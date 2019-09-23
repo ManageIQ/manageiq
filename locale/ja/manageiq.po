@@ -439,7 +439,7 @@ msgstr "アクセス制御アコーディオン"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:809
 msgid "Access Everything under Resource Pools"
-msgstr "リソースプール下のすべてにアクセスします"
+msgstr "リソースプール下のすべてにアクセス"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:124
 msgid "Access Key"
@@ -448,7 +448,7 @@ msgstr "アクセスキー"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3104
 msgid "Access Physical Server Remote Console"
-msgstr "物理サーバーのリモートコンソールにアクセスします"
+msgstr "物理サーバーのリモートコンソールにアクセス"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2626
@@ -1602,7 +1602,7 @@ msgstr "承認と拒否"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:142
 msgid "Approve and Deny Requests"
-msgstr "承認と拒否の要求"
+msgstr "要求の承認と拒否"
 
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity
 #. Reports/110_Provisioning Activity - by Approver.yaml
@@ -5879,7 +5879,7 @@ msgstr "クラスターメモリーおよび CPU 使用状況 (7 日)"
 #. Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
 #: ../config/yaml_strings.rb:5037
 msgid "Cluster Memory and CPU usage over last 7 days"
-msgstr "クラスターメモリーおよび CPU 使用状況 (過去 7 日)"
+msgstr "クラスターメモリーおよび CPU 使用状況 (過去 7 日間)"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual
 #. Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
@@ -12524,7 +12524,7 @@ msgstr "Floating IP の関連付けを解除"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2602
 msgid "Disassociate Floating IP from Instance"
-msgstr "Floating IP のインスタンスとの関連付けを解除"
+msgstr "インスタンスと Floating IP の関連付けを解除"
 
 #: ../app/views/layouts/_discover.html.haml:8
 msgid "Discover"
@@ -14126,7 +14126,7 @@ msgstr "PDF 形式のダウンロード"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:530
 msgid "Download Private Key"
-msgstr "プライベートキーのダウンロード"
+msgstr "秘密鍵のダウンロード"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1677
@@ -16310,22 +16310,22 @@ msgstr "アラートステータス下のすべて"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:162
 msgid "Everything under All Catalog Items Accordion"
-msgstr "すべてのカタログ項目アコーディオン下のすべて"
+msgstr "カタログ項目下のすべてのアコーディオン"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2276
 msgid "Everything under All Containers Accordion"
-msgstr "すべてのコンテナーアコーディオン下のすべて"
+msgstr "コンテナーアコーディオン下のすべてのアコーディオン"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:196
 msgid "Everything under All Service Catalogs Accordion"
-msgstr "すべてのサービスカタログアコーディオン下のすべて"
+msgstr "サービスカタログ下のすべてのアコーディオン"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:262
 msgid "Everything under All Services Accordion"
-msgstr "すべてのサービスアコーディオン下のすべて"
+msgstr "サービスアコーディオン下のすべてのアコーディオン"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2376
@@ -31361,7 +31361,7 @@ msgstr "割合 (99%)"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:368
 msgid "Perform Operations on Availability Zones"
-msgstr "アベイラビリティゾーンで操作を実行"
+msgstr "アベイラビリティーゾーンで操作を実行"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:568
@@ -32867,7 +32867,7 @@ msgstr "先週のポリシーイベント"
 #. Events2.yaml
 #: ../config/yaml_strings.rb:5333
 msgid "Policy Events for the Last 7 Days"
-msgstr "最後の 7 日のポリシーイベント"
+msgstr "過去 7 日間のポリシーイベント"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1251
@@ -34108,11 +34108,11 @@ msgstr "推奨 RAM"
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:9
 #: ../app/views/catalog/_sandt_tree_show.html.haml:101
 msgid "Reconfigure"
-msgstr "再構成"
+msgstr "再設定"
 
 #: ../app/models/miq_action.rb:16
 msgid "Reconfigure CPUs"
-msgstr "CPU の再構成"
+msgstr "CPU の再設定"
 
 #. TRANSLATORS: file: product/reports/500_Events -
 #. Operations/130_Reconfigure_Events_by_Department.yaml
@@ -36204,7 +36204,7 @@ msgstr "スケジュール"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:941
 msgid "Schedules Accordion"
-msgstr "アコーディオンのスケジュール"
+msgstr "スケジュールアコーディオン"
 
 #: ../app/models/manageiq/providers/ansible_tower/shared/automation_manager/scm_credential.rb:32
 msgid "Scm"
@@ -39334,7 +39334,7 @@ msgstr "リージョン番号"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:773
 msgid "Take a Host / Node out of Maintenance Mode"
-msgstr "ホスト/ノードのメンテナンスモードを終了します"
+msgstr "ホスト/ノードのメンテナンスモードを終了"
 
 #: ../app/views/shared/buttons/_ab_show.html.haml:20
 msgid "Target"
@@ -45597,7 +45597,7 @@ msgstr "cpu_total_cores"
 
 #: ../app/models/miq_schedule.rb:177
 msgid "days"
-msgstr "日"
+msgstr "曜日"
 
 #: ../app/models/miq_queue.rb:66
 msgid "dir must be one of %{directory}"
@@ -46895,7 +46895,7 @@ msgstr "ソースプロバイダーのタイプを Vmware にする必要があ�
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb:21
 msgid "The provider does not support reconfigure disks"
-msgstr "プロバイダーは再構成ディスクをサポートしません"
+msgstr "プロバイダーは再設定ディスクをサポートしません"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb:19
 msgid "The virtual machine is not associated with a provider"
@@ -47207,7 +47207,7 @@ msgstr "日"
 
 #: ../app/helpers/miq_policy_helper.rb:5
 msgid " Days"
-msgstr "日"
+msgstr "曜日"
 
 #: ../app/controllers/miq_policy_controller.rb:599
 msgid " Event Assignments"
@@ -48062,7 +48062,7 @@ msgstr "%{title}の検出はユーザーにより取り消されました"
 
 #: ../app/presenters/tree_node/menu/section.rb:6
 msgid "%{title} Main Tab"
-msgstr "%{title}のメインタブ"
+msgstr "%{title} のメインタブ"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:23
 msgid "%{total_cores}"
@@ -51630,7 +51630,7 @@ msgstr "エクスポートには 1 つ以上の項目を選択してください
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:24
 msgid "At least 1 subscription must be added to save server replication type"
-msgstr "サーバーレプリケーションタイプを保存するには、1 つ以上のサブリプションを追加する必要があります"
+msgstr "サーバーレプリケーションタイプを保存するには、1 つ以上のサブスクリプションを追加する必要があります"
 
 #: ../app/controllers/application_controller/compare.rb:732
 msgid "At least 2 %{model} must be selected for Compare"
@@ -52296,7 +52296,7 @@ msgstr "ブロック"
 
 #: ../app/helpers/report_helper.rb:12
 msgid "Blue Background"
-msgstr "青色のバックグラウンド"
+msgstr "青色の背景"
 
 #: ../app/helpers/report_helper.rb:11
 msgid "Blue Text"
@@ -53654,7 +53654,7 @@ msgstr "クリックしてポリシーを表示する"
 
 #: ../app/views/configuration/_ui_4.html.haml:20
 msgid "Click to view Time Profile"
-msgstr "クリックしてタイムプロファイルを表示する"
+msgstr "クリックしてタイムプロファイルを表示/編集する"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:50
 msgid "Click to view child Tenant"
@@ -55877,7 +55877,7 @@ msgstr "日付: "
 #: ../app/assets/javascripts/components/datetime-delay-picker.js:34
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-config-factory.js:75
 msgid "Days"
-msgstr "日"
+msgstr "曜日"
 
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
 #. TRANSLATORS: file: product/views/MiqWidget-all.yaml
@@ -57059,7 +57059,7 @@ msgstr "テキスト形式の比較レポートのダウンロード"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:19
 msgid "Download private key"
-msgstr "プライベートキーのダウンロード"
+msgstr "秘密鍵のダウンロード"
 
 #: ../app/helpers/application_helper/toolbar/logs_center.rb:14
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:53
@@ -60262,7 +60262,7 @@ msgstr "グリッド表示"
 
 #: ../app/views/configuration/_ui_1.html.haml:13
 msgid "Grid/Tile Icons"
-msgstr "グリッド/タイトルアイコン"
+msgstr "グリッド/タイルアイコン"
 
 #: ../app/views/shared/views/_show_alerts_overview.html.haml:6
 msgid "Group By"
@@ -60349,23 +60349,23 @@ msgstr "ハードディスク"
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:87
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:286
 msgid "Hard Reboot"
-msgstr "ハード再起動"
+msgstr "ハードリブート"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:285
 msgid "Hard Reboot the Guest OS on the selected items"
-msgstr "選択した項目でゲスト OS のハード再起動"
+msgstr "選択した項目でゲスト OS のハードリブート"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:290
 msgid "Hard Reboot the Guest OS on the selected items?"
-msgstr "選択した項目のゲスト OS をハード再起動しますか?"
+msgstr "選択した項目のゲスト OS をハードリブートしますか?"
 
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:86
 msgid "Hard Reboot the Guest OS on this Instance"
-msgstr "このインスタンスのゲスト OS のハード再起動"
+msgstr "このインスタンスのゲスト OS のハードリブート"
 
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:89
 msgid "Hard Reboot the Guest OS on this Instance?"
-msgstr "このインスタンスのゲスト OS をハード再起動しますか?"
+msgstr "このインスタンスのゲスト OS をハードリブートしますか?"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:101
 #: ../app/views/ems_container/_form.html.haml:80
@@ -61471,7 +61471,7 @@ msgstr "自動化ログの最後の 1000 行"
 #: ../app/controllers/miq_request_controller.rb:422
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:130
 msgid "Last 24 Hours"
-msgstr "最後の 24 時間"
+msgstr "過去 24 時間"
 
 #: ../app/assets/javascripts/controllers/container_dashboard/container_project_dashboard_controller.js:37
 #: ../app/assets/javascripts/controllers/container_dashboard/container_project_dashboard_controller.js:38
@@ -61479,7 +61479,7 @@ msgstr "最後の 24 時間"
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:154
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:184
 msgid "Last 24 hours"
-msgstr "最後の 24 時間"
+msgstr "過去 24 時間"
 
 #: ../app/controllers/miq_request_controller.rb:424
 #: ../app/assets/javascripts/components/recent-resource.js:24
@@ -61497,16 +61497,16 @@ msgstr "最後の 24 時間"
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:200
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:212
 msgid "Last 30 Days"
-msgstr "最後の 30 日"
+msgstr "過去 30 日間"
 
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:138
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:170
 msgid "Last 30 days"
-msgstr "最後の 30 日"
+msgstr "過去 30 日間"
 
 #: ../app/controllers/miq_request_controller.rb:423
 msgid "Last 7 Days"
-msgstr "最後の 7 日"
+msgstr "過去 7 日間"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:191
 msgid "Last Analyzed"
@@ -62039,7 +62039,7 @@ msgstr "メンテナンスモード"
 
 #: ../app/helpers/application_helper/button/host_toggle_maintenance.rb:4
 msgid "Maintenance mode is not supported for this host"
-msgstr "メンテナンスモードはこのサポートでサポートされていません"
+msgstr "このホストではメンテナンスモードはサポートされていません"
 
 #: ../app/controllers/application_controller/compare.rb:1294
 #: ../app/views/shared/_compare_header_expanded.html.haml:7
@@ -63548,7 +63548,7 @@ msgstr "利用可能なポリシープロファイルはありません。"
 #: ../app/views/miq_policy/_policy_details.html.haml:81
 msgid ""
 "No Policy scope defined, the scope of this policy includes all elements."
-msgstr "ポリシーのスコープが定義されていません。このポリシーのスコープにははすべての要素が含まれます。"
+msgstr "ポリシーのスコープが定義されていません。このポリシーのスコープにはすべての要素が含まれます。"
 
 #: ../app/helpers/application_helper/button/iso_datastore_new.rb:4
 msgid "No Providers are available to create an ISO Datastore on"
@@ -65527,7 +65527,7 @@ msgstr "保存前に無効なプロビジョニングエントリーポイント
 
 #: ../app/controllers/catalog_controller.rb:891
 msgid "Please correct invalid Reconfigure Entry Point prior to saving"
-msgstr "保存前に無効な再構成エントリーポイントを修正してください"
+msgstr "保存前に無効な再設定エントリーポイントを修正してください"
 
 #: ../app/controllers/catalog_controller.rb:893
 msgid "Please correct invalid Retirement Entry Point prior to saving"
@@ -67448,7 +67448,7 @@ msgstr "%{email} の削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:24
 msgid "Remove Block Storage Managers from Inventory"
-msgstr "インベントリーからのブロックストレージマネージャーの削除"
+msgstr "インベントリーからブロックストレージマネージャーを削除"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:28
 msgid "Remove Catalogs"
@@ -67456,11 +67456,11 @@ msgstr "カタログの削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:61
 msgid "Remove Cloud Providers from Inventory"
-msgstr "インベントリーからのクラウドプロバイダーの削除"
+msgstr "インベントリーからクラウドプロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:73
 msgid "Remove Containers Providers from Inventory"
-msgstr "インベントリーからのコンテナープロバイダーの削除"
+msgstr "インベントリーからコンテナープロバイダーを削除"
 
 #: ../app/views/static/generic_object/custom-image.html.haml:30
 msgid "Remove Custom Image"
@@ -67468,11 +67468,11 @@ msgstr "カスタムイメージの削除"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:22
 msgid "Remove Datastore from Inventory"
-msgstr "インベントリーからのデータストアの削除"
+msgstr "インベントリーからデータストアを削除"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:25
 msgid "Remove Datastores from Inventory"
-msgstr "インベントリーからのデータストアの削除"
+msgstr "インベントリーからデータストアを削除"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:29
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:26
@@ -67513,19 +67513,19 @@ msgstr "ホストアグリゲート \"%{name}\" へのホストの削除に失�
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:19
 msgid "Remove ISO Datastores from Inventory"
-msgstr "インベントリーからの ISO データストアの削除"
+msgstr "インベントリーから ISO データストアを削除"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:39
 msgid "Remove Image from Inventory"
-msgstr "インベントリーからのイメージの削除"
+msgstr "インベントリーからイメージを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:69
 msgid "Remove Infrastructure Providers from Inventory"
-msgstr "インベントリーからのインフラストラクチャープロバイダーの削除"
+msgstr "インベントリーからインフラストラクチャープロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:40
 msgid "Remove Instance from Inventory"
-msgstr "インベントリーからのインスタンスの削除"
+msgstr "インベントリーからインスタンスを削除"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:60
 msgid "Remove Instances"
@@ -67571,49 +67571,49 @@ msgstr "ネットワークアダプターを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:41
 msgid "Remove Network Providers from Inventory"
-msgstr "インベントリーからのネットワークプロバイダーの削除"
+msgstr "インベントリーからネットワークプロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:26
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:27
 msgid "Remove Object Storage Container from Inventory"
-msgstr "インベントリーからのオブジェクトストレージコンテナーの削除"
+msgstr "インベントリーからオブジェクトストレージコンテナーを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:36
 msgid "Remove Object Storage Containers from Inventory"
-msgstr "インベントリーからのオブジェクトストレージコンテナーの削除"
+msgstr "インベントリーからオブジェクトストレージコンテナーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:24
 msgid "Remove Object Storage Managers from Inventory"
-msgstr "インベントリーからのオブジェクトストレージマネージャーの削除"
+msgstr "インベントリーからオブジェクトストレージマネージャーを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:14
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:15
 msgid "Remove Object Storage Object from Inventory"
-msgstr "インベントリーからのオブジェクトストレージオブジェクトの削除"
+msgstr "インベントリーからオブジェクトストレージオブジェクトを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_objects_center.rb:17
 msgid "Remove Object Storage Objects from Inventory"
-msgstr "インベントリーからのオブジェクトストレージオブジェクトの削除"
+msgstr "インベントリーからオブジェクトストレージオブジェクトを削除"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:13
 msgid "Remove Orchestration Stacks from Inventory"
-msgstr "インベントリーからのオーケストレーションスタックの削除"
+msgstr "インベントリーからオーケストレーションスタックを削除"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:28
 msgid "Remove PXE Servers from Inventory"
-msgstr "インベントリーからの PXE サーバーの削除"
+msgstr "インベントリーから PXE サーバーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:67
 msgid "Remove Physical Infrastructure Providers from Inventory"
-msgstr "インベントリーからの物理インフラストラクチャープロバイダーの削除"
+msgstr "インベントリーから物理インフラストラクチャープロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:13
 msgid "Remove Resource Pool from Inventory"
-msgstr "インベントリーからのリソースプールの削除"
+msgstr "インベントリーからリソースプールを削除"
 
 #: ../app/helpers/application_helper/toolbar/resource_pools_center.rb:15
 msgid "Remove Resource Pools from Inventory"
-msgstr "インベントリーからのリソースプールの削除"
+msgstr "インベントリーからリソースプールを削除"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:394
 msgid "Remove Resources"
@@ -67629,19 +67629,19 @@ msgstr "'%{name}' に対するセキュリティーグループの削除"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:103
 msgid "Remove Selected items from Inventory"
-msgstr "インベントリーからの選択した項目の削除"
+msgstr "インベントリーから選択した項目を削除"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:18
 msgid "Remove Service from Inventory"
-msgstr "インベントリーからのサービスの削除"
+msgstr "インベントリーからサービスを削除"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:25
 msgid "Remove Services from Inventory"
-msgstr "インベントリーからのサービスの削除"
+msgstr "インベントリーからサービスを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:24
 msgid "Remove Storage Managers from Inventory"
-msgstr "インベントリーからのストレージマネージャーの削除"
+msgstr "インベントリーからストレージマネージャーを削除"
 
 #: ../app/views/miq_policy/_action_options.html.haml:301
 msgid "Remove Tags Settings"
@@ -67649,7 +67649,7 @@ msgstr "タグ設定の削除"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:38
 msgid "Remove Template from Inventory"
-msgstr "インベントリーからのテンプレートの削除"
+msgstr "インベントリーからテンプレートを削除"
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:53
 msgid "Remove Templates"
@@ -67657,11 +67657,11 @@ msgstr "テンプレートの削除 "
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:63
 msgid "Remove Templates from Inventory"
-msgstr "インベントリーからのテンプレートの削除"
+msgstr "インベントリーからテンプレートを削除"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:54
 msgid "Remove Virtual Machine from Inventory"
-msgstr "インベントリーからの仮想マシンの削除"
+msgstr "インベントリーから仮想マシンを削除"
 
 #: ../app/presenters/widget_presenter.rb:29
 msgid "Remove Widget"
@@ -67699,11 +67699,11 @@ msgstr "VMDB からの削除"
 #: ../app/helpers/application_helper/toolbar/host_center.rb:62
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:19
 msgid "Remove item from Inventory"
-msgstr "インベントリーからの項目の削除"
+msgstr "インベントリーから項目を削除"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:104
 msgid "Remove items from Inventory"
-msgstr "インベントリーからの項目の削除"
+msgstr "インベントリーから項目を削除"
 
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:213
 msgid "Remove resources?"
@@ -67724,7 +67724,7 @@ msgstr "このプロファイルから選択したアラートを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:23
 msgid "Remove selected Block Storage Managers from Inventory"
-msgstr "インベントリーからの選択したブロックストレージマネージャーの削除"
+msgstr "インベントリーから選択したブロックストレージマネージャーを削除"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:27
 msgid "Remove selected Catalogs"
@@ -67736,7 +67736,7 @@ msgstr "選択したチャージバックレートを VMDB から削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:60
 msgid "Remove selected Cloud Providers from Inventory"
-msgstr "インベントリーからの選択したクラウドプロバイダーの削除"
+msgstr "インベントリーから選択したクラウドプロバイダーを削除"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:104
 msgid "Remove selected Conditions from this Policy"
@@ -67744,11 +67744,11 @@ msgstr "このポリシーから選択した条件を削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:72
 msgid "Remove selected Containers Providers from Inventory"
-msgstr "インベントリーからの選択したコンテナープロバイダーの削除"
+msgstr "インベントリーから選択したコンテナープロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:30
 msgid "Remove selected Credentials from Inventory"
-msgstr "インベントリーからの選択した認証情報の削除"
+msgstr "インベントリーから選択した認証情報を削除"
 
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:38
 msgid "Remove selected Customization Templates"
@@ -67756,7 +67756,7 @@ msgstr "選択したカスタマイズテンプレートの削除"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:24
 msgid "Remove selected Datastores from Inventory"
-msgstr "インベントリーからの選択したデータストアの削除"
+msgstr "インベントリーから選択したデータストアを削除"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:37
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:38
@@ -67773,15 +67773,15 @@ msgstr "選択したフレーバーの削除"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:26
 msgid "Remove selected Generic Object Classes from Inventory"
-msgstr "インベントリーからの選択した汎用オブジェクトクラスの削除"
+msgstr "インベントリーから選択した汎用オブジェクトクラスを削除"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:18
 msgid "Remove selected ISO Datastores from Inventory"
-msgstr "インベントリーからの選択した ISO データストアの削除"
+msgstr "インベントリーから選択した ISO データストアを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:68
 msgid "Remove selected Infrastructure Providers from Inventory"
-msgstr "インベントリーからの選択したインフラストラクチャープロバイダーの削除"
+msgstr "インベントリーから選択したインフラストラクチャープロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:59
 msgid "Remove selected Instances"
@@ -67797,7 +67797,7 @@ msgstr "選択したジョブの削除"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:19
 msgid "Remove selected Key Pairs from Inventory"
-msgstr "インベントリーからの選択したキーペアの削除"
+msgstr "インベントリーから選択したキーペアを削除"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_methods_center.rb:54
 msgid "Remove selected Methods"
@@ -67809,27 +67809,27 @@ msgstr "選択した名前空間の削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:40
 msgid "Remove selected Network Providers from Inventory"
-msgstr "インベントリーからの選択したネットワークプロバイダーの削除"
+msgstr "インベントリーから選択したネットワークプロバイダーを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:35
 msgid "Remove selected Object Storage Containers from Inventory"
-msgstr "インベントリーからの選択したオブジェクトストレージコンテナーの削除"
+msgstr "インベントリーから選択したオブジェクトストレージコンテナーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:23
 msgid "Remove selected Object Storage Managers from Inventory"
-msgstr "インベントリーからの選択したオブジェクトストレージマネージャーの削除"
+msgstr "インベントリーから選択したオブジェクトストレージマネージャーを削除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_objects_center.rb:16
 msgid "Remove selected Object Storage Objects from Inventory"
-msgstr "インベントリーからの選択したオブジェクトストレージオブジェクトの削除"
+msgstr "インベントリーから選択したオブジェクトストレージオブジェクトを削除"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:12
 msgid "Remove selected Orchestration Stacks from Inventory"
-msgstr "インベントリーからの選択したオーケストレーションスタックの削除"
+msgstr "インベントリーから選択したオーケストレーションスタックを削除"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb:37
 msgid "Remove selected Orchestration Templates from Inventory"
-msgstr "インベントリーからの選択したオーケストレーションテンプレートの削除"
+msgstr "インベントリーから選択したオーケストレーションテンプレートを削除"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb:39
 msgid "Remove selected Orchestration Templates from Inventory?"
@@ -67837,11 +67837,11 @@ msgstr "インベントリーから選択したオーケストレーションテ
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:27
 msgid "Remove selected PXE Servers from Inventory"
-msgstr "インベントリーからの選択した PXE サーバーの削除"
+msgstr "インベントリーから選択した PXE サーバーを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:66
 msgid "Remove selected Physical Infrastructure Providers from Inventory"
-msgstr "インベントリーからの選択した物理インフラストラクチャープロバイダーの削除"
+msgstr "インベントリーから選択した物理インフラストラクチャープロバイダーを削除"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:43
 msgid "Remove selected Policies from this Profile"
@@ -67849,19 +67849,19 @@ msgstr "このプロファイルからの選択したポリシーの削除"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:53
 msgid "Remove selected Repositories from Inventory"
-msgstr "インベントリーからの選択したリポジトリーの削除"
+msgstr "インベントリーから選択したリポジトリーを削除"
 
 #: ../app/helpers/application_helper/toolbar/resource_pools_center.rb:14
 msgid "Remove selected Resource Pools from Inventory"
-msgstr "インベントリーからの選択したリソースプールの削除"
+msgstr "インベントリーから選択したリソースプールを削除"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:24
 msgid "Remove selected Services from Inventory"
-msgstr "インベントリーからの選択したサービスの削除"
+msgstr "インベントリーから選択したサービスを削除"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:23
 msgid "Remove selected Storage Managers from Inventory"
-msgstr "インベントリーからの選択したストレージマネージャーの削除"
+msgstr "インベントリーから選択したストレージマネージャーを削除"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:27
 msgid "Remove selected System Image Types"
@@ -67873,7 +67873,7 @@ msgstr "選択したテンプレートの削除"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:62
 msgid "Remove selected Templates from Inventory"
-msgstr "インベントリーからの選択したテンプレートの削除"
+msgstr "インベントリーから選択したテンプレートを削除"
 
 #: ../app/helpers/application_helper/toolbar/configuration_manager_providers_center.rb:63
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:82
@@ -67883,7 +67883,7 @@ msgstr "インベントリーからの選択したテンプレートの削除"
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:66
 #: ../app/helpers/application_helper/toolbar/ems_clusters_center.rb:34
 msgid "Remove selected items from Inventory"
-msgstr "インベントリーからの選択した項目の削除"
+msgstr "インベントリーから選択した項目を削除"
 
 #: ../app/views/layouts/_content.html.haml:33
 msgid "Remove the current filter"
@@ -67910,11 +67910,11 @@ msgstr "このボタングループの削除"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:23
 msgid "Remove this Button Group from Inventory"
-msgstr "インベントリーからのこのボタングループの削除"
+msgstr "インベントリーからこのボタングループを削除"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_center.rb:17
 msgid "Remove this Button from Inventory"
-msgstr "インベントリーからのこのボタンの削除"
+msgstr "インベントリーからこのボタンを削除"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:20
 msgid "Remove this Catalog"
@@ -68819,7 +68819,7 @@ msgstr "選択したインフラストラクチャープロバイダーの再開
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:262
 msgid "Resume the selected items"
-msgstr "選択した項目を再開します"
+msgstr "選択した項目を再開"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:267
 msgid "Resume the selected items?"
@@ -69726,15 +69726,15 @@ msgstr "左側のノードを選択して使用状況についてのレポート
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:30
 msgid "Select a single Cloud Provider to edit"
-msgstr "編集する単一クラウドプロバイダーの選択"
+msgstr "編集する単一のクラウドプロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:18
 msgid "Select a single Cloud Tenant to edit"
-msgstr "編集する単一クラウドテナントの選択"
+msgstr "編集する単一のクラウドテナントの選択"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:42
 msgid "Select a single Containers Provider to edit"
-msgstr "編集する単一コンテナープロバイダーの選択"
+msgstr "編集する単一のコンテナープロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:18
 msgid "Select a single Customization Templates to copy"
@@ -69746,39 +69746,39 @@ msgstr "編集する単一のカスタマイズテンプレートの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:17
 msgid "Select a single Dashboard to copy"
-msgstr "コピーする単一ダッシュボードの選択"
+msgstr "コピーする単一のダッシュボードの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domains_center.rb:18
 msgid "Select a single Domain to edit"
-msgstr "編集する単一ドメインの選択"
+msgstr "編集する単一のドメインの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:17
 msgid "Select a single Group to edit"
-msgstr "編集する単一グループの選択"
+msgstr "編集する単一のグループの選択"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:28
 msgid "Select a single Host Aggregate to Add Host"
-msgstr "ホストを追加する単一ホストアグリゲートの選択"
+msgstr "ホストを追加する単一のホストアグリゲートの選択"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:37
 msgid "Select a single Host Aggregate to Remove Host"
-msgstr "ホストを削除する単一ホストアグリゲートの選択"
+msgstr "ホストを削除する単一のホストアグリゲートの選択"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:19
 msgid "Select a single Host Aggregate to edit"
-msgstr "編集する単一ホストアグリゲートの選択"
+msgstr "編集する単一のホストアグリゲートの選択"
 
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb:101
 msgid "Select a single Image to Provision Instances"
-msgstr "インスタンスをプロビジョニングするための単一イメージの選択"
+msgstr "インスタンスをプロビジョニングするための単一のイメージの選択"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:128
 msgid "Select a single Infrastructure Provider to Change password"
-msgstr "パスワードを変更する単一インフラストラクチャープロバイダーの選択"
+msgstr "パスワードを変更する単一のインフラストラクチャープロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:38
 msgid "Select a single Infrastructure Provider to edit"
-msgstr "編集する単一インフラストラクチャープロバイダーの選択"
+msgstr "編集する単一のインフラストラクチャープロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:39
 msgid "Select a single Instance to edit"
@@ -69786,69 +69786,69 @@ msgstr "編集する単一インスタンスの選択"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:33
 msgid "Select a single Item to copy"
-msgstr "コピーする単一項目の選択"
+msgstr "コピーする単一の項目の選択"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:24
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:18
 msgid "Select a single Item to edit"
-msgstr "編集する単一項目の選択"
+msgstr "編集する単一の項目の選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_methods_center.rb:34
 msgid "Select a single Method to edit"
-msgstr "編集する単一メソッドの選択"
+msgstr "編集する単一のメソッドの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:50
 msgid "Select a single Namespace to edit"
-msgstr "編集する単一名前空間の選択"
+msgstr "編集する単一の名前空間の選択"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:30
 msgid "Select a single Network Provider to edit"
-msgstr "編集する単一ネットワークプロバイダーの選択"
+msgstr "編集する単一のネットワークプロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:18
 msgid "Select a single PXE Servers to edit"
-msgstr "編集する単一 PXE サーバーの選択"
+msgstr "編集する単一の PXE サーバーの選択"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:36
 msgid "Select a single Physical Infrastructure Provider to edit"
-msgstr "編集する単一物理インフラストラクチャープロバイダーの選択"
+msgstr "編集する単一の物理インフラストラクチャープロバイダーの選択"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:26
 msgid "Select a single Role to copy"
-msgstr "コピーする単一ロールの選択"
+msgstr "コピーする単一のロールの選択"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:17
 msgid "Select a single Role to edit"
-msgstr "編集する単一ロールの選択"
+msgstr "編集する単一のロールの選択"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:18
 msgid "Select a single System Image Type to edit"
-msgstr "編集する単一システムイメージタイプの選択"
+msgstr "編集する単一のシステムイメージタイプの選択"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:131
 msgid "Select a single Template to Provision VMs"
-msgstr "仮想マシンをプロビジョニングするための単一テンプレートの選択"
+msgstr "仮想マシンをプロビジョニングするための単一のテンプレートの選択"
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:34
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:44
 msgid "Select a single Template to edit"
-msgstr "編集する単一テンプレートの選択"
+msgstr "編集する単一のテンプレートの選択"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:28
 msgid "Select a single Time Profile to copy"
-msgstr "コピーする単一時間プロファイルの選択"
+msgstr "コピーする単一のタイムプロファイルの選択"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:19
 msgid "Select a single Time Profile to edit"
-msgstr "編集する単一時間プロファイルの選択"
+msgstr "編集する単一のタイムプロファイルの選択"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:26
 msgid "Select a single User to copy"
-msgstr "コピーする単一ユーザーの選択"
+msgstr "コピーする単一のユーザーの選択"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:17
 msgid "Select a single User to edit"
-msgstr "編集する単一ユーザーの選択"
+msgstr "編集する単一のユーザーの選択"
 
 #: ../app/helpers/application_helper/toolbar/configuration_manager_providers_center.rb:32
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:54
@@ -69858,19 +69858,19 @@ msgstr "編集する単一ユーザーの選択"
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:34
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:12
 msgid "Select a single item to edit"
-msgstr "編集する単一項目の選択"
+msgstr "編集する単一の項目の選択"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:31
 msgid "Select a single item to manage quotas"
-msgstr "クォータを管理する単一項目の選択"
+msgstr "クォータを管理する単一の項目の選択"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:63
 msgid "Select a single item to rename"
-msgstr "名前変更する単一項目の選択"
+msgstr "名前を変更する単一の項目の選択"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:15
 msgid "Select a single service to edit"
-msgstr "編集する単一サービスの選択"
+msgstr "編集する単一のサービスの選択"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:104
 msgid "Select a worker to restart"
@@ -72039,7 +72039,7 @@ msgstr "ソフトリブート"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:274
 msgid "Soft Reboot the selected items"
-msgstr "選択した項目をソフトリブートします"
+msgstr "選択した項目をソフトリブート"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:279
 msgid "Soft Reboot the selected items?"
@@ -72221,7 +72221,7 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:207
 msgid "Start the selected items"
-msgstr "選択した項目を開始します"
+msgstr "選択した項目を開始"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:212
 msgid "Start the selected items?"
@@ -74697,31 +74697,31 @@ msgstr "別の名前の使用"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:34
 msgid "Use the Choose file button to locate .%{image_type} image file"
-msgstr "ファイル選択のボタンを使用して .%{image_type} イメージファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用して .%{image_type} イメージファイルを検索"
 
 #: ../app/controllers/ops_controller/settings.rb:31
 #: ../app/controllers/ops_controller/settings/upload.rb:90
 msgid "Use the Choose file button to locate CSV file"
-msgstr "「Choose file」ボタンを使用して CSV ファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用して CSV ファイルを検索"
 
 #: ../app/controllers/catalog_controller.rb:468
 msgid "Use the Choose file button to locate a .png or .jpg image file"
-msgstr "「Choose file」ボタンを使用して .png または .jpg イメージファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用して .png または .jpg イメージファイルを検索"
 
 #: ../app/controllers/report_controller.rb:94
 #: ../app/controllers/miq_policy_controller.rb:144
 #: ../app/controllers/miq_ae_tools_controller.rb:290
 msgid "Use the Choose file button to locate an Import file"
-msgstr "「Choose file」ボタンを使用して Import ファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用してインポートファイルを検索"
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:21
 msgid "Use the Choose file button to locate an Upload file"
-msgstr "「Choose file」ボタンを使用して Upload ファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用してアップロードファイルを検索"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:190
 #: ../app/controllers/miq_ae_customization_controller.rb:41
 msgid "Use the Choose file button to locate an import file"
-msgstr "「Choose file」ボタンを使用して Import ファイルを検索"
+msgstr "「ファイルの選択」ボタンを使用してインポートファイルを検索"
 
 #: ../app/assets/javascripts/components/pf_charts/donut-pct-chart.component.js:91
 #: ../app/assets/javascripts/components/pf_charts/utilization-trend-chart.component.js:44
@@ -76572,7 +76572,7 @@ msgstr "http"
 
 #: ../app/views/layouts/_empty.html.haml:12
 msgid "in the documentation."
-msgstr "ドキュメントの中で。"
+msgstr "ドキュメントで"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:279
 msgid "info"
@@ -77555,7 +77555,7 @@ msgstr "プロバイダーごとの最大同時移行数"
 
 #: ../app/javascript/common/constants.js:4
 msgid "Maximum length is %s characters."
-msgstr "最大長は %s 文字です。"
+msgstr "最大 %s 文字までです。"
 
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/ConversionHostsListItem.js:59
 msgid "Message:"
@@ -77932,7 +77932,7 @@ msgstr "削除中..."
 
 #: ../app/javascript/common/constants.js:5
 msgid "Required. Maximum length is %s characters."
-msgstr "必須。最大長は %s 文字です。"
+msgstr "必須。最大 %s 文字までです。"
 
 #: ../app/javascript/react/screens/App/Settings/screens/GeneralSettings/GeneralSettings.js:117
 msgid "Resource Utilization Limits for Migrations"
@@ -78424,7 +78424,7 @@ msgstr "仮想マシンが正常に移行されました。"
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/RetryConversionHostConfirmationModal/RetryConversionHostConfirmationModal.js:71
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/ConversionHostWizard/ConversionHostWizardAuthenticationStep/ConversionHostWizardAuthenticationStep.js:61
 msgid "VMware hypervisors SSH private key"
-msgstr "VMware ハイパーバイザー SSH プライベートキー"
+msgstr "VMware ハイパーバイザー SSH 秘密鍵"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:70
 msgid "Validating"
@@ -78480,7 +78480,7 @@ msgstr "エラーが発生しました。もう一度お試しください。"
 
 #: ../app/javascript/common/constants.js:6
 msgid "You have reached the maximum length of %s characters."
-msgstr "最大長 %s 文字に達しています。"
+msgstr "最大文字数の %s 文字に達しています。"
 
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/MappingWizardClustersStepConstants.js:11
 msgid ""
@@ -78792,7 +78792,7 @@ msgstr "表示可能"
 
 #: ./src/gtl/components/pagination/paging.html:22
 msgid "of {{pagingCtrl.settings.total}}"
-msgstr "{{pagingCtrl.settings.total}} の"
+msgstr "の {{pagingCtrl.settings.total}}"
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx:80
 msgid "Vpc ID"
