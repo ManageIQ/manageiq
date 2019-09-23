@@ -365,6 +365,7 @@ module Ansible
       end
 
       PYTHON3_MODULE_PATHS = %w[
+        /usr/lib64/python3.6/site-packages
         /var/lib/awx/venv/ansible/lib/python3.6/site-packages
       ].freeze
       def python3_modules_path
