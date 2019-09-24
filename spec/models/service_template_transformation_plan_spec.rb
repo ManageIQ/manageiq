@@ -9,8 +9,6 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     it { expect(subject.request_type).to eq("transformation_plan") }
   end
 
-  let(:transformation_mapping) { FactoryBot.create(:transformation_mapping) }
-  let(:transformation_mapping2) { FactoryBot.create(:transformation_mapping) }
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
   let(:vm1) { FactoryBot.create(:vm_or_template) }
   let(:vm2) { FactoryBot.create(:vm_or_template) }
@@ -19,6 +17,81 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   let(:flavor1) { FactoryBot.create(:flavor, :name => "large") }
   let(:security_group2) { FactoryBot.create(:security_group, :name => "default") }
   let(:flavor2) { FactoryBot.create(:flavor, :name => "medium") }
+  let(:sg_md) { FactoryBot.create(:security_group, :name => "manageiq-dev") }
+  let(:sg_ch) { FactoryBot.create(:security_group, :name => "converison-host") }
+  let(:sg_cf) { FactoryBot.create(:security_group, :name => "migration") }
+
+  let(:src_ems_vmware) { FactoryBot.create(:ems_vmware) }
+  let(:dst_ems_redhat) { FactoryBot.create(:ems_redhat) }
+  let(:src_cluster_vmware) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems_vmware) }
+  let(:dst_ems_openstack) { FactoryBot.create(:ems_openstack) }
+  let(:dst_cluster_redhat) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems_redhat) }
+
+  let(:src_hosts_vmware) { FactoryBot.create_list(:host_vmware, 1, :ems_cluster => src_cluster_vmware) }
+  let(:dst_hosts_redhat) { FactoryBot.create_list(:host_redhat, 1, :ems_cluster => dst_cluster_redhat) }
+
+  let(:src_storages_vmware) { FactoryBot.create_list(:storage, 1, :hosts => src_hosts_vmware) }
+  let(:dst_storages_redhat) { FactoryBot.create_list(:storage, 1, :hosts => dst_hosts_redhat) }
+
+  let(:src_switches_vmware) { FactoryBot.create_list(:switch, 1, :hosts => src_hosts_vmware) }
+  let(:dst_switches_redhat) { FactoryBot.create_list(:switch, 1, :hosts => dst_hosts_redhat) }
+
+  let(:src_lans_vmware) { FactoryBot.create_list(:lan, 1, :switch => src_switches_vmware.first) }
+  let(:dst_lans_redhat) { FactoryBot.create_list(:lan, 1, :switch => dst_switches_redhat.first) }
+
+  let(:dst_cloud_tenant_openstack) do
+    FactoryBot.create(:cloud_tenant,
+                      :ext_management_system => dst_ems_openstack,
+                      :flavors               => [flavor1, flavor2],
+                      :security_groups       => [security_group1, security_group2, sg_md, sg_ch, sg_cf])
+  end
+  let(:mapping_openstack) do
+    FactoryBot.create(:transformation_mapping).tap do |tm|
+      tm.transformation_mapping_items = [
+        FactoryBot.create(:transformation_mapping_item,
+                          :source                 => src_cluster_vmware,
+                          :destination            => dst_cloud_tenant_openstack,
+                          :transformation_mapping => tm)
+      ]
+    end
+  end
+
+  let(:transformation_mapping) do
+    FactoryBot.create(:transformation_mapping).tap do |tm|
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_cluster_vmware,
+                        :destination            => dst_cluster_redhat,
+                        :transformation_mapping => tm)
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_storages_vmware.first,
+                        :destination            => dst_storages_redhat.first,
+                        :transformation_mapping => tm)
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_lans_vmware.first,
+                        :destination            => dst_lans_redhat.first,
+                        :transformation_mapping => tm)
+    end
+  end
+  let(:transformation_mapping2) do
+    FactoryBot.create(:transformation_mapping).tap do |tm|
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_cluster_vmware,
+                        :destination            => dst_cluster_redhat,
+                        :transformation_mapping => tm)
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_storages_vmware.first,
+                        :destination            => dst_storages_redhat.first,
+                        :transformation_mapping => tm)
+      FactoryBot.create(:transformation_mapping_item,
+                        :source                 => src_lans_vmware.first,
+                        :destination            => dst_lans_redhat.first,
+                        :transformation_mapping => tm)
+    end
+  end
+
+  let(:atst) { FactoryBot.create(:service_template_ansible_tower) }
+  let(:security_group_bad) { FactoryBot.create(:security_group, :name => "sg_bad") }
+  let(:flavor_bad) { FactoryBot.create(:flavor, :name => "flavor_bad") }
 
   let(:catalog_item_options) do
     {
@@ -31,6 +104,70 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         :actions                   => [
           {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
           {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id}
+        ],
+      }
+    }
+  end
+
+  let(:catalog_item_options_bad_premigration) do
+    {
+      :name        => 'Transformation Plan',
+      :description => 'a description',
+      :config_info => {
+        :transformation_mapping_id => mapping_openstack.id,
+        :pre_service_id            => atst.id,
+        :post_service_id           => apst.id,
+        :actions                   => [
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id}
+        ],
+      }
+    }
+  end
+
+  let(:catalog_item_options_bad_postmigration) do
+    {
+      :name        => 'Transformation Plan',
+      :description => 'a description',
+      :config_info => {
+        :transformation_mapping_id => mapping_openstack.id,
+        :pre_service_id            => apst.id,
+        :post_service_id           => atst.id,
+        :actions                   => [
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id}
+        ],
+      }
+    }
+  end
+
+  let(:catalog_item_options_bad_security_group) do
+    {
+      :name        => 'Transformation Plan',
+      :description => 'a description',
+      :config_info => {
+        :transformation_mapping_id => mapping_openstack.id,
+        :pre_service_id            => apst.id,
+        :post_service_id           => apst.id,
+        :actions                   => [
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group_bad.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group_bad.id, :osp_flavor_id => flavor1.id}
+        ],
+      }
+    }
+  end
+
+  let(:catalog_item_options_bad_flavor) do
+    {
+      :name        => 'Transformation Plan',
+      :description => 'a description',
+      :config_info => {
+        :transformation_mapping_id => mapping_openstack.id,
+        :pre_service_id            => apst.id,
+        :post_service_id           => apst.id,
+        :actions                   => [
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor_bad.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor_bad.id}
         ],
       }
     }
@@ -171,6 +308,31 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect { described_class.create_catalog_item(catalog_item_options) }.to raise_error(
         ActiveRecord::RecordInvalid, 'Validation failed: ServiceTemplateTransformationPlan: Name has already been taken'
       )
+    end
+
+    it 'requires premigration service template ansible playbook' do
+      expect do
+        described_class.create_catalog_item(catalog_item_options_bad_premigration)
+      end.to raise_error(StandardError, 'Premigration service type MUST be "ServiceTemplateAnsiblePlaybook"')
+    end
+
+    it 'requires postmigration service template ansible playbook' do
+      # catalog_item_options_bad_prepost
+      expect do
+        described_class.create_catalog_item(catalog_item_options_bad_postmigration)
+      end.to raise_error(StandardError, 'Postmigration service type MUST be "ServiceTemplateAnsiblePlaybook"')
+    end
+
+    it 'requires flavor associated to the cluster/cloud_tenant' do
+      expect do
+        described_class.create_catalog_item(catalog_item_options_bad_flavor)
+      end.to raise_error(StandardError, 'VM flavor does not belong to the cloud_tenant_flavors')
+    end
+
+    it 'requires security_group associated to the cluster/cloud_tenant' do
+      expect do
+        described_class.create_catalog_item(catalog_item_options_bad_security_group)
+      end.to raise_error(StandardError, 'VM security group does not belong to the cloud_tenant_security_groups')
     end
   end
 
