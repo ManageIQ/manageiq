@@ -219,7 +219,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     every = worker_settings[:compliance_purge_interval]
     scheduler.schedule_every(every, :first_in => every) do
-      enqueue(:compliance_purge_interval)
+      enqueue(:compliance_purge_timer)
     end
 
     every = worker_settings[:vim_performance_states_purge_interval]
