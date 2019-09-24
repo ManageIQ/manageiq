@@ -796,8 +796,12 @@ module Rbac
 
     def belongsto_association_filtered?(vcmeta, klass)
       if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) }
-        # Eject early if true
-        return true if associated_belongsto_models.any? { |associated| klass <= associated }
+        # Eject early if klass(requested for RBAC check) is allowed to be filtered by
+        # belongsto filtering generally and whether relation (based on the klass) exists on object
+        # from belongsto filter at all.
+        return true if associated_belongsto_models.any? do |associated|
+          klass <= associated && vcmeta.respond_to?(associated.base_model.to_s.tableize)
+        end
       end
 
       if vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)
