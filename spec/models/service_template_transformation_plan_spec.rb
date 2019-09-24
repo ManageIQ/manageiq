@@ -19,7 +19,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   let(:flavor2) { FactoryBot.create(:flavor, :name => "medium") }
   let(:sg_md) { FactoryBot.create(:security_group, :name => "manageiq-dev") }
   let(:sg_ch) { FactoryBot.create(:security_group, :name => "converison-host") }
-  let(:sg_cf) { FactoryBot.create(:security_group, :name => "cloudforms") }
+  let(:sg_cf) { FactoryBot.create(:security_group, :name => "migration") }
 
   let(:src_ems_vmware) { FactoryBot.create(:ems_vmware) }
   let(:dst_ems_redhat) { FactoryBot.create(:ems_redhat) }
