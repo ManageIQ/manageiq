@@ -19,9 +19,7 @@ module ServiceTemplateTransformationPlan::ValidateConfigInfo
                 end
       # mapping.invalid? added as a part of validating migration plan
       raise _('Must provide an existing transformation mapping') if mapping.blank?
-      if mapping.invalid?
-        raise _('Transformation mapping was invalid.  ' + mapping.errors.messages)
-      end
+      raise _('Transformation mapping was invalid.' + mapping.errors.messages) if mapping.invalid?
 
       # ------------------------------------------------------------------------
       # ansible playbooks validation
