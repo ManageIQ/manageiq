@@ -134,19 +134,12 @@ module MiqServer::RoleManagement
   alias_method :my_roles,            :server_role_names
   alias_method :assigned_role_names, :server_role_names
 
-  def role
-    server_role_names.join(',')
-  end
-  alias_method :my_role,       :role
-  alias_method :assigned_role, :role
-
-  def role=(val)
+  def server_role_names=(roles)
     zone.lock do
-      val = val.to_s.strip.downcase
-      if val.blank?
+      if roles.blank?
         server_roles.delete_all
       else
-        desired = (val == "*" ? ServerRole.all_names : val.split(",").collect { |v| v.strip.downcase }.sort)
+        desired = (roles == "*" ? ServerRole.all_names : roles.map { |role| role.strip.downcase }.sort)
         current = server_role_names
 
         # MiqServer#server_role_names may include database scoped roles, which are managed elsewhere,
@@ -165,6 +158,17 @@ module MiqServer::RoleManagement
       end
     end
 
+    roles
+  end
+
+  def role
+    server_role_names.join(',')
+  end
+  alias_method :my_role,       :role
+  alias_method :assigned_role, :role
+
+  def role=(val)
+    self.server_role_names = val == "*" ? val : val.split(",")
     role
   end
 
