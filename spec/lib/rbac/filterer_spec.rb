@@ -383,9 +383,10 @@ describe Rbac::Filterer do
     context "with ContainerManagers with user roles" do
       let(:owned_ems) { FactoryBot.create(:ems_openshift) }
       let(:other_ems) { FactoryBot.create(:ems_openshift) }
+      let(:ems_without_containers) { FactoryBot.create(:ext_management_system) }
 
       before do
-        filters = ["/belongsto/ExtManagementSystem|#{owned_ems.name}"]
+        filters = ["/belongsto/ExtManagementSystem|#{owned_ems.name}", "/belongsto/ExtManagementSystem|#{ems_without_containers.name}"]
 
         owner_group.entitlement = Entitlement.new
         owner_group.entitlement.set_managed_filters([])
