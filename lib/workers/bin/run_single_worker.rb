@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # Runs a single MiqWorker class in isolation
 #
 #
@@ -36,8 +38,8 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 
-  opts.on("-f", "--force", "Ignore missing server roles and run anyway") do
-    options[:force] = true
+  opts.on("-r=ROLE", "--roles=role1,role2", "Set a list of active roles for the worker (comma separated, no spaces)") do |val|
+    options[:roles] = val.split(",")
   end
 end
 opt_parser.parse!
@@ -64,10 +66,15 @@ options[:ems_id] ||= ENV["EMS_ID"]
 
 require File.expand_path("../../../config/environment", __dir__)
 
+if options[:roles].present?
+  MiqServer.my_server.server_role_names += options[:roles]
+  MiqServer.my_server.activate_roles(MiqServer.my_server.server_role_names)
+end
+
 worker_class = worker_class.constantize
 unless worker_class.has_required_role?
   STDERR.puts "ERR:  Server roles are not sufficient for `#{worker_class}` worker."
-  exit 1 unless options[:force]
+  exit 1
 end
 
 worker_class.before_fork
