@@ -1,0 +1,57 @@
+---
+dims:
+created_on: 2008-08-13 00:33:37.920548 Z
+title: "Guest OS Information for Windows"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: Vm.host-name
+        value: ""
+    - INCLUDES:
+        field: Vm.operating_system-product_name
+        value: Win
+updated_on: 2008-08-13 15:38:01.026806 Z
+order: Ascending
+graph:
+menu_name: "Guest OS Information - Windows"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- operating_system.product_name
+- operating_system.service_pack
+- operating_system.version
+- operating_system.build_number
+- operating_system.product_key
+- operating_system.productid
+timeline:
+id: 94
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - product_name
+    - service_pack
+    - version
+    - build_number
+    - product_key
+    - productid
+db: Vm
+cols:
+- name
+template_type: report
+group:
+sortby:
+- name
+headers:
+- VM Name
+- Product Name
+- Service Pack
+- Version
+- Build Number
+- Product Key
+- Product ID

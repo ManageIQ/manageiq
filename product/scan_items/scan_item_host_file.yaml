@@ -1,0 +1,81 @@
+---
+:item_type: file
+:definition:
+  stats:
+  - target: /bin/ping
+  - target: /bin/su
+  - content: true
+    target: /etc/fstab
+  - target: /etc/group
+  - content: true
+    target: /etc/grub.conf
+  - content: true
+    target: /etc/hosts
+  - target: /etc/krb.conf
+  - target: /etc/krb.realms
+  - target: /etc/krb5.conf
+  - content: true
+    target: /etc/login.defs
+  - content: true
+    target: /etc/logrotate.d/vmkernel
+  - content: true
+    target: /etc/logrotate.d/vmksummary
+  - content: true
+    target: /etc/logrotate.d/vmkwarning
+  - target: /etc/nscd.conf
+  - target: /etc/nsswitch.conf
+  - target: /etc/ntp
+  - content: true
+    target: /etc/ntp.conf
+  - content: true
+    target: /etc/ntp/step-tickers
+  - target: /etc/openldap/ldap.conf
+  - content: true
+    target: /etc/pam.d/su
+  - content: true
+    target: /etc/pam.d/sudo
+  - target: /etc/pam.d/system-auth
+  - target: /etc/passwd
+  - target: /etc/profile
+  - target: /etc/resolv.conf
+  - content: true
+    target: /etc/securetty
+  - content: true
+    target: /etc/shadow
+  - content: true
+    target: /etc/snmp/snmpd.conf
+  - content: true
+    target: /etc/ssh/sshd_config
+  - content: true
+    target: /etc/sudoers
+  - content: true
+    target: /etc/syslog.conf
+  - target: /etc/vmware/*
+  - target: /sbin/pam_timestamp_check
+  - target: /sbin/pwdb_chkpwd
+  - target: /sbin/unix_chkpwd
+  - target: /usr/bin/crontab
+  - target: /usr/bin/lockfile
+  - target: /usr/bin/passwd
+  - target: /usr/bin/sudo
+  - target: /usr/bin/wall
+  - target: /usr/lib/vmware/bin-debug/vmkload_app
+  - target: /usr/lib/vmware/bin-debug/vmware-vmk
+  - target: /usr/lib/vmware/bin/vmkload_app
+  - target: /usr/lib/vmware/bin/vmware-vmx
+  - target: /usr/libexec/openssh/ssh-keysign
+  - target: /usr/sbin/esxcfg-*
+  - target: /usr/sbin/vmware-authd
+  - target: /var/log/messages
+  - target: /var/log/secure
+  - target: /var/log/vmkernel
+  - target: /var/log/vmksummary
+  - target: /var/log/vmksummary.txt
+  - target: /var/log/vmkwarning
+  - target: /var/log/vmware/hostd.log
+  - target: /var/log/vmware/vpx
+  - target: /var/log/vmware/webAccess
+  - target: /var/log/vmware/webAccess/*
+:name: sample_host_file
+:description: Sample Host File Scan
+:mode: Host

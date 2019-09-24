@@ -1,0 +1,40 @@
+---
+dims:
+created_on: 2008-08-11 18:13:25.537656 Z
+title: "Cluster to Hosts Affinity"
+conditions:
+updated_on: 2008-08-13 21:38:19.979641 Z
+order: Ascending
+graph:
+menu_name: "Cluster Hosts Affinity"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- hosts.hostname
+- aggregate_cpu_speed
+- aggregate_memory
+timeline:
+id: 76
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hosts:
+    columns:
+    - hostname
+db: EmsCluster
+cols:
+- name
+- aggregate_cpu_speed
+- aggregate_memory
+template_type: report
+group:
+sortby:
+- hosts.hostname
+headers:
+- Cluster
+- Host Hostname
+- Total CPU Speed
+- Total Memory

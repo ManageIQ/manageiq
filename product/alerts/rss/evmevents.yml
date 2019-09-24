@@ -1,0 +1,37 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "Administrative Events"
+feed_description: "Administrative events"
+feed_link: "/alert/rss?feed=evmevents"
+
+# Item metadata
+item_title: "#{rec.vm_name}"
+
+# item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
+item_description: |-
+    <script>
+        str = rec.message
+        # if str.include?("EVM")
+          "An EVM Administrative event has occured for VM: #{rec.vm_name} was completed
+            on #{rec.created_on}. The task requested was #{rec.message}."
+        # end
+    </script>
+item_link: "/vm/show/#{rec.vm_or_template_id}"
+item_class: EmsEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'GeneralUserEvent' and message like '%EVM%'"
+limit_to_time:
+limit_to_count:
+orderby:
+  :created_on: :desc
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:

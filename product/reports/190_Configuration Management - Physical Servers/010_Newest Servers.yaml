@@ -1,0 +1,54 @@
+---
+title: Recently Discovered Physical Servers
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: PhysicalServer
+cols:
+- hostname
+- health_state
+- power_state
+- product_name
+include: {}
+col_order:
+- hostname
+- health_state
+- power_state
+- product_name
+headers:
+- Hostname
+- Health State
+- Power State
+- Product Name
+conditions:
+order: Ascending
+sortby:
+- hostname
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+menu_name: Recently Discovered Physical Servers

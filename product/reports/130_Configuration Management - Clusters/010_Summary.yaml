@@ -1,0 +1,64 @@
+---
+dims:
+created_on: 2008-08-11 18:01:55.482192 Z
+title: "Clusters Summary"
+conditions:
+updated_on: 2008-08-13 21:34:04.369273 Z
+order: Ascending
+graph:
+menu_name: "Clusters Summary"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- drs_automation_level
+- drs_enabled
+- drs_migration_threshold
+- ha_admit_control
+- ha_enabled
+- ha_max_failures
+- aggregate_cpu_speed
+- aggregate_memory
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+- ext_management_system.name
+timeline:
+id: 75
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  ext_management_system:
+    columns:
+    - name
+db: EmsCluster
+cols:
+- name
+- drs_automation_level
+- drs_enabled
+- drs_migration_threshold
+- ha_admit_control
+- ha_enabled
+- ha_max_failures
+- aggregate_cpu_speed
+- aggregate_memory
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+template_type: report
+group:
+sortby:
+- name
+headers:
+- Name
+- DRS Automation Level
+- DRS Enabled
+- DRS Migration Threshold
+- HA Admit Control
+- HA Enabled
+- HA Max Failures
+- Total CPU Speed
+- Total Memory
+- Total Number of Logical CPUs
+- Total Number of Physical CPUs
+- Provider Name

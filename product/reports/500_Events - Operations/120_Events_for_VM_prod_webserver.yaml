@@ -1,0 +1,42 @@
+---
+where_clause: (vm_name = 'prod_webserver') and (event_type not like '%General%') and (event_type not like '%Complete%') and (username not like '') and (event_type not like '%Snapshot_Task%')
+dims:
+created_on: 2009-03-13 00:59:11.057345 Z
+reserved:
+title: "Summary of all VC Events for VM prod_webserver"
+conditions:
+updated_on: 2009-04-22 22:08:57.932071 Z
+order: Ascending
+graph:
+menu_name: "Events for VM prod_webserver"
+rpt_group: Custom
+priority:
+col_order:
+- username
+- event_type
+- timestamp
+- message
+timeline:
+id: 83
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: EventStream
+cols:
+- username
+- event_type
+- timestamp
+- message
+template_type: report
+group: c
+sortby:
+- username
+- event_type
+headers:
+- Initiated By
+- Event Type
+- Time Stamp
+- Message

@@ -1,0 +1,127 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "VIM Performance Hourly"
+
+# Menu name
+name: "VIM Performance Hourly"
+
+# Main DB table report is based on
+db: MetricRollup
+
+# Columns to fetch from the main table
+cols:
+- timestamp
+- cpu_usagemhz_rate_average
+- derived_cpu_available
+- derived_cpu_reserved
+- cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- v_pct_cpu_wait_delta_summation
+- v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
+- derived_memory_used
+- derived_memory_available
+- derived_memory_reserved
+- disk_usage_rate_average
+- net_usage_rate_average
+- derived_host_count_on
+- derived_host_count_off
+- derived_vm_count_on
+- derived_vm_count_off
+- v_derived_storage_used
+- derived_storage_free
+- assoc_ids
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- cpu_usagemhz_rate_average
+- derived_cpu_available
+- derived_cpu_reserved
+- cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- v_pct_cpu_wait_delta_summation
+- v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
+- derived_memory_used
+- derived_memory_available
+- derived_memory_reserved
+- disk_usage_rate_average
+- net_usage_rate_average
+- derived_host_count_on
+- derived_host_count_off
+- derived_vm_count_on
+- derived_vm_count_off
+- v_derived_storage_used
+- derived_storage_free
+- assoc_ids
+
+# Column titles, in order
+headers:
+- Date/Time
+- Avg Used
+- Available
+- Reserved
+- Avg % Used
+- ! '% Ready'
+- ! '% Idle'
+- ! '% Used'
+- Number of Cores
+- Avg Used
+- Available
+- Reserved
+- Avg I/O
+- Avg I/O
+- Running Hosts
+- Stopped Hosts
+- Running VMs
+- Stopped VMs
+- Used
+- Free
+- Associated Record IDs
+
+# Condition expression for search filtering
+conditions:
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby: timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+template_type: report

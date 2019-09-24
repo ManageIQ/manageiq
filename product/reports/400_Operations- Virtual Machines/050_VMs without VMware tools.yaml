@@ -1,0 +1,52 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-16 21:32:27.952366 Z
+reserved:
+title: "VMs without VMware tools after SmartState Analysis"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: Vm-tools_status
+      value: toolsNotInstalled
+updated_on: 2009-10-19 19:18:42.479033 Z
+order: Descending
+graph:
+generate_rows:
+menu_name: "VMs without VMware tools"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- v_owning_cluster
+- host.name
+- tools_status
+timeline:
+id: 118
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+- tools_status
+template_type: report
+group: c
+sortby:
+- v_owning_cluster
+- name
+headers:
+- Name
+- Parent Cluster
+- Host Name
+- Tools Status

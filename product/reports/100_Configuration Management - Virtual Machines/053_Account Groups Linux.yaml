@@ -1,0 +1,48 @@
+---
+dims:
+created_on: 2008-08-14 21:54:32.366300 Z
+title: "VM Account Groups for Linux"
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: Vm.operating_system-product_name
+      value: Win
+updated_on: 2008-08-14 21:54:32.366300 Z
+order: Ascending
+graph:
+menu_name: "Account Groups - Linux"
+rpt_group: Custom
+priority: 52
+col_order:
+- name
+- groups.name
+- groups.comment
+- groups.acctid
+- groups.accttype
+timeline:
+id: 83
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  groups:
+    columns:
+    - name
+    - comment
+    - acctid
+    - accttype
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- groups.name
+headers:
+- VM Name
+- Group Name
+- Group Comment
+- Group Account ID
+- Group Account Type

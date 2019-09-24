@@ -1,0 +1,83 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-19 21:07:53.178198 Z
+reserved:
+title: "VM Performance - daily averages for last week"
+conditions:
+updated_on: 2009-10-19 21:13:29.542376 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VM Performance - daily over last week"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- host.name
+- timestamp
+- derived_cpu_available
+- cpu_usage_rate_average
+- cpu_usagemhz_rate_average
+- derived_memory_available
+- derived_memory_used
+- mem_usage_absolute_average
+- mem_vmmemctl_absolute_average
+- max_mem_vmmemctl_absolute_average
+- min_mem_vmmemctl_absolute_average
+- mem_vmmemctltarget_absolute_average
+- max_mem_vmmemctltarget_absolute_average
+- min_mem_vmmemctltarget_absolute_average
+timeline:
+id: 127
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 604800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+include:
+  host:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- resource_name
+- timestamp
+- derived_cpu_available
+- cpu_usage_rate_average
+- cpu_usagemhz_rate_average
+- derived_memory_available
+- derived_memory_used
+- mem_usage_absolute_average
+- mem_vmmemctl_absolute_average
+- max_mem_vmmemctl_absolute_average
+- min_mem_vmmemctl_absolute_average
+- mem_vmmemctltarget_absolute_average
+- max_mem_vmmemctltarget_absolute_average
+- min_mem_vmmemctltarget_absolute_average
+template_type: report
+group: c
+sortby:
+- resource_name
+- timestamp
+headers:
+- Asset Name
+- Host Name
+- Activity Sample - Timestamp  (Day/Time)
+- CPU - Total Available - from VM Analysis (MHz)
+- CPU - Usage Rate for Collected Intervals (%)
+- CPU - Usage Rate for Collected Intervals (MHz)
+- Memory - Allocated (MB)
+- Memory - Avg Used for Collected Intervals (MB)
+- Memory - Usage of Total Allocated (%)
+- Memory - Balloon Average
+- Memory - Balloon Max Average
+- Memory - Balloon Min Average
+- Memory - Balloon Target Average
+- Memory - Balloon Target Max Average
+- Memory - Balloon Target Min Average

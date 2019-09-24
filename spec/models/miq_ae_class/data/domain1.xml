@@ -1,0 +1,11 @@
+<MiqAeDatastore version='1.0'>
+  <MiqAeClass name="PROCESS" namespace="SYSTEM">
+    <MiqAeSchema>
+      <MiqAeField name="attr1" aetype="attribute" default_value="fred" display_name="Simple Attribute"/>
+    </MiqAeSchema>
+    <MiqAeInstance name="inst1"/>
+    <MiqAeInstance name="inst2"/>
+    <MiqAeInstance name="inst3"/>
+    <MiqAeInstance name="inst4"/>
+  </MiqAeClass>
+</MiqAeDatastore>

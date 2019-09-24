@@ -1,0 +1,134 @@
+---
+custom_button_set:
+- attributes:
+    name: group1|Vm|
+    description: group1
+    set_type: CustomButtonSet
+    guid: ba4ff235-75eb-4fa4-a9f9-b854d4186c3a
+    read_only:
+    set_data:
+      :button_order:
+      - 2
+      - 3
+      - 10
+      :button_icon: ff ff-class
+      :button_color: "#a341ab"
+      :display: true
+      :applies_to_class: Vm
+      :group_index: 1
+    mode:
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+  children:
+    custom_button:
+    - attributes:
+        guid: f059931f-8703-4bcf-b876-e482d38ce8ea
+        description: button 1
+        applies_to_class: Vm
+        visibility_expression:
+        options:
+          :button_icon: pficon pficon-cpu
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid: admin
+        wait_for_complete:
+        name: button 1
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id:
+        enablement_expression:
+        disabled_text:
+      associations:
+        resource_action:
+        - attributes:
+            action:
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message:
+            ae_attributes:
+              request: test1
+            configuration_template_id:
+            configuration_template_type:
+    - attributes:
+        guid: 3f50d617-851e-451f-95ae-a17fc548cb11
+        description: button 2
+        applies_to_class: Vm
+        visibility_expression:
+        options:
+          :button_icon: pficon pficon-home
+          :button_color: "#c03638"
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: single
+          :submit_how: one
+        userid:
+        wait_for_complete:
+        name: button 2
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id:
+        enablement_expression:
+        disabled_text:
+      associations:
+        resource_action:
+        - attributes:
+            action:
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message:
+            ae_attributes:
+              request: test2
+            configuration_template_id:
+            configuration_template_type:
+    - attributes:
+        guid: d3cd608a-f476-48b7-aa25-a930ec046e00
+        description: multiselect
+        applies_to_class: Vm
+        visibility_expression: !ruby/object:MiqExpression
+          exp:
+            "=":
+              field: Vm-power_state
+              value: 'on'
+          context_type:
+        options:
+          :button_icon: fa fa-users
+          :button_color: "#996633"
+          :button_type: default
+          :display: true
+          :open_url: false
+          :display_for: both
+          :submit_how: all
+        userid: admin
+        wait_for_complete:
+        name: multiselect
+        visibility:
+          :roles:
+          - _ALL_
+        applies_to_id:
+        enablement_expression:
+        disabled_text:
+      associations:
+        resource_action:
+        - attributes:
+            action:
+            resource_type: CustomButton
+            ae_namespace: SYSTEM
+            ae_class: PROCESS
+            ae_instance: Request
+            ae_message:
+            ae_attributes:
+              request: multiselect
+            configuration_template_id:
+            configuration_template_type:

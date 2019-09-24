@@ -1,0 +1,4 @@
+--require spec_helper
+--color
+--order random
+--profile 25

@@ -1,0 +1,12 @@
+# Container real time performance chart layouts
+---
+- :title: Cores Used
+  :type: Line
+  :columns:
+  - v_derived_cpu_total_cores_used
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - derived_memory_available

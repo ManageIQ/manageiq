@@ -1,0 +1,92 @@
+# Storage Daily performance chart layouts
+---
+- :title: Used Space by Type
+  :type: Line
+  :columns:
+  - derived_storage_used_registered
+  - derived_storage_used_unregistered
+  - derived_storage_used_unmanaged
+  :menu:
+  - Chart-VMs-topday:Top VMs on this day
+  - Display-VMs-on:Managed VMs on this Datastore
+  :decimals: 2
+  :units: GB
+
+- :title: Disk Files Space by Type
+  :type: Line
+  :columns:
+  - derived_storage_disk_registered
+  - derived_storage_disk_unregistered
+  - derived_storage_disk_unmanaged
+  :menu:
+  - Chart-VMs-topday:Top VMs on this day
+  - Display-VMs-on:Managed VMs on this Datastore
+  :decimals: 2
+  :units: GB
+
+- :title: Snapshot Files Space by Type
+  :type: Line
+  :columns:
+  - derived_storage_snapshot_registered
+  - derived_storage_snapshot_unregistered
+  - derived_storage_snapshot_unmanaged
+  :menu:
+  - Chart-VMs-topday:Top VMs on this day
+  - Display-VMs-on:Managed VMs on this Datastore
+  :decimals: 2
+  :units: GB
+
+- :title: Memory Files Space by Type
+  :type: Line
+  :columns:
+  - derived_storage_mem_registered
+  - derived_storage_mem_unregistered
+  - derived_storage_mem_unmanaged
+  :menu:
+  - Chart-VMs-topday:Top VMs on this day
+  - Display-VMs-on:Managed VMs on this Datastore
+  :decimals: 2
+  :units: GB
+
+- :title: Number of VMs by Type
+  :type: Line
+  :columns:
+  - derived_storage_vm_count_registered
+  - derived_storage_vm_count_unregistered
+  - derived_storage_vm_count_unmanaged
+
+- :title: Used Disk Space
+  :type: Line
+  :columns:
+  - v_derived_storage_used
+  - derived_storage_total
+  - min_v_derived_storage_used
+  - max_v_derived_storage_used
+  - trend_max_v_derived_storage_used
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Display-VMs-on:Managed VMs on this Datastore
+  :decimals: 2
+  :units: GB
+  :trends:
+  - derived_storage_total:Projected to hit total
+
+- :title: Hosts
+  :type: Area
+  :columns:
+  - derived_host_count_on
+  - derived_host_count_off
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Display-Hosts-on:Hosts that were running
+  - Display-Hosts-off:Hosts that were stopped
+
+- :title: Virtual Machines
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Display-VMs-on:VMs that were running
+  - Display-VMs-off:VMs that were stopped

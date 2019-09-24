@@ -1,0 +1,82 @@
+---
+where_clause:
+generate_cols:
+dims: 1
+created_on: 2009-11-10 21:28:30.163529 Z
+reserved:
+title: "Summary of VM Create and Deletes"
+conditions: !ruby/object:MiqExpression
+  exp:
+    or:
+    - INCLUDES:
+        field: EmsEvent-event_type
+        value: VmCreated
+    - INCLUDES:
+        field: EmsEvent-event_type
+        value: VmRemoved
+updated_on: 2009-11-10 21:28:30.163529 Z
+order: Ascending
+graph:
+  :other: true
+  :type: Pie
+  :count: 10
+generate_rows:
+menu_name: "Summary of VM Create and Deletes"
+rpt_group: Custom
+priority:
+col_order:
+- ext_management_system.name
+- vm_name
+- vm.v_owning_cluster
+- host_name
+- vm.managed.environment
+- vm.managed.location
+- timestamp
+- event_type
+- message
+- username
+timeline:
+id: 188
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  vm:
+    columns:
+    - v_owning_cluster
+    include:
+      managed:
+        columns:
+        - environment
+        - location
+  ext_management_system:
+    columns:
+    - name
+db: EventStream
+cols:
+- vm_name
+- host_name
+- timestamp
+- event_type
+- message
+- username
+template_type: report
+group: c
+sortby:
+- event_type
+- ext_management_system.name
+headers:
+- Provider
+- VM
+- Cluster
+- Host
+- Environment
+- Location
+- Event Timestamp
+- Event Type
+- Message
+- Username

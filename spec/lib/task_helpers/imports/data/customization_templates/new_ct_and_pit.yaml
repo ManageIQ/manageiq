@@ -1,0 +1,13 @@
+---
+:name: Basic root pass template
+:description: This template takes use of rootpassword defined in the UI
+:script: |-
+  #cloud-config
+  chpasswd:
+    list: |
+      root:<%= ManageIQ::Password.decrypt(evm[:root_password]) %>
+    expire: False
+:type: CustomizationTemplateCloudInit
+:pxe_image_type:
+  :name: RHEL-7
+  :provision_type: vm

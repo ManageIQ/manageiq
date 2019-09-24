@@ -1,0 +1,2 @@
+class ConfigurationEnvironment < ConfigurationTag
+end

@@ -1,0 +1,29 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "VMs Relocated using Vmotion"
+feed_description: "VMware Virtual machines relocated using Vmotion"
+feed_link: "/alert/rss?feed=vmotionedvm"
+
+# Item metadata
+item_title: "#{rec.vm_name}"
+
+item_description: "#{rec.vm_name} was migrated using VMotion on #{rec.created_on} from Host: #{rec.host_name} to Host: #{rec.dest_host_name}"
+item_link: "/vm/show/#{rec.vm_or_template_id}"
+item_class: EmsEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'RelocateVM_Task_Complete'"
+limit_to_time:
+limit_to_count:
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:
+orderby:
+  :created_on: :desc

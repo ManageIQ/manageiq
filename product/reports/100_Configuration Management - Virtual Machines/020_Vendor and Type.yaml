@@ -1,0 +1,45 @@
+---
+dims:
+created_on: 2008-08-12 19:24:36.084353 Z
+title: "VM Vendor and Type"
+conditions:
+updated_on: 2008-08-13 22:34:07.490906 Z
+order: Ascending
+graph:
+menu_name: "Vendor and Type"
+rpt_group: Custom
+priority: 231
+col_order:
+- name
+- host.name
+- vendor_display
+- hardware.guest_os
+- last_sync_on
+timeline:
+id: 88
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - guest_os
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- vendor_display
+- last_sync_on
+template_type: report
+group:
+sortby:
+- name
+headers:
+- VM Name
+- Host Name
+- Container
+- Hardware Guest OS
+- Last Smart Analysis

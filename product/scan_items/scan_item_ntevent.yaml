@@ -1,0 +1,28 @@
+---
+:definition:
+  content:
+  - :name: Application
+    :filter:
+      :message:
+      :level: warn
+      :rec_count: 0
+      :source:
+      :num_days: 2
+  - :name: System
+    :filter:
+      :message:
+      :level: warn
+      :rec_count: 0
+      :source:
+      :num_days: 2
+  - :name: Security
+    :filter:
+      :message:
+      :level: warn
+      :rec_count:
+      :source:
+      :num_days: 2
+:description: Sample NT Event Log
+:name: sample_nt_event_log
+:item_type: nteventlog
+:mode: Vm

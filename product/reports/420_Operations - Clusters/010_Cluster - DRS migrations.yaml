@@ -1,0 +1,51 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-19 21:26:43.038162 Z
+reserved:
+title: "Cluster - DRS migrations"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: EmsEvent-event_type
+      value: DrsVmMigratedEvent
+updated_on: 2009-10-19 21:26:43.038162 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Cluster - DRS migrations"
+rpt_group: Custom
+priority:
+col_order:
+- ems_cluster_name
+- vm_name
+- created_on
+- event_type
+timeline:
+id: 129
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include: {}
+
+db: EventStream
+cols:
+- ems_cluster_name
+- vm_name
+- created_on
+- event_type
+template_type: report
+group: c
+sortby:
+- ems_cluster_name
+- vm_name
+headers:
+- Ems Cluster Name
+- Vm Name
+- Date Created
+- Event Type

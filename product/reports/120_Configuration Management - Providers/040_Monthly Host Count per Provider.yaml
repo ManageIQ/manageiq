@@ -1,0 +1,80 @@
+---
+title: Monthly Host Count per Provider
+rpt_group: Custom
+priority: 40
+db: ExtManagementSystemPerformance
+cols:
+- v_month
+- resource_name
+- region_description
+- max_derived_host_count_total
+- max_derived_host_sockets
+include:
+  ext_management_system:
+    columns:
+    - emstype
+col_order:
+- v_month
+- resource_name
+- ext_management_system.emstype
+- region_description
+- max_derived_host_count_total__max
+- max_derived_host_sockets__max
+headers:
+- Month (YYYY/MM)
+- Provider
+- Provider Type
+- Region
+- Daily Host Count (Max)
+- Daily Host Socket Count (Max)
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - not:
+        INCLUDES:
+          field: ExtManagementSystemPerformance.ext_management_system-type
+          value: CloudManager
+    - not:
+        INCLUDES:
+          field: ExtManagementSystemPerformance.ext_management_system-type
+          value: ContainerManager
+order: Ascending
+sortby:
+- v_month
+- resource_name
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options:
+  :interval: daily
+  :calc_avgs_by: time_interval
+  :end_offset: 0
+  :start_offset: 7776000
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+- :general_number_precision_0
+- :general_number_precision_0
+tz: UTC
+time_profile_id: 1
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+  :pivot:
+    :group_cols:
+    - v_month
+    - resource_name
+menu_name: Monthly Host Count per Provider

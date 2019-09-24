@@ -1,0 +1,14 @@
+---
+:definition:
+  content:
+  - :name: hostd
+    :filter:
+      :message:
+      :level: warn
+      :rec_count: 0
+      :source:
+      :num_days: 2
+:description: Sample Host Event Log
+:name: sample_host_event_log
+:item_type: nteventlog
+:mode: Host

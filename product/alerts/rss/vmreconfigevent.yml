@@ -1,0 +1,29 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "Virtual Machine Reconfigure"
+feed_description: "VMware Virtual machines resource reallocation"
+feed_link: "/alert/rss?feed=vmreconfigevent"
+
+# Item metadata
+item_title: "#{rec.vm_name}"
+
+item_description: "A resource for #{rec.vm_name} was reallocated on #{rec.created_on}"
+item_link: "/vm/show/#{rec.vm_or_template_id}"
+item_class: EmsEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'ReconfigVM_Task_Complete'"
+limit_to_time:
+limit_to_count:
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:
+orderby:
+  :created_on: :desc

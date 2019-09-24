@@ -1,0 +1,18 @@
+# Single day percent utilization chart
+---
+:MiqReport:
+- :title: Selected Day Percent Utilization
+  :type: Column
+  :columns:
+  - gen_name
+#  - gen_available_percent # Removed 100% bar - v3.0
+  - gen_reserved_percent
+  - gen_max_used_percent
+  - gen_avg_used_percent
+# Override to show a performance type chart
+  :max_value: 100
+  :value_suffix: ! '%'
+  :value_steps: 5
+  :chart_type: util_ts
+  :allowed_child_tag:
+  - ExtManagementSystem

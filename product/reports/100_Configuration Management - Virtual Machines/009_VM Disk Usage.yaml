@@ -1,0 +1,62 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "VM Disk Usage"
+conditions:
+col_options:
+  derived_vm_used_disk_storage:
+    :grouping:
+    - :max
+    - :min
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VM Disk Usage"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- timestamp
+- derived_vm_allocated_disk_storage
+- derived_vm_used_disk_storage
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 2592000
+  :end_offset: 0
+  :interval: daily
+col_formats:
+-
+- :date
+-
+- :general_number_precision_1
+include: {}
+
+db: VmPerformance
+cols:
+- resource_name
+- timestamp
+- derived_vm_allocated_disk_storage
+- derived_vm_used_disk_storage
+template_type: report
+group: c
+sortby:
+- resource_name
+- timestamp
+rpt_options:
+  :pivot:
+    :group_cols:
+    - resource_name
+    - derived_vm_used_disk_storage
+headers:
+- VM Name
+- Activity Sample - Timestamp  (Day/Time)
+- " Derived Vm Allocated Disk Storage"
+- Derived Vm Used Disk Storage
+display_filter:

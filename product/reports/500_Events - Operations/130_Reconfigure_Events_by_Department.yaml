@@ -1,0 +1,48 @@
+---
+where_clause: event_type = 'ReconfigVM_Task'
+dims:
+created_on: 2009-03-12 23:47:51.098438 Z
+reserved:
+title: "All Reconfigure Events for Department Classified VMs"
+conditions:
+updated_on: 2009-04-22 22:03:18.755484 Z
+order: Descending
+graph:
+menu_name: "Reconfigure Events by Department"
+rpt_group: Custom
+priority:
+col_order:
+- vm.managed.department
+- vm_name
+- timestamp
+- username
+- message
+timeline:
+id: 82
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  vm:
+    include:
+      managed:
+        columns:
+        - department
+db: EventStream
+cols:
+- vm_name
+- timestamp
+- username
+- message
+template_type: report
+group: c
+sortby:
+- vm.managed.department
+- vm_name
+headers:
+- ManageIQ Tag Department
+- VM Name
+- Time Stamp
+- Initiated By
+- Message

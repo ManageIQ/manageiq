@@ -1,0 +1,66 @@
+---
+- :name: Stop Newly Retired Running VM
+  :description: Stop Newly Retired Running VM
+  :towhat: Vm
+  :event: vm_retired
+  :applies_to?: true
+  :active: true
+  :condition:
+    and:
+    - "=":
+        field: Vm-retired
+        value: true
+    - "=":
+        field: Vm-power_state
+        value: 'on'
+  :mode: control
+  :action: vm_stop
+- :name: Prevent Retired VM from Starting
+  :description: Prevent Retired VM from starting
+  :towhat: Vm
+  :event: request_vm_start
+  :applies_to?: true
+  :active: true
+  :condition:
+    "=":
+      field: Vm-retired
+      value: true
+  :mode: control
+  :action: prevent
+- :name: Prevent Retired Instance from Starting
+  :description: Prevent Retired Instance from starting
+  :towhat: Vm
+  :event: vm_resume
+  :applies_to?: true
+  :active: true
+  :condition:
+    "=":
+      field: Vm-retired
+      value: true
+  :mode: control
+  :action: vm_suspend
+- :name: Prevent Transformed VM from Starting
+  :description: Prevent Transformed VM from starting
+  :towhat: Vm
+  :event: request_vm_start
+  :applies_to?: true
+  :active: true
+  :condition:
+    "CONTAINS":
+      tag: Vm.managed-transformation_status
+      value: migrated
+  :modifier: deny
+  :mode: control
+  :action: prevent
+- :name: Stop Retired VM
+  :description: Stop Retired VM
+  :towhat: Vm
+  :event: vm_start
+  :applies_to?: true
+  :active: true
+  :condition:
+    "=":
+      field: Vm-retired
+      value: true
+  :mode: control
+  :action: vm_stop

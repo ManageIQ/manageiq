@@ -1,0 +1,6 @@
+#!/bin/bash
+ESLINT="node_modules/.bin/eslint"
+
+cd `dirname $0`/..
+
+$ESLINT "$@" app/assets/javascripts/ spec/javascripts/

@@ -1,0 +1,164 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Provisioning Activity - by Approver"
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    IS NOT EMPTY:
+      field: Vm.miq_provision_template-name
+col_options: {}
+
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Provisioning Activity - by Approver"
+rpt_group: Custom
+priority:
+col_order:
+- miq_provision.miq_request.v_approved_by
+- miq_provision.miq_request.v_approved_by_email
+- miq_provision.miq_request.fulfilled_on
+- name
+- v_annotation
+- miq_provision_template.name
+- evm_owner.name
+- evm_owner.email
+- miq_provision.miq_request.requester_name
+- miq_provision.miq_request.created_on
+- miq_provision.description
+- miq_provision.message
+- retires_on
+- managed.environment
+- managed.location
+- ext_management_system.name
+- ext_management_system.hostname
+- v_owning_datacenter
+- ems_cluster.name
+- host.name
+- storage.name
+- operating_system.product_name
+- mem_cpu
+- cpu_total_cores
+- used_disk_storage
+timeline:
+file_mtime:
+tz:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :use_sql_view: false
+
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+include:
+  managed:
+    columns:
+    - environment
+    - location
+  ext_management_system:
+    columns:
+    - name
+    - hostname
+  operating_system:
+    columns:
+    - product_name
+  miq_provision_template:
+    columns:
+    - name
+  miq_provision:
+    columns:
+    - description
+    - message
+    include:
+      miq_request:
+        columns:
+        - v_approved_by
+        - v_approved_by_email
+        - fulfilled_on
+        - requester_name
+        - created_on
+  evm_owner:
+    columns:
+    - name
+    - email
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+  ems_cluster:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_annotation
+- retires_on
+- v_owning_datacenter
+- mem_cpu
+- cpu_total_cores
+- used_disk_storage
+template_type: report
+group: c
+sortby:
+- miq_provision.miq_request.v_approved_by
+- name
+rpt_options: {}
+
+headers:
+- Approved By
+- Approved By Email
+- Approved Date
+- VM Name
+- VM Notes
+- Source Template
+- Owner Name
+- Owner Email
+- Requester Name
+- Request Date
+- Provision Description
+- Provision Message
+- Retires On
+- Environment
+- Location
+- Provider
+- Provider Hostname
+- Datacenter
+- Cluster
+- Host
+- Datastore
+- Guest OS
+- Allocated RAM (MB)
+- Allocated vCPUs
+- Total Used Disk Space
+display_filter:

@@ -1,0 +1,57 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-08-18 22:59:06.364093 Z
+reserved:
+title: "ESX Service Console Packages"
+conditions:
+updated_on: 2009-08-18 23:02:36.021319 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Host - ESX Service Console Packages"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- guest_applications.typename
+- guest_applications.name
+- guest_applications.version
+- guest_applications.description
+- guest_applications.arch
+- guest_applications.v_unique_name
+timeline:
+id: 104
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  guest_applications:
+    columns:
+    - typename
+    - name
+    - version
+    - description
+    - arch
+    - v_unique_name
+db: Host
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- guest_applications.typename
+headers:
+- Name
+- Guest Application Type Name
+- Guest Application Name
+- Guest Application Version
+- Guest Application Description
+- Guest Application Arch
+- Guest Application V Unique Name

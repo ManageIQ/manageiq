@@ -1,0 +1,49 @@
+---
+dims:
+created_on: 2008-08-11 17:02:21.413658 Z
+title: "Hosts - Installed Patches"
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        IS NOT EMPTY:
+          field: Host.patches-name
+      checkall:
+        IS NOT EMPTY:
+          field: Host.patches-vendor
+updated_on: 2008-08-12 21:57:04.320822 Z
+order: Ascending
+graph:
+menu_name: "Host Patches"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- patches.name
+- patches.description
+- patches.v_install_date
+timeline:
+id: 72
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  patches:
+    columns:
+    - name
+    - description
+    - v_install_date
+db: Host
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- patches.name
+headers:
+- Name
+- Patch Name
+- Patch Description
+- Patch Installed On

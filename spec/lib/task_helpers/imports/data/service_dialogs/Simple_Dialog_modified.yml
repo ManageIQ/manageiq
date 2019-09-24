@@ -1,0 +1,97 @@
+---
+- description: Simple Dialog to test export and import
+  buttons: submit,cancel
+  label: Simple Dialog
+  dialog_tabs:
+  - description:
+    display:
+    label: Modified New tab
+    display_method:
+    display_method_options:
+    position: 0
+    dialog_groups:
+    - description:
+      display:
+      label: New section
+      display_method:
+      display_method_options:
+      position: 0
+      dialog_fields:
+      - name: text_box_1
+        description: ''
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: false
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values:
+        values_method:
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Text Box
+        position: 0
+        validator_type:
+        validator_rule:
+        reconfigurable: false
+        dynamic: false
+        show_refresh_button: false
+        load_values_on_init: false
+        read_only: false
+        auto_refresh: false
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+        dialog_field_responders: []
+      - name: check_box_1
+        description: ''
+        data_type:
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values:
+        values_method:
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Check Box
+        position: 1
+        validator_type:
+        validator_rule:
+        reconfigurable: false
+        dynamic: false
+        show_refresh_button: false
+        load_values_on_init: false
+        read_only: false
+        auto_refresh: false
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldCheckBox
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+        dialog_field_responders: []

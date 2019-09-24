@@ -1,0 +1,250 @@
+---
+:name: vm_migrate_dialogs
+:description: Sample VM Migrate Dialog
+:dialog_type: VmMigrateWorkflow
+:content:
+  :buttons:
+  - :submit
+  - :cancel
+  :dialogs:
+    :requester:
+      :description: Request
+      :fields:
+        :owner_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_country:
+          :description: Country/Region
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_phone_mobile:
+          :description: Mobile
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_title:
+          :description: Title
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_first_name:
+          :description: First Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager:
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_address:
+          :description: Address
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_company:
+          :description: Company
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_last_name:
+          :description: Last Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager_mail:
+          :description: E-Mail
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_city:
+          :description: City
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_department:
+          :description: Department
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_load_ldap:
+          :pressed:
+            :method: :retrieve_ldap
+          :description: Look Up LDAP Email
+          :required: false
+          :display: :show
+          :data_type: :button
+        :owner_manager_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_state:
+          :description: State
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_office:
+          :description: Office
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_zip:
+          :description: Zip code
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_email:
+          :description: E-Mail
+          :required_method: :validate_regex
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :request_notes:
+          :description: Notes
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+      :field_order:
+    :environment:
+      :description: Environment
+      :fields:
+        :placement_cluster_name:
+          :values_from:
+            :method: :allowed_clusters
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :cluster_filter:
+          :values_from:
+            :options:
+              :category: :EmsCluster
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :host_filter:
+          :values_from:
+            :options:
+              :category: :Host
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :ds_filter:
+          :values_from:
+            :options:
+              :category: :Storage
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_host_name:
+          :values_from:
+            :method: :allowed_hosts
+          :auto_select_single: false
+          :description: Name
+          :required_method: :validate_placement
+          :required: false
+          :display: :edit
+          :data_type: :integer
+          :required_description: Host Name
+        :placement_ds_name:
+          :values_from:
+            :method: :allowed_storages
+          :auto_select_single: false
+          :description: Name
+          :required_method: :validate_placement
+          :required: false
+          :display: :edit
+          :data_type: :integer
+          :required_description: Datastore Name
+        :rp_filter:
+          :values_from:
+            :options:
+              :category: :ResourcePool
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_rp_name:
+          :values_from:
+            :method: :allowed_respools
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_dc_name:
+          :values_from:
+            :method: :allowed_datacenters
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_folder_name:
+          :values_from:
+            :method: :allowed_folders
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+      :display: :show
+    :schedule:
+      :description: Schedule
+      :fields:
+        :schedule_type:
+          :values:
+            schedule: Schedule
+            immediately: Immediately on Approval
+          :description: When to Provision
+          :required: false
+          :display: :edit
+          :default: immediately
+          :data_type: :string
+        :schedule_time:
+          :values_from:
+            :options:
+              :offset: 1.day
+            :method: :default_schedule_time
+          :description: Provision on
+          :required: false
+          :display: :edit
+          :data_type: :time
+      :display: :show
+    :hardware:
+      :description: Hardware
+      :fields:
+        :disk_format:
+          :values:
+            thick: Thick
+            thin: Thin
+            unchanged: Default
+          :description: Disk Format
+          :required: false
+          :display: :edit
+          :default: unchanged
+          :data_type: :string
+      :display: :hide
+  :dialog_order:
+  - :requester
+  - :environment
+  - :hardware
+  - :schedule

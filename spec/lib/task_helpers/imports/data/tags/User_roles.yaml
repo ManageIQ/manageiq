@@ -1,0 +1,84 @@
+---
+- description: User roles
+  icon:
+  read_only: false
+  syntax: string
+  single_value: true
+  example_text:
+  parent_id: 0
+  show: true
+  default: true
+  perf_by_tag:
+  name: role
+  entries:
+  - description: Administrator
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: administrator
+  - description: Super Administrator
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: super_administrator
+  - description: Helpdesk / Support
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: support
+  - description: Auditor
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: auditor
+  - description: Approver
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: approver
+  - description: User
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: user
+  - description: Operator
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: operator
+  ns: "/managed/user"

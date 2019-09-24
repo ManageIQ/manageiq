@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+require_relative '../lib/manageiq/environment'
+
+if ARGV.any?
+  puts <<-EOS
+Usage: bin/setup
+
+Environment Variable Options:
+    SKIP_DATABASE_SETUP  Skip the creation, migration, and seeding of the
+                         database.
+    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
+                         true in production mode since the tasks do not exist.
+EOS
+  exit 1
+end
+
+Dir.chdir(ManageIQ::Environment::APP_ROOT) do
+  ManageIQ::Environment.ensure_config_files
+
+  puts '== Installing dependencies =='
+  ManageIQ::Environment.install_bundler
+  ManageIQ::Environment.bundle_update
+
+  ManageIQ::Environment.while_updating_ui do
+    unless ENV["SKIP_DATABASE_SETUP"]
+      ManageIQ::Environment.create_database
+      ManageIQ::Environment.migrate_database
+      ManageIQ::Environment.seed_database
+    end
+
+    ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
+  end
+
+  ManageIQ::Environment.clear_logs_and_temp
+end

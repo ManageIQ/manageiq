@@ -1,0 +1,97 @@
+skip_frontmatter: false
+
+linters:
+  AltText:
+    enabled: false
+
+  ClassAttributeWithStaticValue:
+    enabled: true
+    severity: warning
+
+  ClassesBeforeIds:
+    enabled: false
+
+  ConsecutiveComments:
+    enabled: false
+
+  ConsecutiveSilentScripts:
+    enabled: false
+
+  EmptyScript:
+    enabled: true
+    severity: warning
+
+  HtmlAttributes:
+    enabled: true
+    severity: warning
+
+  ImplicitDiv:
+    enabled: true
+    severity: warning
+
+  LeadingCommentSpace:
+    enabled: true
+    severity: warning
+
+  LineLength:
+    enabled: true
+    max: 160
+    severity: warning
+
+  MultilinePipe:
+    enabled: false
+
+  MultilineScript:
+    enabled: false
+
+  ObjectReferenceAttributes:
+    enabled: true
+    severity: warning
+
+  RuboCop:
+    enabled: true
+    ignored_cops:
+    - Lint/BlockAlignment
+    - Lint/EndAlignment
+    - Lint/Void
+    - Metrics/LineLength
+    - Style/AlignParameters
+    - Style/BlockNesting
+    - Style/ExtraSpacing
+    - Style/FileName
+    - Style/FinalNewline
+    - Style/IfUnlessModifier
+    - Style/IndentationWidth
+    - Style/Next
+    - Style/TrailingBlankLines
+    - Style/TrailingWhitespace
+    - Style/WhileUntilModifier
+    - Style/SpaceAroundOperators
+
+  RubyComments:
+    enabled: true
+    severity: warning
+
+  SpaceBeforeScript:
+    enabled: true
+    severity: warning
+
+  SpaceInsideHashAttributes:
+    enabled: true
+    style: no_space
+    severity: warning
+
+  TagName:
+    enabled: true
+    severity: warning
+
+  TrailingWhitespace:
+    enabled: false
+
+  UnnecessaryInterpolation:
+    enabled: true
+    severity: warning
+
+  UnnecessaryStringOutput:
+    enabled: true
+    severity: warning

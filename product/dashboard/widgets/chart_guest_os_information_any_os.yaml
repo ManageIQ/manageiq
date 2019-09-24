@@ -1,0 +1,18 @@
+description: chart_guest_os_information_any_os
+title: Guest OS Information
+content_type: chart
+options:
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Guest OS Information - any OS
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

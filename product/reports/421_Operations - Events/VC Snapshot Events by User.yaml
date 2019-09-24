@@ -1,0 +1,61 @@
+---
+where_clause:
+generate_cols:
+dims: 1
+created_on: 2009-11-12 22:44:49.922627 Z
+reserved:
+title: "Summary of VC Snapshot Events by User"
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: EmsEvent-event_type
+      value: CreateSnapshot_Task
+updated_on: 2009-11-12 22:51:43.435616 Z
+order: Ascending
+graph:
+  :other: true
+  :type: Pie
+  :count: 10
+generate_rows:
+menu_name: "VC Snapshot Events by User"
+rpt_group: Custom
+priority:
+col_order:
+- username
+- vm_name
+- timestamp
+- vm.v_total_snapshots
+- message
+- event_type
+timeline:
+id: 189
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  vm:
+    columns:
+    - v_total_snapshots
+db: EventStream
+cols:
+- username
+- vm_name
+- timestamp
+- message
+- event_type
+template_type: report
+group: c
+sortby:
+- username
+- timestamp
+headers:
+- Username
+- VM
+- Event Time Stamp
+- VM Total Snapshots
+- Event Message
+- Event Type

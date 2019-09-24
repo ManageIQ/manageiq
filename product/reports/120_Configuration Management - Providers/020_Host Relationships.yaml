@@ -1,0 +1,47 @@
+---
+dims:
+created_on: 2008-08-11 19:24:27.567247 Z
+title: "Providers Hosts Relationships"
+conditions:
+updated_on: 2008-08-14 00:55:42.790170 Z
+order: Ascending
+graph:
+menu_name: "Providers Hosts Relationships"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- ipaddress
+- hostname
+- hosts.name
+- hosts.hostname
+- hosts.ipaddress
+timeline:
+id: 80
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hosts:
+    columns:
+    - name
+    - hostname
+    - ipaddress
+db: ExtManagementSystem
+cols:
+- name
+- ipaddress
+- hostname
+template_type: report
+group: c
+sortby:
+- name
+- hosts.name
+headers:
+- EMS Name
+- EMS IP Address
+- EMS Hostname
+- Host Name
+- Host Hostname
+- Host IP Address

@@ -1,0 +1,1491 @@
+---
+- :description: Location
+  :entries:
+  - :description: New York
+    :read_only: "0"
+    :syntax: string
+    :name: ny
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Chicago
+    :read_only: "0"
+    :syntax: string
+    :name: chicago
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: London
+    :read_only: "0"
+    :syntax: string
+    :name: london
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Paris
+    :read_only: "0"
+    :syntax: string
+    :name: paris
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: location
+  :example_text: The geographic location of the resource, such as New York, Chicago, or London.
+  :default: true
+  :single_value: "1"
+- :description: Workload
+  :entries:
+  - :description: Desktop
+    :read_only: "0"
+    :syntax: string
+    :name: desktop
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Active Directory Server
+    :read_only: "0"
+    :syntax: string
+    :name: active_directory
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Application Servers
+    :read_only: "0"
+    :syntax: string
+    :name: application_servers
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Database
+    :read_only: "0"
+    :syntax: string
+    :name: database
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: DHCP Server
+    :read_only: "0"
+    :syntax: string
+    :name: dhcp
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: EVM Appliance
+    :read_only: "0"
+    :syntax: string
+    :name: evm_appliance
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Virtual Infrastructure Management
+    :read_only: "0"
+    :syntax: string
+    :name: infrastructure
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Messaging
+    :read_only: "0"
+    :syntax: string
+    :name: messaging
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Security
+    :read_only: "0"
+    :syntax: string
+    :name: security
+    :example_text:
+    :default: true
+    :single_value: "0"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: function
+  :example_text: The workloads a resource provides, such as Web Server, Database, or Firewall.
+  :default: true
+  :single_value: "0"
+- :description: Owner
+  :entries:
+  - :description: Production Linux Team
+    :read_only: "0"
+    :syntax: string
+    :name: prod_linux
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Production Operations Team
+    :read_only: "0"
+    :syntax: string
+    :name: prod_ops
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Windows 2008 Test Team
+    :read_only: "0"
+    :syntax: string
+    :name: win2008_test
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: owner
+  :example_text: The individual or group that owns the resource.
+  :default: true
+  :single_value: "1"
+- :description: Environment
+  :entries:
+  - :description: Development
+    :read_only: "0"
+    :syntax: string
+    :name: dev
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Production
+    :read_only: "0"
+    :syntax: string
+    :name: prod
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Quarantine
+    :read_only: "0"
+    :syntax: string
+    :name: quar
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Test
+    :read_only: "0"
+    :syntax: string
+    :name: test
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Quality Assurance
+    :read_only: "0"
+    :syntax: string
+    :name: qa
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: environment
+  :example_text: The resource environment, such as Development, QA, Test, or Production
+  :default: true
+  :single_value: "1"
+- :description: User roles
+  :entries:
+  - :description: Administrator
+    :read_only: "0"
+    :syntax: string
+    :name: administrator
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Super Administrator
+    :read_only: "0"
+    :syntax: string
+    :name: super_administrator
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Helpdesk / Support
+    :read_only: "0"
+    :syntax: string
+    :name: support
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Auditor
+    :read_only: "0"
+    :syntax: string
+    :name: auditor
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Approver
+    :read_only: "0"
+    :syntax: string
+    :name: approver
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: User
+    :read_only: "0"
+    :syntax: string
+    :name: user
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Operator
+    :read_only: "0"
+    :syntax: string
+    :name: operator
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: role
+  :example_text:
+  :default: true
+  :single_value: "1"
+  :ns: /managed/user
+- :description: Service Level
+  :entries:
+  - :description: Silver
+    :read_only: "0"
+    :syntax: string
+    :name: silver
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Gold
+    :read_only: "0"
+    :syntax: string
+    :name: gold
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Platinum
+    :read_only: "0"
+    :syntax: string
+    :name: platinum
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: service_level
+  :example_text: The level of service associated with this resource.
+  :default: true
+  :single_value: "1"
+- :description: Customer
+  :entries: []
+
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: customer
+  :example_text: The name of the customer associated with this resource.
+  :default: true
+  :single_value: t
+- :description: Line of Business
+  :entries: []
+
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: lob
+  :example_text: The Line of Business the resource is assigned to, such as Retail, Trading, or Manufacturing.
+  :default: true
+  :single_value: "0"
+- :description: Department
+  :entries:
+  - :description: Accounting
+    :read_only: "0"
+    :syntax: string
+    :name: accounting
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Automotive
+    :read_only: "0"
+    :syntax: string
+    :name: automotive
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Communication
+    :read_only: "0"
+    :syntax: string
+    :name: communication
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Defense Systems
+    :read_only: "0"
+    :syntax: string
+    :name: defense
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Engineering
+    :read_only: "0"
+    :syntax: string
+    :name: engineering
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Financial Services
+    :read_only: "0"
+    :syntax: string
+    :name: finance
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Human Resources
+    :read_only: "0"
+    :syntax: string
+    :name: hr
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Presales
+    :read_only: "0"
+    :syntax: string
+    :name: presales
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Retail Operations
+    :read_only: "0"
+    :syntax: string
+    :name: retail
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Support
+    :read_only: "0"
+    :syntax: string
+    :name: support
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Trading Floor
+    :read_only: "0"
+    :syntax: string
+    :name: trading
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Healthcare
+    :read_only: "0"
+    :syntax: string
+    :name: healthcare
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Marketing
+    :read_only: "0"
+    :syntax: string
+    :name: marketing
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Purchasing
+    :read_only: "0"
+    :syntax: string
+    :name: purchasing
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: VI Operations
+    :read_only: "0"
+    :syntax: string
+    :name: vi_operations
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Retail Operations Test
+    :read_only: "0"
+    :syntax: string
+    :name: retail_test
+    :example_text:
+    :default: true
+    :single_value: "0"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: department
+  :example_text: The department the resource is assigned to, such as HR, Accounting, or Sales.
+  :default: true
+  :single_value: "0"
+- :description: Cost Center
+  :entries:
+  - :description: Cost Center 001
+    :read_only: "0"
+    :syntax: string
+    :name: "001"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Cost Center 002
+    :read_only: "0"
+    :syntax: string
+    :name: "002"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: cc
+  :example_text: Cost Center
+  :default: true
+  :single_value: "1"
+- :description: Network Location
+  :entries:
+  - :description: DMZ
+    :read_only: "0"
+    :syntax: string
+    :name: "dmz"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Internal
+    :read_only: "0"
+    :syntax: string
+    :name: "internal"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Cloud
+    :read_only: "0"
+    :syntax: string
+    :name: "cloud"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: network_location
+  :example_text: The network location the resource is to be used, such as DMZ, Internal network or Cloud
+  :default: true
+  :single_value: "1"
+- :description: Exclusions
+  :entries:
+  - :description: Do not Analyze
+    :read_only: "0"
+    :syntax: string
+    :name: do_not_analyze
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: Do not Clone
+    :read_only: "0"
+    :syntax: string
+    :name: do_not_clone
+    :example_text:
+    :default: true
+    :single_value: "0"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: exclusions
+  :example_text: Operations that the resource may be excluded from, such as Analysis or Cloning.
+  :default: true
+  :single_value: "0"
+- :description: Provisioning Scope
+  :entries:
+  - :description: All
+    :read_only: "0"
+    :syntax: string
+    :name: all
+    :example_text:
+    :default: true
+    :single_value: "0"
+  - :description: EvmGroup-user_self_service
+    :read_only: "0"
+    :syntax: string
+    :name: evmgroup_user_self_service
+    :example_text:
+    :default: true
+    :single_value: "0"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: prov_scope
+  :example_text: Provisioning Scope
+  :default: true
+  :single_value: "0"
+- :description: EVM Operations
+  :entries:
+  - :description: Analysis Failed
+    :read_only: "0"
+    :syntax: string
+    :name: analysis_failed
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Analysis Required
+    :read_only: "0"
+    :syntax: string
+    :name: analysis_required
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Analysis Successful
+    :read_only: "0"
+    :syntax: string
+    :name: analysis_success
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: operations
+  :example_text: Operations
+  :default: true
+  :single_value: "1"
+- :description: Quota - Max CPUs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_cpu
+  :example_text: Maximum number of CPUs allowed by Quota
+  :default: true
+  :single_value: "1"
+- :description: Auto Approve - Max CPU
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: prov_max_cpu
+  :example_text: Maximum number of CPUs allowed by Auto Approval
+  :default: true
+  :single_value: "1"
+- :description: Auto Approve - Max VM
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: prov_max_vm
+  :example_text: Maximum number of VMs allowed by Auto Approval
+  :default: true
+  :single_value: "1"
+- :description: Quota - Max  Memory
+  :entries:
+  - :description: 1GB
+    :read_only: "0"
+    :syntax: string
+    :name: "1024"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 2GB
+    :read_only: "0"
+    :syntax: string
+    :name: "2048"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 4GB
+    :read_only: "0"
+    :syntax: string
+    :name: "4096"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 8GB
+    :read_only: "0"
+    :syntax: string
+    :name: "8192"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10240"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20480"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40960"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 80GB
+    :read_only: "0"
+    :syntax: string
+    :name: "81920"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_memory
+  :example_text: Maximum Memory allowed by Quota (GB)
+  :default: true
+  :single_value: "1"
+- :description: Auto Approve - Max Memory
+  :entries:
+  - :description: 1GB
+    :read_only: "0"
+    :syntax: string
+    :name: "1024"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 2GB
+    :read_only: "0"
+    :syntax: string
+    :name: "2048"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 4GB
+    :read_only: "0"
+    :syntax: string
+    :name: "4096"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 8GB
+    :read_only: "0"
+    :syntax: string
+    :name: "8192"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: prov_max_memory
+  :example_text: Maximum Memory allowed by Auto Approval (GB)
+  :default: true
+  :single_value: "1"
+- :description: Quota - Max  Storage
+  :entries:
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 100GB
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 200GB
+    :read_only: "0"
+    :syntax: string
+    :name: "200"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 400GB
+    :read_only: "0"
+    :syntax: string
+    :name: "400"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 1TB
+    :read_only: "0"
+    :syntax: string
+    :name: "1000"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_storage
+  :example_text: Maximum Storage allowed by Quota (GB)
+  :default: true
+  :single_value: "1"
+- :description: Auto Approve - Max Retirement Days
+  :entries:
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "60"
+    :read_only: "0"
+    :syntax: string
+    :name: "60"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "90"
+    :read_only: "0"
+    :syntax: string
+    :name: "90"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "180"
+    :read_only: "0"
+    :syntax: string
+    :name: "180"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: prov_max_retirement_days
+  :example_text: Maximum Days for Retirement allowed by Auto Approval
+  :default: true
+  :single_value: "1"
+- :description: LifeCycle
+  :entries:
+  - :description: Fully retire VM and remove from Provider
+    :read_only: "0"
+    :syntax: string
+    :name: retire_full
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: lifecycle
+  :example_text: LifeCycle Options
+  :default: true
+  :single_value: "1"
+- :description: Migration Group
+  :entries:
+  - :description: Group 1
+    :read_only: "0"
+    :syntax: string
+    :name: group1
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Group 2
+    :read_only: "0"
+    :syntax: string
+    :name: group2
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Group 3
+    :read_only: "0"
+    :syntax: string
+    :name: group3
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: migration_group
+  :example_text: Group of VMs prepared for migration.
+  :default: true
+  :single_value: "1"
+- :description: Network Mapping
+  :entries:
+  - :description: oVirt Management Network
+    :read_only: "0"
+    :syntax: string
+    :name: ovirtmgmt
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: network_mapping
+  :example_text: Mapping between source network(s) and a destination network for migration.
+  :default: true
+  :single_value: "1"
+- :description: Storage Mapping
+  :entries:
+  - :description: Storage 1
+    :read_only: "0"
+    :syntax: string
+    :name: storage1
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Storage 2
+    :read_only: "0"
+    :syntax: string
+    :name: storage2
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: Storage 3
+    :read_only: "0"
+    :syntax: string
+    :name: storage3
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: storage_mapping
+  :example_text: Mapping between source storage(s) and a destination storage for migration.
+  :default: true
+  :single_value: "1"
+- :description: V2V - Transformation Host
+  :entries:
+  - :description: True
+    :read_only: "0"
+    :syntax: string
+    :name: "true"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: False
+    :read_only: "0"
+    :syntax: string
+    :name: "false"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: v2v_transformation_host
+  :example_text: Transformation Host role enabled for V2V.
+  :default: true
+  :single_value: "1"
+- :description: V2V - Transformation Method
+  :entries:
+  - :description: VDDK
+    :read_only: "0"
+    :syntax: string
+    :name: vddk
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: SSH
+    :read_only: "0"
+    :syntax: string
+    :name: ssh
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: v2v_transformation_method
+  :example_text: Transformation methods supported for V2V.
+  :default: true
+  :single_value: "0"
+- :description: Transformation Status
+  :entries:
+  - :description: Migrated
+    :read_only: "0"
+    :syntax: string
+    :name: migrated
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: transformation_status
+  :example_text: VM has been migrated.
+  :default: true
+  :single_value: "1"
+- :description: Quota - Max VMs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "6"
+    :read_only: "0"
+    :syntax: string
+    :name: "6"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "7"
+    :read_only: "0"
+    :syntax: string
+    :name: "7"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "8"
+    :read_only: "0"
+    :syntax: string
+    :name: "8"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "9"
+    :read_only: "0"
+    :syntax: string
+    :name: "9"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "100"
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_vms
+  :example_text: Maximum number of VMs allowed by Quota
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn CPUs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_cpu
+  :example_text: Warning number of CPUs allowed by Quota
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn  Memory
+  :entries:
+  - :description: 1GB
+    :read_only: "0"
+    :syntax: string
+    :name: "1024"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 2GB
+    :read_only: "0"
+    :syntax: string
+    :name: "2048"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 4GB
+    :read_only: "0"
+    :syntax: string
+    :name: "4096"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 8GB
+    :read_only: "0"
+    :syntax: string
+    :name: "8192"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10240"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20480"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40960"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 80GB
+    :read_only: "0"
+    :syntax: string
+    :name: "81920"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_memory
+  :example_text: Warning Memory allowed by Quota (GB)
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn  Storage
+  :entries:
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 100GB
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 200GB
+    :read_only: "0"
+    :syntax: string
+    :name: "200"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 400GB
+    :read_only: "0"
+    :syntax: string
+    :name: "400"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 1TB
+    :read_only: "0"
+    :syntax: string
+    :name: "1000"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_storage
+  :example_text: Warning Storage allowed by Quota (GB)
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn VMs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "6"
+    :read_only: "0"
+    :syntax: string
+    :name: "6"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "7"
+    :read_only: "0"
+    :syntax: string
+    :name: "7"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "8"
+    :read_only: "0"
+    :syntax: string
+    :name: "8"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "9"
+    :read_only: "0"
+    :syntax: string
+    :name: "9"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "100"
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_vms
+  :example_text: Warning number of VMs allowed by Quota
+  :default: true
+  :single_value: "1"

@@ -1,0 +1,45 @@
+---
+dims:
+created_on: 2008-08-13 13:18:32.278343 Z
+title: "Datastores Summary"
+conditions:
+updated_on: 2008-08-13 21:31:20.027387 Z
+order: Ascending
+graph:
+menu_name: "Datastores Summary"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- v_total_hosts
+- v_total_vms
+- total_space
+- free_space
+- store_type
+timeline:
+id: 97
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: Storage
+cols:
+- name
+- v_total_hosts
+- v_total_vms
+- total_space
+- free_space
+- store_type
+template_type: report
+group:
+sortby:
+- name
+headers:
+- Datastore Name
+- Number of Hosts
+- Number of  VMs
+- Total Space
+- Free Space
+- Type

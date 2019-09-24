@@ -1,0 +1,36 @@
+dist: xenial
+language: ruby
+rvm:
+- 2.4.6
+- 2.5.3
+sudo: false
+cache:
+  bundler: true
+env:
+  global:
+  - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
+  - RUBY_GC_HEAP_INIT_SLOTS=600000
+  - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
+  - PARALLEL_TEST_PROCESSORS=2
+  matrix:
+  - TEST_SUITE=vmdb PARALLEL=true
+  - TEST_SUITE=brakeman
+matrix:
+  fast_finish: true
+addons:
+  postgresql: '10'
+before_install:
+- source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
+before_script:
+- bundle exec rake test:$TEST_SUITE:setup
+script:
+- bundle exec rake test:$TEST_SUITE
+after_failure:
+- source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/7af45001fe6b7a4039f2
+    on_success: change
+    on_failure: always
+    on_start: never

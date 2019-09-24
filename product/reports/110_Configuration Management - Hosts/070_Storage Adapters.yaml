@@ -1,0 +1,64 @@
+---
+dims:
+created_on: 2008-08-11 16:56:03.416809 Z
+title: "Hosts - Storage Adapters Information"
+conditions:
+updated_on: 2008-08-11 18:35:06.834637 Z
+order: Ascending
+graph:
+menu_name: "Host Storage Adapters"
+rpt_group: Custom
+priority: 10
+col_order:
+- name
+- ipaddress
+- hardware.storage_adapters.model
+- hardware.storage_adapters.controller_type
+- hardware.storage_adapters.device_name
+- hardware.storage_adapters.device_type
+- hardware.storage_adapters.location
+- hardware.storage_adapters.iscsi_alias
+- hardware.storage_adapters.iscsi_name
+- hardware.storage_adapters.present
+- hardware.storage_adapters.start_connected
+timeline:
+id: 71
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    include:
+      storage_adapters:
+        columns:
+        - model
+        - controller_type
+        - device_name
+        - device_type
+        - location
+        - iscsi_alias
+        - iscsi_name
+        - present
+        - start_connected
+db: Host
+cols:
+- name
+- ipaddress
+template_type: report
+group: c
+sortby:
+- name
+- hardware.storage_adapters.device_name
+headers:
+- Host Name
+- IP Address
+- Storage Adapter Model
+- Storage Adapter Controller Type
+- Storage Adapter Device Name
+- Storage Adapter Device Type
+- Storage Adapter Location
+- Storage Adapter Iscsi Alias
+- Storage Adapter Iscsi Name
+- Storage Adapter Present
+- Storage Adapter Start Connected

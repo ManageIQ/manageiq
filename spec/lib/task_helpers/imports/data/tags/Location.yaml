@@ -1,0 +1,73 @@
+---
+- description: Location Imported
+  icon:
+  read_only: false
+  syntax: string
+  single_value: true
+  example_text: The geographic location of the resource, such as New York, Chicago,
+    or London.
+  show: true
+  default: true
+  perf_by_tag:
+  name: location
+  entries:
+  - description: New York
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: ny
+  - description: Chicago
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: chicago
+  - description: Paris
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: paris
+  - description: Phoenix
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: phoenix
+  - description: London Town
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: london
+  - description: Tucson
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: tucson

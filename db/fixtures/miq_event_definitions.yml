@@ -1,0 +1,271 @@
+---
+:projected:
+  :events:
+  #
+  # Future: CpuUsage 100%
+  #
+  - :name: cpu_usage_100
+    :description: CPU Usage Projected to reach 100% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: CpuUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 100
+        :days: 30
+        :trend_attr: :max_cpu_usagemhz_rate_average
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_cpu_available
+  #
+  # Future: CpuUsage 90%
+  #
+  - :name: cpu_usage_90
+    :description: CPU Usage Projected to reach 90% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: CpuUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 90
+        :days: 30
+        :trend_attr: :max_cpu_usagemhz_rate_average
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_cpu_available
+  #
+  # Future: CpuUsage 75%
+  #
+  - :name: cpu_usage_75
+    :description: CPU Usage Projected to reach 75% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: CpuUsage
+        :severity: 2
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 75
+        :days: 30
+        :trend_attr: :max_cpu_usagemhz_rate_average
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_cpu_available
+  #
+  # Future: CpuUsage 50%
+  #
+  - :name: cpu_usage_50
+    :description: CPU Usage Projected to reach 50% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: CpuUsage
+        :severity: 3
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_mhz_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 50
+        :days: 30
+        :trend_attr: :max_cpu_usagemhz_rate_average
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_cpu_available
+  #
+  # Future: MemoryUsage 100%
+  #
+  - :name: mem_usage_100
+    :description: Memory Usage Projected to reach 100% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: MemoryUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 100
+        :days: 30
+        :trend_attr: :max_derived_memory_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_memory_available
+  #
+  # Future: MemoryUsage 90%
+  #
+  - :name: mem_usage_90
+    :description: Memory Usage Projected to reach 90% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: MemoryUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 90
+        :days: 30
+        :trend_attr: :max_derived_memory_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_memory_available
+  #
+  # Future: MemoryUsage 75%
+  #
+  - :name: mem_usage_75
+    :description: Memory Usage Projected to reach 75% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: MemoryUsage
+        :severity: 2
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 75
+        :days: 30
+        :trend_attr: :max_derived_memory_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_memory_available
+  #
+  # Future: MemoryUsage 50%
+  #
+  - :name: mem_usage_50
+    :description: Memory Usage Projected to reach 50% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      :event:
+        :event_type: MemoryUsage
+        :severity: 3
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format((context[:limit_attr_value] * 1024 * 1024), :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 50
+        :days: 30
+        :trend_attr: :max_derived_memory_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :max_derived_memory_available
+  #
+  # Future: DiskUsage 100%
+  #
+  - :name: disk_usage_100
+    :description: Disk Usage Projected to reach 100% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      - :Storage
+      :event:
+        :event_type: DiskUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 100
+        :days: 30
+        :trend_attr: :max_v_derived_storage_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :derived_storage_total
+  #
+  # Future: DiskUsage 90%
+  #
+  - :name: disk_usage_90
+    :description: Disk Usage Projected to reach 90% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      - :Storage
+      :event:
+        :event_type: DiskUsage
+        :severity: 1
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 90
+        :days: 30
+        :trend_attr: :max_v_derived_storage_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :derived_storage_total
+  #
+  # Future: DiskUsage 75%
+  #
+  - :name: disk_usage_75
+    :description: Disk Usage Projected to reach 75% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      - :Storage
+      :event:
+        :event_type: DiskUsage
+        :severity: 2
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 75
+        :days: 30
+        :trend_attr: :max_v_derived_storage_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :derived_storage_total
+  #
+  # Future: DiskUsage 50%
+  #
+  - :name: disk_usage_50
+    :description: Disk Usage Projected to reach 50% of available
+    :definition:
+      :applies_to:
+      - :Host
+      - :EmsCluster
+      - :ExtManagementSystem
+      - :MiqEnterprise
+      - :Storage
+      :event:
+        :event_type: DiskUsage
+        :severity: 3
+        :message: "#{dictionary(context[:calculation][:trend_attr])} is projected to reach #{format(context[:limit_attr_value], :format_bytes_to_human_size, :precision => 1)} (#{context[:calculation][:limit_pct]}% of #{dictionary(context[:calculation][:limit_attr])})"
+      :calculation:
+        :limit_pct: 50
+        :days: 30
+        :trend_attr: :max_v_derived_storage_used
+        :name: :trend_to_limit
+        :interval: daily
+        :limit_attr: :derived_storage_total

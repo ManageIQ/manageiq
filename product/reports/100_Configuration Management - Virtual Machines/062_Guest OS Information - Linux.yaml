@@ -1,0 +1,43 @@
+---
+dims:
+created_on: 2008-08-13 00:46:26.317037 Z
+title: "Guest OS Information for Linux"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: Vm.host-name
+        value: ""
+    - not:
+        INCLUDES:
+          field: Vm.operating_system-product_name
+          value: Microsoft
+updated_on: 2008-08-13 00:48:15.961995 Z
+order: Ascending
+graph:
+menu_name: "Guest OS Information - Linux"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- operating_system.product_name
+timeline:
+id: 96
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - product_name
+db: Vm
+cols:
+- name
+template_type: report
+group:
+sortby:
+- name
+headers:
+- VM Name
+- Product Name

@@ -1,0 +1,51 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Host Memory Utilization Trends (last week)"
+conditions:
+col_options: {}
+
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Host Memory Trends (last week)"
+rpt_group: Custom
+priority:
+col_order: []
+
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :limit_col: max_derived_memory_available
+  :trend_col: derived_memory_used
+  :rpt_type: trend
+  :start_offset: 604800
+  :trend_db: HostPerformance
+  :end_offset: 0
+  :interval: daily
+  :target_pcts:
+  - 70
+  - 80
+  - 90
+col_formats: []
+
+include: {}
+
+db: VimPerformanceTrend
+cols: []
+
+template_type: report
+group:
+sortby:
+- resource_name
+rpt_options: {}
+
+headers: []
+
+display_filter:

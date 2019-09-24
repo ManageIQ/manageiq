@@ -1,0 +1,52 @@
+---
+dims:
+created_on: 2008-08-12 18:41:31.840618 Z
+title: "VMs in EVM that have been deleted from VC"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS EMPTY:
+        field: Vm.host-name
+        value: ""
+    - IS NOT EMPTY:
+        field: Vm.storage-name
+updated_on: 2008-08-12 19:50:38.171315 Z
+order: Ascending
+graph:
+menu_name: "Orphaned VMs"
+rpt_group: Custom
+priority: 231
+col_order:
+- name
+- v_datastore_path
+- hardware.size_on_disk
+- created_on
+- updated_on
+- hardware.annotation
+timeline:
+id: 86
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - size_on_disk
+    - annotation
+db: Vm
+cols:
+- name
+- v_datastore_path
+- created_on
+- updated_on
+template_type: report
+group:
+sortby:
+headers:
+- VM Name
+- Last Known Datastore Path
+- Last Known Size
+- Date Created
+- Date Updated
+- Annotation

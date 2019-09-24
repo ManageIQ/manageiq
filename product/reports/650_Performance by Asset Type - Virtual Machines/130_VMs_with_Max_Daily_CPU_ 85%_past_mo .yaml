@@ -1,0 +1,69 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 14:31:43.455072 Z
+reserved:
+title: "VMs with Maximum Daily CPU Usage > 85% over last month"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: VmPerformance-sys_uptime_absolute_latest
+        value: ""
+    - ">":
+        field: VmPerformance-abs_max_cpu_usage_rate_average_value
+        value: 85
+updated_on: 2009-05-19 00:28:31.143624 Z
+order: Descending
+graph:
+menu_name: "VMs with Max Daily CPU > 85% (past mo.)"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- host.hostname
+- ems_cluster.name
+- v_date
+- abs_max_cpu_usage_rate_average_value
+- min_cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- derived_cpu_available
+timeline:
+id: 97
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 2592000
+  :end_offset: 0
+  :interval: daily
+include:
+  host:
+    columns:
+    - hostname
+  ems_cluster:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- resource_name
+- v_date
+- abs_max_cpu_usage_rate_average_value
+- min_cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- derived_cpu_available
+template_type: report
+group: c
+sortby:
+- resource_name
+- abs_max_cpu_usage_rate_average_value
+headers:
+- VM Name
+- Host Hostname
+- Cluster Name
+- Activity Sample
+- CPU - Absolute Max Usage Rate (%)
+- CPU - Min Usage Rate for Collected Intervals (%)
+- CPU - Peak Usage Rate Avg for Collected Intervals (%)
+- CPU - Total Available - from VM Analysis (MHz)

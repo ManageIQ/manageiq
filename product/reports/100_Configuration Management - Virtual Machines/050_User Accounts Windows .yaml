@@ -1,0 +1,80 @@
+---
+dims:
+created_on: 2008-08-13 15:47:10.780648 Z
+title: "VM User Accounts for Windows"
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: Vm.operating_system-product_name
+      value: Win
+updated_on: 2008-08-13 15:54:21.910282 Z
+order: Ascending
+graph:
+menu_name: "User Accounts - Windows"
+rpt_group: Custom
+priority: 130
+col_order:
+- name
+- users.name
+- users.display_name
+- users.comment
+- users.enabled
+- users.expires
+- users.acctid
+- users.accttype
+- operating_system.lockout_duration
+- operating_system.lockout_threshold
+- operating_system.max_pw_age
+- operating_system.min_pw_age
+- operating_system.min_pw_len
+- users.domain
+- users.local
+timeline:
+id: 105
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - lockout_duration
+    - lockout_threshold
+    - max_pw_age
+    - min_pw_age
+    - min_pw_len
+  users:
+    columns:
+    - name
+    - display_name
+    - comment
+    - enabled
+    - expires
+    - acctid
+    - accttype
+    - domain
+    - local
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- users.name
+headers:
+- VM Name
+- User Name
+- User Display Name
+- User Comment
+- User Enabled
+- User Expires
+- User Account ID
+- User Account Type
+- Account Lockout Duration
+- Account Lockout Threshold
+- Max Pwd Age
+- Min Pwd Age
+- Min Pwd Length
+- User Domain
+- User Local

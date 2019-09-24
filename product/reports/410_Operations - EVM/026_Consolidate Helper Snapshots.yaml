@@ -1,0 +1,68 @@
+---
+dims:
+created_on: 2008-08-14 01:36:10.800949 Z
+title: "VMs with Consolidate Helper Snapshots"
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        INCLUDES:
+          field: Vm.snapshots-name
+          value: Consolidate Helper
+      checkcount:
+        ">":
+          field: <count>
+          value: 0
+updated_on: 2008-08-14 01:36:10.800949 Z
+order: Ascending
+graph:
+menu_name: "VMs with Consolidate Helper Snapshots"
+rpt_group: Custom
+priority: 220
+col_order:
+- name
+- host.name
+- location
+- snapshots.name
+- snapshots.current
+- snapshots.description
+- snapshots.create_time
+- snapshots.updated_on
+- snapshots.created_on
+timeline:
+id: 119
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  snapshots:
+    columns:
+    - name
+    - current
+    - description
+    - create_time
+    - updated_on
+    - created_on
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- location
+template_type: report
+group: c
+sortby:
+- name
+- snapshots.name
+headers:
+- VM Name
+- Host Name
+- Location
+- Snapshot Name
+- Snapshot Current
+- Snapshot Description
+- Snapshot Create Time
+- Snapshot Analysis Info Updated
+- Snapshot Analysis Info Date Created

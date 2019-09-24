@@ -1,0 +1,69 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-11-10 20:09:56.179364 Z
+reserved:
+title: "VMs with disk free space > 5GB (sorted by disk free space)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - ">=":
+        field: Vm.hardware-disk_free_space
+        value: 5368709120
+    - IS NOT EMPTY:
+        field: Vm-v_pct_free_disk_space
+        value: ""
+updated_on: 2009-11-10 20:09:56.179364 Z
+order: Descending
+graph:
+generate_rows:
+menu_name: "VMs with disk free space > 5GB"
+rpt_group: Custom
+priority: 51
+col_order:
+- name
+- hardware.disk_free_space
+- hardware.disk_capacity
+- storage.name
+- v_owning_cluster
+- host.name
+- updated_on
+timeline:
+id: 181
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  hardware:
+    columns:
+    - disk_free_space
+    - disk_capacity
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+- updated_on
+template_type: report
+group:
+sortby:
+- hardware.disk_free_space
+- name
+headers:
+- VM
+- Free Disk Space (bytes)
+- Total Disk Capacity (bytes)
+- Datastore
+- Cluster
+- Host
+- Date Updated

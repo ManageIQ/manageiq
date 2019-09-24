@@ -1,0 +1,48 @@
+---
+dims:
+created_on: 2008-08-12 17:12:21.636467 Z
+title: "Datastore Summary for VMs"
+conditions:
+updated_on: 2008-08-13 22:21:05.181483 Z
+order: Ascending
+graph:
+menu_name: "Datastore Summary for VMs"
+rpt_group: Custom
+priority: 250
+col_order:
+- storage.name
+- name
+- hardware.size_on_disk
+- storage.total_space
+- storage.free_space
+- storage.store_type
+timeline:
+id: 83
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - size_on_disk
+  storage:
+    columns:
+    - name
+    - total_space
+    - free_space
+    - store_type
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- storage.name
+headers:
+- Datastore
+- VM Name
+- VM Size
+- Datastore Size
+- Datastore Free Space
+- Datastore Type

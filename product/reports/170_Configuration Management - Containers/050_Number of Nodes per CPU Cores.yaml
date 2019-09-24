@@ -1,0 +1,53 @@
+---
+title: Nodes by Number of CPU Cores
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerNode
+cols:
+- name
+include:
+  computer_system:
+    include:
+      hardware:
+        columns:
+        - cpu_total_cores
+col_order:
+- name
+- computer_system.hardware.cpu_total_cores
+headers:
+- Name
+- Hardware Number of CPU Cores
+conditions:
+order: Descending
+sortby:
+- computer_system.hardware.cpu_total_cores
+group:
+graph:
+  :type: Column
+  :count: 10
+  :other: true
+dims: 1
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+miq_group_id: 1
+user_id: 1
+menu_name: Nodes by Number of CPU Cores

@@ -1,0 +1,2 @@
+class ConfigurationComputeProfile < ConfigurationTag
+end

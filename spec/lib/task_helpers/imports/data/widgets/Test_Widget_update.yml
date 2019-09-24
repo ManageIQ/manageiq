@@ -1,0 +1,115 @@
+---
+- MiqWidget:
+    guid: feb5987d-9869-4de8-8195-8d2167400f69
+    description: Test Widget
+    title: Test Widget Modified
+    content_type: report
+    options:
+      :row_count: 10
+      :col_order:
+      - name
+      - power_state
+      - last_scan_on
+      - storage.name
+    visibility:
+      :roles:
+      - _ALL_
+    user_id:
+    resource_id: 81
+    resource_type: MiqReport
+    enabled: true
+    read_only: false
+    MiqReportContent:
+    - MiqReport:
+        title: Online VMs (Powered On)
+        rpt_group: Operations- Virtual Machines
+        rpt_type: Default
+        priority: 20
+        db: Vm
+        cols:
+        - v_datastore_path
+        - name
+        - power_state
+        - last_scan_on
+        include:
+          host:
+            columns:
+            - name
+          storage:
+            columns:
+            - name
+        col_order:
+        - host.name
+        - storage.name
+        - v_datastore_path
+        - name
+        - power_state
+        - last_scan_on
+        headers:
+        - Host
+        - Datastore
+        - Datastore Path
+        - VM Name
+        - Vm Power State
+        - Last Analysis Time
+        conditions: !ruby/object:MiqExpression
+          exp:
+            and:
+            - "=":
+                field: Vm-power_state
+                value: 'on'
+            - "=":
+                field: Vm-active
+                value: 'true'
+        order: Ascending
+        sortby:
+        - name
+        group:
+        graph:
+        dims:
+        filename: 400_Operations- Virtual Machines/020_Online VMs.yaml
+        file_mtime: !ruby/object:ActiveSupport::TimeWithZone
+          utc: &1 2018-04-27 20:10:20.000000000 Z
+          zone: !ruby/object:ActiveSupport::TimeZone
+            name: Etc/UTC
+          time: *1
+        categories:
+        timeline:
+        template_type: report
+        where_clause:
+        db_options:
+        generate_cols:
+        generate_rows:
+        col_formats:
+        tz:
+        time_profile_id:
+        display_filter:
+        col_options:
+        rpt_options:
+        miq_group_id:
+        user_id:
+        menu_name: Online VMs (Powered On)
+    MiqSchedule:
+      name: Test Widget
+      description: Test Widget
+      sched_action:
+        :method: generate_widget
+      filter: !ruby/object:MiqExpression
+        exp:
+          "=":
+            field: MiqWidget-id
+            value: 25
+        context_type:
+      resource_type: MiqWidget
+      run_at:
+        :start_time: 2018-12-21 00:00:00.000000000 Z
+        :tz: UTC
+        :interval:
+          :unit: hourly
+          :value: 1
+      enabled: true
+      userid: system
+      prod_default: system
+      adhoc:
+      file_depot_id:
+      resource_id:

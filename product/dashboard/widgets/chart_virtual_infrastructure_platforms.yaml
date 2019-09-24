@@ -1,0 +1,18 @@
+description: chart_virtual_infrastructure_platforms
+title: Virtual Infrastructure Platforms
+content_type: chart
+options:
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Virtual Infrastructure Platforms
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

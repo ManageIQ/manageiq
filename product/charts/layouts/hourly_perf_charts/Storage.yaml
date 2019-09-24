@@ -1,0 +1,49 @@
+# Storage Hourly performance chart layouts
+---
+# Since we have some charts with no hourly data, need placeholders for all menu links to work properly
+- :title: Used Space by Type
+  :type: None
+
+- :title: Disk Files Space by Type
+  :type: None
+
+- :title: Snapshot Files Space by Type
+  :type: None
+
+- :title: Memory Files Space by Type
+  :type: None
+
+- :title: Number of VMs by Type
+  :type: None
+
+- :title: Used Disk Space
+  :type: Area
+  :columns:
+  - v_derived_storage_used
+  - derived_storage_free
+  :menu:
+  - Chart-Current-Daily:Back to daily
+  - Display-Hosts-on:Hosts that were running
+  - Display-VMs-on:VMs that were running
+  :decimals: 2
+  :units: GB
+
+- :title: Hosts
+  :type: Area
+  :columns:
+  - derived_host_count_on
+  - derived_host_count_off
+  :menu:
+  - Chart-Current-Daily:Back to daily
+  - Display-Hosts-on:Hosts that were running
+  - Display-Hosts-off:Hosts that were stopped
+
+- :title: VMs
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-on:VMs that were running
+  - Display-VMs-off:VMs that were stopped

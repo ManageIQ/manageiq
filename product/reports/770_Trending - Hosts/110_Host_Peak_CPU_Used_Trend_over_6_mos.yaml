@@ -1,0 +1,43 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 16:29:33.788770 Z
+reserved:
+title: "Host Peak CPU Used Trends over last 6 Months"
+conditions:
+updated_on: 2009-05-19 01:12:12.749948 Z
+order: Ascending
+graph:
+menu_name: "Host Peak CPU Used Trend over 6 mos."
+rpt_group: Custom
+priority:
+col_order: []
+
+timeline:
+id: 102
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 15552000
+  :trend_db: HostPerformance
+  :trend_col: max_cpu_usage_rate_average
+  :end_offset: 0
+  :limit_val: 100
+  :rpt_type: trend
+  :target_pcts:
+  - 50
+  - 75
+  - 90
+  :interval: daily
+include: {}
+
+db: VimPerformanceTrend
+cols: []
+
+template_type: report
+group:
+sortby:
+- resource_name
+headers: []

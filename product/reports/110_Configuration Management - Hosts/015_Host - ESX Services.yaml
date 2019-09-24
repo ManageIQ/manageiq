@@ -1,0 +1,48 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-19 21:20:40.900091 Z
+reserved:
+title: "ESX Services"
+conditions:
+updated_on: 2009-10-19 21:20:40.900091 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Host - ESX Services"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- host_services.name
+- host_services.display_name
+- host_services.running
+timeline:
+id: 128
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  host_services:
+    columns:
+    - name
+    - display_name
+    - running
+db: Host
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- host_services.name
+headers:
+- Name
+- Service Name
+- Service Display Name
+- Service Running

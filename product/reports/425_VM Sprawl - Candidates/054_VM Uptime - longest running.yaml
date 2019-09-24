@@ -1,0 +1,75 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-11-10 21:23:15.770095 Z
+reserved:
+title: "VM Uptime (based on last boot, sorted by VM uptime)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: VmPerformance.vm-boot_time
+        value: ""
+    - INCLUDES:
+        field: VmPerformance.vm-power_state
+        value: "on"
+updated_on: 2009-11-10 21:37:22.695687 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VM Uptime - longest running"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- vm.boot_time
+- vm.last_scan_on
+- vm.power_state
+- vm.managed.environment
+- vm.managed.function
+- vm.managed.lob
+- vm.managed.location
+- timestamp
+timeline:
+id: 186
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 172800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+include:
+  vm:
+    columns:
+    - boot_time
+    - last_scan_on
+    - power_state
+    include:
+      managed:
+        columns:
+        - environment
+        - function
+        - lob
+        - location
+db: VmPerformance
+cols:
+- resource_name
+- timestamp
+template_type: report
+group:
+sortby:
+- vm.boot_time
+headers:
+- VM
+- VM Boot Time
+- Last Analysis Time
+- Power State
+- Environment
+- Function
+- Line of Business
+- Location
+- Activity Sample - Timestamp  (Day/Time)

@@ -1,0 +1,44 @@
+---
+dims: 2
+created_on: 2008-08-14 15:14:31.528492 Z
+title: "Virtual Infrastructure Platforms"
+conditions:
+updated_on: 2008-08-14 15:16:53.266497 Z
+order: Ascending
+graph:
+  :type: StackedThreedColumn
+  :count: 10
+  :other: true
+menu_name: "Virtual Infrastructure Platforms"
+rpt_group: Custom
+priority:
+col_order:
+- vmm_vendor_display
+- vmm_product
+- operating_system.product_name
+- name
+timeline:
+id: 65
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - product_name
+db: Host
+cols:
+- vmm_vendor_display
+- vmm_product
+- name
+template_type: report
+group: c
+sortby:
+- vmm_vendor_display
+- vmm_product
+headers:
+- Virtual Infrastructure Platform
+- Infrastructure Product
+- OS Product Name
+- Host Name

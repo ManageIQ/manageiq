@@ -1,0 +1,69 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 14:20:39.628372 Z
+reserved:
+title: "VMs with Average Daily Memory Usage < 50% over last month"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: VmPerformance-sys_uptime_absolute_latest
+        value: ""
+    - <:
+        field: VmPerformance-mem_usage_absolute_average
+        value: 50
+updated_on: 2009-05-19 00:26:16.346485 Z
+order: Descending
+graph:
+menu_name: "VMs with Avg Daily Mem < 50% (past mo.)"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- host.hostname
+- ems_cluster.name
+- mem_usage_absolute_average
+- max_mem_usage_absolute_average
+- abs_max_mem_usage_absolute_average_value
+- derived_memory_available
+- v_date
+timeline:
+id: 96
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 2592000
+  :end_offset: 0
+  :interval: daily
+include:
+  host:
+    columns:
+    - hostname
+  ems_cluster:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- resource_name
+- mem_usage_absolute_average
+- max_mem_usage_absolute_average
+- abs_max_mem_usage_absolute_average_value
+- derived_memory_available
+- v_date
+template_type: report
+group: c
+sortby:
+- resource_name
+- mem_usage_absolute_average
+headers:
+- VM Name
+- Host Hostname
+- Cluster Name
+- Memory - Usage of Total Allocated (%)
+- Memory - Peak Usage of Allocated for Collected Intervals (%)
+- Memory - Absolute Max Usage Rate (%)
+- Memory - Allocated (MB)
+- Activity Sample

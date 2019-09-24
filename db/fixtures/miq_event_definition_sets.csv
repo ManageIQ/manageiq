@@ -1,0 +1,16 @@
+name,description
+auth_validation,Authentication Validation (Provider)
+authentication,Authentication Validation
+compliance,Compliance
+container_operations,Container Operation
+ems_operations,Provider Operation
+evm_operations,Appliance Operation
+host_operations,Host Operation
+orchestration_process,Orchestration Lifecycle
+physical_server_operations,Physical Server Operation
+service_process,Service Lifecycle
+storage_operational,Datastore Operation
+tags,Company Tag
+vm_configurational,VM Configuration
+vm_operational,VM Operation
+vm_process,VM Lifecycle

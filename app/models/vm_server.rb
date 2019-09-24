@@ -1,0 +1,2 @@
+class VmServer < Vm
+end

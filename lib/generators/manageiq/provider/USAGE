@@ -1,0 +1,7 @@
+Description:
+    Create or update ManageIQ provider plugin
+
+Example:
+    rails generate manageiq:provider ManageIQ::Providers::VendorName
+    rails generate manageiq:provider ManageIQ::Providers::VendorName --path ~/dev
+    rails generate manageiq:provider ManageIQ::Providers::VendorName --vcr --dummy

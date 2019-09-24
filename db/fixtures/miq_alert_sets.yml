@@ -1,0 +1,45 @@
+---
+- MiqAlertSet:
+    name: prometheus provider profile
+    description: Prometheus Provider Profile
+    set_type: MiqAlertSet
+    guid: a16fcf51-e2ae-492d-af37-19de881476ad
+    mode: ExtManagementSystem
+    MiqAlert:
+    - description: External Prometheus - Providers
+      options:
+        :notifications:
+          :delay_next_evaluation: 0
+          :evm_event: {}
+      guid: ea3acd49-9516-4fde-b828-bf68d254c0cf
+      db: ExtManagementSystem
+      responds_to_events: datawarehouse_alert
+      miq_expression:
+      enabled: true
+      read_only:
+      hash_expression:
+        :eval_method: dwh_generic
+        :mode: internal
+        :options: {}
+- MiqAlertSet:
+    name: prometheus node profile
+    description: Prometheus node Profile
+    set_type: MiqAlertSet
+    guid: ff0fb114-be03-4685-bebb-b6ae8f13d7ad
+    mode: ContainerNode
+    MiqAlert:
+    - description: External Prometheus - Nodes
+      options:
+        :notifications:
+          :delay_next_evaluation: 0
+          :evm_event: {}
+      guid: efe9d4f0-9c6f-4c67-80b1-05cd83223349
+      db: ContainerNode
+      responds_to_events: datawarehouse_alert
+      miq_expression:
+      enabled: true
+      read_only:
+      hash_expression:
+        :eval_method: dwh_generic
+        :mode: internal
+        :options: {}

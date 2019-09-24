@@ -1,0 +1,7 @@
+timeout 0
+default Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+
+label Ubuntu-10.10-Desktop-i386-LIVE_BOOT
+   kernel ubuntu-10.10-desktop-i386/vmlinuz
+   append vga=normal boot=casper netboot=nfs nfsroot=192.168.252.60:/srv/nfsboot/ubuntu-10.10-desktop-i386 initrd=ubuntu-10.10-desktop-i386/initrd.lz -- quiet
+

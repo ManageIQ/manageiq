@@ -1,0 +1,128 @@
+heat_template_version: 2013-05-23
+
+description: >
+  Heat WordPress template to support F20, using only Heat OpenStack-native
+  resource types, and without the requirement for heat-cfntools in the image.
+  WordPress is web software you can use to create a beautiful website or blog.
+  This template installs a single-instance WordPress deployment using a local
+  MySQL database to store the data.
+
+parameters:
+
+  key_name:
+    type: string
+    description: Name of a KeyPair to enable SSH access to the instance
+  instance_type:
+    type: string
+    description: Instance type for WordPress server
+    default: m1.small
+    constraints:
+    - allowed_values: [m1.tiny, m1.small, m1.medium, m1.large]
+      description: instance_type must be one of m1.small, m1.medium or m1.large
+  image_id:
+    type: string
+    description: >
+      Name or ID of the image to use for the WordPress server.
+      Recommended values are fedora-20.i386 or fedora-20.x86_64;
+      get them from http://cloud.fedoraproject.org/fedora-20.i386.qcow2
+      or http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2 .
+    default: fedora-20.x86_64
+
+  network_id:
+    type: string
+    description: Name or ID of the network to use
+
+  db_name:
+    type: string
+    description: WordPress database name
+    default: wordpress
+    constraints:
+    - length: { min: 1, max: 64 }
+      description: db_name must be between 1 and 64 characters
+    - allowed_pattern: '[a-zA-Z][a-zA-Z0-9]*'
+      description: >
+        db_name must begin with a letter and contain only alphanumeric
+        characters
+  db_username:
+    type: string
+    description: The WordPress database admin account username
+    default: admin
+    hidden: true
+    constraints:
+    - length: { min: 1, max: 16 }
+      description: db_username must be between 1 and 16 characters
+    - allowed_pattern: '[a-zA-Z][a-zA-Z0-9]*'
+      description: >
+        db_username must begin with a letter and contain only alphanumeric
+        characters
+  db_password:
+    type: string
+    description: The WordPress database admin account password
+    default: admin
+    hidden: true
+    constraints:
+    - length: { min: 1, max: 41 }
+      description: db_password must be between 1 and 41 characters
+    - allowed_pattern: '[a-zA-Z0-9]*'
+      description: db_password must contain only alphanumeric characters
+  db_root_password:
+    type: string
+    description: Root password for MySQLMultiple possible
+    default: admin
+    hidden: true
+    constraints:
+    - length: { min: 1, max: 41 }
+      description: db_root_password must be between 1 and 41 characters
+    - allowed_pattern: '[a-zA-Z0-9]*'
+      description: db_root_password must contain only alphanumeric characters
+
+resources:
+  wordpress_instance:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image_id }
+      flavor: { get_param: instance_type }
+      key_name: { get_param: key_name }
+      networks:
+      - uuid: { get_param: network_id }
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash -v
+
+            yum -y install mariadb mariadb-server httpd wordpress
+            touch /var/log/mariadb/mariadb.log
+            chown mysql.mysql /var/log/mariadb/mariadb.log
+            systemctl start mariadb.service
+
+            # Setup MySQL root password and create a user
+            mysqladmin -u root password db_rootpassword
+            cat << EOF | mysql -u root --password=db_rootpassword
+            CREATE DATABASE db_name;
+            GRANT ALL PRIVILEGES ON db_name.* TO "db_user"@"localhost"
+            IDENTIFIED BY "db_password";
+            FLUSH PRIVILEGES;
+            EXIT
+            EOF
+
+            sed -i "/Deny from All/d" /etc/httpd/conf.d/wordpress.conf
+            sed -i "s/Require local/Require all granted/" /etc/httpd/conf.d/wordpress.conf
+            sed -i s/database_name_here/db_name/ /etc/wordpress/wp-config.php
+            sed -i s/username_here/db_user/ /etc/wordpress/wp-config.php
+            sed -i s/password_here/db_password/ /etc/wordpress/wp-config.php
+
+            systemctl start httpd.service
+          params:
+            db_rootpassword: { get_param: db_root_password }
+            db_name: { get_param: db_name }
+            db_user: { get_param: db_username }
+            db_password: { get_param: db_password }
+
+outputs:
+  WebsiteURL:
+    description: URL for Wordpress wiki
+    value:
+      str_replace:
+        template: http://host/wordpress
+        params:
+          host: { get_attr: [wordpress_instance, first_address] }

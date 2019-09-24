@@ -1,0 +1,37 @@
+# storage-Vm Top CIs/day chart layouts
+---
+- :title: Average Used Space
+  :type: Pie
+  :columns:
+  - derived_storage_used_managed
+  :menu:
+  - Display-Current-Top:<category>
+  :decimals: 2
+  :units: GB
+
+- :title: Average Disk Files Space
+  :type: Pie
+  :columns:
+  - derived_storage_disk_managed
+  :menu:
+  - Display-Current-Top:<category>
+  :decimals: 2
+  :units: GB
+
+- :title: Average Snapshot Files Space
+  :type: Pie
+  :columns:
+  - derived_storage_snapshot_managed
+  :menu:
+  - Display-Current-Top:<category>
+  :decimals: 2
+  :units: GB
+
+- :title: Average Memory Files Space
+  :type: Pie
+  :columns:
+  - derived_storage_mem_managed
+  :menu:
+  - Display-Current-Top:<category>
+  :decimals: 2
+  :units: GB

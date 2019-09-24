@@ -1,0 +1,140 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Timeline Events Hourly"
+
+# Menu name
+name: "Timeline Events Hourly"
+
+# Main DB table report is based on
+db: EventStream
+
+# Columns to fetch from the main table
+cols:
+- event_type
+- source
+- group_level
+- message
+- timestamp
+- ems_cluster_name
+- host_name
+- vm_name
+- vm_location
+- dest_host_name
+- dest_vm_name
+- dest_vm_location
+- username
+- container_node_name
+- container_group_name
+- container_namespace
+- container_name
+- container_replicator_name
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  ext_management_system:
+    columns:
+    - name
+  availability_zone:
+    columns:
+    - name
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- event_type
+- source
+- group_level
+- ext_management_system.name
+- message
+- ems_cluster_name
+- host_name
+- vm_name
+- vm_location
+- dest_host_name
+- dest_vm_name
+- dest_vm_location
+- availability_zone.name
+- username
+- container_node_name
+- container_group_name
+- container_namespace
+- container_name
+- container_replicator_name
+
+# Column titles, in order
+headers:
+- Date Time
+- Event Type
+- Event Source
+- Group Level
+- Provider
+- Message
+- Cluster
+- Source Host
+- Source VM
+- Source VM Location
+- Destination Host
+- Destination VM
+- Destination VM Location
+- Availability Zone
+- Provider User Name
+- Container Node
+- Pod
+- Container Project
+- Container
+- Container Replicator
+
+# Condition(s) string for the SQL query
+conditions:
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+timeline:
+  :field: EmsEvent-timestamp
+  :bands:
+  - :text: true
+    :gap: 0.0
+    :unit: Hour
+    :width: 90
+    :pixels: 37.5
+  - :text: false
+    :gap: 0.1
+    :unit: Day
+    :width: 10
+    :height: 0.6
+    :pixels: 1000
+  :position: Last

@@ -1,0 +1,64 @@
+---
+dims:
+created_on: 2008-08-13 23:02:36.425330 Z
+title: "Hosts - Network Information"
+conditions:
+updated_on: 2008-08-13 23:02:36.425330 Z
+order: Ascending
+graph:
+menu_name: "Host Network Information"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- hardware.networks.ipaddress
+- hardware.networks.subnet_mask
+- hardware.networks.dhcp_enabled
+- hardware.networks.dhcp_server
+- hardware.networks.dns_server
+- hardware.networks.default_gateway
+- hardware.networks.description
+- hardware.networks.domain
+- hardware.networks.lease_expires
+- hardware.networks.lease_obtained
+timeline:
+id: 111
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    include:
+      networks:
+        columns:
+        - ipaddress
+        - subnet_mask
+        - dhcp_enabled
+        - dhcp_server
+        - dns_server
+        - default_gateway
+        - description
+        - domain
+        - lease_expires
+        - lease_obtained
+db: Host
+cols:
+- name
+template_type: report
+group:
+sortby:
+- name
+- hardware.networks.ipaddress
+headers:
+- Name
+- Network IP Address
+- Network Subnet Mask
+- Network DHCP Enabled
+- Network DHCP Server
+- Network DNS Server
+- Network Default Gateway
+- Network Description
+- Network Domain
+- Network Lease Expires
+- Network Lease Obtained

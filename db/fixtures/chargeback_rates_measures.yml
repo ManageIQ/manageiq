@@ -1,0 +1,13 @@
+---
+- :name: Bytes Units
+  :units_display: ["B", "KB", "MB", "GB", "TB"]
+  :units: ["bytes", "kilobytes", "megabytes", "gigabytes", "terabytes"]
+  :step: '1024'
+- :name: Hz Units
+  :units_display: ["Hz", "KHz", "MHz", "GHz", "THz"]
+  :units: ["hertz", "kilohertz", "megahertz", "gigahertz", "teraherts"]
+  :step: '1000'
+- :name: Bytes per Second Units
+  :units_display: ["Bps", "KBps", "MBps", "GBps"]
+  :units: ["bps", "kbps", "mbps", "gbps"]
+  :step: '1000'

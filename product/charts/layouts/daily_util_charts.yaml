@@ -1,0 +1,184 @@
+# Summary based on trend chart layouts
+---
+:MiqEnterprise:
+- :title: Trend of CPU Used (Mhz)
+  :type: Line
+  :columns:
+  - trend_max_cpu_usagemhz_rate_average
+  - trend_cpu_usagemhz_rate_average
+  - max_derived_cpu_reserved
+  - max_derived_cpu_available
+  :trends:
+  - max_derived_cpu_available:Projected to hit Total
+  - max_derived_cpu_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - ExtManagementSystem
+
+- :title: Trend of Memory Used (MB)
+  :type: Line
+  :columns:
+  - trend_max_derived_memory_used
+  - trend_derived_memory_used
+  - max_derived_memory_reserved
+  - max_derived_memory_available
+  :trends:
+  - max_derived_memory_available:Projected to hit Total
+  - max_derived_memory_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - ExtManagementSystem
+
+- :title: Trend of Used Disk Space
+  :type: Line
+  :columns:
+  - trend_max_v_derived_storage_used
+  - trend_v_derived_storage_used
+  - derived_storage_total
+  :decimals: 2
+  :units: GB
+  :trends:
+  - derived_storage_total:Projected to hit Total
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - Storage
+
+:MiqRegion:
+- :title: Trend of CPU Used (Mhz)
+  :type: Line
+  :columns:
+  - trend_max_cpu_usagemhz_rate_average
+  - trend_cpu_usagemhz_rate_average
+  - max_derived_cpu_reserved
+  - max_derived_cpu_available
+  :trends:
+  - max_derived_cpu_available:Projected to hit Total
+  - max_derived_cpu_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - ExtManagementSystem
+
+- :title: Trend of Memory Used (MB)
+  :type: Line
+  :columns:
+  - trend_max_derived_memory_used
+  - trend_derived_memory_used
+  - max_derived_memory_reserved
+  - max_derived_memory_available
+  :trends:
+  - max_derived_memory_available:Projected to hit Total
+  - max_derived_memory_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - ExtManagementSystem
+
+- :title: Trend of Used Disk Space
+  :type: Line
+  :columns:
+  - trend_max_v_derived_storage_used
+  - trend_v_derived_storage_used
+  - derived_storage_total
+  :decimals: 2
+  :units: GB
+  :trends:
+  - derived_storage_total:Projected to hit Total
+# Override to show a performance type chart
+  :chart_type: performance
+  :allowed_child_tag:
+  - Storage
+
+:ExtManagementSystem:
+- :title: Trend of CPU Used (Mhz)
+  :type: Line
+  :columns:
+  - trend_max_cpu_usagemhz_rate_average
+  - trend_cpu_usagemhz_rate_average
+  - max_derived_cpu_reserved
+  - max_derived_cpu_available
+  :trends:
+  - max_derived_cpu_available:Projected to hit Total
+  - max_derived_cpu_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+
+- :title: Trend of Memory Used (MB)
+  :type: Line
+  :columns:
+  - trend_max_derived_memory_used
+  - trend_derived_memory_used
+  - max_derived_memory_reserved
+  - max_derived_memory_available
+  :trends:
+  - max_derived_memory_available:Projected to hit Total
+  - max_derived_memory_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+
+:EmsCluster:
+- :title: Trend of CPU Used (Mhz)
+  :type: Line
+  :columns:
+  - trend_max_cpu_usagemhz_rate_average
+  - trend_cpu_usagemhz_rate_average
+  - max_derived_cpu_reserved
+  - max_derived_cpu_available
+  :trends:
+  - max_derived_cpu_available:Projected to hit Total
+  - max_derived_cpu_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+
+- :title: Trend of Memory Used (MB)
+  :type: Line
+  :columns:
+  - trend_max_derived_memory_used
+  - trend_derived_memory_used
+  - max_derived_memory_reserved
+  - max_derived_memory_available
+  :trends:
+  - max_derived_memory_available:Projected to hit Total
+  - max_derived_memory_reserved:Projected to hit Available
+# Override to show a performance type chart
+  :chart_type: performance
+
+:Host:
+- :title: Trend of CPU Used (Mhz)
+  :type: Line
+  :columns:
+  - trend_max_cpu_usagemhz_rate_average
+  - trend_cpu_usagemhz_rate_average
+  - max_derived_cpu_available
+  :trends:
+  - max_derived_cpu_available:Projected to hit Total
+# Override to show a performance type chart
+  :chart_type: performance
+
+- :title: Trend of Memory Used (MB)
+  :type: Line
+  :columns:
+  - trend_max_derived_memory_used
+  - trend_derived_memory_used
+  - max_derived_memory_available
+  :trends:
+  - max_derived_memory_available:Projected to hit Total
+# Override to show a performance type chart
+  :chart_type: performance
+
+:Storage:
+- :title: Trend of Used Disk Space
+  :type: Line
+  :columns:
+  - trend_max_v_derived_storage_used
+  - trend_v_derived_storage_used
+  - derived_storage_total
+  :decimals: 2
+  :units: GB
+  :trends:
+  - derived_storage_total:Projected to hit Total
+# Override to show a performance type chart
+  :chart_type: performance

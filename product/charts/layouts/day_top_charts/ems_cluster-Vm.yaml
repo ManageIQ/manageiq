@@ -1,0 +1,59 @@
+# ems_cluster-Vm Top CIs/day chart layouts
+---
+
+# TODO: Change to VmOrTemplate after migration and backend code is changed FB #14400
+- :title: Average CPU Used (Mhz)
+  :type: Pie
+  :columns:
+  - cpu_usagemhz_rate_average
+  :menu:
+  - Chart-Selected-Daily:Daily for <category>
+  - Chart-Selected-Hourly:Hourly for <category>
+  - Timeline-Selected-Daily:Daily events on <category>
+  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+
+- :title: Average VM CPU Ready (Percent)
+  :type: Pie
+  :columns:
+  - v_pct_cpu_ready_delta_summation
+  :menu:
+  - Chart-Selected-Daily:Daily for <category>
+  - Chart-Selected-Hourly:Hourly for <category>
+  - Timeline-Selected-Daily:Daily events on <category>
+  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+  :decimals: 1
+
+- :title: Average Memory Used (MB)
+  :type: Pie
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Selected-Daily:Daily for <category>
+  - Chart-Selected-Hourly:Hourly for <category>
+  - Timeline-Selected-Daily:Daily events on <category>
+  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+
+- :title: Average Disk I/O (KBps)
+  :type: Pie
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Selected-Daily:Daily for <category>
+  - Chart-Selected-Hourly:Hourly for <category>
+  - Timeline-Selected-Daily:Daily events on <category>
+  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+
+- :title: Average Network I/O (KBps)
+  :type: Pie
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Selected-Daily:Daily for <category>
+  - Chart-Selected-Hourly:Hourly for <category>
+  - Timeline-Selected-Daily:Daily events on <category>
+  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>

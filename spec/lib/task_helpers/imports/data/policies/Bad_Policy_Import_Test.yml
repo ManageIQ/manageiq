@@ -1,0 +1,37 @@
+---
+- MiqPolicy:
+    name: 7562ca69-a00d-4017-be8f-d31d39a07deb
+    description:
+    expression: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Vm-cpu_hot_add_enabled
+          value: 'false'
+      context_type:
+    towhat: Vm
+    guid: 7562ca69-a00d-4017-be8f-d31d39a07deb
+    created_by: admin
+    updated_by: admin
+    notes:
+    active: true
+    mode: compliance
+    read_only:
+    MiqPolicyContent:
+    - qualifier: failure
+      failure_sequence: 1
+      failure_synchronous: true
+      MiqEventDefinition:
+        name: vm_compliance_check
+        description: VM Compliance Check
+        guid: dc3c6494-1a5e-11e7-9bb4-02426c6b2651
+        event_type: Default
+        definition:
+        default:
+        enabled:
+      MiqAction:
+        name: compliance_failed
+        description: Mark as Non-Compliant
+        guid: db553dc6-1a5e-11e7-9bb4-02426c6b2651
+        action_type: default
+        options: {}
+    Condition: []

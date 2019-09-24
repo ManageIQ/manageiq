@@ -1,0 +1,90 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-11-10 20:21:55.875356 Z
+reserved:
+title: "VMs Powered Off but registered to Host (sorted by boot time)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: Vm.host-name
+        value: ""
+    - "=":
+        field: Vm-power_state
+        value: "off"
+    - IS NOT EMPTY:
+        field: Vm-boot_time
+updated_on: 2009-11-10 21:50:03.134813 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VMs Powered Off registered to a Host"
+rpt_group: Custom
+priority: 41
+col_order:
+- name
+- boot_time
+- state_changed_on
+- host.name
+- storage.name
+- hardware.annotation
+- last_scan_on
+- vendor_display
+- platform
+- operating_system.product_name
+- hardware.cpu_total_cores
+- hardware.memory_mb
+- power_state
+timeline:
+id: 185
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  hardware:
+    columns:
+    - annotation
+    - cpu_total_cores
+    - memory_mb
+  operating_system:
+    columns:
+    - product_name
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- boot_time
+- state_changed_on
+- last_scan_on
+- vendor_display
+- platform
+- power_state
+template_type: report
+group:
+sortby:
+- boot_time
+headers:
+- VM
+- Last Boot Time
+- Power Off Date
+- Host
+- Datastore
+- VM Notes
+- Last Analysis Time
+- Vendor
+- Platform
+- Operating System
+- Allocated vCPUs
+- Allocated RAM (MB)
+- Power State

@@ -1,0 +1,71 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-11-10 21:24:55.592339 Z
+reserved:
+title: "VMs with invalid allocation of RAM (32-bit > 4GB allocated)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - ">":
+        field: Vm.hardware-memory_mb
+        value: 4096
+    - or:
+      - INCLUDES:
+          field: Vm.hardware-guest_os_full_name
+          value: (32-bit)
+      - "=":
+          field: Vm.operating_system-bitness
+          value: 32
+updated_on: 2009-11-10 21:24:55.592339 Z
+order: Descending
+graph:
+generate_rows:
+menu_name: "VMs with invalid allocation of RAM"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- hardware.memory_mb
+- hardware.guest_os_full_name
+- operating_system.product_name
+- operating_system.bitness
+- hardware.annotation
+- hardware.cpu_total_cores
+timeline:
+id: 187
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  hardware:
+    columns:
+    - memory_mb
+    - guest_os_full_name
+    - annotation
+    - cpu_total_cores
+  operating_system:
+    columns:
+    - product_name
+    - bitness
+db: Vm
+cols:
+- name
+template_type: report
+group:
+sortby:
+- hardware.memory_mb
+- name
+headers:
+- VM
+- Allocated RAM (MB)
+- Container OS
+- Guest OS
+- OS Architecture
+- VM Notes
+- Allocated vCPUs

@@ -1,0 +1,48 @@
+name,description
+audit,Generate Audit Event
+log,Generate log message
+evm_event,Show EVM Event on Timeline
+# snmp,Generate an SNMP trap
+# sms,Send an SMS text message
+# quarantine,Quarantine target entity
+# remediate,Remediate policy failure
+# tag_inherit,Inherit company tags
+script,Execute an external script
+prevent,Prevent current event from proceeding
+container_image_analyze,Initiate SmartState Analysis for Container Image
+container_image_annotate_deny_execution,Prevent container image from running on OpenShift
+container_image_annotate_allow_execution,Mark container image as safe for running on OpenShift
+container_image_annotate_scan_results,Annotate image with scan results and execution prevention status
+vm_start,Start Virtual Machine
+vm_stop,Stop Virtual Machine
+vm_suspend,Suspend Virtual Machine
+vm_shelve,Shelve Virtual Machine
+vm_shelve_offload,Shelve Offload Virtual Machine
+vm_pause,Pause Virtual Machine
+vm_shutdown_guest,Shutdown Virtual Machine Guest OS
+vm_standby_guest,Put Virtual Machine Guest OS in Standby
+vm_unregister,Remove Virtual Machine from Inventory
+vm_retire,Retire Virtual Machine
+vm_analyze,Initiate SmartState Analysis for VM
+delete_all_snapshots,Delete all Snapshots
+ems_refresh,Refresh data from vCenter
+vm_destroy,Delete VM from Disk
+vm_mark_as_template,Convert to Template
+# vm_mark_as_vm,Mark VM as Virtual Machine
+# vm_migrate,Migrate or vMotion Virtual Machine
+# vm_clone,Clone Virtual Machine
+vm_connect_all,Connect All Floppy and CD-ROM Drives for Virtual Machine
+vm_disconnect_all,Disconnect All Floppy and CD-ROM Drives for Virtual Machine
+vm_connect_cdrom,Connect All CD-ROM Drives for Virtual Machine
+vm_disconnect_cdrom,Disconnect All CD-ROM Drives for Virtual Machine
+vm_connect_floppy,Connect All Floppy Drives for Virtual Machine
+vm_disconnect_floppy,Disconnect All Floppy Drives for Virtual Machine
+vm_collect_running_processes,Collect Running Processes on VM Guest OS
+cancel_task,Cancel vCenter Task
+host_analyze,Initiate SmartState Analysis for Host
+compliance_failed,Mark as Non-Compliant
+check_compliance,Check Host or VM Compliance
+delete_most_recent_snapshot,Delete Most Recent Snapshot
+# Automation
+raise_automation_event,Raise Automation Event
+custom_automation,Invoke A Custom Automation

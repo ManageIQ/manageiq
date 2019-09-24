@@ -1,0 +1,63 @@
+---
+dims:
+created_on: 2008-08-14 21:34:34.077762 Z
+title: "Guest OS HKLM Registry Information"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - INCLUDES:
+        field: Vm.operating_system-product_name
+        value: Win
+    - FIND:
+        search:
+          IS NOT EMPTY:
+            field: Vm.registry_items-name
+        checkcount:
+          ">":
+            field: <count>
+            value: 0
+updated_on: 2008-08-14 21:34:34.077762 Z
+order: Ascending
+graph:
+menu_name: "Guest OS HKLM Registry Information"
+rpt_group: Custom
+priority: 0
+col_order:
+- name
+- registry_items.name
+- registry_items.value_name
+- registry_items.data
+- registry_items.format
+- registry_items.created_on
+- registry_items.updated_on
+timeline:
+id: 75
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  registry_items:
+    columns:
+    - name
+    - value_name
+    - data
+    - format
+    - created_on
+    - updated_on
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- registry_items.name
+headers:
+- VM Name
+- Registry Item Name
+- Registry Item Value Name
+- Registry Item Data
+- Registry Item Format
+- Registry Item Date Created
+- Registry Item Date Updated

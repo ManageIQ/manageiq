@@ -1,0 +1,254 @@
+:item_type: registry
+:definition:
+  content:
+  - depth: 0
+    hive: HKLM
+    value: RestrictGuestAccess
+    key: SYSTEM\CurrentControlSet\Services\Eventlog\Application
+  - depth: 0
+    hive: HKLM
+    value: CurrentVersion
+    key: SOFTWARE\JavaSoft\Java Runtime Environment
+  - depth: 0
+    hive: HKLM
+    value: EnableDCOM
+    key: SOFTWARE\Microsoft\Ole
+  - depth: 0
+    hive: HKLM
+    value: DefaultUserName
+    key: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  - depth: 0
+    hive: HKLM
+    value: RestrictGuestAccess
+    key: SYSTEM\CurrentControlSet\Services\Eventlog\Security
+  - depth: 0
+    hive: HKLM
+    value: RestrictGuestAccess
+    key: SYSTEM\CurrentControlSet\Services\Eventlog\System
+  - depth: 0
+    hive: HKLM
+    value: DCOM Protocols
+    key: SOFTWARE\Microsoft\Rpc
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\Alerter
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\wuauserv
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\ClipSrv
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\Browser
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\DesktopOnCallService
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\DHCP
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\DFS
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\TrkWks
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\MSDTC
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\Fax
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\cisvc
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\PolicyAgent
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\LicenseService
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\dmserver
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\Messenger
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\NetLogon
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\mnmsrvc
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\RSVP
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\NtmsSvc
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\SCardDrv
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\SNMP
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\SNMPTRAP
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\LmHosts
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\TermService
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\ServicesTlntSvr
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\UPS
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\UtilMan
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\WinMgmt
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\W32Time
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\WZCSVC
+  - depth: 0
+    hive: HKLM
+    value: ListenOnINternet
+    key: SYSTEM\CurrentControlSet\Services\RpcSs
+  - depth: 0
+    hive: HKLM
+    value: Bind
+    key: SYSTEM\CurrentControlSet\Services\Rpc\Linkage
+  - depth: 0
+    hive: HKLM
+    value: Ports
+    key: SOFTWARE\Microsoft\Rpc\Internet
+  - depth: 0
+    hive: HKLM
+    value: Description
+    key: SYSTEM\CurrentControlSet\Services\W32Time
+  - depth: 0
+    hive: HKLM
+    value: DisplayName
+    key: SYSTEM\CurrentControlSet\Services\W32Time
+  - depth: 0
+    hive: HKLM
+    value: AnnounceFlags
+    key: SYSTEM\CurrentControlSet\Services\W32Time\Config
+  - depth: 0
+    hive: HKLM
+    value: MaxNegPhaseCorrection
+    key: SYSTEM\CurrentControlSet\Services\W32Time\Config
+  - depth: 0
+    hive: HKLM
+    value: NtpServer
+    key: SYSTEM\CurrentControlSet\Services\W32Time\Parameters
+  - depth: 0
+    hive: HKLM
+    value: Type
+    key: SYSTEM\CurrentControlSet\Services\W32Time\Parameters
+  - depth: 0
+    hive: HKLM
+    value: SpecialPollInterval
+    key: SYSTEM\CurrentControlSet\Services\W32Time\NtpClient
+  - depth: 0
+    hive: HKLM
+    value: Enabled
+    key: SYSTEM\CurrentControlSet\Services\W32Time\NtpServer
+  - depth: 0
+    hive: HKLM
+    value: Enabled
+    key: SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\PatternManager\Schedule
+  - depth: 0
+    hive: HKLM
+    value: Type
+    key: SOFTWARE\INTEL\LANDesk\VirusProtect6\CurrentVersion\PatternManager\Schedule
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\cron
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\sshd
+  - depth: 0
+    hive: HKLM
+    value: SecurityTypes
+    key: SOFTWARE\RealVNC\WinVNC4
+  - depth: 0
+    hive: HKLM
+    value: PortNumber
+    key: SOFTWARE\RealVNC\WinVNC4
+  - depth: 0
+    hive: HKLM
+    value: UserPasswdVerifier
+    key: SOFTWARE\RealVNC\WinVNC4
+  - depth: 0
+    hive: HKLM
+    value: NtLogon_Config
+    key: SOFTWARE\RealVNC\WinVNC4
+  - depth: 0
+    hive: HKLM
+    value: Version
+    key: SOFTWARE\Microsoft\Updates\Windows 2000\SP5\KB958644\Filelist\0
+  - depth: 0
+    hive: HKLM
+    value: Version
+    key: SOFTWARE\Microsoft\Updates\Windows XP\SP4\KB958644\Filelist\0
+  - depth: 0
+    hive: HKLM
+    value: AutoAdminLogon
+    key: SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  - depth: 0
+    hive: HKLM
+    value: Destination
+    key: SOFTWARE\InterSect Alliance\AuditService\Network
+  - depth: 0
+    hive: HKLM
+    value: Start
+    key: SYSTEM\CurrentControlSet\Services\DHCPServer
+  - depth: 0
+    hive: HKLM
+    value: DSA Database file
+    key: SYSTEM\CurrentControlSet\Services\NTDS\Parameters
+:name: sample_registry
+:description: Sample Registry Scan
+:mode: Vm

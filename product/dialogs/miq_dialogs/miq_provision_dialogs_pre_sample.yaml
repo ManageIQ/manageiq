@@ -1,0 +1,74 @@
+---
+:name: miq_provision_dialogs_pre_sample
+:description: Sample VM Pre-Provisioning Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :dialog_order:
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :hardware
+  - :network
+  - :customize
+  - :schedule
+  :buttons:
+  - :continue
+  - :cancel
+  :dialogs:
+    :requester:
+      :description: Request
+      :fields: {}
+
+      :display: :hide
+      :field_order:
+    :purpose:
+      :description: Purpose
+      :fields:
+        :vm_tags:
+          :required_method: :validate_tags
+          :description: Tags
+          :required: true
+          :options:
+            :include:
+            - :environment
+            :single_select: []
+
+            :exclude: []
+
+          :display: :edit
+          :required_tags:
+          - :environment
+          :data_type: :integer
+      :display: :show
+      :field_order:
+    :customize:
+      :description: Customize
+      :fields: {}
+
+      :display: :hide
+    :environment:
+      :description: Environment
+      :fields: {}
+
+      :display: :hide
+    :service:
+      :description: Catalog
+      :fields: {}
+
+      :display: :hide
+    :schedule:
+      :description: Schedule
+      :fields: {}
+
+      :display: :hide
+    :network:
+      :description: Virtual Network
+      :fields: {}
+
+      :display: :hide
+    :hardware:
+      :description: Hardware
+      :fields: {}
+
+      :display: :hide

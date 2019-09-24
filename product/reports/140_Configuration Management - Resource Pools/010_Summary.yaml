@@ -1,0 +1,73 @@
+---
+dims:
+created_on: 2008-08-11 17:59:16.047018 Z
+title: "Resource Pools Summary"
+conditions: !ruby/object:MiqExpression
+  exp:
+    not:
+      INCLUDES:
+        field: ResourcePool-name
+        value: Default
+updated_on: 2008-08-13 21:45:06.865835 Z
+order: Ascending
+graph:
+menu_name: "Resource Pools Summary"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- cpu_limit
+- cpu_reserve_expand
+- cpu_reserve
+- cpu_shares_level
+- cpu_shares
+- memory_limit
+- memory_reserve_expand
+- memory_reserve
+- memory_shares_level
+- memory_shares
+- created_on
+- ext_management_system.name
+timeline:
+id: 74
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  ext_management_system:
+    columns:
+    - name
+db: ResourcePool
+cols:
+- name
+- cpu_limit
+- cpu_reserve_expand
+- cpu_reserve
+- cpu_shares_level
+- cpu_shares
+- memory_limit
+- memory_reserve_expand
+- memory_reserve
+- memory_shares_level
+- memory_shares
+- created_on
+template_type: report
+group: y
+sortby:
+- ext_management_system.name
+- name
+headers:
+- Name
+- CPU Limit
+- CPU Reserve Expand
+- CPU Reserve
+- CPU Shares Level
+- CPU Shares
+- Memory Limit
+- Memory Reserve Expand
+- Memory Reserve
+- Memory Shares Level
+- Memory Shares
+- Date Created
+- Provider Name

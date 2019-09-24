@@ -1,0 +1,43 @@
+---
+- :attributes:
+    :name: "Sample: Daily VM Analysis"
+    :userid: system
+    :enabled: 0
+    :filter: |
+      --- !ruby/object:MiqExpression
+      exp:
+        IS NOT NULL:
+          field: Vm-name
+          value: ""
+
+    :description: Analysis All VMs Daily at Midnight UTC
+    :prod_default: default
+    :run_at:
+      :start_time: 2008-01-01 00:00:00 UTC
+      :interval:
+        :unit: daily
+        :value: 1
+    :sched_action:
+      :method: vm_scan
+    :resource_type: Vm
+- :attributes:
+    :name: "Sample: Hourly VM Analysis"
+    :userid: system
+    :enabled: 0
+    :filter: |
+      --- !ruby/object:MiqExpression
+      exp:
+        IS NOT NULL:
+          field: Vm-name
+          value: ""
+
+    :description: Analysis All VMs Every Hour
+    :prod_default: default
+    :run_at:
+      :start_time: 2008-01-01 00:00:00 UTC
+      :interval:
+        :unit: houly
+        :value: 1
+    :sched_action:
+      :method: vm_scan
+    :resource_type: Vm

@@ -1,0 +1,65 @@
+---
+dims:
+created_on: 2008-08-12 17:36:18.175145 Z
+title: "Host Summary for VMs"
+conditions:
+updated_on: 2008-08-13 22:01:26.731146 Z
+order: Ascending
+graph:
+menu_name: "Host Summary for VMs"
+rpt_group: Custom
+priority: 10
+col_order:
+- name
+- ipaddress
+- vms.name
+- vms.os_image_name
+- vms.managed.power_state
+- vms.v_owning_datacenter
+- vms.v_owning_folder
+- vms.v_owning_resource_pool
+- vms.v_is_a_template
+- vms.retired
+- vms.retires_on
+timeline:
+id: 84
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  vms:
+    columns:
+    - name
+    - os_image_name
+    - v_owning_datacenter
+    - v_owning_folder
+    - v_owning_resource_pool
+    - v_is_a_template
+    - retired
+    - retires_on
+    include:
+      managed:
+        columns:
+        - power_state
+db: Host
+cols:
+- name
+- ipaddress
+template_type: report
+group: c
+sortby:
+- name
+- vms.name
+headers:
+- Host Name
+- IP Address
+- VM Name
+- VM OS Name
+- Power State
+- Parent Datacenter
+- Parent Folder
+- Parent Resource Pool
+- VM is a Template
+- Retired?
+- VM Retires On

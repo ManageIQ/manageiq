@@ -1,0 +1,57 @@
+# QUICKSTART
+#
+# * copy Procfile.example to Procfile
+# * uncomment needed processes
+# * `bin/rake evm:foreman:start` to start the processes!
+#   This task will configure the local server to look started and then start the processes in the Procfile.
+#
+# See documentation at http://manageiq.org/docs/guides/developer_setup/foreman
+#
+# Web server workers
+# The $PORT variable is set automatically by foreman for particular workers
+# We tell foreman to start at 3000, it then increments by 1 per instance of a worker type
+# and 100 per worker type.
+#
+# So, the first ui worker will get PORT=3000 while the next will get PORT=3001
+# The first api worker will get PORT=3100 and the next will get PORT=3101
+
+# ui:             env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqUiWorker
+# api:            env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqWebServiceWorker
+# remote_console: env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqRemoteConsoleWorker
+
+# schedule: ruby lib/workers/bin/run_single_worker.rb MiqScheduleWorker
+
+# Queue workers
+# These workers use a default queue defined in their classes
+# We do not need to pass them a queue name
+
+# generic:           ruby lib/workers/bin/run_single_worker.rb MiqGenericWorker
+# priority:          ruby lib/workers/bin/run_single_worker.rb MiqPriorityWorker
+# event:             ruby lib/workers/bin/run_single_worker.rb MiqEventHandler
+# reporting:         ruby lib/workers/bin/run_single_worker.rb MiqReportingWorker
+# metrics_processor: ruby lib/workers/bin/run_single_worker.rb MiqEmsMetricsProcessorWorker
+
+# Provider workers
+#
+# If you are unsure which workers to start, you can run `ruby lib/workers/bin/run_single_worker.rb -l` to list the workers available
+
+# VMware example
+# The following workers should be started to work with a VMware infrastructure EMS
+
+# vim_broker:     ruby lib/workers/bin/run_single_worker.rb MiqVimBrokerWorker
+# vmware_metrics: ruby lib/workers/bin/run_single_worker.rb ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
+
+# Per EMS queue workers
+# These workers subscribe to a queue named based on the particular EMS they connect to
+# The "<id>" tag in these lines should be replaced by the id of the manager instance these workers apply to
+
+# vmware_refresh_<id>:      ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
+# vmware_event_<id>:        ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::Vmware::InfraManager::EventCatcher
+# vmware_refresh_core_<id>: ruby lib/workers/bin/run_single_worker.rb --ems-id <id> MiqEmsRefreshCoreWorker
+
+# Logs
+#
+# If you also want to see the log output in the same terminal session that you see the foreman output, uncomment these lines
+
+# evm_log: tail -f log/evm.log
+# dev_log: tail -f log/development.log

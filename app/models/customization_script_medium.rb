@@ -1,0 +1,2 @@
+class CustomizationScriptMedium < CustomizationScript
+end

@@ -1,0 +1,43 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 19:47:03.927017 Z
+reserved:
+title: "Datastore Capacity Trend over the last 6 months"
+conditions:
+updated_on: 2009-05-19 01:05:03.689235 Z
+order: Ascending
+graph:
+menu_name: "Datastore Capacity Trend over 6 mos."
+rpt_group: Custom
+priority:
+col_order: []
+
+timeline:
+id: 104
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 15552000
+  :trend_db: StoragePerformance
+  :trend_col: v_derived_storage_used
+  :end_offset: 0
+  :rpt_type: trend
+  :target_pcts:
+  - 50
+  - 75
+  - 95
+  :interval: daily
+  :limit_col: max_derived_storage_total
+include: {}
+
+db: VimPerformanceTrend
+cols: []
+
+template_type: report
+group:
+sortby:
+- resource_name
+headers: []

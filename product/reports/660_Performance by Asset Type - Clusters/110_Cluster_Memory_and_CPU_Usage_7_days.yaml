@@ -1,0 +1,58 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 14:53:10.822035 Z
+reserved:
+title: "Cluster Memory and CPU usage over last 7 days"
+conditions:
+updated_on: 2009-05-19 00:35:33.732482 Z
+order: Descending
+graph:
+menu_name: "Cluster Memory and CPU Usage (7 days)"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- mem_usage_absolute_average
+- max_mem_usage_absolute_average
+- max_derived_memory_used
+- derived_memory_used
+- v_date
+timeline:
+id: 99
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 604800
+  :end_offset: 0
+  :interval: daily
+include: {}
+
+db: EmsClusterPerformance
+cols:
+- resource_name
+- cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- mem_usage_absolute_average
+- max_mem_usage_absolute_average
+- max_derived_memory_used
+- derived_memory_used
+- v_date
+template_type: report
+group: c
+sortby:
+- resource_name
+- v_date
+headers:
+- Cluster Name
+- CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)
+- CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)
+- Memory - Avg Usage of Total Allocated for Collected Intervals (%)
+- Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%)
+- Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)
+- Memory - Aggregate Used for Child VMs for Collected Intervals (MB)
+- Activity Sample - Day  (MM DD YY)

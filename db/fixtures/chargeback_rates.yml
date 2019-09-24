@@ -1,0 +1,258 @@
+---
+- :description: Default
+  :guid: b47a0ef0-4335-11df-aba8-001d09066d98
+  :rate_type: Compute
+  :default: true
+  :rates:
+  - :description: Used CPU
+    :metric: cpu_usagemhz_rate_average
+    :per_time: hourly
+    :per_unit: megahertz
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.02
+  - :description: Used CPU Cores
+    :metric: v_derived_cpu_total_cores_used
+    :per_time: hourly
+    :per_unit: cpu core
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.02
+  - :description: Allocated CPU Count
+    :metric: derived_vm_numvcpus
+    :per_time: hourly
+    :per_unit: cpu
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Allocated CPU Cores
+    :metric: derived_vm_numvcpu_cores
+    :per_time: hourly
+    :per_unit: cpu core
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Used Memory
+    :metric: derived_memory_used
+    :per_time: hourly
+    :per_unit: megabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.02
+  - :description: Allocated Memory
+    :metric: derived_memory_available
+    :per_time: hourly
+    :per_unit: megabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+  - :description: Used Network I/O
+    :metric: net_usage_rate_average
+    :per_time: hourly
+    :per_unit: kbps
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: 100
+      :fixed_rate: 0.5
+      :variable_rate: 0.0
+    - :start: 100
+      :finish: Infinity
+      :fixed_rate: 0.5
+      :variable_rate: 0.005
+  - :description: Used Disk I/O
+    :metric: disk_usage_rate_average
+    :per_time: hourly
+    :per_unit: kbps
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.005
+  - :description: Fixed Compute Cost 1
+    :metric: fixed_compute_1
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+  - :description: Fixed Compute Cost 2
+    :metric: fixed_compute_2
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+- :description: Default
+  :guid: 7d7aaf20-5214-11df-a888-001d09066d98
+  :rate_type: Storage
+  :default: true
+  :rates:
+  - :description: Allocated Disk Storage
+    :metric: derived_vm_allocated_disk_storage
+    :per_time: hourly
+    :per_unit: gigabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Used Disk Storage
+    :metric: derived_vm_used_disk_storage
+    :per_time: hourly
+    :per_unit: gigabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 2.0
+  - :description: Fixed Storage Cost 1
+    :metric: fixed_storage_1
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+  - :description: Fixed Storage Cost 2
+    :metric: fixed_storage_2
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+- :description: Default Container Image Rate
+  :guid: b47a0ef0-4335-11df-aba8-001d09066d99
+  :rate_type: Compute
+  :default: false
+  :rates:
+  - :description: Used CPU
+    :metric: cpu_usagemhz_rate_average
+    :per_time: hourly
+    :per_unit: megahertz
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.02
+  - :description: Used CPU Cores
+    :metric: v_derived_cpu_total_cores_used
+    :per_time: hourly
+    :per_unit: cpu core
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.02
+  - :description: Allocated CPU Count
+    :metric: derived_vm_numvcpus
+    :per_time: hourly
+    :per_unit: cpu
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Allocated CPU Cores
+    :metric: derived_vm_numvcpu_cores
+    :per_time: hourly
+    :per_unit: cpu core
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 1.0
+      :variable_rate: 0.0
+  - :description: Used Memory
+    :metric: derived_memory_used
+    :per_time: hourly
+    :per_unit: megabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.02
+  - :description: Allocated Memory
+    :metric: derived_memory_available
+    :per_time: hourly
+    :per_unit: megabytes
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+  - :description: Used Network I/O
+    :metric: net_usage_rate_average
+    :per_time: hourly
+    :per_unit: kbps
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: 100
+      :fixed_rate: 0.5
+      :variable_rate: 0.0
+    - :start: 100
+      :finish: Infinity
+      :fixed_rate: 0.5
+      :variable_rate: 0.005
+  - :description: Used Disk I/O
+    :metric: disk_usage_rate_average
+    :per_time: hourly
+    :per_unit: kbps
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.005
+  - :description: Fixed Compute Cost 1
+    :metric: fixed_compute_1
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0
+  - :description: Fixed Compute Cost 2
+    :metric: fixed_compute_2
+    :per_time: hourly
+    :type_currency: USD
+    :tiers:
+    - :start: 0
+      :finish: Infinity
+      :fixed_rate: 0.0
+      :variable_rate: 0.0

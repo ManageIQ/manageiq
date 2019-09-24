@@ -1,0 +1,30 @@
+---
+yaml_strings_to_extract:
+  db/fixtures/miq_product_features{.yml,.yaml,/*.yml,/*.yaml}:
+  - name
+  - description
+  db/fixtures/miq_report_formats.*:
+  - description
+  db/fixtures/notification_types.*:
+  - message
+  product/charts/layouts/*.yaml:
+  - title
+  product/charts/layouts/*/*.yaml:
+  - title
+  product/charts/miq_reports/vmdb_database.yaml:
+  - headers
+  - title
+  - name
+  product/compare/*.yaml:
+  - headers
+  - group
+  - menu_name
+  - title
+  product/reports/*/*.*:
+  - headers
+  - menu_name
+  - title
+  product/timelines/miq_reports/*.*:
+  - title
+  - name
+  - headers

@@ -1,0 +1,138 @@
+---
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Operations VM Power On/Off Events for Last Week"
+
+# Menu name
+menu_name: "Operations VMs Powered On/Off for Last Week"
+
+# Main DB table report is based on
+db: EventStream
+
+# Columns to fetch from the main table
+cols:
+- event_type
+- source
+- message
+- timestamp
+- host_name
+- vm_name
+- vm_location
+- username
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  ext_management_system:
+    columns:
+    - name
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- vm_name
+- event_type
+- source
+- ext_management_system.name
+- message
+- host_name
+- vm_location
+- username
+
+# Column titles, in order
+headers:
+- Date Time
+- VM Name
+- Event Type
+- Event Source
+- Provider
+- Message
+- Host Name
+- VM Location
+- VC User Name
+
+# Condition(s) string for the SQL query
+#conditions:
+#  :field: EmsEvent-event_type
+#  :operator: LIKE
+#  :string: VmPowered%Event
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - "OR":
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: VmPowered
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_powerOff
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_start
+    - "OR":
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Event
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Request
+    - "IS":
+        field: EmsEvent-timestamp
+        value: Last Week
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+timeline:
+  :field: EmsEvent-timestamp
+  :bands:
+  - :text: true
+    :gap: 0.0
+    :unit: Minute
+    :width: 70
+    :pixels: 100
+  - :text: false
+    :gap: 0.1
+    :unit: Hour
+    :width: 20
+    :height: 0.6
+    :pixels: 200
+  - :text: false
+    :unit: Day
+    :gap: 0.1
+    :width: 10
+    :pixels: 200
+    :height: 0.3
+  :position: Last

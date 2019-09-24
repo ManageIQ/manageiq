@@ -1,0 +1,49 @@
+---
+dims: 2
+created_on: 2008-08-11 16:19:56.134370 Z
+title: "Hosts - Summary by Version"
+conditions:
+updated_on: 2008-08-13 22:57:45.468867 Z
+order: Ascending
+graph:
+  :type: StackedBar
+  :count: "10"
+  :other: true
+menu_name: "Hosts Summary"
+rpt_group: Custom
+priority: 10
+col_order:
+- name
+- ipaddress
+- vmm_vendor_display
+- vmm_product
+- vmm_version
+- vmm_buildnumber
+timeline:
+id: 67
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: Host
+cols:
+- name
+- ipaddress
+- vmm_vendor_display
+- vmm_product
+- vmm_version
+- vmm_buildnumber
+template_type: report
+group: c
+sortby:
+- vmm_version
+- vmm_buildnumber
+headers:
+- Host Name
+- Primary IP Address
+- VMM Vendor
+- VMM Product
+- VMM Version
+- VMM Build Number

@@ -1,0 +1,43 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 16:32:03.463640 Z
+reserved:
+title: "Host Peak Memory Used Trends over last 6 Months"
+conditions:
+updated_on: 2009-05-19 01:11:56.325613 Z
+order: Ascending
+graph:
+menu_name: "Host Peak Memory Used Trends for 6 Mos."
+rpt_group: Custom
+priority:
+col_order: []
+
+timeline:
+id: 103
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 15552000
+  :trend_db: HostPerformance
+  :trend_col: max_derived_memory_used
+  :end_offset: 0
+  :rpt_type: trend
+  :target_pcts:
+  - 50
+  - 75
+  - 90
+  :interval: daily
+  :limit_col: max_derived_memory_available
+include: {}
+
+db: VimPerformanceTrend
+cols: []
+
+template_type: report
+group:
+sortby:
+- resource_name
+headers: []

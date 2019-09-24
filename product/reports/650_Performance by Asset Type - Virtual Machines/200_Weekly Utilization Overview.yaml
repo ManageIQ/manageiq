@@ -1,0 +1,71 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Weekly Utilization Overview"
+conditions:
+col_options:
+  disk_usage_rate_average__avg:
+    :grouping:
+    - :avg
+  cpu_usage_rate_average__avg:
+    :grouping:
+    - :avg
+  mem_usage_absolute_average__avg:
+    :grouping:
+    - :avg
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Weekly Utilization Overview"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- ems_cluster.v_parent_datacenter
+- cpu_usage_rate_average__avg
+- disk_usage_rate_average__avg
+- mem_usage_absolute_average__avg
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 604800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+-
+-
+-
+-
+-
+include:
+  ems_cluster:
+    columns:
+    - v_parent_datacenter
+db: EmsClusterPerformance
+cols:
+- resource_name
+- cpu_usage_rate_average
+- disk_usage_rate_average
+- mem_usage_absolute_average
+template_type: report
+group: c
+sortby:
+- ems_cluster.v_parent_datacenter
+- resource_name
+rpt_options:
+  :pivot:
+    :group_cols:
+    - ems_cluster.v_parent_datacenter
+headers:
+- Asset Name
+- Cluster Parent Datacenter
+- CPU - Usage (%) (Avg)
+- Disk I/O  (KBps) (Avg)
+- Memory - Usage (%) (Avg)
+display_filter:

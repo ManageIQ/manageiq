@@ -1,0 +1,85 @@
+---
+title: VMware Environment Summary
+rpt_type: Custom
+priority: 10
+db: Host
+cols:
+- name
+- vmm_product
+- vmm_version
+- num_cpu
+- v_total_vms
+include:
+  ext_management_system:
+    columns:
+    - name
+    - api_version
+    - id
+col_order:
+- ext_management_system.name
+- ext_management_system.api_version
+- ext_management_system.id
+- name
+- vmm_product
+- vmm_version
+- num_cpu
+- v_total_vms
+headers:
+- Provider
+- vSphere Version
+- Hypervisor
+- Hypervisor ID
+- Product
+- Version
+- CPU Sockets
+- VMs
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: Host.ext_management_system-type
+      value: ManageIQ::Providers::Vmware::InfraManager
+  context_type:
+order: Ascending
+sortby:
+- ext_management_system.name
+- name
+group: c
+graph:
+dims:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  vmm_version:
+    :break_label: 'VMM Version: '
+  num_cpu:
+    :grouping:
+    - :total
+  v_total_vms:
+    :grouping:
+    - :total
+  name:
+    :break_label: 'Provider : Name: '
+    :break_format: :model_name
+rpt_options:
+  :pdf:
+    :page_size: A4 - 210mm x 297mm (default)
+  :queue_timeout:
+  :summary:
+    :hide_detail_rows: false
+menu_name: VMware Environment Summary

@@ -1,0 +1,66 @@
+---
+where_clause:
+dims:
+created_on: 2009-04-03 16:56:10 Z
+reserved:
+title: Policy Events for Last Week
+conditions: !ruby/object:MiqExpression
+  exp:
+    "IS":
+      field: PolicyEvent-timestamp
+      value: Last Week
+updated_on: 2009-04-06 20:19:27 Z
+order: Ascending
+graph:
+menu_name: Policy Events for Last Week
+rpt_group: Custom
+priority:
+col_order:
+- timestamp
+- event_type
+- miq_event_description
+- miq_policy_description
+timeline:
+  :last_unit: Months
+  :last_time: "1"
+  :field: PolicyEvent-timestamp
+  :position: Last
+  :bands:
+  - :pixels: 100
+    :gap: 0.0
+    :unit: Hour
+    :width: 70
+    :text: true
+  - :height: 0.6
+    :pixels: 200
+    :gap: 0.1
+    :unit: Day
+    :text: false
+    :width: 20
+  - :height: 0.3
+    :pixels: 200
+    :gap: 0.1
+    :unit: Month
+    :text: false
+    :width: 10
+id: 87
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: PolicyEvent
+cols:
+- timestamp
+- event_type
+- miq_event_description
+- miq_policy_description
+template_type: report
+group:
+sortby:
+headers:
+- Time Stamp
+- Event Type
+- Miq Event Description
+- Miq Policy Description

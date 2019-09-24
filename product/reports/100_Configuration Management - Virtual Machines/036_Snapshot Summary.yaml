@@ -1,0 +1,59 @@
+---
+dims:
+created_on: 2008-08-17 20:39:05.871246 Z
+title: "VMs Snapshot Summary"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT NULL:
+        field: Vm.snapshots-name
+        value: ""
+    - FIND:
+        search:
+          IS NOT EMPTY:
+            field: Vm.snapshots-name
+        checkcount:
+          ">":
+            field: <count>
+            value: 0
+updated_on: 2008-08-17 20:39:05.871246 Z
+order: Descending
+graph:
+menu_name: "VMs Snapshot Summary"
+rpt_group: Custom
+priority: 0
+col_order:
+- name
+- snapshots.name
+- snapshots.current
+- snapshots.description
+- snapshots.create_time
+- snapshots.total_size
+timeline:
+id: 70
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  snapshots:
+    columns:
+    - name
+    - current
+    - description
+    - create_time
+    - total_size
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+headers:
+- VM Name
+- Snapshot Name
+- Active Snapshot (0/1)
+- Description
+- Create Time
+- Total Size

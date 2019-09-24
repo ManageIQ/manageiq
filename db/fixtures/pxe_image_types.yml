@@ -1,0 +1,9 @@
+---
+- :name: CentOS-6
+  :provision_type:
+- :name: ESX
+  :provision_type: host
+- :name: RHEL-6
+  :provision_type:
+- :name: Windows
+  :provision_type: vm

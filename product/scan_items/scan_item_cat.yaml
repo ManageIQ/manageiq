@@ -1,0 +1,13 @@
+---
+:item_type: category
+:definition:
+  content:
+  - target: vmconfig
+  - target: vmevents
+  - target: accounts
+  - target: software
+  - target: services
+  - target: system
+:name: sample_category
+:description: Sample Category Scan
+:mode: Vm

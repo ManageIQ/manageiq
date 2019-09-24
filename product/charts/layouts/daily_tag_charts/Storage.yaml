@@ -1,0 +1,45 @@
+# Storage Daily performance by tag chart layouts
+---
+- :title: Used Space
+  :type: Line
+  :columns:
+  - derived_storage_used_managed
+  :menu:
+  - Chart-VMs-topday:Top VMs for <cat> on this day
+  - Display-VMs-bytag:VMs for <cat> on this day
+  :decimals: 2
+  :units: GB
+
+- :title: Disk Files
+  :type: Line
+  :columns:
+  - derived_storage_disk_managed
+  :menu:
+  - Display-VMs-bytag:VMs for <cat> on this day
+  :decimals: 2
+  :units: GB
+
+- :title: Snapshot Files
+  :type: Line
+  :columns:
+  - derived_storage_snapshot_managed
+  :menu:
+  - Display-VMs-bytag:VMs for <cat> on this day
+  :decimals: 2
+  :units: GB
+
+- :title: Memory Files
+  :type: Line
+  :columns:
+  - derived_storage_mem_managed
+  :menu:
+  - Display-VMs-bytag:VMs for <cat> on this day
+  :decimals: 2
+  :units: GB
+
+- :title: Number of VMs
+  :type: Line
+  :columns:
+  - derived_storage_vm_count_managed
+  :menu:
+  - Display-VMs-bytag:VMs for <cat> on this day

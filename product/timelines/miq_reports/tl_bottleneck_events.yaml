@@ -1,0 +1,101 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Timeline All Bottleneck Events"
+
+# Menu name
+name: "Timeline All Bottleneck Events"
+
+# Main DB table report is based on
+db: BottleneckEvent
+
+# Columns to fetch from the main table
+cols:
+- timestamp
+- resource_name
+- event_type
+- severity
+- message
+- resource_type
+- resource_id
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- resource_type
+- resource_name
+- event_type
+- severity
+- message
+
+# Column titles, in order
+headers:
+- Time Stamp
+- Type
+- Name
+- Event Type
+- Severity
+- Message
+
+# Condition(s) string for the SQL query
+conditions:
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+timeline:
+  :field: BottleneckEvent-timestamp
+  :bands:
+  - :text: true
+    :gap: 0.0
+    :unit: Day
+    :width: 80
+    :pixels: 100
+  - :text: false
+    :gap: 0.1
+    :unit: Week
+    :width: 10
+    :height: 0.4
+    :pixels: 150
+  - :text: false
+    :gap: 0.5
+    :unit: Month
+    :width: 10
+    :height: 0.6
+    :pixels: 200
+  :position: Current

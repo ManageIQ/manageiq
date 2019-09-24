@@ -1,0 +1,39 @@
+---
+dims:
+created_on: 2008-08-14 03:24:03.316701 Z
+title: "VM Guest OS UUIDs"
+conditions:
+updated_on: 2008-08-14 03:24:03.316701 Z
+order: Ascending
+graph:
+menu_name: "VM UUIDs"
+rpt_group: Custom
+priority: 20
+col_order:
+- name
+- hardware.bios
+- operating_system.product_name
+timeline:
+id: 132
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - bios
+  operating_system:
+    columns:
+    - product_name
+db: Vm
+cols:
+- name
+template_type: report
+group:
+sortby:
+- name
+headers:
+- VM Name
+- VM UUID
+- OS Product Name

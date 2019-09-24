@@ -1,0 +1,74 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Cluster Resources"
+conditions:
+col_options: {}
+
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Cluster Resources"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- aggregate_physical_cpus
+- aggregate_cpu_total_cores
+- aggregate_vm_cpus
+- v_cpu_vr_ratio
+- aggregate_cpu_speed
+- aggregate_memory
+- aggregate_vm_memory
+- v_ram_vr_ratio
+timeline:
+file_mtime:
+tz:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+include: {}
+
+db: EmsCluster
+cols:
+- name
+- aggregate_physical_cpus
+- aggregate_cpu_total_cores
+- aggregate_vm_cpus
+- v_cpu_vr_ratio
+- aggregate_cpu_speed
+- aggregate_memory
+- aggregate_vm_memory
+- v_ram_vr_ratio
+template_type: report
+group: y
+sortby:
+- name
+rpt_options: {}
+
+headers:
+- Name
+- Total Number of Physical CPUs
+- Total Number of Logical CPUs
+- Aggregate Vm Cpus
+- CPU Cores Virtual to Real Ratio
+- Total CPU Speed
+- Total Memory
+- Aggregate Vm Memory
+- Memory Virtual to Real Ratio
+display_filter:

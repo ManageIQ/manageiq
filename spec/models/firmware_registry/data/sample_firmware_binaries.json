@@ -1,0 +1,54 @@
+[
+  {
+    "description": "DELL BIOS update",
+    "urls": [
+      "http://172.16.93.126:8080/files/dell-bios-2019-03-23.bin",
+      "https://172.16.93.126:8443/files/dell-bios-2019-03-23.bin"
+    ],
+    "compatible_server_models": [
+      {
+        "model": "Common Model",
+        "manufacturer": "Common Manufacturer"
+      }
+    ],
+    "id": 1,
+    "version": "10.4.3",
+    "filename": "dell-bios-2019-03-23.bin"
+  },
+  {
+    "description": "DELL BIOS update",
+    "urls": [
+      "http://172.16.93.126:8080/files/dell-bios-2019-04-13.bin",
+      "https://172.16.93.126:8443/files/dell-bios-2019-04-13.bin"
+    ],
+    "compatible_server_models": [
+      {
+        "model": "Common Model",
+        "manufacturer": "Common Manufacturer"
+      }
+    ],
+    "id": 2,
+    "version": "10.4.4",
+    "filename": "dell-bios-2019-04-13.bin"
+  },
+  {
+    "description": "SuperMicro NIC firmware",
+    "urls": [
+      "http://172.16.93.126:8080/files/nic-update-3.exe",
+      "https://172.16.93.126:8443/files/nic-update-3.exe"
+    ],
+    "compatible_server_models": [
+      {
+        "model": "SYS-6033A-GHJ7Z",
+        "manufacturer": "SuperMicro"
+      },
+      {
+        "model": "SYS-5019D-FN8TP",
+        "manufacturer": "SuperMicro"
+      }
+    ],
+    "id": 3,
+    "version": "4.3.2-101-z",
+    "filename": "nic-update-3.exe"
+  }
+]

@@ -1,0 +1,43 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "Alerts: All"
+feed_description: "Insight All Alert Events"
+feed_link: "/alert/rss?feed=all_alert_event"
+
+# Item metadata
+item_title: |-
+    <script>
+      "#{rec.target.class.name}: #{rec.target.name}"
+    </script>
+
+# item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
+item_description: "#{rec.message} was raised on #{rec.timestamp}"
+item_link: |-
+    <script>
+    case rec.target
+    when ManageIQ::Providers::InfraManager
+      "/ems_infra/show/#{rec.target.id}"
+    when ManageIQ::Providers::CloudManager
+      "/ems_cloud/show/#{rec.target.id}"
+    else
+      "/#{rec.target.class.table_name.singularize}/show/#{rec.target.id}"
+    end
+    </script>
+item_class: MiqEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'EVMAlertEvent'"
+limit_to_time:
+limit_to_count:
+orderby:
+  :timestamp: :desc
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:

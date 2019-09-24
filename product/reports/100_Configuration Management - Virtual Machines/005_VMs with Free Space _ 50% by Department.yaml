@@ -1,0 +1,84 @@
+---
+where_clause:
+dims: 1
+created_on: 2009-05-08 18:28:04.697479 Z
+reserved:
+title: "VMs with Volume Free Space > 50% by Department"
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        IS NOT EMPTY:
+          field: Vm.hardware.volumes-name
+      checkany:
+        ">":
+          field: Vm.hardware.volumes-free_space_percent
+          value: 50
+updated_on: 2009-05-08 23:53:31.651481 Z
+order: Descending
+graph:
+  :type: Pie
+  :count: "8"
+  :other: false
+menu_name: "VMs with Free Space > 50% by Department"
+rpt_group: Custom
+priority: 29
+col_order:
+- managed.department
+- name
+- v_owning_cluster
+- storage.name
+- hardware.volumes.name
+- hardware.volumes.free_space_percent
+- hardware.volumes.free_space
+- hardware.volumes.size
+- hardware.volumes.used_space_percent
+- hardware.volumes.used_space
+- hardware.volumes.filesystem
+timeline:
+id: 103
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+include:
+  hardware:
+    include:
+      volumes:
+        columns:
+        - name
+        - free_space_percent
+        - free_space
+        - size
+        - used_space_percent
+        - used_space
+        - filesystem
+  managed:
+    columns:
+    - department
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+template_type: report
+group: c
+sortby:
+- managed.department
+- hardware.volumes.free_space_percent
+headers:
+- Department Classification
+- Name
+- Parent Cluster
+- Storage Name
+- Volume Name
+- Volume Free Space Percent
+- Volume Free Space
+- Volume Size
+- Volume Used Space Percent
+- Volume Used Space
+- Volume Filesystem

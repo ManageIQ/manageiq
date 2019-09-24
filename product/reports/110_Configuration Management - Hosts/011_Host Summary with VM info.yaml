@@ -1,0 +1,50 @@
+---
+where_clause:
+dims:
+created_on: 2009-10-07 15:09:08.113000 Z
+reserved:
+title: "Host Summary with VM info"
+conditions:
+updated_on: 2009-10-07 15:09:08.113000 Z
+order: Ascending
+graph:
+menu_name: "Host Summary with VM info"
+rpt_group: Custom
+priority: 40
+col_order:
+- host.name
+- name
+- power_state
+- hardware.cpu_total_cores
+- hardware.memory_mb
+timeline:
+id: 110
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+include:
+  hardware:
+    columns:
+    - cpu_total_cores
+    - memory_mb
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- power_state
+template_type: report
+group: c
+sortby:
+- host.name
+- name
+headers:
+- Host Name
+- Name
+- Power State
+- Hardware Number of Virtual CPUs
+- Hardware RAM

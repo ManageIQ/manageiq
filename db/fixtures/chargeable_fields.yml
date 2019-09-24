@@ -1,0 +1,80 @@
+---
+- :metric: cpu_usagemhz_rate_average
+  :description: Used CPU
+  :group: cpu
+  :source: used
+  :measure: Hz Units
+- :metric: v_derived_cpu_total_cores_used
+  :description: Used CPU Cores
+  :group: cpu_cores
+  :source: used
+- :metric: derived_vm_numvcpus
+  :description: Allocated CPU Count
+  :group: cpu
+  :source: allocated
+- :metric: derived_vm_numvcpu_cores
+  :description: Allocated CPU Cores
+  :group: cpu_cores
+  :source: allocated
+- :metric: derived_memory_used
+  :description: Used Memory
+  :group: memory
+  :source: used
+  :measure: Bytes Units
+- :metric: derived_memory_available
+  :description: Allocated Memory
+  :group: memory
+  :source: allocated
+  :measure: Bytes Units
+- :metric: net_usage_rate_average
+  :description: Used Network I/O
+  :group: net_io
+  :source: used
+  :measure: Bytes per Second Units
+- :metric: disk_usage_rate_average
+  :description: Used Disk I/O
+  :group: disk_io
+  :source: used
+  :measure: Bytes per Second Units
+- :metric: fixed_compute_1
+  :description: Fixed Compute Cost 1
+  :group: fixed
+  :source: compute_1
+- :metric: fixed_compute_2
+  :description: Fixed Compute Cost 2
+  :group: fixed
+  :source: compute_2
+- :metric: derived_vm_allocated_disk_storage
+  :description: Allocated Disk Storage
+  :group: storage
+  :source: allocated
+  :measure: Bytes Units
+- :metric: derived_vm_used_disk_storage
+  :description: Used Disk Storage
+  :group: storage
+  :source: used
+  :measure: Bytes Units
+- :metric: fixed_storage_1
+  :group: fixed
+  :source: storage_1
+  :description: Fixed Storage Cost 1
+- :metric: fixed_storage_2
+  :group: fixed
+  :source: storage_2
+  :description: Fixed Storage Cost 2
+- :metric: metering_used_hours
+  :group: metering
+  :source: used
+  :description: Metering - Hours Used
+- :metric: metering_allocated_cpu
+  :group: metering
+  :source: allocated_cpu
+  :description: Metering - Hours Allocated CPU
+- :metric: metering_allocated_memory
+  :group: metering
+  :source: allocated_memory
+  :description: Metering - Hours Allocated Memory
+- :metric: metering_allocated_cpu_cores
+  :group: metering
+  :source: allocated_cpu_cores
+  :description: Metering - Hours Allocated Memory

@@ -1,0 +1,66 @@
+---
+dims:
+created_on: 2008-08-13 15:59:05.745852 Z
+title: "VM Account Groups for Windows"
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: Vm.operating_system-product_name
+      value: Win
+updated_on: 2008-08-13 15:59:05.745852 Z
+order: Ascending
+graph:
+menu_name: "Account Groups - Windows"
+rpt_group: Custom
+priority: 130
+col_order:
+- name
+- groups.name
+- groups.comment
+- groups.acctid
+- groups.accttype
+- groups.display_name
+- groups.domain
+- groups.enabled
+- groups.expires
+- groups.homedir
+- groups.local
+timeline:
+id: 106
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  groups:
+    columns:
+    - name
+    - comment
+    - acctid
+    - accttype
+    - display_name
+    - domain
+    - enabled
+    - expires
+    - homedir
+    - local
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- groups.name
+headers:
+- VM Name
+- Group Name
+- Group Comment
+- Group Account ID
+- Group Account Type
+- Group Display Name
+- Group Domain
+- Group Enabled
+- Group Expires
+- Group Home Directory
+- Group Local

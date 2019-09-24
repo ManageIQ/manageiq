@@ -1,0 +1,48 @@
+---
+dims:
+created_on: 2008-08-12 17:02:22.058132 Z
+title: "Datastore summary for Hosts"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: Storage-store_type
+      value: VMFS
+updated_on: 2008-08-13 17:12:29.040555 Z
+order: Ascending
+graph:
+menu_name: "Datastore Summary for Hosts"
+rpt_group: Custom
+priority: 250
+col_order:
+- name
+- hosts.name
+- store_type
+- free_space
+- total_space
+timeline:
+id: 82
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hosts:
+    columns:
+    - name
+db: Storage
+cols:
+- name
+- store_type
+- free_space
+- total_space
+template_type: report
+group: c
+sortby:
+- name
+- hosts.name
+headers:
+- Datastore Name
+- Host Name
+- Store Type
+- Free Space
+- Total Space

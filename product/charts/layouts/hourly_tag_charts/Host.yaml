@@ -1,0 +1,53 @@
+# Host Hourly performance by tag chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Virtual Machine CPU Ready (Percent)
+  :type: Line
+  :columns:
+  - v_pct_cpu_ready_delta_summation
+  :menu:
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-bytag:VMs for <cat> that were running
+#  :max_value: 100.4
+  :decimals: 1
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-bytag:VMs for <cat> that were running

@@ -1,0 +1,48 @@
+---
+dims:
+created_on: 2008-08-14 03:19:12.019086 Z
+title: "EVM Server UserID Usage Report"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT NULL:
+      field: User-lastlogon
+      value:
+updated_on: 2008-08-14 03:19:12.019086 Z
+order: Ascending
+graph:
+menu_name: "EVM Server UserID Usage Report"
+rpt_group: Custom
+priority: 210
+col_order:
+- userid
+- name
+- lastlogon
+- lastlogoff
+- created_on
+- email
+timeline:
+id: 131
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: User
+cols:
+- userid
+- name
+- lastlogon
+- lastlogoff
+- created_on
+- email
+template_type: report
+group:
+sortby:
+headers:
+- UserID
+- Name
+- Last Logon
+- Last Logoff
+- Date Created
+- Email

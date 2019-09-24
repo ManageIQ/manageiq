@@ -1,0 +1,97 @@
+# /
+*.cmd
+*.pyc
+*.sln
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.swp
+.bundle/
+.idea/
+.vscode/
+.loadpath
+.project
+.redcar/
+.rspec-local
+.rubocop-*
+.ruby-version
+.sass-cache/
+.tags
+/data/
+/productization
+/plugins
+/vmdb/
+BUILD
+ca/root
+certs/v2_key
+config/secrets.yml*
+coverage/
+Gemfile.lock*
+GUID
+openstack_environments.yml
+nbproject/
+private_test
+REGION
+SyntaxCheck
+xfer_*.xml
+Thumbs.db
+Procfile
+
+# bin/
+bin/*
+
+# config/
+config/apache
+config/cockpit
+config/database.yml*
+config/cable.yml
+config/vmdb.yml.db
+
+config/initializers/*.local.rb
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+
+# content/
+content/ansible_consolidated
+
+# db/
+db/*.sqlite3
+db/schema.rb
+db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
+
+# log/
+log/*.gz
+log/*.log
+log/*.txt
+log/call_graph_*.html
+
+# product/
+product/automate
+
+# public/
+/public/assets/
+/public/doc/
+public/upload
+public/pictures/
+public/ui/
+/public/packs
+/public/webmks
+
+# tmp/
+tmp/*
+
+# vendor/
+vendor/bundle
+vendor/node_root/
+
+# npm
+node_modules/
+
+# ignore included plugins in bundler.d
+bundler.d/*
+
+# yardoc
+/doc/
+.yardoc

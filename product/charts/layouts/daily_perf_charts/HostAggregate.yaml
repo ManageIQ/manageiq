@@ -1,0 +1,85 @@
+# Host Aggregate Daily performance chart layouts
+---
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  - min_cpu_usage_rate_average
+  - max_cpu_usage_rate_average
+  - trend_max_cpu_usage_rate_average
+  - resource.cpu_usage_rate_average_high_over_time_period
+  - resource.cpu_usage_rate_average_low_over_time_period
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top Instances on this day
+  - Display-VMs-on:Instances that were running
+  :max_value: 100.4
+  :decimals: 1
+#  :chart2:
+#    :type: Line
+#    :title: Instances
+#    :columns:
+#    - derived_vm_count_on
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - min_derived_memory_used
+  - max_derived_memory_used
+  - trend_max_derived_memory_used
+  - resource.derived_memory_used_high_over_time_period
+  - resource.derived_memory_used_low_over_time_period
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top Instances on this day
+  - Display-VMs-on:Instances that were running
+#  :chart2:
+#    :type: Line
+#    :title: Instances
+#    :columns:
+#    - derived_vm_count_on
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  - min_disk_usage_rate_average
+  - max_disk_usage_rate_average
+  - trend_max_disk_usage_rate_average
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top Instances on this day
+  - Display-VMs-on:Instances that were running
+#  :chart2:
+#    :type: Line
+#    :title: Instances
+#    :columns:
+#    - derived_vm_count_on
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  - min_net_usage_rate_average
+  - max_net_usage_rate_average
+  - trend_max_net_usage_rate_average
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top Instances on this day
+  - Display-VMs-on:Instances that were running
+#  :chart2:
+#    :type: Line
+#    :title: Instances
+#    :columns:
+#    - derived_vm_count_on
+
+- :title: Instances
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Display-VMs-on:Instances that were running
+  - Display-VMs-off:Instances that were stopped

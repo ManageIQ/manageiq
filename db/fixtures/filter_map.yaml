@@ -1,0 +1,12 @@
+---
+SampleEvmGroup-super_administrator:
+  managed:
+  - - /managed/department/accounting
+    - /managed/department/defense
+    - /managed/department/presales
+    - /managed/department/support
+  - - /managed/environment/dev
+    - /managed/environment/test
+  belongsto:
+  - /belongsto/ExtManagementSystem|dev010.manageiq.com/EmsFolder|Datacenters/EmsFolder|Dev010/EmsFolder|host/EmsCluster|GTCluster
+  - /belongsto/ExtManagementSystem|dev010.manageiq.com/EmsFolder|Datacenters/EmsFolder|Dev010/EmsFolder|vm/EmsFolder|Discovered Virtual Machine

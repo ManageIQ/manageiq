@@ -1,0 +1,94 @@
+# Host Hourly performance chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+  - derived_cpu_available
+  - derived_cpu_reserved
+  :menu:
+  - Chart-Vms-tophour:Top VMs during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Virtual Machine CPU States
+  :type: Area
+  :columns:
+  - v_pct_cpu_ready_delta_summation
+  - v_pct_cpu_used_delta_summation
+#  - v_pct_cpu_wait_delta_summation
+  :menu:
+  - Chart-Vms-tophour:Top VMs during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :max_value: 100.4
+  :decimals: 1
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - derived_memory_available
+  - derived_memory_reserved
+  :menu:
+  - Chart-Vms-tophour:Top VMs during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top VMs during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top VMs during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Virtual Machines
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-on:VMs that were running
+  - Display-VMs-off:VMs that were stopped

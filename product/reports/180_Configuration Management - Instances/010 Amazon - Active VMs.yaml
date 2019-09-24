@@ -1,0 +1,82 @@
+---
+title: Amazon - Active VMs
+rpt_group: Custom
+rpt_type: Custom
+priority: 20
+db: ManageIQ::Providers::CloudManager::Vm
+cols:
+- name
+- power_state
+include:
+  flavor:
+    columns:
+    - name
+  ext_management_system:
+    columns:
+    - name
+  availability_zone:
+    columns:
+    - name
+  security_groups:
+    columns:
+    - name
+col_order:
+- name
+- flavor.name
+- ext_management_system.name
+- availability_zone.name
+- security_groups.name
+- power_state
+headers:
+- Name
+- Flavor Name
+- Cloud/Infrastructure Provider Name
+- Availability Zone Name
+- Security Group Name
+- Power State
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - REGULAR EXPRESSION MATCHES:
+        field: VmCloud-vendor
+        value: "/amazon/i"
+    - "=":
+        field: VmCloud-power_state
+        value: 'on'
+  context_type:
+order: Ascending
+sortby:
+- availability_zone.name
+- name
+group: c
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  name:
+    :break_label: 'Name: '
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+  :summary:
+    :hide_detail_rows: false
+menu_name: Amazon - Active VMs

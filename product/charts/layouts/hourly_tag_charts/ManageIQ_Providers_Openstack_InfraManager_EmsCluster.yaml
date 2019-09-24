@@ -1,0 +1,49 @@
+# EmsCluster Hourly performance by tag chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+  :menu:
+  - Chart-Hosts-tophour:Top Hosts for <cat> during this hour
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  - Display-Hosts-bytag:Hosts for <cat> that were running
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Hosts-tophour:Top Hosts for <cat> during this hour
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  - Display-Hosts-bytag:Hosts for <cat> that were running
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Disk I/O (blocks per second)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Hosts-tophour:Top Hosts for <cat> during this hour
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  - Display-Hosts-bytag:Hosts for <cat> that were running
+  - Display-VMs-bytag:VMs for <cat> that were running
+
+- :title: Network I/O (datagrams per second)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Hosts-tophour:Top Hosts for <cat> during this hour
+  - Chart-Vms-tophour:Top VMs for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  - Display-Hosts-bytag:Hosts for <cat> that were running
+  - Display-VMs-bytag:VMs for <cat> that were running

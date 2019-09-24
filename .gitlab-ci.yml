@@ -1,0 +1,25 @@
+image: manageiq_gitlabci:master
+before_script:
+- su postgres -c ". /docker-environment.sh && pg_ctl start -w -D /var/opt/rh/rh-postgresql94/lib/pgsql/data/"
+- ruby -v
+- postgres --version
+- bundle config --global jobs 3
+- bundle config --global retry 3
+- echo "1" > REGION
+- cp certs/v2_key.dev certs/v2_key
+- cp config/database.pg.yml config/database.yml
+- export BUNDLE_GEMFILE=$PWD/Gemfile
+- export RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
+- export RUBY_GC_HEAP_INIT_SLOTS=600000
+- export RUBY_GC_HEAP_GROWTH_FACTOR=1.25
+test:vmdb:
+  script:
+  - bundle update
+  - bundle exec rake update:ui
+  - bundle exec rake test:vmdb:setup
+  - bundle exec rake test:vmdb
+test:brakeman:
+  script:
+  - bundle update
+  - bundle exec rake test:brakeman:setup
+  - bundle exec rake test:brakeman

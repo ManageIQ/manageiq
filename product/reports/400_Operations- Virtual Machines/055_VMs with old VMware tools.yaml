@@ -1,0 +1,52 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-19 22:48:34.746816 Z
+reserved:
+title: "VMs with old VMware tools"
+conditions: !ruby/object:MiqExpression
+  exp:
+    INCLUDES:
+      field: Vm-tools_status
+      value: Old
+updated_on: 2009-10-19 23:06:50.716398 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VMs with old VMware tools"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- v_owning_cluster
+- host.name
+- tools_status
+timeline:
+id: 130
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+- tools_status
+template_type: report
+group:
+sortby:
+- name
+- v_owning_cluster
+headers:
+- Name
+- Parent Cluster
+- Host Name
+- Tools Status

@@ -1,0 +1,427 @@
+---
+- :name: CentOS 6.3 Server
+  :description: Basic CentOS 6.3 Server
+  :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  os_ver
+    \                 = \"CentOS 6.3 Server\"\n  repo_source_url         = \"http://<pxe_server>/ipxe/sources/centos/6.3/\"\n
+    \ rhev_agent_url          = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
+    if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
+    || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
+    the network string based on values from the dialog\n  if evm[:addr_mode].first
+    == 'static'\n    network_string = \"network --onboot yes --bootproto=static --noipv6\"\n
+    \   [\"ip\", :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\",
+    :hostname, \"nameserver\", :dns_servers].each_slice(2) do |ks_key, evm_key|\n
+    \     network_string << \" --#{ks_key} #{evm[evm_key]}\" unless evm[evm_key].blank?\n
+    \   end\n  else\n    network_string = \"network --onboot yes --bootproto=dhcp
+    --noipv6\"\n    network_string << \" --#{\"hostname\"} #{evm[:hostname]}\" unless
+    evm[:hostname].blank?\n  end\n%>\n##### <%= os_ver %> Kickstart file #####\n\n\n###
+    Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
+    --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
+    Configure Networking based on values from provisioning dialog\n<%= network_string
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
+    Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
+    %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
+    Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
+    /proc/partitions |sort |awk 'NR==1{print substr($4,0,4)}'`\necho 'clearpart --all
+    --drives='$hd' --initlabel' >/tmp/partition\necho 'bootloader --location=mbr --driveorder='$hd'
+    --append=\" rhgb crashkernel=auto quiet\"' >>/tmp/partition\necho 'part /boot
+    --fstype=ext4 --size=500 --asprimary --ondrive='$hd >>/tmp/partition\necho 'part
+    pv.008002 --grow --size=1' >>/tmp/partition\necho 'volgroup vg_rhtest --pesize=4096
+    pv.008002' >>/tmp/partition\necho 'logvol / --fstype=ext4 --name=lv_root --vgname=vg_rhtest
+    --grow --size=1024 --maxsize=51200' >>/tmp/partition\necho 'logvol swap --fstype=swap
+    --name=lv_swap --vgname=vg_rhtest --grow --size=2016 --maxsize=4032' >>/tmp/partition\n%end\n\n\n###
+    Grab the partitioning information that was written to disk earlier\n%include /tmp/partition\n\n\n###
+    Post Install Scripts\n%post --log=/root/ks-post.log\n\n# Download and Install
+    RHEV Agent\nwget <%= rhev_agent_url %>\nrpm -ivh rhev-agent-2.3.16-3.el6.x86_64.rpm\n\n#
+    ## Install First-Boot Script\n# echo \"#!/bin/bash\" > /tmp/miq-firstboot.sh\n#
+    echo \"# Do Stuff Here\" >> /tmp/miq-firstboot.sh\n# echo \"# Clean up\" >> /tmp/miq-firstboot.sh\n#
+    echo \"cp /etc/rc.local /tmp/miq-rc.local.tmp\" >> /tmp/miq-firstboot.sh\n# echo
+    \"head -n -1 /tmp/miq-rc.local.tmp > /etc/rc.local\" >> /tmp/miq-firstboot.sh\n#
+    echo \"chmod -x /tmp/miq-*\" >> /tmp/miq-firstboot.sh\n# # Make the script executable\n#
+    chmod +x /tmp/miq-firstboot.sh\n# # Install the script to run at boot\n# echo
+    \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ## Done Installing MIQ First-Boot
+    Script\n\n# Add a user called admin\ngroupadd admin\nuseradd -g admin -c \"Admin
+    User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n# Dump of evm
+    object to ks-post.log if debug is set true\n<%= evm.inspect if debug == true %>\n\n#
+    Callback to EVM during post-install\nwget --no-check-certificate <%= evm[:post_install_callback_url]
+    %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
+    Done #####"
+  :type: CustomizationTemplateKickstart
+  :system: true
+- :name: ESXi 4.1
+  :description: ESXi 4.1
+  :script: ! "vmaccepteula\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password])
+    %>\nautopart --firstdisk --overwritevmfs\ninstall url http://<pxe_server>/tftpboot/VMware-VMvisor-Installer-4.1.0-260247/\n<%=\n
+    \ network_string = \"network --bootproto=static --device=vmnic0\"\n  [\"ip\",
+    :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\", :hostname,
+    \"nameserver\", :dns_servers].each_slice(2) do |ks_key, evm_key|\n    network_string
+    << \" --#{ks_key}=#{evm[evm_key]}\" unless evm[evm_key].blank?\n  end\n  network_string\n%>\n\nreboot
+    --noeject\n\n%post --unsupported --interpreter=python --ignorefailure=true\nimport
+    urllib; urllib.urlretrieve(\"<%= evm[:post_install_callback_url] %>\")"
+  :type: CustomizationTemplateKickstart
+  :system: true
+- :name: RHEL 6.3 Server ISO
+  :description: ISO - Basic RHEL 6.3 Server
+  :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  rhn_activation_key
+    \     = \"\"\n  os_ver                  = \"RHEL 6.3 Server\"\n  rhev_agent_url
+    \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
+    if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
+    || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
+    the network string based on values from the dialog\n  if evm[:addr_mode].first
+    == 'static'\n    network_string = \"network --onboot yes --bootproto=static --noipv6\"\n
+    \   [\"ip\", :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\",
+    :hostname, \"nameserver\", :dns_servers].each_slice(2) do |ks_key, evm_key|\n
+    \     network_string << \" --#{ks_key} #{evm[evm_key]}\" unless evm[evm_key].blank?\n
+    \   end\n  else\n    network_string = \"network --onboot yes --bootproto=dhcp
+    --noipv6\"\n    network_string << \" --#{\"hostname\"} #{evm[:hostname]}\" unless
+    evm[:hostname].blank?\n  end\n%>\n##### <%= os_ver %> Kickstart file #####\n\n\n###
+    Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
+    --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\ncdrom\n\n#
+    Configure Networking based on values from provisioning dialog\n<%= network_string
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n\n###
+    Post Install Scripts\n%post --log=/root/ks-post.log\n\n# Register to RHN or Download
+    locally and Install RHEV Agent\n<% if rhn_activation_key.blank? %>\n  wget <%=
+    rhev_agent_url %>\n  rpm -ivh rhev-agent-2.3.16-3.el6.x86_64.rpm\n<% else %>\n
+    \ rhnreg_ks --activationkey=<%= rhn_activation_key %> --force\n  yum -y install
+    rhev-agent\n<% end %>\n\n# ## Install First-Boot Script\n# echo \"#!/bin/bash\"
+    > /tmp/miq-firstboot.sh\n# echo \"# Do Stuff Here\" >> /tmp/miq-firstboot.sh\n#
+    echo \"# Clean up\" >> /tmp/miq-firstboot.sh\n# echo \"cp /etc/rc.local /tmp/miq-rc.local.tmp\"
+    >> /tmp/miq-firstboot.sh\n# echo \"head -n -1 /tmp/miq-rc.local.tmp > /etc/rc.local\"
+    >> /tmp/miq-firstboot.sh\n# echo \"chmod -x /tmp/miq-*\" >> /tmp/miq-firstboot.sh\n#
+    # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
+    script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
+    Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
+    == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
+    <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
+    Done #####"
+  :type: CustomizationTemplateKickstart
+  :system: true
+- :name: RHEL 6.3 Server PXE
+  :description: PXE - Basic RHEL 6.3 Server
+  :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  os_ver
+    \                 = \"RHEL 6.3 Server\"\n  rhn_activation_key      = \"\"\n  repo_source_url
+    \        = \"http://<pxe_server>/ipxe/sources/rhel/6.3-server\"\n  rhev_agent_url
+    \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
+    if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
+    || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
+    the network string based on values from the dialog\n  if evm[:addr_mode].first
+    == 'static'\n    network_string = \"network --onboot yes --bootproto=static --noipv6\"\n
+    \   [\"ip\", :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\",
+    :hostname, \"nameserver\", :dns_servers].each_slice(2) do |ks_key, evm_key|\n
+    \     network_string << \" --#{ks_key} #{evm[evm_key]}\" unless evm[evm_key].blank?\n
+    \   end\n  else\n    network_string = \"network --onboot yes --bootproto=dhcp
+    --noipv6\"\n    network_string << \" --#{\"hostname\"} #{evm[:hostname]}\" unless
+    evm[:hostname].blank?\n  end\n%>\n##### <%= os_ver %> Kickstart file #####\n\n\n###
+    Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
+    --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
+    Configure Networking based on values from provisioning dialog\n<%= network_string
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
+    Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
+    %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
+    Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
+    /proc/partitions |sort |awk 'NR==1{print substr($4,0,4)}'`\necho 'clearpart --all
+    --drives='$hd' --initlabel' >/tmp/partition\necho 'bootloader --location=mbr --driveorder='$hd'
+    --append=\" rhgb crashkernel=auto quiet\"' >>/tmp/partition\necho 'part /boot
+    --fstype=ext4 --size=500 --asprimary --ondrive='$hd >>/tmp/partition\necho 'part
+    pv.008002 --grow --size=1' >>/tmp/partition\necho 'volgroup vg_rhtest --pesize=4096
+    pv.008002' >>/tmp/partition\necho 'logvol / --fstype=ext4 --name=lv_root --vgname=vg_rhtest
+    --grow --size=1024 --maxsize=51200' >>/tmp/partition\necho 'logvol swap --fstype=swap
+    --name=lv_swap --vgname=vg_rhtest --grow --size=2016 --maxsize=4032' >>/tmp/partition\n%end\n\n\n###
+    Grab the partitioning information that was written to disk earlier\n%include /tmp/partition\n\n\n###
+    Post Install Scripts\n%post --log=/root/ks-post.log\n\n# Register to RHN or Download
+    locally and Install RHEV Agent\n<% if rhn_activation_key.blank? %>\n  wget <%=
+    rhev_agent_url %>\n  rpm -ivh rhev-agent-2.3.16-3.el6.x86_64.rpm\n<% else %>\n
+    \ rhnreg_ks --activationkey=<%= rhn_activation_key %> --force\n  yum -y install
+    rhev-agent\n<% end %>\n\n# ## Install First-Boot Script\n# echo \"#!/bin/bash\"
+    > /tmp/miq-firstboot.sh\n# echo \"# Do Stuff Here\" >> /tmp/miq-firstboot.sh\n#
+    echo \"# Clean up\" >> /tmp/miq-firstboot.sh\n# echo \"cp /etc/rc.local /tmp/miq-rc.local.tmp\"
+    >> /tmp/miq-firstboot.sh\n# echo \"head -n -1 /tmp/miq-rc.local.tmp > /etc/rc.local\"
+    >> /tmp/miq-firstboot.sh\n# echo \"chmod -x /tmp/miq-*\" >> /tmp/miq-firstboot.sh\n#
+    # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
+    script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
+    Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
+    == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
+    <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
+    Done #####"
+  :type: CustomizationTemplateKickstart
+  :system: true
+- :name: RHEL 6.3 Workstation
+  :description: PXE - Basic RHEL 6.3 Workstation
+  :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  os_ver
+    \                 = \"RHEL 6.3 Server\"\n  rhn_activation_key      = \"\"\n  repo_source_url
+    \        = \"http://<pxe_server>/ipxe/sources/rhel/6.3-server\"\n  rhev_agent_url
+    \         = \"http://<pxe_server>/ipxe/sources/misc/rhev-agent-2.3.16-3.el6.x86_64.rpm\"\n
+    \n  # Account for some missing values\n  evm[:hostname]       = evm[:vm_target_hostname]
+    if evm[:hostname].blank?\n  evm[:addr_mode]      = ['dhcp'] if evm[:ip_addr].blank?
+    || evm[:subnet_mask].blank? || evm[:gateway].blank?\n  \n  # Dynamically create
+    the network string based on values from the dialog\n  if evm[:addr_mode].first
+    == 'static'\n    network_string = \"network --onboot yes --bootproto=static --noipv6\"\n
+    \   [\"ip\", :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\",
+    :hostname, \"nameserver\", :dns_servers].each_slice(2) do |ks_key, evm_key|\n
+    \     network_string << \" --#{ks_key} #{evm[evm_key]}\" unless evm[evm_key].blank?\n
+    \   end\n  else\n    network_string = \"network --onboot yes --bootproto=dhcp
+    --noipv6\"\n    network_string << \" --#{\"hostname\"} #{evm[:hostname]}\" unless
+    evm[:hostname].blank?\n  end\n%>\n##### <%= os_ver %> Kickstart file #####\n\n\n###
+    Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
+    --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
+    Configure Networking based on values from provisioning dialog\n<%= network_string
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
+    Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
+    %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
+    Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
+    /proc/partitions |sort |awk 'NR==1{print substr($4,0,4)}'`\necho 'clearpart --all
+    --drives='$hd' --initlabel' >/tmp/partition\necho 'bootloader --location=mbr --driveorder='$hd'
+    --append=\" rhgb crashkernel=auto quiet\"' >>/tmp/partition\necho 'part /boot
+    --fstype=ext4 --size=500 --asprimary --ondrive='$hd >>/tmp/partition\necho 'part
+    pv.008002 --grow --size=1' >>/tmp/partition\necho 'volgroup vg_rhtest --pesize=4096
+    pv.008002' >>/tmp/partition\necho 'logvol / --fstype=ext4 --name=lv_root --vgname=vg_rhtest
+    --grow --size=1024 --maxsize=51200' >>/tmp/partition\necho 'logvol swap --fstype=swap
+    --name=lv_swap --vgname=vg_rhtest --grow --size=2016 --maxsize=4032' >>/tmp/partition\n%end\n\n\n###
+    Grab the partitioning information that was written to disk earlier\n%include /tmp/partition\n\n\n###
+    Post Install Scripts\n%post --log=/root/ks-post.log\n\n# Register to RHN or Download
+    locally and Install RHEV Agent\n<% if rhn_activation_key.blank? %>\n  wget <%=
+    rhev_agent_url %>\n  rpm -ivh rhev-agent-2.3.16-3.el6.x86_64.rpm\n<% else %>\n
+    \ rhnreg_ks --activationkey=<%= rhn_activation_key %> --force\n  yum -y install
+    rhev-agent\n<% end %>\n\n# ## Install First-Boot Script\n# echo \"#!/bin/bash\"
+    > /tmp/miq-firstboot.sh\n# echo \"# Do Stuff Here\" >> /tmp/miq-firstboot.sh\n#
+    echo \"# Clean up\" >> /tmp/miq-firstboot.sh\n# echo \"cp /etc/rc.local /tmp/miq-rc.local.tmp\"
+    >> /tmp/miq-firstboot.sh\n# echo \"head -n -1 /tmp/miq-rc.local.tmp > /etc/rc.local\"
+    >> /tmp/miq-firstboot.sh\n# echo \"chmod -x /tmp/miq-*\" >> /tmp/miq-firstboot.sh\n#
+    # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
+    script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
+    Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
+    == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
+    <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Desktop Packages\n%packages\n@base\n@client-mgmt-tools\n@core\n@debugging\n@basic-desktop\n@desktop-debugging\n@desktop-platform\n@directory-client\n@fonts\n@general-desktop\n@graphical-admin-tools\n@input-methods\n@internet-applications\n@internet-browser\n@java-platform\n@legacy-x\n@network-file-system-client\n@office-suite\n@print-client\n@remote-desktop-clients\n@server-platform\n@workstation-policy\n@x11\npax\npython-dmidecode\noddjob\nwodim\nsgpio\ngenisoimage\nmtools\nabrt-gui\ncertmonger\npam_krb5\nkrb5-workstation\ngnome-pilot\nlibXmu\n%end\n\n\n#####
+    Done #####"
+  :type: CustomizationTemplateKickstart
+  :system: true
+- :name: Windows Server 2008 R2
+  :description: Windows Server 2008 R2 Enterprise x64
+  :script: ! "<%\n  # Setting Variables\n  debug                   = false\n  ms_product_key
+    \         = \"XXXXX-XXXXX-XXXXX-XXXXX-XXXXX\"\n  locale                  = \"en-US\"\n
+    \ registered_organization = \"My Company\"\n  registered_owner        = \"My Company\"\n
+    \n  # Change values if blank\n  evm[:hostname]          = evm[:vm_target_hostname]
+    if evm[:hostname].blank?      # Use vm_target_hostname if hostname in the dialog
+    was blank\n  evm[:addr_mode]         = ['dhcp'] if evm[:ip_addr].blank? || evm[:subnet_mask].blank?
+    || evm[:gateway].blank?\n%>\n\n<%= evm.inspect if debug == true %>\n\n<?xml version=\"1.0\"
+    encoding=\"utf-8\"?>\n<unattend xmlns=\"urn:schemas-microsoft-com:unattend\">\n
+    \   <settings pass=\"generalize\">\n        <component name=\"Microsoft-Windows-OutOfBoxExperience\"
+    processorArchitecture=\"amd64\" publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\"
+    versionScope=\"nonSxS\" xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\"
+    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n            <DoNotOpenInitialConfigurationTasksAtLogon>true</DoNotOpenInitialConfigurationTasksAtLogon>\n
+    \       </component>\n        <component name=\"Microsoft-Windows-ServerManager-SvrMgrNc\"
+    processorArchitecture=\"amd64\" publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\"
+    versionScope=\"nonSxS\" xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\"
+    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>\n
+    \       </component>\n    </settings>\n    <settings pass=\"oobeSystem\">\n        <component
+    name=\"Microsoft-Windows-International-Core\" processorArchitecture=\"amd64\"
+    publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\" versionScope=\"nonSxS\"
+    xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n
+    \           <InputLocale><%= locale %></InputLocale>\n            <SystemLocale><%=
+    locale %></SystemLocale>\n            <UserLocale><%= locale %></UserLocale>\n
+    \           <UILanguage><%= locale %></UILanguage>\n        </component>\n        <component
+    name=\"Microsoft-Windows-Shell-Setup\" processorArchitecture=\"amd64\" publicKeyToken=\"31bf3856ad364e35\"
+    language=\"neutral\" versionScope=\"nonSxS\" xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\"
+    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n            <OOBE>\n
+    \               <HideEULAPage>true</HideEULAPage>\n                <NetworkLocation>Work</NetworkLocation>\n
+    \           </OOBE>\n            <UserAccounts>\n                <AdministratorPassword>\n
+    \                   <Value><%= ManageIQ::Password.sysprep_crypt(evm[:root_password])
+    %></Value>\n                    <PlainText>false</PlainText>\n                </AdministratorPassword>\n
+    \           </UserAccounts>\n            <RegisteredOrganization><%= registered_organization
+    %></RegisteredOrganization>\n            <RegisteredOwner><%= registered_owner
+    %></RegisteredOwner>\n        </component>\n    </settings>\n    <settings pass=\"specialize\">\n
+    \       <component name=\"Microsoft-Windows-Shell-Setup\" processorArchitecture=\"amd64\"
+    publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\" versionScope=\"nonSxS\"
+    xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n
+    \           <ProductKey><%= ms_product_key %></ProductKey>\n            <% unless
+    evm[:hostname].blank? %>\n            <ComputerName><%= evm[:hostname] %></ComputerName>\n
+    \           <% end %>\n        </component>\n<% if evm[:addr_mode].first == 'static'
+    %>\n        <component name=\"Microsoft-Windows-DNS-Client\" processorArchitecture=\"amd64\"
+    publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\" versionScope=\"nonSxS\"
+    xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n
+    \           <Interfaces>\n                <Interface wcm:action=\"add\">\n                    <DNSServerSearchOrder>\n
+    \                       <IpAddress wcm:action=\"add\" wcm:keyValue=\"1\"><%= evm[:dns_servers].split(\"
+    \").first %></IpAddress>\n                    </DNSServerSearchOrder>\n                    <Identifier>Local
+    Area Connection</Identifier>\n                    <EnableAdapterDomainNameRegistration>true</EnableAdapterDomainNameRegistration>\n
+    \                   <DisableDynamicUpdate>false</DisableDynamicUpdate>\n                    <DNSDomain><%=
+    evm[:dns_suffixes].split(\" \").first %></DNSDomain>\n                </Interface>\n
+    \           </Interfaces>\n            <DNSDomain><%= evm[:dns_suffixes].split(\"
+    \").first %></DNSDomain>\n            <UseDomainNameDevolution>true</UseDomainNameDevolution>\n
+    \       </component>\n        <component name=\"Microsoft-Windows-TCPIP\" processorArchitecture=\"amd64\"
+    publicKeyToken=\"31bf3856ad364e35\" language=\"neutral\" versionScope=\"nonSxS\"
+    xmlns:wcm=\"http://schemas.microsoft.com/WMIConfig/2002/State\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n
+    \           <Interfaces>\n                <Interface wcm:action=\"add\">\n                    <Identifier>Local
+    Area Connection</Identifier>\n                    <Ipv4Settings>\n                        <DhcpEnabled>false</DhcpEnabled>\n
+    \                       <Metric>10</Metric>\n                        <RouterDiscoveryEnabled>false</RouterDiscoveryEnabled>\n
+    \                   </Ipv4Settings>\n                    <UnicastIpAddresses>\n
+    \                       <IpAddress wcm:action=\"add\" wcm:keyValue=\"1\"><%= evm[:ip_addr]
+    %>/<%= evm[:cidr] %></IpAddress>\n                    </UnicastIpAddresses>\n
+    \                   <Routes>\n                        <Route wcm:action=\"add\">\n
+    \                           <Identifier>1</Identifier>\n                            <Metric>10</Metric>\n
+    \                           <NextHopAddress><%= evm[:gateway] %></NextHopAddress>\n
+    \                           <Prefix>0.0.0.0/0</Prefix>\n                        </Route>\n
+    \                   </Routes>\n                </Interface>\n            </Interfaces>\n
+    \       </component>\n<% end %>\n    </settings>\n    <cpi:offlineImage cpi:source=\"catalog://path/to/microsoft/2k8media/sources/install_windows
+    server 2008 r2 serverenterprise.clg\" xmlns:cpi=\"urn:schemas-microsoft-com:cpi\"
+    />\n</unattend>"
+  :type: CustomizationTemplateSysprep
+  :system: true
+
+- :name: Windows Server 2012 R2
+  :description: Windows Server 2012 R2 Enterprise x64
+  :script: |-
+    <%
+    # Setting Variables
+    debug                       = false
+    time_zone                   = evm[:sysprep_timezone].present? ? evm[:sysprep_timezone] : "GMT+1"
+    # Change values if blank
+    evm[:sysprep_computer_name] = evm[:vm_target_hostname] if evm[:sysprep_computer_name].blank?      # Use vm_target_hostname if hostname in the dialog was blank
+    %>
+
+    <%= evm.inspect if debug == true %>
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <unattend xmlns="urn:schemas-microsoft-com:unattend">
+        <settings pass="specialize">
+            <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ComputerName><![CDATA[<%= evm[:sysprep_computer_name] %>]]></ComputerName>
+                <% if evm[:sysprep_organization].present? %>
+                <RegisteredOrganization><![CDATA[<%= evm[:sysprep_organization] %>]]></RegisteredOrganization>
+                <% end %>
+                <RegisteredOwner>User</RegisteredOwner>
+                <% if evm[:sysprep_product_key].present? %>
+                <ProductKey><![CDATA[<%= evm[:sysprep_product_key] %>]]></ProductKey>
+                <% end %>
+            </component>
+            <component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <Identification>
+                <% if evm[:sysprep_domain].present? %>
+                    <Credentials>
+                        <Domain><![CDATA[<%= evm[:sysprep_domain] %>]]></Domain>
+                        <Password><![CDATA[<%= evm[:sysprep_domain_password] %>]]></Password>
+                        <Username><![CDATA[<%= evm[:sysprep_domain_admin] %>]]></Username>
+                    </Credentials>
+                    <DebugJoin>true</DebugJoin>
+                    <JoinDomain><![CDATA[<%= evm[:sysprep_domain] %>]]></JoinDomain>
+                <% end %>
+                <% if evm[:sysprep_machine_object_ou].present? %>
+                    <MachineObjectOU><![CDATA[<%= evm[:sysprep_machine_object_ou] %>]]></MachineObjectOU>
+                <% end %>
+                </Identification>
+            </component>
+        </settings>
+        <settings pass="oobeSystem">
+            <component name="Microsoft-Windows-IE-ClientNetworkProtocolImplementation" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <HKLMProxyEnable>false</HKLMProxyEnable>
+            </component>
+            <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <InputLocale><![CDATA[<%= evm[:sysprep_locale_input] %>]]></InputLocale>
+                <SystemLocale><![CDATA[<%= evm[:sysprep_locale_system] %>]]></SystemLocale>
+                <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                <UILanguageFallback>en-US</UILanguageFallback>
+                <UserLocale><![CDATA[<%= evm[:sysprep_locale_user] %>]]></UserLocale>
+            </component>
+            <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <Display>
+                    <ColorDepth>32</ColorDepth>
+                    <HorizontalResolution>1024</HorizontalResolution>
+                    <RefreshRate>75</RefreshRate>
+                    <VerticalResolution>768</VerticalResolution>
+                </Display>
+                <OOBE>
+                    <HideEULAPage>true</HideEULAPage>
+                    <SkipUserOOBE>true</SkipUserOOBE>
+                </OOBE>
+                <% if evm[:sysprep_admin_password].present? %>
+                <UserAccounts>
+                    <AdministratorPassword>
+                    <Value><![CDATA[<%= evm[:sysprep_admin_password] %>]]></Value>
+                        <PlainText>true</PlainText>
+                    </AdministratorPassword>
+                </UserAccounts>
+                <% end %>
+                <% if evm[:sysprep_organization].present? %>
+                <RegisteredOrganization><![CDATA[<%= evm[:sysprep_organization] %>]]></RegisteredOrganization>
+                <% end %>
+                <RegisteredOwner>User</RegisteredOwner>
+                <TimeZone><![CDATA[<%= time_zone %>]]></TimeZone>
+            </component>
+        </settings>
+        <settings pass="windowsPE">
+            <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <SetupUILanguage>
+                    <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                </SetupUILanguage>
+                <InputLocale><![CDATA[<%= evm[:sysprep_locale_input] %>]]></InputLocale>
+                <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                <SystemLocale><![CDATA[<%= evm[:sysprep_locale_system] %>]]></SystemLocale>
+                <UILanguageFallback>en-US</UILanguageFallback>
+                <UserLocale><![CDATA[<%= evm[:sysprep_locale_user] %>]]></UserLocale>
+            </component>
+            <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <UserData>
+                    <% if evm[:sysprep_product_key].present? %>
+                    <ProductKey>
+                      <Key><![CDATA[<%= evm[:sysprep_product_key] %>]]></Key>
+                      <WillShowUI>Never</WillShowUI>
+                    </ProductKey>
+                    <% end %>
+                    <AcceptEula>true</AcceptEula>
+                    <% if evm[:sysprep_organization].present? %>
+                    <Organization><![CDATA[<%= evm[:sysprep_organization] %>]]></Organization>
+                    <% end %>
+                    <FullName>User</FullName>
+                </UserData>
+            </component>
+        </settings>
+        <cpi:offlineImage cpi:source="catalog://catalogs/windows2012-x86/sources/install_windows longhorn serverenterprise.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    </unattend>
+  :type: CustomizationTemplateSysprep
+  :system: true
+
+- :name: Basic root pass template
+  :description: This template takes use of rootpassword defined in the UI
+  :script: "#cloud-config\nchpasswd:\n  list: |\n    root:<%= ManageIQ::Password.decrypt(evm[:root_password]) %>\n  expire: False"
+  :type: CustomizationTemplateCloudInit
+  :system: true
+
+- :name: SSH key addition template
+  :description: This template enables placing ssh public key in authorized keys
+  :script: "#cloud-config\nusers:\n  - name: root\n    ssh-authorized-keys:\n      - <%= evm.fetch_path(:ws_values, :ssh_public_key) %>"
+  :type: CustomizationTemplateCloudInit
+  :system: true
+
+- :name: oVirt cloud-init
+  :description: This template generates the cloud-init configuration supported by oVirt
+  :script: |-
+    # Configure basic host parameeters:
+    host_name: <%= evm[:hostname] %>
+    user_name: root
+    root_password: <%= ManageIQ::Password.decrypt(evm[:root_password]) %>
+
+    # Run commands to configure the network using the NetworkManager command
+    # line tool. Note that this expects the subnet mask in the prefix format,
+    # for example 24 instead of 255.255.255.0.
+    runcmd:
+    - ETH_CON=$(nmcli --get-values name connection show | grep "eth")
+    - nmcli connection down "$ETH_CON"
+    - nmcli connection modify "$ETH_CON"
+      ip4 <%= evm[:ip_addr] %>/<%= evm[:subnet_mask] %>
+      gw4 <%= evm[:gateway] %>
+      ipv4.dns "<%= evm[:dns_servers] %>"
+      ipv4.dns-search "<%= evm[:dns_suffixes] %>"
+      # If address mode was set to static, disable DHCP address obtaining.
+    - if [[ <%= evm[:addr_mode].first %> = "static" ]];
+      then nmcli connection modify "$ETH_CON" ipv4.method "manual";
+      fi
+    - nmcli connection up "$ETH_CON"
+  :type: CustomizationTemplateCloudInit
+  :system: true

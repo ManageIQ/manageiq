@@ -1,0 +1,106 @@
+# Report title
+title: "Cluster Compare Template"
+
+# Menu name
+menu_name: "Clusters: Compare Template"
+
+# Main DB table report is based on
+db: EmsCluster
+
+# Columns to fetch from the main table
+cols:
+- name
+- hosts.size
+- vms.size
+- miq_templates.size
+- aggregate_cpu_speed
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+- aggregate_memory
+- aggregate_vm_cpus
+- aggregate_vm_memory
+- ha_enabled
+- ha_admit_control
+- ha_max_failures
+- drs_enabled
+- drs_automation_level
+- drs_migration_threshold
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  hosts:
+    columns:
+    - id
+  vms:
+    columns:
+    - id
+  miq_templates:
+    columns:
+    - id
+
+# Order of columns (from all tables)
+col_order:
+- name
+- hosts.size
+- vms.size
+- miq_templates.size
+- aggregate_cpu_speed
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+- aggregate_memory
+- aggregate_vm_cpus
+- aggregate_vm_memory
+- ha_enabled
+- ha_admit_control
+- ha_max_failures
+- drs_enabled
+- drs_automation_level
+- drs_migration_threshold
+
+# Column titles, in order
+headers:
+- Name
+- Number Of Hosts
+- Number Of VMs
+- Number Of VM Templates
+- Host CPU Speed
+- Host Logical CPUs
+- Host Physical CPUs
+- Host Memory
+- VM CPUs
+- VM Memory
+- HA Enabled
+- HA Admit Control
+- HA Max Failures
+- DRS Enabled
+- DRS Automation Level
+- DRS Migration Threshold
+
+# Condition(s) string for the SQL query
+conditions:
+
+# Order string for the SQL query
+order:
+
+# Columns to sort the report on, in order
+sortby:
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:

@@ -1,0 +1,27 @@
+# Feed metadata
+roles: "change_managers"
+feed_title: "Recently Added Hosts"
+feed_description: "Host machines added"
+feed_link: "/alert/rss?feed=newest_hosts"
+
+# Item metadata
+item_title: "#{rec.name}, hostname: #{rec.hostname}, running #{rec.vmm_vendor_display} VMM"
+item_description: "#{rec.name}, hostname: #{rec.hostname}"
+item_link: "/host/show/#{rec.id}"
+item_class: Host
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+limit_to_time:
+limit_to_count:
+orderby:
+  :created_on: :desc
+
+# tags_include: any or all
+tag_ns: "/managed/lifecycles"
+tags_include:
+tags:

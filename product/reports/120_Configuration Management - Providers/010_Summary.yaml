@@ -1,0 +1,50 @@
+---
+dims:
+created_on: 2008-08-11 19:15:31.428291 Z
+title: "Providers Summary"
+conditions:
+updated_on: 2008-08-11 19:15:31.428291 Z
+order: Ascending
+graph:
+menu_name: "Providers Summary"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- hostname
+- ipaddress
+- emstype
+- aggregate_memory
+- aggregate_cpu_speed
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+timeline:
+id: 78
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: ExtManagementSystem
+cols:
+- name
+- hostname
+- ipaddress
+- emstype
+- aggregate_memory
+- aggregate_cpu_speed
+- aggregate_cpu_total_cores
+- aggregate_physical_cpus
+template_type: report
+group:
+sortby:
+headers:
+- Name
+- Hostname
+- IP Address
+- MS Type
+- Total Memory
+- Total CPU Speed
+- Total Number of Logical CPUs
+- Total Number of Physical CPUs

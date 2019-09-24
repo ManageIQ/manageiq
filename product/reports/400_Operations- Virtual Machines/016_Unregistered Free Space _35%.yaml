@@ -1,0 +1,64 @@
+---
+dims:
+created_on: 2008-08-14 03:40:21.381022 Z
+title: "Unregistered VMs with Free Space < 35%"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - <=:
+        field: Vm-v_pct_free_disk_space
+        value: 35
+    - IS NOT EMPTY:
+        field: Vm-v_pct_free_disk_space
+        value: ""
+    - IS EMPTY:
+        field: Vm.host-name
+updated_on: 2008-08-14 03:40:21.381022 Z
+order: Ascending
+graph:
+menu_name: "Unregistered VMs Free Space <35%"
+rpt_group: Custom
+priority: 284
+col_order:
+- host.name
+- v_datastore_path
+- name
+- updated_on
+- hardware.disk_capacity
+- hardware.disk_free_space
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+timeline:
+id: 135
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - disk_capacity
+    - disk_free_space
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- v_datastore_path
+- name
+- updated_on
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+template_type: report
+group:
+sortby:
+- v_pct_free_disk_space
+headers:
+- Host Name
+- Datastore Path
+- VM Name
+- Date Updated
+- Total Disk
+- Free Disk
+- Pct Free Disk
+- Pct Used Disk

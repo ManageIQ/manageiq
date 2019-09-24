@@ -1,0 +1,97 @@
+# Host Daily performance chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+  - max_derived_cpu_available
+  - max_derived_cpu_reserved
+  - min_cpu_usagemhz_rate_average
+  - max_cpu_usagemhz_rate_average
+  - trend_max_cpu_usagemhz_rate_average
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Host
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :trends:
+  - max_derived_cpu_reserved:Projected to hit reserve
+  - max_derived_cpu_available:Projected to hit available
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - max_derived_memory_available
+  - max_derived_memory_reserved
+  - min_derived_memory_used
+  - max_derived_memory_used
+  - trend_max_derived_memory_used
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Host
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :trends:
+  - max_derived_memory_reserved:Projected to hit reserve
+  - max_derived_memory_available:Projected to hit available
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Disk I/O (blocks per second)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  - min_disk_usage_rate_average
+  - max_disk_usage_rate_average
+  - trend_max_disk_usage_rate_average
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Host
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Network I/O (datagrams per second)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  - min_net_usage_rate_average
+  - max_net_usage_rate_average
+  - trend_max_net_usage_rate_average
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Host
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+
+- :title: Virtual Machines
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Display-VMs-on:VMs that were running
+  - Display-VMs-off:VMs that were stopped

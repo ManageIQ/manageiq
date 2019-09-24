@@ -1,0 +1,30 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "Alerts: Cluster"
+feed_description: "Cluster Alert Events"
+feed_link: "/alert/rss?feed=cluster_alert_event"
+
+# Item metadata
+item_title: "#{rec.target.name}"
+
+# item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
+item_description: "#{rec.message} was raised on #{rec.timestamp}"
+item_link: "/ems_cluster/show/#{rec.target.id}"
+item_class: MiqEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'EVMAlertEvent' AND target_type = 'EmsCluster'"
+limit_to_time:
+limit_to_count:
+orderby:
+  :timestamp: :desc
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:

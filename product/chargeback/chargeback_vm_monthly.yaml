@@ -1,0 +1,191 @@
+---
+title: Chargeback_Vm_Monthly
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ChargebackVm
+cols:
+- start_date
+- display_range
+- vm_id
+- vm_name
+- cpu_allocated_cost
+- cpu_used_metric
+- cpu_used_cost
+- memory_allocated_cost
+- memory_used_metric
+- memory_used_cost
+- disk_io_used_metric
+- disk_io_used_cost
+- net_io_used_metric
+- net_io_used_cost
+- storage_allocated_metric
+- storage_allocated_cost
+- storage_used_metric
+- storage_used_cost
+include: {}
+col_order:
+- vm_name
+- display_range
+- cpu_allocated_cost
+- cpu_used_metric
+- cpu_used_cost
+- memory_allocated_cost
+- memory_used_metric
+- memory_used_cost
+- disk_io_used_metric
+- disk_io_used_cost
+- net_io_used_metric
+- net_io_used_cost
+- storage_allocated_metric
+- storage_allocated_cost
+- storage_used_metric
+- storage_used_cost
+headers:
+- VM Name
+- Date Range
+- vCPUs Allocated Cost
+- CPU Used
+- CPU Used Cost
+- Memory Allocated Cost
+- Memory Used
+- Memory Used Cost
+- Disk I/O Used
+- Disk I/O Used Cost
+- Network I/O Used
+- Network I/O Used Cost
+- Storage Allocated
+- Storage Allocated Cost
+- Storage Used
+- Storage Used Cost
+conditions:
+order: Ascending
+sortby:
+- vm_name
+- start_date
+group: y
+template_type: report
+db_options:
+  :rpt_type: ChargebackVm
+  :options:
+    :interval: monthly
+    :interval_size: 6
+    :end_interval_offset: 0
+col_formats:
+-
+-
+-
+- :mhz
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+tz: UTC
+col_options:
+  cpu_allocated_cost:
+    :grouping:
+    - :total
+  cpu_allocated_metric:
+    :grouping:
+    - :total
+  cpu_cost:
+    :grouping:
+    - :total
+  cpu_metric:
+    :grouping:
+    - :total
+  cpu_used_cost:
+    :grouping:
+    - :total
+  cpu_used_metric:
+    :grouping:
+    - :total
+  disk_io_cost:
+    :grouping:
+    - :total
+  disk_io_metric:
+    :grouping:
+    - :total
+  disk_io_used_cost:
+    :grouping:
+    - :total
+  disk_io_used_metric:
+    :grouping:
+    - :total
+  fixed_compute_metric:
+    :grouping:
+    - :total
+  fixed_compute_1_cost:
+    :grouping:
+    - :total
+  fixed_compute_2_cost:
+    :grouping:
+    - :total
+  fixed_cost:
+    :grouping:
+    - :total
+  fixed_storage_1_cost:
+    :grouping:
+    - :total
+  fixed_storage_2_cost:
+    :grouping:
+    - :total
+  memory_allocated_cost:
+    :grouping:
+    - :total
+  memory_allocated_metric:
+    :grouping:
+    - :total
+  memory_cost:
+    :grouping:
+    - :total
+  memory_metric:
+    :grouping:
+    - :total
+  memory_used_cost:
+    :grouping:
+    - :total
+  memory_used_metric:
+    :grouping:
+    - :total
+  net_io_cost:
+    :grouping:
+    - :total
+  net_io_metric:
+    :grouping:
+    - :total
+  net_io_used_cost:
+    :grouping:
+    - :total
+  net_io_used_metric:
+    :grouping:
+    - :total
+  storage_allocated_cost:
+    :grouping:
+    - :total
+  storage_allocated_metric:
+    :grouping:
+    - :total
+  storage_cost:
+    :grouping:
+    - :total
+  storage_metric:
+    :grouping:
+    - :total
+  storage_used_cost:
+    :grouping:
+    - :total
+  storage_used_metric:
+    :grouping:
+    - :total
+  total_cost:
+    :grouping:
+    - :total

@@ -1,0 +1,28 @@
+# Top CIs/hour chart layouts
+---
+- :title: Average CPU Used (%)
+  :type: Pie
+  :columns:
+  - cpu_usage_rate_average
+  :menu:
+  - Chart-Selected-Hourly:Hourly for <category>
+#  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+
+- :title: Average Disk I/O (KBps)
+  :type: Pie
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Selected-Hourly:Hourly for <category>
+#  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>
+
+- :title: Average Network I/O (KBps)
+  :type: Pie
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Selected-Hourly:Hourly for <category>
+#  - Timeline-Selected-Hourly:Hourly events on <category>
+  - Display-Current-Top:<category>

@@ -1,0 +1,338 @@
+---
+- reserved:
+  options:
+  guid: 9bc0d572-40bd-11de-bd12-005056a170fa
+  miq_expression: !ruby/object:MiqExpression
+    exp:
+      FIND:
+        search:
+          IS NOT NULL:
+            field: Host.storages-name
+        checkany:
+          ">":
+            field: Host.storages-v_used_space_percent_of_total
+            value: 95
+  description: Host Datastore < 5% of Free Space
+  db: Host
+- reserved:
+  options:
+  guid: fc2ae066-44b8-11de-900a-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_log_message_filter_type: INCLUDES
+      :event_log_message_filter_value: Failed to validate VM IP address
+      :time_threshold: 86400
+      :freq_threshold: "2"
+      :event_log_source: VmMisc
+    :eval_method: hostd_log_threshold
+  description: Host  Event Log Error - Failed to validate VM IP address
+  db: Host
+- reserved:
+  options:
+  guid: 8a6d32a8-44b8-11de-900a-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_log_message_filter_type: INCLUDES
+      :event_log_message_filter_value: exceeds soft limit
+      :time_threshold: 86400
+      :event_log_level: warn
+      :freq_threshold: "2"
+      :event_log_source: Memory checker
+    :eval_method: hostd_log_threshold
+  description: "Host Event Log Error - Memory Exceed Soft Limit "
+  db: Host
+- reserved:
+  options:
+  guid: a9532172-44a5-11de-b543-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_types:
+      - MigrateVM_Task
+      :time_threshold: 1800
+      :freq_threshold: "1"
+    :eval_method: event_threshold
+  description: VM VMotion > 1 in last 30 min
+  db: Vm
+- reserved:
+  options:
+  guid: 1bb81254-44a6-11de-b543-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_log_message_filter_type: INCLUDES
+      :event_log_message_filter_value: NtpClient
+      :time_threshold: 86400
+      :event_log_level: error
+      :freq_threshold: "1"
+    :eval_method: event_log_threshold
+  description: VM Guest Windows Event Log Error - NtpClient
+  db: Vm
+- reserved:
+  options:
+  guid: ce2f8846-44a5-11de-b543-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :operator: Decreased
+      :hdw_attr: :cpu_total_cores
+    :eval_method: reconfigured_hardware_value
+  description: VM CPU count was decreased
+  db: Vm
+- reserved:
+  options:
+  guid: fb73af80-40bd-11de-bd12-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_types:
+      - PowerOnVM_Task_Complete
+      :time_threshold: 900
+      :freq_threshold: "2"
+    :eval_method: event_threshold
+  description: VM Power On > 2 in last 15 min
+  db: Vm
+- reserved:
+  options:
+  guid: e750cdcc-447c-11de-aaba-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :operator: Increased
+      :hdw_attr: memory_mb
+    :eval_method: reconfigured_hardware_value
+  description: VM Memory was increased
+  db: Vm
+- reserved:
+  options:
+  guid: d59185a4-40bc-11de-bd12-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :operator: ">"
+      :perf_column: cpu_ready_delta_summation
+      :value_threshold: "4000"
+      :rt_time_threshold: 600
+    :eval_method: realtime_performance
+  description: CPU Ready > 4000 ms for more than 10 min
+  db: Vm
+- reserved:
+  options:
+  guid: c2fc477a-44a5-11de-b543-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :operator: Increased
+      :hdw_attr: :cpu_total_cores
+    :eval_method: reconfigured_hardware_value
+  description: VM CPU count was increased
+  db: Vm
+- reserved:
+  options:
+  guid: fbe4b5ee-447e-11de-aaba-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :operator: Decreased
+      :hdw_attr: memory_mb
+    :eval_method: reconfigured_hardware_value
+  description: VM Memory was decreased
+  db: Vm
+- reserved:
+  options:
+  guid: 3cfbb5ce-40be-11de-bd12-005056a170fa
+  hash_expression:
+    :mode: internal
+    :options:
+      :event_types:
+      - RelocateVM_Task_Complete
+      :time_threshold: 1800
+      :freq_threshold: "2"
+    :eval_method: event_threshold
+  description: VM Migration > 1 in last 30 min
+  db: Vm
+- reserved:
+  options:
+  guid: 731da3b2-40bc-11de-bd12-005056a170fa
+  miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - "=":
+          field: Vm-platform
+          value: windows
+      - FIND:
+          search:
+            "=":
+              field: Vm.hardware.volumes-name
+              value: "C:"
+          checkall:
+            <:
+              field: Vm.hardware.volumes-free_space_percent
+              value: 10
+  description: "VM Guest C: Drive < 10% Free"
+  db: Vm
+- :description: VM Unregistered
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - IS EMPTY:
+          field: Vm.host-name
+          value: ""
+      - IS NOT EMPTY:
+          field: Vm.storage-name
+  :db: Vm
+  :guid: 5cd2b880-be53-11de-8d65-000c290de4f9
+- :description: VMs on local storage
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      "!=":
+        field: Storage-v_total_hosts
+        value: 1
+  :db: Storage
+  :guid: 8261bf0a-be54-11de-8d65-000c290de4f9
+- :description: VM Silver and CPU > 1
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - CONTAINS:
+          tag: Vm.managed-service_level
+          value: silver
+      - ">":
+          field: Vm.hardware-cpu_total_cores
+          value: 1
+  :db: Vm
+  :guid: fdee2784-bf2c-11de-b3b4-000c290de4f9
+- :description: VM Silver and RAM > 2 GB
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - CONTAINS:
+          tag: Vm.managed-service_level
+          value: silver
+      - ">":
+          field: Vm.hardware-memory_mb
+          value: 2048
+  :db: Vm
+  :guid: 9b61fd9e-bf35-11de-b3b4-000c290de4f9
+- :description: Host VMs >10
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      ">":
+        field: Host-v_total_vms
+        value: 10
+  :db: Host
+  :guid: 561d023c-bf36-11de-b3b4-000c290de4f9
+- :description: Datacenter VMs > 10
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      ">":
+        field: Storage-v_total_vms
+        value: 10
+  :db: Storage
+  :guid: 82f853b0-bf36-11de-b3b4-000c290de4f9
+- :description: VM CD Drive or Floppy Connected
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      or:
+      - FIND:
+          search:
+            INCLUDES:
+              field: Vm.hardware.disks-device_type
+              value: cdrom
+          checkall:
+            STARTS WITH:
+              field: Vm.hardware.disks-start_connected
+              value: "true"
+      - FIND:
+          search:
+            INCLUDES:
+              field: Vm.hardware.disks-device_type
+              value: floppy
+          checkall:
+            INCLUDES:
+              field: Vm.hardware.disks-start_connected
+              value: "true"
+  :db: Vm
+  :guid: 58e8a372-bff9-11de-b3b4-000c290de4f9
+- :description: VM Memory Balloon > 250 in last 10 min
+  :options:
+  :hash_expression:
+    :mode: internal
+    :options:
+      :perf_column: mem_vmmemctl_absolute_average
+      :value_threshold: "250"
+      :rt_time_threshold: 600
+      :operator: ">"
+    :eval_method: realtime_performance
+  :db: Vm
+  :guid: f8b870d0-c23d-11de-a3be-000c290de4f9
+- :description: Cluster DRS not enabled
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      "=":
+        field: EmsCluster-drs_enabled
+        value: "false"
+  :db: EmsCluster
+  :guid: eb88f942-c23e-11de-a3be-000c290de4f9
+- :description: Cluster HA not enabled
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      "=":
+        field: EmsCluster-ha_enabled
+        value: "false"
+  :db: EmsCluster
+  :guid: 196868de-c23f-11de-a3be-000c290de4f9
+- :description: VM Environment Tag <> Datastore Environment Tag
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - CONTAINS:
+          tag: Vm.managed-environment
+          value: prod
+      - not:
+          CONTAINS:
+            tag: Vm.storage.managed-environment
+            value: prod
+  :db: Vm
+  :guid: 4077943a-c240-11de-a3be-000c290de4f9
+- :description: VM Environment Tag <> Host Environment Tag
+  :options:
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      and:
+      - CONTAINS:
+          tag: Vm.managed-environment
+          value: prod
+      - not:
+          CONTAINS:
+            tag: Vm.host.managed-environment
+            value: prod
+  :db: Vm
+  :guid: 89db0be8-c240-11de-a3be-000c290de4f9
+- :description: Physical server has critical health state
+  :options:
+    :notifications:
+      :delay_next_evaluation: 3600
+      :email:
+        :from: ''
+        :to: []
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      =:
+        field: PhysicalServer-health_state
+        value: "Critical"
+  :db: PhysicalServer
+  :guid: 15feb65a-1f36-44db-84ee-0e71d9f497c8
+  :responds_to_events: _hourly_timer_

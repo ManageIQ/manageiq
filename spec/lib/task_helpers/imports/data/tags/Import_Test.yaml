@@ -1,0 +1,32 @@
+---
+- description: Import Test
+  icon:
+  read_only: false
+  syntax: string
+  single_value: true
+  example_text: Tag Import Test
+  show: true
+  default:
+  perf_by_tag: false
+  name: import_test
+  entries:
+  - description: A
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: a
+  - description: One
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: '1'

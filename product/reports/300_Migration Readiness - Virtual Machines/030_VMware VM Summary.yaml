@@ -1,0 +1,98 @@
+---
+title: VMware VM Summary
+rpt_type: Custom
+priority:
+db: Vm
+cols:
+- name
+- v_owning_datacenter
+- allocated_disk_storage
+- mem_cpu
+- cpu_total_cores
+include:
+  operating_system:
+    columns:
+    - product_name
+  ext_management_system:
+    columns:
+    - name
+    - id
+  host:
+    columns:
+    - name
+col_order:
+- name
+- operating_system.product_name
+- ext_management_system.name
+- ext_management_system.id
+- v_owning_datacenter
+- host.name
+- allocated_disk_storage
+- mem_cpu
+- cpu_total_cores
+headers:
+- VM Name
+- Operating System
+- Provider
+- Provider ID
+- Datacenter
+- Hypervisor
+- Storage
+- Memory
+- CPU Cores
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: Vm.ext_management_system-name
+        value: ''
+    - "=":
+        field: Vm-type
+        value: ManageIQ::Providers::Vmware::InfraManager::Vm
+  context_type:
+order: Ascending
+sortby:
+- ext_management_system.name
+- v_owning_datacenter
+group: y
+graph:
+dims:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  name:
+    :break_label: 'Provider : Name: '
+    :break_format: :model_name
+  allocated_disk_storage:
+    :grouping:
+    - :total
+  mem_cpu:
+    :grouping:
+    - :total
+  cpu_total_cores:
+    :grouping:
+    - :total
+rpt_options:
+  :pdf:
+    :page_size: A4 - 210mm x 297mm (default)
+  :queue_timeout:
+  :summary:
+    :hide_detail_rows: false
+menu_name: VMware VM Summary

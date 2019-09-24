@@ -1,0 +1,16 @@
+name: default
+read_only: t
+set_type: MiqWidgetSet
+description: Default Dashboard
+set_data_by_description:
+  :col1:
+  - chart_vendor_and_guest_os
+  - rss_newest_hosts
+  - report_top_memory_consumers_weekly
+  :col2:
+  - report_top_cpu_consumers_weekly
+  - chart_virtual_infrastructure_platforms
+  :col3:
+  - chart_guest_os_information_any_os
+  - rss_newest_vms
+  - report_top_storage_consumers

@@ -1,0 +1,96 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "Timeline All Policy Events"
+
+# Menu name
+name: "Timeline All Policy Events"
+
+# Main DB table report is based on
+db: PolicyEvent
+
+# Columns to fetch from the main table
+cols:
+- timestamp
+- event_type
+- miq_event_description
+- miq_policy_description
+- result
+- target_name
+- target_id
+- target_class
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- event_type
+- miq_event_description
+- miq_policy_description
+- result
+- target_name
+
+# Column titles, in order
+headers:
+- Date Created
+- Event Type
+- Miq Event Description
+- Miq Policy Description
+- Result
+- Target
+
+# Condition(s) string for the SQL query
+conditions:
+
+# Order string for the SQL query
+order: Descending
+
+# Columns to sort the report on, in order
+sortby:
+- timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group:
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+timeline:
+  :field: PolicyEvent-timestamp
+  :bands:
+  - :text: true
+    :gap: 0.0
+    :unit: Day
+    :width: 90
+    :pixels: 35
+  - :text: false
+    :gap: 0.1
+    :unit: Week
+    :width: 10
+    :height: 0.6
+    :pixels: 200
+  :position: Last

@@ -1,0 +1,54 @@
+---
+dims:
+created_on: 2008-08-14 03:32:49.644645 Z
+title: "VMs Not Powered On"
+conditions: !ruby/object:MiqExpression
+  exp:
+    not:
+      "=":
+        field: Vm-power_state
+        value: "on"
+updated_on: 2008-08-14 03:34:49.773955 Z
+order: Ascending
+graph:
+menu_name: "VMs not Powered On"
+rpt_group: Custom
+priority: 228
+col_order:
+- host.name
+- storage.name
+- v_datastore_path
+- name
+- power_state
+- last_scan_on
+timeline:
+id: 134
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- v_datastore_path
+- name
+- power_state
+- last_scan_on
+template_type: report
+group: c
+sortby:
+- host.name
+- name
+headers:
+- Host
+- Datastore
+- Datastore Path
+- VM Name
+- VM Power State
+- Last Analysis Time

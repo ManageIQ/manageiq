@@ -1,0 +1,38 @@
+# Feed metadata
+roles: "change_managers operators"
+feed_title: "Policy Events"
+feed_description: "Policy events"
+feed_link: "/alert/rss?feed=polevents_vmconfiguration"
+
+# Item metadata
+item_title: "#{rec.target_name}"
+
+# item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
+item_description: |-
+    <script>
+        str = rec.miq_policy_description
+        result = rec.result == "success" ? "True" : "False"
+        # if str.include?("EVM")
+          "An EVM Policy event '#{rec.miq_event_description}' has occured for VM: #{rec.target_name} was completed
+            on #{rec.timestamp}. Policy '#{rec.miq_policy_description}' result was #{result}."
+        # end
+    </script>
+item_link: "/vm/show/#{rec.target_id}"
+item_class: PolicyEvent
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+search_conditions: "event_type = 'vm_create' OR event_type = 'vm_clone' OR event_type = 'vm_clone_start' OR event_type = 'vm_template' OR event_type = 'vm_reconfigure' OR event_type = 'request_vm_destroy'"
+limit_to_time:
+limit_to_count:
+orderby:
+  :timestamp: :desc
+
+# tags_include: any or all
+tag_ns:
+tags_include:
+tags:

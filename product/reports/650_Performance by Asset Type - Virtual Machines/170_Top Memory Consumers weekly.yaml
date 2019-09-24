@@ -1,0 +1,65 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Top Memory Consumers (weekly)"
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    "!=":
+      field: VmPerformance-derived_memory_used
+      value: "0"
+col_options: {}
+
+order: Descending
+graph:
+generate_rows:
+menu_name: "Top Memory Consumers (weekly)"
+rpt_group: Custom
+priority:
+col_order:
+- resource_name
+- ems_cluster.name
+- host.name
+- derived_memory_used__avg
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 604800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+-
+-
+-
+-
+include:
+  host:
+    columns:
+    - name
+  ems_cluster:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- resource_name
+- derived_memory_used
+template_type: report
+group:
+sortby:
+- derived_memory_used__avg
+rpt_options:
+  :pivot:
+    :group_cols:
+    - resource_name
+headers:
+- Asset Name
+- Cluster Name
+- Host Name
+- Memory - Used for Collected Intervals (MB) (Avg)
+display_filter:

@@ -1,0 +1,41 @@
+---
+dims:
+created_on: 2008-08-14 04:16:11.705205 Z
+title: "Folder to VMs Relationships"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT EMPTY:
+      field: Vm-v_owning_folder
+updated_on: 2009-08-05 17:20:41.446347 Z
+order: Ascending
+graph:
+menu_name: "Folder VMs Relationships"
+rpt_group: Custom
+priority: 10
+col_order:
+- v_owning_blue_folder_path
+- name
+- ext_management_system.name
+timeline:
+id: 103
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  ext_management_system:
+    columns:
+    - name
+db: Vm
+cols:
+- v_owning_blue_folder_path
+- name
+template_type: report
+group: c
+sortby:
+- v_owning_blue_folder_path
+- name
+headers:
+- Parent Folder Path (VMs & Templates)
+- VM Name
+- Provider Name

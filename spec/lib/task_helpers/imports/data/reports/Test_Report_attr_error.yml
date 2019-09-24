@@ -1,0 +1,86 @@
+---
+- MiqReport:
+    invalid_title: Test Report for Exporting
+    rpt_group: Custom
+    rpt_type: Custom
+    priority:
+    db: Vm
+    cols:
+    - name
+    - ipaddresses
+    - os_image_name
+    - num_cpu
+    - cpu_cores_per_socket
+    - cpu_total_cores
+    - mem_cpu
+    - evm_owner_name
+    - evm_owner_email
+    include: {}
+    col_order:
+    - name
+    - ipaddresses
+    - os_image_name
+    - num_cpu
+    - cpu_cores_per_socket
+    - cpu_total_cores
+    - mem_cpu
+    - evm_owner_name
+    - evm_owner_email
+    headers:
+    - Name
+    - IP Addresses
+    - OS Name
+    - Number of CPUs
+    - Cpu Cores Per Socket
+    - Number of CPU Cores
+    - Memory
+    - Evm Owner Name
+    - Evm Owner Email
+    conditions: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Vm.managed-department
+          value: engineering
+      context_type:
+    order: Ascending
+    sortby:
+    - evm_owner_email
+    - name
+    group: y
+    graph:
+    dims:
+    filename:
+    file_mtime:
+    categories: []
+    timeline:
+    template_type: report
+    where_clause:
+    db_options: {}
+    generate_cols:
+    generate_rows:
+    col_formats:
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+    -
+    tz:
+    time_profile_id:
+    display_filter:
+    col_options:
+      evm_owner_email:
+        :break_label: 'Evm Owner Email: '
+        :break_format: :model_name
+    rpt_options:
+      :pdf:
+        :page_size: US Letter - 8.5in x 11.0in
+      :queue_timeout:
+      :summary:
+        :hide_detail_rows: false
+    miq_group_id: 2
+    user_id: 1
+    menu_name: Test Report

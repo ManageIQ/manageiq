@@ -1,0 +1,142 @@
+# Parent EmsCluster Daily performance chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usagemhz_rate_average
+  - min_cpu_usagemhz_rate_average
+  - max_cpu_usagemhz_rate_average
+  - trend_max_cpu_usagemhz_rate_average
+  - max_derived_cpu_available
+  - max_derived_cpu_reserved
+#  :menu:
+#  - Chart-Current-Hourly:Hourly for this day
+#  - Chart-Hosts-topday:Top Hosts on this day
+#  - Chart-VMs-topday:Top VMs on this day
+#  - Timeline-Current-Daily:Daily events on this Cluster
+#  - Timeline-Current-Hourly:Hourly events on this Cluster
+#  - Display-Hosts-on:Hosts that were running
+#  - Display-VMs-on:VMs that were running
+  :trends:
+  - max_derived_cpu_reserved:Projected to hit reserve
+  - max_derived_cpu_available:Projected to hit available
+  :chart2:
+    :type: Line
+    :title: VMs & Hosts
+    :columns:
+    - derived_vm_count_on
+    - derived_host_count_on
+  :applies_to_method: cpu_mhz_available?
+
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  - min_cpu_usage_rate_average
+  - max_cpu_usage_rate_average
+  - trend_max_cpu_usage_rate_average
+  - resource.cpu_usage_rate_average_high_over_time_period
+  - resource.cpu_usage_rate_average_low_over_time_period
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Timeline-Current-Daily:Daily events on this Cluster
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  :max_value: 100.4
+  :decimals: 1
+  :applies_to_method: cpu_percent_available?
+
+- :title: Virtual Machine CPU States
+  :type: Area
+  :columns:
+  - v_pct_cpu_ready_delta_summation
+  - v_pct_cpu_used_delta_summation
+#  - v_pct_cpu_wait_delta_summation
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-Hosts-topday:Top Hosts on this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Cluster
+  - Timeline-Current-Hourly:Hourly events on this Cluster
+  - Display-Hosts-on:Hosts that were running
+  - Display-VMs-on:VMs that were running
+  :max_value: 100.4
+  :decimals: 1
+  :chart2:
+    :type: Line
+    :title: VMs & Hosts
+    :columns:
+    - derived_vm_count_on
+    - derived_host_count_on
+  :applies_to_method: cpu_ready_available?
+
+- :title: Memory (MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  - min_derived_memory_used
+  - max_derived_memory_used
+  - trend_max_derived_memory_used
+  - max_derived_memory_available
+  - max_derived_memory_reserved
+#  :menu:
+#  - Chart-Current-Hourly:Hourly for this day
+#  - Chart-Hosts-topday:Top Hosts on this day
+#  - Chart-VMs-topday:Top VMs on this day
+#  - Timeline-Current-Daily:Daily events on this Cluster
+#  - Timeline-Current-Hourly:Hourly events on this Cluster
+#  - Display-Hosts-on:Hosts that were running
+#  - Display-VMs-on:VMs that were running
+  :trends:
+  - max_derived_memory_reserved:Projected to hit reserve
+  - max_derived_memory_available:Projected to hit available
+  :chart2:
+    :type: Line
+    :title: VMs & Hosts
+    :columns:
+    - derived_vm_count_on
+    - derived_host_count_on
+  :applies_to_method: memory_mb_available?
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  - min_disk_usage_rate_average
+  - max_disk_usage_rate_average
+  - trend_max_disk_usage_rate_average
+#  :menu:
+#  - Chart-Current-Hourly:Hourly for this day
+#  - Chart-Hosts-topday:Top Hosts on this day
+#  - Chart-VMs-topday:Top VMs on this day
+#  - Timeline-Current-Daily:Daily events on this Cluster
+#  - Timeline-Current-Hourly:Hourly events on this Cluster
+#  - Display-Hosts-on:Hosts that were running
+#  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs & Hosts
+    :columns:
+    - derived_vm_count_on
+    - derived_host_count_on
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  - min_net_usage_rate_average
+  - max_net_usage_rate_average
+  - trend_max_net_usage_rate_average
+#  :menu:
+#  - Chart-Current-Hourly:Hourly for this day
+#  - Chart-Hosts-topday:Top Hosts on this day
+#  - Chart-VMs-topday:Top VMs on this day
+#  - Timeline-Current-Daily:Daily events on this Cluster
+#  - Timeline-Current-Hourly:Hourly events on this Cluster
+#  - Display-Hosts-on:Hosts that were running
+#  - Display-VMs-on:VMs that were running
+  :chart2:
+    :type: Line
+    :title: VMs & Hosts
+    :columns:
+    - derived_vm_count_on
+    - derived_host_count_on

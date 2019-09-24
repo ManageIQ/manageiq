@@ -1,0 +1,64 @@
+---
+where_clause:
+dims:
+created_on: 2008-11-17 18:54:07.052922 Z
+title: "Summary - VMs NOT migration ready - CD/DVD/Floppy connected"
+conditions: !ruby/object:MiqExpression
+  exp:
+    or:
+    - FIND:
+        search:
+          INCLUDES:
+            field: Vm.hardware.disks-device_type
+            value: cdrom
+        checkall:
+          STARTS WITH:
+            field: Vm.hardware.disks-start_connected
+            value: "true"
+    - FIND:
+        search:
+          INCLUDES:
+            field: Vm.hardware.disks-device_type
+            value: floppy
+        checkall:
+          INCLUDES:
+            field: Vm.hardware.disks-start_connected
+            value: "true"
+updated_on: 2008-11-18 16:18:05.754050 Z
+order: Ascending
+graph:
+menu_name: "Summary - VMs NOT migration ready"
+rpt_group: Custom
+priority: 10
+col_order:
+- name
+- host.name
+- v_owning_datacenter
+- storage.name
+timeline:
+id: 146
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_datacenter
+template_type: report
+group: c
+sortby:
+- host.name
+- name
+headers:
+- VM Name
+- Host Name
+- Parent Datacenter
+- Storage Name

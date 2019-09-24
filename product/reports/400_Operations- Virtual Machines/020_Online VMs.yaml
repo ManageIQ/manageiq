@@ -1,0 +1,56 @@
+---
+dims:
+created_on: 2008-08-14 01:54:13.891449 Z
+title: "Online VMs (Powered On)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - "=":
+        field: Vm-power_state
+        value: "on"
+    - "=":
+        field: Vm-active
+        value: "true"
+updated_on: 2008-08-14 01:54:13.891449 Z
+order: Ascending
+graph:
+menu_name: "Online VMs (Powered On)"
+rpt_group: Custom
+priority: 228
+col_order:
+- host.name
+- storage.name
+- v_datastore_path
+- name
+- power_state
+- last_scan_on
+timeline:
+id: 120
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- v_datastore_path
+- name
+- power_state
+- last_scan_on
+template_type: report
+group:
+sortby:
+- name
+headers:
+- Host
+- Datastore
+- Datastore Path
+- VM Name
+- Vm Power State
+- Last Analysis Time

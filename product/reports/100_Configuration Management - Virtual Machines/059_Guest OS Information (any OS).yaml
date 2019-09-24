@@ -1,0 +1,59 @@
+---
+dims: 1
+created_on: 2008-08-14 14:57:57.560210 Z
+title: "Guest OS Information - any OS"
+conditions:
+updated_on: 2008-08-14 15:18:19.546191 Z
+order: Ascending
+graph:
+  :type: Pie
+  :count: 10
+  :other: true
+menu_name: "Guest OS Information - any OS"
+rpt_group: Custom
+priority:
+col_order:
+- operating_system.product_name
+- operating_system.service_pack
+- name
+- vendor_display
+- os_image_name
+- operating_system.version
+- operating_system.build_number
+- operating_system.product_key
+- operating_system.productid
+timeline:
+id: 63
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - product_name
+    - service_pack
+    - version
+    - build_number
+    - product_key
+    - productid
+db: Vm
+cols:
+- name
+- vendor_display
+- os_image_name
+template_type: report
+group: c
+sortby:
+- operating_system.product_name
+- operating_system.service_pack
+headers:
+- Guest OS
+- OS Service Pack
+- VM Name
+- Vendor
+- OS Name
+- OS Version
+- OS Build Number
+- OS Product Key
+- OS Productid

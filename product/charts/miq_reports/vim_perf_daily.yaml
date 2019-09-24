@@ -1,0 +1,247 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "VIM Performance Daily"
+
+# Menu name
+name: "VIM Performance Daily"
+
+# Main DB table report is based on
+db: VimPerformanceDaily
+
+# Columns to fetch from the main table
+cols:
+- timestamp
+- cpu_usagemhz_rate_average
+- max_derived_cpu_available
+- max_derived_cpu_reserved
+- min_cpu_usagemhz_rate_average
+- max_cpu_usagemhz_rate_average
+- trend_max_cpu_usagemhz_rate_average
+- cpu_usage_rate_average
+- min_cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- trend_max_cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- v_pct_cpu_wait_delta_summation
+- v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
+- derived_memory_used
+- derived_memory_available
+- max_derived_memory_available
+- max_derived_memory_reserved
+- min_derived_memory_used
+- max_derived_memory_used
+- trend_max_derived_memory_used
+- disk_usage_rate_average
+- min_disk_usage_rate_average
+- max_disk_usage_rate_average
+- trend_max_disk_usage_rate_average
+- net_usage_rate_average
+- min_net_usage_rate_average
+- max_net_usage_rate_average
+- trend_max_net_usage_rate_average
+- derived_host_count_on
+- derived_host_count_off
+- derived_vm_count_on
+- derived_vm_count_off
+- v_derived_storage_used
+- derived_storage_total
+- min_v_derived_storage_used
+- max_v_derived_storage_used
+- trend_max_v_derived_storage_used
+- derived_storage_vm_count_registered
+- derived_storage_vm_count_unregistered
+- derived_storage_vm_count_unmanaged
+- derived_storage_used_registered
+- derived_storage_used_unregistered
+- derived_storage_used_unmanaged
+- derived_storage_snapshot_registered
+- derived_storage_snapshot_unregistered
+- derived_storage_snapshot_unmanaged
+- derived_storage_disk_registered
+- derived_storage_disk_unregistered
+- derived_storage_disk_unmanaged
+- derived_storage_mem_registered
+- derived_storage_mem_unregistered
+- derived_storage_mem_unmanaged
+- assoc_ids
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+  resource:
+    columns:
+    - cpu_usagemhz_rate_average_high_over_time_period
+    - cpu_usagemhz_rate_average_low_over_time_period
+    - derived_memory_used_high_over_time_period
+    - derived_memory_used_low_over_time_period
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- cpu_usagemhz_rate_average
+- max_derived_cpu_available
+- max_derived_cpu_reserved
+- min_cpu_usagemhz_rate_average
+- max_cpu_usagemhz_rate_average
+- trend_max_cpu_usagemhz_rate_average
+- cpu_usage_rate_average
+- min_cpu_usage_rate_average
+- max_cpu_usage_rate_average
+- trend_max_cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- v_pct_cpu_wait_delta_summation
+- v_pct_cpu_used_delta_summation
+- v_derived_cpu_total_cores_used
+- derived_memory_used
+- derived_memory_available
+- max_derived_memory_available
+- max_derived_memory_reserved
+- min_derived_memory_used
+- max_derived_memory_used
+- trend_max_derived_memory_used
+- disk_usage_rate_average
+- min_disk_usage_rate_average
+- max_disk_usage_rate_average
+- trend_max_disk_usage_rate_average
+- net_usage_rate_average
+- min_net_usage_rate_average
+- max_net_usage_rate_average
+- trend_max_net_usage_rate_average
+- derived_host_count_on
+- derived_host_count_off
+- derived_vm_count_on
+- derived_vm_count_off
+- v_derived_storage_used
+- derived_storage_total
+- min_v_derived_storage_used
+- max_v_derived_storage_used
+- trend_max_v_derived_storage_used
+- derived_storage_vm_count_registered
+- derived_storage_vm_count_unregistered
+- derived_storage_vm_count_unmanaged
+- derived_storage_used_registered
+- derived_storage_used_unregistered
+- derived_storage_used_unmanaged
+- derived_storage_snapshot_registered
+- derived_storage_snapshot_unregistered
+- derived_storage_snapshot_unmanaged
+- derived_storage_disk_registered
+- derived_storage_disk_unregistered
+- derived_storage_disk_unmanaged
+- derived_storage_mem_registered
+- derived_storage_mem_unregistered
+- derived_storage_mem_unmanaged
+- resource.cpu_usagemhz_rate_average_high_over_time_period
+- resource.cpu_usagemhz_rate_average_low_over_time_period
+- resource.cpu_usage_rate_average_high_over_time_period
+- resource.cpu_usage_rate_average_low_over_time_period
+- resource.derived_memory_used_high_over_time_period
+- resource.derived_memory_used_low_over_time_period
+- assoc_ids
+
+# Column titles, in order
+headers:
+- Date/Time
+- Avg Used
+- Max Available
+- Max Reserved
+- Min Used
+- Max Used
+- Trend Max Used
+- Avg % Used
+- Min % Used
+- Max % Used
+- Trend Max % Used
+- ! '% Ready'
+- ! '% Idle'
+- ! '% Used'
+- Number of Cores
+- Avg Used
+- Avg Available
+- Max Available
+- Max Reserved
+- Min Used
+- Max Used
+- Trend Max Used
+- Avg I/O
+- Min I/O
+- Max I/O
+- Trend Max I/O
+- Avg I/O
+- Min I/O
+- Max I/O
+- Trend Max I/O
+- Avg Running Hosts
+- Avg Stopped Hosts
+- Avg Running VMs
+- Avg Stopped VMs
+- Avg Used
+- Total
+- Min Used
+- Max Used
+- Trend Max Used
+- EVM Managed/Registered
+- EVM Managed/Unregistered
+- Not Managed
+- EVM Managed/Registered
+- EVM Managed/Unregistered
+- Not Managed
+- EVM Managed/Registered
+- EVM Managed/Unregistered
+- Not Managed
+- EVM Managed/Registered
+- EVM Managed/Unregistered
+- Not Managed
+- EVM Managed/Registered
+- EVM Managed/Unregistered
+- Not Managed
+- High Oper Range
+- Low Oper Range
+- High % Oper Range
+- Low % Oper Range
+- High Oper Range
+- Low Oper Range
+- Associated Record IDs
+
+# Condition expression for search filtering
+conditions:
+
+# Order string for the SQL query
+order: ascending
+
+# Columns to sort the report on, in order
+sortby: timestamp
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+template_type: report

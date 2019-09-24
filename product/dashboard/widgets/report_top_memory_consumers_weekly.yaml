@@ -1,0 +1,22 @@
+description: report_top_memory_consumers_weekly
+title: Top Memory Consumers (weekly)
+content_type: report
+options:
+  :col_order:
+  - resource_name
+  - ems_cluster.name
+  - derived_memory_used__avg
+  :row_count: 10
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Top Memory Consumers (weekly)
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

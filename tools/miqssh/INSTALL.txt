@@ -1,0 +1,8 @@
+Installation Instructions
+
+- Recommended place to configure miqssh tools is on the VMDB in the region.
+- Configure your appliances into zones as appropriate for your environment.
+- Create an miqhosts file in this directory.  See miqhosts-sample and miqhosts-gen can help dynamically generate that by querying server names and zones from the VMDB.
+- Generate SSH public/private keys using ssh-keygen, unless they already exist.
+- Push the SSH public keys out to all the servers in the region, miqssh-copy-id can help with this.
+- To be able to use miqtail, the multitail package from EPEL will need to be installed on this system.

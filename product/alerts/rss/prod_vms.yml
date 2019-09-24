@@ -1,0 +1,44 @@
+# Feed metadata
+roles: "operators"
+feed_title: "VMs in  Production"
+feed_description: "Virtual machines discovered in production"
+feed_link: "/alert/rss?feed=prod_vms"
+
+# Item metadata
+item_title: |-
+    <script>
+        if rec.host != nil
+          "#{rec.name} on Host #{rec.host.name}"
+        elsif ! rec.repositories.empty?
+          "#{rec.name} in Repository #{rec.repositories[0].name}"
+        elsif rec.storage != nil
+          "#{rec.name} at #{rec.storage.name}"
+        else
+          "#{rec.name} - location unknown"
+        end
+    </script>
+item_description: "#{rec.name} is a #{rec.vendor_display} VM located at \\\"#{rec.location}\\\""
+item_link: "/vm/show/#{rec.id}"
+item_class: Vm
+
+# Search criteria
+#   search_method: find, nil or a custom method name
+#   Custom method is called the following way:
+#     <item_class>.method(<search_method>).<name>, <options>)
+#   A nil value or a value of "find" use the default class find method
+search_method:
+limit_to_time:
+limit_to_count:
+orderby:
+  :created_on: :desc
+
+# Included tables and columns for query performance
+include:
+  :host: {}
+  :storage: {}
+  :repositories: {}
+
+# tags_include: any or all
+tag_ns: "/managed/environment"
+tags_include: any
+tags: "prod"

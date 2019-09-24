@@ -1,0 +1,43 @@
+---
+where_clause:
+dims:
+created_on: 2009-10-01 16:55:02.140000 Z
+reserved:
+title: "Cluster memory trend based on past 6 months"
+conditions:
+updated_on: 2009-10-19 22:09:11.300000 Z
+order: Ascending
+graph:
+menu_name: "Cluster memory trend  6 months"
+rpt_group: Custom
+priority: 110
+col_order: []
+
+timeline:
+id: 106
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 15552000
+  :end_offset: 0
+  :trend_db: EmsClusterPerformance
+  :trend_col: derived_memory_used
+  :interval: daily
+  :target_pcts:
+  - 70
+  - 90
+  - 100
+  :rpt_type: trend
+  :limit_col: max_derived_memory_available
+include: {}
+
+db: VimPerformanceTrend
+cols: []
+
+template_type: report
+group:
+sortby:
+- resource_name
+headers: []

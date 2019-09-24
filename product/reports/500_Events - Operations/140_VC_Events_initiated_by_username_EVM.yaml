@@ -1,0 +1,42 @@
+---
+where_clause: (username = 'EVM') and (event_type <> 'GeneralUserEvent') and not(event_type LIKE '%Complete%')
+dims:
+created_on: 2009-04-22 21:37:41.955707 Z
+reserved:
+title: "Virtual Center Events initiated by username EVM"
+conditions:
+updated_on: 2009-04-22 21:39:07.473636 Z
+order: Ascending
+graph:
+menu_name: "VC Events initiated by username EVM86"
+rpt_group: Custom
+priority:
+col_order:
+- event_type
+- vm_name
+- timestamp
+- message
+timeline:
+id: 95
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: EventStream
+cols:
+- event_type
+- vm_name
+- timestamp
+- message
+template_type: report
+group: c
+sortby:
+- event_type
+- timestamp
+headers:
+- Event Type
+- VM Name
+- Time Stamp
+- Message

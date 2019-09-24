@@ -1,0 +1,431 @@
+---
+- MiqPolicySet:
+    name: openscap profile
+    description: OpenSCAP profile
+    set_type: MiqPolicySet
+    guid: 0bf2e43a-1211-11e6-aa9c-02424d459b45
+    read_only: true
+    set_data:
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: openscap policy
+      description: OpenSCAP
+      expression:
+      towhat: ContainerImage
+      guid: 14c7b8ee-120f-11e6-aa9c-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: compliance
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: failure
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: compliance_failed
+          description: Mark as Non-Compliant
+          action_type: default
+          options: {}
+      - qualifier: failure
+        failure_sequence: 2
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_annotate_scan_results
+          description: Annotate image with scan results and execution prevention status
+          action_type: default
+          options: {}
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_annotate_scan_results
+          description: Annotate image with scan results and execution prevention status
+          action_type: default
+          options: {}
+      Condition:
+      - name: if container image has no high severity failure in openscap rule results
+        description: No high severity failure in OpenSCAP rule results
+        expression: !ruby/object:MiqExpression
+          exp:
+            not:
+              FIND:
+                search:
+                  "=":
+                    field: ContainerImage.openscap_rule_results-result
+                    value: fail
+                checkany:
+                  "=":
+                    field: ContainerImage.openscap_rule_results-severity
+                    value: High
+          context_type:
+        towhat: ContainerImage
+        file_mtime:
+        guid: 92b1949a-1210-11e6-aa9c-02424d459b45
+        filename:
+        applies_to_exp:
+        miq_policy_id:
+        notes:
+        read_only: true
+    - name: analyse incoming container images
+      description: Analyse incoming container images
+      expression:
+      towhat: ContainerImage
+      guid: e7a270bc-109b-11e6-86ba-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_created
+          description: Container Image Discovered
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_analyze
+          description: Initiate SmartState Analysis for Container Image
+          action_type: default
+          options: {}
+      Condition:
+      - name: "Do not scan image-inspector's image"
+        description: "Don't scan image-inspector's image"
+        expression: !ruby/object:MiqExpression
+          exp:
+            not:
+              ENDS WITH:
+                field: ContainerImage-name
+                value: "/image-inspector"
+          context_type:
+        towhat: ContainerImage
+        file_mtime:
+        guid: e744245a-3d08-11e6-8d39-02422087d789
+        filename:
+        applies_to_exp:
+        miq_policy_id:
+        notes:
+        read_only: true
+    - name: schedule compliance after smart state analysis
+      description: Schedule compliance after smart state analysis
+      expression:
+      towhat: ContainerImage
+      guid: bae4a2b0-1cfe-11e6-a243-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_scan_complete
+          description: Container Image Analysis Complete
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: check_compliance
+          description: Check Host or VM Compliance
+          action_type: default
+          options: {}
+      Condition: []
+- MiqPolicySet:
+    name: physical infrastructure profile
+    description: Physical Infrastructure Profile
+    set_type: MiqPolicySet
+    guid: e89997cd-e7ba-4c1f-92f6-57154fe1c875
+    read_only: true
+    set_data:
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: power on servers that were powered off
+      description: Power on servers that were powered off
+      expression:
+      towhat: PhysicalServer
+      guid: 6220e15b-01a4-430c-9e70-d67af4798708
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: physical_server_shutdown
+          description: Physical Server Shutdown
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: physical_server_power_on
+          description: Power on the Server
+          action_type: default
+          options: {}
+      Condition: []
+- MiqPolicySet:
+    name: VM SmartState Analysis profile
+    description: VM SmartState Analysis profile
+    set_type: MiqPolicySet
+    guid: 2d7c4b41-474f-43dd-888d-8f3ddd5151a5
+    read_only: true
+    set_data:
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: prevent smartstate analysis from running
+      description: Prevent SmartState Analysis from running
+      expression:
+      towhat: Vm
+      guid: eea4ca5c-68a3-11e7-ab6f-beeffeed0072
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: request_vm_scan
+          description: VM Analysis Request
+          guid: 587cf5cc-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: prevent
+          description: Prevent current event from proceeding
+          guid: 5701e680-5aa2-11e7-a23e-beeffeed0072
+          action_type: default
+          options: {}
+      Condition:
+      - name: tagged as do_not_analyze
+        description: Tagged as do_not_analyze
+        expression: !ruby/object:MiqExpression
+          exp:
+            CONTAINS:
+              tag: Vm.managed-exclusions
+              value: do_not_analyze
+          context_type:
+        towhat: Vm
+        file_mtime:
+        guid: 51283fb0-68a4-11e7-ab6f-beeffeed0072
+        filename:
+        applies_to_exp:
+        miq_policy_id:
+        notes:
+        read_only:
+    - name: run smartstate analysis on new vms
+      description: Run SmartState Analysis on new VMs
+      expression:
+      towhat: Vm
+      guid: ca3dc824-6c56-11e7-8e1f-beeffeed0072
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_provisioned
+          description: VM Provision Complete
+          guid: 582f2e3c-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: vm_analyze
+          description: Initiate SmartState Analysis for VM
+          guid: 570d69ba-5aa2-11e7-a23e-beeffeed0072
+          action_type: default
+          options: {}
+      Condition: []
+    - name: tag a vm if smartstate analysis failed
+      description: Tag a VM if SmartState Analysis failed
+      expression:
+      towhat: Vm
+      guid: 55054b1c-6ad1-11e7-ab6f-beeffeed0072
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_scan_abort
+          description: VM Analysis Failure
+          guid: 5882f6ac-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: remove_evm_operations_tags
+          description: Remove EVM Operations tags
+          guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
+          action_type: remove_tags
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :cats:
+            - operations
+      - qualifier: success
+        success_sequence: 2
+        MiqEventDefinition:
+          name: vm_scan_abort
+          description: VM Analysis Failure
+          guid: 5882f6ac-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: tag_as_analysis_failed
+          description: Tag as Analysis Failed
+          guid: 824ab012-6ad1-11e7-ab6f-beeffeed0072
+          action_type: tag
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :tags:
+            - "/managed/operations/analysis_failed"
+      Condition: []
+    - name: tag a vm if smartstate analysis successful
+      description: Tag a VM if SmartState Analysis successful
+      expression:
+      towhat: Vm
+      guid: b97cf4da-6b9b-11e7-abf0-beeffeed0072
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_scan_complete
+          description: VM Analysis Complete
+          guid: 587fef70-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: remove_evm_operations_tags
+          description: Remove EVM Operations tags
+          guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
+          action_type: remove_tags
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :cats:
+            - operations
+      - qualifier: success
+        success_sequence: 2
+        MiqEventDefinition:
+          name: vm_scan_complete
+          description: VM Analysis Complete
+          guid: 587fef70-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: tag_as_analysis_successful
+          description: Tag as Analysis Successful
+          guid: 77825142-6b9b-11e7-abf0-beeffeed0072
+          action_type: tag
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :tags:
+            - "/managed/operations/analysis_success"
+      Condition: []
+    - name: trigger compliance check on smartstate completion
+      description: Trigger Compliance Check on SmartState Completion
+      expression:
+      towhat: Vm
+      guid: c274a932-873b-11e7-866d-beeffeed0072
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        MiqEventDefinition:
+          name: vm_scan_complete
+          description: VM Analysis Complete
+          guid: 587fef70-5aa2-11e7-a23e-beeffeed0072
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: check_compliance
+          description: Check Host or VM Compliance
+          guid: 571bb178-5aa2-11e7-a23e-beeffeed0072
+          action_type: default
+          options: {}
+      Condition: []

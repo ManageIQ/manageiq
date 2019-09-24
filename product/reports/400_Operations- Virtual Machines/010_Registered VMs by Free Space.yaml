@@ -1,0 +1,51 @@
+---
+dims:
+created_on: 2008-08-11 22:29:55.101908 Z
+title: "Registered VMs by Free Space"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT NULL:
+      field: Vm.hardware-size_on_disk
+updated_on: 2008-08-11 22:36:07.331335 Z
+order: Ascending
+graph:
+menu_name: "Registered VMs by Free Space"
+rpt_group: Custom
+priority: 231
+col_order:
+- name
+- host.name
+- hardware.disk_capacity
+- hardware.disk_free_space
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+timeline:
+id: 81
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - disk_capacity
+    - disk_free_space
+  host:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_pct_free_disk_space
+- v_pct_used_disk_space
+template_type: report
+group:
+sortby:
+- hardware.disk_free_space
+headers:
+- VM Name
+- Host Name
+- Total Disk
+- Free Disk
+- Pct Free Disk
+- Pct Used Disk

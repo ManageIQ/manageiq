@@ -1,0 +1,49 @@
+---
+dims:
+created_on: 2008-08-14 21:52:08.726052 Z
+title: "VM User Accounts for Linux"
+conditions: !ruby/object:MiqExpression
+  exp:
+    not:
+      INCLUDES:
+        field: Vm.operating_system-product_name
+        value: Win
+updated_on: 2008-08-14 21:52:08.726052 Z
+order: Ascending
+graph:
+menu_name: "User Accounts - Linux"
+rpt_group: Custom
+priority: 50
+col_order:
+- name
+- users.name
+- users.comment
+- users.acctid
+- users.accttype
+timeline:
+id: 82
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  users:
+    columns:
+    - name
+    - comment
+    - acctid
+    - accttype
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- users.name
+headers:
+- VM Name
+- User Name
+- User Comment
+- User Account ID
+- User Account Type

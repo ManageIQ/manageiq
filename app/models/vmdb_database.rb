@@ -1,0 +1,85 @@
+class VmdbDatabase < ApplicationRecord
+  has_many :vmdb_tables            # Destroy will be handled by seeder
+  has_many :evm_tables,            :class_name => 'VmdbTableEvm'
+  has_many :text_tables,           :class_name => 'VmdbTableText'
+  has_many :vmdb_indexes,          :through => :vmdb_tables
+  has_many :vmdb_database_metrics, :dependent => :destroy
+  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order("timestamp DESC") }, :class_name => 'VmdbDatabaseMetric'
+
+  virtual_has_many :vmdb_database_settings
+  virtual_has_many :vmdb_database_connections
+
+  include VmdbDatabaseMetricsMixin
+
+  include_concern 'VmdbDatabase::MetricCapture'
+  include_concern 'Logging'
+  include_concern 'Seeding'
+
+  def vmdb_database_settings
+    self.in_current_region? ? VmdbDatabaseSetting.all : []
+  end
+
+  def vmdb_database_connections
+    self.in_current_region? ? VmdbDatabaseConnection.all : []
+  end
+
+  def self.my_database
+    VmdbDatabase.in_my_region.first
+  end
+
+  def my_metrics
+    vmdb_database_metrics
+  end
+
+  def size
+    ActiveRecord::Base.connection.database_size(name)
+  end
+
+  def top_tables_by(sorted_by, limit = nil)
+    # latest_hourly_metric via includes causes too many rows to come back.
+    #   Instead we will manually query for the MAX(id), which is simpler than
+    #   MAX(timestamp).
+    latest_ids = VmdbMetric.where(:resource_type => 'VmdbTable', :resource_id => evm_table_ids,
+                                  :capture_interval_name => 'hourly')
+                           .select("MAX(id) AS id").group(:resource_type, :resource_id).collect(&:id)
+    metrics    = VmdbMetric.where(:id => latest_ids).to_a
+
+    metrics = metrics.sort_by { |m| m.send(sorted_by) }.reverse
+    metrics = metrics[0, limit] if limit.kind_of?(Numeric)
+
+    tables_by_id = evm_tables.index_by(&:id)
+    metrics.collect { |m| tables_by_id[m.resource_id] }
+  end
+
+  #
+  # Report database statistics and bloat...
+  #
+
+  def self.report_table_bloat
+    connection.table_bloat if connection.respond_to?(:table_bloat)
+  end
+
+  def self.report_index_bloat
+    connection.index_bloat if connection.respond_to?(:index_bloat)
+  end
+
+  def self.report_database_bloat
+    connection.database_bloat if connection.respond_to?(:database_bloat)
+  end
+
+  def self.report_table_statistics
+    connection.table_statistics if connection.respond_to?(:table_statistics)
+  end
+
+  def self.report_table_size
+    connection.table_size if connection.respond_to?(:table_size)
+  end
+
+  def self.report_client_connections
+    connection.client_connections if connection.respond_to?(:client_connections)
+  end
+
+  def self.display_name(number = 1)
+    n_('Database', 'Databases', number)
+  end
+end

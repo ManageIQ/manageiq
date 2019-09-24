@@ -1,0 +1,73 @@
+---
+where_clause:
+dims:
+created_on: 2008-10-23 17:25:06.892661 Z
+title: "VMs with Volume Free Space >= 80%"
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        IS NOT EMPTY:
+          field: Vm.hardware.volumes-name
+      checkany:
+        ">=":
+          field: Vm.hardware.volumes-free_space_percent
+          value: 80
+updated_on: 2008-10-23 17:25:06.892661 Z
+order: Descending
+graph:
+menu_name: "VMs with Volume Free Space >= 80%"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- v_owning_cluster
+- storage.name
+- hardware.volumes.name
+- hardware.volumes.free_space_percent
+- hardware.volumes.free_space
+- hardware.volumes.size
+- hardware.volumes.used_space_percent
+- hardware.volumes.used_space
+- hardware.volumes.filesystem
+timeline:
+id: 141
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    include:
+      volumes:
+        columns:
+        - name
+        - free_space_percent
+        - free_space
+        - size
+        - used_space_percent
+        - used_space
+        - filesystem
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+template_type: report
+group: c
+sortby:
+- v_owning_cluster
+- hardware.volumes.free_space_percent
+headers:
+- Name
+- Parent Cluster
+- Storage Name
+- Volume Name
+- Volume Free Space Percent
+- Volume Free Space
+- Volume Size
+- Volume Used Space Percent
+- Volume Used Space
+- Volume Filesystem

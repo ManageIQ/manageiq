@@ -1,0 +1,238 @@
+name,description,event_type,set_type
+#
+# Authentication
+#
+login_failed,Login failed,Default,authentication
+
+# Authorization
+user_created,User created,Default,authorization
+
+#
+# EVM Server operations
+#
+evm_server_start,Server Start,Default,evm_operations
+evm_server_stop,Server Stop,Default,evm_operations
+evm_server_not_responding,Server Not Responding,Default,evm_operations
+evm_server_memory_exceeded,Server Exceeded Memory Limit,Default,evm_operations
+evm_server_is_master,Server is Master,Default,evm_operations
+evm_server_system_disk_high_usage,Server High System Disk Usage,Default,evm_operations
+evm_server_boot_disk_high_usage,Server High /boot Disk Usage,Default,evm_operations
+evm_server_home_disk_high_usage,Server High /home Disk Usage,Default,evm_operations
+evm_server_var_disk_high_usage,Server High /var Disk Usage,Default,evm_operations
+evm_server_var_log_disk_high_usage,Server High /var/log Disk Usage,Default,evm_operations
+evm_server_var_log_audit_disk_high_usage,Server High /var/log/audit Disk Usage,Default,evm_operations
+evm_server_log_disk_high_usage,Server High /var/www/miq/vmdb/log Disk Usage,Default,evm_operations
+evm_server_miq_tmp_disk_high_usage,Server High Temp Storage Disk Usage,Default,evm_operations
+evm_server_tmp_disk_high_usage,Server High /tmp Disk Usage,Default,evm_operations
+evm_server_db_disk_high_usage,Server High DB Disk Usage,Default,evm_operations
+evm_server_db_backup_low_space,Server Database Backup Insufficient Space,Default,evm_operations
+evm_worker_start,Worker Started,Default,evm_operations
+evm_worker_stop,Worker Stopped,Default,evm_operations
+evm_worker_killed,Worker Killed,Default,evm_operations
+evm_worker_not_responding,Worker Not Responding,Default,evm_operations
+evm_worker_memory_exceeded,Worker Exceeded Memory Limit,Default,evm_operations
+evm_worker_uptime_exceeded,Worker Exceeded Uptime Limit,Default,evm_operations
+evm_worker_exit_file,Worker Exit File,Default,evm_operations
+
+#
+# External Management System operations
+#
+ems_auth_changed,Provider Auth Changed,Default,auth_validation
+ems_auth_valid,Provider Auth Valid,Default,auth_validation
+ems_auth_invalid,Provider Auth Invalid,Default,auth_validation
+ems_auth_unreachable,Provider Auth Unreachable,Default,auth_validation
+ems_auth_incomplete,Provider Auth Incomplete Credentials,Default,auth_validation
+ems_auth_error,Provider Auth Error,Default,auth_validation
+ems_performance_gap_detected,C & U Collection Gap Detected,Default,ems_operations
+# Compliance event names are derived from lowercased model name.
+extmanagementsystem_compliance_check,Provider Compliance Check,Default,compliance
+extmanagementsystem_compliance_passed,Provider Compliance Passed,Default,compliance
+extmanagementsystem_compliance_failed,Provider Compliance Failed,Default,compliance
+
+#
+# Host operations
+#
+host_connect,Host Connect,Default,host_operations
+host_disconnect,Host Disconnect,Default,host_operations
+host_failure,Host Failure,Default,host_operations
+request_host_scan,Host Analysis Request,Default,host_operations
+host_scan_complete,Host Analysis Complete,Default,host_operations
+host_perf_complete,Host C & U Processing Complete,Default,host_operations
+host_add_to_cluster,Host Added to Cluster,Default,host_operations
+host_remove_from_cluster,Host Removed from Cluster,Default,host_operations
+host_compliance_check,Host Compliance Check,Default,compliance
+host_compliance_passed,Host Compliance Passed,Default,compliance
+host_compliance_failed,Host Compliance Failed,Default,compliance
+host_auth_changed,Host Auth Changed,Default,auth_validation
+host_auth_valid,Host Auth Valid,Default,auth_validation
+host_auth_invalid,Host Auth Invalid,Default,auth_validation
+host_auth_unreachable,Host Auth Unreachable,Default,auth_validation
+host_auth_incomplete,Host Auth Incomplete Credentials,Default,auth_validation
+host_auth_error,Host Auth Error,Default,auth_validation
+request_host_reset,Host Reset Request,Default,host_operations
+request_host_start,Host Start Request,Default,host_operations
+request_host_stop,Host Stop Request,Default,host_operations
+request_host_standby,Host Standby Request,Default,host_operations
+request_host_enter_maintenance_mode,Host Maintenance Enter Request,Default,host_operations
+request_host_exit_maintenance_mode,Host Maintenance Exit Request,Default,host_operations
+request_host_shutdown,Host Shutdown Request,Default,host_operations
+request_host_reboot,Host Reboot Request,Default,host_operations
+request_host_enable_vmotion,Host Vmotion Enable Request,Default,host_operations
+request_host_disable_vmotion,Host Vmotion Disable Request,Default,host_operations
+#
+# Company tags
+#
+request_assign_company_tag,Tag Request,Default,tags
+assigned_company_tag,Tag Complete,Default,tags
+assigned_company_tag_parent_host,Tag Parent Host Complete,Default,tags
+assigned_company_tag_parent_ems_cluster,Tag Parent Cluster Complete,Default,tags
+assigned_company_tag_parent_resource_pool,Tag Parent Resource Pool Complete,Default,tags
+assigned_company_tag_parent_storage,Tag Parent Datastore Complete,Default,tags
+request_unassign_company_tag,Un-Tag Request,Default,tags
+unassigned_company_tag,Un-Tag Complete,Default,tags
+unassigned_company_tag_parent_host,Un-Tag Parent Host Complete,Default,tags
+unassigned_company_tag_parent_ems_cluster,Un-Tag Parent Cluster Complete,Default,tags
+unassigned_company_tag_parent_resource_pool,Un-Tag Parent Resource Pool Complete,Default,tags
+unassigned_company_tag_parent_storage,Un-Tag Parent Datastore Complete,Default,tags
+#
+# VM configuration
+#
+vm_reconfigure,VM Settings Change,Default,vm_configurational
+vm_renamed_event,VM Renamed Event,Default,vm_configurational
+#
+# VM lifecycle
+#
+vm_destroy,VM Delete (from Disk),Default,vm_process
+request_vm_destroy,VM Delete (from Disk) Request,Default,vm_process
+vm_create,VM Create Complete,Default,vm_process
+# vm_delete,VM Deletion,Default,vm_process
+# vm_deploy,VM Deployment from Template,Default,vm_process
+vm_template,VM Template Create Complete,Default,vm_process
+vm_retired,VM Retired,Default,vm_process
+request_vm_retire,VM Retire Request,Default,vm_process
+vm_retire_warn,VM Retirement Warning,Default,vm_process
+vm_provisioned,VM Provision Complete,Default,vm_process
+#
+# VM operations
+#
+vm_clone,VM Clone Complete,Default,vm_operational
+vm_clone_start,VM Clone Start,Default,vm_operational
+vm_start,VM Power On,Default,vm_operational
+request_vm_start,VM Power On Request,Default,vm_operational
+# vm_shutdown,VM Shutdown,Default,vm_operational
+vm_resume,VM Resume,Default,vm_operational
+vm_migrate,VM Live Migration (VMOTION),Default,vm_operational
+# vm_relocate,VM Relocation to a New Host,Default,vm_operational
+vm_reset,VM Reset,Default,vm_operational
+request_vm_reset,VM Reset Request,Default,vm_operational
+vm_suspend,VM Suspend,Default,vm_operational
+request_vm_suspend,VM Suspend Request,Default,vm_operational
+vm_pause,VM Pause,Default,vm_operational
+request_vm_pause,VM Pause Request,Default,vm_operational
+vm_shelve,VM Shelve,Default,vm_operational
+request_vm_shelve,VM Shelve Request,Default,vm_operational
+vm_shelve_offload,VM Shelve Offload,Default,vm_operational
+request_vm_shelve_offload,VM Shelve Offload Request,Default,vm_operational
+vm_poweroff,VM Power Off,Default,vm_operational
+request_vm_poweroff,VM Power Off Request,Default,vm_operational
+vm_shutdown_guest,VM Guest Shutdown,Default,vm_operational
+request_vm_reboot_guest,VM Guest Reboot Request,Default,vm_operational
+vm_reboot_guest,VM Guest Reboot,Default,vm_operational
+request_vm_shutdown_guest,VM Guest Shutdown Request,Default,vm_operational
+vm_standby_guest,VM Standby of Guest,Default,vm_operational
+request_vm_standby_guest,VM Standby of Guest Request,Default,vm_operational
+vm_unregister,VM Removal from Inventory,Default,vm_operational
+request_vm_unregister,VM Removal from Inventory Request,Default,vm_operational
+vm_snapshot,VM Snapshot Create Started,Default,vm_operational
+vm_snapshot_complete,VM Snapshot Create Complete,Default,vm_operational
+request_vm_scan,VM Analysis Request,Default,vm_operational
+vm_scan_complete,VM Analysis Complete,Default,vm_operational
+vm_scan_abort,VM Analysis Failure,Default,vm_operational
+vm_perf_complete,VM C & U Processing Complete,Default,vm_operational
+request_vm_create_snapshot,VM Snapshot Create Request,Default,vm_operational
+vm_scan_start,VM Analysis Start,Default,vm_operational
+vm_compliance_check,VM Compliance Check,Default,compliance
+vm_compliance_passed,VM Compliance Passed,Default,compliance
+vm_compliance_failed,VM Compliance Failed,Default,compliance
+vm_remote_console_connected,VM Remote Console Connected,Default,vm_operational
+
+#
+# Storage Operations
+#
+request_storage_scan,Datastore Analysis Request,Default,storage_operational
+storage_scan_complete,Datastore Analysis Complete,Default,storage_operational
+db_failover_executed,Database Failover Executed,Default,storage_operational
+
+#
+# Service lifecycle
+#
+service_retired,Service Retired,Default,service_process
+request_service_retire,Service Retire Request,Default,service_process
+service_retire_warn,Service Retirement Warning,Default,service_process
+service_provisioned,Service Provision Complete,Default,service_process
+request_service_start,Service Start Request,Default,service_process
+service_started,Service Started,Default,service_process
+request_service_stop,Service Stop Request,Default,service_process
+service_stopped,Service Stopped,Default,service_process
+
+#
+# Orchestration
+#
+request_orchestration_stack_retire,Orchestration Stack Retire Request,Default,orchestration_process
+
+#
+# Container Operations
+#
+request_containerimage_scan,Container Image Analysis Request,Default,container_operations
+containerimage_scan_abort,Container Image Analysis Failure,Default,container_operations
+containerimage_scan_complete,Container Image Analysis Complete,Default,container_operations
+containerimage_created,Container Image Discovered,Default,container_operations
+containerimage_compliance_check,Container Image Compliance Check,Default,compliance
+containerimage_compliance_passed,Container Image Compliance Passed,Default,compliance
+containerimage_compliance_failed,Container Image Compliance Failed,Default,compliance
+
+containernode_failedmount,Container Node Failed Mount,Default,container_operations
+containernode_invaliddiskcapacity,Container Node Invalid Disk Capacity,Default,container_operations
+containernode_nodenotready,Container Node Not Ready,Default,container_operations
+containernode_nodenotschedulable,Container Node Not Schedulable,Default,container_operations
+containernode_nodeready,Container Node Ready,Default,container_operations
+containernode_nodeschedulable,Container Node Schedulable,Default,container_operations
+containernode_rebooted,Container Node Rebooted,Default,container_operations
+containernode_compliance_check,Container Node Compliance Check,Default,compliance
+containernode_compliance_passed,Container Node Compliance Passed,Default,compliance
+containernode_compliance_failed,Container Node Compliance Failed,Default,compliance
+
+containergroup_deadlineexceeded,Pod Deadline Exceeded,Default,container_operations
+containergroup_failedscheduling,Pod Failed Scheduling,Default,container_operations
+containergroup_failedvalidation,Pod Failed Validation,Default,container_operations
+containergroup_hostportconflict,Pod hostPort Conflict,Default,container_operations
+containergroup_insufficientfreecpu,Pod Insufficient Free CPU,Default,container_operations
+containergroup_insufficientfreememory,Pod Insufficient Free Memory,Default,container_operations
+containergroup_nodeselectormismatching,Pod nodeSelector Mismatching,Default,container_operations
+containergroup_outofdisk,Pod Out of Disk,Default,container_operations
+containergroup_scheduled,Pod Scheduled,Default,container_operations
+containergroup_compliance_check,Pod Compliance Check,Default,compliance
+containergroup_compliance_passed,Pod Compliance Passed,Default,compliance
+containergroup_compliance_failed,Pod Compliance Failed,Default,compliance
+containergroup_created,Pod Container Created,Default,container_operations
+containergroup_failed,Pod Container Failed,Default,container_operations
+containergroup_killing,Pod Container Killing,Default,container_operations
+containergroup_started,Pod Container Started,Default,container_operations
+containergroup_stopped,Pod Container Stopped,Default,container_operations
+containergroup_unhealthy,Pod Container Unhealthy,Default,container_operations
+
+containerreplicator_failedcreate,Replicator Failed Creating Pod,Default,container_operations
+containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default,container_operations
+containerreplicator_compliance_check,Replicator Compliance Check,Default,compliance
+containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
+containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
+
+containerproject_created,Container Project Discovered,Default,container_operations
+
+#
+# Physical Server Operations
+#
+physicalserver_compliance_check,Physical Server Compliance Check,Default,compliance
+physical_server_shutdown,Physical Server Shutdown,Default,physical_server_operations
+physical_server_start,Physical Server Start,Default,physical_server_operations
+physical_server_reset,Physical Server Reset,Default,physical_server_operations

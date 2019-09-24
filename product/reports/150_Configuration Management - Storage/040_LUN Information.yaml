@@ -1,0 +1,61 @@
+---
+dims:
+created_on: 2008-08-14 17:47:08.304867 Z
+title: "Datastore LUN Information"
+conditions:
+updated_on: 2008-08-14 17:47:08.304867 Z
+order: Ascending
+graph:
+menu_name: "Datastore LUN Information"
+rpt_group: Custom
+priority: 0
+col_order:
+- storages.name
+- miq_scsi_luns.canonical_name
+- miq_scsi_luns.uuid
+- miq_scsi_luns.device_name
+- miq_scsi_luns.lun
+- miq_scsi_luns.capacity
+- miq_scsi_luns.device_type
+- miq_scsi_luns.lun_type
+- miq_scsi_luns.block
+- miq_scsi_luns.block_size
+timeline:
+id: 70
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  miq_scsi_luns:
+    columns:
+    - canonical_name
+    - uuid
+    - device_name
+    - lun
+    - capacity
+    - device_type
+    - lun_type
+    - block
+    - block_size
+  storages:
+    columns:
+    - name
+db: Host
+cols: []
+
+template_type: report
+group:
+sortby:
+- storages.name
+headers:
+- Datastore Name
+- LUN Canonical Name
+- LUN UUID
+- LUN Device Name
+- LUN ID
+- LUN Capacity
+- LUN Device Type
+- LUN Type
+- LUN Block
+- LUN Block Size

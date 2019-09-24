@@ -1,0 +1,110 @@
+#
+# This is an MIQ Report configuration file
+#   Single value parameters are specified as:
+#     single_value_parm: value
+#   Multiple value parameters are specified as:
+#     multi_value_parm:
+#       - value 1
+#       - value 2
+#
+
+# Report title
+title: "VIM Performance Top (Day)"
+
+# Menu name
+name: "VIM Performance Top (Day)"
+
+# Main DB table report is based on
+db: VimPerformanceDaily
+
+# Columns to fetch from the main table
+cols:
+- timestamp
+- resource_type
+- resource_id
+- resource_name
+- cpu_usagemhz_rate_average
+- cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- derived_memory_used
+- disk_usage_rate_average
+- net_usage_rate_average
+- derived_storage_used_managed
+- derived_storage_disk_managed
+- derived_storage_snapshot_managed
+- derived_storage_mem_managed
+- assoc_ids
+
+# Included tables (joined, has_one, has_many) and columns
+include:
+
+# Order of columns (from all tables)
+col_order:
+- timestamp
+- resource_type
+- resource_id
+- resource_name
+- cpu_usagemhz_rate_average
+- cpu_usage_rate_average
+- v_pct_cpu_ready_delta_summation
+- derived_memory_used
+- disk_usage_rate_average
+- net_usage_rate_average
+- derived_storage_used_managed
+- derived_storage_disk_managed
+- derived_storage_snapshot_managed
+- derived_storage_mem_managed
+- assoc_ids
+
+# Column titles, in order
+headers:
+- Date/Time
+- Model
+- Record ID
+- Name
+- Avg CPU Used
+- Avg CPU % Used
+- Avg % CPU Ready
+- Avg RAM Used
+- Avg Disk I/O
+- Avg Net I/O
+- Used Storage
+- Disk File Storage
+- Snapshot File Storage
+- Memory File Storage
+- Associated Record IDs
+
+# Condition expression for search filtering
+conditions:
+
+# Order string for the SQL query
+order: descending
+
+# Columns to sort the report on, in order
+sortby: cpu_usagemhz_rate_average
+
+
+# Group rows (y=yes,n=no,c=count)
+group: n
+
+# Graph type
+#   Bar
+#   Column
+#   ColumnThreed
+#   ParallelThreedColumn
+#   Pie
+#   PieThreed
+#   StackedBar
+#   StackedColumn
+#   StackedThreedColumn
+
+graph:
+  :type: Pie
+  :columns:
+  - cpu_usagemhz_rate_average
+
+# Dimensions of graph (1 or 2)
+#   Note: specifying 2 for a single dimension graph may not return expected results
+dims:
+
+template_type: report

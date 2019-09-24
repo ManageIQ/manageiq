@@ -1,0 +1,2 @@
+class GitBranch < GitReference
+end

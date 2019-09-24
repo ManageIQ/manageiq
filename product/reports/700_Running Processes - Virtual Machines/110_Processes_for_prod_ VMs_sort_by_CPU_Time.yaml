@@ -1,0 +1,72 @@
+---
+where_clause:
+dims:
+created_on: 2009-05-15 15:57:22.526477 Z
+reserved:
+title: "Processes for prod VMs sorted by CPU Time"
+conditions: !ruby/object:MiqExpression
+  exp:
+    STARTS WITH:
+      field: Vm-name
+      value: prod_
+updated_on: 2009-05-19 00:55:46.491384 Z
+order: Descending
+graph:
+menu_name: "Processes for prod VMs sort by CPU Time"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- operating_system.processes.cpu_time
+- operating_system.processes.percent_cpu
+- operating_system.processes.created_on
+- operating_system.processes.updated_on
+- operating_system.processes.memory_size
+- operating_system.processes.memory_usage
+- operating_system.processes.name
+- operating_system.processes.percent_memory
+- operating_system.processes.pid
+- operating_system.processes.priority
+timeline:
+id: 100
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+include:
+  operating_system:
+    include:
+      processes:
+        columns:
+        - cpu_time
+        - percent_cpu
+        - created_on
+        - updated_on
+        - memory_size
+        - memory_usage
+        - name
+        - percent_memory
+        - pid
+        - priority
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- name
+- operating_system.processes.cpu_time
+headers:
+- Name
+- Process Cpu Time
+- Process Percent Cpu
+- Process Date Created
+- Process Date Updated
+- Process Memory Size
+- Process Memory Usage
+- Process Name
+- Process Percent Memory
+- Process Pid
+- Process Priority

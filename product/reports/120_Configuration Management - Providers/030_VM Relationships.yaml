@@ -1,0 +1,48 @@
+---
+dims:
+created_on: 2008-08-14 00:33:53.473846 Z
+title: "Providers VMs Relationships"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT EMPTY:
+      field: Vm.ext_management_system-name
+updated_on: 2008-08-14 01:02:10.460635 Z
+order: Ascending
+graph:
+menu_name: "Providers VMs Relationships"
+rpt_group: Custom
+priority:
+col_order:
+- ext_management_system.name
+- ext_management_system.ipaddress
+- name
+- hardware.networks.ipaddress
+timeline:
+id: 115
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    include:
+      networks:
+        columns:
+        - ipaddress
+  ext_management_system:
+    columns:
+    - name
+    - ipaddress
+db: Vm
+cols:
+- name
+template_type: report
+group: c
+sortby:
+- ext_management_system.name
+- name
+headers:
+- Provider Name
+- Provider IP Addr
+- Name
+- Network IP Addr

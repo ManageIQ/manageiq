@@ -1,0 +1,346 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "All Departments with Performance for last week"
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    IS NOT EMPTY:
+      field: VmPerformance.host-name
+col_options:
+  vm.mem_cpu__total:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.disk_2_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.cpu_total_cores__total:
+    :grouping:
+    - :total
+  vm.disk_6_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.cpu_total_cores:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.v_total_snapshots:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.disk_4_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  cpu_usagemhz_rate_average__avg:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  derived_memory_used__avg:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.provisioned_storage:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.disk_3_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  max_cpu_usage_rate_average__avg:
+    :grouping:
+    - :avg
+    - :max
+  max_mem_usage_absolute_average__avg:
+    :grouping:
+    - :avg
+    - :max
+  vm.disk_1_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.mem_cpu:
+    :grouping:
+    - :total
+  vm.used_disk_storage:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  vm.disk_5_size_on_disk:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  cpu_usage_rate_average__avg:
+    :grouping:
+    - :avg
+    - :max
+  vm.memory_reserve:
+    :grouping:
+    - :avg
+    - :max
+    - :total
+  mem_usage_absolute_average__avg:
+    :grouping:
+    - :avg
+    - :max
+order: Ascending
+graph:
+generate_rows:
+menu_name: "All Departments with Performance"
+rpt_group: Custom
+priority:
+col_order:
+- ems_cluster.name
+- vm.managed.folder_path_yellow
+- resource_name
+- vm.v_annotation
+- vm.cpu_total_cores
+- vm.cpu_shares_level
+- vm.mem_cpu
+- vm.memory_reserve
+- vm.memory_shares_level
+- max_cpu_usage_rate_average__max
+- cpu_usage_rate_average__avg
+- cpu_usagemhz_rate_average__avg
+- max_mem_usage_absolute_average__max
+- mem_usage_absolute_average__avg
+- derived_memory_used__avg
+- vm.provisioned_storage
+- vm.used_disk_storage
+- vm.v_total_snapshots
+- vm.disk_1_disk_type
+- vm.disk_1_mode
+- vm.disk_1_size
+- vm.disk_1_size_on_disk
+- vm.disk_1_used_percent_of_provisioned
+- vm.disk_2_disk_type
+- vm.disk_2_mode
+- vm.disk_2_size
+- vm.disk_2_size_on_disk
+- vm.disk_2_used_percent_of_provisioned
+- vm.disk_3_disk_type
+- vm.disk_3_mode
+- vm.disk_3_size
+- vm.disk_3_size_on_disk
+- vm.disk_3_used_percent_of_provisioned
+- vm.disk_4_disk_type
+- vm.disk_4_mode
+- vm.disk_4_size
+- vm.disk_4_size_on_disk
+- vm.disk_4_used_percent_of_provisioned
+- vm.disk_5_disk_type
+- vm.disk_5_mode
+- vm.disk_5_size
+- vm.disk_5_size_on_disk
+- vm.disk_5_used_percent_of_provisioned
+- vm.disk_6_disk_type
+- vm.disk_6_mode
+- vm.disk_6_size
+- vm.disk_6_size_on_disk
+- vm.disk_6_used_percent_of_provisioned
+- vm.managed.department
+- host.name
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 604800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+- :percent_precision_0
+- :percent_precision_0
+- :mhz
+- :percent_precision_0
+- :percent_precision_0
+-
+-
+-
+-
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+-
+-
+- :percent_precision_0
+-
+-
+include:
+  vm:
+    columns:
+    - v_annotation
+    - cpu_total_cores
+    - cpu_shares_level
+    - mem_cpu
+    - memory_reserve
+    - memory_shares_level
+    - provisioned_storage
+    - used_disk_storage
+    - v_total_snapshots
+    - disk_1_disk_type
+    - disk_1_mode
+    - disk_1_size
+    - disk_1_size_on_disk
+    - disk_1_used_percent_of_provisioned
+    - disk_2_disk_type
+    - disk_2_mode
+    - disk_2_size
+    - disk_2_size_on_disk
+    - disk_2_used_percent_of_provisioned
+    - disk_3_disk_type
+    - disk_3_mode
+    - disk_3_size
+    - disk_3_size_on_disk
+    - disk_3_used_percent_of_provisioned
+    - disk_4_disk_type
+    - disk_4_mode
+    - disk_4_size
+    - disk_4_size_on_disk
+    - disk_4_used_percent_of_provisioned
+    - disk_5_disk_type
+    - disk_5_mode
+    - disk_5_size
+    - disk_5_size_on_disk
+    - disk_5_used_percent_of_provisioned
+    - disk_6_disk_type
+    - disk_6_mode
+    - disk_6_size
+    - disk_6_size_on_disk
+    - disk_6_used_percent_of_provisioned
+    include:
+      managed:
+        columns:
+        - folder_path_yellow
+        - department
+  host:
+    columns:
+    - name
+  ems_cluster:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- resource_name
+- max_cpu_usage_rate_average
+- cpu_usage_rate_average
+- cpu_usagemhz_rate_average
+- max_mem_usage_absolute_average
+- mem_usage_absolute_average
+- derived_memory_used
+template_type: report
+group: c
+sortby:
+- vm.managed.department
+- resource_name
+rpt_options:
+  :pivot:
+    :group_cols:
+    - vm.managed.department
+    - resource_name
+headers:
+- Cluster
+- Folder Path
+- VM
+- VM Annotations - Notes
+- vCPUs
+- CPU Shares Level
+- "VM : Memory"
+- Memory Reserve
+- Memory Shares Level
+- " CPU - Peak Usage Rate Avg for Collected Intervals (%) (Max)"
+- CPU - Usage Rate (%) (Avg)
+- CPU - Usage Rate (MHz) (Avg)
+- " Memory - Peak Usage of Allocated for Collected Intervals (%) (Max)"
+- Memory - Usage (%) (Avg)
+- Memory - Used (MB) (Avg)
+- Total Provisioned Space (Includes RAM)
+- Total Used Disk Space
+- Total Snapshots
+- Disk 1Type
+- Disk 1 Mode
+- Disk 1 Size
+- Disk 1 Size On Disk
+- Disk 1 % Used
+- Disk 2 Type
+- Disk 2 Mode
+- Disk 2 Size
+- Disk 2 Size On Disk
+- Disk 2 % Used
+- Disk 3 Type
+- Disk 3 Mode
+- Disk 3 Size
+- Disk 3 Size On Disk
+- Disk 3 % Used
+- Disk 4 Type
+- Disk 4 Mode
+- Disk 4 Size
+- Disk 4 Size On Disk
+- Disk 4 % Used
+- Disk 5 Type
+- Disk 5 Mode
+- Disk 5 Size
+- Disk 5 Size On Disk
+- Disk 5 % Used
+- Disk 6 Type
+- Disk 6 Mode
+- Disk 6 Size
+- Disk 6 Size On Disk
+- Disk 6 % Used
+- Department
+- Host Name
+display_filter:

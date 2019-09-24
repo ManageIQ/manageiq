@@ -1,0 +1,59 @@
+---
+dims:
+created_on: 2008-08-11 16:25:13.490154 Z
+title: "Hosts: Date brought under Management for Last Week"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "IS":
+      field: Host-created_on
+      value: Last Week
+updated_on: 2008-08-13 21:07:38.833909 Z
+order: Ascending
+graph:
+menu_name: "Date brought under Management for Last Week"
+rpt_group: Custom
+priority: 30
+col_order:
+- name
+- hostname
+- created_on
+- username
+timeline:
+  :last_unit:
+  :last_time:
+  :field: created_on
+  :bands:
+  - :gap: 0.0
+    :width: 70
+    :pixels: 100
+    :text: true
+    :unit: Day
+  - :gap: 0.1
+    :width: 30
+    :pixels: 200
+    :text: false
+    :height: 0.6
+    :unit: Month
+  :position: Last
+id: 68
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include: {}
+
+db: Host
+cols:
+- name
+- hostname
+- created_on
+- username
+template_type: report
+group:
+sortby:
+- name
+headers:
+- Host Name
+- Hostname
+- Date Added
+- VC User Name

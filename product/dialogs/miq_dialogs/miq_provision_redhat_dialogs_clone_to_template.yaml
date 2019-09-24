@@ -1,0 +1,332 @@
+---
+:name: miq_provision_redhat_dialogs_clone_to_template
+:description: Sample RedHat VM Clone to Template Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :buttons:
+  - :submit
+  - :cancel
+  :dialogs:
+    :requester:
+      :description: Request
+      :fields:
+        :owner_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_country:
+          :description: Country/Region
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_phone_mobile:
+          :description: Mobile
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_title:
+          :description: Title
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_first_name:
+          :description: First Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager:
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_address:
+          :description: Address
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_company:
+          :description: Company
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_last_name:
+          :description: Last Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :owner_manager_mail:
+          :description: E-Mail
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_city:
+          :description: City
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_department:
+          :description: Department
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_load_ldap:
+          :pressed:
+            :method: :retrieve_ldap
+          :description: Look Up LDAP Email
+          :required: false
+          :display: :show
+          :data_type: :button
+        :owner_manager_phone:
+          :description: Phone
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_state:
+          :description: State
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_office:
+          :description: Office
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_zip:
+          :description: Zip code
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :owner_email:
+          :description: E-Mail
+          :required_method: :validate_regex
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
+          :required: true
+          :display: :edit
+          :data_type: :string
+        :request_notes:
+          :description: Notes
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
+      :field_order:
+    :purpose:
+      :description: Purpose
+      :fields:
+        :vm_tags:
+          :required_method: :validate_tags
+          :description: Tags
+          :required: false
+          :options:
+            :include: []
+            :order: []
+            :single_select: []
+            :exclude: []
+          :display: :edit
+          :required_tags: []
+          :data_type: :integer
+      :display: :show
+      :field_order:
+    :environment:
+      :description: Environment
+      :fields:
+        :placement_cluster_name:
+          :values_from:
+            :method: :allowed_clusters
+          :auto_select_single: true
+          :description: Name
+          :required: true
+          :display: :show
+          :data_type: :integer
+        :cluster_filter:
+          :values_from:
+            :options:
+              :category: :EmsCluster
+            :method: :allowed_filters
+          :auto_select_single: false
+          :description: Filter
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :placement_auto:
+          :values:
+            false: 0
+            true: 1
+          :description: Choose Automatically
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+        :placement_ds_name:
+          :values_from:
+            :method: :allowed_storages
+          :auto_select_single: false
+          :description: Name
+          :required: true
+          :display: :edit
+          :data_type: :integer
+          :required_description: Datastore Name
+      :display: :show
+    :service:
+      :description: Catalog
+      :fields:
+        :number_of_vms:
+          :values_from:
+            :options:
+              :max: 1
+            :method: :allowed_number_of_vms
+          :description: Count
+          :required: false
+          :display: :hide
+          :default: 1
+          :data_type: :integer
+        :vm_description:
+          :description: Template Description
+          :required: false
+          :display: :edit
+          :data_type: :string
+          :min_length:
+          :max_length: 255
+        :vm_prefix:
+          :description: VM Name Prefix/Suffix
+          :required_method: :validate_vm_name
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :src_vm_id:
+          :values_from:
+            :options:
+              :tag_filters: []
+            :method: :allowed_templates
+          :description: Name
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+        :provision_type:
+          :values_from:
+            :method: :allowed_provision_types
+          :description: Provision Type
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :linked_clone:
+          :values:
+            false: 0
+            true: 1
+          :description: Linked Clone
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+        :seal_template:
+          :description: Seal Template
+          :notes: (Linux only)
+          :validation_method: :validate_seal_template
+          :values:
+            false: 0
+            true: 1
+          :required: false
+          :display: :edit
+          :default: false
+          :data_type: :boolean
+        :vm_name:
+          :description: Template Name
+          :required_method: :validate_vm_name
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :string
+          :notes_display: :show
+          :min_length:
+          :max_length: 255
+        :pxe_image_id:
+          :values_from:
+            :method: :allowed_images
+          :auto_select_single: false
+          :description: Image
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :iso_image_id:
+          :values_from:
+            :method: :allowed_iso_images
+          :auto_select_single: false
+          :description: Image
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :pxe_server_id:
+          :values_from:
+            :method: :allowed_pxe_servers
+          :auto_select_single: false
+          :description: Server
+          :required: false
+          :display: :hide
+          :data_type: :integer
+      :display: :show
+    :schedule:
+      :description: Schedule
+      :fields:
+        :schedule_type:
+          :values:
+            schedule: Schedule
+            immediately: Immediately on Approval
+          :description: When to Provision
+          :required: false
+          :display: :edit
+          :default: immediately
+          :data_type: :string
+        :vm_auto_start:
+          :values:
+            false: 0
+            true: 1
+          :description: Power on virtual machines after creation
+          :required: false
+          :display: :hide
+          :default: false
+          :data_type: :boolean
+        :schedule_time:
+          :values_from:
+            :options:
+              :offset: 1.day
+            :method: :default_schedule_time
+          :description: Provision on
+          :required: false
+          :display: :edit
+          :data_type: :time
+        :retirement:
+          :values:
+            0: Indefinite
+            1.month: 1 Month
+            3.months: 3 Months
+            6.months: 6 Months
+          :description: Time until Retirement
+          :required: false
+          :display: :edit
+          :default: 0
+          :data_type: :integer
+        :retirement_warn:
+          :values_from:
+            :options:
+              :values:
+                1.week: 1 Week
+                2.weeks: 2 Weeks
+                30.days: 30 Days
+              :include_equals: false
+              :field: :retirement
+            :method: :values_less_then
+          :description: Retirement Warning
+          :required: true
+          :display: :edit
+          :default: 1.week
+          :data_type: :integer
+      :display: :show
+  :dialog_order:
+  - :requester
+  - :purpose
+  - :service
+  - :environment
+  - :schedule

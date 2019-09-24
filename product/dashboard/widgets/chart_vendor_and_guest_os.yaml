@@ -1,0 +1,18 @@
+description: chart_vendor_and_guest_os
+title: Vendor and Guest OS Chart
+content_type: chart
+options:
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Vendor and Guest OS
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

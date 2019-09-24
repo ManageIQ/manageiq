@@ -1,0 +1,88 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-11-10 20:18:58.003982 Z
+reserved:
+title: "VMs that have been Retired (past retirement date)"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: Vm-retired
+      value: "true"
+updated_on: 2009-11-10 20:18:58.003982 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "VMs that are Retired"
+rpt_group: Custom
+priority: 54
+col_order:
+- name
+- hardware.annotation
+- ems_cluster.name
+- storage.name
+- retired
+- retires_on
+- hardware.cpu_total_cores
+- hardware.memory_mb
+- hardware.size_on_disk
+- managed.department
+- managed.environment
+- managed.function
+- managed.lob
+- managed.location
+timeline:
+id: 183
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+col_formats:
+include:
+  hardware:
+    columns:
+    - annotation
+    - cpu_total_cores
+    - memory_mb
+    - size_on_disk
+  managed:
+    columns:
+    - department
+    - environment
+    - function
+    - lob
+    - location
+  storage:
+    columns:
+    - name
+  ems_cluster:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- retired
+- retires_on
+template_type: report
+group:
+sortby:
+- retires_on
+- name
+headers:
+- VM
+- VM Notes
+- Cluster
+- Datastore
+- VM is Retired?
+- Retirement Date
+- Allocated vCPUs
+- Allocated RAM (MB)
+- Diskspace (bytes)
+- Department
+- Environment
+- Function
+- " Line of Business"
+- Location

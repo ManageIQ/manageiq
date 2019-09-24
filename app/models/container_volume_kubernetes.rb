@@ -1,0 +1,2 @@
+class ContainerVolumeKubernetes < ContainerVolume
+end

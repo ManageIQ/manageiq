@@ -1,0 +1,56 @@
+---
+where_clause:
+generate_cols:
+dims:
+created_on: 2009-10-19 20:03:50.841315 Z
+reserved:
+title: "Host CPU Usage per VM"
+conditions:
+updated_on: 2009-10-19 20:05:38.086771 Z
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Host CPU Usage per VM"
+rpt_group: Custom
+priority: 120
+col_order:
+- host.name
+- timestamp
+- resource_name
+- cpu_usage_rate_average
+- cpu_usagemhz_rate_average
+- derived_cpu_available
+timeline:
+id: 125
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :start_offset: 172800
+  :end_offset: 0
+  :interval: daily
+col_formats:
+include:
+  host:
+    columns:
+    - name
+db: VmPerformance
+cols:
+- timestamp
+- resource_name
+- cpu_usage_rate_average
+- cpu_usagemhz_rate_average
+- derived_cpu_available
+template_type: report
+group: c
+sortby:
+- host.name
+- resource_name
+headers:
+- Host Name
+- Activity Sample - Timestamp  (Day/Time)
+- Asset Name
+- CPU - Usage Rate for Collected Intervals (%)
+- CPU - Usage Rate for Collected Intervals (MHz)
+- CPU - Total Available - from VM Analysis (MHz)

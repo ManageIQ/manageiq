@@ -1,0 +1,25 @@
+scss_files: "app/assets/stylesheets/**/*.scss"
+severity: error
+
+linters:
+  BorderZero:
+    convention: none
+  DuplicateProperty:
+    ignore_consecutive:
+    - background
+    - transition
+  HexLength:
+    style: long
+  ImportantRule:
+    severity: warning
+  MergeableSelector:
+    severity: warning
+  PropertyCount:
+    severity: warning
+  SelectorDepth:
+    severity: warning
+  Shorthand:
+    severity: warning
+  TrailingZero:
+    enabled: true
+    severity: warning

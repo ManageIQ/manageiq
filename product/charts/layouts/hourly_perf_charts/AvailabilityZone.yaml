@@ -1,0 +1,72 @@
+# Availability Zone Hourly performance chart layouts
+---
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events in this Availability Zone
+  - Display-VMs-on:Instances that were running
+  :max_value: 100.4
+  :decimals: 1
+  :chart2:
+    :type: Line
+    :title: Instances
+    :columns:
+    - derived_vm_count_on
+
+- :title: Memory(MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Vms-tophour:Top Instances during this hour
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-on:Instances that were running
+  :chart2:
+    :type: Line
+    :title: Instances
+    :columns:
+    - derived_vm_count_on
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events in this Availability Zone
+  - Display-VMs-on:Instances that were running
+  :chart2:
+    :type: Line
+    :title: Instances
+    :columns:
+    - derived_vm_count_on
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events in this Availability Zone
+  - Display-VMs-on:Instances that were running
+  :chart2:
+    :type: Line
+    :title: Instances
+    :columns:
+    - derived_vm_count_on
+
+- :title: Instances
+  :type: Area
+  :columns:
+  - derived_vm_count_on
+  - derived_vm_count_off
+  :menu:
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-on:Instances that were running
+  - Display-VMs-off:Instances that were stopped

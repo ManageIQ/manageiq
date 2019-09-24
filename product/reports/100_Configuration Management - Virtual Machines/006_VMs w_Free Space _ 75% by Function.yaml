@@ -1,0 +1,84 @@
+---
+where_clause:
+dims: 1
+created_on: 2009-09-30 17:26:35.073000 Z
+reserved:
+title: "VMs with Volume Free Space > 75% by Function"
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        IS NOT EMPTY:
+          field: Vm.hardware.volumes-name
+      checkany:
+        ">":
+          field: Vm.hardware.volumes-free_space_percent
+          value: 75
+updated_on: 2009-10-19 22:10:21.430000 Z
+order: Descending
+graph:
+  :other: false
+  :type: Pie
+  :count: "8"
+menu_name: "VMs w/Free Space > 75% by Function"
+rpt_group: Custom
+priority: 5
+col_order:
+- managed.function
+- name
+- v_owning_cluster
+- storage.name
+- hardware.volumes.name
+- hardware.volumes.free_space_percent
+- hardware.volumes.free_space
+- hardware.volumes.size
+- hardware.volumes.used_space_percent
+- hardware.volumes.used_space
+- hardware.volumes.filesystem
+timeline:
+id: 104
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options: {}
+
+include:
+  hardware:
+    include:
+      volumes:
+        columns:
+        - name
+        - free_space_percent
+        - free_space
+        - size
+        - used_space_percent
+        - used_space
+        - filesystem
+  managed:
+    columns:
+    - function
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_owning_cluster
+template_type: report
+group: c
+sortby:
+- managed.function
+- hardware.volumes.free_space_percent
+headers:
+- Function
+- Name
+- Parent Cluster
+- Storage Name
+- Volume Name
+- Volume Free Space Percent
+- Volume Free Space
+- Volume Size
+- Volume Used Space Percent
+- Volume Used Space
+- Volume Filesystem

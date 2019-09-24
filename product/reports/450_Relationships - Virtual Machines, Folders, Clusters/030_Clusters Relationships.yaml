@@ -1,0 +1,41 @@
+---
+dims:
+created_on: 2008-08-14 00:19:02.021355 Z
+title: "Cluster Relationships"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NOT EMPTY:
+      field: EmsCluster-name
+updated_on: 2008-08-14 00:19:02.021355 Z
+order: Ascending
+graph:
+menu_name: "Cluster Relationships"
+rpt_group: Custom
+priority:
+col_order:
+- name
+- ext_management_system.name
+- hosts.name
+timeline:
+id: 114
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  ext_management_system:
+    columns:
+    - name
+  hosts:
+    columns:
+    - name
+db: EmsCluster
+cols:
+- name
+template_type: report
+group:
+sortby:
+headers:
+- Name
+- Provider Name
+- Host Name

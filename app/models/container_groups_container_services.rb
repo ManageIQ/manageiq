@@ -1,0 +1,2 @@
+class ContainerGroupsContainerServices < ApplicationRecord
+end

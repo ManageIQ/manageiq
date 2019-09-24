@@ -1,0 +1,57 @@
+---
+dims:
+created_on: 2008-08-14 03:26:36.226841 Z
+title: "VMs with no UUID"
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NULL:
+      field: Vm.hardware-bios
+      value:
+updated_on: 2008-08-14 03:26:36.226841 Z
+order: Ascending
+graph:
+menu_name: "VMs with no UUID"
+rpt_group: Custom
+priority: 40
+col_order:
+- name
+- host.name
+- storage.name
+- v_datastore_path
+- operating_system.product_name
+- hardware.bios
+timeline:
+id: 133
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  hardware:
+    columns:
+    - bios
+  operating_system:
+    columns:
+    - product_name
+  host:
+    columns:
+    - name
+  storage:
+    columns:
+    - name
+db: Vm
+cols:
+- name
+- v_datastore_path
+template_type: report
+group: c
+sortby:
+- hardware.bios
+- name
+headers:
+- VM Name
+- Host Name
+- Datastore
+- Datastore Path
+- OS Product Name
+- VM UUID

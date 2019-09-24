@@ -1,0 +1,2 @@
+class Datacenter < EmsFolder
+end

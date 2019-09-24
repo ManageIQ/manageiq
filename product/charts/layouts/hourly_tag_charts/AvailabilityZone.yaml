@@ -1,0 +1,40 @@
+# Availability Zone Hourly performance by tag chart layouts
+---
+- :title: CPU (Mhz)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this Availability Zone
+  - Display-VMs-bytag:Instances for <cat> that were running
+
+- :title: Memory(MB)
+  :type: Line
+  :columns:
+  - derived_memory_used
+  :menu:
+  - Chart-Vms-tophour:Top Instances for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+  - Display-VMs-bytag:Instances for <cat> that were running
+
+- :title: Disk I/O (KBps)
+  :type: Line
+  :columns:
+  - disk_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this Availability Zone
+  - Display-VMs-bytag:Instances for <cat> that were running
+
+- :title: Network I/O (KBps)
+  :type: Line
+  :columns:
+  - net_usage_rate_average
+  :menu:
+  - Chart-Vms-tophour:Top Instances for <cat> during this hour
+  - Chart-Current-Daily:Back to daily
+#  - Timeline-Current-Hourly:Hourly events on this Availability Zone
+  - Display-VMs-bytag:Instances for <cat> that were running
