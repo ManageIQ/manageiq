@@ -41,7 +41,6 @@ class CustomButton < ApplicationRecord
     ExtManagementSystem,
     GenericObject,
     Host,
-    LoadBalancer,
     MiqGroup,
     MiqTemplate,
     NetworkRouter,
