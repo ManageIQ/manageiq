@@ -7,16 +7,10 @@ FactoryBot.define do
 
   factory :configuration_script_payload, :class => "ConfigurationScriptPayload", :parent => :configuration_script_base
   factory :ansible_playbook,
-          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook",
+          :class  => "ManageIQ::Providers::AutomationManager::ConfigurationScriptPayload",
           :parent => :configuration_script_payload
 
   factory :configuration_script, :class => "ConfigurationScript", :parent => :configuration_script_base
-  factory :configuration_workflow,
-          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow",
-          :parent => :configuration_script
-  factory :ansible_configuration_script,
-          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
-          :parent => :configuration_script
   factory :embedded_ansible_configuration_script,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript",
           :parent => :configuration_script

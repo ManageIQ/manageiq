@@ -113,18 +113,8 @@ FactoryBot.define do
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
-          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
+          :class   => "ManageIQ::Providers::AutomationManager",
           :parent  => :ext_management_system
-
-  factory :external_automation_manager,
-          :aliases => ["manageiq/providers/external_automation_manager"],
-          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
-          :parent  => :automation_manager
-
-  factory :embedded_automation_manager,
-          :aliases => ["manageiq/providers/embedded_automation_manager"],
-          :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :parent  => :automation_manager
 
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
@@ -361,7 +351,7 @@ FactoryBot.define do
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :parent  => :embedded_automation_manager
+          :parent  => :automation_manager
 
   # Leaf classes for provisioning_manager
 
