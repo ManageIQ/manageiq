@@ -17,6 +17,8 @@ class ServiceOrder < ApplicationRecord
   before_create :assign_user
   after_create  :create_order_name
 
+  virtual_attribute :v2v?, :type => :boolean
+
   def self.find_for_user(requester, id)
     find_by!(:user => requester, :tenant => requester.current_tenant, :id => id)
   end
@@ -41,6 +43,11 @@ class ServiceOrder < ApplicationRecord
 
   def cart?
     state == STATE_CART
+  end
+
+  # v2v Service Orders are special because those don't come from the shopping cart and should be hidden in Service UI
+  def v2v?
+    miq_requests.any? { |request| request.kind_of?(ServiceTemplateTransformationPlanRequest) }
   end
 
   def checkout
