@@ -63,6 +63,33 @@ RSpec.describe "Server Role Management" do
       end
     end
 
+    context "server_role_names=" do
+      it "normal case" do
+        @miq_server.assign_role('ems_operations', 1)
+        expect(@miq_server.server_role_names).to eq(['ems_operations'])
+
+        desired = %w[event scheduler user_interface]
+        @miq_server.server_role_names = desired
+        expect(@miq_server.server_role_names).to eq(desired)
+      end
+
+      it "with a duplicate existing role" do
+        @miq_server.assign_role('ems_operations', 1)
+
+        desired = %w[ems_operations ems_operations scheduler]
+        @miq_server.server_role_names = desired
+        expect(@miq_server.server_role_names).to eq(%w[ems_operations scheduler])
+      end
+
+      it "with duplicate new roles" do
+        @miq_server.assign_role('event', 1)
+
+        desired = %w[ems_operations scheduler scheduler]
+        @miq_server.server_role_names = desired
+        expect(@miq_server.server_role_names).to eq(%w[ems_operations scheduler])
+      end
+    end
+
     it "should assign role properly when requested" do
       @roles = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 1], ['reporting', 1]]
       @roles.each do |role, priority|
