@@ -8,6 +8,8 @@ module Rbac
       Authentication
       AvailabilityZone
       CloudNetwork
+      CloudObjectStoreContainer
+      CloudObjectStoreObject
       CloudSubnet
       CloudTenant
       CloudVolume

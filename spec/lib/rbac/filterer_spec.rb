@@ -230,6 +230,42 @@ describe Rbac::Filterer do
         end
       end
 
+      context 'searching for instances of CloudObjectStoreContainer' do
+        let!(:cosc) { FactoryBot.create_list(:cloud_object_store_container, 2).first }
+
+        before do
+          cosc.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged CloudObjectStoreContainers' do
+          results = described_class.search(:class => CloudObjectStoreContainer, :user => user).first
+          expect(results).to match_array [cosc]
+        end
+
+        it 'lists only all CloudObjectStoreContainers' do
+          results = described_class.search(:class => CloudObjectStoreContainer, :user => admin_user).first
+          expect(results).to match_array CloudObjectStoreContainer.all
+        end
+      end
+
+      context 'searching for instances of CloudObjectStoreObject' do
+        let!(:coso) { FactoryBot.create_list(:cloud_object_store_object, 2).first }
+
+        before do
+          coso.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged CloudObjectStoreObject' do
+          results = described_class.search(:class => CloudObjectStoreObject, :user => user).first
+          expect(results).to match_array [coso]
+        end
+
+        it 'lists only all CloudObjectStoreObject' do
+          results = described_class.search(:class => CloudObjectStoreObject, :user => admin_user).first
+          expect(results).to match_array CloudObjectStoreObject.all
+        end
+      end
+
       context 'searching for instances of Lans' do
         let!(:lan) { FactoryBot.create_list(:lan, 2).first }
 
@@ -2701,6 +2737,8 @@ describe Rbac::Filterer do
     let(:project1_user)         { FactoryBot.create(:user, :miq_groups => [project1_group]) }
     let(:project1_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
     let(:project1_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project1_c_o_store_container) { FactoryBot.create(:cloud_object_store_container, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
+    let(:project1_c_o_store_object) { FactoryBot.create(:cloud_object_store_object, :cloud_object_store_container => project1_c_o_store_container, :cloud_tenant => project1_cloud_tenant, :ext_management_system => ems_openstack) }
     let(:project1_orchestration_stack) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
     let(:project1_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project1_cloud_tenant, :flavor => project1_flavor) }
     let(:project2_tenant)       { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
@@ -2710,15 +2748,19 @@ describe Rbac::Filterer do
     let(:project2_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
     let(:project2_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
     let(:project2_orchestration_stack) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
+    let(:project2_c_o_store_container) { FactoryBot.create(:cloud_object_store_container, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
+    let(:project2_c_o_store_object) { FactoryBot.create(:cloud_object_store_object, :cloud_object_store_container => project2_c_o_store_container, :cloud_tenant => project2_cloud_tenant, :ext_management_system => ems_openstack) }
     let(:project2_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project2_cloud_tenant, :flavor => project2_flavor) }
     let(:ems_other)             { FactoryBot.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
     let(:volume_other)          { FactoryBot.create(:cloud_volume, :ext_management_system => ems_other) }
     let(:tenant_other)          { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
     let(:cloud_tenant_other)    { FactoryBot.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
     let(:flavor_other)          { FactoryBot.create(:flavor, :ext_management_system => ems_other) }
+    let(:cloud_object_store_container_other) { FactoryBot.create(:cloud_object_store_container, :ext_management_system => ems_other) }
+    let(:cloud_object_store_object_other) { FactoryBot.create(:cloud_object_store_object, :cloud_object_store_container => cloud_object_store_container_other, :ext_management_system => ems_other) }
     let(:orchestration_stack_other) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_other, :cloud_tenant => cloud_tenant_other) }
     let(:c_t_flavor_other)      { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => cloud_tenant_other, :flavor => flavor_other) }
-    let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other, project1_orchestration_stack, project2_orchestration_stack, orchestration_stack_other] }
+    let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other, project1_orchestration_stack, project2_orchestration_stack, orchestration_stack_other, project1_c_o_store_container, project2_c_o_store_container, project1_c_o_store_object, project2_c_o_store_object, cloud_object_store_container_other, cloud_object_store_object_other] }
 
     it "lists its own project's objects and other objects where tenant_mapping is enabled" do
       ems_openstack.tenant_mapping_enabled = true
@@ -2749,6 +2791,24 @@ describe Rbac::Filterer do
 
       results = described_class.search(:class => Flavor, :user => other_user).first
       expect(results).to match_array [flavor_other]
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => project1_user).first
+      expect(results).to match_array [project1_c_o_store_object, cloud_object_store_object_other]
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => project2_user).first
+      expect(results).to match_array [project2_c_o_store_object, cloud_object_store_object_other]
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => other_user).first
+      expect(results).to match_array [cloud_object_store_object_other]
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => project1_user).first
+      expect(results).to match_array [project1_c_o_store_container, cloud_object_store_container_other]
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => project2_user).first
+      expect(results).to match_array [project2_c_o_store_container, cloud_object_store_container_other]
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => other_user).first
+      expect(results).to match_array [cloud_object_store_container_other]
 
       results = described_class.search(:class => OrchestrationStack, :user => project1_user).first
       expect(results).to match_array [project1_orchestration_stack, orchestration_stack_other]
@@ -2789,6 +2849,24 @@ describe Rbac::Filterer do
 
       results = described_class.search(:class => Flavor, :user => other_user).first
       expect(results).to match_array Flavor.all
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => project1_user).first
+      expect(results).to match_array CloudObjectStoreObject.all
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => project2_user).first
+      expect(results).to match_array CloudObjectStoreObject.all
+
+      results = described_class.search(:class => CloudObjectStoreObject, :user => other_user).first
+      expect(results).to match_array CloudObjectStoreObject.all
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => project1_user).first
+      expect(results).to match_array CloudObjectStoreContainer.all
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => project2_user).first
+      expect(results).to match_array CloudObjectStoreContainer.all
+
+      results = described_class.search(:class => CloudObjectStoreContainer, :user => other_user).first
+      expect(results).to match_array CloudObjectStoreContainer.all
 
       results = described_class.search(:class => OrchestrationStack, :user => project1_user).first
       expect(results).to match_array OrchestrationStack.all
