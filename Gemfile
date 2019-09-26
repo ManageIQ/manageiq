@@ -249,9 +249,9 @@ unless ENV["APPLIANCE"]
     gem "brakeman",         "~>3.3",    :require => false
     gem "capybara",         "~>2.5.0",  :require => false
     gem "coveralls",                    :require => false
-    gem "factory_bot",      "~>4.11.1", :require => false
+    gem "factory_bot",      "~>5.1",    :require => false
     gem "faker",            "~>1.8",    :require => false
-    gem "timecop",          "~>0.7.3",  :require => false
+    gem "timecop",          "~>0.9",    :require => false
     gem "vcr",              "~>5.0",    :require => false
     gem "webmock",          "~>3.7",    :require => false
   end
