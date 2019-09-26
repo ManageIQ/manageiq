@@ -45,14 +45,6 @@ describe EmsRefresh do
       target2 = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target2, [target, target2])
     end
-
-    it "with streaming refresh enabled doesn't queue a refresh" do
-      allow(@ems).to receive(:supports_streaming_refresh?).and_return(true)
-      target = @ems
-
-      described_class.queue_refresh(target)
-      expect(MiqQueue.count).to eq(0)
-    end
   end
 
   context "stopping targets unbounded growth" do
