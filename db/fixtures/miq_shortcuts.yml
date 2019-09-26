@@ -319,7 +319,7 @@
   :url: /network_router/show_list
   :rbac_feature_name: network_router_show_list
   :startup: true
-- :name: secutiry_groups
+- :name: security_groups
   :description: Networks / Security Groups
   :url: /security_group/show_list
   :rbac_feature_name: security_group_show_list
