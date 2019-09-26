@@ -11,7 +11,7 @@ class EmsEvent
     end
 
     def refresh(*targets, sync)
-      return if ext_management_system.supports_streaming_refresh?
+      return if ext_management_system&.supports_streaming_refresh?
 
       targets = targets.flatten
       return if targets.blank?
