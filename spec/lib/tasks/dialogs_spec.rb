@@ -28,13 +28,13 @@ describe "dialogs" do
     end
 
     it "depends on the environment" do
-      expect(Rake::Task["dialogs:export"].prerequisites).to include("environment")
+      expect(Rake::Task["evm:export:service_dialogs"].prerequisites).to include("environment")
     end
 
     context "with a given filename" do
       it "delegates to a dialog exporter with the given filename" do
         expect(dialog_exporter).to receive(:export).with("filename")
-        Rake::Task["dialogs:export"].invoke("filename")
+        Rake::Task["evm:export:service_dialogs"].invoke("filename")
       end
     end
 
@@ -42,7 +42,7 @@ describe "dialogs" do
       it "delegates to a dialog exporter with a default filename and timestamp" do
         Timecop.freeze(2013, 1, 1) do
           expect(dialog_exporter).to receive(:export).with("dialog_export_20130101_000000.yml")
-          Rake::Task["dialogs:export"].invoke
+          Rake::Task["evm:export:service_dialogs"].invoke
         end
       end
     end
