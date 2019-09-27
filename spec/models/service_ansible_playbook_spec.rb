@@ -1,6 +1,6 @@
 describe(ServiceAnsiblePlaybook) do
   let(:runner_job)      { FactoryBot.create(:embedded_ansible_job) }
-  let(:runner_job_temp) { FactoryBot.create(:ansible_configuration_script) }
+  let(:playbook)        { FactoryBot.create(:embedded_playbook) }
   let(:basic_service)   { FactoryBot.create(:service_ansible_playbook, :options => config_info_options) }
   let(:service)         { FactoryBot.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
   let(:action)          { ResourceAction::PROVISION }
@@ -13,12 +13,10 @@ describe(ServiceAnsiblePlaybook) do
   let(:encrypted_val2)  { ManageIQ::Password.encrypt(decrpyted_val + "new") }
 
   let(:loaded_service) do
-    service_template = FactoryBot.create(:service_template_ansible_playbook)
-    service_template.resource_actions.build(:action => action, :configuration_template => runner_job_temp)
-    service_template.save!
+    service_template = FactoryBot.create(:service_template_ansible_playbook, :options => config_info_options)
     FactoryBot.create(:service_ansible_playbook,
-                       :options          => provision_options.merge(config_info_options),
-                       :service_template => service_template)
+                      :options          => provision_options.merge(config_info_options),
+                      :service_template => service_template)
   end
 
   let(:executed_service) do
@@ -47,7 +45,7 @@ describe(ServiceAnsiblePlaybook) do
           :hosts               => "default_host1,default_host2",
           :credential_id       => credential_0.id,
           :vault_credential_id => credential_3.id,
-          :playbook_id         => 10,
+          :playbook_id         => playbook.id,
           :execution_ttl       => "5",
           :verbosity           => "3",
           :become_enabled      => true,
@@ -208,7 +206,7 @@ describe(ServiceAnsiblePlaybook) do
 
     it 'creates an Ansible Runner job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
-        expect(jobtemp).to eq(runner_job_temp)
+        expect(jobtemp).to eq(playbook)
         exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
         exposed_connection = %w(url token X_MIQ_Group)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)

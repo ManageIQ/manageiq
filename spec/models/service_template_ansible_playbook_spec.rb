@@ -77,82 +77,8 @@ describe ServiceTemplateAnsiblePlaybook do
     catalog_item_options.deep_merge(changed_items)
   end
 
-  describe 'building_job_templates' do
-    it '#create_job_templates' do
-      expect(described_class).to receive(:create_job_template).exactly(2).times.and_return(job_template)
-      options_hash = described_class.send(:create_job_templates,
-                                          catalog_item_options_two[:name],
-                                          catalog_item_options_two[:description],
-                                          catalog_item_options_two[:config_info], 'system')
-      [:provision, :retirement].each do |action|
-        expect(options_hash[action.to_sym][:configuration_template]).to eq job_template
-      end
-    end
-
-    it '#create_job_template' do
-      expect(described_class).to receive(:build_parameter_list).and_return([ems, {}])
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
-      expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_return(
-        instance_double('MiqTask', :task_results => {}, :status => 'Ok')
-      )
-
-      described_class.send(:create_job_template,
-                           catalog_item_options[:name],
-                           catalog_item_options[:description],
-                           catalog_item_options[:config_info],
-                           'system')
-    end
-
-    it 'create_job_template exception' do
-      expect(described_class).to receive(:build_parameter_list).and_return([ems, {}])
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
-      expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_raise(Exception, 'bad job template')
-
-      expect do
-        described_class.send(:create_job_template,
-                             catalog_item_options[:name],
-                             catalog_item_options[:description],
-                             catalog_item_options[:config_info],
-                             'system')
-      end.to raise_error(Exception)
-    end
-
-    it '.build_parameter_list' do
-      name = catalog_item_options[:name]
-      catalog_extra_vars = catalog_item_options_two
-      description = catalog_item_options[:description]
-      info = catalog_item_options[:config_info][:provision]
-      _tower, params = described_class.send(:build_parameter_list, name, description, info)
-      _tower_two, params_two = described_class.send(:build_parameter_list,
-                                                    catalog_extra_vars[:name],
-                                                    catalog_extra_vars[:description],
-                                                    catalog_extra_vars[:config_info][:provision])
-
-      expect(params).to include(
-        :name               => name,
-        :description        => description,
-        :become_enabled     => true,
-        :verbosity          => 3,
-        :credential         => auth_one.id,
-        :network_credential => auth_two.id,
-        :vault_credential   => auth_three.id
-      )
-
-      expect(params.keys).to_not include(:extra_vars, :cloud_credentials)
-      expect(params_two.keys).to include(:extra_vars)
-      expect(JSON.parse(params_two[:extra_vars])).to include(
-        'key1' => 'val1',
-        'key2' => 'val2'
-      )
-    end
-  end
-
   describe '.create_catalog_item' do
     it 'creates and returns a catalog item' do
-      expect(described_class)
-        .to receive(:create_job_templates).and_return(:provision => {:configuration_template => job_template})
       service_template = described_class.create_catalog_item(catalog_item_options_two, user)
 
       expect(service_template.name).to eq(catalog_item_options_two[:name])
@@ -160,9 +86,8 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(service_template.dialogs.first.name)
         .to eq(catalog_item_options.fetch_path(:config_info, :provision, :new_dialog_name))
       expect(service_template.resource_actions.first).to have_attributes(
-        :action                 => 'Provision',
-        :fqname                 => described_class.default_provisioning_entry_point('atomic'),
-        :configuration_template => job_template
+        :action => 'Provision',
+        :fqname => described_class.default_provisioning_entry_point('atomic')
       )
 
       saved_options = catalog_item_options_two[:config_info].deep_merge(:provision => {:dialog_id => service_template.dialogs.first.id})
@@ -216,7 +141,6 @@ describe ServiceTemplateAnsiblePlaybook do
       new_dialog_label = catalog_item_options_three
                          .fetch_path(:config_info, :provision, :new_dialog_name)
       expect(Dialog.where(:label => new_dialog_label)).to be_empty
-      expect(job_template).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
 
       expect(service_template.name).to eq(catalog_item_options_three[:name])
@@ -232,7 +156,6 @@ describe ServiceTemplateAnsiblePlaybook do
       new_dialog_record = Dialog.where(:label => new_dialog_label).first
       expect(new_dialog_record).to be_truthy
       expect(service_template.resource_actions.first.dialog.id).to eq new_dialog_record.id
-      expect(service_template.options[:config_info][:provision]).not_to have_key(:configuration_template)
     end
 
     it 'uses the existing dialog if :dialog_id is passed in' do
@@ -241,7 +164,6 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:dialog_id]
       expect(service_template).to receive(:create_new_dialog).never
-      expect(job_template).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
       service_template.reload
 
@@ -249,82 +171,7 @@ describe ServiceTemplateAnsiblePlaybook do
     end
   end
 
-  describe '#update_job_templates' do
-    let(:service_template) { prebuild_service_template(:job_template => true) }
-
-    it 'does not update a job_template if the there is no playbook_id' do
-      [:provision, :retirement, :reconfigure].each do |action|
-        catalog_item_options.delete_path(:config_info, action, :playbook_id)
-      end
-      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
-      expect(job_template).to receive(:update_in_provider_queue).never
-    end
-
-    it 'does update a job_template if a playbook_id is included' do
-      expect(job_template).to receive(:update_in_provider_queue).once
-      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
-    end
-
-    it 'deletes a job_template if a playbook id is not passed in' do
-      [:provision, :retirement, :reconfigure].each do |action|
-        next unless catalog_item_options[:config_info][action]
-        catalog_item_options[:config_info][action].delete(:playbook_id)
-      end
-      expect(job_template).to receive(:delete_in_provider_queue)
-
-      service_template.send(:update_job_templates, 'blah', 'blah', catalog_item_options[:config_info], user)
-    end
-  end
-
-  describe '#delete_job_templates' do
-    let(:service) { FactoryBot.create(:service_ansible_tower) }
-
-    it 'destroys a job template if there is an associated configuration_template' do
-      service_template = prebuild_service_template(:job_template => false)
-      adjust_resource_actions(service_template, job_template.id)
-
-      expect(job_template).to receive(:delete_in_provider_queue)
-      service_template.send(:delete_job_templates, [job_template])
-    end
-
-    it 'does not destroy a job template if there is no associated configuration_template' do
-      service_template = prebuild_service_template(:job_template => false)
-      adjust_resource_actions(service_template, nil)
-
-      expect(job_template).to receive(:delete_in_provider_queue).never
-      service_template.send(:delete_job_templates, [])
-    end
-
-    it '#destroy' do
-      service_template = prebuild_service_template(:job_template => false)
-      adjust_resource_actions(service_template, nil)
-      expect(service_template).to receive(:delete_job_templates).once
-
-      service_template.destroy
-    end
-
-    it '#retirement_potential?' do
-      service.update(:retired => false)
-      service_template = prebuild_service_template(:job_template => false)
-      adjust_resource_actions(service_template, job_template.id, :last)
-      service_template.services << service
-      expect(service_template.retirement_potential?).to be_truthy
-    end
-
-    def adjust_resource_actions(service_template, item, list_name = :first)
-      service_template.resource_actions.send(list_name).tap do |resource_action|
-        resource_action.configuration_template_id = item
-      end.save
-    end
-  end
-
-  def prebuild_service_template(options = { :job_template => true })
-    ret = {:provision => {:configuration_template => job_template}}
-    expect(described_class).to receive(:create_job_templates).and_return(ret).at_least(:once)
-    described_class.create_catalog_item(catalog_item_options_two, user).tap do |service_template|
-      if options[:job_template]
-        expect(service_template).to receive(:job_template).and_return(job_template).at_least(:once)
-      end
-    end
+  def prebuild_service_template
+    described_class.create_catalog_item(catalog_item_options_two, user)
   end
 end
