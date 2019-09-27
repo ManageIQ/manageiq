@@ -91,7 +91,7 @@ describe RegistrationSystem do
     end
 
     it "should rescue NotImplementedError" do
-      allow_any_instance_of(LinuxAdmin::Rhn).to receive_messages(:registered? => true)
+      allow(LinuxAdmin::RegistrationSystem).to receive(:registration_type_uncached).and_return(LinuxAdmin::RegistrationSystem)
       expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
