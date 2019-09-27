@@ -12,7 +12,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def xlog_location
-    select_value("SELECT pg_current_wal_insert_lsn()")
+    select_value("SELECT pg_current_wal_insert_lsn()::varchar")
   end
 
   def xlog_location_diff(lsn1, lsn2)
