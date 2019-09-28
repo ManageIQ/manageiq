@@ -64,7 +64,7 @@ describe TaskHelpers::Exports::ServiceDialogs do
     expect(file_contents.first).to include('export_version' => DialogImportService::CURRENT_DIALOG_VERSION)
   end
 
-  let(:task_path) { "lib/tasks/dialogs" }
+  let(:task_path) { "lib/tasks/evm_export_import" }
 
   describe "import", :type => :rake_task do
     let(:dialog_import_helper) { double("TaskHelpers::DialogImportHelper") }
