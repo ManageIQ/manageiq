@@ -695,7 +695,7 @@ module Rbac
     end
 
     def lookup_user_group(user, userid, miq_group, miq_group_id)
-      user ||= (userid && User.find_by_userid(userid)) || User.current_user
+      user ||= (userid && User.lookup_by_userid(userid)) || User.current_user
       miq_group_id ||= miq_group.try!(:id)
       return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
 

@@ -55,7 +55,7 @@ describe TaskHelpers::Imports::Tags do
         assert_test_tag_two_present
         expect(Tag.exists?(tag_two_cat)).to be_falsey
         expect(parent.find_entry_by_name('london').description).to eq('London Town')
-        tag_cat = Classification.find_by_name(tag_two_name)
+        tag_cat = Classification.lookup_by_name(tag_two_name)
         expect(tag_cat.description).to eq(tag_two_desc)
       end
     end
@@ -91,7 +91,7 @@ describe TaskHelpers::Imports::Tags do
   end
 
   def assert_test_tag_one_present
-    tag_cat = Classification.find_by_name(tag_one_name)
+    tag_cat = Classification.lookup_by_name(tag_one_name)
     expect(tag_cat).to_not be_nil
     expect(tag_cat.tag).to_not be_nil
     expect(File.split(tag_cat.tag.name).last).to_not be_nil
@@ -101,7 +101,7 @@ describe TaskHelpers::Imports::Tags do
   end
 
   def assert_test_tag_two_present
-    tag_cat = Classification.find_by_name(tag_two_name)
+    tag_cat = Classification.lookup_by_name(tag_two_name)
     expect(tag_cat).to_not be_nil
     expect(tag_cat.tag).to_not be_nil
     expect(File.split(tag_cat.tag.name).last).to_not be_nil

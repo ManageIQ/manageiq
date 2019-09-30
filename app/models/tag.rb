@@ -122,9 +122,12 @@ class Tag < ApplicationRecord
     where(:name => fq_tag_names)
   end
 
-  def self.find_by_classification_name(name)
+  def self.lookup_by_classification_name(name)
     in_region(my_region_number).find_by(:name => Classification.name2tag(name))
   end
+
+  singleton_class.send(:alias_method, :find_by_classification_name, :lookup_by_classification_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_classification_name => :lookup_by_classification_name)
 
   def ==(comparison_object)
     super || name.downcase == comparison_object.to_s.downcase

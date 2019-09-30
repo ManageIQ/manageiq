@@ -38,7 +38,7 @@ class MiqApproval < ApplicationRecord
   end
 
   def authorized?(userid)
-    user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
+    user = userid.kind_of?(User) ? userid : User.lookup_by_userid(userid)
     return false unless user
 
     return true if user.role_allows?(:identifier => "miq_request_approval") || (approver.kind_of?(User) && approver == user)
@@ -62,7 +62,7 @@ class MiqApproval < ApplicationRecord
   end
 
   def user_validate(userid)
-    user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
+    user = userid.kind_of?(User) ? userid : User.lookup_by_userid(userid)
     raise "not authorized" unless authorized?(user)
     user
   end

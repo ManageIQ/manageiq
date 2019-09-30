@@ -69,22 +69,22 @@ describe MiqAeNamespace do
     expect(n1).not_to be_nil
     expect(n1.save!).to be_truthy
 
-    n2 = MiqAeNamespace.find_by_fqname("SYSTEM/test")
+    n2 = MiqAeNamespace.lookup_by_fqname("SYSTEM/test")
     expect(n2).not_to be_nil
     expect(n2).to eq(n1)
 
-    n2 = MiqAeNamespace.find_by_fqname("system")
+    n2 = MiqAeNamespace.lookup_by_fqname("system")
     expect(n2).not_to be_nil
     expect(n2).to eq(n1.parent)
 
-    expect(MiqAeNamespace.find_by_fqname("TEST")).to be_nil
+    expect(MiqAeNamespace.lookup_by_fqname("TEST")).to be_nil
   end
 
   it "should set the updated_by field on save" do
     n1 = MiqAeNamespace.find_or_create_by_fqname("foo/bar")
     expect(n1.updated_by).to eq('system')
 
-    n2 = MiqAeNamespace.find_by_fqname("foo")
+    n2 = MiqAeNamespace.lookup_by_fqname("foo")
     expect(n2.updated_by).to eq('system')
   end
 
@@ -110,12 +110,13 @@ describe MiqAeNamespace do
 
   it 'find_by_fqname works with and without leading slash' do
     n1 = MiqAeNamespace.find_or_create_by_fqname("foo/bar")
-    MiqAeNamespace.find_by_fqname('/foo/bar').id == n1.id
+
+    expect(MiqAeNamespace.lookup_by_fqname('/foo/bar').id).to eq(n1.id)
   end
 
   it 'empty namespace string should return nil' do
-    expect(MiqAeNamespace.find_by_fqname(nil)).to be_nil
-    expect(MiqAeNamespace.find_by_fqname('')).to be_nil
+    expect(MiqAeNamespace.lookup_by_fqname(nil)).to be_nil
+    expect(MiqAeNamespace.lookup_by_fqname('')).to be_nil
   end
 
   it "#domain" do

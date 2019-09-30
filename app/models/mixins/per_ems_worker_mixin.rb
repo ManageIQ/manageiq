@@ -76,7 +76,7 @@ module PerEmsWorkerMixin
 
     def stop_worker_for_ems(ems_or_queue_name)
       wpid = nil
-      find_by_queue_name(queue_name_for_ems(ems_or_queue_name).to_s).each do |w|
+      lookup_by_queue_name(queue_name_for_ems(ems_or_queue_name).to_s).each do |w|
         next unless w.status == MiqWorker::STATUS_STARTED
         wpid = w.pid
         w.stop
@@ -89,13 +89,19 @@ module PerEmsWorkerMixin
       start_worker_for_ems(ems)
     end
 
-    def find_by_ems(ems)
-      find_by_queue_name(queue_name_for_ems(ems))
+    def lookup_by_ems(ems)
+      lookup_by_queue_name(queue_name_for_ems(ems))
     end
 
-    def find_by_queue_name(queue_name)
+    alias find_by_ems lookup_by_ems
+    Vmdb::Deprecation.deprecate_methods(self, :find_by_ems => :lookup_by_ems)
+
+    def lookup_by_queue_name(queue_name)
       server_scope.where(:queue_name => queue_name).order("started_on DESC")
     end
+
+    alias find_by_queue_name lookup_by_queue_name
+    Vmdb::Deprecation.deprecate_methods(self, :find_by_queue_name => :lookup_by_queue_name)
 
     def queue_name_for_ems(ems)
       return ems unless ems.kind_of?(ExtManagementSystem)

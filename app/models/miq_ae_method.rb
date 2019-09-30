@@ -125,10 +125,13 @@ class MiqAeMethod < ApplicationRecord
     MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeMethod, fqname, enabled)
   end
 
-  def self.find_by_class_id_and_name(class_id, name)
+  def self.lookup_by_class_id_and_name(class_id, name)
     ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
     ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
   end
+
+  singleton_class.send(:alias_method, :find_by_class_id_and_name, :lookup_by_class_id_and_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_class_id_and_name => :lookup_by_class_id_and_name)
 
   def self.display_name(number = 1)
     n_('Automate Method', 'Automate Methods', number)

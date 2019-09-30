@@ -50,8 +50,8 @@ module MiqReport::Generator::Trend
     build_apply_time_profile(results)
     results = db_klass.build(results, db_options)
 
-     if conditions
-      tz = User.find_by_userid(options[:userid]).get_timezone if options[:userid]
+    if conditions
+      tz = User.lookup_by_userid(options[:userid]).get_timezone if options[:userid]
       results = results.reject { |obj| conditions.lenient_evaluate(obj, tz) }
     end
     results = results[0...options[:limit]] if options[:limit]

@@ -15,6 +15,10 @@ describe PerEmsWorkerMixin do
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end
 
+  it ".lookup_by_ems" do
+    expect(@worker_class.lookup_by_ems(@ems).first).to eq(@worker_record)
+  end
+
   it ".all_valid_ems_in_zone" do
     expect(@worker_class.all_valid_ems_in_zone).to be_empty
 

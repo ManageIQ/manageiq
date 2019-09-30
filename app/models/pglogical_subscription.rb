@@ -22,11 +22,14 @@ class PglogicalSubscription < ActsAsArModel
     end
   end
 
-  def self.find_by_id(to_find)
+  def self.lookup_by_id(to_find)
     find(to_find)
   rescue ActiveRecord::RecordNotFound
     nil
   end
+
+  singleton_class.send(:alias_method, :find_by_id, :lookup_by_id)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
 
   def save!(reload_failover_monitor = true)
     assert_different_region!

@@ -17,24 +17,37 @@ class MiqAeClass < ApplicationRecord
 
   virtual_attribute :fqname, :string
 
-  def self.find_by_fqname(fqname, args = {})
+  def self.lookup_by_fqname(fqname, args = {})
     ns, name = parse_fqname(fqname)
-    find_by_namespace_and_name(ns, name, args)
+    lookup_by_namespace_and_name(ns, name, args)
   end
 
-  def self.find_by_namespace_and_name(ns, name, _args = {})
-    ns = MiqAeNamespace.find_by_fqname(ns)
-    return nil if ns.nil?
-    ns.ae_classes.detect { |c| name.casecmp(c.name) == 0 }
+  singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
+
+  def self.lookup_by_namespace_and_name(name_space, name, _args = {})
+    name_space = MiqAeNamespace.lookup_by_fqname(name_space)
+    return nil if name_space.nil?
+
+    name_space.ae_classes.detect { |c| name.casecmp(c.name).zero? }
   end
 
-  def self.find_by_namespace_id_and_name(ns_id, name)
+  singleton_class.send(:alias_method, :find_by_namespace_and_name, :lookup_by_namespace_and_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_namespace_and_name => :lookup_by_namespace_and_name)
+
+  def self.lookup_by_namespace_id_and_name(ns_id, name)
     where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
   end
 
-  def self.find_by_name(name)
+  singleton_class.send(:alias_method, :find_by_namespace_id_and_name, :lookup_by_namespace_id_and_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_namespace_id_and_name => :lookup_by_namespace_id_and_name)
+
+  def self.lookup_by_name(name)
     where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields]).first
   end
+
+  singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_name => :lookup_by_name)
 
   def self.fqname(ns, name)
     "#{ns}/#{name}"
@@ -178,11 +191,11 @@ class MiqAeClass < ApplicationRecord
   end
 
   def self.get_sorted_homonym_class_across_domains(user, ns = nil, klass)
-    ns_obj = MiqAeNamespace.find_by_fqname(ns) unless ns.nil?
+    ns_obj = MiqAeNamespace.lookup_by_fqname(ns) unless ns.nil?
     partial_ns = ns_obj.nil? ? ns : remove_domain_from_fqns(ns)
     class_array = user.current_tenant.visible_domains.pluck(:name).collect do |domain|
       fq_ns = domain + "/" + partial_ns
-      ae_ns = MiqAeNamespace.find_by_fqname(fq_ns)
+      ae_ns = MiqAeNamespace.lookup_by_fqname(fq_ns)
       next if ae_ns.nil?
       ae_ns.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD) }
     end.compact.flatten

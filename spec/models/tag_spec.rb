@@ -81,7 +81,7 @@ describe Tag do
       FactoryBot.create(:classification_department_with_tags)
 
       @tag            = Tag.find_by(:name => "/managed/department/finance")
-      @category       = Classification.find_by_name("department")
+      @category       = Classification.lookup_by_name("department")
       @classification = @tag.classification
     end
 
@@ -125,13 +125,13 @@ describe Tag do
       FactoryBot.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
     end
 
-    it "finds tag by name" do
-      expect(Tag.find_by_classification_name("test_category")).not_to be_nil
-      expect(Tag.find_by_classification_name("test_category").name).to eq(parent_ns)
+    it "looks up tag by name" do
+      expect(Tag.lookup_by_classification_name("test_category")).not_to be_nil
+      expect(Tag.lookup_by_classification_name("test_category").name).to eq(parent_ns)
     end
 
     it "doesn't find non tag" do
-      expect(Tag.find_by_classification_name("test_entry")).to be_nil
+      expect(Tag.lookup_by_classification_name("test_entry")).to be_nil
     end
   end
 

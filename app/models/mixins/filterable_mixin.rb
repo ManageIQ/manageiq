@@ -2,7 +2,7 @@ module FilterableMixin
   extend ActiveSupport::Concern
 
   def authorized_for_user?(userid)
-    user     = User.find_by_userid(userid)
+    user     = User.lookup_by_userid(userid)
     mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
     db       = self.class

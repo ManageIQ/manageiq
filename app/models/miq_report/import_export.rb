@@ -35,13 +35,13 @@ module MiqReport::ImportExport
       report[:db_options] ||= report["db_options"]
       report[:db_options].deep_symbolize_keys! if report[:db_options]
 
-      user = options[:user] || User.find_by_userid(options[:userid])
+      user = options[:user] || User.lookup_by_userid(options[:userid])
 
       if options[:preserve_owner]
         userid = report.delete("userid")
         group_description = report.delete("group_description")
 
-        report_user = userid.present? ? User.find_by_userid(userid) : User.find_by(:id => report["user_id"])
+        report_user = userid.present? ? User.lookup_by_userid(userid) : User.find_by(:id => report["user_id"])
         if report_user.nil?
           _log.warn("User '#{userid.presence || report["user_id"]}' for imported report '#{report["name"]}' was not found")
           report.delete("user_id")

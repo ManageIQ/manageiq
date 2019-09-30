@@ -98,7 +98,7 @@ class Classification < ApplicationRecord
   # rubocop:disable Style/NumericPredicate
 
   def self.classify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.find_by_name(category_name, obj.region_id)
+    cat = Classification.lookup_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
       ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
@@ -106,7 +106,7 @@ class Classification < ApplicationRecord
   end
 
   def self.unclassify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.find_by_name(category_name, obj.region_id)
+    cat = Classification.lookup_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
       ent.remove_entry_from(obj, is_request) unless ent.nil? || !obj.is_tagged_with?(ent.to_tag, :ns => "none")
@@ -228,7 +228,7 @@ class Classification < ApplicationRecord
   end
 
   def self.first_cat_entry(name, obj)
-    cat = find_by_name(name, obj.region_id)
+    cat = lookup_by_name(name, obj.region_id)
     return nil unless cat
 
     find_assigned_entries(obj).each do |e|
@@ -247,7 +247,7 @@ class Classification < ApplicationRecord
   # Splits a fully qualified tag into the namespace, category object, and entry object
   def self.tag_name_to_objects(tag_name)
     ns, cat, entry = tag_name_split(tag_name)
-    cat_obj = find_by_name(cat)
+    cat_obj = lookup_by_name(cat)
     entry_obj = cat_obj && cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
@@ -273,7 +273,7 @@ class Classification < ApplicationRecord
     children
   end
 
-  def find_by_entry(type)
+  def lookup_by_entry(type)
     raise _("method is only available for an entry") if category?
     klass = type.constantize
     unless klass.respond_to?("find_tagged_with")
@@ -282,6 +282,9 @@ class Classification < ApplicationRecord
 
     klass.find_tagged_with(:any => name, :ns => ns, :cat => parent.name)
   end
+
+  alias find_by_entry lookup_by_entry
+  Vmdb::Deprecation.deprecate_methods(self, :find_by_entry => :lookup_by_entry)
 
   def assign_entry_to(obj, is_request = true)
     raise _("method is only available for an entry") if category?
@@ -331,21 +334,27 @@ class Classification < ApplicationRecord
   attr_writer :name
 
   def find_entry_by_name(name, region_id = my_region_number)
-    self.class.find_by_name(name, region_id, ns, self)
+    self.class.lookup_by_name(name, region_id, ns, self)
   end
 
   # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
-  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = nil)
-    find_by_names([name], region_id, ns, parent_id).first
+  def self.lookup_by_name(name, region_id = my_region_number, name_space = DEFAULT_NAMESPACE, parent_id = nil)
+    lookup_by_names([name], region_id, name_space, parent_id).first
   end
 
+  singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_name => :lookup_by_name)
+
   # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
-  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = nil)
-    tag_names = names.map { |name| name2tag(name, parent_id, ns) }
+  def self.lookup_by_names(names, region_id = my_region_number, name_space = DEFAULT_NAMESPACE, parent_id = nil)
+    tag_names = names.map { |name| name2tag(name, parent_id, name_space) }
     # NOTE: tags is a subselect - not an array of ids
     tags = Tag.in_region(region_id).where(:name => tag_names).select(:id)
     where(:tag_id => tags)
   end
+
+  singleton_class.send(:alias_method, :find_by_names, :lookup_by_names)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_names => :lookup_by_names)
 
   def tag2ns(tag)
     unless tag.nil?
@@ -400,7 +409,7 @@ class Classification < ApplicationRecord
     stats = {"categories" => 0, "entries" => 0}
 
     if parent.nil? # category
-      cat = find_by_name(classification["name"])
+      cat = lookup_by_name(classification["name"])
       if cat
         _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
         return stats
@@ -449,7 +458,7 @@ class Classification < ApplicationRecord
 
   def self.seed
     YAML.load_file(FIXTURE_FILE).each do |c|
-      category = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      category = lookup_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
       next if category
 
       category = is_category.new(c.except(:entries))
@@ -473,7 +482,7 @@ class Classification < ApplicationRecord
   def self.tag2human(tag)
     c, e = tag.split("/")[2..-1]
 
-    cat = find_by_name(c)
+    cat = lookup_by_name(c)
     cname = cat.nil? ? c.titleize : cat.description
 
     ename = e.titleize

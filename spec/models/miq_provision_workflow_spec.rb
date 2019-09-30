@@ -43,7 +43,7 @@ describe MiqProvisionWorkflow do
             "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
           expect(request).to be_a_kind_of(MiqRequest)
 
-          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
+          expect(request.options[:vm_tags]).to eq([Classification.lookup_by_name("cc/001").id])
         end
 
         it "should set tags" do
@@ -53,7 +53,7 @@ describe MiqProvisionWorkflow do
             {'cc' => '001', 'environment' => 'test'}, nil, nil, nil)
           expect(request).to be_a_kind_of(MiqRequest)
 
-          expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
+          expect(request.options[:vm_tags]).to eq([Classification.lookup_by_name("cc/001").id])
         end
 
         it "should encrypt fields" do

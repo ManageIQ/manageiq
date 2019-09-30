@@ -17,7 +17,7 @@ class MiqAeNamespace < ApplicationRecord
                                  :message => N_("may contain only alphanumeric and _ . - $ characters")
   validates_uniqueness_of :name, :scope => :parent_id, :case_sensitive => false
 
-  def self.find_by_fqname(fqname, include_classes = true)
+  def self.lookup_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
     fqname   = fqname[0] == '/' ? fqname : "/#{fqname}"
@@ -29,17 +29,20 @@ class MiqAeNamespace < ApplicationRecord
     query.where(low_name.eq(last)).detect { |namespace| namespace.fqname.downcase == fqname }
   end
 
+  singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
+
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
     fqname   = fqname[1..-1] if fqname[0] == '/'
-    found = find_by_fqname(fqname, include_classes)
+    found = lookup_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
     parts = fqname.split('/')
     new_parts = [parts.pop]
     loop do
-      found = find_by_fqname(parts.join('/'), include_classes)
+      found = lookup_by_fqname(parts.join('/'), include_classes)
       break unless found.nil?
       new_parts.unshift(parts.pop)
       break if parts.empty?

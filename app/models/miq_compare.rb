@@ -214,7 +214,7 @@ class MiqCompare
       elsif section == :categories
         column = column.to_s
         section = "#{TAG_PREFIX}#{column}".to_sym
-        c = Classification.find_by_name(column)
+        c = Classification.lookup_by_name(column)
         section_header = (c.nil? || c.description.blank?) ? column.titleize : c.description
         column = nil # columns will be filled in dynamically when we fetch the section data
         key = nil
@@ -252,7 +252,7 @@ class MiqCompare
         @results.each_value { |result| result[section].delete_if { |k, _v| !columns.include?(k) && k.to_s[0, 1] != '_' } }
 
         # Get all of the tag headers
-        cat = Classification.find_by_name(self.class.section_to_tag(section))
+        cat = Classification.lookup_by_name(self.class.section_to_tag(section))
         columns.collect! { |c| {:name => c, :header => cat.find_entry_by_name(c.to_s).description} }
 
         columns.sort! { |x, y| x[:header].to_s.downcase <=> y[:header].to_s.downcase }
@@ -303,7 +303,7 @@ class MiqCompare
       # Get the tag entry name and description from the source
       new_columns = case @mode
                     when :compare
-                      Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
+                      Classification.lookup_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
                     when :drift
                       rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
                     end

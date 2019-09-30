@@ -177,7 +177,7 @@ module MiqReport::Generator
       User.with_user(options[:user]) { _generate_table(options) }
     elsif options[:userid]
       userid = MiqReportResult.parse_userid(options[:userid])
-      user = User.find_by_userid(userid)
+      user = User.lookup_by_userid(userid)
       User.with_user(user, userid) { _generate_table(options) }
     else
       _generate_table(options)
@@ -354,7 +354,7 @@ module MiqReport::Generator
 
     curr_tz = Time.zone # Save current time zone setting
     userid = options[:userid].split("|").first if options[:userid]
-    user = User.find_by_userid(userid) if userid
+    user = User.lookup_by_userid(userid) if userid
 
     # TODO: user is nil from MiqWidget#generate_report_result due to passing the username as the second part of :userid, such as widget_id_735|admin...
     # Looks like widget generation for a user doesn't expect multiple timezones, could be an issue with MiqGroups.
@@ -517,7 +517,7 @@ module MiqReport::Generator
             if tag == "_none_"
               tags2desc[tag] = "[None]"
             else
-              entry = Classification.find_by_name([performance[:group_by_category], tag].join("/"))
+              entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
               tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
             end
           end

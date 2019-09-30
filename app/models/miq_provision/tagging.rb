@@ -6,7 +6,7 @@ module MiqProvision::Tagging
 
   def allowed_tags_by_category(category_name)
     user_tags = get_user_managed_filters
-    category = Classification.find_by_name(category_name)
+    category = Classification.lookup_by_name(category_name)
     raise MiqException::MiqProvisionError, "unknown category, '#{category_name}'" if category.nil?
     category.entries.each_with_object({}) do |entry, h|
       if user_tags.blank? || user_tags.include?(entry.to_tag)

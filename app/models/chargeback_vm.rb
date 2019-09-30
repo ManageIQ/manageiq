@@ -162,7 +162,7 @@ class ChargebackVm < Chargeback
         if @options[:entity_id]
           Vm.where(:id => @options[:entity_id])
         elsif @options[:owner]
-          user = User.find_by_userid(@options[:owner])
+          user = User.lookup_by_userid(@options[:owner])
           if user.nil?
             _log.error("Unable to find user '#{@options[:owner]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => @options[:owner]}

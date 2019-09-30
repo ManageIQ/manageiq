@@ -42,7 +42,7 @@ describe Classification do
     let(:host2) { FactoryBot.create(:host, :name => "HOST2") }
     let(:host3) do
       FactoryBot.create(:host, :name => "HOST3").tap do |host|
-        Classification.find_by_name("test_category").entries.each { |ent| ent.assign_entry_to(host) }
+        Classification.lookup_by_name("test_category").entries.each { |ent| ent.assign_entry_to(host) }
       end
     end
     let(:sti_inst) { FactoryBot.create(:template_vmware) }
@@ -63,7 +63,7 @@ describe Classification do
 
     context "#destroy" do
       it "a category deletes all entries" do
-        cat = Classification.find_by_name("test_category")
+        cat = Classification.lookup_by_name("test_category")
         expect(cat).to_not be_nil
         entries = cat.entries
         expect(entries.length).to eq(2)
@@ -73,7 +73,7 @@ describe Classification do
       end
 
       it "a category deletes assignments referenced by its entries" do
-        cat = Classification.find_by_name("test_category")
+        cat = Classification.lookup_by_name("test_category")
         assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
 
         Tag.create!(:name => assignment_tag)
@@ -85,7 +85,7 @@ describe Classification do
       end
 
       it "a category does not delete assignments that are close but do not match its tag" do
-        cat = Classification.find_by_name("test_category")
+        cat = Classification.lookup_by_name("test_category")
         assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
         another_tag1 = Tag.create(:name => "/policy_set/assigned_to/vm/tag/managed/test_category/test_entry1")
         another_tag2 = Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/test_category1/test_entry")
@@ -100,7 +100,7 @@ describe Classification do
       end
 
       it "an entry deletes assignments where its tag is referenced" do
-        cat = Classification.find_by_name("test_category")
+        cat = Classification.lookup_by_name("test_category")
         ent = cat.entries.find { |e| e.name == "test_entry" }
         assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
 
@@ -114,14 +114,14 @@ describe Classification do
     end
 
     it "should test setup data" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       expect(cat).to_not be_nil
       expect(cat.tag).to_not be_nil
       expect(File.split(cat.tag.name).last).to_not be_nil
     end
 
     it "should test add entry" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       ent = FactoryBot.create(:classification_tag, :name => "test_add_entry", :parent => cat)
 
       expect(ent).to be_valid
@@ -130,7 +130,7 @@ describe Classification do
     end
 
     it "should test add entry directly (without calling add_entry)" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       ent = cat.children.new(:name => "test_add_entry_1")
       ent.save(:validate => false)
 
@@ -151,7 +151,7 @@ describe Classification do
     end
 
     it "should test update category" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       cat.name = "test_update_entry"
 
       expect(cat).to      be_valid
@@ -159,7 +159,7 @@ describe Classification do
     end
 
     it "should test add duplicate entry" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       ent = FactoryBot.create(:classification_tag, :name => "test_add_dup_entry", :parent => cat)
 
       expect(ent).to be_valid
@@ -169,7 +169,7 @@ describe Classification do
     end
 
     it "should test update entry" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       ent = cat.entries[0]
       ent.name = "test_update_entry"
 
@@ -178,7 +178,7 @@ describe Classification do
     end
 
     it "should test update entry to duplicate" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
       ent = cat.entries[0]
       ent.name = cat.entries[1].name
 
@@ -212,7 +212,7 @@ describe Classification do
     end
 
     it "should test assign single entry to" do
-      cat = Classification.find_by_name "test_single_value_category"
+      cat = Classification.lookup_by_name "test_single_value_category"
       ent1 = cat.entries[0]
       ent2 = cat.entries[1]
 
@@ -227,7 +227,7 @@ describe Classification do
     end
 
     it "should test assign multi entry to" do
-      cat = Classification.find_by_name "test_multi_value_category"
+      cat = Classification.lookup_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
       ent2 = cat.entries[1]
 
@@ -247,11 +247,11 @@ describe Classification do
     end
 
     it "find with multiple tags" do
-      cat1 = Classification.find_by_name "test_single_value_category"
+      cat1 = Classification.lookup_by_name "test_single_value_category"
       ent11 = cat1.entries[0]
       ent12 = cat1.entries[1]
 
-      cat2 = Classification.find_by_name "test_multi_value_category"
+      cat2 = Classification.lookup_by_name "test_multi_value_category"
       ent21 = cat2.entries[0]
       ent22 = cat2.entries[1]
 
@@ -270,7 +270,7 @@ describe Classification do
     end
 
     it "finds tagged items with order clause" do
-      cat1 = Classification.find_by_name "test_single_value_category"
+      cat1 = Classification.lookup_by_name "test_single_value_category"
       ent11 = cat1.entries[0]
 
       ent11.assign_entry_to(host1)
@@ -285,16 +285,16 @@ describe Classification do
       expect(any_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
     end
 
-    it "should test find by entry" do
-      cat = Classification.find_by_name "test_multi_value_category"
+    it "should test lookup by entry" do
+      cat = Classification.lookup_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
 
       ent1.assign_entry_to(host2)
-      expect(ent1.find_by_entry("Host")[0].name).to eq(host2.name)
+      expect(ent1.lookup_by_entry("Host")[0].name).to eq(host2.name)
     end
 
     it "should test remove entry from" do
-      cat = Classification.find_by_name "test_multi_value_category"
+      cat = Classification.lookup_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
       ent2 = cat.entries[1]
 
@@ -312,7 +312,7 @@ describe Classification do
     end
 
     it "should test to_tag" do
-      cat = Classification.find_by_name("test_category")
+      cat = Classification.lookup_by_name("test_category")
 
       expect(cat).to_not be_nil
       expect(cat.entries.length).to eq(2)
@@ -320,7 +320,7 @@ describe Classification do
     end
 
     it "should test assign single entry to an STI instance" do
-      cat = Classification.find_by_name "test_single_value_category"
+      cat = Classification.lookup_by_name "test_single_value_category"
       ent1 = cat.entries[0]
       ent2 = cat.entries[1]
 
@@ -333,15 +333,15 @@ describe Classification do
     end
 
     it "should test find by entry for an STI instance" do
-      cat = Classification.find_by_name "test_multi_value_category"
+      cat = Classification.lookup_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
 
       ent1.assign_entry_to(sti_inst)
-      expect(ent1.find_by_entry("MiqTemplate")[0]).to eq(sti_inst)
+      expect(ent1.lookup_by_entry("MiqTemplate")[0]).to eq(sti_inst)
     end
 
     it "should test remove entry from an STI instance" do
-      cat = Classification.find_by_name "test_multi_value_category"
+      cat = Classification.lookup_by_name "test_multi_value_category"
       ent1 = cat.entries[0]
       ent2 = cat.entries[1]
 
@@ -360,11 +360,11 @@ describe Classification do
         targets = [host1, host2, host3]
         @options[:object_ids] = targets.collect(&:id)
 
-        cat = Classification.find_by_name("test_category")
+        cat = Classification.lookup_by_name("test_category")
         @dels = cat.entries.collect
         @options[:delete_ids] = @dels.collect(&:id)
 
-        cat = Classification.find_by_name("test_multi_value_category")
+        cat = Classification.lookup_by_name("test_multi_value_category")
         @adds = cat.entries.collect
         @options[:add_ids] = @adds.collect(&:id)
       end
@@ -389,12 +389,12 @@ describe Classification do
 
     context "#category" do
       it "for tag" do
-        tag = Classification.find_by_name("test_category").children.first
+        tag = Classification.lookup_by_name("test_category").children.first
         expect(tag.category).to eq("test_category")
       end
 
       it "for category" do
-        expect(Classification.find_by_name("test_category").category).to be_nil
+        expect(Classification.lookup_by_name("test_category").category).to be_nil
       end
     end
   end
@@ -489,25 +489,25 @@ describe Classification do
     end
 
     it "finds in region" do
-      local = Classification.find_by_name("test_category1", my_region_number)
+      local = Classification.lookup_by_name("test_category1", my_region_number)
       expect(local).to eq(@local)
-      remote = Classification.find_by_name("test_category2", other_region)
+      remote = Classification.lookup_by_name("test_category2", other_region)
       expect(remote).to eq(@remote)
     end
 
     it "filters out wrong region" do
-      expect(Classification.find_by_name("test_category1", other_region)).to be_nil
-      expect(Classification.find_by_name("test_category2", my_region_number)).to be_nil
+      expect(Classification.lookup_by_name("test_category1", other_region)).to be_nil
+      expect(Classification.lookup_by_name("test_category2", my_region_number)).to be_nil
     end
 
     it "finds in all regions" do
-      expect(Classification.find_by_name("test_category1", nil)).to eq(@local)
-      expect(Classification.find_by_name("test_category2", nil)).to eq(@remote)
+      expect(Classification.lookup_by_name("test_category1", nil)).to eq(@local)
+      expect(Classification.lookup_by_name("test_category2", nil)).to eq(@remote)
     end
 
     it "finds in my region" do
-      expect(Classification.find_by_name("test_category1")).to eq(@local)
-      expect(Classification.find_by_name("test_category2")).to be_nil
+      expect(Classification.lookup_by_name("test_category1")).to eq(@local)
+      expect(Classification.lookup_by_name("test_category2")).to be_nil
     end
   end
 
@@ -524,17 +524,17 @@ describe Classification do
     end
 
     it "finds in region" do
-      expect(Classification.find_by_names(%w(test_category1 test_category2), my_region_number)).to eq([@local])
-      expect(Classification.find_by_names(%w(test_category1 test_category2), other_region)).to eq([@remote])
+      expect(Classification.lookup_by_names(%w[test_category1 test_category2], my_region_number)).to eq([@local])
+      expect(Classification.lookup_by_names(%w[test_category1 test_category2], other_region)).to eq([@remote])
     end
 
     it "finds in all regions" do
-      expect(Classification.find_by_names(%w(test_category1 test_category2), nil)).to match_array([@local, @remote])
+      expect(Classification.lookup_by_names(%w[test_category1 test_category2], nil)).to match_array([@local, @remote])
     end
 
     it "finds in my region" do
-      Classification.find_by_name(%w(test_category1 test_category2))
-      expect(Classification.find_by_names(%w(test_category1 test_category2))).to eq([@local])
+      Classification.lookup_by_name(%w[test_category1 test_category2])
+      expect(Classification.lookup_by_names(%w[test_category1 test_category2])).to eq([@local])
     end
   end
 

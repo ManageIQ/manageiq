@@ -130,7 +130,7 @@ describe AssignmentMixin do
   # @param value    [String] value e.g.: "test"
   # @return [ClassificationTag] classification tag. `.tag()` is an available method
   def ctag(category = "environment", value = "test")
-    env = Classification.find_by_name(category) ||
+    env = Classification.lookup_by_name(category) ||
           FactoryBot.create(:classification, :name => category, :single_value => 1)
     FactoryBot.create(:classification_tag, :name => value, :parent => env)
   end

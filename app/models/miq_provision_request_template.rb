@@ -43,7 +43,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   # NOTE: for services, the requester is the owner
   def owner_options(service_task)
-    user = User.find_by_userid(service_task.userid)
+    user = User.lookup_by_userid(service_task.userid)
     return {} if user.nil?
 
     {

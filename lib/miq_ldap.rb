@@ -296,8 +296,8 @@ class MiqLdap
       return "#{username}@#{@user_suffix}"
     when "mail"
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
-      dbuser = User.find_by_email(username.downcase)
-      dbuser ||= User.find_by_userid(username.downcase)
+      dbuser = User.lookup_by_email(username.downcase)
+      dbuser ||= User.lookup_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
       return username

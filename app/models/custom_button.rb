@@ -222,7 +222,7 @@ class CustomButton < ApplicationRecord
   end
 
   def self.get_user(user)
-    user = User.find_by_userid(user) if user.kind_of?(String)
+    user = User.lookup_by_userid(user) if user.kind_of?(String)
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
     user
   end

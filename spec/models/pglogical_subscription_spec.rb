@@ -171,17 +171,17 @@ describe PglogicalSubscription do
     end
   end
 
-  describe ".find_by_id" do
+  describe ".lookup_by_id" do
     it "returns the specified record with records" do
       with_records
       expected = expected_attrs.first
-      rec = described_class.find_by_id(expected["id"])
+      rec = described_class.lookup_by_id(expected["id"])
       expect(rec.attributes).to eq(expected)
     end
 
     it "returns nil without records" do
       with_no_records
-      expect(described_class.find_by_id("some_subscription")).to be_nil
+      expect(described_class.lookup_by_id("some_subscription")).to be_nil
     end
   end
 

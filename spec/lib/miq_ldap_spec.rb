@@ -264,8 +264,8 @@ describe MiqLdap do
     it "searches for username when user_type is mail even when username is UPN" do
       @opts[:user_type] = 'mail'
       ldap = MiqLdap.new(@opts)
-      expect(User).to receive(:find_by_email)
-      expect(User).to receive(:find_by_userid)
+      expect(User).to receive(:lookup_by_email)
+      expect(User).to receive(:lookup_by_userid)
       expect(ldap.fqusername('myuserid@mycompany.com')).to eq('myuserid@mycompany.com')
     end
   end

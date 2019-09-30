@@ -2,7 +2,7 @@ module Spec
   module Support
     module QuotaHelper
       def create_category_and_tag(category, tag)
-        cat = Classification.find_by_name(category)
+        cat = Classification.lookup_by_name(category)
         cat = Classification.create_category!(:name         => category,
                                               :single_value => false,
                                               :description  => category) unless cat

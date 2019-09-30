@@ -81,24 +81,36 @@ class User < ApplicationRecord
     {table_name => {:id => users_ids}}
   end
 
-  def self.find_by_userid(userid)
+  def self.lookup_by_userid(userid)
     in_my_region.find_by(:userid => userid)
   end
 
-  def self.find_by_userid!(userid)
+  singleton_class.send(:alias_method, :find_by_userid, :lookup_by_userid)
+  Vmdb::Deprecation.deprecate_methods(self, :find_by_userid => :lookup_by_userid)
+
+  def self.lookup_by_userid!(userid)
     in_my_region.find_by!(:userid => userid)
   end
 
-  def self.find_by_email(email)
+  singleton_class.send(:alias_method, :find_by_userid!, :lookup_by_userid!)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_userid! => :lookup_by_userid!)
+
+  def self.lookup_by_email(email)
     in_my_region.find_by(:email => email)
   end
 
+  singleton_class.send(:alias_method, :find_by_email, :lookup_by_email)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_email => :lookup_by_email)
+
   # find a user by lowercase email
   # often we have the most probably user object onhand. so use that if possible
-  def self.find_by_lower_email(email, cache = [])
+  def self.lookup_by_lower_email(email, cache = [])
     email = email.downcase
     Array.wrap(cache).detect { |u| u.email.try(:downcase) == email } || find_by(['lower(email) = ?', email])
   end
+
+  singleton_class.send(:alias_method, :find_by_lower_email, :lookup_by_lower_email)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_lower_email => :lookup_by_lower_email)
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
   # FIXME: amazon_group too?
@@ -309,7 +321,7 @@ class User < ApplicationRecord
   end
 
   def self.current_user
-    Thread.current[:user] ||= find_by_userid(current_userid)
+    Thread.current[:user] ||= lookup_by_userid(current_userid)
   end
 
   # parallel to MiqGroup.with_groups - only show users with these groups
