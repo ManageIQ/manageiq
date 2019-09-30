@@ -1159,7 +1159,7 @@ describe VmOrTemplate do
       FactoryBot.create(:vm_or_template)
       FactoryBot.create(:vm_or_template, :storage => FactoryBot.create(:storage))
 
-      expect(VmOrTemplate.with_ems).to eq([vm])
+      expect(VmOrTemplate.active).to eq([vm])
     end
   end
 
