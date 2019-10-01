@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 121 ending 2019-09-30
+
+### Added
+- Add check for nil group to system_context_requester [(#19309)](https://github.com/ManageIQ/manageiq/pull/19309)
+
+### Fixed
+- Drop load balancer from the custom buttons tree in automate [(#19331)](https://github.com/ManageIQ/manageiq/pull/19331)
+- Users without groups should use admin retirement [(#19319)](https://github.com/ManageIQ/manageiq/pull/19319)
+- Removed advanced config option to switch between "puma" and "thin" [(#19304)](https://github.com/ManageIQ/manageiq/pull/19304)
+- Remove unnecessary log message. [(#19299)](https://github.com/ManageIQ/manageiq/pull/19299)
+- Set result_format to ignore for all custom buttons. [(#19270)](https://github.com/ManageIQ/manageiq/pull/19270)
+
 ## Unreleased as of Sprint 120 ending 2019-09-16
 
 ### Added
