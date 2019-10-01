@@ -62,7 +62,7 @@ gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.2.0",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "rubyzip",                        "~>1.2.1",       :require => false
+gem "rubyzip",                        "~>1.3.0",       :require => false
 gem "rugged",                         "~>0.27.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
