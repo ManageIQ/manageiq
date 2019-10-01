@@ -301,12 +301,9 @@ module Ansible
       end
 
       def python_env
-        python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
-        python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
-
-        if File.exist?(python3_modules_path)
+        if python3_modules_path.present?
           { "PYTHONPATH" => python3_modules_path }
-        elsif File.exist?(python2_modules_path)
+        elsif python2_modules_path.present?
           { "PYTHONPATH" => python2_modules_path }
         else
           {}
@@ -356,6 +353,29 @@ module Ansible
 
       def env_dir(base_dir)
         FileUtils.mkdir_p(File.join(base_dir, "env")).first
+      end
+
+      PYTHON2_MODULE_PATHS = %w[
+        /var/lib/manageiq/venv/lib/python2.7/site-packages
+      ].freeze
+      def python2_modules_path
+        @python2_modules_path ||= begin
+          determine_existing_python_paths_for(*PYTHON2_MODULE_PATHS).join(File::PATH_SEPARATOR)
+        end
+      end
+
+      PYTHON3_MODULE_PATHS = %w[
+        /usr/lib64/python3.6/site-packages
+        /var/lib/awx/venv/ansible/lib/python3.6/site-packages
+      ].freeze
+      def python3_modules_path
+        @python3_modules_path ||= begin
+          determine_existing_python_paths_for(*PYTHON3_MODULE_PATHS).join(File::PATH_SEPARATOR)
+        end
+      end
+
+      def determine_existing_python_paths_for(*paths)
+        paths.select { |path| File.exist?(path) }
       end
     end
   end
