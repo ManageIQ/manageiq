@@ -7,10 +7,10 @@ class MiqDialog < ApplicationRecord
   scope :with_dialog_type, ->(dialog_type) { where(:dialog_type => dialog_type) }
 
   DIALOG_TYPES = [
-    [_("VM Provision"),                "MiqProvisionWorkflow"],
-    [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
-    [_("VM Migrate"),                  "VmMigrateWorkflow"],
-    [_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
+    [N_("VM Provision"),                "MiqProvisionWorkflow"],
+    [N_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
+    [N_("VM Migrate"),                  "VmMigrateWorkflow"],
+    [N_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
   ].freeze
 
   serialize :content
