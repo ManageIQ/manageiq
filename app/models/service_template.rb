@@ -205,14 +205,18 @@ class ServiceTemplate < ApplicationRecord
 
   def create_service(service_task, parent_svc = nil)
     nh = attributes.dup
+
+    # Service#display was renamed to #visible in https://github.com/ManageIQ/manageiq-schema/pull/410
+    nh['visible'] = nh.delete('display') if nh.key?('display')
+
     nh['options'][:dialog] = service_task.options[:dialog]
     (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
 
     # Hide child services by default
-    nh['display'] = false if parent_svc
+    nh['visible'] = false if parent_svc
 
-    # If display is nil, set it to false
-    nh['display'] ||= false
+    # If visible is nil, set it to false
+    nh['visible'] ||= false
 
     # convert template class name to service class name by naming convention
     nh['type'] = self.class.name.sub('Template', '')
