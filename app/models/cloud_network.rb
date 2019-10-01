@@ -9,6 +9,7 @@ class CloudNetwork < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
+  belongs_to :resource_group
 
   has_many :cloud_subnets, :dependent => :destroy
   has_many :network_routers, -> { distinct }, :through => :cloud_subnets

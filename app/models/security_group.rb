@@ -13,6 +13,7 @@ class SecurityGroup < ApplicationRecord
   belongs_to :network_group
   belongs_to :cloud_subnet
   belongs_to :network_router
+  belongs_to :resource_group
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
   has_many :network_port_security_groups, :dependent => :destroy

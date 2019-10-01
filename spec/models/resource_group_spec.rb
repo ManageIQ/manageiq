@@ -26,6 +26,9 @@ describe ResourceGroup do
     before do
       @vm       = FactoryBot.create(:vm_google, :template => false, :resource_group => resource_group)
       @template = FactoryBot.create(:template_google, :template => true, :resource_group => resource_group)
+      @cloud_network = FactoryBot.create(:cloud_network, :resource_group => resource_group)
+      @network_port = FactoryBot.create(:network_port, :resource_group => resource_group)
+      @security_group = FactoryBot.create(:security_group, :resource_group => resource_group)
     end
 
     it "returns the expected results for vms" do
@@ -41,6 +44,18 @@ describe ResourceGroup do
     it "returns the expected results for vm_or_templates" do
       expect(resource_group.vm_or_templates).to include(@template)
       expect(resource_group.vm_or_templates).to include(@vm)
+    end
+
+    it "returns the expected results for cloud_networks" do
+      expect(resource_group.cloud_networks).to include(@cloud_network)
+    end
+
+    it "returns the expected results for network_ports" do
+      expect(resource_group.network_ports).to include(@network_port)
+    end
+
+    it "returns the expected results for security_groups" do
+      expect(resource_group.security_groups).to include(@security_group)
     end
   end
 end

@@ -6,6 +6,7 @@ class NetworkPort < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
   belongs_to :cloud_tenant
   belongs_to :device, :polymorphic => true
+  belongs_to :resource_group
 
   has_many :network_port_security_groups, :dependent => :destroy
   has_many :security_groups, :through => :network_port_security_groups
