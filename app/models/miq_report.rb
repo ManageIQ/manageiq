@@ -295,10 +295,14 @@ class MiqReport < ApplicationRecord
     result_set.map { |row| format_row(row, skip_columns, hash_value_format) }
   end
 
-  def filter_result_set(result_set, options)
-    filter_columns = validate_columns(options[:filter_column])
-    formatted_result_set = format_result_set(result_set, filter_columns)
-    result_set_filtered = formatted_result_set.select { |x| x[options[:filter_column]].include?(options[:filter_string]) }
+  def filter_result_set_record(record, filter_options)
+    filter_options.all? { |column, search_string| record[column].include?(search_string) }
+  end
+
+  def filter_result_set(result_set, filter_options)
+    validated_filter_columns = validate_columns(filter_options.keys)
+    formatted_result_set = format_result_set(result_set, validated_filter_columns)
+    result_set_filtered = formatted_result_set.select { |record| filter_result_set_record(record, filter_options) }
 
     [result_set_filtered, result_set_filtered.count]
   end
