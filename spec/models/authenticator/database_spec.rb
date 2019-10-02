@@ -54,7 +54,7 @@ describe Authenticator::Database do
       end
 
       it "updates lastlogon" do
-        expect { authenticate }.to change { alice.reload.lastlogon }
+        expect { authenticate }.to(change { alice.reload.lastlogon })
       end
     end
 
@@ -86,7 +86,7 @@ describe Authenticator::Database do
       end
 
       it "doesn't change lastlogon" do
-        expect { authenticate rescue nil }.not_to change { alice.reload.lastlogon }
+        expect { authenticate rescue nil }.not_to(change { alice.reload.lastlogon })
       end
     end
 
@@ -140,7 +140,7 @@ describe Authenticator::Database do
         authenticate
       end
       it "updates lastlogon" do
-        expect { authenticate }.to change { vincent.reload.lastlogon }
+        expect { authenticate }.to(change { vincent.reload.lastlogon })
       end
     end
   end

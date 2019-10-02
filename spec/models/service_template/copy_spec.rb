@@ -12,7 +12,7 @@ describe ServiceTemplate do
       copy = nil
       expect do
         copy = template.public_send(*[:template_copy, name].compact)
-      end.to change { ServiceTemplate.count }.by(1)
+      end.to(change { ServiceTemplate.count }.by(1))
       expect(copy.persisted?).to be(true)
       expect(copy.guid).not_to eq(template.guid)
       expect(copy.display).to be(false)
