@@ -36,8 +36,6 @@ class Authentication < ApplicationRecord
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
-  before_validation :set_tenant_from_group
-
   serialize :options
 
   include OwnershipMixin
@@ -153,10 +151,6 @@ class Authentication < ApplicationRecord
   end
 
   private
-
-  def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
-  end
 
   def set_credentials_changed_on
     return unless @auth_changed

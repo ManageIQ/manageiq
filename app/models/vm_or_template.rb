@@ -191,7 +191,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true, :type => :float
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
 
-  before_validation :set_tenant_from_group
   after_save :save_genealogy_information
 
   scope :active,       ->       { where.not(:ems_id => nil) }
@@ -1843,10 +1842,6 @@ class VmOrTemplate < ApplicationRecord
   end
 
   private
-
-  def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
-  end
 
   def power_state=(new_power_state)
     super

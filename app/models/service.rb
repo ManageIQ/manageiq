@@ -53,7 +53,6 @@ class Service < ApplicationRecord
   virtual_has_one    :reconfigure_dialog
   virtual_has_one    :user
 
-  before_validation :set_tenant_from_group
   before_create :update_attributes_from_dialog
 
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
@@ -381,10 +380,6 @@ class Service < ApplicationRecord
 
   def raise_provisioned_event
     MiqEvent.raise_evm_event(self, :service_provisioned)
-  end
-
-  def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
   end
 
   def tenant_identity
