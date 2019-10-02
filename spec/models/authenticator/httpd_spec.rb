@@ -164,7 +164,7 @@ describe Authenticator::Httpd do
         end
 
         it "updates lastlogon" do
-          expect { authenticate }.to change { alice.reload.lastlogon }
+          expect { authenticate }.to(change { alice.reload.lastlogon })
         end
       end
 
@@ -192,7 +192,7 @@ describe Authenticator::Httpd do
         end
 
         it "updates lastlogon" do
-          expect { authenticate }.to change { alice.reload.lastlogon }
+          expect { authenticate }.to(change { alice.reload.lastlogon })
         end
 
         it "immediately completes the task" do
@@ -243,7 +243,7 @@ describe Authenticator::Httpd do
         authenticate rescue nil
       end
       it "doesn't change lastlogon" do
-        expect { authenticate rescue nil }.not_to change { alice.reload.lastlogon }
+        expect { authenticate rescue nil }.not_to(change { alice.reload.lastlogon })
       end
 
       context "with specific failure message" do
@@ -278,33 +278,33 @@ describe Authenticator::Httpd do
         let!(:sally_upn) { FactoryBot.create(:user, :userid => 'sAlly@example.com') }
 
         it "leaves user record with userid in username format unchanged" do
-          expect { authenticate }.to_not change { sally_username.reload.userid }
+          expect { authenticate }.to_not(change { sally_username.reload.userid })
         end
 
         it "leaves user record with userid in distinguished name format unchanged" do
-          expect { authenticate }.to_not change { sally_dn.reload.userid }
+          expect { authenticate }.to_not(change { sally_dn.reload.userid })
         end
 
         it "downcases user record with userid in upn format" do
           expect { authenticate }
-            .to change { sally_upn.reload.userid }.from("sAlly@example.com").to("sally@example.com")
+            .to(change { sally_upn.reload.userid }.from("sAlly@example.com").to("sally@example.com"))
         end
       end
 
       context "when user record with userid in upn format does not already exists" do
         it "updates userid from username format to upn format" do
           sally_username = FactoryBot.create(:user, :userid => 'sally')
-          expect { authenticate }.to change { sally_username.reload.userid }.from("sally").to("sally@example.com")
+          expect { authenticate }.to(change { sally_username.reload.userid }.from("sally").to("sally@example.com"))
         end
 
         it "updates userid from distinguished name format to upn format" do
           sally_dn = FactoryBot.create(:user, :userid => dn)
-          expect { authenticate }.to change { sally_dn.reload.userid }.from(dn).to("sally@example.com")
+          expect { authenticate }.to(change { sally_dn.reload.userid }.from(dn).to("sally@example.com"))
         end
 
         it "does not modify userid if already in upn format" do
           sally_upn = FactoryBot.create(:user, :userid => 'sally@example.com')
-          expect { authenticate }.to_not change { sally_upn.reload.userid }
+          expect { authenticate }.to_not(change { sally_upn.reload.userid })
         end
       end
 
@@ -315,17 +315,17 @@ describe Authenticator::Httpd do
 
         it "does not modify the user record when userid is in username format" do
           sally_username = FactoryBot.create(:user, :userid => 'sally', :id => other_region_id)
-          expect { authenticate }.to_not change { sally_username.reload.userid }
+          expect { authenticate }.to_not(change { sally_username.reload.userid })
         end
 
         it "does not modify the user record when userid is in distinguished name format" do
           sally_dn = FactoryBot.create(:user, :userid => dn, :id => other_region_id)
-          expect { authenticate }.to_not change { sally_dn.reload.userid }
+          expect { authenticate }.to_not(change { sally_dn.reload.userid })
         end
 
         it "does not modify the user record when userid is in already upn format" do
           sally_upn = FactoryBot.create(:user, :userid => 'sally@example.com', :id => other_region_id)
-          expect { authenticate }.to_not change { sally_upn.reload.userid }
+          expect { authenticate }.to_not(change { sally_upn.reload.userid })
         end
       end
     end
@@ -400,7 +400,7 @@ describe Authenticator::Httpd do
         end
 
         it "creates a new User" do
-          expect { authenticate }.to change { User.where(:userid => 'bob@example.com').count }.from(0).to(1)
+          expect { authenticate }.to(change { User.where(:userid => 'bob@example.com').count }.from(0).to(1))
         end
 
         context "with no matching groups" do
@@ -436,7 +436,7 @@ describe Authenticator::Httpd do
           end
 
           it "doesn't create a new User" do
-            expect { authenticate }.not_to change { User.where(:userid => 'bob').count }.from(0)
+            expect { authenticate }.not_to(change { User.where(:userid => 'bob').count }.from(0))
           end
 
           it "immediately marks the task as errored" do
@@ -457,7 +457,7 @@ describe Authenticator::Httpd do
           end
 
           it "creates a new User with name set to FirstName + LastName" do
-            expect { authenticate }.to change { User.where(:name => 'Betty Boop').count }.from(0).to(1)
+            expect { authenticate }.to(change { User.where(:name => 'Betty Boop').count }.from(0).to(1))
           end
         end
 
@@ -471,7 +471,7 @@ describe Authenticator::Httpd do
           end
 
           it "creates a new User with the userid set to the UPN" do
-            expect { authenticate }.to change { User.where(:name => 'sam@example.com').count }.from(0).to(1)
+            expect { authenticate }.to(change { User.where(:name => 'sam@example.com').count }.from(0).to(1))
           end
         end
       end

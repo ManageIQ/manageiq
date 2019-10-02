@@ -28,7 +28,7 @@ describe Session do
     it "purges an old session" do
       FactoryBot.create(:session, :updated_at => 1.year.ago, :raw_data => {:userid => "admin"})
 
-      expect { described_class.purge(0, 1) }.to change { described_class.count }.from(1).to(0)
+      expect { described_class.purge(0, 1) }.to(change { described_class.count }.from(1).to(0))
     end
 
     it "logs out users before destroying stale sessions" do
@@ -44,7 +44,7 @@ describe Session do
     it "handles a session with bad data" do
       FactoryBot.create(:session, :updated_at => 1.year.ago, :data => "Data that can't be marshaled")
 
-      expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
+      expect { described_class.purge(0) }.to(change { described_class.count }.from(1).to(0))
     end
 
     context "given some token store data" do
@@ -53,13 +53,13 @@ describe Session do
       it "will purge an expired token" do
         FactoryBot.create(:session, :raw_data => {:expires_on => 1.second.ago})
 
-        expect { described_class.purge(0) }.to change { described_class.count }.from(1).to(0)
+        expect { described_class.purge(0) }.to(change { described_class.count }.from(1).to(0))
       end
 
       it "won't purge an unexpired token" do
         FactoryBot.create(:session, :raw_data => {:expires_on => 1.second.from_now})
 
-        expect { described_class.purge(0) }.not_to change { described_class.count }
+        expect { described_class.purge(0) }.not_to(change { described_class.count })
       end
     end
 
@@ -69,7 +69,7 @@ describe Session do
 
         expect do
           expect(described_class.purge_one_batch(0, 1)).to eq 1
-        end.to change { described_class.count }.from(2).to(1)
+        end.to(change { described_class.count }.from(2).to(1))
       end
     end
   end

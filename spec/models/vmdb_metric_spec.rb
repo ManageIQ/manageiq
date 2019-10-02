@@ -6,6 +6,6 @@ describe VmdbMetric do
   it "should purge" do
     expect do
       VmdbMetric.purge_daily_timer
-    end.to change { MiqQueue.count }.by(1)
+    end.to(change { MiqQueue.count }.by(1))
   end
 end

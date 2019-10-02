@@ -39,7 +39,7 @@ describe Job do
         end
 
         it "should queue a timeout job if one not already on there" do
-          expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
+          expect { @job.timeout! }.to(change { MiqQueue.count }.by(1))
         end
 
         it "should be timed out after 5 minutes" do
@@ -51,12 +51,12 @@ describe Job do
       end
 
       it "should not queue a timeout job if one is already on there" do
-        expect { @job.timeout! }.not_to change { MiqQueue.count }
+        expect { @job.timeout! }.not_to(change { MiqQueue.count })
       end
 
       it "should queue a timeout job if one is there, but it is failed" do
         MiqQueue.first.update(:state => MiqQueue::STATE_ERROR)
-        expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
+        expect { @job.timeout! }.to(change { MiqQueue.count }.by(1))
       end
     end
 

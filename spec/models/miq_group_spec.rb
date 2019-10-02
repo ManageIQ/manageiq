@@ -279,7 +279,7 @@ describe MiqGroup do
 
       expect {
         MiqGroup.seed
-      }.to change { MiqGroup.count }
+      }.to(change { MiqGroup.count })
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
     end
