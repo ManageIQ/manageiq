@@ -52,8 +52,6 @@ class OrchestrationStack < ApplicationRecord
 
   virtual_column :stdout, :type => :string
 
-  before_validation :set_tenant_from_group
-
   scope :without_type, ->(type) { where.not(:type => type) }
 
   alias_method :orchestration_stack_parameters, :parameters
@@ -97,10 +95,6 @@ class OrchestrationStack < ApplicationRecord
 
   def stdout(format = nil)
     format.nil? ? try(:raw_stdout) : try(:raw_stdout, format)
-  end
-
-  def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
   end
 
   private :directs_and_indirects
