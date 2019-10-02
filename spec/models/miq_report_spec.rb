@@ -125,16 +125,16 @@ describe MiqReport do
 
   context "report with virtual dynamic custom attributes" do
     let(:options)              { {:targets_hash => true, :userid => "admin"} }
-    let(:custom_column_key_1)  { 'kubernetes.io/hostname' }
-    let(:custom_column_key_2)  { 'manageiq.org' }
+    let(:custom_column_key_1)  { 'kubernetes_io_hostname' }
+    let(:custom_column_key_2)  { 'manageiq_org' }
     let(:custom_column_key_3)  { 'ATTR_Name_3' }
     let(:custom_column_value)  { 'value1' }
     let(:user)                 { FactoryBot.create(:user_with_group) }
     let(:ems)                  { FactoryBot.create(:ems_vmware) }
     let!(:vm_1)                { FactoryBot.create(:vm_vmware) }
     let!(:vm_2)                { FactoryBot.create(:vm_vmware, :retired => false, :ext_management_system => ems) }
-    let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}kubernetes.io/hostname" }
-    let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}manageiq.org" }
+    let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}kubernetes_io_hostname" }
+    let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}manageiq_org" }
     let(:virtual_column_key_3) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_3" }
     let(:miq_task)             { FactoryBot.create(:miq_task) }
 
@@ -155,9 +155,9 @@ describe MiqReport do
       MiqReport.new(
         :name => "Custom VM report", :title => "Custom VM report", :rpt_group => "Custom", :rpt_type => "Custom",
         :db        => "ManageIQ::Providers::InfraManager::Vm",
-        :cols      => %w(name virtual_custom_attribute_kubernetes.io/hostname virtual_custom_attribute_manageiq.org),
+        :cols      => %w(name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org),
         :include   => {:custom_attributes => {}},
-        :col_order => %w(name virtual_custom_attribute_kubernetes.io/hostname virtual_custom_attribute_manageiq.org),
+        :col_order => %w(name virtual_custom_attribute_kubernetes_io_hostname virtual_custom_attribute_manageiq_org),
         :headers   => ["Name", custom_column_key_1, custom_column_key_1],
         :order     => "Ascending"
       )
