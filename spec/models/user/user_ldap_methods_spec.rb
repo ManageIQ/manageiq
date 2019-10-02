@@ -58,14 +58,14 @@ describe Authenticator::Ldap do
     it "password is blank" do
       @password = ""
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect { subject }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     it "ldap bind fails" do
       allow(@miq_ldap).to receive_messages(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect { subject }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     context "ldap binds" do

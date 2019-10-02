@@ -224,13 +224,13 @@ describe Authenticator::Ldap do
         end
 
         it "updates lastlogon" do
-          expect(-> { authenticate }).to change { alice.reload.lastlogon }
+          expect { authenticate }.to change { alice.reload.lastlogon }
         end
 
         context "with no corresponding LDAP user" do
           let(:alice_data) { nil }
           it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+            expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
           end
         end
       end
@@ -269,7 +269,7 @@ describe Authenticator::Ldap do
         end
 
         it "updates lastlogon" do
-          expect(-> { authenticate }).to change { alice.reload.lastlogon }
+          expect { authenticate }.to change { alice.reload.lastlogon }
         end
 
         it "immediately completes the task" do
@@ -296,7 +296,7 @@ describe Authenticator::Ldap do
         context "with no corresponding LDAP user" do
           let(:alice_data) { nil }
           it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+            expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
           end
         end
       end
@@ -306,7 +306,7 @@ describe Authenticator::Ldap do
       let(:password) { 'incorrect' }
 
       it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
       end
 
       it "records one failing audit entry" do
@@ -324,7 +324,7 @@ describe Authenticator::Ldap do
         authenticate rescue nil
       end
       it "doesn't change lastlogon" do
-        expect(-> { authenticate rescue nil }).not_to change { alice.reload.lastlogon }
+        expect { authenticate rescue nil }.not_to change { alice.reload.lastlogon }
       end
     end
 
@@ -335,7 +335,7 @@ describe Authenticator::Ldap do
         let(:password) { 'incorrect' }
 
         it "fails" do
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
         end
 
         it "records one failing audit entry" do
@@ -356,7 +356,7 @@ describe Authenticator::Ldap do
 
       context "using local authorization" do
         it "fails" do
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
+          expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError)
         end
 
         it "records one successful and one failing audit entry" do
@@ -401,7 +401,7 @@ describe Authenticator::Ldap do
           end
 
           it "creates a new User" do
-            expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
+            expect { authenticate }.to change { User.where(:userid => 'bob').count }.from(0).to(1)
           end
         end
 
@@ -409,7 +409,7 @@ describe Authenticator::Ldap do
           let(:config) { super().merge(:default_group_for_users => 'bubble') }
 
           it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
+            expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError)
           end
         end
       end
@@ -452,7 +452,7 @@ describe Authenticator::Ldap do
         end
 
         it "creates a new User" do
-          expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
+          expect { authenticate }.to change { User.where(:userid => 'bob').count }.from(0).to(1)
         end
 
         context "with no matching groups" do
@@ -488,7 +488,7 @@ describe Authenticator::Ldap do
           end
 
           it "doesn't create a new User" do
-            expect(-> { authenticate }).not_to change { User.where(:userid => 'bob').count }.from(0)
+            expect { authenticate }.not_to change { User.where(:userid => 'bob').count }.from(0)
           end
 
           it "immediately marks the task as errored" do
@@ -503,7 +503,7 @@ describe Authenticator::Ldap do
           let(:username) { 'betty' }
 
           it "creates a new User with name set to givenname + sn" do
-            expect(-> { authenticate }).to change { User.where(:name => 'Betty Builderson').count }.from(0).to(1)
+            expect { authenticate }.to change { User.where(:name => 'Betty Builderson').count }.from(0).to(1)
           end
         end
 
@@ -511,7 +511,7 @@ describe Authenticator::Ldap do
           let(:username) { 'sam' }
 
           it "creates a new User with name set to the userid" do
-            expect(-> { authenticate }).to change { User.where(:name => 'sam').count }.from(0).to(1)
+            expect { authenticate }.to change { User.where(:name => 'sam').count }.from(0).to(1)
           end
         end
       end
