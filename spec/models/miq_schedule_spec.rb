@@ -1,7 +1,7 @@
 describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
 
-  context "exporting " do
+  context "import/export" do
     let(:user) { FactoryBot.create(:user) }
     let(:miq_group) { FactoryBot.create(:miq_group) }
     let(:options) do
@@ -36,9 +36,17 @@ describe MiqSchedule do
         expect(miq_schedule_array['resource_type']).to eq("MiqReport")
       end
 
-      context "filter resource doesn't exists" do
-        let(:miq_expression) { MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => 999_999_999}) }
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
 
+        expect(imported_schedule.sched_action[:method]).to eq("run_report")
+        expect(imported_schedule.userid).to eq(user.userid)
+        expect(imported_schedule.resource_type).to eq("MiqReport")
+      end
+
+      context "filter resource doesn't exist" do
+        let(:miq_expression) { MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => 999_999_999}) }
         it "exports to array" do
           expect do
             miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
@@ -46,6 +54,13 @@ describe MiqSchedule do
             expect(miq_schedule_array['sched_action'][:options]).to eq(options.merge(:miq_group_description => miq_group.description))
             expect(miq_schedule_array['filter_resource_name']).to be_nil
           end.not_to raise_error
+        end
+
+        it "raises on import with missing resource error" do
+          # see https://github.com/ManageIQ/manageiq/blob/1d73637c2c633f9208a60e45b58a2d7e426c63d1/app/models/miq_schedule/import_export.rb#L84
+          miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+
+          expect { MiqSchedule.import_from_hash(miq_schedule_array) }.to raise_error(RuntimeError, /Unable to find resource used in filter/)
         end
       end
     end
@@ -59,6 +74,15 @@ describe MiqSchedule do
         expect(miq_schedule_array['sched_action'][:method]).to eq("vm_scan")
         expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
         expect(miq_schedule_array['resource_type']).to eq("MiqReport")
+      end
+
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
+
+        expect(imported_schedule.sched_action[:method]).to eq("vm_scan")
+        expect(imported_schedule.userid).to eq(user.userid)
+        expect(imported_schedule.resource_type).to eq("MiqReport")
       end
     end
 
@@ -77,13 +101,21 @@ describe MiqSchedule do
         expect(miq_schedule_array['MiqSearchContent']).not_to be(nil)
         expect(miq_schedule_array['resource_type']).to eq("MiqReport")
       end
+
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
+
+        expect(imported_schedule.sched_action[:method]).to eq("run_report")
+        expect(imported_schedule.userid).to eq(user.userid)
+        expect(imported_schedule.miq_search_id).to eq(miq_search.id)
+        expect(imported_schedule.resource_type).to eq("MiqReport")
+        expect(MiqSearch.first.db).to eq("Vm")
+        expect(MiqSearch.first.filter).to be_a(MiqExpression)
+      end
     end
 
     context "DatabaseBackup" do
-      let(:miq_schedule) do
-        FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now, :file_depot => file_depot)
-      end
-
       let(:file_depot) { FactoryBot.create(:file_depot_ftp_with_authentication) }
 
       before do
@@ -97,13 +129,22 @@ describe MiqSchedule do
       end
 
       it "exports to array" do
-        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        miq_schedule_array = MiqSchedule.export_to_array([@schedule.id], MiqSchedule).first["MiqSchedule"]
         expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
-        expect(miq_schedule_array['sched_action'][:options].keys).to include(:miq_group_description)
         expect(miq_schedule_array['file_depot_id']).to eq(file_depot.id)
         expect(miq_schedule_array['FileDepotContent']).not_to be(nil)
-        expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
-        expect(miq_schedule_array['resource_type']).to eq("MiqReport")
+        expect(miq_schedule_array['resource_type']).to eq("DatabaseBackup")
+      end
+
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([@schedule.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
+
+        expect(imported_schedule.sched_action[:method]).to eq("db_backup")
+        expect(imported_schedule.userid).to eq("system")
+        expect(imported_schedule.file_depot_id).to eq(file_depot.id)
+        expect(imported_schedule.resource_type).to eq("DatabaseBackup")
+        expect(FileDepot.count).to eq(1)
       end
     end
 
@@ -118,6 +159,15 @@ describe MiqSchedule do
         expect(miq_schedule_array['sched_action'][:options].keys).not_to include(:miq_group_description)
         expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
         expect(miq_schedule_array['resource_type']).to eq("AutomationRequest")
+      end
+
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_automate_schedule.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
+
+        expect(imported_schedule.sched_action[:method]).to eq("run_report")
+        expect(imported_schedule.userid).to eq(user.userid)
+        expect(imported_schedule.resource_type).to eq("AutomationRequest")
       end
     end
 
@@ -141,6 +191,15 @@ describe MiqSchedule do
         expect(miq_schedule_array['resource_type']).to eq("ServiceTemplate")
         expect(miq_schedule_array['sched_action'][:method]).to eq("vm_scan")
         expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
+      end
+
+      it "imports schedule" do
+        miq_schedule_array = MiqSchedule.export_to_array([schedule_with_template.id], MiqSchedule).first["MiqSchedule"]
+        imported_schedule = MiqSchedule.import_from_hash(miq_schedule_array).first
+
+        expect(imported_schedule.sched_action[:method]).to eq("vm_scan")
+        expect(imported_schedule.userid).to eq(user.userid)
+        expect(imported_schedule.resource_type).to eq("ServiceTemplate")
       end
     end
   end
