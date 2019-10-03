@@ -395,17 +395,17 @@ describe ServiceTemplate do
 
     it "should pass display attribute to created top level service" do
       @svc_a.display = true
-      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).display).to eq(true)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).visible).to eq(true)
     end
 
     it "should set created child service's display to false" do
       @svc_a.display = true
       allow(@svc_b).to receive(:add_resource!)
-      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user), @svc_b).display).to eq(false)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user), @svc_b).visible).to eq(false)
     end
 
     it "should set created service's display to false by default" do
-      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).display).to eq(false)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).visible).to eq(false)
     end
 
     it "should return all parent services for a service" do

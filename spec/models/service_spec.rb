@@ -676,14 +676,14 @@ describe Service do
     end
   end
 
-  describe "#display" do
+  describe "#visible" do
     it "defaults to false" do
       service = described_class.new
-      expect(service.display).to be(false)
+      expect(service.visible).to be(false)
     end
 
     it "cannot be nil" do
-      service = FactoryBot.build(:service, :display => nil)
+      service = FactoryBot.build(:service, :visible => nil)
       expect(service).not_to be_valid
     end
   end

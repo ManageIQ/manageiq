@@ -88,15 +88,15 @@ class Service < ApplicationRecord
 
   validates :name, :presence => true
 
-  default_value_for :display, false
+  default_value_for :visible, false
   default_value_for :initiator, 'user'
   default_value_for :lifecycle_state, 'unprovisioned'
   default_value_for :retired, false
 
-  validates :display, :inclusion => { :in => [true, false] }
+  validates :visible, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
 
-  scope :displayed, ->              { where(:display => true) }
+  scope :displayed, ->              { where(:visible => true) }
   scope :retired,   ->(bool = true) { where(:retired => bool) }
 
   supports :reconfigure do
