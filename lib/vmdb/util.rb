@@ -97,6 +97,9 @@ module VMDB
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
       require 'zip/filesystem'
+      # we need to set this flag to true until we can upgrade to rubyzip 2.0.0
+      # see https://github.com/rubyzip/rubyzip/pull/403#issue-317103816
+      Zip.validate_entry_sizes = true
 
       zip_dir = Rails.root.join("data", "user", userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
