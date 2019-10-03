@@ -21,6 +21,10 @@ class ActsAsArModel
     superclass == ActsAsArModel ? self : superclass.base_class
   end
 
+  def self.includes_to_references(_inc)
+    []
+  end
+
   class << self; alias_method :base_model, :base_class; end
 
   #
