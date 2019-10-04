@@ -4,7 +4,7 @@ module ComplianceMixin
   included do
     has_many :compliances, :as => :resource, :dependent => :destroy
     has_one  :last_compliance,
-             -> { order('"compliances"."timestamp" DESC') },
+             -> { order(:timestamp => :desc) },
              :as         => :resource,
              :inverse_of => :resource,
              :class_name => "Compliance"
