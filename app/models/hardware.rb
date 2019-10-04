@@ -10,7 +10,8 @@ class Hardware < ApplicationRecord
   has_many    :firmwares, :as => :resource, :dependent => :destroy
 
   has_many    :disks, -> { order(:location) }, :dependent => :destroy
-  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :hard_disks, -> { where.not(:device_type => 'floppy').where.not(Disk.arel_table[:device_type].lower.matches('%cdrom%')).order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+
   has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
 
