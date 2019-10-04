@@ -355,7 +355,7 @@ class Tenant < ApplicationRecord
 
   def ensure_can_be_destroyed
     errors.add(:base, _("A tenant with groups associated cannot be deleted.")) if miq_groups.non_tenant_groups.exists?
-    errors.add(:base, _("A tenant created by tenant mapping cannot be deleted.")) if source
+    errors.add(:base, _("A tenant created by tenant mapping cannot be deleted.")) if source&.persisted?
     throw :abort unless errors[:base].empty?
   end
 
