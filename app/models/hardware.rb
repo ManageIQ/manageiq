@@ -10,21 +10,21 @@ class Hardware < ApplicationRecord
   has_many    :firmwares, :as => :resource, :dependent => :destroy
 
   has_many    :disks, -> { order(:location) }, :dependent => :destroy
-  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :hard_disks, -> { where.not(:device_type => 'floppy').where.not(Disk.arel_table[:device_type].lower.matches('%cdrom%')).order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :floppies, -> { where(:device_type => 'floppy').order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :cdroms, -> { where(Disk.arel_table[:device_type].lower.matches('%cdrom%')).order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
 
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
 
   has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, -> { where("device_type = 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :nics, -> { where("device_type = 'ethernet'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :ports, -> { where("device_type != 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :physical_ports, -> { where("device_type = 'physical_port'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :storage_adapters, -> { where(:device_type => 'storage') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :nics, -> { where(:device_type => 'ethernet') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :ports, -> { where.not(:device_type => 'storage') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :physical_ports, -> { where(:device_type => 'physical_port') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :connected_physical_switches, :through => :guest_devices
 
-  has_many    :management_devices, -> { where("device_type = 'management'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :management_devices, -> { where(:device_type => 'management') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks

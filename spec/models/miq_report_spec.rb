@@ -123,6 +123,37 @@ describe MiqReport do
     end
   end
 
+  context "report with disks" do
+    let(:user)     { FactoryBot.create(:user_with_group) }
+    let(:miq_task) { FactoryBot.create(:miq_task) }
+    let(:miq_provision) { FactoryBot.create(:miq_provision) }
+    let(:vm) { FactoryBot.create(:vm_vmware, :miq_provision => miq_provision) }
+
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    let(:report) do
+      MiqReport.new(:name      => "Custom VM report",
+                    :title     => "Custom VM report",
+                    :rpt_group => "Custom",
+                    :rpt_type  => "Custom",
+                    :db        => "ManageIQ::Providers::InfraManager::Vm",
+                    :cols      => %w[name num_disks],
+                    :include   => { "miq_provision_template" => { "columns" => %w[num_hard_disks] }},
+                    :col_order => %w[name miq_provision_template.num_hard_disks num_disks],
+                    :headers   => ["Name", "Provisioned From Template Number of Hard Disks", "Number of Disks"],
+                    :order     => "Ascending")
+    end
+
+    it "doesn't raise error" do
+      expect do
+        report.queue_generate_table(:userid => user.userid)
+        report._async_generate_table(miq_task.id, :userid => user.userid, :mode => "async", :report_source => "Requested by user")
+      end.not_to raise_error
+    end
+  end
+
   context "report with virtual dynamic custom attributes" do
     let(:options)              { {:targets_hash => true, :userid => "admin"} }
     let(:custom_column_key_1)  { 'kubernetes_io_hostname' }
