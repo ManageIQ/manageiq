@@ -11,6 +11,6 @@ class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
 
   def self.raw_connect(base_url, username, password, verify_ssl)
     return super if MiqRegion.my_region.role_active?('embedded_ansible')
-    raise StandardError, 'Embedded ansible is disabled'
+    raise MiqException::Error, 'Embedded ansible is disabled'
   end
 end
