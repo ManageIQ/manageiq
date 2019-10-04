@@ -68,11 +68,10 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :flavor
 
   belongs_to                :storage
-  has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
-
   belongs_to                :storage_profile
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
   belongs_to                :resource_group
+  belongs_to                :tenant
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
@@ -125,12 +124,12 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :service_resources, :as => :resource
   has_many                  :direct_services, :through => :service_resources, :source => :service
-  belongs_to                :tenant
   has_many                  :connected_shares, -> { where(:resource_type => "VmOrTemplate") }, :foreign_key => :resource_id, :class_name => "Share"
   has_many                  :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_many                  :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
   has_many                  :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
 
+  has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
   acts_as_miq_taggable
 
