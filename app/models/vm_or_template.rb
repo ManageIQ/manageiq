@@ -33,10 +33,6 @@ class VmOrTemplate < ApplicationRecord
   include AvailabilityMixin
   include ManageIQ::Providers::Inflector::Methods
 
-  has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
-           :class_name => "CustomAttribute"
-  has_many :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
-
   VENDOR_TYPES = {
     # DB            Displayed
     "azure"       => "Azure",
@@ -67,7 +63,6 @@ class VmOrTemplate < ApplicationRecord
   has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
   has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
-  has_many                  :disks, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
   belongs_to                :flavor
@@ -76,24 +71,19 @@ class VmOrTemplate < ApplicationRecord
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
   belongs_to                :storage_profile
-
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
-
-  has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
-  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
-  has_many                  :miq_provision_requests, :as => :source
-
-  has_many                  :guest_applications, :dependent => :destroy
-  has_many                  :patches, :dependent => :destroy
-
-
   belongs_to                :resource_group
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
   has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
   has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account"
-
+  has_many                  :disks, :through => :hardware
+  has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
+  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
+  has_many                  :miq_provision_requests, :as => :source
+  has_many                  :guest_applications, :dependent => :destroy
+  has_many                  :patches, :dependent => :destroy
   # System Services - Win32_Services, Kernel drivers, Filesystem drivers
   has_many                  :system_services, :dependent => :destroy
   has_many                  :win32_services, -> { where("typename = 'win32_service'") }, :class_name => "SystemService"
@@ -138,6 +128,9 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :tenant
   has_many                  :connected_shares, -> { where(:resource_type => "VmOrTemplate") }, :foreign_key => :resource_id, :class_name => "Share"
   has_many                  :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many                  :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
+  has_many                  :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
+
 
   acts_as_miq_taggable
 
