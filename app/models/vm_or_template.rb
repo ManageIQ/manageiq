@@ -59,10 +59,14 @@ class VmOrTemplate < ApplicationRecord
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
-  has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
-
   has_one                   :operating_system, :dependent => :destroy
+  has_one                   :openscap_result, :as => :resource, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
+  has_one                   :miq_provision, :dependent => :nullify, :as => :destination
+  has_one                   :miq_provision_template, :through => "miq_provision", :source => "source", :source_type => "VmOrTemplate"
+  has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+
   has_many                  :disks, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
@@ -75,7 +79,6 @@ class VmOrTemplate < ApplicationRecord
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
 
-  has_one                   :miq_provision, :dependent => :nullify, :as => :destination
   has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
   has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
   has_many                  :miq_provision_requests, :as => :source
@@ -83,7 +86,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :guest_applications, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
 
-  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   belongs_to                :resource_group
 
@@ -117,7 +119,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
 
-  has_one                   :openscap_result, :as => :resource, :dependent => :destroy
 
   # EMS Events
   has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
@@ -177,7 +178,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
   virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
 
-  has_one            :miq_provision_template, :through => "miq_provision", :source => "source", :source_type => "VmOrTemplate"
   virtual_belongs_to :parent_resource_pool,   :class_name => "ResourcePool", :uses => :all_relationships
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
