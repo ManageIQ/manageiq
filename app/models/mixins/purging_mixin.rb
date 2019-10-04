@@ -149,7 +149,7 @@ module PurgingMixin
     # @return [ActiveRecord::Relation] Records to be deleted
     def purge_ids_for_remaining(remaining)
       # HACK: `as(table_name)` fixes a bug with `from("").pluck(:id)`
-      from(purge_ids_ranked_by_age.as(table_name)).where("rank > ?", remaining)
+      from(purge_ids_ranked_by_age.arel.as(table_name)).where("rank > ?", remaining)
     end
 
     # Private: Rank records by age for each resource
