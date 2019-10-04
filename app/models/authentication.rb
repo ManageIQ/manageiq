@@ -2,8 +2,11 @@ class Authentication < ApplicationRecord
   acts_as_miq_taggable
   include_concern 'ImportExport'
 
-  include YAMLImportExportMixin
   include NewWithTypeStiMixin
+  include OwnershipMixin
+  include PasswordMixin
+  include TenancyMixin
+  include YAMLImportExportMixin
 
   def self.new(*args, &block)
     if self == Authentication
@@ -13,7 +16,6 @@ class Authentication < ApplicationRecord
     end
   end
 
-  include PasswordMixin
   encrypt_column :auth_key
   encrypt_column :auth_key_password
   encrypt_column :become_password
@@ -37,9 +39,6 @@ class Authentication < ApplicationRecord
   after_update :after_authentication_changed
 
   serialize :options
-
-  include OwnershipMixin
-  include TenancyMixin
 
   belongs_to :tenant
 
