@@ -33,10 +33,6 @@ class VmOrTemplate < ApplicationRecord
   include AvailabilityMixin
   include ManageIQ::Providers::Inflector::Methods
 
-  has_many :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy,
-           :class_name => "CustomAttribute"
-  has_many :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
-
   VENDOR_TYPES = {
     # DB            Displayed
     "azure"       => "Azure",
@@ -59,39 +55,34 @@ class VmOrTemplate < ApplicationRecord
   validates_presence_of     :name, :location
   validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
 
-  has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
-
   has_one                   :operating_system, :dependent => :destroy
+  has_one                   :openscap_result, :as => :resource, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
-  has_many                  :disks, :through => :hardware
+  has_one                   :miq_provision, :dependent => :nullify, :as => :destination
+  has_one                   :miq_provision_template, :through => "miq_provision", :source => "source", :source_type => "VmOrTemplate"
+  has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+
   belongs_to                :host
   belongs_to                :ems_cluster
   belongs_to                :flavor
 
   belongs_to                :storage
-  has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
-
   belongs_to                :storage_profile
-
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
-
-  has_one                   :miq_provision, :dependent => :nullify, :as => :destination
-  has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
-  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
-  has_many                  :miq_provision_requests, :as => :source
-
-  has_many                  :guest_applications, :dependent => :destroy
-  has_many                  :patches, :dependent => :destroy
-
-  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
-
   belongs_to                :resource_group
+  belongs_to                :tenant
 
   # Accounts - Users and Groups
   has_many                  :accounts, :dependent => :destroy
   has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
   has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account"
-
+  has_many                  :disks, :through => :hardware
+  has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
+  has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
+  has_many                  :miq_provision_requests, :as => :source
+  has_many                  :guest_applications, :dependent => :destroy
+  has_many                  :patches, :dependent => :destroy
   # System Services - Win32_Services, Kernel drivers, Filesystem drivers
   has_many                  :system_services, :dependent => :destroy
   has_many                  :win32_services, -> { where("typename = 'win32_service'") }, :class_name => "SystemService"
@@ -117,7 +108,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :storage_files, :dependent => :destroy
   has_many                  :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile"
 
-  has_one                   :openscap_result, :as => :resource, :dependent => :destroy
 
   # EMS Events
   has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
@@ -134,9 +124,12 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :service_resources, :as => :resource
   has_many                  :direct_services, :through => :service_resources, :source => :service
-  belongs_to                :tenant
   has_many                  :connected_shares, -> { where(:resource_type => "VmOrTemplate") }, :foreign_key => :resource_id, :class_name => "Share"
   has_many                  :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many                  :ems_custom_attributes, -> { where(:source => 'VC') }, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
+  has_many                  :counterparts, :as => :counterpart, :class_name => "ConfiguredSystem", :dependent => :nullify
+
+  has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
 
   acts_as_miq_taggable
 
@@ -157,9 +150,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
-  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
@@ -167,8 +157,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
-  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
-  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true, :type => :string
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
 
@@ -177,7 +165,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_many   :lans,                                                  :uses => {:hardware => {:nics => :lan}}
   virtual_has_many   :child_resources,        :class_name => "VmOrTemplate"
 
-  has_one            :miq_provision_template, :through => "miq_provision", :source => "source", :source_type => "VmOrTemplate"
   virtual_belongs_to :parent_resource_pool,   :class_name => "ResourcePool", :uses => :all_relationships
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
@@ -189,6 +176,12 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :name, :to => :ems_cluster, :prefix => true, :allow_nil => true, :type => :string
   virtual_delegate :vmm_product, :to => :host, :prefix => :v_host, :allow_nil => true, :type => :string
   virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true, :type => :float
+  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true, :type => :string
+  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
+
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
 
   after_save :save_genealogy_information
