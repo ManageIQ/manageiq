@@ -1074,7 +1074,6 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:transform_vm)
         job.signal(:shutdown_vm)
-        expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
 
       it 'sends shutdown request to VM if VM supports shutdown_guest' do
