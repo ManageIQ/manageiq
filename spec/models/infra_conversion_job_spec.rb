@@ -222,7 +222,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 2.0,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -251,7 +251,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 3.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -276,7 +276,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 5.0,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -304,7 +304,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 3.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -329,7 +329,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 6.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -359,7 +359,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 6.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -384,7 +384,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 17.0,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -412,7 +412,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 6.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',
@@ -437,7 +437,7 @@ RSpec.describe InfraConversionJob, :v2v do
               :current_description => 'Running pre-migration playbook',
               :percent             => 6.5,
               :states              => {
-                :waiting_for_ip_address => {
+                :waiting_for_ip_address     => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
                   :status      => 'Ok',

@@ -214,7 +214,7 @@ class InfraConversionJob < Job
       progress[:current_state] = state
       progress[:current_description] = state_settings[state.to_sym][:description] if state_settings[state.to_sym][:description].present?
     end
-    progress[:percent] = progress[:states].map { |k, v| v[:percent] * (state_settings[k.to_sym][:weight] || 0) / 100.0 }.inject(0) { |sum, x| sum + x}
+    progress[:percent] = progress[:states].map { |k, v| v[:percent] * (state_settings[k.to_sym][:weight] || 0) / 100.0 }.inject(0) { |sum, x| sum + x }
     migration_task.update_transformation_progress(progress)
     abort_conversion('Migration cancelation requested', 'ok') if migration_task.cancel_requested?
   end
