@@ -105,18 +105,20 @@ RSpec.describe InfraConversionJob, :v2v do
 
   context 'state hash methods' do
     before do
-      job.state = 'running_in_automate'
-      job.context[:retries_running_in_automate] = 48
+      job.state = 'running_migration_playbook'
+      job.context[:retries_running_migration_playbook] = 288
+      task.update_options(:migration_phase => 'pre')
     end
 
     context '.on_entry' do
       it 'initializes the state hash if it did not exist' do
         Timecop.freeze(2019, 2, 6) do
           expect(job.on_entry(nil, nil)).to eq(
-            :state      => 'active',
-            :status     => 'Ok',
-            :started_on => Time.now.utc,
-            :percent    => 0.0
+            :description => 'Running pre-migration playbook',
+            :state       => 'active',
+            :status      => 'Ok',
+            :started_on  => Time.now.utc,
+            :percent     => 0.0
           )
         end
       end
@@ -195,153 +197,265 @@ RSpec.describe InfraConversionJob, :v2v do
     end
 
     context '.update_migration_task_progress' do
-      it 'initializes the progress hash on entry if it does not exist' do
-        Timecop.freeze(2019, 2, 6) do
-          job.update_migration_task_progress(:on_entry)
-          expect(task.reload.options[:progress]).to eq(
-            :current_state => 'running_in_automate',
-            :percent       => 0.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc,
-                :percent    => 0.0
+      context 'on_entry' do
+        it 'initializes the progress hash on entry if it does not exist' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state => 'waiting_for_ip_address',
+              :current_description => 'Waiting for VM IP address',
+              :percent => 2.0,
+              :states => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                }
               }
             }
-          )
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_entry)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 2.0,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc,
+                  :percent     => 0.0
+                }
+              }
+            )
+          end
         end
       end
 
-      it 'updates the task progress hash on retry without a state progress hash' do
-        Timecop.freeze(2019, 2, 6) do
-          progress = {
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc - 30.seconds
+      context 'on_retry' do
+        it 'updates the task progress hash on retry without a state progress hash' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 3.5,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 10.0,
+                  :updated_on  => Time.now.utc - 30.seconds
+                }
               }
             }
-          }
-          task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_retry)
-          expect(task.reload.options[:progress]).to eq(
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 20.0,
-                :updated_on => Time.now.utc
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_retry)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 5.0,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 20.0,
+                  :updated_on  => Time.now.utc
+                }
+              }
+            )
+          end
+        end
+
+        it 'updates the task progress hash on retry with a state progress hash' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 3.5,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 10.0,
+                  :updated_on  => Time.now.utc - 30.seconds
+                }
               }
             }
-          )
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_retry, :percent => 30)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 6.5,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 30.0,
+                  :updated_on  => Time.now.utc
+                }
+              }
+            )
+          end
         end
       end
 
-      it 'updates the task progress hash on retry with a state progress hash' do
-        Timecop.freeze(2019, 2, 6) do
-          progress = {
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc - 30.seconds
+      context 'on_exit and on_error' do
+        it 'updates the task progress hash on exit' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent => 6.5,
+              :states => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 30.0,
+                  :updated_on  => Time.now.utc
+                }
               }
             }
-          }
-          task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_retry, :percent => 30)
-          expect(task.reload.options[:progress]).to eq(
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 30.0,
-                :updated_on => Time.now.utc
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_exit)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 17.0,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 100.0,
+                  :updated_on  => Time.now.utc
+                }
               }
-            }
-          )
+            )
+          end
         end
-      end
 
-      it 'updates the task progress hash on exit' do
-        Timecop.freeze(2019, 2, 6) do
-          progress = {
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc - 30.seconds
+        it 'updates the task progress hash on error' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent => 6.5,
+              :states => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'active',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 30.0,
+                  :updated_on  => Time.now.utc
+                }
               }
             }
-          }
-          task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_exit)
-          expect(task.reload.options[:progress]).to eq(
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'finished',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 100.0,
-                :updated_on => Time.now.utc
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_error)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook',
+              :percent       => 6.5,
+              :states        => {
+                :waiting_for_ip_address => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'finished',
+                  :status      => 'Error',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 30.0,
+                  :updated_on  => Time.now.utc
+                }
               }
-            }
-          )
-        end
-      end
-
-      it 'updates the task progress hash on error' do
-        Timecop.freeze(2019, 2, 6) do
-          progress = {
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc - 30.seconds
-              }
-            }
-          }
-          task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_error)
-          expect(task.reload.options[:progress]).to eq(
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'finished',
-                :status     => 'Error',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc
-              }
-            }
-          )
+            )
+          end
         end
       end
 
