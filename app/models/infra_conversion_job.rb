@@ -396,7 +396,6 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
-    handover_to_automate
     queue_signal(:transform_vm)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
