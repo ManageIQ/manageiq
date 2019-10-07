@@ -136,6 +136,10 @@ class InfraConversionJob < Job
 
   # --- Override Job methods to handle cancelation properly  --- #
 
+  def self.current_job_timeout(_timeout_adjustment = 1)
+    36.hours
+  end
+
   def process_abort(*args)
     message, status = args
     _log.error("job aborting, #{message}")
