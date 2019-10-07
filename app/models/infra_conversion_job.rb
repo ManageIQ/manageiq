@@ -1,7 +1,4 @@
 class InfraConversionJob < Job
-  # Override default timeout to allow large disks VM migration
-  DEFAULT_TIMEOUT = 36.hours
-
   #
   # State-transition diagram:
   #                              :poll_conversion                         :poll_post_stage
@@ -138,6 +135,10 @@ class InfraConversionJob < Job
   end
 
   # --- Override Job methods to handle cancelation properly  --- #
+
+  def self.current_job_timeout(_timeout_adjustment = 1)
+    36.hours
+  end
 
   def process_abort(*args)
     message, status = args
