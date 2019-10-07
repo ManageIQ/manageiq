@@ -28,10 +28,8 @@ class InfraConversionJob < Job
     {
       :initializing                         => {'initialize'         => 'waiting_to_start'},
       :start                                => {'waiting_to_start'   => 'started'},
-      :remove_snapshots                     => {'started'            => 'removing_snapshots'},
-      :poll_remove_snapshots_complete       => {'removing_snapshots' => 'removing_snapshots'},
       :wait_for_ip_address                  => {
-        'removing_snapshots'     => 'waiting_for_ip_address',
+        'started'                => 'waiting_for_ip_address',
         'powering_on_vm'         => 'waiting_for_ip_address',
         'waiting_for_ip_address' => 'waiting_for_ip_address'
       },
@@ -77,11 +75,6 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
-      :removing_snapshots            => {
-        :description => 'Remove snapshosts',
-        :weight      => 5,
-        :max_retries => 4.hours / state_retry_interval
-      },
       :waiting_for_ip_address        => {
         :description => 'Waiting for VM IP address',
         :weight      => 1,
@@ -272,42 +265,7 @@ class InfraConversionJob < Job
   def start
     migration_task.update!(:state => 'migrate')
     migration_task.update_options(:migration_phase => 'pre')
-    queue_signal(:remove_snapshots)
-  end
-
-  def remove_snapshots
-    update_migration_task_progress(:on_entry)
-    if migration_task.source.supports_remove_all_snapshots?
-      context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
-      update_migration_task_progress(:on_exit)
-      return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
-    end
-
-    update_migration_task_progress(:on_exit)
     queue_signal(:wait_for_ip_address)
-  rescue StandardError => error
-    update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
-  end
-
-  def poll_remove_snapshots_complete
-    update_migration_task_progress(:on_entry)
-    raise 'Removing snapshots timed out' if polling_timeout
-
-    async_task = MiqTask.find(context[:async_task_id_removing_snapshots])
-
-    if async_task.state == MiqTask::STATE_FINISHED
-      raise async_task.message unless async_task.status == MiqTask::STATUS_OK
-
-      update_migration_task_progress(:on_exit)
-      return queue_signal(:wait_for_ip_address)
-    end
-
-    update_migration_task_progress(:on_retry)
-    queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
-    update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
   end
 
   def wait_for_ip_address
