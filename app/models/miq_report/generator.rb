@@ -9,17 +9,17 @@ module MiqReport::Generator
   include_concern 'Utilization'
 
   DATE_TIME_BREAK_SUFFIXES = [
-    [_("Hour"),              "hour"],
-    [_("Day"),               "day"],
-    [_("Week"),              "week"],
-    [_("Month"),             "month"],
-    [_("Quarter"),           "quarter"],
-    [_("Year"),              "year"],
-    [_("Hour of the Day"),   "hour_of_day"],
-    [_("Day of the Week"),   "day_of_week"],
-    [_("Day of the Month"),  "day_of_month"],
-    [_("Week of the Year"),  "week_of_year"],
-    [_("Month of the Year"), "month_of_year"]
+    [N_("Hour"),              "hour"],
+    [N_("Day"),               "day"],
+    [N_("Week"),              "week"],
+    [N_("Month"),             "month"],
+    [N_("Quarter"),           "quarter"],
+    [N_("Year"),              "year"],
+    [N_("Hour of the Day"),   "hour_of_day"],
+    [N_("Day of the Week"),   "day_of_week"],
+    [N_("Day of the Month"),  "day_of_month"],
+    [N_("Week of the Year"),  "week_of_year"],
+    [N_("Month of the Year"), "month_of_year"]
   ].freeze
 
   module ClassMethods
