@@ -1,5 +1,4 @@
 class InfraConversionJob < Job
-
   # Override default timeout to allow large disks VM migration
   DEFAULT_TIMEOUT = 36.hours
 
