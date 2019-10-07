@@ -201,10 +201,10 @@ RSpec.describe InfraConversionJob, :v2v do
         it 'initializes the progress hash on entry if it does not exist' do
           Timecop.freeze(2019, 2, 6) do
             progress = {
-              :current_state => 'waiting_for_ip_address',
+              :current_state       => 'waiting_for_ip_address',
               :current_description => 'Waiting for VM IP address',
-              :percent => 2.0,
-              :states => {
+              :percent             => 2.0,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -218,10 +218,10 @@ RSpec.describe InfraConversionJob, :v2v do
             task.update_options(:progress => progress)
             job.update_migration_task_progress(:on_entry)
             expect(task.reload.options[:progress]).to eq(
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 2.0,
-              :states        => {
+              :percent             => 2.0,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -247,10 +247,10 @@ RSpec.describe InfraConversionJob, :v2v do
         it 'updates the task progress hash on retry without a state progress hash' do
           Timecop.freeze(2019, 2, 6) do
             progress = {
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 3.5,
-              :states        => {
+              :percent             => 3.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -272,10 +272,10 @@ RSpec.describe InfraConversionJob, :v2v do
             task.update_options(:progress => progress)
             job.update_migration_task_progress(:on_retry)
             expect(task.reload.options[:progress]).to eq(
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 5.0,
-              :states        => {
+              :percent             => 5.0,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -300,10 +300,10 @@ RSpec.describe InfraConversionJob, :v2v do
         it 'updates the task progress hash on retry with a state progress hash' do
           Timecop.freeze(2019, 2, 6) do
             progress = {
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 3.5,
-              :states        => {
+              :percent             => 3.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -325,10 +325,10 @@ RSpec.describe InfraConversionJob, :v2v do
             task.update_options(:progress => progress)
             job.update_migration_task_progress(:on_retry, :percent => 30)
             expect(task.reload.options[:progress]).to eq(
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 6.5,
-              :states        => {
+              :percent             => 6.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -355,10 +355,10 @@ RSpec.describe InfraConversionJob, :v2v do
         it 'updates the task progress hash on exit' do
           Timecop.freeze(2019, 2, 6) do
             progress = {
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent => 6.5,
-              :states => {
+              :percent             => 6.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -380,10 +380,10 @@ RSpec.describe InfraConversionJob, :v2v do
             task.update_options(:progress => progress)
             job.update_migration_task_progress(:on_exit)
             expect(task.reload.options[:progress]).to eq(
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 17.0,
-              :states        => {
+              :percent             => 17.0,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -408,10 +408,10 @@ RSpec.describe InfraConversionJob, :v2v do
         it 'updates the task progress hash on error' do
           Timecop.freeze(2019, 2, 6) do
             progress = {
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent => 6.5,
-              :states => {
+              :percent             => 6.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',
@@ -433,10 +433,10 @@ RSpec.describe InfraConversionJob, :v2v do
             task.update_options(:progress => progress)
             job.update_migration_task_progress(:on_error)
             expect(task.reload.options[:progress]).to eq(
-              :current_state => 'running_migration_playbook',
+              :current_state       => 'running_migration_playbook',
               :current_description => 'Running pre-migration playbook',
-              :percent       => 6.5,
-              :states        => {
+              :percent             => 6.5,
+              :states              => {
                 :waiting_for_ip_address => {
                   :description => 'Waiting for VM IP address',
                   :state       => 'finished',

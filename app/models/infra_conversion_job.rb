@@ -206,14 +206,6 @@ class InfraConversionJob < Job
     state_hash
   end
 
-  def calculate_progress_percent(progress)
-    percent = 0
-    progress[:states].each do |k,v|
-      percent += v[:percent] * state_settings[k.to_sym][:weight] / 100.0 if state_settings[k.to_sym][:weight].present?
-    end
-    return percent
-  end
-
   def update_migration_task_progress(state_phase, state_progress = nil)
     progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
@@ -222,7 +214,7 @@ class InfraConversionJob < Job
       progress[:current_state] = state
       progress[:current_description] = state_settings[state.to_sym][:description] if state_settings[state.to_sym][:description].present?
     end
-    progress[:percent] = calculate_progress_percent(progress)
+    progress[:percent] = progress[:states].map { |k, v| v[:percent] * (state_settings[k.to_sym][:weight] || 0) / 100.0 }.inject(0) { |sum, x| sum + x}
     migration_task.update_transformation_progress(progress)
     abort_conversion('Migration cancelation requested', 'ok') if migration_task.cancel_requested?
   end
