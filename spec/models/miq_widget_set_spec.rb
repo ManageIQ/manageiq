@@ -14,7 +14,7 @@ describe MiqWidgetSet do
   context "with a group" do
     it "being deleted" do
       expect(MiqWidgetSet.count).to eq(1)
-      user.miq_groups = []
+      user.destroy
       group.destroy
       expect(MiqWidgetSet.count).to eq(0)
     end

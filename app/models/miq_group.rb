@@ -304,7 +304,8 @@ class MiqGroup < ApplicationRecord
     throw :abort unless errors[:base].empty?
   end
 
+  # tell users that this group is goinga away - and the users should fix their current group
   def reset_current_group_for_users
-    User.where(:id => user_ids, :current_group_id => id).each(&:change_current_group)
+    User.where(:current_group_id => id).each(&:change_current_group)
   end
 end
