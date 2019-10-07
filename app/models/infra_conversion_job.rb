@@ -1,4 +1,8 @@
 class InfraConversionJob < Job
+
+  # Override default timeout to allow large disks VM migration
+  DEFAULT_TIMEOUT = 36.hours
+
   #
   # State-transition diagram:
   #                              :poll_conversion                         :poll_post_stage
