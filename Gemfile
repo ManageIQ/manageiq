@@ -66,6 +66,7 @@ gem "rubyzip",                        "~>1.3.0",       :require => false
 gem "rugged",                         "~>0.27.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
+gem "sprockets",                      "~>3.0",         :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "trollop",                        "~>2.1.3",       :require => false
 
