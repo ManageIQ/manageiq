@@ -534,9 +534,15 @@ describe MiqGroup do
       testgroup3 = FactoryBot.create(:miq_group)
       user1 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
       user2 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup3], :current_group => testgroup3)
-      expect { testgroup2.destroy }.not_to raise_error
-      expect(User.find_by(:id => user1.id).current_group.id).to eq(testgroup1.id)
-      expect(User.find_by(:id => user2.id).current_group.id).to eq(testgroup3.id)
+      user3 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup1)
+
+      testgroup2.destroy
+      expect(user1.reload.current_group.id).to eq(testgroup1.id)
+      expect(user1.miq_group_ids).to eq([testgroup1.id])
+      expect(user2.reload.current_group.id).to eq(testgroup3.id)
+      expect(user2.miq_group_ids).to match_array([testgroup1.id, testgroup3.id])
+      expect(user3.reload.current_group.id).to eq(testgroup1.id)
+      expect(user3.miq_group_ids).to eq([testgroup1.id])
     end
 
     it "should not be called if the user does not have the deleted group as the current_group" do
