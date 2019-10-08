@@ -21,6 +21,20 @@ class MiqExpression::Field < MiqExpression::Target
     parse(field)&.valid? || false
   end
 
+  LIMIT_FOR_VALUES = 100
+
+  def column_values
+    return [] unless valid?
+    return [] if virtual_attribute?
+
+    if custom_attribute_column?
+      custom_attribute_name = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+      CustomAttribute.where(:resource => Rbac::Filterer.filtered(model), :name => custom_attribute_name).distinct(:value).limit(LIMIT_FOR_VALUES).pluck(:value)
+    else
+      Rbac::Filterer.filtered(model).distinct(column).limit(LIMIT_FOR_VALUES).pluck(column)
+    end
+  end
+
   def to_s
     "#{[model, *associations].join(".")}-#{column}"
   end
