@@ -1,5 +1,5 @@
 class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
-  DEFAULT_EXECUTION_TTL = 10 # minutes
+  DEFAULT_EXECUTION_TTL = 100.minutes
 
   def minimize_indirect
     @minimize_indirect = true if @minimize_indirect.nil?
@@ -7,8 +7,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
   end
 
   def current_job_timeout(_timeout_adjustment = 1)
-    @execution_ttl ||=
-      (options[:execution_ttl].present? ? options[:execution_ttl].try(:to_i) : DEFAULT_EXECUTION_TTL) * 60
+    @execution_ttl ||= options[:execution_ttl].present? ? options[:execution_ttl].to_i.minutes : DEFAULT_EXECUTION_TTL
   end
 
   def start
