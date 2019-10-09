@@ -31,7 +31,7 @@ module MiqConfigSssdLdap
   end
 
   if $PROGRAM_NAME == __FILE__
-    action = ARGV.nil? ? "convert" : ARGV.shift
+    action = ARGV.shift
 
     case action
     when "convert"
