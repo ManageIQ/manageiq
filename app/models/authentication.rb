@@ -151,10 +151,6 @@ class Authentication < ApplicationRecord
 
   private
 
-  def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
-  end
-
   def after_authentication_changed
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
