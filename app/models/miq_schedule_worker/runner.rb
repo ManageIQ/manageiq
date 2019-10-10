@@ -79,7 +79,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     scheduler.schedule_every(
       every,
-      :first_in => every,
       :tags     => [:vmdb_appliance_log_config, schedule_category]
     ) { enqueue(:vmdb_appliance_log_config) }
 
@@ -87,7 +86,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = worker_settings[:log_database_statistics_interval]
     scheduler.schedule_every(
       every,
-      :first_in => every,
       :tags     => [:log_all_database_statistics, schedule_category]
     ) { enqueue(:vmdb_database_log_all_database_statistics) }
 
@@ -95,7 +93,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = worker_settings[:server_stats_interval]
     scheduler.schedule_every(
       every,
-      :first_in => every,
       :tags     => [:status_update, schedule_category]
     ) { enqueue(:miq_server_status_update) }
 
@@ -103,7 +100,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     every = worker_settings[:server_log_stats_interval]
     scheduler.schedule_every(
       every,
-      :first_in => every,
       :tags     => [:log_status, schedule_category]
     ) { enqueue(:miq_server_worker_log_status) }
 
@@ -134,27 +130,27 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     scheduler = scheduler_for(:scheduler)
     # Schedule - Check for timed out jobs
     every = worker_settings[:job_timeout_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:job_check_jobs_for_timeout)
     end
 
     # Schedule - Check for retired items and start retirement
     # TODO: remove redundant settings in follow-up pr
     every = [worker_settings[:service_retired_interval], worker_settings[:vm_retired_interval], worker_settings[:orchestration_stack_retired_interval]].min
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:retirement_check)
     end
 
     # Schedule - Periodic validation of authentications
     every = worker_settings[:authentication_check_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       # Queue authentication checks for CIs with credentials
       enqueue(:host_authentication_check_schedule)
       enqueue(:ems_authentication_check_schedule)
     end
 
     every = worker_settings[:drift_state_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:drift_state_purge_timer)
     end
 
@@ -169,7 +165,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Check for rogue EVM snapshots
     every               = worker_settings[:evm_snapshot_interval]
     job_not_found_delay = worker_settings[:evm_snapshot_delete_delay_for_job_not_found]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue([:job_check_for_evm_snapshots, job_not_found_delay])
     end
 
@@ -193,37 +189,37 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule - Prune old reports Timer
     every = worker_settings[:report_result_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:miq_report_result_purge_timer)
     end
 
     every = worker_settings[:container_entities_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:archived_entities_purge_timer)
     end
 
     every = worker_settings[:binary_blob_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:binary_blob_purge_timer)
     end
 
     every = worker_settings[:notifications_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:notification_purge_timer)
     end
 
     every = worker_settings[:task_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:task_purge_timer)
     end
 
     every = worker_settings[:compliance_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:compliance_purge_timer)
     end
 
     every = worker_settings[:vim_performance_states_purge_interval]
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(every) do
       enqueue(:vim_performance_states_purge_timer)
     end
 
@@ -240,7 +236,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { enqueue(:storage_scan_timer) }
 
     schedule_settings_for_ems_refresh.each do |klass, local_every|
-      scheduler.schedule_every(local_every, :first_in => local_every) do
+      scheduler.schedule_every(local_every) do
         enqueue([:ems_refresh_timer, klass])
       end
     end
