@@ -174,6 +174,7 @@ module Rbac
     # @option options :where_clause  []
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
+    # @option options :references   [Array<Symbol>], models used by select and where. If not passed, uses include_for_find instead
     # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
@@ -209,6 +210,7 @@ module Rbac
       where_clause      = options[:where_clause]
       sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
+      references        = options.fetch(:references) { include_for_find }
       search_filter     = options[:filter]
 
       limit             = options[:limit]  || targets.try(:limit_value)
@@ -258,7 +260,6 @@ module Rbac
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
-      skip_references            = skip_references?(scope, options, attrs, exp_sql, exp_includes)
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
@@ -268,7 +269,7 @@ module Rbac
               .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
+      scope = include_references(scope, klass, references, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
       if inline_view?(options, scope)
@@ -360,62 +361,8 @@ module Rbac
       end
     end
 
-    # This is a very primitive way of determining whether we want to skip
-    # adding references to the query.
-    #
-    # For now, basically it checks if the caller has not provided :extra_cols,
-    # or if the MiqExpression can't apply the limit in SQL.  If both of those
-    # are true, then we don't add `.references` to the scope.
-    #
-    # Also, if for whatever reason we are passed a
-    # `ActiveRecord::NullRelation`, make sure that we don't skip references.
-    # This will cause the EXPLAIN to blow up since `.to_sql` gets changed to
-    # always return `""`... even though at the end of the day, we will always
-    # get back zero records from the query.
-    #
-    # If still invalid, there is an EXPLAIN check in #include_references that
-    # will make sure the query is valid and if not, will include the references
-    # as done previously.
-    def skip_references?(scope, options, attrs, exp_sql, exp_includes)
-      return false if scope.singleton_class.included_modules.include?(ActiveRecord::NullRelation)
-      options[:skip_references] ||
-      (options[:extra_cols].blank? &&
-        (!attrs[:apply_limit_in_sql] && (exp_sql.nil? || exp_includes.nil?)))
-    end
-
-    def include_references(scope, klass, include_for_find, exp_includes, skip)
-      if skip
-        # If we are in a transaction, we don't want to polute that
-        # transaction with a failed EXPLAIN.  We use a SQL SAVEPOINT (which is
-        # created via `transaction(:requires_new => true)`) to prevent that
-        # from being an issue (happens in tests with transactional fixtures)
-        #
-        # See https://stackoverflow.com/a/31146267/3574689
-        valid_skip = MiqDatabase.transaction(:requires_new => true) do
-          begin
-            ActiveRecord::Base.connection.explain(scope.to_sql)
-          rescue ActiveRecord::StatementInvalid => e
-            unless Rails.env.production?
-              warn "There was an issue with the Rbac filter without references!"
-              warn "Consider trying to fix this edge case in Rbac::Filterer!  Error Below:"
-              warn e.message
-              warn e.backtrace
-            end
-            # returns nil
-            raise ActiveRecord::Rollback
-          end
-        end
-        # If the result of the transaction is non-nil, then the block was
-        # successful and didn't trigger the ActiveRecord::Rollback, so we can
-        # return the scope as is.
-        return scope if valid_skip
-      end
-
-      ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
-      unless polymorphic_include?(klass, ref_includes)
-        scope = scope.references(klass.includes_to_references(include_for_find)).references(klass.includes_to_references(exp_includes))
-      end
-      scope
+    def include_references(scope, klass, include_for_find, exp_includes)
+      scope.references(klass.includes_to_references(include_for_find)).references(klass.includes_to_references(exp_includes))
     end
 
     # @param includes [Array, Hash]
@@ -430,13 +377,6 @@ module Rbac
         end
       end
       scope
-    end
-
-    def polymorphic_include?(target_klass, includes)
-      includes.keys.any? do |incld|
-        reflection = target_klass.reflect_on_association(incld)
-        reflection && reflection.polymorphic?
-      end
     end
 
     def filtered(objects, options = {})
