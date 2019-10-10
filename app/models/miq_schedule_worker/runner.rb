@@ -240,7 +240,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { enqueue(:storage_scan_timer) }
 
     schedule_settings_for_ems_refresh.each do |klass, local_every|
-      scheduler.schedule_every(every, :first_in => local_every) do
+      scheduler.schedule_every(local_every, :first_in => local_every) do
         enqueue([:ems_refresh_timer, klass])
       end
     end
