@@ -1,8 +1,8 @@
 module MiqReport::Seeding
   extend ActiveSupport::Concern
 
-  REPORT_DIR  = Rails.root.join("product/reports")
-  COMPARE_DIR = Rails.root.join("product/compare")
+  REPORT_DIR  = Rails.root.join("product", "reports").freeze
+  COMPARE_DIR = Rails.root.join("product", "compare").freeze
 
   module ClassMethods
     def seed
@@ -66,7 +66,7 @@ module MiqReport::Seeding
         attrs[:priority]      = File.basename(path).split("_").first.to_i
         attrs[:rpt_group]     = File.basename(File.dirname(path)).split("_").last
         attrs[:rpt_type]      = "Default"
-        attrs[:template_type] = path.start_with?(REPORT_DIR.to_s) ? "report" : "compare"
+        attrs[:template_type] = template_type(path)
 
         begin
           report.update!(attrs)
@@ -84,12 +84,32 @@ module MiqReport::Seeding
       end
     end
 
+    def template_type(path)
+      File.dirname(path).include?("reports") ? "report" : "compare"
+    end
+
     def seed_files
-      Dir.glob(REPORT_DIR.join("**/*.yaml")).sort + Dir.glob(COMPARE_DIR.join("**/*.yaml")).sort
+      seed_core_files + seed_plugin_files
+    end
+
+    def seed_core_files
+      [REPORT_DIR, COMPARE_DIR].flat_map { |dir| Dir.glob(dir.join("**", "*.yaml")).sort }
+    end
+
+    def seed_plugin_files
+      Vmdb::Plugins.flat_map do |plugin|
+        %w[reports compare].flat_map { |dir| Dir.glob(plugin.root.join("content", dir, "**", "*.yaml")).sort }
+      end
     end
 
     def seed_filename(path)
-      path.remove("#{REPORT_DIR}/").remove("#{COMPARE_DIR}/")
+      if File.dirname(path).include?("reports")
+        path.split("reports/").last
+      elsif File.dirname(path).include?("compare")
+        path.split("compare/").last
+      else
+        path
+      end
     end
   end
 end
