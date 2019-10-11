@@ -13,6 +13,7 @@ module Rbac
       CloudSubnet
       CloudTenant
       CloudVolume
+      CloudVolumeSnapshot
       ConfigurationProfile
       ConfigurationScriptBase
       ConfigurationScriptSource
