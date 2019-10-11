@@ -102,8 +102,9 @@ describe AuthenticationMixin do
     end
 
     it "should be triggered for kubernetes" do
-      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
-      FactoryBot.create(:ems_kubernetes, :authentications => [auth])
+      auths = FactoryBot.create_list(:auth_token, 1, :name => "bearer")
+      auths.first.auth_key = "valid_token" # Assign this afterwards to force an update callback
+      FactoryBot.create(:ems_kubernetes, :authentications => auths)
 
       expect(MiqQueue.count).to eq(2)
       expect(MiqQueue.find_by(:method_name => 'raise_evm_event')).not_to be_nil
@@ -111,8 +112,9 @@ describe AuthenticationMixin do
     end
 
     it "should be triggered for openshift" do
-      auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
-      FactoryBot.create(:ems_openshift, :authentications => [auth])
+      auths = FactoryBot.create_list(:auth_token, 1)
+      auths.first.auth_key = "valid_token" # Assign this afterwards to force an update callback
+      FactoryBot.create(:ems_openshift, :authentications => auths)
 
       expect(MiqQueue.count).to eq(2)
       expect(MiqQueue.find_by(:method_name => 'raise_evm_event')).not_to be_nil
