@@ -152,6 +152,8 @@ class Authentication < ApplicationRecord
   private
 
   def after_authentication_changed
+    return unless saved_change_to_userid? || saved_change_to_password? || saved_change_to_auth_key?
+
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
     raise_event(:changed)

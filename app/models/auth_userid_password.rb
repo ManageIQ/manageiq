@@ -1,7 +1,4 @@
 class AuthUseridPassword < Authentication
-  after_update :after_authentication_changed,
-    :if => proc { |auth| auth.saved_change_to_userid? || auth.saved_change_to_password? }
-
   def self.display_name(number = 1)
     n_('Password', 'Passwords', number)
   end
