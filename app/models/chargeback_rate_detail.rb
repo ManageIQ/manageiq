@@ -16,11 +16,11 @@ class ChargebackRateDetail < ApplicationRecord
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
   PER_TIME_TYPES = {
-    "hourly"  => _("Hourly"),
-    "daily"   => _("Daily"),
-    "weekly"  => _("Weekly"),
-    "monthly" => _("Monthly"),
-    'yearly'  => _('Yearly')
+    "hourly"  => N_("Hourly"),
+    "daily"   => N_("Daily"),
+    "weekly"  => N_("Weekly"),
+    "monthly" => N_("Monthly"),
+    'yearly'  => N_('Yearly')
   }.freeze
 
   # gigabytes -> GiB
