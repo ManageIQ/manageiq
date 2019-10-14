@@ -66,18 +66,30 @@ module MiqReport::Generator::Html
     html_rows
   end
 
+  def format_column(col_name, row_data, time_zone, col_format = nil)
+    if col_name == 'resource_type'
+      ui_lookup(:model => row_data[col_name]) # Lookup models in resource_type col
+    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
+      CGI.escapeHTML(TenantQuota.format_quota_value(col_name, row_data[col_name], row_data['tenant_quotas.name']))
+    elsif ['<compare>', '<drift>'].include?(db.to_s)
+      CGI.escapeHTML(row_data[col_name].to_s)
+    else
+      CGI.escapeHTML(format(col_name.split("__").first, row_data[col_name], :format => col_format || :_default_, :tz => time_zone)) # rubocop:disable Style/FormatString
+    end
+  end
+
   def build_html_col(output, col_name, col_format, row_data)
     style = get_style_class(col_name, row_data, tz)
     style_class = !style.nil? ? " class='#{style}'" : nil
     if col_name == 'resource_type'
       output << "<td#{style_class}>"
-      output << ui_lookup(:model => row_data[col_name]) # Lookup models in resource_type col
+      output << format_column(col_name, row_data, time_zone)
     elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
       output << "<td#{style_class} " + 'style="text-align:right">'
-      output << CGI.escapeHTML(TenantQuota.format_quota_value(col_name, row_data[col_name], row_data['tenant_quotas.name']))
+      output << format_column(col_name, row_data, time_zone)
     elsif ['<compare>', '<drift>'].include?(db.to_s)
       output << "<td#{style_class}>"
-      output << CGI.escapeHTML(row_data[col_name].to_s)
+      output << format_column(col_name, row_data, time_zone)
     else
       if row_data[col_name].kind_of?(Time)
         output << "<td#{style_class} " + 'style="text-align:center">'
@@ -86,8 +98,7 @@ module MiqReport::Generator::Html
       else
         output << "<td#{style_class}>"
       end
-      output << CGI.escapeHTML(format(col_name.split("__").first, row_data[col_name],
-                                      :format => col_format || :_default_, :tz => tz))
+      output << format_column(col_name, row_data, time_zone, col_format)
     end
     output << '</td>'
   end
@@ -124,13 +135,13 @@ module MiqReport::Generator::Html
     html_rows = []
 
     content =
-      if group == :_total_
-        "All Rows"
-      else
-        group_label = group_text || group
-        group_label = "<Empty>" if group_label.blank?
-        "#{label}#{group_label}"
-      end
+    if group == :_total_
+      "All Rows"
+    else
+      group_label = group_text || group
+      group_label = "<Empty>" if group_label.blank?
+      "#{label}#{group_label}"
+    end
 
     if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
       display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}

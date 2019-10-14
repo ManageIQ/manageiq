@@ -52,7 +52,15 @@ class MiqReportResult < ApplicationRecord
   delegate :table, :to => :report_results, :allow_nil => true
 
   def result_set
-    (table || []).map(&:to_hash)
+    (table || []).map(&:to_hash).map { |row| format_row(row, skip_columns) }
+  end
+
+  def format_row(row, allowed_columns = nil)
+    tz = get_time_zone(User.current_user.settings.fetch_path(:display, :timezone).presence || Time.zone)
+
+    row.map do |key, _|
+      [key, allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, tz, col_format_hash[key]) : row[key]]
+    end.to_h
   end
 
   def status
