@@ -177,6 +177,13 @@ class ConversionHost < ApplicationRecord
     raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
+  def create_cutover_file(path)
+    connect_ssh { |ssu| ssu.shell_exec("touch #{path}") }
+    true
+  rescue
+    false
+  end
+
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
   # if no signal is specified.
   #

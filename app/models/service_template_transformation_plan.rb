@@ -53,6 +53,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   #     :transformation_mapping_id
   #     :pre_service_id
   #     :post_service_id
+  #     :warm_migration => true|false
   #     :actions => [
   #        {:vm_id => "1", :pre_service => true, :post_service => false},
   #        {:vm_id => "2", :pre_service => true, :post_service => true},
