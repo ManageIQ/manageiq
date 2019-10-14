@@ -1,5 +1,5 @@
 class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
-  DEFAULT_EXECUTION_TTL = 10 # minutes
+  DEFAULT_EXECUTION_TTL = 100.minutes
 
   # options are job table columns, including options column which is the playbook context info
   def self.create_job(options)
@@ -12,8 +12,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
   end
 
   def current_job_timeout(_timeout_adjustment = 1)
-    @execution_ttl ||=
-      (options[:execution_ttl].present? ? options[:execution_ttl].try(:to_i) : DEFAULT_EXECUTION_TTL) * 60
+    @execution_ttl ||= options[:execution_ttl].present? ? options[:execution_ttl].to_i.minutes : DEFAULT_EXECUTION_TTL
   end
 
   def start
