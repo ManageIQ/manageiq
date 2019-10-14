@@ -246,7 +246,11 @@ module MiqReport::Generator
   end
 
   def performance_report_time_range
-    Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
+    if db_options[:custom_time_range]
+      db_options[:start_date]..db_options[:end_date]
+    else
+      Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
+    end
   end
 
   # Ad-hoc daily performance reports
