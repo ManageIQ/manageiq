@@ -1,6 +1,7 @@
 describe "Service Retirement Management" do
   let(:user) { FactoryBot.create(:user_miq_request_approver) }
   let(:service_with_owner) { FactoryBot.create(:service, :evm_owner => user) }
+  let(:service_ansible_playbook) { FactoryBot.create(:service_ansible_playbook) }
 
   before do
     @server = EvmSpecHelper.local_miq_server
@@ -100,6 +101,12 @@ describe "Service Retirement Management" do
     @service.retire(options)
     @service.reload
     expect(@service.retirement_warn).to eq(options[:warn])
+  end
+
+  it "with a Service Ansible Playbook" do
+    expect(ServiceRetireRequest).to receive(:make_request)
+      .with(nil, {:src_ids => [service_ansible_playbook.id], :__initiated_by__ => 'user', :__request_type__ => "service_retire"}, user)
+    service_ansible_playbook.class.make_retire_request(service_ansible_playbook.id, user)
   end
 
   it "with one src_id" do
