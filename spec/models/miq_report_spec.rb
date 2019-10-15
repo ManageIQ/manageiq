@@ -39,6 +39,8 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
 end
 
 describe MiqReport do
+  include Spec::Support::ChargebackHelper
+
   context ".for_user" do
     let(:my_user) { FactoryBot.create(:user_with_group) }
     let(:group_in_my_tenant) { FactoryBot.create(:miq_group, :tenant => my_user.current_tenant) }
@@ -680,18 +682,21 @@ describe MiqReport do
       expect(report.table.data.collect { |rec| rec.data['miq_provision_vms.name'] }).to eq([vm.name])
     end
 
+    let(:db_options) { {:start_offset => 604_800, :end_offset => 0, :interval => interval} }
     let(:report) do
       MiqReport.new(
-        :name     => "All Departments with Performance", :title => "All Departments with Performance for last week",
-      :db         => "VmPerformance",
-      :cols       => %w(resource_name max_cpu_usage_rate_average cpu_usage_rate_average),
-      :col_order  => ["ems_cluster.name", "vm.v_annotation", "host.name"],
-      :headers    => ["Cluster", "VM Annotations - Notes", "Host Name"],
-      :order      => "Ascending",
-      :group      => "c",
-      :db_options => {:start_offset => 604_800, :end_offset => 0, :interval => interval},
-      :conditions => conditions)
+        :name       => "All Departments with Performance", :title => "All Departments with Performance for last week",
+        :db         => "VmPerformance",
+        :cols       => %w[resource_name max_cpu_usage_rate_average cpu_usage_rate_average timestamp],
+        :col_order  => %w[ems_cluster.name vm.v_annotation host.name"],
+        :headers    => %w[Cluster VM\ Annotations\ -\ Notes Host\ Name],
+        :order      => "Ascending",
+        :group      => "c",
+        :db_options => db_options,
+        :conditions => nil
+      )
     end
+
     context "daily reports" do
       let(:interval) { "daily" }
 
@@ -710,6 +715,42 @@ describe MiqReport do
                                   :mode          => "async",
                                   :report_source => "Requested by user")
           end.not_to raise_error
+        end
+      end
+
+      context "with specific timeframe interval" do
+        let(:vm) { FactoryBot.create(:vm_vmware, :name => "test_vm 2") }
+
+        let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
+        let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(:tz => 'UTC')) }
+        let(:first_rollup_timestamp) { ts.beginning_of_month.utc }
+        let(:last_rollup_timestamp) { (ts + 1.month).end_of_month.utc }
+        let(:time_profile) { FactoryBot.create(:time_profile_with_rollup, :profile => {:tz => "UTC", :hours => TimeProfile::ALL_HOURS, :days => TimeProfile::ALL_DAYS}) }
+        let(:user_admin) { FactoryBot.create(:user_admin) }
+
+        before do
+          EvmSpecHelper.create_guid_miq_server_zone
+          rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id }
+          add_metric_rollups_for([vm], first_rollup_timestamp...last_rollup_timestamp, 24.hours, rollup_params)
+        end
+
+        let(:reporting_start_day) { ts.beginning_of_day + 5.days }
+        let(:reporting_end_day) { ts.beginning_of_day + 10.days }
+
+        let(:db_options) do
+          {:custom_time_range => true,
+           :start_date        => reporting_start_day,
+           :end_date          => reporting_end_day,
+           :interval          => interval}
+        end
+
+        it "reports data in specific date range" do
+          User.with_user(user_admin) do
+            report.generate_table(:userid => "admin", :mode => "async", :report_source => "Requested by user")
+            expect(report.table.data.count).to eq((reporting_end_day.end_of_day - reporting_start_day).to_f.ceil / 1.day)
+            expect(report.table.data.first["timestamp"]).to eq(reporting_start_day)
+            expect(report.table.data.last["timestamp"]).to eq(reporting_end_day)
+          end
         end
       end
     end

@@ -245,6 +245,14 @@ module MiqReport::Generator
     results
   end
 
+  def performance_report_time_range
+    if db_options[:custom_time_range]
+      db_options[:start_date]..db_options[:end_date]
+    else
+      Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
+    end
+  end
+
   # Ad-hoc daily performance reports
   #   Daily for: Performance - Clusters...
   def generate_daily_metric_rollup_results(options = {})
@@ -252,11 +260,10 @@ module MiqReport::Generator
       conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
     end
 
-    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
     results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
                             .where(where_clause)
                             .where(options[:where_clause])
-                            .where(:timestamp => time_range)
+                            .where(:timestamp => performance_report_time_range)
                             .includes(get_include_for_find)
                             .references(db_klass.includes_to_references(get_include))
                             .limit(options[:limit])
@@ -269,9 +276,7 @@ module MiqReport::Generator
 
   # Ad-hoc performance reports
   def generate_interval_metric_results(options = {})
-    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
-
-    results = db_klass.with_interval_and_time_range(interval, time_range)
+    results = db_klass.with_interval_and_time_range(interval, performance_report_time_range)
                       .where(where_clause)
                       .where(options[:where_clause])
                       .includes(get_include_for_find)
