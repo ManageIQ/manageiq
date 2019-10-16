@@ -1,18 +1,18 @@
 describe SecurityGroup do
-  before do
-    provider = FactoryBot.create(:ems_amazon)
-    cn       = FactoryBot.create(:cloud_network)
-    @sg1     = FactoryBot.create(:security_group,
-                                  :name                  => "sq_1",
-                                  :ext_management_system => provider.network_manager,
-                                  :cloud_network         => cn)
-    @sg2     = FactoryBot.create(:security_group,
-                                  :name                  => "sq_1",
-                                  :ext_management_system => provider.network_manager)
-  end
+  describe ".non_cloud_network" do
+    let(:provider) { FactoryBot.create(:ems_amazon) }
 
-  it ".non_cloud_network" do
-    expect(SecurityGroup.non_cloud_network).to eq([@sg2])
+    before do
+      @sg1 = FactoryBot.create(:security_group,
+                               :ext_management_system => provider.network_manager,
+                               :cloud_network         => FactoryBot.create(:cloud_network))
+      @sg2 = FactoryBot.create(:security_group,
+                               :ext_management_system => provider.network_manager)
+    end
+
+    it "calculates in the database" do
+      expect(SecurityGroup.non_cloud_network).to eq([@sg2])
+    end
   end
 
   describe "#total_vms" do
