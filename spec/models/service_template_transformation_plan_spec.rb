@@ -1,4 +1,5 @@
 RSpec.describe ServiceTemplateTransformationPlan, :v2v do
+  before { EvmSpecHelper.local_miq_server } # required for creating snapshots needed for warm migration testing
   subject { FactoryBot.create(:service_template_transformation_plan) }
 
   describe '#request_class' do
@@ -285,6 +286,18 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         :action => 'Provision',
         :fqname => described_class.default_provisioning_entry_point(nil)
       )
+    end
+
+    it 'creates and returns a transformation plan with VMs containing snapshots' do
+      FactoryBot.create_list(:snapshot, 2, :create_time => 1.minute.ago, :vm_or_template => vm1)
+      FactoryBot.create_list(:snapshot, 2, :create_time => 1.minute.ago, :vm_or_template => vm2)
+
+      service_template = described_class.create_catalog_item(catalog_item_options)
+
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => false)
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => false)
     end
 
     it 'requires a transformation mapping' do
