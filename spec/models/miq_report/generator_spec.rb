@@ -1,20 +1,26 @@
 describe MiqReport::Generator do
+  include Spec::Support::ChargebackHelper
+
   before do
     EvmSpecHelper.local_miq_server
     @user = FactoryBot.create(:user_with_group)
-    @time_profile_all = FactoryBot.create(:time_profile_with_rollup, :tz => "UTC")
     @host1 = FactoryBot.create(:host)
   end
 
   describe "#generate" do
     context "Memory Utilization Trends report (daily)" do
+      let(:start_date) { end_date - 4.days }
+      let(:end_date) { Time.zone.yesterday.beginning_of_day }
+      let(:time_profile_all) { FactoryBot.create(:time_profile_with_rollup, :tz => "UTC") }
+      let(:metric_rollup_params) { {:derived_memory_available => 1400, :time_profile_id => time_profile_all.id} }
+
       before do
         @miq_report_profile_all = FactoryBot.create(
           :miq_report,
           :db              => "VimPerformanceTrend",
           :order           => "Ascending",
           :sortby          => ["resource_name"],
-          :time_profile_id => @time_profile_all.id,
+          :time_profile_id => time_profile_all.id,
           :db_options      => {:limit_col    => "max_derived_memory_available",
                                :trend_col    => "derived_memory_used",
                                :rpt_type     => "trend",
@@ -28,50 +34,38 @@ describe MiqReport::Generator do
       it "returns one row for each host" do
         used_mem_up = [400, 500, 600, 700]
         @host2 = FactoryBot.create(:host)
-        create_rollup(@host1, @time_profile_all, used_mem_up)
-        create_rollup(@host2, @time_profile_all, used_mem_up)
+        add_metric_rollups_for([@host1, @host2], start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data.size).to eq(2)
       end
 
       it "calculates positive slope which is 'UP' trend" do
         used_mem_up = [400, 500, 600, 700]
-        create_rollup(@host1, @time_profile_all, used_mem_up)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 100, "direction_of_trend" => "Up")
       end
 
       it "calculates negative slope which is 'Down' trend" do
         used_mem_down = [120, 90, 60, 30]
-        create_rollup(@host1, @time_profile_all, used_mem_down)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_down[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => -30, "direction_of_trend" => "Down")
       end
 
       it "calculates 0 slope which is 'Flat' trend" do
         used_mem_flat = [302, 300, 300, 302]
-        create_rollup(@host1, @time_profile_all, used_mem_flat)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_flat[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 0, "direction_of_trend" => "Flat")
       end
 
       it "calculates max and min trend values" do
         used_mem_up = [400, 500, 600, 700]
-        create_rollup(@host1, @time_profile_all, used_mem_up)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-        expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => used_mem_up.min,
-                                                                      "max_trend_value" => used_mem_up.max)
-      end
-    end
-
-    def create_rollup(host, profile, used_mem)
-      day_midnight = Time.zone.yesterday.beginning_of_day - used_mem.size.days
-      used_mem.size.times do |i|
-        host.metric_rollups << FactoryBot.create(:metric_rollup_host_daily,
-                                                  :timestamp                => day_midnight + i.day,
-                                                  :time_profile_id          => profile.id,
-                                                  :derived_memory_used      => used_mem[i],
-                                                  :derived_memory_available => 1400)
+        expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => 400,
+                                                                      "max_trend_value" => 700)
       end
     end
   end
