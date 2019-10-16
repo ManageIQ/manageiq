@@ -49,6 +49,7 @@ module MiqConfigSssdLdap
       end
 
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
+      opts[:action] = "convert"
       self.opts = opts.delete_if { |_n, v| v.nil? }
       LOGGER.debug("User provided settings: #{opts}")
 

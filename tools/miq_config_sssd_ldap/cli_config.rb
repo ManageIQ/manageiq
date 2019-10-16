@@ -48,7 +48,7 @@ module MiqConfigSssdLdap
             :short    => "d",
             :default  => nil,
             :type     => :string,
-            :required => false
+            :required => true
 
         opt :bind_dn,
             "The Bind DN, credential to use to authenticate against LDAP e.g. cn=Manager,dc=example,dc=com",
@@ -62,6 +62,13 @@ module MiqConfigSssdLdap
             :short    => "p",
             :default  => nil,
             :type     => :string,
+            :required => false
+
+        opt :ldap_role,
+            "Get user groups from LDAP true or false",
+            :short    => "g",
+            :default  => false,
+            :type     => :flag,
             :required => false
 
         opt :tls_cacert,
@@ -91,9 +98,11 @@ module MiqConfigSssdLdap
       default_port_from_mode
       Optimist.die "#{opts[:ldaphost]}:#{opts[:ldapport]} is not open." unless ldaphost_and_ldapport_valid?
       opts[:ldaphost] = [opts[:ldaphost]] # Currently only supporting a single host from the command line.
-      set_ldap_role
+
+      Optimist.die "bind_dn and bind_pwd are required when when Get user groups from ldap is true or mode is ldap." unless bind_dn_and_bind_pwd_valid?
 
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
+      opts[:action] = "config"
       self.opts = opts.delete_if { |_n, v| v.nil? }
       LOGGER.debug("User provided settings: #{opts}")
 
@@ -130,8 +139,12 @@ module MiqConfigSssdLdap
       false
     end
 
-    def set_ldap_role
-      opts[:ldap_role] = opts[:bind_pwd].nil? ? false : true
+    def bind_dn_and_bind_pwd_valid?
+      if opts[:mode] == "ldap" || opts[:ldap_role] == true
+        return false if opts[:bind_dn].nil?
+        return false if opts[:bind_pwd].nil?
+      end
+      true
     end
 
     def user_type_valid?

@@ -6,7 +6,7 @@ describe MiqConfigSssdLdap::CliConfig do
   before do
     @all_opts = :tls_cacert, :tls_cacertdir, :domain, :ldaphost, :ldapport, :user_type, :user_suffix, :mode,
                 :bind_dn, :bind_pwd, :only_change_userids, :skip_post_conversion_userid_change
-    @all_required_opts = %w[-H ldaphost -T dn-cn -S user_suffix -M ldap]
+    @all_required_opts = %w[-H ldaphost -T dn-cn -S user_suffix -M ldap -d example.com -b cn=Manager,dc=example,dc=com -p password]
     allow(TCPSocket).to receive(:new).and_return(double(:close => nil))
 
     stub_const("LOGGER", double)
@@ -19,9 +19,12 @@ describe MiqConfigSssdLdap::CliConfig do
       expect(opts).to include(:ldapport => 389, :skip_post_conversion_userid_change => false)
     end
 
-    it "should assign all required options" do
+    it "should assign all required options when mode is ldap" do
       opts = described_class.new.parse(@all_required_opts).opts.slice(*@all_opts)
-      expect(opts).to eq(:ldaphost                           => ["ldaphost"],
+      expect(opts).to eq(:bind_dn                            => "cn=Manager,dc=example,dc=com",
+                         :bind_pwd                           => "password",
+                         :domain                             => "example.com",
+                         :ldaphost                           => ["ldaphost"],
                          :ldapport                           => 389,
                          :mode                               => "ldap",
                          :only_change_userids                => false,
@@ -66,17 +69,17 @@ describe MiqConfigSssdLdap::CliConfig do
     end
 
     it "should parse base DN domain names" do
-      opts = described_class.new.parse(@all_required_opts + %w[-d example.com]).opts.slice(:domain)
+      opts = described_class.new.parse(@all_required_opts).opts.slice(:domain)
       expect(opts).to eq(:domain => "example.com")
     end
 
     it "should parse bind DN" do
-      opts = described_class.new.parse(@all_required_opts + %w[-b cn=Manager,dc=example,dc=com]).opts.slice(:bind_dn)
+      opts = described_class.new.parse(@all_required_opts).opts.slice(:bind_dn)
       expect(opts).to eq(:bind_dn => "cn=Manager,dc=example,dc=com")
     end
 
     it "should parse bind pwd" do
-      opts = described_class.new.parse(@all_required_opts + %w[-p password]).opts.slice(:bind_pwd)
+      opts = described_class.new.parse(@all_required_opts).opts.slice(:bind_pwd)
       expect(opts).to eq(:bind_pwd => "password")
     end
 
@@ -88,6 +91,34 @@ describe MiqConfigSssdLdap::CliConfig do
     it "can skip updating the userids after the conversion" do
       opts = described_class.new.parse(@all_required_opts + %w[-s]).opts.slice(*@all_opts)
       expect(opts).to include(:skip_post_conversion_userid_change => true)
+    end
+
+    context "When mode is ldap" do
+      it "requires bind_dn" do
+        expect(Optimist).to receive(:die)
+        described_class.new.parse(@all_required_opts - %w[-b cn=Manager,dc=example,dc=com])
+      end
+
+      it "requires bind_pwd" do
+        expect(Optimist).to receive(:die)
+        described_class.new.parse(@all_required_opts - %w[-p password])
+      end
+    end
+
+    context "When ldap_role is true" do
+      before do
+        @ldap_role_ldaps_opts = @all_required_opts - %w[-M ldap] + %w[-M ldaps -g]
+      end
+
+      it "requires bind_dn" do
+        expect(Optimist).to receive(:die)
+        described_class.new.parse(@ldap_role_ldaps_opts - %w[-b cn=Manager,dc=example,dc=com])
+      end
+
+      it "requires bind_pwd" do
+        expect(Optimist).to receive(:die)
+        described_class.new.parse(@ldap_role_ldaps_opts - %w[-p password])
+      end
     end
   end
 end

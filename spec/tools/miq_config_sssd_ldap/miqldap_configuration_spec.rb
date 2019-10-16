@@ -3,6 +3,25 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 require "miq_config_sssd_ldap"
 
 describe MiqConfigSssdLdap::MiqLdapConfiguration do
+  describe '#initialize' do
+    let(:settings) { {:tls_cacert => 'cert', :domain => "example.com"} }
+    let(:options) do
+      {:action      => "config",
+       :ldaphost    => "my-ldap-server",
+       :user_type   => "dn-cn",
+       :user_suffix => "ou=people,ou=prod,dc=example,dc=com",
+       :mode        => "ldap",
+       :domain      => "example.com",
+       :bind_dn     => "cn=Manager,dc=example,dc=com",
+       :bind_pwd    => "password"}
+    end
+
+    it 'does not merge current authentication setting with options when doing a fresh configuration' do
+      expect(described_class).to_not receive(:current_authentication_settings)
+      described_class.new(options)
+    end
+  end
+
   describe '#retrieve_initial_settings' do
     let(:settings) { {:tls_cacert => 'cert', :domain => "example.com"} }
 

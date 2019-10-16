@@ -15,7 +15,7 @@ module MiqConfigSssdLdap
     attr_accessor :initial_settings
 
     def initialize(options = {})
-      self.initial_settings = current_authentication_settings.merge(options)
+      self.initial_settings = options[:action] == "config" ? options : current_authentication_settings.merge(options)
     end
 
     def retrieve_initial_settings
