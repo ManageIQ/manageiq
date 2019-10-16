@@ -4,7 +4,7 @@ require File.expand_path('../config/environment', __dir__)
 # Delete any records older than this:
 ARCHIVE_CUTOFF = Time.now.utc - 1.month
 # If true, do not delete anything; only report:
-REPORT_ONLY = true
+REPORT_ONLY = ActiveModel::Type::Boolean.new.cast(ENV.fetch("REPORT_ONLY", true))
 
 old_logger = $log
 $log = VMDBLogger.new(STDOUT)
@@ -36,6 +36,7 @@ query.archived.find_in_batches do |vms|
 end
 
 $log.info("Completed purging archived VMs. #{REPORT_ONLY ? 'Found' : 'Purged'} #{archived} archived VMs.")
+$log.info("To cleanup archived VMs re-run with REPORT_ONLY=false #{$PROGRAM_NAME}")
 
 $log.close
 $log = old_logger
