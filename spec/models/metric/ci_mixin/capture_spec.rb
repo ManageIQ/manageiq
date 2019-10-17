@@ -297,7 +297,7 @@ describe Metric::CiMixin::Capture do
         if queue_items.any? && realtime_start_time
           interval_start_time = vm.last_perf_capture_on
           interval_end_time   = interval_start_time + 1.day
-          queue_items.reverse.each do |q_item|
+          queue_items.reverse_each do |q_item|
             verify_historical_queue_item(q_item, interval_start_time, interval_end_time)
 
             interval_start_time = interval_end_time
