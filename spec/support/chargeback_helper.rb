@@ -12,8 +12,8 @@ module Spec
         resource.metric_rollups.sum(&metric) / hours_in_interval
       end
 
-      def add_metric_rollups_for(resources, range, step, metric_rollup_params, trait = [:with_data])
-        args          = ([:metric_rollup_vm_hr] + trait).compact
+      def add_metric_rollups_for(resources, range, step, metric_rollup_params, trait = [:with_data], rollup_factory = :metric_rollup_vm_hr, dynamic_columns = {})
+        args          = ([rollup_factory] + trait).compact
         times         = range.step_value(step).to_a
         column_names  = nil
         record_values = []
@@ -25,14 +25,22 @@ module Spec
             :resource_type => resource.class.base_class.name
           }
 
-          attrs = FactoryBot.attributes_for(*args, metric_rollup_params.merge(resource_attrs))
+          attrs = FactoryBot.attributes_for(*args, metric_rollup_params.merge(resource_attrs).merge(dynamic_columns))
           attrs.delete(:timestamp)
 
           column_names ||= attrs.keys.append("timestamp").join(", ")
-          base_values    = attrs.values.map(&:inspect).join(", ").tr('"', "'")
+          base_values_func = ->(attributes) { attributes.values.map(&:inspect).join(", ").tr('"', "'") }
+          base_values = dynamic_columns.keys.present? ? base_values_func : base_values_func.call(attrs)
 
-          times.each do |time|
-            record_values << "(#{base_values}, '#{time.to_s(:db)}')"
+          times.each_with_index do |time, index|
+            values = if dynamic_columns.keys.present?
+                       dynamic_columns.keys.each { |column| attrs[column] = dynamic_columns[column].call(index) }
+                       base_values.call(attrs)
+                     else
+                       base_values
+                     end
+
+            record_values << "(#{values}, '#{time.to_s(:db)}')"
           end
         end
 
