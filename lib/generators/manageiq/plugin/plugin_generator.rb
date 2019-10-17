@@ -36,7 +36,6 @@ module ManageIQ
       template "LICENSE.txt"
       template "Rakefile"
       template "README.md"
-      template "zanata.xml"
       template "bin/rails"
       template "bin/setup"
       template "bin/update"
