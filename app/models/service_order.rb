@@ -17,7 +17,7 @@ class ServiceOrder < ApplicationRecord
   before_create :assign_user
   after_create  :create_order_name
 
-  virtual_attribute :v2v?, :type => :boolean
+  virtual_attribute :v2v?, :type => :boolean, :uses => :miq_requests
 
   def self.find_for_user(requester, id)
     find_by!(:user => requester, :tenant => requester.current_tenant, :id => id)
