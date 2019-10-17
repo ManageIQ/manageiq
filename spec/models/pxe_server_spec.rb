@@ -4,6 +4,8 @@ describe PxeServer do
     @pxe_server = FactoryBot.create(:pxe_server)
   end
 
+  subject { FactoryBot.create(:pxe_server) }
+
   context "#sync_images_queue" do
     it "should create a queue entry with the correct parameters" do
       msg = @pxe_server.sync_images_queue
@@ -308,6 +310,81 @@ PXE
 
     it "#discovered_pxe_images" do
       expect(@pxe_server.discovered_pxe_images).to eq([@discovered_image])
+    end
+  end
+
+  describe '#ensure_menu_list' do
+    context 'when creating server' do
+      subject { FactoryBot.build(:pxe_server) }
+      it 'existing menus remain' do
+        subject.ensure_menu_list(%w[new])
+        subject.save!
+        expect(PxeMenu.count).to eq(1)
+        expect(subject.pxe_menus.count).to eq(1)
+      end
+    end
+
+    context 'when updating server' do
+      let!(:pxe_menu_1)  { FactoryBot.create(:pxe_menu, :pxe_server => subject, :file_name => 'existing1') }
+      let!(:pxe_image_1) { FactoryBot.create(:pxe_image, :pxe_server => subject, :pxe_menu => pxe_menu_1) }
+      let!(:pxe_menu_2)  { FactoryBot.create(:pxe_menu, :pxe_server => subject, :file_name => 'existing2') }
+      let!(:pxe_image_2) { FactoryBot.create(:pxe_image, :pxe_server => subject, :pxe_menu => pxe_menu_2) }
+
+      context 'when nothing changed' do
+        let(:menus) { %w[existing1 existing2] }
+        it 'all menus remain' do
+          subject.ensure_menu_list(menus)
+          expect(PxeMenu.count).to eq(2)
+          expect(PxeImage.count).to eq(2)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_1.id)).to eq(pxe_menu_1)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_2.id)).to eq(pxe_menu_2)
+        end
+      end
+
+      context 'when new menus are added' do
+        let(:menus) { %w[existing1 existing2 new] }
+        it 'existing menus remain' do
+          subject.ensure_menu_list(menus)
+          expect(PxeMenu.count).to eq(3)
+          expect(PxeImage.count).to eq(2)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_1.id)).to eq(pxe_menu_1)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_2.id)).to eq(pxe_menu_2)
+          expect(subject.pxe_menus.find_by(:file_name => 'new')).not_to be_nil
+        end
+      end
+
+      context 'when menus are deleted' do
+        let(:menus) { %w[existing1] }
+        it 'menus are destroyed' do
+          subject.ensure_menu_list(menus)
+          expect(PxeMenu.count).to eq(1)
+          expect(PxeImage.count).to eq(1)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_1.id)).to eq(pxe_menu_1)
+          expect(subject.pxe_menus.find_by(:id => pxe_menu_2.id)).to be_nil
+        end
+      end
+
+      context 'when different menus are specified' do
+        let(:menus) { %w[new] }
+        it 'old menus are destroyed' do
+          subject.ensure_menu_list(menus)
+          expect(PxeMenu.count).to eq(1)
+          expect(PxeImage.count).to eq(0)
+          expect(subject.pxe_menus.find_by(:file_name => 'new')).not_to be_nil
+        end
+      end
+    end
+
+    context 'when two servers have similar menu' do
+      let(:other_server) { FactoryBot.create(:pxe_server) }
+      it 'they are not mixed up' do
+        subject.ensure_menu_list(%w[new])
+        other_server.ensure_menu_list(%w[new])
+        expect(PxeMenu.count).to eq(2)
+        expect(subject.pxe_menus.count).to eq(1)
+        expect(other_server.pxe_menus.count).to eq(1)
+        expect(subject.pxe_menus.map(&:id)).not_to eq(other_server.pxe_menus.map(&:id))
+      end
     end
   end
 end

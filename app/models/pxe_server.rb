@@ -198,6 +198,16 @@ class PxeServer < ApplicationRecord
     _log.info("#{log_message}...Complete")
   end
 
+  def ensure_menu_list(menu_list)
+    current_menus = pxe_menus.map(&:file_name)
+    to_destroy = current_menus - menu_list
+    to_create = menu_list - current_menus
+    transaction do
+      pxe_menus.where(:file_name => to_destroy).destroy_all
+      to_create.each { |menu| pxe_menus << PxeMenu.create!(:file_name => menu) }
+    end
+  end
+
   def self.display_name(number = 1)
     n_('PXE Server', 'PXE Servers', number)
   end
