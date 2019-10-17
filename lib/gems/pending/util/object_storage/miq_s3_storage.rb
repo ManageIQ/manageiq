@@ -84,8 +84,8 @@ class MiqS3Storage < MiqObjectStorage
   private
 
   def s3
-    require 'aws-sdk'
-    require 'util/extensions/aws-sdk/s3_upload_stream_patch'
+    require 'aws-sdk-s3'
+
     @s3 ||= Aws::S3::Resource.new(:region            => @settings[:region],
                                   :access_key_id     => @settings[:username],
                                   :secret_access_key => @settings[:password])
