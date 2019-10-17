@@ -130,35 +130,6 @@ describe "Service Retirement Management" do
     expect(@service.retires_on).to eq(options[:date])
   end
 
-  it "#retire_service_resources" do
-    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to_not receive(:retire_now)
-    @service.retire_service_resources
-  end
-
-  it "#retire_service_resources should get service's retirement_requester" do
-    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
-    userid = 'freddy'
-    @service.update(:retirement_requester => userid)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(userid)
-    @service.retire_service_resources
-  end
-
-  it "#retire_service_resources should get service's nil retirement_requester" do
-    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(nil)
-    @service.retire_service_resources
-  end
-
   it "#finish_retirement" do
     message = "Service: [#{@service.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
     expect(@service).to receive(:raise_audit_event).with("service_retired", message, nil)
