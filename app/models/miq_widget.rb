@@ -327,9 +327,7 @@ class MiqWidget < ApplicationRecord
     settings_for_build[:user_id]  = user.id  if user
     settings_for_build[:timezone] = timezone if timezone
     contents = miq_widget_contents.find_by(settings_for_build) || miq_widget_contents.build(settings_for_build)
-    contents.updated_at = Time.now.utc # Force updated timestamp to change when saved even if the new contents are the same
-
-    contents
+    contents.tap { |c| c.update!(:updated_at => Time.now.utc) }
   end
 
   # TODO: group/user support

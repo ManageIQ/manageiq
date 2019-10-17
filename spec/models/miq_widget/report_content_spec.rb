@@ -32,6 +32,7 @@ describe MiqWidget, "::ReportContent" do
   it "#generate_one_content_for_user" do
     content = widget.generate_one_content_for_user(@admin_group, @admin)
     expect(content).to be_kind_of MiqWidgetContent
+    expect(content.updated_at).to be_within(2.seconds).of(Time.now.utc)
     expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count] + 1)
     expect(content.contents.scan("</td>").length).to eq(widget.options[:row_count] * widget.options[:col_order].length)
     expect(content.contents.scan("</th>").length).to eq(widget.options[:col_order].length)
@@ -44,6 +45,7 @@ describe MiqWidget, "::ReportContent" do
   it "#generate_one_content_for_group" do
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
     expect(content).to be_kind_of MiqWidgetContent
+    expect(content.updated_at).to be_within(2.seconds).of(Time.now.utc)
     expect(content.contents.scan("</tr>").length).to eq(widget.options[:row_count] + 1)
     expect(content.contents.scan("</td>").length).to eq(widget.options[:row_count] * widget.options[:col_order].length)
     expect(content.contents.scan("</th>").length).to eq(widget.options[:col_order].length)
