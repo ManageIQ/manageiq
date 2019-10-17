@@ -10,7 +10,8 @@ class FileDepotS3 < FileDepot
   end
 
   def connect(options = {})
-    require 'aws-sdk'
+    require 'aws-sdk-s3'
+
     username = options[:username] || authentication_userid(options[:auth_type])
     password = options[:password] || authentication_password(options[:auth_type])
     # Note: The hard-coded aws_region will be removed after manageiq-ui-class implements region selection
@@ -62,7 +63,8 @@ class FileDepotS3 < FileDepot
   end
 
   def translate_exception(err)
-    require 'aws-sdk'
+    require 'aws-sdk-ec2'
+
     case err
     when Aws::EC2::Errors::SignatureDoesNotMatch
       MiqException::MiqHostError.new("SignatureMismatch - check your AWS Secret Access Key and signing method")
