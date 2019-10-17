@@ -21,35 +21,35 @@ class SystemService < ApplicationRecord
   SVC_TYPES = {
     # Type     Display
     ""    => "",
-    "1"   => _("Kernel Driver"),
-    "2"   => _("File System Driver"),
-    "4"   => _("Service Adapter"),
-    "8"   => _("Recognizer Driver"),
-    "16"  => _("Win32 Own Process"),
-    "32"  => _("Win32 Shared Process"),
-    "256" => _("Interactive"),
-    "272" => _("Win32 Own Process, Interactive"),
-    "288" => _("Win32 Shared Process, Interactive"),
+    "1"   => N_("Kernel Driver"),
+    "2"   => N_("File System Driver"),
+    "4"   => N_("Service Adapter"),
+    "8"   => N_("Recognizer Driver"),
+    "16"  => N_("Win32 Own Process"),
+    "32"  => N_("Win32 Shared Process"),
+    "256" => N_("Interactive"),
+    "272" => N_("Win32 Own Process, Interactive"),
+    "288" => N_("Win32 Shared Process, Interactive"),
   }
 
   START_TYPES = {
     # Type     Display
     ""  => "",
-    "0" => _("Boot Start"),
-    "1" => _("System Start"),
-    "2" => _("Automatic"),
-    "3" => _("Manual"),
-    "4" => _("Disabled")
+    "0" => N_("Boot Start"),
+    "1" => N_("System Start"),
+    "2" => N_("Automatic"),
+    "3" => N_("Manual"),
+    "4" => N_("Disabled")
   }
 
   def start
     s = self['start']
-    START_TYPES[s] || s
+    _(START_TYPES[s]) || s
   end
 
   def svc_type
     svc = self['svc_type']
-    SVC_TYPES[svc] || svc
+    _(SVC_TYPES[svc]) || svc
   end
 
   def self.add_elements(parent, xmlNode)
