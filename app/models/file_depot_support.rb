@@ -16,7 +16,7 @@ class FileDepotSupport < FileDepot
     super
     with_connection do
       begin
-        upload(file.local_file)
+        upload(file.local_file, support_case)
       rescue => err
         msg = "Error '#{err.message.chomp}', uploading to Support site, Username: [#{authentication_userid}]"
         _log.error(msg)
@@ -72,7 +72,7 @@ class FileDepotSupport < FileDepot
   def create_directory_structure(directory_path)
   end
 
-  def upload(source)
+  def upload(source, support_case)
   end
 
   def login_credentials
