@@ -244,6 +244,19 @@ describe TenantQuota do
     end
   end
 
+  describe ".format_quota_value" do
+    let(:quota_name) { "cpu_allocated" }
+    let(:quota_description) { "Allocated Virtual CPUs" }
+
+    it "returns quota description if field to format is 'tenant_quotas.name'" do
+      expect(described_class.format_quota_value("tenant_quotas.name", "something", quota_name)).to eq(quota_description)
+    end
+
+    it "returns quota description if field to format is 'tenant_quotas.description'" do
+      expect(described_class.format_quota_value("tenant_quotas.description", "something", quota_name)).to eq(quota_description)
+    end
+  end
+
   describe "#quota_hash" do
     it "has cpu_allocated attributes" do
       expect(described_class.new(:tenant => tenant, :name => "cpu_allocated", :value => 4096).tap(&:valid?).quota_hash).to eq(
