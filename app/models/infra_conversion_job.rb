@@ -247,7 +247,8 @@ class InfraConversionJob < Job
       :zone        => zone,
       :task_id     => guid,
       :args        => args,
-      :deliver_on  => deliver_on
+      :deliver_on  => deliver_on,
+      :server_guid => MiqServer.my_server.guid
     )
   end
 
