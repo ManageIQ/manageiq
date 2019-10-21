@@ -11,7 +11,7 @@ module RetirementMixin
 
   module ClassMethods
     def make_retire_request(*src_ids, requester)
-      klass = (base_class.name.demodulize + "RetireRequest").constantize
+      klass = (name.demodulize + "RetireRequest").constantize
       options = {:src_ids => src_ids.presence, :__request_type__ => klass.request_types.first}
       set_retirement_requester(options[:src_ids], requester)
       klass.make_request(nil, options, requester)
