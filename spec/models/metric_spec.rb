@@ -48,14 +48,14 @@ describe Metric do
         MiqQueue.delete_all
       end
 
-      context "executing capture_targets" do
+      context "executing capture_ems_targets" do
         it "should find enabled targets" do
-          targets = Metric::Targets.capture_targets
+          targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload)
           assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage)
         end
 
         it "should find enabled targets excluding storages" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
+          targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload, :exclude_storages => true)
           assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host)
         end
       end
@@ -63,7 +63,7 @@ describe Metric do
       context "executing perf_capture_timer" do
         before do
           stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-          Metric::Capture.perf_capture_timer
+          Metric::Capture.perf_capture_timer(@ems_vmware.id)
         end
 
         let(:expected_queue_items) do
@@ -79,12 +79,12 @@ describe Metric do
 
         it "should queue up enabled targets" do
           expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
-          assert_metric_targets
+          assert_metric_targets(Metric::Targets.capture_ems_targets(@ems_vmware.reload))
         end
 
-        context "executing capture_targets for realtime targets with parent objects" do
+        context "executing capture_ems_targets for realtime targets with parent objects" do
           before do
-            @expected_targets = Metric::Targets.capture_targets
+            @expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware)
           end
 
           it "should create tasks and queue callbacks" do
@@ -120,7 +120,7 @@ describe Metric do
           end
 
           it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
-            Metric::Capture.perf_capture_timer
+            Metric::Capture.perf_capture_timer(@ems_vmware.id)
             @vmware_clusters.each do |cluster|
               expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
@@ -162,14 +162,14 @@ describe Metric do
             messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
             messages.each { |m| m.update_attribute(:state, "dequeue") }
 
-            Metric::Capture.perf_capture_timer
+            Metric::Capture.perf_capture_timer(@ems_vmware.id)
 
             messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
             messages.each { |m| expect(m.lock_version).to eq(1) }
           end
 
           it "calling perf_capture_timer a second time should create another task with the correct time window" do
-            Metric::Capture.perf_capture_timer
+            Metric::Capture.perf_capture_timer(@ems_vmware.id)
 
             @vmware_clusters.each do |cluster|
               expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
@@ -194,7 +194,7 @@ describe Metric do
         it "should queue up enabled targets for historical" do
           expect(MiqQueue.count).to eq(10)
 
-          expected_targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
+          expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload, :exclude_storages => true)
           expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
 
           selected = queue_intervals(MiqQueue.all)
@@ -1030,9 +1030,9 @@ describe Metric do
         MiqQueue.delete_all
       end
 
-      context "executing capture_targets" do
+      context "executing capture_ems_targets" do
         it "should find enabled targets" do
-          targets = Metric::Targets.capture_targets
+          targets = Metric::Targets.capture_ems_targets(@ems_openstack)
           assert_cloud_targets_enabled targets, %w(ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm)
         end
       end
@@ -1040,11 +1040,11 @@ describe Metric do
       context "executing perf_capture_timer" do
         before do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          Metric::Capture.perf_capture_timer
+          Metric::Capture.perf_capture_timer(@ems_openstack.id)
         end
 
         it "should queue up enabled targets" do
-          expected_targets = Metric::Targets.capture_targets
+          expected_targets = Metric::Targets.capture_ems_targets(@ems_openstack)
           expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
                                                            'perf_capture_historical'    => expected_targets.count * 8,
                                                            'destroy_older_by_condition' => 1)
@@ -1318,7 +1318,7 @@ describe Metric do
     end
   end
 
-  def assert_metric_targets(expected_targets = Metric::Targets.capture_targets)
+  def assert_metric_targets(expected_targets)
     expected = expected_targets.flat_map do |t|
       # Storage is hourly only
       # Non-storage historical is expecting 7 days back, plus partial day = 8
