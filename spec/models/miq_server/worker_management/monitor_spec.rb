@@ -33,6 +33,20 @@ describe MiqServer::WorkerManagement::Monitor do
 
     context "#sync_workers" do
       let(:server) { EvmSpecHelper.local_miq_server }
+
+      it "ensures only expected worker classes are constantized" do
+        # Autoload abstract base class for the event catcher
+        ManageIQ::Providers::BaseManager::EventCatcher
+
+        # We'll try to constantize a non-existing EventCatcher class in an existing namespace,
+        # which incorrectly resolves to the base manager event catcher.
+        allow(MiqServer).to receive(:monitor_class_names).and_return(%w[ManageIQ::Providers::Foreman::ProvisioningManager::EventCatcher MiqGenericWorker])
+
+        expect(ManageIQ::Providers::BaseManager::EventCatcher).not_to receive(:sync_workers)
+        expect(MiqGenericWorker).to receive(:sync_workers).and_return(:adds => [111])
+        expect(server.sync_workers).to eq("MiqGenericWorker"=>{:adds=>[111]})
+      end
+
       it "rescues exceptions and moves on" do
         allow(MiqServer).to receive(:monitor_class_names).and_return(%w(MiqGenericWorker MiqPriorityWorker))
         allow(MiqGenericWorker).to receive(:sync_workers).and_raise
