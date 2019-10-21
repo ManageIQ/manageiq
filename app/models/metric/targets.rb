@@ -8,6 +8,14 @@ module Metric::Targets
     MiqRegion.my_region.perf_capture_always = options
   end
 
+  def self.capture_ems_targets(ems, options = {})
+    case ems
+    when EmsCloud                                then capture_cloud_targets([ems], options)
+    when EmsInfra                                then capture_infra_targets([ems], options)
+    when ::ManageIQ::Providers::ContainerManager then capture_container_targets([ems], options)
+    end
+  end
+
   def self.capture_infra_targets(emses, options)
     load_infra_targets_data(emses, options)
     all_hosts = capture_host_targets(emses)
@@ -141,8 +149,8 @@ module Metric::Targets
   def self.capture_targets(zone = nil, options = {})
     zone = MiqServer.my_server.zone if zone.nil?
     zone = Zone.find(zone) if zone.kind_of?(Integer)
-    capture_infra_targets(zone.ems_infras, options) + \
-      capture_cloud_targets(zone.ems_clouds, options) + \
-      capture_container_targets(zone.ems_containers, options)
+    zone.ems_metrics_collectable.flat_map do |ems|
+      capture_ems_targets(ems, options) || []
+    end
   end
 end
