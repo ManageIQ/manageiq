@@ -206,8 +206,8 @@ describe MiqSchedule do
 
   context 'with schedule infrastructure and valid run_ats' do
     before do
-      @valid_run_ats =  [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},
-                         {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}]
+      @valid_run_ats = [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},
+                        {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}]
     end
 
     it "hourly schedule" do
@@ -512,7 +512,7 @@ describe MiqSchedule do
         before do
           @east_tz = "Eastern Time (US & Canada)"
           @ak_tz = "Alaska"
-          @utc_tz  = "UTC"
+          @utc_tz = "UTC"
           # Tue, 06 Oct 2010 01:00:00 AKDT -08:00
           @ak_time = Time.parse("Sun October 6 01:00:00 -0800 2010")
           Timecop.travel(@ak_time + 10.minutes)
@@ -977,9 +977,13 @@ describe MiqSchedule do
         end
 
         it "and responds to the method with arguments" do
-          schedule = FactoryBot.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name", :args => ["abc", 123, :a => 1]})
+          schedule = FactoryBot.create(
+            :miq_schedule,
+            :resource     => resource,
+            :sched_action => {:method => "raise_cluster_event", :args => ["abc", 123]}
+          )
 
-          expect_any_instance_of(Host).to receive("name").once.with("abc", 123, :a => 1)
+          expect_any_instance_of(Host).to receive("raise_cluster_event").once.with("abc", 123)
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
