@@ -189,18 +189,18 @@ describe MiqReport::Generator do
       # it also allows cols to override col_order for requesting extra columns
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :include          => {},
-                          :cols             => %w(name num_cpu),
+                          :cols             => %w[name v_datastore_path],
                           :col_order        => %w(name host.name storage.name),
                           :include_for_find => {:snapshots => {}})
-      expect(rpt.get_include_for_find).to eq(:num_cpu => {}, :host => {}, :storage => {}, :snapshots => {})
+      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
     end
 
     it "uses col_order and virtual attributes" do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :include          => {},
-                          :col_order        => %w(name num_cpu host.name storage.name),
+                          :col_order        => %w[name v_datastore_path host.name storage.name],
                           :include_for_find => {:snapshots => {}})
-      expect(rpt.get_include_for_find).to eq(:num_cpu => {}, :host => {}, :storage => {}, :snapshots => {})
+      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
     end
   end
 end

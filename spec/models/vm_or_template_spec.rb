@@ -798,6 +798,76 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".num_cpu" do
+    context "with no hardware record" do
+      it "calculates" do
+        vm = FactoryBot.create(:vm_vmware)
+        expect(vm.num_cpu).to eq(0)
+      end
+    end
+
+    context "with empty hardware" do
+      let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_sockets => nil) }
+
+      it "bails ruby calculation" do
+        expect(vm.num_cpu).to eq(0)
+      end
+
+      it "bails database calculation" do
+        loaded_vm = VmOrTemplate.select(:id, :num_cpu).find(vm.id)
+        expect(loaded_vm.num_cpu).to eq(0)
+
+        expect(virtual_column_sql_value(VmOrTemplate, "num_cpu")).to be_nil # darn, wanted 0
+      end
+    end
+
+    context "with values" do
+      let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_sockets => 4) }
+
+      it "calculates in ruby" do
+        expect(vm.num_cpu).to eq(4)
+      end
+
+      it "calculates in the database" do
+        expect(virtual_column_sql_value(VmOrTemplate, "num_cpu")).to eq(4)
+      end
+    end
+  end
+
+  describe ".num_disks", ".num_hard_disks" do
+    let(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 10) }
+    let(:disk) { FactoryBot.create(:disk, :device_type => 'disk', :hardware => hardware) }
+
+    it "calculates in ruby with null hardware" do
+      vm = FactoryBot.create(:vm_vmware)
+      expect(vm.num_disks).to eq(0)
+    end
+
+    it "uses calculated (inline) attribute with null hardware" do
+      vm = FactoryBot.create(:vm_vmware)
+      vm2 = VmOrTemplate.select(:id, :num_disks, :num_hard_disks).find_by(:id => vm.id)
+      expect { expect(vm2.num_disks).to eq(0) }.to match_query_limit_of(0)
+      expect { expect(vm2.num_hard_disks).to eq(0) }.to match_query_limit_of(0)
+    end
+
+    it "calculates in ruby" do
+      vm
+      disk # make sure the record is created
+      expect(vm.num_disks).to eq(1)
+      expect(vm.num_hard_disks).to eq(1)
+    end
+
+    it "uses calculated (inline) attribute" do
+      vm
+      disk # make sure the record is created
+      expect(virtual_column_sql_value(VmOrTemplate, "num_disks")).to eq(1)
+      expect(virtual_column_sql_value(VmOrTemplate, "num_hard_disks")).to eq(1)
+    end
+  end
+
   describe ".ram_size", ".mem_cpu" do
     let(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 10) }

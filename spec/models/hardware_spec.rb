@@ -55,6 +55,22 @@ describe Hardware do
     end
   end
 
+  describe ".num_disks", ".num_hard_disks" do
+    let(:hardware) { FactoryBot.create(:hardware) }
+
+    before { FactoryBot.create_list(:disk, 3, :hardware => hardware, :device_type => 'disk') }
+
+    it "calculates in ruby" do
+      expect(hardware.num_disks).to eq(3)
+      expect(hardware.num_hard_disks).to eq(3)
+    end
+
+    it "calculates in the database" do
+      expect(virtual_column_sql_value(Hardware, "num_disks")).to eq(3)
+      expect(virtual_column_sql_value(Hardware, "num_hard_disks")).to eq(3)
+    end
+  end
+
   describe ".v_pct_free_disk_space" do
     context "with empty hardware" do
       let(:hardware) { FactoryBot.build(:hardware) }
