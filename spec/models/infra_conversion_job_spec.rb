@@ -76,7 +76,6 @@ RSpec.describe InfraConversionJob, :v2v do
   before do
     allow(MiqServer).to receive(:my_zone).and_return(zone.name)
     allow(MiqServer).to receive(:my_server).and_return(server)
-    allow(ServiceTemplateProvisionRequest).to receive(:destination)
   end
 
   context '.create_job' do
