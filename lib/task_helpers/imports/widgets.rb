@@ -12,7 +12,8 @@ module TaskHelpers
                              :overwrite => options[:overwrite],
                              :save      => true }
 
-          File.open(filename, 'r') do |widget_fd|
+          begin
+            widget_fd = File.open(filename, 'r')
             MiqWidget.import(widget_fd, widget_options)
           rescue ActiveModel::UnknownAttributeError, RuntimeError => err
             $log.error("Error importing #{filename} : #{err.message}")
