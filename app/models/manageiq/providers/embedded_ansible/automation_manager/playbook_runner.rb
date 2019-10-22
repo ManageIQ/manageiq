@@ -153,15 +153,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   def queue_signal(*args, deliver_on: nil)
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
 
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :method_name => "signal",
-      :instance_id => id,
-      :priority    => priority,
-      :role        => 'embedded_ansible',
-      :args        => args,
-      :deliver_on  => deliver_on
-    )
+    super(*args, :priority => priority, :role => "embedded_ansible", :deliver_on => deliver_on)
   end
 
   def temp_configuration_script

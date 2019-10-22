@@ -95,18 +95,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     role     = options[:role] || "ems_operations"
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
 
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :method_name => "signal",
-      :instance_id => id,
-      :priority    => priority,
-      :role        => role,
-      :zone        => zone,
-      :task_id     => guid,
-      :args        => args,
-      :deliver_on  => deliver_on,
-      :server_guid => MiqServer.my_server.guid
-    )
+    super(*args, :priority => priority, :role => role, :deliver_on => deliver_on, :server_guid => MiqServer.my_server.guid)
   end
 
   def deliver_on
