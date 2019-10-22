@@ -29,6 +29,7 @@ module Vmdb
 
     def self.init
       ::Config.overwrite_arrays = true
+      ::Config.merge_nil_values = false
       reset_settings_constant(for_resource(:my_server))
       on_reload
     end
@@ -182,8 +183,9 @@ module Vmdb
     # sources and doesn't allow you insert new sources into the middle of the
     # stack.
     def self.reset_settings_constant(settings)
-      Kernel.send(:remove_const, ::Config.const_name) if Kernel.const_defined?(::Config.const_name)
-      Kernel.const_set(::Config.const_name, settings)
+      name = ::Config.const_name
+      Object.send(:remove_const, name) if Object.const_defined?(name)
+      Object.const_set(name, settings)
     end
     private_class_method :reset_settings_constant
 
