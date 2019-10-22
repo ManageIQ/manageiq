@@ -11,9 +11,9 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   end
 
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
-  let(:vm1) { FactoryBot.create(:vm_or_template) }
-  let(:vm2) { FactoryBot.create(:vm_or_template) }
-  let(:vm3) { FactoryBot.create(:vm_or_template) }
+  let(:vm1) { FactoryBot.create(:vm_vmware) }
+  let(:vm2) { FactoryBot.create(:vm_vmware) }
+  let(:vm3) { FactoryBot.create(:vm_vmware) }
   let(:security_group1) { FactoryBot.create(:security_group, :name => "default") }
   let(:flavor1) { FactoryBot.create(:flavor, :name => "large") }
   let(:security_group2) { FactoryBot.create(:security_group, :name => "default") }
