@@ -12,8 +12,7 @@ module TaskHelpers
                              :overwrite => options[:overwrite],
                              :save      => true }
 
-          begin
-            report_fd = File.open(filename, 'r')
+          File.open(filename, 'r') do |report_fd|
             MiqReport.import(report_fd, report_options)
           rescue ActiveModel::UnknownAttributeError, RuntimeError => err
             $log.error("Error importing #{filename} : #{err.message}")
