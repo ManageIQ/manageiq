@@ -490,6 +490,12 @@ class MiqGenericMountSession < MiqFileStorage::Interface
   end
 
   def source_for_log
-    @input_writer ? "<STREAMED_FROM_CMD>" : @source_input.path
+    if @input_writer
+      "<STREAMED_FROM_CMD>"
+    elsif @source_input
+      @source_input.path
+    else
+      "<NOT_READY>"
+    end
   end
 end
