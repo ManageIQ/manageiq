@@ -607,8 +607,7 @@ class MiqExpression
       else
         target = parse_field_or_tag(ops["field"])
         col_type = target&.column_type || "string"
-        case context_type
-        when "hash"
+        if context_type == "hash"
           val = ops["field"].split(".").last.split("-").join(".")
           fld = "<value type=#{col_type}>#{val}</value>"
         else
