@@ -5,8 +5,6 @@ class Snapshot < ApplicationRecord
 
   belongs_to :vm_or_template
 
-  include SerializedEmsRefObjMixin
-
   serialize :disks, Array
 
   after_create  :after_create_callback

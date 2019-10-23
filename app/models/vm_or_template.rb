@@ -19,9 +19,7 @@ class VmOrTemplate < ApplicationRecord
   attr_accessor :surrogate_host
   @surrogate_host = nil
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
-
   include ComplianceMixin
   include OwnershipMixin
   include CustomAttributeMixin

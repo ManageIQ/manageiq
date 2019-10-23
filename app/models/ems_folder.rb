@@ -5,7 +5,6 @@ class EmsFolder < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include RelationshipMixin
