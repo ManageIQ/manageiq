@@ -605,13 +605,13 @@ class MiqExpression
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
-        col_type = parse_field_or_tag(ops["field"])&.column_type || "string"
+        target = parse_field_or_tag(ops["field"])
+        col_type = target&.column_type || "string"
         case context_type
         when "hash"
           val = ops["field"].split(".").last.split("-").join(".")
           fld = "<value type=#{col_type}>#{val}</value>"
         else
-          target = parse_field_or_tag(ops["field"])
           fld = "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
         end
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
