@@ -250,7 +250,7 @@ module Metric::CiMixin::Capture
           # Task is done, call the rollup on the parent
           task.state, task.status, task.message = [MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, "Performance collection complete, #{task.context_data[:complete].length} out of #{task.context_data[:targets].length} collections completed"]
 
-          # Splitting e.g. "ManageIQ::Providers::Openstack::InfraManager::EmsCluster:8" to class and id
+          # Splitting e.g. "ManageIQ::Providers::Openstack::InfraManager::Cluster:8" to class and id
           pclass, _, pid = task.context_data[:parent].rpartition(":")
           parent = pclass.constantize.find(pid)
           msg = "Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
