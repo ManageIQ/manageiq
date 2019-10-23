@@ -30,7 +30,6 @@ class ResourceAction < ApplicationRecord
     end
 
     attrs = (ae_attributes || {}).merge(override_attrs || {})
-    attrs["result_format"] = 'ignore'
 
     {
       :namespace        => ae_namespace,

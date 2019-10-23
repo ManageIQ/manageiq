@@ -4,7 +4,7 @@ describe ResourceAction do
     let(:zone_name) { "default" }
     let(:ra) { FactoryBot.create(:resource_action) }
     let(:miq_server) { FactoryBot.create(:miq_server) }
-    let(:ae_attributes) { { "result_format" => "ignore"} }
+    let(:ae_attributes) { {} }
     let(:q_args) do
       {
         :namespace        => nil,
@@ -114,8 +114,12 @@ describe ResourceAction do
     let(:user)   { FactoryBot.create(:user_with_group) }
     let(:target) { FactoryBot.create(:vm_vmware) }
 
-    it "adds result_format" do
-      expect(ra.automate_queue_hash(target, {}, user)).to include(:attrs => {"result_format"=>"ignore"})
+    it "passes result_format" do
+      expect(ra.automate_queue_hash(target, {"result_format"=>"ignore"}, user)).to include(:attrs => {"result_format"=>"ignore"})
+    end
+
+    it "does not pass result_format by default" do
+      expect(ra.automate_queue_hash(target, {}, user)).not_to include(:attrs => {"result_format"=>"ignore"})
     end
   end
 end

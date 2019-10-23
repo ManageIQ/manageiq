@@ -94,7 +94,7 @@ class CustomButton < ApplicationRecord
   end
 
   def invoke(target, source = nil)
-    args = resource_action.automate_queue_hash(target, {}, User.current_user)
+    args = resource_action.automate_queue_hash(target, {"result_format" => 'ignore'}, User.current_user)
 
     publish_event(source, target, args)
     MiqQueue.put(queue_opts(target, args))
@@ -142,7 +142,7 @@ class CustomButton < ApplicationRecord
       :userid => User.current_user
     }
 
-    args = resource_action.automate_queue_hash(target, {}, User.current_user)
+    args = resource_action.automate_queue_hash(target, {"result_format" => 'ignore'}, User.current_user)
 
     publish_event(source, target, args)
     MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
