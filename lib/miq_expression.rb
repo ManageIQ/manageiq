@@ -129,13 +129,13 @@ class MiqExpression
       clause = "#{operands.first} #{operator} #{operands.last}"
     when "between dates", "between times"
       col_name = exp[operator]["field"]
-      col_type = get_col_type(col_name)
+      col_type = parse_field_or_tag(col_name)&.column_type
       col_human, _value = operands2humanvalue(exp[operator], options)
       vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} AND #{vals_human.last}"
     when "from"
       col_name = exp[operator]["field"]
-      col_type = get_col_type(col_name)
+      col_type = parse_field_or_tag(col_name)&.column_type
       col_human, _value = operands2humanvalue(exp[operator], options)
       vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} THROUGH #{vals_human.last}"
@@ -165,12 +165,12 @@ class MiqExpression
       operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
-      col_type = get_col_type(col_name) if col_name
+      col_type = parse_field_or_tag(col_name)&.column_type if col_name
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
-      col_type = get_col_type(col_name) if col_name
+      col_type = parse_field_or_tag(col_name)&.column_type if col_name
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
@@ -262,7 +262,7 @@ class MiqExpression
       clause = operands2rubyvalue(operator, op_args, context_type)
     when "is"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = get_col_type(col_name)
+      col_type = parse_field_or_tag(col_name)&.column_type
       value = op_args["value"]
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
                  ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
@@ -271,7 +271,7 @@ class MiqExpression
                end
     when "from"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
-      col_type = get_col_type(col_name)
+      col_type = parse_field_or_tag(col_name)&.column_type
 
       start_val, end_val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
@@ -528,7 +528,7 @@ class MiqExpression
         if ops["value"] == :user_input
           ret.push("<user input>")
         else
-          col_type = get_col_type(ops["field"]) || "string"
+          col_type = parse_field_or_tag(ops["field"])&.column_type || "string"
           ret.push(quote_human(ops["value"], col_type.to_s))
         end
       end
@@ -605,7 +605,7 @@ class MiqExpression
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
-        col_type = get_col_type(ops["field"]) || "string"
+        col_type = parse_field_or_tag(ops["field"])&.column_type || "string"
         case context_type
         when "hash"
           val = ops["field"].split(".").last.split("-").join(".")
@@ -644,7 +644,7 @@ class MiqExpression
     if Field.is_field?(val)
       target = parse_field_or_tag(val)
       value = target.tag_path_with
-      col_type = target.try(:column_type) || "string"
+      col_type = target&.column_type || "string"
 
       reference_attribute = target ? "ref=#{target.model.to_s.downcase}, " : " "
       return "<value #{reference_attribute}type=#{col_type}>#{value}</value>"
@@ -1032,10 +1032,6 @@ class MiqExpression
     end.compact
   end
 
-  def self.get_col_type(field)
-    parse_field_or_tag(field).try(:column_type)
-  end
-
   NUM_OPERATORS     = config[:num_operators].freeze
   STRING_OPERATORS  = config[:string_operators]
   SET_OPERATORS     = config[:set_operators]
@@ -1048,7 +1044,7 @@ class MiqExpression
       if field == :count || field == :regkey
         field
       else
-        get_col_type(field.to_s) || :string
+        parse_field_or_tag(field.to_s)&.column_type || :string
       end
 
     case col_type.to_s.downcase.to_sym

@@ -2480,8 +2480,8 @@ describe MiqExpression do
     end
   end
 
-  describe ".get_col_type" do
-    subject { described_class.get_col_type(@field) }
+  describe ".parse_field_or_tag" do
+    subject { described_class.parse_field_or_tag(@field).try(:column_type) }
     let(:string_custom_attribute) do
       FactoryBot.create(:custom_attribute,
                          :name          => "foo",
@@ -2497,7 +2497,7 @@ describe MiqExpression do
 
     it "with model-field__with_pivot_table_suffix" do
       @field = "Vm-name__pv"
-      expect(subject).to eq(described_class.get_col_type("Vm-name"))
+      expect(subject).to eq(described_class.parse_field_or_tag("Vm-name").try(:column_type))
     end
 
     it "with custom attribute without value_type" do
