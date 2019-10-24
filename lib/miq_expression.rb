@@ -1031,12 +1031,13 @@ class MiqExpression
     end.compact
   end
 
-  NUM_OPERATORS     = config[:num_operators].freeze
-  STRING_OPERATORS  = config[:string_operators]
-  SET_OPERATORS     = config[:set_operators]
-  REGKEY_OPERATORS  = config[:regkey_operators]
-  BOOLEAN_OPERATORS = config[:boolean_operators]
-  DATE_TIME_OPERATORS = config[:date_time_operators]
+  NUM_OPERATORS        = config[:num_operators].freeze
+  STRING_OPERATORS     = config[:string_operators]
+  SET_OPERATORS        = config[:set_operators]
+  REGKEY_OPERATORS     = config[:regkey_operators]
+  BOOLEAN_OPERATORS    = config[:boolean_operators]
+  DATE_TIME_OPERATORS  = config[:date_time_operators]
+  DEPRECATED_OPERATORS = config[:deprecated_operators]
 
   def self.get_col_operators(field)
     col_type =
