@@ -56,6 +56,7 @@ class TenantQuota < ApplicationRecord
   virtual_column :used, :type => :float
   virtual_column :allocated, :type => :float
   virtual_column :available, :type => :float
+  virtual_column :description, :type => :string
 
   alias_attribute :total, :value
 
@@ -63,8 +64,12 @@ class TenantQuota < ApplicationRecord
     self.unit = default_unit unless unit.present?
   end
 
+  def description
+    TenantQuota.tenant_quota_description(name.to_sym)
+  end
+
   def self.format_quota_value(field, field_value, tenant_quota_name)
-    if field == "tenant_quotas.name"
+    if %w[tenant_quotas.name tenant_quotas.description].include?(field)
       TenantQuota.tenant_quota_description(tenant_quota_name.to_sym)
     else
       row = QUOTA_BASE[tenant_quota_name.to_sym]
