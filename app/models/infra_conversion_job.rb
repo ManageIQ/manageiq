@@ -378,6 +378,7 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     migration_task.run_conversion
     update_migration_task_progress(:on_exit)
+    record_transformation_activity
     queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
