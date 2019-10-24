@@ -1,51 +1,74 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
-  let(:manager) { FactoryBot.create(:embedded_automation_manager_ansible) }
-  let(:auth_one) { FactoryBot.create(:embedded_ansible_credential) }
-  let(:auth_two) { FactoryBot.create(:embedded_ansible_credential) }
-  subject { FactoryBot.create(:embedded_playbook, :manager => manager) }
+  let(:manager)               { FactoryBot.create(:embedded_automation_manager_ansible, :provider) }
+  let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager_id => manager.id) }
+  let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source) }
 
-  describe '#run' do
-    it 'delegates request to playbook runner' do
-      double_return = double(:signal => nil, :miq_task => double(:id => 'tid'))
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner)
-        .to receive(:create_job).with(hash_including(:playbook_id => subject.id, :userid => 'system')).and_return(double_return)
-      expect(subject.run({})).to eq('tid')
+  before { EvmSpecHelper.assign_embedded_ansible_role }
+
+  context "#run" do
+    it "launches the referenced ansible playbook" do
+      job = playbook.run
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:env_vars]).to eq({})
+      expect(job.options[:extra_vars]).to eq({})
+      expect(job.options[:configuration_script_source_id]).to eq(ansible_script_source.id)
+      expect(job.options[:playbook_relative_path]).to eq(playbook.name)
+      expect(job.options[:timeout]).to eq(100.minutes)
+      expect(job.options[:verbosity]).to eq(0)
+    end
+
+    it "accepts different variables to launch a playbook against" do
+      job = playbook.run(:extra_vars => {:some_key => :some_value})
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:env_vars]).to eq({})
+      expect(job.options[:extra_vars]).to eq(:some_key => :some_value)
+    end
+
+    it "passes execution_ttl to the job as its timeout" do
+      job = playbook.run(:execution_ttl => "5")
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:timeout]).to eq(5.minutes)
+    end
+
+    it "passes verbosity to the job when specified" do
+      job = playbook.run(:verbosity => "5")
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:verbosity]).to eq(5)
+    end
+
+    it "passes become_enabled to the job when specified" do
+      job = playbook.run(:become_enabled => true)
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:become_enabled]).to eq(true)
     end
   end
 
-  describe '#raw_create_job_template' do
-    it 'delegates request to job template raw creation' do
-      options = {:inventory => 'inv', :extra_vars => {'a' => 'x'}, :credential_id => auth_one.id, :vault_credential_id => auth_two.id }
-      option_matcher = hash_including(
-        :inventory        => 'inv',
-        :extra_vars       => '{"a":"x"}',
-        :playbook         => subject.name,
-        :project          => 'mref',
-        :credential       => auth_one.id,
-        :vault_credential => auth_two.id
-      )
+  context "#build_extra_vars" do
+    it "merges external hashes to send out to ansible_runner" do
+      external      = {:some_key => :some_value}
+      merged        = playbook.send(:build_extra_vars, external)
 
-      allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))
-      expect(SecureRandom).to receive(:uuid).and_return('random-uuid')
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:raw_create_in_provider).with(instance_of(manager.class), option_matcher)
-      subject.raw_create_job_template(options)
+      expect(merged).to eq(:some_key => :some_value)
     end
 
-    it 'works with empty credential id' do
-      options = {:inventory => 'inv', :extra_vars => {'a' => 'x'}, :credential_id => ''}
-      option_matcher = hash_including(
-        :inventory  => 'inv',
-        :extra_vars => '{"a":"x"}',
-        :playbook   => subject.name,
-        :project    => 'mref'
-      )
+    it "merges all empty arguments to send out to the tower gem" do
+      external      = nil
+      merged        = playbook.send(:build_extra_vars, external)
 
-      allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))
-      expect(SecureRandom).to receive(:uuid).and_return('random-uuid')
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:raw_create_in_provider).with(instance_of(manager.class), option_matcher)
-      subject.raw_create_job_template(options)
+      expect(merged).to eq({})
+    end
+
+    it "decrypts extra_vars before sending out to the tower gem" do
+      password      = "password::#{ManageIQ::Password.encrypt("some_value")}"
+      external      = {:some_key => password}
+      merged        = playbook.send(:build_extra_vars, external)
+
+      expect(merged).to eq(:some_key => "some_value")
     end
   end
 end

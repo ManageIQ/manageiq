@@ -4,7 +4,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   require_nested :Status
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::AutomationManager", :inverse_of => false
-  belongs_to :job_template, :foreign_key => :orchestration_template_id, :class_name => "ConfigurationScript", :inverse_of => false
   belongs_to :playbook, :foreign_key => :configuration_script_base_id, :inverse_of => false
 
   belongs_to :miq_task, :foreign_key => :ems_ref, :inverse_of => false
@@ -16,22 +15,20 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   #   :limit      => String
   #   :extra_vars => Hash
   #
-  def self.create_stack(template, options = {})
-    template_ref = template.new_record? ? nil : template
-    new(:name                  => template.name,
-        :ext_management_system => template.manager,
-        :verbosity             => template.variables["verbosity"].to_i,
-        :authentications       => collect_authentications(template.manager, options),
-        :job_template          => template_ref).tap do |stack|
-      stack.send(:update_with_provider_object, raw_create_stack(template, options))
+  def self.create_stack(playbook, options = {})
+    new(:name                  => playbook.name,
+        :ext_management_system => playbook.manager,
+        :verbosity             => options[:verbosity].to_i,
+        :authentications       => collect_authentications(playbook.manager, options),
+        :playbook              => playbook).tap do |stack|
+      stack.send(:update_with_provider_object, raw_create_stack(playbook, options))
     end
   end
 
-  def self.raw_create_stack(template, options = {})
-    options = reconcile_extra_vars_keys(template, options)
-    template.run(options)
+  def self.raw_create_stack(playbook, options = {})
+    playbook.run(options)
   rescue StandardError => e
-    _log.error("Failed to create job from template(#{template.name}), error: #{e}")
+    _log.error("Failed to create job from playbook(#{playbook.name}), error: #{e}")
     raise MiqException::MiqOrchestrationProvisionError, e.to_s, e.backtrace
   end
 
@@ -58,6 +55,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
 
   def job_plays
     resources.where(:resource_category => 'job_play').order(:start_time)
+  end
+
+  def playbook_set_stats
+    raw_stdout_json.dig(-1, 'event_data', 'artifact_data')
   end
 
   # Intend to be called by UI to display stdout. The stdout is stored in MiqTask#task_results or #message if error
@@ -92,14 +93,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   private
-
-  # If extra_vars are passed through automate, all keys are considered as attributes and
-  # converted to lower case. Need to convert them back to original definitions in the
-  # job template through survey_spec or variables
-  def self.reconcile_extra_vars_keys(_template, options)
-    options
-  end
-  private_class_method :reconcile_extra_vars_keys
 
   def self.collect_authentications(manager, options)
     credential_ids = options.values_at(
