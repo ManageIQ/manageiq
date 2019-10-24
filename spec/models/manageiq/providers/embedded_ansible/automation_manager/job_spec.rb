@@ -14,7 +14,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
     end
 
     let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager => manager) }
-    let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source) }
+    let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source, :manager => manager) }
     let(:manager)               { FactoryBot.create(:embedded_automation_manager_ansible, :provider) }
 
     let(:machine_credential)    { FactoryBot.create(:ansible_machine_credential, :manager_ref => "1", :resource => manager) }
@@ -22,66 +22,39 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
     let(:network_credential)    { FactoryBot.create(:ansible_network_credential, :manager_ref => "3", :resource => manager) }
     let(:vault_credential)      { FactoryBot.create(:ansible_vault_credential,   :manager_ref => "4", :resource => manager) }
 
-    let(:template) { FactoryBot.create(:embedded_ansible_configuration_script, :manager => manager, :parent => playbook) }
+    let(:job_options) do
+      {
+        :credential         => machine_credential.id,
+        :cloud_credential   => cloud_credential.id,
+        :network_credential => network_credential.id,
+        :vault_credential   => vault_credential.id
+      }
+    end
 
     describe "job operations" do
       describe ".create_job" do
-        context "template is persisted" do
-          it "creates a job" do
-            job = described_class.create_job(template, {})
-            expect(job.class).to                 eq(described_class)
-            expect(job.name).to                  eq(template.name)
-            expect(job.ems_ref).to               eq(job.miq_task.id.to_s)
-            expect(job.job_template).to          eq(template)
-            expect(job.status).to                eq(job.miq_task.state)
-            expect(job.ext_management_system).to eq(manager)
-            expect(job.retireable?).to           be false
-          end
-        end
-
-        context "template is temporary" do
-          let(:template) { FactoryBot.build(:embedded_ansible_configuration_script, :manager => manager, :parent => playbook) }
-
-          it "creates a job" do
-            job = described_class.create_job(template, {})
-            expect(job.job_template).to be_nil
-          end
+        it "creates a job" do
+          job = described_class.create_job(playbook, job_options)
+          expect(job.class).to                 eq(described_class)
+          expect(job.name).to                  eq(playbook.name)
+          expect(job.ems_ref).to               eq(job.miq_task.id.to_s)
+          expect(job.playbook).to              eq(playbook)
+          expect(job.status).to                eq(job.miq_task.state)
+          expect(job.ext_management_system).to eq(manager)
+          expect(job.retireable?).to           be false
         end
 
         it "catches errors from provider" do
-          expect(template).to receive(:run).and_raise("bad request")
+          expect(playbook).to receive(:run).and_raise("bad request")
 
           expect do
-            described_class.create_job(template, {})
+            described_class.create_job(playbook, {})
           end.to raise_error(MiqException::MiqOrchestrationProvisionError)
-        end
-
-        context "options have extra_vars" do
-          let(:template) do
-            FactoryBot.build(:embedded_ansible_configuration_script,
-                             :manager     => manager,
-                             :parent      => playbook,
-                             :variables   => {"Var1" => "v1", "VAR2" => "v2"},
-                             :survey_spec => {"spec" => [{"default" => "v3", "variable" => "var3", "type" => "text"}]})
-          end
-
-          it "updates the extra_vars with original keys" do
-            described_class.create_job(template, :extra_vars => {"var1" => "n1", "var2" => "n2", "VAR3" => "n3"})
-          end
         end
       end
 
       context "#refresh_ems" do
-        subject { described_class.create_job(template, job_options) }
-
-        let(:job_options) do
-          {
-            :credential         => machine_credential.id,
-            :cloud_credential   => cloud_credential.id,
-            :network_credential => network_credential.id,
-            :vault_credential   => vault_credential.id
-          }
-        end
+        subject { described_class.create_job(playbook, job_options) }
 
         before { Timecop.freeze }
         after  { Timecop.return }
@@ -155,17 +128,11 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
           # expect(subject.parameters.first).to have_attributes(:name => "param1", :value => "val1")
           #
         end
-
-        # TODO:  This is should be irrelevant now, right?
-        # it "catches errors from provider" do
-        #   expect(connection.api.jobs).to receive(:find).and_raise("bad request")
-        #   expect { subject.refresh_ems }.to raise_error(MiqException::MiqOrchestrationUpdateError)
-        # end
       end
     end
 
     describe "job status" do
-      subject { described_class.create_job(template, {}) }
+      subject { described_class.create_job(playbook, {}) }
 
       context "#raw_status and #raw_exists" do
         it "gets the stack status" do
@@ -182,7 +149,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
     #        to set this up in a time crunch.
 
     # describe "#raw_stdout" do
-    #   subject { described_class.create_job(template, {}) }
+    #   subject { described_class.create_job(playbook, {}) }
 
     #   it "gets the standard output of the job" do
     #     expect(subject.raw_stdout("html")).to eq("<html><body>job stdout</body></html>")

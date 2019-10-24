@@ -1,7 +1,8 @@
 class ServiceAnsiblePlaybook < ServiceGeneric
   include AnsibleExtraVarsMixin
+  include AnsiblePlaybookMixin
 
-  delegate :job_template, :to => :service_template, :allow_nil => true
+  delegate :playbook, :to => :service_template, :allow_nil => true
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
@@ -37,7 +38,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def launch_ansible_job(action)
-    jt = job_template(action)
+    my_playbook = playbook(action)
     opts = get_job_options(action).deep_merge(
       :extra_vars => {
         'manageiq'            => service_manageiq_env(action),
@@ -48,7 +49,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
     _log.info("Launching Ansible job with options:")
     $log.log_hashes(opts, :filter => ["api_token", "token"])
-    new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
+    new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(my_playbook, decrypt_options(opts))
     update_job_for_playbook(action, new_job, opts[:hosts])
 
     _log.info("Ansible job with ref #{new_job.ems_ref} was created.")
@@ -109,28 +110,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     options[job_option_key(action)].deep_dup
   end
 
-  CONFIG_OPTIONS_WHITELIST = %i[
-    become_enabled
-    cloud_credential_id
-    credential_id
-    execution_ttl
-    extra_vars
-    hosts
-    network_credential_id
-    vault_credential_id
-    verbosity
-  ].freeze
-
   def config_options(action)
     options.fetch_path(:config_info, action.downcase.to_sym).slice(*CONFIG_OPTIONS_WHITELIST).with_indifferent_access
-  end
-
-  def translate_credentials!(job_options)
-    %i[credential vault_credential network_credential cloud_credential].each do |cred|
-      cred_sym = "#{cred}_id".to_sym
-      credential_id = job_options.delete(cred_sym)
-      job_options[cred] = Authentication.find(credential_id).native_ref if credential_id.present?
-    end
   end
 
   def save_job_options(action, overrides)
@@ -171,16 +152,6 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     params.blank? ? {} : {:extra_vars => params}
   end
 
-  def use_default_inventory?(hosts)
-    hosts.blank? || hosts == 'localhost'
-  end
-
-  def hosts_array(hosts_string)
-    return ["localhost"] if use_default_inventory?(hosts_string)
-
-    hosts_string.split(',').map(&:strip).delete_blanks
-  end
-
   # update job attributes only available to playbook provisioning
   def update_job_for_playbook(action, job, hosts)
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
@@ -195,12 +166,6 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def log_stdout(action)
     log_option = options.fetch_path(:config_info, action.downcase.to_sym, :log_output) || 'on_error'
-    return unless %(on_error always).include?(log_option)
-    job = job(action)
-    return if log_option == 'on_error' && job.raw_status.succeeded?
-    _log.info("Stdout from ansible job #{job.name}: #{job.raw_stdout('txt_download')}")
-  rescue => err
-    _log.error("Failed to get stdout from ansible job #{job.name}")
-    _log.log_backtrace(err)
+    playbook_log_stdout(log_option, job(action))
   end
 end
