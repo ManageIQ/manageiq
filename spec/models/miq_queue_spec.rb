@@ -111,8 +111,8 @@ describe MiqQueue do
 
     it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
-      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
+      allow(Storage).to receive(:ext_management_system).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'ext_management_system')
       status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -123,7 +123,7 @@ describe MiqQueue do
       expect(msg.handler).to    be_nil
       expect(msg.deliver_on).to eq(deliver_on)
 
-      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
+      allow(Storage).to receive(:ext_management_system).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
       status, _message, _result = msg.deliver
@@ -135,8 +135,8 @@ describe MiqQueue do
 
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
-      allow(MiqServer).to receive(:foobar).and_raise(ex)
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
+      allow(MiqServer).to receive(:hostname).and_raise(ex)
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'hostname')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
@@ -152,12 +152,12 @@ describe MiqQueue do
       msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
                                            :handler     => @miq_server,
                                            :class_name  => 'Storage',
-                                           :method_name => 'foobar',
+                                           :method_name => 'ext_management_system',
                                            :user_id     => user.id,
                                            :args        => [1, 2, 3],
                                            :group_id    => user.current_group.id,
                                            :tenant_id   => user.current_tenant.id)
-      expect(Storage).to receive(:foobar) do
+      expect(Storage).to receive(:ext_management_system) do
         expect(User.current_user.name).to eq(user.name)
         expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
         expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
