@@ -617,28 +617,25 @@ class MiqExpression
       else
         target = parse_field_or_tag(ops["field"])
         col_type = target&.column_type || "string"
-        if context_type == "hash"
-          val = ops["field"].split(".").last.split("-").join(".")
-          fld = "<value type=#{col_type}>#{val}</value>"
-        else
-          fld = "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
-        end
+        field = if context_type == "hash"
+                  val = ops["field"].split(".").last.split("-").join(".")
+                  "<value type=#{col_type}>#{val}</value>"
+                else
+                  "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
+                end
 
-        [fld, quote_by(operator, ops["value"], col_type)]
+        [field, quote_by(operator, ops["value"], col_type)]
       end
     elsif ops["count"]
       target = parse_field_or_tag(ops["count"])
-      fld = "<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>"
-      [fld, quote_by(nil, ops["value"], target.column_type)]
+      ["<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>", quote_by(nil, ops["value"], target.column_type)]
     elsif ops["regkey"]
       if operator == "key exists"
         ["<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'", nil]
       elsif operator == "value exists"
         ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil]
       else
-        fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
-
-        [fld, quote_by(operator, ops["value"], "string")]
+        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote_by(operator, ops["value"], "string")]
       end
     end
   end
