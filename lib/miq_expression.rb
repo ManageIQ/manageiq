@@ -611,33 +611,36 @@ class MiqExpression
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
 
-    if ops["field"]
-      if ops["field"] == "<count>"
-        ["<count>", quote_by(nil, ops["value"], :integer)]
-      else
-        target = parse_field_or_tag(ops["field"])
-        col_type = target&.column_type || "string"
-        field = if context_type == "hash"
-                  val = ops["field"].split(".").last.split("-").join(".")
-                  "<value type=#{col_type}>#{val}</value>"
-                else
-                  "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
-                end
+    field, operator, value, column_type =
+      if ops["field"]
+        if ops["field"] == "<count>"
+          ["<count>", nil, ops["value"], :integer]
+        else
+          target = parse_field_or_tag(ops["field"])
+          col_type = target&.column_type || "string"
+          field = if context_type == "hash"
+                    val = ops["field"].split(".").last.split("-").join(".")
+                    "<value type=#{col_type}>#{val}</value>"
+                  else
+                    "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
+                  end
 
-        [field, quote_by(operator, ops["value"], col_type)]
+          [field, operator, ops["value"], col_type]
+        end
+      elsif ops["count"]
+        target = parse_field_or_tag(ops["count"])
+        ["<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>", nil, ops["value"], target.column_type]
+      elsif ops["regkey"]
+        if operator == "key exists"
+          ["<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'", nil, nil, nil]
+        elsif operator == "value exists"
+          ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil, nil, nil]
+        else
+          ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", operator, ops["value"], :string]
+        end
       end
-    elsif ops["count"]
-      target = parse_field_or_tag(ops["count"])
-      ["<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>", quote_by(nil, ops["value"], target.column_type)]
-    elsif ops["regkey"]
-      if operator == "key exists"
-        ["<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'", nil]
-      elsif operator == "value exists"
-        ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil]
-      else
-        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote_by(operator, ops["value"], "string")]
-      end
-    end
+
+    [field, quote_by(operator, value, column_type)]
   end
 
   def self.quote(val, typ)
