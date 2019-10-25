@@ -257,9 +257,9 @@ class MiqExpression
       clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
                "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
     when "key exists"
-      clause = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type)
     when "value exists"
-      clause = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type)
     when "is"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = parse_field_or_tag(col_name)&.column_type
@@ -632,9 +632,9 @@ class MiqExpression
       [fld, quote_by(nil, ops["value"], target.column_type)]
     elsif ops["regkey"]
       if operator == "key exists"
-        "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
+        ["<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'", nil]
       elsif operator == "value exists"
-        "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
+        ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil]
       else
         fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
 
