@@ -12,7 +12,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :VaultCredential
   require_nested :VmwareCredential
 
-  require_nested :ConfigurationScript
   require_nested :ConfigurationScriptSource
   require_nested :ConfigurationWorkflow
   require_nested :ConfiguredSystem
