@@ -54,29 +54,26 @@ describe MiqQueue do
     end
 
     it "passes args" do
-      # not a valid method, just making sure everything is passed
-      expect(MiqServer).to receive(:my_zone).with("1", "2").and_return("MY ZONE")
-      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :args => %w(1 2))
+      expect(Storage).to receive(:scan_queue).with("1", "2").and_return("WHATEVER")
+      msg = MiqQueue.new(:class_name => "Storage", :method_name => "scan_queue", :args => %w[1 2])
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq("MY ZONE")
+      expect(result).to eq("WHATEVER")
     end
 
     it "passes data" do
-      # not a valid method, but stubbing it out
-      expect(MiqServer).to receive(:my_zone).with("1", "2", "3").and_return("MY ZONE")
-      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :data => "3", :args => %w(1 2))
+      expect(Storage).to receive(:scan_queue).with(1, "2").and_return("STUFF")
+      msg = MiqQueue.new(:class_name => "Storage", :method_name => "scan_queue", :data => "2", :args => [1])
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq("MY ZONE")
+      expect(result).to eq("STUFF")
     end
 
     it "passes target_id" do
-      # not a valid method, but stubbing it out
       expect(MiqServer).to receive(:my_zone).with(1).and_return("MY ZONE")
       msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :target_id => "1")
 
@@ -111,8 +108,8 @@ describe MiqQueue do
 
     it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
-      allow(Storage).to receive(:ext_management_system).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'ext_management_system')
+      allow(Storage).to receive(:scan_eligible_storages).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'scan_eligible_storages')
       status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -123,7 +120,7 @@ describe MiqQueue do
       expect(msg.handler).to    be_nil
       expect(msg.deliver_on).to eq(deliver_on)
 
-      allow(Storage).to receive(:ext_management_system).and_raise(MiqException::MiqQueueRetryLater.new)
+      allow(Storage).to receive(:scan_timer).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
       status, _message, _result = msg.deliver
@@ -135,8 +132,8 @@ describe MiqQueue do
 
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
-      allow(MiqServer).to receive(:hostname).and_raise(ex)
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'hostname')
+      allow(MiqServer).to receive(:setup_data_directory).and_raise(ex)
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'setup_data_directory')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
@@ -152,12 +149,12 @@ describe MiqQueue do
       msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
                                            :handler     => @miq_server,
                                            :class_name  => 'Storage',
-                                           :method_name => 'ext_management_system',
+                                           :method_name => 'create_scan_task',
                                            :user_id     => user.id,
-                                           :args        => [1, 2, 3],
+                                           :args        => [1,2,3],
                                            :group_id    => user.current_group.id,
                                            :tenant_id   => user.current_tenant.id)
-      expect(Storage).to receive(:ext_management_system) do
+      expect(Storage).to receive(:create_scan_task) do
         expect(User.current_user.name).to eq(user.name)
         expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
         expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
