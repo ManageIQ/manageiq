@@ -147,13 +147,13 @@ describe MiqQueue do
     it "sets the User.current_user" do
       user = FactoryBot.create(:user_with_group, :name => 'Freddy Kreuger')
       msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
-                                           :handler     => @miq_server,
-                                           :class_name  => 'Storage',
-                                           :method_name => 'create_scan_task',
-                                           :user_id     => user.id,
-                                           :args        => [1,2,3],
-                                           :group_id    => user.current_group.id,
-                                           :tenant_id   => user.current_tenant.id)
+                                          :handler     => @miq_server,
+                                          :class_name  => 'Storage',
+                                          :method_name => 'create_scan_task',
+                                          :user_id     => user.id,
+                                          :args        => [1,2,3],
+                                          :group_id    => user.current_group.id,
+                                          :tenant_id   => user.current_tenant.id)
       expect(Storage).to receive(:create_scan_task) do
         expect(User.current_user.name).to eq(user.name)
         expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
