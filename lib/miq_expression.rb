@@ -943,9 +943,8 @@ class MiqExpression
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
 
-      # REMOVE ME: workaround to temporarily exlude certain mdoels from the relationships
-      excluded_models = EXCLUDE_FROM_RELATS[model.name]
-      next if excluded_models && excluded_models.include?(assoc.to_s)
+      # REMOVE ME: workaround to temporarily exclude certain models from the relationships
+      next if EXCLUDE_FROM_RELATS[model.name]&.include?(assoc.to_s)
 
       assoc_class = ref.klass.name
 
