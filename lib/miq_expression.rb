@@ -600,12 +600,20 @@ class MiqExpression
 
   UNQUOTABLE_OPERATORS = %w[= IS\ NULL IS\ NOT\ NULL IS\ EMPTY IS\ NOT\ EMPTY].freeze
 
+  def self.quote_by(operator, value, column_type = nil)
+    if (STRING_OPERATORS + DEPRECATED_OPERATORS - UNQUOTABLE_OPERATORS).map(&:downcase).include?(operator)
+      value
+    else
+      quote(value, column_type.to_s)
+    end
+  end
+
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
 
     if ops["field"]
       if ops["field"] == "<count>"
-        ["<count>", quote(ops["value"], "integer")]
+        ["<count>", quote_by(nil, ops["value"], :integer)]
       else
         target = parse_field_or_tag(ops["field"])
         col_type = target&.column_type || "string"
@@ -616,16 +624,12 @@ class MiqExpression
           fld = "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
         end
 
-        if (STRING_OPERATORS + DEPRECATED_OPERATORS - UNQUOTABLE_OPERATORS).map(&:downcase).include?(operator)
-          [fld, ops["value"]]
-        else
-          [fld, quote(ops["value"], col_type.to_s)]
-        end
+        [fld, quote_by(operator, ops["value"], col_type)]
       end
     elsif ops["count"]
       target = parse_field_or_tag(ops["count"])
       fld = "<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>"
-      [fld, quote(ops["value"], target.column_type)]
+      [fld, quote_by(nil, ops["value"], target.column_type)]
     elsif ops["regkey"]
       if operator == "key exists"
         "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
@@ -634,11 +638,7 @@ class MiqExpression
       else
         fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
 
-        if (STRING_OPERATORS + DEPRECATED_OPERATORS - UNQUOTABLE_OPERATORS).map(&:downcase).include?(operator)
-          [fld, ops["value"]]
-        else
-          [fld, quote(ops["value"], "string")]
-        end
+        [fld, quote_by(operator, ops["value"], "string")]
       end
     end
   end
