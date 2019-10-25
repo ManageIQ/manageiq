@@ -609,8 +609,6 @@ class MiqExpression
   end
 
   def self.operands2rubyvalue(operator, ops, context_type)
-    # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
-
     field, operator, value, column_type =
       if ops["field"]
         if ops["field"] == "<count>"
