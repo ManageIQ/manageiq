@@ -66,6 +66,7 @@ log/*.gz
 log/*.log
 log/*.txt
 log/call_graph_*.html
+log/migration/*.log
 
 # product/
 product/automate

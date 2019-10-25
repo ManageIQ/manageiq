@@ -569,15 +569,16 @@ class InfraConversionJob < Job
     end
   end
 
-  def record_transformation_activity
+  def record_transformation_activity 
     dirname = "log/migration"
-
     FileUtils.mkdir(dirname) unless Dir.exist?(dirname)
-  
+
     tofile = File.open("#{dirname}/task_#{self.id}.log", mode: "w")
     File.readlines("log/evm.log").each { |line| 
       tofile << line if line.include?("ServiceTemplateTransformationPlanTask.#{self.id}") || line.include?(":object_id=>#{self.id}")
     }
     tofile.close
+  rescue
+    return "Error reading evm.log or writing out filtered messages"
   end
 end
