@@ -11,9 +11,9 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   end
 
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
-  let(:vm1) { FactoryBot.create(:vm_vmware) }
-  let(:vm2) { FactoryBot.create(:vm_vmware) }
-  let(:vm3) { FactoryBot.create(:vm_vmware) }
+  let(:vm1) { FactoryBot.create(:vm_or_template) }
+  let(:vm2) { FactoryBot.create(:vm_or_template) }
+  let(:vm3) { FactoryBot.create(:vm_or_template) }
   let(:security_group1) { FactoryBot.create(:security_group, :name => "default") }
   let(:flavor1) { FactoryBot.create(:flavor, :name => "large") }
   let(:security_group2) { FactoryBot.create(:security_group, :name => "default") }
@@ -277,10 +277,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      vm2_options = service_template.vm_resources.find_by(:resource_id => vm2.id).options
+      vm2_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm2_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -367,12 +378,25 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2, vm3])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group2.id, "osp_flavor_id" => flavor2.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      vm2_options = service_template.vm_resources.find_by(:resource_id => vm2.id).options
+      vm2_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm2.snapshots).supports_warm_migrate?
+      expect(vm2_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      vm3_options = service_template.vm_resources.find_by(:resource_id => vm3.id).options
+      vm3_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm3.snapshots).supports_warm_migrate?
+      expect(vm3_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group2.id, "osp_flavor_id" => flavor2.id, "warm_migration_compatible" => true)
+
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -389,8 +413,17 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true) # Arif: returns false
+
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_removed[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -407,10 +440,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm3])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+
+      vm3_options = service_template.vm_resources.find_by(:resource_id => vm3.id).options
+      vm3_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm3.snapshots).supports_warm_migrate?
+      expect(vm3_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added_and_removed[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -428,10 +472,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true) # Arif: returns false
+
+      vm2_options = service_template.vm_resources.find_by(:resource_id => vm2.id).options
+      vm2_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm2.snapshots).supports_warm_migrate?
+      expect(vm2_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -448,10 +503,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.description).to eq('an updated description')
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      stub_const("VirtualMachine", Class.new(ManageIQ::Providers::InfraManager::Vm) do
+        supports :warm_migrate do
+          unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        end
+      end)
+
+      vm1_options = service_template.vm_resources.find_by(:resource_id => vm1.id).options
+      vm1_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm1.snapshots).supports_warm_migrate?
+      expect(vm1_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
+      vm2_options = service_template.vm_resources.find_by(:resource_id => vm2.id).options
+      vm2_options["warm_migration_compatible"] = VirtualMachine.new(:snapshots => vm2.snapshots).supports_warm_migrate?
+      expect(vm2_options).to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
