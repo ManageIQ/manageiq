@@ -836,17 +836,11 @@ describe MiqQueue do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    # NOTE: default queue_name, state, zone
     it "should unqueue a message" do
-      msg = MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1'
-      # NOTE: default queue_name, state, zone
-      )
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1'
-      # NOTE: default queue_name, state, zone
-      )).to eq(msg)
+      msg = MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1')
+
+      expect(MiqQueue.unqueue(:class_name => 'MyClass', :method_name => 'method1')).to eq(msg)
     end
 
     it "should unqueue a message to 'any' zone, other state (when included in a list), and other queue" do
@@ -858,27 +852,23 @@ describe MiqQueue do
       )
       msg.update(:state => MiqQueue::STATE_DEQUEUE)
 
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1',
-               :queue_name  => 'other_queue',
-               :zone        => 'myzone', # NOTE: not nil
-               :state       => [MiqQueue::STATE_DEQUEUE, MiqQueue::STATE_READY]
-      )).to eq(msg)
+      expect(
+        MiqQueue.unqueue(
+          :class_name  => 'MyClass',
+          :method_name => 'method1',
+          :queue_name  => 'other_queue',
+          :zone        => 'myzone', # NOTE: not nil
+          :state       => [MiqQueue::STATE_DEQUEUE, MiqQueue::STATE_READY]
+        )
+      ).to eq(msg)
     end
 
     it "should not unqueue a message from a different zone" do
       zone = FactoryBot.create(:zone)
-      MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-        :zone        => zone.name
-      )
 
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1'
-      )).to be_nil
+      MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :zone => zone.name)
+
+      expect(MiqQueue.unqueue(:class_name => 'MyClass', :method_name => 'method1')).to be_nil
     end
   end
 
@@ -889,17 +879,13 @@ describe MiqQueue do
     end
 
     it "should default the queue name" do
-      expect(described_class.send(:default_get_options, {}
-                                 )).to include(
-                                   :queue_name => MiqQueue::DEFAULT_QUEUE
-                                 )
+      expect(described_class.send(:default_get_options, {})).to include(:queue_name => MiqQueue::DEFAULT_QUEUE)
     end
 
     it "should default the queue name and others" do
-      expect(described_class.send(
-               :default_get_options,
-               :other_key => "x"
-      )).to include(
+      expect(
+        described_class.send(:default_get_options, :other_key => "x")
+      ).to include(
         :queue_name => MiqQueue::DEFAULT_QUEUE,
         :other_key  => "x",
         :state      => MiqQueue::STATE_READY,
@@ -908,12 +894,9 @@ describe MiqQueue do
     end
 
     it "should override the queue name" do
-      expect(described_class.send(
-               :default_get_options,
-               :queue_name => "non_generic"
-      )).to include(
-        :queue_name => "non_generic"
-      )
+      expect(
+        described_class.send(:default_get_options, :queue_name => "non_generic")
+      ).to include(:queue_name => "non_generic")
     end
   end
 
