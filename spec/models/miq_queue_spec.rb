@@ -1,4 +1,4 @@
-describe MiqQueue do
+RSpec.describe MiqQueue do
   specify { expect(FactoryBot.build(:miq_queue)).to be_valid }
 
   context "#deliver" do
