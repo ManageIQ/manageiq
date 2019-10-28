@@ -244,7 +244,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   before do
     stub_const("ManageIQ::Providers::InfraManager::WarmMigrationVm", Class.new(ManageIQ::Providers::InfraManager::Vm) do
       supports :warm_migrate do
-        unsupported_reason_add(:warm_migrate, _('Warm migratiobn can not migrate a VM with snapshots')) if snapshots.present?
+        unsupported_reason_add(:warm_migrate, _('Warm migration can not migrate a VM with snapshots')) if snapshots.present?
       end
     end)
   end
