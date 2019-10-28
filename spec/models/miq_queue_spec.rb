@@ -1,4 +1,4 @@
-RSpec.describe MiqQueue do
+describe MiqQueue do
   specify { expect(FactoryBot.build(:miq_queue)).to be_valid }
 
   context "#deliver" do
@@ -53,7 +53,7 @@ RSpec.describe MiqQueue do
       expect(result).to be_nil
     end
 
-    it "passes args" do
+    it "passes multiple args" do
       expect(Storage).to receive(:scan_queue).with("1", "2").and_return("WHATEVER")
       msg = MiqQueue.new(:class_name => "Storage", :method_name => "scan_queue", :args => %w[1 2])
 
