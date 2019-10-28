@@ -53,30 +53,27 @@ describe MiqQueue do
       expect(result).to be_nil
     end
 
-    it "passes args" do
-      # not a valid method, just making sure everything is passed
-      expect(MiqServer).to receive(:my_zone).with("1", "2").and_return("MY ZONE")
-      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :args => %w(1 2))
+    it "passes multiple args" do
+      expect(Storage).to receive(:scan_queue).with("1", "2").and_return("WHATEVER")
+      msg = MiqQueue.new(:class_name => "Storage", :method_name => "scan_queue", :args => %w[1 2])
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq("MY ZONE")
+      expect(result).to eq("WHATEVER")
     end
 
     it "passes data" do
-      # not a valid method, but stubbing it out
-      expect(MiqServer).to receive(:my_zone).with("1", "2", "3").and_return("MY ZONE")
-      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :data => "3", :args => %w(1 2))
+      expect(Storage).to receive(:scan_queue).with(1, "2").and_return("STUFF")
+      msg = MiqQueue.new(:class_name => "Storage", :method_name => "scan_queue", :data => "2", :args => [1])
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq("MY ZONE")
+      expect(result).to eq("STUFF")
     end
 
     it "passes target_id" do
-      # not a valid method, but stubbing it out
       expect(MiqServer).to receive(:my_zone).with(1).and_return("MY ZONE")
       msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :target_id => "1")
 
@@ -111,8 +108,8 @@ describe MiqQueue do
 
     it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
-      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
+      allow(Storage).to receive(:scan_eligible_storages).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'scan_eligible_storages')
       status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -123,7 +120,7 @@ describe MiqQueue do
       expect(msg.handler).to    be_nil
       expect(msg.deliver_on).to eq(deliver_on)
 
-      allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
+      allow(Storage).to receive(:scan_timer).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
       status, _message, _result = msg.deliver
@@ -135,8 +132,8 @@ describe MiqQueue do
 
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
-      allow(MiqServer).to receive(:foobar).and_raise(ex)
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
+      allow(MiqServer).to receive(:setup_data_directory).and_raise(ex)
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'setup_data_directory')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
@@ -150,14 +147,14 @@ describe MiqQueue do
     it "sets the User.current_user" do
       user = FactoryBot.create(:user_with_group, :name => 'Freddy Kreuger')
       msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
-                                           :handler     => @miq_server,
-                                           :class_name  => 'Storage',
-                                           :method_name => 'foobar',
-                                           :user_id     => user.id,
-                                           :args        => [1, 2, 3],
-                                           :group_id    => user.current_group.id,
-                                           :tenant_id   => user.current_tenant.id)
-      expect(Storage).to receive(:foobar) do
+                                          :handler     => @miq_server,
+                                          :class_name  => 'Storage',
+                                          :method_name => 'create_scan_task',
+                                          :user_id     => user.id,
+                                          :args        => [1, 2, 3],
+                                          :group_id    => user.current_group.id,
+                                          :tenant_id   => user.current_tenant.id)
+      expect(Storage).to receive(:create_scan_task) do
         expect(User.current_user.name).to eq(user.name)
         expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
         expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
@@ -183,23 +180,22 @@ describe MiqQueue do
 
   it "should validate formatting of message for logging" do
     # Add various key/value combos as needs arise...
-    message_parms = [
-      {:target_id    => nil,
-       :priority     => 20,
-       :method_name  => 'perf_rollup_gap',
-       :state        => 'ready',
-       :task_id      => nil,
-       :queue_name   => 'ems_metrics_processor',
-       :class_name   => 'Metric::Rollup',
-       :instance_id  => nil,
-       :args         => [],
-       :zone         => 'default',
-       :role         => 'ems_metrics_processor',
-       :server_guid  => nil,
-       :msg_timeout  => 600,
-       :handler_type => nil
-      }
-    ]
+    message_parms = [{
+      :target_id    => nil,
+      :priority     => 20,
+      :method_name  => 'perf_rollup_gap',
+      :state        => 'ready',
+      :task_id      => nil,
+      :queue_name   => 'ems_metrics_processor',
+      :class_name   => 'Metric::Rollup',
+      :instance_id  => nil,
+      :args         => [],
+      :zone         => 'default',
+      :role         => 'ems_metrics_processor',
+      :server_guid  => nil,
+      :msg_timeout  => 600,
+      :handler_type => nil
+    }]
 
     message_parms.each do |mparms|
       msg = FactoryBot.create(:miq_queue)
@@ -221,23 +217,22 @@ describe MiqQueue do
       "---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false"
     ]
 
-    message_parms = [
-      {:target_id    => nil,
-       :priority     => 20,
-       :method_name  => 'perf_rollup_gap',
-       :state        => 'ready',
-       :task_id      => nil,
-       :queue_name   => 'ems_metrics_processor',
-       :class_name   => 'Metric::Rollup',
-       :instance_id  => nil,
-       :args         => args_test,
-       :zone         => 'default',
-       :role         => 'ems_metrics_processor',
-       :server_guid  => nil,
-       :msg_timeout  => 600,
-       :handler_type => nil
-      }
-    ]
+    message_parms = [{
+      :target_id    => nil,
+      :priority     => 20,
+      :method_name  => 'perf_rollup_gap',
+      :state        => 'ready',
+      :task_id      => nil,
+      :queue_name   => 'ems_metrics_processor',
+      :class_name   => 'Metric::Rollup',
+      :instance_id  => nil,
+      :args         => args_test,
+      :zone         => 'default',
+      :role         => 'ems_metrics_processor',
+      :server_guid  => nil,
+      :msg_timeout  => 600,
+      :handler_type => nil
+    }]
 
     message_parms.each do |mparms|
       msg = FactoryBot.build(:miq_queue, mparms)
@@ -391,7 +386,7 @@ describe MiqQueue do
         msg = MiqQueue.put(
           :class_name  => "MiqQueueSpecNonArrayArgs",
           :method_name => "some_method",
-          :args        => "not_an_array",
+          :args        => "not_an_array"
         )
 
         msg_from_db = MiqQueue.find(msg.id)
@@ -407,7 +402,7 @@ describe MiqQueue do
     it "defaults :args" do
       msg = MiqQueue.put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       msg_from_db = MiqQueue.find(msg.id)
@@ -417,7 +412,7 @@ describe MiqQueue do
     it "defaults :miq_callback" do
       msg = MiqQueue.put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       msg_from_db = MiqQueue.find(msg.id)
@@ -443,12 +438,12 @@ describe MiqQueue do
     it "creates with :miq_callback via create_with" do
       miq_callback = {
         :class_name  => "Class1",
-        :method_name => "callback_method",
+        :method_name => "callback_method"
       }
 
       msg = MiqQueue.create_with(:miq_callback => miq_callback).put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       msg_from_db = MiqQueue.find(msg.id)
@@ -465,7 +460,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.queue_name).to eq("generic")
     end
@@ -484,7 +479,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.priority).to eq(MiqQueue::NORMAL_PRIORITY)
     end
@@ -502,7 +497,7 @@ describe MiqQueue do
     it "creates with :prority via create_with" do
       msg = MiqQueue.create_with(:priority => MiqQueue::LOW_PRIORITY).put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       expect(msg.priority).to eq(MiqQueue::LOW_PRIORITY)
@@ -512,7 +507,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.role).to eq(nil)
     end
@@ -521,7 +516,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.server_guid).to eq(nil)
     end
@@ -530,7 +525,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.msg_timeout).to eq(MiqQueue::TIMEOUT)
     end
@@ -548,7 +543,7 @@ describe MiqQueue do
     it "sets :msg_timeout via create_with" do
       msg = MiqQueue.create_with(:msg_timeout => 3.minutes).put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       expect(msg.msg_timeout).to eq(3.minutes)
@@ -558,7 +553,7 @@ describe MiqQueue do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :args        => [1, 2],
+        :args        => [1, 2]
       )
       expect(msg.deliver_on).to eq(nil)
     end
@@ -581,7 +576,7 @@ describe MiqQueue do
 
       msg = MiqQueue.create_with(:deliver_on => deliver_on).put(
         :class_name  => "Class1",
-        :method_name => "Method1",
+        :method_name => "Method1"
       )
 
       msg_from_db = MiqQueue.find(msg.id)
@@ -660,7 +655,7 @@ describe MiqQueue do
     it "should add create_with options" do
       MiqQueue.create_with(:args => [3, 3]).put_unless_exists(
         :class_name  => 'MyClass',
-        :method_name => 'method1',
+        :method_name => 'method1'
       )
 
       expect(MiqQueue.first.args).to eq([3, 3])
@@ -669,12 +664,12 @@ describe MiqQueue do
     it "should not update create_with options" do
       MiqQueue.create_with(:args => [3, 3]).put_unless_exists(
         :class_name  => 'MyClass',
-        :method_name => 'method1',
+        :method_name => 'method1'
       )
 
       MiqQueue.create_with(:args => [1, 2]).put_unless_exists(
         :class_name  => 'MyClass',
-        :method_name => 'method1',
+        :method_name => 'method1'
       )
 
       expect(MiqQueue.first.args).to eq([3, 3])
@@ -841,17 +836,11 @@ describe MiqQueue do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    # NOTE: default queue_name, state, zone
     it "should unqueue a message" do
-      msg = MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-      # NOTE: default queue_name, state, zone
-      )
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1',
-      # NOTE: default queue_name, state, zone
-      )).to eq(msg)
+      msg = MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1')
+
+      expect(MiqQueue.unqueue(:class_name => 'MyClass', :method_name => 'method1')).to eq(msg)
     end
 
     it "should unqueue a message to 'any' zone, other state (when included in a list), and other queue" do
@@ -859,31 +848,27 @@ describe MiqQueue do
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :queue_name  => 'other_queue',
-        :zone        => nil,
+        :zone        => nil
       )
       msg.update(:state => MiqQueue::STATE_DEQUEUE)
 
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1',
-               :queue_name  => 'other_queue',
-               :zone        => 'myzone', # NOTE: not nil
-               :state       => [MiqQueue::STATE_DEQUEUE, MiqQueue::STATE_READY],
-      )).to eq(msg)
+      expect(
+        MiqQueue.unqueue(
+          :class_name  => 'MyClass',
+          :method_name => 'method1',
+          :queue_name  => 'other_queue',
+          :zone        => 'myzone', # NOTE: not nil
+          :state       => [MiqQueue::STATE_DEQUEUE, MiqQueue::STATE_READY]
+        )
+      ).to eq(msg)
     end
 
     it "should not unqueue a message from a different zone" do
       zone = FactoryBot.create(:zone)
-      MiqQueue.put(
-        :class_name  => 'MyClass',
-        :method_name => 'method1',
-        :zone        => zone.name
-      )
 
-      expect(MiqQueue.unqueue(
-               :class_name  => 'MyClass',
-               :method_name => 'method1',
-      )).to be_nil
+      MiqQueue.put(:class_name => 'MyClass', :method_name => 'method1', :zone => zone.name)
+
+      expect(MiqQueue.unqueue(:class_name => 'MyClass', :method_name => 'method1')).to be_nil
     end
   end
 
@@ -894,17 +879,13 @@ describe MiqQueue do
     end
 
     it "should default the queue name" do
-      expect(described_class.send(:default_get_options, {}
-                                 )).to include(
-                                   :queue_name => MiqQueue::DEFAULT_QUEUE
-                                 )
+      expect(described_class.send(:default_get_options, {})).to include(:queue_name => MiqQueue::DEFAULT_QUEUE)
     end
 
     it "should default the queue name and others" do
-      expect(described_class.send(
-               :default_get_options,
-               :other_key => "x"
-      )).to include(
+      expect(
+        described_class.send(:default_get_options, :other_key => "x")
+      ).to include(
         :queue_name => MiqQueue::DEFAULT_QUEUE,
         :other_key  => "x",
         :state      => MiqQueue::STATE_READY,
@@ -913,12 +894,9 @@ describe MiqQueue do
     end
 
     it "should override the queue name" do
-      expect(described_class.send(
-               :default_get_options,
-               :queue_name => "non_generic"
-      )).to include(
-        :queue_name => "non_generic"
-      )
+      expect(
+        described_class.send(:default_get_options, :queue_name => "non_generic")
+      ).to include(:queue_name => "non_generic")
     end
   end
 
