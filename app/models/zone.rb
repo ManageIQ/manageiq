@@ -194,6 +194,11 @@ class Zone < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of?(EmsCloud) }
   end
 
+  # @return [Array<ExtManagementSystem>] All emses that can collect Capacity and Utilization metrics
+  def ems_metrics_collectable
+    ext_management_systems.select { |e| e.kind_of?(EmsCloud) || e.kind_of?(EmsInfra) || e.kind_of?(ManageIQ::Providers::ContainerManager) }
+  end
+
   def ems_networks
     ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::NetworkManager) }
   end

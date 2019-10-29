@@ -43,12 +43,13 @@ module Metric::Capture
                 ::Settings.performance.capture_threshold_with_alerts.default)
   end
 
-  def self.perf_capture_timer(zone = nil)
+  def self.perf_capture_timer(ems_id)
     _log.info("Queueing performance capture...")
 
-    zone ||= MiqServer.my_server.zone
+    ems = ExtManagementSystem.find(ems_id)
+    zone = ems.zone
     perf_capture_health_check(zone)
-    targets = Metric::Targets.capture_targets(zone)
+    targets = Metric::Targets.capture_ems_targets(ems)
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     target_options = calc_target_options(zone, targets_by_rollup_parent)
