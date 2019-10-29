@@ -47,7 +47,7 @@ class MiqWorker
 
     # Can be overriden by including classes
     def container_image_name
-      "manageiq/manageiq-webserver-worker"
+      "manageiq-webserver-worker"
     end
   end
 end
