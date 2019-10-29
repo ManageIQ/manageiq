@@ -1,11 +1,19 @@
 class ServerSettingsReplicator
   def self.replicate(server, path_string, dry_run = false)
+    disallowed_path = ['server', 'server/host', 'server/hostname']
+    raise "Not allowed to replicate path #{path_string}" if disallowed_path.include?(path_string)
+
     path = path_string.split("/").map(&:to_sym)
 
     # all servers except source
     target_servers = MiqServer.where.not(:id => server.id)
-    settings = construct_setting_tree(path, server.settings_for_resource.fetch_path(path).to_h)
 
+    current_value = server.settings_for_resource.fetch_path(path)
+    settings = if current_value.respond_to?(:to_h)
+                 construct_setting_tree(path, current_value.to_h)
+               else
+                 construct_setting_tree(path, current_value)
+               end
     puts "Replicating from server id=#{server.id}, path=#{path_string} to #{target_servers.count} servers"
     puts "Settings: #{settings}"
 
