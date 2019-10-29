@@ -63,6 +63,7 @@ module ServiceTemplateTransformationPlan::ValidateConfigInfo
           raise _("Invalid VM found #{vm_obj.name}") if vm_obj.invalid?
 
           vm_options = {}
+          vm_options[:warm_migration_compatible] = vm_obj.supports_warm_migrate?
           vm_options[:pre_ansible_playbook_service_template_id] = pre_service_id if vm_hash[:pre_service]
           vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
           vm_options[:cpu_right_sizing_mode] = vm_hash[:cpu_right_sizing_mode] if vm_hash[:cpu_right_sizing_mode].present?
