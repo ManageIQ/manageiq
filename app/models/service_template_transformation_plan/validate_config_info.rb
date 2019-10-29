@@ -28,6 +28,7 @@ module ServiceTemplateTransformationPlan::ValidateConfigInfo
           next if vm_obj.nil?
 
           vm_options = {}
+          vm_options[:warm_migration_compatible] = vm_obj.supports_warm_migrate?
           vm_options[:pre_ansible_playbook_service_template_id] = pre_service_id if vm_hash[:pre_service]
           vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
           vm_options[:osp_security_group_id] = vm_hash[:osp_security_group_id] if vm_hash[:osp_security_group_id].present?

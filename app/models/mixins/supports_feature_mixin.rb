@@ -96,6 +96,7 @@ module SupportsFeatureMixin
     :launch_vmrc_console                 => 'Launch VMRC Console',
     :admin_ui                            => 'Open Admin UI for a Provider',
     :live_migrate                        => 'Live Migration',
+    :warm_migrate                        => 'Warm Migration',
     :migrate                             => 'Migration',
     :capture                             => 'Capture of Capacity & Utilization Metrics',
     :openscap_scan                       => 'OpenSCAP security scan',
