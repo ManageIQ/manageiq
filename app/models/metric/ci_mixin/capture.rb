@@ -40,34 +40,9 @@ module Metric::CiMixin::Capture
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
     raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
 
-    # Determine the items to queue up
     # cb is the task used to group cluster realtime metrics
     cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
-    if interval_name == 'historical'
-      start_time = Metric::Capture.historical_start_time if start_time.nil?
-      end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
-      items = split_capture_intervals(interval_name, start_time, end_time)
-    else
-      # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
-      # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
-      # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
-      realtime_cut_off = 4.hours.ago.utc.beginning_of_day
-      items =
-        if last_perf_capture_on.nil?
-          # for initial refresh of non-Storage objects, also go back historically
-          if !kind_of?(Storage) && Metric::Capture.historical_days != 0
-            [[interval_name, realtime_cut_off]] +
-              split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
-          else
-            [[interval_name, realtime_cut_off]]
-          end
-        elsif last_perf_capture_on < realtime_cut_off
-          [[interval_name, realtime_cut_off]] +
-            split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
-        else
-          [interval_name]
-        end
-    end
+    items = queue_items_for_interval(interval_name, start_time, end_time)
 
     # Queue up the actual items
     queue_item = {
@@ -113,6 +88,34 @@ module Metric::CiMixin::Capture
       end
     end
   end
+
+  def queue_items_for_interval(interval_name, start_time, end_time)
+    if interval_name == 'historical'
+      start_time = Metric::Capture.historical_start_time if start_time.nil?
+      end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
+      split_capture_intervals(interval_name, start_time, end_time)
+    else
+      # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
+      # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
+      # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
+      realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+      if last_perf_capture_on.nil?
+        # for initial refresh of non-Storage objects, also go back historically
+        if !kind_of?(Storage) && Metric::Capture.historical_days != 0
+          [[interval_name, realtime_cut_off]] +
+            split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
+        else
+          [[interval_name, realtime_cut_off]]
+        end
+      elsif last_perf_capture_on < realtime_cut_off
+        [[interval_name, realtime_cut_off]] +
+          split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
+      else
+        [interval_name]
+      end
+    end
+  end
+
 
   def perf_capture_realtime(*args)
     perf_capture('realtime', *args)
