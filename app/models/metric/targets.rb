@@ -8,6 +8,11 @@ module Metric::Targets
     MiqRegion.my_region.perf_capture_always = options
   end
 
+  def self.targets_archived_from
+    archived_for_setting = Settings.performance.targets.archived_for
+    archived_for_setting.to_i_with_method.seconds.ago.utc
+  end
+
   def self.capture_ems_targets(ems, options = {})
     case ems
     when EmsCloud                                then capture_cloud_targets([ems], options)
@@ -49,7 +54,7 @@ module Metric::Targets
 
   def self.with_archived(scope)
     # We will look also for freshly archived entities, if the entity was short-lived or even sub-hour
-    archived_from = Metric::Capture.targets_archived_from
+    archived_from = targets_archived_from
     scope.where(:deleted_on => nil).or(scope.where(:deleted_on => (archived_from..Time.now.utc)))
   end
 

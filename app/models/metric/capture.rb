@@ -20,11 +20,6 @@ module Metric::Capture
     historical_days.days.ago.utc.beginning_of_day
   end
 
-  def self.targets_archived_from
-    archived_for_setting = Settings.performance.targets.archived_for
-    archived_for_setting.to_i_with_method.seconds.ago.utc
-  end
-
   def self.concurrent_requests(interval_name)
     requests = ::Settings.performance.concurrent_requests[interval_name]
     requests = 20 if requests < 20 && interval_name == 'realtime'
