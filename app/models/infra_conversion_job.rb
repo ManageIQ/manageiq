@@ -142,6 +142,11 @@ class InfraConversionJob < Job
     queue_signal(:abort_virtv2v)
   end
 
+  def process_finished
+    record_transformation_activity
+    super
+  end
+
   # ---           Job relationships helper methods           --- #
 
   def state_retry_interval
@@ -378,7 +383,6 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     migration_task.run_conversion
     update_migration_task_progress(:on_exit)
-    record_transformation_activity
     queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
@@ -575,7 +579,7 @@ class InfraConversionJob < Job
 
     tofile = File.open("#{dirname}/task_#{self.id}.log", mode: "w")
     File.readlines("log/evm.log").each { |line| 
-      tofile << line if line.include?("ServiceTemplateTransformationPlanTask.#{self.id}") || line.include?(":object_id=>#{self.id}")
+      tofile << line if line.include?("MiqRequestTask id=#{migration_task.id}") || line.include?("InfraConversionJob id=#{id}")
     }
     tofile.close
   rescue
