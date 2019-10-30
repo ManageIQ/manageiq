@@ -54,6 +54,24 @@ RSpec.shared_context 'with enabled/disabled vmware targets', :with_enabled_disab
   let(:all_targets) { Metric::Targets.capture_ems_targets(@ems_vmware) }
 end
 
+RSpec.shared_context "with a small environment and time_profile", :with_small_vmware do
+  before do
+    @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
+    @vm1 = FactoryBot.create(:vm_vmware)
+    @vm2 = FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 4096))
+    @host1 = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
+    @host2 = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576))
+
+    @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
+    @ems_cluster.hosts << @host1
+    @ems_cluster.hosts << @host2
+
+    @time_profile = FactoryBot.create(:time_profile_utc)
+
+    MiqQueue.delete_all
+  end
+end
+
 RSpec.shared_context "with openstack", :with_openstack_and_availability_zones do
   before do
     @ems_openstack = FactoryBot.create(:ems_openstack, :zone => @zone)

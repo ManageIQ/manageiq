@@ -342,11 +342,6 @@ describe Metric do
           end
         end
 
-        it "should find the correct rows" do
-          expect(Metric::Finders.hour_to_range("2010-04-14T21:00:00Z")).to eq(["2010-04-14T21:00:00Z", "2010-04-14T21:59:59Z"])
-          expect(Metric::Finders.find_all_by_hour(@vm1, "2010-04-14T21:00:00Z", 'realtime')).to match_array @vm1.metrics.sort_by(&:timestamp)[1..5]
-        end
-
         context "calling perf_rollup to hourly on the Vm" do
           before do
             @vm1.perf_rollup("2010-04-14T21:00:00Z", 'hourly')
@@ -400,19 +395,6 @@ describe Metric do
                                                       }
                                                      )
           end
-        end
-
-        it "should find the correct rows" do
-          expect(Metric::Finders.day_to_range("2010-04-14T00:00:00Z", @time_profile)).to eq(["2010-04-14T00:00:00Z", "2010-04-14T23:59:59Z"])
-          expect(Metric::Finders.find_all_by_day(@vm1, "2010-04-14T00:00:00Z", 'hourly', @time_profile)).to match_array @vm1.metric_rollups.sort_by(&:timestamp)[1..5]
-        end
-
-        it "should find multiple resource types" do
-          @host1.metric_rollups << FactoryBot.create(:metric_rollup_host_hr,
-                                                      :resource  => @host1,
-                                                      :timestamp => "2010-04-14T22:00:00Z")
-          metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
-          expect(metrics.collect(&:resource_type).uniq).to match_array(%w(VmOrTemplate Host))
         end
 
         context "calling perf_rollup to daily on the Vm" do
@@ -746,26 +728,6 @@ describe Metric do
           @ems_vmware.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
           expect(MiqQueue.count).to eq(0)
         end
-      end
-    end
-
-    context ".day_to_range" do
-      it "should return the correct start and end dates when calling day_to_range before DST starts" do
-        s, e = Metric::Finders.day_to_range("2011-03-12T05:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        expect(s).to eq('2011-03-12T05:00:00Z')
-        expect(e).to eq('2011-03-13T04:59:59Z')
-      end
-
-      it "should return the correct start and end dates when calling day_to_range on the day DST starts" do
-        s, e = Metric::Finders.day_to_range("2011-03-13T05:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        expect(s).to eq('2011-03-13T05:00:00Z')
-        expect(e).to eq('2011-03-14T03:59:59Z')
-      end
-
-      it "should return the correct start and end dates when calling day_to_range after DST starts" do
-        s, e = Metric::Finders.day_to_range("2011-03-14T04:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
-        expect(s).to eq('2011-03-14T04:00:00Z')
-        expect(e).to eq('2011-03-15T03:59:59Z')
       end
     end
 
