@@ -86,7 +86,7 @@ module Metric::CiMixin::Capture
       next if item_interval != 'realtime' && messages[start_and_end_time].try(:priority) == priority
       MiqQueue.put_or_update(queue_item_options) do |msg, qi|
         # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
-        qi[:miq_task_id] = task_id if task_id
+        qi[:miq_task_id] = task_id if task_id && item_interval == "realtime"
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
@@ -98,9 +98,9 @@ module Metric::CiMixin::Capture
           qi[:priority] = priority
           # rerun the job (either with new task or higher priority)
           qi.delete(:state)
-          if task_id
+          if task_id && item_interval == "realtime"
             existing_tasks = (((msg.miq_callback || {})[:args] || []).first) || []
-            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]]) if item_interval == "realtime"
+            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
           end
           qi
         else
