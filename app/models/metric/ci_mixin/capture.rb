@@ -28,8 +28,8 @@ module Metric::CiMixin::Capture
   private :split_capture_intervals
 
   def perf_capture_queue(interval_name, options = {})
-    start_time = options[:start_time]
-    end_time   = options[:end_time]
+    start_time = options[:start_time]&.utc
+    end_time   = options[:end_time]&.utc
     priority   = options[:priority] || Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
@@ -39,9 +39,6 @@ module Metric::CiMixin::Capture
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
     raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
-
-    start_time = start_time.utc unless start_time.nil?
-    end_time = end_time.utc unless end_time.nil?
 
     # Determine the items to queue up
     # cb is the task used to group cluster realtime metrics
