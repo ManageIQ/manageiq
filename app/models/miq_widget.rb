@@ -206,13 +206,14 @@ class MiqWidget < ApplicationRecord
       unless MiqTask.exists?(:name   => "Generate Widget: '#{title}'",
                              :userid => User.current_userid || 'system',
                              :state  => %w(Queued Active))
-        create_task(group_hash.length)
+        task = create_task(group_hash.length)
 
         _log.info("#{log_prefix} Queueing Content Generation")
         group_hash.each do |g, u|
           options = generate_content_options(g, u)
           queue_generate_content_for_users_or_group(*options)
         end
+        task.id
       end
     end
   end
