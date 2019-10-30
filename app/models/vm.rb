@@ -6,6 +6,7 @@ class Vm < VmOrTemplate
   include CustomActionsMixin
   include CiFeatureMixin
   include ExternalUrlMixin
+  include AuthenticationMixin
 
   include_concern 'Operations'
 
