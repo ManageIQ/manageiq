@@ -141,8 +141,7 @@ module MiqConfigSssdLdap
 
     def bind_dn_and_bind_pwd_valid?
       if opts[:mode] == "ldap" || opts[:ldap_role] == true
-        return false if opts[:bind_dn].nil?
-        return false if opts[:bind_pwd].nil?
+        return false if opts[:bind_dn].nil? || opts[:bind_pwd].nil?
       end
       true
     end
