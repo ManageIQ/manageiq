@@ -464,35 +464,6 @@ describe Metric do
           end
         end
 
-        context "with Vm daily performances" do
-          before do
-            @perf = FactoryBot.create(:metric_rollup_vm_daily,
-                                       :timestamp    => "2010-04-14T00:00:00Z",
-                                       :time_profile => @time_profile
-                                      )
-          end
-
-          it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
-            rec = Metric::Helper.find_for_interval_name("daily", @time_profile)
-            expect(rec).to eq([@perf])
-          end
-
-          it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
-            rec = Metric::Helper.find_for_interval_name("daily", "UTC")
-            expect(rec).to eq([@perf])
-          end
-
-          it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
-            rec = Metric::Helper.find_for_interval_name("daily")
-            expect(rec).to eq([@perf])
-          end
-
-          it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
-            rec = Metric::Helper.find_for_interval_name("daily", "Alaska")
-            expect(rec.length).to eq(0)
-          end
-        end
-
         context "and Host realtime performances" do
           before do
             cases = [
@@ -795,23 +766,6 @@ describe Metric do
         s, e = Metric::Finders.day_to_range("2011-03-14T04:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))
         expect(s).to eq('2011-03-14T04:00:00Z')
         expect(e).to eq('2011-03-15T03:59:59Z')
-      end
-    end
-
-    context ".days_from_range" do
-      it "should return the correct dates and times when calling days_from_range before DST starts" do
-        days = Metric::Helper.days_from_range('2011-03-01T15:24:00Z', '2011-03-03T13:45:00Z', "Eastern Time (US & Canada)")
-        expect(days).to eq(["2011-03-01T05:00:00Z", "2011-03-02T05:00:00Z", "2011-03-03T05:00:00Z"])
-      end
-
-      it "should return the correct dates and times when calling days_from_range when start and end dates span DST" do
-        days = Metric::Helper.days_from_range('2011-03-12T11:23:00Z', '2011-03-14T14:33:00Z', "Eastern Time (US & Canada)")
-        expect(days).to eq(["2011-03-12T05:00:00Z", "2011-03-13T05:00:00Z", "2011-03-14T04:00:00Z"])
-      end
-
-      it "should return the correct dates and times when calling days_from_range before DST starts" do
-        days = Metric::Helper.days_from_range('2011-03-15T17:22:00Z', '2011-03-17T19:52:00Z', "Eastern Time (US & Canada)")
-        expect(days).to eq(["2011-03-15T04:00:00Z", "2011-03-16T04:00:00Z", "2011-03-17T04:00:00Z"])
       end
     end
 
