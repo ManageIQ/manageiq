@@ -17,12 +17,21 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
-  unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+  group :test, :development do
+    unless dependencies.detect { |d| d.name == plugin_name }
+      gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    end
+  end
+  group :production do
+    unless dependencies.detect { |d| d.name == plugin_name }
+      source "https://rubygems.pkg.github.com/juliancheal" do
+        gem plugin_name
+      end
+    end
   end
 end
 
-manageiq_plugin "manageiq-schema"
+# manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-virtual_attributes", "~>1.4.0"
