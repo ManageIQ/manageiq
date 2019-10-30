@@ -416,7 +416,7 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     it "finds the credentials associated with the resource if credentials cannot be found for the conversion host" do
-      vm.ext_management_system.authentications << auth_default
+      vm.authentications << auth_default
       host.authentications << auth_default
       expect(conversion_host_vm.send(:find_credentials)).to eq(auth_default)
       expect(conversion_host_host.send(:find_credentials)).to eq(auth_default)
