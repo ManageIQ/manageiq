@@ -45,7 +45,7 @@ module Metric::CiMixin::Capture
 
     # Determine the items to queue up
     # cb is the task used to group cluster realtime metrics
-    cb = nil
+    cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
       end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
@@ -70,8 +70,6 @@ module Metric::CiMixin::Capture
         else
           [interval_name]
         end
-
-      cb = {:class_name => self.class.name, :instance_id => id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
     end
 
     # Queue up the actual items
