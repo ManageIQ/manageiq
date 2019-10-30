@@ -204,13 +204,8 @@ module Metric::Capture
 
     targets.each do |target|
       interval_name = perf_target_to_interval_name(target)
-
       options = target_options[target]
-
       target.perf_capture_queue(interval_name, options)
-      if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
-        target.perf_capture_queue('historical')
-      end
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end

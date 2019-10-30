@@ -57,7 +57,13 @@ module Metric::CiMixin::Capture
       realtime_cut_off = 4.hours.ago.utc.beginning_of_day
       items =
         if last_perf_capture_on.nil?
-          [[interval_name, realtime_cut_off]]
+          # for initial refresh of non-Storage objects, also go back historically
+          if !kind_of?(Storage) && Metric::Capture.historical_days != 0
+            [[interval_name, realtime_cut_off]] +
+              split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
+          else
+            [[interval_name, realtime_cut_off]]
+          end
         elsif last_perf_capture_on < realtime_cut_off
           [[interval_name, realtime_cut_off]] +
             split_capture_intervals("historical", last_perf_capture_on, realtime_cut_off)
