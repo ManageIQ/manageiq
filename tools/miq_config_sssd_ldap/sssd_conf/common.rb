@@ -1,8 +1,8 @@
 require 'miqldap_configuration'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class Common
-    USER_ATTRS = %w(mail givenname sn displayname domainname).freeze
+    USER_ATTRS = %w[mail givenname sn displayname domainname].freeze
 
     attr_reader :initial_settings, :installation_specific_fields
 

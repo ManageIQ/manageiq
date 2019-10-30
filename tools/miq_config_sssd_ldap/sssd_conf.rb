@@ -7,7 +7,7 @@ require 'sssd_conf/pam'
 require 'sssd_conf/sssd'
 require 'auth_template_files'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class SssdConfError < StandardError; end
 
   class SssdConf < AuthTemplateFiles

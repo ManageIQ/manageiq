@@ -1,6 +1,6 @@
 require 'sssd_conf/common'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class DomainError < StandardError; end
 
   class Domain < Common
@@ -9,7 +9,7 @@ module MiqLdapToSssd
     def initialize(initial_settings)
       self.active_directory = determine_if_active_directory_configured(initial_settings)
 
-      super(%w(entry_cache_timeout
+      super(%w[entry_cache_timeout
                ldap_auth_disable_tls_never_use_in_production
                ldap_default_bind_dn
                ldap_default_authtok
@@ -28,7 +28,7 @@ module MiqLdapToSssd
                ldap_user_name
                ldap_user_object_class
                ldap_user_search_base
-               ldap_user_uid_number), initial_settings)
+               ldap_user_uid_number], initial_settings)
     end
 
     def entry_cache_timeout
@@ -36,7 +36,7 @@ module MiqLdapToSssd
     end
 
     def ldap_auth_disable_tls_never_use_in_production
-      initial_settings[:mode] == "ldaps" ? false : true
+      initial_settings[:mode] != "ldaps"
     end
 
     def ldap_default_bind_dn

@@ -1,17 +1,23 @@
 require 'fileutils'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class ConfigureApplianceSettingsError < StandardError; end
 
   class ConfigureApplianceSettings
     attr_reader :initial_settings
 
+    def initialize(initial_settings)
+      @initial_settings = initial_settings
+    end
+
     def configure
-      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+      LOGGER.debug("Invoked #{self.class}\##{__method__} initial_settings  #{initial_settings} ")
+
+      ldap_role = initial_settings[:ldap_role].nil? ? Settings.authentication.ldap_role : initial_settings[:ldap_role]
 
       new_settings = {
         :authentication => {:mode       => "httpd",
-                            :httpd_role => Settings.authentication.ldap_role,
+                            :httpd_role => ldap_role,
                             :ldap_role  => false}
       }
 

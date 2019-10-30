@@ -1,11 +1,11 @@
 $LOAD_PATH << Rails.root.join("tools").to_s
 
-require "miqldap_to_sssd"
+require "miq_config_sssd_ldap"
 require "tempfile"
 require "fileutils"
 require "auth_template_files"
 
-describe MiqLdapToSssd::SssdConf do
+describe MiqConfigSssdLdap::SssdConf do
   before do
     @spec_name = File.basename(__FILE__).split(".rb").first.freeze
   end
@@ -58,14 +58,14 @@ describe MiqLdapToSssd::SssdConf do
 
       @test_dir = "#{Dir.tmpdir}/#{@spec_name}"
       @template_dir = "#{@test_dir}/TEMPLATE"
-      stub_const("MiqLdapToSssd::AuthTemplateFiles::TEMPLATE_DIR", @template_dir)
+      stub_const("MiqConfigSssdLdap::AuthTemplateFiles::TEMPLATE_DIR", @template_dir)
 
       @sssd_conf_dir = "#{@test_dir}/etc/sssd"
       @sssd_conf_file = "#{@sssd_conf_dir}/sssd.conf"
       FileUtils.mkdir_p @sssd_conf_dir
       @sssd_template_dir = FileUtils.mkdir_p("#{@template_dir}/#{@sssd_conf_dir}")[0]
-      stub_const("MiqLdapToSssd::AuthTemplateFiles::SSSD_CONF_DIR", @sssd_conf_dir)
-      stub_const("MiqLdapToSssd::SSSD_CONF_FILE", @sssd_conf_file)
+      stub_const("MiqConfigSssdLdap::AuthTemplateFiles::SSSD_CONF_DIR", @sssd_conf_dir)
+      stub_const("MiqConfigSssdLdap::SSSD_CONF_FILE", @sssd_conf_file)
     end
 
     after do

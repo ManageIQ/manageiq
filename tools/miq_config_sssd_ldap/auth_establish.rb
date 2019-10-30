@@ -1,7 +1,7 @@
 require 'awesome_spawn'
 require 'miqldap_configuration'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class AuthEstablishError < StandardError; end
 
   class AuthEstablish

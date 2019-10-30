@@ -1,16 +1,15 @@
 require 'optimist'
+require 'miq_config_sssd_ldap/cli'
 
-module MiqLdapToSssd
-  class Cli
-    attr_accessor :options
-
+module MiqConfigSssdLdap
+  class CliConvert < Cli
     def parse(args)
       args.shift if args.first == "--" # Handle when called through script/runner
 
       LOGGER.debug("Invoked #{self.class}\##{__method__}")
 
-      self.options = Optimist.options(args) do
-        banner "Usage: ruby #{$PROGRAM_NAME} [options]\n"
+      self.opts = Optimist.options(args) do
+        banner "Usage: ruby #{$PROGRAM_NAME} [opts]\n"
 
         opt :domain,
             "The domain name for the Base DN, e.g. example.com",
@@ -49,19 +48,12 @@ module MiqLdapToSssd
             :type    => :flag
       end
 
-      options[:tls_cacertdir] = File.dirname(options[:tls_cacert]) unless options[:tls_cacert].nil?
-      self.options = options.delete_if { |_n, v| v.nil? }
-      LOGGER.debug("User provided settings: #{options}")
+      opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
+      opts[:action] = "convert"
+      self.opts = opts.delete_if { |_n, v| v.nil? }
+      LOGGER.debug("User provided settings: #{opts}")
 
       self
-    end
-
-    def run
-      Converter.new(options).run
-    end
-
-    def self.run(args)
-      new.parse(args).run
     end
   end
 end

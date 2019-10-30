@@ -1,6 +1,4 @@
-#!/usr/bin/env ruby
-
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
   SSSD_ALREADY_CONFIGURED = "ERROR: #{SSSD_CONF_FILE} already exists. No changes will be made. Exiting".freeze
 
@@ -36,7 +34,7 @@ module MiqLdapToSssd
       disable_tls
       ConfigureApache.new(initial_settings).configure
       ConfigureSELinux.new(initial_settings).configure
-      ConfigureApplianceSettings.new.configure
+      ConfigureApplianceSettings.new(initial_settings).configure
     end
 
     def disable_tls
