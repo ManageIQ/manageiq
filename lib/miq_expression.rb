@@ -621,14 +621,12 @@ class MiqExpression
       else
         target = parse_field_or_tag(ops["field"])
         col_type = target&.column_type || "string"
-        field = if context_type == "hash"
-                  val = ops["field"].split(".").last.split("-").join(".")
-                  "<value type=#{col_type}>#{val}</value>"
-                else
-                  "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
-                end
 
-        [field, quote_by(operator, ops["value"], col_type)]
+        [if context_type == "hash"
+           "<value type=#{col_type}>#{ops["field"].split(".").last.split("-").join(".")}</value>"
+         else
+           "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
+         end, quote_by(operator, ops["value"], col_type)]
       end
     elsif ops["count"]
       target = parse_field_or_tag(ops["count"])
