@@ -62,4 +62,154 @@ describe MetricRollup do
       expect(rollups.pluck(:id)).to match_array(@current.pluck(:id) + @past.pluck(:id))
     end
   end
+
+  describe ".v_pct_cpu_ready_delta_summation" do
+    it "should return the correct values for Vm hourly" do
+      pdata = {
+        :resource_type             => "VmOrTemplate",
+        :capture_interval_name     => "hourly",
+        :intervals_in_rollup       => 180,
+        :cpu_ready_delta_summation => 10604.0,
+        :cpu_used_delta_summation  => 401296.0,
+        :cpu_wait_delta_summation  => 6709070.0,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(11.1)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(186.4)
+    end
+
+    it "should return the correct values for Vm daily" do
+      pdata = {
+        :resource_type             => "VmOrTemplate",
+        :capture_interval_name     => "daily",
+        :intervals_in_rollup       => 24,
+        :cpu_ready_delta_summation => 10868.0833333333,
+        :cpu_used_delta_summation  => 131611.583333333,
+        :cpu_wait_delta_summation  => 6772579.45833333,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(3.7)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(188.1)
+    end
+
+    it "should return the correct values for Host hourly" do
+      pdata = {
+        :resource_type             => "Host",
+        :capture_interval_name     => "hourly",
+        :intervals_in_rollup       => 179,
+        :derived_vm_count_on       => 6,
+        :cpu_ready_delta_summation => 54281.0,
+        :cpu_used_delta_summation  => 2324833.0,
+        :cpu_wait_delta_summation  => 36722174.0,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.3)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(10.8)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(170.0)
+
+      pdata[:derived_vm_count_on] = nil
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+
+      pdata[:derived_vm_count_on] = 0
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+    end
+
+    it "should return the correct values for Host daily" do
+      pdata = {
+        :resource_type             => "Host",
+        :capture_interval_name     => "daily",
+        :intervals_in_rollup       => 24,
+        :derived_vm_count_on       => 6,
+        :cpu_ready_delta_summation => 50579.1666666667,
+        :cpu_used_delta_summation  => 2180869.375,
+        :cpu_wait_delta_summation  => 36918805.4166667,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(10.1)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(170.9)
+
+      pdata[:derived_vm_count_on] = nil
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+
+      pdata[:derived_vm_count_on] = 0
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+    end
+
+    it "should return the correct values for Cluster hourly" do
+      pdata = {
+        :resource_type             => "EmsCluster",
+        :capture_interval_name     => "hourly",
+        :intervals_in_rollup       => nil,
+        :derived_vm_count_on       => 10,
+        :cpu_ready_delta_summation => 58783.0,
+        :cpu_used_delta_summation  => 3668409.0,
+        :cpu_wait_delta_summation  => 60426340.0,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(10.2)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(167.9)
+
+      pdata[:derived_vm_count_on] = nil
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+
+      pdata[:derived_vm_count_on] = 0
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+    end
+
+    it "should return the correct values for Cluster daily" do
+      pdata = {
+        :resource_type             => "EmsCluster",
+        :capture_interval_name     => "daily",
+        :intervals_in_rollup       => 24,
+        :derived_vm_count_on       => 10,
+        :cpu_ready_delta_summation => 54120.0833333333,
+        :cpu_used_delta_summation  => 3209660.54166667,
+        :cpu_wait_delta_summation  => 60868270.1666667,
+      }
+      perf = MetricRollup.new(pdata)
+
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0.2)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(8.9)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(169.1)
+
+      pdata[:derived_vm_count_on] = nil
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+
+      pdata[:derived_vm_count_on] = 0
+      perf = MetricRollup.new(pdata)
+      expect(perf.v_pct_cpu_ready_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_used_delta_summation).to eq(0)
+      expect(perf.v_pct_cpu_wait_delta_summation).to eq(0)
+    end
+  end
 end
