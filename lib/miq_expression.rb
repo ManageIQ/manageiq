@@ -14,6 +14,14 @@ class MiqExpression
   FORMAT_SUB_TYPES = config[:format_sub_types]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].to_h.invert
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
+  NUM_OPERATORS        = config[:num_operators].freeze
+  STRING_OPERATORS     = config[:string_operators]
+  SET_OPERATORS        = config[:set_operators]
+  REGKEY_OPERATORS     = config[:regkey_operators]
+  BOOLEAN_OPERATORS    = config[:boolean_operators]
+  DATE_TIME_OPERATORS  = config[:date_time_operators]
+  DEPRECATED_OPERATORS = config[:deprecated_operators]
+  UNQUOTABLE_OPERATORS = (STRING_OPERATORS + DEPRECATED_OPERATORS - ['=', 'IS NULL', 'IS NOT NULL', 'IS EMPTY', 'IS NOT EMPTY']).freeze
 
   def initialize(exp, ctype = nil)
     @exp = exp
@@ -598,10 +606,8 @@ class MiqExpression
     ret
   end
 
-  UNQUOTABLE_OPERATORS = %w[= IS\ NULL IS\ NOT\ NULL IS\ EMPTY IS\ NOT\ EMPTY].freeze
-
   def self.quote_by(operator, value, column_type = nil)
-    if (STRING_OPERATORS + DEPRECATED_OPERATORS - UNQUOTABLE_OPERATORS).map(&:downcase).include?(operator)
+    if UNQUOTABLE_OPERATORS.map(&:downcase).include?(operator)
       value
     else
       quote(value, column_type.to_s)
@@ -1032,14 +1038,6 @@ class MiqExpression
       [value2human(field_class_path, :include_model => include_model), field_assoc_path]
     end.compact
   end
-
-  NUM_OPERATORS        = config[:num_operators].freeze
-  STRING_OPERATORS     = config[:string_operators]
-  SET_OPERATORS        = config[:set_operators]
-  REGKEY_OPERATORS     = config[:regkey_operators]
-  BOOLEAN_OPERATORS    = config[:boolean_operators]
-  DATE_TIME_OPERATORS  = config[:date_time_operators]
-  DEPRECATED_OPERATORS = config[:deprecated_operators]
 
   def self.get_col_operators(field)
     col_type =
