@@ -14,8 +14,8 @@ class MiqWorker
     end
 
     def scale_deployment
-      ContainerOrchestrator.new.scale(worker_deployment_name, self.class.workers_configured_count)
-      delete_container_objects if self.class.workers_configured_count.zero?
+      ContainerOrchestrator.new.scale(worker_deployment_name, self.class.workers)
+      delete_container_objects if self.class.workers.zero?
     end
 
     def container_image_namespace
