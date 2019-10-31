@@ -1124,8 +1124,6 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job.migration_task).to receive(:run_conversion)
           expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:transform_vm)
-          expect(job.process_finished).to be true
-          expect(job.record_transformation_activity).to be_nil
         end
       end
     end
@@ -1527,6 +1525,11 @@ RSpec.describe InfraConversionJob, :v2v do
         job.signal(:poll_automate_state_machine)
         expect(job.status).to eq(task.status)
       end
+    end
+
+    it 'to finish migration_task.filter out this migration_task logs' do
+      expect(job.process_finished).to be true
+      expect(job.record_transformation_activity).to be_nil
     end
   end
 end
