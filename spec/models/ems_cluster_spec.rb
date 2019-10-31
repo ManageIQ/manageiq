@@ -248,7 +248,7 @@ describe EmsCluster do
   context "#upgrade_cluster" do
     before do
       @ems = FactoryBot.create(:ems_redhat_with_authentication_with_ca, :skip_validate)
-      @cluster = FactoryBot.create(:ems_cluster, :ems_id => @ems.id)
+      @cluster = FactoryBot.create(:ems_cluster_ovirt, :ems_id => @ems.id)
       my_server = double("my_server", :guid => "guid1")
       allow(MiqServer).to receive(:my_server).and_return(my_server)
     end
@@ -271,10 +271,9 @@ describe EmsCluster do
       expect(@cluster.supports_upgrade_cluster?).to be_truthy
     end
 
-    context "non rhv" do
+    context "non rhv cluster" do
       before do
-        @ems = FactoryBot.create(:ext_management_system)
-        @cluster = FactoryBot.create(:ems_cluster, :ems_id => @ems.id)
+        @cluster = FactoryBot.create(:ems_cluster)
       end
 
       it 'does not support upgrade_cluster' do

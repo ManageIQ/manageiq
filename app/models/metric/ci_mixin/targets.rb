@@ -2,7 +2,7 @@ module Metric::CiMixin::Targets
   def perf_capture_always?
     case self
     # For now allowing capturing for all OpenstackInfra hosts and clusters
-    when ManageIQ::Providers::Openstack::InfraManager::Host, ManageIQ::Providers::Openstack::InfraManager::EmsCluster then true
+    when ManageIQ::Providers::Openstack::InfraManager::Host, ManageIQ::Providers::Openstack::InfraManager::Cluster then true
     when ManageIQ::Providers::Kubernetes::ContainerManager::Container then true
     when ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup then true
     when ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode then true

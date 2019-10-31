@@ -4,7 +4,6 @@ class EmsCluster < ApplicationRecord
   include EventMixin
   include TenantIdentityMixin
   include CustomActionsMixin
-  include ClusterUpgrade
 
   acts_as_miq_taggable
 
@@ -57,18 +56,20 @@ class EmsCluster < ApplicationRecord
   include AsyncDeleteMixin
 
   #
-  # Provider Object methods
+  # Provider Object methods - to be overwritten by Provider authors
   #
-  # TODO: Vmware specific - Fix when we subclass EmsCluster
+  supports_not :upgrade_cluster
 
-  def provider_object(connection)
-    raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    connection.getVimClusterByMor(ems_ref_obj)
+  def provider_object(_connection)
+    raise NotImplementedError, _("provider_object must be implemented by a subclass")
   end
 
-  def provider_object_release(handle)
-    raise NotImplementedError unless ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    handle.release if handle rescue nil
+  def provider_object_release(_handle)
+    raise NotImplementedError, _("provider_object_release must be implemented by a subclass")
+  end
+
+  def register_host(_host)
+    raise NotImplementedError, _("register_host must be implemented by a subclass")
   end
 
   #
@@ -284,36 +285,6 @@ class EmsCluster < ApplicationRecord
 
   def hosts_enabled_for_perf_capture
     hosts(:include => [:taggings, :tags]).select(&:perf_capture_enabled?)
-  end
-
-  # Vmware specific
-  def register_host(host)
-    host = Host.extract_objects(host)
-    raise _("Host cannot be nil") if host.nil?
-    userid, password = host.auth_user_pwd(:default)
-    network_address  = host.address
-
-    with_provider_object do |vim_cluster|
-      begin
-        _log.info("Invoking addHost with options: address => #{network_address}, #{userid}")
-        host_mor = vim_cluster.addHost(network_address, userid, password)
-      rescue VimFault => verr
-        fault = verr.vimFaultInfo.fault
-        raise if     fault.nil?
-        raise unless fault.xsiType == "SSLVerifyFault"
-
-        ssl_thumbprint = fault.thumbprint
-        _log.info("Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}")
-        host_mor = vim_cluster.addHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
-      end
-
-      host.ems_ref                = host_mor
-      host.ems_ref_obj            = host_mor
-      host.ext_management_system  = ext_management_system
-      host.save!
-      hosts << host
-      host.refresh_ems
-    end
   end
 
   cache_with_timeout(:node_types) do
