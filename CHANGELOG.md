@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+# Unreleased as of Sprint 123 ending 2019-10-28
+
+### Added
+* Update puma to latest.  Be less conservative. [(#19389)](https://github.com/ManageIQ/manageiq/pull/19389)
+* Update to config gem 2.0.0 [(#19418)](https://github.com/ManageIQ/manageiq/pull/19418)
+* Add a base Job#queue_signal method [(#19281)](https://github.com/ManageIQ/manageiq/pull/19281)
+* drop first_in => interval from scheduler [(#19385)](https://github.com/ManageIQ/manageiq/pull/19385)
+* Reduce the number of gems for AWS SDK usage [(#19436)](https://github.com/ManageIQ/manageiq/pull/19436)
+* Update sys-filesystem gem to 1.3.1 [(#19399)](https://github.com/ManageIQ/manageiq/pull/19399)
+* require specific aws gems [(#19411)](https://github.com/ManageIQ/manageiq/pull/19411)
+* [V2V] Pin InfraConversionJob to first server where it runs [(#19416)](https://github.com/ManageIQ/manageiq/pull/19416)
+* Allow plugins to bring their own miq_reports [(#19391)](https://github.com/ManageIQ/manageiq/pull/19391)
+* Generate perfomance reports in specific date range [(#19393)](https://github.com/ManageIQ/manageiq/pull/19393)
+* Don't require modifying the source to purge vms [(#19406)](https://github.com/ManageIQ/manageiq/pull/19406)
+* Remove zanata-related stuff from manageiq [(#19404)](https://github.com/ManageIQ/manageiq/pull/19404)
+* Enumerable#reverse_each is faster than Enumerable#reverse.each [(#19409)](https://github.com/ManageIQ/manageiq/pull/19409)
+* Prefer block version of File.open to ensure file handle gets automatically closed [(#19412)](https://github.com/ManageIQ/manageiq/pull/19412)
+* Revert "Prefer block version of File.open to ensure file handle gets automatically closed" [(#19427)](https://github.com/ManageIQ/manageiq/pull/19427)
+
+
+### Fixed
+* Adding Volume Type (CloudVolumeType) to RBAC [(#19408)](https://github.com/ManageIQ/manageiq/pull/19408)
+* Revert "Remove unused Service::RetirementManagement.retire_service_resources method" [(#19417)](https://github.com/ManageIQ/manageiq/pull/19417)
+* Passes result_format when automate workspace is not expected [(#19407)](https://github.com/ManageIQ/manageiq/pull/19407)
+* Fixed sorting in TenantQuotas report [(#19415)](https://github.com/ManageIQ/manageiq/pull/19415)
+* Save the updated widget timestamp [(#19405)](https://github.com/ManageIQ/manageiq/pull/19405)
+* Utility function to update PxeMenu list [(#19134)](https://github.com/ManageIQ/manageiq/pull/19134)
+* Output constant must match the constantized class name [(#19400)](https://github.com/ManageIQ/manageiq/pull/19400)
+* Generate retire requests from the base class name [(#19398)](https://github.com/ManageIQ/manageiq/pull/19398)
+* SystemService: don't use gettext in model constants [(#19403)](https://github.com/ManageIQ/manageiq/pull/19403)
+* replicate_server_settings is parsing serverid incorrect [(#19433)](https://github.com/ManageIQ/manageiq/pull/19433)
+* Cleanup after Ansible runner. [(#19383)](https://github.com/ManageIQ/manageiq/pull/19383)
+
+
+# Unreleased as of Sprint 122 ending 2019-10-14
+
+### Added
+- [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+- Add a verify_credentials_task method [(#19346)](https://github.com/ManageIQ/manageiq/pull/19346)
+- CloudNetwork NetworkPort and SecurityGroup belong to a ResourceGroup [(#19343)](https://github.com/ManageIQ/manageiq/pull/19343)
+- Convert unsafe SQL to pure active record methods (rails 5.2) [(#19366)](https://github.com/ManageIQ/manageiq/pull/19366)
+- Pluggable ScanItems [(#19388)](https://github.com/ManageIQ/manageiq/pull/19388)
+- Rbac no references array [(#19318)](https://github.com/ManageIQ/manageiq/pull/19318)
+- Reload stale source_tenant after destroying self (rails 5.2) [(#19367)](https://github.com/ManageIQ/manageiq/pull/19367)
+- Removing groups changes users current group [(#19376)](https://github.com/ManageIQ/manageiq/pull/19376)
+- Update default_value_for rails 5.2/6 support [(#19370)](https://github.com/ManageIQ/manageiq/pull/19370)
+
+### Fixed
+- Service display has been renamed to visible. [(#19211)](https://github.com/ManageIQ/manageiq/pull/19211)
+- fix schedule_settings [(#19386)](https://github.com/ManageIQ/manageiq/pull/19386)
+- Adding Volume Snapshot (CloudVolumeSnapshot) to RBAC [(#19356)](https://github.com/ManageIQ/manageiq/pull/19356)
+- [V2V] Extend InfraConversionJob timeout [(#19373)](https://github.com/ManageIQ/manageiq/pull/19373)
+- [V2V] Fix progress percentage calculation [(#19375)](https://github.com/ManageIQ/manageiq/pull/19375)
+- [V2V] Remove handover from shutdown_vm transition [(#19371)](https://github.com/ManageIQ/manageiq/pull/19371)
+- Set default OrchestrationTemplateRunner timeout to 100 minutes. [(#19381)](https://github.com/ManageIQ/manageiq/pull/19381)
+
 ## Unreleased as of Sprint 121 ending 2019-09-30
 
 ### Added
