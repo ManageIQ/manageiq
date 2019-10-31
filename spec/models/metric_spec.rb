@@ -272,22 +272,6 @@ describe Metric do
         end
       end
 
-      context "executing perf_capture_now?" do
-        before do
-          stub_settings(:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}})
-        end
-
-        it "without alerts assigned" do
-          allow(MiqAlert).to receive(:target_needs_realtime_capture?).and_return(false)
-          assert_perf_capture_now @vm, :without_alerts
-        end
-
-        it "with alerts assigned" do
-          allow(MiqAlert).to receive(:target_needs_realtime_capture?).and_return(true)
-          assert_perf_capture_now @vm, :with_alerts
-        end
-      end
-
       context "services" do
         let(:service) { FactoryBot.create(:service) }
 
@@ -1164,21 +1148,5 @@ describe Metric do
       values[0][2] = time_profile.id
     end
     assert_queued_rollup(q_item, obj.id, obj.class.name, *values)
-  end
-
-  def assert_perf_capture_now(target, mode)
-    Timecop.freeze(Time.now) do
-      target.update_attribute(:last_perf_capture_on, nil)
-      expect(Metric::Capture.perf_capture_now?(target)).to be_truthy
-
-      target.update_attribute(:last_perf_capture_on, Time.now.utc - 15.minutes)
-      expect(Metric::Capture.perf_capture_now?(target)).to be_truthy
-
-      target.update_attribute(:last_perf_capture_on, Time.now.utc - 7.minutes)
-      expect(mode == :with_alerts ? Metric::Capture.perf_capture_now?(target) : !Metric::Capture.perf_capture_now?(target)).to be_truthy
-
-      target.update_attribute(:last_perf_capture_on, Time.now.utc - 1.minutes)
-      expect(Metric::Capture.perf_capture_now?(target)).not_to be_truthy
-    end
   end
 end
