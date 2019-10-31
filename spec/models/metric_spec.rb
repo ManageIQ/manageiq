@@ -56,22 +56,6 @@ describe Metric do
           Metric::Capture.perf_capture_timer(@ems_vmware.id)
         end
 
-        let(:expected_queue_items) do
-          {
-            %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime)   => 3,
-            %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_historical) => 24,
-            %w(Storage perf_capture_hourly)                                             => 1,
-            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)     => 2,
-            %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical)   => 16,
-            %w(MiqTask destroy_older_by_condition)                                      => 1
-          }
-        end
-
-        it "should queue up enabled targets" do
-          expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
-          assert_metric_targets(Metric::Targets.capture_ems_targets(@ems_vmware.reload))
-        end
-
         context "executing capture_ems_targets for realtime targets with parent objects" do
           before do
             @expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware)
@@ -148,16 +132,6 @@ describe Metric do
             end
           end
 
-          it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-            messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
-            messages.each { |m| m.update_attribute(:state, "dequeue") }
-
-            Metric::Capture.perf_capture_timer(@ems_vmware.id)
-
-            messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
-            messages.each { |m| expect(m.lock_version).to eq(1) }
-          end
-
           it "calling perf_capture_timer a second time should create another task with the correct time window" do
             Metric::Capture.perf_capture_timer(@ems_vmware.id)
 
@@ -171,72 +145,6 @@ describe Metric do
               t1, t2 = tasks
               expect(t2.context_data[:start]).to eq(t1.context_data[:end])
             end
-          end
-        end
-      end
-
-      context "executing perf_capture_gap" do
-        before do
-          t = Time.now.utc
-          Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days)
-        end
-
-        it "should queue up enabled targets for historical" do
-          expect(MiqQueue.count).to eq(10)
-
-          expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload, :exclude_storages => true)
-          expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
-
-          selected = queue_intervals(MiqQueue.all)
-
-          expect(selected).to match_array(expected)
-        end
-      end
-
-      context "executing perf_capture_realtime_now" do
-        before do
-          @vm = Vm.first
-          @vm.perf_capture_realtime_now
-        end
-
-        it "should queue up realtime capture for vm" do
-          expect(MiqQueue.count).to eq(1)
-
-          msg = MiqQueue.first
-          expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
-          expect(msg.instance_id).to eq(@vm.id)
-          expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-        end
-
-        context "with an existing queue item at a lower priority" do
-          before do
-            MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
-            @vm.perf_capture_realtime_now
-          end
-
-          it "should raise the priority of the existing queue item" do
-            expect(MiqQueue.count).to eq(1)
-
-            msg = MiqQueue.first
-            expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
-            expect(msg.instance_id).to eq(@vm.id)
-            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-          end
-        end
-
-        context "with an existing queue item at a higher priority" do
-          before do
-            MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
-            @vm.perf_capture_realtime_now
-          end
-
-          it "should not lower the priority of the existing queue item" do
-            expect(MiqQueue.count).to eq(1)
-
-            msg = MiqQueue.first
-            expect(msg.priority).to eq(MiqQueue::MAX_PRIORITY)
-            expect(msg.instance_id).to eq(@vm.id)
-            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
           end
         end
       end
