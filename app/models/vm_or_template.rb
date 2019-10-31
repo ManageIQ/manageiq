@@ -317,15 +317,6 @@ class VmOrTemplate < ApplicationRecord
     current_state == 'terminated'
   end
 
-  def raw_set_custom_field(attribute, value)
-    raise _("VM has no EMS, unable to set custom attribute") unless ext_management_system
-    run_command_via_parent(:vm_set_custom_field, :attribute => attribute, :value => value)
-  end
-
-  def set_custom_field(attribute, value)
-    raw_set_custom_field(attribute, value)
-  end
-
   def makesmart(_options = {})
     self.smart = true
     save

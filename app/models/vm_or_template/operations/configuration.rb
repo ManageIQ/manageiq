@@ -1,126 +1,132 @@
 module VmOrTemplate::Operations::Configuration
   def raw_set_memory(mb)
-    raise _("VM has no EMS, unable to reconfigure memory") unless ext_management_system
-    run_command_via_parent(:vm_set_memory, :value => mb)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def set_memory(mb)
+    raise _("VM has no EMS, unable to reconfigure memory") unless ext_management_system
+
     raw_set_memory(mb)
   end
 
   def raw_set_number_of_cpus(num)
-    raise _("VM has no EMS, unable to reconfigure CPUs") unless ext_management_system
-    run_command_via_parent(:vm_set_num_cpus, :value => num)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def set_number_of_cpus(num)
+    raise _("VM has no EMS, unable to reconfigure CPUs") unless ext_management_system
+
     raw_set_number_of_cpus(num)
   end
 
   def raw_connect_all_devices
-    raise _("VM has no EMS, unable to connect all devices") unless ext_management_system
-    run_command_via_parent(:vm_connect_all)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def connect_all_devices
+    raise _("VM has no EMS, unable to connect all devices") unless ext_management_system
+
     raw_connect_all_devices
   end
 
   def raw_disconnect_all_devices
-    raise _("VM has no EMS, unable to disconnect all devices") unless ext_management_system
-    run_command_via_parent(:vm_disconnect_all)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def disconnect_all_devices
+    raise _("VM has no EMS, unable to disconnect all devices") unless ext_management_system
+
     raw_disconnect_all_devices
   end
 
   def raw_connect_cdroms
-    raise _("VM has no EMS, unable to connect CD-ROM devices") unless ext_management_system
-    run_command_via_parent(:vm_connect_cdrom)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def connect_cdroms
+    raise _("VM has no EMS, unable to connect CD-ROM devices") unless ext_management_system
+
     raw_connect_cdroms
   end
 
   def raw_disconnect_cdroms
-    raise _("VM has no EMS, unable to disconnect CD-ROM devices") unless ext_management_system
-    run_command_via_parent(:vm_disconnect_cdrom)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def disconnect_cdroms
+    raise _("VM has no EMS, unable to disconnect CD-ROM devices") unless ext_management_system
+
     raw_disconnect_cdroms
   end
 
   def raw_connect_floppies
-    raise _("VM has no EMS, unable to connect Floppy devices") unless ext_management_system
-    run_command_via_parent(:vm_connect_floppy)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def connect_floppies
+    raise _("VM has no EMS, unable to connect Floppy devices") unless ext_management_system
+
     raw_connect_floppies
   end
 
   def raw_disconnect_floppies
-    raise _("VM has no EMS, unable to disconnect Floppy devices") unless ext_management_system
-    run_command_via_parent(:vm_disconnect_floppy)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def disconnect_floppies
+    raise _("VM has no EMS, unable to disconnect Floppy devices") unless ext_management_system
+
     raw_disconnect_floppies
   end
 
   def raw_add_disk(disk_name, disk_size_mb, options = {})
-    raise _("VM has no EMS, unable to add disk") unless ext_management_system
-    if options[:datastore]
-      datastore = ext_management_system.hosts.collect do |h|
-        h.writable_accessible_storages.find_by(:name => options[:datastore])
-      end.uniq.compact.first
-      raise _("Datastore does not exist or cannot be accessed, unable to add disk") unless datastore
-    end
-
-    run_command_via_parent(:vm_add_disk, :diskName => disk_name, :diskSize => disk_size_mb,
-        :thinProvisioned => options[:thin_provisioned], :dependent => options[:dependent],
-        :persistent => options[:persistent], :bootable => options[:bootable], :datastore => datastore,
-        :interface => options[:interface])
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def add_disk(disk_name, disk_size_mb, options = {})
+    raise _("VM has no EMS, unable to add disk") unless ext_management_system
+
     raw_add_disk(disk_name, disk_size_mb, options)
   end
 
   def raw_remove_disk(disk_name, options = {})
-    raise _("VM has no EMS, unable to remove disk") unless ext_management_system
-
-    options[:delete_backing] = true if options[:delete_backing].nil?
-    run_command_via_parent(:vm_remove_disk, :diskName => disk_name, :delete_backing => options[:delete_backing])
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def remove_disk(disk_name, options = {})
+    raise _("VM has no EMS, unable to remove disk") unless ext_management_system
+
     raw_remove_disk(disk_name, options)
   end
 
   def raw_attach_volume(volume_id, device = nil)
-    raise _("VM has no EMS, unable to attach volume") unless ext_management_system
-    run_command_via_parent(:vm_attach_volume, :volume_id => volume_id, :device => device)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def attach_volume(volume_id, device = nil)
+    raise _("VM has no EMS, unable to attach volume") unless ext_management_system
+
     raw_attach_volume(volume_id, device)
   end
 
   def raw_detach_volume(volume_id)
-    raise _("VM has no EMS, unable to detach volume") unless ext_management_system
-    run_command_via_parent(:vm_detach_volume, :volume_id => volume_id)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def detach_volume(volume_id, device = nil)
+    raise _("VM has no EMS, unable to detach volume") unless ext_management_system
+
     raw_detach_volume(volume_id)
   end
 
-  def spec_reconfigure(spec)
-    raise _("VM has no EMS, unable to apply reconfigure spec") unless ext_management_system
-    run_command_via_parent(:vm_reconfigure, :spec => spec)
+  def raw_reconfigure
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
+
+  def reconfigure(spec)
+    raise _("VM has no EMS, unable to apply reconfigure spec") unless ext_management_system
+
+    raw_reconfigure(spec)
+  end
+  alias spec_reconfigure reconfigure
 end

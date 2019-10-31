@@ -1,6 +1,6 @@
 module VmOrTemplate::Operations::Power
   def raw_start
-    run_command_via_parent(:vm_start)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def start
@@ -8,7 +8,7 @@ module VmOrTemplate::Operations::Power
   end
 
   def raw_stop
-    run_command_via_parent(:vm_stop)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def stop
@@ -17,7 +17,7 @@ module VmOrTemplate::Operations::Power
 
   # Suspend saves the state of the VM to disk and shuts it down
   def raw_suspend
-    run_command_via_parent(:vm_suspend)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def suspend
@@ -26,7 +26,7 @@ module VmOrTemplate::Operations::Power
 
   # All associated data and resources are kept but anything still in memory is not retained.
   def raw_shelve
-    run_command_via_parent(:vm_shelve)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def shelve
@@ -35,7 +35,7 @@ module VmOrTemplate::Operations::Power
 
   # Has to be in shelved state first. Data and resource associations are deleted.
   def raw_shelve_offload
-    run_command_via_parent(:vm_shelve_offload)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def shelve_offload
@@ -45,7 +45,7 @@ module VmOrTemplate::Operations::Power
   # Pause keeps the VM in memory but does not give it CPU cycles.
   # Not supported in VMware, so it is the same as suspend
   def raw_pause
-    run_command_via_parent(:vm_pause)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def pause

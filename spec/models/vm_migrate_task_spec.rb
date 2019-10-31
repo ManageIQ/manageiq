@@ -33,7 +33,7 @@ describe VmMigrateTask do
       vm.update(:name => 'aaa', :vendor => 'vmware', :location => 'somewhere')
       vm.ext_management_system = FactoryBot.create(:ext_management_system, :with_authentication)
       subject.update(:options => {:placement_folder_name => folder.id})
-      expect(vm).to receive(:run_command_via_parent).with(:vm_move_into_folder, :folder => folder)
+      expect(vm).to receive(:raw_move_into_folder).with(folder)
       expect(subject).to receive(:update_and_notify_parent).with(hash_including(:state => "migrated", :status => "Ok", :message => "Finished VM Migrate"))
       subject.do_request
     end
