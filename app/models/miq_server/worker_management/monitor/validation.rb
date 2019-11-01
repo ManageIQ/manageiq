@@ -3,6 +3,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
   def validate_worker(w)
     return true if MiqEnvironment::Command.is_podified?
+
     time_threshold   = get_time_threshold(w)
     memory_threshold = get_memory_threshold(w)
 
