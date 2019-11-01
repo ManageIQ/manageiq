@@ -36,9 +36,9 @@ class FileDepotS3 < FileDepot
   def verify_credentials(auth_type = nil, options = {})
 
     connection_rescue_block do
-      # EC2 does Lazy Connections, so call a cheap function
-      with_depot_connection(options.merge(:auth_type => auth_type)) do |ec2|
-        validate_connection(ec2)
+      # aws-sdk does Lazy Connections, so call a cheap function
+      with_depot_connection(options.merge(:auth_type => auth_type)) do |s3|
+        validate_connection(s3)
       end
     end
 
@@ -63,12 +63,12 @@ class FileDepotS3 < FileDepot
   end
 
   def translate_exception(err)
-    require 'aws-sdk-ec2'
+    require 'aws-sdk-s3'
 
     case err
-    when Aws::EC2::Errors::SignatureDoesNotMatch
+    when Aws::S3::Errors::SignatureDoesNotMatch
       MiqException::MiqHostError.new("SignatureMismatch - check your AWS Secret Access Key and signing method")
-    when Aws::EC2::Errors::AuthFailure
+    when Aws::S3::Errors::AuthFailure
       MiqException::MiqHostError.new("Login failed due to a bad username or password.")
     when Aws::Errors::MissingCredentialsError
       MiqException::MiqHostError.new("Missing credentials")
