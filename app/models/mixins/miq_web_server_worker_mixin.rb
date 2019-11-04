@@ -55,7 +55,7 @@ module MiqWebServerWorkerMixin
 
       workers = find_current_or_starting
       current = workers.length
-      desired = self.has_required_role? ? self.workers : 0
+      desired = self.workers
       result  = {:adds => [], :deletes => []}
       ports = all_ports_in_use
 

@@ -31,6 +31,6 @@ class MiqUiWorker < MiqWorker
   end
 
   def container_image_name
-    "manageiq/manageiq-ui-worker"
+    "manageiq-ui-worker"
   end
 end

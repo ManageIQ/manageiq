@@ -9,17 +9,21 @@ class MiqWorker
       definition[:spec][:template][:spec][:terminationGracePeriodSeconds] = self.class.worker_settings[:stopping_timeout].seconds
 
       container = definition[:spec][:template][:spec][:containers].first
-      container[:image] = "#{container_image_name}:#{container_image_tag}"
+      container[:image] = "#{container_image_namespace}/#{container_image_name}:#{container_image_tag}"
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
     end
 
     def scale_deployment
-      ContainerOrchestrator.new.scale(worker_deployment_name, self.class.workers_configured_count)
-      delete_container_objects if self.class.workers_configured_count.zero?
+      ContainerOrchestrator.new.scale(worker_deployment_name, self.class.workers)
+      delete_container_objects if self.class.workers.zero?
+    end
+
+    def container_image_namespace
+      ENV["CONTAINER_IMAGE_NAMESPACE"]
     end
 
     def container_image_name
-      "manageiq/manageiq-base-worker"
+      "manageiq-base-worker"
     end
 
     def container_image_tag

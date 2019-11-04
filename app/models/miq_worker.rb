@@ -48,6 +48,7 @@ class MiqWorker < ApplicationRecord
 
   def self.workers
     return (self.has_minimal_env_option? ? 1 : 0) if MiqServer.minimal_env? && check_for_minimal_role
+    return 0 unless has_required_role?
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
     workers_configured_count
@@ -137,7 +138,7 @@ class MiqWorker < ApplicationRecord
   def self.sync_workers
     w       = include_stopping_workers_on_synchronize ? find_alive : find_current_or_starting
     current = w.length
-    desired = self.has_required_role? ? workers : 0
+    desired = workers
     result  = {:adds => [], :deletes => []}
 
     if current != desired
@@ -358,8 +359,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.containerized_worker?
-    # un-rearch containers until further notice
-    return false
+    MiqEnvironment::Command.is_podified? && supports_container?
   end
 
   def containerized_worker?
@@ -527,6 +527,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def status_update
+    return if MiqEnvironment::Command.is_podified?
+
     begin
       pinfo = MiqProcess.processInfo(pid)
     rescue Errno::ESRCH
