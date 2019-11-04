@@ -14,6 +14,14 @@ class MiqExpression
   FORMAT_SUB_TYPES = config[:format_sub_types]
   FORMAT_BYTE_SUFFIXES = FORMAT_SUB_TYPES[:bytes][:units].to_h.invert
   BYTE_FORMAT_WHITELIST = Hash[FORMAT_BYTE_SUFFIXES.keys.collect(&:to_s).zip(FORMAT_BYTE_SUFFIXES.keys)]
+  NUM_OPERATORS        = config[:num_operators].freeze
+  STRING_OPERATORS     = config[:string_operators]
+  SET_OPERATORS        = config[:set_operators]
+  REGKEY_OPERATORS     = config[:regkey_operators]
+  BOOLEAN_OPERATORS    = config[:boolean_operators]
+  DATE_TIME_OPERATORS  = config[:date_time_operators]
+  DEPRECATED_OPERATORS = config[:deprecated_operators]
+  UNQUOTABLE_OPERATORS = (STRING_OPERATORS + DEPRECATED_OPERATORS - ['=', 'IS NULL', 'IS NOT NULL', 'IS EMPTY', 'IS NOT EMPTY']).freeze
 
   def initialize(exp, ctype = nil)
     @exp = exp
@@ -257,9 +265,9 @@ class MiqExpression
       clause = "<find><search>" + _to_ruby(op_args["search"], context_type, tz) + "</search>" \
                "<check mode=#{mode}>" + _to_ruby(op_args[check], context_type, tz) + "</check></find>"
     when "key exists"
-      clause = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type)
     when "value exists"
-      clause = operands2rubyvalue(operator, op_args, context_type)
+      clause, = operands2rubyvalue(operator, op_args, context_type)
     when "is"
       col_ruby, _value = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = parse_field_or_tag(col_name)&.column_type
@@ -598,43 +606,38 @@ class MiqExpression
     ret
   end
 
-  def self.operands2rubyvalue(operator, ops, context_type)
-    # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
+  def self.quote_by(operator, value, column_type = nil)
+    if UNQUOTABLE_OPERATORS.map(&:downcase).include?(operator)
+      value
+    else
+      quote(value, column_type.to_s)
+    end
+  end
 
+  def self.operands2rubyvalue(operator, ops, context_type)
     if ops["field"]
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
         target = parse_field_or_tag(ops["field"])
         col_type = target&.column_type || "string"
-        if context_type == "hash"
-          val = ops["field"].split(".").last.split("-").join(".")
-          fld = "<value type=#{col_type}>#{val}</value>"
-        else
-          fld = "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
-        end
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-          [fld, ops["value"]]
-        else
-          [fld, quote(ops["value"], col_type.to_s)]
-        end
+
+        [if context_type == "hash"
+           "<value type=#{col_type}>#{ops["field"].split(".").last.split("-").join(".")}</value>"
+         else
+           "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
+         end, quote_by(operator, ops["value"], col_type)]
       end
     elsif ops["count"]
       target = parse_field_or_tag(ops["count"])
-      fld = "<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>"
-      [fld, quote(ops["value"], target.column_type)]
+      ["<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>", quote(ops["value"], target.column_type)]
     elsif ops["regkey"]
       if operator == "key exists"
-        "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
+        ["<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'", nil]
       elsif operator == "value exists"
-        "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
+        ["<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'", nil]
       else
-        fld = "<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>"
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-          [fld, ops["value"]]
-        else
-          [fld, quote(ops["value"], "string")]
-        end
+        ["<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>", quote_by(operator, ops["value"], "string")]
       end
     end
   end
@@ -1029,13 +1032,6 @@ class MiqExpression
       [value2human(field_class_path, :include_model => include_model), field_assoc_path]
     end.compact
   end
-
-  NUM_OPERATORS     = config[:num_operators].freeze
-  STRING_OPERATORS  = config[:string_operators]
-  SET_OPERATORS     = config[:set_operators]
-  REGKEY_OPERATORS  = config[:regkey_operators]
-  BOOLEAN_OPERATORS = config[:boolean_operators]
-  DATE_TIME_OPERATORS = config[:date_time_operators]
 
   def self.get_col_operators(field)
     col_type =
