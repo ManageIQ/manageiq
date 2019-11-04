@@ -5471,6 +5471,10 @@
         :description: Edit a VM
         :feature_type: admin
         :identifier: vm_edit
+      - :name: Rename VM
+        :description: Rename VM
+        :feature_type: admin
+        :identifier: vm_rename
       - :name: Transform
         :description: Transform VM
         :feature_type: admin
