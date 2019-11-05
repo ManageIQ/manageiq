@@ -11,6 +11,11 @@ describe "VM Retirement Management" do
   end
 
   describe "#retirement_check" do
+    before do
+      # system_context_retirement relies on the presence of a user with this userid
+      FactoryBot.create(:user, :userid => "admin")
+    end
+
     context "with user" do
       it "uses user as requester" do
         expect(MiqEvent).to receive(:raise_evm_event)
@@ -44,8 +49,6 @@ describe "VM Retirement Management" do
 
     context "without user" do
       before do
-        # system_context_retirement relies on the presence of a user with this userid
-        FactoryBot.create(:user, :userid => 'admin', :role => 'super_administrator')
         user.destroy
         vm_with_owner.reload
       end
