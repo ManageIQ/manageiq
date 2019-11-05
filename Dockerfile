@@ -1,5 +1,5 @@
 ARG IMAGE_REF=latest
-FROM manageiq/manageiq-pods:frontend-${IMAGE_REF}
+FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ## Set build ARG
@@ -18,6 +18,7 @@ RUN yum -y install --setopt=tsflags=nodocs \
     yum clean all
 
 VOLUME [ "/var/lib/pgsql/data" ]
+VOLUME [ ${APP_ROOT} ]
 
 # Initialize SSH
 RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
@@ -34,8 +35,8 @@ RUN ${APPLIANCE_ROOT}/setup && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
-## Copy appliance-initialize script and service unit file
-COPY docker-assets/appliance-initialize.sh /usr/bin
+## Overwrite entrypoint from pods repo
+COPY docker-assets/entrypoint /usr/local/bin
 
 EXPOSE 443 22
 
