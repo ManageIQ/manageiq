@@ -60,7 +60,7 @@ module ManageIQ::Providers
     has_many :availability_zones, -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
 
     # Relationships delegated to parent manager
-    delegate :cloud_tenants,
+    virtual_delegate :cloud_tenants,
              :flavors,
              :cloud_resource_quotas,
              :cloud_volumes,
@@ -80,7 +80,8 @@ module ManageIQ::Providers
              :total_miq_templates,
              :hosts,
              :to        => :parent_manager,
-             :allow_nil => true
+             :allow_nil => true,
+             :default => []
 
     def self.supported_types_and_descriptions_hash
       supported_subclasses.select(&:supports_ems_network_new?).each_with_object({}) do |klass, hash|
