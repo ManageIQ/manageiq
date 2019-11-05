@@ -20,11 +20,6 @@ module Metric::Capture
     historical_days.days.ago.utc.beginning_of_day
   end
 
-  def self.targets_archived_from
-    archived_for_setting = Settings.performance.targets.archived_for
-    archived_for_setting.to_i_with_method.seconds.ago.utc
-  end
-
   def self.concurrent_requests(interval_name)
     requests = ::Settings.performance.concurrent_requests[interval_name]
     requests = 20 if requests < 20 && interval_name == 'realtime'
@@ -204,17 +199,10 @@ module Metric::Capture
 
     targets.each do |target|
       interval_name = perf_target_to_interval_name(target)
-
       options = target_options[target]
-
-      begin
-        target.perf_capture_queue(interval_name, options)
-        if !target.kind_of?(Storage) && use_historical && target.last_perf_capture_on.nil?
-          target.perf_capture_queue('historical')
-        end
-      rescue => err
-        _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
-      end
+      target.perf_capture_queue(interval_name, options)
+    rescue => err
+      _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
   end
   private_class_method :queue_captures
