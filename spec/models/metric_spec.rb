@@ -237,40 +237,6 @@ describe Metric do
     end
   end
 
-  context "as openstack" do
-    before do
-      @ems_openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
-    end
-
-    context "with enabled and disabled targets" do
-      before do
-        @availability_zone = FactoryBot.create(:availability_zone_target)
-        @ems_openstack.availability_zones << @availability_zone
-        @vms_in_az = FactoryBot.create_list(:vm_openstack, 2, :ems_id => @ems_openstack.id)
-        @availability_zone.vms = @vms_in_az
-        @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
-        @vms_not_in_az = FactoryBot.create_list(:vm_openstack, 3, :ems_id => @ems_openstack.id)
-
-        MiqQueue.delete_all
-      end
-
-      context "executing perf_capture_timer" do
-        before do
-          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          Metric::Capture.perf_capture_timer(@ems_openstack.id)
-        end
-
-        it "should queue up enabled targets" do
-          expected_targets = Metric::Targets.capture_ems_targets(@ems_openstack)
-          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
-                                                           'perf_capture_historical'    => expected_targets.count * 8,
-                                                           'destroy_older_by_condition' => 1)
-          assert_metric_targets(expected_targets)
-        end
-      end
-    end
-  end
-
   context "as kubernetes" do
     before do
       @ems_kubernetes = FactoryBot.create(:ems_kubernetes, :zone => @zone)
