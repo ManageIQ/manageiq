@@ -23,10 +23,11 @@ describe Metric::Helper do
   describe ".find_for_interval_name" do
     before do
       @time_profile = FactoryBot.create(:time_profile_utc)
-      @perf = FactoryBot.create(:metric_rollup_vm_daily,
-                                 :timestamp    => "2010-04-14T00:00:00Z",
-                                 :time_profile => @time_profile
-                                )
+      @perf = FactoryBot.create(
+        :metric_rollup_vm_daily,
+        :timestamp    => "2010-04-14T00:00:00Z",
+        :time_profile => @time_profile
+      )
     end
     it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
       rec = Metric::Helper.find_for_interval_name("daily", @time_profile)
@@ -52,22 +53,28 @@ describe Metric::Helper do
   describe ".remove_duplicate_timestamps" do
     let(:host) { FactoryBot.create(:host) }
     let(:metric_rollup_1) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000")
+      )
     end
 
     # duplicate of metric_rollup_1
     let(:metric_rollup_2) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000")
+      )
     end
 
     let(:metric_rollup_3) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000")
+      )
     end
 
     it "returns only unique records" do

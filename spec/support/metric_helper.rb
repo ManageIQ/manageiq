@@ -9,7 +9,8 @@ module Spec
           t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
         end
         selected = queue_intervals(
-          MiqQueue.where(:method_name => %w(perf_capture_hourly perf_capture_realtime perf_capture_historical)))
+          MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical])
+        )
 
         expect(selected).to match_array(expected)
       end
@@ -25,8 +26,7 @@ module Spec
   end
 end
 
-
-# expecting to have setup:
+# These contexts expect the following setup:
 #
 # before do
 #   MiqRegion.seed

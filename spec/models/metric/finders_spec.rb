@@ -43,18 +43,19 @@ describe Metric::Finders do
           "2010-04-15T21:00:00Z", 100.0,
         ]
         cases.each_slice(2) do |t, v|
-          @vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                    :timestamp                  => t,
-                                                    :cpu_usage_rate_average     => v,
-                                                    :cpu_ready_delta_summation  => v * 10000,
-                                                    :sys_uptime_absolute_latest => v,
-                                                    :min_max                    => {
-                                                      :abs_max_cpu_usage_rate_average_value     => v,
-                                                      :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
-                                                      :abs_min_cpu_usage_rate_average_value     => v,
-                                                      :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
-                                                    }
-                                                   )
+          @vm1.metric_rollups << FactoryBot.create(
+            :metric_rollup_vm_hr,
+            :timestamp                  => t,
+            :cpu_usage_rate_average     => v,
+            :cpu_ready_delta_summation  => v * 10_000,
+            :sys_uptime_absolute_latest => v,
+            :min_max                    => {
+              :abs_max_cpu_usage_rate_average_value     => v,
+              :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 20.seconds,
+              :abs_min_cpu_usage_rate_average_value     => v,
+              :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 40.seconds,
+            }
+          )
         end
       end
 
@@ -64,10 +65,10 @@ describe Metric::Finders do
 
       it "should find multiple resource types" do
         @host1.metric_rollups << FactoryBot.create(:metric_rollup_host_hr,
-                                                    :resource  => @host1,
-                                                    :timestamp => "2010-04-14T22:00:00Z")
+                                                   :resource  => @host1,
+                                                   :timestamp => "2010-04-14T22:00:00Z")
         metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
-        expect(metrics.collect(&:resource_type).uniq).to match_array(%w(VmOrTemplate Host))
+        expect(metrics.collect(&:resource_type).uniq).to match_array(%w[VmOrTemplate Host])
       end
     end
 
@@ -83,12 +84,13 @@ describe Metric::Finders do
           "2010-04-14T22:52:30Z", 100.0,
         ]
         cases.each_slice(2) do |t, v|
-          @vm1.metrics << FactoryBot.create(:metric_vm_rt,
-                                             :timestamp                  => t,
-                                             :cpu_usage_rate_average     => v,
-                                             :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
-                                             :sys_uptime_absolute_latest => v
-                                            )
+          @vm1.metrics << FactoryBot.create(
+            :metric_vm_rt,
+            :timestamp                  => t,
+            :cpu_usage_rate_average     => v,
+            :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+            :sys_uptime_absolute_latest => v
+          )
         end
       end
 
@@ -99,7 +101,7 @@ describe Metric::Finders do
   end
 
   describe ".hour_to_range" do
-    it "works" do
+    it "determines range for hour" do
       expect(Metric::Finders.hour_to_range("2010-04-14T21:00:00Z")).to eq(["2010-04-14T21:00:00Z", "2010-04-14T21:59:59Z"])
     end
   end

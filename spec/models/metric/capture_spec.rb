@@ -37,12 +37,12 @@ describe Metric::Capture do
     context "with enabled and disabled vmware targets", :with_enabled_disabled_vmware do
       let(:expected_queue_items) do
         {
-          %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime)   => 3,
-          %w(ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_historical) => 24,
-          %w(Storage perf_capture_hourly)                                             => 1,
-          %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime)     => 2,
-          %w(ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical)   => 16,
-          %w(MiqTask destroy_older_by_condition)                                      => 1
+          %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime]   => 3,
+          %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_historical] => 24,
+          %w[Storage perf_capture_hourly]                                             => 1,
+          %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime]     => 2,
+          %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical]   => 16,
+          %w[MiqTask destroy_older_by_condition]                                      => 1
         }
       end
 
@@ -114,8 +114,7 @@ describe Metric::Capture do
     end
 
     it "produces default with class not found" do
-      stub_performance_settings(:capture_threshold => {:vm      => "4.minutes",
-                                                       :default => "10.minutes"})
+      stub_performance_settings(:capture_threshold => {:vm => "4.minutes", :default => "10.minutes"})
       Timecop.freeze(Time.now.utc) do
         expect(described_class.standard_capture_threshold(host)).to eq 10.minutes.ago.utc
       end
@@ -143,7 +142,7 @@ describe Metric::Capture do
   describe ".perf_capture_now" do
     context "with enabled and disabled targets" do
       before do
-      @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
+        @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
         storages = FactoryBot.create_list(:storage_target_vmware, 2)
         @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
         @ems_vmware.ems_clusters = @vmware_clusters

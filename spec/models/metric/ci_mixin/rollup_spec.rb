@@ -115,22 +115,23 @@ describe Metric::CiMixin::Rollup do
 
     context "with Vm realtime performances", :with_small_vmware do
       before do
-        cases = [
-          "2010-04-14T20:52:30Z", 100.0,
-          "2010-04-14T21:51:10Z", 1.0,
-          "2010-04-14T21:51:30Z", 2.0,
-          "2010-04-14T21:51:50Z", 4.0,
-          "2010-04-14T21:52:10Z", 8.0,
-          "2010-04-14T21:52:30Z", 15.0,
-          "2010-04-14T22:52:30Z", 100.0,
-        ]
-        cases.each_slice(2) do |t, v|
-          @vm1.metrics << FactoryBot.create(:metric_vm_rt,
-                                             :timestamp                  => t,
-                                             :cpu_usage_rate_average     => v,
-                                             :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
-                                             :sys_uptime_absolute_latest => v
-                                            )
+        cases = {
+          "2010-04-14T20:52:30Z" => 100.0,
+          "2010-04-14T21:51:10Z" => 1.0,
+          "2010-04-14T21:51:30Z" => 2.0,
+          "2010-04-14T21:51:50Z" => 4.0,
+          "2010-04-14T21:52:10Z" => 8.0,
+          "2010-04-14T21:52:30Z" => 15.0,
+          "2010-04-14T22:52:30Z" => 100.0,
+        }
+        cases.each do |t, v|
+          @vm1.metrics << FactoryBot.create(
+            :metric_vm_rt,
+            :timestamp                  => t,
+            :cpu_usage_rate_average     => v,
+            :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+            :sys_uptime_absolute_latest => v
+          )
         end
       end
 
@@ -150,43 +151,44 @@ describe Metric::CiMixin::Rollup do
           expect(perf.timestamp.iso8601).to eq("2010-04-14T21:00:00Z")
 
           expect(perf.cpu_usage_rate_average).to eq(6.0)
-          expect(perf.cpu_ready_delta_summation).to eq(30000.0)
+          expect(perf.cpu_ready_delta_summation).to eq(30_000.0)
           expect(perf.v_pct_cpu_ready_delta_summation).to eq(30.0)
           expect(perf.sys_uptime_absolute_latest).to eq(15.0)
 
           expect(perf.abs_max_cpu_usage_rate_average_value).to eq(15.0)
           expect(perf.abs_max_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T21:52:30Z")
 
-          perf.abs_min_cpu_usage_rate_average_value == 1.0
-          perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601 == "2010-04-14T21:51:10Z"
+          expect(perf.abs_min_cpu_usage_rate_average_value).to eq(1.0)
+          expect(perf.abs_min_cpu_usage_rate_average_timestamp.utc.iso8601).to eq("2010-04-14T21:51:10Z")
         end
       end
     end
 
     context "with Vm hourly performances", :with_small_vmware do
       before do
-        cases = [
-          "2010-04-13T21:00:00Z", 100.0,
-          "2010-04-14T18:00:00Z", 1.0,
-          "2010-04-14T19:00:00Z", 2.0,
-          "2010-04-14T20:00:00Z", 4.0,
-          "2010-04-14T21:00:00Z", 8.0,
-          "2010-04-14T22:00:00Z", 15.0,
-          "2010-04-15T21:00:00Z", 100.0,
-        ]
-        cases.each_slice(2) do |t, v|
-          @vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                    :timestamp                  => t,
-                                                    :cpu_usage_rate_average     => v,
-                                                    :cpu_ready_delta_summation  => v * 10000,
-                                                    :sys_uptime_absolute_latest => v,
-                                                    :min_max                    => {
-                                                      :abs_max_cpu_usage_rate_average_value     => v,
-                                                      :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
-                                                      :abs_min_cpu_usage_rate_average_value     => v,
-                                                      :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
-                                                    }
-                                                   )
+        cases = {
+          "2010-04-13T21:00:00Z" => 100.0,
+          "2010-04-14T18:00:00Z" => 1.0,
+          "2010-04-14T19:00:00Z" => 2.0,
+          "2010-04-14T20:00:00Z" => 4.0,
+          "2010-04-14T21:00:00Z" => 8.0,
+          "2010-04-14T22:00:00Z" => 15.0,
+          "2010-04-15T21:00:00Z" => 100.0,
+        }
+        cases.each do |t, v|
+          @vm1.metric_rollups << FactoryBot.create(
+            :metric_rollup_vm_hr,
+            :timestamp                  => t,
+            :cpu_usage_rate_average     => v,
+            :cpu_ready_delta_summation  => v * 10_000,
+            :sys_uptime_absolute_latest => v,
+            :min_max                    => {
+              :abs_max_cpu_usage_rate_average_value     => v,
+              :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 20.seconds,
+              :abs_min_cpu_usage_rate_average_value     => v,
+              :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 40.seconds,
+            }
+          )
         end
       end
 
@@ -206,7 +208,7 @@ describe Metric::CiMixin::Rollup do
           expect(perf.time_profile_id).to eq(@time_profile.id)
 
           expect(perf.cpu_usage_rate_average).to eq(6.0)
-          expect(perf.cpu_ready_delta_summation).to eq(60000.0) # actually uses average
+          expect(perf.cpu_ready_delta_summation).to eq(60_000.0) # actually uses average
           expect(perf.v_pct_cpu_ready_delta_summation).to eq(1.7)
           expect(perf.sys_uptime_absolute_latest).to eq(6.0)     # actually uses average
 
@@ -234,47 +236,48 @@ describe Metric::CiMixin::Rollup do
         it "should rollup Vm hourly into Vm daily rows correctly" do
           perfs = MetricRollup.daily
           expect(perfs.length).to eq(3)
-          expect(perfs.collect { |r| r.timestamp.iso8601 }).to match_array(
-            ["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"])
+          expect(perfs.collect { |r| r.timestamp.iso8601 }).to match_array(["2010-04-13T00:00:00Z", "2010-04-14T00:00:00Z", "2010-04-15T00:00:00Z"])
         end
       end
 
       context "and Host realtime performances" do
         before do
-          cases = [
-            "2010-04-14T20:52:40Z", 100.0,
-            "2010-04-14T21:51:20Z", 2.0,
-            "2010-04-14T21:51:40Z", 4.0,
-            "2010-04-14T21:52:00Z", 8.0,
-            "2010-04-14T21:52:20Z", 16.0,
-            "2010-04-14T21:52:40Z", 30.0,
-            "2010-04-14T22:52:40Z", 100.0,
-          ]
-          cases.each_slice(2) do |t, v|
-            @host1.metrics << FactoryBot.create(:metric_host_rt,
-                                                 :timestamp                  => t,
-                                                 :cpu_usage_rate_average     => v,
-                                                 :cpu_usagemhz_rate_average  => v,
-                                                 :sys_uptime_absolute_latest => v
-                                                )
+          cases = {
+            "2010-04-14T20:52:40Z" => 100.0,
+            "2010-04-14T21:51:20Z" => 2.0,
+            "2010-04-14T21:51:40Z" => 4.0,
+            "2010-04-14T21:52:00Z" => 8.0,
+            "2010-04-14T21:52:20Z" => 16.0,
+            "2010-04-14T21:52:40Z" => 30.0,
+            "2010-04-14T22:52:40Z" => 100.0,
+          }
+          cases.each do |t, v|
+            @host1.metrics << FactoryBot.create(
+              :metric_host_rt,
+              :timestamp                  => t,
+              :cpu_usage_rate_average     => v,
+              :cpu_usagemhz_rate_average  => v,
+              :sys_uptime_absolute_latest => v
+            )
           end
 
-          cases = [
-            "2010-04-14T20:52:40Z", 200.0,
-            "2010-04-14T21:51:20Z", 3.0,
-            "2010-04-14T21:51:40Z", 8.0,
-            "2010-04-14T21:52:00Z", 16.0,
-            "2010-04-14T21:52:20Z", 32.0,
-            "2010-04-14T21:52:40Z", 60.0,
-            "2010-04-14T22:52:40Z", 200.0,
-          ]
-          cases.each_slice(2) do |t, v|
-            @host2.metrics << FactoryBot.create(:metric_host_rt,
-                                                 :timestamp                  => t,
-                                                 :cpu_usage_rate_average     => v,
-                                                 :cpu_usagemhz_rate_average  => v,
-                                                 :sys_uptime_absolute_latest => v
-                                                )
+          cases = {
+            "2010-04-14T20:52:40Z" => 200.0,
+            "2010-04-14T21:51:20Z" => 3.0,
+            "2010-04-14T21:51:40Z" => 8.0,
+            "2010-04-14T21:52:00Z" => 16.0,
+            "2010-04-14T21:52:20Z" => 32.0,
+            "2010-04-14T21:52:40Z" => 60.0,
+            "2010-04-14T22:52:40Z" => 200.0,
+          }
+          cases.each do |t, v|
+            @host2.metrics << FactoryBot.create(
+              :metric_host_rt,
+              :timestamp                  => t,
+              :cpu_usage_rate_average     => v,
+              :cpu_usagemhz_rate_average  => v,
+              :sys_uptime_absolute_latest => v
+            )
           end
         end
 
@@ -292,10 +295,10 @@ describe Metric::CiMixin::Rollup do
             expect(perf.capture_interval_name).to eq('hourly')
             expect(perf.timestamp.iso8601).to eq("2010-04-14T21:00:00Z")
 
-            expect(perf.cpu_usage_rate_average).to eq(12.0)    # pulled from Host realtime
-            expect(perf.cpu_ready_delta_summation).to eq(80000.0) # pulled from Vm hourly
+            expect(perf.cpu_usage_rate_average).to eq(12.0)         # pulled from Host realtime
+            expect(perf.cpu_ready_delta_summation).to eq(80_000.0)  # pulled from Vm hourly
             expect(perf.v_pct_cpu_ready_delta_summation).to eq(2.2)
-            expect(perf.sys_uptime_absolute_latest).to eq(30.0)    # pulled from Host realtime
+            expect(perf.sys_uptime_absolute_latest).to eq(30.0)     # pulled from Host realtime
 
             # NOTE: min / max / burst are only pulled in from Vm realtime.
           end
@@ -315,20 +318,20 @@ describe Metric::CiMixin::Rollup do
             expect(perfs[0].capture_interval_name).to eq('realtime')
             expect(perfs[0].timestamp.iso8601).to eq("2010-04-14T21:51:20Z")
 
-            expect(perfs[0].cpu_usage_rate_average).to eq(2.5) # pulled from Host realtime
-            expect(perfs[0].cpu_usagemhz_rate_average).to eq(5.0) # pulled from Host realtime
+            expect(perfs[0].cpu_usage_rate_average).to eq(2.5)     # pulled from Host realtime
+            expect(perfs[0].cpu_usagemhz_rate_average).to eq(5.0)  # pulled from Host realtime
             expect(perfs[0].sys_uptime_absolute_latest).to eq(3.0) # pulled from Host realtime
-            expect(perfs[0].derived_cpu_available).to eq(19152)
+            expect(perfs[0].derived_cpu_available).to eq(19_152)
 
-            expect(perfs[2].cpu_usage_rate_average).to eq(12.0)  # pulled from Host realtime
+            expect(perfs[2].cpu_usage_rate_average).to eq(12.0)     # pulled from Host realtime
             expect(perfs[2].cpu_usagemhz_rate_average).to eq(24.0)  # pulled from Host realtime
-            expect(perfs[2].sys_uptime_absolute_latest).to eq(16.0)  # pulled from Host realtime
-            expect(perfs[2].derived_cpu_available).to eq(19152)
+            expect(perfs[2].sys_uptime_absolute_latest).to eq(16.0) # pulled from Host realtime
+            expect(perfs[2].derived_cpu_available).to eq(19_152)
 
-            expect(perfs[3].cpu_usage_rate_average).to eq(24.0)  # pulled from Host realtime
+            expect(perfs[3].cpu_usage_rate_average).to eq(24.0)     # pulled from Host realtime
             expect(perfs[3].cpu_usagemhz_rate_average).to eq(48.0)  # pulled from Host realtime
-            expect(perfs[3].sys_uptime_absolute_latest).to eq(32.0)  # pulled from Host realtime
-            expect(perfs[3].derived_cpu_available).to eq(19152)
+            expect(perfs[3].sys_uptime_absolute_latest).to eq(32.0) # pulled from Host realtime
+            expect(perfs[3].derived_cpu_available).to eq(19_152)
           end
         end
       end
@@ -354,49 +357,51 @@ describe Metric::CiMixin::Rollup do
 
       context "with Vm hourly performances" do
         before do
-          cases = [
-            "2010-04-13T21:00:00Z", 100.0,
-            "2010-04-14T18:00:00Z", 1.0,
-            "2010-04-14T19:00:00Z", 2.0,
-            "2010-04-14T20:00:00Z", 4.0,
-            "2010-04-14T21:00:00Z", 8.0,
-            "2010-04-14T22:00:00Z", 15.0,
-            "2010-04-15T21:00:00Z", 100.0,
-          ]
-          cases.each_slice(2) do |t, v|
-            @vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                      :timestamp                  => t,
-                                                      :cpu_usage_rate_average     => v,
-                                                      :cpu_ready_delta_summation  => v * 10000,
-                                                      :sys_uptime_absolute_latest => v,
-                                                      :min_max                    => {
-                                                        :abs_max_cpu_usage_rate_average_value     => v,
-                                                        :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t) + 20.seconds,
-                                                        :abs_min_cpu_usage_rate_average_value     => v,
-                                                        :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t) + 40.seconds,
-                                                      }
-                                                     )
+          cases = {
+            "2010-04-13T21:00:00Z" => 100.0,
+            "2010-04-14T18:00:00Z" => 1.0,
+            "2010-04-14T19:00:00Z" => 2.0,
+            "2010-04-14T20:00:00Z" => 4.0,
+            "2010-04-14T21:00:00Z" => 8.0,
+            "2010-04-14T22:00:00Z" => 15.0,
+            "2010-04-15T21:00:00Z" => 100.0,
+          }
+          cases.each do |t, v|
+            @vm1.metric_rollups << FactoryBot.create(
+              :metric_rollup_vm_hr,
+              :timestamp                  => t,
+              :cpu_usage_rate_average     => v,
+              :cpu_ready_delta_summation  => v * 10_000,
+              :sys_uptime_absolute_latest => v,
+              :min_max                    => {
+                :abs_max_cpu_usage_rate_average_value     => v,
+                :abs_max_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 20.seconds,
+                :abs_min_cpu_usage_rate_average_value     => v,
+                :abs_min_cpu_usage_rate_average_timestamp => Time.parse(t).utc + 40.seconds,
+              }
+            )
           end
         end
 
         context "and Host realtime performances" do
           before do
-            cases = [
-              "2010-04-14T20:52:40Z", 100.0,
-              "2010-04-14T21:51:20Z", 2.0,
-              "2010-04-14T21:51:40Z", 4.0,
-              "2010-04-14T21:52:00Z", 8.0,
-              "2010-04-14T21:52:20Z", 16.0,
-              "2010-04-14T21:52:40Z", 30.0,
-              "2010-04-14T22:52:40Z", 100.0,
-            ]
-            cases.each_slice(2) do |t, v|
-              @host1.metrics << FactoryBot.create(:metric_host_rt,
-                                                   :timestamp                  => t,
-                                                   :cpu_usage_rate_average     => v,
-                                                   :cpu_usagemhz_rate_average  => v,
-                                                   :sys_uptime_absolute_latest => v
-                                                  )
+            cases = {
+              "2010-04-14T20:52:40Z" => 100.0,
+              "2010-04-14T21:51:20Z" => 2.0,
+              "2010-04-14T21:51:40Z" => 4.0,
+              "2010-04-14T21:52:00Z" => 8.0,
+              "2010-04-14T21:52:20Z" => 16.0,
+              "2010-04-14T21:52:40Z" => 30.0,
+              "2010-04-14T22:52:40Z" => 100.0,
+            }
+            cases.each do |t, v|
+              @host1.metrics << FactoryBot.create(
+                :metric_host_rt,
+                :timestamp                  => t,
+                :cpu_usage_rate_average     => v,
+                :cpu_usagemhz_rate_average  => v,
+                :sys_uptime_absolute_latest => v
+              )
             end
 
             cases = [
@@ -409,12 +414,13 @@ describe Metric::CiMixin::Rollup do
               "2010-04-14T22:52:40Z", 200.0,
             ]
             cases.each_slice(2) do |t, v|
-              @host2.metrics << FactoryBot.create(:metric_host_rt,
-                                                   :timestamp                  => t,
-                                                   :cpu_usage_rate_average     => v,
-                                                   :cpu_usagemhz_rate_average  => v,
-                                                   :sys_uptime_absolute_latest => v
-                                                  )
+              @host2.metrics << FactoryBot.create(
+                :metric_host_rt,
+                :timestamp                  => t,
+                :cpu_usage_rate_average     => v,
+                :cpu_usagemhz_rate_average  => v,
+                :sys_uptime_absolute_latest => v
+              )
             end
           end
 
@@ -491,7 +497,7 @@ describe Metric::CiMixin::Rollup do
 
         @vm.perf_rollup_to_parents("hourly", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
 
-        expect(MiqQueue.all.pluck(:class_name).uniq).to eq(%w(Service))
+        expect(MiqQueue.all.pluck(:class_name).uniq).to eq(%w[Service])
       end
     end
 
@@ -509,21 +515,21 @@ describe Metric::CiMixin::Rollup do
       end
 
       it "should queue up from Vm realtime to Vm hourly" do
-        @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('realtime', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(1)
         assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
       end
 
       it "should queue up from Host realtime to Host hourly" do
-        @host.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
+        @host.perf_rollup_to_parents('realtime', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(1)
         assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
       end
 
       it "should queue up from Vm hourly to Host hourly and Vm daily" do
-        @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('hourly', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(2)
         assert_queue_item_rollup_chain(q_all[0], @host, 'hourly')
@@ -531,7 +537,7 @@ describe Metric::CiMixin::Rollup do
       end
 
       it "should queue up from Host hourly to EmsCluster hourly and Host daily" do
-        @host.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
+        @host.perf_rollup_to_parents('hourly', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(2)
         assert_queue_item_rollup_chain(q_all[0], @ems_cluster, 'hourly')
@@ -539,30 +545,30 @@ describe Metric::CiMixin::Rollup do
       end
 
       it "should queue up from EmsCluster hourly to EMS hourly and EmsCluster daily" do
-        @ems_cluster.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
+        @ems_cluster.perf_rollup_to_parents('hourly', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(2)
-        assert_queue_item_rollup_chain(q_all[0], @ems_vmware,         'hourly')
+        assert_queue_item_rollup_chain(q_all[0], @ems_vmware,  'hourly')
         assert_queue_item_rollup_chain(q_all[1], @ems_cluster, 'daily', @time_profile)
       end
 
       it "should queue up from Vm daily to nothing" do
-        @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
 
       it "should queue up from Host daily to nothing" do
-        @host.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @host.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
 
       it "should queue up from EmsCluster daily to nothing" do
-        @ems_cluster.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @ems_cluster.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
 
       it "should queue up from EMS daily to nothing" do
-        @ems_vmware.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @ems_vmware.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
     end
@@ -611,47 +617,47 @@ describe Metric::CiMixin::Rollup do
       end
 
       it "should queue up from Vm realtime to Vm hourly" do
-        @vm.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('realtime', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(1)
         assert_queue_item_rollup_chain(q_all[0], @vm, 'hourly')
       end
 
       it "should queue up from AvailabilityZone realtime to AvailabilityZone hourly" do
-        @availability_zone.perf_rollup_to_parents('realtime', ROLLUP_CHAIN_TIMESTAMP)
+        @availability_zone.perf_rollup_to_parents('realtime', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(1)
         assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
       end
 
       it "should queue up from Vm hourly to AvailabilityZone hourly and Vm daily" do
-        @vm.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('hourly', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(2)
         assert_queue_item_rollup_chain(q_all[0], @availability_zone, 'hourly')
-        assert_queue_item_rollup_chain(q_all[1], @vm,   'daily', @time_profile)
+        assert_queue_item_rollup_chain(q_all[1], @vm, 'daily', @time_profile)
       end
 
       it "should queue up from AvailabilityZone hourly to EMS hourly and AvailabilityZone daily" do
-        @availability_zone.perf_rollup_to_parents('hourly', ROLLUP_CHAIN_TIMESTAMP)
+        @availability_zone.perf_rollup_to_parents('hourly', rollup_chain_timestamp)
         q_all = MiqQueue.order(:id)
         expect(q_all.length).to eq(2)
-        assert_queue_item_rollup_chain(q_all[0], @ems_openstack,  'hourly')
+        assert_queue_item_rollup_chain(q_all[0], @ems_openstack, 'hourly')
         assert_queue_item_rollup_chain(q_all[1], @availability_zone, 'daily', @time_profile)
       end
 
       it "should queue up from Vm daily to nothing" do
-        @vm.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @vm.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
 
       it "should queue up from AvailabilityZone daily to nothing" do
-        @availability_zone.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @availability_zone.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
 
       it "should queue up from EMS daily to nothing" do
-        @ems_openstack.perf_rollup_to_parents('daily', ROLLUP_CHAIN_TIMESTAMP)
+        @ems_openstack.perf_rollup_to_parents('daily', rollup_chain_timestamp)
         expect(MiqQueue.count).to eq(0)
       end
     end
@@ -677,20 +683,16 @@ describe Metric::CiMixin::Rollup do
     end
   end
 
-  ROLLUP_CHAIN_TIMESTAMP       = "2011-08-12T20:33:20Z"
-  ROLLUP_CHAIN_REALTIME_VALUES = [["2011-08-12T20:33:20Z", nil, 'realtime', nil], nil, "perf_rollup_range"]
-  ROLLUP_CHAIN_HOURLY_VALUES   = [["2011-08-12T20:00:00Z", 'hourly'], "2011-08-12T21:00:00Z"]
-  ROLLUP_CHAIN_DAILY_VALUES    = [["2011-08-12T00:00:00Z", 'daily', nil], "2011-08-13T00:00:00Z"] # nil will be filled in later during test
+  let(:rollup_chain_timestamp) { "2011-08-12T20:33:20Z" }
 
   def assert_queue_item_rollup_chain(q_item, obj, interval_name, time_profile = nil)
     case interval_name
     when 'realtime'
-      values = ROLLUP_CHAIN_REALTIME_VALUES
+      values = [["2011-08-12T20:33:20Z", nil, 'realtime', nil], nil, "perf_rollup_range"]
     when 'hourly'
-      values = ROLLUP_CHAIN_HOURLY_VALUES
+      values = [["2011-08-12T20:00:00Z", 'hourly'], "2011-08-12T21:00:00Z"]
     when 'daily'
-      values = ROLLUP_CHAIN_DAILY_VALUES
-      values[0][2] = time_profile.id
+      values = [["2011-08-12T00:00:00Z", 'daily', time_profile.id], "2011-08-13T00:00:00Z"]
     end
     assert_queued_rollup(q_item, obj.id, obj.class.name, *values)
   end
