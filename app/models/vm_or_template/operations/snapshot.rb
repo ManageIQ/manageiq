@@ -4,9 +4,6 @@ module VmOrTemplate::Operations::Snapshot
   included do
     supports :snapshot_create do
       if supports_snapshots?
-        if !snapshots.blank? && snapshots.first.get_current_snapshot.nil?
-          unsupported_reason_add(:snapshot_create, _("At least one snapshot has to be active to create a new snapshot for this VM"))
-        end
         unless supports_control?
           unsupported_reason_add(:snapshot_create, unsupported_reason(:control))
         end
