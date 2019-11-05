@@ -1,27 +1,80 @@
 describe Metric::Helper do
   before do
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
+  end
+
+  context ".days_from_range" do
+    it "should return the correct dates and times when calling days_from_range before DST starts" do
+      days = Metric::Helper.days_from_range('2011-03-01T15:24:00Z', '2011-03-03T13:45:00Z', "Eastern Time (US & Canada)")
+      expect(days).to eq(["2011-03-01T05:00:00Z", "2011-03-02T05:00:00Z", "2011-03-03T05:00:00Z"])
+    end
+
+    it "should return the correct dates and times when calling days_from_range when start and end dates span DST" do
+      days = Metric::Helper.days_from_range('2011-03-12T11:23:00Z', '2011-03-14T14:33:00Z', "Eastern Time (US & Canada)")
+      expect(days).to eq(["2011-03-12T05:00:00Z", "2011-03-13T05:00:00Z", "2011-03-14T04:00:00Z"])
+    end
+
+    it "should return the correct dates and times when calling days_from_range before DST starts" do
+      days = Metric::Helper.days_from_range('2011-03-15T17:22:00Z', '2011-03-17T19:52:00Z', "Eastern Time (US & Canada)")
+      expect(days).to eq(["2011-03-15T04:00:00Z", "2011-03-16T04:00:00Z", "2011-03-17T04:00:00Z"])
+    end
+  end
+
+  describe ".find_for_interval_name" do
+    before do
+      @time_profile = FactoryBot.create(:time_profile_utc)
+      @perf = FactoryBot.create(
+        :metric_rollup_vm_daily,
+        :timestamp    => "2010-04-14T00:00:00Z",
+        :time_profile => @time_profile
+      )
+    end
+    it "VimPerformanceDaily.find should return existing daily performances when a time_profile is passed" do
+      rec = Metric::Helper.find_for_interval_name("daily", @time_profile)
+      expect(rec).to eq([@perf])
+    end
+
+    it "VimPerformanceDaily.find should return existing daily performances when a time_profile is not passed, but an associated tz is" do
+      rec = Metric::Helper.find_for_interval_name("daily", "UTC")
+      expect(rec).to eq([@perf])
+    end
+
+    it "VimPerformanceDaily.find should return existing daily performances when defaulting to UTC time zone" do
+      rec = Metric::Helper.find_for_interval_name("daily")
+      expect(rec).to eq([@perf])
+    end
+
+    it "VimPerformanceDaily.find should return an empty array when a time_profile is not passed" do
+      rec = Metric::Helper.find_for_interval_name("daily", "Alaska")
+      expect(rec.length).to eq(0)
+    end
   end
 
   describe ".remove_duplicate_timestamps" do
     let(:host) { FactoryBot.create(:host) }
     let(:metric_rollup_1) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000")
+      )
     end
 
     # duplicate of metric_rollup_1
     let(:metric_rollup_2) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000")
+      )
     end
 
     let(:metric_rollup_3) do
-      FactoryBot.create(:metric_rollup,
-                         :resource  => host,
-                         :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
+      FactoryBot.create(
+        :metric_rollup,
+        :resource  => host,
+        :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000")
+      )
     end
 
     it "returns only unique records" do
