@@ -19,7 +19,7 @@ describe JobProxyDispatcher do
   end
 
   describe '.waiting?' do
-    let(:vm_scan_job) { VmScan.create_job }
+    let(:vm_scan_job) { VmScan.create_job('VmScan') }
     let(:infra_conversion_job) { InfraConversionJob.create_job }
 
     it 'returns true if VmScan state is waiting to start and InfraConversionJob state is finished' do

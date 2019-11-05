@@ -1,5 +1,5 @@
 class InfraConversionJob < Job
-  def self.create_job(options)
+  def self.create_job(options = {})
     super(name, options)
   end
 
