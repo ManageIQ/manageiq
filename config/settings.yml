@@ -1174,6 +1174,7 @@
         :memory_threshold: 600.megabytes
         :nice_delta: 7
         :poll_method: :escalate
+      :ems_operations_worker: {}
       :ems_refresh_worker:
         :defaults:
           :memory_threshold: 2.gigabytes
