@@ -270,7 +270,9 @@ class Classification < ApplicationRecord
   end
 
   def entries
-    children
+    tag_ids = children.map(&:tag_id)
+    existing_tags = Tag.where(:id => tag_ids).ids
+    children.select { |x| existing_tags.include?(x.tag_id) }
   end
 
   def lookup_by_entry(type)
