@@ -216,9 +216,6 @@ module Metric::Capture
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
   # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def self.queue_captures(targets, target_options)
-    # Queue the captures for each target
-    use_historical = historical_days != 0
-
     targets.each do |target|
       options = target_options[target] || {}
       interval_name = options[:interval] || perf_target_to_interval_name(target)
