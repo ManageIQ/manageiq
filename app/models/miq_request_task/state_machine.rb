@@ -1,6 +1,7 @@
 module MiqRequestTask::StateMachine
   delegate :my_role, :to => :miq_request
   delegate :my_zone, :to => :source,      :allow_nil => true
+  delegate :my_queue_name, :to => :miq_request
 
   def tracking_label_id
     "r#{miq_request_id}_#{self.class.base_model.name.underscore}_#{id}"
@@ -56,6 +57,7 @@ module MiqRequestTask::StateMachine
       :args           => args,
       :zone           => my_zone,
       :role           => my_role,
+      :queue_name     => my_queue_name,
       :tracking_label => tracking_label_id,
     )
   end

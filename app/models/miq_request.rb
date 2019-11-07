@@ -410,6 +410,10 @@ class MiqRequest < ApplicationRecord
     nil
   end
 
+  def my_queue_name
+    nil
+  end
+
   def task_check_on_execute
     if self.class::ACTIVE_STATES.include?(request_state)
       raise _("%{task} request is already being processed") % {:task => self.class::TASK_DESCRIPTION}
