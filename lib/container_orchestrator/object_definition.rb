@@ -2,7 +2,7 @@ class ContainerOrchestrator
   module ObjectDefinition
     private
 
-    def deployment_config_definition(name)
+    def deployment_definition(name)
       {
         :metadata => {
           :name      => name,
@@ -10,11 +10,10 @@ class ContainerOrchestrator
           :namespace => my_namespace,
         },
         :spec     => {
-          :selector => {:name => name, :app => app_name},
+          :selector => {:matchLabels => {:name => name}},
           :template => {
             :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
             :spec     => {
-              :serviceAccount     => "miq-anyuid",
               :serviceAccountName => "miq-anyuid",
               :containers         => [{
                 :name          => name,
