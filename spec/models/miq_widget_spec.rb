@@ -318,6 +318,12 @@ describe MiqWidget do
       }
     end
 
+    it "returns MiqTask id if successful" do
+      return_value = @widget.queue_generate_content
+      expect(return_value).to equal(MiqTask.where(:name => "Generate Widget: '#{@widget.title}'",
+                                                  :id   => @widget.reload.miq_task_id).first.id)
+    end
+
     it "for groups without visibility" do
       expect(@widget).to receive(:queue_generate_content_for_users_or_group).once
       @widget.queue_generate_content
