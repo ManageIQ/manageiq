@@ -44,11 +44,10 @@ module VmOrTemplate::Scanning
     true
   end
 
-  # TODO: Vmware specfic
+  #
+  # Provider subclasses should override this method, if they support SmartState Analysis
+  #
   def require_snapshot_for_scan?
-    return false unless self.runnable?
-    return false if ['redhat'].include?(vendor.downcase)
-    return false if host && host.platform == "windows"
-    true
+    raise NotImplementedError, "must be implemented in provider subclass"
   end
 end
