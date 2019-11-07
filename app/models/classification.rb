@@ -504,14 +504,11 @@ class Classification < ApplicationRecord
   private_class_method :add_entries_from_hash
 
   def validate_uniqueness_on_tag_name
-    tag = find_tag
-    return if tag.nil?
-    cond = ["tag_id = ?", tag.id]
-    unless new_record?
-      cond[0] << " and id <> ?"
-      cond << id
-    end
-    errors.add("name", "has already been taken") if Classification.exists?(cond)
+    tag_name = Classification.name2tag(name, parent, ns)
+    exist_scope = Classification.includes(:tag).where(:tags => {:name => tag_name}).merge(Tag.in_region(region_id))
+    exist_scope = exist_scope.where.not(:id => id) unless new_record?
+
+    errors.add("name", "has already been taken") if exist_scope.exists?
   end
 
   def self.name2tag(name, parent_id = nil, ns = DEFAULT_NAMESPACE)
