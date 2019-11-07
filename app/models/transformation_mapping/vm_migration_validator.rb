@@ -157,11 +157,12 @@ class TransformationMapping::VmMigrationValidator
 
       if vm.present?
         options.merge!(
-          "cluster"        => vm.ems_cluster.try(:name) || '',
-          "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.v_parent_blue_folder_display_path}" : '',
-          "allocated_size" => vm.allocated_disk_storage,
-          "id"             => vm.id.to_s,
-          "ems_cluster_id" => vm.ems_cluster_id.to_s
+          "cluster"                   => vm.ems_cluster.try(:name) || '',
+          "path"                      => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.v_parent_blue_folder_display_path}" : '',
+          "allocated_size"            => vm.allocated_disk_storage,
+          "id"                        => vm.id.to_s,
+          "ems_cluster_id"            => vm.ems_cluster_id.to_s,
+          "warm_migration_compatible" => vm.supports_warm_migrate?
         )
       end
 
