@@ -1134,10 +1134,6 @@
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
-    :ems_inventory_collector_worker:
-      :disabled: true
-      :nice_delta: 1
-      :poll: 5.seconds
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
