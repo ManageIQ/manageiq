@@ -37,6 +37,25 @@ module VmOrTemplate::Scanning
   end
 
   #
+  # Default Adjustment Multiplier is 1 (i.e. no change to timeout)
+  #   since this is a multiplier, timeout * 1 = timeout
+  #
+  # Subclasses MAY choose to override this
+  #
+  module ClassMethods
+    def scan_timeout_adjustment_multiplier
+      1
+    end
+  end
+
+  #
+  # Instance method delegates to class method for convenience
+  #
+  def scan_timeout_adjustment_multiplier
+    self.class.scan_timeout_adjustment_multiplier
+  end
+
+  #
   # Subclasses need to override this method if a storage association
   # is not required for SSA.
   #
