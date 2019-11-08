@@ -26,6 +26,13 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     queue_captures(targets, target_options)
   end
 
+  # target is an ExtManagementSystem
+  def perf_capture_gap(start_time, end_time)
+    targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
+    target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
+    queue_captures(targets, target_options)
+  end
+
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
   # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def queue_captures(targets, target_options)

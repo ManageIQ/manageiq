@@ -69,9 +69,7 @@ module Metric::Capture
             end
     emses.each do |ems|
       pco = ems.perf_capture_object
-      targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
-      target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
-      pco.queue_captures(targets, target_options)
+      pco.perf_capture_gap(start_time, end_time)
     end
 
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
