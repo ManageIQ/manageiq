@@ -63,12 +63,20 @@ module Metric::Capture
     _log.info("Queueing performance capture...Complete")
   end
 
-  def self.perf_capture_gap(start_time, end_time, zone_id = nil)
+  def self.perf_capture_gap(start_time, end_time, zone_id = nil, ems_id = nil)
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...")
 
-    zone = Zone.find(zone_id) if zone_id
-    targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
-    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
+    emses = if ems_id
+              [ExtManagementSystem.find(ems_id)]
+            elsif zone_id
+              Zone.find(zone_id).ems_metrics_collectable
+            else
+              MiqServer.my_server.zone.ems_metrics_collectable
+            end
+    emses.each do |ems|
+      targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
+      targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
+    end
 
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
   end

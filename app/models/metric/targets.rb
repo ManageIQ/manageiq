@@ -21,6 +21,9 @@ module Metric::Targets
     end
   end
 
+  # If a Cluster, standalone Host, or Storage is not enabled, skip it.
+  # If a Cluster is enabled, capture all of its Hosts.
+  # If a Host is enabled, capture all of its Vms.
   def self.capture_infra_targets(emses, options)
     load_infra_targets_data(emses, options)
     all_hosts = capture_host_targets(emses)
@@ -146,16 +149,5 @@ module Metric::Targets
   def self.capture_vm_targets(emses, hosts)
     enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
     emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? } }
-  end
-
-  # If a Cluster, standalone Host, or Storage is not enabled, skip it.
-  # If a Cluster is enabled, capture all of its Hosts.
-  # If a Host is enabled, capture all of its Vms.
-  def self.capture_targets(zone = nil, options = {})
-    zone = MiqServer.my_server.zone if zone.nil?
-    zone = Zone.find(zone) if zone.kind_of?(Integer)
-    zone.ems_metrics_collectable.flat_map do |ems|
-      capture_ems_targets(ems, options) || []
-    end
   end
 end
