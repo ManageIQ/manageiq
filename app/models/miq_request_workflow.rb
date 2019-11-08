@@ -770,6 +770,12 @@ class MiqRequestWorkflow
   def update_field_visibility
   end
 
+  # Subclasses should define this as appropriate.
+  #
+  def get_source_and_targets(_refresh = false)
+    raise NoMethodError, "subclass failed to define a 'get_source_and_targets' method"
+  end
+
   def refresh_field_values(values)
     st = Time.now
 
