@@ -130,7 +130,7 @@ RSpec.describe ConversionHost, :v2v do
 
   shared_examples_for "#check_ssh_connection" do
     it "fails when SSH send an error" do
-      allow(conversion_host).to receive(:connect).and_raise('Unexpected failure')
+      allow(conversion_host).to receive(:connect_ssh).and_raise('Unexpected failure')
       expect(conversion_host.check_ssh_connection).to eq(false)
     end
 
@@ -240,9 +240,6 @@ RSpec.describe ConversionHost, :v2v do
 
       before do
         allow(ems).to receive(:authentications).and_return(ssh_auth)
-        allow(ssh_auth).to receive(:where).with(:authype => 'ssh_keypair').and_return(ssh_auth)
-        allow(ssh_auth).to receive(:where).and_return(ssh_auth)
-        allow(ssh_auth).to receive(:not).with(:userid => nil, :auth_key => nil).and_return([ssh_auth])
       end
 
       it_behaves_like "#check_ssh_connection"
