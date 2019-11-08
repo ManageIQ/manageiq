@@ -49,7 +49,6 @@ module ManageIQ::Providers
     has_many :cloud_object_store_objects,    -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :cloud_services,                -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :cloud_databases,               -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
-    has_many :key_pairs,                     -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id, :class_name => "AuthKeyPair", :as => :resource
     has_many :hosts,                         -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :vms,                           -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :miq_templates,                 -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
@@ -64,6 +63,7 @@ module ManageIQ::Providers
                      :orchestration_stacks_resources,
                      :direct_orchestration_stacks,
                      :resource_groups,
+                     :key_pairs,
                      :to        => :parent_manager,
                      :allow_nil => true,
                      :default   => []
