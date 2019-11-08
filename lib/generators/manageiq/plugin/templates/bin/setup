@@ -1,14 +1,16 @@
 #!/usr/bin/env ruby
 require 'pathname'
+require 'fileutils'
 
 gem_root = Pathname.new(__dir__).join("..")
 spec_manageiq = gem_root.join("spec/manageiq")
 
 if ENV.key?("MANAGEIQ_REPO")
-  puts "== Symlinking spec/manageiq to #{ENV["MANAGEIQ_REPO"]}"
+  manageiq_repo = Pathname.new(ENV["MANAGEIQ_REPO"])
+  puts "== Symlinking spec/manageiq to #{manageiq_repo}"
 
-  spec_manageiq.rmtree if spec_manageiq.exist?
-  system "ln -s #{ENV["MANAGEIQ_REPO"]} spec/manageiq"
+  FileUtils.rm_rf(spec_manageiq.expand_path)
+  FileUtils.ln_s(manageiq_repo.expand_path, spec_manageiq.expand_path)
 elsif !spec_manageiq.exist?
   puts "== Cloning manageiq sample app =="
   system "git clone https://github.com/ManageIQ/manageiq.git --branch master --depth 1 spec/manageiq"
