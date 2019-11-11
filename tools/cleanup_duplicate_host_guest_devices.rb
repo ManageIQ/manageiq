@@ -56,7 +56,7 @@ guest_devices_to_delete.each_slice(opts[:page_size]).with_index do |slice, index
 
   dependents.each do |assoc|
     delete_meth = assoc.options[:dependent]
-    foreign_key = assoc.join_keys.key
+    foreign_key = assoc.join_keys(assoc.klass).key
 
     if %i[delete destroy].include?(delete_meth)
       assoc.klass.where(foreign_key => slice).send("#{delete_meth}_all")
