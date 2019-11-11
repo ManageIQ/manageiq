@@ -28,10 +28,14 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def self.where_unique_on(name, user = nil)
+    # user is nil for dashboards set for group
     userid = user.try(:userid)
-    group_id = user.try(:current_group_id)
     # a unique record is defined by name, group_id and userid
-    where(:name => name, :group_id => group_id, :userid => userid)
+    if userid.present?
+      where(:name => name, :group_id => user.current_group_id, :userid => userid)
+    else
+      where(:name => name, :userid => nil)
+    end
   end
 
   def self.subscribed_for_user(user)
