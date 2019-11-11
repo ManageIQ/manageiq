@@ -131,6 +131,7 @@ module MiqServer::LogManagement
       logfile.upload
     rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
+      task.update_status("Finished", "Error", "Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
       logfile.update(:state => "error")
       raise
     ensure
