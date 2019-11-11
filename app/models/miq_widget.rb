@@ -151,8 +151,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_complete!
-    self.last_generated_content_on = Time.now.utc
-    self.save!
+    self.update!(:last_generated_content_on => Time.now.utc)
   end
 
   def generate_content_complete_message
@@ -242,10 +241,7 @@ class MiqWidget < ApplicationRecord
 
       data = content_type_klass.new(:report => report, :resource => resource, :timezone => timezone, :widget_options => options).generate(group)
       content = find_or_build_contents_for_user(group, nil, timezone)
-      content.miq_report_result = miq_report_result
-      content.contents = data
-      content.miq_group_id = group.id
-      content.save!
+      content.update!(:miq_report_result => miq_report_result, :contents => data, :miq_group_id => group.id)
     rescue => error
       _log.error("#{log_prefix} Failed for [#{group.class}] [#{group.name}] with error: [#{error.class.name}] [#{error}]")
       _log.log_backtrace(error)
@@ -287,11 +283,7 @@ class MiqWidget < ApplicationRecord
 
       data = content_type_klass.new(:report => report, :resource => resource, :timezone => timezone, :widget_options => options).generate(user)
       content = find_or_build_contents_for_user(group, user, timezone)
-      content.miq_report_result = miq_report_result
-      content.contents = data
-      content.user_id      = user.id
-      content.miq_group_id = group.id
-      content.save!
+      content.update!(:miq_report_result => miq_report_result, :contents => data, :miq_group_id => group.id, :user_id => user.id)
     rescue => error
       _log.error("#{log_prefix} Failed for [#{user.class}] [#{user.name}] with error: [#{error.class.name}] [#{error}]")
       _log.log_backtrace(error)
