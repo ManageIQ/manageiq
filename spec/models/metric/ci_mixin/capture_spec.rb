@@ -288,7 +288,7 @@ describe Metric::CiMixin::Capture do
     def verify_perf_capture_queue(last_perf_capture_on, total_queue_items)
       Timecop.freeze do
         vm.last_perf_capture_on = last_perf_capture_on
-        vm.perf_capture_queue("realtime")
+        ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "realtime"})
         expect(MiqQueue.count).to eq total_queue_items
 
         # make sure the queue items are in the correct order
@@ -357,7 +357,7 @@ describe Metric::CiMixin::Capture do
     it "links supplied miq_task with queued item which allow to initialize MiqTask#started_on attribute" do
       MiqQueue.delete_all
       task = FactoryBot.create(:miq_task)
-      vm.perf_capture_queue("realtime", :task_id => task.id)
+      ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "realtime", :task_id => task.id})
       expect(MiqQueue.first.miq_task_id).to eq task.id
     end
   end
@@ -366,7 +366,7 @@ describe Metric::CiMixin::Capture do
     context "with capture days > 0 and multiple attempts" do
       def verify_perf_capture_queue_historical(last_perf_capture_on, total_queue_items)
         vm.last_perf_capture_on = last_perf_capture_on
-        vm.perf_capture_queue("historical")
+        ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "historical"})
         expect(MiqQueue.count).to eq total_queue_items
       end
 
