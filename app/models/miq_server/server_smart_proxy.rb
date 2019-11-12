@@ -69,25 +69,13 @@ module MiqServer::ServerSmartProxy
     case ost.method_name
     when "scan_metadata", "sync_metadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
-      #
-      # TODO: until we get location/offset read capability for OpenStack
-      # image data, OpenStack fleecing is prone to timeout (based on image size).
-      # We try to adjust the timeout here - maybe this should be calculated based
-      # on the size of the image, but that information isn't directly available.
-      #
-      timeout_adj = 1
+
+      timeout_adjustment_multiplier = 1
       if ost.method_name == "scan_metadata"
         klass = ost.target_type.constantize
         target = klass.find(ost.target_id)
-        if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
-           target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
-          timeout_adj = 4
-        elsif target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
-              target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Template)
-          timeout_adj = 4
-        elsif target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-              target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
-          timeout_adj = 8
+        if target.respond_to?(:scan_timeout_adjustment_multiplier)
+          timeout_adjustment_multiplier = target.scan_timeout_adjustment_multiplier
         end
       end
       _log.debug("queuing call to #{self.class.name}##{ost.method_name}")
@@ -99,7 +87,7 @@ module MiqServer::ServerSmartProxy
         :method_name => ost.method_name,
         :args        => ost,
         :server_guid => guid, # this should be derived in service. fix this
-        :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
+        :msg_timeout => worker_setting[:queue_timeout] * timeout_adjustment_multiplier
       )
     else
       _log.error("Unsupported method [#{ost.method_name}]")
