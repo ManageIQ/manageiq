@@ -248,8 +248,7 @@ class Condition < ApplicationRecord
     if ohash[:key_exists]
       return registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
     elsif ohash[:value_exists]
-      rec = registry_items.find_by(:name => name)
-      return !!rec
+      rec = registry_items.where(:name => name).exists?
     else
       rec = registry_items.find_by(:name => name)
     end
