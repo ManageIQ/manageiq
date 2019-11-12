@@ -160,9 +160,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
     task_id    = options[:task_id]
 
-    raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
-    raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
-
     # cb is the task used to group cluster realtime metrics
     cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
     items = queue_items_for_interval(target, interval_name, start_time, end_time)
