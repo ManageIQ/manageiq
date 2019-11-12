@@ -8,7 +8,7 @@ describe VmOrTemplate::Operations::Configuration do
 
       it "raises an exception when does not find ext_management_system" do
         message = "VM has no EMS, unable to add disk"
-        expect { vm.raw_add_disk(disk_name, disk_size, {}) }.to raise_error(message)
+        expect { vm.add_disk(disk_name, disk_size, {}) }.to raise_error(message)
       end
     end
 
@@ -21,27 +21,8 @@ describe VmOrTemplate::Operations::Configuration do
 
       context "when storage exists" do
         it "adds a disk on the storage" do
-          allow(ems).to receive(:vm_add_disk)
-
-          expected_options = {
-            :diskName        => disk_name,
-            :diskSize        => disk_size,
-            :thinProvisioned => nil,
-            :dependent       => nil,
-            :persistent      => nil,
-            :bootable        => nil,
-            :datastore       => storage,
-            :interface       => nil
-          }
-          expect(vm).to receive(:run_command_via_parent).with(:vm_add_disk, expected_options).once
-          vm.raw_add_disk(disk_name, disk_size, :datastore => storage_name)
-        end
-      end
-
-      context "when storage does not exist" do
-        it "raises an exception when doesn't find storage by its name" do
-          message = "Datastore does not exist or cannot be accessed, unable to add disk"
-          expect { vm.raw_add_disk(disk_name, disk_size, :datastore => "wrong_storage_name") }.to raise_error(message)
+          expect(vm).to receive(:raw_add_disk).with(disk_name, disk_size, :datastore => storage_name).once
+          vm.add_disk(disk_name, disk_size, :datastore => storage_name)
         end
       end
     end
@@ -54,7 +35,7 @@ describe VmOrTemplate::Operations::Configuration do
       let(:vm) { FactoryBot.create(:vm_or_template) }
 
       it "raises an exception" do
-        expect { vm.raw_remove_disk(disk_name) }.to raise_error("VM has no EMS, unable to remove disk")
+        expect { vm.remove_disk(disk_name) }.to raise_error("VM has no EMS, unable to remove disk")
       end
     end
 
@@ -63,23 +44,16 @@ describe VmOrTemplate::Operations::Configuration do
       let(:vm)  { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
 
       it "defaults to delete the backing file" do
-        expected_options = {
-          :diskName       => disk_name,
-          :delete_backing => true,
-        }
-
-        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
-        vm.raw_remove_disk(disk_name)
+        expected_options = {}
+        expect(vm).to receive(:raw_remove_disk).with(disk_name, expected_options)
+        vm.remove_disk(disk_name)
       end
 
       it "can override the delete backing file option" do
-        expected_options = {
-          :diskName       => disk_name,
-          :delete_backing => false,
-        }
+        expected_options = {:delete_backing => false}
 
-        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
-        vm.raw_remove_disk(disk_name, :delete_backing => false)
+        expect(vm).to receive(:raw_remove_disk).with(disk_name, expected_options)
+        vm.remove_disk(disk_name, :delete_backing => false)
       end
     end
   end
