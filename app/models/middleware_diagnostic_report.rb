@@ -1,2 +1,0 @@
-class MiddlewareDiagnosticReport < ApplicationRecord
-end
