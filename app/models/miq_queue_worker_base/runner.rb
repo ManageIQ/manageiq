@@ -74,7 +74,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     loop do
       msg = MiqQueue.get(
         :queue_name => @worker.queue_name,
-        :role       => @active_roles,
+        :role       => @worker.required_roles.presence,
         :priority   => @worker.class.queue_priority
       )
       return msg unless msg == :stale
