@@ -15,6 +15,10 @@ module VmOrTemplate::Scanning
     check_policy_prevent(:request_vm_scan, :raw_scan, userid, options)
   end
 
+  def scan_job_class
+    VmScan
+  end
+
   def raw_scan(userid = "system", options = {})
     options = {
       :target_id    => id,
@@ -29,7 +33,7 @@ module VmOrTemplate::Scanning
 
     self.last_scan_attempt_on = Time.now.utc
     save
-    job = VmScan.create_job(options)
+    job = scan_job_class.create_job(options)
     return job
   rescue => err
     _log.log_backtrace(err)
