@@ -11,6 +11,10 @@ FactoryBot.define do
 
   factory :miq_ems_metrics_processor_worker, :class => "MiqEmsMetricsProcessorWorker", :parent => :miq_worker
 
+  factory :miq_ems_metrics_collector_worker,
+          :class  => "ManageIQ::Providers::BaseManager::MetricsCollectorWorker",
+          :parent => :miq_worker
+
   factory :miq_ems_refresh_worker,
           :parent => :miq_worker,
           :class  => "ManageIQ::Providers::BaseManager::RefreshWorker"
