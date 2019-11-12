@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+# Unreleased as of Sprint 124 ending 2019-11-11
+
+### Added
+* [V2V] Add VM validation for warm migration eligibility and updated specs to … [(#19401)](https://github.com/ManageIQ/manageiq/pull/19401)
+* Add AuthenticationMixin to Vm [(#19444)](https://github.com/ManageIQ/manageiq/pull/19444)
+* Add support to automate external auth config for ldap [(#19228)](https://github.com/ManageIQ/manageiq/pull/19228)
+* Cap&U collector tests [(#19443)](https://github.com/ManageIQ/manageiq/pull/19443)
+* Cap&U Extract logic to determine queue items [(#19448)](https://github.com/ManageIQ/manageiq/pull/19448)
+* Cu schedule collector by ems [(#19420)](https://github.com/ManageIQ/manageiq/pull/19420)
+* Enable workers as containers [(#19451)](https://github.com/ManageIQ/manageiq/pull/19451)
+* Optionally symlink a plugin's spec/manageiq [(#19481)](https://github.com/ManageIQ/manageiq/pull/19481)
+* Return MiqTask id from MiqWidget.queue_generate_content [(#19445)](https://github.com/ManageIQ/manageiq/pull/19445)
+* Update the orchestrator for new database secret format [(#19457)](https://github.com/ManageIQ/manageiq/pull/19457)
+
+### Fixed
+* Adding task error status to log management [(#19480)](https://github.com/ManageIQ/manageiq/pull/19480)
+* Base monolithic container image on pods ui worker [(#19463)](https://github.com/ManageIQ/manageiq/pull/19463)
+* Fix key_pair class lookup [(#19486)](https://github.com/ManageIQ/manageiq/pull/19486)
+* Remove the check for a "current" snapshot [(#19458)](https://github.com/ManageIQ/manageiq/pull/19458)
+
 # Unreleased as of Sprint 123 ending 2019-10-28
 
 ### Added
