@@ -1,11 +1,9 @@
-describe TaskHelpers::Exports::Widgets do
+describe TaskHelpers::Exports::Widgets, :with_local_miq_server do
   let(:export_dir) do
     Dir.mktmpdir('miq_exp_dir')
   end
 
   before do
-    _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
-
     MiqReport.seed_report("Vendor and Guest OS")
     MiqWidget.seed_widget("chart_vendor_and_guest_os")
     MiqWidget.sync_from_hash(YAML.safe_load("

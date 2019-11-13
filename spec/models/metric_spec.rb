@@ -1,11 +1,5 @@
-describe Metric do
+describe Metric, :with_local_miq_server do
   include Spec::Support::MetricHelper
-
-  before do
-    MiqRegion.seed
-
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
 
   describe "metrics view" do
     it "creates an object with an id" do

@@ -6,9 +6,8 @@ describe MiqScheduleWorker::Jobs do
       expect(MiqQueue.count).to eq(0)
     end
 
-    it "with an EMS" do
-      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      FactoryBot.create(:ems_vmware, :zone => zone)
+    it "with an EMS", :with_local_miq_server do
+      FactoryBot.create(:ems_vmware, :zone => @zone)
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)
 
       expect(MiqQueue.count).to eq(1)
@@ -16,7 +15,7 @@ describe MiqScheduleWorker::Jobs do
         :class_name  => "ManageIQ::Providers::Vmware::InfraManager",
         :instance_id => nil,
         :method_name => "refresh_all_ems_timer",
-        :zone        => zone.name
+        :zone        => @zone.name
       )
     end
   end

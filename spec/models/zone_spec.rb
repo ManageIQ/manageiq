@@ -39,11 +39,7 @@ describe Zone do
     end
   end
 
-  context "when dealing with clouds" do
-    before do
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    end
-
+  context "when dealing with clouds", :with_local_miq_server do
     it "returns the set of ems_clouds" do
       ems_clouds = FactoryBot.create_list(:ems_openstack, 2, :zone => @zone)
       ems_clouds += FactoryBot.create_list(:ems_amazon, 2, :zone => @zone)
@@ -146,7 +142,7 @@ describe Zone do
   end
 
   context "ConfigurationManagementMixin" do
-    describe "#remote_cockpit_ws_miq_server" do
+    describe "#remote_cockpit_ws_miq_server", :with_local_miq_server do
       before do
         @csv = <<-CSV.gsub(/^\s+/, "")
           name,description,max_concurrent,external_failover,role_scope
@@ -154,7 +150,6 @@ describe Zone do
         CSV
         allow(ServerRole).to receive(:seed_data).and_return(@csv)
         ServerRole.seed
-        _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
       end
 
       it "none when not enabled" do

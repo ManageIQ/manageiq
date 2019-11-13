@@ -1,9 +1,4 @@
-describe Metric::Targets do
-  before do
-    MiqRegion.seed
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
-
+describe Metric::Targets, :with_local_miq_server do
   describe ".capture_ems_targets" do
     context "with vmware", :with_enabled_disabled_vmware do
       it "finds enabled targets" do

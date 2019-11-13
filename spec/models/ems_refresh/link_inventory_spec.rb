@@ -1,8 +1,7 @@
 describe EmsRefresh::LinkInventory do
-  context ".link_ems_inventory" do
+  context ".link_ems_inventory", :with_local_miq_server do
     let!(:ems) do
-      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
-      FactoryBot.create(:ems_vmware, :zone => zone).tap do |e|
+      FactoryBot.create(:ems_vmware, :zone => @zone).tap do |e|
         build_vmware_folder_structure!(e)
         folder = e.ems_folders.find_by(:name => "blue1")
         folder.add_child(FactoryBot.create(:vm_vmware, :name => "vm1", :ems_id => e.id))

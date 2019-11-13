@@ -283,10 +283,9 @@ describe Vm do
     end
   end
 
-  context "#cockpit_url" do
+  context "#cockpit_url", :with_local_miq_server do
     before do
       ServerRole.seed
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryBot.create(:ext_management_system, :zone => @zone)
     end
 

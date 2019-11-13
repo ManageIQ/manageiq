@@ -1253,7 +1253,7 @@ describe VmOrTemplate do
     end
   end
 
-  describe ".post_refresh_ems" do
+  describe ".post_refresh_ems", :with_local_miq_server do
     let(:folder_blue1)   { EmsFolder.find_by(:name => "blue1") }
     let(:folder_blue2)   { EmsFolder.find_by(:name => "blue2") }
     let(:folder_vm_root) { EmsFolder.find_by(:name => "vm") }
@@ -1261,8 +1261,7 @@ describe VmOrTemplate do
     let(:vm_blue2)       { VmOrTemplate.find_by(:name => "vm_blue2") }
 
     let!(:ems) do
-      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
-      FactoryBot.create(:ems_vmware, :zone => zone).tap do |ems|
+      FactoryBot.create(:ems_vmware, :zone => @zone).tap do |ems|
         build_vmware_folder_structure!(ems)
         folder_blue1.add_child(FactoryBot.create(:vm_vmware, :name => "vm_blue1", :ems_id => ems.id))
         folder_blue2.add_child(FactoryBot.create(:vm_vmware, :name => "vm_blue2", :ems_id => ems.id))

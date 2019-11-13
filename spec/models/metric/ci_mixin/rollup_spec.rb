@@ -1,10 +1,4 @@
-describe Metric::CiMixin::Rollup do
-  before do
-    MiqRegion.seed
-
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
-
+describe Metric::CiMixin::Rollup, :with_local_miq_server do
   describe ".perf_rollup" do
     context "with enabled and disabled targets", :with_enabled_disabled_vmware do
       context "executing perf_capture_timer" do

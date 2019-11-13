@@ -1,10 +1,4 @@
-describe Metric::Finders do
-  before do
-    MiqRegion.seed
-
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
-
+describe Metric::Finders, :with_local_miq_server do
   describe ".day_to_range" do
     it "should return the correct start and end dates when calling day_to_range before DST starts" do
       s, e = Metric::Finders.day_to_range("2011-03-12T05:00:00Z", TimeProfile.new(:tz => "Eastern Time (US & Canada)"))

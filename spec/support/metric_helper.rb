@@ -26,12 +26,7 @@ module Spec
   end
 end
 
-# These contexts expect the following setup:
-#
-# before do
-#   MiqRegion.seed
-#   @zone = EvmSpecHelper.local_miq_server.zone
-# end
+# These contexts expect :with_local_miq_server
 RSpec.shared_context 'with enabled/disabled vmware targets', :with_enabled_disabled_vmware do
   before do
     @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)

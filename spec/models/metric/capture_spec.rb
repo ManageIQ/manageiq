@@ -1,11 +1,5 @@
-describe Metric::Capture do
+describe Metric::Capture, :with_local_miq_server do
   include Spec::Support::MetricHelper
-
-  before do
-    MiqRegion.seed
-
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
 
   describe ".alert_capture_threshold" do
     let(:target) { FactoryBot.build(:host_vmware) }

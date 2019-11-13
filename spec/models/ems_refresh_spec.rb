@@ -1,10 +1,9 @@
 require "inventory_refresh"
 
 describe EmsRefresh do
-  context ".queue_refresh" do
+  context ".queue_refresh", :with_local_miq_server do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryBot.create(:ems_vmware, :zone => zone)
+      @ems = FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     it "with Ems" do
@@ -47,10 +46,9 @@ describe EmsRefresh do
     end
   end
 
-  context "stopping targets unbounded growth" do
+  context "stopping targets unbounded growth", :with_local_miq_server do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryBot.create(:ems_vmware, :zone => zone)
+      @ems = FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     let(:targets) do
@@ -97,11 +95,10 @@ describe EmsRefresh do
     end
   end
 
-  context ".queue_refresh_task" do
+  context ".queue_refresh_task", :with_local_miq_server do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems  = FactoryBot.create(:ems_vmware, :zone => zone)
-      @ems2 = FactoryBot.create(:ems_vmware, :zone => zone)
+      @ems  = FactoryBot.create(:ems_vmware, :zone => @zone)
+      @ems2 = FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     context "with a refresh already on the queue" do
@@ -246,10 +243,9 @@ describe EmsRefresh do
     end
   end
 
-  context '.refresh_new_target' do
+  context '.refresh_new_target', :with_local_miq_server do
     let(:ems) do
-      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      FactoryBot.create(:ems_vmware, :zone => zone)
+      FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     context 'targeting a new vm' do

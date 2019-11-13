@@ -1,10 +1,4 @@
-describe Metric::CiMixin::Capture do
-  before do
-    MiqRegion.seed
-
-    @zone = EvmSpecHelper.local_miq_server.zone
-  end
-
+describe Metric::CiMixin::Capture, :with_local_miq_server do
   require ManageIQ::Providers::Openstack::Engine.root.join("spec/tools/openstack_data/openstack_data_test_helper")
   let(:zone) { EvmSpecHelper.create_guid_miq_server_zone[2] }
   let(:mock_meter_list) { OpenstackMeterListData.new }
