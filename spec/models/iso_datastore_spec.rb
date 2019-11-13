@@ -20,16 +20,7 @@ describe IsoDatastore do
       context "supports api4" do
         let(:supported_api_versions) { %w(3 4) }
         it "send the method to ovirt services v4" do
-          expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V4)
-            .to receive(:advertised_images)
-          advertised_images
-        end
-      end
-
-      context "does not support api4" do
-        let(:supported_api_versions) { ["3"] }
-        it "send the method to ovirt services v4" do
-          expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V3)
+          expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::V4)
             .to receive(:advertised_images)
           advertised_images
         end
