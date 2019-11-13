@@ -20,28 +20,24 @@ FactoryBot.define do
   #
 
   factory :vmware_folder, :parent => :ems_folder do
-    sequence(:ems_ref)     { |n| "group-d#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("group-d#{n}", "Folder", "ManagedObjectReference") }
+    sequence(:ems_ref) { |n| "group-d#{n}" }
+    ems_ref_type       { "Folder" }
   end
 
-  factory :vmware_folder_vm, :parent => :ems_folder do
-    sequence(:ems_ref)     { |n| "group-v#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("group-v#{n}", "Folder", "ManagedObjectReference") }
+  factory :vmware_folder_vm, :parent => :vmware_folder do
+    sequence(:ems_ref) { |n| "group-v#{n}" }
   end
 
-  factory :vmware_folder_host, :parent => :ems_folder do
-    sequence(:ems_ref)     { |n| "group-h#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("group-h#{n}", "Folder", "ManagedObjectReference") }
+  factory :vmware_folder_host, :parent => :vmware_folder do
+    sequence(:ems_ref) { |n| "group-h#{n}" }
   end
 
-  factory :vmware_folder_datastore, :parent => :ems_folder do
-    sequence(:ems_ref)     { |n| "group-s#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("group-s#{n}", "Folder", "ManagedObjectReference") }
+  factory :vmware_folder_datastore, :parent => :vmware_folder do
+    sequence(:ems_ref) { |n| "group-s#{n}" }
   end
 
-  factory :vmware_folder_network, :parent => :ems_folder do
-    sequence(:ems_ref)     { |n| "group-n#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("group-n#{n}", "Folder", "ManagedObjectReference") }
+  factory :vmware_folder_network, :parent => :vmware_folder do
+    sequence(:ems_ref) { |n| "group-n#{n}" }
   end
 
   factory :vmware_folder_root, :parent => :vmware_folder do
@@ -70,9 +66,9 @@ FactoryBot.define do
   end
 
   factory :vmware_datacenter, :parent => :vmware_folder, :class => "Datacenter" do
-    sequence(:name) { |n| "Test Datacenter #{seq_padded_for_sorting(n)}" }
-    sequence(:ems_ref)     { |n| "datacenter-#{n}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("datacenter-#{n}", "Datacenter", "ManagedObjectReference") }
+    sequence(:name)    { |n| "Test Datacenter #{seq_padded_for_sorting(n)}" }
+    sequence(:ems_ref) { |n| "datacenter-#{n}" }
+    ems_ref_type       { "Datacenter" }
   end
 end
 
