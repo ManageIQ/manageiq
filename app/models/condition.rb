@@ -243,17 +243,15 @@ class Condition < ApplicationRecord
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders\Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     return nil unless ref.respond_to?("registry_items")
-    if ohash[:key_exists]
-      return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
-    elsif ohash[:value_exists]
-      rec = ref.registry_items.find_by(:name => name)
-      return !!rec
-    else
-      rec = ref.registry_items.find_by(:name => name)
-    end
-    return nil unless rec
 
-    rec.data
+    registry_items = ref.registry_items
+    if ohash[:key_exists]
+      registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
+    elsif ohash[:value_exists]
+      registry_items.where(:name => name).exists?
+    else
+      registry_items.find_by(:name => name)&.data
+    end
   end
 
   def export_to_array
