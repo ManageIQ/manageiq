@@ -75,7 +75,8 @@ module Metric::Capture
             end
     emses.each do |ems|
       targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
-      targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
+      target_options = Hash.new { |_n, _v| {:start_time => start_time, :end_time => end_time, :zone => ems.zone, :interval => 'historical'} }
+      queue_captures(targets, target_options)
     end
 
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
@@ -216,8 +217,8 @@ module Metric::Capture
     use_historical = historical_days != 0
 
     targets.each do |target|
-      interval_name = perf_target_to_interval_name(target)
-      options = target_options[target]
+      options = target_options[target] || {}
+      interval_name = options[:interval] || perf_target_to_interval_name(target)
       target.perf_capture_queue(interval_name, options)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
