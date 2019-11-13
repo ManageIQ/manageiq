@@ -170,10 +170,9 @@ describe EmsRefresh::SaveInventory do
         @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
         @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
 
-        @ems_ref1 = @vm1.ems_ref_obj
-        @ems_ref2 = @vm2.ems_ref_obj
-        @vm1.ems_ref     = @vm2.ems_ref     = nil
-        @vm1.ems_ref_obj = @vm2.ems_ref_obj = nil
+        @ems_ref1 = @vm1.ems_ref
+        @ems_ref2 = @vm2.ems_ref
+        @vm1.ems_ref = @vm2.ems_ref     = nil
         @vm1.save
         @vm2.save
       end
@@ -182,9 +181,7 @@ describe EmsRefresh::SaveInventory do
       it "should handle no dups in the raw data" do
         data = raw_data_without_dups(@vm1, @vm2)
         data[0][:ems_ref]     = @ems_ref1
-        data[0][:ems_ref_obj] = @ems_ref1
         data[1][:ems_ref]     = @ems_ref2
-        data[1][:ems_ref_obj] = @ems_ref2
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
@@ -201,9 +198,7 @@ describe EmsRefresh::SaveInventory do
       it "should handle dups in the raw data" do
         data = raw_data_with_dups(@vm1, @vm2)
         data[0][:ems_ref]     = @ems_ref1
-        data[0][:ems_ref_obj] = @ems_ref1
         data[1][:ems_ref]     = @ems_ref2
-        data[1][:ems_ref_obj] = @ems_ref2
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
@@ -230,7 +225,7 @@ describe EmsRefresh::SaveInventory do
 
     private
 
-    RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type].freeze
+    RAW_DATA_ATTRS = [:name, :ems_ref, :vendor, :location, :uid_ems, :type].freeze
 
     def raw_data_process(*args)
       args.collect do |v|
@@ -283,7 +278,6 @@ describe EmsRefresh::SaveInventory do
       vms = {
         :type        => "ManageIQ::Providers::Redhat::InfraManager::Vm",
         :ems_ref     => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
-        :ems_ref_obj => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
         :uid_ems     => "6420a429-5ef5-441d-b88c-046dd2501382",
         :vendor      => "redhat",
         :name        => "vm",
@@ -300,7 +294,6 @@ describe EmsRefresh::SaveInventory do
       }
       clusters = {
         :ems_ref      => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
-        :ems_ref_obj  => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
         :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d",
         :name         => "Default",
         :ems_children => {
@@ -320,7 +313,6 @@ describe EmsRefresh::SaveInventory do
       folders = [
         {:type         => "Datacenter",
          :ems_ref      => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
-         :ems_ref_obj  => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
          :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180",
          :ems_children => {
            :folders => [vm_folder]
