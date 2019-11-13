@@ -1,13 +1,13 @@
 describe ContainerOrchestrator do
-  let(:connection)      { subject.send(:connection) }
-  let(:kube_connection) { subject.send(:kube_connection) }
-  let(:cert)            { Tempfile.new("cert") }
-  let(:token)           { Tempfile.new("token") }
-  let(:cert_path)       { cert.path }
-  let(:token_path)      { token.path }
-  let(:kube_host)       { "kube.example.com" }
-  let(:kube_port)       { "8443" }
-  let(:namespace)       { "manageiq" }
+  let(:kube_apps_connection) { subject.send(:kube_apps_connection) }
+  let(:kube_connection)      { subject.send(:kube_connection) }
+  let(:cert)                 { Tempfile.new("cert") }
+  let(:token)                { Tempfile.new("token") }
+  let(:cert_path)            { cert.path }
+  let(:token_path)           { token.path }
+  let(:kube_host)            { "kube.example.com" }
+  let(:kube_port)            { "8443" }
+  let(:namespace)            { "manageiq" }
 
   before do
     stub_const("ContainerOrchestrator::CA_CERT_FILE", cert_path)
@@ -37,14 +37,6 @@ describe ContainerOrchestrator do
     end
   end
 
-  describe "#connection (private)" do
-    it "connects to the correct uri" do
-      expect(connection.api_endpoint.to_s).to eq("https://kube.example.com:8443/oapi")
-      expect(connection.auth_options[:bearer_token_file]).to eq(token_path)
-      expect(connection.ssl_options[:verify_ssl]).to eq(1)
-    end
-  end
-
   describe "#kube_connection (private)" do
     it "connects to the correct uri" do
       expect(kube_connection.api_endpoint.to_s).to eq("https://kube.example.com:8443/api")
@@ -53,38 +45,44 @@ describe ContainerOrchestrator do
     end
   end
 
+  describe "#kube_apps_connection (private)" do
+    it "connects to the correct uri" do
+      expect(kube_apps_connection.api_endpoint.to_s).to eq("https://kube.example.com:8443/apis/apps")
+      expect(kube_apps_connection.auth_options[:bearer_token_file]).to eq(token_path)
+      expect(kube_apps_connection.ssl_options[:verify_ssl]).to eq(1)
+    end
+  end
+
   context "with stub connections" do
-    let(:connection_stub)      { double("OpenShiftConnection") }
+    let(:apps_connection_stub) { double("AppsConnection") }
     let(:kube_connection_stub) { double("KubeConnection") }
 
     before do
-      allow(subject).to receive(:connection).and_return(connection_stub)
+      allow(subject).to receive(:kube_apps_connection).and_return(apps_connection_stub)
       allow(subject).to receive(:kube_connection).and_return(kube_connection_stub)
     end
 
     describe "#scale" do
-      it "patches the deployment config with the specified number of replicas" do
+      it "patches the deployment with the specified number of replicas" do
         deployment_patch = {:spec => {:replicas => 4}}
-        expect(connection_stub).to receive(:patch_deployment_config).with("deployment", deployment_patch, namespace)
+        expect(apps_connection_stub).to receive(:patch_deployment).with("deployment", deployment_patch, namespace)
 
         subject.scale("deployment", 4)
       end
     end
 
-    describe "#create_deployment_config" do
-      it "creates a deployment config with the given name and edits" do
-        expect(connection_stub).to receive(:create_deployment_config) do |definition|
+    describe "#create_deployment" do
+      it "creates a deployment with the given name and edits" do
+        expect(apps_connection_stub).to receive(:create_deployment) do |definition|
           expect(definition[:metadata][:name]).to eq("test")
           expect(definition[:metadata][:namespace]).to eq("manageiq")
 
-          expect(definition[:spec][:template][:spec][:serviceAccount]).to eq("test-account")
           expect(definition[:spec][:template][:spec][:serviceAccountName]).to eq("test-account")
 
           expect(definition[:spec][:template][:spec][:containers].first[:image]).to eq("test-image")
         end
 
-        subject.create_deployment_config("test") do |spec|
-          spec[:spec][:template][:spec][:serviceAccount] = "test-account"
+        subject.create_deployment("test") do |spec|
           spec[:spec][:template][:spec][:serviceAccountName] = "test-account"
 
           spec[:spec][:template][:spec][:containers].first[:image] = "test-image"
@@ -93,9 +91,9 @@ describe ContainerOrchestrator do
 
       it "doesn't raise an exception for an existing object" do
         error = KubeException.new(500, "deployment config already exists", "")
-        expect(connection_stub).to receive(:create_deployment_config).and_raise(error)
+        expect(apps_connection_stub).to receive(:create_deployment).and_raise(error)
 
-        expect { subject.create_deployment_config("test") }.not_to raise_error
+        expect { subject.create_deployment("test") }.not_to raise_error
       end
     end
 
@@ -148,31 +146,12 @@ describe ContainerOrchestrator do
       end
     end
 
-    describe "#delete_deployment_config" do
+    describe "#delete_deployment" do
       it "deletes the replication controller if it exists" do
-        rc = double("ReplicationController", :metadata => double(:name => "rc_name"))
+        expect(apps_connection_stub).to receive(:delete_deployment).with("deploy_name", "manageiq")
+        expect(subject).to receive(:scale).with("deploy_name", 0)
 
-        expect(kube_connection_stub).to receive(:get_replication_controllers)
-          .with(:label_selector => "openshift.io/deployment-config.name=dc_name", :namespace => "manageiq")
-          .and_return([rc])
-
-        expect(connection_stub).to receive(:delete_deployment_config).with("dc_name", "manageiq")
-        expect(kube_connection_stub).to receive(:delete_replication_controller).with("rc_name", "manageiq")
-        expect(subject).to receive(:scale).with("dc_name", 0)
-
-        subject.delete_deployment_config("dc_name")
-      end
-
-      it "doesn't try to delete the replication controler if it doesn't exist" do
-        expect(kube_connection_stub).to receive(:get_replication_controllers)
-          .with(:label_selector => "openshift.io/deployment-config.name=dc_name", :namespace => "manageiq")
-          .and_return([])
-
-        expect(connection_stub).to receive(:delete_deployment_config).with("dc_name", "manageiq")
-        expect(kube_connection_stub).not_to receive(:delete_replication_controller)
-        expect(subject).to receive(:scale).with("dc_name", 0)
-
-        subject.delete_deployment_config("dc_name")
+        subject.delete_deployment("deploy_name")
       end
     end
   end
