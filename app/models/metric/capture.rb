@@ -64,6 +64,9 @@ module Metric::Capture
   end
 
   def self.perf_capture_gap(start_time, end_time, zone_id = nil, ems_id = nil)
+    raise ArgumentError, "end_time and start_time must be specified" if start_time.nil? || end_time.nil?
+    raise _("Start time must be earlier than End time") if start_time > end_time
+
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...")
 
     emses = if ems_id
@@ -75,7 +78,7 @@ module Metric::Capture
             end
     emses.each do |ems|
       targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
-      target_options = Hash.new { |_n, _v| {:start_time => start_time, :end_time => end_time, :zone => ems.zone, :interval => 'historical'} }
+      target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
       queue_captures(targets, target_options)
     end
 

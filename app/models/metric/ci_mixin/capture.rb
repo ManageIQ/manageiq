@@ -18,7 +18,6 @@ module Metric::CiMixin::Capture
   end
 
   def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
-    raise _("Start time must be earlier than End time") if start_time > end_time
     # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
     # within the threshold.  Then, reverse it so the newest ordered pair is first:
     # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
@@ -32,8 +31,8 @@ module Metric::CiMixin::Capture
   private :split_capture_intervals
 
   def perf_capture_queue(interval_name, options = {})
-    start_time = options[:start_time]&.utc
-    end_time   = options[:end_time]&.utc
+    start_time = options[:start_time]
+    end_time   = options[:end_time]
     priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
@@ -41,7 +40,6 @@ module Metric::CiMixin::Capture
     ems        = ems_for_capture_target
 
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
-    raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
     raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
 
     # cb is the task used to group cluster realtime metrics
