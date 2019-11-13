@@ -30,7 +30,7 @@ module Metric::CiMixin::Capture
   def perf_capture_queue(interval_name, options = {})
     start_time = options[:start_time]&.utc
     end_time   = options[:end_time]&.utc
-    priority   = options[:priority] || Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
+    priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
     task_id    = options[:task_id]
     zone       = options[:zone] || my_zone
     zone = zone.name if zone.respond_to?(:name)

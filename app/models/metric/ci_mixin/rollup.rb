@@ -63,7 +63,7 @@ module Metric::CiMixin::Rollup
       :role        => 'ems_metrics_processor',
       :queue_name  => 'ems_metrics_processor',
       :deliver_on  => deliver_on,
-      :priority    => Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
+      :priority    => Metric::Capture.interval_priority(interval_name)
     ) do |msg|
       _log.debug("Skipping queueing [#{interval_name}] rollup of #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}], since it is already queued") unless msg.nil?
     end
