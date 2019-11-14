@@ -928,6 +928,40 @@ class MiqExpression
     end
   end
 
+  def self.expression_reflections_for(model, parent = {})
+    model = model_class(model)
+
+    reflections = []
+
+    model.reflections_with_virtual.each do |association, ref|
+      next unless INCLUDE_TABLES.include?(association.to_s.pluralize)
+      next if association.to_s.pluralize == "event_logs" && model.name == "Host" && !proto?
+      next if association.to_s.pluralize == "processes" && model.name == "Host" # Process data not available yet for Host
+
+      # REMOVE ME: workaround to temporarily exclude certain models from the relationships
+      next if EXCLUDE_FROM_RELATS[model.name]&.include?(association.to_s)
+
+      next if ref.macro == :belongs_to && model.name != parent[:root]
+
+      association_klass = ref.klass.name
+
+      next if association_klass == parent[:root] ||
+              parent[:assoc_path].include?(association.to_s) ||
+              parent[:assoc_path].include?(association.to_s.singularize) ||
+              parent[:macro] == :belongs_to ||
+              parent[:multivalue]
+
+      if block_given?
+        yield(ref, association, association_klass)
+      else
+        human_value = value2human("#{parent[:assoc_path]}.#{association.to_s}").strip.split(".").last
+        reflections << {:association => association, :association_klass => association_klass, :human_name => human_value}
+      end
+    end
+
+    reflections
+  end
+
   def self.build_relats(model, parent = {}, seen = [])
     _log.info("Building relationship tree for: [#{parent[:path]} => #{model}]...")
 
@@ -939,37 +973,21 @@ class MiqExpression
     result = {:columns => model.attribute_names, :parent => parent}
     result[:reflections] = {}
 
-    model.reflections_with_virtual.each do |assoc, ref|
-      next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
-      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
-      next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
-
-      next if ref.macro == :belongs_to && model.name != parent[:root]
-
-      # REMOVE ME: workaround to temporarily exclude certain models from the relationships
-      next if EXCLUDE_FROM_RELATS[model.name]&.include?(assoc.to_s)
-
-      assoc_class = ref.klass.name
+    expression_reflections_for(model, parent) do |ref, association, association_klass|
+      seen_key = [model.name, association].join("_")
+      next if seen.include?(seen_key)
 
       new_parent = {
         :macro       => ref.macro,
         :class_path  => [parent[:class_path], determine_relat_path(ref)].join("."),
-        :assoc_path  => [parent[:assoc_path], assoc.to_s].join("."),
-        :assoc       => assoc,
-        :assoc_class => assoc_class,
+        :assoc_path  => [parent[:assoc_path], association.to_s].join("."),
+        :assoc       => association,
+        :assoc_class => association_klass,
         :root        => parent[:root],
         :multivalue  => [:has_many, :has_and_belongs_to_many].include?(ref.macro)
       }
 
-      seen_key = [model.name, assoc].join("_")
-      next if seen.include?(seen_key) ||
-              assoc_class == parent[:root] ||
-              parent[:assoc_path].include?(assoc.to_s) ||
-              parent[:assoc_path].include?(assoc.to_s.singularize) ||
-              parent[:macro] == :belongs_to ||
-              parent[:multivalue]
-      seen.push(seen_key)
-      result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
+      result[:reflections][association] = build_relats(association_klass, new_parent, seen)
     end
     result
   end
