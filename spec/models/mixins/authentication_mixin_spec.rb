@@ -266,13 +266,14 @@ describe AuthenticationMixin do
       end
     end
 
-    context ".validate_credentials_task" do
-      let(:args) { %w(userid password foo) }
+    context ".verify_credentials_task" do
+      let(:klass) { ManageIQ::Providers::Redhat::InfraManager }
+      let(:args) { {"userid" => "user", "password" => "pass", "other" => "value"} }
       let(:queue_opts) do
         {
-          :args        => [*args],
-          :class_name  => "ExtManagementSystem",
-          :method_name => "raw_connect?",
+          :args        => [args],
+          :class_name  => klass.name,
+          :method_name => "verify_credentials?",
           :queue_name  => "generic",
           :role        => "ems_operations",
           :zone        => 'zone'
@@ -280,26 +281,17 @@ describe AuthenticationMixin do
       end
       let(:task_opts) do
         {
-          :action => "Validate EMS Provider Credentials",
+          :action => "Verify EMS Provider Credentials",
           :userid => 'userid'
         }
       end
 
-      it "returns success with no error message" do
+      it "queues background task" do
         ok_task = FactoryBot.create(:miq_task, :status => 'Ok')
         allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
-        allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(ok_task)
 
-        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([true, nil])
-      end
-
-      it "returns failure with an error message" do
-        message = 'Login failed due to a bad username or password.'
-        error_task = FactoryBot.create(:miq_task, :status => 'Error', :message => message)
-        allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
-        allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(error_task)
-
-        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([false, message])
+        task_id = klass.verify_credentials_task('userid', 'zone', args)
+        expect(task_id).to eq(1)
       end
     end
 
