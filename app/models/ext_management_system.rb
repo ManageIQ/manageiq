@@ -603,6 +603,12 @@ class ExtManagementSystem < ApplicationRecord
     "ems_#{id}"
   end
 
+  # Until all providers have an operations worker we can continue
+  # to use the GenericWorker to run ems_operations roles
+  def queue_name_for_ems_operations
+    nil
+  end
+
   def enforce_policy(target, event)
     inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
