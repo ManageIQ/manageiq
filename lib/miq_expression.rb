@@ -959,7 +959,6 @@ class MiqExpression
         :assoc_class => assoc_class,
         :root        => parent[:root]
       }
-      new_parent[:direction] = new_parent[:macro] == :belongs_to ? :up : :down
       new_parent[:multivalue] = [:has_many, :has_and_belongs_to_many].include?(new_parent[:macro])
 
       seen_key = [model.name, assoc].join("_")
@@ -967,7 +966,7 @@ class MiqExpression
               assoc_class == parent[:root] ||
               parent[:assoc_path].include?(assoc.to_s) ||
               parent[:assoc_path].include?(assoc.to_s.singularize) ||
-              parent[:direction] == :up ||
+              parent[:macro] == :belongs_to ||
               parent[:multivalue]
       seen.push(seen_key)
       result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
