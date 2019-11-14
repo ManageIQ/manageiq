@@ -957,9 +957,9 @@ class MiqExpression
         :assoc_path  => [parent[:assoc_path], assoc.to_s].join("."),
         :assoc       => assoc,
         :assoc_class => assoc_class,
-        :root        => parent[:root]
+        :root        => parent[:root],
+        :multivalue  => [:has_many, :has_and_belongs_to_many].include?(ref.macro)
       }
-      new_parent[:multivalue] = [:has_many, :has_and_belongs_to_many].include?(new_parent[:macro])
 
       seen_key = [model.name, assoc].join("_")
       next if seen.include?(seen_key) ||
