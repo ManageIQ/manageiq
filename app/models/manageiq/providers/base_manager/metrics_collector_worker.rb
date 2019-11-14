@@ -14,8 +14,4 @@ class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerB
   def self.normalized_type
     @normalized_type ||= "ems_metrics_collector_worker"
   end
-
-  def self.ems_class
-    parent
-  end
 end
