@@ -140,7 +140,8 @@ module Metric::Capture
   def self.calc_targets_by_rollup_parent(targets)
     realtime_targets = targets.select do |target|
       target.kind_of?(Host) &&
-        perf_capture_now?(target)
+        perf_capture_now?(target) &&
+        target.ems_cluster_id
     end
     realtime_targets.each_with_object({}) do |target, h|
       target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
