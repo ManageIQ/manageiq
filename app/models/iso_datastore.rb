@@ -21,7 +21,7 @@ class IsoDatastore < ApplicationRecord
   def advertised_images
     return [] unless ext_management_system.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
 
-    ext_management_system.ovirt_services(:use_highest_supported_version => true).advertised_images
+    ext_management_system.ovirt_services.advertised_images
   end
 
   def synchronize_advertised_images
