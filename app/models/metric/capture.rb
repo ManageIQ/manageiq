@@ -133,13 +133,13 @@ module Metric::Capture
   # 1. Only calculate rollups for Hosts
   # 2. Some Hosts have an EmsCluster as a parent, others have none.
   # 3. Only Hosts with a parent are rolled up.
+  # 4. Only used for VMWare
   # @param [Array<Host|VmOrTemplate|Storage>] @targets The nodes to rollup
   # @returns Hash<String,Array<Host>>
   #   e.g.: {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
   def self.calc_targets_by_rollup_parent(targets)
     realtime_targets = targets.select do |target|
       target.kind_of?(Host) &&
-        perf_target_to_interval_name(target) == "realtime" &&
         perf_capture_now?(target)
     end
     realtime_targets.each_with_object({}) do |target, h|
