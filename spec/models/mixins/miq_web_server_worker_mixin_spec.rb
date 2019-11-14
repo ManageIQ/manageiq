@@ -15,38 +15,39 @@ describe MiqWebServerWorkerMixin do
   end
 
   before do
-    @token   = Rails.application.config.secret_token
+    @token   = Rails.application.config.secret_key_base
     @secrets = Rails.application.secrets
     MiqDatabase.seed
   end
 
   after do
-    Rails.application.config.secret_token = @token
+    Rails.application.config.secret_key_base = @token
     Rails.application.secrets = @secrets
   end
 
   it ".configure_secret_token defaults to MiqDatabase session_secret_token" do
-    Rails.application.config.secret_token = nil
+    Rails.application.config.secret_key_base = nil
 
     test_class.configure_secret_token
-    expect(Rails.application.secrets[:secret_token]).to eq(MiqDatabase.first.session_secret_token)
+    expect(Rails.application.config.secret_key_base).to eq(MiqDatabase.first.session_secret_token)
   end
 
   it ".configure_secret_token accepts an input token" do
-    Rails.application.config.secret_token = nil
+    Rails.application.config.secret_key_base = nil
 
     token = SecureRandom.hex(64)
     test_class.configure_secret_token(token)
-    expect(Rails.application.secrets[:secret_token]).to eq(token)
+    expect(Rails.application.config.secret_key_base).to eq(token)
   end
 
   it ".configure_secret_token does not reset secrets when token already configured" do
-    Rails.application.config.secret_token = SecureRandom.hex(64)
+    existing_value = SecureRandom.hex(64)
+    Rails.application.config.secret_key_base = existing_value
     Rails.application.secrets = nil
     Rails.application.secrets
 
     test_class.configure_secret_token
-    expect(Rails.application.secrets[:secret_token]).to eq(Rails.application.config.secret_token)
+    expect(Rails.application.config.secret_key_base).to eq(existing_value)
   end
 
   it "#rails_server_options" do
