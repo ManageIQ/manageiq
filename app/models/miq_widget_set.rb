@@ -2,6 +2,7 @@ class MiqWidgetSet < ApplicationRecord
   acts_as_miq_set
 
   before_destroy :destroy_user_versions
+  before_save    :keep_group_when_saving
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
@@ -15,7 +16,7 @@ class MiqWidgetSet < ApplicationRecord
 
   def destroy_user_versions
     # userid, group_id and name are set for user version
-    # owner_type and owner_id are set for group version
+    # group_id, owner_type and owner_id are set for group version
     return if userid
 
     # When we destroy a WidgetSet for a group, we also want to destroy all user-modified versions
@@ -27,10 +28,14 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def self.where_unique_on(name, user = nil)
+    # user is nil for dashboards set for group
     userid = user.try(:userid)
-    group_id = user.try(:current_group_id)
     # a unique record is defined by name, group_id and userid
-    where(:name => name, :group_id => group_id, :userid => userid)
+    if userid.present?
+      where(:name => name, :group_id => user.current_group_id, :userid => userid)
+    else
+      where(:name => name, :userid => nil)
+    end
   end
 
   def self.subscribed_for_user(user)
@@ -97,5 +102,11 @@ class MiqWidgetSet < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Dashboard', 'Dashboards', number)
+  end
+
+  private
+
+  def keep_group_when_saving
+    self.group_id = owner_id if owner_type == "MiqGroup" && owner_id.present?
   end
 end
