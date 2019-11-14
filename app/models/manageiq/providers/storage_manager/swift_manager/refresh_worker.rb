@@ -2,7 +2,7 @@ class ManageIQ::Providers::StorageManager::SwiftManager::RefreshWorker < ::MiqEm
   require_nested :Runner
 
   def self.ems_class
-    ManageIQ::Providers::StorageManager::SwiftManager
+    parent
   end
 
   def self.settings_name
