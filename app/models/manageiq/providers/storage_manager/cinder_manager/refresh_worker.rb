@@ -2,7 +2,7 @@ class ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker < ::MiqE
   require_nested :Runner
 
   def self.ems_class
-    ManageIQ::Providers::StorageManager::CinderManager
+    parent
   end
 
   def self.settings_name
