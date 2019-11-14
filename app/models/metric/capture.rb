@@ -144,10 +144,9 @@ module Metric::Capture
         target.ems_cluster_id
     end
     realtime_targets.each_with_object({}) do |target, h|
-      target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
-        pkey = "#{parent.class}:#{parent.id}"
-        (h[pkey] ||= []) << target
-      end
+      parent = target.ems_cluster
+      pkey = "#{parent.class}:#{parent.id}"
+      (h[pkey] ||= []) << target
     end
   end
 
