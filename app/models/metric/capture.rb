@@ -139,22 +139,17 @@ module Metric::Capture
   # 1. Only calculate rollups for Hosts
   # 2. Some Hosts have an EmsCluster as a parent, others have none.
   # 3. Only Hosts with a parent are rolled up.
+  # 4. Only used for VMWare
   # @param [Array<Host|VmOrTemplate|Storage>] @targets The nodes to rollup
-  # @option options :force Force capture if this node is a host
   # @returns Hash<String,Array<Host>>
-  #   e.g.: {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
-  def self.calc_targets_by_rollup_parent(targets, options = {})
+  #   e.g.: {EmsCluster:4=>[Host:4], EmsCluster:5=>[Host:1, Host:2]}
+  def self.calc_targets_by_rollup_parent(targets)
     realtime_targets = targets.select do |target|
       target.kind_of?(Host) &&
-        perf_target_to_interval_name(target) == "realtime" &&
-        (options[:force] || perf_capture_now?(target))
+        perf_capture_now?(target) &&
+        target.ems_cluster_id
     end
-    realtime_targets.each_with_object({}) do |target, h|
-      target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
-        pkey = "#{parent.class}:#{parent.id}"
-        (h[pkey] ||= []) << target
-      end
-    end
+    realtime_targets.group_by(&:ems_cluster)
   end
 
   # Determine queue options for each target
@@ -167,7 +162,8 @@ module Metric::Capture
     target_options = Hash.new { |h, k| h[k] = {:zone => zone} }
     # Create a new task for each rollup parent
     # mark each target with the rollup parent
-    targets_by_rollup_parent.each_with_object(target_options) do |(pkey, targets), h|
+    targets_by_rollup_parent.each_with_object(target_options) do |(parent, targets), h|
+      pkey = "#{parent.class.name}:#{parent.id}"
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
