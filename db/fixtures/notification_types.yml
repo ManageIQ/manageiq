@@ -158,7 +158,7 @@
 - :name: vm_snapshot_success
   :message: 'The operation %{snapshot_op} on snapshot of %{subject} completed successfully.'
   :expires_in: 24.hours
-  :level: :warning
+  :level: :success
   :audience: global
 - :name: vm_snapshot_failure
   :message: 'Failed to %{snapshot_op} snapshot of %{subject}: %{error}'
