@@ -22,13 +22,6 @@ describe MiqWorker do
     end
   end
 
-  it "renice" do
-    allow(AwesomeSpawn).to receive(:launch)
-    allow(described_class).to receive(:worker_settings).and_return(:nice_delta => 5)
-    result = described_class.renice(123)
-    expect(result.command_line).to eq "renice -n 5 -p 123"
-  end
-
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
       allow(described_class).to receive(:required_roles).and_return(worker_role_names)
@@ -382,12 +375,12 @@ describe MiqWorker do
 
       it "with ENV['APPLIANCE']" do
         begin
-          allow(MiqWorker).to receive(:nice_increment).and_return("+10")
+          allow(MiqWorker).to receive(:nice_increment).and_return("10")
           allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
           old_env = ENV.delete('APPLIANCE')
           ENV['APPLIANCE'] = 'true'
           cmd = @worker.command_line
-          expect(cmd).to start_with("nice +10")
+          expect(cmd).to start_with("nice -n 10")
           expect(cmd).to include("--ems-id 1234")
           expect(cmd).to include("--guid #{@worker.guid}")
           expect(cmd).to include("--heartbeat")

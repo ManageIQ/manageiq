@@ -307,48 +307,6 @@ class MiqWorker < ApplicationRecord
     )
   end
 
-  def self.before_fork
-    preload_for_worker_role if respond_to?(:preload_for_worker_role)
-  end
-
-  def self.after_fork
-    close_pg_sockets_inherited_from_parent
-    DRb.stop_service
-    close_drb_pool_connections
-    renice(Process.pid)
-    CodeCoverage.run_hook
-  end
-
-  # When we fork, the children inherits the parent's file descriptors
-  # so we need to close any inherited raw pg sockets in the child.
-  def self.close_pg_sockets_inherited_from_parent
-    owner_to_pool = ActiveRecord::Base.connection_handler.instance_variable_get(:@owner_to_pool)
-    owner_to_pool[Process.ppid].values.compact.each do |pool|
-      pool.connections.each do |conn|
-        socket = conn.raw_connection.socket
-        _log.info("Closing socket: #{socket}")
-        IO.for_fd(socket).close
-      end
-    end
-  end
-
-  # Close all open DRb connections so that connections in the parent's memory space
-  # which is shared due to forking the child process do not pollute the child's DRb
-  # connection pool.  This can lead to errors when the children connect to a server
-  # and get an incorrect response back.
-  #
-  # ref: https://bugs.ruby-lang.org/issues/2718
-  def self.close_drb_pool_connections
-    require 'drb'
-
-    # HACK: DRb doesn't provide an interface to close open pool connections.
-    #
-    # Once that is added this should be replaced.
-    DRb::DRbConn.instance_variable_get(:@mutex).synchronize do
-      DRb::DRbConn.instance_variable_get(:@pool).each(&:close)
-      DRb::DRbConn.instance_variable_set(:@pool, [])
-    end
-  end
 
   # Overriding queue_name as now some queue names can be
   # arrays of names for some workers not just a singular name.
@@ -383,14 +341,12 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner
-    if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
-      start_runner_via_spawn
-    elsif systemd_worker?
+    if ENV['MIQ_SYSTEMD_WORKERS'] && systemd_worker?
       start_systemd_worker
     elsif containerized_worker?
       start_runner_via_container
     else
-      start_runner_via_fork
+      start_runner_via_spawn
     end
   end
 
@@ -398,24 +354,12 @@ class MiqWorker < ApplicationRecord
     create_container_objects
   end
 
-  def start_runner_via_fork
-    self.class.before_fork
-    pid = fork(:cow_friendly => true) do
-      self.class.after_fork
-      self.class::Runner.start_worker(worker_options)
-      exit!
-    end
-
-    Process.detach(pid)
-    pid
-  end
-
   def self.build_command_line(guid, ems_id = nil)
     raise ArgumentError, "No guid provided" unless guid
 
     require 'awesome_spawn'
     cmd = "#{Gem.ruby} #{runner_script}"
-    cmd = "nice #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
+    cmd = "nice -n #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
 
     options = {:guid => guid, :heartbeat => nil}
     if ems_id
@@ -645,13 +589,9 @@ class MiqWorker < ApplicationRecord
                          end
   end
 
-  def self.renice(pid)
-    AwesomeSpawn.run("renice", :params =>  {:n => nice_increment, :p => pid })
-  end
-
   def self.nice_increment
     delta = worker_settings[:nice_delta]
-    delta.kind_of?(Integer) ? delta.to_s : "+10"
+    delta.kind_of?(Integer) ? delta.to_s : "10"
   end
 
   def self.display_name(number = 1)
