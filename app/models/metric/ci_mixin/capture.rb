@@ -1,6 +1,10 @@
 module Metric::CiMixin::Capture
   def perf_capture_object
-    self.class.parent::MetricsCapture.new(self)
+    if self.kind_of?(ExtManagementSystem)
+      self.class::MetricsCapture.new(nil, ext_management_system)
+    else
+      self.class.parent::MetricsCapture.new(self, ext_management_system)
+    end
   end
 
   delegate :perf_collect_metrics, :to => :perf_capture_object
