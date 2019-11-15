@@ -78,7 +78,9 @@ generate_rows:
   - :function: percent_of_col
     :col_name: derived_storage_total
     :pct_col_name: derived_storage_total
-  - 0
+  - :function: percent_of_col
+    :col_name: derived_storage_free
+    :pct_col_name: derived_storage_total
   - :function: percent_of_col
     :col_name: trend_max_v_derived_storage_used
     :pct_col_name: derived_storage_total
@@ -86,7 +88,7 @@ generate_rows:
     :col_name: trend_v_derived_storage_used
     :pct_col_name: derived_storage_total
   - :col_name: derived_storage_total
-  - 0
+  - :col_name: derived_storage_free
   - :col_name: trend_max_v_derived_storage_used
   - :col_name: trend_v_derived_storage_used
 
