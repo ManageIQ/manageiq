@@ -11,7 +11,7 @@ module PerEmsTypeWorkerMixin
 
   module ClassMethods
     def ems_class
-      ExtManagementSystem
+      parent
     end
 
     def emses_in_zone

@@ -15,8 +15,4 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
       end
     end
   end
-
-  def self.ems_class
-    parent
-  end
 end

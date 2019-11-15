@@ -18,10 +18,6 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     end
   end
 
-  def self.ems_class
-    parent
-  end
-
   def self.normalized_type
     @normalized_type ||= "ems_refresh_worker"
   end
