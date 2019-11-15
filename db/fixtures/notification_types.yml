@@ -250,6 +250,36 @@
   :expires_in: 24.hours
   :level: :error
   :audience: global
+- :name: cloud_volume_backup_create_success
+  :message: 'Creating Backup %{backup_name} of Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_create_error
+  :message: 'Creating Backup %{backup_name} of Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_backup_delete_success
+  :message: 'Deleting Backup %{subject} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_delete_error
+  :message: 'Deleting Backup %{subject} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_backup_restore_success
+  :message: 'Restoring Backup %{subject} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_restore_error
+  :message: 'Restoring Backup %{subject} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
 - :name: cloud_volume_snapshot_create_success
   :message: 'Creating Snapshot %{snapshot_name} of Volume %{volume_name} completed successfully.'
   :expires_in: 24.hours
