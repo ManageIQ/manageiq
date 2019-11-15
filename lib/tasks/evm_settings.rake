@@ -1,5 +1,7 @@
 module EvmSettings
   ALLOWED_KEYS ||= [
+    "/authentication/mode",
+    "/authentication/httpd_role",
     "/authentication/sso_enabled",
     "/authentication/saml_enabled",
     "/authentication/oidc_enabled",
