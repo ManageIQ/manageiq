@@ -8,6 +8,12 @@ module Metric::Capture
   REALTIME_PRIORITY = HOURLY_PRIORITY = DAILY_PRIORITY = MiqQueue::NORMAL_PRIORITY
   HISTORICAL_PRIORITY = MiqQueue::LOW_PRIORITY
 
+  # @param [String[ capture interval
+  # @return [Integer] MiqQueue priority level for this message
+  def self.interval_priority(interval)
+    interval == "historical" ? MiqQueue::LOW_PRIORITY : MiqQueue::NORMAL_PRIORITY
+  end
+
   def self.capture_cols
     @capture_cols ||= Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
   end
@@ -193,6 +199,8 @@ module Metric::Capture
   end
   private_class_method :calc_target_options
 
+  # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
+  # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def self.queue_captures(targets, target_options)
     # Queue the captures for each target
     use_historical = historical_days != 0
