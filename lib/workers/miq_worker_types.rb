@@ -67,9 +67,9 @@ MIQ_WORKER_TYPES = {
   "MiqReportingWorker"                                                          => %i(manageiq_default),
   "MiqScheduleWorker"                                                           => %i(manageiq_default),
   "MiqSmartProxyWorker"                                                         => %i(manageiq_default),
-  "MiqUiWorker"                                                                 => %i(manageiq_default ui_dependencies),
+  "MiqUiWorker"                                                                 => %i(manageiq_default ui_dependencies graphql_api),
   "MiqVimBrokerWorker"                                                          => %i(manageiq_default),
-  "MiqWebServiceWorker"                                                         => %i(manageiq_default),
+  "MiqWebServiceWorker"                                                         => %i(manageiq_default graphql_api),
   "MiqRemoteConsoleWorker"                                                      => %i(manageiq_default),
 }.freeze
 
