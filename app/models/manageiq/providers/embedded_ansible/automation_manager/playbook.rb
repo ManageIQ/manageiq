@@ -1,8 +1,6 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptPayload
   has_many :jobs, :class_name => 'OrchestrationStack', :foreign_key => :configuration_script_base_id
 
-  DEFAULT_EXECUTION_TTL = 100.minutes # automate state machine aborts after 100 retries at a minute interval
-
   def self.display_name(number = 1)
     n_('Playbook (Embedded Ansible)', 'Playbooks (Embedded Ansible)', number)
   end
@@ -20,7 +18,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < Manage
     credentials = collect_credentials(vars)
 
     kwargs = {:become_enabled => vars[:become_enabled]}
-    kwargs[:timeout]   = vars[:execution_ttl].present? ? vars[:execution_ttl].to_i.minutes : DEFAULT_EXECUTION_TTL
+    kwargs[:timeout]   = vars[:execution_ttl].to_i.minutes
     kwargs[:verbosity] = vars[:verbosity].to_i if vars[:verbosity].present?
 
     workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials, kwargs).tap do |job|

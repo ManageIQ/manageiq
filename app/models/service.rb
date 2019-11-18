@@ -489,7 +489,18 @@ class Service < ApplicationRecord
   def configuration_script
   end
 
-  private def update_attributes_from_dialog
+  def set_automate_timeout(timeout, action = nil)
+    options[automate_timeout_key(action)] = timeout
+    save!
+  end
+
+  private
+
+  def update_attributes_from_dialog
     Service::DialogProperties.parse(options[:dialog], evm_owner).each { |key, value| self[key] = value }
+  end
+
+  def automate_timeout_key(action)
+    action.nil? ? :automate_timeout : "#{action.downcase}_automate_timeout".to_sym
   end
 end

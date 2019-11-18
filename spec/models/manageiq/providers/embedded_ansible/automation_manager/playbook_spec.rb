@@ -7,7 +7,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
 
   context "#run" do
     it "launches the referenced ansible playbook" do
-      job = playbook.run
+      job = playbook.run(:execution_ttl => 100)
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:env_vars]).to eq({})
