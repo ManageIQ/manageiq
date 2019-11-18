@@ -2442,6 +2442,12 @@ describe Rbac::Filterer do
       FactoryBot.create(:vm_vmware, :location => "a")
       expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
     end
+
+    it "returns empty array for out-of-bounds condition when limits cannot be applied in SQL" do
+      FactoryBot.create(:vm)
+      recs = Rbac.filtered(Vm.includes(:platform), :limit => 3, :offset => 10, :filter => MiqExpression.new("NOT" => {"=" => {"field" => "Vm-platform", "value" => "foo"}}))
+      expect(recs).to eq([])
+    end
   end
 
   describe ".filtered_object" do
