@@ -5,7 +5,7 @@ describe BinaryBlob do
     before { @blob = FactoryBot.build(:binary_blob, :name => "test") }
 
     subject do
-      @blob.binary = @data.dup # binary= is descructive (it changes the object passed to it)
+      @blob.binary = @data.dup # binary= is destructive (it changes the object passed to it)
       @blob.save
       @blob.reload
       @blob.binary
