@@ -303,7 +303,7 @@ module Rbac
       if limit && !attrs[:apply_limit_in_sql]
         attrs[:target_ids_for_paging] = targets.collect(&:id) # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
         offset = offset.to_i
-        targets = targets[offset...(offset + limit.to_i)]
+        targets = targets[offset...(offset + limit.to_i)] || []
       end
 
       # Preserve sort order of incoming target_ids
