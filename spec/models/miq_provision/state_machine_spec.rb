@@ -116,8 +116,8 @@ describe MiqProvision do
 
           task.signal(:post_create_destination)
 
-          expect(task.destination.retires_on).to be_between(retires_on - 1.second, retires_on + 1.second)
-          expect(vm.reload.retires_on).to        be_between(retires_on - 1.second, retires_on + 1.second)
+          expect(task.destination.retires_on).to be_between(retires_on - 2.seconds, retires_on + 2.seconds)
+          expect(vm.reload.retires_on).to        be_between(retires_on - 2.seconds, retires_on + 2.seconds)
           expect(vm.retirement_warn).to          eq(0)
           expect(vm.retired).to                  be_falsey
         end
@@ -135,7 +135,7 @@ describe MiqProvision do
           task.signal(:post_create_destination)
 
           expect(task.destination.retires_on).to eq(retires_on)
-          expect(vm.reload.retires_on).to        be_between(retires_on - 1.second, retires_on + 1.second)
+          expect(vm.reload.retires_on).to        be_between(retires_on - 2.seconds, retires_on + 2.seconds)
           expect(vm.retirement_warn).to          eq(retirement_warn_days)
           expect(vm.retired).to                  be_falsey
         end
