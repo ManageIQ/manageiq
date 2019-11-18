@@ -12,7 +12,7 @@ class PolicyEvent < ApplicationRecord
     event = MiqEventDefinition.find_by(:name => event) if event.kind_of?(String)
     chain_id = nil
     result.each do |r|
-      miq_policy_id = r[:miq_policy].kind_of?(MiqPolicy) ? r[:miq_policy].id : nil # handle built-in policies too
+      miq_policy_id = r[:miq_policy].id if r[:miq_policy].kind_of?(MiqPolicy) # handle built-in policies too
       pe = new(
         :event_type                       => event.name,
         :miq_event_definition_id          => event.id,
