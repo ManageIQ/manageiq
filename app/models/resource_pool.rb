@@ -1,4 +1,5 @@
 class ResourcePool < ApplicationRecord
+  include NewWithTypeStiMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable
