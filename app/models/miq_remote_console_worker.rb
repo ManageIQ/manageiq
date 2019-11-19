@@ -16,4 +16,8 @@ class MiqRemoteConsoleWorker < MiqWorker
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    150
+  end
 end

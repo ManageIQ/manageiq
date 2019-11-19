@@ -13,4 +13,8 @@ class MiqScheduleWorker < MiqWorker
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    80
+  end
 end

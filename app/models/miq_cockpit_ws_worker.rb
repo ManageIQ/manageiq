@@ -9,6 +9,10 @@ class MiqCockpitWsWorker < MiqWorker
     @friendly_name ||= "Cockpit Worker"
   end
 
+  def self.kill_priority
+    160
+  end
+
   def self.can_start_cockpit_ws?
     @supports_cockpit_ws ||= MiqCockpit::WS.can_start_cockpit_ws?
   end

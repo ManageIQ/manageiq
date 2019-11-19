@@ -3,7 +3,7 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
 
   include PerEmsWorkerMixin
 
-  self.required_roles = "ems_operations"
+  self.required_roles = %w[ems_operations]
 
   def friendly_name
     @friendly_name ||= begin

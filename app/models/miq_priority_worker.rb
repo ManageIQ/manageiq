@@ -12,4 +12,8 @@ class MiqPriorityWorker < MiqQueueWorkerBase
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    90
+  end
 end
