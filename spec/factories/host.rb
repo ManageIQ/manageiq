@@ -57,7 +57,7 @@ FactoryBot.define do
   factory :host_openstack_infra, :parent => :host, :class => "ManageIQ::Providers::Openstack::InfraManager::Host" do
     vmm_vendor   { "unknown" }
     ems_ref      { "openstack-perf-host" }
-    ems_ref_type { "nova-instance" }
+    uid_ems      { "openstack-perf-host-nova-instance" }
     association :ems_cluster, factory: :ems_cluster_openstack
   end
 
