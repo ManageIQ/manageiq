@@ -48,6 +48,7 @@ module Metric::Capture
     _log.info("Queueing performance capture...")
 
     ems = ExtManagementSystem.find(ems_id)
+    pco = ems.perf_capture_object
     zone = ems.zone
     perf_capture_health_check(zone)
     targets = Metric::Targets.capture_ems_targets(ems)
@@ -55,7 +56,7 @@ module Metric::Capture
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     target_options = calc_target_options(zone, targets_by_rollup_parent)
     targets = filter_perf_capture_now(targets, target_options)
-    queue_captures(targets, target_options)
+    pco.queue_captures(targets, target_options)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
@@ -77,9 +78,10 @@ module Metric::Capture
               MiqServer.my_server.zone.ems_metrics_collectable
             end
     emses.each do |ems|
+      pco = ems.perf_capture_object
       targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
       target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
-      queue_captures(targets, target_options)
+      pco.queue_captures(targets, target_options)
     end
 
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
@@ -212,28 +214,6 @@ module Metric::Capture
     end
   end
   private_class_method :calc_target_options
-
-  # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
-  # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
-  def self.queue_captures(targets, target_options)
-    targets.each do |target|
-      options = target_options[target] || {}
-      interval_name = options[:interval] || perf_target_to_interval_name(target)
-      target.perf_capture_queue(interval_name, options)
-    rescue => err
-      _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
-    end
-  end
-  private_class_method :queue_captures
-
-  def self.perf_target_to_interval_name(target)
-    case target
-    when Host, VmOrTemplate then                       "realtime"
-    when ContainerNode, Container, ContainerGroup then "realtime"
-    when Storage then                                  "hourly"
-    end
-  end
-  private_class_method :perf_target_to_interval_name
 
   def self.minutes_ago(value)
     if value.kind_of?(Integer) # Default unit is minutes
