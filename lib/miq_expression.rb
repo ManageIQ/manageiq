@@ -28,6 +28,10 @@ class MiqExpression
     @context_type = ctype
   end
 
+  def self.columns_hash
+    {}
+  end
+
   def valid?(component = exp)
     operator = component.keys.first
     case operator.downcase

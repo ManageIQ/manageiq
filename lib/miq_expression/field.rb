@@ -34,8 +34,21 @@ class MiqExpression::Field < MiqExpression::Target
     !custom_attribute_column? && target.attribute_supported_by_sql?(column) && reflection_supported_by_sql?
   end
 
-  def custom_attribute_column?
+  def custom_attribute_column?(load = false)
+    model.add_custom_attribute(column) if load && column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+
     column.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
+  end
+
+  def column_values
+    return [] unless valid?
+
+    targets = Rbac::Filterer.filtered(target)
+    if virtual_attribute? || custom_attribute_column?(true)
+      targets.map { |x| x.try(column) }
+    else
+      targets.pluck(column)
+    end.uniq.compact
   end
 
   def column_type
