@@ -34,8 +34,8 @@ module Authenticator
       request.headers['X-EXTERNAL-AUTH-ERROR']
     end
 
-    def find_external_identity(_username, user_attrs, membership_list)
-      [user_attrs, membership_list]
+    def find_external_identity(_username, *args)
+      args
     end
 
     def groups_for(identity)
