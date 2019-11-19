@@ -8,6 +8,8 @@ class ChargebackRateDetailCurrency < ApplicationRecord
 
   has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
 
+  self.table_name = 'currencies'
+
   CURRENCY_FILE = "/currency_iso.json".freeze
   FIXTURE_DIR = Money::Currency::Loader::DATA_PATH.freeze
 
