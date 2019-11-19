@@ -151,7 +151,7 @@ module Authenticator
       end
     end
 
-    def find_external_identity(username, *args)
+    def find_external_identity(_username, *_args)
       raise NoMethodError, "required interface method 'find_external_identity' not defined by subclass"
     end
 
