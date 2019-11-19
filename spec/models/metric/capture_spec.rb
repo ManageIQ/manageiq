@@ -161,7 +161,7 @@ describe Metric::Capture do
       context "executing perf_capture_gap" do
         before do
           t = Time.now.utc
-          Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days)
+          Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days, nil, @ems_vmware.id)
         end
 
         it "should queue up enabled targets for historical" do

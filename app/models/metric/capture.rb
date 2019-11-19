@@ -63,27 +63,45 @@ module Metric::Capture
     _log.info("Queueing performance capture...Complete")
   end
 
-  def self.perf_capture_gap(start_time, end_time, zone_id = nil)
+  def self.perf_capture_gap(start_time, end_time, zone_id = nil, ems_id = nil)
+    raise ArgumentError, "end_time and start_time must be specified" if start_time.nil? || end_time.nil?
+    raise _("Start time must be earlier than End time") if start_time > end_time
+
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...")
 
-    zone = Zone.find(zone_id) if zone_id
-    targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
-    targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
+    emses = if ems_id
+              [ExtManagementSystem.find(ems_id)]
+            elsif zone_id
+              Zone.find(zone_id).ems_metrics_collectable
+            else
+              MiqServer.my_server.zone.ems_metrics_collectable
+            end
+    emses.each do |ems|
+      targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
+      target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
+      queue_captures(targets, target_options)
+    end
 
     _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
   end
 
-  def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
-    item = {
+  # called by the UI
+  # @param zone [Zone] zone where the ems resides
+  # @param ems [ExtManagementSystem] ems to capture collect
+  #
+  # pass at least one of these, since we need to specify which ems needs a gap to run
+  # Prefer to use the ems over the zone for perf_capture_gap
+  def self.perf_capture_gap_queue(start_time, end_time, zone, ems = nil)
+    zone ||= ems.zone
+
+    MiqQueue.put(
       :class_name  => name,
       :method_name => "perf_capture_gap",
       :role        => "ems_metrics_coordinator",
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [start_time, end_time, zone.try(:id)]
-    }
-    item[:zone] = zone.name if zone
-
-    MiqQueue.put(item)
+      :zone        => zone.name,
+      :args        => [start_time, end_time, zone.id, ems&.id]
+    )
   end
 
   def self.filter_perf_capture_now(targets, target_options)
@@ -202,8 +220,8 @@ module Metric::Capture
     use_historical = historical_days != 0
 
     targets.each do |target|
-      interval_name = perf_target_to_interval_name(target)
-      options = target_options[target]
+      options = target_options[target] || {}
+      interval_name = options[:interval] || perf_target_to_interval_name(target)
       target.perf_capture_queue(interval_name, options)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
