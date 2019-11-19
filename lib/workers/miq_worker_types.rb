@@ -110,8 +110,6 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
   ManageIQ::Providers::Redhat::NetworkManager::RefreshWorker
   ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
-  ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker
-  ManageIQ::Providers::StorageManager::SwiftManager::RefreshWorker
   ManageIQ::Providers::Vmware::CloudManager::RefreshWorker
   ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker
   ManageIQ::Providers::Vmware::InfraManager::RefreshWorker

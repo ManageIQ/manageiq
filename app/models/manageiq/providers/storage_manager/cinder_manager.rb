@@ -3,7 +3,6 @@
 
 class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager
   require_nested :RefreshParser
-  require_nested :RefreshWorker
   require_nested :Refresher
 
   include ManageIQ::Providers::StorageManager::BlockMixin

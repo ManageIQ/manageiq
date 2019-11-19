@@ -1,6 +1,5 @@
 class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::StorageManager
   require_nested :RefreshParser
-  require_nested :RefreshWorker
   require_nested :Refresher
 
   include ManageIQ::Providers::StorageManager::ObjectMixin
