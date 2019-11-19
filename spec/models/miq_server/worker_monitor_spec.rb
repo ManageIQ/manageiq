@@ -5,6 +5,7 @@ describe "MiqWorker Monitor" do
       allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(120)
       allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(100.megabytes)
 
+      MiqWorkerType.seed
       @miq_server = EvmSpecHelper.local_miq_server
     end
 

@@ -42,12 +42,6 @@ module ManageIQ
       template "app/models/%plugin_path%/inventory/persister/cloud_manager.rb"
       template "app/models/%plugin_path%/inventory/persister.rb"
       template "app/models/%plugin_path%/cloud_manager.rb"
-
-      inject_into_file Rails.root.join('lib/workers/miq_worker_types.rb'), <<~RB.indent(2), :after => "MIQ_WORKER_TYPES = {\n"
-        "#{class_name}::CloudManager::EventCatcher"                        => %i(manageiq_default),
-        "#{class_name}::CloudManager::MetricsCollectorWorker"              => %i(manageiq_default),
-        "#{class_name}::CloudManager::RefreshWorker"                       => %i(manageiq_default),
-      RB
     end
 
     def create_vcr

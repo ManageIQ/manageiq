@@ -60,26 +60,26 @@ end
 opt_parser.parse!
 worker_class = ARGV[0]
 
-require File.expand_path("../miq_worker_types", __dir__)
+require File.expand_path("../../../config/environment", __dir__)
 
 if options[:list]
-  puts ::MIQ_WORKER_TYPES.keys
+  puts MiqWorkerType.pluck(:worker_type)
   exit
 end
 opt_parser.abort(opt_parser.help) unless worker_class
 
-unless ::MIQ_WORKER_TYPES.keys.include?(worker_class)
+worker_type = MiqWorkerType.find_by(:worker_type => worker_class)
+
+unless worker_type
   STDERR.puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
 end
 
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
-ENV["BUNDLER_GROUPS"] = MIQ_WORKER_TYPES[worker_class].join(',')
+ENV["BUNDLER_GROUPS"] = worker_type.bundler_groups.join(',')
 
 options[:ems_id] ||= ENV["EMS_ID"]
-
-require File.expand_path("../../../config/environment", __dir__)
 
 if options[:roles].present?
   MiqServer.my_server.server_role_names += options[:roles]
