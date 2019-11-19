@@ -35,7 +35,7 @@ module Authenticator
     end
 
     def find_external_identity(_username, *args)
-      args
+      args # should be [user_attributes, membership_list]
     end
 
     def groups_for(identity)
