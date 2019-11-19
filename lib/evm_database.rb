@@ -77,8 +77,26 @@ class EvmDatabase
     seed(OTHER_SEEDABLE_CLASSES)
   end
 
+  # Returns whether or not a primordial seed has completed.
+  def self.seeded_primordially?
+    # While not technically accurate, as someone could just insert a record
+    # directly, this is the simplest check at the moment to guess whether or not
+    # a primordial seed has completed.
+    MiqDatabase.any? && MiqRegion.in_my_region.any?
+  end
+
+  # Returns whether or not a full seed has completed.
+  def self.seeded?
+    # While not technically accurate, as someone could just insert a record
+    # directly, this is the simplest check at the moment to guess whether or not
+    # a full seed has completed.
+    #
+    # MiqAction was chosen because it cannot be added by a user directly.
+    seeded_primordially? && MiqAction.in_my_region.any?
+  end
+
   def self.skip_seeding?
-    ENV['SKIP_SEEDING'] && MiqDatabase.any?
+    ENV['SKIP_SEEDING'] && seeded_primordially?
   end
   private_class_method :skip_seeding?
 

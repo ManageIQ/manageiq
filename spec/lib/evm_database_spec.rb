@@ -73,6 +73,46 @@ describe EvmDatabase do
     end
   end
 
+  def simulate_primordial_seed
+    described_class.seed(["MiqDatabase", "MiqRegion"])
+  end
+
+  def simulate_full_seed
+    described_class.seed(["MiqDatabase", "MiqRegion", "MiqAction"])
+  end
+
+  describe ".seeded_primordially?" do
+    it "when not seeded" do
+      expect(EvmDatabase.seeded_primordially?).to be false
+    end
+
+    it "when seeded primordially" do
+      simulate_primordial_seed
+      expect(EvmDatabase.seeded_primordially?).to be true
+    end
+
+    it "when fully seeded" do
+      simulate_full_seed
+      expect(EvmDatabase.seeded_primordially?).to be true
+    end
+  end
+
+  describe ".seeded?" do
+    it "when not seeded" do
+      expect(EvmDatabase.seeded?).to be false
+    end
+
+    it "when seeded primordially" do
+      simulate_primordial_seed
+      expect(EvmDatabase.seeded?).to be false
+    end
+
+    it "when fully seeded" do
+      simulate_full_seed
+      expect(EvmDatabase.seeded?).to be true
+    end
+  end
+
   describe ".skip_seeding? (private)" do
     it "will not skip when SKIP_SEEDING is not set" do
       expect(ENV).to receive(:[]).with("SKIP_SEEDING").and_return(nil)
@@ -85,7 +125,7 @@ describe EvmDatabase do
     end
 
     it "will skip when SKIP_SEEDING is set and the database is seeded" do
-      MiqDatabase.seed
+      simulate_primordial_seed
       expect(ENV).to receive(:[]).with("SKIP_SEEDING").and_return("true")
       expect(described_class.send(:skip_seeding?)).to be_truthy
     end
