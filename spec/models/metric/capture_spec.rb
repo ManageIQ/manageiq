@@ -240,10 +240,4 @@ describe Metric::Capture do
       end
     end
   end
-
-  private
-
-  def stub_performance_settings(hash)
-    stub_settings(:performance => hash)
-  end
 end

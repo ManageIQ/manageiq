@@ -22,6 +22,10 @@ module Spec
           [Object.const_get(q.class_name).find(q.instance_id), interval_name]
         end
       end
+
+      def stub_performance_settings(hash)
+        stub_settings(:performance => hash)
+      end
     end
   end
 end
