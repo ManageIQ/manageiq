@@ -2,6 +2,7 @@ module ManageIQ::Providers
   class InfraManager < BaseManager
     require_nested :Cluster
     require_nested :ProvisionWorkflow
+    require_nested :ResourcePool
     require_nested :Template
     require_nested :Vm
     require_nested :VmOrTemplate
