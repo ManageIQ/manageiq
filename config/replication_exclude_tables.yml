@@ -5,7 +5,7 @@
 - binary_blobs
 - binary_blob_parts
 - chargeable_fields
-- chargeback_rate_detail_currencies
+- currencies
 - chargeback_rate_detail_measures
 - chargeback_rate_details
 - chargeback_rates
