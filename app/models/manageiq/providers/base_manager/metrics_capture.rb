@@ -29,7 +29,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # target is an ExtManagementSystem
   def perf_capture_gap(start_time, end_time)
     targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
-    target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :zone => ems.zone, :interval => 'historical'} }
+    target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :interval => 'historical'} }
     queue_captures(targets, target_options)
   end
 
@@ -119,7 +119,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
-    target_options = Hash.new { |h, k| h[k] = {:zone => zone} }
+    target_options = Hash.new { |h, k| h[k] = {} }
     # Create a new task for each rollup parent
     # mark each target with the rollup parent
     targets_by_rollup_parent.each_with_object(target_options) do |(parent, targets), h|
@@ -148,7 +148,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         h[target] = {
           :task_id => task.id,
           :force   => true, # Force collection since we've already verified that capture should be done now
-          :zone    => zone,
         }
       end
     end
@@ -160,9 +159,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end_time   = options[:end_time]
     priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
     task_id    = options[:task_id]
-
-    my_zone = options[:zone] || target.my_zone
-    my_zone = my_zone.name if my_zone.respond_to?(:name)
 
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
