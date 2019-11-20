@@ -97,6 +97,10 @@ module VmOrTemplate::Operations
     raw_set_custom_field(attribute, value)
   end
 
+  def log_user_event(user_event)
+    $log.info(user_event)
+  end
+
   private
 
   #

@@ -712,11 +712,6 @@ class ExtManagementSystem < ApplicationRecord
     get_reserve(:memory_reserve)
   end
 
-  def vm_log_user_event(_vm, user_event)
-    $log.info(user_event)
-    $log.warn("User event logging is not available on [#{self.class.name}] Name:[#{name}]")
-  end
-
   def conversion_hosts
     host_conversion_hosts + vm_conversion_hosts
   end
