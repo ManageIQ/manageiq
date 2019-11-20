@@ -22,12 +22,13 @@ class MiqWorkerType < ApplicationRecord
 
   def self.seed
     transaction do
+      clean_worker_types
       classes_for_seed.each { |klass| seed_worker(klass) }
     end
   end
 
   private_class_method def self.classes_for_seed
-    MiqWorker.descendants.select { |w| w.subclasses.empty? } - EXCLUDED_CLASS_NAMES.map(&:constantize)
+    @classes_for_seed ||= MiqWorker.descendants.select { |w| w.subclasses.empty? } - EXCLUDED_CLASS_NAMES.map(&:constantize)
   end
 
   private_class_method def self.seed_worker(klass)
@@ -37,5 +38,9 @@ class MiqWorkerType < ApplicationRecord
       :bundler_groups => klass.bundler_groups,
       :kill_priority  => klass.kill_priority
     )
+  end
+
+  private_class_method def self.clean_worker_types
+    where.not(:worker_type => classes_for_seed.map(&:to_s)).destroy_all
   end
 end

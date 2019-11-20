@@ -17,5 +17,18 @@ describe MiqWorkerType do
       expect(ui_worker.bundler_groups).to match_array(MiqUiWorker.bundler_groups)
       expect(ui_worker.kill_priority).to eq(MiqUiWorker.kill_priority)
     end
+
+    it "removes worker records which no longer exist" do
+      old_worker_name = "MiqReplicationWorker"
+      described_class.create!(
+        :worker_type    => old_worker_name,
+        :bundler_groups => [],
+        :kill_priority  => 123
+      )
+
+      described_class.seed
+
+      expect(described_class.find_by(:worker_type => old_worker_name)).to be_nil
+    end
   end
 end
