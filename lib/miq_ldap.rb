@@ -310,7 +310,7 @@ class MiqLdap
     user_type ||= @user_type.split("-").first
     if dn?(username)
       user_type = "dn"
-    elsif upn?(username)
+    elsif user_type != "mail" && upn?(username)
       user_type = "upn"
     end
 
@@ -338,7 +338,7 @@ class MiqLdap
     obj.first if obj
   end
 
-  def get_user_info(username, user_type = 'mail')
+  def get_user_info(username, user_type = nil)
     user = get_user_object(username, user_type)
     return nil if user.nil?
 

@@ -207,6 +207,15 @@ describe MiqLdap do
 
       ldap.get_user_object("myuserid@mycompany.com", "bad_user_type")
     end
+
+    it "filters by mail=<user> when user_type is mail" do
+      ldap = MiqLdap.new(:host => ["192.0.2.2"])
+      @opts[:attributes] = ["*", "memberof"]
+      @opts[:filter] = "(mail=myuserid@mycompany.com)"
+      expect(ldap).to receive(:search).with(@opts)
+
+      ldap.get_user_object("myuserid@mycompany.com", "mail")
+    end
   end
 
   context "#fqusername" do
