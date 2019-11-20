@@ -128,8 +128,9 @@ module Metric::Capture
   # assumes alert capture threshold <= standard capture threshold
   def self.perf_capture_now?(target)
     return true  if target.last_perf_capture_on.nil?
-    return true  if target.last_perf_capture_on < standard_capture_threshold(target)
-    return false if target.last_perf_capture_on >= alert_capture_threshold(target)
+    return true  if target.last_perf_capture_on < Metric::Capture.standard_capture_threshold(target)
+    return false if target.last_perf_capture_on >= Metric::Capture.alert_capture_threshold(target)
+
     MiqAlert.target_needs_realtime_capture?(target)
   end
 
