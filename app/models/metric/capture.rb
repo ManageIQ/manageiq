@@ -54,7 +54,7 @@ module Metric::Capture
     targets = Metric::Targets.capture_ems_targets(ems)
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
-    target_options = calc_target_options(zone, targets_by_rollup_parent)
+    target_options = pco.send(:calc_target_options, zone, targets_by_rollup_parent)
     targets = filter_perf_capture_now(targets, target_options)
     pco.queue_captures(targets, target_options)
 
@@ -154,49 +154,6 @@ module Metric::Capture
     end
     realtime_targets.group_by(&:ems_cluster)
   end
-
-  # Determine queue options for each target
-  # Is only generating options for Vmware Hosts, which have a task for rollups.
-  # The rest just set the zone
-  def self.calc_target_options(zone, targets_by_rollup_parent)
-    task_end_time           = Time.now.utc.iso8601
-    default_task_start_time = 1.hour.ago.utc.iso8601
-
-    target_options = Hash.new { |h, k| h[k] = {:zone => zone} }
-    # Create a new task for each rollup parent
-    # mark each target with the rollup parent
-    targets_by_rollup_parent.each_with_object(target_options) do |(parent, targets), h|
-      pkey = "#{parent.class.name}:#{parent.id}"
-      name = "Performance rollup for #{pkey}"
-      prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
-      task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
-
-      task = MiqTask.create(
-        :name         => name,
-        :identifier   => pkey,
-        :state        => MiqTask::STATE_QUEUED,
-        :status       => MiqTask::STATUS_OK,
-        :message      => "Task has been queued",
-        :context_data => {
-          :start    => task_start_time,
-          :end      => task_end_time,
-          :parent   => pkey,
-          :targets  => targets.map { |target| "#{target.class}:#{target.id}" },
-          :complete => [],
-          :interval => "realtime"
-        }
-      )
-      _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]")
-      targets.each do |target|
-        h[target] = {
-          :task_id => task.id,
-          :force   => true, # Force collection since we've already verified that capture should be done now
-          :zone    => zone,
-        }
-      end
-    end
-  end
-  private_class_method :calc_target_options
 
   def self.minutes_ago(value)
     if value.kind_of?(Integer) # Default unit is minutes
