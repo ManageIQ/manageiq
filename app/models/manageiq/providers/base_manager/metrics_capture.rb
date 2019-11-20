@@ -45,6 +45,52 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
+  def filter_perf_capture_now(targets, target_options)
+    targets.select do |target|
+      options = target_options[target]
+      # [:force] is set if we already determined this target needs perf capture
+      if options[:force] || perf_capture_now?(target)
+        true
+      else
+        _log.debug do
+          "Skipping capture of #{target.log_target} -" +
+            "Performance last captured on [#{target.last_perf_capture_on}] is within threshold"
+        end
+        false
+      end
+    end
+  end
+
+  # if it has not been run, or it was a very long time ago, just run it
+  # if it has been run very recently (even too recently for realtime) then skip it
+  # otherwise, it needs to be run if it is realtime, but not if it is standard threshold
+  # assumes alert capture threshold <= standard capture threshold
+  def perf_capture_now?(target)
+    return true  if target.last_perf_capture_on.nil?
+    return true  if target.last_perf_capture_on < Metric::Capture.standard_capture_threshold(target)
+    return false if target.last_perf_capture_on >= Metric::Capture.alert_capture_threshold(target)
+
+    MiqAlert.target_needs_realtime_capture?(target)
+  end
+
+  # Collect realtime targets and group them by their rollup parent
+  #
+  # 1. Only calculate rollups for Hosts
+  # 2. Some Hosts have an EmsCluster as a parent, others have none.
+  # 3. Only Hosts with a parent are rolled up.
+  # 4. Only used for VMWare
+  # @param [Array<Host|VmOrTemplate|Storage>] @targets The nodes to rollup
+  # @returns Hash<String,Array<Host>>
+  #   e.g.: {EmsCluster:4=>[Host:4], EmsCluster:5=>[Host:1, Host:2]}
+  def calc_targets_by_rollup_parent(targets)
+    realtime_targets = targets.select do |target|
+      target.kind_of?(Host) &&
+        perf_capture_now?(target) &&
+        target.ems_cluster_id
+    end
+    realtime_targets.group_by(&:ems_cluster)
+  end
+
   # Determine queue options for each target
   # Is only generating options for Vmware Hosts, which have a task for rollups.
   # The rest just set the zone
