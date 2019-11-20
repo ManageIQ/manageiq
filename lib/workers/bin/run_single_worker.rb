@@ -68,16 +68,13 @@ if options[:list]
 end
 opt_parser.abort(opt_parser.help) unless worker_class
 
-worker_type = MiqWorkerType.find_by(:worker_type => worker_class)
-
-unless worker_type
+unless MiqWorkerType.find_by(:worker_type => worker_class)
   STDERR.puts "ERR:  `#{worker_class}` WORKER CLASS NOT FOUND!  Please run with `-l` to see possible worker class names."
   exit 1
 end
 
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
-ENV["BUNDLER_GROUPS"] = worker_type.bundler_groups.join(',')
 
 options[:ems_id] ||= ENV["EMS_ID"]
 

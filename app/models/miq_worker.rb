@@ -435,7 +435,11 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner_via_spawn
-    pid = Kernel.spawn(command_line, [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
+    pid = Kernel.spawn(
+      {"BUNDLER_GROUPS" => self.class.bundler_groups.join(",")},
+      command_line,
+      [:out, :err] => [Rails.root.join("log", "evm.log"), "a"]
+    )
     Process.detach(pid)
     pid
   end
