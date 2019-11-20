@@ -6,6 +6,7 @@ module RequireNested
     filename = "#{self}::#{name}".underscore
     filename = name.to_s.underscore if self == Object
     if Rails.application.config.cache_classes
+      raise LoadError, "No such file to load -- #{filename}" unless ActiveSupport::Dependencies.search_for_file(filename)
       autoload name, filename
     else
       require_dependency filename
