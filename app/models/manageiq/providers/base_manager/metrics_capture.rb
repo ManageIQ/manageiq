@@ -29,18 +29,18 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
   private
 
-  def perf_capture_health_check(zone)
+  def perf_capture_health_check
     q_items = MiqQueue.select(:method_name, :created_on).order(:created_on)
                       .where(:state       => "ready",
                              :role        => "ems_metrics_collector",
-                             :method_name => %w(perf_capture perf_capture_realtime perf_capture_hourly perf_capture_historical),
-                             :zone        => zone.name)
+                             :method_name => %w[perf_capture perf_capture_realtime perf_capture_hourly perf_capture_historical],
+                             :zone        => my_zone)
     items_by_interval = q_items.group_by(&:method_name)
     items_by_interval.reverse_merge!("perf_capture_realtime" => [], "perf_capture_hourly" => [], "perf_capture_historical" => [])
     items_by_interval.each do |method_name, items|
       interval = method_name.sub("perf_capture_", "")
-      msg = "#{items.length} #{interval.inspect} captures on the queue for zone [#{zone.name}]"
-      msg << " - oldest: [#{items.first.created_on.utc.iso8601}], recent: [#{items.last.created_on.utc.iso8601}]" if items.length > 0
+      msg = "#{items.length} #{interval.inspect} captures on the queue for zone [#{my_zone}]"
+      msg << " - oldest: [#{items.first.created_on.utc.iso8601}], recent: [#{items.last.created_on.utc.iso8601}]" if items.present?
       _log.info(msg)
     end
   end

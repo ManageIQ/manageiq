@@ -15,7 +15,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       expect(subject._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
       expect(subject._log).to receive(:info).with(/0 "hourly" captures on the queue/)
       expect(subject._log).to receive(:info).with(/0 "historical" captures on the queue/)
-      subject.send(:perf_capture_health_check, miq_server.zone)
+      subject.send(:perf_capture_health_check)
     end
   end
 end

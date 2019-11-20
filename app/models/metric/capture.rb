@@ -50,7 +50,7 @@ module Metric::Capture
     ems = ExtManagementSystem.find(ems_id)
     pco = ems.perf_capture_object
     zone = ems.zone
-    pco.send(:perf_capture_health_check, zone)
+    pco.send(:perf_capture_health_check)
     targets = Metric::Targets.capture_ems_targets(ems)
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
