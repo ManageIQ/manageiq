@@ -15,6 +15,20 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     ems.zone.name
   end
 
+  # Capture all metrics for an ems
+  def perf_capture
+    perf_capture_health_check
+    targets = Metric::Targets.capture_ems_targets(ems)
+
+    targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
+    target_options = calc_target_options(targets_by_rollup_parent)
+    targets = filter_perf_capture_now(targets, target_options)
+    queue_captures(targets, target_options)
+
+    # Purge tasks older than 4 hours
+    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
+  end
+
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
   # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def queue_captures(targets, target_options)

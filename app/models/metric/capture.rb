@@ -49,17 +49,7 @@ module Metric::Capture
 
     ems = ExtManagementSystem.find(ems_id)
     pco = ems.perf_capture_object
-    zone = ems.zone
-    pco.send(:perf_capture_health_check)
-    targets = Metric::Targets.capture_ems_targets(ems)
-
-    targets_by_rollup_parent = pco.send(:calc_targets_by_rollup_parent, targets)
-    target_options = pco.send(:calc_target_options, targets_by_rollup_parent)
-    targets = pco.send(:filter_perf_capture_now, targets, target_options)
-    pco.queue_captures(targets, target_options)
-
-    # Purge tasks older than 4 hours
-    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
+    pco.perf_capture
 
     _log.info("Queueing performance capture...Complete")
   end
