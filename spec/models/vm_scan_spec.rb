@@ -57,12 +57,12 @@ describe VmScan do
           @job.check_policy_complete(@server1.my_zone, 'ok', nil, nil)
         end
 
-        it "sends signal :start_snapshot if status is 'ok' to local zone" do
+        it "sends signal :before_scan if status is 'ok' to local zone" do
           expect(MiqQueue).to receive(:put).with(
             :class_name  => @job.class.to_s,
             :instance_id => @job.id,
             :method_name => "signal",
-            :args        => [:start_snapshot],
+            :args        => [:before_scan],
             :zone        => @server1.my_zone,
             :role        => "smartstate"
           )
@@ -89,12 +89,12 @@ describe VmScan do
           @job.check_policy_complete(@server2.my_zone, 'ok', nil, nil)
         end
 
-        it "signals :start_snapshot if status is 'ok' to remote zone" do
+        it "signals :before_scan if status is 'ok' to remote zone" do
           expect(MiqQueue).to receive(:put).with(
             :class_name  => @job.class.to_s,
             :instance_id => @job.id,
             :method_name => "signal",
-            :args        => [:start_snapshot],
+            :args        => [:before_scan],
             :zone        => @server2.my_zone,
             :role        => "smartstate"
           )
