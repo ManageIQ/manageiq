@@ -25,7 +25,7 @@ describe Authenticator do
     end
 
     it 'Updates the user groups when no matching groups' do
-      allow(authenticator).to receive(:find_external_identity).with(any_args)
+      expect(authenticator).to receive(:find_external_identity)
         .and_return([{:username => user.userid, :fullname => user.name, :domain => "example.com"}, []])
 
       authenticator.authorize(task.id, user.userid)
@@ -33,7 +33,7 @@ describe Authenticator do
     end
 
     it 'Updates the user groups' do
-      allow(authenticator).to receive(:find_external_identity).with(any_args)
+      expect(authenticator).to receive(:find_external_identity)
         .and_return([{:username => user.userid, :fullname => user.name, :domain => "example.com"}, groups.collect(&:name)])
 
       authenticator.authorize(task.id, user.userid)
