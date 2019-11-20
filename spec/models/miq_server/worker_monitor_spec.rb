@@ -219,7 +219,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end
@@ -231,7 +231,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end
@@ -243,7 +243,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end

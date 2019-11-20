@@ -27,6 +27,14 @@ class MiqWorkerType < ApplicationRecord
     end
   end
 
+  def self.worker_class_names
+    pluck(:worker_type)
+  end
+
+  def self.worker_class_names_in_kill_order
+    in_kill_order.pluck(:worker_type)
+  end
+
   private_class_method def self.classes_for_seed
     @classes_for_seed ||= MiqWorker.descendants.select { |w| w.subclasses.empty? } - EXCLUDED_CLASS_NAMES.map(&:constantize)
   end

@@ -8,7 +8,7 @@ module MiqServer::WorkerManagement::Monitor::Settings
 
   def sync_child_worker_settings
     @child_worker_settings = {}
-    self.class.monitor_class_names.each do |class_name|
+    MiqWorkerType.worker_class_names.each do |class_name|
       c = class_name.constantize
       @child_worker_settings[c.settings_name] = c.worker_settings
     end

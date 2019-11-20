@@ -10,7 +10,7 @@ module MiqServer::WorkerManagement::Monitor::Start
     entered_wait_for_started_loop = Time.now.utc
     wait_for_started_timeout      = @worker_monitor_settings[:wait_for_started_timeout] || 10.minutes
     loop do
-      starting = MiqWorker.find_starting.find_all { |w| self.class.monitor_class_names.include?(w.class.name) }
+      starting = MiqWorker.find_starting.find_all { |w| MiqWorkerType.worker_class_names.include?(w.class.name) }
       if starting.empty?
         _log.info("All workers have been started")
         break
