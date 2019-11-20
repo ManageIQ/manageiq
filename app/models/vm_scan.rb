@@ -119,14 +119,14 @@ class VmScan < Job
           options[:snapshot] = :smartProxy
           _log.info("Skipping snapshot creation, it will be performed by the SmartProxy")
           context[:snapshot_mor] = options[:snapshot_description] = snapshotDescription("(embedded)")
-          start_user_event_message(vm)
+          log_start_user_event_message(vm)
         else
           set_status("Creating VM snapshot")
 
           return unless create_snapshot(vm)
         end
       else
-        start_user_event_message(vm)
+        log_start_user_event_message(vm)
       end
       signal(:snapshot_complete)
     rescue => err
@@ -269,7 +269,7 @@ class VmScan < Job
       end
     else
       set_status("Snapshot was not taken, delete not required") if options[:snapshot] == :skipped
-      end_user_event_message(vm)
+      log_end_user_event_message(vm)
     end
 
     signal(:snapshot_complete)
@@ -390,10 +390,10 @@ class VmScan < Job
       begin
         if vm.ext_management_system
           if options[:snapshot] == :smartProxy
-            end_user_event_message(vm)
+            log_end_user_event_message(vm)
             delete_snapshot_by_description(mor, vm)
           else
-            user_event = end_user_event_message(vm, false)
+            user_event = end_user_event_message(vm)
             if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
               vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
             elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
@@ -411,7 +411,7 @@ class VmScan < Job
         _log.log_backtrace(err, :debug)
       end
     else
-      end_user_event_message(vm)
+      log_end_user_event_message(vm)
     end
   end
 
@@ -445,23 +445,27 @@ class VmScan < Job
     end
   end
 
-  def start_user_event_message(vm, send = true)
-    return if vm.vendor == "amazon"
-
-    user_event = "EVM SmartState Analysis Initiated for VM [#{vm.name}]"
-    log_user_event(user_event, vm) if send
-    user_event
+  def user_event_message(vm, verb)
+    "EVM SmartState Analysis #{verb} for VM [#{vm.name}]"
   end
 
-  def end_user_event_message(vm, send = true)
-    return if vm.vendor == "amazon"
+  def start_user_event_message(vm)
+    user_event_message(vm, "Initiated")
+  end
 
-    user_event = "EVM SmartState Analysis completed for VM [#{vm.name}]"
+  def end_user_event_message(vm)
+    user_event_message(vm, "completed")
+  end
+
+  def log_start_user_event_message(vm)
+    log_user_event(start_user_event_message(vm), vm)
+  end
+
+  def log_end_user_event_message(vm)
     unless options[:end_message_sent]
-      log_user_event(user_event, vm) if send
+      log_user_event(end_user_event_message(vm), vm)
       options[:end_message_sent] = true
     end
-    user_event
   end
 
   def snapshotDescription(type = nil)
@@ -567,7 +571,7 @@ class VmScan < Job
     if vm.ext_management_system
       sn_description = snapshotDescription
       _log.info("Creating snapshot, description: [#{sn_description}]")
-      user_event = start_user_event_message(vm, false)
+      user_event = start_user_event_message(vm)
       options[:snapshot] = :server
       begin
         # TODO: should this be a vm method?
@@ -591,12 +595,11 @@ class VmScan < Job
   end
 
   def log_user_event(user_event, vm)
-    if vm.ext_management_system
-      begin
-        vm.ext_management_system.vm_log_user_event(vm, user_event)
-      rescue => err
-        _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
-      end
+    begin
+      vm.log_user_event(user_event)
+    rescue => err
+      _log.warn("Failed to log user event with EMS.  Error: [#{err.class.name}]: #{err} Event message [#{user_event}]")
     end
   end
+
 end
