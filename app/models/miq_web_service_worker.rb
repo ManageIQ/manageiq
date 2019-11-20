@@ -21,6 +21,6 @@ class MiqWebServiceWorker < MiqWorker
   end
 
   def self.kill_priority
-    100
+    MiqWorkerType::KILL_PRIORITY_WEB_SERVICE_WORKERS
   end
 end

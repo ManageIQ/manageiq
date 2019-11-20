@@ -17,6 +17,6 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
   end
 
   def self.kill_priority
-    130
+    MiqWorkerType::KILL_PRIORITY_EVENT_CATCHERS
   end
 end

@@ -18,6 +18,6 @@ class MiqRemoteConsoleWorker < MiqWorker
   end
 
   def self.kill_priority
-    150
+    MiqWorkerType::KILL_PRIORITY_REMOTE_CONSOLE_WORKERS
   end
 end

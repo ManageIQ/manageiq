@@ -11,6 +11,6 @@ class MiqReportingWorker < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    30
+    MiqWorkerType::KILL_PRIORITY_REPORTING_WORKERS
   end
 end

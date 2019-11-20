@@ -15,6 +15,6 @@ class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    10
+    MiqWorkerType::KILL_PRIORITY_METRICS_PROCESSOR_WORKERS
   end
 end

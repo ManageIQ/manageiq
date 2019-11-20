@@ -12,6 +12,6 @@ class MiqGenericWorker < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    50
+    MiqWorkerType::KILL_PRIORITY_GENERIC_WORKERS
   end
 end

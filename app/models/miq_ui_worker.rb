@@ -31,7 +31,7 @@ class MiqUiWorker < MiqWorker
   end
 
   def self.kill_priority
-    140
+    MiqWorkerType::KILL_PRIORITY_UI_WORKERS
   end
 
   def container_port

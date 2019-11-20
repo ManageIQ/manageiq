@@ -14,6 +14,6 @@ class MiqPriorityWorker < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    90
+    MiqWorkerType::KILL_PRIORITY_PRIORITY_WORKERS
   end
 end

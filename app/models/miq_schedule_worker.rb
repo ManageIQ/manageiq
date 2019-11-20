@@ -15,6 +15,6 @@ class MiqScheduleWorker < MiqWorker
   end
 
   def self.kill_priority
-    80
+    MiqWorkerType::KILL_PRIORITY_SCHEDULE_WORKERS
   end
 end

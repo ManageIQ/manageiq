@@ -10,7 +10,7 @@ class MiqCockpitWsWorker < MiqWorker
   end
 
   def self.kill_priority
-    160
+    MiqWorkerType::KILL_PRIORITY_COCKPIT_WS_WORKERS
   end
 
   def self.can_start_cockpit_ws?

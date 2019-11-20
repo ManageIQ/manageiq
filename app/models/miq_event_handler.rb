@@ -11,6 +11,6 @@ class MiqEventHandler < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    60
+    MiqWorkerType::KILL_PRIORITY_EVENT_HANDLERS
   end
 end

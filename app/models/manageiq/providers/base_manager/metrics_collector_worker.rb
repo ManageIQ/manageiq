@@ -16,6 +16,6 @@ class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerB
   end
 
   def self.kill_priority
-    20
+    MiqWorkerType::KILL_PRIORITY_METRICS_COLLECTOR_WORKERS
   end
 end

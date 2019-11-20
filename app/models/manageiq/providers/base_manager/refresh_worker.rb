@@ -23,6 +23,6 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   end
 
   def self.kill_priority
-    70
+    MiqWorkerType::KILL_PRIORITY_REFRESH_WORKERS
   end
 end
