@@ -6,4 +6,12 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     @target = target
     @ems = ems
   end
+
+  def zone
+    ems.zone
+  end
+
+  def my_zone
+    ems.zone.name
+  end
 end
