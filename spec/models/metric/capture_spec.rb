@@ -121,24 +121,6 @@ describe Metric::Capture do
     end
   end
 
-  context ".perf_capture_health_check" do
-    let(:miq_server) { EvmSpecHelper.local_miq_server }
-    let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
-    let(:vm) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
-    let(:vm2) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
-
-    it "should queue up realtime capture for vm" do
-      vm.perf_capture_realtime_now
-      vm2.perf_capture_realtime_now
-      expect(MiqQueue.count).to eq(2)
-
-      expect(Metric::Capture._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
-      expect(Metric::Capture._log).to receive(:info).with(/0 "hourly" captures on the queue/)
-      expect(Metric::Capture._log).to receive(:info).with(/0 "historical" captures on the queue/)
-      described_class.send(:perf_capture_health_check, miq_server.zone)
-    end
-  end
-
   describe ".perf_capture_now" do
     context "with enabled and disabled targets" do
       before do
