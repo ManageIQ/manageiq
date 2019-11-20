@@ -39,7 +39,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     targets.each do |target|
       options = target_options[target] || {}
       interval_name = options[:interval] || perf_target_to_interval_name(target)
-      target.perf_capture_queue(target, interval_name, options)
+      perf_capture_queue(target, interval_name, options)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
@@ -150,6 +150,70 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
           :force   => true, # Force collection since we've already verified that capture should be done now
           :zone    => zone,
         }
+      end
+    end
+  end
+
+  def perf_capture_queue(target, interval_name, options = {})
+    # for gap, interval_name = historical, start and end time present.
+    start_time = options[:start_time]
+    end_time   = options[:end_time]
+    priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
+    task_id    = options[:task_id]
+
+    my_zone = options[:zone] || target.my_zone
+    my_zone = my_zone.name if my_zone.respond_to?(:name)
+    ems = target.ems_for_capture_target
+
+    raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
+    raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?
+
+    # cb is the task used to group cluster realtime metrics
+    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
+    items = target.queue_items_for_interval(target, interval_name, start_time, end_time)
+
+    # Queue up the actual items
+    queue_item = {
+      :class_name  => target.class.name,
+      :instance_id => target.id,
+      :role        => 'ems_metrics_collector',
+      :queue_name  => ems.metrics_collector_queue_name,
+      :zone        => my_zone,
+      :state       => ['ready', 'dequeue'],
+    }
+
+    messages = MiqQueue.where.not(:method_name => 'perf_capture_realtime').where(queue_item).index_by(&:args)
+    items.each do |item_interval, *start_and_end_time|
+      # Should both interval name and args (dates) be part of uniqueness query?
+      queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
+      queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
+      next if item_interval != 'realtime' && messages[start_and_end_time].try(:priority) == priority
+
+      MiqQueue.put_or_update(queue_item_options) do |msg, qi|
+        # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
+        qi[:miq_task_id] = task_id if task_id && item_interval == "realtime"
+        if msg.nil?
+          qi[:priority] = priority
+          qi.delete(:state)
+          if cb && item_interval == "realtime"
+            qi[:miq_callback] = cb
+          end
+          qi
+        elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
+          qi[:priority] = priority
+          # rerun the job (either with new task or higher priority)
+          qi.delete(:state)
+          if task_id && item_interval == "realtime"
+            existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
+            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
+          end
+          qi
+        else
+          interval = qi[:method_name].sub("perf_capture_", "")
+          _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval} is still running")
+          # NOTE: do not update the message queue
+          nil
+        end
       end
     end
   end
