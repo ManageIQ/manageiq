@@ -48,7 +48,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # Determine queue options for each target
   # Is only generating options for Vmware Hosts, which have a task for rollups.
   # The rest just set the zone
-  def calc_target_options(zone, targets_by_rollup_parent)
+  def calc_target_options(targets_by_rollup_parent)
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 

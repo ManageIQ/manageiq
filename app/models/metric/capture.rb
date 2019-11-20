@@ -54,7 +54,7 @@ module Metric::Capture
     targets = Metric::Targets.capture_ems_targets(ems)
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
-    target_options = pco.send(:calc_target_options, zone, targets_by_rollup_parent)
+    target_options = pco.send(:calc_target_options, targets_by_rollup_parent)
     targets = filter_perf_capture_now(targets, target_options)
     pco.queue_captures(targets, target_options)
 
