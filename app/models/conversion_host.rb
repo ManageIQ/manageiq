@@ -180,7 +180,7 @@ class ConversionHost < ApplicationRecord
   def create_cutover_file(path)
     connect_ssh { |ssu| ssu.shell_exec("touch #{path}") }
     true
-  rescue
+  rescue StandardError
     false
   end
 

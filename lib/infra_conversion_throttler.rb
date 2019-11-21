@@ -27,7 +27,12 @@ class InfraConversionThrottler
         _log.debug("-- Available slots in EMS: #{slots}")
         _log.debug("- Looking for a conversion host for task for #{vm_name}")
 
-        eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.count }
+        eligible_hosts = ems.conversion_hosts.select do |ch|
+	  ch.eligible? && (
+	    !job.migration_task.warm_migration? ||
+            (job.migration_task.warm_migration? && ch.vddk_transport_supported)
+	  )
+	end.sort_by { |ch| ch.active_tasks.count }
         if eligible_hosts.empty?
           _log.debug("-- No eligible conversion host for task for '#{vm_name}'")
           break
