@@ -3,6 +3,18 @@ class Dialog < ApplicationRecord
 
   # The following gets around a glob symbolic link issue
   YAML_FILES_PATTERN = "{,*/**/}*.{yaml,yml}".freeze
+  IMPLICIT_SCHEMA = [{
+    :component => "tab-item",
+    :name      => "tab-item-1",
+    :title     => "Tab 1",
+    :fields    => [{
+      :component => "sub-form",
+      :name      => "sub-form-1",
+      :title     => "Section 1",
+      :visible   => true,
+      :fields    => []
+    }]
+  }].freeze
 
   has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy
   validate :validate_children
@@ -17,6 +29,20 @@ class Dialog < ApplicationRecord
   alias_attribute  :name, :label
 
   attr_accessor :target_resource
+
+  def to_ddf
+    {
+      :title       => name,
+      :description => description,
+      :version     => 'ddf',
+      :fields      => [
+        :component => 'tabs',
+        :name      => 'tabs',
+        :visible   => true,
+        :fields    => dialog_tabs.any? ? dialog_tabs.map(&:to_ddf) : IMPLICIT_SCHEMA
+      ]
+    }.compact
+  end
 
   def self.seed
     dialog_import_service = DialogImportService.new

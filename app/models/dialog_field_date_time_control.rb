@@ -1,6 +1,10 @@
 class DialogFieldDateTimeControl < DialogFieldDateControl
   AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only visible description).freeze
 
+  def to_ddf
+    super.merge(:variant => 'date-time')
+  end
+
   def automate_output_value
     return nil if @value.blank?
     with_current_user_timezone { Time.zone.parse(@value).utc.iso8601 }

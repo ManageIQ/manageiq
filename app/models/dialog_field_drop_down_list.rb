@@ -1,4 +1,13 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
+  def to_ddf
+    super.merge(
+      :component   => 'select-field',
+      :multi       => options[:force_multi_value],
+      :isClearable => true,
+      :values      => values.map { |a, b| {:value => a, :label => b} }
+    ).compact
+  end
+
   def initialize_with_given_value(given_value)
     super
     coerce_default_value_into_proper_format if force_multi_value

@@ -3,6 +3,14 @@ class DialogFieldDateControl < DialogField
 
   include TimezoneMixin
 
+  def to_ddf
+    super.merge(
+      :component    => 'date-picker',
+      :variant      => 'date',
+      :disabledDays => options[:show_past_dates] ? nil : [{:before => 'today'}]
+    ).compact
+  end
+
   def show_past_dates
     options[:show_past_dates] || false
   end

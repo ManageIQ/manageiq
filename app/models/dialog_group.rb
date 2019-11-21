@@ -6,6 +6,16 @@ class DialogGroup < ApplicationRecord
 
   alias_attribute :order, :position
 
+  def to_ddf
+    {
+      :component   => 'sub-form',
+      :name        => "sub-form-#{id}",
+      :title       => label,
+      :description => description,
+      :fields      => dialog_fields.map(&:to_ddf)
+    }.compact
+  end
+
   def each_dialog_field(&block)
     dialog_fields.each(&block)
   end

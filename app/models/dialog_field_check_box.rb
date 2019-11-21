@@ -1,6 +1,10 @@
 class DialogFieldCheckBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(required read_only visible description).freeze
 
+  def to_ddf
+    super.merge(:component => 'checkbox')
+  end
+
   def checked?
     value == "t"
   end

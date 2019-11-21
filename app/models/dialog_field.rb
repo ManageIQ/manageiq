@@ -84,6 +84,29 @@ class DialogField < ApplicationRecord
     DialogFieldTextBox
   )
 
+  def to_ddf
+    validate = [
+      required ? {:type => 'required-validator'} : nil,
+      validator_type && validator_rule ? {:type => 'pattern-validator', :pattern => validator_rule} : nil
+    ].compact
+
+    {
+      :name             => name,
+      :helperText       => description,
+      :label            => label,
+      :dataType         => data_type,
+      :visible          => visible,
+      :initialValue     => default_value,
+      :isReadOnly       => read_only,
+      :isRequired       => required,
+      :validate         => validate.empty? ? nil : validate,
+      :dynamic          => dynamic,
+      :showRefresh      => show_refresh_button,
+      :loadValuesOnInit => load_values_on_init,
+      :resourceAction   => resource_action.try(:fqname)
+    }.compact
+  end
+
   def self.dialog_field_types
     DIALOG_FIELD_TYPES
   end

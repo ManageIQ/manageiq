@@ -6,6 +6,16 @@ class DialogTab < ApplicationRecord
 
   alias_attribute :order, :position
 
+  def to_ddf
+    {
+      :component   => 'tab-item',
+      :name        => "tab-item-#{id}",
+      :title       => label,
+      :description => description,
+      :fields      => dialog_groups.map(&:to_ddf)
+    }.compact
+  end
+
   def each_dialog_field(&block)
     dialog_fields.each(&block)
   end

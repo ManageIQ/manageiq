@@ -1,4 +1,8 @@
 class DialogFieldRadioButton < DialogFieldSortedItem
+  def to_ddf
+    super.merge(:component => 'radio', :values => values.map { |a, b| {:value => a, :label => b} })
+  end
+
   def show_refresh_button?
     !!show_refresh_button
   end

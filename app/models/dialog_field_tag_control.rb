@@ -1,4 +1,13 @@
 class DialogFieldTagControl < DialogFieldSortedItem
+  def to_ddf
+    super.merge(
+      :component        => 'tag-control',
+      :categoryId       => options[:category_id],
+      :forceSingleValue => options[:force_single_value],
+      :isClearable      => true
+    ).compact
+  end
+
   def initialize_value_context
     @value = get_default_value
   end

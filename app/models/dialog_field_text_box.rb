@@ -1,6 +1,10 @@
 class DialogFieldTextBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only visible description).freeze
 
+  def to_ddf
+    super.merge(:component => 'text-field')
+  end
+
   def initialize_value_context
     if @value.blank?
       @value = dynamic && load_values_on_init ? values_from_automate : default_value
