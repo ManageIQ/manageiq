@@ -46,6 +46,14 @@ class MiqWorker < ApplicationRecord
     attr_writer :workers
   end
 
+  def self.bundler_groups
+    %w[manageiq_default]
+  end
+
+  def self.kill_priority
+    raise NotImplementedError, ".kill_priority must be implemented in a subclass"
+  end
+
   def self.workers
     return (self.has_minimal_env_option? ? 1 : 0) if MiqServer.minimal_env? && check_for_minimal_role
     return 0 unless has_required_role?
@@ -427,7 +435,11 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner_via_spawn
-    pid = Kernel.spawn(command_line, [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
+    pid = Kernel.spawn(
+      {"BUNDLER_GROUPS" => self.class.bundler_groups.join(",")},
+      command_line,
+      [:out, :err] => [Rails.root.join("log", "evm.log"), "a"]
+    )
     Process.detach(pid)
     pid
   end

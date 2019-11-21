@@ -46,6 +46,7 @@ describe "Message Timeout Handling" do
         :handler_id   => @worker.id,
         :handler_type => 'MiqWorker'
       )
+      MiqWorkerType.seed
       @miq_server.sync_child_worker_settings
     end
 

@@ -5,6 +5,7 @@ describe "MiqWorker Monitor" do
       allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(120)
       allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(100.megabytes)
 
+      MiqWorkerType.seed
       @miq_server = EvmSpecHelper.local_miq_server
     end
 
@@ -218,7 +219,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end
@@ -230,7 +231,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end
@@ -242,7 +243,7 @@ describe "MiqWorker Monitor" do
 
             it "should delete worker row after clean_worker_records" do
               expect(MiqWorker.count).to eq(1)
-              MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
+              MiqWorkerType.worker_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
           end

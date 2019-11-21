@@ -13,4 +13,8 @@ class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_METRICS_PROCESSOR_WORKERS
+  end
 end

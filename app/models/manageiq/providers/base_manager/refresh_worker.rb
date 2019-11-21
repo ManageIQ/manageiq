@@ -5,7 +5,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
 
   # Don't allow multiple refresh workers to run at once
   self.include_stopping_workers_on_synchronize = true
-  self.required_roles = "ems_inventory"
+  self.required_roles = %w[ems_inventory]
 
   def friendly_name
     @friendly_name ||= begin
@@ -20,5 +20,9 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
 
   def self.normalized_type
     @normalized_type ||= "ems_refresh_worker"
+  end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_REFRESH_WORKERS
   end
 end

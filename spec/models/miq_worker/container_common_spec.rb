@@ -16,7 +16,8 @@ describe MiqWorker::ContainerCommon do
     it "no worker deployment names are over 60 characters" do
       # OpenShift does not allow deployment names over 63 characters
       # We also want to leave some for the ems_id so we compare against 60 to be safe
-      MIQ_WORKER_TYPES_IN_KILL_ORDER.each do |klass|
+      MiqWorkerType.seed
+      MiqWorkerType.pluck(:worker_type).each do |klass|
         expect(klass.constantize.new.worker_deployment_name.length).to be <= 60
       end
     end

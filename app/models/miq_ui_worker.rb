@@ -26,6 +26,14 @@ class MiqUiWorker < MiqWorker
     true
   end
 
+  def self.bundler_groups
+    %w[manageiq_default ui_dependencies graphql_api]
+  end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_UI_WORKERS
+  end
+
   def container_port
     3001
   end

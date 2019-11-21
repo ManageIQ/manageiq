@@ -67,6 +67,7 @@ class MiqWorker
           WantedBy=#{target_file_name}
           [Service]
           WorkingDirectory=#{working_directory}
+          Environment=BUNDLER_GROUPS=#{bundler_groups.join(",")}
           ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=always
           Slice=#{slice_name}

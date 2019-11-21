@@ -15,4 +15,12 @@ class MiqWebServiceWorker < MiqWorker
   def self.supports_container?
     true
   end
+
+  def self.bundler_groups
+    %w[manageiq_default graphql_api]
+  end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_WEB_SERVICE_WORKERS
+  end
 end

@@ -9,4 +9,8 @@ class MiqEventHandler < MiqQueueWorkerBase
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_EVENT_HANDLERS
+  end
 end

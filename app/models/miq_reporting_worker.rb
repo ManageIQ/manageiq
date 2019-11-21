@@ -9,4 +9,8 @@ class MiqReportingWorker < MiqQueueWorkerBase
   def self.supports_container?
     true
   end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_REPORTING_WORKERS
+  end
 end

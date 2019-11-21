@@ -5,7 +5,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     # do a subset of the monitor_workers loop to allow for graceful exit
     heartbeat
 
-    self.class.monitor_class_names.each do |class_name|
+    MiqWorkerType.worker_class_names.each do |class_name|
       check_not_responding(class_name)
       check_pending_stop(class_name)
       clean_worker_records(class_name)

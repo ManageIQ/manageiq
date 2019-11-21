@@ -74,6 +74,7 @@
 - miq_user_roles
 - miq_widgets
 - miq_widget_contents
+- miq_worker_types
 - miq_workers
 - notifications
 - notification_recipients

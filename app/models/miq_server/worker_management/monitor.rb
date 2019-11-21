@@ -1,7 +1,6 @@
 module MiqServer::WorkerManagement::Monitor
   extend ActiveSupport::Concern
 
-  include_concern 'ClassNames'
   include_concern 'Kill'
   include_concern 'Quiesce'
   include_concern 'Reason'
@@ -25,7 +24,7 @@ module MiqServer::WorkerManagement::Monitor
 
     processed_worker_ids = []
 
-    self.class.monitor_class_names.each do |class_name|
+    MiqWorkerType.worker_class_names.each do |class_name|
       processed_worker_ids += check_not_responding(class_name)
       processed_worker_ids += check_pending_stop(class_name)
       processed_worker_ids += clean_worker_records(class_name)
@@ -47,7 +46,7 @@ module MiqServer::WorkerManagement::Monitor
 
   def sync_workers
     result = {}
-    self.class.monitor_class_names.each do |class_name|
+    MiqWorkerType.worker_class_names.each do |class_name|
       begin
         c = class_name.constantize
         raise NameError, "Constant problem: expected: #{class_name}, constantized: #{c.name}" unless c.name == class_name
@@ -115,7 +114,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def do_system_limit_exceeded
-    self.class.monitor_class_names_in_kill_order.each do |class_name|
+    MiqWorkerType.worker_class_names_in_kill_order.each do |class_name|
       workers = class_name.constantize.find_current.to_a
       next if workers.empty?
 
