@@ -48,8 +48,12 @@ module VmOrTemplate::Operations::Snapshot
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
+  def create_snapshot_queue(name, desc = nil, memory)
+    run_command_via_queue("raw_create_snapshot", :args => [name, desc, memory])
+  end
+
   def create_snapshot(name, desc = nil, memory = false)
-    check_policy_prevent(:request_vm_create_snapshot, :raw_create_snapshot, name, desc, memory)
+    check_policy_prevent(:request_vm_create_snapshot, :create_snapshot_queue, name, desc, memory)
   end
 
   def raw_remove_snapshot(snapshot_id)

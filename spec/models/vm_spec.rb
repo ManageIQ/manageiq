@@ -173,7 +173,7 @@ describe Vm do
     end
 
     it "policy passes" do
-      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_start)
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:start_queue)
 
       allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
       @vm.start
@@ -182,7 +182,7 @@ describe Vm do
     end
 
     it "policy prevented" do
-      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_start)
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:start_queue)
 
       event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
       allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
