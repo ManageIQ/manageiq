@@ -66,7 +66,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
       my_signal(minimize_indirect, :post_stack_run, "Orchestration stack [#{orchestration_stack.name}] #{status}", 'ok')
     when 'rollback_complete', 'delete_complete', /failed$/, /canceled$/
       _log.error("Orchestration stack deployment error: #{message}. Please examine stack resources for more details")
-      my_signal(minimize_indirect, :error, "Orchestration stack deployment error: #{message}", 'error')
+      my_signal(minimize_indirect, :abort_job, "Orchestration stack deployment error: #{message}", 'error')
     else
       interval = 60 if interval > 60
       my_signal(false, :poll_stack_status, interval * 2, :deliver_on => Time.now.utc + interval)
@@ -76,7 +76,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
     options.merge!(:orchestration_stack_status => 'check_status_failed', :orchestration_stack_message => err.message)
     save!
     _log.error("Error polling orchestration stack status : #{err.class} - #{err.message}")
-    my_signal(minimize_indirect, :error, err.message, 'error')
+    my_signal(minimize_indirect, :abort_job, err.message, 'error')
   end
 
   def post_stack_run(message, status)
