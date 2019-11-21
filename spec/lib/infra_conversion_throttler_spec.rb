@@ -22,7 +22,7 @@ RSpec.describe InfraConversionThrottler, :v2v do
       :config_info => {
         :transformation_mapping_id => mapping.id,
         :actions                   => [
-          {:vm_id => vm.id.to_s, :warm_migration => true,}
+          {:vm_id => vm.id.to_s, :warm_migration => true}
         ],
       }
     }

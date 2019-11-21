@@ -427,7 +427,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         "post_ansible_playbook_service_template_id" => apst.id,
         "osp_security_group_id"                     => security_group1.id,
         "osp_flavor_id"                             => flavor1.id,
-	"warm_migration_compatible"                 => true,
+        "warm_migration_compatible"                 => true,
         "warm_migration"                            => false
       )
       expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options).to eq(
@@ -435,7 +435,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         "post_ansible_playbook_service_template_id" => apst.id,
         "osp_security_group_id"                     => security_group2.id,
         "osp_flavor_id"                             => flavor2.id,
-	"warm_migration_compatible"                 => true
+        "warm_migration_compatible"                 => true,
         "warm_migration"                            => false
       )
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added[:config_info])
