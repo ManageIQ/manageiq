@@ -166,13 +166,9 @@ module MiqServer::ServerSmartProxy
   end
 
   def concurrent_job_max
-    update_capabilities
-    capabilities[:concurrent_miqproxies].to_i
-  end
-
-  def max_concurrent_miqproxies
     return 0 unless self.is_a_proxy?
-    MiqSmartProxyWorker.worker_settings[:count]
+
+    MiqSmartProxyWorker.fetch_worker_settings_from_server(self)[:count].to_i
   end
 
   def update_capabilities
@@ -181,7 +177,6 @@ module MiqServer::ServerSmartProxy
     # since they are determined by local resources.
     if MiqServer.my_server == self
       capabilities[:vixDisk] = self.is_vix_disk_supported?
-      capabilities[:concurrent_miqproxies] = max_concurrent_miqproxies
     end
   end
 end
