@@ -46,7 +46,6 @@ module MiqServer::ConfigurationManagement
       zone = Zone.in_my_region.find_by(:name => data.zone)
       update(:zone => zone) if zone
     end
-    update_capabilities
 
     save
   end

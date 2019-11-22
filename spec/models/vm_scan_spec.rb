@@ -3,7 +3,7 @@ describe VmScan do
   context "A VM Scan job in multiple zones" do
     before do
       # local zone
-      @server1 = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
+      @server1 = EvmSpecHelper.local_miq_server(:has_vix_disk_lib => true)
       @user      = FactoryBot.create(:user_with_group, :userid => "tester")
       @ems       = FactoryBot.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server1.zone,
                                       :tenant                                  => FactoryBot.create(:tenant))
@@ -19,7 +19,7 @@ describe VmScan do
                                       :storage               => @storage)
 
       # remote zone
-      @server2 = EvmSpecHelper.remote_miq_server(:capabilities => {:vixDisk => true})
+      @server2 = EvmSpecHelper.remote_miq_server(:has_vix_disk_lib => true)
       @user2     = FactoryBot.create(:user_with_group, :userid => "tester2")
       @storage2  = FactoryBot.create(:storage, :name => "test_storage2", :store_type => "VMFS")
       @host2     = FactoryBot.create(:host, :name => "test_host2", :hostname => "test_host2",
