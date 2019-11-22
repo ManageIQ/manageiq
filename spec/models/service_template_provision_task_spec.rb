@@ -154,6 +154,7 @@ describe ServiceTemplateProvisionTask do
           :instance_id    => @task_0.id,
           :method_name    => 'execute',
           :role           => 'ems_operations',
+          :queue_name     => nil,
           :zone           => 'a_zone',
           :tracking_label => tracking_label,
           :deliver_on     => nil,

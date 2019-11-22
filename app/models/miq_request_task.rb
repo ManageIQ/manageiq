@@ -183,6 +183,7 @@ class MiqRequestTask < ApplicationRecord
       :method_name    => "execute",
       :zone           => options.fetch(:miq_zone, zone),
       :role           => miq_request.my_role,
+      :queue_name     => miq_request.my_queue_name,
       :tracking_label => tracking_label_id,
       :deliver_on     => deliver_on,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
