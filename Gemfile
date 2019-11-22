@@ -253,6 +253,7 @@ unless ENV["APPLIANCE"]
     gem "capybara",         "~>2.5.0",  :require => false
     gem "coveralls",                    :require => false
     gem "factory_bot",      "~>5.1",    :require => false
+    gem "ftpd",             "~> 2.1.0", :require => false
 
     # TODO: faker is used for url generation in git repository factory and the lenovo
     # provider, via a xclarity_client dependency
