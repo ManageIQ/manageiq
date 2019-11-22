@@ -24,9 +24,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     target_options = calc_target_options(targets_by_rollup_parent)
     targets = filter_perf_capture_now(targets, target_options)
     queue_captures(targets, target_options)
-
-    # Purge tasks older than 4 hours
-    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
   end
 
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
@@ -109,6 +106,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # Is only generating options for Vmware Hosts, which have a task for rollups.
   # The rest just set the zone
   def calc_target_options(targets_by_rollup_parent)
+    # Purge tasks older than 4 hours
+    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
+
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
