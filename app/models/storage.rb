@@ -32,7 +32,6 @@ class Storage < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include FilterableMixin
   include SupportsFeatureMixin
   include Metric::CiMixin

@@ -60,8 +60,8 @@ FactoryBot.define do
   end
 
   factory :template_vmware_with_ref, :parent => :template_vmware do
-    sequence(:ems_ref)     { |n| "vm-#{seq_padded_for_sorting(n)}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("vm-#{seq_padded_for_sorting(n)}", "VirtualMachine", "ManagedObjectReference") }
+    sequence(:ems_ref) { |n| "vm-#{seq_padded_for_sorting(n)}" }
+    ems_ref_type       { "VirtualMachine" }
   end
 
   factory :template_vmware_cloud,
@@ -144,11 +144,11 @@ FactoryBot.define do
     location        { |x| "[storage] #{x.name}/#{x.name}.vmx" }
     vendor          { "vmware" }
     raw_power_state { "poweredOn" }
+    ems_ref_type    { "VirtualMachine" }
   end
 
   factory :vm_with_ref, :parent => :vm_vmware do
-    sequence(:ems_ref)     { |n| "vm-#{seq_padded_for_sorting(n)}" }
-    sequence(:ems_ref_obj) { |n| VimString.new("vm-#{seq_padded_for_sorting(n)}", "VirtualMachine", "ManagedObjectReference") }
+    sequence(:ems_ref) { |n| "vm-#{seq_padded_for_sorting(n)}" }
   end
 
   # Factories for perf_capture, perf_process testing
@@ -156,7 +156,6 @@ FactoryBot.define do
     name     { "MIQ-WEBSVR1" }
     location { "MIQ-WEBSVR1/MIQ-WEBSVR1.vmx" }
     ems_ref  { "vm-578855" }
-    ems_ref_obj { VimString.new("vm-578855", "VirtualMachine", "ManagedObjectReference") }
   end
 
   # Factories for perf_capture_timer and perf_capture_gap testing

@@ -95,7 +95,6 @@ class Host < ApplicationRecord
   alias_attribute     :state,   :power_state
   alias_attribute     :to_s,    :name
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
   include EventMixin
 

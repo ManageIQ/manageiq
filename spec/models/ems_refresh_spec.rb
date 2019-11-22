@@ -255,12 +255,11 @@ describe EmsRefresh do
     context 'targeting a new vm' do
       let(:vm_hash) do
         {
-          :type        => ManageIQ::Providers::InfraManager::Vm.name,
-          :ems_ref     => 'vm-123',
-          :ems_ref_obj => 'vm-123',
-          :uid_ems     => 'vm-123',
-          :name        => 'new-vm',
-          :vendor      => 'unknown'
+          :type    => ManageIQ::Providers::InfraManager::Vm.name,
+          :ems_ref => 'vm-123',
+          :uid_ems => 'vm-123',
+          :name    => 'new-vm',
+          :vendor  => 'unknown'
         }
       end
 

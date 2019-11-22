@@ -12,7 +12,7 @@ FactoryBot.define do
   end
 
   factory :storage_redhat, :parent => :storage_nfs do
-    sequence(:ems_ref_obj) { |n| "/api/storagedomains/#{n}" }
+    sequence(:ems_ref)             { |n| "/api/storagedomains/#{n}" }
     sequence(:storage_domain_type) { |n| n == 2 ? "iso" : "data" }
   end
 

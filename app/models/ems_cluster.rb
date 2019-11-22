@@ -38,7 +38,6 @@ class EmsCluster < ApplicationRecord
 
   has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include FilterableMixin

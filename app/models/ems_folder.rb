@@ -5,7 +5,6 @@ class EmsFolder < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include RelationshipMixin
@@ -25,6 +24,8 @@ class EmsFolder < ApplicationRecord
   # TODO: Vmware specific - Fix when we subclass EmsFolder
 
   def provider_object(connection)
+    # TODO once EmsFolders are subclassed this can be moved to the vmware repo
+    ems_ref_obj = VimString.new(ems_ref, ems_ref_type, :ManagedObjectReference)
     connection.getVimFolderByMor(ems_ref_obj)
   end
 
@@ -147,7 +148,7 @@ class EmsFolder < ApplicationRecord
 
       host_mor                   = vim.computeResourcesByMor[cr_mor].host.first
       host.ems_ref               = host_mor
-      host.ems_ref_obj           = host_mor
+      host.ems_ref_type          = "HostSystem"
       host.ext_management_system = ext_management_system
       host.save!
       add_host(host)
