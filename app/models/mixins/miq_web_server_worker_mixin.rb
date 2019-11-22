@@ -23,6 +23,7 @@ module MiqWebServerWorkerMixin
     end
 
     def preload_for_worker_role
+      raise "Expected database to be seeded via `rake db:seed`." unless EvmDatabase.seeded_primordially?
       configure_secret_token
     end
 
