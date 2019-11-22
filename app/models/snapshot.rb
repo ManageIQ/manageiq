@@ -9,6 +9,8 @@ class Snapshot < ApplicationRecord
 
   after_create  :after_create_callback
 
+  EVM_SNAPSHOT_NAME = "EvmSnapshot".freeze
+
   def after_create_callback
     MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
   end
@@ -40,23 +42,19 @@ class Snapshot < ApplicationRecord
 
   def self.find_all_evm_snapshots(zone = nil)
     zone ||= MiqServer.my_server.zone
-    require 'VMwareWebService/MiqVimVm'
-    Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
+    Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
   end
 
   def is_a_type?(stype)
-    require 'VMwareWebService/MiqVimVm'
     value = case stype.to_sym
-            when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
-            when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
-            when :vcb_snapshot        then MiqVimVm.const_get("VCB_SNAPSHOT_NAME")
+            when :evm_snapshot        then EVM_SNAPSHOT_NAME
             when :system_snapshot     then :system_snapshot
             else
               raise "Unknown snapshot type '#{stype}' for #{self.class.name}.is_a_type?"
             end
 
     if value == :system_snapshot
-      return self.is_a_type?(:evm_snapshot) || self.is_a_type?(:consolidate_helper) || self.is_a_type?(:vcb_snapshot)
+      return self.is_a_type?(:evm_snapshot)
     elsif value.kind_of?(Regexp)
       return !!(value =~ name)
     else
