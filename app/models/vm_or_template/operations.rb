@@ -43,20 +43,28 @@ module VmOrTemplate::Operations
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
+  def unregister_queue
+    run_command_via_queue("raw_unregister")
+  end
+
   def unregister
     raise _("VM has no Provider, unable to unregister VM") unless ext_management_system
 
-    check_policy_prevent(:request_vm_unregister, :raw_unregister)
+    check_policy_prevent(:request_vm_unregister, :unregister_queue)
   end
 
   def raw_destroy
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
+  def destroy_queue
+    run_command_via_queue("raw_destroy")
+  end
+
   def vm_destroy
     raise _("VM has no Provider, unable to destroy VM") unless ext_management_system
 
-    check_policy_prevent(:request_vm_destroy, :raw_destroy)
+    check_policy_prevent(:request_vm_destroy, :destroy_queue)
   end
 
   def raw_rename(new_name)
@@ -75,16 +83,7 @@ module VmOrTemplate::Operations
       :userid => userid
     }
 
-    queue_opts = {
-      :class_name  => self.class.name,
-      :method_name => 'rename',
-      :instance_id => id,
-      :role        => 'ems_operations',
-      :zone        => my_zone,
-      :args        => [new_name]
-    }
-
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    run_command_via_queue(task_opts, :method_name => "rename", :args => [new_name])
   end
 
   def raw_set_custom_field(_attribute, _value)
