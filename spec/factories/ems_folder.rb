@@ -19,7 +19,8 @@ FactoryBot.define do
   # VMware specific folders
   #
 
-  factory :vmware_folder, :parent => :ems_folder do
+  factory :vmware_folder,
+          :parent => :ems_folder, :class => "ManageIQ::Providers::Vmware::InfraManager::Folder" do
     sequence(:ems_ref) { |n| "group-d#{n}" }
     ems_ref_type       { "Folder" }
   end
@@ -65,7 +66,8 @@ FactoryBot.define do
     hidden { true }
   end
 
-  factory :vmware_datacenter, :parent => :vmware_folder, :class => "Datacenter" do
+  factory :vmware_datacenter,
+          :parent => :datacenter, :class => "ManageIQ::Providers::Vmware::InfraManager::Datacenter" do
     sequence(:name)    { |n| "Test Datacenter #{seq_padded_for_sorting(n)}" }
     sequence(:ems_ref) { |n| "datacenter-#{n}" }
     ems_ref_type       { "Datacenter" }
