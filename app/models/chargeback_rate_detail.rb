@@ -43,30 +43,6 @@ class ChargebackRateDetail < ApplicationRecord
      'gbps'      => 'Tbps'}[p_per_unit || per_unit]
   end
 
-  def populate_showback_rate(plan, rate_detail, entity)
-    group = rate_detail.chargeable_field.showback_measure
-    field, _, calculation = rate_detail.chargeable_field.showback_dimension
-    unit  = rate_detail.showback_unit
-
-    showback_rate = ManageIQ::Showback::Rate.find_or_create_by(:entity      => entity,
-                                                               :group       => group,
-                                                               :field       => field,
-                                                               :price_plan  => plan,
-                                                               :calculation => calculation,
-                                                               :concept     => rate_detail.id)
-    showback_rate.tiers.destroy_all
-    rate_detail.chargeback_tiers.each do |tier|
-      showback_rate.tiers.build(:tier_start_value       => tier.start,
-                                :tier_end_value         => tier.finish,
-                                :variable_rate_per_time => rate_detail.per_time,
-                                :variable_rate_per_unit => unit,
-                                :fixed_rate_per_time    => rate_detail.per_time,
-                                :fixed_rate             => Money.new(tier.fixed_rate * Money.default_currency.subunit_to_unit),
-                                :variable_rate          => Money.new(tier.variable_rate * Money.default_currency.subunit_to_unit))
-    end
-    showback_rate.save
-  end
-
   def sub_metrics
     if metric == 'derived_vm_allocated_disk_storage'
       volume_types = CloudVolume.volume_types

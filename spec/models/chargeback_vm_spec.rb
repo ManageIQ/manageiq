@@ -61,7 +61,6 @@ describe ChargebackVm do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
-    ManageIQ::Showback::InputMeasure.seed
     MiqEnterprise.seed
 
     EvmSpecHelper.create_guid_miq_server_zone

@@ -66,12 +66,7 @@ class Chargeback < ActsAsArModel
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
-        # we are getting hash with metrics and costs for metrics defined for chargeback
-        if Settings[:new_chargeback]
-          data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
-        else
-          data[key].calculate_costs(consumption, rates_to_apply)
-        end
+        data[key].calculate_costs(consumption, rates_to_apply)
       end
     end
 
@@ -133,49 +128,6 @@ class Chargeback < ActsAsArModel
       'Container'
     when ChargebackContainerImage
       'ContainerImage'
-    end
-  end
-
-  def new_chargeback_calculate_costs(consumption, rates)
-    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
-
-    rates.each do |rate|
-      plan = ManageIQ::Showback::PricePlan.find_or_create_by(:description => rate.description,
-                                                             :name        => rate.description,
-                                                             :resource    => MiqEnterprise.first)
-
-      data = {}
-      rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
-        r.populate_showback_rate(plan, r, showback_category)
-        measure = r.chargeable_field.showback_measure
-        dimension, _, _ = r.chargeable_field.showback_dimension
-        value = r.chargeable_field.measure(consumption, @options)
-        data[measure] ||= {}
-        data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
-      end
-
-      # TODO: duration_of_report_step is 30.days for price plans but for consumption history,
-      # it's used for date ranges and needs to be 1.month with rails 5.1
-      duration = @options.interval == "monthly" ? 30.days : @options.duration_of_report_step
-      results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
-                                                   data:           data,
-                                                   start_time:     consumption.instance_variable_get("@start_time"),
-                                                   end_time:       consumption.instance_variable_get("@end_time"),
-                                                   cycle_duration: duration)
-
-      results.each do |cost_value, sb_rate|
-        r = ChargebackRateDetail.find(sb_rate.concept)
-        metric = r.chargeable_field.metric
-        metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
-        metric_value = data[r.chargeable_field.group][metric_index]
-        metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
-        cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
-        _, total_metric_field, total_field = r.chargeable_field.cost_keys
-        self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
-        self[total_metric_field] = (self[total_metric_field].to_f || 0) + cost_value.to_f
-        self[cost_field] = cost_value.to_f
-        self[metric_field] = metric_value.first.to_f
-      end
     end
   end
 
