@@ -21,6 +21,8 @@ class GuestDevice < ApplicationRecord
 
   alias_attribute :name, :device_name
 
+  acts_as_miq_taggable
+
   def self.with_ethernet_type
     where(:device_type => "ethernet")
   end
