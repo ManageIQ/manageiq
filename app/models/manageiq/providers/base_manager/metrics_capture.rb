@@ -39,7 +39,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     targets.each do |target|
       options = target_options[target] || {}
       interval_name = options[:interval] || perf_target_to_interval_name(target)
-      target.perf_capture_queue(interval_name, options)
+      target.perf_capture_queue(target, interval_name, options)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
