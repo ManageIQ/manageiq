@@ -8,6 +8,7 @@ describe "Message Timeout Handling" do
     allow(MiqServer).to receive(:my_server).and_return(@miq_server)
 
     @worker = FactoryBot.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
+    MiqWorker.my_guid = @worker.guid
   end
 
   context "A Worker Handling a Message with a timeout of 3600 seconds" do
