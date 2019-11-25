@@ -773,7 +773,7 @@ class MiqRequestWorkflow
   # Subclasses should define this as appropriate.
   #
   def get_source_and_targets(_refresh = false)
-    raise NoMethodError, "subclass failed to define a 'get_source_and_targets' method"
+    raise NotImplementedError, _("get_source_and_targets must be implemented in a subclass")
   end
 
   def refresh_field_values(values)
