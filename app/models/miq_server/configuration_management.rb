@@ -52,7 +52,6 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_config
-    @blacklisted_events = true
     @config_last_loaded = Vmdb::Settings.last_loaded
     sync_log_level
     sync_worker_monitor_settings
@@ -63,11 +62,7 @@ module MiqServer::ConfigurationManagement
   def sync_config_changed?
     stale = @config_last_loaded != Vmdb::Settings.last_loaded
     @config_last_loaded = Vmdb::Settings.last_loaded if stale
-    stale || @blacklisted_events.nil?
-  end
-
-  def sync_blacklisted_event_names
-    @blacklisted_events = nil
+    stale
   end
 
   def sync_log_level
