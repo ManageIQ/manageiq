@@ -83,7 +83,7 @@ module VmOrTemplate::Operations
       :userid => userid
     }
 
-    run_command_via_queue(task_opts, :method_name => "rename", :args => [new_name])
+    run_command_via_task(task_opts, :method_name => "rename", :args => [new_name])
   end
 
   def raw_set_custom_field(_attribute, _value)
