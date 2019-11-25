@@ -19,6 +19,8 @@ class MiqWorker < ApplicationRecord
   scope :with_miq_server_id, ->(server_id) { where(:miq_server_id => server_id) }
   scope :with_status,        ->(status)    { where(:status => status) }
 
+  cattr_accessor :my_guid, :instance_accessor => false
+
   STATUS_CREATING = 'creating'.freeze
   STATUS_STARTING = 'starting'.freeze
   STATUS_STARTED  = 'started'.freeze
@@ -279,7 +281,7 @@ class MiqWorker < ApplicationRecord
     w
   end
 
-  cache_with_timeout(:my_worker) { server_scope.find_by(:pid => Process.pid) }
+  cache_with_timeout(:my_worker) { server_scope.find_by(:guid => my_guid) }
 
   def self.status_update_all
     MiqWorker.status_update

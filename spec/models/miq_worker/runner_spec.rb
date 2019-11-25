@@ -69,4 +69,22 @@ describe MiqWorker::Runner do
       @worker_base.send(:process_message, "sync_config")
     end
   end
+
+  context "#initialize" do
+    let(:worker) do
+      server_id = EvmSpecHelper.local_miq_server.id
+      FactoryBot.create(:miq_worker, :miq_server_id => server_id, :type => "MiqGenericWorker")
+    end
+
+    let!(:runner) { MiqWorker::Runner.new(:guid => worker.guid) }
+
+    it "configures the #worker attribute correctly" do
+      expect(runner.worker.id).to eq(worker.id)
+      expect(runner.worker.guid).to eq(worker.guid)
+    end
+
+    it "sets the MiqWorker.my_guid class attribute" do
+      expect(MiqWorker.my_guid).to eq(worker.guid)
+    end
+  end
 end
