@@ -7,7 +7,7 @@ describe "Message Timeout Handling" do
     @miq_server = FactoryBot.create(:miq_server, :guid => @guid, :zone => @zone)
     allow(MiqServer).to receive(:my_server).and_return(@miq_server)
 
-    @worker = FactoryBot.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
+    @worker = FactoryBot.create(:ems_refresh_worker_amazon, :miq_server_id => @miq_server.id)
     MiqWorker.my_guid = @worker.guid
   end
 
