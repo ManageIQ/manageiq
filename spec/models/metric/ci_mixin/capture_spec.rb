@@ -414,31 +414,6 @@ describe Metric::CiMixin::Capture do
     end
   end
 
-  context "handles archived container entities" do
-    it "get the correct queue name and zone from archived container entities" do
-      ems = FactoryBot.create(:ems_openshift, :name => 'OpenShiftProvider')
-      group = FactoryBot.create(:container_group, :name => "group", :ext_management_system => ems)
-      container = FactoryBot.create(:container,
-                                     :name                  => "container",
-                                     :container_group       => group,
-                                     :ext_management_system => ems)
-      project = FactoryBot.create(:container_project,
-                                   :name                  => "project",
-                                   :ext_management_system => ems)
-      container.disconnect_inv
-      group.disconnect_inv
-      project.disconnect_inv
-
-      expect(container.ems_for_capture_target).to eq ems
-      expect(group.ems_for_capture_target).to     eq ems
-      expect(project.ems_for_capture_target).to   eq ems
-
-      expect(container.my_zone).to eq ems.my_zone
-      expect(group.my_zone).to eq ems.my_zone
-      expect(project.my_zone).to eq ems.my_zone
-    end
-  end
-
   describe ".perf_capture_realtime_now" do
     context "with enabled and disabled targets", :with_enabled_disabled_vmware do
       context "executing perf_capture_realtime_now" do

@@ -163,7 +163,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
     my_zone = options[:zone] || target.my_zone
     my_zone = my_zone.name if my_zone.respond_to?(:name)
-    ems = target.ems_for_capture_target
 
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
     raise ArgumentError, "target does not have an ExtManagementSystem" if ems.nil?

@@ -9,14 +9,6 @@ module Metric::CiMixin::Capture
 
   delegate :perf_collect_metrics, :to => :perf_capture_object
 
-  def ems_for_capture_target
-    if self.kind_of?(ExtManagementSystem)
-      self
-    elsif respond_to?(:ext_management_system) && ext_management_system.present?
-      ext_management_system
-    end
-  end
-
   def perf_capture_realtime(*args)
     perf_capture('realtime', *args)
   end
