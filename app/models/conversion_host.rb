@@ -98,6 +98,16 @@ class ConversionHost < ApplicationRecord
     source_transport_method.present? && authentication_check('v2v').first && check_concurrent_tasks
   end
 
+  # Returns a boolean indication whether or not the conversion host is eligible
+  # for warm migration. To be eligible, a conversion host must have the following
+  # properties:
+  #
+  #  - The conversion is generally eligible, i.e. eligible? returns true
+  #  - The VDDK transport method is supported
+  def warm_migration_eligible?
+    eligible? && source_transport_method == 'vddk'
+  end
+
   # Returns a boolean indicating whether or not the current number of active tasks
   # exceeds the maximum number of allowable concurrent tasks specified in settings.
   #
@@ -175,6 +185,13 @@ class ConversionHost < ApplicationRecord
     raise "Could not parse result data after running virt-v2v-wrapper using options: #{filtered_options}. Result was: #{result}."
   rescue StandardError => err
     raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
+  end
+
+  def create_cutover_file(path)
+    connect_ssh { |ssu| ssu.shell_exec("touch #{path}") }
+    true
+  rescue StandardError
+    false
   end
 
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
