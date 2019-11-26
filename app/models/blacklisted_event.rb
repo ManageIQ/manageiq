@@ -2,8 +2,8 @@ class BlacklistedEvent < ApplicationRecord
   belongs_to        :ext_management_system, :foreign_key => "ems_id"
 
   default_value_for :enabled, true
-  after_save        :queue_sync_blacklisted_event_names
-  after_destroy     :queue_sync_blacklisted_event_names, :audit_deletion
+  after_save        :reload_all_server_settings
+  after_destroy     :reload_all_server_settings, :audit_deletion
   after_create      :audit_creation
 
   def audit_deletion
@@ -33,21 +33,7 @@ class BlacklistedEvent < ApplicationRecord
     User.current_userid || 'system'
   end
 
-  def queue_sync_blacklisted_event_names
-    # notify MiqServer to sync with the blacklisted events
-    servers = MiqRegion.my_region.active_miq_servers
-    return if servers.blank?
-    _log.info("Queueing sync_blacklisted_event_names for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
-
-    servers.each do |s|
-      MiqQueue.put(
-        :class_name  => "MiqServer",
-        :instance_id => s.id,
-        :method_name => "sync_blacklisted_event_names",
-        :server_guid => s.guid,
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :queue_name  => 'miq_server'
-      )
-    end
+  def reload_all_server_settings
+    MiqRegion.my_region.reload_all_server_settings
   end
 end
