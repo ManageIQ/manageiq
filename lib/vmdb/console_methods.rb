@@ -41,5 +41,12 @@ module Vmdb
         break if break_on_complete.kind_of?(Integer) && (break_on_complete -= 1) <= 0
       end
     end
+
+    # Helper method to set up a $evm variable for debugging purposes in Rails console
+    def automate_initialize_evm(user: nil)
+      ws = MiqAeEngine::MiqAeWorkspaceRuntime.current = MiqAeEngine::MiqAeWorkspaceRuntime.new
+      ws.ae_user = (user || User.find_by(:userid => 'admin'))
+      $evm = MiqAeMethodService::MiqAeService.new(ws)
+    end
   end
 end
