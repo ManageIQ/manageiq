@@ -89,7 +89,7 @@ unless worker_class.has_required_role?
   exit 1
 end
 
-worker_class.before_fork
+worker_class.preload_for_worker_role if worker_class.respond_to?(:preload_for_worker_role)
 unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
