@@ -52,7 +52,7 @@ RSpec.describe ConversionHost, :v2v do
       end
     end
 
-     context "#warm_migration_eligible?" do
+    context "#warm_migration_eligible?" do
       it "fails when source transport method is ssh" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('ssh')
         allow(conversion_host_1).to receive(:authentication_check).and_return([true, 'worked'])
