@@ -42,6 +42,8 @@ module EvmSpecHelper
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
     clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
 
+    MiqWorker.my_guid = nil
+
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
 
