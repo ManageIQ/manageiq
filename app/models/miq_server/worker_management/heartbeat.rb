@@ -46,7 +46,7 @@ module MiqServer::WorkerManagement::Heartbeat
     worker_set_message(w, message, *args) unless w.nil?
   end
 
-  def post_message_for_workers(class_name = nil, resync_needed = false, sync_message = nil)
+  def post_message_for_workers(class_name = nil, resync_needed = false)
     processed_worker_ids = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
@@ -59,7 +59,7 @@ module MiqServer::WorkerManagement::Heartbeat
       next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
       processed_worker_ids << w.id
       next unless validate_worker(w)
-      worker_set_message(w, sync_message) if resync_needed
+      worker_set_message(w, "sync_config") if resync_needed
     end
     processed_worker_ids
   end

@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
-    resync_needed, sync_message = sync_needed?
+    resync_needed = sync_needed?
 
     # Sync the workers after sync'ing the child worker settings
     sync_workers
@@ -28,7 +28,7 @@ module MiqServer::WorkerManagement::Monitor
       processed_worker_ids += check_not_responding(class_name)
       processed_worker_ids += check_pending_stop(class_name)
       processed_worker_ids += clean_worker_records(class_name)
-      processed_worker_ids += post_message_for_workers(class_name, resync_needed, sync_message)
+      processed_worker_ids += post_message_for_workers(class_name, resync_needed)
     end
 
     validate_active_messages(processed_worker_ids)
@@ -135,13 +135,11 @@ module MiqServer::WorkerManagement::Monitor
     config_changed        = self.sync_config_changed?
     roles_changed         = self.active_roles_changed?
     resync_needed         = config_changed || roles_changed || sync_interval_reached
-    sync_message          = nil
 
     roles_added, roles_deleted, _roles_unchanged = role_changes
 
     if resync_needed
       @last_sync = Time.now.utc
-      sync_message = "sync_config"
 
       sync_config                if config_changed
       sync_assigned_roles        if config_changed
@@ -159,7 +157,7 @@ module MiqServer::WorkerManagement::Monitor
       update_sync_timestamp(@last_sync)
     end
 
-    return resync_needed, sync_message
+    resync_needed
   end
 
   def set_last_change(key, value)
