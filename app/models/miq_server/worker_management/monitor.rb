@@ -28,7 +28,7 @@ module MiqServer::WorkerManagement::Monitor
       processed_worker_ids += check_not_responding(class_name)
       processed_worker_ids += check_pending_stop(class_name)
       processed_worker_ids += clean_worker_records(class_name)
-      processed_worker_ids += post_message_for_workers(class_name, resync_needed)
+      processed_worker_ids += request_workers_to_sync_config(class_name, resync_needed)
     end
 
     validate_active_messages(processed_worker_ids)
