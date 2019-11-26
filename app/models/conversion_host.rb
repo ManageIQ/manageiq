@@ -98,6 +98,16 @@ class ConversionHost < ApplicationRecord
     source_transport_method.present? && authentication_check('v2v').first && check_concurrent_tasks
   end
 
+  # Returns a boolean indication whether or not the conversion host is eligible
+  # for warm migration. To be eligible, a conversion host must have the following
+  # properties:
+  #
+  #  - The conversion is generally eligible, i.e. eligible? returns true
+  #  - The VDDK transport method is supported
+  def warm_migration_eligible?
+    eligible? && source_transport_method == 'vddk'
+  end
+
   # Returns a boolean indicating whether or not the current number of active tasks
   # exceeds the maximum number of allowable concurrent tasks specified in settings.
   #

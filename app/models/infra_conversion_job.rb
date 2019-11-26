@@ -270,9 +270,7 @@ class InfraConversionJob < Job
   def start
     migration_task.update!(:state => 'migrate')
     migration_task.update_options(:migration_phase => 'pre')
-    return queue_signal(:start_precopying_disks) if migration_task.warm_migration?
-
-    queue_signal(:wait_for_ip_address)
+    migration_task.warm_migration? ? queue_signal(:start_precopying_disks) : queue_signal(:wait_for_ip_address)
   end
 
   def start_precopying_disks
