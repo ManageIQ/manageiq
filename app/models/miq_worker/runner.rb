@@ -164,6 +164,7 @@ class MiqWorker::Runner
   def find_worker_record
     @worker = self.class.corresponding_model.find_by(:guid => @cfg[:guid])
     do_exit("Unable to find instance for worker GUID [#{@cfg[:guid]}].", 1) if @worker.nil?
+    MiqWorker.my_guid = @cfg[:guid]
   end
 
   def starting_worker_record
