@@ -39,6 +39,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     vm_resource.options["memory_right_sizing_mode"]
   end
 
+  def warm_migration?
+    vm_resource.options["warm_migration"]
+  end
+
   def update_transformation_progress(progress)
     update_options(:progress => (options[:progress] || {}).merge(progress))
   end
@@ -245,6 +249,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     update_options(updates)
   end
 
+  def cutover
+    unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
+      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+    end
+  end
+
   def kill_virtv2v(signal = 'TERM')
     get_conversion_state
 
@@ -322,7 +332,9 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :path     => '/',
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
-      :vmware_password    => source.host.authentication_password
+      :vmware_password    => source.host.authentication_password,
+      :two_phase          => true,
+      :warm               => warm_migration?
     }
   end
 

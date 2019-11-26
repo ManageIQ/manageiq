@@ -280,6 +280,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           :transformation_mapping_id => mapping.id,
           :pre_service_id            => apst.id,
           :post_service_id           => apst.id,
+          :warm_migration            => true,
           :actions                   => [
             {:vm_id => src_vm_1.id.to_s, :pre_service => true, :post_service => true, :osp_flavor_id => dst_flavor.id, :osp_security_group_id => dst_security_group.id},
             {:vm_id => src_vm_2.id.to_s, :pre_service => false, :post_service => false},
@@ -544,7 +545,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
               :install_drivers     => true,
-              :insecure_connection => true
+              :insecure_connection => true,
+              :two_phase           => true,
+              :warm                => true
             )
           end
 
@@ -660,7 +663,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :osp_flavor_id              => openstack_flavor.ems_ref,
               :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
-              :network_mappings           => task_1.network_mappings
+              :network_mappings           => task_1.network_mappings,
+              :two_phase                  => true,
+              :warm                       => true
             )
           end
         end

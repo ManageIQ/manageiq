@@ -28,8 +28,11 @@ class InfraConversionJob < Job
     {
       :initializing                         => {'initialize'         => 'waiting_to_start'},
       :start                                => {'waiting_to_start'   => 'started'},
+      :start_precopying_disks               => {'started'            => 'precopying_disks'},
+      :poll_precopying_disks                => {'precopying_disks'   => 'precopying_disks'},
       :wait_for_ip_address                  => {
         'started'                => 'waiting_for_ip_address',
+        'precopying_disks'       => 'waiting_for_ip_address',
         'powering_on_vm'         => 'waiting_for_ip_address',
         'waiting_for_ip_address' => 'waiting_for_ip_address'
       },
@@ -75,6 +78,10 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
+      :precopying_disks              => {
+        :description => 'Precopying disks',
+        :max_retries => 36.hours / state_retry_interval
+      },
       :waiting_for_ip_address        => {
         :description => 'Waiting for VM IP address',
         :weight      => 2,
@@ -263,7 +270,34 @@ class InfraConversionJob < Job
   def start
     migration_task.update!(:state => 'migrate')
     migration_task.update_options(:migration_phase => 'pre')
+    migration_task.warm_migration? ? queue_signal(:start_precopying_disks) : queue_signal(:wait_for_ip_address)
+  end
+
+  def start_precopying_disks
+    update_migration_task_progress(:on_entry)
+    migration_task.run_conversion
+    queue_signal(:poll_precopying_disks, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def poll_precopying_disks
+    update_migration_task_progress(:on_entry)
+    return abort_conversion('Precopying disks timed out', 'error') if polling_timeout
+
+    migration_task.get_conversion_state
+
+    unless migration_task.miq_request.options[:cutover_datetime].present? && migration_task.miq_request.options[:cutover_datetime] < Time.now.utc
+      update_migration_task_progress(:on_retry)
+      return queue_signal(:poll_precopying_disks, :deliver_on => Time.now.utc + state_retry_interval)
+    end
+
+    update_migration_task_progress(:on_exit)
     queue_signal(:wait_for_ip_address)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
   end
 
   def wait_for_ip_address
@@ -376,7 +410,8 @@ class InfraConversionJob < Job
 
   def transform_vm
     update_migration_task_progress(:on_entry)
-    migration_task.run_conversion
+    migration_task.run_conversion unless migration_task.warm_migration?
+    migration_task.cutover
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error

@@ -222,7 +222,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     }
   end
 
-  let(:updated_options_with_updated_transformation_mapping) do
+  let(:updated_catalog_item_options_with_updated_transformation_mapping) do
     {
       :name        => 'Transformation Plan Updated',
       :description => 'an updated description',
@@ -230,6 +230,23 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         :transformation_mapping_id => transformation_mapping2.id,
         :pre_service_id            => apst.id,
         :post_service_id           => apst.id,
+        :actions                   => [
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true}
+        ],
+      }
+    }
+  end
+
+  let(:updated_catalog_item_options_with_warm_migration) do
+    {
+      :name        => 'Transformation Plan Updated',
+      :description => 'an updated description',
+      :config_info => {
+        :transformation_mapping_id => transformation_mapping2.id,
+        :pre_service_id            => apst.id,
+        :post_service_id           => apst.id,
+        :warm_migration            => true,
         :actions                   => [
           {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false},
           {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true}
@@ -277,10 +294,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                    => security_group1.id,
+        "osp_flavor_id"                            => flavor1.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group1.id,
+        "osp_flavor_id"                             => flavor1.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -294,10 +322,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
 
       service_template = described_class.create_catalog_item(catalog_item_options)
 
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => false)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => false)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                    => security_group1.id,
+        "osp_flavor_id"                            => flavor1.id,
+        "warm_migration_compatible"                => false,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group1.id,
+        "osp_flavor_id"                             => flavor1.id,
+        "warm_migration_compatible"                 => false,
+        "warm_migration"                            => false
+      )
     end
 
     it 'requires a transformation mapping' do
@@ -353,9 +392,31 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     it 'updates the associated transformation mapping' do
       service_template = described_class.create_catalog_item(catalog_item_options)
       service_template.miq_requests = []
-      service_template.update_catalog_item(updated_options_with_updated_transformation_mapping)
+      service_template.update_catalog_item(updated_catalog_item_options_with_updated_transformation_mapping)
       expect(service_template.name).to eq('Transformation Plan Updated')
       expect(service_template.transformation_mapping).to eq(transformation_mapping2)
+    end
+
+    it 'updates the warm migration option for all vms' do
+      service_template = described_class.create_catalog_item(catalog_item_options)
+      service_template.miq_requests = []
+      service_template.update_catalog_item(updated_catalog_item_options_with_warm_migration)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => true
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => true
+      )
+      expect(service_template.config_info).to eq(updated_catalog_item_options_with_warm_migration[:config_info])
+      expect(service_template.resource_actions.first).to have_attributes(
+        :action => 'Provision',
+        :fqname => described_class.default_provisioning_entry_point(nil)
+      )
     end
 
     it 'updates by adding new VMs to existing VMs and returns a transformation plan' do
@@ -367,12 +428,29 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2, vm3])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group2.id, "osp_flavor_id" => flavor2.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                    => security_group1.id,
+        "osp_flavor_id"                            => flavor1.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group1.id,
+        "osp_flavor_id"                             => flavor1.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group2.id,
+        "osp_flavor_id"                             => flavor2.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -389,8 +467,11 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_removed[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -407,10 +488,17 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm3])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added_and_removed[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -428,10 +516,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                    => security_group1.id,
+        "osp_flavor_id"                            => flavor1.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group1.id,
+        "osp_flavor_id"                             => flavor1.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -448,10 +547,21 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
       expect(service_template.description).to eq('an updated description')
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
-      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
-      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id, "warm_migration_compatible" => true)
+      expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options).to eq(
+        "pre_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                    => security_group1.id,
+        "osp_flavor_id"                            => flavor1.id,
+        "warm_migration_compatible"                => true,
+        "warm_migration"                           => false
+      )
+      expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options).to eq(
+        "pre_ansible_playbook_service_template_id"  => apst.id,
+        "post_ansible_playbook_service_template_id" => apst.id,
+        "osp_security_group_id"                     => security_group1.id,
+        "osp_flavor_id"                             => flavor1.id,
+        "warm_migration_compatible"                 => true,
+        "warm_migration"                            => false
+      )
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
