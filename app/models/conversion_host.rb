@@ -115,7 +115,7 @@ class ConversionHost < ApplicationRecord
   # want that value cached.
   #
   def check_concurrent_tasks
-    max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
+    max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_conversion_host
     active_tasks.count < max_tasks
   end
 

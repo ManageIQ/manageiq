@@ -70,12 +70,12 @@ RSpec.describe ConversionHost, :v2v do
 
     context "#check_concurrent_tasks" do
       context "default max concurrent tasks is equal to current active tasks" do
-        before { stub_settings_merge(:transformation => {:limits => {:max_concurrent_tasks_per_host => 1}}) }
+        before { stub_settings_merge(:transformation => {:limits => {:max_concurrent_tasks_per_conversion_host => 1}}) }
         it { expect(conversion_host_1.check_concurrent_tasks).to eq(false) }
       end
 
       context "default max concurrent tasks is greater than current active tasks" do
-        before { stub_settings_merge(:transformation => {:limits => {:max_concurrent_tasks_per_host => 10}}) }
+        before { stub_settings_merge(:transformation => {:limits => {:max_concurrent_tasks_per_conversion_host => 10}}) }
         it { expect(conversion_host_1.check_concurrent_tasks).to eq(true) }
       end
 
