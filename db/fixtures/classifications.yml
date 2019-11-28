@@ -1059,6 +1059,29 @@
   :example_text: VM has been migrated.
   :default: true
   :single_value: "1"
+- :description: Host eligible for disk transfer during VM transformation
+  :entries:
+  - :description: True
+    :read_only: "0"
+    :syntax: string
+    :name: "true"
+    :example_text:
+    :default: true
+    single_value: "1"
+  - :description: False
+    :read_only: "0"
+    :syntax: string
+    :name: "false"
+    :example_text:
+    :default: true
+    single_value: "1"
+  :readonly: "0"
+  :syntax: string
+  :show: true
+  :name: transformation_eligible_for_disk_transfer
+  :example_text: Whether a host is eligible for disk transfer during transformation (default: True)
+  :default: true
+  :single_value: "1"
 - :description: Quota - Max VMs
   :entries:
   - :description: "1"
