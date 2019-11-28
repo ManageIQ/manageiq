@@ -470,7 +470,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete optimize_vm_placement poll_optimize_vm_placement_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -479,7 +479,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine].each do |signal|
+    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete optimize_vm_placement poll_optimize_vm_placement_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -505,6 +505,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -534,6 +536,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -563,6 +567,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -592,6 +598,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -622,6 +630,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -636,8 +646,8 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'shutting_down_vm'
       end
 
-      it_behaves_like 'allows transform_vm signal'
       it_behaves_like 'allows poll_shutdown_vm_complete signal'
+      it_behaves_like 'allows optimize_vm_placement signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
@@ -650,6 +660,38 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
+      it_behaves_like 'doesn\'t allow transform_vm signal'
+      it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
+      it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
+      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
+      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
+      it_behaves_like 'doesn\'t allow mark_vm_migrated signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
+    end
+
+    context 'optimizing_vm_placement' do
+      before do
+        job.state = 'optimizing_vm_placement'
+      end
+
+      it_behaves_like 'allows poll_optimize_vm_placement_complete signal'
+      it_behaves_like 'allows transform_vm signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow start_precopying_disks signal'
+      it_behaves_like 'doesn\'t allow poll_precopying_disks signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
+      it_behaves_like 'doesn\'t allow shutdown_vm signal'
+      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
@@ -680,6 +722,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
@@ -709,6 +753,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
@@ -737,6 +783,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -766,6 +814,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -796,6 +846,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -824,6 +876,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -853,6 +907,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -884,6 +940,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -913,6 +971,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow optimize_vm_placement signal'
+      it_behaves_like 'doesn\'t allow poll_optimize_vm_placement_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
@@ -1166,7 +1226,7 @@ RSpec.describe InfraConversionJob, :v2v do
         vm_vmware.update!(:raw_power_state => 'poweredOff')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:transform_vm)
+        expect(job).to receive(:queue_signal).with(:optimize_vm_placement)
         job.signal(:shutdown_vm)
       end
 
@@ -1219,15 +1279,140 @@ RSpec.describe InfraConversionJob, :v2v do
         vm_vmware.update!(:raw_power_state => 'poweredOff')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:transform_vm)
+        expect(job).to receive(:queue_signal).with(:optimize_vm_placement)
         job.signal(:poll_shutdown_vm_complete)
+      end
+    end
+
+    context '#optimize_vm_placement' do
+      let(:host_vmware_1) { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
+      let(:host_vmware_2) { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
+      let(:host_vmware_3) { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
+
+      let(:storage_1) { FactoryBot.create(:storage, :ext_management_system => ems_vmware) }
+      let(:storage_2) { FactoryBot.create(:storage, :ext_management_system => ems_vmware) }
+      let(:storage_3) { FactoryBot.create(:storage, :ext_management_system => ems_vmware) }
+
+      let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+      let(:task_2) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+      let(:task_3) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+
+      let(:job_1) { described_class.create_job({:target_class => task_1.class.name, :target_id => task_1.id}) }
+      let(:job_2) { described_class.create_job({:target_class => task_2.class.name, :target_id => task_2.id}) }
+      let(:job_3) { described_class.create_job({:target_class => task_3.class.name, :target_id => task_3.id}) }
+
+
+      before do
+        task.update_options(:migration_phase => 'pre')
+        job.state = 'shutting_down_vm'
+      end
+
+      context 'when VM placement optimization is disabled' do
+        before { stub_settings_merge(:transformation => {:optimize_vmware_vm_placement => false}) }
+
+        it 'exits if optimize_vmware_vm_placement setting is false' do
+          vm_vmware.update!(:raw_power_state => 'poweredOff')
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+          expect(job).to receive(:queue_signal).with(:transform_vm)
+          job.signal(:optimize_vm_placement)
+        end
+      end
+
+      context 'when VM placement optimization is enabled' do
+        before do
+          stub_settings_merge(:transformation => {:optimize_vmware_vm_placement => true, :max_concurrent_tasks_per_vmware_hosts => 20})
+          allow(vm_vmware).to receive(:migrate)
+          allow(vm_vmware).to receive(:storages).and_return([storage_1])
+          allow(host_vmware_1).to receive(:storages).and_return([storage_1, storage_2])
+          allow(host_vmware_2).to receive(:storages).and_return([storage_1, storage_3])
+          allow(host_vmware_3).to receive(:storages).and_return([storage_2, storage_3])
+          task_1.update_options(:placement_host_id => host_vmware_1.id)
+          task_2.update_options(:placement_host_id => host_vmware_1.id)
+          task_3.update_options(:placement_host_id => host_vmware_2.id)
+          job_1.update!(:state => 'shutting_down_vm')
+          job_2.update!(:state => 'shutting_down_vm')
+          job_3.update!(:state => 'shutting_down_vm')
+          allow_any_instance_of(Vm).to receive(:migrate_via_ids)
+        end
+
+        it 'finds a best fit host if criteria are met' do
+          host_vmware.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+            expect(job).to receive(:queue_signal).with(:poll_optimize_vm_placement_complete)
+            job.signal(:optimize_vm_placement)
+            expect(task.reload.options[:placement_host_id]).to eq(host_vmware_2.id)
+          end
+        end
+
+        it 'does not find a best fit host if all hosts is tagged as ineligible' do
+          host_vmware.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          host_vmware_1.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          host_vmware_2.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          host_vmware_3.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+            expect(job).to receive(:queue_signal).with(:transform_vm)
+            job.signal(:optimize_vm_placement)
+          end
+        end
+
+        it 'does not find a best fit host if hosts do not have access to the VM storage' do
+          allow(host_vmware_1).to receive(:storage).and_return([storage_2, storage_3])
+          allow(host_vmware_2).to receive(:storage).and_return([storage_2, storage_3])
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+            expect(job).to receive(:queue_signal).with(:transform_vm)
+            job.signal(:optimize_vm_placement)
+          end
+        end
+
+        it 'does not find a best fit host if host not tagged as ineligible has already reach its max concurrent tasks' do
+          stub_settings_merge(:transformation => {:max_concurrent_tasks_per_vmware_hosts => 1})
+          host_vmware.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          host_vmware_1.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          host_vmware_2.tag_add('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+            expect(job).to receive(:queue_signal).with(:transform_vm)
+            job.signal(:optimize_vm_placement)
+          end
+        end
+      end
+    end
+
+    context '#poll_optimize_vm_placement_complete' do
+      before do
+        task.update_options(:migration_phase => 'pre', :placement_host_id => host_vmware.id)
+        job.state = 'optimizing_vm_placement'
+      end
+
+      it 'abort_conversion when optimizing_vm_placement times out' do
+        job.context[:retries_shutting_down_vm] = 20
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job).to receive(:queue_signal).with(:transform_vm)
+        job.signal(:poll_optimize_vm_placement_complete)
+      end
+
+      it 'exits if VM is migrated' do
+        vm_vmware.update!(:host => host_vmware)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job).to receive(:queue_signal).with(:transform_vm)
+        job.signal(:poll_optimize_vm_placement_complete)
       end
     end
 
     context '#transform_vm' do
       before do
         task.update_options(:migration_phase => 'pre', :virtv2v_wrapper => { 'cutover_file' => '/tmp/cutover' })
-        job.state = 'shutting_down_vm'
+        job.state = 'optimizing_vm_placement'
       end
 
       it 'sends run_conversion and cutover to migration task and exits when cold migration' do

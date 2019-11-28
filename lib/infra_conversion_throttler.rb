@@ -62,7 +62,7 @@ class InfraConversionThrottler
 
   # @return [Hash] the list of jobs in state 'running', grouped by conversion host
   def self.running_conversion_jobs
-    running = InfraConversionJob.where(:state => 'running')
+    running = InfraConversionJob.where.not(:state => ["finished", "waiting_to_start"])
     _log.info("Running InfraConversionJob: #{running.count}")
     running.group_by { |job| job.migration_task.conversion_host }
   end

@@ -40,7 +40,9 @@ class InfraConversionJob < Job
       :poll_run_migration_playbook_complete => {'running_migration_playbook' => 'running_migration_playbook'},
       :shutdown_vm                          => {'running_migration_playbook' => 'shutting_down_vm' },
       :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
-      :transform_vm                         => {'shutting_down_vm' => 'transforming_vm'},
+      :optimize_vm_placement                => {'shutting_down_vm' => 'optimizing_vm_placement'},
+      :poll_optimize_vm_placement_complete  => {'optimizing_vm_placement' => 'optimizing_vm_placement'},
+      :transform_vm                         => {'optimizing_vm_placement' => 'transforming_vm'},
       :poll_transform_vm_complete           => {'transforming_vm' => 'transforming_vm'},
       :poll_inventory_refresh_complete      => {
         'transforming_vm'               => 'waiting_for_inventory_refresh',
@@ -96,6 +98,11 @@ class InfraConversionJob < Job
         :description => "Shutting down virtual machine",
         :weight      => 2,
         :max_retries => 15.minutes / state_retry_interval
+      },
+      :optimzing_vm_placement        => {
+        :description => "Optimizing virtual machine placement",
+        :weight      => 1,
+        :max_retries => 5.minutes / state_retry_interval
       },
       :transforming_vm               => {
         :description => "Converting disks",
@@ -386,7 +393,7 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
-    queue_signal(:transform_vm)
+    queue_signal(:optimize_vm_placement)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
@@ -398,7 +405,7 @@ class InfraConversionJob < Job
 
     if target_vm.power_state == 'off'
       update_migration_task_progress(:on_exit)
-      return queue_signal(:transform_vm)
+      return queue_signal(:optimize_vm_placement)
     end
 
     update_migration_task_progress(:on_retry)
@@ -406,6 +413,54 @@ class InfraConversionJob < Job
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
+  end
+
+  def optimize_vm_placement
+    update_migration_task_progress(:on_entry)
+
+    if !migration_task.warm_migration? && target_vm.vendor == 'vmware' && Settings.transformation.optimize_vmware_vm_placement
+      eligible_vmware_hosts = []
+      target_vm.ems_cluster.hosts.each do |host|
+        next if host.is_tagged_with?('transformation_eligible_for_disk_transfer/false', :ns => 'managed')
+        next if (target_vm.storages & host.storages) != target_vm.storages
+
+        running_tasks = InfraConversionJob.where.not(:state => ["finished", "waiting_to_start"]).select { |job| job.migration_task.options[:placement_host_id] == host.id }.length
+        next if Settings.transformation.limits.max_concurrent_tasks_per_vmware_host <= running_tasks
+
+        eligible_vmware_hosts << { :id => host.id, :running_tasks => running_tasks }
+      end
+      bestfit_vmware_host_id = eligible_vmware_hosts.empty? ? nil : eligible_vmware_hosts.sort_by { |h| h[:running_tasks] }.first[:id]
+    end
+
+    if bestfit_vmware_host_id.present?
+      migration_task.update_options(:placement_host_id => bestfit_vmware_host_id)
+      target_vm.migrate_via_ids(bestfit_vmware_host_id)
+      signal = :poll_optimize_vm_placement_complete
+    else
+      signal = :transform_vm
+    end
+
+    update_migration_task_progress(:on_exit)
+    queue_signal(signal)
+  rescue StandardError => error
+    update_migration_task_progress(:on_exit)
+    queue_signal(:transform_vm)
+  end
+
+  def poll_optimize_vm_placement_complete
+    update_migration_task_progress(:on_entry)
+    return abort_conversion('Optimizing VM placement timed out', 'error') if polling_timeout
+
+    if migration_task.options[:placement_host_id].present? && target_vm.host.id != migration_task.options[:placement_host_id]
+      update_migration_task_progress(:on_retry)
+      return queue_signal(:poll_optimize_vm_placement_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    end
+
+    update_migration_task_progress(:on_exit)
+    queue_signal(:transform_vm)
+  rescue StandardError => error
+    update_migration_task_progress(:on_exit)
+    queue_signal(:transform_vm)
   end
 
   def transform_vm
