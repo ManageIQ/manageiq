@@ -37,7 +37,7 @@ class InfraConversionThrottler
 
         _log.debug("-- Eligible conversion hosts:")
         eligible_hosts.each do |eh|
-          max_tasks = eh.max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
+          max_tasks = eh.max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_conversion_host
           _log.debug("--- #{eh.name} [#{eh.active_tasks.count}/#{max_tasks}]")
         end
 
