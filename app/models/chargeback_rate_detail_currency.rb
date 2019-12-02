@@ -1,3 +1,5 @@
+require "money"
+
 class ChargebackRateDetailCurrency < ApplicationRecord
   belongs_to :chargeback_rate_detail
 
