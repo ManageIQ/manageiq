@@ -23,6 +23,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'create_volume',
         :role        => 'ems_operations',
+        :queue_name  => 'generic',
         :zone        => ems.my_zone,
         :args        => [ems.id, {}]
       )
@@ -47,6 +48,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'update_volume',
         :role        => 'ems_operations',
+        :queue_name  => 'generic',
         :zone        => ems.my_zone,
         :args        => [options]
       )
@@ -69,6 +71,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'delete_volume',
         :role        => 'ems_operations',
+        :queue_name  => 'generic',
         :zone        => ems.my_zone,
         :args        => []
       )

@@ -92,6 +92,7 @@ class CloudVolume < ApplicationRecord
       :method_name => 'update_volume',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [options]
     }
