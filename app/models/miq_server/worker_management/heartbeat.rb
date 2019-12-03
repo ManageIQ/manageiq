@@ -46,11 +46,9 @@ module MiqServer::WorkerManagement::Heartbeat
     worker_set_message(w, message, *args) unless w.nil?
   end
 
-  def request_workers_to_sync_config(class_name = nil, resync_needed = false)
+  def request_workers_to_sync_config(resync_needed = false)
     processed_worker_ids = []
     miq_workers.each do |w|
-      next unless class_name.nil? || (w.type == class_name)
-
       # Note, STATUSES_CURRENT_OR_STARTING doesn't include 'stopping'.
       # We already restarted 'stopping' workers, so we bail out early here.
       # 'stopping' workers continue to run and heartbeat through drb, which

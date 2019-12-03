@@ -23,13 +23,10 @@ module MiqServer::WorkerManagement::Monitor
     MiqWorker.status_update_all
 
     processed_worker_ids = []
-
-    MiqWorkerType.worker_class_names.each do |class_name|
-      processed_worker_ids += check_not_responding(class_name)
-      processed_worker_ids += check_pending_stop(class_name)
-      processed_worker_ids += clean_worker_records(class_name)
-      processed_worker_ids += request_workers_to_sync_config(class_name, resync_needed)
-    end
+    processed_worker_ids += check_not_responding
+    processed_worker_ids += check_pending_stop
+    processed_worker_ids += clean_worker_records
+    processed_worker_ids += request_workers_to_sync_config(resync_needed)
 
     validate_active_messages(processed_worker_ids)
 
@@ -67,10 +64,9 @@ module MiqServer::WorkerManagement::Monitor
     stop_worker(w, :waiting_for_stop_before_restart, reason)
   end
 
-  def clean_worker_records(class_name = nil)
+  def clean_worker_records
     processed_workers = []
     miq_workers.each do |w|
-      next unless class_name.nil? || (w.type == class_name)
       next unless w.is_stopped?
       _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
       processed_workers << w
@@ -81,10 +77,9 @@ module MiqServer::WorkerManagement::Monitor
     processed_workers.collect(&:id)
   end
 
-  def check_pending_stop(class_name = nil)
+  def check_pending_stop
     processed_worker_ids = []
     miq_workers.each do |w|
-      next unless class_name.nil? || (w.type == class_name)
       next unless w.is_stopped?
       next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
       worker_set_monitor_status(w.pid, nil)
@@ -93,12 +88,11 @@ module MiqServer::WorkerManagement::Monitor
     processed_worker_ids
   end
 
-  def check_not_responding(class_name = nil)
+  def check_not_responding
     return [] if MiqEnvironment::Command.is_podified?
 
     processed_workers = []
     miq_workers.each do |w|
-      next unless class_name.nil? || (w.type == class_name)
       next unless monitor_reason_not_responding?(w)
       next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
       processed_workers << w
