@@ -35,18 +35,26 @@ class CloudVolume < ApplicationRecord
     ext_management_system && ext_management_system.class::CloudVolume
   end
 
+  # Create a cloud volume as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the provided EMS instance. The EMS
+  # instance and a userid are mandatory. Any +options+ are forwarded as
+  # arguments to the +create_volume+ method.
+  #
   def self.create_volume_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "creating Cloud Volume for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
-      :class_name  => "CloudVolume",
+      :class_name  => 'CloudVolume',
       :method_name => 'create_volume',
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [ext_management_system.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -70,19 +78,25 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_create_volume must be implemented in a subclass")
   end
 
+  # Update a cloud volume as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def update_volume_queue(userid, options = {})
     task_opts = {
       :action => "updating Cloud Volume for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'update_volume',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -98,19 +112,25 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
   end
 
+  # Delete a cloud volume as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def delete_volume_queue(userid)
     task_opts = {
       :action => "deleting Cloud Volume for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete_volume',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
