@@ -1,14 +1,21 @@
 class CustomButtonSet < ApplicationRecord
   acts_as_miq_set
 
-  before_save :validate_children
+  before_save :update_button_order
   after_save :update_children
 
-  def validate_children
-    return if set_data.try(:[], :button_order).nil?
+  def update_button_order
+    if set_data.try(:[], :button_order).nil?
+      self.set_data ||= {}
+      set_data[:button_order] ||= []
+    end
 
-    children = Rbac.filtered(CustomButton.where(:id => set_data[:button_order]))
-    throw(:abort) if children.pluck(:id).sort != set_data[:button_order].sort
+    children = Set.new(Rbac.filtered(CustomButton.where(:id => set_data[:button_order])).pluck(:id))
+
+    # remove obsolete entries from button_order
+    set_data[:button_order].select! do |button_id|
+      children.include?(button_id)
+    end
   end
 
   def update_children
