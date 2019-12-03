@@ -12,7 +12,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def after_request_task_create
-    update!(:description => get_description)
+    update_attributes(:description => get_description)
   end
 
   def resource_action
@@ -45,7 +45,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def task_finished
     # update the status of vm transformation status in the plan
-    vm_resource.update!(:status => status == 'Ok' ? ServiceResource::STATUS_COMPLETED : ServiceResource::STATUS_FAILED)
+    vm_resource.update_attributes(:status => status == 'Ok' ? ServiceResource::STATUS_COMPLETED : ServiceResource::STATUS_FAILED)
   end
 
   def mark_vm_migrated
@@ -53,7 +53,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def task_active
-    vm_resource.update!(:status => ServiceResource::STATUS_ACTIVE)
+    vm_resource.update_attributes(:status => ServiceResource::STATUS_ACTIVE)
   end
 
   # This method returns true if all mappings are ok. It also preload
@@ -169,16 +169,16 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cancel
-    update!(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
     infra_conversion_job.cancel
   end
 
   def canceling
-    update!(:cancelation_status => MiqRequestTask::CANCEL_STATUS_PROCESSING)
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_PROCESSING)
   end
 
   def canceled
-    update!(:cancelation_status => MiqRequestTask::CANCEL_STATUS_FINISHED)
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_FINISHED)
   end
 
   def conversion_options
@@ -201,7 +201,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     with_lock do
       # Automate is updating this options hash (various keys) as well, using with_lock.
       options.merge!(opts)
-      update!(:options => options)
+      update_attributes(:options => options)
     end
     options
   end
