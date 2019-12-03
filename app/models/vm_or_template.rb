@@ -961,19 +961,6 @@ class VmOrTemplate < ApplicationRecord
     "#{object.class.name}:#{object.id}-#{object.name}:#{object.try(:state)}"
   end
 
-  def storage2hosts
-    hosts = storage.hosts.to_a if storage
-    hosts = [myhost] if hosts.blank?
-    return hosts unless host
-
-    # VMware needs a VMware host to resolve datastore names
-    if vendor == 'vmware'
-      hosts.delete_if { |h| !h.is_vmware? }
-    end
-
-    hosts
-  end
-
   def storage2proxies
     @storage_proxies ||= begin
       # Support vixDisk scanning of VMware VMs from the vmdb server
