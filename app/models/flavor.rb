@@ -58,9 +58,11 @@ class Flavor < ApplicationRecord
       :class_name  => 'Flavor',
       :method_name => 'create_flavor',
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [ext_management_system.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -86,14 +88,17 @@ class Flavor < ApplicationRecord
       :action => "Deleting flavor for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => "Flavor",
       :method_name => 'delete_flavor',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
