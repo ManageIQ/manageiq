@@ -1,7 +1,5 @@
 RSpec.describe InfraConversionJob, :v2v do
   let(:user)                  { FactoryBot.create(:user_with_group) }
-  let(:user_admin)            { FactoryBot.create(:user_admin) }
-  let(:group)                 { FactoryBot.create(:miq_group) }
   let(:zone)                  { FactoryBot.create(:zone) }
 
   let(:ems_vmware)            { FactoryBot.create(:ems_vmware, :zone => zone) }
@@ -17,14 +15,13 @@ RSpec.describe InfraConversionJob, :v2v do
                       :ems_cluster           => ems_cluster_vmware,
                       :host                  => host_vmware,
                       :hardware              => hardware_vmware,
-                      :evm_owner             => user,
-                      :miq_group             => group)
+                      :evm_owner             => user)
   end
 
   let(:ems_redhat)            { FactoryBot.create(:ems_redhat, :zone => zone) }
   let(:ems_cluster_redhat)    { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
   let(:host_redhat)           { FactoryBot.create(:host, :ext_management_system => ems_redhat, :ems_cluster => ems_cluster_redhat) }
-  let(:vm_redhat)             { FactoryBot.create(:vm_vmware, :ext_management_system => ems_redhat, :ems_cluster => ems_cluster_redhat, :host => host_redhat, :evm_owner => user_admin) }
+  let(:vm_redhat)             { FactoryBot.create(:vm_vmware, :ext_management_system => ems_redhat, :ems_cluster => ems_cluster_redhat, :host => host_redhat, :evm_owner => user) }
 
   let(:embedded_ansible_auth) { FactoryBot.create(:embedded_ansible_credential) }
   let(:embedded_ansible_catalog_item_options) do
@@ -352,7 +349,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -361,7 +358,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes poll_automate_state_machine].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -390,8 +387,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -416,8 +411,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -442,8 +435,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -468,8 +459,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -494,8 +483,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -520,8 +507,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -546,8 +531,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -573,37 +556,11 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
     end
 
     context 'applying_right_sizing' do
       before do
         job.state = 'applying_right_sizing'
-      end
-
-      it_behaves_like 'allows restore_vm_attributes signal'
-      it_behaves_like 'allows finish signal'
-      it_behaves_like 'allows abort_job signal'
-      it_behaves_like 'allows cancel signal'
-      it_behaves_like 'allows error signal'
-
-      it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow remove_snapshots signal'
-      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
-      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
-      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
-      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
-      it_behaves_like 'doesn\'t allow transform_vm signal'
-      it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
-      it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
-      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-    end
-
-    context 'restoring_vm_attributes' do
-      before do
-        job.state = 'restoring_vm_attributes'
       end
 
       it_behaves_like 'allows poll_automate_state_machine signal'
@@ -624,7 +581,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
     end
 
     context 'running_in_automate' do
@@ -650,7 +606,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
-      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
     end
   end
 
@@ -1065,12 +1020,13 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update!(:destination => vm_redhat)
     end
 
-    it "exits to next state in case of failure" do
+    it "exits to next state in case of failed" do
       allow(job.migration_task).to receive(:cpu_right_sizing_mode).and_raise('Fake error message')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
-      expect(job).to receive(:queue_signal).with(:restore_vm_attributes)
+      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
       job.signal(:apply_right_sizing)
+      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     context 'without right_sizing mode' do
@@ -1082,8 +1038,9 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'exits if no right-sizing is requested' do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:restore_vm_attributes)
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:apply_right_sizing)
+        expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
     end
 
@@ -1100,52 +1057,8 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job.migration_task.destination).to receive(:set_number_of_cpus).with(1)
         expect(job.migration_task.destination).to receive(:set_memory).with(1024)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:restore_vm_attributes)
-        job.signal(:apply_right_sizing)
-      end
-    end
-  end
-
-  context '#restore_vm_attributes' do
-    let(:service)               { FactoryBot.create(:service) }
-    let(:parent_classification) { FactoryBot.create(:classification, :name => 'environment', :description => 'Environment') }
-    let(:classification)        { FactoryBot.create(:classification, :name => 'prod', :description => 'Production', :parent => parent_classication) }
-
-    before do
-      job.state = 'applying_right_sizing'
-      task.update!(:destination => vm_redhat)
-    end
-
-    it "exits to next state in case of failure" do
-      allow(job.migration_task.source).to receive(:service).and_raise('Fake error message')
-      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-      job.signal(:restore_vm_attributes)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
-    end
-
-    it 'restore VM attributes' do
-      Timecop.freeze(2019, 2, 6) do
-        vm_vmware.add_to_service(service)
-        vm_vmware.tag_with('test', :ns => '/managed', :cat => 'folder_path_spec')
-        vm_vmware.tag_with('prod', :ns => '/managed', :cat => 'environment')
-        vm_vmware.miq_custom_set('attr', 'value')
-        vm_vmware.update!(:retires_on => Time.now.utc + 1.day)
-        vm_vmware.update!(:retirement_warn => 7)
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:restore_vm_attributes)
-        vm_redhat.reload
-        expect(vm_vmware.service).to be_nil
-        expect(vm_redhat.service.id).to eq(service.id)
-        expect(vm_redhat.tags).to eq(['/managed/environment/prod'])
-        expect(vm_redhat.miq_custom_get('attr')).to eq('value')
-        expect(vm_redhat.evm_owner.id).to eq(user.id)
-        expect(vm_redhat.miq_group.id).to eq(group.id)
-        expect(vm_redhat.retires_on).to eq(Time.now.utc + 1.day)
-        expect(vm_redhat.retirement_warn).to eq(7)
+        job.signal(:apply_right_sizing)
         expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
     end

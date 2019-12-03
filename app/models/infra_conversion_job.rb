@@ -49,10 +49,9 @@ class InfraConversionJob < Job
         'waiting_for_inventory_refresh' => 'waiting_for_inventory_refresh'
       },
       :apply_right_sizing                   => {'waiting_for_inventory_refresh' => 'applying_right_sizing'},
-      :restore_vm_attributes                => {'applying_right_sizing' => 'restoring_vm_attributes'},
       :poll_automate_state_machine          => {
-        'restoring_vm_attributes' => 'running_in_automate',
-        'running_in_automate'     => 'running_in_automate'
+        'applying_right_sizing' => 'running_in_automate',
+        'running_in_automate'   => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -101,10 +100,6 @@ class InfraConversionJob < Job
       },
       :applying_right_sizing         => {
         :description => "Apply Right-Sizing Recommendation",
-        :weight      => 1
-      },
-      :restoring_vm_attributes       => {
-        :description => "Restore VM Attributes",
         :weight      => 1
       },
       :running_in_automate           => {
@@ -453,45 +448,6 @@ class InfraConversionJob < Job
       right_sizing_mode = migration_task.send("#{item}_right_sizing_mode")
       send("apply_right_sizing_#{item}", right_sizing_mode) if right_sizing_mode.present?
     end
-
-    update_migration_task_progress(:on_exit)
-    queue_signal(:restore_vm_attributes)
-  rescue StandardError
-    update_migration_task_progress(:on_error)
-    queue_signal(:restore_vm_attributes)
-  end
-
-  def restore_vm_attributes
-    update_migration_task_progress(:on_entry)
-
-    # Transfer service link to destination VM
-    if source_vm.service
-      destination_vm.add_to_service(source_vm.service)
-      source_vm.direct_service.try(:remove_resource, source_vm)
-    end
-
-    # Copy tags and custom attributes from source VM
-    source_vm.tags.each do |tag|
-      next if tag.name =~ /^\/managed\/folder_path_/
-
-      tag_as_array = tag.name.split('/')
-      namespace = tag_as_array.shift
-      value = tag_as_array.pop
-      category = tag_as_array.join('/')
-      destination_vm.tag_add("#{category}/#{value}", :ns => namespace)
-    end
-    source_vm.miq_custom_keys.each { |ca| destination_vm.miq_custom_set(ca, source_vm.miq_custom_get(ca)) }
-
-    # Copy ownership from source VM
-    destination_vm.evm_owner = source_vm.evm_owner if source_vm.present?
-    destination_vm.miq_group = source_vm.miq_group if source_vm.miq_group.present?
-
-    # Copy retirement settings from source VM
-    destination_vm.retires_on = source_vm.retires_on if source_vm.retires_on.present?
-    destination_vm.retirement_warn = source_vm.retirement_warn if source_vm.retirement_warn.present?
-
-    # Save destination_vm in VMDB
-    destination_vm.save
 
     update_migration_task_progress(:on_exit)
     handover_to_automate
