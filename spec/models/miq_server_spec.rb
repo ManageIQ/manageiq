@@ -271,7 +271,8 @@ describe MiqServer do
 
     context "with a worker" do
       before do
-        @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
+        MiqWorkerType.seed
+        @worker = FactoryBot.create(:miq_generic_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
         allow(@miq_server).to receive(:validate_worker).and_return(true)
         @miq_server.setup_drb_variables
         @miq_server.worker_add(@worker.pid)
@@ -296,7 +297,7 @@ describe MiqServer do
       it "quiesce_workers do mini-monitor_workers loop" do
         expect(@miq_server).to receive(:heartbeat)
         expect(@miq_server).to receive(:quiesce_workers_loop_timeout?).never
-        allow_any_instance_of(MiqWorker).to receive(:is_stopped?).and_return(true, false)
+        @worker.update(:status => MiqWorker::STATUS_STOPPED)
         @miq_server.workers_quiesced?
       end
 
