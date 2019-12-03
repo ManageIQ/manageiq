@@ -44,14 +44,9 @@ class InfraConversionJob < Job
       :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
       :transform_vm                         => {'shutting_down_vm' => 'transforming_vm'},
       :poll_transform_vm_complete           => {'transforming_vm' => 'transforming_vm'},
-      :poll_inventory_refresh_complete      => {
-        'transforming_vm'               => 'waiting_for_inventory_refresh',
-        'waiting_for_inventory_refresh' => 'waiting_for_inventory_refresh'
-      },
-      :apply_right_sizing                   => {'waiting_for_inventory_refresh' => 'applying_right_sizing'},
       :poll_automate_state_machine          => {
-        'applying_right_sizing' => 'running_in_automate',
-        'running_in_automate'   => 'running_in_automate'
+        'transforming_vm'     => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -68,41 +63,32 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
-      :removing_snapshots            => {
+      :removing_snapshots         => {
         :description => 'Remove snapshosts',
         :weight      => 5,
         :max_retries => 4.hours / state_retry_interval
       },
-      :waiting_for_ip_address        => {
+      :waiting_for_ip_address     => {
         :description => 'Waiting for VM IP address',
         :weight      => 1,
         :max_retries => 1.hour / state_retry_interval
       },
-      :running_migration_playbook    => {
+      :running_migration_playbook => {
         :description => "Running #{migration_phase}-migration playbook",
         :weight      => 10,
         :max_retries => 6.hours / state_retry_interval
       },
-      :shutting_down_vm              => {
+      :shutting_down_vm           => {
         :description => "Shutting down virtual machine",
         :weight      => 1,
         :max_retries => 15.minutes / state_retry_interval
       },
-      :transforming_vm               => {
+      :transforming_vm            => {
         :description => "Converting disks",
         :weight      => 60,
         :max_retries => 1.day / state_retry_interval
       },
-      :waiting_for_inventory_refresh => {
-        :description => "Identify destination VM",
-        :weight      => 4,
-        :max_retries => 1.hour / state_retry_interval
-      },
-      :applying_right_sizing         => {
-        :description => "Apply Right-Sizing Recommendation",
-        :weight      => 1
-      },
-      :running_in_automate           => {
+      :running_in_automate        => {
         :max_retries => 36.hours / state_retry_interval
       }
     }
@@ -126,7 +112,11 @@ class InfraConversionJob < Job
   end
 
   def destination_vm
-    @destination_vm ||= migration_task.destination
+    return nil if migration_task.options[:destination_vm_id].nil?
+
+    @destination_vm ||= Vm.find(migration_task.options[:destination_vm_id]).tap do |vm|
+      raise "No Vm in VMDB with id #{migration_task.options[:destination_vm_id]}" if vm.nil?
+    end
   end
 
   def target_vm
@@ -222,14 +212,6 @@ class InfraConversionJob < Job
       :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
     }
     service_template.provision_request(migration_task.userid.to_i, service_dialog_options)
-  end
-
-  def apply_right_sizing_cpu(mode)
-    destination_vm.set_number_of_cpus(source_vm.send("#{mode}_recommended_vcpus"))
-  end
-
-  def apply_right_sizing_memory(mode)
-    destination_vm.set_memory(source_vm.send("#{mode}_recommended_mem"))
   end
 
   # --- Methods that implement the state machine transitions --- #
@@ -412,50 +394,12 @@ class InfraConversionJob < Job
       raise migration_task.options[:virtv2v_message]
     when 'succeeded'
       update_migration_task_progress(:on_exit)
+      handover_to_automate
       queue_signal(:poll_automate_state_machine)
     end
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
-  end
-
-  # This methods waits for the destination EMS inventory to refresh.
-  # It updates the migration_task.destination relationship with the create VM.
-  # We don't force the EMS refresh and rather allow 1 hour to get it.
-  def poll_inventory_refresh_complete
-    update_migration_task_progress(:on_entry)
-    return abort_conversion('Identify destination VM timed out', 'error') if polling_timeout
-
-    destination_vm = Vm.find_by(:name => migration_task.source.name, :ems_id => migration_task.destination_ems.id)
-    if destination_vm.nil?
-      update_migration_task_progress(:on_retry)
-      return queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)
-    end
-
-    migration_task.update!(:destination => destination_vm)
-    migration_task.update_options(:migration_phase => 'post')
-    update_migration_task_progress(:on_exit)
-    queue_signal(:apply_right_sizing)
-  rescue StandardError => error
-    update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
-  end
-
-  def apply_right_sizing
-    update_migration_task_progress(:on_entry)
-
-    %i[cpu memory].each do |item|
-      right_sizing_mode = migration_task.send("#{item}_right_sizing_mode")
-      send("apply_right_sizing_#{item}", right_sizing_mode) if right_sizing_mode.present?
-    end
-
-    update_migration_task_progress(:on_exit)
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
-  rescue StandardError
-    update_migration_task_progress(:on_error)
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
   end
 
   def poll_automate_state_machine

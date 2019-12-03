@@ -32,8 +32,6 @@ module ServiceTemplateTransformationPlan::ValidateConfigInfo
           vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
           vm_options[:osp_security_group_id] = vm_hash[:osp_security_group_id] if vm_hash[:osp_security_group_id].present?
           vm_options[:osp_flavor_id] = vm_hash[:osp_flavor_id] if vm_hash[:osp_flavor_id].present?
-          vm_options[:cpu_right_sizing_mode] = vm_hash[:cpu_right_sizing_mode] if vm_hash[:cpu_right_sizing_mode].present?
-          vm_options[:memory_right_sizing_mode] = vm_hash[:memory_right_sizing_mode] if vm_hash[:memory_right_sizing_mode].present?
           vms << {:vm => vm_obj, :options => vm_options}
         end
       end
