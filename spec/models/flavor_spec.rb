@@ -35,7 +35,7 @@ RSpec.describe Flavor do
     end
   end
 
-  context 'queued methods', :queue do
+  context 'queued methods' do
     it 'queues a create task with create_flavor_queue' do
       task_id = described_class.create_flavor_queue(user.userid, ems)
 
