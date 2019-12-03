@@ -55,8 +55,8 @@ RSpec.describe Flavor do
     end
 
     it 'requires a userid and ems for a queued create task' do
-      expect{ described_class.create_flavor_queue }.to raise_error(ArgumentError)
-      expect{ described_class.create_flavor_queue(user.userid) }.to raise_error(ArgumentError)
+      expect { described_class.create_flavor_queue }.to raise_error(ArgumentError)
+      expect { described_class.create_flavor_queue(user.userid) }.to raise_error(ArgumentError)
     end
 
     it 'queues a delete task with delete_flavor_queue' do
@@ -78,7 +78,7 @@ RSpec.describe Flavor do
     end
 
     it 'requires a userid for a queued delete task' do
-      expect{ flavor.delete_flavor_queue }.to raise_error(ArgumentError)
+      expect { flavor.delete_flavor_queue }.to raise_error(ArgumentError)
     end
   end
 end
