@@ -348,7 +348,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -357,7 +357,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete poll_automate_state_machine].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -381,8 +381,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -402,8 +400,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -423,8 +419,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow remove_snapshots signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -444,8 +438,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow remove_snapshots signal'
       it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -455,27 +447,6 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it_behaves_like 'allows poll_run_migration_playbook_complete signal'
-      it_behaves_like 'allows shutdown_vm signal'
-      it_behaves_like 'allows finish signal'
-      it_behaves_like 'allows abort_job signal'
-      it_behaves_like 'allows cancel signal'
-      it_behaves_like 'allows error signal'
-
-      it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow remove_snapshots signal'
-      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
-      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
-      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
-      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
-    end
-
-    context 'shutting_down_vm' do
-      before do
-        job.state = 'shutting_down_vm'
-      end
-
-      it_behaves_like 'allows poll_shutdown_vm_complete signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -487,8 +458,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
       it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
-      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
     end
 
     context 'running_in_automate' do
@@ -508,8 +477,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
       it_behaves_like 'doesn\'t allow run_migration_playbook signal'
       it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
-      it_behaves_like 'doesn\'t allow shutdown_vm signal'
-      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
     end
   end
 
@@ -568,7 +535,7 @@ RSpec.describe InfraConversionJob, :v2v do
         job.context[:retries_removing_snapshots] = 960
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
-        expect(job).to receive(:abort_conversion).with('Removing snapshots timed out', 'error')
+        expect(job).to receive(:abort_conversion).with('Collapsing snapshots timed out', 'error')
         job.signal(:poll_remove_snapshots_complete)
       end
 
@@ -648,8 +615,9 @@ RSpec.describe InfraConversionJob, :v2v do
           embedded_ansible_service_template.delete
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job).to receive(:queue_signal).with(:shutdown_vm)
+          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
           job.signal(:run_migration_playbook)
+          expect(task.reload.options[:workflow_runner]).to eq('automate')
         end
       end
 
@@ -702,8 +670,9 @@ RSpec.describe InfraConversionJob, :v2v do
         embedded_ansible_service_request.update!(:request_state => 'finished', :status => 'Ok')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:shutdown_vm)
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:poll_run_migration_playbook_complete)
+        expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
 
       it 'fails if service request is finished and migration_phase is "pre" and its status is Error' do
@@ -720,77 +689,8 @@ RSpec.describe InfraConversionJob, :v2v do
         embedded_ansible_service_request.update!(:state => 'finished', :status => 'Error', :message => 'Fake error message')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:shutdown_vm)
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:poll_run_migration_playbook_complete)
-      end
-    end
-
-    context '#shutdown_vm' do
-      before do
-        task.update_options(:migration_phase => 'pre')
-        job.state = 'running_migration_playbook'
-      end
-
-      it 'exits if VM is already off' do
-        vm_vmware.update!(:raw_power_state => 'poweredOff')
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:shutdown_vm)
-        expect(task.reload.options[:workflow_runner]).to eq('automate')
-      end
-
-      it 'sends shutdown request to VM if VM supports shutdown_guest' do
-        vm_vmware.update!(:raw_power_state => 'poweredOn')
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job.migration_task.source).to receive(:shutdown_guest)
-          expect(job).to receive(:queue_signal).with(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
-          job.signal(:shutdown_vm)
-        end
-      end
-
-      it 'sends stop request to VM if VM does not support shutdown_guest' do
-        vm_vmware.update!(:raw_power_state => 'unknown')
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job.migration_task.source).to receive(:stop)
-          expect(job).to receive(:queue_signal).with(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
-          job.signal(:shutdown_vm)
-        end
-      end
-    end
-
-    context '#poll_shutdown_vm_complete' do
-      before do
-        task.update_options(:migration_phase => 'pre')
-        job.state = 'shutting_down_vm'
-      end
-
-      it 'abort_conversion when shutting_down_vm times out' do
-        job.context[:retries_shutting_down_vm] = 60
-        expect(job).to receive(:abort_conversion).with('Shutting down VM timed out', 'error')
-        job.signal(:poll_shutdown_vm_complete)
-      end
-
-      it 'retries if VM is not off' do
-        vm_vmware.update!(:raw_power_state => 'poweredOn')
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
-          expect(job).to receive(:queue_signal).with(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
-          job.signal(:poll_shutdown_vm_complete)
-        end
-      end
-
-      it 'exits if VM is off' do
-        vm_vmware.update!(:raw_power_state => 'poweredOff')
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:poll_shutdown_vm_complete)
         expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
     end
