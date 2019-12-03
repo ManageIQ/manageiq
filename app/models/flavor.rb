@@ -48,6 +48,10 @@ class Flavor < ApplicationRecord
          .references(:cloud_tenants, :tenants, :ext_management_system)
   end
 
+  # Create a flavor as a queued task and return the task id. The queue name and
+  # the queue zone are derived from the provided EMS instance. The EMS instance
+  # and a userid are mandatory.
+  #
   def self.create_flavor_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "Creating flavor for user #{userid}",
@@ -83,6 +87,9 @@ class Flavor < ApplicationRecord
     klass.raw_create_flavor(ext_management_system, options)
   end
 
+  # Delete a flavor as a queued task and return the task id. The queue name and
+  # the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def delete_flavor_queue(userid)
     task_opts = {
       :action => "Deleting flavor for user #{userid}",
@@ -90,7 +97,7 @@ class Flavor < ApplicationRecord
     }
 
     queue_opts = {
-      :class_name  => "Flavor",
+      :class_name  => 'Flavor',
       :method_name => 'delete_flavor',
       :instance_id => id,
       :role        => 'ems_operations',

@@ -36,7 +36,30 @@ RSpec.describe Flavor do
   end
 
   context 'queued methods', :queue do
-    it 'queues a delete task' do
+    it 'queues a create task with create_flavor_queue' do
+      task_id = described_class.create_flavor_queue(user.userid, ems)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "Creating flavor for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'create_flavor',
+        :role        => 'ems_operations',
+        :zone        => ems.my_zone,
+        :args        => [ems.id, {}]
+      )
+    end
+
+    it 'requires a userid and ems for a queued create task' do
+      expect{ described_class.create_flavor_queue }.to raise_error(ArgumentError)
+      expect{ described_class.create_flavor_queue(user.userid) }.to raise_error(ArgumentError)
+    end
+
+    it 'queues a delete task with delete_flavor_queue' do
       task_id = flavor.delete_flavor_queue(user.userid)
 
       expect(MiqTask.find(task_id)).to have_attributes(
