@@ -3,7 +3,6 @@ RSpec.describe InfraConversionJob, :v2v do
   let(:user_admin)            { FactoryBot.create(:user_admin) }
   let(:group)                 { FactoryBot.create(:miq_group) }
   let(:zone)                  { FactoryBot.create(:zone) }
-  let(:server)                { FactoryBot.create(:miq_server) }
 
   let(:ems_vmware)            { FactoryBot.create(:ems_vmware, :zone => zone) }
   let(:ems_cluster_vmware)    { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
@@ -75,7 +74,6 @@ RSpec.describe InfraConversionJob, :v2v do
 
   before do
     allow(MiqServer).to receive(:my_zone).and_return(zone.name)
-    allow(MiqServer).to receive(:my_server).and_return(server)
     allow(ServiceTemplateProvisionRequest).to receive(:destination)
   end
 
