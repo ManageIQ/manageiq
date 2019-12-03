@@ -2,15 +2,15 @@ module EmsOperationsTaskMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def create_generic_task_queue(klass, userid, ext_management_system, method_name, options = {})
+    def create_generic_task_queue(userid, ext_management_system, options = {})
       task_opts = {
-        :action => "Creating #{klass.name} for user #{userid}",
+        :action => "Creating #{table.name} for user #{userid}",
         :userid => userid
       }
 
       queue_opts = {
-        :class_name  => klass.name,
-        :method_name => method_name,
+        :class_name  => table.name,
+        :method_name => "create_#{table.name.to_s.downcase}",
         :role        => 'ems_operations',
         :queue_name  => ext_management_system.queue_name_for_ems_operations,
         :zone        => ext_management_system.my_zone,
@@ -21,15 +21,15 @@ module EmsOperationsTaskMixin
     end
   end
 
-  def delete_generic_task_queue(klass, userid, method_name)
+  def delete_generic_task_queue(userid)
     task_opts = {
-      :action => "Deleting #{klass.name} for user #{userid}",
+      :action => "Deleting #{table.name} for user #{userid}",
       :userid => userid
     }
 
     queue_opts = {
-      :class_name  => klass.name,
-      :method_name => method_name,
+      :class_name  => table.name,
+      :method_name => "delete_#{table.name.to_s.downcase}",
       :instance_id => id,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
@@ -40,15 +40,15 @@ module EmsOperationsTaskMixin
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def update_generic_task_queue(klass, method_name, options = {})
+  def update_generic_task_queue(options = {})
     task_opts = {
-      :action => "updating #{klass.name} for user #{userid}",
+      :action => "updating #{table.name} for user #{userid}",
       :userid => userid
     }
 
     queue_opts = {
-      :class_name  => klass.name,
-      :method_name => method_name,
+      :class_name  => table.name,
+      :method_name => "update_#{table.name.to_s.downcase}",
       :instance_id => id,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
