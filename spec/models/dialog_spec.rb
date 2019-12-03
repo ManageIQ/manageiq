@@ -120,6 +120,16 @@ describe Dialog do
       expect(err_msg).to eq("Dialog cannot be deleted because it is connected to other components: [\"Dialog:#{dialog.id} - #{dialog.name}\"]")
       expect(Dialog.count).to eq(1)
     end
+
+    it "does destroy dialog with only obsolete resource_action association" do
+      custom_button = FactoryBot.create(:custom_button, :applies_to_class => 'Vm')
+      FactoryBot.create(:resource_action, :action => nil, :dialog => dialog, :resource_type => 'CustomButton', :resource_id => custom_button.id)
+
+      custom_button.delete  # deliberately not destroy, otherwise the ResourceAction gets removed too
+
+      expect(dialog.destroy).to be_truthy
+      expect(Dialog.count).to eq(0)
+    end
   end
 
   describe "dialog structures" do
