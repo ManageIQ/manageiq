@@ -42,12 +42,6 @@ class InfraConversionJob < Job
     }
   end
 
-  # Example state:
-  #   :state_name => {
-  #     :description => 'State description',
-  #     :weight      => 30,
-  #     :max_retries => 960
-  #   }
   def state_settings
     @state_settings ||= {
       :running_in_automate => {
@@ -59,49 +53,6 @@ class InfraConversionJob < Job
   def migration_task
     @migration_task ||= target_entity
     # valid states: %w(migrate pending finished active queued)
-  end
-
-  def on_entry(state_hash, _)
-    state_hash || {
-      :state       => 'active',
-      :status      => 'Ok',
-      :description => state_settings[state.to_sym][:description],
-      :started_on  => Time.now.utc,
-      :percent     => 0.0
-    }.compact
-  end
-
-  def on_retry(state_hash, state_progress = nil)
-    if state_progress.nil?
-      state_hash[:percent] = context["retries_#{state}".to_sym].to_f / state_settings[state.to_sym][:max_retries].to_f * 100.0
-    else
-      state_hash.merge!(state_progress)
-    end
-    state_hash[:updated_on] = Time.now.utc
-    state_hash
-  end
-
-  def on_exit(state_hash, _)
-    state_hash[:state] = 'finished'
-    state_hash[:percent] = 100.0
-    state_hash[:updated_on] = Time.now.utc
-    state_hash
-  end
-
-  def on_error(state_hash, _)
-    state_hash[:state] = 'finished'
-    state_hash[:status] = 'Error'
-    state_hash[:updated_on] = Time.now.utc
-    state_hash
-  end
-
-  def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
-    state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
-    progress[:states][state.to_sym] = state_hash
-    progress[:current_description] = state_settings[state.to_sym][:description] if state_phase == :on_entry && state_settings[state.to_sym][:description].present?
-    progress[:percent] += state_hash[:percent] * state_settings[state.to_sym][:weight] / 100.0 if state_settings[state.to_sym][:weight].present?
-    migration_task.update_transformation_progress(progress)
   end
 
   # Temporary method to allow switching from InfraConversionJob to Automate.
@@ -143,8 +94,6 @@ class InfraConversionJob < Job
 
   # --- Methods that implement the state machine transitions --- #
 
-  # This transition simply allows to officially mark the task as migrating.
-  # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
     handover_to_automate
