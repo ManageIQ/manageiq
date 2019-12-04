@@ -5,10 +5,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   define_callbacks(:dst_change)
   set_callback(:dst_change, :after, :load_user_schedules)
 
-  OPTIONS_PARSER_SETTINGS = MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
-    [:emsid, 'EMS Instance ID', String],
-  ]
-
   ROLES_NEEDING_RESTART = ["scheduler", "ems_metrics_coordinator", "event"]
   SCHEDULE_MEDIUM_PRIORITY = MiqQueue.priority(:normal, :higher, 10)
   CLASS_TAG = "MiqSchedule"

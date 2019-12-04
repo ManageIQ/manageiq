@@ -11,11 +11,6 @@ class MiqWorker::Runner
 
   INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
 
-  # DELETE ME
-  OPTIONS_PARSER_SETTINGS = [
-    [:guid,       'EVM Worker GUID',       String],
-  ]
-
   SAFE_SLEEP_SECONDS = 60
 
   def self.start_worker(*args)

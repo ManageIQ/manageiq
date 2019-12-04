@@ -1,8 +1,4 @@
 class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < ::MiqQueueWorkerBase::Runner
-  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
-    [:ems_id, 'EMS Instance ID', String],
-  ]
-
   def worker_roles
     %w[ems_operations"]
   end
