@@ -21,7 +21,7 @@ class SecurityGroup < ApplicationRecord
   # TODO(lsmola) we should be able to remove table security_groups_vms, if it's unused now. Can't be backported
   has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
-  virtual_total :total_vms, :vms, :uses => :vms
+  virtual_total :total_vms, :vms
 
   def self.non_cloud_network
     where(:cloud_network_id => nil)
