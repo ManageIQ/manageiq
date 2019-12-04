@@ -10,7 +10,9 @@ module ManageIQ::Providers
     include AvailabilityMixin
 
     has_many :distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
+    has_many :external_distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
     has_many :distributed_virtual_lans, -> { distinct }, :through => :distributed_virtual_switches, :source => :lans
+    has_many :external_distributed_virtual_lans, -> { distinct }, :through => :external_distributed_virtual_switches, :source => :lans
     has_many :host_virtual_switches, -> { distinct }, :through => :hosts
 
     has_many :host_hardwares,             :through => :hosts, :source => :hardware

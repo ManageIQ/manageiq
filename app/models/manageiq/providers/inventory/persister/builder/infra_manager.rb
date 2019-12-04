@@ -195,6 +195,15 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def external_distributed_virtual_switches
+          add_properties(
+            :manager_ref          => %i[uid_ems],
+            :attributes_blacklist => %i[parent],
+            :secondary_refs       => {:by_switch_uuid => %i[switch_uuid]}
+          )
+          add_common_default_values
+        end
+
         def lans
           add_properties(
             :manager_ref                  => %i(switch uid_ems),
@@ -206,6 +215,13 @@ module ManageIQ::Providers
           add_properties(
             :manager_ref                  => %i(switch uid_ems),
             :parent_inventory_collections => %i(distributed_virtual_switches),
+          )
+        end
+
+        def external_distributed_virtual_lans
+          add_properties(
+            :manager_ref                  => %i(switch uid_ems),
+            :parent_inventory_collections => %i(external_distributed_virtual_switches),
           )
         end
 
