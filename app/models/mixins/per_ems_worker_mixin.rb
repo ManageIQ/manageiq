@@ -20,22 +20,23 @@ module PerEmsWorkerMixin
     end
 
     def all_ems_in_zone
-      ems_class.where(:zone_id => MiqServer.my_server.zone.id).to_a
+      ems_class.where(:zone_id => MiqServer.my_server.zone.id)
     end
 
     def all_valid_ems_in_zone
-      all_ems_in_zone.select {|e| e.enabled && e.authentication_status_ok?}
+      all_ems_in_zone.select { |e| e.enabled && e.authentication_status_ok? }
     end
 
     def desired_queue_names
-      return [] if MiqServer.minimal_env? && !self.has_minimal_env_option?
+      return [] if MiqServer.minimal_env? && !has_minimal_env_option?
+
       all_valid_ems_in_zone.collect { |e| queue_name_for_ems(e) }
     end
 
     def sync_workers
       ws      = find_current_or_starting
       current = ws.collect(&:queue_name).sort
-      desired = self.has_required_role? ? desired_queue_names.sort : []
+      desired = has_required_role? ? desired_queue_names.sort : []
       result  = {:adds => [], :deletes => []}
 
       unless compare_queues(current, desired)
@@ -63,7 +64,8 @@ module PerEmsWorkerMixin
     end
 
     def start_workers
-      return unless self.has_required_role?
+      return unless has_required_role?
+
       all_valid_ems_in_zone.each do |ems|
         start_worker_for_ems(ems)
       end
@@ -78,6 +80,7 @@ module PerEmsWorkerMixin
       wpid = nil
       lookup_by_queue_name(queue_name_for_ems(ems_or_queue_name).to_s).each do |w|
         next unless w.status == MiqWorker::STATUS_STARTED
+
         wpid = w.pid
         w.stop
       end
@@ -105,13 +108,16 @@ module PerEmsWorkerMixin
 
     def queue_name_for_ems(ems)
       return ems unless ems.kind_of?(ExtManagementSystem)
+
       ems.queue_name
     end
 
     def parse_ems_id(queue_name)
       return nil if queue_name.blank?
+
       name, id = queue_name.split("_")
       return nil unless name == "ems"
+
       id.to_i
     end
 
