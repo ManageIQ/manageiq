@@ -22,24 +22,19 @@ module MiqServer::WorkerManagement::Monitor
 
     MiqWorker.status_update_all
 
-    processed_worker_ids = []
-    processed_worker_ids += check_not_responding
-    processed_worker_ids += check_pending_stop
-    processed_worker_ids += clean_worker_records
+    check_not_responding
+    check_pending_stop
+    clean_worker_records
 
     # Monitor all remaining current worker records
-    processed_worker_ids += miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
-      # Check their queue messages for timeout
-      worker.validate_active_messages
+    miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
       # Push the heartbeat into the database
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
       next unless validate_worker(worker)
       # Tell the valid workers to sync config if needed
       worker_set_message(worker, "sync_config") if resync_needed
-    end.map(&:id)
-
-    validate_active_messages(processed_worker_ids)
+    end
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
   end
@@ -72,42 +67,33 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def clean_worker_records
-    processed_workers = []
     miq_workers.each do |w|
       next unless w.is_stopped?
       _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
-      processed_workers << w
       worker_delete(w.pid)
       w.destroy
+      miq_workers.delete(w)
     end
-    miq_workers.delete(*processed_workers) unless processed_workers.empty?
-    processed_workers.collect(&:id)
   end
 
   def check_pending_stop
-    processed_worker_ids = []
     miq_workers.each do |w|
       next unless w.is_stopped?
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
       worker_set_monitor_status(w.pid, nil)
-      processed_worker_ids << w.id
     end
-    processed_worker_ids
   end
 
   def check_not_responding
     return [] if MiqEnvironment::Command.is_podified?
 
-    processed_workers = []
     miq_workers.each do |w|
       next unless monitor_reason_not_responding?(w)
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
-      processed_workers << w
       worker_not_responding(w)
       worker_delete(w.pid)
+      miq_workers.delete(w)
     end
-    miq_workers.delete(*processed_workers) unless processed_workers.empty?
-    processed_workers.collect(&:id)
   end
 
   def monitor_reason_not_responding?(w)

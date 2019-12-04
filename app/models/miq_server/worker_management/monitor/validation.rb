@@ -52,22 +52,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
     false
   end
 
-  def validate_active_messages(processed_worker_ids = [])
-    actives = MiqQueue.where(:state => 'dequeue').includes(:handler)
-    actives.each do |msg|
-      next if processed_worker_ids.include?(msg.handler_id)
-
-      # Exclude messages on starting/started servers
-      handler = msg.handler
-      handler_server = handler.respond_to?(:miq_server) ? handler.miq_server : handler
-      if handler_server.kind_of?(MiqServer) && handler_server != self
-        next if [MiqServer::STATUS_STARTED, MiqServer::STATUS_STARTING].include?(handler_server.status)
-      end
-
-      msg.check_for_timeout(_log.prefix)
-    end
-  end
-
   private
 
   def usage_exceeds_threshold?(usage, threshold)

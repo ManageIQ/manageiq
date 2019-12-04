@@ -20,9 +20,8 @@ describe "MiqWorker Monitor" do
         @worker.update(:status => MiqWorker::STATUS_STOPPED)
 
         expect(@miq_server.miq_workers.length).to eq(2)
-        ids = @miq_server.clean_worker_records
+        @miq_server.clean_worker_records
         expect(@miq_server.miq_workers.length).to eq(1)
-        expect(ids).to eq([@worker.id])
       end
 
       it "MiqServer#check_not_responding" do
@@ -36,9 +35,8 @@ describe "MiqWorker Monitor" do
         @worker.update(:status => MiqWorker::STATUS_STOPPING)
 
         expect(@miq_server.miq_workers.length).to eq(2)
-        ids = @miq_server.check_not_responding
+        @miq_server.check_not_responding
         expect(@miq_server.miq_workers.length).to eq(1)
-        expect(ids).to eq([@worker.id])
       end
 
       describe "#do_system_limit_exceeded" do
@@ -147,61 +145,6 @@ describe "MiqWorker Monitor" do
     end
 
     context "A WorkerMonitor" do
-      context "with active messages without worker" do
-        before do
-          @actives = []
-          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes)
-          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 5.minutes)
-        end
-
-        it "should timeout the right active messages" do
-          actives = MiqQueue.where(:state => 'dequeue')
-          expect(actives.length).to eq(@actives.length)
-
-          Timecop.travel 5.minutes do
-            @miq_server.validate_active_messages
-          end
-
-          actives = MiqQueue.where(:state => 'dequeue')
-          expect(actives.length).to eq(@actives.length - 1)
-        end
-      end
-
-      context "with expired active messages assigned to workers from multiple" do
-        before do
-          @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server.zone)
-          @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
-          @worker2 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server2.id)
-
-          @actives = []
-        end
-
-        it "should timeout messages on my server or servers that are down" do
-          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker1)
-          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker2)
-
-          actives = MiqQueue.where(:state => 'dequeue')
-          expect(actives.length).to eq(@actives.length)
-
-          Timecop.travel 5.minutes do
-            @miq_server.validate_active_messages
-          end
-
-          actives = MiqQueue.where(:state => 'dequeue')
-          expect(actives.length).to eq(@actives.length - 1)
-          expect(actives.first.handler).to eq(@worker2)
-
-          @miq_server2.update_attribute(:status, 'stopped')
-
-          Timecop.travel 5.minutes do
-            @miq_server.validate_active_messages
-          end
-
-          actives = MiqQueue.where(:state => 'dequeue')
-          expect(actives.length).to eq(0)
-        end
-      end
-
       context "with vanilla generic worker" do
         before do
           @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
