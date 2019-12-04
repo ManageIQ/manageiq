@@ -166,6 +166,10 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def queue_miq_queue_check_for_timeout
+    queue_work(:class_name => "MiqQueue", :method_name => "check_for_timeout", :zone => nil)
+  end
+
   def check_for_stuck_dispatch(threshold_seconds)
     class_n = "JobProxyDispatcher"
     method_n = "dispatch"

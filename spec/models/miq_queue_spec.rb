@@ -178,6 +178,22 @@ describe MiqQueue do
     end
   end
 
+  describe ".check_for_timeout" do
+    it "will destroy all timed out dequeued messages" do
+      handler = FactoryBot.create(:miq_ems_refresh_worker)
+      msg1 = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 1.minute)
+      msg2 = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 2.minutes)
+      msg3 = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 10.minutes)
+
+      Timecop.travel(5.minutes) do
+        described_class.check_for_timeout
+        expect(described_class.find_by(:id => msg1.id)).to be_nil
+        expect(described_class.find_by(:id => msg2.id)).to be_nil
+        expect(described_class.find_by(:id => msg3.id)).to_not be_nil
+      end
+    end
+  end
+
   it "should validate formatting of message for logging" do
     # Add various key/value combos as needs arise...
     message_parms = [{

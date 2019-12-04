@@ -545,6 +545,10 @@ class MiqQueue < ApplicationRecord
     end
   end
 
+  def self.check_for_timeout
+    where(:state => STATE_DEQUEUE).find_each(&:check_for_timeout)
+  end
+
   def finished?
     FINISHED_STATES.include?(state)
   end
