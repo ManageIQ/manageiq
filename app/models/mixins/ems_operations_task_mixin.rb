@@ -4,13 +4,13 @@ module EmsOperationsTaskMixin
   module ClassMethods
     def create_generic_task_queue(userid, ext_management_system, options = {})
       task_opts = {
-        :action => "Creating #{table.name} for user #{userid}",
+        :action => "Creating #{class_name.downcase} for user #{userid}",
         :userid => userid
       }
 
       queue_opts = {
-        :class_name  => table.name,
-        :method_name => "create_#{table.name.to_s.downcase}",
+        :class_name  => class_name,
+        :method_name => "create_#{class_name.to_s.downcase}",
         :role        => 'ems_operations',
         :queue_name  => ext_management_system.queue_name_for_ems_operations,
         :zone        => ext_management_system.my_zone,
@@ -23,13 +23,13 @@ module EmsOperationsTaskMixin
 
   def delete_generic_task_queue(userid)
     task_opts = {
-      :action => "Deleting #{table.name} for user #{userid}",
+      :action => "Deleting #{class.to_s.downcase} for user #{userid}",
       :userid => userid
     }
 
     queue_opts = {
       :class_name  => table.name,
-      :method_name => "delete_#{table.name.to_s.downcase}",
+      :method_name => "delete_#{class.to_s.downcase}",
       :instance_id => id,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
@@ -42,7 +42,7 @@ module EmsOperationsTaskMixin
 
   def update_generic_task_queue(options = {})
     task_opts = {
-      :action => "updating #{table.name} for user #{userid}",
+      :action => "updating #{class.to_s.downcase} for user #{userid}",
       :userid => userid
     }
 
