@@ -5491,10 +5491,36 @@
         :description: CPU/Memory Recommendations
         :feature_type: admin
         :identifier: vm_right_size
-      - :name: Reconfigure VMs
-        :description: Reconfigure VM Memory/CPUs
+      - :name: Reconfigure VMs button
+        :description: Reconfigure VM Memory/CPUs/...
         :feature_type: admin
         :identifier: vm_reconfigure
+        :hidden: true
+      - :name: Reconfigure VMs
+        :description: Reconfigure VM Memory/CPUs/...
+        :feature_type: admin
+        :identifier: vm_reconfigure_all
+        :children:
+        - :name: Reconfigure VM CPU
+          :description: Reconfigure VM CPU
+          :feature_type: admin
+          :identifier: vm_reconfigure_cpu
+        - :name: Reconfigure VM Memory
+          :description: Reconfigure VM Memory
+          :feature_type: admin
+          :identifier: vm_reconfigure_memory
+        - :name: Reconfigure VM Networks
+          :description: Reconfigure VM Networks
+          :feature_type: admin
+          :identifier: vm_reconfigure_networks
+        - :name: Reconfigure VM Disks
+          :description: Reconfigure VM Disks
+          :feature_type: admin
+          :identifier: vm_reconfigure_disks
+        - :name: Reconfigure VM Drives
+          :description: Reconfigure VM Drives
+          :feature_type: admin
+          :identifier: vm_reconfigure_drives
     - :name: Snapshots
       :description: Everything for VM Snapshots
       :feature_type: node
