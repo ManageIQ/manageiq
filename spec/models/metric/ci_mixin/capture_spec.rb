@@ -288,7 +288,7 @@ describe Metric::CiMixin::Capture do
     def verify_perf_capture_queue(last_perf_capture_on, total_queue_items)
       Timecop.freeze do
         vm.last_perf_capture_on = last_perf_capture_on
-        vm.perf_capture_queue("realtime")
+        ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "realtime"})
         expect(MiqQueue.count).to eq total_queue_items
 
         # make sure the queue items are in the correct order
@@ -357,7 +357,7 @@ describe Metric::CiMixin::Capture do
     it "links supplied miq_task with queued item which allow to initialize MiqTask#started_on attribute" do
       MiqQueue.delete_all
       task = FactoryBot.create(:miq_task)
-      vm.perf_capture_queue("realtime", :task_id => task.id)
+      ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "realtime", :task_id => task.id})
       expect(MiqQueue.first.miq_task_id).to eq task.id
     end
   end
@@ -366,7 +366,7 @@ describe Metric::CiMixin::Capture do
     context "with capture days > 0 and multiple attempts" do
       def verify_perf_capture_queue_historical(last_perf_capture_on, total_queue_items)
         vm.last_perf_capture_on = last_perf_capture_on
-        vm.perf_capture_queue("historical")
+        ems_openstack.perf_capture_object.queue_captures([vm], vm => {:interval => "historical"})
         expect(MiqQueue.count).to eq total_queue_items
       end
 
@@ -411,31 +411,6 @@ describe Metric::CiMixin::Capture do
           verify_perf_capture_queue_historical(last_capture_on, 8)
         end
       end
-    end
-  end
-
-  context "handles archived container entities" do
-    it "get the correct queue name and zone from archived container entities" do
-      ems = FactoryBot.create(:ems_openshift, :name => 'OpenShiftProvider')
-      group = FactoryBot.create(:container_group, :name => "group", :ext_management_system => ems)
-      container = FactoryBot.create(:container,
-                                     :name                  => "container",
-                                     :container_group       => group,
-                                     :ext_management_system => ems)
-      project = FactoryBot.create(:container_project,
-                                   :name                  => "project",
-                                   :ext_management_system => ems)
-      container.disconnect_inv
-      group.disconnect_inv
-      project.disconnect_inv
-
-      expect(container.ems_for_capture_target).to eq ems
-      expect(group.ems_for_capture_target).to     eq ems
-      expect(project.ems_for_capture_target).to   eq ems
-
-      expect(container.my_zone).to eq ems.my_zone
-      expect(group.my_zone).to eq ems.my_zone
-      expect(project.my_zone).to eq ems.my_zone
     end
   end
 
