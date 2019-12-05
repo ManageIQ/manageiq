@@ -17,7 +17,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
     my_signal(false, :deploy_orchestration_stack, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
-  def update
+  def reconfigure
     time = Time.zone.now
     update(:started_on => time)
     miq_task.update(:started_on => time)
@@ -124,7 +124,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
     {
       :initializing               => {'initialize'       => 'waiting_to_start'},
       :start                      => {'waiting_to_start' => 'running'},
-      :update                     => {'waiting_to_start' => 'updating'},
+      :reconfigure                => {'waiting_to_start' => 'updating'},
       :deploy_orchestration_stack => {'running'          => 'stack_job'},
       :update_orchestration_stack => {'updating'         => 'stack_job'},
       :poll_stack_status          => {'stack_job'        => 'stack_job'},
