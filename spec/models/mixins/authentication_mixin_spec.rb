@@ -713,12 +713,12 @@ describe AuthenticationMixin do
             task_id = @ems.change_password_queue('test_user', current_password, new_password)
 
             expect(MiqTask.find(task_id)).to have_attributes(
-              :name   => "Changing the password for Physical Provider named foo",
+              :name   => "Changing the password for Physical Provider named '#{@ems.name}'",
               :state  => "Queued",
               :status => "Ok"
             )
 
-            expect(MiqQueue.where(:class_name => @ems.class).first).to have_attributes(
+            expect(MiqQueue.where(:class_name => @ems.class.name).first).to have_attributes(
               :class_name  => @ems.class.name,
               :method_name => 'change_password',
               :role        => 'ems_operations',
