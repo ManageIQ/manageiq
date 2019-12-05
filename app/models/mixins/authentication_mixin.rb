@@ -351,6 +351,10 @@ module AuthenticationMixin
     true
   end
 
+  # Change the password as a queued task and return the task id. The userid,
+  # current password and new password are mandatory. The auth type is optional
+  # and defaults to 'default'.
+  #
   def change_password_queue(userid, current_password, new_password, auth_type = :default)
     task_opts = {
       :action => "Changing the password for Physical Provider named '#{name}'",
@@ -362,6 +366,7 @@ module AuthenticationMixin
       :instance_id => id,
       :method_name => 'change_password',
       :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
       :zone        => my_zone,
       :args        => [current_password, new_password, auth_type]
     }
