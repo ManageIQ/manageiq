@@ -26,9 +26,15 @@ class CloudVolumeSnapshot < ApplicationRecord
     self.class.my_zone(ext_management_system)
   end
 
+  # Delete a cloud volume snapshot as a queued task and return the task id. The
+  # queue name and the queue zone are derived from the EMS. The userid is
+  # optional and defaults to 'system'.
+  #
+  # The _options argument is unused, and is strictly for interface compliance.
+  #
   def delete_snapshot_queue(userid = "system", _options = {})
     task_opts = {
-      :action => "deleting volume snapshot #{inspect} in #{ext_management_system.inspect}",
+      :action => "deleting volume snapshot for #{userid} in #{ext_management_system.name}",
       :userid => userid
     }
 
@@ -38,6 +44,7 @@ class CloudVolumeSnapshot < ApplicationRecord
       :method_name => 'delete_snapshot',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => my_zone,
       :args        => []
     }
