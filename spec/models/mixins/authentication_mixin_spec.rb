@@ -703,29 +703,52 @@ describe AuthenticationMixin do
         end
       end
 
-      context "#change_password" do
+      context "password changes" do
         let(:current_password) { "current_pass" }
         let(:new_password) { "new_pass" }
         let(:confirm_password) { "new_pass" }
 
-        it "should fail if some param is blank" do
-          current_password = ""
-          allow(@ems).to receive(:supports?).with(:change_password) { true }
+        context "#change_password_queue" do
+          it 'queues an update task with update_volume_queue' do
+            task_id = @ems.change_password_queue('test_user', current_password, new_password)
 
-          expect { @ems.change_password(current_password, new_password, confirm_password) }
-            .to raise_error(MiqException::Error, "Please, fill the current_password and new_password fields.")
+            expect(MiqTask.find(task_id)).to have_attributes(
+              :name   => "Changing the password for Physical Provider named '#{@ems.name}'",
+              :state  => "Queued",
+              :status => "Ok"
+            )
+
+            expect(MiqQueue.where(:class_name => @ems.class.name).first).to have_attributes(
+              :class_name  => @ems.class.name,
+              :method_name => 'change_password',
+              :role        => 'ems_operations',
+              :queue_name  => 'generic',
+              :zone        => @ems.my_zone,
+              :args        => [current_password, new_password, :default]
+            )
+          end
         end
 
-        it "should fail if the provider doesn't support this operation" do
-          expect { @ems.change_password(current_password, new_password, confirm_password) }
-            .to raise_error(MiqException::Error, "Change Password is not supported for #{@ems.class.description} provider")
-        end
+        context "#change_password" do
+          it "should fail if some param is blank" do
+            current_password = ""
+            allow(@ems).to receive(:supports?).with(:change_password) { true }
 
-        it "should update the provider password" do
-          allow(@ems).to receive(:raw_change_password) { true }
-          allow(@ems).to receive(:supports?).with(:change_password) { true }
+            expect { @ems.change_password(current_password, new_password, confirm_password) }
+              .to raise_error(MiqException::Error, "Please, fill the current_password and new_password fields.")
+          end
 
-          expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
+          it "should fail if the provider doesn't support this operation" do
+            expect { @ems.change_password(current_password, new_password, confirm_password) }
+              .to raise_error(MiqException::Error, "Change Password is not supported for #{@ems.class.description} provider")
+          end
+
+          it "should update the provider password" do
+            allow(@ems).to receive(:raw_change_password) { true }
+            allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+            expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
+          end
         end
       end
     end
