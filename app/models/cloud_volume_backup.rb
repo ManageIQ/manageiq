@@ -11,19 +11,26 @@ class CloudVolumeBackup < ApplicationRecord
   belongs_to :cloud_volume
   has_one :cloud_tenant, :through => :cloud_volume
 
+  # Restore a cloud volume backup as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS. The userid is mandatory, and
+  # the volumeid and name are optional.
+  #
   def restore_queue(userid, volumeid = nil, name = nil)
     task_opts = {
       :action => "Restoring Cloud Volume Backup for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'restore',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [volumeid, name]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -35,19 +42,25 @@ class CloudVolumeBackup < ApplicationRecord
     raise NotImplementedError, _("raw_restore must be implemented in a subclass")
   end
 
+  # Delete a cloud volume backup as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def delete_queue(userid)
     task_opts = {
       :action => "deleting Cloud Volume Backup for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
