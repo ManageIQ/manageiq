@@ -1,8 +1,4 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
-  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
-    [:ems_id, 'EMS Instance ID', String],
-  ]
-
   self.delay_startup_for_vim_broker = true # NOTE: For ems_inventory role, TODO: only for VMware
 
   def after_initialize
