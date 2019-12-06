@@ -31,7 +31,7 @@ RSpec.describe CloudTenant do
     end
   end
 
-  context "queued methods", :queue do
+  context "queued methods" do
     it 'queues a create task with create_tenant_queue' do
       task_id = described_class.create_cloud_tenant_queue(user.userid, ems)
       klass = ems.class.name + '::CloudTenant'
@@ -57,20 +57,19 @@ RSpec.describe CloudTenant do
       expect { described_class.create_cloud_tenant_queue(user.userid) }.to raise_error(ArgumentError)
     end
 
-=begin
-    it 'queues an update task with update_tenant_queue' do
-      options = {:name => 'updated_tenant_name'}
-      task_id = cloud_tenant.update_volume_queue(user.userid, options)
+    it 'queues an update task with update_cloud_tenant_queue' do
+      options = {:name => 'updated_cloud_tenant_name'}
+      task_id = cloud_tenant.update_cloud_tenant_queue(user.userid, options)
 
       expect(MiqTask.find(task_id)).to have_attributes(
-        :name   => "updating Cloud Volume for user #{user.userid}",
+        :name   => "updating Cloud Tenant for user #{user.userid}",
         :state  => "Queued",
         :status => "Ok"
       )
 
       expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
         :class_name  => described_class.name,
-        :method_name => 'update_tenant',
+        :method_name => 'update_cloud_tenant',
         :role        => 'ems_operations',
         :queue_name  => 'generic',
         :zone        => ems.my_zone,
@@ -79,21 +78,21 @@ RSpec.describe CloudTenant do
     end
 
     it 'requires a userid for a queued update task' do
-      expect { cloud_tenant.update_volume_queue }.to raise_error(ArgumentError)
+      expect { cloud_tenant.update_cloud_tenant_queue }.to raise_error(ArgumentError)
     end
 
-    it 'queues a delete task with delete_tenant_queue' do
-      task_id = cloud_tenant.delete_volume_queue(user.userid)
+    it 'queues a delete task with delete_cloud_tenant_queue' do
+      task_id = cloud_tenant.delete_cloud_tenant_queue(user.userid)
 
       expect(MiqTask.find(task_id)).to have_attributes(
-        :name   => "deleting Cloud Volume for user #{user.userid}",
+        :name   => "deleting Cloud Tenant for user #{user.userid}",
         :state  => "Queued",
         :status => "Ok"
       )
 
       expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
         :class_name  => described_class.name,
-        :method_name => 'delete_tenant',
+        :method_name => 'delete_cloud_tenant',
         :role        => 'ems_operations',
         :queue_name  => 'generic',
         :zone        => ems.my_zone,
@@ -102,8 +101,7 @@ RSpec.describe CloudTenant do
     end
 
     it 'requires a userid for a queued delete task' do
-      expect { cloud_tenant.delete_volume_queue }.to raise_error(ArgumentError)
+      expect { cloud_tenant.delete_cloud_tenant_queue }.to raise_error(ArgumentError)
     end
-=end
   end
 end
