@@ -99,6 +99,22 @@ module MiqServer::WorkerManagement::Monitor
     processed_workers.collect(&:id)
   end
 
+  def request_workers_to_sync_config(resync_needed = false)
+    processed_worker_ids = []
+    miq_workers.each do |w|
+      # Note, STATUSES_CURRENT_OR_STARTING doesn't include 'stopping'.
+      # We already restarted 'stopping' workers, so we bail out early here.
+      # 'stopping' workers continue to run and heartbeat through drb, which
+      # updates the in memory @workers.  The last heartbeat in the workers row is
+      # NOT updated because we no longer call validate_heartbeat when we skip validate_worker below.
+      next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
+      processed_worker_ids << w.id
+      next unless validate_worker(w)
+      worker_set_message(w, "sync_config") if resync_needed
+    end
+    processed_worker_ids
+  end
+
   def monitor_reason_not_responding?(w)
     [MiqServer::NOT_RESPONDING, MiqServer::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
   end
