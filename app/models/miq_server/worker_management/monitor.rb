@@ -61,7 +61,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def restart_worker(w, reason = nil)
-    stop_worker(w, :waiting_for_stop_before_restart, reason)
+    stop_worker(w, :waiting_for_stop, reason)
   end
 
   def clean_worker_records
@@ -81,7 +81,7 @@ module MiqServer::WorkerManagement::Monitor
     processed_worker_ids = []
     miq_workers.each do |w|
       next unless w.is_stopped?
-      next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
+      next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
       worker_set_monitor_status(w.pid, nil)
       processed_worker_ids << w.id
     end
@@ -94,7 +94,7 @@ module MiqServer::WorkerManagement::Monitor
     processed_workers = []
     miq_workers.each do |w|
       next unless monitor_reason_not_responding?(w)
-      next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
+      next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
       processed_workers << w
       worker_not_responding(w)
       worker_delete(w.pid)
