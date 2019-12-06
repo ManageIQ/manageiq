@@ -1,6 +1,21 @@
-describe IsoDatastore do
+RSpec.describe IsoDatastore do
   let(:ems) { FactoryBot.create(:ems_redhat) }
   let(:iso_datastore) { FactoryBot.create(:iso_datastore, :ext_management_system => ems) }
+
+  context "queued methods" do
+    it 'queues a sync task with synchronize_advertised_images_queue' do
+      queue = iso_datastore.synchronize_advertised_images_queue
+
+      expect(queue).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'synchronize_advertised_images',
+        :role        => 'ems_operations',
+        :queue_name  => 'generic',
+        :zone        => ems.my_zone,
+        :args        => []
+      )
+    end
+  end
 
   describe "#advertised_images" do
     subject(:advertised_images) { iso_datastore.advertised_images }
