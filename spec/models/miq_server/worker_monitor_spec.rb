@@ -362,7 +362,10 @@ describe "MiqWorker Monitor" do
         end
 
         context "for excessive memory" do
-          before { worker.memory_usage = 2.gigabytes }
+          before do
+            worker.memory_usage = 2.gigabytes
+            worker.update(:last_heartbeat => Time.now.utc)
+          end
 
           it "should not trigger memory threshold if worker is creating" do
             worker.status = MiqWorker::STATUS_CREATING
