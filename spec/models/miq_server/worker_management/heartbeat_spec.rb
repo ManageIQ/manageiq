@@ -1,5 +1,5 @@
 describe MiqServer::WorkerManagement::Heartbeat do
-  context "#validate_heartbeat" do
+  context "#persist_last_heartbeat" do
     let(:miq_server) { EvmSpecHelper.local_miq_server.tap(&:setup_drb_variables) }
     let(:pid)        { 1234 }
     let(:worker)     { FactoryBot.create(:miq_worker, :miq_server_id => miq_server.id, :pid => pid) }
@@ -9,7 +9,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
         t = Time.now.utc
         Timecop.freeze(t) do
           miq_server.worker_heartbeat(pid)
-          miq_server.validate_heartbeat(worker)
+          miq_server.persist_last_heartbeat(worker)
         end
 
         expect(worker.reload.last_heartbeat).to be_within(1.second).of(t)
@@ -38,7 +38,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
           [0, 5].each do |i|
             Timecop.freeze(first_heartbeat) do
               miq_server.worker_heartbeat(pid)
-              miq_server.validate_heartbeat(worker)
+              miq_server.persist_last_heartbeat(worker)
             end
 
             expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat + i)
@@ -61,7 +61,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
           [0, 5, 10, 15].each do |i|
             Timecop.freeze(first_heartbeat + i) do
               miq_server.worker_heartbeat(pid)
-              miq_server.validate_heartbeat(worker)
+              miq_server.persist_last_heartbeat(worker)
             end
 
             expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat)
@@ -77,7 +77,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
           [0, 5].each do |i|
             Timecop.freeze(first_heartbeat) do
               miq_server.worker_heartbeat(pid)
-              miq_server.validate_heartbeat(worker)
+              miq_server.persist_last_heartbeat(worker)
             end
 
             expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat + i)

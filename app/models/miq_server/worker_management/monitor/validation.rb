@@ -9,7 +9,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     w.validate_active_messages
 
-    validate_heartbeat(w)
+    persist_last_heartbeat(w)
 
     if time_threshold.seconds.ago.utc > w.last_heartbeat
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"

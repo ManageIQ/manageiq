@@ -47,7 +47,7 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   # Get the latest heartbeat between the SQL and memory (updated via DRb)
-  def validate_heartbeat(w)
+  def persist_last_heartbeat(w)
     last_heartbeat = workers_last_heartbeat(w)
 
     if w.last_heartbeat.nil?

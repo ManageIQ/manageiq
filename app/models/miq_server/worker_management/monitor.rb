@@ -106,7 +106,7 @@ module MiqServer::WorkerManagement::Monitor
       # We already restarted 'stopping' workers, so we bail out early here.
       # 'stopping' workers continue to run and heartbeat through drb, which
       # updates the in memory @workers.  The last heartbeat in the workers row is
-      # NOT updated because we no longer call validate_heartbeat when we skip validate_worker below.
+      # NOT updated because we no longer call persist_last_heartbeat when we skip validate_worker below.
       next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
       processed_worker_ids << w.id
       next unless validate_worker(w)
