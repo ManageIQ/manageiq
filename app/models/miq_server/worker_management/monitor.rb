@@ -60,10 +60,6 @@ module MiqServer::WorkerManagement::Monitor
     result
   end
 
-  def restart_worker(w, reason = nil)
-    stop_worker(w, reason)
-  end
-
   def clean_worker_records
     processed_workers = []
     miq_workers.each do |w|
@@ -117,7 +113,7 @@ module MiqServer::WorkerManagement::Monitor
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
       _log.warn(msg)
       MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name)
-      restart_worker(w, MiqServer::MEMORY_EXCEEDED)
+      stop_worker(w, MiqServer::MEMORY_EXCEEDED)
       break
     end
   end

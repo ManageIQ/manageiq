@@ -54,14 +54,14 @@ describe "MiqWorker Monitor" do
         end
 
         it "will kill the worker with the highest memory" do
-          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          expect(@miq_server).to receive(:stop_worker).with(@worker_to_kill, :memory_exceeded)
           @miq_server.do_system_limit_exceeded
         end
 
         it "will handle workers with nil memory_usage" do
           @worker_to_keep.update!(:memory_usage => nil)
 
-          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          expect(@miq_server).to receive(:stop_worker).with(@worker_to_kill, :memory_exceeded)
           @miq_server.do_system_limit_exceeded
         end
       end
