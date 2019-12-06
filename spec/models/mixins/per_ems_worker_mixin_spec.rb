@@ -5,7 +5,7 @@ describe PerEmsWorkerMixin do
     @ems_queue_name = "ems_#{@ems.id}"
 
     # General stubbing for testing any worker (methods called during initialize)
-    @worker_record = FactoryBot.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
+    @worker_record = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
     @worker_class  = @worker_record.class
   end
 
