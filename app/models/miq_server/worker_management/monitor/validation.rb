@@ -4,13 +4,19 @@ module MiqServer::WorkerManagement::Monitor::Validation
   def validate_worker(w)
     return true if MiqEnvironment::Command.is_podified?
 
-    time_threshold   = get_time_threshold(w)
-    memory_threshold = get_memory_threshold(w)
-
     w.validate_active_messages
 
     persist_last_heartbeat(w)
 
+    return false unless worker_heartbeat_valid?(w)
+    return true  if worker_get_monitor_status(w.pid)
+    return false unless worker_memory_valid?(w)
+
+    true
+  end
+
+  def worker_heartbeat_valid?(w)
+    time_threshold = get_time_threshold(w)
     if time_threshold.seconds.ago.utc > w.last_heartbeat
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
       _log.error(msg)
@@ -18,8 +24,11 @@ module MiqServer::WorkerManagement::Monitor::Validation
       stop_worker(w, MiqServer::NOT_RESPONDING)
       return false
     end
+    true
+  end
 
-    return true unless worker_get_monitor_status(w.pid).nil?
+  def worker_memory_valid?(w)
+    memory_threshold = get_memory_threshold(w)
 
     # Unique set size is only implemented on linux
     usage = w.unique_set_size || w.memory_usage
@@ -38,7 +47,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
       stop_worker(w)
       return false
     end
-
     true
   end
 
