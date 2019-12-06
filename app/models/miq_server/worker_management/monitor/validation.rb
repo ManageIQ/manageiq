@@ -4,10 +4,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
   def validate_worker(w)
     return true if MiqEnvironment::Command.is_podified?
 
-    w.validate_active_messages
-
-    persist_last_heartbeat(w)
-
     if !worker_heartbeat_valid?(w)
       stop_worker(w, MiqServer::NOT_RESPONDING)
       return false
