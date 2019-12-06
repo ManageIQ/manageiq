@@ -54,14 +54,14 @@ describe "MiqWorker Monitor" do
         end
 
         it "will kill the worker with the highest memory" do
-          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          expect(@miq_server).to receive(:stop_worker).with(@worker_to_kill, :memory_exceeded)
           @miq_server.do_system_limit_exceeded
         end
 
         it "will handle workers with nil memory_usage" do
           @worker_to_keep.update!(:memory_usage => nil)
 
-          expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
+          expect(@miq_server).to receive(:stop_worker).with(@worker_to_kill, :memory_exceeded)
           @miq_server.do_system_limit_exceeded
         end
       end
@@ -376,19 +376,19 @@ describe "MiqWorker Monitor" do
 
           it "should trigger memory threshold if worker is started" do
             worker.status = MiqWorker::STATUS_STARTED
-            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
             server.validate_worker(worker)
           end
 
           it "should trigger memory threshold if worker is ready" do
             worker.status = MiqWorker::STATUS_READY
-            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
             server.validate_worker(worker)
           end
 
           it "should trigger memory threshold if worker is working" do
             worker.status = MiqWorker::STATUS_WORKING
-            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
             server.validate_worker(worker)
           end
 

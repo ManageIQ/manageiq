@@ -10,19 +10,19 @@ module MiqServer::WorkerManagement::Monitor::Stop
     ).destroy_all
   end
 
-  def stop_worker_queue(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
+  def stop_worker_queue(worker, monitor_reason = nil)
     MiqQueue.put_deprecated(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'stop_worker',
-      :args        => [worker.id, monitor_status, monitor_reason],
+      :args        => [worker.id, monitor_reason],
       :queue_name  => 'miq_server',
       :zone        => zone.name,
       :server_guid => guid
     )
   end
 
-  def stop_worker(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
+  def stop_worker(worker, monitor_reason = nil)
     w = worker.kind_of?(Integer) ? miq_workers.find_by(:id => worker) : worker
 
     if w.nil?
@@ -34,7 +34,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
     _log.info(msg)
     MiqEvent.raise_evm_event_queue(self, "evm_worker_stop", :event_details => msg, :type => w.type)
 
-    worker_set_monitor_status(w.pid, monitor_status)
+    worker_set_monitor_status(w.pid, :waiting_for_stop)
     worker_set_monitor_reason(w.pid, monitor_reason)
 
     if w.containerized_worker?
