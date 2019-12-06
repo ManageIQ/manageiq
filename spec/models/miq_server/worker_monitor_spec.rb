@@ -337,28 +337,6 @@ describe "MiqWorker Monitor" do
             expect(server.validate_worker(worker)).to be_falsey
             expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPING)
           end
-
-          context "to a file" do
-            before do
-              ENV["WORKER_HEARTBEAT_METHOD"] = "file"
-            end
-
-            after do
-              ENV["WORKER_HEARTBEAT_METHOD"] = nil
-            end
-
-            it "should mark not responding if not recently heartbeated via file" do
-              allow(server).to receive(:workers_last_heartbeat_to_file).and_return(20.minutes.ago)
-
-              expect(server.validate_worker(worker)).to be_falsey
-              expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPING)
-            end
-
-            it "should detect responding if recently heartbeated via file" do
-              expect(server.validate_worker(worker)).to be_truthy
-              expect(worker.reload.status).to eq(MiqWorker::STATUS_READY)
-            end
-          end
         end
 
         context "for excessive memory" do
