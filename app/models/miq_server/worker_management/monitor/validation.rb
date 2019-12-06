@@ -8,9 +8,17 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
     persist_last_heartbeat(w)
 
-    return false unless worker_heartbeat_valid?(w)
-    return true  if worker_get_monitor_status(w.pid)
-    return false unless worker_memory_valid?(w)
+    if !worker_heartbeat_valid?(w)
+      stop_worker(w, MiqServer::NOT_RESPONDING)
+      return false
+    end
+
+    return true if worker_get_monitor_status(w.pid)
+
+    if !worker_memory_valid?(w)
+      stop_worker(w)
+      return false
+    end
 
     true
   end
@@ -21,7 +29,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
       _log.error(msg)
       MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
-      stop_worker(w, MiqServer::NOT_RESPONDING)
       return false
     end
     true
@@ -44,7 +51,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
                                      :event_details => msg,
                                      :type          => w.class.name,
                                      :full_data     => full_data)
-      stop_worker(w)
       return false
     end
     true
