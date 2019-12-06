@@ -61,7 +61,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def restart_worker(w, reason = nil)
-    stop_worker(w, :waiting_for_stop, reason)
+    stop_worker(w, reason)
   end
 
   def clean_worker_records
