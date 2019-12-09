@@ -1,4 +1,6 @@
 class Storage < ApplicationRecord
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :storages
+
   has_many :vms_and_templates, :foreign_key => :storage_id, :dependent => :nullify, :class_name => "VmOrTemplate"
   has_many :miq_templates,     :foreign_key => :storage_id
   has_many :vms,               :foreign_key => :storage_id
