@@ -47,6 +47,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     )
     opts[:hosts] = hosts_array(opts.delete(:hosts))
 
+    if opts[:execution_ttl].blank?
+      opts[:execution_ttl] = options[automate_timeout_key(action)]
+      _log.info("execution_ttl is set to automate timeout [#{opts[:execution_ttl]}] minutes")
+    end
+
     _log.info("Launching Ansible job with options:")
     $log.log_hashes(opts, :filter => ["api_token", "token"])
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(my_playbook, decrypt_options(opts))

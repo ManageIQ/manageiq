@@ -225,6 +225,27 @@ describe(ServiceAnsiblePlaybook) do
       }
       expect(loaded_service.job(action)).to have_attributes(expected_job_attributes)
     end
+
+    it 'uses automate timeout if no execution_ttl' do
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |_jobtemp, opts|
+        expect(opts[:execution_ttl]).to eq(77)
+        runner_job
+      end
+      expect(loaded_service.options[:provision_job_options][:execution_ttl]).to be nil
+      loaded_service.options[:provision_automate_timeout] = 77
+      loaded_service.launch_ansible_job(action)
+    end
+
+    it 'uses specified execution_ttl' do
+      timeout = config_info_options.dig(:config_info, :provision, :execution_ttl)
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |_jobtemp, opts|
+        expect(opts[:execution_ttl]).to eq(timeout)
+        runner_job
+      end
+      loaded_service.options[:provision_job_options][:execution_ttl] = timeout
+      loaded_service.options[:provision_automate_timeout] = 77
+      loaded_service.launch_ansible_job(action)
+    end
   end
 
   describe '#check_completed' do
