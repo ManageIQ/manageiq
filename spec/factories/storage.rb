@@ -5,6 +5,7 @@ FactoryBot.define do
 
   factory :storage_vmware, :parent => :storage do
     store_type { "VMFS" }
+    sequence(:ems_ref) { |n| "datastore-#{n}" }
   end
 
   factory :storage_nfs, :parent => :storage do
