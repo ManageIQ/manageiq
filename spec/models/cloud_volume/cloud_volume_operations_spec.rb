@@ -1,12 +1,12 @@
 RSpec.describe 'CloudVolume::Operations' do
-  let(:disk)         { FactoryBot.create(:disk) }
   let(:ems)          { FactoryBot.create(:ems_vmware) }
+  let(:vm)           { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
   let(:cloud_volume) { FactoryBot.create(:cloud_volume, :ext_management_system => ems) }
   let(:user)         { FactoryBot.create(:user, :userid => 'test') }
 
   context "queued methods" do
     it "queues an attach task with attach_volume_queue" do
-      task_id = cloud_volume.attach_volume_queue(user.userid, ems.id, disk.id)
+      task_id = cloud_volume.attach_volume_queue(user.userid, vm.ext_management_system.id, vm.id)
 
       expect(MiqTask.find(task_id)).to have_attributes(
         :name   => "attaching Cloud Volume for user #{user.userid}",
@@ -20,12 +20,12 @@ RSpec.describe 'CloudVolume::Operations' do
         :role        => 'ems_operations',
         :queue_name  => 'generic',
         :zone        => ems.my_zone,
-        :args        => [ems.id, disk.id]
+        :args        => [ems.id, vm.id]
       )
     end
 
     it "queues a detach task with detach_volume_queue" do
-      task_id = cloud_volume.detach_volume_queue(user.userid, ems.id)
+      task_id = cloud_volume.detach_volume_queue(user.userid, vm.ext_management_system.id)
 
       expect(MiqTask.find(task_id)).to have_attributes(
         :name   => "detaching Cloud Volume for user #{user.userid}",
