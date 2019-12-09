@@ -5,7 +5,6 @@ module CloudVolume::Operations
   end
 
   module InstanceMethods
-
     # Attach a cloud volume as a queued task and return the task id. The queue
     # name and the queue zone are derived from the server EMS, and both a userid
     # and server EMS ref are mandatory. The device is optional.
@@ -84,15 +83,19 @@ module CloudVolume::Operations
 
     def validate_volume_available
       msg = validate_volume
+
       return {:available => msg[:available], :message => msg[:message]} unless msg.nil?
       return {:available => true, :message => nil} if status == "available"
+
       {:available => false, :message => _("The volume can't be attached, status has to be 'available'")}
     end
 
     def validate_volume_in_use
       msg = validate_volume
+
       return {:available => msg[:available], :message => msg[:message]} unless msg[:available]
       return {:available => true, :message => nil} if status == "in-use"
+
       {:available => false, :message => _("The volume can't be detached, status has to be 'in-use'")}
     end
   end
