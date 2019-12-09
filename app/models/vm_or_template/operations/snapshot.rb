@@ -142,6 +142,9 @@ module VmOrTemplate::Operations::Snapshot
     raw_remove_all_snapshots
   end
 
+  # Remove all snapshots as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS. The userid is mandatory.
+  #
   def remove_all_snapshots_queue(userid)
     task_opts = {
       :name   => "Removing all snapshots for #{name}",
@@ -154,6 +157,7 @@ module VmOrTemplate::Operations::Snapshot
       :instance_id => id,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
+      :queue_name  => queue_name_for_ems_operations,
       :args        => []
     }
 
