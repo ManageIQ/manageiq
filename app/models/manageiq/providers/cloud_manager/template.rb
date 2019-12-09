@@ -24,6 +24,11 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     ext_management_system.class::Template
   end
 
+  # Create a cloud image as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the provided EMS instance. The EMS
+  # instance and a userid are mandatory. Any +options+ are forwarded as
+  # arguments to the +create_image+ method.
+  #
   def self.create_image_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "Creating Cloud Template for user #{userid}",
@@ -35,8 +40,10 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
       :method_name => 'create_image',
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :args        => [ext_management_system.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -62,6 +69,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
       :action => "updating Cloud Template for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'update_image',
@@ -70,6 +78,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
       :zone        => ext_management_system.my_zone,
       :args        => [options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
