@@ -1,5 +1,6 @@
 RSpec.describe VmOrTemplate::Operations::Snapshot do
   before { EvmSpecHelper.local_miq_server }
+  after(:context) { MiqQueue.delete_all }
 
   let(:user)      { FactoryBot.create(:user, :userid => 'test') }
   let(:ems)       { FactoryBot.create(:ems_vmware) }
@@ -7,8 +8,6 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
   let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
 
   context "queued methods" do
-    after(:context) { MiqQueue.delete_all }
-
     it 'queues as expected in remove_snapshot_queue' do
       queue = vm.remove_snapshot_queue(snapshots.first.id)
 
