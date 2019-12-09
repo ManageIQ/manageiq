@@ -147,10 +147,11 @@ describe ExtManagementSystem do
   end
 
   it "#total_storages" do
-    storage1 = FactoryBot.create(:storage)
-    storage2 = FactoryBot.create(:storage)
-
     ems = FactoryBot.create(:ems_vmware)
+
+    storage1 = FactoryBot.create(:storage, :ems_id => ems.id)
+    storage2 = FactoryBot.create(:storage, :ems_id => ems.id)
+
     FactoryBot.create(
       :host_vmware,
       :storages              => [storage1, storage2],
