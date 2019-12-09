@@ -1,6 +1,6 @@
 RSpec.describe 'CloudVolume::Operations' do
-  let(:ems)          { FactoryBot.create(:ems_vmware) }
-  let(:vm)           { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+  let(:ems)          { FactoryBot.create(:ems_cloud) }
+  let(:vm)           { FactoryBot.create(:vm_cloud, :ext_management_system => ems) }
   let(:cloud_volume) { FactoryBot.create(:cloud_volume, :ext_management_system => ems) }
   let(:user)         { FactoryBot.create(:user, :userid => 'test') }
 
