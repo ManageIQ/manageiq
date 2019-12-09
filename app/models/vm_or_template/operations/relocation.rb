@@ -12,8 +12,8 @@ module VmOrTemplate::Operations::Relocation
   end
 
   # Evacuate a VM (i.e. move to another host) as a queued task and return the
-  # task id. The queue name and the queue zone are derived from the EMS, and a
-  # userid is mandatory.
+  # task id. The queue name and the queue zone are derived from the EMS, and
+  # both the userid and options are mandatory.
   #
   def evacuate_queue(userid, options)
     task_opts = {
