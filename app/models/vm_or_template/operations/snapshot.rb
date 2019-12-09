@@ -83,7 +83,8 @@ module VmOrTemplate::Operations::Snapshot
       :instance_id => id,
       :method_name => 'remove_snapshot',
       :args        => [snapshot_id],
-      :role        => "ems_operations",
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
       :zone        => my_zone,
       :task_id     => task_id
     )
