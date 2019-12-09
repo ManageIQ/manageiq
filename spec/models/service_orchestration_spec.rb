@@ -225,7 +225,7 @@ describe ServiceOrchestration do
 
     it 'calls OrchestrationTemplateRunner' do
       job = FactoryBot.create(:job)
-      allow(job).to receive(:signal).with(:update)
+      allow(job).to receive(:signal).with(:reconfigure)
       allow(ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner).to receive(:create_job) do |options|
         expect(options[:update_options][:parameters]).to include(
           'InstanceType'   => 'cg1.4xlarge',
