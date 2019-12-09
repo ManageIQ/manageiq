@@ -185,6 +185,8 @@ class ServiceOrchestration < Service
 
   def wait_on_orchestration_stack
     while deploy_stack_job.orchestration_stack.blank?
+      raise _("Orchestration template runner finished with error. Check evm.log for details.") if deploy_stack_job.status == 'error'
+
       _log.info("Waiting for the deployment of orchestration stack [#{stack_name}]...")
       sleep 2
       # Code running with Rails QueryCache enabled,
