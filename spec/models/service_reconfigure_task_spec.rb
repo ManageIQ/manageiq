@@ -44,6 +44,20 @@ describe ServiceReconfigureTask do
         :message => 'Service Reconfigure failed')
       task.after_ae_delivery('error')
     end
+
+    it "updates service's dialog options if reconfigure passes" do
+      service.update(:options => {:dialog => {:var1 => "value"}})
+      task.options[:dialog] = {:var1 => "new_value"}
+      task.after_ae_delivery('ok')
+      expect(service.options[:dialog]).to include(:var1 => "new_value")
+    end
+
+    it "does not update service's dialog options if reconfigure fails" do
+      service.update(:options => {:dialog => {:var1 => "value"}})
+      task.options[:dialog] = {:var1 => "new_value"}
+      task.after_ae_delivery('error')
+      expect(service.options[:dialog]).to include(:var1 => "value")
+    end
   end
 
   describe "#after_request_task_create" do
