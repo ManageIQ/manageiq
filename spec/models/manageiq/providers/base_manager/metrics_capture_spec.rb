@@ -122,59 +122,42 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
   end
 
-  describe ".perf_capture_realtime_now" do
+  describe ".perf_capture_queue" do
     before do
       MiqRegion.seed
-      @zone = miq_server.zone
+      FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
+
+      MiqQueue.delete_all
+
+      vm.perf_capture_realtime_now
     end
 
-    context "with enabled and disabled targets", :with_enabled_disabled_vmware do
-      context "executing perf_capture_realtime_now" do
-        before do
-          @vm = Vm.first
-          @vm.perf_capture_realtime_now
-        end
+    let(:vm) { Vm.first }
 
-        it "should queue up realtime capture for vm" do
-          expect(MiqQueue.count).to eq(1)
+    context "for queue prioritization" do
+      it "should queue up realtime capture for vm" do
+        expect(MiqQueue.count).to eq(1)
 
-          msg = MiqQueue.first
-          expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
-          expect(msg.instance_id).to eq(@vm.id)
-          expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-        end
+        msg = MiqQueue.first
+        expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
+        expect(msg.instance_id).to eq(vm.id)
+        expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
+      end
 
-        context "with an existing queue item at a lower priority" do
-          before do
-            MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
-            @vm.perf_capture_realtime_now
-          end
+      it "should raise the priority of the existing queue item" do
+        MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
+        vm.perf_capture_realtime_now
 
-          it "should raise the priority of the existing queue item" do
-            expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.priority).to eq(MiqQueue::HIGH_PRIORITY)
+      end
 
-            msg = MiqQueue.first
-            expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
-            expect(msg.instance_id).to eq(@vm.id)
-            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-          end
-        end
+      it "should not lower the priority of the existing queue item" do
+        MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
+        vm.perf_capture_realtime_now
 
-        context "with an existing queue item at a higher priority" do
-          before do
-            MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
-            @vm.perf_capture_realtime_now
-          end
-
-          it "should not lower the priority of the existing queue item" do
-            expect(MiqQueue.count).to eq(1)
-
-            msg = MiqQueue.first
-            expect(msg.priority).to eq(MiqQueue::MAX_PRIORITY)
-            expect(msg.instance_id).to eq(@vm.id)
-            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-          end
-        end
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.priority).to eq(MiqQueue::MAX_PRIORITY)
       end
     end
   end
