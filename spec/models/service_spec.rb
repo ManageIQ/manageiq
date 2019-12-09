@@ -507,11 +507,24 @@ RSpec.describe Service do
     end
 
     describe "#chargeback_report" do
-      it "returns chargeback report" do
+      let(:tier_rate)     { {:fixed_rate => 1, :variable_rate => 1} }
+      let(:detail_params) { {:chargeback_rate_detail_cpu_used => {:tiers => [tier_rate]}} }
+
+      let!(:chargeback_rate) { FactoryBot.create(:chargeback_rate, :detail_params => detail_params) }
+      let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => Tenant.root_tenant} }
+
+      before do
         EvmSpecHelper.local_miq_server
+        Tenant.seed
+        ChargebackRate.set_assignments(:compute, [rate_assignment_options])
+      end
+
+      it "returns chargeback report" do
         allow(Chargeback).to receive(:build_results_for_report_chargeback)
         @service.generate_chargeback_report
         expect(@service.chargeback_report).to have_key(:results)
+        expect(@service.chargeback_report[:currency]).to eq(chargeback_rate.currency.attributes)
+        expect(@service.chargeback_report).to have_key(:currency)
       end
     end
   end

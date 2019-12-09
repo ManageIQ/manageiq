@@ -717,10 +717,10 @@ RSpec.describe ChargebackVm do
           expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
           expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
 
-          expect(ChargebackVm.report_settings[:default_currency_symbol]).to eq(chargeback_rate.currency_symbol)
+          expect(ChargebackVm.report_settings[:currency]).to eq(chargeback_rate.currency.attributes)
 
           expected_chargeback_rate = ChargebackVm.report_settings[:rates].first
-          expect(expected_chargeback_rate.except('chargeback_rate_details', 'currency_symbol')).to eq(chargeback_rate.attributes)
+          expect(expected_chargeback_rate.except('chargeback_rate_details', 'currency')).to eq(chargeback_rate.attributes)
 
           expected_chargeback_rate_detail = expected_chargeback_rate['chargeback_rate_details'].first['detail']
           expect(expected_chargeback_rate_detail).to eq(ChargebackRateDetail.find(expected_chargeback_rate_detail['id']).attributes)

@@ -172,15 +172,16 @@ class ChargebackRate < ApplicationRecord
 
     result
   end
-  ###########################################################
-
-  private
 
   def currency
     # Note that the currency should be relation to ChargebackRate, not ChargebackRateDetail. We cannot work
     # with various currencies within single ChargebackRate. This is to be fixed later in series of db migrations.
     chargeback_rate_details.first.try(:detail_currency)
   end
+
+  ###########################################################
+
+  private
 
   def ensure_unassigned
     if assigned?

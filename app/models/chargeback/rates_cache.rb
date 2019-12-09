@@ -21,6 +21,11 @@ class Chargeback
         end
     end
 
+    def current_rate_assigment
+      rate = ChargebackRate.get_assignments(:compute)[0] || ChargebackRate.get_assignments(:storage)[0]
+      rate&.fetch_path(:cb_rate)
+    end
+
     private
 
     def rates(consumption)

@@ -401,9 +401,12 @@ class Service < ApplicationRecord
   def chargeback_report
     report_result = MiqReportResult.find_by(:name => chargeback_report_name)
     if report_result.nil?
-      {:results => []}
+      {:results => [], :currency => nil}
     else
-      {:results => report_result.result_set}
+      results = {:results => report_result.result_set}
+      rate_currency = report_result&.report&.rpt_options&.fetch_path(:report_settings, :currency)
+      results[:currency] = rate_currency || Chargeback::RatesCache.new.current_rate_assigment&.currency&.attributes
+      results
     end
   end
 
