@@ -9,6 +9,8 @@ class PxeServer < ApplicationRecord
 
   serialize :visibility
 
+  acts_as_miq_taggable
+
   validates_presence_of   :name, :uri
   validates_uniqueness_of :name
 
