@@ -201,6 +201,13 @@ describe ServiceOrchestration do
       end.and_return(job)
       service_with_dialog_options.deploy_orchestration_stack
     end
+
+    it 'raises runtime error when job finishes with pre-existing stack' do
+      job = double(:job, :id => 1, :status => 'error', :orchestration_stack => nil)
+      allow(job).to receive(:signal).with(:start)
+      allow(ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner).to receive(:create_job).and_return(job)
+      expect { service_with_dialog_options.deploy_orchestration_stack }.to raise_error(RuntimeError, /Orchestration template runner finished with error/)
+    end
   end
 
   describe '#update_orchestration_stack' do
