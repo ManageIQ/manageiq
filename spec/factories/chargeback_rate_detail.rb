@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :chargeback_rate_detail do
     chargeback_rate
-    detail_currency { FactoryBot.create(:chargeback_rate_detail_currency) }
+    detail_currency { FactoryBot.create(:currency) }
 
     transient do
       tiers_params { nil }

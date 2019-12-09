@@ -60,7 +60,7 @@ class ServiceTemplate < ApplicationRecord
 
   belongs_to :service_template_catalog
   belongs_to :zone
-  belongs_to :currency, :class_name => "ChargebackRateDetailCurrency", :inverse_of => false
+  belongs_to :currency, :inverse_of => false
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
   has_many   :miq_schedules, :as => :resource, :dependent => :destroy
