@@ -121,4 +121,61 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
     end
   end
+
+  describe ".perf_capture_realtime_now" do
+    before do
+      MiqRegion.seed
+      @zone = miq_server.zone
+    end
+
+    context "with enabled and disabled targets", :with_enabled_disabled_vmware do
+      context "executing perf_capture_realtime_now" do
+        before do
+          @vm = Vm.first
+          @vm.perf_capture_realtime_now
+        end
+
+        it "should queue up realtime capture for vm" do
+          expect(MiqQueue.count).to eq(1)
+
+          msg = MiqQueue.first
+          expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
+          expect(msg.instance_id).to eq(@vm.id)
+          expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
+        end
+
+        context "with an existing queue item at a lower priority" do
+          before do
+            MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
+            @vm.perf_capture_realtime_now
+          end
+
+          it "should raise the priority of the existing queue item" do
+            expect(MiqQueue.count).to eq(1)
+
+            msg = MiqQueue.first
+            expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
+            expect(msg.instance_id).to eq(@vm.id)
+            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
+          end
+        end
+
+        context "with an existing queue item at a higher priority" do
+          before do
+            MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
+            @vm.perf_capture_realtime_now
+          end
+
+          it "should not lower the priority of the existing queue item" do
+            expect(MiqQueue.count).to eq(1)
+
+            msg = MiqQueue.first
+            expect(msg.priority).to eq(MiqQueue::MAX_PRIORITY)
+            expect(msg.instance_id).to eq(@vm.id)
+            expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
+          end
+        end
+      end
+    end
+  end
 end
