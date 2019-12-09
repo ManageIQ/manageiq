@@ -484,10 +484,10 @@ describe MiqAlert do
     end
 
     it "evaluates for storage" do
-      storage_in_zone = FactoryBot.create(:storage_vmware)
+      storage_in_zone = FactoryBot.create(:storage_vmware, :ems_id => @ems.id)
       FactoryBot.create(:host, :ext_management_system => @ems, :storages => [storage_in_zone])
 
-      storage_in_another = FactoryBot.create(:storage_vmware)
+      storage_in_another = FactoryBot.create(:storage_vmware, :ems_id => @ems_other.id)
       FactoryBot.create(:host, :ext_management_system => @ems_other, :storages => [storage_in_another])
 
       storage_in_host_no_ems = FactoryBot.create(:storage_vmware)
