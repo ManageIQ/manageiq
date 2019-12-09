@@ -19,5 +19,19 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
         :task_id     => nil
       )
     end
+
+    it 'queues an update task with remove_evm_snapshot_queue' do
+      queue = vm.remove_evm_snapshot_queue(snapshot.id)
+
+      expect(queue).to have_attributes(
+        :class_name  => vm.class.name,
+        :method_name => 'remove_evm_snapshot',
+        :role        => 'ems_operations',
+        :queue_name  => 'generic',
+        :zone        => vm.my_zone,
+        :args        => [snapshot.id],
+        :task_id     => nil
+      )
+    end
   end
 end
