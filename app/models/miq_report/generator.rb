@@ -400,6 +400,11 @@ module MiqReport::Generator
 
     report = dup
     report.table = nil
+
+    if db_klass.try(:report_settings).present?
+      report.rpt_options[:report_settings] = db_klass.report_settings
+    end
+
     res.report = report
     res.save
     _log.info("Finished creating report result with id [#{res.id}] for report id: [#{id}], name: [#{name}]")
