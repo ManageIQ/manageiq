@@ -157,7 +157,7 @@ module VmOrTemplate::Operations::Snapshot
       :instance_id => id,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
-      :queue_name  => queue_name_for_ems_operations,
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :args        => []
     }
 
