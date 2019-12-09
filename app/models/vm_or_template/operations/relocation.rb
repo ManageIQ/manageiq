@@ -11,19 +11,26 @@ module VmOrTemplate::Operations::Relocation
     raise NotImplementedError, _("raw_evacuate must be implemented in a subclass")
   end
 
+  # Evacuate a VM (i.e. move to another host) as a queued task and return the
+  # task id. The queue name and the queue zone are derived from the EMS, and
+  # both the userid and options are mandatory.
+  #
   def evacuate_queue(userid, options)
     task_opts = {
       :action => "evacuating VM for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'evacuate',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
       :zone        => my_zone,
       :args        => [options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
