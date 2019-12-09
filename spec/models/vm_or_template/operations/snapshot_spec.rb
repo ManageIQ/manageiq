@@ -7,7 +7,7 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
   let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
 
   context "queued methods" do
-    after(:each) { MiqQueue.delete_all }
+    after(:context) { MiqQueue.delete_all }
 
     it 'queues as expected in remove_snapshot_queue' do
       queue = vm.remove_snapshot_queue(snapshots.first.id)
