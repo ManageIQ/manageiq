@@ -44,6 +44,37 @@ class Chargeback < ActsAsArModel
     set_columns_hash(dynamic_rate_columns)
   end
 
+  def self.report_settings
+    @@report_settings_cash ||= begin
+      rate_settings = []
+      @@report_settings ||= {}
+      @@report_settings[:rates] ||= []
+
+      @@report_settings[:rates].each do |rate|
+        rate_hash = rate.attributes
+        rate_hash['chargeback_rate_details'] = []
+        rate_hash['currency_symbol'] = rate.currency_symbol
+
+        rate.chargeback_rate_details.each do |detail|
+          detail_hash = {}
+          detail_hash['chargeback_tiers'] = []
+
+          detail.chargeback_tiers.each do |tier|
+            detail_hash['chargeback_tiers'].push(tier.attributes)
+          end
+
+          detail_hash['detail'] = detail.attributes
+          rate_hash['chargeback_rate_details'].push(detail_hash)
+        end
+
+        rate_settings.push(rate_hash)
+      end
+
+      default_currency_symbol = rate_settings&.first&.dig('currency_symbol') || RatesCache.new.currency_for_report
+      {:rates => rate_settings, :default_currency_symbol => default_currency_symbol }
+    end
+  end
+
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
@@ -52,11 +83,16 @@ class Chargeback < ActsAsArModel
     rates = RatesCache.new(options)
     _log.debug("With report options: #{options.inspect}")
 
+    @@report_settings = {}
+    @@report_settings[:rates] = []
+    @@report_settings_cash = nil
+
     MiqRegion.all.each do |region|
       _log.debug("For region #{region.region}")
 
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
         rates_to_apply = rates.get(consumption)
+        @@report_settings[:rates] |= rates_to_apply
 
         key = report_row_key(consumption)
         _log.debug("Report row key #{key}")
