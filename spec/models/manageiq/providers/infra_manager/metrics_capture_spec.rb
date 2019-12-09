@@ -10,32 +10,28 @@ describe ManageIQ::Providers::InfraManager::MetricsCapture do
     context "with vmware", :with_enabled_disabled_vmware do
       it "finds enabled targets" do
         targets = described_class.new(nil, @ems_vmware).send(:capture_ems_targets)
-        assert_infra_targets_enabled targets, %w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage]
+        assert_infra_targets_enabled targets
+        expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage])
       end
 
       it "finds enabled targets excluding storages" do
         targets = described_class.new(nil, @ems_vmware).send(:capture_ems_targets, :exclude_storages => true)
-        assert_infra_targets_enabled targets, %w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host]
+        assert_infra_targets_enabled targets
+        expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host])
       end
     end
   end
 
   private
 
-  def assert_infra_targets_enabled(targets, expected_types)
-    # infra only
-    selected_types = []
+  def assert_infra_targets_enabled(targets)
     targets.each do |t|
-      selected_types << t.class.name
-
       expected_enabled = case t
                          when Vm then      t.host.perf_capture_enabled?
-                         when Host then    t.perf_capture_enabled? || t.ems_cluster.perf_capture_enabled?
+                         when Host then    t.ems_cluster ? t.ems_cluster.perf_capture_enabled? : t.perf_capture_enabled?
                          when Storage then t.perf_capture_enabled?
                          end
       expect(expected_enabled).to be_truthy
     end
-
-    expect(selected_types).to match_array(expected_types)
   end
 end
