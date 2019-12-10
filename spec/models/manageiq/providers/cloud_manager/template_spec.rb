@@ -1,6 +1,7 @@
-RSpec.describe TemplateCloud do
+RSpec.describe ManageIQ::Providers::CloudManager::Template do
   let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
+  let(:cloud_template) { FactoryBot.create(:template_cloud, :ext_management_system => ems) }
 
   context "actions" do
     it "#post_create_actions" do
@@ -29,6 +30,26 @@ RSpec.describe TemplateCloud do
         :queue_name  => 'generic',
         :zone        => ems.my_zone,
         :args        => [ems.id, {}]
+      )
+    end
+
+    it 'queues an update task with update_image_queue' do
+      options = {:name => 'updated_image_name'}
+      task_id = cloud_template.update_image_queue(user.userid, options)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "updating Cloud Template for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => cloud_template.class.name).first).to have_attributes(
+        :class_name  => cloud_template.class.name,
+        :method_name => 'update_image',
+        :role        => 'ems_operations',
+        :queue_name  => 'generic',
+        :zone        => ems.my_zone,
+        :args        => [options]
       )
     end
   end
