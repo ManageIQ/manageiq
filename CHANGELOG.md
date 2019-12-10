@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Ivanchuk-2
+
+### Added
+* Add Settings attribute for displaying the ops/database screen [(#19208)](https://github.com/ManageIQ/manageiq/pull/19208)
+* Add VmOrTemplate.remove_all_snapshots_queue [(#19150)](https://github.com/ManageIQ/manageiq/pull/19150)
+* Allow error messages in ServiceTemplate.validate_order [(#19186)](https://github.com/ManageIQ/manageiq/pull/19186)
+* Add export/import of schedules to rake task [(#19192)](https://github.com/ManageIQ/manageiq/pull/19192)
+* [V2V] Remove .py extension from calls to virt-v2v-wrapper [(#19194)](https://github.com/ManageIQ/manageiq/pull/19194)
+* [V2V] Add order option to SupportsFeatureMixin module [(#19203)](https://github.com/ManageIQ/manageiq/pull/19203)
+* [V2V] Lan validation in Transformation Mapping [(#19220)](https://github.com/ManageIQ/manageiq/pull/19220)
+* Add distributed_virtual_lans to persister [(#19306)](https://github.com/ManageIQ/manageiq/pull/19306)
+* [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+* Pluggable ScanItems [(#19388)](https://github.com/ManageIQ/manageiq/pull/19388)
+* [V2V] Pin InfraConversionJob to first server where it runs [(#19416)](https://github.com/ManageIQ/manageiq/pull/19416)
+* Adding ability to update additional authentication settings [(#19525)](https://github.com/ManageIQ/manageiq/pull/19525)
+
+### Fixed
+* Update translations for ivanchuk [(#19301)](https://github.com/ManageIQ/manageiq/pull/19301)
+* Service retirement request should be per region. [(#19143)](https://github.com/ManageIQ/manageiq/pull/19143)
+* Fixed MiqSearch.seed  when search name was changed and corrected typo miq_search.yml [(#19151)](https://github.com/ManageIQ/manageiq/pull/19151)
+* Schedule compliance purging [(#19264)](https://github.com/ManageIQ/manageiq/pull/19264)
+* Remove unnecessary log message. [(#19299)](https://github.com/ManageIQ/manageiq/pull/19299)
+* Add check for nil group to system_context_requester [(#19309)](https://github.com/ManageIQ/manageiq/pull/19309)
+* Drop load balancer from the custom buttons tree in automate [(#19331)](https://github.com/ManageIQ/manageiq/pull/19331)
+* [EmbeddedAnsible] Force embedded_ansible role for workflow [(#19187)](https://github.com/ManageIQ/manageiq/pull/19187)
+* Use find_by to skip exceptions in Export of schedules [(#19191)](https://github.com/ManageIQ/manageiq/pull/19191)
+* Fix inverse_of for DistributedVirtualSwitch [(#19221)](https://github.com/ManageIQ/manageiq/pull/19221)
+* [V2V] Allow active InfraConversionJob to be throttled [(#19277)](https://github.com/ManageIQ/manageiq/pull/19277)
+* Update translations for ivanchuk [(#19301)](https://github.com/ManageIQ/manageiq/pull/19301)
+* [EmbeddedAnsible] Fix job_plays for API [(#19320)](https://github.com/ManageIQ/manageiq/pull/19320)
+* Fix an exception calling compliance_purge_timer [(#19326)](https://github.com/ManageIQ/manageiq/pull/19326)
+* [V2V]Fix create_job in JobProxyDispatcher specs [(#19461)](https://github.com/ManageIQ/manageiq/pull/19461)
+
+### Removed
+Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
+
 ## Ivanchuk-1
 
 ### Added
