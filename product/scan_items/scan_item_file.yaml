@@ -2,12 +2,36 @@
 :item_type: file
 :definition:
   stats:
-  - target: c:/windows/system32/*.scr
-  - target: c:/windows/system32/msi*.*
+  - target: C:/Windows/System32/*.scr
+  - target: C:/Windows/System32/msi*.*
+  - target: C:/Windows/System32/netapi32.dll
+  - target: C:/Program Files/Microsoft SQL Server/110
+  - target: C:/Program Files/Microsoft SQL Server/120
+  - target: C:/Program Files/Microsoft SQL Server/130
+  - target: C:/Program Files/Microsoft SQL Server/140
+  - target: C:/Program Files/IBM/WebSphere/AppServer
   - target: /etc/*.conf
   - target: /etc/hosts
   - target: /etc/redhat-access-insights/machine-id
-  - target: c:/windows/system32/netapi32.dll
+  - target: /etc/group
+    content: true
+  - target: /etc/oraInst.loc
+    content: true
+  - target: /u01/app/oraInventory
+  - target: /opt/mssql/bin/mssql-conf
+  - target: /usr/sap/hostctrl/exe/saphostctrl
+  - target: /etc/.ibm/registry/InstallationManager.dat
+  - target: /opt/IBM/WebSphere/AppServer
+  - target: /opt/IBM/WebSphere/AppServer/profiles/AppSrv01
+  - target: /opt/rh/eap7/root/usr/share/wildfly/domain/configuration/domain.xml
+  - target: /opt/rh/eap7/root/usr/share/wildfly/standalone/configuration/standalone.xml
+  - target: /opt/tomcat/bin/catalina.sh
+  - target: /opt/tomcat/conf/server.xml
+  - target: /u01/app/oracle/domains/base/bin/startNodeManager.sh
+  - target: /u01/app/oracle/domains/base/startWebLogic.sh
+  - target: /home/oracle/oraInventory
+  - target: /u01/app/oracle/domains/base/config/config.xml
+  - target: /var/lib/pgsql/data/postgresql.conf
 :name: sample_file
 :description: Sample File Scan
 :mode: Vm
