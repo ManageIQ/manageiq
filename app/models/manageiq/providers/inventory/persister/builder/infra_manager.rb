@@ -114,12 +114,8 @@ module ManageIQ::Providers
         end
 
         def storages
-          add_properties(
-            :manager_ref          => %i[location],
-            :complete             => false,
-            :arel                 => Storage,
-            :attributes_blacklist => %i[parent],
-          )
+          add_properties(:attributes_blacklist => %i[parent])
+          add_common_default_values
         end
 
         def hosts
