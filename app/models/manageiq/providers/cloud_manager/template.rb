@@ -98,19 +98,25 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     raise NotImplementedError, _("raw_update_image must be implemented in a subclass")
   end
 
+  # Delete a cloud template as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def delete_image_queue(userid)
     task_opts = {
       :action => "Deleting Cloud Template for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete_image',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
