@@ -24,6 +24,11 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     ext_management_system.class::Template
   end
 
+  # Create a cloud image as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the provided EMS instance. The EMS
+  # instance and a userid are mandatory. Any +options+ are forwarded as
+  # arguments to the +create_image+ method.
+  #
   def self.create_image_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "Creating Cloud Template for user #{userid}",
@@ -35,8 +40,10 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
       :method_name => 'create_image',
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :args        => [ext_management_system.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -57,19 +64,25 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     klass.raw_create_image(ext_management_system, options)
   end
 
+  # Update a cloud template as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def update_image_queue(userid, options = {})
     task_opts = {
       :action => "updating Cloud Template for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'update_image',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -85,19 +98,25 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     raise NotImplementedError, _("raw_update_image must be implemented in a subclass")
   end
 
+  # Delete a cloud template as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def delete_image_queue(userid)
     task_opts = {
       :action => "Deleting Cloud Template for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete_image',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
