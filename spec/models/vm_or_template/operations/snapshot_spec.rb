@@ -2,12 +2,17 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
   before { EvmSpecHelper.local_miq_server }
   after(:context) { MiqQueue.delete_all }
 
-  let(:user)      { FactoryBot.create(:user, :userid => 'test') }
-  let(:ems)       { FactoryBot.create(:ems_vmware) }
-  let(:vm)        { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
-  let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
+  let(:user)       { FactoryBot.create(:user, :userid => 'test') }
+  let(:ems)        { FactoryBot.create(:ems_vmware) }
+  let(:vm)         { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+  let(:snapshots)  { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm) }
+  let(:queue_name) { 'snapshot_queue' }
 
   context "queued methods" do
+    before do
+      allow(ems).to receive(:queue_name_for_ems_operations).and_return(queue_name)
+    end
+
     it 'queues as expected in remove_snapshot_queue' do
       queue = vm.remove_snapshot_queue(snapshots.first.id)
 
@@ -15,7 +20,7 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
         :class_name  => vm.class.name,
         :method_name => 'remove_snapshot',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => queue_name,
         :zone        => vm.my_zone,
         :args        => [snapshots.first.id],
         :task_id     => nil
@@ -29,7 +34,7 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
         :class_name  => vm.class.name,
         :method_name => 'remove_evm_snapshot',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => queue_name,
         :zone        => vm.my_zone,
         :args        => [snapshots.first.id],
         :task_id     => nil
@@ -49,7 +54,7 @@ RSpec.describe VmOrTemplate::Operations::Snapshot do
         :class_name  => vm.class.name,
         :method_name => 'remove_all_snapshots',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => queue_name,
         :zone        => ems.my_zone,
         :args        => []
       )
