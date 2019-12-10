@@ -177,5 +177,29 @@ describe VmCloud do
       expect { described_class.live_migrate_queue }.to raise_error(ArgumentError)
       expect { described_class.live_migrate_queue(user.userid) }.to raise_error(ArgumentError)
     end
+
+    it 'queues an evacuation task with evacuate_queue' do
+      task_id = described_class.evacuate_queue(user.userid, subject)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "evacuating Instance for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'evacuate',
+        :role        => 'ems_operations',
+        :queue_name  => queue_name,
+        :zone        => subject.my_zone,
+        :args        => [subject.id, {}]
+      )
+    end
+
+    it 'requires an both a userid and vm for the evacuation queue task' do
+      expect { described_class.evacuate_queue }.to raise_error(ArgumentError)
+      expect { described_class.evacuate_queue(user.userid) }.to raise_error(ArgumentError)
+    end
   end
 end
