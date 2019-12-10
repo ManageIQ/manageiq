@@ -64,6 +64,9 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     klass.raw_create_image(ext_management_system, options)
   end
 
+  # Update a cloud template as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  #
   def update_image_queue(userid, options = {})
     task_opts = {
       :action => "updating Cloud Template for user #{userid}",
