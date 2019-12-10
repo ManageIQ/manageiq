@@ -199,7 +199,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   #
   def add_security_group_queue(userid, security_group)
     task_opts = {
-      :action => "associating Security Group with Instance for user #{userid}",
+      :action => "adding Security Group to Instance for user #{userid}",
       :userid => userid
     }
 
@@ -224,19 +224,26 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_remove_security_group must be implemented in a subclass")
   end
 
+  # Remove a security group to the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # security group id are mandatory.
+  #
   def remove_security_group_queue(userid, security_group)
     task_opts = {
-      :action => "associating Security Group with Instance for user #{userid}",
+      :action => "removing Security Group from Instance for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'remove_security_group',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
       :zone        => my_zone,
       :args        => [security_group]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 

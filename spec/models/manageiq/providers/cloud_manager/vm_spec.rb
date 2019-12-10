@@ -109,7 +109,7 @@ describe VmCloud do
       task_id = subject.add_security_group_queue(user.userid, security_group.id)
 
       expect(MiqTask.find(task_id)).to have_attributes(
-        :name   => "associating Security Group with Instance for user #{user.userid}",
+        :name   => "adding Security Group to Instance for user #{user.userid}",
         :state  => "Queued",
         :status => "Ok"
       )
@@ -124,9 +124,34 @@ describe VmCloud do
       )
     end
 
-    it 'requires an both a userid and ip address for the add security group queue task' do
+    it 'requires an both a userid and security group for the add security group queue task' do
       expect { subject.add_security_group_queue }.to raise_error(ArgumentError)
       expect { subject.add_security_group_queue(user.userid) }.to raise_error(ArgumentError)
+    end
+
+    it 'queues a remove security group task with remove_security_group_queue' do
+      security_group = FactoryBot.create(:security_group)
+      task_id = subject.remove_security_group_queue(user.userid, security_group.id)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "removing Security Group from Instance for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'remove_security_group',
+        :role        => 'ems_operations',
+        :queue_name  => queue_name,
+        :zone        => ems.my_zone,
+        :args        => [security_group.id]
+      )
+    end
+
+    it 'requires an both a userid and security group for the remove security group queue task' do
+      expect { subject.remove_security_group_queue }.to raise_error(ArgumentError)
+      expect { subject.remove_security_group_queue(user.userid) }.to raise_error(ArgumentError)
     end
   end
 end
