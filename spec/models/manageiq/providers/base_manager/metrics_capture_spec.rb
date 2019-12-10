@@ -210,41 +210,35 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
 
     it "when last_perf_capture_on is nil (first time)" do
+      stub_performance_settings(:history => {:initial_capture_days => nil})
       MiqQueue.delete_all
-      Timecop.freeze do
-        Timecop.travel(Time.now.end_of_day - 6.hours)
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         verify_perf_capture_queue(nil, 1)
-        Timecop.travel(Time.now + 20.minutes)
+        Timecop.travel(20.minutes)
         verify_perf_capture_queue(nil, 1)
       end
     end
 
     it "when last_perf_capture_on is very old (older than the realtime_cut_off of 4.hours.ago)" do
       MiqQueue.delete_all
-      Timecop.freeze do
-        Timecop.travel(Time.now.end_of_day - 6.hours)
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         verify_perf_capture_queue((10.days + 5.hours + 23.minutes).ago, 11)
       end
     end
 
     it "when last_perf_capture_on is recent (before the realtime_cut_off of 4.hours.ago)" do
       MiqQueue.delete_all
-      Timecop.freeze do
-        Timecop.travel(Time.now.end_of_day - 6.hours)
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         verify_perf_capture_queue((0.days + 2.hours + 5.minutes).ago, 1)
       end
     end
 
     it "is able to handle multiple attempts to queue perf_captures and not add new items" do
       MiqQueue.delete_all
-      Timecop.freeze do
-        # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
-        # queue items to 12 instead of 11
-        current_time = Time.now.end_of_day - 6.hours
-        Timecop.travel(current_time)
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
         verify_perf_capture_queue(last_perf_capture_on, 11)
-        Timecop.travel(current_time + 20.minutes)
+        Timecop.travel(20.minutes)
         verify_perf_capture_queue(last_perf_capture_on, 11)
       end
     end
@@ -269,43 +263,33 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "when last_perf_capture_on is nil(first time)" do
+        stub_performance_settings(:history => {:initial_capture_days => 7})
         MiqQueue.delete_all
-        Timecop.freeze do
-          allow(Metric::Capture).to receive(:historical_days).and_return(7)
-          current_time = Time.now.end_of_day - 6.hours
-          Timecop.travel(current_time)
+        Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
           verify_perf_capture_queue_historical(nil, 8)
-          Timecop.travel(current_time + 20.minutes)
+          Timecop.travel(20.minutes)
           verify_perf_capture_queue_historical(nil, 8)
         end
       end
 
       it "when last_perf_capture_on is very old" do
+        stub_performance_settings(:history => {:initial_capture_days => 7})
         MiqQueue.delete_all
-        Timecop.freeze do
-          # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
-          # queue items to 12 instead of 11
-          allow(Metric::Capture).to receive(:historical_days).and_return(7)
-          current_time = Time.now.end_of_day - 6.hours
+        Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
           last_capture_on = (10.days + 5.hours + 23.minutes).ago
-          Timecop.travel(current_time)
           verify_perf_capture_queue_historical(last_capture_on, 8)
-          Timecop.travel(current_time + 20.minutes)
+          Timecop.travel(20.minutes)
           verify_perf_capture_queue_historical(last_capture_on, 8)
         end
       end
 
       it "when last_perf_capture_on is fairly recent" do
+        stub_performance_settings(:history => {:initial_capture_days => 7})
         MiqQueue.delete_all
-        Timecop.freeze do
-          # set a specific time of day to avoid sporadic test failures that fall on the exact right time to bump the
-          # queue items to 12 instead of 11
-          allow(Metric::Capture).to receive(:historical_days).and_return(7)
-          current_time = Time.now.end_of_day - 6.hours
+        Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
           last_capture_on = (10.days + 5.hours + 23.minutes).ago
-          Timecop.travel(current_time)
           verify_perf_capture_queue_historical(last_capture_on, 8)
-          Timecop.travel(current_time + 20.minutes)
+          Timecop.travel(20.minutes)
           verify_perf_capture_queue_historical(last_capture_on, 8)
         end
       end
