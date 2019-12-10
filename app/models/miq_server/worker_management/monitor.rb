@@ -67,13 +67,16 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def clean_worker_records
+    worker_deleted = false
     miq_workers.each do |w|
       next unless w.is_stopped?
       _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
       worker_delete(w.pid)
       w.destroy
-      miq_workers.delete(w)
+      worker_deleted = true
     end
+
+    miq_workers.reload if worker_deleted
   end
 
   def check_pending_stop
@@ -85,15 +88,19 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def check_not_responding
-    return [] if MiqEnvironment::Command.is_podified?
+    return if MiqEnvironment::Command.is_podified?
 
+    worker_deleted = false
     miq_workers.each do |w|
       next unless monitor_reason_not_responding?(w)
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
       worker_not_responding(w)
       worker_delete(w.pid)
-      miq_workers.delete(w)
+      w.destroy
+      worker_deleted = true
     end
+
+    miq_workers.reload if worker_deleted
   end
 
   def monitor_reason_not_responding?(w)
