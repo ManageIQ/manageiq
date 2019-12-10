@@ -224,7 +224,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_remove_security_group must be implemented in a subclass")
   end
 
-  # Remove a security group to the VM as a queued task and return the task id.
+  # Remove a security group from the VM as a queued task and return the task id.
   # The queue name and the queue zone are derived from the EMS. The userid and
   # security group id are mandatory.
   #
