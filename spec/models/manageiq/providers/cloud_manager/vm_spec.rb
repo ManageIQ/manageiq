@@ -103,5 +103,30 @@ describe VmCloud do
       expect { subject.disassociate_floating_ip_queue }.to raise_error(ArgumentError)
       expect { subject.disassociate_floating_ip_queue(user.userid) }.to raise_error(ArgumentError)
     end
+
+    it 'queues an add security group task with add_security_group_queue' do
+      security_group = FactoryBot.create(:security_group)
+      task_id = subject.add_security_group_queue(user.userid, security_group.id)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "associating Security Group with Instance for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'add_security_group',
+        :role        => 'ems_operations',
+        :queue_name  => queue_name,
+        :zone        => ems.my_zone,
+        :args        => [security_group.id]
+      )
+    end
+
+    it 'requires an both a userid and ip address for the add security group queue task' do
+      expect { subject.add_security_group_queue }.to raise_error(ArgumentError)
+      expect { subject.add_security_group_queue(user.userid) }.to raise_error(ArgumentError)
+    end
   end
 end

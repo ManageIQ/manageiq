@@ -162,7 +162,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_disassociate_floating_ip must be implemented in a subclass")
   end
 
-  # Disassociate an IP address with the VM as a queued task and return the task id.
+  # Disassociate an IP address from the VM as a queued task and return the task id.
   # The queue name and the queue zone are derived from the EMS. The userid and
   # IP address are mandatory.
   #
@@ -193,19 +193,26 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_add_security_group must be implemented in a subclass")
   end
 
+  # Add a security group to the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # security group id are mandatory.
+  #
   def add_security_group_queue(userid, security_group)
     task_opts = {
       :action => "associating Security Group with Instance for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'add_security_group',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
       :zone        => my_zone,
       :args        => [security_group]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
