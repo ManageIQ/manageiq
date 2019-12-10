@@ -4,22 +4,34 @@ module MiqServer::WorkerManagement::Monitor::Validation
   def validate_worker(w)
     return true if MiqEnvironment::Command.is_podified?
 
-    time_threshold   = get_time_threshold(w)
-    memory_threshold = get_memory_threshold(w)
-
-    w.validate_active_messages
-
-    validate_heartbeat(w)
-
-    if time_threshold.seconds.ago.utc > w.last_heartbeat
-      msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
-      _log.error(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
+    if exceeded_heartbeat_threshold?(w)
       stop_worker(w, MiqServer::NOT_RESPONDING)
       return false
     end
 
-    return true unless worker_get_monitor_status(w.pid).nil?
+    return true if worker_get_monitor_status(w.pid)
+
+    if exceeded_memory_threshold?(w)
+      stop_worker(w)
+      return false
+    end
+
+    true
+  end
+
+  def exceeded_heartbeat_threshold?(w)
+    time_threshold = get_time_threshold(w)
+    if time_threshold.seconds.ago.utc > w.last_heartbeat
+      msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
+      _log.error(msg)
+      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
+      return true
+    end
+    false
+  end
+
+  def exceeded_memory_threshold?(w)
+    memory_threshold = get_memory_threshold(w)
 
     # Unique set size is only implemented on linux
     usage = w.unique_set_size || w.memory_usage
@@ -35,11 +47,9 @@ module MiqServer::WorkerManagement::Monitor::Validation
                                      :event_details => msg,
                                      :type          => w.class.name,
                                      :full_data     => full_data)
-      stop_worker(w)
-      return false
+      return true
     end
-
-    true
+    false
   end
 
   def validate_active_messages(processed_worker_ids = [])

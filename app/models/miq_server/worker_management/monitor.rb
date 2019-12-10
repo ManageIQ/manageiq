@@ -26,7 +26,18 @@ module MiqServer::WorkerManagement::Monitor
     processed_worker_ids += check_not_responding
     processed_worker_ids += check_pending_stop
     processed_worker_ids += clean_worker_records
-    processed_worker_ids += request_workers_to_sync_config(resync_needed)
+
+    # Monitor all remaining current worker records
+    processed_worker_ids += miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
+      # Check their queue messages for timeout
+      worker.validate_active_messages
+      # Push the heartbeat into the database
+      persist_last_heartbeat(worker)
+      # Check the worker record for heartbeat timeouts
+      next unless validate_worker(worker)
+      # Tell the valid workers to sync config if needed
+      worker_set_message(worker, "sync_config") if resync_needed
+    end.map(&:id)
 
     validate_active_messages(processed_worker_ids)
 
