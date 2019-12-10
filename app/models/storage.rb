@@ -1,4 +1,6 @@
 class Storage < ApplicationRecord
+  include NewWithTypeStiMixin
+
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :storages
 
   has_many :vms_and_templates, :foreign_key => :storage_id, :dependent => :nullify, :class_name => "VmOrTemplate"
