@@ -74,8 +74,34 @@ describe VmCloud do
       )
     end
 
-    it 'requires an ip address for the associate floating ip queue task' do
+    it 'requires an both a userid and ip address for the associate floating ip queue task' do
       expect { subject.associate_floating_ip_queue }.to raise_error(ArgumentError)
+      expect { subject.associate_floating_ip_queue(user.userid) }.to raise_error(ArgumentError)
+    end
+
+    it 'queues an dissociate floating IP task with disassociate_floating_ip_queue' do
+      ip_address = '1.2.3.4'
+      task_id = subject.disassociate_floating_ip_queue(user.userid, ip_address)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "disassociating floating IP with Instance for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'disassociate_floating_ip',
+        :role        => 'ems_operations',
+        :queue_name  => queue_name,
+        :zone        => ems.my_zone,
+        :args        => [ip_address]
+      )
+    end
+
+    it 'requires an both a userid and ip address for the dissociate floating ip queue task' do
+      expect { subject.disassociate_floating_ip_queue }.to raise_error(ArgumentError)
+      expect { subject.disassociate_floating_ip_queue(user.userid) }.to raise_error(ArgumentError)
     end
   end
 end
