@@ -189,6 +189,24 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
     end
 
+    it "creates historical only when requesting historical and with last_perf_capture_on.nil? (first time) with initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => 7})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        trigger_capture(nil, :interval => "historical")
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(nil, :interval => "historical")
+
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+      end
+    end
+
     it "creates realtime and historical with last_perf_capture_on older than the realtime_cut_off" do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
@@ -241,24 +259,6 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       trigger_capture(nil, :interval => "realtime", :task_id => task.id)
 
       expect(MiqQueue.first.miq_task_id).to eq task.id
-    end
-
-    it "creates historical only when requesting historical and with last_perf_capture_on.nil? (first time) with initial_capture" do
-      stub_performance_settings(:history => {:initial_capture_days => 7})
-      MiqQueue.delete_all
-      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        trigger_capture(nil, :interval => "historical")
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-
-        Timecop.travel(20.minutes)
-        trigger_capture(nil, :interval => "historical")
-
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-      end
     end
 
     it "creates historical only when requesting historical and with old last_perf_capture_on with initial_capture" do
