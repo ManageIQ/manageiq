@@ -153,5 +153,29 @@ describe VmCloud do
       expect { subject.remove_security_group_queue }.to raise_error(ArgumentError)
       expect { subject.remove_security_group_queue(user.userid) }.to raise_error(ArgumentError)
     end
+
+    it 'queues a live migration task with live_migrate_queue' do
+      task_id = described_class.live_migrate_queue(user.userid, subject)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "migrating Instance for user #{user.userid}",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'live_migrate',
+        :role        => 'ems_operations',
+        :queue_name  => queue_name,
+        :zone        => subject.my_zone,
+        :args        => [subject.id, {}]
+      )
+    end
+
+    it 'requires an both a userid and vm for the live migration queue task' do
+      expect { described_class.live_migrate_queue }.to raise_error(ArgumentError)
+      expect { described_class.live_migrate_queue(user.userid) }.to raise_error(ArgumentError)
+    end
   end
 end

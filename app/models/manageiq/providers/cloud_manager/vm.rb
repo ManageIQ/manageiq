@@ -259,19 +259,26 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     super || orchestration_stack.try(:direct_service)
   end
 
+  # Live migrate a VM as a high priority queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid
+  # and VM are mandatory, with any options forwarded to the live_migrate method.
+  #
   def self.live_migrate_queue(userid, vm, options = {})
     task_opts = {
       :action => "migrating Instance for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => vm.class.name,
       :method_name => 'live_migrate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
+      :queue_name  => vm.queue_name_for_ems_operations,
       :zone        => vm.my_zone,
       :args        => [vm.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
