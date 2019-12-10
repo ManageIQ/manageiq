@@ -194,6 +194,21 @@ describe MiqQueue do
     end
   end
 
+  describe ".candidates_for_timeout" do
+    it "returns only messages in dequeue state which are outside their timeout" do
+      FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_READY, :msg_timeout => 1.minute) # not in dequeue
+      FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :msg_timeout => 10.minutes) # not timed out
+
+      expected_ids = []
+      expected_ids << FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :msg_timeout => 1.minute).id
+      expected_ids << FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :msg_timeout => 2.minutes).id
+
+      Timecop.travel(5.minutes) do
+        expect(described_class.candidates_for_timeout.pluck(:id)).to match_array(expected_ids)
+      end
+    end
+  end
+
   it "should validate formatting of message for logging" do
     # Add various key/value combos as needs arise...
     message_parms = [{
