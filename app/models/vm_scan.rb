@@ -31,12 +31,14 @@ class VmScan < Job
     }
   end
 
+  def vm
+    @vm ||= VmOrTemplate.find(target_id)
+  end
+
   def call_check_policy
     _log.info("Enter")
 
     begin
-      vm = VmOrTemplate.find(target_id)
-
       q_options = {
         :miq_callback => {
           :class_name  => self.class.to_s,
@@ -84,9 +86,7 @@ class VmScan < Job
 
   def before_scan
     _log.info("Enter")
-
-    vm = VmOrTemplate.find(target_id)
-    log_start_user_event_message(vm)
+    log_start_user_event_message
     signal(:start_scan)
   end
 
@@ -95,9 +95,8 @@ class VmScan < Job
 
     begin
       host = MiqServer.find(miq_server_id)
-      vm = VmOrTemplate.find(target_id)
       # Send down metadata to allow the host to make decisions.
-      scan_args = create_scan_args(vm)
+      scan_args = create_scan_args
       options[:ems_list] = scan_args["ems"]
       options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
 
@@ -115,14 +114,14 @@ class VmScan < Job
     set_status("Scanning for metadata from VM")
   end
 
-  def config_ems_list(vm)
+  def config_ems_list
     ems_list = vm.ems_host_list
     ems_list['connect_to'] = vm.scan_via_ems? ? 'ems' : 'host'
     ems_list
   end
 
-  def create_scan_args(vm)
-    scan_args = { 'ems' => config_ems_list(vm) }
+  def create_scan_args
+    scan_args = { 'ems' => config_ems_list }
 
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = options[:scan_profiles] || vm.scan_profile_list
@@ -134,7 +133,6 @@ class VmScan < Job
 
     begin
       host = MiqServer.find(miq_server_id)
-      vm = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,
                        "host"   => host
@@ -185,7 +183,6 @@ class VmScan < Job
           end
           if request_docs.empty? || (request_docs.length != all_docs.length)
             _log.info("sending :finish")
-            vm = VmOrTemplate.find_by(:id => target_id)
 
             # Collect any VIM data here
             # TODO: Make this a separate state?
@@ -223,7 +220,6 @@ class VmScan < Job
           end
         when "scanmetadata"
           _log.info("sending :synchronize")
-          vm = VmOrTemplate.find(options[:target_id])
           result = vm.save_scan_history(s.attributes.to_h(false).merge("taskid" => doc.root.attributes["taskid"])) if s.attributes
           if result.status_code == 16 # fatal error on proxy
             signal(:abort_retry, result.message, "error", false)
@@ -238,29 +234,25 @@ class VmScan < Job
     # got data to process
   end
 
-  def user_event_message(vm, verb)
+  def user_event_message(verb)
     "EVM SmartState Analysis #{verb} for VM [#{vm.name}]"
   end
 
-  def start_user_event_message(vm = nil)
-    vm ||= VmOrTemplate.find(target_id)
-    user_event_message(vm, "Initiated")
+  def start_user_event_message
+    user_event_message("initiated")
   end
 
-  def end_user_event_message(vm = nil)
-    vm ||= VmOrTemplate.find(target_id)
-    user_event_message(vm, "completed")
+  def end_user_event_message
+    user_event_message("completed")
   end
 
-  def log_start_user_event_message(vm = nil)
-    vm ||= VmOrTemplate.find(target_id)
-    log_user_event(start_user_event_message(vm), vm)
+  def log_start_user_event_message
+    log_user_event(start_user_event_message)
   end
 
-  def log_end_user_event_message(vm = nil)
+  def log_end_user_event_message
     unless options[:end_message_sent]
-      vm ||= VmOrTemplate.find(target_id)
-      log_user_event(end_user_event_message(vm), vm)
+      log_user_event(end_user_event_message)
       options[:end_message_sent] = true
     end
   end
@@ -278,7 +270,6 @@ class VmScan < Job
       # We may need to skip calling the retry if this method is called twice.
       return if skip_retry == true
       options[:scan_count] = options[:scan_count].to_i + 1
-      vm = VmOrTemplate.find(target_id)
       EmsRefresh.refresh(vm)
       vm.reload
       _log.info("Retrying VM scan for [#{vm.name}] due to error [#{message}]")
@@ -290,7 +281,6 @@ class VmScan < Job
 
   def process_abort(*args)
     begin
-      vm = VmOrTemplate.find_by(:id => target_id)
       if vm
         inputs = {:vm => vm, :host => vm.host}
         MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "abort"}, inputs)
@@ -332,7 +322,7 @@ class VmScan < Job
 
   private
 
-  def log_user_event(user_event, vm)
+  def log_user_event(user_event)
     begin
       vm.log_user_event(user_event)
     rescue => err
