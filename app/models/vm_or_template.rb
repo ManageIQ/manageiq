@@ -339,7 +339,7 @@ class VmOrTemplate < ApplicationRecord
     MiqTask.generic_action_with_callback(task_options, command_queue_options(queue_options))
   end
 
-  def run_command_via_queue(method_name, queue_options)
+  def run_command_via_queue(method_name, queue_options = {})
     queue_options[:method_name] = method_name
     MiqQueue.put(command_queue_options(queue_options))
   end
