@@ -71,7 +71,7 @@ gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "rubyzip",                        "~>1.3.0",       :require => false
+gem "rubyzip",                        "~>2.0.0",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sprockets",                      "~>3.0",         :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
