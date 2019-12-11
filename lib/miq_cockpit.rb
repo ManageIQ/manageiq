@@ -90,6 +90,7 @@ module MiqCockpit
       fname = File.join(@cockpit_conf_dir, "cockpit.conf")
       update_config
       File.write(fname, @config)
+      AwesomeSpawn.run!("restorecon -R -v #{@cockpit_conf_dir}")
     end
 
     def web_ui_url

@@ -4,6 +4,8 @@ describe MiqCockpit::WS do
     @miq_server = EvmSpecHelper.local_miq_server
     @miq_server.ipaddress = "10.0.0.1"
     @miq_server.has_active_userinterface = true
+
+    allow(AwesomeSpawn).to receive(:run!)
   end
 
   describe '#url' do
