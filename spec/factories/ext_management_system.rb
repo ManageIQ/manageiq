@@ -39,6 +39,16 @@ FactoryBot.define do
       end
     end
 
+    trait :with_storages_redhat do
+      transient do
+        storage_count { 1 }
+      end
+
+      after :create do |ems, evaluator|
+        ems.storages = create_list :storage_redhat, evaluator.storage_count, :ext_management_system => ems
+      end
+    end
+
     trait :with_authentication do
       authtype { "default" }
     end
