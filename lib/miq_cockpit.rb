@@ -115,7 +115,7 @@ module MiqCockpit
     def update_config
       title = @opts[:title] || "ManageIQ Cockpit"
 
-      login_command = Rails.root.join("tools", "cockpit", "cockpit-auth-miq")
+      login_command = File.join("/usr", "bin", "cockpit-auth-miq")
 
       @config = <<-END_OF_CONFIG
 [Webservice]
