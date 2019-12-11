@@ -742,4 +742,14 @@ describe ExtManagementSystem do
       expect(result[1][4..-1]).to eq([2])
     end
   end
+
+  context "#queue_name_for_ems_operations" do
+    it "defaults to 'generic' as the queue name for ems operations" do
+      ems_cloud = FactoryBot.create(:ems_cloud)
+      ems_container = FactoryBot.create(:ems_container)
+
+      expect(ems_cloud.queue_name_for_ems_operations).to eql('generic')
+      expect(ems_container.queue_name_for_ems_operations).to eql('generic')
+    end
+  end
 end

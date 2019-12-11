@@ -604,9 +604,10 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   # Until all providers have an operations worker we can continue
-  # to use the GenericWorker to run ems_operations roles
+  # to use the GenericWorker to run ems_operations roles.
+  #
   def queue_name_for_ems_operations
-    nil
+    'generic'
   end
 
   def enforce_policy(target, event)
