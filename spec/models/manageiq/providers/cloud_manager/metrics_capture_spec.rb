@@ -3,24 +3,25 @@ describe ManageIQ::Providers::CloudManager::MetricsCapture do
 
   before do
     MiqRegion.seed
-    @zone = EvmSpecHelper.local_miq_server.zone
   end
+
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
+  let(:ems)  { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
 
   describe ".capture_ems_targets" do
     before do
-      @ems_openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
-      @availability_zone = FactoryBot.create(:availability_zone_target)
-      @ems_openstack.availability_zones << @availability_zone
-      @vms_in_az = FactoryBot.create_list(:vm_openstack, 2, :ems_id => @ems_openstack.id)
-      @availability_zone.vms = @vms_in_az
-      @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
-      @vms_not_in_az = FactoryBot.create_list(:vm_openstack, 3, :ems_id => @ems_openstack.id)
+      availability_zone = FactoryBot.create(:availability_zone_target)
+      ems.availability_zones << availability_zone
+      availability_zone.vms = FactoryBot.create_list(:vm_openstack, 2, :ems_id => ems.id)
+      availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
+      # vms not in availability zone:
+      FactoryBot.create_list(:vm_openstack, 3, :ems_id => ems.id)
 
       MiqQueue.delete_all
     end
 
     it "finds enabled targets" do
-      targets = described_class.new(nil, @ems_openstack).send(:capture_ems_targets)
+      targets = described_class.new(nil, ems).send(:capture_ems_targets)
       assert_cloud_targets_enabled targets
       expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm])
     end

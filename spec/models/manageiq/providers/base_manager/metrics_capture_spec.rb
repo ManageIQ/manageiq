@@ -25,14 +25,14 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       before do
         MiqRegion.seed
         storages = FactoryBot.create_list(:storage_target_vmware, 2)
-        @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
-        ems.ems_clusters = @vmware_clusters
+        clusters = FactoryBot.create_list(:cluster_target, 2)
+        ems.ems_clusters = clusters
 
         6.times do |n|
           host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
           ems.hosts << host
 
-          @vmware_clusters[n / 2].hosts << host if n < 4
+          clusters[n / 2].hosts << host if n < 4
           host.storages << storages[n / 3]
         end
 
@@ -125,17 +125,14 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
   describe ".perf_capture_queue" do
     before do
       MiqRegion.seed
-      FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
-
-      MiqQueue.delete_all
-
-      vm.perf_capture_realtime_now
     end
 
-    let(:vm) { Vm.first }
+    let(:host) { FactoryBot.create(:host_target_vmware, :ext_management_system => ems).tap { MiqQueue.delete_all } }
+    let(:vm) { host.vms.first }
 
     context "for queue prioritization" do
       it "should queue up realtime capture for vm" do
+        vm.perf_capture_realtime_now
         expect(MiqQueue.count).to eq(1)
 
         msg = MiqQueue.first
@@ -145,6 +142,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "should raise the priority of the existing queue item" do
+        vm.perf_capture_realtime_now
         MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
         vm.perf_capture_realtime_now
 
@@ -153,6 +151,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "should not lower the priority of the existing queue item" do
+        vm.perf_capture_realtime_now
         MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
         vm.perf_capture_realtime_now
 
