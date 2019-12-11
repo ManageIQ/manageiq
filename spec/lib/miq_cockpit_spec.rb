@@ -4,6 +4,8 @@ describe MiqCockpit::WS do
     @miq_server = EvmSpecHelper.local_miq_server
     @miq_server.ipaddress = "10.0.0.1"
     @miq_server.has_active_userinterface = true
+
+    allow(AwesomeSpawn).to receive(:run!)
   end
 
   describe '#url' do
@@ -104,15 +106,11 @@ describe MiqCockpit::WS do
   end
 
   describe 'update_config' do
-    before do
-      @login_command = Rails.root.join("tools", "cockpit", "cockpit-auth-miq")
-    end
-
     context "when using empty opts" do
       it "it uses defaults" do
         ins = MiqCockpit::WS.new(nil)
         config = ins.update_config
-        expect(config).to include("\n[SSH-Login]\ncommand = #{@login_command}\n")
+        expect(config).to include("\n[SSH-Login]\ncommand = /usr/bin/cockpit-auth-miq\n")
         expect(config).to include("\n[Basic]\nAction = none\n")
         expect(config).to include("\n[Negotiate]\nAction = none\n")
         expect(config).to include("\nLoginTitle = ManageIQ Cockpit\n")
