@@ -1,7 +1,6 @@
 describe VmCloud do
   let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
-  let(:queue_name) { 'vm_cloud_queue' }
 
   subject { FactoryBot.create(:vm_cloud, :ext_management_system => ems) }
 
@@ -50,10 +49,6 @@ describe VmCloud do
   end
 
   context "queued methods" do
-    before do
-      allow(ems).to receive(:queue_name_for_ems_operations).and_return(queue_name)
-    end
-
     it 'queues an associate floating IP task with associate_floating_ip_queue' do
       ip_address = '1.2.3.4'
       task_id = subject.associate_floating_ip_queue(user.userid, ip_address)
@@ -68,7 +63,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'associate_floating_ip',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [ip_address]
       )
@@ -93,7 +88,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'disassociate_floating_ip',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [ip_address]
       )
@@ -118,7 +113,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'add_security_group',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [security_group.id]
       )
@@ -143,7 +138,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'remove_security_group',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [security_group.id]
       )
@@ -167,7 +162,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'live_migrate',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => subject.queue_name_for_ems_operations,
         :zone        => subject.my_zone,
         :args        => [subject.id, {}]
       )
@@ -191,7 +186,7 @@ describe VmCloud do
         :class_name  => described_class.name,
         :method_name => 'evacuate',
         :role        => 'ems_operations',
-        :queue_name  => queue_name,
+        :queue_name  => subject.queue_name_for_ems_operations,
         :zone        => subject.my_zone,
         :args        => [subject.id, {}]
       )
