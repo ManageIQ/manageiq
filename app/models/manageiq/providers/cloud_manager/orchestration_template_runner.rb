@@ -139,10 +139,11 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
   def queue_signal(*args, deliver_on: nil, priority: MiqQueue::NORMAL_PRIORITY)
     MiqQueue.put(
       :class_name  => self.class.name,
-      :method_name => "signal",
+      :method_name => 'signal',
       :instance_id => id,
       :priority    => priority,
       :role        => 'ems_operations',
+      :queue_name  => options[:queue_name],
       :zone        => options[:zone],
       :args        => args,
       :deliver_on  => deliver_on
