@@ -213,6 +213,7 @@ class MiqQueue < ApplicationRecord
       # options[:queue_name] = "generic"
       options[:role] = service
       options[:zone] = resource.try(:my_zone) || MiqServer.my_zone
+      options[:queue_name] = resource.try(:queue_name_for_ems_operations) || "generic"
     when "event"
       options[:queue_name] = "ems"
       options[:role] = service
