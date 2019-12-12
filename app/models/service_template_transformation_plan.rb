@@ -76,7 +76,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   def update_catalog_item(options, _auth_user = nil)
-    if options[:config_info].present? && options[:config_info][:warm_migration_cutover_datetime].present?
+    if options.dig(:config_info, :warm_migration_cutover_datetime)
       return update_cutover_datetime(options[:config_info][:warm_migration_cutover_datetime])
     end
 
