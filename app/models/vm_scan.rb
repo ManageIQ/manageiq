@@ -20,14 +20,15 @@ class VmScan < Job
       :before_scan        => {'checking_policy'           => 'before_scan'},
       :start_scan         => {'before_scan'               => 'scanning'},
       :after_scan         => {'scanning'                  => 'after_scan'},
-      :synchronize        => {'after_scan'                => 'synchronize'},
-      :finish             => {'*'                         => 'finished'},
-      :abort_job          => {'*'                         => 'aborting'},
-      :cancel             => {'*'                         => 'canceling'},
-      :error              => {'*'                         => '*'},
+      :synchronize        => {'after_scan'                => 'synchronizing'},
+      :finish             => {'synchronizing'             => 'finished',
+                              'aborting'                  => 'finished'},
       :data               => {'scanning'                  => 'scanning',
                               'synchronizing'             => 'synchronizing',
                               'finished'                  => 'finished'},
+      :abort_job          => {'*'                         => 'aborting'},
+      :cancel             => {'*'                         => 'canceling'},
+      :error              => {'*'                         => '*'},
     }
   end
 
