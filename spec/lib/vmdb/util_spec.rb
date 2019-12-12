@@ -123,6 +123,8 @@ describe VMDB::Util do
   end
 
   context ".add_zip_entry(private)" do
+    require 'zip/filesystem'
+
     let(:origin_file) { Tempfile.new 'origin' }
     let(:symlink_level_1) { create_temp_symlink 'symlink_level_1', origin_file.path }
     let(:symlink_level_2) { create_temp_symlink 'symlink_level_2', symlink_level_1 }
