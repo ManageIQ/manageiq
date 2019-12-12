@@ -11,6 +11,11 @@ module ConversionHost::Configurations
       )
     end
 
+    # Configure a conversion host as a queued task. The queue name and the
+    # queue zone are derived from the EMS of the resource. The op (method name),
+    # instance id, resource and parameters are all mandatory. The auth user is
+    # optional.
+    #
     def queue_configuration(op, instance_id, resource, params, auth_user = nil)
       task_opts = {
         :action => "Configuring a conversion_host: operation=#{op} resource=(name: #{resource.name} type: #{resource.class.name} id: #{resource.id})",
@@ -23,6 +28,7 @@ module ConversionHost::Configurations
         :instance_id => instance_id,
         :role        => 'ems_operations',
         :zone        => resource.ext_management_system.my_zone,
+        :queue_name  => resource.ext_management_system.queue_name_for_ems_operations,
         :args        => [params, auth_user]
       }
 

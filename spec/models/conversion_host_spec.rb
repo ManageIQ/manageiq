@@ -589,4 +589,29 @@ RSpec.describe ConversionHost, :v2v do
       expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
     end
   end
+
+  context ".queue_configuration" do
+    let(:params) { {:name => 'updated_config'} }
+    let(:ems) { FactoryBot.create(:ems_openstack) }
+    let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
+
+    it "queues a configuration with the queue_configuration method" do
+      task_id = described_class.queue_configuration('enable', nil, vm, params, nil)
+
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :name   => "Configuring a conversion_host: operation=enable resource=(name: #{vm.name} type: #{vm.class.name} id: #{vm.id})",
+        :state  => "Queued",
+        :status => "Ok"
+      )
+
+      expect(MiqQueue.where(:class_name => described_class.name).first).to have_attributes(
+        :class_name  => described_class.name,
+        :method_name => 'enable',
+        :role        => 'ems_operations',
+        :queue_name  => 'generic',
+        :zone        => ems.my_zone,
+        :args        => [{:name => 'updated_config', :task_id => task_id}, nil]
+      )
+    end
+  end
 end
