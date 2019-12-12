@@ -18,7 +18,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # Capture all metrics for an ems
   def perf_capture
     perf_capture_health_check
-    targets = Metric::Targets.capture_ems_targets(ems)
+    targets = capture_ems_targets
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
     target_options = calc_target_options(targets_by_rollup_parent)
@@ -28,7 +28,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
   # target is an ExtManagementSystem
   def perf_capture_gap(start_time, end_time)
-    targets = Metric::Targets.capture_ems_targets(ems, :exclude_storages => true)
+    targets = capture_ems_targets(:exclude_storages => true)
     target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :interval => 'historical'} }
     queue_captures(targets, target_options)
   end
@@ -77,6 +77,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         false
       end
     end
+  end
+
+  def capture_ems_targets(options = {})
+    Metric::Targets.capture_ems_targets(ems, options)
   end
 
   # if it has not been run, or it was a very long time ago, just run it

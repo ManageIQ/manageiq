@@ -75,17 +75,3 @@ RSpec.shared_context "with a small environment and time_profile", :with_small_vm
     MiqQueue.delete_all
   end
 end
-
-RSpec.shared_context "with openstack", :with_openstack_and_availability_zones do
-  before do
-    @ems_openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
-    @availability_zone = FactoryBot.create(:availability_zone_target)
-    @ems_openstack.availability_zones << @availability_zone
-    @vms_in_az = FactoryBot.create_list(:vm_openstack, 2, :ems_id => @ems_openstack.id)
-    @availability_zone.vms = @vms_in_az
-    @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
-    @vms_not_in_az = FactoryBot.create_list(:vm_openstack, 3, :ems_id => @ems_openstack.id)
-
-    MiqQueue.delete_all
-  end
-end
