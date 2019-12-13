@@ -109,8 +109,10 @@ unless options[:dry_run]
 
   begin
     runner_options[:guid] = worker.guid
+    $log.info("Starting #{worker.class.name} with runner options #{runner_options}")
     worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
   ensure
+    $log.info("Deleting worker record for #{worker.class.name}, id #{worker.id}")
     worker.delete
   end
 end
