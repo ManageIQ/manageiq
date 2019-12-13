@@ -137,30 +137,6 @@ module MiqWebServerWorkerMixin
     super
   end
 
-  def terminate
-    # HACK: Cannot call exit properly from UiWorker nor can we Process.kill('INT', ...) from inside the worker
-    # Hence, this is an external mechanism for terminating this worker.
-
-    begin
-      _log.info("Terminating #{format_full_log_msg}, status [#{status}]")
-      Process.kill("TERM", pid)
-      # TODO: Variablize and clean up this 10-second-max loop of waiting on Worker to gracefully shut down
-      10.times do
-        unless MiqProcess.alive?(pid)
-          update(:stopped_on => Time.now.utc, :status => MiqWorker::STATUS_STOPPED)
-          break
-        end
-        sleep 1
-      end
-    rescue Errno::ESRCH
-      _log.warn("#{format_full_log_msg} has been killed")
-    rescue => err
-      _log.warn("#{format_full_log_msg} has been killed, but with the following error: #{err}")
-    end
-
-    kill if MiqProcess.alive?(pid)
-  end
-
   def kill
     deleted_worker = super
     delete_pid_file
