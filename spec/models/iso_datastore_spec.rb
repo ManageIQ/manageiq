@@ -28,10 +28,6 @@ RSpec.describe IsoDatastore do
     end
 
     context "ems is rhv" do
-      before do
-        allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
-      end
-
       context "supports api4" do
         let(:supported_api_versions) { %w(3 4) }
         it "send the method to ovirt services v4" do
