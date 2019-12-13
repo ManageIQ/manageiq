@@ -545,6 +545,14 @@ class MiqQueue < ApplicationRecord
     end
   end
 
+  def self.candidates_for_timeout
+    where(:state => STATE_DEQUEUE).where("(select date_part('epoch', updated_on) + msg_timeout) < ?", Time.now.to_i)
+  end
+
+  def self.check_for_timeout
+    candidates_for_timeout.each(&:check_for_timeout)
+  end
+
   def finished?
     FINISHED_STATES.include?(state)
   end

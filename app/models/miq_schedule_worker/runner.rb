@@ -114,7 +114,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   end
 
   def schedules_for_scheduler_role
-    # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
+    # These schedules need to run only once in a region per interval, so let the single scheduler role handle them
     return unless schedule_enabled?(:scheduler)
     scheduler = scheduler_for(:scheduler)
     # Schedule - Check for timed out jobs
@@ -199,6 +199,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     scheduler.schedule_every(worker_settings[:vim_performance_states_purge_interval]) do
       enqueue(:vim_performance_states_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:queue_timeout_interval]) do
+      enqueue(:queue_miq_queue_check_for_timeout)
     end
 
     # Schedule every 24 hours

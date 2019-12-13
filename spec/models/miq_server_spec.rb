@@ -318,58 +318,6 @@ describe MiqServer do
         expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
       end
 
-      context "with an active messsage and a second server" do
-        before do
-          @msg = FactoryBot.create(:miq_queue, :state => 'dequeue')
-          @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @zone)
-        end
-
-        it "will validate the 'started' first server's active message when called on it" do
-          @msg.handler = @miq_server.reload
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
-          @miq_server.validate_active_messages
-        end
-
-        it "will validate the 'not responding' first server's active message when called on it" do
-          @miq_server.update_attribute(:status, 'not responding')
-          @msg.handler = @miq_server.reload
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
-          @miq_server.validate_active_messages
-        end
-
-        it "will validate the 'not resonding' second server's active message when called on first server" do
-          @miq_server2.update_attribute(:status, 'not responding')
-          @msg.handler = @miq_server2
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
-          @miq_server.validate_active_messages
-        end
-
-        it "will NOT validate the 'started' second server's active message when called on first server" do
-          @miq_server2.update_attribute(:status, 'started')
-          @msg.handler = @miq_server2
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).never
-          @miq_server.validate_active_messages
-        end
-
-        it "will validate a worker's active message when called on the worker's server" do
-          @msg.handler = @worker
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout)
-          @miq_server.validate_active_messages
-        end
-
-        it "will not validate a worker's active message when called on the worker's server if already processed" do
-          @msg.handler = @worker
-          @msg.save
-          expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).never
-          @miq_server.validate_active_messages([@worker.id])
-        end
-      end
-
       context "#server_timezone" do
         it "utc with no system default" do
           stub_settings(:server => {:timezone => nil})
