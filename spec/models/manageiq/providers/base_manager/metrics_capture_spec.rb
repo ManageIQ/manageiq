@@ -51,9 +51,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
           expected_targets = Metric::Targets.capture_ems_targets(ems.reload, :exclude_storages => true)
           expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
 
-          selected = queue_intervals(MiqQueue.all)
-
-          expect(selected).to match_array(expected)
+          expect(queue_intervals).to match_array(expected)
         end
       end
     end
@@ -148,7 +146,8 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         Metric::Capture.perf_capture_timer(@ems_vmware.id)
 
         expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
-        assert_metric_targets(Metric::Targets.capture_ems_targets(@ems_vmware.reload))
+        targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload)
+        expect(queue_intervals).to match_array(metric_targets(targets))
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
@@ -187,7 +186,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
           expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
                                                            'perf_capture_historical'    => expected_targets.count * 8,
                                                            'destroy_older_by_condition' => 1)
-          assert_metric_targets(expected_targets)
+          expect(queue_intervals).to match_array(metric_targets(expected_targets))
         end
       end
     end
