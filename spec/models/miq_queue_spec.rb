@@ -1,4 +1,4 @@
-describe MiqQueue do
+RSpec.describe MiqQueue do
   specify { expect(FactoryBot.build(:miq_queue)).to be_valid }
 
   context "#deliver" do
@@ -934,6 +934,25 @@ describe MiqQueue do
 
     it "without a zone" do
       expect(MiqQueue.create!(:state => "ready")).to be_kind_of(MiqQueue)
+    end
+  end
+
+  context ".submit_job", :submit_job do
+    let(:ems) { FactoryBot.create(:ems_vmware) }
+    let(:vm) { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+    let(:options) { {:method_name => 'enable', :class_name => vm.class.name, :instance_id => vm.id, :affinity => ems} }
+
+    it "sets options to expected values for an ems_operations service" do
+      queue = MiqQueue.submit_job(options.merge(:service => 'ems_operations'))
+
+      expect(queue).to have_attributes(
+        :class_name  => vm.class.name,
+        :method_name => options[:method_name],
+        :role        => 'ems_operations',
+        :queue_name  => ems.queue_name_for_ems_operations,
+        :zone        => ems.my_zone,
+        :args        => []
+      )
     end
   end
 end

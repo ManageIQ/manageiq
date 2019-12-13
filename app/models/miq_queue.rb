@@ -176,9 +176,9 @@ class MiqQueue < ApplicationRecord
   #
   # target_worker:
   #
-  # @options options [String] :class
-  # @options options [String] :instance
-  # @options options [String] :method
+  # @options options [String] :class_name
+  # @options options [String] :instance_id
+  # @options options [String] :method_name
   # @options options [String] :args
   # @options options [String] :target_id (deprecated)
   # @options options [String] :data (deprecated)
