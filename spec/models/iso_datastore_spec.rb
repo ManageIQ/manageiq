@@ -29,7 +29,6 @@ RSpec.describe IsoDatastore do
 
     context "ems is rhv" do
       context "supports api4" do
-        let(:supported_api_versions) { %w(3 4) }
         it "send the method to ovirt services v4" do
           expect_any_instance_of(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::V4)
             .to receive(:advertised_images)
