@@ -97,7 +97,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
   end
 
   def queue_signal(*args, deliver_on: nil, priority: MiqQueue::NORMAL_PRIORITY)
-    super(*args, role: 'ems_operations', deliver_on: deliver_on, priority: priority)
+    super(*args, :role => 'ems_operations', :deliver_on => deliver_on, :priority => priority)
   end
 
   def orchestration_stack
