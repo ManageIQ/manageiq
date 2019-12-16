@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 126 ending 2019-12-09
+
+### Added
+
+* Streamline Cap and U capture [(#19599)](https://github.com/ManageIQ/manageiq/pull/19599)
+* Development environment performance improvement by removing the seeding of the database on startup [(#19535)](https://github.com/ManageIQ/manageiq/pull/19535)
+* Drop support for forking workers, use spawn by default [(#19556)](https://github.com/ManageIQ/manageiq/pull/19556)
+
+### Fixed
+
+* Look up worker by guid not pid because pid is unreliable in a container deployment [(#19557)](https://github.com/ManageIQ/manageiq/pull/19557)
+* Fix currency list on new symbol, UZS [(#19567)](https://github.com/ManageIQ/manageiq/pull/19567)
+* Raise an exception if an invalid path is passed to autoload [(#19537)](https://github.com/ManageIQ/manageiq/pull/19537)
+
+# Unreleased as of Sprint 125 ending 2019-11-25
+
+### Added
+* Improved metrics_capture support [(#19511)](https://github.com/ManageIQ/manageiq/pull/19511), [(#19506)](https://github.com/ManageIQ/manageiq/pull/19506), [(#19522)](https://github.com/ManageIQ/manageiq/pull/19522)
+* Added support for configuring SAML and OIDC authentication settings enabling automated configuration from the appliance_console CLI [(#19525)](https://github.com/ManageIQ/manageiq/pull/19525)
+* Added the ability for the orchestrator to run on either OpenShift or Kubernetes by using only objects supported by both.  [(#19500)](https://github.com/ManageIQ/manageiq/pull/19500)
+* Added MiqWorkerType model replacing the worker type constant [(#19536)](https://github.com/ManageIQ/manageiq/pull/19536)
+* Use table currencies if they exist in ChargebackRateDetailCurrency [(#19350)](https://github.com/ManageIQ/manageiq/pull/19350)
+
+### Fixed
+
+* Removed no longer supported oVirt V3 api calls [(#19508)](https://github.com/ManageIQ/manageiq/pull/19508)
+* Fixed starting of metrics collector workers, even when the role was not active [(#19494)](https://github.com/ManageIQ/manageiq/pull/19494)
+* Ensure dashboard names are only unique within a group [(#19491)](https://github.com/ManageIQ/manageiq/pull/19491)
+* Fixed missing display of available disk space under Utilization [(#19502)](https://github.com/ManageIQ/manageiq/pull/19502)
+* Fix user lookups by email when provisioning [(#19515)](https://github.com/ManageIQ/manageiq/pull/19515)
+
 
 # Unreleased as of Sprint 124 ending 2019-11-11
 
