@@ -4,7 +4,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner do
 
   context "#queue_signal" do
     it "queues a signal with the queue_signal method" do
-      runner = described_class.new(:options => {:orchestration_template_id => template.id, :zone => zone.id})
+      runner = described_class.create_job(:options => {:orchestration_template_id => template.id, :zone => zone})
       queue = runner.queue_signal
 
       expect(queue).to have_attributes(
