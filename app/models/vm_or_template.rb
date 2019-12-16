@@ -351,6 +351,25 @@ class VmOrTemplate < ApplicationRecord
     ext_management_system.send(verb, self, options)
   end
 
+  # keep the same method signature as others in retirement mixin
+  def self.make_retire_request(*src_ids, requester, initiated_by: 'user')
+    vms = where(:id => src_ids)
+
+    missing_ids = src_ids - vms.pluck(:id)
+    _log.error("Retirement of [Vm] IDs: [#{missing_ids.join(', ')}] skipped - target(s) does not exist")
+
+    vms.each do |target|
+      target.check_policy_prevent('request_vm_retire', "retire_request_after_policy_check", requester.userid, :initiated_by => initiated_by)
+    end
+  end
+
+  def retire_request_after_policy_check(userid, initiated_by: 'user')
+    options = {:src_ids => [id], :__initiated_by__ => initiated_by, :__request_type__ => VmRetireRequest.request_types.first}
+    requester = User.find_by(:userid => userid)
+    self.class.set_retirement_requester(options[:src_ids], requester)
+    VmRetireRequest.make_request(nil, options, requester)
+  end
+
   # policy_event: the event sent to automate for policy resolution
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy
