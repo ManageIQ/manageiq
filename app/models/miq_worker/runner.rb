@@ -249,14 +249,6 @@ class MiqWorker::Runner
     exit exit_code
   end
 
-  #
-  # Message handling methods
-  #
-
-  def message_exit(*_args)
-    do_exit("Exit request received.")
-  end
-
   def message_sync_config(*_args)
     _log.info("#{log_prefix} Synchronizing configuration...")
     sync_config

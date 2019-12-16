@@ -277,6 +277,7 @@ describe "MiqWorker Monitor" do
         context "for heartbeat" do
           it "should mark not responding if not recently heartbeated via Drb" do
             worker.update(:last_heartbeat => 20.minutes.ago)
+            expect(Process).to receive(:kill).with("TERM", worker.pid)
             expect(server.validate_worker(worker)).to be_falsey
             expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPING)
           end
@@ -301,26 +302,22 @@ describe "MiqWorker Monitor" do
           it "should trigger memory threshold if worker is started" do
             worker.status = MiqWorker::STATUS_STARTED
             expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
+            expect(Process).to receive(:kill).with("TERM", worker.pid)
             server.validate_worker(worker)
           end
 
           it "should trigger memory threshold if worker is ready" do
             worker.status = MiqWorker::STATUS_READY
             expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
+            expect(Process).to receive(:kill).with("TERM", worker.pid)
             server.validate_worker(worker)
           end
 
           it "should trigger memory threshold if worker is working" do
             worker.status = MiqWorker::STATUS_WORKING
             expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop).once
+            expect(Process).to receive(:kill).with("TERM", worker.pid)
             server.validate_worker(worker)
-          end
-
-          it "should return proper message on heartbeat" do
-            worker.status = MiqWorker::STATUS_READY
-            expect(server.worker_heartbeat(worker.pid)).to eq([])
-            server.validate_worker(worker) # Validation will populate message
-            expect(server.worker_heartbeat(worker.pid)).to eq([['exit']])
           end
         end
       end
