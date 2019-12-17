@@ -109,6 +109,10 @@ class EmsFolder < ApplicationRecord
     path.any? { |folder| folder.name == "vm" && folder.hidden? }
   end
 
+  def register_host(_host)
+    raise NotImplementedError, _("register_host must be implemented by a subclass")
+  end
+
   # Folder pathing methods
   # TODO: Store the full path directly in the folder objects for performance reasons
 
