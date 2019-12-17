@@ -1022,8 +1022,8 @@ class MiqAction < ApplicationRecord
         :zone        => zone
       }
 
-      if role == 'ems_operations' && target.respond_to?(:queue_name_for_ems_operations)
-        options[:queue_name] = target.queue_name_for_ems_operations
+      if role == 'ems_operations'
+        options[:queue_name] = target.try(:queue_name_for_ems_operations) || 'generic'
       end
 
       MiqQueue.put(options)
