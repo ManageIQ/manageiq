@@ -23,11 +23,6 @@ module EmsRefresh
   # of quietly recording them as failures and continuing.
   mattr_accessor :debug_failures
 
-  # Development helper method for setting up the selector specs for VC
-  def self.init_console
-    ManageIQ::Providers::Vmware::InfraManager::Refresher.init_console
-  end
-
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
   def self.queue_refresh_task(target, id = nil)
@@ -75,8 +70,6 @@ module EmsRefresh
 
   def self.refresh(target, id = nil)
     require "inventory_refresh"
-
-    EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = get_target_objects(target, id).uniq
