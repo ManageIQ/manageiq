@@ -6,22 +6,17 @@ module MiqWebServerRunnerMixin
 
   def do_before_work_loop
     @worker.release_db_connection
-
-    # Since puma traps interrupts, log that we're going away and update our worker row
-    at_exit { do_exit("Exit request received.") }
   end
 
-  def start
-    _log.info("URI: #{worker.uri}")
-
-    # Do all the SQL worker preparation in the main thread
-    prepare
-
+  def run
     # The heartbeating will be done in a separate thread
-    Thread.new { run }
+    worker_thread = Thread.new { super }
 
     worker.class.configure_secret_token
     start_rails_server(worker.rails_server_options)
+
+    # when puma exits allow the heartbeat thread to exit cleanly using #do_exit
+    worker_thread.join
   end
 
   def start_rails_server(options)
@@ -33,6 +28,10 @@ module MiqWebServerRunnerMixin
       Dir.chdir(Vmdb::Application.root)
       server.start
     end
+  rescue SignalException => e
+    raise unless MiqWorker::Runner::INTERRUPT_SIGNALS.include?(e.message)
+  ensure
+    @worker_should_exit = true
   end
 
   def do_heartbeat_work

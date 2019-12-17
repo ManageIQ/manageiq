@@ -15,6 +15,8 @@ describe MiqServer::WorkerManagement::Monitor do
     end
 
     it "destroys an unresponsive 'stopping' worker" do
+      expect(Process).to receive(:kill).with("TERM", worker.pid)
+      expect(Process).to receive(:kill).with(9, worker.pid)
       worker.update(:last_heartbeat => 20.minutes.ago)
       server.stop_worker(worker)
       server.check_not_responding
@@ -24,6 +26,7 @@ describe MiqServer::WorkerManagement::Monitor do
     end
 
     it "monitors recently heartbeated 'stopping' workers" do
+      expect(Process).to receive(:kill).with("TERM", worker.pid)
       worker.update(:last_heartbeat => 1.minute.ago)
       server.stop_worker(worker)
       server.check_not_responding

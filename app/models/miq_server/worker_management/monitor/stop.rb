@@ -41,11 +41,13 @@ module MiqServer::WorkerManagement::Monitor::Stop
       w.stop_container
     elsif w.systemd_worker?
       w.stop_systemd_worker
-    elsif w.respond_to?(:terminate)
-      w.terminate
     else
       w.update(:status => MiqWorker::STATUS_STOPPING)
-      worker_set_message(w, 'exit')
+      if w.pid
+        Process.kill("TERM", w.pid)
+      else
+        _log.error("Failed to stop worker #{w.inspect}; pid is nil")
+      end
     end
   end
 end

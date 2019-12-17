@@ -9,7 +9,7 @@ class MiqWorker::Runner
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :active_roles, :server
 
-  INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
+  INTERRUPT_SIGNALS = %w[SIGINT SIGTERM].freeze
 
   SAFE_SLEEP_SECONDS = 60
 
@@ -32,16 +32,12 @@ class MiqWorker::Runner
     parent
   end
 
-  def self.interrupt_signals
-    INTERRUPT_SIGNALS
-  end
-
   def initialize(cfg = {})
     @cfg = cfg
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
-    @sigterm_received = false
+    @worker_should_exit = false
 
     worker_initialization
     after_initialize
@@ -120,13 +116,6 @@ class MiqWorker::Runner
   def start
     prepare
     run
-
-  rescue SignalException => e
-    if e.kind_of?(Interrupt) || self.class.interrupt_signals.include?(e.message)
-      do_exit("Interrupt signal (#{e}) received.")
-    else
-      raise
-    end
   end
 
   def recover_from_temporary_failure
@@ -249,14 +238,6 @@ class MiqWorker::Runner
     exit exit_code
   end
 
-  #
-  # Message handling methods
-  #
-
-  def message_exit(*_args)
-    do_exit("Exit request received.")
-  end
-
   def message_sync_config(*_args)
     _log.info("#{log_prefix} Synchronizing configuration...")
     sync_config
@@ -332,9 +313,7 @@ class MiqWorker::Runner
         @backoff = nil
       end
 
-      # Should be caught by the rescue in `#start` and will run do_exit from
-      # there.
-      raise Interrupt if @sigterm_received
+      do_exit("Request to exit received:") if @worker_should_exit
 
       do_gc
       self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
@@ -487,8 +466,9 @@ class MiqWorker::Runner
   # received from the container management system (aka OpenShift).  The SIGINT
   # trap is mostly a developer convenience.
   def setup_sigterm_trap
-    Kernel.trap("TERM") { @sigterm_received = true }
-    Kernel.trap("INT")  { @sigterm_received = true }
+    INTERRUPT_SIGNALS.each do |signal|
+      Kernel.trap(signal) { @worker_should_exit = true }
+    end
   end
 
   protected
