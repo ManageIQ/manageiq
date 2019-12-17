@@ -41,7 +41,7 @@ class MiqWorker::Runner
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
-    @sigterm_received = false
+    @worker_should_exit = false
 
     worker_initialization
     after_initialize
@@ -120,13 +120,6 @@ class MiqWorker::Runner
   def start
     prepare
     run
-
-  rescue SignalException => e
-    if e.kind_of?(Interrupt) || self.class.interrupt_signals.include?(e.message)
-      do_exit("Interrupt signal (#{e}) received.")
-    else
-      raise
-    end
   end
 
   def recover_from_temporary_failure
@@ -324,9 +317,7 @@ class MiqWorker::Runner
         @backoff = nil
       end
 
-      # Should be caught by the rescue in `#start` and will run do_exit from
-      # there.
-      raise Interrupt if @sigterm_received
+      do_exit("Request to exit received:") if @worker_should_exit
 
       do_gc
       self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
@@ -479,8 +470,9 @@ class MiqWorker::Runner
   # received from the container management system (aka OpenShift).  The SIGINT
   # trap is mostly a developer convenience.
   def setup_sigterm_trap
-    Kernel.trap("TERM") { @sigterm_received = true }
-    Kernel.trap("INT")  { @sigterm_received = true }
+    self.class.interrupt_signals.each do |signal|
+      Kernel.trap(signal) { @worker_should_exit = true }
+    end
   end
 
   protected
