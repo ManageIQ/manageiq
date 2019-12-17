@@ -10,18 +10,26 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
     ext_management_system.class::AuthKeyPair
   end
 
+  # Create an auth key pair as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the provided EMS instance. The EMS
+  # instance and a userid are mandatory. Any +options+ are forwarded as
+  # arguments to the +create_key_pair+ method.
+  #
   def self.create_key_pair_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "creating Auth Key Pair for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
-      :class_name  => "ManageIQ::Providers::CloudManager::AuthKeyPair",
+      :class_name  => 'ManageIQ::Providers::CloudManager::AuthKeyPair',
       :method_name => 'create_key_pair',
       :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
       :args        => [ext_management_system.id, options]
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -41,19 +49,25 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
     )
   end
 
+  # Delete an auth key pair as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the resource, and a userid is mandatory.
+  #
   def delete_key_pair_queue(userid)
     task_opts = {
       :action => "deleting Auth Key Pair for user #{userid}",
       :userid => userid
     }
+
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete_key_pair',
       :instance_id => id,
       :role        => 'ems_operations',
+      :queue_name  => resource.queue_name_for_ems_operations,
       :zone        => resource.my_zone,
       :args        => []
     }
+
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
