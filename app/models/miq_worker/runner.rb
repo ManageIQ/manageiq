@@ -9,7 +9,7 @@ class MiqWorker::Runner
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :active_roles, :server
 
-  INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
+  INTERRUPT_SIGNALS = %w[SIGINT SIGTERM].freeze
 
   SAFE_SLEEP_SECONDS = 60
 
@@ -30,10 +30,6 @@ class MiqWorker::Runner
 
   def self.corresponding_model
     parent
-  end
-
-  def self.interrupt_signals
-    INTERRUPT_SIGNALS
   end
 
   def initialize(cfg = {})
@@ -470,7 +466,7 @@ class MiqWorker::Runner
   # received from the container management system (aka OpenShift).  The SIGINT
   # trap is mostly a developer convenience.
   def setup_sigterm_trap
-    self.class.interrupt_signals.each do |signal|
+    INTERRUPT_SIGNALS.each do |signal|
       Kernel.trap(signal) { @worker_should_exit = true }
     end
   end

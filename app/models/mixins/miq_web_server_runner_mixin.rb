@@ -28,7 +28,8 @@ module MiqWebServerRunnerMixin
       Dir.chdir(Vmdb::Application.root)
       server.start
     end
-  rescue SignalException
+  rescue SignalException => e
+    raise unless MiqWorker::Runner::INTERRUPT_SIGNALS.include?(e.message)
   ensure
     @worker_should_exit = true
   end
