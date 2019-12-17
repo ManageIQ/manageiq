@@ -162,6 +162,12 @@ RSpec.describe MiqAction do
       @action = FactoryBot.create(:miq_action, :name => "vm_stop")
     end
 
+    it "synchronous" do
+      input = {:synchronous => true}
+      expect(MiqQueue).not_to receive(:put)
+      @action.action_vm_stop(@action, @vm, input)
+    end
+
     it "asynchronous" do
       input = {:synchronous => false}
       @action.action_vm_stop(@action, @vm, input)
