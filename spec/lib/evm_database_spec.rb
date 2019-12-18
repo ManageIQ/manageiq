@@ -17,8 +17,8 @@ describe EvmDatabase do
   end
 
   describe ".seed" do
-    it "seeds primordial and non-primordial classes by default" do
-      (described_class::PRIMORDIAL_SEEDABLE_CLASSES + described_class::OTHER_SEEDABLE_CLASSES).each do |klass|
+    it "seeds primordial, non-primordial, and plugin classes by default" do
+      described_class.seedable_classes.each do |klass|
         expect(klass.constantize).to receive(:seed)
       end
 
@@ -64,7 +64,7 @@ describe EvmDatabase do
 
   describe ".seed_rest" do
     it "only seeds non-primordial classes" do
-      described_class::OTHER_SEEDABLE_CLASSES.each do |klass|
+      (described_class::OTHER_SEEDABLE_CLASSES + described_class.seedable_plugin_classes).each do |klass|
         expect(klass.constantize).to receive(:seed)
       end
       expect(described_class::PRIMORDIAL_SEEDABLE_CLASSES.first.constantize).to_not receive(:seed)
