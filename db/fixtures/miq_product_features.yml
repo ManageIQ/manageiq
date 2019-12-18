@@ -6412,6 +6412,10 @@
     :feature_type: node
     :identifier: sui_dashboard
     :children:
+    - :name: View Dashboard
+      :description: Display any dashboards
+      :feature_type: view
+      :identifier: sui_dashboard_show
     - :name: Monthly Charge view
       :description: Display monthly charges
       :feature_type: view
