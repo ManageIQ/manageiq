@@ -145,21 +145,6 @@ module MiqServer::ServerSmartProxy
     true
   end
 
-  # TODO: This should be moved - where?
-  def is_vix_disk_supported?
-    # This is only available on Linux
-    return false unless Sys::Platform::IMPL == :linux
-
-    begin
-      require 'VMwareWebService/VixDiskLib/VixDiskLib'
-      return true
-    rescue Exception
-      # It is ok if we hit an error, it just means the library is not available to load.
-    end
-
-    false
-  end
-
   def concurrent_job_max
     return 0 unless self.is_a_proxy?
 
