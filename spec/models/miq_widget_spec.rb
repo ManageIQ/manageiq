@@ -184,7 +184,7 @@ describe MiqWidget do
         end
 
         it 'only returns groups in the current region' do
-          groups = [@group1, @group2]
+          groups = MiqGroup.where(:id => [@group1, @group2])
           expect(MiqGroup).to receive(:in_my_region).and_return(groups)
           allow(groups).to receive(:where).and_return(groups)
           @widget_report_vendor_and_guest_os.grouped_subscribers
