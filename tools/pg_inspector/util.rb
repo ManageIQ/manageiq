@@ -1,5 +1,4 @@
 require 'yaml'
-require 'highline'
 
 module PgInspector
   class Util
