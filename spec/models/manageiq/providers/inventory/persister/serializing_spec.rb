@@ -12,8 +12,6 @@ describe ManageIQ::Providers::Inventory::Persister do
   #
   before do
     @ems = FactoryBot.create(:ems_cloud)
-
-    allow(Settings.ems_refresh).to receive(:mock).and_return({})
   end
 
   it "tests we can serialize inventory object with nested lazy references" do
