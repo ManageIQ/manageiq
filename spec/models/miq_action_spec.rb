@@ -153,6 +153,37 @@ RSpec.describe MiqAction do
     end
   end
 
+  context "#action_vm_stop" do
+    before do
+      @zone   = FactoryBot.create(:zone)
+      @ems    = FactoryBot.create(:ems_vmware, :zone => @zone)
+      @host   = FactoryBot.create(:host_vmware)
+      @vm     = FactoryBot.create(:vm_vmware, :host => @host, :ext_management_system => @ems)
+      @action = FactoryBot.create(:miq_action, :name => "vm_stop")
+    end
+
+    it "synchronous" do
+      input = {:synchronous => true}
+      expect(MiqQueue).not_to receive(:put)
+      @action.action_vm_stop(@action, @vm, input)
+    end
+
+    it "asynchronous" do
+      input = {:synchronous => false}
+      @action.action_vm_stop(@action, @vm, input)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.where(:class_name => @vm.class.name).first).to have_attributes(
+        :class_name  => @vm.class.name,
+        :method_name => 'stop',
+        :role        => 'ems_operations',
+        :queue_name  => 'generic',
+        :zone        => @ems.my_zone,
+        :args        => []
+      )
+    end
+  end
+
   context "#action_vm_retire" do
     before do
       @vm     = FactoryBot.create(:vm_vmware)

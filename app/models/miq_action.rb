@@ -1011,7 +1011,8 @@ class MiqAction < ApplicationRecord
       target.send(target_method, *target_args)
     else
       MiqPolicy.logger.info("#{log_prefix} Queueing #{log_suffix}")
-      MiqQueue.put(
+
+      options = {
         :class_name  => static ? target.name : target.class.name,
         :method_name => target_method,
         :instance_id => static ? nil : target.id,
@@ -1019,7 +1020,13 @@ class MiqAction < ApplicationRecord
         :role        => role,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => zone
-      )
+      }
+
+      if role == 'ems_operations'
+        options[:queue_name] = target.try(:queue_name_for_ems_operations) || 'generic'
+      end
+
+      MiqQueue.put(options)
     end
   end
 
