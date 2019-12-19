@@ -2,11 +2,6 @@ describe MiqWorkerType do
   describe ".seed" do
     before { described_class.seed }
 
-    it "doesn't create a row for excluded classes" do
-      expect(described_class.count).to be > 0
-      expect(described_class.pluck(:worker_type)).not_to include(*described_class::EXCLUDED_CLASS_NAMES)
-    end
-
     it "correctly creates records for workers" do
       generic_worker = described_class.find_by(:worker_type => "MiqGenericWorker")
       ui_worker      = described_class.find_by(:worker_type => "MiqUiWorker")

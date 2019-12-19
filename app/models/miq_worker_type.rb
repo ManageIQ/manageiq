@@ -1,6 +1,4 @@
 class MiqWorkerType < ApplicationRecord
-  EXCLUDED_CLASS_NAMES = %w[ManageIQ::Providers::BaseManager::OperationsWorker].freeze
-
   KILL_PRIORITY_METRICS_PROCESSOR_WORKERS = 10
   KILL_PRIORITY_METRICS_COLLECTOR_WORKERS = 20
   KILL_PRIORITY_REPORTING_WORKERS         = 30
@@ -36,7 +34,7 @@ class MiqWorkerType < ApplicationRecord
   end
 
   private_class_method def self.classes_for_seed
-    @classes_for_seed ||= MiqWorker.descendants.select { |w| w.subclasses.empty? } - EXCLUDED_CLASS_NAMES.map(&:constantize)
+    @classes_for_seed ||= MiqWorker.descendants.select { |w| w.subclasses.empty? }
   end
 
   private_class_method def self.seed_worker(klass)
