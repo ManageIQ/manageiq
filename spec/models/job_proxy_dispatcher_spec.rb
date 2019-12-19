@@ -87,7 +87,6 @@ RSpec.describe JobProxyDispatcher do
       context "with a vm without a storage" do
         before do
           # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
-          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
           @vm = @vms.first
           @vm.storage = nil
           @vm.save
@@ -103,7 +102,6 @@ RSpec.describe JobProxyDispatcher do
       context "with a Microsoft vm without a storage" do
         before do
           # Test a Microsoft vm without a storage
-          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
           @vm = @vms.first
           @vm.storage = nil
           @vm.vendor = "microsoft"
@@ -119,7 +117,6 @@ RSpec.describe JobProxyDispatcher do
       context "with a Microsoft vm with a Microsoft storage" do
         before do
           # Test a Microsoft vm without a storage
-          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
           @vm = @vms.first
           @vm.storage.store_type = "CSVFS"
           @vm.vendor = "microsoft"
@@ -135,7 +132,6 @@ RSpec.describe JobProxyDispatcher do
       context "with a Microsoft vm with an invalid storage" do
         before do
           # Test a Microsoft vm without a storage
-          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
           @vm = @vms.first
           @vm.storage.store_type = "XFS"
           @vm.vendor = "microsoft"
@@ -151,7 +147,6 @@ RSpec.describe JobProxyDispatcher do
 
       context "with jobs, a default smartproxy for repo scanning" do
         before do
-          allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
           @repo_proxy = @proxies.last
           if @repo_proxy
             @repo_proxy.name = "repo_proxy"

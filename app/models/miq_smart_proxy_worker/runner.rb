@@ -1,6 +1,4 @@
 class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
-  self.delay_startup_for_vim_broker = true # NOTE: For smartproxy role
-
   def do_before_work_loop
     @tid = start_heartbeat_thread
   end
