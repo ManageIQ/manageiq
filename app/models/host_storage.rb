@@ -10,7 +10,7 @@ class HostStorage < ApplicationRecord
 
   class << self
     def writable_accessible
-      writable.accessible
+      writable.accessible.joins(:storage).merge(Storage.available)
     end
   end
 end
