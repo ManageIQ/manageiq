@@ -215,8 +215,8 @@ describe "MiqWorker Monitor" do
             @miq_server.message_for_worker(@worker1.id, "foo")
           end
 
-          it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['foo']])
+          it "#worker_get_messages should return proper message via drb" do
+            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['foo']])
           end
         end
 
@@ -225,8 +225,8 @@ describe "MiqWorker Monitor" do
             @miq_server.message_for_worker(@worker1.id, "sync_config")
           end
 
-          it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['sync_config']])
+          it "#worker_get_messages should return proper message via drb" do
+            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['sync_config']])
           end
         end
 
@@ -236,8 +236,8 @@ describe "MiqWorker Monitor" do
             @miq_server.message_for_worker(@worker1.id, 'reconnect_ems', @ems_id.to_s)
           end
 
-          it "should return proper message on heartbeat via drb" do
-            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s]])
+          it "#worker_get_messages should return proper message via drb" do
+            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s]])
           end
 
           context "and an exit message" do
@@ -245,8 +245,8 @@ describe "MiqWorker Monitor" do
               @miq_server.message_for_worker(@worker1.id, 'exit')
             end
 
-            it "should return proper message on heartbeat via drb" do
-              expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s], ['exit']])
+            it "#worker_get_messages should return proper message via drb" do
+              expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s], ['exit']])
             end
           end
         end
