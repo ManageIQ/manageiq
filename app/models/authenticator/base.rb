@@ -109,7 +109,7 @@ module Authenticator
 
       run_task(taskid, "Authorizing") do |task|
         begin
-          identity = find_external_identity(username, *args)
+          identity = find_external_identity(username, args[0], args[1])
 
           unless identity
             msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
@@ -151,7 +151,7 @@ module Authenticator
       end
     end
 
-    def find_external_identity(_username, *_args)
+    def find_external_identity(_username, _user_attrs, _membership_list)
       raise NotImplementedError, _("find_external_identity must be implemented in a subclass")
     end
 
