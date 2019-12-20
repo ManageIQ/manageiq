@@ -177,7 +177,7 @@ RSpec.describe MiqAction do
         :class_name  => @vm.class.name,
         :method_name => 'stop',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => @ems.queue_name_for_ems_operations,
         :zone        => @ems.my_zone,
         :args        => []
       )
