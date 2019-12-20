@@ -1,4 +1,4 @@
-describe Zone do
+RSpec.describe Zone do
   context ".seed" do
     before { MiqRegion.seed }
     include_examples ".seed called multiple times", 2
@@ -148,11 +148,6 @@ describe Zone do
   context "ConfigurationManagementMixin" do
     describe "#remote_cockpit_ws_miq_server" do
       before do
-        @csv = <<-CSV.gsub(/^\s+/, "")
-          name,description,max_concurrent,external_failover,role_scope
-          cockpit_ws,Cockpit,1,false,zone
-        CSV
-        allow(ServerRole).to receive(:seed_data).and_return(@csv)
         ServerRole.seed
         _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
       end
