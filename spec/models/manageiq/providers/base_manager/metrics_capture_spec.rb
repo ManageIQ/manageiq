@@ -125,27 +125,22 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqRegion.seed
     end
 
-    let(:host) { FactoryBot.create(:host_target_vmware, :ext_management_system => ems).tap { MiqQueue.delete_all } }
-    let(:vm) { host.vms.first }
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host).tap { MiqQueue.delete_all } }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+        )
+    end
+    let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
 
-    context "with enabled and disabled vmware targets" do
-      before do
-        @storages = FactoryBot.create_list(:storage_target_vmware, 2)
-        @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
-        ems.ems_clusters = @vmware_clusters
-
-        6.times do |n|
-          host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
-          ems.hosts << host
-
-          @vmware_clusters[n / 2].hosts << host if n < 4
-          host.storages << @storages[n / 3]
-        end
-
-        MiqQueue.delete_all
-        ems.reload
-      end
-
+    context "with vmware targets" do
       let(:expected_queue_items) do
         {
           %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime]   => 3,
@@ -153,13 +148,12 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
           %w[Storage perf_capture_hourly]                                             => 1,
           %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime]     => 2,
           %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical]   => 16,
-          %w[MiqTask destroy_older_by_condition]                                      => 1
         }
       end
 
-      it "should queue up enabled targets" do
+      it "should queue up targets properly" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-        Metric::Capture.perf_capture_timer(ems.id)
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
 
         expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
         targets = Metric::Targets.capture_ems_targets(ems.reload)
@@ -167,41 +161,31 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-        Metric::Capture.perf_capture_timer(ems.id)
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
-        messages.each { |m| m.update_attribute(:state, "dequeue") }
+        messages.each { |m| m.update(:state => "dequeue") }
 
-        Metric::Capture.perf_capture_timer(ems.id)
-
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| expect(m.lock_version).to eq(1) }
       end
     end
 
     context "with enabled and disabled openstack targets" do
-      before do
-        @ems_openstack = FactoryBot.create(:ems_openstack, :zone => miq_server.zone)
-        @availability_zone = FactoryBot.create(:availability_zone_target)
-        @ems_openstack.availability_zones << @availability_zone
-        @vms_in_az = FactoryBot.create_list(:vm_openstack, 2, :ems_id => @ems_openstack.id)
-        @availability_zone.vms = @vms_in_az
-        @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
-        @vms_not_in_az = FactoryBot.create_list(:vm_openstack, 3, :ems_id => @ems_openstack.id)
-
-        MiqQueue.delete_all
-      end
+      let(:ems) { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
+      let(:vms) { FactoryBot.create_list(:vm_openstack, 3, :ext_management_system => ems) }
 
       context "executing perf_capture_timer" do
-        before do
-          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          Metric::Capture.perf_capture_timer(@ems_openstack.id)
-        end
-
         it "should queue up enabled targets" do
-          expected_targets = Metric::Targets.capture_ems_targets(@ems_openstack)
+          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
+          vms
+          MiqQueue.delete_all
+
+          ems.perf_capture_object.queue_captures(vms, {})
+
+          expected_targets = Metric::Targets.capture_ems_targets(ems.reload)
           expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
-                                                           'perf_capture_historical'    => expected_targets.count * 8,
-                                                           'destroy_older_by_condition' => 1)
+                                                           'perf_capture_historical'    => expected_targets.count * 8)
           expect(queue_intervals).to match_array(metric_targets(expected_targets))
         end
       end
