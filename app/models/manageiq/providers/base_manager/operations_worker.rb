@@ -23,4 +23,8 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
   def self.normalized_type
     @normalized_type ||= "ems_operations_worker"
   end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_GENERIC_WORKERS
+  end
 end

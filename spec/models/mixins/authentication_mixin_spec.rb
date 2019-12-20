@@ -722,7 +722,7 @@ describe AuthenticationMixin do
               :class_name  => @ems.class.name,
               :method_name => 'change_password',
               :role        => 'ems_operations',
-              :queue_name  => 'generic',
+              :queue_name  => @ems.queue_name_for_ems_operations,
               :zone        => @ems.my_zone,
               :args        => [current_password, new_password, :default]
             )

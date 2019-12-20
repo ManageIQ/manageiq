@@ -1,6 +1,6 @@
 RSpec.describe CloudVolume do
   let(:disks) { FactoryBot.create_list(:disk, 2) }
-  let(:ems) { FactoryBot.create(:ems_vmware) }
+  let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:cloud_volume) { FactoryBot.create(:cloud_volume, :ext_management_system => ems, :attachments => disks) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
 
@@ -23,7 +23,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'create_volume',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [ems.id, {}]
       )
@@ -48,7 +48,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'update_volume',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [options]
       )
@@ -71,7 +71,7 @@ RSpec.describe CloudVolume do
         :class_name  => described_class.name,
         :method_name => 'delete_volume',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => []
       )

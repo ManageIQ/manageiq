@@ -1,6 +1,6 @@
 RSpec.describe CloudVolumeBackup do
   let(:disks) { FactoryBot.create_list(:disk, 2) }
-  let(:ems) { FactoryBot.create(:ems_vmware) }
+  let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:cloud_volume) { FactoryBot.create(:cloud_volume, :ext_management_system => ems, :attachments => disks) }
   let(:cloud_volume_backup) { FactoryBot.create(:cloud_volume_backup, :ext_management_system => ems) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
@@ -19,7 +19,7 @@ RSpec.describe CloudVolumeBackup do
         :class_name  => described_class.name,
         :method_name => 'delete',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => []
       )
@@ -43,7 +43,7 @@ RSpec.describe CloudVolumeBackup do
         :class_name  => described_class.name,
         :method_name => 'restore',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [cloud_volume.id, name]
       )

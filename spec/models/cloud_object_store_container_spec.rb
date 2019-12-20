@@ -1,5 +1,5 @@
 RSpec.describe CloudObjectStoreContainer do
-  let(:ems) { FactoryBot.create(:ems_vmware) }
+  let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
 
   context "queued methods" do
@@ -16,7 +16,7 @@ RSpec.describe CloudObjectStoreContainer do
         :class_name  => described_class.name,
         :method_name => 'cloud_object_store_container_create',
         :role        => 'ems_operations',
-        :queue_name  => 'generic',
+        :queue_name  => ems.queue_name_for_ems_operations,
         :zone        => ems.my_zone,
         :args        => [ems.id, {}]
       )
