@@ -123,13 +123,29 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
   describe ".perf_capture_queue" do
     before do
       MiqRegion.seed
-      @zone = miq_server.zone
     end
 
     let(:host) { FactoryBot.create(:host_target_vmware, :ext_management_system => ems).tap { MiqQueue.delete_all } }
     let(:vm) { host.vms.first }
 
-    context "with enabled and disabled vmware targets", :with_enabled_disabled_vmware do
+    context "with enabled and disabled vmware targets" do
+      before do
+        @storages = FactoryBot.create_list(:storage_target_vmware, 2)
+        @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
+        ems.ems_clusters = @vmware_clusters
+
+        6.times do |n|
+          host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
+          ems.hosts << host
+
+          @vmware_clusters[n / 2].hosts << host if n < 4
+          host.storages << @storages[n / 3]
+        end
+
+        MiqQueue.delete_all
+        ems.reload
+      end
+
       let(:expected_queue_items) do
         {
           %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime]   => 3,
@@ -143,19 +159,19 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
       it "should queue up enabled targets" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-        Metric::Capture.perf_capture_timer(@ems_vmware.id)
+        Metric::Capture.perf_capture_timer(ems.id)
 
         expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
-        targets = Metric::Targets.capture_ems_targets(@ems_vmware.reload)
+        targets = Metric::Targets.capture_ems_targets(ems.reload)
         expect(queue_intervals).to match_array(metric_targets(targets))
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-        Metric::Capture.perf_capture_timer(@ems_vmware.id)
+        Metric::Capture.perf_capture_timer(ems.id)
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| m.update_attribute(:state, "dequeue") }
 
-        Metric::Capture.perf_capture_timer(@ems_vmware.id)
+        Metric::Capture.perf_capture_timer(ems.id)
 
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| expect(m.lock_version).to eq(1) }
