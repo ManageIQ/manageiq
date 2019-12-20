@@ -1147,7 +1147,8 @@ RSpec.describe Rbac::Filterer do
           :max_disk_usage_rate_average     => {},
           :min_net_usage_rate_average      => {},
           :max_net_usage_rate_average      => {},
-          :v_derived_storage_used          => {}
+          :v_derived_storage_used          => {},
+          :resource                        => {},
         }
       end
 
@@ -1157,8 +1158,10 @@ RSpec.describe Rbac::Filterer do
       it "should not raise an error when a polymorphic reflection is included" do
         result = nil
         expect do
+          # having the virtual attribute in references is the current way.
+          # even though resource is polymorphic, it is ending up in the join tables
           result = described_class.search :class            => "MetricRollup",
-                                          :include_for_find => @include
+                                          :include_for_find => @include, :references => @include
         end.not_to raise_error
         expect(result.first.length).to eq(1)
       end
