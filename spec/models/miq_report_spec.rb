@@ -755,8 +755,13 @@ RSpec.describe MiqReport do
       end
     end
     context "performance reports" do
-      let(:report) do
-        MiqReport.new(
+      let(:miq_server) { EvmSpecHelper.local_miq_server }
+      let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
+      let(:vm) { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+      let(:time_profile) { FactoryBot.create(:time_profile_utc) }
+
+      it "runs daily report" do
+        report = MiqReport.new(
           :title   => "vim_perf_daily.yaml",
           :db      => "VimPerformanceDaily",
           :cols    => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
@@ -765,10 +770,18 @@ RSpec.describe MiqReport do
                             cpu_usagemhz_rate_average_low_over_time_period
                             derived_memory_used_high_over_time_period
                             derived_memory_used_low_over_time_period)}})
+        report.generate_table(:userid => "admin")
       end
-      let(:ems) { FactoryBot.create(:ems_vmware, :zone => @server.zone) }
 
-      it "runs report" do
+      it "runs report with polymorphic references" do
+        FactoryBot.create(:metric_rollup_vm_daily, :resource => vm, :time_profile => time_profile)
+
+        report = MiqReport.new(
+          :title     => "vim_perf_daily.yaml",
+          :db        => "VimPerformanceDaily",
+          :col_order => %w[timestamp cpu_usagemhz_rate_average max_derived_cpu_available
+                           resource.derived_memory_used_low_over_time_period]
+        )
         report.generate_table(:userid => "admin")
       end
     end
