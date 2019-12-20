@@ -23,6 +23,31 @@ module Spec
         end
       end
 
+      # method_name => {target => [timing1, timing2] }
+      # for each capture type, what objects are submitted and what are their time frames
+      # @return [Hash{String => Hash{Object => Array<Array>}} ]
+      def queue_timings(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
+        messages = {}
+        items.each do |q|
+          obj = q.instance_id ? Object.const_get(q.class_name).find(q.instance_id) : q.class_name.constantize
+
+          interval_name = q.method_name.sub("perf_capture_", "")
+
+          messages[interval_name] ||= {}
+          (messages[interval_name][obj] ||= []) << q.args
+        end
+        messages["historical"]&.transform_values!(&:sort!)
+
+        messages
+      end
+
+      # sorry, stole from the code - not really testing
+      def arg_day_range(start_time, end_time, threshold = 1.day)
+        (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+          [s_time, e_time]
+        end
+      end
+
       def stub_performance_settings(hash)
         stub_settings(:performance => hash)
       end

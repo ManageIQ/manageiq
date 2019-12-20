@@ -160,4 +160,167 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
     end
   end
+
+  def trigger_capture(last_perf_capture_on = nil, options = {:interval => "realtime"})
+    vm.last_perf_capture_on = last_perf_capture_on if last_perf_capture_on
+    ems.perf_capture_object.queue_captures([vm], vm => options)
+  end
+
+  describe "#queue_items_for_interval" do
+    let!(:ems) { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
+    let(:vm) { FactoryBot.create(:vm_perf_openstack, :ext_management_system => ems) }
+
+    it "creates realtime only with last_perf_capture_on.nil? (first time) with no initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => nil})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        trigger_capture(nil, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(nil, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+        )
+      end
+    end
+
+    it "creates realtime and historical with last_perf_capture_on.nil? (first time) with initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => 7})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        trigger_capture(nil, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates historical only when requesting historical and with last_perf_capture_on.nil? (first time) with initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => 7})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        trigger_capture(nil, :interval => "historical")
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(nil, :interval => "historical")
+
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates realtime and historical with last_perf_capture_on older than the realtime_cut_off" do
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates realtime only with last_perf_capture_on newer than the realtime_cut_off" do
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (2.hours + 5.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime" => {vm => [[]]}
+        )
+      end
+    end
+
+    it "creates one set of realtime and historical with multiple calls" do
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(nil, :interval => "realtime")
+
+        expect(queue_timings).to eq(
+          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates queue item with task_id (which will set MiqTask#started_on)" do
+      MiqQueue.delete_all
+      task = FactoryBot.create(:miq_task)
+      trigger_capture(nil, :interval => "realtime", :task_id => task.id)
+
+      expect(MiqQueue.first.miq_task_id).to eq task.id
+    end
+
+    it "creates historical only when requesting historical and with old last_perf_capture_on with initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => 7})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "historical")
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(last_perf_capture_on, :interval => "historical")
+
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates historical only when requesting historical and recent last_perf_capture_on with initial_capture" do
+      stub_performance_settings(:history => {:initial_capture_days => 7})
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "historical")
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+
+        Timecop.travel(20.minutes)
+        trigger_capture(last_perf_capture_on, :interval => "historical")
+
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+        )
+      end
+    end
+
+    it "creates historical only when requesting historical with dates with recent last_perf_capture_on" do
+      MiqQueue.delete_all
+      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
+        last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago
+        trigger_capture(last_perf_capture_on, :interval => "historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
+        expect(queue_timings).to eq(
+          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
+        )
+      end
+    end
+  end
 end
