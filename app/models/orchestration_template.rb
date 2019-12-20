@@ -123,6 +123,13 @@ class OrchestrationTemplate < ApplicationRecord
     [stack_name_opt]
   end
 
+  # Typically the provider's cloud or infra manager class name. Providers that need
+  # something more advanced should define this within their respective subclass.
+  #
+  def self.eligible_manager_types
+    raise NotImplementedError, _("eligible_manager_types must be implemented in subclass")
+  end
+
   # List managers that may be able to deploy this template
   def self.eligible_managers
     Rbac::Filterer.filtered(ExtManagementSystem, :named_scope => [[:with_eligible_manager_types, eligible_manager_types]])
