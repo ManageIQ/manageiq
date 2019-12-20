@@ -1,4 +1,4 @@
-describe "JobProxyDispatcherVmProxies4Job" do
+RSpec.describe "JobProxyDispatcherVmProxies4Job" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do
@@ -55,7 +55,6 @@ describe "JobProxyDispatcherVmProxies4Job" do
         before do
           @job = @vm.raw_scan
           allow(@vm).to receive_messages(:storage2proxies => [])
-          allow(@vm).to receive_messages(:storage2activeproxies => [])
         end
 
         it "should call 'log_all_proxies'" do
