@@ -88,6 +88,21 @@ describe 'VM::Operations' do
     end
   end
 
+  describe '#supports_native_console?' do
+    it 'returns false if type is not supported' do
+      allow(@vm).to receive(:console_supported?).with('NATIVE').and_return(false)
+
+      expect(@vm.supports_native_console?).to be_falsey
+      expect(@vm.unsupported_reason(:native_console)).to include('NATIVE Console not supported')
+    end
+
+    it 'supports it if all conditions are met' do
+      allow(@vm).to receive(:console_supported?).with('NATIVE').and_return(true)
+
+      expect(@vm.supports_native_console?).to be_truthy
+    end
+  end
+
   describe '#supports_launch_vmrc_console?' do
     it 'does not support it if validate_remote_console_vmrc_support raises an error' do
       allow(@vm).to receive(:validate_remote_console_vmrc_support).and_raise(StandardError)
@@ -115,6 +130,21 @@ describe 'VM::Operations' do
       allow(@vm).to receive(:power_state).and_return('on')
 
       expect(@vm.supports_launch_html5_console?).to be_truthy
+    end
+  end
+
+  describe '#supports_launch_native_console?' do
+    it 'does not support it if validate_native_console_support raises an error' do
+      allow(@vm).to receive(:validate_native_console_support).and_raise(StandardError)
+
+      expect(@vm.supports_launch_native_console?).to be_falsey
+      expect(@vm.unsupported_reason(:launch_native_console)).to include('VM NATIVE Console error:')
+    end
+
+    it 'supports it if all conditions are met' do
+      allow(@vm).to receive(:validate_native_console_support)
+
+      expect(@vm.supports_launch_native_console?).to be_truthy
     end
   end
 end
