@@ -6,7 +6,6 @@ ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=
 
 RUN yum -y install --setopt=tsflags=nodocs \
                    memcached               \
-                   postgresql-server       \
                    mod_ssl                 \
                    openssh-clients         \
                    openssh-server          \
