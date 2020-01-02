@@ -65,6 +65,7 @@ describe PglogicalSubscription do
         :host                 => "example.com",
         :user                 => "root",
         :password             => nil,
+        :port                 => nil,
         :provider_region      => remote_region1,
         :provider_region_name => "The region"
       },
@@ -134,7 +135,7 @@ describe PglogicalSubscription do
     it "retrieves no records with no records" do
       with_no_records
       expect(described_class.all).to be_empty
-      expect(described_class.search(:all).to be_empty
+      expect(described_class.search(:all)).to be_empty
     end
   end
 
