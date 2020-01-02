@@ -20,39 +20,38 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
   end
 
-  describe ".perf_capture_now" do
-    context "with enabled and disabled targets" do
-      before do
-        MiqRegion.seed
-        storages = FactoryBot.create_list(:storage_target_vmware, 2)
-        clusters = FactoryBot.create_list(:cluster_target, 2)
-        ems.ems_clusters = clusters
+  describe ".perf_capture_gap" do
+    before do
+      MiqRegion.seed
+    end
 
-        6.times do |n|
-          host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
-          ems.hosts << host
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let!(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+      )
+    end
+    let!(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let!(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
 
-          clusters[n / 2].hosts << host if n < 4
-          host.storages << storages[n / 3]
-        end
-
-        MiqQueue.delete_all
-      end
-
-      context "executing perf_capture_gap" do
-        before do
-          t = Time.now.utc
-          Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days, nil, ems.id)
-        end
-
-        it "should queue up enabled targets for historical" do
-          expect(MiqQueue.count).to eq(10)
-
-          expected_targets = Metric::Targets.capture_ems_targets(ems.reload, :exclude_storages => true)
-          expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
-
-          expect(queue_intervals).to match_array(expected)
-        end
+    it "should queue up targets for historical" do
+      Timecop.freeze do
+        Metric::Capture.perf_capture_gap(7.days.ago.utc, 5.days.ago.utc, nil, ems.id)
+        expect(queue_timings).to eq(
+          "historical" => {
+            vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            vm2   => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host  => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host2 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host3 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+          }
+        )
       end
     end
   end
@@ -134,7 +133,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         :perf_capture_enabled  => true,
         :storages              => [storage],
         :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
-        )
+      )
     end
     let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
     let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
