@@ -50,32 +50,6 @@ module Spec
   end
 end
 
-# These contexts expect the following setup:
-#
-# before do
-#   MiqRegion.seed
-#   @zone = EvmSpecHelper.local_miq_server.zone
-# end
-RSpec.shared_context 'with enabled/disabled vmware targets', :with_enabled_disabled_vmware do
-  before do
-    @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
-    @storages = FactoryBot.create_list(:storage_target_vmware, 2)
-    @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
-    @ems_vmware.ems_clusters = @vmware_clusters
-
-    6.times do |n|
-      host = FactoryBot.create(:host_target_vmware, :ext_management_system => @ems_vmware)
-      @ems_vmware.hosts << host
-
-      @vmware_clusters[n / 2].hosts << host if n < 4
-      host.storages << @storages[n / 3]
-    end
-
-    MiqQueue.delete_all
-    @ems_vmware.reload
-  end
-end
-
 RSpec.shared_context "with a small environment and time_profile", :with_small_vmware do
   before do
     @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
