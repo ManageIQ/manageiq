@@ -8,7 +8,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
       2.times do
         t = Time.now.utc
         Timecop.freeze(t) do
-          miq_server.worker_heartbeat(pid)
+          miq_server.update_worker_last_heartbeat(pid)
           miq_server.persist_last_heartbeat(worker)
         end
 
@@ -37,7 +37,6 @@ describe MiqServer::WorkerManagement::Heartbeat do
 
           [0, 5].each do |i|
             Timecop.freeze(first_heartbeat) do
-              miq_server.worker_heartbeat(pid)
               miq_server.persist_last_heartbeat(worker)
             end
 
@@ -60,7 +59,6 @@ describe MiqServer::WorkerManagement::Heartbeat do
           # iteration of the loop
           [0, 5, 10, 15].each do |i|
             Timecop.freeze(first_heartbeat + i) do
-              miq_server.worker_heartbeat(pid)
               miq_server.persist_last_heartbeat(worker)
             end
 
@@ -76,7 +74,6 @@ describe MiqServer::WorkerManagement::Heartbeat do
 
           [0, 5].each do |i|
             Timecop.freeze(first_heartbeat) do
-              miq_server.worker_heartbeat(pid)
               miq_server.persist_last_heartbeat(worker)
             end
 
