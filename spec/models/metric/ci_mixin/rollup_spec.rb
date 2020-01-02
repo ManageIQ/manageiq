@@ -2,23 +2,45 @@ describe Metric::CiMixin::Rollup do
   before do
     MiqRegion.seed
 
-    @zone = EvmSpecHelper.local_miq_server.zone
+    @zone = miq_server.zone
   end
 
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
+  let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
+
   describe ".perf_rollup" do
-    context "with enabled and disabled targets", :with_enabled_disabled_vmware do
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+      )
+    end
+    let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
+    let(:host4)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true, :ems_cluster => host2.ems_cluster) }
+
+    context "with enabled and disabled targets" do
       context "executing perf_capture_timer" do
         before do
-          @expected_targets = all_targets
+          vm
+          vm2
+          host3
+          host4
+          @ems_vmware = ems
+          @vmware_clusters = [host2.ems_cluster]
+          @expected_targets = [vm, vm2, host, host2, host3, host4, storage]
+
           stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer(@ems_vmware.id)
         end
 
         context "executing capture_ems_targets for realtime targets with parent objects" do
-          before do
-            @expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware)
-          end
-
           it "should create tasks and queue callbacks for perf_capture_timer" do
             # stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
             # Metric::Capture.perf_capture_timer(@ems_vmware.id)

@@ -74,8 +74,6 @@ RSpec.shared_context 'with enabled/disabled vmware targets', :with_enabled_disab
     MiqQueue.delete_all
     @ems_vmware.reload
   end
-
-  let(:all_targets) { Metric::Targets.capture_ems_targets(@ems_vmware) }
 end
 
 RSpec.shared_context "with a small environment and time_profile", :with_small_vmware do
