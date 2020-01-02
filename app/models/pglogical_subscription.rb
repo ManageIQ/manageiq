@@ -9,6 +9,9 @@ class PglogicalSubscription
 
   attr_accessor :id, :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
 
+  # A list of attributes typically used on inspection, and necessary
+  # for ActiveModel::AttributeMethods, if used.
+  #
   def attributes
     {
       :id                   => @id,
@@ -50,6 +53,8 @@ class PglogicalSubscription
     end
   end
 
+  # Filter a +collection+ based on various +options+ that are used by QueryRelation.
+  #
   def self.filter_collection(collection, options)
     collection = collection.drop(options[:offset]) if options[:offset]
     collection = collection.take(options[:limit]) if options[:limit]
@@ -57,14 +62,13 @@ class PglogicalSubscription
     collection
   end
 
+  # Find a record by id, but return nil instead of raising an error if it's not found.
+  #
   def self.lookup_by_id(to_find)
     search(to_find)
   rescue ActiveRecord::RecordNotFound
     nil
   end
-
-  singleton_class.send(:alias_method, :find_by_id, :lookup_by_id)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
