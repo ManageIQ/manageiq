@@ -6,11 +6,16 @@ describe ManageIQ::Providers::InfraManager::MetricsCapture do
 
   before do
     MiqRegion.seed
-    storages = FactoryBot.create_list(:storage_target_vmware, 2)
-    clusters = FactoryBot.create_list(:cluster_target, 2, :ext_management_system => ems)
+    storages = FactoryBot.create_list(:storage_vmware, 2)
+    storages.each_with_index { |st, i| st.perf_capture_enabled = i.even? }
+    clusters = FactoryBot.create_list(:ems_cluster, 2, :ext_management_system => ems)
+    clusters.each_with_index { |cl, i| cl.perf_capture_enabled = i.even? }
 
     6.times do |n|
-      host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems, :ems_cluster => clusters[n / 2])
+      host = FactoryBot.create(:host_vmware, :ext_management_system => ems, :ems_cluster => clusters[n / 2], :perf_capture_enabled => n.even?)
+      2.times do |i|
+        FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host, :raw_power_state => i.even? ? "poweredOn" : "poweredOff")
+      end
       host.storages << storages[n / 3]
     end
 
