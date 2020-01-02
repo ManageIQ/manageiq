@@ -127,7 +127,7 @@ describe PglogicalSubscription do
 
     it "supports find(:all) with records" do
       with_records
-      actual_attrs = described_class.all.map(&:attributes)
+      actual_attrs = described_class.search(:all).map(&:attributes)
       expect(actual_attrs).to match_array(expected_attrs)
     end
 
