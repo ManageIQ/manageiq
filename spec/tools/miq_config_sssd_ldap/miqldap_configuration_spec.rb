@@ -17,8 +17,8 @@ RSpec.describe MiqConfigSssdLdap::MiqLdapConfiguration do
     end
 
     it 'does not merge current authentication setting with options when doing a fresh configuration' do
-      config = described_class.new(options)
-      expect(config).to_not receive(:current_authentication_settings)
+      expect_any_instance_of(described_class).to_not receive(:current_authentication_settings)
+      described_class.new(options)
     end
   end
 
