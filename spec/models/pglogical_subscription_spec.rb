@@ -169,7 +169,7 @@ describe PglogicalSubscription do
     it "retrieves the specified record with records" do
       with_records
       expected = expected_attrs.first
-      rec = described_class.search(expected["id"])
+      rec = described_class.search(expected[:id])
       expect(rec.attributes).to eq(expected)
     end
 
@@ -183,7 +183,7 @@ describe PglogicalSubscription do
     it "returns the specified record with records" do
       with_records
       expected = expected_attrs.first
-      rec = described_class.lookup_by_id(expected["id"])
+      rec = described_class.lookup_by_id(expected[:id])
       expect(rec.attributes).to eq(expected)
     end
 

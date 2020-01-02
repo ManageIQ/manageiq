@@ -45,7 +45,7 @@ class PglogicalSubscription
     when :last
       collection.last
     else
-      collection.select{ |e| e[:id] == mode }
+      collection.select{ |e| e.id == mode }
     end
   end
 
