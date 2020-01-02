@@ -3,6 +3,7 @@ require 'pg/logical_replication'
 require 'query_relation'
 
 class PglogicalSubscription
+  include Vmdb::Logging
   include ActiveModel::Model
   extend QueryRelation::Queryable
 
