@@ -141,23 +141,31 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
     let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
 
     context "with vmware targets" do
-      let(:expected_queue_items) do
-        {
-          %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_realtime]   => 3,
-          %w[ManageIQ::Providers::Vmware::InfraManager::Host perf_capture_historical] => 24,
-          %w[Storage perf_capture_hourly]                                             => 1,
-          %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_realtime]     => 2,
-          %w[ManageIQ::Providers::Vmware::InfraManager::Vm perf_capture_historical]   => 16,
-        }
-      end
-
       it "should queue up targets properly" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
         ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
 
-        expect(MiqQueue.group(:class_name, :method_name).count).to eq(expected_queue_items)
-        targets = Metric::Targets.capture_ems_targets(ems.reload)
-        expect(queue_intervals).to match_array(metric_targets(targets))
+        bod = Time.now.utc.beginning_of_day
+
+        expect(queue_timings).to eq(
+          "realtime"   => {
+            host  => [[bod]],
+            host2 => [[bod]],
+            host3 => [[bod]],
+            vm    => [[bod]],
+            vm2   => [[bod]]
+          },
+          "historical" => {
+            host  => arg_day_range(bod - 7.days, bod + 1.day),
+            host2 => arg_day_range(bod - 7.days, bod + 1.day),
+            host3 => arg_day_range(bod - 7.days, bod + 1.day),
+            vm    => arg_day_range(bod - 7.days, bod + 1.day),
+            vm2   => arg_day_range(bod - 7.days, bod + 1.day)
+          },
+          "hourly"     => {
+            storage => [[bod]]
+          }
+        )
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
@@ -178,15 +186,14 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       context "executing perf_capture_timer" do
         it "should queue up enabled targets" do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          vms
-          MiqQueue.delete_all
-
           ems.perf_capture_object.queue_captures(vms, {})
 
-          expected_targets = Metric::Targets.capture_ems_targets(ems.reload)
-          expect(MiqQueue.group(:method_name).count).to eq('perf_capture_realtime'      => expected_targets.count,
-                                                           'perf_capture_historical'    => expected_targets.count * 8)
-          expect(queue_intervals).to match_array(metric_targets(expected_targets))
+          bod = Time.now.utc.beginning_of_day
+
+          expect(queue_timings).to eq(
+            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[bod]] },
+            "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day) }
+          )
         end
       end
     end
