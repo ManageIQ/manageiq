@@ -1,29 +1,63 @@
 require 'pg/dsn_parser'
 require 'pg/logical_replication'
+require 'query_relation'
 
-class PglogicalSubscription < ActsAsArModel
-  set_columns_hash(
-    :id                   => :string,
-    :status               => :string,
-    :dbname               => :string,
-    :host                 => :string,
-    :user                 => :string,
-    :password             => :string,
-    :port                 => :integer,
-    :provider_region      => :integer,
-    :provider_region_name => :string
-  )
+class PglogicalSubscription
+  include ActiveModel::Model
+  extend QueryRelation::Queryable
 
-  def self.find(*args)
-    case args.first
-    when :all then find_all
-    when :first, :last then find_one(args.first)
-    else find_id(args.first)
+  attr_accessor :id, :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
+
+  def attributes
+    {
+      :id                   => @id,
+      :status               => @status,
+      :dbname               => @dbname,
+      :host                 => @host,
+      :user                 => @user,
+      :password             => @password,
+      :port                 => @port,
+      :provider_region      => @provider_region,
+      :provider_region_name => @provider_region_name
+    }
+  end
+
+  def self.connection
+    ActiveRecord::Base.connection
+  end
+
+  def connection
+    self.class.connection
+  end
+
+  # Interface method required by QueryRelation. If +mode+ is not a hash option,
+  # it assumes the argument is an id.
+  #
+  def self.search(mode, options = {})
+    collection = subscriptions.collect { |s| new(subscription_to_columns(s)) }
+    collection = filter_collection(collection, options) if options.present?
+
+    case mode
+    when :all
+      collection
+    when :first
+      collection.first
+    when :last
+      collection.last
+    else
+      collection.select{ |e| e[:id] == mode }
     end
   end
 
+  def self.filter_collection(collection, options)
+    collection = collection.drop(options[:offset]) if options[:offset]
+    collection = collection.take(options[:limit]) if options[:limit]
+    collection = collection.select{ |hash| hash.slice(*options[:where].keys) == options[:where] } if options[:where]
+    collection
+  end
+
   def self.lookup_by_id(to_find)
-    find(to_find)
+    search(to_find)
   rescue ActiveRecord::RecordNotFound
     nil
   end
