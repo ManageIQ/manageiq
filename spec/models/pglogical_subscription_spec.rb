@@ -134,7 +134,7 @@ describe PglogicalSubscription do
     it "retrieves no records with no records" do
       with_no_records
       expect(described_class.all).to be_empty
-      expect(described_class.all).to be_empty
+      expect(described_class.search(:all).to be_empty
     end
   end
 
