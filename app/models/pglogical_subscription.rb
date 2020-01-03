@@ -132,13 +132,14 @@ class PglogicalSubscription
   end
 
   def validate(new_connection_params = {})
-    find_password if new_connection_params['password'].blank?
+    new_connection_params.symbolize_keys!
+    find_password if new_connection_params[:password].blank?
     connection_hash = attributes.merge(new_connection_params.delete_blanks)
-    MiqRegionRemote.validate_connection_settings(connection_hash['host'],
-                                                 connection_hash['port'],
-                                                 connection_hash['user'],
-                                                 connection_hash['password'],
-                                                 connection_hash['dbname'])
+    MiqRegionRemote.validate_connection_settings(connection_hash[:host],
+                                                 connection_hash[:port],
+                                                 connection_hash[:user],
+                                                 connection_hash[:password],
+                                                 connection_hash[:dbname])
   end
 
   def backlog
