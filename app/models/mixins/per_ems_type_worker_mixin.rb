@@ -3,13 +3,15 @@ module PerEmsTypeWorkerMixin
 
   included do
     self.check_for_minimal_role = false
-    @workers = lambda do
-      return 0 unless self.any_valid_ems_in_zone?
-      workers_configured_count
-    end
   end
 
   module ClassMethods
+    def workers
+      return 0 unless any_valid_ems_in_zone?
+
+      super
+    end
+
     def ems_class
       parent
     end
