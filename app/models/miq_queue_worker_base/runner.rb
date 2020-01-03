@@ -90,10 +90,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     end
   end
 
-  def message_delivery_suspended?
-    false
-  end
-
   def deliver_queue_message(msg, &block)
     reset_poll_escalate if poll_method == :sleep_poll_escalate
 
@@ -149,7 +145,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     loop do
       heartbeat
       break if thresholds_exceeded?
-      break if message_delivery_suspended?
       msg = get_message
       break if msg.nil?
       deliver_message(msg)
