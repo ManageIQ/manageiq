@@ -1,4 +1,4 @@
-require 'util/mount/miq_generic_mount_session'
+require 'mount/miq_generic_mount_session'
 
 # MiqLocalMountSession is meant to be a representation of the local file system
 # that conforms to the same interface as MiqLocalMountSession (and by proxy,

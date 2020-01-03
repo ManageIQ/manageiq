@@ -1,4 +1,4 @@
-require 'util/miq_object_storage'
+require 'miq_object_storage'
 
 class MiqSwiftStorage < MiqObjectStorage
   attr_reader :container_name

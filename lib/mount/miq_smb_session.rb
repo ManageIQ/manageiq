@@ -1,4 +1,4 @@
-require 'util/mount/miq_generic_mount_session'
+require 'mount/miq_generic_mount_session'
 
 class MiqSmbSession < MiqGenericMountSession
   PORTS = [445, 139]

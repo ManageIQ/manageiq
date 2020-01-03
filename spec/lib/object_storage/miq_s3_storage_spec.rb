@@ -1,4 +1,4 @@
-require "util/object_storage/miq_s3_storage"
+require "object_storage/miq_s3_storage"
 
 describe MiqS3Storage do
   before(:each) do

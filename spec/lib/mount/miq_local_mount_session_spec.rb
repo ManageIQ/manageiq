@@ -1,4 +1,4 @@
-require 'util/mount/miq_local_mount_session'
+require 'mount/miq_local_mount_session'
 require 'tempfile'
 
 describe MiqLocalMountSession do
