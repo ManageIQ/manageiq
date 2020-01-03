@@ -113,7 +113,7 @@ class Zone < ApplicationRecord
   end
 
   def remote_cockpit_ws_miq_server
-    role_active?("cockpit_ws") ? miq_servers.find_by(:has_active_cockpit_ws => true) : nil
+    miq_servers.find_by(:has_active_cockpit_ws => true) if role_active?("cockpit_ws")
   end
 
   # The zone to use when inserting a record into MiqQueue

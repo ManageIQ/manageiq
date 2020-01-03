@@ -76,7 +76,7 @@ module MiqConfigSssdLdap
     end
 
     def ldap_tls_cacert
-      initial_settings[:mode] == "ldaps" ? initial_settings[:tls_cacert] : nil
+      initial_settings[:tls_cacert] if initial_settings[:mode] == "ldaps"
     end
 
     def ldap_tls_cacertdir

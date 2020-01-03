@@ -300,7 +300,7 @@ class GitWorktree
 
   def merge(commit, rebase = false)
     current_branch = @repo.ref(local_ref)
-    merge_index = current_branch ? @repo.merge_commits(current_branch.target, commit) : nil
+    merge_index = @repo.merge_commits(current_branch.target, commit) if current_branch
     if merge_index && merge_index.conflicts?
       result = differences_with_current(commit)
       raise GitWorktreeException::GitConflicts, result
