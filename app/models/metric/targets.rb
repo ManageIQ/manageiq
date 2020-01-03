@@ -15,7 +15,6 @@ module Metric::Targets
 
   def self.capture_ems_targets(ems, options = {})
     case ems
-    when EmsCloud                                then capture_cloud_targets([ems], options)
     when EmsInfra                                then capture_infra_targets([ems], options)
     end
   end
@@ -40,17 +39,6 @@ module Metric::Targets
   def self.only_enabled(hosts)
     hosts.select do |host|
       host.supports_capture? && (host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?)
-    end
-  end
-
-  # @return vms under all availability zones
-  #         and vms under no availability zone
-  # NOTE: some stacks (e.g. nova) default to no availability zone
-  def self.capture_cloud_targets(emses, options = {})
-    MiqPreloader.preload(emses, :vms => [{:availability_zone => :tags}, :ext_management_system])
-
-    emses.flat_map(&:vms).select do |vm|
-      vm.state == 'on' && (vm.availability_zone.nil? || vm.availability_zone.perf_capture_enabled?)
     end
   end
 
