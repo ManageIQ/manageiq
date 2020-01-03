@@ -2,7 +2,7 @@ $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
 require 'mount/miq_generic_mount_session'
-require 'util/miq_object_storage'
+require 'miq_object_storage'
 
 class EvmDatabaseOps
   include Vmdb::Logging

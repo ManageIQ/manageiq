@@ -1,4 +1,4 @@
-require 'util/object_storage/miq_ftp_storage.rb'
+require 'object_storage/miq_ftp_storage.rb'
 
 describe MiqFtpStorage, :with_ftp_server do
   subject         { described_class.new(ftp_creds.merge(:uri => "ftp://localhost")) }

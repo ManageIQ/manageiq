@@ -1,5 +1,5 @@
-require "util/mount/miq_generic_mount_session"
-require "util/miq_object_storage"
+require "mount/miq_generic_mount_session"
+require "miq_object_storage"
 
 describe MiqFileStorage do
   def opts_for_nfs

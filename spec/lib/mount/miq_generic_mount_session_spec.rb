@@ -1,4 +1,4 @@
-require "util/mount/miq_generic_mount_session"
+require "mount/miq_generic_mount_session"
 
 describe MiqGenericMountSession do
   it "#connect returns a string pointing to the mount point" do
