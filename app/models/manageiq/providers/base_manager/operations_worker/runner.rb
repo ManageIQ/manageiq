@@ -1,6 +1,6 @@
 class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < ::MiqQueueWorkerBase::Runner
   def worker_roles
-    %w[ems_operations"]
+    %w[ems_operations]
   end
 
   attr_reader :ems
