@@ -49,7 +49,7 @@ class PglogicalSubscription
     when :last
       collection.last
     else
-      collection.find{ |e| e.id == mode } or raise ActiveRecord::RecordNotFound
+      collection.find { |e| e.id == mode } or raise ActiveRecord::RecordNotFound
     end
   end
 
@@ -58,7 +58,7 @@ class PglogicalSubscription
   def self.filter_collection(collection, options)
     collection = collection.drop(options[:offset]) if options[:offset]
     collection = collection.take(options[:limit]) if options[:limit]
-    collection = collection.select{ |hash| hash.slice(*options[:where].keys) == options[:where] } if options[:where]
+    collection = collection.select { |hash| hash.slice(*options[:where].keys) == options[:where] } if options[:where]
     collection
   end
 
