@@ -17,7 +17,7 @@ RSpec.describe VimPerformanceAnalysis do
     end
   end
 
-  let(:storage) { FactoryBot.create(:storage_target_vmware) }
+  let(:storage) { FactoryBot.create(:storage_vmware) }
   let(:host1) do
     FactoryBot.create(:host,
                        :hardware => FactoryBot.create(:hardware,

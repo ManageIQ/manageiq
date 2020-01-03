@@ -24,14 +24,6 @@ FactoryBot.define do
     end
   end
 
-  # Factories for perf_capture_timer and perf_capture_gap testing
-  factory :host_target_vmware, :parent => :host, :class => 'ManageIQ::Providers::Vmware::InfraManager::Host' do
-    after(:create) do |x|
-      x.perf_capture_enabled = toggle_on_name_seq(x)
-      2.times { x.vms << FactoryBot.create(:vm_target_vmware, :ext_management_system => x.ext_management_system) }
-    end
-  end
-
   factory :host_with_ipmi, :parent => :host do
     ipmi_address { "127.0.0.1" }
     mac_address  { "aa:bb:cc:dd:ee:ff" }
