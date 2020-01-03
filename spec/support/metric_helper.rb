@@ -2,21 +2,16 @@ module Spec
   module Support
     module MetricHelper
       # given (enabled) capture_targets, compare with suggested queue entries
-      def assert_metric_targets(expected_targets)
-        expected = expected_targets.flat_map do |t|
+      def metric_targets(expected_targets)
+        expected_targets.flat_map do |t|
           # Storage is hourly only
           # Non-storage historical is expecting 7 days back, plus partial day = 8
           t.kind_of?(Storage) ? [[t, "hourly"]] : [[t, "realtime"]] + [[t, "historical"]] * 8
         end
-        selected = queue_intervals(
-          MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical])
-        )
-
-        expect(selected).to match_array(expected)
       end
 
       # @return [Array<Array<Object, String>>] List of object and interval names in miq queue
-      def queue_intervals(items)
+      def queue_intervals(items = MiqQueue.where(:method_name => %w[perf_capture_hourly perf_capture_realtime perf_capture_historical]))
         items.map do |q|
           interval_name = q.method_name.sub("perf_capture_", "")
           [Object.const_get(q.class_name).find(q.instance_id), interval_name]
@@ -53,34 +48,6 @@ module Spec
       end
     end
   end
-end
-
-# These contexts expect the following setup:
-#
-# before do
-#   MiqRegion.seed
-#   @zone = EvmSpecHelper.local_miq_server.zone
-# end
-RSpec.shared_context 'with enabled/disabled vmware targets', :with_enabled_disabled_vmware do
-  before do
-    @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
-    @storages = FactoryBot.create_list(:storage_target_vmware, 2)
-    @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
-    @ems_vmware.ems_clusters = @vmware_clusters
-
-    6.times do |n|
-      host = FactoryBot.create(:host_target_vmware, :ext_management_system => @ems_vmware)
-      @ems_vmware.hosts << host
-
-      @vmware_clusters[n / 2].hosts << host if n < 4
-      host.storages << @storages[n / 3]
-    end
-
-    MiqQueue.delete_all
-    @ems_vmware.reload
-  end
-
-  let(:all_targets) { Metric::Targets.capture_ems_targets(@ems_vmware) }
 end
 
 RSpec.shared_context "with a small environment and time_profile", :with_small_vmware do
