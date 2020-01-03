@@ -526,9 +526,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.refresh_ems(ems_ids, reload = false)
     ems_ids = [ems_ids] unless ems_ids.kind_of?(Array)
-
-    ExtManagementSystem.where(:id => ems_ids).each { |ems| ems.reset_vim_cache_queue if ems.respond_to?(:reset_vim_cache_queue) } if reload
-
     ems_ids = ems_ids.collect { |id| [ExtManagementSystem, id] }
     EmsRefresh.queue_refresh(ems_ids)
   end
