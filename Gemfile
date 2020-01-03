@@ -74,6 +74,7 @@ gem "rubyzip",                        "~>2.0.0",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sprockets",                      "~>3.0",         :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
+gem "sync",                           "~>0.5",         :require => false
 gem "sys-filesystem",                 "~>1.3.1"
 gem "terminal",                                        :require => false
 
