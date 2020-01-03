@@ -17,7 +17,6 @@ module Metric::Targets
     case ems
     when EmsCloud                                then capture_cloud_targets([ems], options)
     when EmsInfra                                then capture_infra_targets([ems], options)
-    when ::ManageIQ::Providers::ContainerManager then capture_container_targets([ems], options)
     end
   end
 
@@ -53,32 +52,6 @@ module Metric::Targets
     emses.flat_map(&:vms).select do |vm|
       vm.state == 'on' && (vm.availability_zone.nil? || vm.availability_zone.perf_capture_enabled?)
     end
-  end
-
-  def self.with_archived(scope)
-    # We will look also for freshly archived entities, if the entity was short-lived or even sub-hour
-    archived_from = targets_archived_from
-    scope.where(:deleted_on => nil).or(scope.where(:deleted_on => (archived_from..Time.now.utc)))
-  end
-
-  def self.capture_container_targets(emses, _options)
-    includes = {
-      :container_nodes  => :tags,
-      :container_groups => [:tags, :containers => :tags],
-    }
-
-    MiqPreloader.preload(emses, includes)
-
-    targets = []
-    emses.each do |ems|
-      next unless ems.supports_metrics?
-
-      targets += with_archived(ems.all_container_nodes)
-      targets += with_archived(ems.all_container_groups)
-      targets += with_archived(ems.all_containers)
-    end
-
-    targets
   end
 
   # preload emses with relations that will be used in cap&u

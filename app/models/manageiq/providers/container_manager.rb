@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   class ContainerManager < BaseManager
     require_nested :ContainerTemplate
+    require_nested :MetricsCapture
     require_nested :OrchestrationStack
 
     include AvailabilityMixin
