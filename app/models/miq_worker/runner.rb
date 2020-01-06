@@ -326,7 +326,10 @@ class MiqWorker::Runner
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
 
-    ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? heartbeat_to_file : heartbeat_to_drb
+    heartbeat_to_file
+
+    process_messages_from_server unless MiqEnvironment::Command.is_podified?
+
     @last_hb = now
     do_heartbeat_work
   rescue SystemExit, SignalException
@@ -335,22 +338,20 @@ class MiqWorker::Runner
     do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
   end
 
-  def heartbeat_to_drb
-    # Disable heartbeat check.  Useful if a worker is running in isolation
-    # without the oversight of MiqServer::WorkerManagement
-    return if skip_heartbeat?
-
+  def process_messages_from_server
     worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
-    worker_monitor_drb.update_worker_last_heartbeat(@worker.pid)
-
     worker_monitor_drb.worker_get_messages(@worker.pid).each do |msg, *args|
       process_message(msg, *args)
     end
   rescue DRb::DRbError => err
-    do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
+    do_exit("Error processing messages from MiqServer because #{err.class.name}: #{err.message}", 1)
   end
 
   def heartbeat_to_file(timeout = nil)
+    # Disable heartbeat check.  Useful if a worker is running in isolation
+    # without the oversight of MiqServer::WorkerManagement
+    return if skip_heartbeat?
+
     timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
     File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
 

@@ -47,7 +47,6 @@ module MiqServer::WorkerManagement::Dequeue
   end
 
   def get_queue_message(pid)
-    update_worker_last_heartbeat(pid)
     @workers_lock.synchronize(:SH) do
       w = @workers[pid]
 
