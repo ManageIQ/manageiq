@@ -238,13 +238,8 @@ class MiqWorker::Runner
     exit exit_code
   end
 
-  def message_sync_config(*_args)
-    _log.info("#{log_prefix} Synchronizing configuration...")
-    sync_config
-    _log.info("#{log_prefix} Synchronizing configuration complete...")
-  end
-
   def sync_config
+    _log.info("#{log_prefix} Synchronizing configuration...")
     # Sync roles
     @active_roles = MiqServer.my_active_roles(true)
     after_sync_active_roles
@@ -263,6 +258,7 @@ class MiqWorker::Runner
     $log.log_hashes(@cfg)
 
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
+    _log.info("#{log_prefix} Synchronizing configuration complete...")
   end
 
   def sync_log_level
@@ -328,6 +324,7 @@ class MiqWorker::Runner
 
     heartbeat_to_file
 
+    sync_config                  if config_out_of_date?
     process_messages_from_server unless MiqEnvironment::Command.is_podified?
 
     @last_hb = now
@@ -354,23 +351,19 @@ class MiqWorker::Runner
 
     timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
     File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
-
-    get_messages.each { |msg, *args| process_message(msg, *args) }
   end
 
-  def get_messages
-    messages = []
+  def config_out_of_date?
     @my_last_config_change ||= Time.now.utc
 
     last_config_change = server_last_change(:last_config_change)
     if last_config_change && last_config_change > @my_last_config_change
       _log.info("#{log_prefix} Configuration has changed, New TS: #{last_config_change}, Old TS: #{@my_last_config_change}")
-      messages << ["sync_config"]
-
       @my_last_config_change = last_config_change
+      return true
     end
 
-    messages
+    false
   end
 
   def key_store
