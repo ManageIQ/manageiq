@@ -1,22 +1,15 @@
 class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
   def capture_ems_targets(options = {})
-    capture_infra_targets([ems], options)
-  end
-
-  private
-
-  # If a Cluster, standalone Host, or Storage is not enabled, skip it.
-  # If a Cluster is enabled, capture all of its Hosts.
-  # If a Host is enabled, capture all of its Vms.
-  def capture_infra_targets(emses, options)
-    load_infra_targets_data(emses, options)
-    all_hosts = capture_host_targets(emses)
+    load_infra_targets_data(ems, options)
+    all_hosts = capture_host_targets(ems)
     targets = enabled_hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(emses, enabled_hosts)
+    targets += capture_vm_targets(ems, enabled_hosts)
 
     targets
   end
+
+  private
 
   # Filter to enabled hosts. If it has a cluster consult that, otherwise consult the host itself.
   #
@@ -33,9 +26,9 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
   # tags are needed for determining if it is enabled.
   # ems is needed for determining queue name
   # cluster is used for hierarchies
-  def load_infra_targets_data(emses, options)
-    MiqPreloader.preload(emses, preload_hash_infra_targets_data(options))
-    postload_infra_targets_data(emses, options)
+  def load_infra_targets_data(ems, options)
+    MiqPreloader.preload(ems, preload_hash_infra_targets_data(options))
+    postload_infra_targets_data(ems, options)
   end
 
   def preload_hash_infra_targets_data(options)
@@ -55,34 +48,32 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
   # and since we also rely upon tags and clusters, this causes unnecessary data to be downloaded
   #
   # so we have introduced this to work around preload not working (and inverse_of)
-  def postload_infra_targets_data(emses, options)
+  def postload_infra_targets_data(ems, options)
     # populate ems (with tags / clusters)
-    emses.each do |ems|
-      ems.hosts.each do |host|
-        host.ems_cluster.association(:ext_management_system).target = ems if host.ems_cluster_id
-        unless options[:exclude_storages]
-          host.storages.each do |storage|
-            storage.ext_management_system = ems
-          end
-        end
+    ems.hosts.each do |host|
+      host.ems_cluster.association(:ext_management_system).target = ems if host.ems_cluster_id
+      next if options[:exclude_storages]
+
+      host.storages.each do |storage|
+        storage.ext_management_system = ems
       end
-      host_ids = ems.hosts.index_by(&:id)
-      clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
-      ems.vms.each do |vm|
-        vm.association(:ext_management_system).target = ems if vm.ems_id
-        vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
-        vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
-      end
+    end
+    host_ids = ems.hosts.index_by(&:id)
+    clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
+    ems.vms.each do |vm|
+      vm.association(:ext_management_system).target = ems if vm.ems_id
+      vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
+      vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
     end
   end
 
-  def capture_host_targets(emses)
+  def capture_host_targets(ems)
     # NOTE: if capture_storage_targets takes only enabled hosts
     # merge only_enabled into this method
-    emses.flat_map(&:hosts)
+    ems.hosts
   end
 
-  # @param [Host] all hosts that have an ems
+  # @param [Array<Host>] all hosts that have an ems
   # NOTE: disabled hosts are passed in.
   # @return [Array<Storage>] supported storages
   # hosts preloaded storages and tags
@@ -90,11 +81,11 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
     hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
-  # @param [Array<ExtManagementSystem>] emses Typically 1 ems for this zone
-  # @param [Host] hosts that are enabled or cluster enabled
+  # @param [ExtManagementSystem] ems
+  # @param [Array<Host>] hosts that are enabled or cluster enabled
   # we want to work with only enabled_hosts, so hosts needs to be further filtered
-  def capture_vm_targets(emses, hosts)
+  def capture_vm_targets(ems, hosts)
     enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
-    emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? } }
+    ems.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? }
   end
 end
