@@ -158,11 +158,6 @@ FactoryBot.define do
     ems_ref  { "vm-578855" }
   end
 
-  # Factories for perf_capture_timer and perf_capture_gap testing
-  factory :vm_target_vmware, :parent => :vm_vmware do
-    after(:create) { |x| x.raw_power_state = (toggle_on_name_seq(x) ? "poweredOn" : "poweredOff") }
-  end
-
   factory :vm_vmware_cloud, :class => "ManageIQ::Providers::Vmware::CloudManager::Vm", :parent => :vm_cloud do
     vendor { "vmware" }
   end

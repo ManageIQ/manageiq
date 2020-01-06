@@ -23,7 +23,7 @@ describe MeteringContainerProject do
   let(:project) { FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems, :created_on => month_beginning) }
   let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576) }
   let(:host) { FactoryBot.create(:host, :storages => [storage], :hardware => hardware, :vms => [vm]) }
-  let(:storage) { FactoryBot.create(:storage_target_vmware) }
+  let(:storage) { FactoryBot.create(:storage_vmware) }
   let(:ems_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems, :hosts => [host]) }
 
   before do

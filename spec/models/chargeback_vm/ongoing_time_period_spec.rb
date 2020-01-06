@@ -23,7 +23,7 @@ describe ChargebackVm do
                                                                      :cpu_speed => 9576), :vms => [vm])
     ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
     ems_cluster.hosts << host
-    storage = FactoryBot.create(:storage_target_vmware)
+    storage = FactoryBot.create(:storage_vmware)
 
     Range.new(start_of_all_intervals, midle_of_the_first_day, true).step_value(1.hour).each do |time|
       vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
