@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
-    resync_needed = sync_needed?
+    sync_needed?
 
     # Sync the workers after sync'ing the child worker settings
     sync_workers
@@ -32,8 +32,6 @@ module MiqServer::WorkerManagement::Monitor
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
       next unless validate_worker(worker)
-      # Tell the valid workers to sync config if needed
-      worker_set_message(worker, "sync_config") if resync_needed
     end
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
@@ -150,8 +148,6 @@ module MiqServer::WorkerManagement::Monitor
 
       update_sync_timestamp(@last_sync)
     end
-
-    resync_needed
   end
 
   def set_last_change(key, value)
