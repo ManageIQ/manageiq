@@ -134,6 +134,8 @@ class VmScan < Job
 
     begin
       host = MiqServer.find(miq_server_id)
+      scan_args = create_scan_args
+      options[:categories] = vm.scan_profile_categories(scan_args["vmScanProfiles"])
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,
                        "host"   => host
