@@ -69,4 +69,26 @@ describe Workers::Heartbeat do
       it_should_behave_like "heartbeat file checker", other_heartbeat_file
     end
   end
+
+  describe "#post_message_for_workers" do
+    let(:started_worker)  { FactoryBot.create(:miq_ui_worker, :status => MiqWorker::STATUS_STARTED,  :last_heartbeat => 30.seconds.ago.utc) }
+    let(:stopping_worker) { FactoryBot.create(:miq_ui_worker, :status => MiqWorker::STATUS_STOPPING, :last_heartbeat => 30.seconds.ago.utc) }
+    let(:server)          { EvmSpecHelper.local_miq_server(:miq_workers => [started_worker, stopping_worker]) }
+
+    before do
+      allow(server).to receive(:workers_last_heartbeat) { Time.now.utc }
+      require 'miq-process'
+      allow(MiqProcess).to receive(:alive?).with(started_worker.pid).and_return(true)
+      allow(Process).to receive(:kill)
+    end
+
+    it "validates current/starting workers for memory usage, avoiding stale miq_workers" do
+      server.sync_child_worker_settings
+      started_worker.update!(:unique_set_size => 4.gigabytes)
+
+      expect(server.post_message_for_workers(started_worker.class.name)).to eq([started_worker.id])
+      expect(MiqWorker.exists?(started_worker.id)).to be_falsy
+      expect(server.post_message_for_workers(started_worker.class.name)).to eq([])
+    end
+  end
 end
