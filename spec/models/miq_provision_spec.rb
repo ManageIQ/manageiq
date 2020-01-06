@@ -113,7 +113,7 @@ describe MiqProvision do
             service_provision_request = FactoryBot.create(:service_template_provision_request, :description => request_descripton)
             @vm_prov.update(:miq_request_id => service_provision_request.id)
 
-            expect(service_provision_request).not_to receive(:update_description_from_tasks)
+            expect(service_provision_request).not_to receive(:update)
             @vm_prov.update_vm_name(@target_vm_name, :update_request => true)
 
             expect(service_provision_request.description).to eq(request_descripton)
