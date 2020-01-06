@@ -137,6 +137,7 @@ module MiqWebServerWorkerMixin
   end
 
   def terminate
+    require 'miq-process'
     # HACK: Cannot call exit properly from UiWorker nor can we Process.kill('INT', ...) from inside the worker
     # Hence, this is an external mechanism for terminating this worker.
 
