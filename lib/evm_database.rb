@@ -51,10 +51,16 @@ class EvmDatabase
     MiqAeDatastore
   ].freeze
 
-  SEEDABLE_CLASSES = PRIMORDIAL_SEEDABLE_CLASSES + OTHER_SEEDABLE_CLASSES
+  def self.seedable_classes
+    PRIMORDIAL_SEEDABLE_CLASSES + OTHER_SEEDABLE_CLASSES + seedable_plugin_classes
+  end
+
+  def self.seedable_plugin_classes
+    Vmdb::Plugins.flat_map { |p| p.try(:seedable_classes) }.compact
+  end
 
   def self.seed(classes = nil, exclude_list = [])
-    classes ||= SEEDABLE_CLASSES
+    classes ||= seedable_classes
     classes  -= exclude_list
     classes   = classes.collect(&:constantize)
 
@@ -75,7 +81,7 @@ class EvmDatabase
 
   def self.seed_rest
     return if skip_seeding?
-    seed(OTHER_SEEDABLE_CLASSES)
+    seed(OTHER_SEEDABLE_CLASSES + seedable_plugin_classes)
   end
 
   # Returns whether or not a primordial seed has completed.
