@@ -239,7 +239,6 @@ class MiqWorker::Runner
   end
 
   def sync_config
-    _log.info("#{log_prefix} Synchronizing configuration...")
     # Sync roles
     @active_roles = MiqServer.my_active_roles(true)
     after_sync_active_roles
@@ -258,7 +257,6 @@ class MiqWorker::Runner
     $log.log_hashes(@cfg)
 
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
-    _log.info("#{log_prefix} Synchronizing configuration complete...")
   end
 
   def sync_log_level
@@ -324,7 +322,12 @@ class MiqWorker::Runner
 
     heartbeat_to_file
 
-    sync_config                  if config_out_of_date?
+    if config_out_of_date?
+      _log.info("#{log_prefix} Synchronizing configuration...")
+      sync_config
+      _log.info("#{log_prefix} Synchronizing configuration complete...")
+    end
+
     process_messages_from_server unless MiqEnvironment::Command.is_podified?
 
     @last_hb = now
