@@ -49,7 +49,7 @@ class PglogicalSubscription
     when :last
       collection.last
     else
-      collection.find { |e| e.id == mode } or raise ActiveRecord::RecordNotFound
+      collection.find { |e| e.id == mode } || raise(ActiveRecord::RecordNotFound)
     end
   end
 
