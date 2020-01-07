@@ -148,11 +148,11 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {
-            host  => [[bod]],
-            host2 => [[bod]],
-            host3 => [[bod]],
-            vm    => [[bod]],
-            vm2   => [[bod]]
+            host  => [[4.hours.ago.utc.beginning_of_day]],
+            host2 => [[4.hours.ago.utc.beginning_of_day]],
+            host3 => [[4.hours.ago.utc.beginning_of_day]],
+            vm    => [[4.hours.ago.utc.beginning_of_day]],
+            vm2   => [[4.hours.ago.utc.beginning_of_day]]
           },
           "historical" => {
             host  => arg_day_range(bod - 7.days, bod + 1.day),
@@ -162,7 +162,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
             vm2   => arg_day_range(bod - 7.days, bod + 1.day)
           },
           "hourly"     => {
-            storage => [[bod]]
+            storage => [[4.hours.ago.utc.beginning_of_day]]
           }
         )
       end
@@ -190,7 +190,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
           bod = Time.now.utc.beginning_of_day
 
           expect(queue_timings).to eq(
-            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[bod]] },
+            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[4.hours.ago.utc.beginning_of_day]] },
             "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day) }
           )
         end
@@ -244,14 +244,14 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
         )
 
         Timecop.travel(20.minutes)
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
         )
       end
     end
@@ -263,7 +263,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
         )
       end
@@ -294,7 +294,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end
@@ -319,7 +319,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
 
@@ -327,7 +327,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end
