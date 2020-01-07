@@ -179,6 +179,12 @@ describe PglogicalSubscription do
     end
   end
 
+  describe ".find" do
+    it "is an alias for search" do
+      expect(described_class.method(:find)).to eql(described_class.method(:search))
+    end
+  end
+
   describe ".lookup_by_id" do
     it "returns the specified record with records" do
       with_records

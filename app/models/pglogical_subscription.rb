@@ -53,6 +53,10 @@ class PglogicalSubscription
     end
   end
 
+  class << self
+    alias find search
+  end
+
   # Filter a +collection+ based on various +options+ that are used by QueryRelation.
   #
   def self.filter_collection(collection, options)
