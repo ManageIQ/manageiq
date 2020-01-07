@@ -34,8 +34,8 @@ class PglogicalSubscription
     self.class.connection
   end
 
-  # Interface method required by QueryRelation. If +mode+ is not a hash option,
-  # it assumes the argument is an id.
+  # Interface method required by QueryRelation. If +mode+ is not a symbol
+  # then it assumes the argument is an id.
   #
   def self.search(mode, options = {})
     collection = subscriptions.collect { |s| new(subscription_to_columns(s)) }
