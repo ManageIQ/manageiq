@@ -911,6 +911,9 @@ module MiqReport::Generator
   end
 
   def custom_results_method
-    @custom_results_method ||= db_options && db_options[:rpt_type] ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
+    return @custom_results_method if defined?(@custom_results_method)
+
+    db_rpt_type = db_options && db_options[:rpt_type]
+    @custom_results_method = db_rpt_type ? "build_results_for_report_#{db_rpt_type}" : nil
   end
 end

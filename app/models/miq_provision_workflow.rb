@@ -18,7 +18,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
 
   def self.find_matching_constant(string)
     const = string.safe_constantize
-    const.try(:name) == string ? const : nil
+    const if const.try(:name) == string
   end
   private_class_method :find_matching_constant
 

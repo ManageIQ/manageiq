@@ -48,7 +48,7 @@ class CsvVisitor
   def visit(subject)
     unless subject.supports_nothing?
       row = CSV::Row.new([], [])
-      row << {:model => subject.model.name}.merge(subject.features.transform_values { |v| v ? 'x' : nil })
+      row << {:model => subject.model.name}.merge(subject.features.transform_values { |v| 'x' if v })
       @rows << row
     end
   end

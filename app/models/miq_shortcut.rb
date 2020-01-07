@@ -37,19 +37,11 @@ class MiqShortcut < ApplicationRecord
   def self.fixture_file_names
     shortcuts_dir = FIXTURE_DIR.join("miq_shortcuts")
     main_shortcuts = FIXTURE_DIR.join("miq_shortcuts.yml")
-    [main_shortcuts, (shortcuts_dir.directory? ? shortcuts_dir : nil)]
+    [main_shortcuts] + (shortcuts_dir.directory? ? shortcuts_dir.children : [])
   end
 
   def self.seed_data
-    main_file, dir = fixture_file_names
-    fixtures_from_dir = []
-    if dir
-      dir.children.each do |file|
-        fixture_file = YAML.load_file(file)
-        fixtures_from_dir += fixture_file
-      end
-    end
-    YAML.load_file(main_file) + fixtures_from_dir
+    fixture_file_names.flat_map { |file| YAML.load_file(file) }
   end
 
   def self.start_pages

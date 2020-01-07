@@ -16,19 +16,25 @@ module MiqServer::WorkerManagement::Heartbeat
     end unless @workers_lock.nil?
   end
 
-  def worker_heartbeat(worker_pid, worker_class = nil, queue_name = nil)
-    # Set the heartbeat in memory and consume a message
+  def register_worker(worker_pid, worker_class, queue_name)
     worker_class = worker_class.constantize if worker_class.kind_of?(String)
 
-    messages = []
     @workers_lock.synchronize(:EX) do
       worker_add(worker_pid)
-      update_worker_last_heartbeat(worker_pid)
       h = @workers[worker_pid]
-      messages           = h[:message] || []
-      h[:message]        = nil
       h[:class] ||= worker_class
       h[:queue_name] ||= queue_name
+    end unless @workers_lock.nil?
+  end
+
+  def worker_get_messages(worker_pid)
+    messages = []
+    @workers_lock.synchronize(:EX) do
+      h = @workers[worker_pid]
+      if h
+        messages    = h[:message] || []
+        h[:message] = nil
+      end
     end unless @workers_lock.nil?
 
     messages

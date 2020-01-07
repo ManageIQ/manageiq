@@ -20,41 +20,38 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
   end
 
-  describe ".perf_capture_now" do
-    context "with enabled and disabled targets" do
-      before do
-        MiqRegion.seed
-        storages = FactoryBot.create_list(:storage_target_vmware, 2)
-        clusters = FactoryBot.create_list(:cluster_target, 2)
-        ems.ems_clusters = clusters
+  describe ".perf_capture_gap" do
+    before do
+      MiqRegion.seed
+    end
 
-        6.times do |n|
-          host = FactoryBot.create(:host_target_vmware, :ext_management_system => ems)
-          ems.hosts << host
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let!(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+      )
+    end
+    let!(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let!(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
 
-          clusters[n / 2].hosts << host if n < 4
-          host.storages << storages[n / 3]
-        end
-
-        MiqQueue.delete_all
-      end
-
-      context "executing perf_capture_gap" do
-        before do
-          t = Time.now.utc
-          Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days, nil, ems.id)
-        end
-
-        it "should queue up enabled targets for historical" do
-          expect(MiqQueue.count).to eq(10)
-
-          expected_targets = Metric::Targets.capture_ems_targets(ems.reload, :exclude_storages => true)
-          expected = expected_targets.flat_map { |t| [[t, "historical"]] * 2 } # Vm, Host, Host, Vm, Host
-
-          selected = queue_intervals(MiqQueue.all)
-
-          expect(selected).to match_array(expected)
-        end
+    it "should queue up targets for historical" do
+      Timecop.freeze do
+        Metric::Capture.perf_capture_gap(7.days.ago.utc, 5.days.ago.utc, nil, ems.id)
+        expect(queue_timings).to eq(
+          "historical" => {
+            vm    => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            vm2   => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host  => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host2 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+            host3 => arg_day_range(7.days.ago.utc, 5.days.ago.utc),
+          }
+        )
       end
     end
   end
@@ -127,8 +124,78 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqRegion.seed
     end
 
-    let(:host) { FactoryBot.create(:host_target_vmware, :ext_management_system => ems).tap { MiqQueue.delete_all } }
-    let(:vm) { host.vms.first }
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host).tap { MiqQueue.delete_all } }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+      )
+    end
+    let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
+
+    context "with vmware targets" do
+      it "should queue up targets properly" do
+        stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+
+        bod = Time.now.utc.beginning_of_day
+
+        expect(queue_timings).to eq(
+          "realtime"   => {
+            host  => [[4.hours.ago.utc.beginning_of_day]],
+            host2 => [[4.hours.ago.utc.beginning_of_day]],
+            host3 => [[4.hours.ago.utc.beginning_of_day]],
+            vm    => [[4.hours.ago.utc.beginning_of_day]],
+            vm2   => [[4.hours.ago.utc.beginning_of_day]]
+          },
+          "historical" => {
+            host  => arg_day_range(bod - 7.days, bod + 1.day),
+            host2 => arg_day_range(bod - 7.days, bod + 1.day),
+            host3 => arg_day_range(bod - 7.days, bod + 1.day),
+            vm    => arg_day_range(bod - 7.days, bod + 1.day),
+            vm2   => arg_day_range(bod - 7.days, bod + 1.day)
+          },
+          "hourly"     => {
+            storage => [[4.hours.ago.utc.beginning_of_day]]
+          }
+        )
+      end
+
+      it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
+        messages.each { |m| m.update(:state => "dequeue") }
+
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
+        messages.each { |m| expect(m.lock_version).to eq(1) }
+      end
+    end
+
+    context "with enabled and disabled openstack targets" do
+      let(:ems) { FactoryBot.create(:ems_openstack, :zone => miq_server.zone) }
+      let(:vms) { FactoryBot.create_list(:vm_openstack, 3, :ext_management_system => ems) }
+
+      context "executing perf_capture_timer" do
+        it "should queue up enabled targets" do
+          stub_settings(:performance => {:history => {:initial_capture_days => 7}})
+          ems.perf_capture_object.queue_captures(vms, {})
+
+          bod = Time.now.utc.beginning_of_day
+
+          expect(queue_timings).to eq(
+            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[4.hours.ago.utc.beginning_of_day]] },
+            "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day) }
+          )
+        end
+      end
+    end
 
     context "for queue prioritization" do
       it "should queue up realtime capture for vm" do
@@ -177,14 +244,14 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
         )
 
         Timecop.travel(20.minutes)
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[Time.now.utc.beginning_of_day]]}
+          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
         )
       end
     end
@@ -196,7 +263,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
         )
       end
@@ -227,7 +294,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end
@@ -252,7 +319,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
 
@@ -260,7 +327,7 @@ describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[Time.now.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end

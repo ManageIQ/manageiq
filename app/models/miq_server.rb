@@ -223,8 +223,6 @@ class MiqServer < ApplicationRecord
       ].each { |k| server_hash[k] = nil }
     end
 
-    server_hash[:has_vix_disk_lib] = server.is_vix_disk_supported?
-
     server.update(server_hash)
 
     _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?

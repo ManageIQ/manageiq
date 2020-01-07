@@ -24,11 +24,4 @@ FactoryBot.define do
   factory :storage_unknown, :parent => :storage do
     store_type { "UNKNOWN" }
   end
-
-  # Factories for perf_capture_timer and perf_capture_gap testing
-  factory :storage_target_vmware, :parent => :storage_vmware do
-    after(:create) do |x|
-      x.perf_capture_enabled = toggle_on_name_seq(x)
-    end
-  end
 end

@@ -60,7 +60,7 @@ module MiqProvision::Automate
 
   def get_network_scope
     network = get_network_details
-    network.kind_of?(Hash) ? network[:scope] : nil
+    network[:scope] if network.kind_of?(Hash)
   end
 
   def get_network_details

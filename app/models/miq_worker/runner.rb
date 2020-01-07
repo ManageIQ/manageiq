@@ -340,8 +340,12 @@ class MiqWorker::Runner
     # without the oversight of MiqServer::WorkerManagement
     return if skip_heartbeat?
 
-    messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
-    messages.each { |msg, *args| process_message(msg, *args) }
+    worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
+    worker_monitor_drb.update_worker_last_heartbeat(@worker.pid)
+
+    worker_monitor_drb.worker_get_messages(@worker.pid).each do |msg, *args|
+      process_message(msg, *args)
+    end
   rescue DRb::DRbError => err
     do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
   end

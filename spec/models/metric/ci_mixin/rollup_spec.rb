@@ -2,114 +2,120 @@ describe Metric::CiMixin::Rollup do
   before do
     MiqRegion.seed
 
-    @zone = EvmSpecHelper.local_miq_server.zone
+    @zone = miq_server.zone
   end
 
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
+  let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
+
   describe ".perf_rollup" do
-    context "with enabled and disabled targets", :with_enabled_disabled_vmware do
-      context "executing perf_capture_timer" do
-        before do
-          @expected_targets = all_targets
-          stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-          Metric::Capture.perf_capture_timer(@ems_vmware.id)
-        end
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:vm)   { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host) }
+    let(:host2) do
+      FactoryBot.create(
+        :host_vmware,
+        :ext_management_system => ems,
+        :perf_capture_enabled  => true,
+        :storages              => [storage],
+        :ems_cluster           => FactoryBot.create(:ems_cluster, :perf_capture_enabled => true, :ext_management_system => ems)
+      )
+    end
+    let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
+    let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
+    let(:host4)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true, :ems_cluster => host2.ems_cluster) }
 
-        context "executing capture_ems_targets for realtime targets with parent objects" do
-          before do
-            @expected_targets = Metric::Targets.capture_ems_targets(@ems_vmware)
-          end
+    context "executing capture_ems_targets for realtime targets with parent objects" do
+      before do
+        stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
+        vm
+        vm2
+        host3
+        host4
+      end
 
-          it "should create tasks and queue callbacks for perf_capture_timer" do
-            # stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-            # Metric::Capture.perf_capture_timer(@ems_vmware.id)
-            @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
-              next if expected_hosts.empty?
+      it "should create tasks and queue callbacks for perf_capture_timer" do
+        ems.perf_capture_object.perf_capture
 
-              task = MiqTask.find_by(:name => "Performance rollup for EmsCluster:#{cluster.id}")
-              expect(task).not_to be_nil
-              expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
+        cluster = host2.ems_cluster
+        expected_hosts = [host2, host4]
 
-              expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
-                                          :instance_id => host.id,
-                                          :method_name => "perf_capture_realtime")
-                expect(messages.size).to eq(1)
-                messages.each do |m|
-                  expect(m.miq_callback).not_to be_nil
-                  expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
-                  expect(m.miq_callback[:args]).to eq([[task.id]])
+        task = MiqTask.find_by(:name => "Performance rollup for EmsCluster:#{cluster.id}")
+        expect(task).not_to be_nil
+        expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
 
-                  m.delivered("ok", "Message delivered successfully", nil)
-                end
-              end
+        expected_hosts.each do |host|
+          messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
+                                    :instance_id => host.id,
+                                    :method_name => "perf_capture_realtime")
+          expect(messages.size).to eq(1)
+          messages.each do |m|
+            expect(m.miq_callback).not_to be_nil
+            expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
+            expect(m.miq_callback[:args]).to eq([[task.id]])
 
-              task.reload
-              expect(task.state).to eq("Finished")
-
-              message = MiqQueue.find_by(:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id)
-              expect(message).not_to be_nil
-              expect(message.args).to eq([task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil])
-            end
-          end
-
-          it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
-            # stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-            # Metric::Capture.perf_capture_timer(@ems_vmware.id)
-            Metric::Capture.perf_capture_timer(@ems_vmware.id)
-            @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
-              next if expected_hosts.empty?
-
-              tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
-              expect(tasks.length).to eq(2)
-              tasks.each do |task|
-                expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
-              end
-
-              task_ids = tasks.collect(&:id)
-
-              expected_hosts.each do |host|
-                messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
-                                          :instance_id => host.id,
-                                          :method_name => "perf_capture_realtime")
-                expect(messages.size).to eq(1)
-                host.update_attribute(:last_perf_capture_on, 1.minute.from_now.utc)
-                messages.each do |m|
-                  next if m.miq_callback[:args].blank?
-
-                  expect(m.miq_callback).not_to be_nil
-                  expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
-                  expect(m.miq_callback[:args].first.sort).to eq(task_ids.sort)
-
-                  status, message, result = m.deliver
-                  m.delivered(status, message, result)
-                end
-              end
-
-              tasks.each do |task|
-                task.reload
-                expect(task.state).to eq("Finished")
-              end
-            end
-          end
-
-          it "calling perf_capture_timer a second time should create another task with the correct time window" do
-            # Metric::Capture.perf_capture_timer(@ems_vmware.id)
-            Metric::Capture.perf_capture_timer(@ems_vmware.id)
-
-            @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
-              next if expected_hosts.empty?
-
-              tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
-              expect(tasks.length).to eq(2)
-
-              t1, t2 = tasks
-              expect(t2.context_data[:start]).to eq(t1.context_data[:end])
-            end
+            m.delivered("ok", "Message delivered successfully", nil)
           end
         end
+
+        task.reload
+        expect(task.state).to eq("Finished")
+
+        message = MiqQueue.find_by(:method_name => "perf_rollup_range", :class_name => "EmsCluster", :instance_id => cluster.id)
+        expect(message).not_to be_nil
+        expect(message.args).to eq([task.context_data[:start], task.context_data[:end], task.context_data[:interval], nil])
+      end
+
+      it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
+        ems.perf_capture_object.perf_capture
+        ems.perf_capture_object.perf_capture
+
+        cluster = host2.ems_cluster
+        expected_hosts = [host2, host4]
+
+        tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
+        expect(tasks.length).to eq(2)
+        tasks.each do |task|
+          expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "ManageIQ::Providers::Vmware::InfraManager::Host:#{h.id}" })
+        end
+
+        task_ids = tasks.collect(&:id)
+
+        expected_hosts.each do |host|
+          messages = MiqQueue.where(:class_name  => 'ManageIQ::Providers::Vmware::InfraManager::Host',
+                                    :instance_id => host.id,
+                                    :method_name => "perf_capture_realtime")
+          expect(messages.size).to eq(1)
+          host.update(:last_perf_capture_on => 1.minute.from_now.utc)
+          messages.each do |m|
+            next if m.miq_callback[:args].blank?
+
+            expect(m.miq_callback).not_to be_nil
+            expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
+            expect(m.miq_callback[:args].first.sort).to eq(task_ids.sort)
+
+            status, message, result = m.deliver
+            m.delivered(status, message, result)
+          end
+        end
+
+        tasks.each do |task|
+          task.reload
+          expect(task.state).to eq("Finished")
+        end
+      end
+
+      it "calling perf_capture_timer a second time should create another task with the correct time window" do
+        ems.perf_capture_object.perf_capture
+        ems.perf_capture_object.perf_capture
+
+        cluster = host2.ems_cluster
+
+        tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
+        expect(tasks.length).to eq(2)
+
+        t1, t2 = tasks
+        expect(t2.context_data[:start]).to eq(t1.context_data[:end])
       end
     end
 

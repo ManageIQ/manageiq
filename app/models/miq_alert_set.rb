@@ -12,7 +12,7 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def notes
-    set_data.kind_of?(Hash) && set_data.key?(:notes) ? set_data[:notes] : nil
+    set_data[:notes] if set_data.kind_of?(Hash) && set_data.key?(:notes)
   end
 
   def notes=(data)

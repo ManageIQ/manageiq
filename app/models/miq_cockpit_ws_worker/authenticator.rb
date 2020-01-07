@@ -20,14 +20,15 @@ module MiqCockpitWsWorker::Authenticator
 
   def creds_for_vm(vm)
     return nil unless vm
-    creds = vm.respond_to?(:key_pairs) ? vm.key_pairs.first : nil unless creds
-    creds ? creds : Authentication.new
+
+    creds = vm.key_pairs.first if vm.respond_to?(:key_pairs)
+    creds || Authentication.new
   end
 
   def find_vm(host_or_ip)
     vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, host_or_ip)
     vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(nil, host_or_ip, nil) unless vms.length == 1
-    vms.length == 1 ? vms[0] : nil
+    vms[0] if vms.length == 1
   end
 
   def find_vm_creds(user_obj, host_or_ip)

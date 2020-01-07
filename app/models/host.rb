@@ -690,7 +690,7 @@ class Host < ApplicationRecord
   # Parent relationship methods
   def parent_folder
     p = parent
-    p.kind_of?(EmsFolder) ? p : nil
+    p if p.kind_of?(EmsFolder)
   end
 
   def owning_folder
