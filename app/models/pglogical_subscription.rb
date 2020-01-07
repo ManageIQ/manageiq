@@ -29,8 +29,8 @@ class PglogicalSubscription
     end
   end
 
-  # A list of attributes typically used on inspection, and necessary
-  # for ActiveModel::AttributeMethods, if used.
+  # A list of attributes typically used on inspection, and used for validation
+  # within the constructor.
   #
   def attributes
     {
