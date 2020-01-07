@@ -24,7 +24,7 @@ class PglogicalSubscription
   def initialize(**kwargs)
     kwargs.each do |key, value|
       raise ArgumentError, "invalid key '#{key}'" unless attributes.include?(key)
-      self.send("#{key}=",value)
+      send("#{key}=", value)
     end
   end
 
