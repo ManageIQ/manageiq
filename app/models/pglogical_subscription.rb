@@ -4,10 +4,28 @@ require 'query_relation'
 
 class PglogicalSubscription
   include Vmdb::Logging
-  include ActiveModel::Model
   extend QueryRelation::Queryable
 
   attr_accessor :id, :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
+
+  # Create and return a new PglogicalSubscription instance. The possible
+  # options that can be passed to the constructor are:
+  #
+  # * id
+  # * status
+  # * dbname
+  # * host
+  # * user
+  # * password
+  # * port
+  # * provider_region
+  # * provider_region_name
+  #
+  def initialize(**kwargs)
+    kwargs.each do |key, value|
+      self.send("#{key}=",value)
+    end
+  end
 
   # A list of attributes typically used on inspection, and necessary
   # for ActiveModel::AttributeMethods, if used.
