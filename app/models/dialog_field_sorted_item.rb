@@ -11,7 +11,19 @@ class DialogFieldSortedItem < DialogField
 
   def initialize_with_given_value(given_value)
     raw_values
-    self.default_value = given_value
+    super
+    coerce_default_value_into_proper_format if multiselect?
+  end
+
+  # ensure JSON encoding for multiselect default_value
+  def coerce_default_value_into_proper_format
+    return unless default_value
+
+    unless JSON.parse(default_value).kind_of?(Array)
+      self.default_value = Array.wrap(default_value).to_json
+    end
+  rescue JSON::ParserError
+    self.default_value = Array.wrap(default_value).to_json
   end
 
   def sort_by

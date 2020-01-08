@@ -1,9 +1,4 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
-  def initialize_with_given_value(given_value)
-    super
-    coerce_default_value_into_proper_format if force_multi_value
-  end
-
   def show_refresh_button?
     !!show_refresh_button
   end
@@ -67,12 +62,6 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   private
 
-  def determine_selected_value
-    coerce_default_value_into_proper_format if dynamic? && force_multi_value
-
-    super
-  end
-
   def use_first_value_as_default
     self.default_value = if force_multi_value
                            [].to_json
@@ -91,14 +80,5 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     else
       super(values_list)
     end
-  end
-
-  def coerce_default_value_into_proper_format
-    return unless default_value
-    unless JSON.parse(default_value).kind_of?(Array)
-      self.default_value = Array.wrap(default_value).to_json
-    end
-  rescue JSON::ParserError
-    self.default_value = Array.wrap(default_value).to_json
   end
 end
