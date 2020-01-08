@@ -171,18 +171,11 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     describe '#transformation_log' do
       before do
         task.conversion_host = conversion_host
-        task.options.store_path(:virtv2v_wrapper, "v2v_log", "/path/to/log.file")
-        task.save!
-      end
-
-      it 'requires transformation log location in options' do
-        task.options.store_path(:virtv2v_wrapper, "v2v_log", "")
-        expect { task.transformation_log("v2v") }.to raise_error(MiqException::Error)
       end
 
       it 'gets the transformation log content' do
         msg = 'my transformation migration log'
-        allow(conversion_host).to receive(:get_conversion_log).with(task.options[:virtv2v_wrapper]['v2v_log']).and_return(msg)
+        allow(conversion_host).to receive(:get_conversion_log).with(task.id, 'v2v').and_return(msg)
         expect(task.transformation_log("v2v")).to eq(msg)
       end
     end
@@ -215,36 +208,30 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
       it "returns false if not started" do
         task.options[:virtv2v_started_on] = nil
-        expect(conversion_host).not_to receive(:kill_process)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        expect(conversion_host).not_to receive(:kill_virtv2v)
+        expect(task.kill_virtv2v).to eq(false)
       end
 
       it "returns false if finished" do
         task.options[:virtv2v_finished_on] = 1
-        expect(conversion_host).not_to receive(:kill_process)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        expect(conversion_host).not_to receive(:kill_virtv2v)
+        expect(task.kill_virtv2v).to eq(false)
       end
 
       it "returns false if virtv2v_wrapper is absent" do
         task.options[:virtv2v_wrapper] = nil
-        expect(conversion_host).not_to receive(:kill_process)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
-      end
-
-      it "returns false if virtv2v_pid is absent" do
-        task.options[:virtv2v_pid] = nil
-        expect(conversion_host).not_to receive(:kill_process)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        expect(conversion_host).not_to receive(:kill_virtv2v)
+        expect(task.kill_virtv2v).to eq(false)
       end
 
       it "returns false if if kill command failed" do
-        expect(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(false)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(false)
+        expect(task.kill_virtv2v).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
-        expect(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
-        expect(task.kill_virtv2v('KILL')).to eq(true)
+        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(true)
+        expect(task.kill_virtv2v).to eq(true)
       end
     end
   end
@@ -317,19 +304,17 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:time_now) { Time.now.utc }
       before do
         allow(Time).to receive(:now).and_return(time_now)
-        allow(conversion_host).to receive(:run_conversion).with(task_1.conversion_options).and_return(
-          "wrapper_log" => "/tmp/wrapper.log",
-          "v2v_log"     => "/tmp/v2v.log",
-          "state_file"  => "/tmp/v2v.state"
-        )
+        allow(conversion_host).to receive(:run_conversion).with(task_1.id, task_1.conversion_options)
       end
 
       it "collects the wrapper state hash" do
         task_1.run_conversion
         expect(task_1.options[:virtv2v_wrapper]).to eq(
-          "wrapper_log" => "/tmp/wrapper.log",
-          "v2v_log"     => "/tmp/v2v.log",
-          "state_file"  => "/tmp/v2v.state"
+          "state_file"      => "/var/lib/uci/#{task_1.id}/state.json",
+          "throttling_file" => "/var/lib/uci/#{task_1.id}/limits.json",
+          "cutover_file"    => "/var/lib/uci/#{task_1.id}/cutover",
+          "v2v_log"         => "/var/log/uci/#{task_1.id}/virt-v2v.log",
+          "wrapper_log"     => "/var/log/uci/#{task_1.id}/virt-v2v-wrapper.log"
         )
         expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
         expect(task_1.options[:virtv2v_status]).to eq('active')

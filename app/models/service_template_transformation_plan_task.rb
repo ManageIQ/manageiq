@@ -141,14 +141,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       raise MiqException::Error, msg
     end
 
-    logfile = options.fetch_path(:virtv2v_wrapper, "#{log_type}_log")
-    if logfile.blank?
-      msg = "The location of #{log_type} log was not set. Download of #{log_type} log aborted."
-      _log.error(msg)
-      raise MiqException::Error, msg
-    end
-
-    conversion_host.get_conversion_log(logfile)
+    conversion_host.get_conversion_log(id, log_type)
   end
 
   # Intend to be called by UI to display transformation log. The log is stored in MiqTask#task_results
@@ -215,7 +208,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def run_conversion
     start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
     updates = {}
-    updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
+    conversion_host.run_conversion(id, conversion_options)
+    updates[:virtv2v_wrapper] = {
+      "state_file"      => "/var/lib/uci/#{id}/state.json",
+      "throttling_file" => "/var/lib/uci/#{id}/limits.json",
+      "cutover_file"    => "/var/lib/uci/#{id}/cutover",
+      "v2v_log"         => "/var/log/uci/#{id}/virt-v2v.log",
+      "wrapper_log"     => "/var/log/uci/#{id}/virt-v2v-wrapper.log"
+    }
     updates[:virtv2v_started_on] = start_timestamp
     updates[:virtv2v_status] = 'active'
     _log.info("InfraConversionJob run_conversion to update_options: #{updates}")
@@ -224,7 +224,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def get_conversion_state
     updates = {}
-    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
+    virtv2v_state = conversion_host.get_conversion_state(id)
     updated_disks = virtv2v_disks
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
@@ -258,14 +258,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cutover
-    if options[:virtv2v_wrapper]['cutover_file'].present?
-      unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
-        raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
-      end
+    unless conversion_host.create_cutover_file(id)
+      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
     end
   end
 
-  def kill_virtv2v(signal = 'TERM')
+  def kill_virtv2v
     get_conversion_state
 
     unless virtv2v_running?
@@ -273,23 +271,18 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       return false
     end
 
-    unless options[:virtv2v_pid]
-      _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
-      return false
-    end
+    _log.info("Killing conversion pod for task '#{id}'.")
+    conversion_host.kill_virtv2v(id)
+  end
 
-    _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
-    conversion_host.kill_process(options[:virtv2v_pid], signal)
+  def virtv2v_running?
+    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
   end
 
   private
 
   def vm_resource
     miq_request.vm_resources.find_by(:resource => source)
-  end
-
-  def virtv2v_running?
-    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
   end
 
   def create_error_status_task(userid, msg)

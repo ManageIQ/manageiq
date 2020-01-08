@@ -158,14 +158,59 @@ class ConversionHost < ApplicationRecord
   # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
-  def apply_task_limits(path, limits = {})
-    connect_ssh { |ssu| ssu.put_file(path, limits.to_json) }
+  def apply_task_limits(task_id, limits = {})
+    connect_ssh { |ssu| ssu.put_file("/var/lib/uci/#{task_id}/limits.json", limits.to_json) }
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
-    raise "Failed to connect and apply limits in file '#{path}' with [#{err.class}: #{err}]"
+    raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
   rescue StandardError => err
-    raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{err.class}: #{err}]"
+    raise "Could not apply the limits for task '#{task_id}' on '#{resource.name}' with [#{err.class}: #{err}]"
+  end
+
+  # Prepare the conversion assets for a specific task.
+  #
+  # @param [Integer] id of the task that needs the preparation
+  # @param [Hash] conversion options to write on the conversion host
+  #
+  # @return [Integer] length of data written to conversion options file
+  #
+  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
+  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
+  # @raise [StandardError] if any other problem happens
+  def prepare_conversion(task_id, conversion_options)
+    filtered_options = filter_options(conversion_options)
+
+    connect_ssh do |ssu|
+      # Prepare the conversion folders
+      ssu.shell_exec("mkdir -p /var/lib/uci/#{task_id} /var/log/uci/#{task_id}", nil, nil, nil)
+
+      # Write the conversion options file
+      ssu.put_file("/var/lib/uci/#{task_id}/input.json", conversion_options.to_json)
+    end
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
+  rescue JSON::GeneratorError => err
+    raise "Could not generate JSON for task '#{task_id}' from options '#{filtered_options}' with [#{err.class}: #{err}]"
+  rescue StandardError => err
+    raise "Preparation of conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
+  end
+
+  # Build the podman command to execute conversion
+  #
+  # @param [Integer] id of the task that conversion applies to
+  #
+  # @return [String] podman command to be executed on conversion host
+  def build_podman_command(task_id)
+    "/usr/bin/podman run --privileged"\
+    " --name conversion-#{task_id}"\
+    " --volume /dev:/dev"\
+    " --volume /var/tmp:/var/tmp"\
+    " --volume /var/lib/uci/#{task_id}:/var/lib/uci"\
+    " --volume /var/log/uci/#{task_id}:/var/log/uci"\
+    " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
+    " registry.access.redhat.com/manageiq/kubevirt-v2v-conversion:ims"\
   end
 
   # Run the virt-v2v-wrapper script on the remote host and return a hash
@@ -174,21 +219,19 @@ class ConversionHost < ApplicationRecord
   # Certain sensitive fields are filtered in the error messages to prevent
   # that information from showing up in the UI or logs.
   #
-  def run_conversion(conversion_options)
-    ignore = %w[password fingerprint key]
-    filtered_options = conversion_options.clone.tap { |h| h.each { |k, _v| h[k] = "__FILTERED__" if ignore.any? { |i| k.to_s.end_with?(i) } } }
-    result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper', nil, nil, conversion_options.to_json) }
-    JSON.parse(result)
+  # @param [Integer] id of the task that conversion applies to
+  def run_conversion(task_id, conversion_options)
+    filtered_options = filter_options(conversion_options)
+    prepare_conversion(task_id, conversion_options)
+    connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id), nil, nil, nil) }
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
-  rescue JSON::ParserError
-    raise "Could not parse result data after running virt-v2v-wrapper using options: #{filtered_options}. Result was: #{result}."
   rescue StandardError => err
-    raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
+    raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
-  def create_cutover_file(path)
-    connect_ssh { |ssu| ssu.shell_exec("touch #{path}") }
+  def create_cutover_file(task_id)
+    connect_ssh { |ssu| ssu.shell_exec("touch /var/lib/uci/#{task_id}/cutover") }
     true
   rescue StandardError
     false
@@ -197,8 +240,8 @@ class ConversionHost < ApplicationRecord
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
   # if no signal is specified.
   #
-  def kill_process(pid, signal = 'TERM')
-    connect_ssh { |ssu| ssu.shell_exec("/bin/kill -s #{signal} #{pid}") }
+  def kill_virtv2v(task_id)
+    connect_ssh { |ssu| ssu.shell_exec("/usr/bin/podman kill conversion-#{task_id}") }
     true
   rescue
     false
@@ -207,23 +250,23 @@ class ConversionHost < ApplicationRecord
   # Retrieve the conversion state information from a remote file as a stream.
   # Then parse and return the stream data as a hash using JSON.parse.
   #
-  def get_conversion_state(path)
-    json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
+  def get_conversion_state(task_id)
+    json_state = connect_ssh { |ssu| ssu.get_file("/var/lib/uci/#{task_id}/state.json", nil) }
     JSON.parse(json_state)
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
-    raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
+    raise "Failed to connect and retrieve conversion state data from file '/var/lib/uci/#{task_id}/state.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
-    raise "Could not parse conversion state data from file '#{path}': #{json_state}"
+    raise "Could not parse conversion state data from file '/var/lib/uci/#{task_id}/state.json': #{json_state}"
   rescue StandardError => err
-    raise "Error retrieving and parsing conversion state file '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
+    raise "Error retrieving and parsing conversion state file '/var/lib/uci/#{task_id}/state.json' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   # Get and return the contents of the remote conversion log at +path+.
   #
-  def get_conversion_log(path)
-    connect_ssh { |ssu| ssu.get_file(path, nil) }
-  rescue => e
-    raise "Could not get conversion log '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
+  def get_conversion_log(task_id, log_type)
+    connect_ssh { |ssu| ssu.get_file("/var/log/uci/#{task_id}/#{log_type}.log", nil) }
+  rescue StandardError => err
+    raise "Could not get #{log_type} log for task '#{task_id}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   def check_conversion_host_role(miq_task_id = nil)
@@ -297,6 +340,12 @@ class ConversionHost < ApplicationRecord
     end
 
     authentication
+  end
+
+  # Utility method to filter certain entries of a hash based on key name
+  def filter_options(options)
+    ignore = %w[password fingerprint key]
+    options.clone.tap { |h| h.each { |k, _v| h[k] = "__FILTERED__" if ignore.any? { |i| k.to_s.end_with?(i) } } }
   end
 
   # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
