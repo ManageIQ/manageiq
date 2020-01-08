@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 127 ending 2020-01-06
+
+### Added
+
+* Switch from git source to rubygems.manageiq.org [(#19564)](https://github.com/ManageIQ/manageiq/pull/19564)
+* Added a tool to visualize Jobs in graphviz [(#19626)](https://github.com/ManageIQ/manageiq/pull/19626)
+* Updated rubyzip gem to version 2 [(#19629)](https://github.com/ManageIQ/manageiq/pull/19629)
+* Updated linux_admin gem to version 2 [(#19639)](https://github.com/ManageIQ/manageiq/pull/19639)
+* Added sync gem [(#19682)](https://github.com/ManageIQ/manageiq/pull/19682)
+
+### Fixed
+
+* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
+* Avoid starting every metrics collector worker for every EMS type simply because the role is enabled. [(#19683)](https://github.com/ManageIQ/manageiq/pull/19683)
+
 # Unreleased as of Sprint 126 ending 2019-12-09
 
 ### Added
