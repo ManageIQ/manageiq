@@ -1,4 +1,4 @@
-describe ExtManagementSystem do
+RSpec.describe ExtManagementSystem do
   describe ".with_tenant" do
     # tenant_root
     #   \___ tenant_eye_bee_em (service_template_eye_bee_em)
@@ -715,7 +715,7 @@ describe ExtManagementSystem do
       connection = double
       allow(ManageIQ::Providers::Amazon::CloudManager).to receive(:raw_connect).and_return(connection)
 
-      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
+      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?('abc', 'xxx', 'EC2', 'eastus')).to eq(true)
     end
   end
 
