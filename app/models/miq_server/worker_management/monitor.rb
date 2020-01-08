@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
-    sync_needed?
+    sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
     sync_workers
@@ -120,7 +120,7 @@ module MiqServer::WorkerManagement::Monitor
     end
   end
 
-  def sync_needed?
+  def sync_monitor
     @last_sync ||= Time.now.utc
     sync_interval         = @worker_monitor_settings[:sync_interval] || 30.minutes
     sync_interval_reached = sync_interval.seconds.ago.utc > @last_sync
