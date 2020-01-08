@@ -2240,7 +2240,7 @@ describe Rbac::Filterer do
         service2.update(:service_template => nil)
 
         # exclude service2 (no service template)
-        exp = YAML.safe_load("--- !ruby/object:MiqExpression
+        exp = YAML.load("--- !ruby/object:MiqExpression
         exp:
           and:
           - IS NOT EMPTY:
@@ -2269,7 +2269,7 @@ describe Rbac::Filterer do
         FactoryBot.create_list(:service, 1, :parent => root_service) # matches ruby and sql filter, not rbac
 
         # expression with sql AND ruby
-        exp = YAML.safe_load("--- !ruby/object:MiqExpression
+        exp = YAML.load("--- !ruby/object:MiqExpression
         exp:
           and:
           - IS NOT EMPTY:
