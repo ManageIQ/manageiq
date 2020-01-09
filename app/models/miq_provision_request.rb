@@ -73,6 +73,10 @@ class MiqProvisionRequest < MiqRequest
     'ems_operations'
   end
 
+  def my_queue_name
+    source.ext_management_system&.queue_name_for_ems_operations
+  end
+
   def requested_task_idx
     (1..get_option(:number_of_vms).to_i).to_a
   end
