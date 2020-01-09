@@ -325,31 +325,37 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def conversion_options_source_provider_vmwarews_vddk(_storage)
     {
-      :vm_name            => source.name,
-      :transport_method   => 'vddk',
-      :vmware_fingerprint => source.host.thumbprint_sha1,
-      :vmware_uri         => URI::Generic.build(
+      :vm_name              => source.name,
+      :vm_uuid              => source.ems_ref,
+      :conversion_host_uuid => conversion_host.resource.ems_ref,
+      :transport_method     => 'vddk',
+      :vmware_fingerprint   => source.host.thumbprint_sha1,
+      :vmware_uri           => URI::Generic.build(
         :scheme   => 'esx',
         :userinfo => CGI.escape(source.host.authentication_userid),
         :host     => source.host.ipaddress,
         :path     => '/',
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
-      :vmware_password    => source.host.authentication_password,
-      :two_phase          => true,
-      :warm               => warm_migration?
+      :vmware_password      => source.host.authentication_password,
+      :two_phase            => true,
+      :warm                 => warm_migration?,
+      :daemonize            => false
     }
   end
 
   def conversion_options_source_provider_vmwarews_ssh(storage)
     {
-      :vm_name          => URI::Generic.build(
+      :vm_name              => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
-      :transport_method => 'ssh'
+      :vm_uuid              => source.ems_ref,
+      :conversion_host_uuid => conversion_host.resource.ems_ref,
+      :transport_method     => 'ssh',
+      :daemonize            => false
     }
   end
 
