@@ -877,7 +877,7 @@ class MiqRequestWorkflow
         else
           path << " / ".freeze << folder.name
         end
-        dh[folder.id] = path unless folder.type == "Datacenter".freeze
+        dh[folder.id] = path unless folder.datacenter?
       end
     end
 
@@ -929,7 +929,7 @@ class MiqRequestWorkflow
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
       ci = node.attributes[:object]
-      if node.name == klass_name && (datacenter == false || datacenter == true && ci.type == "Datacenter")
+      if node.name == klass_name && (datacenter == false || datacenter == true && ci.datacenter?)
         result = ci
         break
       end
@@ -1009,7 +1009,9 @@ class MiqRequestWorkflow
   end
 
   def ems_folder_to_hash_struct(ci)
-    build_ci_hash_struct(ci, [:name, :type, :hidden])
+    build_ci_hash_struct(ci, [:name, :type, :hidden]).tap do |nh|
+      nh.send("datacenter?=", ci.kind_of?(Datacenter))
+    end
   end
 
   def storage_to_hash_struct(ci)
