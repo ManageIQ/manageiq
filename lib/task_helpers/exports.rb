@@ -29,6 +29,7 @@ module TaskHelpers
 		   tmp_filename = object[:label]
 	   end
 	  end
+	end
 	  
     def self.safe_filename(object, keep_spaces = false, super_safe_filename = false)
 	  # Description: generate a safe filename either by some string fields or by object id's.
