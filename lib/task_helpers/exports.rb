@@ -8,6 +8,7 @@ module TaskHelpers
 	  description_types = [MiqAlert, MiqAlertSet, MiqPolicy, MiqPolicySet, Classification, MiqWidget]
 	  names_types = [GenericObjectDefinition, MiqReport, ScanItemSet, MiqSchedule]
 	  
+	  tmp_filename = ''
 	  if names_types.include? object.class then
 		tmp_filename = object.name
 	  elsif description_types.include? object.class then
@@ -29,6 +30,7 @@ module TaskHelpers
 		   tmp_filename = object[:label]
 	   end
 	  end
+	  return tmp_filename
 	end
 	  
     def self.safe_filename(object, keep_spaces = false, super_safe_filename = false)
