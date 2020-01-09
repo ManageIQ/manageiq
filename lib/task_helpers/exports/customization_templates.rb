@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class CustomizationTemplates
-      EXCLUDE_ATTRS = %i(created_at updated_at id pxe_image_type_id class).freeze
+      EXCLUDE_ATTRS = %i(created_at updated_at pxe_image_type_id).freeze
       def export(options = {})
         export_dir = options[:directory]
 
@@ -14,7 +14,7 @@ module TaskHelpers
           ct_hash.merge!(pxe_image_type_hash(customization_template.pxe_image_type))
 
           image_type_name = ct_hash.fetch_path(:pxe_image_type, :name) || "Examples"
-          filename = Exports.safe_filename("#{image_type_name}-#{ct_hash[:name]}", options[:keep_spaces])
+          filename = Exports.safe_filename(ct_hash, options[:keep_spaces])
           File.write("#{export_dir}/#{filename}.yaml", ct_hash.to_yaml)
         end
       end

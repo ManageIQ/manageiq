@@ -9,9 +9,12 @@ module TaskHelpers
         dialogs.each do |dialog|
           $log.info("Exporting Service Dialog: #{dialog.name} (ID: #{dialog.id})")
 
-          dialog_hash = DialogSerializer.new.serialize([dialog])
+          dialog_hash = DialogSerializer.new.serialize([dialog]).first
+          dialog_hash["id"] = dialog.id
+          dialog_hash["class"] = dialog.class
+          dialog_hash = dialog_hash.symbolize_keys
 
-          filename = Exports.safe_filename(dialog_hash.first['label'], options[:keep_spaces])
+          filename = Exports.safe_filename(dialog_hash, options[:keep_spaces])
           File.write("#{export_dir}/#{filename}.yaml", dialog_hash.to_yaml)
         end
       end
