@@ -1,4 +1,4 @@
-describe ExtManagementSystem do
+RSpec.describe ExtManagementSystem do
   describe ".with_tenant" do
     # tenant_root
     #   \___ tenant_eye_bee_em (service_template_eye_bee_em)
@@ -712,10 +712,8 @@ describe ExtManagementSystem do
 
   describe ".raw_connect?" do
     it "returns true if validation was successful" do
-      connection = double
-      allow(ManageIQ::Providers::Amazon::CloudManager).to receive(:raw_connect).and_return(connection)
-
-      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
+      allow(described_class).to receive(:raw_connect).and_return(double)
+      expect(described_class.raw_connect?).to eq(true)
     end
   end
 
