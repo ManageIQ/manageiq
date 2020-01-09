@@ -719,6 +719,13 @@ describe ExtManagementSystem do
     end
   end
 
+  context "raw_connect" do
+    it 'defines a raw_connect method which raises an error' do
+      expect(described_class).to respond_to(:raw_connect)
+      expect { described_class.raw_connect }.to raise_error(NotImplementedError, _("must be implemented in a subclass"))
+    end
+  end
+
   describe ".inventory_status" do
     it "works with infra providers" do
       ems = FactoryBot.create(:ems_infra)

@@ -327,6 +327,12 @@ class ExtManagementSystem < ApplicationRecord
     !!raw_connect(*params)
   end
 
+  # Interface method that should be defined within the EMS of the provider.
+  #
+  def self.raw_connect(*_args)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
   def self.model_name_from_emstype(emstype)
     model_from_emstype(emstype).try(:name)
   end
