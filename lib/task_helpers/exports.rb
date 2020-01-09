@@ -50,6 +50,7 @@ module TaskHelpers
 		new_filename = keep_spaces ? tmp_filename : tmp_filename.gsub(%r{[ ]}, '_')
 		new_filename.gsub(%r{[|/]}, '/' => 'slash', '|' => 'pipe')
 	  end
+	  return new_filename
     end
 
     def self.parse_options
