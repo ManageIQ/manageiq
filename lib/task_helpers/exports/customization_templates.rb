@@ -13,7 +13,6 @@ module TaskHelpers
           ct_hash = Exports.exclude_attributes(customization_template.to_model_hash, EXCLUDE_ATTRS)
           ct_hash.merge!(pxe_image_type_hash(customization_template.pxe_image_type))
 
-          image_type_name = ct_hash.fetch_path(:pxe_image_type, :name) || "Examples"
           filename = Exports.safe_filename(ct_hash, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", ct_hash.to_yaml)
         end
