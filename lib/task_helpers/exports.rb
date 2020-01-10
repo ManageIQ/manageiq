@@ -14,19 +14,19 @@ module TaskHelpers
       # Handle specifically crafted Hashes
       elsif my_object.class == Hash
         # CustomizationTemplate Hash
-          if my_object[:class].include?("CustomizationTemplate")
-            image_type_name = my_object.fetch_path(:pxe_image_type, :name) || "Examples"
-            tmp_filename = "#{image_type_name}-#{object[:name]}"
-            # Provisioning Dialog Hash
-          elsif my_object[:class].include?("MiqDialog")
-            tmp_filename = "#{my_object[:dialog_type]}-#{my_object[:name]}"
-            # Role Hash
-          elsif my_object[:class].include?("MiqUserRole")
-            tmp_filename = role_hash[:name]
-            # Service Dialog Hash
-          elsif my_object[:class].include?("Dialog")
-            tmp_filename = my_object[:label]
-          end
+        if my_object[:class].include?("CustomizationTemplate")
+          image_type_name = my_object.fetch_path(:pxe_image_type, :name) || "Examples"
+          tmp_filename = "#{image_type_name}-#{object[:name]}"
+        # Provisioning Dialog Hash
+        elsif my_object[:class].include?("MiqDialog")
+          tmp_filename = "#{my_object[:dialog_type]}-#{my_object[:name]}"
+        # Role Hash
+        elsif my_object[:class].include?("MiqUserRole")
+          tmp_filename = role_hash[:name]
+        # Service Dialog Hash
+        elsif my_object[:class].include?("Dialog")
+          tmp_filename = my_object[:label]
+        end
       end
       tmp_filename
     end
