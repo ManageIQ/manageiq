@@ -5,6 +5,14 @@ describe MiqRequestWorkflow do
   let(:ems_folder) { FactoryBot.create(:ems_folder) }
   let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
 
+  before("#validate") do
+    module TempModule
+      def some_validation_method; end
+      def some_required_method; end
+    end
+    workflow.extend(TempModule)
+  end
+
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
 
@@ -17,14 +25,14 @@ describe MiqRequestWorkflow do
       it "calls the validation_method if defined" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).once
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).once
         expect(workflow.validate({})).to be true
       end
 
       it "returns false when validation fails" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
