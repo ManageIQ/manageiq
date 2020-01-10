@@ -11,7 +11,7 @@ module TaskHelpers
 
           dialog_hash = DialogSerializer.new.serialize([dialog]).first
           dialog_hash["id"] = dialog.id
-          dialog_hash["class"] = dialog.class
+          dialog_hash["class"] = dialog.class.to_s
           dialog_hash = dialog_hash.symbolize_keys
 
           filename = Exports.safe_filename(dialog_hash, options[:keep_spaces])
