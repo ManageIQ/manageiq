@@ -6,14 +6,11 @@ describe MiqRequestWorkflow do
   let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
 
   before("#validate") do
-    module TempModule
-      def some_validation_method; end
-      def other_validation_method; end
-      def some_required_method; end
-      def some_required_method_1; end
-      def some_required_method_2; end
-    end
-    workflow.extend(TempModule)
+    workflow.define_singleton_method(:some_validation_method) {}
+    workflow.define_singleton_method(:other_validation_method) {}
+    workflow.define_singleton_method(:some_required_method) {}
+    workflow.define_singleton_method(:some_required_method_1) {}
+    workflow.define_singleton_method(:some_required_method_2) {}
   end
 
   context "#validate" do
