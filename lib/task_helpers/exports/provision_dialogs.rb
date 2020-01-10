@@ -12,7 +12,7 @@ module TaskHelpers
 
           dialog_hash = Exports.exclude_attributes(dialog.to_model_hash, EXCLUDE_ATTRS)
 
-          filename = Exports.safe_filename(dialog_hash, options[:keep_spaces])
+          filename = Exports.safe_filename(dialog_hash, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", dialog_hash.to_yaml)
         end
       end

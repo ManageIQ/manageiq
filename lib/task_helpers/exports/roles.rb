@@ -13,7 +13,7 @@ module TaskHelpers
           role_hash = Exports.exclude_attributes(role.attributes, EXCLUDE_ATTRS).merge('feature_identifiers' => role.feature_identifiers.sort)
           role_hash["class"] = role.class.to_s
           role_hash = role_hash.symbolize_keys
-          filename = Exports.safe_filename(role_hash, options[:keep_spaces])
+          filename = Exports.safe_filename(role_hash, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", [role_hash].to_yaml)
         end
       end

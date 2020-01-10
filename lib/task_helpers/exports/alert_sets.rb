@@ -7,7 +7,7 @@ module TaskHelpers
         MiqAlertSet.order(:id).all.each do |alert_set|
           $log.info("Exporting Alert Profile: #{alert_set.description} (ID: #{alert_set.id})")
 
-          filename = Exports.safe_filename(alert_set.description, options[:keep_spaces])
+          filename = Exports.safe_filename(alert_set.description, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", alert_set.export_to_yaml)
         end
       end
