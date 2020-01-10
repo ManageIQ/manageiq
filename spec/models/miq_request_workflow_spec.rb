@@ -8,7 +8,10 @@ describe MiqRequestWorkflow do
   before("#validate") do
     module TempModule
       def some_validation_method; end
+      def other_validation_method; end
       def some_required_method; end
+      def some_required_method_1; end
+      def some_required_method_2; end
     end
     workflow.extend(TempModule)
   end
@@ -51,7 +54,7 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required_method, :some_required_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_required_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
@@ -62,8 +65,8 @@ describe MiqRequestWorkflow do
                                                                                             :some_required_method_2])
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method_1)
-        expect(workflow).to receive(:some_required_method_2)
+        expect(workflow).to receive(:send).with(:some_required_method_1, any_args)
+        expect(workflow).to receive(:send).with(:some_required_method_2, any_args)
         expect(workflow.validate({})).to be true
       end
     end
@@ -73,8 +76,8 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password_2, :validation_method, :other_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
-        expect(workflow).to receive(:other_validation_method)
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:other_validation_method, any_args)
         expect(workflow.validate({})).to be false
       end
     end
