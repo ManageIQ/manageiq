@@ -1,6 +1,6 @@
 module TaskHelpers
   class Exports
-    def get_tmp_filename(object)
+    def self.get_tmp_filename(my_object)
       # Description: This method is used to generate a legacy, error-prone filename based on selected string fields.
       # There is no handling of CustomButtons because safe_filename is not called.
       # Build Arrays for plain classes where filenames are either set by name or description
