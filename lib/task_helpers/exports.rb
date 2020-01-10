@@ -7,41 +7,41 @@ module TaskHelpers
       description_types = [MiqAlert, MiqAlertSet, MiqPolicy, MiqPolicySet, Classification, MiqWidget]
       names_types = [GenericObjectDefinition, MiqReport, ScanItemSet, MiqSchedule]
       tmp_filename = ''
-      if names_types.include?(object.class)
-        tmp_filename = object.name
-      elsif description_types.include?(object.class)
-        tmp_filename = object.description
+      if names_types.include?(my_object.class)
+        tmp_filename = my_object.name
+      elsif description_types.include?(my_object.class)
+        tmp_filename = my_object.description
       # Handle specifically crafted Hashes
-      elsif object.class == Hash
+      elsif my_object.class == Hash
         # CustomizationTemplate Hash
-        if object[:class].include?("CustomizationTemplate")
-          image_type_name = object.fetch_path(:pxe_image_type, :name) || "Examples"
-          tmp_filename = "#{image_type_name}-#{object[:name]}"
-          # Provisioning Dialog Hash
-        elsif object[:class].include?("MiqDialog")
-          tmp_filename = "#{object[:dialog_type]}-#{object[:name]}"
-          # Role Hash
-        elsif object[:class].include?("MiqUserRole")
-          tmp_filename = role_hash[:name]
-          # Service Dialog Hash
-        elsif object[:class].include?("Dialog")
-          tmp_filename = object[:label]
-        end
+          if my_object[:class].include?("CustomizationTemplate")
+            image_type_name = my_object.fetch_path(:pxe_image_type, :name) || "Examples"
+            tmp_filename = "#{image_type_name}-#{object[:name]}"
+            # Provisioning Dialog Hash
+          elsif my_object[:class].include?("MiqDialog")
+            tmp_filename = "#{my_object[:dialog_type]}-#{my_object[:name]}"
+            # Role Hash
+          elsif my_object[:class].include?("MiqUserRole")
+            tmp_filename = role_hash[:name]
+            # Service Dialog Hash
+          elsif my_object[:class].include?("Dialog")
+            tmp_filename = my_object[:label]
+          end
       end
       tmp_filename
     end
 
-    def self.safe_filename(object, keep_spaces = false, super_safe_filename = false)
+    def self.safe_filename(my_object, keep_spaces = false, super_safe_filename = false)
       # Description: generate a safe filename either by some string fields or by object id's.
       # We expect parameter object to be a crafted hash or a miq class suitable for export.
 
       new_filename = ''
       # Generate filename by id. Hashes and Miq classes must be handled.
       if super_safe_filename
-        new_filename = object.class == Hash ? object[:id] : object.id
+        new_filename = my_object.class == Hash ? my_object[:id] : my_object.id
       # Generate filename by not so safe strings.
       else
-        tmp_filename = Exports.get_tmp_filename(object)
+        tmp_filename = Exports.get_tmp_filename(my_object)
         new_filename = keep_spaces ? tmp_filename : tmp_filename.gsub(%r{[ ]}, '_')
         new_filename.gsub(%r{[|/]}, '/' => 'slash', '|' => 'pipe')
       end
