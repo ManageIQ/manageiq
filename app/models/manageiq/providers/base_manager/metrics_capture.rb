@@ -19,10 +19,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   def perf_capture
     perf_capture_health_check
     targets = capture_ems_targets
+    targets = filter_perf_capture_now(targets)
 
-    targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
-    target_options = calc_target_options(targets_by_rollup_parent)
-    targets = filter_perf_capture_now(targets, target_options)
+    target_options = calc_target_options(targets)
     queue_captures(targets, target_options)
   end
 
@@ -67,11 +66,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
-  def filter_perf_capture_now(targets, target_options)
+  def filter_perf_capture_now(targets)
     targets.select do |target|
-      options = target_options[target]
-      # [:force] is set if we already determined this target needs perf capture
-      if options[:force] || perf_capture_now?(target)
+      if perf_capture_now?(target)
         true
       else
         _log.debug do
@@ -111,7 +108,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   def calc_targets_by_rollup_parent(targets)
     realtime_targets = targets.select do |target|
       target.kind_of?(Host) &&
-        perf_capture_now?(target) &&
         target.ems_cluster_id
     end
     realtime_targets.group_by(&:ems_cluster)
@@ -120,7 +116,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # Determine queue options for each target
   # Is only generating options for Vmware Hosts, which have a task for rollups.
   # The rest just set the zone
-  def calc_target_options(targets_by_rollup_parent)
+  def calc_target_options(all_targets)
+    targets_by_rollup_parent = calc_targets_by_rollup_parent(all_targets)
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
 
