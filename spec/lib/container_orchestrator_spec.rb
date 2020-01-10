@@ -106,9 +106,11 @@ describe ContainerOrchestrator do
           ports = definition[:spec][:ports]
           expect(ports.first).to eq(:name => "http-80", :port => 80, :targetPort => 80)
           expect(ports.last).to eq(:name => "https", :port => 443, :targetPort => 5000)
+
+          expect(definition[:spec][:selector][:service]).to eq("http")
         end
 
-        subject.create_service("http", 80) do |spec|
+        subject.create_service("http", {:service => "http"}, 80) do |spec|
           spec[:spec][:ports] << {:name => "https", :port => 443, :targetPort => 5000}
         end
       end
@@ -117,7 +119,7 @@ describe ContainerOrchestrator do
         error = KubeException.new(500, "service already exists", "")
         expect(kube_connection_stub).to receive(:create_service).and_raise(error)
 
-        expect { subject.create_service("http", 80) }.not_to raise_error
+        expect { subject.create_service("http", {:service => "http"}, 80) }.not_to raise_error
       end
     end
 

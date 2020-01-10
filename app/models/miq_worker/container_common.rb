@@ -31,11 +31,15 @@ class MiqWorker
       "latest"
     end
 
+    def deployment_prefix
+      "#{MiqServer.my_server.compressed_id}-"
+    end
+
     def worker_deployment_name
       @worker_deployment_name ||= begin
         deployment_name = abbreviated_class_name.dup.chomp("Worker").sub("Manager", "").sub(/^Miq/, "")
         deployment_name << "-#{Array(ems_id).map { |id| ApplicationRecord.split_id(id).last }.join("-")}" if respond_to?(:ems_id)
-        deployment_name.underscore.dasherize.tr("/", "-")
+        "#{deployment_prefix}#{deployment_name.underscore.dasherize.tr("/", "-")}"
       end
     end
   end
