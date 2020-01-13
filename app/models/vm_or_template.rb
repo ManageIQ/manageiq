@@ -361,7 +361,7 @@ class VmOrTemplate < ApplicationRecord
     vms = where(:id => src_ids)
 
     missing_ids = src_ids - vms.pluck(:id)
-    _log.error("Retirement of [Vm] IDs: [#{missing_ids.join(', ')}] skipped - target(s) does not exist")
+    _log.error("Retirement of [Vm] IDs: [#{missing_ids.join(', ')}] skipped - target(s) does not exist") if missing_ids.present?
 
     vms.each do |target|
       target.check_policy_prevent('request_vm_retire', "retire_request_after_policy_check", requester.userid, :initiated_by => initiated_by)
