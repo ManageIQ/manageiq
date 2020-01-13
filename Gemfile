@@ -52,7 +52,7 @@ gem "manageiq-api-client",            "~>0.3.3",       :require => false
 gem "manageiq-loggers",               "~>0.3.0",       :require => false
 gem "manageiq-messaging",             "~>0.1.4",       :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
-gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
+gem "manageiq-postgres_ha_admin",     "~>3.1", ">=3.1.1", :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
 gem "money",                          "=6.13.4",       :require => false
