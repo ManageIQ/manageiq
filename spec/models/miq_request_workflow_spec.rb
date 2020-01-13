@@ -5,16 +5,16 @@ describe MiqRequestWorkflow do
   let(:ems_folder) { FactoryBot.create(:ems_folder) }
   let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
 
-  before("#validate") do
-    workflow.define_singleton_method(:some_validation_method) {}
-    workflow.define_singleton_method(:other_validation_method) {}
-    workflow.define_singleton_method(:some_required_method) {}
-    workflow.define_singleton_method(:some_required_method_1) {}
-    workflow.define_singleton_method(:some_required_method_2) {}
-  end
-
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
+
+    before do
+      workflow.define_singleton_method(:some_validation_method) {}
+      workflow.define_singleton_method(:other_validation_method) {}
+      workflow.define_singleton_method(:some_required_method) {}
+      workflow.define_singleton_method(:some_required_method_1) {}
+      workflow.define_singleton_method(:some_required_method_2) {}
+    end
 
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
