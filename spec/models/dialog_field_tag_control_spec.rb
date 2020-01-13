@@ -151,12 +151,13 @@ describe DialogFieldTagControl do
 
   describe "#values" do
     let(:dialog_field) { described_class.new(:options => options, :data_type => data_type, :required => required) }
-    let(:options) { {:category_id => category_id, :sort_by => sort_by, :sort_order => sort_order} }
+    let(:options) { {:category_id => category_id, :sort_by => sort_by, :sort_order => sort_order, :force_single_value => single?} }
     let(:category_id) { 123 }
     let(:required) { false }
     let(:sort_by) { :none }
     let(:sort_order) { :ascending }
     let(:data_type) { "string" }
+    let(:single?) { true }
 
     before do
       allow(Classification).to receive(:find_by).with(:id => category_id).and_return(classification)
@@ -165,8 +166,20 @@ describe DialogFieldTagControl do
     shared_examples_for "DialogFieldTagControl#values when required is true" do
       let(:required) { true }
 
-      it "the blank value uses 'Choose' for its name and description" do
-        expect(dialog_field.values[0]).to eq(:id => nil, :name => "<Choose>", :description => "<Choose>")
+      context "singlevalue" do
+        let(:single?) { true }
+
+        it "the blank value uses 'Choose' for its name and description" do
+          expect(dialog_field.values[0]).to eq(:id => nil, :name => "<Choose>", :description => "<Choose>")
+        end
+      end
+
+      context "multi value" do
+        let(:single?) { false }
+
+        it "has no blank value" do
+          expect(%w[<Choose> <None>]).to_not include(dialog_field.values[0][:name])
+        end
       end
     end
 

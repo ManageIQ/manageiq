@@ -37,6 +37,10 @@ class DialogFieldTagControl < DialogFieldSortedItem
     !single_value?
   end
 
+  def multiselect?
+    force_multi_value
+  end
+
   def self.allowed_tag_categories
     tag_cats = Classification.is_category.where(:show => true, :read_only => false).includes(:tag).to_a
 
@@ -64,7 +68,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
     end
 
     empty = required? ? "<Choose>" : "<None>"
-    blank_value = [{:id => nil, :name => empty, :description => empty}]
+    blank_value = multiselect? ? [] : [{:id => nil, :name => empty, :description => empty}]
 
     return blank_value + available_tags if sort_field == :none
 
