@@ -8,6 +8,14 @@ describe MiqRequestWorkflow do
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
 
+    before do
+      workflow.define_singleton_method(:some_validation_method) {}
+      workflow.define_singleton_method(:other_validation_method) {}
+      workflow.define_singleton_method(:some_required_method) {}
+      workflow.define_singleton_method(:some_required_method_1) {}
+      workflow.define_singleton_method(:some_required_method_2) {}
+    end
+
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
         expect(workflow.get_all_dialogs[:customize][:fields][:root_password][:validation_method]).to eq(nil)
@@ -17,14 +25,14 @@ describe MiqRequestWorkflow do
       it "calls the validation_method if defined" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).once
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).once
         expect(workflow.validate({})).to be true
       end
 
       it "returns false when validation fails" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
@@ -43,7 +51,7 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required_method, :some_required_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_required_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
@@ -54,8 +62,8 @@ describe MiqRequestWorkflow do
                                                                                             :some_required_method_2])
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method_1)
-        expect(workflow).to receive(:some_required_method_2)
+        expect(workflow).to receive(:send).with(:some_required_method_1, any_args)
+        expect(workflow).to receive(:send).with(:some_required_method_2, any_args)
         expect(workflow.validate({})).to be true
       end
     end
@@ -65,8 +73,8 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password_2, :validation_method, :other_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
-        expect(workflow).to receive(:other_validation_method)
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:other_validation_method, any_args)
         expect(workflow.validate({})).to be false
       end
     end
