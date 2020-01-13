@@ -40,6 +40,11 @@ describe Vm do
     expect { vm.validate_remote_console_vmrc_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
   end
 
+  it "#validate_native_console_support must be overridden" do
+    vm = FactoryBot.create(:vm_vmware, :vendor => 'vmware')
+    expect { vm.validate_native_console_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
+  end
+
   context ".find_all_by_mac_address_and_hostname_and_ipaddress" do
     before do
       @hardware1 = FactoryBot.create(:hardware)
@@ -309,7 +314,7 @@ describe Vm do
   context "#supported_consoles" do
     it 'returns all of the console types' do
       vm = FactoryBot.create(:vm)
-      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :cockpit])
+      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :cockpit, :native])
     end
   end
 end

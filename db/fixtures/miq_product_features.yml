@@ -5438,6 +5438,10 @@
         :description: Open the Cockpit console for VMs
         :feature_type: control
         :identifier: cockpit_console
+      - :name: Native Console
+        :description: Open the Native console for VMs
+        :feature_type: control
+        :identifier: vm_native_console
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control
