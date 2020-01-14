@@ -24,7 +24,7 @@ class EvmServer
     EvmDatabase.seed_primordial
     check_migrations_up_to_date
 
-    start_server_environment(MiqServer.my_server(true))
+    start_server(MiqServer.my_server(true))
   end
 
   ##
@@ -38,7 +38,7 @@ class EvmServer
     new.start
   end
 
-  def start_server_environment(server)
+  def start_server(server)
     Vmdb::Settings.activate
 
     server_hash = {}
@@ -104,11 +104,7 @@ class EvmServer
 
     MiqServer.start_memcached
     MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
-    start_server(server)
-    monitor_loop(server)
-  end
 
-  def start_server(server)
     MiqEvent.raise_evm_event(server, "evm_server_start")
 
     msg = "Server starting in #{MiqServer.startup_mode} mode."
@@ -160,6 +156,8 @@ class EvmServer
 
     server.update(:status => "started")
     _log.info("Server starting complete")
+
+    monitor_loop(server)
   end
 
   def monitor_loop(server)
