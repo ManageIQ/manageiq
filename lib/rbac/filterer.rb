@@ -50,6 +50,7 @@ module Rbac
       NetworkRouter
       OrchestrationStack
       OrchestrationTemplate
+      PxeImage
       ResourcePool
       SecurityGroup
       Service
