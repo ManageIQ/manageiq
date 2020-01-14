@@ -24,7 +24,19 @@ class EvmServer
     EvmDatabase.seed_primordial
     check_migrations_up_to_date
 
-    start_server(MiqServer.my_server(true))
+    server = MiqServer.my_server(true)
+    start_server(server)
+    loop do
+      monitor(server)
+      sleep ::Settings.server.monitor_poll.to_i_with_method
+    end
+  rescue Interrupt => e
+    _log.info("Received #{e.message} signal, killing server")
+    MiqServer.kill
+    exit 1
+  rescue SignalException => e
+    _log.info("Received #{e.message} signal, shutting down server")
+    server.shutdown_and_exit
   end
 
   ##
@@ -78,23 +90,11 @@ class EvmServer
 
     server.update(:status => "started")
     _log.info("Server starting complete")
-
-    monitor_loop(server)
   end
 
-  def monitor_loop(server)
-    loop do
-      _dummy, timings = Benchmark.realtime_block(:total_time) { server.monitor }
-      _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < ::Settings.server.server_log_timings_threshold.to_i_with_method
-      sleep ::Settings.server.monitor_poll.to_i_with_method
-    end
-  rescue Interrupt => e
-    _log.info("Received #{e.message} signal, killing server")
-    MiqServer.kill
-    exit 1
-  rescue SignalException => e
-    _log.info("Received #{e.message} signal, shutting down server")
-    server.shutdown_and_exit
+  def monitor(server)
+    _dummy, timings = Benchmark.realtime_block(:total_time) { server.monitor }
+    _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < ::Settings.server.server_log_timings_threshold.to_i_with_method
   end
 
   def validate_database
