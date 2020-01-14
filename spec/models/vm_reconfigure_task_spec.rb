@@ -5,11 +5,11 @@ RSpec.describe VmReconfigureTask do
   let(:host)          { FactoryBot.build(:host, :hardware => host_hardware) }
   let(:vm_hardware)   { FactoryBot.build(:hardware, :virtual_hw_version => "07") }
   let(:vm) { FactoryBot.create(:vm_vmware, :hardware => vm_hardware, :host => host) }
+  let(:request_options) { {} }
 
   let(:request) do
     VmReconfigureRequest.create(:requester    => user,
-                                :options      => {:src_ids  => [vm.id],
-                                                  :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"}]},
+                                :options      => {:src_ids => [vm.id]}.merge(request_options),
                                 :request_type => 'vm_reconfigure')
   end
 
@@ -19,47 +19,40 @@ RSpec.describe VmReconfigureTask do
                              :source       => vm,
                              :request_type => 'vm_reconfigure')
   end
-  context "Single Disk add " do
-    describe "#self.base_model" do
-      it "should return VmReconfigureTask" do
-        expect(VmReconfigureTask.base_model).to eq(VmReconfigureTask)
-      end
-    end
 
-    describe "#self.get_description" do
+  describe ".base_model" do
+    it "should return VmReconfigureTask" do
+      expect(VmReconfigureTask.base_model).to eq(VmReconfigureTask)
+    end
+  end
+
+  describe "#after_request_task_create" do
+    it "should set the task description" do
+      task.after_request_task_create
+      expect(task.description).to include("VM Reconfigure for: #{vm} - ")
+    end
+  end
+
+  context "Single Disk add " do
+    let(:request_options) { {:disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"}]} }
+
+    describe ".get_description" do
       it "should get the task description" do
         expect(VmReconfigureTask.get_description(request)).to eq("VM Reconfigure for: #{vm} - Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)} ")
-      end
-    end
-
-    describe "#after_request_task_create" do
-      it "should set the task description" do
-        task.after_request_task_create
-        expect(task.description).to include("VM Reconfigure for: #{vm} - ")
       end
     end
   end
 
   context "Multiple Disk add " do
-    let(:request) do
-      VmReconfigureRequest.create(:requester    => user,
-                                  :options      => {:src_ids  => [vm.id],
-                                                    :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"},
-                                                                  {"disk_size_in_mb" => "44", "persistent" => "true"}]},
-                                  :request_type => 'vm_reconfigure')
+    let(:request_options) do
+      {:disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"},
+                     {"disk_size_in_mb" => "44", "persistent" => "true"}]}
     end
 
-    describe "#self.get_description" do
+    describe ".get_description" do
       it "should get the task description" do
         expect(VmReconfigureTask.get_description(request)).to eq("VM Reconfigure for: #{vm} - Add Disks: 2 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, "\
           "#{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)} ")
-      end
-    end
-
-    describe "#after_request_task_create" do
-      it "should set the task description" do
-        task.after_request_task_create
-        expect(task.description).to include("VM Reconfigure for: #{vm} - ")
       end
     end
   end
