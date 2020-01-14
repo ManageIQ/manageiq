@@ -214,4 +214,40 @@ class EvmServer
     @server.sync_workers
     @server.wait_for_started_workers
   end
+
+  private
+
+  ######################################################################
+  # Warning:
+  #
+  # The following methods can lead to unexpected (and likely unpleasant)
+  # behavior if used out of the scope of the orchestrator process.
+  #
+  # They change the global state which is used to determine the current
+  # server's identity. This intentionally will alter the values of calls
+  # such as MiqServer.my_server and MiqServer.my_guid, and also the
+  # contents of the global ::Settings constant.
+  ######################################################################
+  def for_each_server
+    servers = MiqEnvironment::Command.is_podified? ? MiqServer.all : [MiqServer.my_server(true)]
+
+    servers.each do |s|
+      impersonate_server(s)
+      yield
+    end
+  ensure
+    clear_server_caches
+  end
+
+  def impersonate_server(s)
+    MiqServer.my_guid = s.guid
+    @server = MiqServer.my_server(true)
+    Vmdb::Settings.init
+  end
+
+  def clear_server_caches
+    MiqServer.my_guid = nil
+    MiqServer.my_server_clear_cache
+    Vmdb::Settings.init
+  end
 end
