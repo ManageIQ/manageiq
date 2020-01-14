@@ -41,59 +41,10 @@ class EvmServer
   def start_server(server)
     Vmdb::Settings.activate
 
-    server_hash = {}
-    config_hash = {}
-
-    ipaddr, hostname, mac_address = MiqServer.get_network_information
-
-    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
-      server_hash[:ipaddress] = config_hash[:host] = ipaddr
-    end
-
-    if hostname.present? && hostname.hostname?
-      hostname = nil if hostname =~ /.*localhost.*/
-      server_hash[:hostname] = config_hash[:hostname] = hostname
-    end
-
-    unless mac_address.blank?
-      server_hash[:mac_address] = mac_address
-    end
-
-    if config_hash.any?
-      Vmdb::Settings.save!(server, :server => config_hash)
-      ::Settings.reload!
-    end
-
-    # Determine the corresponding Vm
-    if server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddr)
-      if vms.length > 1
-        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
-      elsif vms.length == 1
-        server_hash[:vm_id] = vms.first.id
-      end
-    end
-
-    unless server.new_record?
-      [
-        # Reset the DRb URI
-        :drb_uri, :last_heartbeat,
-        # Reset stats
-        :memory_usage, :memory_size, :percent_memory, :percent_cpu, :cpu_time
-      ].each { |k| server_hash[k] = nil }
-    end
-
-    server.update(server_hash)
-
-    _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
-    _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
-    _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
-    _log.info("Server GUID: #{MiqServer.my_guid}")
-    _log.info("Server Zone: #{MiqServer.my_zone}")
-    _log.info("Server Role: #{MiqServer.my_role}")
-    region = MiqRegion.my_region
-    _log.info("Server Region number: #{region.region}, name: #{region.name}") unless region.nil?
-    _log.info("Database Latency: #{EvmDatabase.ping(ApplicationRecord.connection)} ms")
+    save_local_network_info(server)
+    set_local_server_vm(server)
+    reset_server_runtime_info(server)
+    log_server_info(server)
 
     Vmdb::Appliance.log_config_on_startup
 
@@ -190,5 +141,67 @@ class EvmServer
     level = up_to_date ? :info : :warn
     message.to_miq_a.each { |msg| _log.send(level, msg) }
     up_to_date
+  end
+
+  def save_local_network_info(server)
+    server_hash = {}
+    config_hash = {}
+
+    ipaddr, hostname, mac_address = MiqServer.get_network_information
+
+    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
+      server_hash[:ipaddress] = config_hash[:host] = ipaddr
+    end
+
+    if hostname.present? && hostname.hostname?
+      hostname = nil if hostname =~ /.*localhost.*/
+      server_hash[:hostname] = config_hash[:hostname] = hostname
+    end
+
+    unless mac_address.blank?
+      server_hash[:mac_address] = mac_address
+    end
+
+    if config_hash.any?
+      Vmdb::Settings.save!(server, :server => config_hash)
+      ::Settings.reload!
+    end
+
+    server.update(server_hash)
+  end
+
+  def set_local_server_vm(server)
+    if server.vm_id.nil?
+      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(server.mac_address, server.hostname, server.ipaddress)
+      if vms.length > 1
+        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
+      elsif vms.length == 1
+        server.update(:vm_id => vms.first.id)
+      end
+    end
+  end
+
+  def reset_server_runtime_info(server)
+    server.update(
+      :drb_uri        => nil,
+      :last_heartbeat => nil,
+      :memory_usage   => nil,
+      :memory_size    => nil,
+      :percent_memory => nil,
+      :percent_cpu    => nil,
+      :cpu_time       => nil
+    )
+  end
+
+  def log_server_info
+    _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
+    _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
+    _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
+    _log.info("Server GUID: #{MiqServer.my_guid}")
+    _log.info("Server Zone: #{MiqServer.my_zone}")
+    _log.info("Server Role: #{MiqServer.my_role}")
+    region = MiqRegion.my_region
+    _log.info("Server Region number: #{region.region}, name: #{region.name}") unless region.nil?
+    _log.info("Database Latency: #{EvmDatabase.ping(ApplicationRecord.connection)} ms")
   end
 end
