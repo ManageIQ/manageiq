@@ -10,7 +10,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     let(:vm2) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
 
     it "should queue up realtime capture for vm" do
-      subject.queue_captures([vm, vm2], {})
+      subject.queue_captures([vm, vm2])
       expect(MiqQueue.count).to eq(2)
 
       expect(subject._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
@@ -142,7 +142,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     context "with vmware targets" do
       it "should queue up targets properly" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3])
 
         bod = Time.now.utc.beginning_of_day
 
@@ -168,11 +168,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3])
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| m.update(:state => "dequeue") }
 
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3])
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| expect(m.lock_version).to eq(1) }
       end
@@ -185,7 +185,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       context "executing perf_capture_timer" do
         it "should queue up enabled targets" do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          ems.perf_capture_object.queue_captures(vms, {})
+          ems.perf_capture_object.queue_captures(vms)
 
           bod = Time.now.utc.beginning_of_day
 
@@ -200,7 +200,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
   def trigger_capture(interval, last_perf_capture_on = nil, start_time: nil, end_time: nil, rollups: false)
     vm.last_perf_capture_on = last_perf_capture_on if last_perf_capture_on
-    ems.perf_capture_object.queue_captures([vm], vm => {:interval => interval, :start_time => start_time, :end_time => end_time})
+    ems.perf_capture_object.queue_captures([vm], interval, :start_time => start_time, :end_time => end_time, :rollups => rollups)
   end
 
   describe "#queue_items_for_interval" do

@@ -20,29 +20,28 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     perf_capture_health_check
     targets = capture_ems_targets
     targets = filter_perf_capture_now(targets)
-
-    target_options = calc_target_options(targets)
-    queue_captures(targets, target_options)
+    queue_captures(targets, :rollups => true)
   end
 
-  # target is an ExtManagementSystem
   def perf_capture_gap(start_time, end_time)
     targets = capture_ems_targets(:exclude_storages => true)
-    target_options = Hash.new { |_n, _v| {:start_time => start_time.utc, :end_time => end_time.utc, :interval => 'historical'} }
-    queue_captures(targets, target_options)
+    queue_captures(targets, 'historical', :start_time => start_time.utc, :end_time => end_time.utc)
   end
 
   def perf_capture_realtime_queue
-    queue_captures(Array(target), target => {:interval => 'realtime'})
+    queue_captures(Array(target), 'realtime')
   end
 
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
-  # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
-  def queue_captures(targets, target_options)
+  def queue_captures(targets, interval = nil, start_time: nil, end_time: nil, rollups: false)
+    target_options = rollups ? calc_target_options(targets) : {}
+
     targets.each do |target|
-      options = target_options[target] || {}
-      interval_name = options[:interval] || perf_target_to_interval_name(target)
-      perf_capture_queue(target, interval_name, options)
+      task_id = target_options[target]
+      perf_capture_queue(target, interval || perf_target_to_interval_name(target),
+                         :start_time => start_time,
+                         :end_time   => end_time,
+                         :task_id    => task_id)
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
@@ -124,10 +123,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
-    target_options = Hash.new { |h, k| h[k] = {} }
     # Create a new task for each rollup parent
     # mark each target with the rollup parent
-    targets_by_rollup_parent.each_with_object(target_options) do |(parent, targets), h|
+    targets_by_rollup_parent.each_with_object({}) do |(parent, targets), h|
       pkey = "#{parent.class.name}:#{parent.id}"
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
@@ -150,20 +148,12 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       )
       _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]")
       targets.each do |target|
-        h[target] = {
-          :task_id => task.id,
-          :force   => true, # Force collection since we've already verified that capture should be done now
-        }
+        h[target] = task.id
       end
     end
   end
 
-  def perf_capture_queue(target, interval_name, options = {})
-    # for gap, interval_name = historical, start and end time present.
-    start_time = options[:start_time]
-    end_time   = options[:end_time]
-    task_id    = options[:task_id]
-
+  def perf_capture_queue(target, interval_name, start_time: nil, end_time: nil, task_id: nil)
     # cb is the task used to group cluster realtime metrics
     cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
     items = queue_items_for_interval(target, interval_name, start_time, end_time)
