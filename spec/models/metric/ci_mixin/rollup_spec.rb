@@ -50,6 +50,7 @@ RSpec.describe Metric::CiMixin::Rollup do
                                     :method_name => "perf_capture_realtime")
           expect(messages.size).to eq(1)
           messages.each do |m|
+            expect(m.miq_task_id).to eq(task.id)
             expect(m.miq_callback).not_to be_nil
             expect(m.miq_callback[:method_name]).to eq(:perf_capture_callback)
             expect(m.miq_callback[:args]).to eq([[task.id]])
