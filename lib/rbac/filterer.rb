@@ -38,6 +38,7 @@ module Rbac
       FloatingIp
       Host
       HostAggregate
+      IsoImage
       Lan
       MiddlewareDatasource
       MiddlewareDeployment
@@ -51,6 +52,7 @@ module Rbac
       OrchestrationStack
       OrchestrationTemplate
       PxeImage
+      PxeServer
       ResourcePool
       SecurityGroup
       Service
@@ -58,6 +60,7 @@ module Rbac
       Storage
       Switch
       VmOrTemplate
+      WindowsImage
     )
 
     TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder MiqRequest) + %w(MiqGroup User Tenant)
