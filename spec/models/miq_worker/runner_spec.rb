@@ -27,34 +27,24 @@ describe MiqWorker::Runner do
     end
   end
 
-  context "#get_messages" do
+  context "#config_out_of_date?" do
     before do
       allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
       @worker_base = MiqWorker::Runner.new
     end
 
-    it "gets sync_config when last config change was recent" do
-      allow(@worker_base).to receive(:server_last_change).with(:last_config_change).and_return(1.minute.from_now.utc)
-
-      expect(@worker_base.get_messages).to eq([["sync_config"]])
-    end
-  end
-
-  context "#process_message" do
-    before do
-      allow(MiqServer).to receive(:my_zone).and_return("default")
-      @miq_server = EvmSpecHelper.local_miq_server
-      allow(@miq_server).to receive(:active_role).and_return("automate)")
-
-      @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :type => "MiqGenericWorker")
-      @worker_base = MiqWorker::Runner.new(:guid => @worker.guid)
+    it "returns true for the first call and false for subsequent calls" do
+      expect(@worker_base).to receive(:server_last_change).with(:last_config_change).thrice.and_return(1.minute.from_now.utc)
+      expect(@worker_base.config_out_of_date?).to be_truthy
+      expect(@worker_base.config_out_of_date?).to be_falsey
+      expect(@worker_base.config_out_of_date?).to be_falsey
     end
 
-    it "syncs roles and configuration" do
-      expect(@worker_base).to receive(:after_sync_active_roles)
-      expect(@worker_base).to receive(:after_sync_config)
+    it "returns true when last config change was updated" do
+      expect(@worker_base).to receive(:server_last_change).with(:last_config_change).twice.and_return(1.minute.ago.utc, 1.minute.from_now.utc)
 
-      @worker_base.send(:process_message, "sync_config")
+      expect(@worker_base.config_out_of_date?).to be_falsey
+      expect(@worker_base.config_out_of_date?).to be_truthy
     end
   end
 

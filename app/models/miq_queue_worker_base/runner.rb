@@ -160,7 +160,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   # Only for file based heartbeating
   def heartbeat_message_timeout(message)
-    if ENV["WORKER_HEARTBEAT_METHOD"] == "file" && message.msg_timeout
+    if message.msg_timeout
       timeout = worker_settings[:poll] + message.msg_timeout
       heartbeat_to_file(timeout)
     end
