@@ -212,6 +212,24 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
+      context 'searching for instances of PxeImage' do
+        let!(:pxe_image) { FactoryBot.create_list(:pxe_image, 2).first }
+
+        before do
+          pxe_image.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged PxeImages' do
+          results = described_class.search(:class => PxeImage, :user => user).first
+          expect(results).to match_array [pxe_image]
+        end
+
+        it 'lists only all PxeImages' do
+          results = described_class.search(:class => PxeImage, :user => admin_user).first
+          expect(results).to match_array PxeImage.all
+        end
+      end
+
       context 'searching for instances of Switches' do
         let!(:switch) { FactoryBot.create_list(:switch, 2).first }
 
