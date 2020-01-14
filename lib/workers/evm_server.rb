@@ -20,6 +20,10 @@ class EvmServer
 
     PidFile.create(MiqServer.pidfile)
     set_process_title
+    validate_database
+    EvmDatabase.seed_primordial
+    check_migrations_up_to_date
+
     start_server_environment(MiqServer.my_server(true))
   end
 
@@ -35,11 +39,6 @@ class EvmServer
   end
 
   def start_server_environment(server)
-    MiqServer.validate_database
-
-    EvmDatabase.seed_primordial
-
-    MiqServer.check_migrations_up_to_date
     Vmdb::Settings.activate
 
     server_hash = {}
@@ -176,5 +175,22 @@ class EvmServer
   rescue SignalException => e
     _log.info("Received #{e.message} signal, shutting down server")
     server.shutdown_and_exit
+  end
+
+  def validate_database
+    # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+    spec_name = ActiveRecord::Base.connection_specification_name
+    ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
+
+    # Log the Versions
+    _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)
+    _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]") if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
+  end
+
+  def check_migrations_up_to_date
+    up_to_date, *message = SchemaMigration.up_to_date?
+    level = up_to_date ? :info : :warn
+    message.to_miq_a.each { |msg| _log.send(level, msg) }
+    up_to_date
   end
 end
