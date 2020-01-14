@@ -63,32 +63,10 @@ class EvmServer
     puts "** #{msg}"
 
     server.starting_server_record
-    server.ensure_default_roles
 
-    #############################################################
-    # Server Role Assignment
-    #
-    # - Deactivate all roles from last time
-    # - Assert database_owner role - based on vmdb being local
-    # - Role activation should happen inside monitor_servers
-    # - Synchronize active roles to monitor for role changes
-    #############################################################
-    server.deactivate_all_roles
-    server.set_database_owner_role(EvmDatabase.local?)
-    server.monitor_servers
-    server.monitor_server_roles if server.is_master?
-    server.sync_active_roles
-    server.set_active_role_flags
+    configure_server_roles(server)
+    clear_queue(server)
 
-    #############################################################
-    # Clear the MiqQueue for server and its workers
-    #############################################################
-    server.clean_stop_worker_queue_items
-    server.clear_miq_queue_for_this_server
-
-    #############################################################
-    # Other startup actions
-    #############################################################
     MiqServer.log_managed_entities
     MiqServer.clean_all_workers
     MiqServer.clean_dequeued_messages
@@ -96,14 +74,7 @@ class EvmServer
 
     server.delete_active_log_collections_queue
 
-    #############################################################
-    # Start all the configured workers
-    #############################################################
-    server.clean_heartbeat_files
-    server.sync_config
-    server.start_drb_server
-    server.sync_workers
-    server.wait_for_started_workers
+    start_workers(server)
 
     server.update(:status => "started")
     _log.info("Server starting complete")
@@ -203,5 +174,43 @@ class EvmServer
     region = MiqRegion.my_region
     _log.info("Server Region number: #{region.region}, name: #{region.name}") unless region.nil?
     _log.info("Database Latency: #{EvmDatabase.ping(ApplicationRecord.connection)} ms")
+  end
+
+  def configure_server_roles(server)
+    server.ensure_default_roles
+
+    #############################################################
+    # Server Role Assignment
+    #
+    # - Deactivate all roles from last time
+    # - Assert database_owner role - based on vmdb being local
+    # - Role activation should happen inside monitor_servers
+    # - Synchronize active roles to monitor for role changes
+    #############################################################
+    server.deactivate_all_roles
+    server.set_database_owner_role(EvmDatabase.local?)
+    server.monitor_servers
+    server.monitor_server_roles if server.is_master?
+    server.sync_active_roles
+    server.set_active_role_flags
+  end
+
+  def clear_queue(server)
+    #############################################################
+    # Clear the MiqQueue for server and its workers
+    #############################################################
+    server.clean_stop_worker_queue_items
+    server.clear_miq_queue_for_this_server
+  end
+
+  def start_workers(server)
+    #############################################################
+    # Start all the configured workers
+    #############################################################
+    server.clean_heartbeat_files
+    server.sync_config
+    server.start_drb_server
+    server.sync_workers
+    server.wait_for_started_workers
   end
 end
