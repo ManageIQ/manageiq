@@ -6,7 +6,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   def self.class_for_platform(platform)
     classy = platform.classify
 
-    if classy =~ /(.*)Infra/
+    if /Infra/.match?(classy)
       find_matching_constant("MiqProvision#{classy}Workflow") ||
         find_matching_constant("ManageIQ::Providers::#{$1}::InfraManager::ProvisionWorkflow")
     else
