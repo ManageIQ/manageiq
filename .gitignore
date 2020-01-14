@@ -17,7 +17,7 @@
 .ruby-version
 .sass-cache/
 .tags
-/data/
+/data/*
 /productization
 /plugins
 /vmdb/

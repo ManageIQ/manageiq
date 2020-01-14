@@ -91,12 +91,6 @@ class MiqServer < ApplicationRecord
     EventStream.where(:target_id => server_id, :target_type => "MiqServer").destroy_all
   end
 
-  def self.setup_data_directory
-    # create root data directory
-    data_dir = File.join(File.expand_path(Rails.root), "data")
-    Dir.mkdir(data_dir) unless File.exist?(data_dir)
-  end
-
   def self.pidfile
     @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
   end
@@ -176,7 +170,6 @@ class MiqServer < ApplicationRecord
 
     EvmDatabase.seed_primordial
 
-    setup_data_directory
     check_migrations_up_to_date
     Vmdb::Settings.activate
 
