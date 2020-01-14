@@ -24,10 +24,11 @@ class EvmServer
     EvmDatabase.seed_primordial
     check_migrations_up_to_date
 
-    server = MiqServer.my_server(true)
-    start_server(server)
+    @server = MiqServer.my_server(true)
+
+    start_server
     loop do
-      monitor(server)
+      monitor
       sleep ::Settings.server.monitor_poll.to_i_with_method
     end
   rescue Interrupt => e
@@ -36,7 +37,7 @@ class EvmServer
     exit 1
   rescue SignalException => e
     _log.info("Received #{e.message} signal, shutting down server")
-    server.shutdown_and_exit
+    @server.shutdown_and_exit
   end
 
   ##
@@ -50,50 +51,50 @@ class EvmServer
     new.start
   end
 
-  def start_server(server)
+  def start_server
     Vmdb::Settings.activate
 
-    save_local_network_info(server)
-    set_local_server_vm(server)
-    reset_server_runtime_info(server)
-    log_server_info(server)
+    save_local_network_info
+    set_local_server_vm
+    reset_server_runtime_info
+    log_server_info
 
     Vmdb::Appliance.log_config_on_startup
 
-    server.ntp_reload
-    server.set_database_application_name
+    @server.ntp_reload
+    @server.set_database_application_name
 
     EvmDatabase.seed_rest
 
     MiqServer.start_memcached
     MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
 
-    MiqEvent.raise_evm_event(server, "evm_server_start")
+    MiqEvent.raise_evm_event(@server, "evm_server_start")
 
     msg = "Server starting in #{MiqServer.startup_mode} mode."
     _log.info(msg)
     puts "** #{msg}"
 
-    server.starting_server_record
+    @server.starting_server_record
 
-    configure_server_roles(server)
-    clear_queue(server)
+    configure_server_roles
+    clear_queue
 
     MiqServer.log_managed_entities
     MiqServer.clean_all_workers
     MiqServer.clean_dequeued_messages
     MiqServer.purge_report_results
 
-    server.delete_active_log_collections_queue
+    @server.delete_active_log_collections_queue
 
-    start_workers(server)
+    start_workers
 
-    server.update(:status => "started")
+    @server.update(:status => "started")
     _log.info("Server starting complete")
   end
 
-  def monitor(server)
-    _dummy, timings = Benchmark.realtime_block(:total_time) { server.monitor }
+  def monitor
+    _dummy, timings = Benchmark.realtime_block(:total_time) { @server.monitor }
     _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < ::Settings.server.server_log_timings_threshold.to_i_with_method
   end
 
@@ -114,7 +115,7 @@ class EvmServer
     up_to_date
   end
 
-  def save_local_network_info(server)
+  def save_local_network_info
     server_hash = {}
     config_hash = {}
 
@@ -134,26 +135,26 @@ class EvmServer
     end
 
     if config_hash.any?
-      Vmdb::Settings.save!(server, :server => config_hash)
+      Vmdb::Settings.save!(@server, :server => config_hash)
       ::Settings.reload!
     end
 
-    server.update(server_hash)
+    @server.update(server_hash)
   end
 
-  def set_local_server_vm(server)
-    if server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(server.mac_address, server.hostname, server.ipaddress)
+  def set_local_server_vm
+    if @server.vm_id.nil?
+      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(@server.mac_address, @server.hostname, @server.ipaddress)
       if vms.length > 1
         _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
       elsif vms.length == 1
-        server.update(:vm_id => vms.first.id)
+        @server.update(:vm_id => vms.first.id)
       end
     end
   end
 
-  def reset_server_runtime_info(server)
-    server.update(
+  def reset_server_runtime_info
+    @server.update(
       :drb_uri        => nil,
       :last_heartbeat => nil,
       :memory_usage   => nil,
@@ -165,9 +166,9 @@ class EvmServer
   end
 
   def log_server_info
-    _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
-    _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
-    _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
+    _log.info("Server IP Address: #{@server.ipaddress}")    unless @server.ipaddress.blank?
+    _log.info("Server Hostname: #{@server.hostname}")       unless @server.hostname.blank?
+    _log.info("Server MAC Address: #{@server.mac_address}") unless @server.mac_address.blank?
     _log.info("Server GUID: #{MiqServer.my_guid}")
     _log.info("Server Zone: #{MiqServer.my_zone}")
     _log.info("Server Role: #{MiqServer.my_role}")
@@ -176,8 +177,8 @@ class EvmServer
     _log.info("Database Latency: #{EvmDatabase.ping(ApplicationRecord.connection)} ms")
   end
 
-  def configure_server_roles(server)
-    server.ensure_default_roles
+  def configure_server_roles
+    @server.ensure_default_roles
 
     #############################################################
     # Server Role Assignment
@@ -187,30 +188,30 @@ class EvmServer
     # - Role activation should happen inside monitor_servers
     # - Synchronize active roles to monitor for role changes
     #############################################################
-    server.deactivate_all_roles
-    server.set_database_owner_role(EvmDatabase.local?)
-    server.monitor_servers
-    server.monitor_server_roles if server.is_master?
-    server.sync_active_roles
-    server.set_active_role_flags
+    @server.deactivate_all_roles
+    @server.set_database_owner_role(EvmDatabase.local?)
+    @server.monitor_servers
+    @server.monitor_server_roles if @server.is_master?
+    @server.sync_active_roles
+    @server.set_active_role_flags
   end
 
-  def clear_queue(server)
+  def clear_queue
     #############################################################
     # Clear the MiqQueue for server and its workers
     #############################################################
-    server.clean_stop_worker_queue_items
-    server.clear_miq_queue_for_this_server
+    @server.clean_stop_worker_queue_items
+    @server.clear_miq_queue_for_this_server
   end
 
-  def start_workers(server)
+  def start_workers
     #############################################################
     # Start all the configured workers
     #############################################################
-    server.clean_heartbeat_files
-    server.sync_config
-    server.start_drb_server
-    server.sync_workers
-    server.wait_for_started_workers
+    @server.clean_heartbeat_files
+    @server.sync_config
+    @server.start_drb_server
+    @server.sync_workers
+    @server.wait_for_started_workers
   end
 end
