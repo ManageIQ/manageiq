@@ -21,19 +21,36 @@ class DialogImportService
   def import_from_file(filename)
     dialogs = YAML.load_file(filename)
 
-    begin
-      dialogs.each do |dialog|
-        dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
-        if dialog_with_label?(dialog["label"])
+    if dialogs.class == Hash
+      begin
+        dialogs.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
+        if dialog_with_label?(dialogs["label"])
           yield dialog if block_given?
         else
-          Dialog.create(dialog.except('export_version').merge("dialog_tabs" => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
+          puts dialogs.keys
+          Dialog.create(dialogs.except(:export_version, 'export_version', :class, 'class', :id, 'id').merge("dialog_tabs" => build_dialog_tabs(dialogs, dialogs['export_version'] || DEFAULT_DIALOG_VERSION)))
         end
+      rescue DialogFieldImporter::InvalidDialogFieldTypeError
+        raise
+      rescue
+        raise ParsedNonDialogYamlError
       end
-    rescue DialogFieldImporter::InvalidDialogFieldTypeError
-      raise
-    rescue
-      raise ParsedNonDialogYamlError
+
+    elsif dialogs.class == Array
+      begin
+        dialogs.each do |dialog|
+          dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
+          if dialog_with_label?(dialog["label"])
+            yield dialog if block_given?
+          else
+            Dialog.create(dialog.except(:export_version, 'export_version', :class, 'class', :id, 'id').merge("dialog_tabs" => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
+          end
+        end
+      rescue DialogFieldImporter::InvalidDialogFieldTypeError
+        raise
+      rescue
+        raise ParsedNonDialogYamlError
+      end
     end
   end
 
@@ -68,7 +85,7 @@ class DialogImportService
   end
 
   def build_dialog_tabs(dialog, export_version = CURRENT_DIALOG_VERSION)
-    dialog["dialog_tabs"].collect do |dialog_tab|
+    dialog[:dialog_tabs].collect do |dialog_tab|
       DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab, export_version)))
     end
   end
@@ -100,7 +117,7 @@ class DialogImportService
 
   def import(dialog)
     @dialog_import_validator.determine_dialog_validity(dialog)
-    new_dialog = Dialog.create(dialog.except('dialog_tabs', 'export_version'))
+    new_dialog = Dialog.create(dialog.except(:dialog_tabs, 'dialog_tabs', :export_version, 'export_version', :class, 'class', :id, 'id'))
     association_list = build_association_list(dialog)
     new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
     build_associations(new_dialog, association_list)
