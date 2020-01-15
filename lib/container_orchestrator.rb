@@ -22,8 +22,8 @@ class ContainerOrchestrator
     raise unless e.message =~ /already exists/
   end
 
-  def create_service(name, port)
-    definition = service_definition(name, port)
+  def create_service(name, selector, port)
+    definition = service_definition(name, selector, port)
     yield(definition) if block_given?
     kube_connection.create_service(definition)
   rescue KubeException => e
