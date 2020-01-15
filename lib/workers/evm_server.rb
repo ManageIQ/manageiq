@@ -8,8 +8,11 @@ class EvmServer
   # String used as a title for a linux process. Visible in ps, htop, ...
   SERVER_PROCESS_TITLE = 'MIQ Server'.freeze
 
+  attr_accessor :servers_to_monitor
+
   def initialize
     $log ||= Rails.logger
+    @servers_to_monitor = MiqEnvironment::Command.is_podified? ? MiqServer.all : [MiqServer.my_server(true)]
   end
 
   def start
@@ -24,13 +27,8 @@ class EvmServer
     EvmDatabase.seed_primordial
     check_migrations_up_to_date
 
-    @server = MiqServer.my_server(true)
-
-    start_server
-    loop do
-      monitor
-      sleep ::Settings.server.monitor_poll.to_i_with_method
-    end
+    start_servers
+    monitor_servers
   rescue Interrupt => e
     _log.info("Received #{e.message} signal, killing server")
     MiqServer.kill
@@ -38,6 +36,17 @@ class EvmServer
   rescue SignalException => e
     _log.info("Received #{e.message} signal, shutting down server")
     @server.shutdown_and_exit
+  end
+
+  def start_servers
+    for_each_server { start_server }
+  end
+
+  def monitor_servers
+    loop do
+      for_each_server { monitor }
+      sleep ::Settings.server.monitor_poll.to_i_with_method
+    end
   end
 
   ##
@@ -229,9 +238,7 @@ class EvmServer
   # contents of the global ::Settings constant.
   ######################################################################
   def for_each_server
-    servers = MiqEnvironment::Command.is_podified? ? MiqServer.all : [MiqServer.my_server(true)]
-
-    servers.each do |s|
+    servers_to_monitor.each do |s|
       impersonate_server(s)
       yield
     end
@@ -241,7 +248,9 @@ class EvmServer
 
   def impersonate_server(s)
     MiqServer.my_guid = s.guid
-    @server = MiqServer.my_server(true)
+    # It is important that we continue to use the same server instance here.
+    # A lot of "global" state is stored in instance variables on the server.
+    @server = s
     Vmdb::Settings.init
   end
 
