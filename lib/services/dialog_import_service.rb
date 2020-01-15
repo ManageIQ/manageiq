@@ -27,7 +27,6 @@ class DialogImportService
         if dialog_with_label?(dialogs["label"])
           yield dialog if block_given?
         else
-          puts dialogs.keys
           Dialog.create(dialogs.except(:export_version, 'export_version', :class, 'class', :id, 'id').merge("dialog_tabs" => build_dialog_tabs(dialogs, dialogs['export_version'] || DEFAULT_DIALOG_VERSION)))
         end
       rescue DialogFieldImporter::InvalidDialogFieldTypeError
