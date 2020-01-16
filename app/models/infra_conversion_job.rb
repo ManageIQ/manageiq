@@ -121,7 +121,7 @@ class InfraConversionJob < Job
         :max_retries => 15.minutes / state_retry_interval
       },
       :marking_vm_migrated           => {
-        :description => "Mark source as migrated",
+        :description => "Virtual machine successfully migrated",
         :weight      => 1
       },
       :aborting_virtv2v              => {
@@ -542,13 +542,11 @@ class InfraConversionJob < Job
     return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on' && !migration_task.canceling?
 
     migration_task.canceled if migration_task.canceling?
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:mark_vm_migrated)
   rescue StandardError
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:mark_vm_migrated)
   end
 
   def poll_power_on_vm_complete

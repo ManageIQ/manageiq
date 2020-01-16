@@ -991,7 +991,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#wait_for_ip_address' do
       before do
-        task.update_options(:migration_phase => 'pre')
+        task.update_options(:migration_phase => 'pre', :source_vm_ipaddresses => ['10.0.0.1'])
         job.state = 'started'
       end
 
@@ -1515,9 +1515,8 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update_options(:source_vm_power_state => 'off')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:mark_vm_migrated)
       job.signal(:power_on_vm)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     it 'sends start request to VM if VM is off' do
