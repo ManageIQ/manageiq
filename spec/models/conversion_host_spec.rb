@@ -504,7 +504,7 @@ RSpec.describe ConversionHost, :v2v do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
     let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
-    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz' } }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz'} }
     let(:filtered_options) { conversion_options.clone.update(:ssh_key => '__FILTERED__', :password => '__FILTERED__') }
 
     it "works as expected if the connection is successful but the JSON is invalid" do
