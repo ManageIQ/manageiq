@@ -35,7 +35,7 @@ RSpec.describe Metric::CiMixin::Rollup do
       end
 
       it "should create tasks and queue callbacks for perf_capture_timer" do
-        ems.perf_capture_object.perf_capture
+        ems.perf_capture_object.perf_capture_all_queue
 
         cluster = host2.ems_cluster
         expected_hosts = [host2, host4]
@@ -68,8 +68,8 @@ RSpec.describe Metric::CiMixin::Rollup do
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
-        ems.perf_capture_object.perf_capture
-        ems.perf_capture_object.perf_capture
+        ems.perf_capture_object.perf_capture_all_queue
+        ems.perf_capture_object.perf_capture_all_queue
 
         cluster = host2.ems_cluster
         expected_hosts = [host2, host4]
@@ -107,8 +107,8 @@ RSpec.describe Metric::CiMixin::Rollup do
       end
 
       it "calling perf_capture_timer a second time should create another task with the correct time window" do
-        ems.perf_capture_object.perf_capture
-        ems.perf_capture_object.perf_capture
+        ems.perf_capture_object.perf_capture_all_queue
+        ems.perf_capture_object.perf_capture_all_queue
 
         cluster = host2.ems_cluster
 
