@@ -64,7 +64,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
     raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
-    update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
+    update_options(
+      :source_vm_power_state => source.power_state, # This will determine power_state of destination_vm
+      :source_vm_ipaddresses => source.ipaddresses  # This will determine if we need to wait for ip addresses to appear
+    )
     destination_cluster
     virtv2v_disks
     network_mappings
@@ -174,7 +177,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def cancel
     update!(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
-    infra_conversion_job.cancel
   end
 
   def canceling
