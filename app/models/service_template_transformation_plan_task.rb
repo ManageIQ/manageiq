@@ -252,8 +252,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cutover
-    unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
-      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+    if options[:virtv2v_wrapper]['cutover_file'].present?
+      unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
+        raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+      end
     end
   end
 
