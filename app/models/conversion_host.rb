@@ -206,6 +206,7 @@ class ConversionHost < ApplicationRecord
     "/usr/bin/podman run --privileged"\
     " --name conversion-#{task_id}"\
     " --volume /dev:/dev"\
+    " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
     " --volume /var/tmp:/var/tmp"\
     " --volume /var/lib/uci/#{task_id}:/var/lib/uci"\
     " --volume /var/log/uci/#{task_id}:/var/log/uci"\

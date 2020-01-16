@@ -536,6 +536,7 @@ RSpec.describe ConversionHost, :v2v do
         "/usr/bin/podman run --privileged"\
         " --name conversion-#{task.id}"\
         " --volume /dev:/dev"\
+        " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
         " --volume /var/tmp:/var/tmp"\
         " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
         " --volume /var/log/uci/#{task.id}:/var/log/uci"\
