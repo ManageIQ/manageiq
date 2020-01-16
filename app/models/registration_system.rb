@@ -121,10 +121,10 @@ module RegistrationSystem
   def self.write_rhsm_config(params)
     FileUtils.copy(RHSM_CONFIG_FILE, "#{RHSM_CONFIG_FILE}.miq_orig") unless File.exist?("#{RHSM_CONFIG_FILE}.miq_orig")
     rhsm_config = File.read(RHSM_CONFIG_FILE)
-    rhsm_config[/(\s*)proxy_hostname(\s*)=(.*)/, 3] = " #{params[:proxy_hostname]}"
-    rhsm_config[/(\s*)proxy_port(\s*)=(.*)/, 3]     = " #{params[:proxy_port]}"
-    rhsm_config[/(\s*)proxy_user(\s*)=(.*)/, 3]     = " #{params[:proxy_user]}"
-    rhsm_config[/(\s*)proxy_password(\s*)=(.*)/, 3] = " #{params[:proxy_password]}"
+    rhsm_config[/\s*?proxy_hostname\s*?=(.*?)$/, 1] = " #{params[:proxy_hostname]}"
+    rhsm_config[/\s*?proxy_port\s*?=(.*?)$/, 1]     = " #{params[:proxy_port]}"
+    rhsm_config[/\s*?proxy_user\s*?=(.*?)$/, 1]     = " #{params[:proxy_user]}"
+    rhsm_config[/\s*?proxy_password\s*?=(.*?)$/, 1] = " #{params[:proxy_password]}"
     File.write(RHSM_CONFIG_FILE, rhsm_config)
   end
   private_class_method :write_rhsm_config
