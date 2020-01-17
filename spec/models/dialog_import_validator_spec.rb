@@ -1,4 +1,4 @@
-describe DialogImportValidator do
+RSpec.describe DialogImportValidator do
   let(:dialog_field_association_validator) { instance_double("DialogFieldAssociationValidator") }
   let(:dialog_import_validator) { described_class.new(dialog_field_association_validator) }
 

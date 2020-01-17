@@ -1,4 +1,4 @@
-describe CustomAttribute do
+RSpec.describe CustomAttribute do
   let(:string_custom_attribute) { FactoryBot.build(:custom_attribute, :name => "foo", :value => "string", :resource_type => 'ExtManagementSystem') }
   let(:time_custom_attribute) { FactoryBot.build(:custom_attribute, :name => "bar", :value => DateTime.current, :resource_type => 'ExtManagementSystem') }
   let(:int_custom_attribute) { FactoryBot.build(:custom_attribute, :name => "foobar", :value => 5, :resource_type => 'ExtManagementSystem') }

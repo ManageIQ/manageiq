@@ -1,4 +1,4 @@
-describe 'VM::Operations' do
+RSpec.describe 'VM::Operations' do
   before do
     @miq_server = EvmSpecHelper.local_miq_server
     @ems        = FactoryBot.create(:ems_vmware, :zone => @miq_server.zone)

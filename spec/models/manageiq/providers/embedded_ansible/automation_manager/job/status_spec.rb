@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status do
   # The following specs are copied from the 'ansible job status' spec helper
   # from the AnsibleTower Provider repo, but have been modified to make sense
   # for the case of AnsibleRunner implementation.  Previously was:

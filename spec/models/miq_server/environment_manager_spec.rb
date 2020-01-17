@@ -1,4 +1,4 @@
-describe "Server Environment Management" do
+RSpec.describe "Server Environment Management" do
   context ".spartan_mode" do
     before { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
     after { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }

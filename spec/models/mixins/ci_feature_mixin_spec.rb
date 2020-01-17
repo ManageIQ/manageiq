@@ -1,4 +1,4 @@
-describe CiFeatureMixin do
+RSpec.describe CiFeatureMixin do
   let(:service) { FactoryBot.create(:service) }
   describe "#retireable?" do
     it "vm is retireable" do

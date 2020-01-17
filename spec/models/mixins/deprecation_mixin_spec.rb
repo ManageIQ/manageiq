@@ -1,4 +1,4 @@
-describe DeprecationMixin do
+RSpec.describe DeprecationMixin do
   # Host.deprecate_attribute :address, :hostname
   context ".arel_attribute" do
     it "works for deprecate_attribute columns" do

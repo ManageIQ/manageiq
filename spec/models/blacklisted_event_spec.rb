@@ -1,6 +1,6 @@
 require 'workers/event_catcher'
 
-describe BlacklistedEvent do
+RSpec.describe BlacklistedEvent do
   let(:total_blacklist_entry_count) { ExtManagementSystem.descendants.collect(&:default_blacklisted_event_names).flatten.count }
   before do
     MiqRegion.seed

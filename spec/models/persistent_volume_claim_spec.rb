@@ -1,4 +1,4 @@
-describe PersistentVolumeClaim do
+RSpec.describe PersistentVolumeClaim do
   describe "#storage_capacity" do
     let(:storage_size) { 123_456_789 }
 

@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraManager do
+RSpec.describe ManageIQ::Providers::InfraManager do
   describe ".ems_timeouts" do
     before do
       stub_settings(:ems => {:ems_amazon => {},

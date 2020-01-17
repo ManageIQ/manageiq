@@ -1,4 +1,4 @@
-describe MiqAlertSet do
+RSpec.describe MiqAlertSet do
   context ".seed" do
     it "should create the prometheus profiles" do
       expect(MiqAlertSet.count).to eq(0)

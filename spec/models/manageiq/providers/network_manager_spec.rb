@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::NetworkManager do
+RSpec.describe ManageIQ::Providers::NetworkManager do
   let(:vms) { FactoryBot.create(:vm) }
   let(:template) { FactoryBot.create(:miq_template) }
 

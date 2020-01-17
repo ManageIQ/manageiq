@@ -1,4 +1,4 @@
-describe AvailabilityMixin do
+RSpec.describe AvailabilityMixin do
   let(:test_class) do
     Class.new do
       include AvailabilityMixin

@@ -1,4 +1,4 @@
-describe PersistentVolume do
+RSpec.describe PersistentVolume do
   it "has container volumes and pods" do
     pvc = FactoryBot.create(
       :persistent_volume_claim,

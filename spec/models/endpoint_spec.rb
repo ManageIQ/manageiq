@@ -1,4 +1,4 @@
-describe Endpoint do
+RSpec.describe Endpoint do
   let(:endpoint) { FactoryBot.build(:endpoint) }
 
   describe "#verify_ssl" do

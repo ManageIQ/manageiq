@@ -1,4 +1,4 @@
-describe MiqQueueWorkerBase::Runner do
+RSpec.describe MiqQueueWorkerBase::Runner do
   context "#get_message_via_drb" do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) { FactoryBot.create(:miq_generic_worker, :miq_server => server, :pid => 123) }

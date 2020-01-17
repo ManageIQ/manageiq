@@ -1,4 +1,4 @@
-describe ScanningMixin do
+RSpec.describe ScanningMixin do
   let(:test_instance) do
     Class.new do
       include ScanningMixin

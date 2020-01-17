@@ -1,4 +1,4 @@
-describe ServiceRetireTask do
+RSpec.describe ServiceRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:vm) { FactoryBot.create(:vm) }
   let(:service) { FactoryBot.create(:service, :lifecycle_state => 'provisioned') }

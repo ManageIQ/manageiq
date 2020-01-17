@@ -1,4 +1,4 @@
-describe AutomationTask do
+RSpec.describe AutomationTask do
   before do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     @admin       = FactoryBot.create(:user_admin)

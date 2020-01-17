@@ -1,4 +1,4 @@
-describe MiqSchedule do
+RSpec.describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
 
   context "import/export" do

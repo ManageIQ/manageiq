@@ -1,4 +1,4 @@
-describe Category do
+RSpec.describe Category do
   describe "#tags" do
     it "works" do
       clergy        = FactoryBot.create(:classification,     :name => "clergy", :single_value => 1)

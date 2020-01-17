@@ -1,4 +1,4 @@
-describe ChargebackVm do
+RSpec.describe ChargebackVm do
   let(:admin) { FactoryBot.create(:user_admin) }
   let(:start_of_all_intervals) { Time.parse('2007-01-01 00:00:00Z').utc } # 0hours, Monday, 1st of month
   let(:consumed_hours) { 17 }

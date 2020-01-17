@@ -1,4 +1,4 @@
-describe FileDepotSwift do
+RSpec.describe FileDepotSwift do
   let(:uri) { "swift://server.example.com/bucket" }
   let(:merged_uri) { "swift://server.example.com:5678/bucket?region=test_openstack_region&api_version=v3&domain_id=default" }
   let(:merged_default_uri) { "swift://server.example.com:5000/bucket?region=test_openstack_region&api_version=v3&domain_id=default" }

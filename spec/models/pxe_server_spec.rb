@@ -1,4 +1,4 @@
-describe PxeServer do
+RSpec.describe PxeServer do
   before do
     EvmSpecHelper.local_miq_server
     @pxe_server = FactoryBot.create(:pxe_server)

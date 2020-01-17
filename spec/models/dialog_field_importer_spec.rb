@@ -1,4 +1,4 @@
-describe DialogFieldImporter do
+RSpec.describe DialogFieldImporter do
   let(:dialog_field_importer) { described_class.new }
 
   describe "#import_field" do

@@ -1,4 +1,4 @@
-describe AutomationRequest do
+RSpec.describe AutomationRequest do
   let(:admin) { FactoryBot.create(:user, :role => "admin") }
   before do
     MiqRegion.seed

@@ -1,4 +1,4 @@
-describe MiqWidget do
+RSpec.describe MiqWidget do
   context ".import_from_hash" do
     before do
       @user       = FactoryBot.create(:user_admin)

@@ -1,4 +1,4 @@
-describe VmdbDatabase do
+RSpec.describe VmdbDatabase do
   describe "::Seeding" do
     let(:connection) { ApplicationRecord.connection }
 

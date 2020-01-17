@@ -1,4 +1,4 @@
-describe Host do
+RSpec.describe Host do
   it "groups and users joins" do
     user1  = FactoryBot.create(:account_user)
     user2  = FactoryBot.create(:account_user)

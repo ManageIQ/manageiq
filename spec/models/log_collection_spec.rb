@@ -1,4 +1,4 @@
-describe "LogCollection" do
+RSpec.describe "LogCollection" do
   before do
     _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end

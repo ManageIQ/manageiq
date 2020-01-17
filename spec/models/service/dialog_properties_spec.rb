@@ -1,4 +1,4 @@
-describe Service::DialogProperties do
+RSpec.describe Service::DialogProperties do
   it 'with a nil parameter and nil user' do
     options = nil
     expect(described_class.parse(options, nil)).to eq({})

@@ -1,4 +1,4 @@
-describe MiqWorker do
+RSpec.describe MiqWorker do
   context "::Runner" do
     def all_workers
       MiqWorker.descendants.select { |c| c.subclasses.empty? }

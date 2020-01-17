@@ -1,4 +1,4 @@
-describe ContainerQuotaItem do
+RSpec.describe ContainerQuotaItem do
   it "converts float to string" do
     quota_item = ContainerQuotaItem.new(:resource       => 'cpu',
                                         :quota_desired  => 4.2,

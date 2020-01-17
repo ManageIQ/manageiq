@@ -1,4 +1,4 @@
-describe Job, "::StateMachine" do
+RSpec.describe Job, "::StateMachine" do
   subject(:job) do
     # Job is expected to be subclassed by something
     # that implements load_transitions

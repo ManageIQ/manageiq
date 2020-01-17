@@ -76,7 +76,7 @@ shared_examples "post_logs_fails" do |is_zone_depot, is_server_depot, context|
   end
 end
 
-describe MiqServer do
+RSpec.describe MiqServer do
   context "LogManagement" do
     let(:server_depot) { FactoryBot.create(:file_depot) }
     let(:zone_depot) { FactoryBot.create(:file_depot) }

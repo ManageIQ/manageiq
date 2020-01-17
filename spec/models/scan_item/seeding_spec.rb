@@ -1,6 +1,6 @@
 require 'fileutils'
 
-describe ScanItem do
+RSpec.describe ScanItem do
   describe "::Seeding" do
     include_examples(".seed called multiple times", 6)
 

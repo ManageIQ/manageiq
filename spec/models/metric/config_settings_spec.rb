@@ -1,4 +1,4 @@
-describe Metric::ConfigSettings do
+RSpec.describe Metric::ConfigSettings do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
   end

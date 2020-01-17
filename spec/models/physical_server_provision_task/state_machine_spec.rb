@@ -1,4 +1,4 @@
-describe PhysicalServerProvisionTask do
+RSpec.describe PhysicalServerProvisionTask do
   let(:server) { FactoryBot.create(:physical_server) }
 
   subject { described_class.new(:source => server) }

@@ -1,4 +1,4 @@
-describe Metric::CiMixin do
+RSpec.describe Metric::CiMixin do
   context "with a Vm" do
     let(:vm) { FactoryBot.create(:vm_vmware) }
 

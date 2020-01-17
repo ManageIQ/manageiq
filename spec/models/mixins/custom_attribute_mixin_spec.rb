@@ -1,4 +1,4 @@
-describe CustomAttributeMixin do
+RSpec.describe CustomAttributeMixin do
   let(:supported_factories) { [:vm_redhat, :host] }
   let(:test_class) do
     Class.new(ActiveRecord::Base) do

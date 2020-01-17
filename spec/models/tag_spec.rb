@@ -1,4 +1,4 @@
-describe Tag do
+RSpec.describe Tag do
   describe ".list" do
     it "returns an empty string for something that is untaggable" do
       account = FactoryBot.create(:account)

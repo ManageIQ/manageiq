@@ -1,4 +1,4 @@
-describe MiqCompare do
+RSpec.describe MiqCompare do
   context "Marshal.dump and Marshal.load" do
     it "with Vms" do
       vm1 = FactoryBot.create(:vm_vmware)

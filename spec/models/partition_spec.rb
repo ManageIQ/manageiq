@@ -1,4 +1,4 @@
-describe Partition do
+RSpec.describe Partition do
   it "#partition_type_name" do
     partition = FactoryBot.create(:partition)
 

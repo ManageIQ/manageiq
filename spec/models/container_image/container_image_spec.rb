@@ -1,4 +1,4 @@
-describe ContainerImage do
+RSpec.describe ContainerImage do
   it "counts containers" do
     group = FactoryBot.create(
       :container_group,

@@ -1,4 +1,4 @@
-describe VmdbDatabaseSetting do
+RSpec.describe VmdbDatabaseSetting do
   before do
     @db = FactoryBot.create(:vmdb_database)
   end

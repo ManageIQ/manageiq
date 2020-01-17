@@ -1,4 +1,4 @@
-describe ServiceTemplateAnsiblePlaybook do
+RSpec.describe ServiceTemplateAnsiblePlaybook do
   let(:user)     { FactoryBot.create(:user_with_group) }
   let(:auth_one) { FactoryBot.create(:embedded_ansible_credential) }
   let(:auth_two) { FactoryBot.create(:embedded_ansible_credential) }

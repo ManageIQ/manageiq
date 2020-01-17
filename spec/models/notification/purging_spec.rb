@@ -1,4 +1,4 @@
-describe Notification do
+RSpec.describe Notification do
   context "::Purging" do
     describe ".purge_by_date" do
       it "purges old notifications" do

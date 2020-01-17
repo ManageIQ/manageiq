@@ -1,4 +1,4 @@
-describe MiqEvent do
+RSpec.describe MiqEvent do
   context "seeded" do
     context ".raise_evm_job_event" do
       it "vm" do

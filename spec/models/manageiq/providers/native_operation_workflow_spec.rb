@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::NativeOperationWorkflow do
+RSpec.describe ManageIQ::Providers::NativeOperationWorkflow do
   context "post_refresh" do
     before do
       vm = FactoryBot.create(:vm)

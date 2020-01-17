@@ -1,4 +1,4 @@
-describe TenantQuota do
+RSpec.describe TenantQuota do
   let(:tenant) { FactoryBot.create(:tenant) }
 
   describe "#valid?" do

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-describe BinaryBlobPart do
+RSpec.describe BinaryBlobPart do
   context "#data= and #data" do
     let(:part) { FactoryBot.build(:binary_blob_part) }
 

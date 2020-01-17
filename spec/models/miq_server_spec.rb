@@ -1,4 +1,4 @@
-describe MiqServer do
+RSpec.describe MiqServer do
   context ".seed" do
     before do
       MiqRegion.seed

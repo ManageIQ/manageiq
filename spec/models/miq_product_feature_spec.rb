@@ -1,4 +1,4 @@
-describe MiqProductFeature do
+RSpec.describe MiqProductFeature do
   let(:miq_product_feature_class) do
     Class.new(described_class) do
       def self.with_parent_tenant_nodes

@@ -1,4 +1,4 @@
-describe VmdbTableEvm do
+RSpec.describe VmdbTableEvm do
   let(:db)    { FactoryBot.create(:vmdb_database) }
   let(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
 

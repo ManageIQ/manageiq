@@ -1,4 +1,4 @@
-describe GenericObject do
+RSpec.describe GenericObject do
   let(:go_object_name) { "load_balancer_1" }
   let(:max_number)     { 100 }
   let(:server_name)    { "test_server" }

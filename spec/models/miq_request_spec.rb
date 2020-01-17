@@ -1,4 +1,4 @@
-describe MiqRequest do
+RSpec.describe MiqRequest do
   let(:fred)   { FactoryBot.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
   let(:barney) { FactoryBot.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 

@@ -1,4 +1,4 @@
-describe ContainerLabelTagMapping do
+RSpec.describe ContainerLabelTagMapping do
   let(:cat_classification) { FactoryBot.create(:classification, :read_only => true, :name => 'kubernetes:1') }
   let(:cat_tag) { cat_classification.tag }
   let(:tag1) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }

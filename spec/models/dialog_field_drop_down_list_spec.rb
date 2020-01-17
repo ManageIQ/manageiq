@@ -1,4 +1,4 @@
-describe DialogFieldDropDownList do
+RSpec.describe DialogFieldDropDownList do
   context "dialog_field_drop_down_list" do
     let(:data_type) { "string" }
     let(:sort_by) { :description }

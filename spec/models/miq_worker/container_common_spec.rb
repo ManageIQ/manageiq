@@ -1,4 +1,4 @@
-describe MiqWorker::ContainerCommon do
+RSpec.describe MiqWorker::ContainerCommon do
   before { EvmSpecHelper.local_miq_server }
   let(:compressed_server_id) { MiqServer.my_server.compressed_id }
 

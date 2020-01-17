@@ -1,4 +1,4 @@
-describe "VM Snapshotting" do
+RSpec.describe "VM Snapshotting" do
   before { EvmSpecHelper.local_miq_server }
   let(:vm) { FactoryBot.create(:vm) }
 

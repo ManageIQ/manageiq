@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::BaseManager::MetricsCapture do
+RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   subject { described_class.new(nil, ems) }

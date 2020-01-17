@@ -1,4 +1,4 @@
-describe VmdbMetric do
+RSpec.describe VmdbMetric do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
   end

@@ -1,4 +1,4 @@
-describe Vm do
+RSpec.describe Vm do
   include_examples "OwnershipMixin"
 
   it "#corresponding_model" do

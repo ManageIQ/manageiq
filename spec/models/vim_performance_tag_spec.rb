@@ -1,4 +1,4 @@
-describe VimPerformanceTag do
+RSpec.describe VimPerformanceTag do
   before do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)

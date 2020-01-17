@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::Provision::Configuration do
+RSpec.describe ManageIQ::Providers::CloudManager::Provision::Configuration do
   it "#userdata_payload is clear text" do
     template  = FactoryBot.build(:customization_template, :script => "#cloud-init")
     provision = ManageIQ::Providers::CloudManager::Provision.new

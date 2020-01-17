@@ -1,4 +1,4 @@
-describe AutomateWorkspace do
+RSpec.describe AutomateWorkspace do
   describe "#merge_output!" do
     let(:aw) { FactoryBot.create(:automate_workspace, :input => input) }
     let(:password) { "ca$hc0w" }

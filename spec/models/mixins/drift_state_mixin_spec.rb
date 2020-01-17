@@ -1,4 +1,4 @@
-describe DriftStateMixin do
+RSpec.describe DriftStateMixin do
   include Spec::Support::ArelHelper
 
   let(:host) { FactoryBot.create(:host) }

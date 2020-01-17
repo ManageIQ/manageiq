@@ -1,4 +1,4 @@
-describe(ServiceContainerTemplate) do
+RSpec.describe(ServiceContainerTemplate) do
   let(:action) { ResourceAction::PROVISION }
   let(:stack_status) { double("ManageIQ::Providers::Openshift::ContainerManager::OrchestrationStack::Status") }
   let(:stack) do

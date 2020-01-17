@@ -1,4 +1,4 @@
-describe MiqPolicy::ImportExport do
+RSpec.describe MiqPolicy::ImportExport do
   context '.import_from_hash' do
     it "loads attributes" do
       p_hash = {

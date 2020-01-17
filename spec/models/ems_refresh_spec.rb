@@ -1,6 +1,6 @@
 require "inventory_refresh"
 
-describe EmsRefresh do
+RSpec.describe EmsRefresh do
   context ".queue_refresh" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone

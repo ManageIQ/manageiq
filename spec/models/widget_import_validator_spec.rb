@@ -1,4 +1,4 @@
-describe WidgetImportValidator do
+RSpec.describe WidgetImportValidator do
   let(:widget_import_validator) { described_class.new }
 
   describe "#determine_validity" do

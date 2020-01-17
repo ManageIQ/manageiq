@@ -1,4 +1,4 @@
-describe MiqEventDefinition do
+RSpec.describe MiqEventDefinition do
   let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do

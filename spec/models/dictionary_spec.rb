@@ -1,4 +1,4 @@
-describe Dictionary do
+RSpec.describe Dictionary do
   context ".gettext" do
     context "with empty text" do
       it("returns an empty string") { expect(described_class.gettext("")).to eq("") }

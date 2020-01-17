@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::MetricsCapture do
+RSpec.describe ManageIQ::Providers::CloudManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   before do

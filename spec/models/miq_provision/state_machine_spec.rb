@@ -1,4 +1,4 @@
-describe MiqProvision do
+RSpec.describe MiqProvision do
   context "::StateMachine" do
     let(:req_user) { FactoryBot.create(:user_with_group) }
     let(:ems)      { FactoryBot.create(:ems_openstack_with_authentication) }

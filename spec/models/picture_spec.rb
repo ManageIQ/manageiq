@@ -1,4 +1,4 @@
-describe Picture do
+RSpec.describe Picture do
   subject { FactoryBot.build(:picture) }
 
   it "auto-creates needed directory" do

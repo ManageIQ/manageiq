@@ -1,4 +1,4 @@
-describe CustomizationTemplate do
+RSpec.describe CustomizationTemplate do
   context "unique name validation" do
     it "doesn't allow same name, same pxe_image_type in same region" do
       pit = FactoryBot.create(:pxe_image_type)

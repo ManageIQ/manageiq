@@ -1,4 +1,4 @@
-describe Authenticator do
+RSpec.describe Authenticator do
   describe '.for' do
     it "instantiates the matching class" do
       expect(Authenticator.for(:mode => 'database')).to be_a(Authenticator::Database)

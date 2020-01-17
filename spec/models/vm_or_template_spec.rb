@@ -1,4 +1,4 @@
-describe VmOrTemplate do
+RSpec.describe VmOrTemplate do
   include Spec::Support::ArelHelper
 
   let(:vm)      { FactoryBot.create(:vm_or_template) }

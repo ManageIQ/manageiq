@@ -1,4 +1,4 @@
-describe FirmwareRegistry do
+RSpec.describe FirmwareRegistry do
   before  { EvmSpecHelper.create_guid_miq_server_zone }
   subject { FactoryBot.create(:firmware_registry) }
 

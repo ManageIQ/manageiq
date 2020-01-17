@@ -1,4 +1,4 @@
-describe ResourceAction do
+RSpec.describe ResourceAction do
   context "#deliver_to_automate_from_dialog" do
     let(:user) { FactoryBot.create(:user_with_group) }
     let(:zone_name) { "default" }

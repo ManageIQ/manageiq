@@ -1,4 +1,4 @@
-describe VmMigrateWorkflow do
+RSpec.describe VmMigrateWorkflow do
   include Spec::Support::WorkflowHelper
   let(:admin) { FactoryBot.create(:user_with_group) }
   let(:ems) { FactoryBot.create(:ems_vmware) }

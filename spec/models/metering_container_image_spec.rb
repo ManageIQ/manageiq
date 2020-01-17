@@ -1,4 +1,4 @@
-describe MeteringContainerImage do
+RSpec.describe MeteringContainerImage do
   include Spec::Support::ChargebackHelper
   let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }

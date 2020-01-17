@@ -1,4 +1,4 @@
-describe Job do
+RSpec.describe Job do
   context "With a single scan job," do
     before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)

@@ -1,4 +1,4 @@
-describe TenantQuotasMixin do
+RSpec.describe TenantQuotasMixin do
   before do
     Tenant.seed
   end

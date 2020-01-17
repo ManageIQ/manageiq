@@ -1,4 +1,4 @@
-describe ContainerProject do
+RSpec.describe ContainerProject do
   context "::Purging" do
     context ".purge_queue" do
       before do

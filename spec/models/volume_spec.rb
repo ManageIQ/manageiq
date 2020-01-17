@@ -1,4 +1,4 @@
-describe Volume do
+RSpec.describe Volume do
   context "#volume_group" do
     it "nil when starts with '***physical_'," do
       expect(Volume.new(:volume_group => '***physical_scsi0:0:1').volume_group).to be_falsey

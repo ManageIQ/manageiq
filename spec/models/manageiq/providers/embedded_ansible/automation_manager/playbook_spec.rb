@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
   let(:manager)               { FactoryBot.create(:embedded_automation_manager_ansible, :provider) }
   let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager_id => manager.id) }
   let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source) }

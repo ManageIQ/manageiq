@@ -1,4 +1,4 @@
-describe MetricRollup do
+RSpec.describe MetricRollup do
   describe '#parents_determining_rate' do
     let(:ems) { FactoryBot.build(:ems_vmware) }
 

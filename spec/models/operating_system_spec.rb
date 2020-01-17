@@ -1,4 +1,4 @@
-describe OperatingSystem do
+RSpec.describe OperatingSystem do
   context "#normalize_os_name" do
     {
       "an_amazing_undiscovered_os" => "unknown",

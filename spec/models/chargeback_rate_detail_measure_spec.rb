@@ -1,4 +1,4 @@
-describe ChargebackRateDetailMeasure do
+RSpec.describe ChargebackRateDetailMeasure do
   it "has a valid factory" do
     expect(FactoryBot.create(:chargeback_rate_detail_measure)).to be_valid
   end

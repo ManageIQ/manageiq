@@ -1,4 +1,4 @@
-describe ServiceOrchestration do
+RSpec.describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryBot.create(:ems_amazon) }
   let(:template_by_setter) { FactoryBot.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryBot.create(:ems_amazon) }

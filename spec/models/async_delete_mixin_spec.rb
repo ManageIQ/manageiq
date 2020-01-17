@@ -1,4 +1,4 @@
-describe AsyncDeleteMixin do
+RSpec.describe AsyncDeleteMixin do
   def common_setup(klass)
     objects = []
     3.times do |i|

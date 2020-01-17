@@ -1,4 +1,4 @@
-describe DialogFieldDateTimeControl do
+RSpec.describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do
       User.current_user = FactoryBot.create(:user)

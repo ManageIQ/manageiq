@@ -1,4 +1,4 @@
-describe Hardware do
+RSpec.describe Hardware do
   include Spec::Support::ArelHelper
   let(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware)) }
   let(:template) { FactoryBot.create(:template_vmware, :hardware => FactoryBot.create(:hardware)) }

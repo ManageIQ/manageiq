@@ -1,4 +1,4 @@
-describe DialogGroup do
+RSpec.describe DialogGroup do
   let(:dialog_group) { FactoryBot.build(:dialog_group, :label => 'group') }
   context "#validate_children" do
     it "fails without element" do

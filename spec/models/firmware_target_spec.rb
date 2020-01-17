@@ -1,4 +1,4 @@
-describe FirmwareTarget do
+RSpec.describe FirmwareTarget do
   let(:attrs)       { { :manufacturer => 'manu', :model => 'model' } }
   let(:other_attrs) { { :manufacturer => 'other-manu', :model => 'other-model' } }
 

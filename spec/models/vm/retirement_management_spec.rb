@@ -1,4 +1,4 @@
-describe "VM Retirement Management" do
+RSpec.describe "VM Retirement Management" do
   let(:user) { FactoryBot.create(:user_miq_request_approver) }
   let(:vm_with_owner) { FactoryBot.create(:vm, :evm_owner => user, :host => FactoryBot.create(:host)) }
   let(:region) { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }

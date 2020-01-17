@@ -1,4 +1,4 @@
-describe Service::DialogProperties::Retirement do
+RSpec.describe Service::DialogProperties::Retirement do
   let(:time) { Time.new(2018, 7, 21, 12, 20, 0, 0) }
 
   it 'with a nil parameter' do

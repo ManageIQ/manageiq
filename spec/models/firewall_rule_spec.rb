@@ -1,4 +1,4 @@
-describe FirewallRule do
+RSpec.describe FirewallRule do
   let(:firewall_rule) { FactoryBot.create(:firewall_rule) }
 
   context "#operating_system" do

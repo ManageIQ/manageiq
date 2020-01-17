@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraManager::MetricsCapture do
+RSpec.describe ManageIQ::Providers::InfraManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   let(:miq_server) { EvmSpecHelper.local_miq_server }

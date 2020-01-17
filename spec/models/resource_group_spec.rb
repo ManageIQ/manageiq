@@ -1,4 +1,4 @@
-describe ResourceGroup do
+RSpec.describe ResourceGroup do
   let(:resource_group) do
     FactoryBot.create(
       :resource_group,

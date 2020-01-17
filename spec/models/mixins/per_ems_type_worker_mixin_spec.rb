@@ -1,4 +1,4 @@
-describe PerEmsTypeWorkerMixin do
+RSpec.describe PerEmsTypeWorkerMixin do
   let(:worker)       { FactoryBot.create(:miq_ems_metrics_collector_worker) }
   let(:worker_class) { worker.class }
 

@@ -1,4 +1,4 @@
-describe MiqProvision::PostInstallCallback do
+RSpec.describe MiqProvision::PostInstallCallback do
   let(:included_class) do
     Class.new do
       include MiqProvision::PostInstallCallback

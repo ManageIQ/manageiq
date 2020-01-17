@@ -1,4 +1,4 @@
-describe JobProxyDispatcher do
+RSpec.describe JobProxyDispatcher do
   include Spec::Support::JobProxyDispatcherHelper
 
   NUM_VMS = 3

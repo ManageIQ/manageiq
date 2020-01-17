@@ -1,4 +1,4 @@
-describe ChargebackRate do
+RSpec.describe ChargebackRate do
   describe "#rate_details_relevant_to" do
     let(:count_hourly_variable_tier_rate) { {:variable_rate => '10'} }
 

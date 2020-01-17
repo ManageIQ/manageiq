@@ -1,4 +1,4 @@
-describe ServiceTemplate do
+RSpec.describe ServiceTemplate do
   describe "#template_copy" do
     let(:custom_button)                  { FactoryBot.create(:custom_button, :applies_to => service_template) }
     let(:custom_button_for_service)      { FactoryBot.create(:custom_button, :applies_to_class => "Service") }

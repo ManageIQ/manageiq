@@ -1,4 +1,4 @@
-describe NewWithTypeStiMixin do
+RSpec.describe NewWithTypeStiMixin do
   context ".new" do
     it "without type" do
       expect(Host.new.class).to eq(Host)

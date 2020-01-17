@@ -1,4 +1,4 @@
-describe MiqPolicy do
+RSpec.describe MiqPolicy do
   context "Testing edge cases on conditions" do
     # The conditions reflection on MiqPolicy is affected when called through a
     # belongs_to or has_one, which is used under the covers in MiqSet.  This

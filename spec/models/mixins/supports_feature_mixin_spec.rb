@@ -1,4 +1,4 @@
-describe SupportsFeatureMixin do
+RSpec.describe SupportsFeatureMixin do
   before do
     stub_const('SupportsFeatureMixin::QUERYABLE_FEATURES',
                SupportsFeatureMixin::QUERYABLE_FEATURES.merge(

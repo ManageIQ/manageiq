@@ -1,4 +1,4 @@
-describe ConfigurationManagementMixin do
+RSpec.describe ConfigurationManagementMixin do
   let(:miq_server) { FactoryBot.create(:miq_server, :zone => zone, :status => "started") }
   let(:region)     { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   let(:settings)   { {:some_test_setting => {:setting => {:deeper => 1}, :other => 2}} }

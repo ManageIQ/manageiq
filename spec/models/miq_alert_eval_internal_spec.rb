@@ -1,4 +1,4 @@
-describe "MiqAlert Evaluation Internal" do
+RSpec.describe "MiqAlert Evaluation Internal" do
   context "With VM as a target," do
     before do
       @vm = FactoryBot.create(:vm_vmware)

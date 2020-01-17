@@ -1,4 +1,4 @@
-describe ImportFileUpload do
+RSpec.describe ImportFileUpload do
   let(:import_file_upload) { described_class.create }
 
   describe "#policy_import_data" do

@@ -1,4 +1,4 @@
-describe GitRepository do
+RSpec.describe GitRepository do
   describe "#url" do
     it "missing" do
       expect(FactoryBot.build(:git_repository, :url => nil)).to_not be_valid

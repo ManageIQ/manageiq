@@ -1,4 +1,4 @@
-describe MiqSnmp do
+RSpec.describe MiqSnmp do
   describe '.trap_v2' do
     it 'calls subst_oid' do
       expect(MiqSnmp).to receive(:subst_oid).at_least(1).and_return("1.2.3")

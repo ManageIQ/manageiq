@@ -1,6 +1,6 @@
 require "concurrent/atomic/event"
 
-describe VmdbDatabaseConnection do
+RSpec.describe VmdbDatabaseConnection do
   self.use_transactional_tests = false
   after :all do
     # HACK: Some other tests (around Automate) rely on the fact there's

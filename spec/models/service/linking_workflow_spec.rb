@@ -1,4 +1,4 @@
-describe Service::LinkingWorkflow do
+RSpec.describe Service::LinkingWorkflow do
   let(:service)  { FactoryBot.create(:service) }
   let(:provider) { FactoryBot.create(:ems_vmware) }
   let(:uid_ems_array) { ["423c9963-378c-813f-1dbd-630e464d59d4", "423cf3e2-e319-3953-993f-fd8513db951d"] }

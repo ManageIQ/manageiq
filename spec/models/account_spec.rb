@@ -1,4 +1,4 @@
-describe Account do
+RSpec.describe Account do
   let(:user_account1) { FactoryBot.create(:account_user) }
   let(:group_account1) { FactoryBot.create(:account_group) }
 

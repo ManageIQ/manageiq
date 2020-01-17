@@ -1,4 +1,4 @@
-describe BottleneckEvent do
+RSpec.describe BottleneckEvent do
   describe ".future_event_definitions_for_obj" do
     it "contains things" do
       MiqEventDefinition.seed_default_definitions(MiqEventDefinition.all.group_by(&:name))

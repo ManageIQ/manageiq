@@ -1,4 +1,4 @@
-describe VmdbTable do
+RSpec.describe VmdbTable do
   context "#latest_hourly_metric" do
     let(:db)    { FactoryBot.create(:vmdb_database) }
     let(:table) { FactoryBot.create(:vmdb_table, :vmdb_database => db, :name => 'foo') }

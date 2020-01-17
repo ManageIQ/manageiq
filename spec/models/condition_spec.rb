@@ -1,4 +1,4 @@
-describe Condition do
+RSpec.describe Condition do
   describe ".subst" do
     context "evaluation of virtual custom attributes from left and right side" do
       let(:custom_attribute_1)         { FactoryBot.create(:custom_attribute, :name => "attr_1", :value => 20) }

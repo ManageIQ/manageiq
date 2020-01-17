@@ -1,4 +1,4 @@
-describe Dialog do
+RSpec.describe Dialog do
   describe ".seed" do
     let(:dialog_import_service) { double("DialogImportService") }
     let(:test_file_path) { "spec/fixtures/files/dialogs" }

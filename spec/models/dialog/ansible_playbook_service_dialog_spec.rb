@@ -1,4 +1,4 @@
-describe Dialog::AnsiblePlaybookServiceDialog do
+RSpec.describe Dialog::AnsiblePlaybookServiceDialog do
   describe "#create_dialog" do
     it "creates a dialog for a playbook with variables" do
       extra_vars = {

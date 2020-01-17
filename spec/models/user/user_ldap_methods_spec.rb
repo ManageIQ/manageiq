@@ -1,4 +1,4 @@
-describe Authenticator::Ldap do
+RSpec.describe Authenticator::Ldap do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     @auth_config = {

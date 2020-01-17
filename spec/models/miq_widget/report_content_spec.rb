@@ -1,4 +1,4 @@
-describe MiqWidget, "::ReportContent" do
+RSpec.describe MiqWidget, "::ReportContent" do
   let(:vm_count) { 2 }
   let(:widget) do
     MiqWidget.sync_from_hash(YAML.load("
