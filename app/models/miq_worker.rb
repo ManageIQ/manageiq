@@ -414,6 +414,11 @@ class MiqWorker < ApplicationRecord
   end
 
   def kill_process
+    if containerized_worker?
+      delete_container_objects
+      return
+    end
+
     unless pid.nil?
       begin
         _log.info("Killing worker: ID [#{id}], PID [#{pid}], GUID [#{guid}], status [#{status}]")
