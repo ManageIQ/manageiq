@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools", "miq_config_sssd_ldap").to_s
 
 require "configure_appliance_settings"
 
-describe MiqConfigSssdLdap::ConfigureApplianceSettings do
+RSpec.describe MiqConfigSssdLdap::ConfigureApplianceSettings do
   before do
     stub_const("LOGGER", double)
     allow(LOGGER).to receive(:debug)

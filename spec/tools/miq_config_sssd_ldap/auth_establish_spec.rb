@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "miq_config_sssd_ldap"
 
-describe MiqConfigSssdLdap::AuthEstablish do
+RSpec.describe MiqConfigSssdLdap::AuthEstablish do
   describe '#run_auth_establish' do
     before do
       @initial_settings = {:mode => "bob", :ldaphost => ["hostname"], :ldapport => 22}

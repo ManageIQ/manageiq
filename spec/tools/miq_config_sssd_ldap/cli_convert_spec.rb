@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "miq_config_sssd_ldap/cli_convert"
 
-describe MiqConfigSssdLdap::CliConvert do
+RSpec.describe MiqConfigSssdLdap::CliConvert do
   before do
     @all_opts = :tls_cacert, :tls_cacertdir, :domain, :only_change_userids, :skip_post_conversion_userid_change
     stub_const("LOGGER", double)
