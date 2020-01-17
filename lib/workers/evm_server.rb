@@ -31,11 +31,12 @@ class EvmServer
     monitor_servers
   rescue Interrupt => e
     _log.info("Received #{e.message} signal, killing server")
-    MiqServer.kill
+    kill_servers
     exit 1
   rescue SignalException => e
     _log.info("Received #{e.message} signal, shutting down server")
-    @server.shutdown_and_exit
+    stop_servers
+    exit 0
   end
 
   def start_servers
@@ -54,6 +55,17 @@ class EvmServer
   #
   def set_process_title
     Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
+  end
+
+  def stop_servers
+    for_each_server { @server.shutdown }
+  end
+
+  def kill_servers
+    for_each_server do
+      @server.kill_all_workers
+      @server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
+    end
   end
 
   def self.start(*args)
