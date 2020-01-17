@@ -4,8 +4,6 @@ require 'pid_file'
 class EvmServer
   include Vmdb::Logging
 
-  ##
-  # String used as a title for a linux process. Visible in ps, htop, ...
   SERVER_PROCESS_TITLE = 'MIQ Server'.freeze
 
   attr_accessor :servers_to_monitor
@@ -50,13 +48,6 @@ class EvmServer
     end
   end
 
-  ##
-  # Sets the server process' name if it is possible.
-  #
-  def set_process_title
-    Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
-  end
-
   def stop_servers
     for_each_server { @server.shutdown }
   end
@@ -70,6 +61,12 @@ class EvmServer
 
   def self.start(*args)
     new.start
+  end
+
+  private
+
+  def set_process_title
+    Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
   end
 
   def start_server
@@ -235,8 +232,6 @@ class EvmServer
     @server.sync_workers
     @server.wait_for_started_workers
   end
-
-  private
 
   ######################################################################
   # Warning:
