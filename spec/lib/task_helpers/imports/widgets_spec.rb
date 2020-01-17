@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::Widgets do
+RSpec.describe TaskHelpers::Imports::Widgets do
   describe "#import" do
     let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'widgets') }
     let(:widget_file1) { "Test_Widget.yaml" }

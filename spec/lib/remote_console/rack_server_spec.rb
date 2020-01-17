@@ -1,4 +1,4 @@
-describe RemoteConsole::RackServer do
+RSpec.describe RemoteConsole::RackServer do
   before do
     allow(logger).to receive(:info)
     @server = described_class.new(:logger => logger)

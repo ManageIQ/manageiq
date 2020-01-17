@@ -1,4 +1,4 @@
-describe "AR Nested Count By extension" do
+RSpec.describe "AR Nested Count By extension" do
   context "miq_queue with messages" do
     let(:zone1) { EvmSpecHelper.local_miq_server.zone }
     let(:zone2) { FactoryBot.create(:zone) }

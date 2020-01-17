@@ -1,4 +1,4 @@
-describe Vmdb::Settings do
+RSpec.describe Vmdb::Settings do
   describe ".on_reload" do
     it "is called on top-level ::Settings.reload!" do
       expect(described_class).to receive(:on_reload)

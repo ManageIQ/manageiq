@@ -1,4 +1,4 @@
-describe Ansible::Runner::Response do
+RSpec.describe Ansible::Runner::Response do
   subject { described_class.new(:base_dir => base_dir, :ident => ident) }
 
   let(:ident)        { described_class.new(:base_dir => '').ident }

@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::Reports do
+RSpec.describe TaskHelpers::Imports::Reports do
   describe "#import" do
     let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'reports') }
     let(:rpt_file1) { "Test_Report.yaml" }

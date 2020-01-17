@@ -1,4 +1,4 @@
-describe Spec::Support::QueryCounter do
+RSpec.describe Spec::Support::QueryCounter do
   it "counts named queries" do
     expect(Spec::Support::QueryCounter.count { Host.first }).to eq(1)
   end

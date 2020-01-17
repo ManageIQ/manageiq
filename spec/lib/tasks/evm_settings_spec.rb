@@ -1,6 +1,6 @@
 require "rake"
 
-describe "EvmSettings", :type => :rake_task do
+RSpec.describe "EvmSettings", :type => :rake_task do
   let(:task_path) { "lib/tasks/evm_settings" }
   let(:keys) { ["/authentication/mode", "/authentication/httpd_role", "/authentication/sso_enabled", "/authentication/saml_enabled", "/authentication/oidc_enabled", "/authentication/local_login_disabled"] }
 

@@ -1,4 +1,4 @@
-describe Rbac::Filterer do
+RSpec.describe Rbac::Filterer do
   describe "using expressions as managed filters" do
     it "supports OR conditions across categories" do
       filter = MiqExpression.new(

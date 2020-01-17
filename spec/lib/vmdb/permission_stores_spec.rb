@@ -1,4 +1,4 @@
-describe Vmdb::PermissionStores do
+RSpec.describe Vmdb::PermissionStores do
   it 'should be configurable' do
     stub_vmdb_permission_store do
       Vmdb::PermissionStores.configure do |config|

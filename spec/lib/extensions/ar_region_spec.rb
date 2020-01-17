@@ -1,4 +1,4 @@
-describe ArRegion do
+RSpec.describe ArRegion do
   it "exposes #region_number as a virtual column" do
     expect(Vm).to have_virtual_column(:region_number)
   end

@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::AlertSets do
+RSpec.describe TaskHelpers::Exports::AlertSets do
   let(:guid) { "eca41687-5ca9-40f2-93f7-3fe1ef08e16e" }
 
   let(:alert_set_export_attrs) do

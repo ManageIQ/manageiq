@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::ProvisionDialogs do
+RSpec.describe TaskHelpers::Imports::ProvisionDialogs do
   let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'provision_dialogs') }
   let(:dialog_file) { 'MiqProvisionWorkflow-test_miq_provision_dialogs_template.yaml' }
   let(:mod_dialog_file) { 'MiqProvisionWorkflow-test_miq_provision_dialogs_template_modified.yml' }

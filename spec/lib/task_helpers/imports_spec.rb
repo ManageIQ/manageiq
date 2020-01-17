@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports do
+RSpec.describe TaskHelpers::Imports do
   describe '.validate_source' do
     before do
       @import_dir = Dir.mktmpdir('miq_imp_dir')

@@ -1,4 +1,4 @@
-describe UniqueWithinRegionValidator do
+RSpec.describe UniqueWithinRegionValidator do
   describe "#unique_within_region" do
     context "class without STI" do
       let(:case_sensitive_class) do

@@ -1,4 +1,4 @@
-describe MiqExpression do
+RSpec.describe MiqExpression do
   describe '#reporting_available_fields' do
     let(:vm) { FactoryBot.create(:vm) }
     let!(:custom_attribute) { FactoryBot.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }

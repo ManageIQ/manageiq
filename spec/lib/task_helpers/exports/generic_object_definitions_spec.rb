@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::GenericObjectDefinitions do
+RSpec.describe TaskHelpers::Exports::GenericObjectDefinitions do
   let(:export_dir) do
     Dir.mktmpdir('miq_exp_dir')
   end

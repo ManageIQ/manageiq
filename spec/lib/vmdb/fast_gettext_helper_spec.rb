@@ -1,4 +1,4 @@
-describe Vmdb::FastGettextHelper do
+RSpec.describe Vmdb::FastGettextHelper do
   describe ".register_locales" do
     it "registers locales across all threads" do
       Thread.new do

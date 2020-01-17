@@ -1,4 +1,4 @@
-describe ContainerOrchestrator do
+RSpec.describe ContainerOrchestrator do
   let(:kube_apps_connection) { subject.send(:kube_apps_connection) }
   let(:kube_connection)      { subject.send(:kube_connection) }
   let(:cert)                 { Tempfile.new("cert") }

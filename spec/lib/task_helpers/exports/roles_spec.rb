@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::Roles do
+RSpec.describe TaskHelpers::Exports::Roles do
   let(:role_test_export) do
     [{"name"                => "Test Role",
       "read_only"           => false,

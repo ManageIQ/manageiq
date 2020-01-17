@@ -1,4 +1,4 @@
-describe "#number_of" do
+RSpec.describe "#number_of" do
   it "caches the results" do
     h = FactoryBot.create(:host)
     FactoryBot.create_list(:vm, 2, :host => h)

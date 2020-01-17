@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::CustomButtons do
+RSpec.describe TaskHelpers::Exports::CustomButtons do
   let!(:custom_button)     { FactoryBot.create(:custom_button, :name => "export_test_button", :description => "Export Test", :applies_to_class => "Vm") }
   let!(:custom_button2)    { FactoryBot.create(:custom_button, :name => "export_test_button2", :description => "Export Test", :applies_to_class => "Service") }
   let!(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "custom_button_set", :description => "Default Export Test") }
