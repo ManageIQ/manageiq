@@ -1,4 +1,4 @@
-describe OrchestrationStackRetireTask do
+RSpec.describe OrchestrationStackRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
   let(:miq_request) { FactoryBot.create(:orchestration_stack_retire_request, :requester => user, :source => orchestration_stack) }

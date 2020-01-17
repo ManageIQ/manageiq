@@ -1,4 +1,4 @@
-describe MiqUserScope do
+RSpec.describe MiqUserScope do
   context "testing hash_to_scope method" do
     before do
     end

@@ -1,4 +1,4 @@
-describe MiqReport do
+RSpec.describe MiqReport do
   context "Generator::Async" do
     context ".async_generate_tables" do
       let(:report) do

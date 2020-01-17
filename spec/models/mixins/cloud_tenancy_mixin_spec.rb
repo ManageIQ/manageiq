@@ -1,4 +1,4 @@
-describe CloudTenancyMixin do
+RSpec.describe CloudTenancyMixin do
   let(:root_tenant) do
     Tenant.seed
   end

@@ -1,4 +1,4 @@
-describe RelationshipMixin do
+RSpec.describe RelationshipMixin do
   let(:test_rel_type) { "testing" }
   #      0
   #  1        2

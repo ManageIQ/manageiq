@@ -1,4 +1,4 @@
-describe MiqTask do
+RSpec.describe MiqTask do
   context "when I add an MiqTask" do
     let(:miq_task) { FactoryBot.create(:miq_task_plain) }
 

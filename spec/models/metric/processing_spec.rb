@@ -1,4 +1,4 @@
-describe Metric::Processing do
+RSpec.describe Metric::Processing do
   context "#add_missing_intervals" do
     let(:time_now) { Time.current }
     let(:last_perf) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => time_now) }

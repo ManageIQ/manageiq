@@ -1,4 +1,4 @@
-describe PxeImageType do
+RSpec.describe PxeImageType do
   context "#esx?" do
     it "with a nil name" do
       expect(subject).not_to be_esx

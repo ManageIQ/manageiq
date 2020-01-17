@@ -1,4 +1,4 @@
-describe DialogFieldAssociationValidator do
+RSpec.describe DialogFieldAssociationValidator do
   let(:dialog_field_association_validator) { described_class.new }
 
   describe "circular_references" do

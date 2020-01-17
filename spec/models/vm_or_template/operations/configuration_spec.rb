@@ -1,4 +1,4 @@
-describe VmOrTemplate::Operations::Configuration do
+RSpec.describe VmOrTemplate::Operations::Configuration do
   context "#raw_add_disk" do
     let(:disk_name) { "abc" }
     let(:disk_size) { "123" }

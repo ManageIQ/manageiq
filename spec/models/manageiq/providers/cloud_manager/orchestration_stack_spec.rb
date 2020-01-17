@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::OrchestrationStack do
+RSpec.describe ManageIQ::Providers::CloudManager::OrchestrationStack do
   let!(:root_stack) do
     FactoryBot.create(:orchestration_stack_cloud).tap do |stack|
       FactoryBot.create(:vm_cloud, :orchestration_stack => stack)

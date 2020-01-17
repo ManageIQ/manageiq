@@ -1,4 +1,4 @@
-describe AssignmentMixin do
+RSpec.describe AssignmentMixin do
   # too ingrained in AR - has many, acts_as_miq_taggable, ...
   let(:test_class) { MiqAlertSet }
 

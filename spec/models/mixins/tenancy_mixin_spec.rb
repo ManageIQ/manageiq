@@ -1,4 +1,4 @@
-describe TenancyMixin do
+RSpec.describe TenancyMixin do
   let(:root_tenant) do
     Tenant.seed
   end

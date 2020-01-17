@@ -1,4 +1,4 @@
-describe(ServiceAnsiblePlaybook) do
+RSpec.describe(ServiceAnsiblePlaybook) do
   let(:runner_job)      { FactoryBot.create(:embedded_ansible_job) }
   let(:playbook)        { FactoryBot.create(:embedded_playbook) }
   let(:basic_service)   { FactoryBot.create(:service_ansible_playbook, :options => config_info_options) }

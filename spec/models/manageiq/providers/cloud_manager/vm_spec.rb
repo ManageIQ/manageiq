@@ -1,4 +1,4 @@
-describe VmCloud do
+RSpec.describe VmCloud do
   let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
 

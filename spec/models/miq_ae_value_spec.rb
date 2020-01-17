@@ -1,4 +1,4 @@
-describe MiqAeValue do
+RSpec.describe MiqAeValue do
   describe "#to_export_xml" do
     let(:miq_ae_value) do
       described_class.new(

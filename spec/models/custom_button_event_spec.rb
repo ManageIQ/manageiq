@@ -1,4 +1,4 @@
-describe CustomButtonEvent do
+RSpec.describe CustomButtonEvent do
   let(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Vm", :name => "Test Button") }
   let(:ae_entry_point) { "/SYSTEM/PROCESS/Request" }
   let(:cb_event) do

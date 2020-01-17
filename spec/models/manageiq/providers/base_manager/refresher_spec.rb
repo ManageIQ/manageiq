@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::BaseManager::Refresher do
+RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
   context "#initialize" do
     let(:ems1) { FactoryBot.create(:ext_management_system) }
     let(:ems2) { FactoryBot.create(:ext_management_system) }

@@ -1,4 +1,4 @@
-describe MiqServer, "::AtStartup" do
+RSpec.describe MiqServer, "::AtStartup" do
   describe ".clean_dequeued_messages" do
     before do
       _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone

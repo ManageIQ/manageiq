@@ -1,4 +1,4 @@
-describe MiqSearch do
+RSpec.describe MiqSearch do
   describe '#descriptions' do
     it "hashes" do
       srchs = [

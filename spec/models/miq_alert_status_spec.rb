@@ -1,4 +1,4 @@
-describe MiqAlertStatus do
+RSpec.describe MiqAlertStatus do
   let(:ems)                    { FactoryBot.create(:ems_vmware, :name => 'ems') }
   let(:alert)                  { FactoryBot.create(:miq_alert_status) }
   let(:user1)                  { FactoryBot.create(:user, :name => 'user1') }

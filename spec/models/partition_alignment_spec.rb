@@ -1,4 +1,4 @@
-describe "PartitionAlignment" do
+RSpec.describe "PartitionAlignment" do
   context "Running test" do
     before do
       aligned = 64.kilobytes

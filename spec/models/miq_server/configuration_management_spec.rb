@@ -1,4 +1,4 @@
-describe MiqServer, "::ConfigurationManagement" do
+RSpec.describe MiqServer, "::ConfigurationManagement" do
   describe "#settings" do
     shared_examples_for "#settings" do
       it "with no changes in the database" do

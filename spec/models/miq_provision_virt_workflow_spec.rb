@@ -1,4 +1,4 @@
-describe MiqProvisionVirtWorkflow do
+RSpec.describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryBot.create(:miq_provision_virt_workflow) }
 
   context "#new" do

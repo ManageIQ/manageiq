@@ -1,4 +1,4 @@
-describe OrchestrationTemplate do
+RSpec.describe OrchestrationTemplate do
   describe ".find_or_create_by_contents" do
     context "when the template does not exist" do
       let(:query_hash) { FactoryBot.build(:orchestration_template).as_json.symbolize_keys }

@@ -1,4 +1,4 @@
-describe DialogFieldTextBox do
+RSpec.describe DialogFieldTextBox do
   describe "#initialize_value_context" do
     let(:field) do
       described_class.new(

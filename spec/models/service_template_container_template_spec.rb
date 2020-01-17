@@ -1,4 +1,4 @@
-describe ServiceTemplateContainerTemplate do
+RSpec.describe ServiceTemplateContainerTemplate do
   let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
   let(:container_template) { FactoryBot.create(:container_template, :ems_id => ems.id) }
   let(:ems) { FactoryBot.create(:ems_openshift) }

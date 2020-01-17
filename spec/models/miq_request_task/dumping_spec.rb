@@ -1,4 +1,4 @@
-describe MiqRequestTask do
+RSpec.describe MiqRequestTask do
   context "::Dumping" do
     let(:task) { FactoryBot.create(:miq_request_task) }
 

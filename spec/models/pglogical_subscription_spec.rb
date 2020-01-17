@@ -1,4 +1,4 @@
-describe PglogicalSubscription do
+RSpec.describe PglogicalSubscription do
   let(:remote_region1) { ApplicationRecord.my_region_number + 1 }
   let(:remote_region2) { ApplicationRecord.my_region_number + 2 }
   let(:remote_region3) { ApplicationRecord.my_region_number + 3 }

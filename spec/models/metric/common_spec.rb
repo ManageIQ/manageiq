@@ -1,4 +1,4 @@
-describe Metric::Common do
+RSpec.describe Metric::Common do
   let(:host) { FactoryBot.create(:host) }
   let(:metric) do
     FactoryBot.create(:metric_rollup_host_hr,

@@ -1,4 +1,4 @@
-describe DialogFieldTextAreaBox do
+RSpec.describe DialogFieldTextAreaBox do
   let(:dialog_field) { described_class.new }
 
   describe "#normalize_automate_values" do

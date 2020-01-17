@@ -1,4 +1,4 @@
-describe VmReconfigureTask do
+RSpec.describe VmReconfigureTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:ems_vmware)    { FactoryBot.create(:ems_vmware, :zone => zone2) }
   let(:host_hardware) { FactoryBot.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }

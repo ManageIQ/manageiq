@@ -1,4 +1,4 @@
-describe MiqReport, "::Formatting" do
+RSpec.describe MiqReport, "::Formatting" do
   subject { described_class.new(:db => "Vm") }
 
   describe "#format_currency_with_delimiter" do

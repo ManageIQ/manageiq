@@ -1,4 +1,4 @@
-describe Metric::Helper do
+RSpec.describe Metric::Helper do
   before do
     EvmSpecHelper.local_miq_server
   end

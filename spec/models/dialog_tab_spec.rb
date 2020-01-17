@@ -1,4 +1,4 @@
-describe DialogTab do
+RSpec.describe DialogTab do
   let(:dialog_tab) { FactoryBot.build(:dialog_tab, :label => 'tab') }
   context "#validate_children" do
     it "fails without box" do

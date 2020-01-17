@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-describe BinaryBlob do
+RSpec.describe BinaryBlob do
   context "#binary= and #binary" do
     before { @blob = FactoryBot.build(:binary_blob, :name => "test") }
 

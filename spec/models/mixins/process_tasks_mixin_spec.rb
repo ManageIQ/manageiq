@@ -1,4 +1,4 @@
-describe ProcessTasksMixin do
+RSpec.describe ProcessTasksMixin do
   let(:test_class) do
     Class.new(ApplicationRecord) do
       include ProcessTasksMixin

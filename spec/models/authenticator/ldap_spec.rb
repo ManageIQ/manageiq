@@ -1,4 +1,4 @@
-describe Authenticator::Ldap do
+RSpec.describe Authenticator::Ldap do
   subject { Authenticator::Ldap.new(config) }
   let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
   let(:config) do

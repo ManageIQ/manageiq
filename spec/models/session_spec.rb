@@ -1,4 +1,4 @@
-describe Session do
+RSpec.describe Session do
   describe "#raw_data" do
     it "returns the unmarshaled data" do
       session = FactoryBot.build(:session, :data => "BAh7BjoLdXNlcmlkSSIKYWRtaW4GOgZFVA==\n")

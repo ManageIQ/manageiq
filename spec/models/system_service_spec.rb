@@ -1,4 +1,4 @@
-describe SystemService do
+RSpec.describe SystemService do
   describe ".svc_type" do
     it "has nice names" do
       ss = FactoryBot.build(:system_service, :svc_type => "4")

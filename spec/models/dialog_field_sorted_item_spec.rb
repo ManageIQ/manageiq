@@ -1,4 +1,4 @@
-describe DialogFieldSortedItem do
+RSpec.describe DialogFieldSortedItem do
   describe "#initialize_value_context" do
     let(:dialog_field) do
       described_class.new(

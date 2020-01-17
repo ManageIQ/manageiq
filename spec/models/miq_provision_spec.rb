@@ -1,4 +1,4 @@
-describe MiqProvision do
+RSpec.describe MiqProvision do
   context "A new provision request," do
     before do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')

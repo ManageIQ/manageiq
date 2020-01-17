@@ -1,4 +1,4 @@
-describe Disk do
+RSpec.describe Disk do
   include Spec::Support::ArelHelper
 
   describe ".used_disk_storage" do

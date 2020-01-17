@@ -1,4 +1,4 @@
-describe PhysicalServerFirmwareUpdateTask do
+RSpec.describe PhysicalServerFirmwareUpdateTask do
   let(:server)  { FactoryBot.create(:physical_server) }
   let(:src_ids) { [server.id] }
 

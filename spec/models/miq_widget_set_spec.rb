@@ -1,4 +1,4 @@
-describe MiqWidgetSet do
+RSpec.describe MiqWidgetSet do
   let(:group) { user.current_group }
   let(:user)  { FactoryBot.create(:user_with_group) }
   before do

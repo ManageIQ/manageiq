@@ -1,6 +1,6 @@
 require 'bcrypt'
 
-describe "User Password" do
+RSpec.describe "User Password" do
   context "With admin user" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone

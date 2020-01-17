@@ -1,4 +1,4 @@
-describe MiqServer do
+RSpec.describe MiqServer do
   context "WorkerManagement::Monitor::SystemLimits" do
     before do
       _, @server, = EvmSpecHelper.create_guid_miq_server_zone

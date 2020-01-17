@@ -1,4 +1,4 @@
-describe Metric do
+RSpec.describe Metric do
   include Spec::Support::MetricHelper
 
   before do

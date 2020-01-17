@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::AnsibleRoleWorkflow do
+RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
   let(:job)          { described_class.create_job(*options).tap { |job| job.state = state } }
   let(:role_options) { {:role_name => 'role_name', :roles_path => '/path/to/role', :role_skip_facts => true } }
   let(:options)      { [{"ENV" => "VAR"}, {"arg1" => "val1"}, role_options, {:verbosity => 4}] }

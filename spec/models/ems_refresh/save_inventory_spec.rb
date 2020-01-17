@@ -1,4 +1,4 @@
-describe EmsRefresh::SaveInventory do
+RSpec.describe EmsRefresh::SaveInventory do
   context ".save_vms_inventory" do
     before do
       @zone = FactoryBot.create(:zone)

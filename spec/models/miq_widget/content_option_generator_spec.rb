@@ -1,4 +1,4 @@
-describe MiqWidget::ContentOptionGenerator do
+RSpec.describe MiqWidget::ContentOptionGenerator do
   let(:content_option_generator) { described_class.new }
 
   describe "#generate" do

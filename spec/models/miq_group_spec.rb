@@ -1,4 +1,4 @@
-describe MiqGroup do
+RSpec.describe MiqGroup do
   include Spec::Support::ArelHelper
 
   describe "#settings" do

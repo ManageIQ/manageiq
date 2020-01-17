@@ -1,4 +1,4 @@
-describe Dialog::AnsibleTowerJobTemplateDialogService do
+RSpec.describe Dialog::AnsibleTowerJobTemplateDialogService do
   let(:template) { FactoryBot.create(:ansible_configuration_script) }
   let(:survey) do
     "{\"spec\":[{\"index\": 0, \"question_name\": \"Param1\", \"min\": 10, \

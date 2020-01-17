@@ -1,4 +1,4 @@
-describe PxeMenuPxelinux do
+RSpec.describe PxeMenuPxelinux do
   before do
     @contents = <<-PXEMENU
 default vesamenu.c32

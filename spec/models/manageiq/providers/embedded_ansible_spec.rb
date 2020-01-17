@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible do
   describe ".seed" do
     let(:provider) { ManageIQ::Providers::EmbeddedAnsible::Provider.first }
     let(:manager)  { provider.automation_manager }

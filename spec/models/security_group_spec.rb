@@ -1,4 +1,4 @@
-describe SecurityGroup do
+RSpec.describe SecurityGroup do
   include Spec::Support::ArelHelper
 
   describe ".non_cloud_network" do

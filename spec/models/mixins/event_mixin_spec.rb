@@ -1,4 +1,4 @@
-describe EventMixin do
+RSpec.describe EventMixin do
   context "Included in a test class with events" do
     let(:test_class) do
       Class.new do

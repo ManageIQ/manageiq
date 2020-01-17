@@ -1,4 +1,4 @@
-describe ServiceTemplateAnsibleTower do
+RSpec.describe ServiceTemplateAnsibleTower do
   let(:ra1) { FactoryBot.create(:resource_action, :action => 'Provision') }
   let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
   let(:service_dialog) { FactoryBot.create(:dialog) }

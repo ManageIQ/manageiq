@@ -1,4 +1,4 @@
-describe "Queue Management" do
+RSpec.describe "Queue Management" do
   let(:server) { EvmSpecHelper.local_miq_server }
 
   describe "#ntp_reload_queue" do

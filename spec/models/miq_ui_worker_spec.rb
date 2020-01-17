@@ -1,4 +1,4 @@
-describe MiqUiWorker do
+RSpec.describe MiqUiWorker do
   context ".all_ports_in_use" do
     before do
       require 'util/miq-process'

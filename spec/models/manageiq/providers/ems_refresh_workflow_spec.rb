@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmsRefreshWorkflow do
+RSpec.describe ManageIQ::Providers::EmsRefreshWorkflow do
   context '.create_job' do
     it 'leaves job waiting to start' do
       options = {}

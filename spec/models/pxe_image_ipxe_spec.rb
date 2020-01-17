@@ -1,4 +1,4 @@
-describe PxeImageIpxe do
+RSpec.describe PxeImageIpxe do
   let(:image) { FactoryBot.create(:pxe_image_ipxe) }
 
   context "#build_pxe_contents" do

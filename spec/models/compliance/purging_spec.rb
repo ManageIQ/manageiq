@@ -1,4 +1,4 @@
-describe Compliance do
+RSpec.describe Compliance do
   context "::Purging" do
     context ".purge_queue" do
       before do

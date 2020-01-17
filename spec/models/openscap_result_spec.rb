@@ -1,4 +1,4 @@
-describe OpenscapResult do
+RSpec.describe OpenscapResult do
   let(:openscap_result) { described_class.new(:id => 17) }
   context "#html" do
     it "raises exception if there is no blob" do

@@ -1,4 +1,4 @@
-describe "MiqWorker Monitor" do
+RSpec.describe "MiqWorker Monitor" do
   context "After Setup," do
     before do
       allow(MiqWorker).to receive(:nice_increment).and_return("+10")

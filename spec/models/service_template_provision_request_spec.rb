@@ -1,4 +1,4 @@
-describe ServiceTemplateProvisionRequest do
+RSpec.describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryBot.create(:user_admin) }
   context "with multiple tasks" do
     before do

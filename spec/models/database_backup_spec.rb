@@ -1,4 +1,4 @@
-describe DatabaseBackup do
+RSpec.describe DatabaseBackup do
   context "region" do
     let!(:region) { FactoryBot.create(:miq_region, :region => 3) }
 

@@ -1,4 +1,4 @@
-describe GuestDevice do
+RSpec.describe GuestDevice do
   let!(:vm_gd) { FactoryBot.create(:guest_device_nic) }
   let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [vm_gd])) }
 

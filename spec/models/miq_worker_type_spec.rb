@@ -1,4 +1,4 @@
-describe MiqWorkerType do
+RSpec.describe MiqWorkerType do
   describe ".seed" do
     before { described_class.seed }
 

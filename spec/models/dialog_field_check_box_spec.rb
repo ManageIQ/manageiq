@@ -1,4 +1,4 @@
-describe DialogFieldCheckBox do
+RSpec.describe DialogFieldCheckBox do
   describe "#checked?" do
     let(:dialog_field) { described_class.new(:value => value) }
 

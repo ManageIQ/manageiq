@@ -1,4 +1,4 @@
-describe ServiceTemplateCatalog do
+RSpec.describe ServiceTemplateCatalog do
   let(:root_tenant) do
     Tenant.seed
   end

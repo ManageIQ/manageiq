@@ -1,4 +1,4 @@
-describe FileDepotNfs do
+RSpec.describe FileDepotNfs do
   let(:uri)            { "nfs://ignore.com/directory" }
   let(:actual_uri)     { "nfs://actual_bucket/doo_directory" }
   let(:file_depot_nfs) { FileDepotNfs.new(:uri => uri) }

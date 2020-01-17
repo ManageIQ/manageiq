@@ -1,4 +1,4 @@
-describe ContainerImageRegistry do
+RSpec.describe ContainerImageRegistry do
   it "#full_name" do
     reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io")
     expect(reg.full_name).to eq("docker.io")

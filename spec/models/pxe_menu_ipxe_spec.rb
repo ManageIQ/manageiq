@@ -1,4 +1,4 @@
-describe PxeMenuIpxe do
+RSpec.describe PxeMenuIpxe do
   before do
     @contents = <<-PXEMENU
 #!ipxe

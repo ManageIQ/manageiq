@@ -1,4 +1,4 @@
-describe "MiqSchedule Filter" do
+RSpec.describe "MiqSchedule Filter" do
   context "Getting schedule targets" do
     before do
       @server1 = EvmSpecHelper.local_miq_server

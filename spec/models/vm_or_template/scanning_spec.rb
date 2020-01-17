@@ -1,4 +1,4 @@
-describe VmOrTemplate::Scanning do
+RSpec.describe VmOrTemplate::Scanning do
   describe ".scan_timeout_adjustment_multiplier" do
     it "when called for Template class, returns numeric value" do
       expect(MiqTemplate.scan_timeout_adjustment_multiplier).to be_kind_of(Numeric)

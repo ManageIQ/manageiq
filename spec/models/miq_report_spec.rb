@@ -38,7 +38,7 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
   end
 end
 
-describe MiqReport do
+RSpec.describe MiqReport do
   include Spec::Support::ChargebackHelper
 
   context ".for_user" do

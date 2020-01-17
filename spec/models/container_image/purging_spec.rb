@@ -1,4 +1,4 @@
-describe ContainerImage do
+RSpec.describe ContainerImage do
   context "::Purging" do
     context ".purge_queue" do
       before do

@@ -1,4 +1,4 @@
-describe Authentication do
+RSpec.describe Authentication do
   describe ".set_ownership" do
     let!(:authentication) { FactoryBot.create(:authentication) }
     let(:tenant) { FactoryBot.create(:tenant) }

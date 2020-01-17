@@ -1,4 +1,4 @@
-describe MiqRemoteConsoleWorker::Runner do
+RSpec.describe MiqRemoteConsoleWorker::Runner do
   describe '#check_internal_thread' do
     subject do
       w = described_class.allocate

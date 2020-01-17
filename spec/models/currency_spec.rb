@@ -1,4 +1,4 @@
-describe Currency do
+RSpec.describe Currency do
   describe '.seed' do
     it "returns supported currencies" do
       Currency.seed

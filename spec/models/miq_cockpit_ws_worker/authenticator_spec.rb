@@ -1,4 +1,4 @@
-describe MiqCockpitWsWorker::Authenticator do
+RSpec.describe MiqCockpitWsWorker::Authenticator do
   describe '#authenticate_for_host' do
     before do
       @auth = MiqCockpitWsWorker::Authenticator

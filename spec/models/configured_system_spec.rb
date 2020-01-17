@@ -1,4 +1,4 @@
-describe ConfiguredSystem do
+RSpec.describe ConfiguredSystem do
   it "#counterparts" do
     vm  = FactoryBot.create(:vm)
     cs1 = FactoryBot.create(:configured_system, :counterpart => vm)

@@ -1,4 +1,4 @@
-describe "Service Filter" do
+RSpec.describe "Service Filter" do
   include Spec::Support::ServiceTemplateHelper
 
   before do

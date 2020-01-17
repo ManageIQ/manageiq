@@ -1,4 +1,4 @@
-describe Storage do
+RSpec.describe Storage do
   describe "#total_unregistered_vms" do
     let(:ext_management_system)  { FactoryBot.create(:ext_management_system) }
     let(:host)                   { FactoryBot.create(:host) }

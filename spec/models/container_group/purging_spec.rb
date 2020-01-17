@@ -1,4 +1,4 @@
-describe ContainerGroup do
+RSpec.describe ContainerGroup do
   context "::Purging" do
     context ".purge_queue" do
       before do

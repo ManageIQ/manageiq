@@ -1,4 +1,4 @@
-describe MiqScheduleWorker::Jobs do
+RSpec.describe MiqScheduleWorker::Jobs do
   context "#ems_refresh_timer" do
     it "with no EMSes" do
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)

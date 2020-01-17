@@ -1,4 +1,4 @@
-describe ContainerImage do
+RSpec.describe ContainerImage do
   it "#full_name" do
     image = ContainerImage.new(:name => "fedora")
     expect(image.full_name).to eq("fedora")

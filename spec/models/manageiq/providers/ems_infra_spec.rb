@@ -1,4 +1,4 @@
-describe EmsInfra do
+RSpec.describe EmsInfra do
   it ".types" do
     expected_types = [ManageIQ::Providers::Vmware::InfraManager,
                       ManageIQ::Providers::Redhat::InfraManager,

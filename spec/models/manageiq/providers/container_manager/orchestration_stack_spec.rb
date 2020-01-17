@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::ContainerManager::OrchestrationStack do
+RSpec.describe ManageIQ::Providers::ContainerManager::OrchestrationStack do
   let(:stack) { FactoryBot.create(:orchestration_stack_container) }
 
   describe '#retire_now' do

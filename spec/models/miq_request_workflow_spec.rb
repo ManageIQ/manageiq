@@ -1,4 +1,4 @@
-describe MiqRequestWorkflow do
+RSpec.describe MiqRequestWorkflow do
   let(:workflow) { FactoryBot.build(:miq_provision_workflow) }
   let(:ems) { FactoryBot.create(:ext_management_system) }
   let(:resource_pool) { FactoryBot.create(:resource_pool) }

@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::Inflector::Methods do
+RSpec.describe ManageIQ::Providers::Inflector::Methods do
   context "#provider_name" do
     it "returns name for an instance" do
       manager = ManageIQ::Providers::Amazon::CloudManager.new

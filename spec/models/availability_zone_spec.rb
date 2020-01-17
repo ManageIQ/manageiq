@@ -1,4 +1,4 @@
-describe AvailabilityZone do
+RSpec.describe AvailabilityZone do
   it ".available" do
     FactoryBot.create(:availability_zone_amazon)
     FactoryBot.create(:availability_zone_openstack)

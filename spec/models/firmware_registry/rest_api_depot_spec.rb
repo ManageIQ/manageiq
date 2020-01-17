@@ -1,4 +1,4 @@
-describe FirmwareRegistry::RestApiDepot do
+RSpec.describe FirmwareRegistry::RestApiDepot do
   before do
     VCR.configure do |config|
       config.filter_sensitive_data('AUTHORIZATION') { Base64.encode64("#{user}:#{pass}").chomp }

@@ -1,4 +1,4 @@
-describe ServiceTemplateProvisionRequest do
+RSpec.describe ServiceTemplateProvisionRequest do
   include Spec::Support::QuotaHelper
   include Spec::Support::ServiceTemplateHelper
 

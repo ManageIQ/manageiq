@@ -1,4 +1,4 @@
-describe AuthenticationMixin do
+RSpec.describe AuthenticationMixin do
   include Spec::Support::ArelHelper
 
   let(:host)            { FactoryBot.create(:host) }

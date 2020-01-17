@@ -1,4 +1,4 @@
-describe PolicyEvent do
+RSpec.describe PolicyEvent do
   context "::Purging" do
     context ".purge_timer" do
       before do

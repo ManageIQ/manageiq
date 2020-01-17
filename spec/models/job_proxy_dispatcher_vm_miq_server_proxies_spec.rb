@@ -1,4 +1,4 @@
-describe "JobProxyDispatcherVmMiqServerProxies" do
+RSpec.describe "JobProxyDispatcherVmMiqServerProxies" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do

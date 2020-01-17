@@ -1,4 +1,4 @@
-describe ChargebackRateDetail do
+RSpec.describe ChargebackRateDetail do
   let(:field) { FactoryBot.build(:chargeable_field) }
   describe "#chargeback_rate" do
     it "is invalid without a valid chargeback_rate" do

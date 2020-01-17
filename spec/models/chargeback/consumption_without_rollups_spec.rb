@@ -1,4 +1,4 @@
-describe Chargeback::ConsumptionWithoutRollups do
+RSpec.describe Chargeback::ConsumptionWithoutRollups do
   let(:cores) { 7 }
   let(:mem_mb) { 1777 }
   let(:disk_size) { 12_345 }

@@ -1,4 +1,4 @@
-describe PhysicalServerProvisionRequest do
+RSpec.describe PhysicalServerProvisionRequest do
   it '.TASK_DESCRIPTION' do
     expect(described_class::TASK_DESCRIPTION).to eq('Physical Server Provisioning')
   end

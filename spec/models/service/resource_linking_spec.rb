@@ -1,4 +1,4 @@
-describe Service do
+RSpec.describe Service do
   describe '#add_provider_vms' do
     let(:service)  { FactoryBot.create(:service, :evm_owner => FactoryBot.create(:user)) }
     let(:provider) { FactoryBot.create(:ems_vmware) }

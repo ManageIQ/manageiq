@@ -1,4 +1,4 @@
-describe MiqAeMethod do
+RSpec.describe MiqAeMethod do
   let(:user) { FactoryBot.create(:user_with_group) }
   it "should return editable as false if the parent namespace/class is not editable" do
     n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)

@@ -1,4 +1,4 @@
-describe MiqReportResult::ResultSetOperations do
+RSpec.describe MiqReportResult::ResultSetOperations do
   describe ".result_set_for_reporting" do
     let(:result_set_options_base) { {'limit' => '1000'} }
 

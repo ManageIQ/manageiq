@@ -1,4 +1,4 @@
-describe MiqWorker::Runner do
+RSpec.describe MiqWorker::Runner do
   context "#start" do
     before do
       allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)

@@ -1,4 +1,4 @@
-describe GenericObjectDefinition do
+RSpec.describe GenericObjectDefinition do
   let(:definition) do
     FactoryBot.create(
       :generic_object_definition,

@@ -1,4 +1,4 @@
-describe MiqApproval do
+RSpec.describe MiqApproval do
   it "#approver= also sets approver_name" do
     approval = FactoryBot.build(:miq_approval)
     user     = FactoryBot.create(:user)

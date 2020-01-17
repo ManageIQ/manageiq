@@ -1,4 +1,4 @@
-describe MiqEnterprise do
+RSpec.describe MiqEnterprise do
   include_examples ".seed called multiple times"
 
   let(:enterprise) { FactoryBot.create(:miq_enterprise) }

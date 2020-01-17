@@ -1,4 +1,4 @@
-describe Lan do
+RSpec.describe Lan do
   let(:lan) { FactoryBot.create(:lan) }
   let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [FactoryBot.create(:guest_device_nic, :lan => lan)])) }
   let!(:template) { FactoryBot.create(:template_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [FactoryBot.create(:guest_device_nic, :lan => lan)])) }

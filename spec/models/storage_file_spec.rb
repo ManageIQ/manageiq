@@ -1,4 +1,4 @@
-describe StorageFile do
+RSpec.describe StorageFile do
   context "#is_snapshot_disk_file" do
     it "false if NOT .vmdk extension" do
       stub_file = double(:ext_name => 'txt')

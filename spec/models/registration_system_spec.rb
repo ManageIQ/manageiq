@@ -1,6 +1,6 @@
 require "tempfile"
 
-describe RegistrationSystem do
+RSpec.describe RegistrationSystem do
   let(:creds) { {:userid => "SomeUser", :password => "SomePass"} }
   let(:proxy_creds) { {:userid => "bob", :password => "pass"} }
   before do

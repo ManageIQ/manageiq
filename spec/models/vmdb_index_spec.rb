@@ -1,4 +1,4 @@
-describe VmdbIndex do
+RSpec.describe VmdbIndex do
   context "#capture_metrics" do
     let(:index) { FactoryBot.create(:vmdb_index, :name => "accounts_pkey") }
 

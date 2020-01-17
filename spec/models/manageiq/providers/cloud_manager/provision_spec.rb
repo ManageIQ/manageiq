@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::Provision do
+RSpec.describe ManageIQ::Providers::CloudManager::Provision do
   context "Cloning" do
     let(:provider) { FactoryBot.create(:ems_cloud) }
     let(:template) { FactoryBot.create(:template_cloud, :ext_management_system => provider) }

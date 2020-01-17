@@ -1,4 +1,4 @@
-describe TemplateInfra do
+RSpec.describe TemplateInfra do
   context "#post_create_actions" do
     it "without a host relationship" do
       expect(subject).to receive(:reconnect_events)

@@ -1,4 +1,4 @@
-describe Metric::Statistic do
+RSpec.describe Metric::Statistic do
   context ".calculate_stat_columns" do
     let(:ems_openshift) do
       FactoryBot.create(:ems_openshift, :hostname => 't', :port => 8443, :name => 't')
