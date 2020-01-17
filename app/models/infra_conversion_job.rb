@@ -53,7 +53,10 @@ class InfraConversionJob < Job
         'aborting_virtv2v'        => 'powering_on_vm'
       },
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
-      :mark_vm_migrated                     => {'running_migration_playbook' => 'marking_vm_migrated'},
+      :mark_vm_migrated                     => {
+        'powering_on_vm'             => 'marking_vm_migrated',
+        'running_migration_playbook' => 'marking_vm_migrated'
+      },
       :poll_automate_state_machine          => {
         'powering_on_vm'      => 'running_in_automate',
         'marking_vm_migrated' => 'running_in_automate',
@@ -546,7 +549,7 @@ class InfraConversionJob < Job
   rescue StandardError
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
-    queue_signal(:mark_vm_migrated)
+    queue_signal(:poll_automate_state_machine)
   end
 
   def poll_power_on_vm_complete
@@ -572,9 +575,11 @@ class InfraConversionJob < Job
   end
 
   def mark_vm_migrated
+    update_migration_task_progress(:on_entry)
     migration_task.mark_vm_migrated
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
+    update_migration_task_progress(:on_exit)
   end
 
   def abort_virtv2v

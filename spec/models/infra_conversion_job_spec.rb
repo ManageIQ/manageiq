@@ -783,6 +783,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it_behaves_like 'allows poll_power_on_vm_complete signal'
       it_behaves_like 'allows wait_for_ip_address signal'
+      it_behaves_like 'allows mark_vm_migrated signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -801,7 +802,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
-      it_behaves_like 'doesn\'t allow mark_vm_migrated signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
     end
 
