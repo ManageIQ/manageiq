@@ -10,7 +10,7 @@ class EvmServer
 
   def initialize
     $log ||= Rails.logger
-    @servers_to_monitor = MiqEnvironment::Command.is_podified? ? MiqServer.all : [MiqServer.my_server(true)]
+    @servers_to_monitor = servers_from_db
   end
 
   def start
@@ -43,6 +43,7 @@ class EvmServer
 
   def monitor_servers
     loop do
+      refresh_servers_to_monitor
       for_each_server { monitor }
       sleep ::Settings.server.monitor_poll.to_i_with_method
     end
@@ -59,11 +60,35 @@ class EvmServer
     end
   end
 
+  def refresh_servers_to_monitor
+    # Add the server object to our list if we're not monitoring it already
+    servers_from_db.each do |db_server|
+      servers_to_monitor << db_server unless monitoring_server?(db_server)
+    end
+
+    # Remove and shutdown a server if we're monitoring it and it is no longer in the database
+    servers_to_monitor.delete_if do |monitor_server|
+      servers_from_db.none? { |db_server| db_server.id == monitor_server.id }.tap do |should_delete|
+        monitor_server.shutdown if should_delete
+      end
+    end
+  end
+
   def self.start(*args)
     new.start
   end
 
   private
+
+  def monitoring_server?(server)
+    servers_to_monitor.any? do |monitor_server|
+      monitor_server.id == server.id
+    end
+  end
+
+  def servers_from_db
+    MiqEnvironment::Command.is_podified? ? MiqServer.all.to_a : [MiqServer.my_server(true)]
+  end
 
   def set_process_title
     Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)

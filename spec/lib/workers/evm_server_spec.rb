@@ -1,6 +1,82 @@
 require "workers/evm_server"
 
 describe EvmServer do
+  describe ".new" do
+    it "sets the servers_to_monitor to the current server" do
+      server = EvmSpecHelper.local_miq_server
+      servers_to_monitor = subject.servers_to_monitor
+
+      expect(servers_to_monitor.count).to eq(1)
+      expect(servers_to_monitor.first.id).to eq(server.id)
+    end
+
+    context "when podified" do
+      let(:expected_ids) { MiqServer.pluck(:id) }
+
+      before do
+        4.times { FactoryBot.create(:miq_server) }
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      end
+
+      it "sets the servers_to_monitor to all servers" do
+        received_ids = subject.servers_to_monitor.map(&:id)
+
+        expect(received_ids).to match_array(expected_ids)
+      end
+    end
+  end
+
+  describe "#refresh_servers_to_monitor" do
+    it "doesn't change anything when not podified" do
+      server = EvmSpecHelper.local_miq_server
+      servers_to_monitor = subject.servers_to_monitor
+      expect(servers_to_monitor.first.id).to eq(server.id)
+
+      4.times { FactoryBot.create(:miq_server) }
+      subject.refresh_servers_to_monitor
+
+      servers_to_monitor = subject.servers_to_monitor
+      expect(servers_to_monitor.count).to eq(1)
+      expect(servers_to_monitor.first.id).to eq(server.id)
+    end
+
+    context "when podified" do
+      before do
+        FactoryBot.create(:miq_server)
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      end
+
+      it "sets the servers_to_monitor to all servers" do
+        expect(subject.servers_to_monitor.count).to eq(1)
+        expect(subject.servers_to_monitor.first.id).to eq(MiqServer.first.id)
+
+        4.times { FactoryBot.create(:miq_server) }
+        subject.refresh_servers_to_monitor
+
+        expect(subject.servers_to_monitor.count).to eq(5)
+        expect(subject.servers_to_monitor.map(&:id)).to match_array(MiqServer.all.map(&:id))
+      end
+
+      # Note: this is a very important spec
+      # A lot of the data about the current server is stored as instance variables
+      # so losing the particular instance we're using to do worker management would
+      # be a big problem
+      it "doesn't change the existing server instances" do
+        initial_object_id = subject.servers_to_monitor.first.object_id
+
+        4.times { FactoryBot.create(:miq_server) }
+        subject.refresh_servers_to_monitor
+
+        new_objects = subject.servers_to_monitor.map(&:object_id)
+        expect(new_objects).to include(initial_object_id)
+
+        subject.refresh_servers_to_monitor
+
+        expect(subject.servers_to_monitor.map(&:object_id)).to match_array(new_objects)
+      end
+    end
+  end
+
   describe "#for_each_server (private)" do
     it "yields the local server when not podified" do
       server = EvmSpecHelper.local_miq_server
