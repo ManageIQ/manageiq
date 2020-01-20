@@ -51,6 +51,8 @@ describe EvmServer do
         expect(subject.servers_to_monitor.first.id).to eq(MiqServer.first.id)
 
         4.times { FactoryBot.create(:miq_server) }
+        expect(subject).to receive(:impersonate_server).exactly(4).times
+        expect(subject).to receive(:start_server).exactly(4).times
         subject.refresh_servers_to_monitor
 
         expect(subject.servers_to_monitor.count).to eq(5)
@@ -65,6 +67,8 @@ describe EvmServer do
         initial_object_id = subject.servers_to_monitor.first.object_id
 
         4.times { FactoryBot.create(:miq_server) }
+        expect(subject).to receive(:impersonate_server).exactly(4).times
+        expect(subject).to receive(:start_server).exactly(4).times
         subject.refresh_servers_to_monitor
 
         new_objects = subject.servers_to_monitor.map(&:object_id)

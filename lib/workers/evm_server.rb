@@ -61,9 +61,13 @@ class EvmServer
   end
 
   def refresh_servers_to_monitor
-    # Add the server object to our list if we're not monitoring it already
+    # Add the server object to our list and start it if we're not monitoring it already
     servers_from_db.each do |db_server|
-      servers_to_monitor << db_server unless monitoring_server?(db_server)
+      unless monitoring_server?(db_server)
+        servers_to_monitor << db_server
+        impersonate_server(db_server)
+        start_server
+      end
     end
 
     # Remove and shutdown a server if we're monitoring it and it is no longer in the database
