@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::ServiceDialogs do
+RSpec.describe TaskHelpers::Exports::ServiceDialogs do
   let(:buttons) { "the buttons" }
   let(:description1) { "the first description" }
   let(:description2) { "the second description" }

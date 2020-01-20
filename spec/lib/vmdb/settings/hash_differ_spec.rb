@@ -1,4 +1,4 @@
-describe Vmdb::Settings::HashDiffer do
+RSpec.describe Vmdb::Settings::HashDiffer do
   let(:before_hash) do
     {
       :values => {

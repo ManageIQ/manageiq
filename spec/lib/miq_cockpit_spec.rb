@@ -1,4 +1,4 @@
-describe MiqCockpit::WS do
+RSpec.describe MiqCockpit::WS do
   before do
     @server = FactoryBot.create(:miq_server, :hostname => "hostname")
     @miq_server = EvmSpecHelper.local_miq_server

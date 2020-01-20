@@ -1,4 +1,4 @@
-describe Vmdb::Loggers::AzureLogger do
+RSpec.describe Vmdb::Loggers::AzureLogger do
   before do
     @log_stream = StringIO.new
     @log = described_class.new(@log_stream)

@@ -1,4 +1,4 @@
-describe RemoteConsole::ClientAdapter do
+RSpec.describe RemoteConsole::ClientAdapter do
   describe '.new' do
     let(:record) { FactoryBot.create(:system_console, :protocol => protocol, :ssl => ssl) }
     let(:ssl) { false }

@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "fix_auth"
 
-describe FixAuth::FixAuth do
+RSpec.describe FixAuth::FixAuth do
   describe "#fix_database_yml" do
     it "supports --hardcode" do
       subject = described_class.new(:password => 'newpass', :root => '/', :databaseyml => true)

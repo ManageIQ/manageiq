@@ -1,4 +1,4 @@
-describe PdfGenerator do
+RSpec.describe PdfGenerator do
   let(:generator) do
     double("PdfGenerator subclass", :available? => true, :pdf_from_string => "pdf-data")
   end

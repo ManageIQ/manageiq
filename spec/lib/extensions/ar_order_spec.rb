@@ -1,4 +1,4 @@
-describe "ar_order extension" do
+RSpec.describe "ar_order extension" do
   # includes a has_many AND references the has many
   # this introduces a DISTINCT to the query.
   # rails uses limited_ids_for (which calls columns_for_distinct) to run a quick query

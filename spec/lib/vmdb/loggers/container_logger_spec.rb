@@ -1,4 +1,4 @@
-describe Vmdb::Loggers::ContainerLogger::Formatter do
+RSpec.describe Vmdb::Loggers::ContainerLogger::Formatter do
   it "stuff" do
     time = Time.now
     result = described_class.new.call("INFO", time, "some_program", "testing 1, 2, 3")

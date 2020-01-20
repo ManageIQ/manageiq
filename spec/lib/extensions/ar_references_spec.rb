@@ -1,4 +1,4 @@
-describe "ar_references" do
+RSpec.describe "ar_references" do
   describe ".includes_to_references" do
     it "supports none" do
       expect(Vm.includes_to_references(nil)).to eq([])

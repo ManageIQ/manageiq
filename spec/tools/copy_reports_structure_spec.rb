@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require 'copy_reports_structure/report_structure'
 
-describe ReportStructure do
+RSpec.describe ReportStructure do
   let(:group_name) { "SourceGroup" }
   let(:settings) { {"reports_menus" => [["Configuration Management", ["Virtual Machines", ["Vendor and Type"]]]]} }
   let(:role)  { FactoryBot.create(:miq_user_role) }

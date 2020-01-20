@@ -1,4 +1,4 @@
-describe Ansible::Runner do
+RSpec.describe Ansible::Runner do
   let(:uuid)       { "201ac780-7bf4-0136-3b9e-54e1ad8b3cf4" }
   let(:env_vars)   { {"ENV1" => "VAL1", "ENV2" => "VAL2"} }
   let(:extra_vars) { {"id" => uuid} }

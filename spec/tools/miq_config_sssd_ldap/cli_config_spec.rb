@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "miq_config_sssd_ldap/cli_config"
 
-describe MiqConfigSssdLdap::CliConfig do
+RSpec.describe MiqConfigSssdLdap::CliConfig do
   before do
     @all_opts = :tls_cacert, :tls_cacertdir, :domain, :ldaphost, :ldapport, :user_type, :user_suffix, :mode,
                 :bind_dn, :bind_pwd, :only_change_userids, :skip_post_conversion_userid_change

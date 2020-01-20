@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::PolicySets do
+RSpec.describe TaskHelpers::Imports::PolicySets do
   let(:data_dir)            { File.join(File.expand_path(__dir__), 'data', 'policy_sets') }
   let(:policy_set_file)     { 'Policy_Profile_Import_Test.yaml' }
   let(:bad_policy_set_file) { 'Bad_Policy_Profile_Import_Test.yml' }

@@ -1,7 +1,7 @@
 require "dialog_field_importer"
 require "dialog_import_validator"
 
-describe DialogImportService do
+RSpec.describe DialogImportService do
   let(:dialog_import_service) { described_class.new(dialog_field_importer, dialog_import_validator) }
   let(:dialog_field_importer) { double("DialogFieldImporter") }
   let(:dialog_import_validator) { double("DialogImportValidator") }

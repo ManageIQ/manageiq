@@ -1,4 +1,4 @@
-describe "ArExtractObjects" do
+RSpec.describe "ArExtractObjects" do
   context "ArExtractObjectsTest" do
     before do
       vms = (0...2).collect { FactoryBot.create(:vm_vmware) }

@@ -1,6 +1,6 @@
 require "rake"
 
-describe "dialogs" do
+RSpec.describe "dialogs" do
   let(:task_path) { "lib/tasks/dialogs" }
 
   describe "import", :type => :rake_task do

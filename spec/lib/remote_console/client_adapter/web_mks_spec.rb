@@ -1,4 +1,4 @@
-describe RemoteConsole::ClientAdapter::WebMKS do
+RSpec.describe RemoteConsole::ClientAdapter::WebMKS do
   let(:record) { FactoryBot.create(:system_console, :secret => '12345') }
   subject { described_class.new(record, nil) }
 

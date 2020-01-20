@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::Roles do
+RSpec.describe TaskHelpers::Imports::Roles do
   let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'roles') }
   let(:role_file)       { 'Role_Import_Test.yaml' }
   let(:bad_role_file)   { 'Bad_Role_Import_Test.yml' }

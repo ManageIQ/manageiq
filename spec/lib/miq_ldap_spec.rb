@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-describe MiqLdap do
+RSpec.describe MiqLdap do
   before do
     @host     = 'mycompany.com'
 

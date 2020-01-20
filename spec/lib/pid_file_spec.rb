@@ -1,4 +1,4 @@
-describe PidFile do
+RSpec.describe PidFile do
   before do
     @fname = 'foo.bar'
     @pid_file = PidFile.new(@fname)

@@ -1,4 +1,4 @@
-describe PostponedTranslation do
+RSpec.describe PostponedTranslation do
   context "translate" do
     it "calls Kernel#format" do
       pt = PostponedTranslation.new("Test %s") { "foo" }

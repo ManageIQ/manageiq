@@ -2,7 +2,7 @@ require_relative '../interaction_methods'
 
 $LOAD_PATH << Rails.root.join("tools").to_s
 
-describe Openstack::InteractionMethods do
+RSpec.describe Openstack::InteractionMethods do
   let(:host1_data) { {:name => "name1", :connection_state => 'connection_state1', :settings => {}} }
   let(:host2_data) { {:name => "name2", :connection_state => 'connection_state2', :settings => {}} }
   let(:host3_data) { {:name => "name3", :connection_state => 'connection_state', :settings => {}} }

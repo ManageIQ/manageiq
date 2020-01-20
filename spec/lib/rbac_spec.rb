@@ -1,4 +1,4 @@
-describe Rbac do
+RSpec.describe Rbac do
   before { allow(User).to receive_messages(:server_timezone => "UTC") }
 
   describe ".resources_shared_with" do

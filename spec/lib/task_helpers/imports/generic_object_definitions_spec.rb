@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::GenericObjectDefinitions do
+RSpec.describe TaskHelpers::Imports::GenericObjectDefinitions do
   describe "#import" do
     let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'generic_object_definitions') }
     let(:options) { { :source => source, :overwrite => overwrite } }

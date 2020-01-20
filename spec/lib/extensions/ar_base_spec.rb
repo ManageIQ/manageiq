@@ -1,4 +1,4 @@
-describe "ar_base extension" do
+RSpec.describe "ar_base extension" do
   context "with a test class" do
     let(:test_class) do
       Class.new(ActiveRecord::Base) do

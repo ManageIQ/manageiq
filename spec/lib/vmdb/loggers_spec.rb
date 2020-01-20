@@ -1,4 +1,4 @@
-describe Vmdb::Loggers do
+RSpec.describe Vmdb::Loggers do
   let(:log_file) { Rails.root.join("log", "foo.log").to_s }
 
   def in_container_env(example)

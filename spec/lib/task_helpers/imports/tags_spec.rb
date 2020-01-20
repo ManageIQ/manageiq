@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::Tags do
+RSpec.describe TaskHelpers::Imports::Tags do
   let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'tags') }
   let(:tag_file1)       { 'Import_Test.yaml' }
   let(:tag_file2)       { 'Location.yaml' }

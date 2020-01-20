@@ -1,4 +1,4 @@
-describe ActsAsArScope do
+RSpec.describe ActsAsArScope do
   context "AR backed model" do
     # model contains ids of important vms - acts like ar model
     let(:important_vm_model) do

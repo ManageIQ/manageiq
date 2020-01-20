@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports do
+RSpec.describe TaskHelpers::Exports do
   describe '.safe_filename' do
     it 'should return a filename without spaces' do
       filename = TaskHelpers::Exports.safe_filename('filename without spaces')

@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::CustomizationTemplates do
+RSpec.describe TaskHelpers::Exports::CustomizationTemplates do
   let(:template_name) { "Basic root pass template" }
   let(:template_type) { "CustomizationTemplateCloudInit" }
   let(:template_desc) { "This template takes use of rootpassword defined in the UI" }

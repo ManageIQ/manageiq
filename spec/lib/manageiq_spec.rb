@@ -8,7 +8,7 @@
 
 require 'manageiq'
 
-describe ManageIQ do
+RSpec.describe ManageIQ do
   def without_rails(rb_cmd)
     miq_lib_file = Rails.root.join("lib", "manageiq.rb")
     `#{Gem.ruby} -e 'require "#{miq_lib_file}"; print #{rb_cmd}'`

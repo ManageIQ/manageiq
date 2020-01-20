@@ -1,4 +1,4 @@
-describe UuidMixin do
+RSpec.describe UuidMixin do
   let(:test_class) do
     Class.new(ActiveRecord::Base) do
       def self.name; "TestClass"; end

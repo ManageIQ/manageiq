@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::Tags do
+RSpec.describe TaskHelpers::Exports::Tags do
   let(:parent)      { FactoryBot.create(:classification, :name => "export_test_category",   :description => "Export Test") }
   let(:def_parent)  { FactoryBot.create(:classification, :name => "default_test_category",  :description => "Default Export Test",   :default => true) }
   let(:def_parent2) { FactoryBot.create(:classification, :name => "default_test2_category", :description => "Default Export Test 2", :default => true) }

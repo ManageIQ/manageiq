@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::AlertSets do
+RSpec.describe TaskHelpers::Imports::AlertSets do
   let(:data_dir)           { File.join(File.expand_path(__dir__), 'data', 'alert_sets') }
   let(:alert_set_file)     { 'Alert_Profile_VM_Import_Test.yaml' }
   let(:bad_alert_set_file) { 'Bad_Alert_Profile_Host_Import_Test.yml' }
