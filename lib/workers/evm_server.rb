@@ -38,6 +38,7 @@ class EvmServer
   end
 
   def start_servers
+    refresh_servers_to_monitor
     for_each_server { start_server }
   end
 
