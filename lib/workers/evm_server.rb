@@ -92,7 +92,7 @@ class EvmServer
   end
 
   def servers_from_db
-    MiqEnvironment::Command.is_podified? ? MiqServer.all.to_a : [MiqServer.my_server(true)]
+    MiqEnvironment::Command.is_podified? ? MiqServer.in_my_region.to_a : [MiqServer.my_server(true)]
   end
 
   def set_process_title
