@@ -275,15 +275,20 @@ class EvmServer
   # contents of the global ::Settings constant.
   ######################################################################
   def for_each_server
+    initial_server = @server
     servers_to_monitor.each do |s|
       impersonate_server(s)
       yield
     end
   ensure
-    clear_server_caches
+    clear_server_caches if @server != initial_server
   end
 
   def impersonate_server(s)
+    return if s == @server
+
+    # generic log message to say we're switching servers?
+
     MiqServer.my_guid = s.guid
     # It is important that we continue to use the same server instance here.
     # A lot of "global" state is stored in instance variables on the server.
