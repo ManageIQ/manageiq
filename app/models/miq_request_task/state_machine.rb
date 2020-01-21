@@ -80,6 +80,7 @@ module MiqRequestTask::StateMachine
       :deliver_on     => 10.seconds.from_now.utc,
       :zone           => my_zone,
       :role           => my_role,
+      :queue_name     => my_queue_name,
       :tracking_label => tracking_label_id,
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
