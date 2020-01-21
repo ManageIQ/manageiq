@@ -10,6 +10,10 @@ describe EvmServer do
       expect(servers_to_monitor.first.id).to eq(server.id)
     end
 
+    it "doesn't give a nil server when there is no local server" do
+      expect(subject.servers_to_monitor).to be_empty
+    end
+
     context "when podified" do
       let(:expected_ids) { MiqServer.pluck(:id) }
 
