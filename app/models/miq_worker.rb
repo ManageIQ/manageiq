@@ -272,7 +272,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.create_worker_record(*params)
-    init_worker_object(*params).tap(&:save)
+    init_worker_object(*params).tap(&:save!)
   end
 
   def self.start_worker(*params)
