@@ -27,14 +27,14 @@ class ServiceOrchestration < Service
   end
 
   def deploy_orchestration_stack
-    deploy_stack_options = stack_options
     job_options = {
-      :create_options            => deploy_stack_options,
+      :create_options            => stack_options,
       :orchestration_manager_id  => orchestration_manager.id,
       :orchestration_template_id => orchestration_template.id,
       :stack_name                => stack_name,
       :zone                      => my_zone
     }
+    job_options[:execution_ttl] = service_timeout(stack_options, 'provision')
 
     @deploy_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
     update_attributes(:options => options.merge(:deploy_stack_job_id => @deploy_stack_job.id))
@@ -55,6 +55,8 @@ class ServiceOrchestration < Service
       :update_options            => update_options,
       :zone                      => my_zone
     }
+    job_options[:execution_ttl] = service_timeout(update_options, 'reconfigure')
+
     @update_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
     update_attributes(:options => options.merge(:update_stack_job_id => @update_stack_job.id))
     @update_stack_job.signal(:update)
@@ -202,5 +204,9 @@ class ServiceOrchestration < Service
       deploy_stack_job.class.uncached { deploy_stack_job.reload }
     end
     @orchestration_stack = deploy_stack_job.orchestration_stack
+  end
+
+  def service_timeout(hash, action)
+    hash[:execution_ttl] || options[:execution_ttl] || options[automate_timeout_key(action)]
   end
 end
