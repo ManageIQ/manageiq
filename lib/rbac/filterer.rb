@@ -48,6 +48,7 @@ module Rbac
       NetworkRouter
       OrchestrationStack
       OrchestrationTemplate
+      PhysicalServer
       ResourcePool
       SecurityGroup
       Service
