@@ -27,6 +27,19 @@ RSpec.describe VmReconfigureRequest do
     end
   end
 
+  context "#my_queue_name" do
+    it "with valid source should have the VM's queue_name_for_ems_operations" do
+      vm_vmware.update(:ems_id => ems_vmware.id)
+      request.update(:options => {:src_ids => [vm_vmware.id]})
+
+      expect(request.my_queue_name).to eq(vm_vmware.queue_name_for_ems_operations)
+    end
+
+    it "with no source should be nil" do
+      expect(request.my_queue_name).to be_nil
+    end
+  end
+
   describe "#make_request" do
     let(:alt_user) { FactoryBot.create(:user_with_group) }
     it "creates and update a request" do
