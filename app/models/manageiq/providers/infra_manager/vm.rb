@@ -15,6 +15,10 @@ class ManageIQ::Providers::InfraManager::Vm < ::Vm
     super
   end
 
+  def self.display_name(number = 1)
+    n_('Virtual Machine', 'Virtual Machines', number)
+  end
+
   private
 
   def raise_created_event

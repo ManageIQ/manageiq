@@ -1,4 +1,5 @@
-require 'miq_apache'
+class NoFreePortError < StandardError; end
+
 module MiqWebServerWorkerMixin
   extend ActiveSupport::Concern
 
@@ -8,6 +9,8 @@ module MiqWebServerWorkerMixin
     class << self
       attr_accessor :registered_ports
     end
+
+    try(:maximum_workers_count=, 10)
   end
 
   module ClassMethods
@@ -20,16 +23,14 @@ module MiqWebServerWorkerMixin
     end
 
     def preload_for_worker_role
-      # Make these constants globally available
-      ::UiConstants
-
+      raise "Expected database to be seeded via `rake db:seed`." unless EvmDatabase.seeded_primordially?
       configure_secret_token
     end
 
     def configure_secret_token(token = MiqDatabase.first.session_secret_token)
-      return if Rails.application.config.secret_token
+      return if Rails.application.config.secret_key_base
 
-      Rails.application.config.secret_token = token
+      Rails.application.config.secret_key_base = token
 
       # To set a secret token after the Rails.application is initialized,
       # we need to reset the secrets since they are cached:
@@ -38,7 +39,7 @@ module MiqWebServerWorkerMixin
     end
 
     def rails_server
-      ::Settings.server.rails_server
+      "puma"
     end
 
     def all_ports_in_use
@@ -55,7 +56,7 @@ module MiqWebServerWorkerMixin
 
       workers = find_current_or_starting
       current = workers.length
-      desired = self.has_required_role? ? self.workers : 0
+      desired = self.workers
       result  = {:adds => [], :deletes => []}
       ports = all_ports_in_use
 
@@ -89,8 +90,6 @@ module MiqWebServerWorkerMixin
         end
       end
 
-      modify_apache_ports(ports_hash, self::PROTOCOL) if MiqEnvironment::Command.supports_apache?
-
       result
     end
 
@@ -98,62 +97,14 @@ module MiqWebServerWorkerMixin
       Rails.root.join("tmp/pids/rails_server.#{port}.pid")
     end
 
-    def install_apache_proxy_config
-      options = {
-        :member_file    => self::BALANCE_MEMBER_CONFIG_FILE,
-        :redirects_file => self::REDIRECTS_CONFIG_FILE,
-        :method         => self::LB_METHOD,
-        :redirects      => self::REDIRECTS,
-        :cluster        => self::CLUSTER,
-        :protocol       => self::PROTOCOL
-      }
-
-      _log.info("[#{options.inspect}")
-      MiqApache::Conf.install_default_config(options)
-    end
-
-    def modify_apache_ports(ports_hash, protocol)
-      return unless MiqEnvironment::Command.supports_apache?
-      adds    = Array(ports_hash[:adds])
-      deletes = Array(ports_hash[:deletes])
-
-      # Remove any already registered
-      adds -= self.registered_ports
-
-      return false if adds.empty? && deletes.empty?
-
-      conf = MiqApache::Conf.instance(self::BALANCE_MEMBER_CONFIG_FILE)
-
-      unless adds.empty?
-        _log.info("Adding port(s) #{adds.inspect}")
-        conf.add_ports(adds, protocol)
-      end
-
-      unless deletes.empty?
-        _log.info("Removing port(s) #{deletes.inspect}")
-        conf.remove_ports(deletes, protocol)
-      end
-
-      saved = conf.save
-      if saved
-        self.registered_ports += adds
-        self.registered_ports -= deletes
-
-        # Update the apache load balancer regardless but only restart apache
-        # when adding a new port to the balancer.
-        MiqServer.my_server.queue_restart_apache unless adds.empty?
-        _log.info("Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
-      end
-      saved
+    def port_range
+      self::STARTING_PORT...(self::STARTING_PORT + maximum_workers_count)
     end
 
     def reserve_port(ports)
-      index = 0
-      loop do
-        port = self::STARTING_PORT + index
-        return port unless ports.include?(port)
-        index += 1
-      end
+      free_ports = port_range.to_a - ports
+      raise NoFreePortError if free_ports.empty?
+      free_ports.first
     end
   end
 
@@ -171,7 +122,7 @@ module MiqWebServerWorkerMixin
       :server      => self.class.rails_server
     }
 
-    params[:Port] = port.kind_of?(Numeric) ? port : 3000
+    params[:Port] = port.kind_of?(Numeric) ? port : ENV["PORT"] || 3000
     params[:pid]  = self.class.pid_file(params[:Port]).to_s
 
     params
@@ -183,33 +134,7 @@ module MiqWebServerWorkerMixin
 
   def start
     delete_pid_file
-    ENV['PORT'] = port.to_s
-    ENV['MIQ_GUID'] = guid
     super
-  end
-
-  def terminate
-    # HACK: Cannot call exit properly from UiWorker nor can we Process.kill('INT', ...) from inside the worker
-    # Hence, this is an external mechanism for terminating this worker.
-
-    begin
-      _log.info("Terminating #{format_full_log_msg}, status [#{status}]")
-      Process.kill("TERM", pid)
-      # TODO: Variablize and clean up this 10-second-max loop of waiting on Worker to gracefully shut down
-      10.times do
-        unless MiqProcess.alive?(pid)
-          update_attributes(:stopped_on => Time.now.utc, :status => MiqWorker::STATUS_STOPPED)
-          break
-        end
-        sleep 1
-      end
-    rescue Errno::ESRCH
-      _log.warn("#{format_full_log_msg} has been killed")
-    rescue => err
-      _log.warn("#{format_full_log_msg} has been killed, but with the following error: #{err}")
-    end
-
-    kill if MiqProcess.alive?(pid)
   end
 
   def kill

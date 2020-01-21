@@ -6,8 +6,8 @@ linters:
     convention: none
   DuplicateProperty:
     ignore_consecutive:
-      - background
-      - transition
+    - background
+    - transition
   HexLength:
     style: long
   ImportantRule:

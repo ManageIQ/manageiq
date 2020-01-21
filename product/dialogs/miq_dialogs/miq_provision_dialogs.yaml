@@ -32,7 +32,7 @@
           :data_type: :string
         :owner_first_name:
           :description: First Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager:
@@ -52,7 +52,7 @@
           :data_type: :string
         :owner_last_name:
           :description: Last Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager_mail:
@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -659,7 +659,7 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: vLan
+          :description: Virtual Network
           :required: true
           :display: :edit
           :data_type: :string
@@ -732,6 +732,8 @@
             "12288": "12288"
             "16384": "16384"
             "32768": "32768"
+            "65536": "65536"
+            "131072": "131072"
           :description: Memory (MB)
           :required: false
           :display: :edit

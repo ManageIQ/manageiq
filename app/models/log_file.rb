@@ -18,7 +18,7 @@ class LogFile < ApplicationRecord
     zone        = server.zone
     path        = "#{zone.name}_#{zone.id}", "#{server.name}_#{server.id}"
     date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
-    fname       = historical ? "Archive_" : "Current_"
+    fname       = "#{File.basename(loc_file, ".*").capitalize}_"
     fname += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
     dest        = File.join("/", path, fname)
     _log.info("Built relative path: [#{dest}] from source: [#{loc_file}]")
@@ -140,19 +140,12 @@ class LogFile < ApplicationRecord
                    :description => "Default logfile")
   end
 
-  # Added tcp ping stuff here until ftp is refactored into a separate class
-  def self.get_ping_depot_options
-    @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
-  end
-
   def self.ping_timeout
-    get_ping_depot_options
-    @@ping_timeout ||= (@@ping_depot_options[:ping_depot_timeout] || 20)
+    ::Settings.log.collection.ping_depot_timeout
   end
 
   def self.do_ping?
-    get_ping_depot_options
-    @@do_ping ||= @@ping_depot_options[:ping_depot] == true
+    ::Settings.log.collection.ping_depot == true
   end
 
   def upload_log_file_ftp
@@ -162,7 +155,7 @@ class LogFile < ApplicationRecord
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)
-    update_attributes(
+    update(
       :state   => "available",
       :log_uri => uri
     )
@@ -172,7 +165,7 @@ class LogFile < ApplicationRecord
   def upload_log_file_smb
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqSmbSession.new(legacy_depot_hash).add(local_file, uri_to_add)
-    update_attributes(
+    update(
       :state   => "available",
       :log_uri => uri
     )
@@ -187,10 +180,17 @@ class LogFile < ApplicationRecord
     File.join("#{resource.zone.name}_#{resource.zone.id}", "#{resource.name}_#{resource.id}")
   end
 
+  def self.logfile_name(resource, category = "Current", date_string = nil)
+    region = MiqRegion.my_region.try(:region) || "unknown"
+    [category, "region", region, resource.zone.name, resource.zone.id, resource.name, resource.id, date_string].compact.join(" ")
+  end
+
   def destination_file_name
-    date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
-    destname    = historical ? "Archive_" : "Current_"
-    destname << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
+    name.gsub(/\s+/, "_").concat(File.extname(local_file))
+  end
+
+  def name
+    super || self.class.logfile_name(resource)
   end
 
   def post_upload_tasks
@@ -267,4 +267,6 @@ class LogFile < ApplicationRecord
     _log.info("#{log_header} #{msg}")
     task.update_status("Queued", "Ok", msg)
   end
+
+  private_class_method :_request_logs
 end

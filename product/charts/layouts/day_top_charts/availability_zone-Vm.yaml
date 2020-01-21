@@ -1,5 +1,5 @@
 # availability_zone-Vm Top CIs/day chart layouts
---- 
+---
 - :title: Average CPU Used (%)
   :type: Pie
   :columns:

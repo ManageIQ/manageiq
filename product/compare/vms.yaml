@@ -12,7 +12,6 @@ cols:
 - name
 - vendor
 - location
-- last_scan_on
 - retires_on
 - boot_time
 - tools_status
@@ -62,7 +61,7 @@ include:
         - allocated_space
         - size_on_disk
         key:
-        - 
+        -
       cdroms:
         group: Properties
         columns:
@@ -73,7 +72,7 @@ include:
         - present
         - start_connected
         key:
-        - 
+        -
       floppies:
         group: Properties
         columns:
@@ -83,7 +82,7 @@ include:
         - present
         - start_connected
         key:
-        - 
+        -
       nics:
         group: Properties
         columns:
@@ -92,7 +91,7 @@ include:
         - start_connected
         - address
         key:
-        - 
+        -
       volumes:
         group: Properties
         columns:
@@ -195,11 +194,10 @@ include:
     - service_level
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - name
 - vendor
 - location
-- last_scan_on
 - retires_on
 - boot_time
 - tools_status
@@ -300,7 +298,6 @@ headers:
 - Name
 - Vendor
 - Location
-- Last Analysis
 - Retires On
 - Boot Time
 - VMware Tools Status
@@ -397,13 +394,13 @@ headers:
 - Service Level
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order:
 
 # Columns to sort the report on, in order
-sortby: 
+sortby:
 
 # Group rows (y=yes,n=no,c=count)
 group:

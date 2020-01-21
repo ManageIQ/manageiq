@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 # Rails.logger.level = 0
 
 start_ts, end_ts, id_spec = ARGV
@@ -29,17 +32,4 @@ vm_perf_recs.group_by(&:resource_id).sort.each do |resource_id, perfs|
     {:tag_names => perfs.first.vm.perf_tags},
     :id        => perfs.collect(&:id)
   )
-end
-
-host_ids = vm_perf_recs.collect(&:parent_host_id).compact.uniq
-Host.where(:id => host_ids).order(:id).each do |host|
-  puts "Updating performance breakdown by tags for VMs under Host: ID: #{host.id} => #{host.name}"
-
-  host.preload_vim_performance_state_for_ts(time_cond)
-  perf_recs = host.metric_rollups.where(time_cond).where(:capture_interval_name => 'hourly')
-  VimPerformanceTagValue.where(:metric_type => "Host", :metric_id => perf_recs.collect(&:id)).delete_all
-  perf_recs.each do |perf|
-    perf.resource.target = host
-    VimPerformanceTagValue.build_from_performance_record(perf)
-  end
 end

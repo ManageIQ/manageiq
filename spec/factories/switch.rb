@@ -1,4 +1,3 @@
-FactoryGirl.define do
-  factory :switch do
-  end
+FactoryBot.define do
+  factory :switch_vmware, :class => 'ManageIQ::Providers::Vmware::InfraManager::HostVirtualSwitch'
 end

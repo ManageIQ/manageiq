@@ -17,12 +17,20 @@ class ChargebackTier < ApplicationRecord
     end
   end
 
+  def includes?(value)
+    starts_with_zero? && value.zero? || value > start && value.to_f <= finish
+  end
+
   def starts_with_zero?
     start.zero?
   end
 
   def ends_with_infinity?
     finish == Float::INFINITY
+  end
+
+  def gratis?
+    fixed_rate.zero? && variable_rate.zero?
   end
 
   def continuity?

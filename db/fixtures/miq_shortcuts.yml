@@ -1,38 +1,33 @@
 ---
 - :name: dashboard_show
-  :description: Cloud Intel / Dashboard
+  :description: Overview / Dashboard
   :url: /dashboard/show
   :rbac_feature_name: dashboard_view
   :startup: true
-- :name: report_explorer
-  :description: Cloud Intelligence / Reports
+- :name: miq_report
+  :description: Overview / Reports
   :url: /report/explorer
   :rbac_feature_name: miq_report
   :startup: true
-- :name: timelines
-  :description: Cloud Intelligence / Timelines
-  :url: /dashboard/timeline
-  :rbac_feature_name: timeline
+- :name: miq_capacity_utilization
+  :description: Overview / Utilization
+  :url: /utilization
+  :rbac_feature_name: utilization
   :startup: true
-- :name: rss
-  :description: Cloud Intelligence / RSS
-  :url: /alert
-  :rbac_feature_name: rss
+- :name: chargeback
+  :description: Overview / Chargeback
+  :url: /chargeback/explorer
+  :rbac_feature_name: chargeback
   :startup: true
-- :name: service_explorer
+- :name: services
   :description: Services / My Services
   :url: /service/explorer
   :rbac_feature_name: service
   :startup: true
-- :name: catalog_explorer
+- :name: catalogs
   :description: Services / Catalogs
   :url: /catalog/explorer
   :rbac_feature_name: catalog
-  :startup: true
-- :name: requests
-  :description: Services / Requests
-  :url: /miq_request/show_list
-  :rbac_feature_name: miq_request_show_list
   :startup: true
 - :name: vms_myvms
   :description: Services / Workloads / VMs & Instances
@@ -49,212 +44,433 @@
   :url: /vm_or_template/explorer?button=vm_miq_request_new
   :rbac_feature_name: vm_miq_request_new
   :startup: false
+- :name: miq_requests
+  :description: Services / Requests
+  :url: /miq_request/show_list
+  :rbac_feature_name: miq_request_show_list
+  :startup: true
 - :name: ems_clouds
-  :description: Clouds / Providers
+  :description: Compute / Clouds / Providers
   :url: /ems_cloud/show_list
   :rbac_feature_name: ems_cloud_show_list
   :startup: true
-- :name: auth_key_pair_clouds
-  :description: Clouds / Key Pairs
-  :url: /auth_key_pair_cloud/show_list
-  :rbac_feature_name: auth_key_pair_cloud_show_list
-  :startup: true
 - :name: availability_zones
-  :description: Clouds / Availability Zones
+  :description: Compute / Clouds / Availability Zones
   :url: /availability_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
 - :name: host_aggregates
-  :description: Clouds / Host Aggregates
+  :description: Compute / Clouds / Host Aggregates
   :url: /host_aggregate/show_list
   :rbac_feature_name: host_aggregate_show_list
   :startup: true
-- :name: cloud_object_store_containers
-  :description: Clouds / Object Store Containers
-  :url: /cloud_object_store_container/show_list
-  :rbac_feature_name: cloud_object_store_container_show_list
-  :startup: true
 - :name: cloud_tenants
-  :description: Clouds / Tenants
+  :description: Compute / Clouds / Tenants
   :url: /cloud_tenant/show_list
   :rbac_feature_name: cloud_tenant_show_list
   :startup: true
-- :name: cloud_volumes
-  :description: Clouds / Volumes
-  :url: /cloud_volume/show_list
-  :rbac_feature_name: cloud_volume_show_list
-  :startup: true
-- :name: cloud_volumes
-  :description: Clouds / Snapshots
-  :url: /cloud_volume_snapshot/show_list
-  :rbac_feature_name: cloud_volume_snapshot_show_list
-  :startup: true
 - :name: flavors
-  :description: Clouds / Flavors
+  :description: Compute / Clouds / Flavors
   :url: /flavor/show_list
   :rbac_feature_name: flavor_show_list
   :startup: true
 - :name: vm_cloud_instances_accord
-  :description: Clouds / Instances / Instances By Providers
+  :description: Compute / Clouds / Instances / Instances By Providers
   :url: /vm_cloud/explorer?accordion=instances
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
 - :name: vm_cloud_images_accord
-  :description: Clouds / Instances / Images By Providers
+  :description: Compute / Clouds / Instances / Images By Providers
   :url: /vm_cloud/explorer?accordion=images
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
 - :name: vm_cloud_instances_filter_accord
-  :description: Clouds / Instances / Instances
+  :description: Compute / Clouds / Instances / Instances
   :url: /vm_cloud/explorer?accordion=instances_filter
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
 - :name: vm_cloud_images_filter_accord
-  :description: Clouds / Instances / Images
+  :description: Compute / Clouds / Instances / Images
   :url: /vm_cloud/explorer?accordion=images_filter
   :rbac_feature_name: vm_cloud_explorer
   :startup: true
 - :name: cloud_orchestration_stack
-  :description: Clouds / Stacks
+  :description: Compute / Clouds / Stacks
   :url: orchestration_stack/show_list
-  :rbac_feature_name: orchestration_stack
+  :rbac_feature_name: orchestration_stack_show_list
+  :startup: true
+- :name: auth_key_pair_clouds
+  :description: Compute / Clouds / Key Pairs
+  :url: /auth_key_pair_cloud/show_list
+  :rbac_feature_name: auth_key_pair_cloud_show_list
+  :startup: true
+- :name: cloud_topology
+  :description: Compute / Clouds / Topology
+  :url: /cloud_topology
+  :rbac_feature_name: cloud_topology_view
+  :startup: true
+- :name: ems_infras
+  :description: Compute / Infrastructure / Providers
+  :url: /ems_infra
+  :rbac_feature_name: ems_infra_show_list
+  :startup: true
+- :name: ems_clusters
+  :description: Compute / Infrastructure / Clusters
+  :url: /ems_cluster
+  :rbac_feature_name: ems_cluster_show_list
+  :startup: true
+- :name: hosts
+  :description: Compute / Infrastructure / Hosts / Nodes
+  :url: /host
+  :rbac_feature_name: host_show_list
+  :startup: true
+- :name: vms_vandt
+  :description: Compute / Infrastructure / Virtual Machines / VMs & Templates
+  :url: /vm_infra/explorer?accordion=vandt
+  :rbac_feature_name: vandt_accord
+  :startup: true
+- :name: vms
+  :description: Compute / Infrastructure / Virtual Machines / VMs
+  :url: /vm_infra/explorer?accordion=vms_filter
+  :rbac_feature_name: vms_filter_accord
+  :startup: true
+- :name: templates
+  :description: Compute / Infrastructure / Virtual Machines / Templates
+  :url: /vm_infra/explorer?accordion=templates_filter
+  :rbac_feature_name: templates_filter_accord
+  :startup: true
+- :name: resource_pools
+  :description: Compute / Infrastructure / Resource Pools
+  :url: /resource_pool/show_list
+  :rbac_feature_name: resource_pool_show_list
+  :startup: true
+- :name: storage
+  :description: Compute / Infrastructure / Datastores
+  :url: /storage/show_list
+  :rbac_feature_name: storage_show_list
+  :startup: true
+- :name: pxe
+  :description: Compute / Infrastructure / PXE
+  :url: /pxe/explorer
+  :rbac_feature_name: pxe
+  :startup: true
+- :name: infra_networking
+  :description: Compute / Infrastructure / Networking
+  :url: /infra_networking/explorer
+  :rbac_feature_name: infra_networking
+  :startup: true
+- :name: infra_topology
+  :description: Compute / Infrastructure / Topology
+  :url: /infra_topology
+  :rbac_feature_name: infra_topology_view
+  :startup: true
+- :name: physical_infra_overview
+  :description: Compute / Physical Infrastructure / Overview
+  :url: /physical_infra_overview/show
+  :rbac_feature_name: physical_infra_overview
+  :startup: true
+- :name: ems_physical_infra
+  :description: Compute / Physical Infrastructure / Providers
+  :url: /ems_physical_infra/show_list
+  :rbac_feature_name: ems_physical_infra_show_list
+  :startup: true
+- :name: physical_chassis
+  :description: Compute / Physical Infrastructure / Chassis
+  :url: /physical_chassis/show_list
+  :rbac_feature_name: physical_chassis_show_list
+  :startup: true
+- :name: physical_rack
+  :description: Compute / Physical Infrastructure / Racks
+  :url: /physical_rack/show_list
+  :rbac_feature_name: physical_rack_show_list
+  :startup: true
+- :name: physical_server
+  :description: Compute / Physical Infrastructure / Servers
+  :url: /physical_server/show_list
+  :rbac_feature_name: physical_server_show_list
+  :startup: true
+- :name: physical_storage
+  :description: Compute / Physical Infrastructure / Storages
+  :url: /physical_storage/show_list
+  :rbac_feature_name: physical_storage_show_list
+  :startup: true
+- :name: physical_switch
+  :description: Compute / Physical Infrastructure / Switches
+  :url: /physical_switch/show_list
+  :rbac_feature_name: physical_switch_show_list
+  :startup: true
+- :name: physical_infra_topology
+  :description: Compute / Physical Infrastructure / Topology
+  :url: /physical_infra_topology/show
+  :rbac_feature_name: physical_infra_topology
+  :startup: true
+- :name: container_dashboard
+  :description: Compute / Containers / Overview
+  :url: /container_dashboard
+  :rbac_feature_name: container_dashboard
+  :startup: true
+- :name: ems_containers
+  :description: Compute / Containers / Providers
+  :url: /ems_container/show_list
+  :rbac_feature_name: ems_container_show_list
+  :startup: true
+- :name: container_projects
+  :description: Compute / Containers / Projects
+  :url: /container_project/show_list
+  :rbac_feature_name: container_project_show_list
+  :startup: true
+- :name: container_routes
+  :description: Compute / Containers / Routes
+  :url: /container_route/show_list
+  :rbac_feature_name: container_route_show_list
+  :startup: true
+- :name: container_services
+  :description: Compute / Containers / Container Services
+  :url: /container_service/show_list
+  :rbac_feature_name: container_service_show_list
+  :startup: true
+- :name: container_replicators
+  :description: Compute / Containers / Replicators
+  :url: /container_replicator/show_list
+  :rbac_feature_name: container_replicator_show_list
+  :startup: true
+- :name: container_groups
+  :description: Compute / Containers / Pods
+  :url: /container_group/show_list
+  :rbac_feature_name: container_group_show_list
+  :startup: true
+- :name: containers
+  :description: Compute / Containers / Containers
+  :url: /container/show_list
+  :rbac_feature_name: container
+  :startup: true
+- :name: container_nodes
+  :description: Compute / Containers / Container Nodes
+  :url: /container_node/show_list
+  :rbac_feature_name: container_node_show_list
+  :startup: true
+- :name: persistent_volumes
+  :description: Compute / Containers / Volumes
+  :url: /persistent_volume/show_list
+  :rbac_feature_name: persistent_volume_show_list
+  :startup: true
+- :name: container_builds
+  :description: Compute / Containers / Container Builds
+  :url: /container_build/show_list
+  :rbac_feature_name: container_build_show_list
+  :startup: true
+- :name: container_image_registries
+  :description: Compute / Containers / Image Registries
+  :url: /container_image_registry/show_list
+  :rbac_feature_name: container_image_registry_show_list
+  :startup: true
+- :name: container_images
+  :description: Compute / Containers / Container Images
+  :url: /container_image/show_list
+  :rbac_feature_name: container_image_show_list
+  :startup: true
+- :name: container_templates
+  :description: Compute / Containers / Container Templates
+  :url: /container_template/show_list
+  :rbac_feature_name: container_template_show_list
+  :startup: true
+- :name: container_topology
+  :description: Compute / Containers / Topology
+  :url: /container_topology
+  :rbac_feature_name: container_topology_view
+  :startup: true
+- :name: migration
+  :description: Migration / Migration Plans
+  :url: /migration/#plans
+  :rbac_feature_name: migration
+  :startup: true
+- :name: mappings
+  :description: Migration / Infrastructure Mappings
+  :url: /migration/#mappings
+  :rbac_feature_name: mappings
+  :startup: true
+- :name: migration_settings
+  :description: Migration / Migration Settings
+  :url: /migration/#settings
+  :rbac_feature_name: migration_settings
+  :startup: true
+- :name: configuration_management
+  :description: Configuration / Management
+  :url: provider_foreman/explorer
+  :rbac_feature_name: provider_foreman_explorer
   :startup: true
 - :name: ems_networks
   :description: Networks / Providers
   :url: /ems_network/show_list
   :rbac_feature_name: ems_network_show_list
   :startup: true
-- :name: ems_infras
-  :description: Infrastructure / Providers
-  :url: /ems_infra/show_list
-  :rbac_feature_name: ems_infra_show_list
+- :name: cloud_networks
+  :description: Networks / Networks
+  :url: /cloud_network/show_list
+  :rbac_feature_name: cloud_network_show_list
   :startup: true
-- :name: clusters
-  :description: Infrastructure / Clusters
-  :url: /ems_cluster/show_list
-  :rbac_feature_name: ems_cluster_show_list
+- :name: cloud_subnets
+  :description: Networks / Subnets
+  :url: /cloud_subnet/show_list
+  :rbac_feature_name: cloud_subnet_show_list
   :startup: true
-- :name: hosts
-  :description: Infrastructure / Hosts
-  :url: /host/show_list
-  :rbac_feature_name: host_show_list
+- :name: network_routers
+  :description: Networks / Network Routers
+  :url: /network_router/show_list
+  :rbac_feature_name: network_router_show_list
   :startup: true
-- :name: vms_vandt
-  :description: Infrastructure / Virtual Machines / VMs & Templates
-  :url: /vm_infra/explorer?accordion=vandt
-  :rbac_feature_name: vandt_accord
+- :name: security_groups
+  :description: Networks / Security Groups
+  :url: /security_group/show_list
+  :rbac_feature_name: security_group_show_list
   :startup: true
-- :name: vms
-  :description: Infrastructure / Virtual Machines / VMs
-  :url: /vm_infra/explorer?accordion=vms_filter
-  :rbac_feature_name: vms_filter_accord
+- :name: floating_ips
+  :description: Networks / Floating IPs
+  :url: /floating_ip/show_list
+  :rbac_feature_name: floating_ip_show_list
   :startup: true
-- :name: templates
-  :description: Infrastructure / Virtual Machines / Templates
-  :url: /vm_infra/explorer?accordion=templates_filter
-  :rbac_feature_name: templates_filter_accord
+- :name: network_ports
+  :description: Networks / Network Ports
+  :url: /network_port/show_list
+  :rbac_feature_name: network_port_show_list
   :startup: true
-- :name: resource_pools
-  :description: Infrastructure / Resource Pools
-  :url: /resource_pool/show_list
-  :rbac_feature_name: resource_pool_show_list
+- :name: network_topology
+  :description: Networks / Topology
+  :url: /network_topology
+  :rbac_feature_name: network_topology_view
   :startup: true
-- :name: datastores
-  :description: Infrastructure / Datastores
-  :url: /storage/show_list
-  :rbac_feature_name: storage_show_list
+- :name: ems_block_storage
+  :description: Storage / Block Storage / Managers
+  :url: /ems_block_storage/show_list
+  :rbac_feature_name: ems_block_storage_show_list
   :startup: true
-- :name: configuration_management
-  :description: Infrastructure / Configuration Management
-  :url: provider_foreman/explorer
-  :rbac_feature_name: provider_foreman_explorer
+- :name: cloud_volumes
+  :description: Storage / Block Storage / Volumes
+  :url: /cloud_volume/show_list
+  :rbac_feature_name: cloud_volume_show_list
   :startup: true
-- :name: storage_systems
-  :description: Storage / Storage Systems
-  :url: /ontap_storage_system/show_list
-  :rbac_feature_name: ontap_storage_system_show_list
+- :name: volume_snapshots
+  :description: Storage / Block Storage / Volume Snapshots
+  :url: /cloud_volume_snapshot/show_list
+  :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
-- :name: file_shares
-  :description: Storage / File Shares
-  :url: /ontap_file_share/show_list
-  :rbac_feature_name: ontap_file_share_show_list
+- :name: cloud_volume_backups
+  :description: Storage / Block Storage / Volume Backups
+  :url: /cloud_volume_backup/show_list
+  :rbac_feature_name: cloud_volume_backup_show_list
   :startup: true
-- :name: logical_disks
-  :description: Storage / Logical Disks
-  :url: /ontap_logical_disk/show_list
-  :rbac_feature_name: ontap_logical_disk_show_list
+- :name: cloud_volume_types
+  :description: Storage / Block Storage / Volume Types
+  :url: /cloud_volume_type/show_list
+  :rbac_feature_name: cloud_volume_type_show_list
   :startup: true
-- :name: base_extents
-  :description: Storage / Base Extents
-  :url: /cim_base_storage_extent/show_list
-  :rbac_feature_name: cim_storage_extent_show_list
+- :name: ems_object_storage
+  :description: Storage / Object Storage / Managers
+  :url: /ems_object_storage/show_list
+  :rbac_feature_name: ems_object_storage_show_list
   :startup: true
-- :name: storage_volumes
-  :description: Storage / Storage Volumes
-  :url: /ontap_storage_volume/show_list
-  :rbac_feature_name: ontap_storage_volume_show_list
+- :name: cloud_object_store_containers
+  :description: Storage / Object Storage / Object Store Containers
+  :url: /cloud_object_store_container/show_list
+  :rbac_feature_name: cloud_object_store_container_show_list
   :startup: true
-- :name: storage_managers
-  :description: Storage / Storage Managers
-  :url: /storage_manager/show_list
-  :rbac_feature_name: storage_manager_show_list
-- :name: ems_containers
-  :description: Containers / Providers
-  :url: /ems_container/show_list
-  :rbac_feature_name: ems_container_show_list
-  :startup: true
-- :name: container_nodes
-  :description: Containers / Nodes
-  :url: /container_node/show_list
-  :rbac_feature_name: container_node_show_list
-  :startup: true
-- :name: container_groups
-  :description: Containers / Groups
-  :url: /container_group/show_list
-  :rbac_feature_name: container_group_show_list
-  :startup: true
-- :name: container_services
-  :description: Containers / Services
-  :url: /container_service/show_list
-  :rbac_feature_name: container_service_show_list
-  :startup: true
-- :name: container_containers
-  :description: Containers / Explorer
-  :url: /container/explorer
-  :rbac_feature_name: containers
+- :name: cloud_object_store_objects
+  :description: Storage / Object Storage / Object Store Objects
+  :url: /cloud_object_store_object/show_list
+  :rbac_feature_name: cloud_object_store_object_show_list
   :startup: true
 - :name: control_explorer
   :description: Control / Explorer
   :url: /miq_policy/explorer
-  :rbac_feature_name: control_explorer
+  :rbac_feature_name: control_explorer_view
   :startup: true
-- :name: automate_explorer
-  :description: Automate / Explorer
+- :name: policy_simulation
+  :description: Control / Simulation
+  :url: /miq_policy/rsop
+  :rbac_feature_name: policy_simulation
+  :startup: true
+- :name: policy_import_export
+  :description: Control / Import / Export
+  :url: /miq_policy/export
+  :rbac_feature_name: policy_import_export
+  :startup: true
+- :name: policy_logs
+  :description: Control / Log
+  :url: /miq_policy/log
+  :rbac_feature_name: policy_log
+  :startup: true
+- :name: embedded_configuration_script_payload
+  :description: Automation / Ansible / Playbooks
+  :url: /ansible_playbook
+  :rbac_feature_name: embedded_configuration_script_payload
+  :startup: true
+- :name: embedded_configuration_script_source
+  :description: Automation / Ansible / Repositories
+  :url: /ansible_repository
+  :rbac_feature_name: embedded_configuration_script_source
+  :startup: true
+- :name: embedded_automation_manager_credentials
+  :description: Automation / Ansible / Credentials
+  :url: /ansible_credential
+  :rbac_feature_name: embedded_automation_manager_credentials
+  :startup: true
+- :name: automation_manager
+  :description: Automation / Ansible Tower / Explorer
+  :url: /automation_manager/explorer
+  :rbac_feature_name: automation_manager
+  :startup: true
+- :name: configuration_job
+  :description: Automation / Ansible Tower / Jobs
+  :url: /configuration_job
+  :rbac_feature_name: configuration_job_show_list
+  :startup: true
+- :name: miq_ae_class_explorer
+  :description: Automation / Automate / Explorer
   :url: /miq_ae_class/explorer
-  :rbac_feature_name: miq_ae_class_explorer
+  :rbac_feature_name: miq_ae_domain_view
   :startup: true
-- :name: utilization
-  :description: Optimize / Utilization
-  :url: /miq_capacity/utilization
-  :rbac_feature_name: utilization
+- :name: miq_ae_class_simulation
+  :description: Automation / Automate / Simulation
+  :url: /miq_ae_tools/resolve
+  :rbac_feature_name: miq_ae_class_simulation
   :startup: true
-- :name: capacity_planning
-  :description: Optimize / Planning
-  :url: /miq_capacity/planning
-  :rbac_feature_name: planning
+- :name: generic_object_definition
+  :description: Automation / Automate / Generic Objects
+  :url: /generic_object_definition/show_list
+  :rbac_feature_name: generic_object_definition_show_list
   :startup: true
-- :name: capacity_bottlenecks
-  :description: Optimize / Bottlenecks
-  :url: /miq_capacity/bottlenecks
-  :rbac_feature_name: bottlenecks
+- :name: miq_ae_customization_explorer
+  :description: Automation / Automate / Customization
+  :url: /miq_ae_customization/explorer
+  :rbac_feature_name: miq_ae_customization_explorer
   :startup: true
-- :name: miq_proxy_tasks
-  :description: Configure / Tasks
-  :url: /miq_task/index?jobs_tab=alltasks
-  :rbac_feature_name: tasks
+- :name: miq_ae_class_import_export
+  :description: Automation / Automate / Import / Export
+  :url: /miq_ae_tools/import_export
+  :rbac_feature_name: miq_ae_class_import_export
   :startup: true
-- :name: miq_automate_log
-  :description: Automate Log
+- :name: miq_ae_class_log
+  :description: Automation / Automate / Log
   :url: /miq_ae_tools/log
   :rbac_feature_name: miq_ae_class_log
+  :startup: true
+- :name: requests
+  :description: Automation / Automate / Requests
+  :url: /miq_request?typ=ae
+  :rbac_feature_name: miq_request_show_list
+  :startup: true
+- :name: monitor_alerts_overview
+  :description: Monitor / Alerts / Overview
+  :url: /alerts_overview
+  :rbac_feature_name: monitor_alerts_overview
+  :startup: true
+- :name: monitor_alerts_list
+  :description: Monitor / Alerts / All Alerts
+  :url: /alerts_list
+  :rbac_feature_name: monitor_alerts_list
+  :startup: true
+- :name: miq_proxy_tasks
+  :description: Settings / Tasks
+  :url: /miq_task/index?jobs_tab=tasks
+  :rbac_feature_name: tasks
   :startup: true

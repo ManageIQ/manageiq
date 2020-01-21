@@ -1,15 +1,15 @@
 require 'time'
 
 class Snapshot < ApplicationRecord
-  acts_as_tree
+  acts_as_tree :dependent => :nullify
 
   belongs_to :vm_or_template
-
-  include SerializedEmsRefObjMixin
 
   serialize :disks, Array
 
   after_create  :after_create_callback
+
+  EVM_SNAPSHOT_NAME = "EvmSnapshot".freeze
 
   def after_create_callback
     MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
@@ -20,10 +20,10 @@ class Snapshot < ApplicationRecord
     all_nh = xml_to_hashes(xmlNode, parentObj.id)
     return if all_nh.nil?
 
-    unless parentObj.ems_id.nil?
-      add_snapshot_size_for_ems(parentObj, all_nh)
-    else
+    if parentObj.ems_id.nil?
       EmsRefresh.save_snapshots_inventory(parentObj, all_nh)
+    else
+      add_snapshot_size_for_ems(parentObj, all_nh)
     end
   end
 
@@ -42,23 +42,19 @@ class Snapshot < ApplicationRecord
 
   def self.find_all_evm_snapshots(zone = nil)
     zone ||= MiqServer.my_server.zone
-    require 'VMwareWebService/MiqVimVm'
-    Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
+    Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
   end
 
   def is_a_type?(stype)
-    require 'VMwareWebService/MiqVimVm'
     value = case stype.to_sym
-            when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
-            when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
-            when :vcb_snapshot        then MiqVimVm.const_get("VCB_SNAPSHOT_NAME")
+            when :evm_snapshot        then EVM_SNAPSHOT_NAME
             when :system_snapshot     then :system_snapshot
             else
               raise "Unknown snapshot type '#{stype}' for #{self.class.name}.is_a_type?"
             end
 
     if value == :system_snapshot
-      return self.is_a_type?(:evm_snapshot) || self.is_a_type?(:consolidate_helper) || self.is_a_type?(:vcb_snapshot)
+      return self.is_a_type?(:evm_snapshot)
     elsif value.kind_of?(Regexp)
       return !!(value =~ name)
     else
@@ -75,19 +71,19 @@ class Snapshot < ApplicationRecord
   end
 
   def self.remove_unused_evm_snapshots(delay)
-    _log.debug "Called"
+    _log.debug("Called")
     find_all_evm_snapshots.each do |sn|
       job_guid, timestamp = parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
-        _log.info "Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
+        _log.info("Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]")
         sn.vm_or_template.remove_evm_snapshot_queue(sn.id)
       end
     end
   end
 
   def recently_created?
-    @recent_threshold ||= (VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
-    create_time >= @recent_threshold.seconds.ago.utc
+    create_time >= ::Settings.ems_refresh.raise_vm_snapshot_complete_if_created_within.to_i_with_method
+                   .seconds.ago.utc
   end
 
   def not_recently_created?
@@ -161,7 +157,7 @@ class Snapshot < ApplicationRecord
   def self.add_snapshot_size_for_ems(parentObj, hashes)
     ss_props = {}
     hashes.each { |h| ss_props[normalize_ss_uid(h[:uid])] = {:total_size => h[:total_size]} }
-    parentObj.snapshots.each { |s| s.update_attributes(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil? }
+    parentObj.snapshots.each { |s| s.update(ss_props[normalize_ss_uid(s[:uid])]) unless ss_props[normalize_ss_uid(s[:uid])].nil? }
   end
   private_class_method :add_snapshot_size_for_ems
 

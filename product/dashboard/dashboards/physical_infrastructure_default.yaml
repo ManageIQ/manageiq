@@ -1,0 +1,13 @@
+name: Default for Physical Infrastructure
+read_only: t
+set_type: MiqWidgetSet
+description: Default Dashboard for Physical Infrastructure Group
+owner_type: MiqGroup
+owner_description: EvmGroup-physical_infrastructure
+set_data_by_description:
+  :col1:
+  - chart_server_health
+  :col2:
+  - chart_server_availability
+  :col3:
+  - rss_newest_servers

@@ -31,12 +31,12 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  ext_management_system: 
-    columns: 
+  ext_management_system:
+    columns:
     - name
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - vm_name
 - event_type
@@ -64,15 +64,26 @@ headers:
 #  :field: EmsEvent-event_type
 #  :operator: LIKE
 #  :string: VmPowered%Event
-conditions: !ruby/object:MiqExpression 
-  exp: 
+conditions: !ruby/object:MiqExpression
+  exp:
     and:
-    - "STARTS WITH": 
-        field: EmsEvent-event_type
-        value: VmPowered
-    - "ENDS WITH": 
-        field: EmsEvent-event_type
-        value: Event
+    - "OR":
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: VmPowered
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_powerOff
+      - "STARTS WITH":
+          field: EmsEvent-event_type
+          value: virtualMachines_start
+    - "OR":
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Event
+      - "ENDS WITH":
+          field: EmsEvent-event_type
+          value: Request
     - "IS":
         field: EmsEvent-timestamp
         value: Last Week
@@ -81,7 +92,7 @@ conditions: !ruby/object:MiqExpression
 order: Descending
 
 # Columns to sort the report on, in order
-sortby: 
+sortby:
 - timestamp
 
 # Group rows (y=yes,n=no,c=count)
@@ -106,7 +117,7 @@ dims:
 
 timeline:
   :field: EmsEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Minute

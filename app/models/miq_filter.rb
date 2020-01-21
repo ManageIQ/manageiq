@@ -1,10 +1,42 @@
 module MiqFilter
-  def self.records2table(records, only_columns)
-    MiqReportable.records2table(records, only_columns)
-  end
+  ALLOWED_DESCENDANT_CLASSES_FROM_MODEL = %w[ExtManagementSystem].freeze
 
   def self.belongsto2object(tag)
     belongsto2object_list(tag).last
+  end
+
+  def self.belongsto2path_human(tag)
+    tag.split("/").map { |x| x.split("|").second }.compact.join(" -> ")
+  end
+
+  def self.find_descendant_class_by(klass, name)
+    if ALLOWED_DESCENDANT_CLASSES_FROM_MODEL.include?(klass.to_s) && (descendant_class = klass.try(:belongsto_descendant_class, name))
+      return descendant_class.constantize
+    else
+      _log.warn("Unable to find descendant class for belongsto filter: #{klass}/#{name}")
+    end
+
+    nil
+  end
+
+  def self.find_object_by_special_class(klass, name)
+    if (descendant_class = find_descendant_class_by(klass, name)) && descendant_class.respond_to?(:find_object_for_belongs_to_filter)
+      return descendant_class.find_object_for_belongs_to_filter(name)
+    else
+      _log.warn("#{klass} is not supported for loading objects of descendants classes.(belongsto filter: #{klass}/#{name}, descendant class: #{descendant_class}")
+    end
+
+    nil
+  end
+
+  def self.find_object_by_name(klass, name)
+    klass = klass.constantize
+    object = klass.find_by(:name => name)
+    if object.nil?
+      find_object_by_special_class(klass, name)
+    else
+      object
+    end
   end
 
   def self.belongsto2object_list(tag)
@@ -14,8 +46,7 @@ module MiqFilter
 
     # root object
     klass, name = parts.shift.split("|")
-    klass = klass.constantize
-    obj = klass.find_by_name(name)
+    obj = find_object_by_name(klass, name)
 
     if obj.nil?
       _log.warn("lookup for klass=#{klass.to_s.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
@@ -31,7 +62,7 @@ module MiqFilter
         obj.children.grep(tag_part_klass).detect { |c| c.name == name }
       end
 
-      return result unless obj
+      return [] unless obj
       result.push(obj)
     end
   end
@@ -39,7 +70,7 @@ module MiqFilter
   def self.object2belongsto(obj)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     unless obj.root_id[0] == "ExtManagementSystem"
-      raise _("Folder Root is not a %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Folder Root is not a Provider")
     end
 
     tag = obj.ancestry(

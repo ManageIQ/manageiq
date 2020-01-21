@@ -23,4 +23,8 @@ class ManageIQ::Providers::CloudManager::OrchestrationStack < ::OrchestrationSta
   def self.orchestration_stack_class_factory(orchestration_manager, template)
     "#{orchestration_manager.class.name}::#{template.stack_type}".constantize
   end
+
+  def self.display_name(number = 1)
+    n_('Orchestration Stack', 'Orchestration Stacks', number)
+  end
 end

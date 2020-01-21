@@ -1,4 +1,3 @@
-require 'miq_apache'
 require 'linux_admin'
 
 module MiqServer::EnvironmentManagement
@@ -30,16 +29,8 @@ module MiqServer::EnvironmentManagement
     end
 
     def startup_mode
-      mode = ""
-      # Find out startup mode
-      if self.minimal_env?
-        mode = "Minimal"
-        mode << " [#{minimal_env_options.join(', ')}]" unless minimal_env_options.empty?
-      else
-        mode = "Normal"
-      end
-
-      mode
+      return "Normal" unless minimal_env?
+      "Minimal".tap { |s| s << " [#{minimal_env_options.join(', ').presence}]" if minimal_env_options.present? }
     end
 
     def get_network_information
@@ -48,14 +39,14 @@ module MiqServer::EnvironmentManagement
         if MiqEnvironment::Command.is_appliance?
           eth0 = LinuxAdmin::NetworkInterface.new("eth0")
 
-          ipaddr      = eth0.address
+          ipaddr      = eth0.address || eth0.address6
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else
           require 'MiqSockUtil'
           ipaddr      = MiqSockUtil.getIpAddr
           hostname    = MiqSockUtil.getFullyQualifiedDomainName
-          mac_address = MiqUUID.mac_address.dup
+          mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue
       end
@@ -64,11 +55,13 @@ module MiqServer::EnvironmentManagement
     end
 
     def validate_database
-      ActiveRecord::Base.connection.reconnect!
+      # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+      spec_name = ActiveRecord::Base.connection_specification_name
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
 
       # Log the Versions
-      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]"                   if ActiveRecord::Base.connection.respond_to?(:database_version)
-      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
+      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)
+      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]") if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
     end
 
     def start_memcached
@@ -76,48 +69,30 @@ module MiqServer::EnvironmentManagement
       return unless ::Settings.server.session_store.to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
-      _svr, port = ::Settings.session.memcache_server.to_s.split(":")
+      _svr, port = MiqMemcached.server_address.to_s.split(":")
       opts = ::Settings.session.memcache_server_opts.to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")
-    end
-
-    def prep_apache_proxying
-      return unless MiqEnvironment::Command.supports_apache?
-
-      MiqApache::Control.stop
-      MiqUiWorker.install_apache_proxy_config
-      MiqWebServiceWorker.install_apache_proxy_config
-      MiqWebsocketWorker.install_apache_proxy_config
     end
   end
 
   #
   # Apache
   #
-  def queue_restart_apache
-    MiqQueue.put_unless_exists(
-      :class_name  => 'MiqServer',
-      :instance_id => id,
-      :method_name => 'restart_apache',
-      :queue_name  => 'miq_server',
-      :zone        => zone.name,
-      :server_guid => guid
-    ) do |msg|
-      _log.info("Server: [#{id}] [#{name}], there is already a prior request to restart apache, skipping...") unless msg.nil?
-    end
-  end
+  def start_apache
+    return unless MiqEnvironment::Command.is_appliance?
 
-  def restart_apache
-    MiqApache::Control.restart(false)
+    MiqApache::Control.start
   end
 
   def stop_apache
-    MiqApache::Control.stop(false)
+    return unless MiqEnvironment::Command.is_appliance?
+
+    MiqApache::Control.stop
   end
 
   def disk_usage_threshold
-    ::Settings.server.events.disk_usage_gt_percent || 80
+    ::Settings.server.events.disk_usage_gt_percent
   end
 
   def check_disk_usage(disks)
@@ -126,15 +101,16 @@ module MiqServer::EnvironmentManagement
     disks.each do |disk|
       next unless disk[:used_bytes_percent].to_i > threshold
       disk_usage_event = case disk[:mount_point].chomp
-                         when '/'                then 'evm_server_system_disk_high_usage'
-                         when '/boot'            then 'evm_server_boot_disk_high_usage'
-                         when '/home'            then 'evm_server_home_disk_high_usage'
-                         when '/var'             then 'evm_server_var_disk_high_usage'
-                         when '/var/log'         then 'evm_server_var_log_disk_high_usage'
-                         when '/var/log/audit'   then 'evm_server_var_log_audit_disk_high_usage'
-                         when '/var/www/miq_tmp' then 'evm_server_miq_tmp_disk_high_usage'
-                         when '/tmp'             then 'evm_server_tmp_disk_high_usage'
-                         when %r{lib/pgsql}      then 'evm_server_db_disk_high_usage'
+                         when '/'                     then 'evm_server_system_disk_high_usage'
+                         when '/boot'                 then 'evm_server_boot_disk_high_usage'
+                         when '/home'                 then 'evm_server_home_disk_high_usage'
+                         when '/var'                  then 'evm_server_var_disk_high_usage'
+                         when '/var/log'              then 'evm_server_var_log_disk_high_usage'
+                         when '/var/log/audit'        then 'evm_server_var_log_audit_disk_high_usage'
+                         when '/var/www/miq/vmdb/log' then 'evm_server_log_disk_high_usage'
+                         when '/var/www/miq_tmp'      then 'evm_server_miq_tmp_disk_high_usage'
+                         when '/tmp'                  then 'evm_server_tmp_disk_high_usage'
+                         when %r{lib/pgsql}           then 'evm_server_db_disk_high_usage'
                          end
 
       next unless disk_usage_event

@@ -1,20 +1,38 @@
-
 describe ActsAsTaggable do
-  before(:each) do
-    @host1 = FactoryGirl.create(:host, :name => "HOST1")
+  before do
+    @host1 = FactoryBot.create(:host, :name => "HOST1")
     @host1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
-    @host2 = FactoryGirl.create(:host, :name => "HOST2")
-    @host3 = FactoryGirl.create(:host, :name => "HOST3")
+    @host2 = FactoryBot.create(:host, :name => "HOST2")
+    @host3 = FactoryBot.create(:host, :name => "HOST3")
 
-    @vm1   = FactoryGirl.create(:vm_vmware, :name => "VM1")
-    @vm2   = FactoryGirl.create(:vm_vmware, :name => "VM2")
-    @vm3   = FactoryGirl.create(:vm_vmware, :name => "VM3")
-    @vm4   = FactoryGirl.create(:vm_vmware, :name => "VM4")
+    @vm1   = FactoryBot.create(:vm_vmware, :name => "VM1")
+    @vm2   = FactoryBot.create(:vm_vmware, :name => "VM2")
+    @vm3   = FactoryBot.create(:vm_vmware, :name => "VM3")
+    @vm4   = FactoryBot.create(:vm_vmware, :name => "VM4")
 
     @vm1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
     @vm3.tag_with("Red Blue Yellow", :ns => "/Test", :cat => "MixedCase")
     @vm4.tag_with("nyc chi la", :cat => "someuser")
     @vm4.tag_add("bos phi blt")
+  end
+
+  describe '#writable_classification_tags' do
+    let(:parent_classification) { FactoryBot.create(:classification, :description => "Environment", :name => "environment", :read_only => false) }
+    let(:classification)        { FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent => parent_classification, :read_only => true) }
+
+    before do
+      classification.assign_entry_to(@vm1)
+    end
+
+    it "returns only tags as they would be entered in UI by user(edit tags screen)" do
+      expect(@vm1.tags.count).to eq(4)
+      expect(@vm1.writable_classification_tags.count).to eq(1)
+      expect(@vm1.writable_classification_tags.first.name).to eq('/managed/environment/prod')
+      expect(@vm1.writable_classification_tags.first).to be_kind_of(Tag)
+
+      expect(@vm3.writable_classification_tags.count).to eq(0)
+      expect(@vm3.tags.count).to eq(3)
+    end
   end
 
   context ".find_tagged_with" do
@@ -35,7 +53,7 @@ describe ActsAsTaggable do
     end
 
     it "STI classes" do
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template", :host => @host)
+      vm_template = FactoryBot.create(:template_vmware, :name => "template", :host => @host)
       vm_template.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
 
       expect(Vm.find_tagged_with(:all => 'red', :ns => '/test/tags')).to eq([@vm1])
@@ -62,19 +80,19 @@ describe ActsAsTaggable do
   end
 
   it "#tags" do
-    expect(Host.find_by_name("HOST1").tags.length).to eq(3)
-    expect(Vm.find_by_name("VM2").tags.length).to eq(0)
+    expect(Host.find_by(:name => "HOST1").tags.length).to eq(3)
+    expect(Vm.find_by(:name => "VM2").tags.length).to eq(0)
   end
 
   context "#tag_with" do
     it "passing string" do
-      vm = Vm.find_by_name("VM3")
+      vm = Vm.find_by(:name => "VM3")
       expect(vm.tag_with("abc def ghi")).to eq(["abc", "def", "ghi"])
       expect(Vm.find_tagged_with(:all => "abc def ghi", :ns => '/user')).to eq([@vm3])
     end
 
     it "passing array" do
-      vm = Vm.find_by_name("VM3")
+      vm = Vm.find_by(:name => "VM3")
       expect(vm.tag_with(["abc", "def", "ghi"])).to eq(["abc", "def", "ghi"])
       expect(Vm.find_tagged_with(:all => "abc def ghi", :ns => '/user')).to eq([@vm3])
     end
@@ -98,14 +116,32 @@ describe ActsAsTaggable do
   end
 
   it "#tag_add" do
-    vm = Vm.find_by_name("VM1")
+    vm = Vm.find_by(:name => "VM1")
     expect(vm.tag_add("abc", :ns => "/test/tags")).to eq(["abc"])
     expect(Vm.find_tagged_with(:all => "red blue yellow abc", :ns => "/test/tags")).to eq([@vm1])
   end
 
+  context "#tag_remove" do
+    it "works" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_add("foo1", :ns => "/test/tags")
+      vm.tag_add("foo2", :ns => "/test/tags")
+      expect(vm.tag_remove("foo1", :ns => "/test/tags")).to eq(["foo1"])
+      expect(Vm.find_tagged_with(:all => "foo2", :ns => "/test/tags")).to eq([@vm1])
+      expect(Vm.find_tagged_with(:all => "foo1", :ns => "/test/tags")).to be_empty
+    end
+
+    it "does nothing if tag doesn't exist" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_remove("foo3", :ns => "/test/tags")
+      expect(Tag.find_by(:name => "/test/tags/foo3")).to be_nil
+      expect(Vm.find_tagged_with(:all => "foo3", :ns => "/test/tags")).to be_empty
+    end
+  end
+
   context "#is_tagged_with?" do
     it "works" do
-      vm = Vm.find_by_name("VM1")
+      vm = Vm.find_by(:name => "VM1")
       expect(vm.is_tagged_with?("red",   :ns => "/test", :cat => "tags")).to be_truthy
       expect(vm.is_tagged_with?("black", :ns => "/test", :cat => "tags")).not_to be_truthy
     end
@@ -123,11 +159,17 @@ describe ActsAsTaggable do
       expect(@vm1).to be_is_tagged_with("/test/tags/red", :ns => "none")
       expect(@vm1).to be_is_tagged_with("/test/tags/red", :ns => :none)
     end
+
+    it "with virtual reflections" do
+      lan = FactoryBot.create(:lan, :name => "VM NFS Network")
+      vm  = FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [FactoryBot.create(:guest_device_nic, :lan => lan)]))
+      expect(vm).to be_is_tagged_with("/virtual/lans/name/VM NFS Network", :ns => "*")
+    end
   end
 
   it "#tag_list" do
-    expect(Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
-    expect(Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)
+    expect(Host.find_by(:name => "HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
+    expect(Vm.find_by(:name => "VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)
   end
 
   it "#to_tag" do

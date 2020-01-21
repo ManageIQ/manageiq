@@ -8,7 +8,7 @@ class ResourceSharer
 
   attr_accessor :user, :resource, :tenants, :features, :allow_tenant_inheritance
 
-  with_options :presence => true do
+  with_options(:presence => true) do
     validates :user
     validates :resource
     validates :tenants

@@ -17,7 +17,7 @@ module Spec
         ae_fields ||= {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
         ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
                            attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
@@ -27,7 +27,7 @@ module Spec
         ae_fields = {'field1' => {:aetype => 'state', :datatype => 'string'}}
         ae_instances = {instance_name => {'field1' => {:value => 'phases of matter'}}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
                            attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
@@ -35,15 +35,16 @@ module Spec
         attrs = default_ae_model_attributes(attrs)
         method_script = attrs.delete(:method_script)
         method_params = attrs.delete(:method_params) || {}
+        method_loc = attrs.delete(:method_loc) || "inline"
         instance_name = attrs.delete(:instance_name)
         method_name = attrs.delete(:method_name)
         ae_fields = {'execute' => {:aetype => 'method', :datatype => 'string'}}
         ae_instances = {instance_name => {'execute' => {:value => method_name}}}
-        ae_methods = {method_name => {:scope => 'instance', :location => 'inline',
+        ae_methods = {method_name => {:scope => 'instance', :location => method_loc,
                                       :data => method_script,
                                       :language => 'ruby', 'params' => method_params}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
                            attrs.merge('ae_fields'    => ae_fields,
                                        'ae_instances' => ae_instances,
                                        'ae_methods'   => ae_methods))
@@ -75,7 +76,7 @@ module Spec
       end
 
       def add_call_method
-        aec = MiqAeClass.find_by_fqname('/ManageIQ/System/Request')
+        aec = MiqAeClass.lookup_by_fqname('/ManageIQ/System/Request')
         aei = aec.ae_instances.detect { |ins| ins.name == 'Call_Method' } if aec
         return if aei
         aef = aec.ae_fields.detect { |fld| fld.name == 'meth1' }

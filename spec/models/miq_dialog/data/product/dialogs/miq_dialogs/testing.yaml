@@ -1,0 +1,23 @@
+---
+:name: testing_dialog
+:description: Testing Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :dialog_order:
+  - :requester
+  - :service
+  :buttons:
+  - :continue
+  - :cancel
+  :dialogs:
+    :requester:
+      :description: Request
+      :fields: {}
+
+      :display: :hide
+      :field_order:
+    :service:
+      :description: Catalog
+      :fields: {}
+
+      :display: :hide

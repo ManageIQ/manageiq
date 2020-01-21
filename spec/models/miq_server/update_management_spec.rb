@@ -1,10 +1,11 @@
 describe MiqServer do
   before do
+    MiqRegion.seed
     @server = EvmSpecHelper.local_miq_server(:zone => Zone.seed)
   end
 
   let!(:database) do
-    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+    FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     db = MiqDatabase.seed
     db.update_repo_name = "repo-1 repo-2"
     db
@@ -15,7 +16,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server, :zone => @server.zone)
+      FactoryBot.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do
@@ -57,19 +58,11 @@ describe MiqServer do
     end
   end
 
-  context "#update_registration_status" do
-    it "rhn_client" do
-      @server.update_attribute(:rhn_mirror, true)
-      expect(@server).to receive(:check_updates).once
+  it "#update_registration_status" do
+    expect(@server).to receive(:attempt_registration).once
+    expect(@server).to receive(:check_updates).once
 
-      @server.update_registration_status
-    end
-    it "not rhn_client" do
-      expect(@server).to receive(:attempt_registration).once
-      expect(@server).to receive(:check_updates).once
-
-      @server.update_registration_status
-    end
+    @server.update_registration_status
   end
 
   context "#attempt_registration" do
@@ -96,6 +89,17 @@ describe MiqServer do
       expect(@server).to receive(:enable_repos).twice
 
       @server.attempt_registration
+    end
+
+    it "should raise a notification if registration fails" do
+      NotificationType.seed
+      result = AwesomeSpawn::CommandResult.new("stuff", "things", "more things", 1)
+      err = LinuxAdmin::SubscriptionManagerError.new("things", result)
+      expect(@server).to receive(:register).and_raise(err)
+      expect { @server.attempt_registration }.to raise_error(LinuxAdmin::SubscriptionManagerError)
+
+      note = Notification.find_by(:notification_type_id => NotificationType.find_by(:name => "server_registration_error").id)
+      expect(note.options.keys).to include(:server_name)
     end
   end
 
@@ -147,6 +151,41 @@ describe MiqServer do
     end
   end
 
+  context "#configure_yum_proxy" do
+    it "with no proxy server" do
+      expect(IniFile).not_to receive(:load)
+
+      @server.configure_yum_proxy
+    end
+
+    it "with proxy server but no credentials" do
+      database.update(:registration_http_proxy_server => "http://my_proxy:port")
+
+      Tempfile.open do |tempfile|
+        stub_inifile = IniFile.new(:filename => tempfile.path)
+        expect(IniFile).to receive(:load).and_return(stub_inifile)
+
+        @server.configure_yum_proxy
+
+        expect(File.read(tempfile)).to eq("[main]\nproxy = http://my_proxy:port\n\n")
+      end
+    end
+
+    it "with proxy server and credentials" do
+      database.update_authentication(:registration_http_proxy => {:userid => "user", :password => "pass"})
+      database.update(:registration_http_proxy_server => "http://my_proxy:port")
+
+      Tempfile.open do |tempfile|
+        stub_inifile = IniFile.new(:filename => tempfile.path)
+        expect(IniFile).to receive(:load).and_return(stub_inifile)
+
+        @server.configure_yum_proxy
+
+        expect(File.read(tempfile)).to eq("[main]\nproxy = http://my_proxy:port\nproxy_username = user\nproxy_password = pass\n\n")
+      end
+    end
+  end
+
   context "#repo_enabled?" do
     it "true" do
       expect(reg_system).to receive(:enabled_repos).and_return(["abc", database.update_repo_names].flatten)
@@ -162,11 +201,26 @@ describe MiqServer do
     end
   end
 
-  it "#enable_repos" do
-    expect(reg_system).to receive(:enable_repo).twice
+  describe "#enable_repos" do
+    it "enables all repos in the list" do
+      expect(reg_system).to receive(:enable_repo).twice
 
-    @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling repo-2")
+      @server.enable_repos
+      expect(@server.upgrade_message).to eq("enabling repo-2")
+    end
+
+    it "raises a notification for repos which fail to enable" do
+      NotificationType.seed
+      result = AwesomeSpawn::CommandResult.new("stuff", "things", "more things", 1)
+      err = LinuxAdmin::SubscriptionManagerError.new("things", result)
+
+      expect(reg_system).to receive(:enable_repo).with("repo-1", anything).and_raise(err)
+      expect(reg_system).to receive(:enable_repo).with("repo-2", anything)
+
+      @server.enable_repos
+      note = Notification.find_by(:notification_type_id => NotificationType.find_by(:name => "enable_update_repo_failed").id)
+      expect(note.options).to eq(:repo_name => "repo-1")
+    end
   end
 
   it "#check_updates" do
@@ -260,7 +314,7 @@ describe MiqServer do
     it "#assemble_registration_options" do
       database.update_authentication(:registration => {:userid => "registration_user", :password => "registration_password"})
       database.update_authentication(:registration_http_proxy => {:userid => "proxy_user", :password => "proxy_password"})
-      database.update_attributes(
+      database.update(
         :registration_organization      => "my_org",
         :registration_http_proxy_server => "my_proxy:port",
         :registration_server            => "subscription.example.com",

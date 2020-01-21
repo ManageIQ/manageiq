@@ -1,5 +1,7 @@
 class Dictionary
   def self.gettext(text, opts = {})
+    return "" if text.blank?
+
     opts[:type] ||= :column
     opts[:plural] = false if opts[:plural].nil?
     opts[:translate] = true if opts[:translate].nil?
@@ -8,7 +10,12 @@ class Dictionary
 
     i18n_result = i18n_lookup(opts[:type], key)
     i18n_result ||= i18n_lookup(opts[:type], key.split(".").last)
-    i18n_result = i18n_result.pluralize if i18n_result && opts[:plural]
+    i18n_result = if i18n_result && opts[:plural]
+                    m = /(.+)(\s+\(.+\))/.match(i18n_result)
+                    m ? "#{m[1].pluralize}#{m[2]}" : i18n_result.pluralize
+                  else
+                    i18n_result
+                  end
 
     result = if i18n_result
                opts[:translate] ? _(i18n_result) : i18n_result

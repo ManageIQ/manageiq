@@ -1,6 +1,8 @@
 module MiqPolicy::ImportExport
   extend ActiveSupport::Concern
 
+  IMPORT_CLASS_NAMES = %w(MiqPolicy MiqPolicySet MiqAlert).freeze
+
   module ClassMethods
     def import_from_hash(policy, options = {})
       raise _("No Policy to Import") if policy.nil?
@@ -53,7 +55,7 @@ module MiqPolicy::ImportExport
       end
 
       conditions = []
-      pc.each do|c|
+      pc.each do |c|
         c.delete("condition_id")
         condition, s = Condition.import_from_hash(c, options)
         status[:children].push(s)
@@ -65,7 +67,7 @@ module MiqPolicy::ImportExport
       policy["active"] = true if policy["active"].nil?
       policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
 
-      p = MiqPolicy.find_by_guid(policy["guid"])
+      p = MiqPolicy.find_by(:guid => policy["guid"])
       msg_pfx = "Importing Policy: guid=[#{policy["guid"]}] description=[#{policy["description"]}]"
       if p.nil?
         p = MiqPolicy.new(policy)
@@ -103,15 +105,11 @@ module MiqPolicy::ImportExport
     end
 
     def import_from_yaml(fd)
-      stats = []
-
       input = YAML.load(fd)
-      input.each do |e|
-        p, stat = import_from_hash(e["MiqPolicy"])
-        stats.push(stat)
+      input.collect do |e|
+        _p, stat = import_from_hash(e["MiqPolicy"])
+        stat
       end
-
-      stats
     end
   end
 
@@ -124,7 +122,6 @@ module MiqPolicy::ImportExport
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 end

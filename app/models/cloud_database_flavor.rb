@@ -1,6 +1,5 @@
 class CloudDatabaseFlavor < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
 
   acts_as_miq_taggable
 

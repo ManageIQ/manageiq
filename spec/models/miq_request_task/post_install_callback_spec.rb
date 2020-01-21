@@ -1,7 +1,7 @@
 describe MiqRequestTask::PostInstallCallback do
-  let(:miq_request) { FactoryGirl.build(:miq_host_provision_request, :requester => user) }
-  let(:task)        { FactoryGirl.create(:miq_request_task, :miq_request => miq_request) }
-  let(:user)        { FactoryGirl.build(:user) }
+  let(:miq_request) { FactoryBot.build(:miq_provision_request, :requester => user) }
+  let(:task)        { FactoryBot.create(:miq_request_task, :miq_request => miq_request) }
+  let(:user)        { FactoryBot.build(:user) }
 
   context ".post_install_callback" do
     it "valid id" do
@@ -24,7 +24,7 @@ describe MiqRequestTask::PostInstallCallback do
 
     it "with remote ui url" do
       EvmSpecHelper.create_guid_miq_server_zone
-      MiqServer.first.update_attributes(:ipaddress => "192.0.2.1", :has_active_userinterface => true)
+      MiqServer.first.update(:ipaddress => "192.0.2.1", :has_active_userinterface => true)
       expect(task.post_install_callback_url).to eq("https://192.0.2.1/miq_request/post_install_callback?task_id=#{task.id}")
     end
   end

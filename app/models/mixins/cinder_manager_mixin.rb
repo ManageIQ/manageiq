@@ -7,8 +7,7 @@ module CinderManagerMixin
     has_one  :cinder_manager,
              :foreign_key => :parent_ems_id,
              :class_name  => "ManageIQ::Providers::StorageManager::CinderManager",
-             :autosave    => true,
-             :dependent   => :destroy
+             :autosave    => true
 
     delegate :cloud_volumes,
              :cloud_volume_snapshots,
@@ -29,7 +28,7 @@ module CinderManagerMixin
       begin
         cinder_manager.save
         cinder_manager.reload
-        _log.debug "cinder_manager.id = #{cinder_manager.id}"
+        _log.debug("cinder_manager.id = #{cinder_manager.id}")
 
         CloudVolume.where(:ems_id => id).update(:ems_id => cinder_manager.id)
         CloudVolumeBackup.where(:ems_id => id).update(:ems_id => cinder_manager.id)

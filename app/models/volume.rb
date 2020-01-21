@@ -57,9 +57,14 @@ class Volume < ApplicationRecord
         else
           found = found[0]
         end
-        found.nil? ? new_partitions << nhp : found.update_attributes(nhp)
+        found.nil? ? new_partitions << nhp : found.update(nhp)
 
-        deletes[:partitions].each_with_index { |ele, i| if ele[1] == name; deletes[:partitions].delete_at(i); break; end }
+        deletes[:partitions].each_with_index do |ele, i|
+          if ele[1] == name
+            deletes[:partitions].delete_at(i)
+            break
+          end
+        end
       end
 
       nhv = nh[:volume]
@@ -75,9 +80,14 @@ class Volume < ApplicationRecord
         else
           found = found[0]
         end
-        found.nil? ? new_volumes << nhv : found.update_attributes(nhv)
+        found.nil? ? new_volumes << nhv : found.update(nhv)
 
-        deletes[:volumes].each_with_index { |ele, i| if ele[1] == name; deletes[:volumes].delete_at(i); break; end }
+        deletes[:volumes].each_with_index do |ele, i|
+          if ele[1] == name
+            deletes[:volumes].delete_at(i)
+            break
+          end
+        end
       end
     end
 

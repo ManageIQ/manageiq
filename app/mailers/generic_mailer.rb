@@ -19,7 +19,7 @@ class GenericMailer < ActionMailer::Base
       rcpts = [msg.to].flatten
       rcpts.each do |rcpt|
         rcpt.split(',').each do |to|
-          options.merge! :to => to
+          options[:to] = to
           individual =  send(method, options)
           begin
             individual.deliver_now
@@ -48,14 +48,14 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.deliver_queue(method, options = {})
+    return unless MiqRegion.my_region.role_assigned?('notifier')
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
-    MiqQueue.put(
+    MiqQueue.submit_job(
+      :service     => "notifier",
       :class_name  => name,
       :method_name => 'deliver',
-      :role        => 'notifier',
       :args        => [method, options],
-      :zone        => nil
     )
   end
 
@@ -129,7 +129,7 @@ class GenericMailer < ActionMailer::Base
     options = {
       :to      => to,
       :from    => settings[:from],
-      :subject => "#{I18n.t("product.name")} Test Email",
+      :subject => "#{Vmdb::Appliance.PRODUCT_NAME} Test Email",
       :body    => "If you have received this email, your SMTP settings are correct."
     }
     prepare_generic_email(options)
@@ -140,18 +140,23 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.openssl_verify_modes
-    %w(none peer client_once fail_if_no_peer_cert)
+    [
+      [_("None"),                 "none"],
+      [_("Peer"),                 "peer"],
+      [_("Client Once"),          "client_once"],
+      [_("Fail If No Peer Cert"), "fail_if_no_peer_cert"]
+    ]
   end
 
   def self.authentication_modes
-    %w(login plain none)
+    [[_("login"), "login"], [_("plain"), "plain"], [_("none"), "none"]]
   end
 
   protected
 
   def prepare_generic_email(options)
     _log.info("options: #{options.inspect}")
-    options[:from] = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :from) if options[:from].blank?
+    options[:from] = ::Settings.smtp.from if options[:from].blank?
     @content = options[:body]
     options[:attachment] ||= []
     options[:attachment].each do |a|
@@ -166,7 +171,7 @@ class GenericMailer < ActionMailer::Base
   AUTHENTICATION_SMTP_KEYS = [:authentication, :user_name, :password]
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
-    evm_settings ||= VMDB::Config.new("vmdb").config[:smtp]
+    evm_settings ||= ::Settings.smtp
     am_settings =  {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
@@ -179,7 +184,7 @@ class GenericMailer < ActionMailer::Base
     else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
-    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }
+    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings[key] }
 
     ActionMailer::Base.smtp_settings = am_settings
     log_smtp_settings = am_settings.dup

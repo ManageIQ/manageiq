@@ -1,5 +1,5 @@
 class DialogFieldDateTimeControl < DialogFieldDateControl
-  AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only visible).freeze
+  AUTOMATE_VALUE_FIELDS = %w(show_past_dates read_only visible description).freeze
 
   def automate_output_value
     return nil if @value.blank?
@@ -7,9 +7,8 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   end
 
   def value
-    @value = dynamic ? values_from_automate : default_time if @value.blank?
-
-    Time.parse(@value).strftime("%m/%d/%Y %H:%M")
+    value_to_parse = @value.presence || default_time
+    Time.zone.parse(value_to_parse).strftime("%m/%d/%Y %H:%M")
   end
 
   def refresh_json_value

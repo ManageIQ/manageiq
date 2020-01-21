@@ -17,7 +17,7 @@ ctr = 0
 reports.each do |r|
   ctr += 1
   name = File.join(Dir.pwd, "#{ctr}_#{r["name"]}.yaml")
-  File.open(name, "w") { |f| f.write(YAML.dump r) }
+  File.open(name, "w") { |f| f.write(YAML.dump(r)) }
   puts "Created file '#{name}'"
 end
 

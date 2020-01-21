@@ -9,17 +9,17 @@ class TokenManager
 
   def initialize(namespace = DEFAULT_NS, options = {})
     @namespace = namespace
-    @options = {:token_ttl => 10.minutes}.merge(options)
+    @options = {:token_ttl => -> { 10.minutes }}.merge(options)
   end
 
   def gen_token(token_options = {})
     token = SecureRandom.hex(16)
-    token_ttl = token_options.delete(:token_ttl_override) || @options[:token_ttl]
-    token_data = {:token_ttl => token_ttl, :expires_on => Time.now.utc + token_ttl}
+    ttl = token_options.delete(:token_ttl_override) || token_ttl
+    token_data = {:token_ttl => ttl, :expires_on => Time.now.utc + ttl}
 
     token_store.write(token,
                       token_data.merge!(prune_token_options(token_options)),
-                      :expires_in => @options[:token_ttl])
+                      :expires_in => token_ttl)
     token
   end
 
@@ -27,16 +27,20 @@ class TokenManager
     token_data = token_store.read(token)
     return {} if token_data.nil?
 
-    token_ttl = token_data[:token_ttl]
+    ttl = token_data[:token_ttl]
+    token_data[:expires_on] = Time.now.utc + ttl
     token_store.write(token,
-                      token_data.merge!(:expires_on => Time.now.utc + token_ttl),
-                      :expires_in => token_ttl)
+                      token_data,
+                      :expires_in => ttl)
   end
 
   def token_get_info(token, what = nil)
     return {} unless token_valid?(token)
 
-    what.nil? ? token_store.read(token) : token_store.read(token)[what]
+    token_data = token_store.read(token)
+    return nil if token_data.nil?
+
+    what.nil? ? token_data : token_data[what]
   end
 
   def token_valid?(token)
@@ -47,10 +51,14 @@ class TokenManager
     token_store.delete(token)
   end
 
+  def token_ttl
+    @options[:token_ttl].call
+  end
+
   private
 
   def token_store
-    TokenStore.acquire(@namespace, @options[:token_ttl])
+    TokenStore.acquire(@namespace, token_ttl)
   end
 
   def prune_token_options(token_options = {})

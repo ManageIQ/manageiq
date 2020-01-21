@@ -5,33 +5,18 @@ class EmsFolder < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include ProviderObjectMixin
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
-  include AggregationMixin
-  aggregation_mixin_virtual_columns_use :all_relationships
+  include RelationshipsAggregationMixin
   include MiqPolicyMixin
 
   virtual_has_many :vms_and_templates, :uses => :all_relationships
   virtual_has_many :vms,               :uses => :all_relationships
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
-
-  #
-  # Provider Object methods
-  #
-  # TODO: Vmware specific - Fix when we subclass EmsFolder
-
-  def provider_object(connection)
-    connection.getVimFolderByMor(ems_ref_obj)
-  end
-
-  def provider_object_release(handle)
-    handle.release if handle rescue nil
-  end
 
   #
   # Relationship methods
@@ -119,36 +104,13 @@ class EmsFolder < ApplicationRecord
     detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
 
-  # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
-  def register_host(host)
-    host = Host.extract_objects(host)
-    raise _("Host cannot be nil") if host.nil?
-    userid, password = host.auth_user_pwd(:default)
-    network_address  = host.address
+  # Indicates if the folder is able to have child VMs
+  def vm_folder?
+    path.any? { |folder| folder.name == "vm" && folder.hidden? }
+  end
 
-    with_provider_connection do |vim|
-      handle = provider_object(vim)
-      begin
-        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, #{userid}"
-        cr_mor = handle.addStandaloneHost(network_address, userid, password)
-      rescue VimFault => verr
-        fault = verr.vimFaultInfo.fault
-        raise if     fault.nil?
-        raise unless fault.xsiType == "SSLVerifyFault"
-
-        ssl_thumbprint = fault.thumbprint
-        _log.info "Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
-        cr_mor = handle.addStandaloneHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
-      end
-
-      host_mor                   = vim.computeResourcesByMor[cr_mor].host.first
-      host.ems_ref               = host_mor
-      host.ems_ref_obj           = host_mor
-      host.ext_management_system = ext_management_system
-      host.save!
-      add_host(host)
-      host.refresh_ems
-    end
+  def register_host(_host)
+    raise NotImplementedError, _("register_host must be implemented by a subclass")
   end
 
   # Folder pathing methods
@@ -180,6 +142,10 @@ class EmsFolder < ApplicationRecord
 
     subtree = folder.send(meth, :of_type => "EmsFolder")
     child_folder_paths_recursive(subtree, options)
+  end
+
+  def self.display_name(number = 1)
+    n_('Folder', 'Folders', number)
   end
 
   # Helper method for building the child folder paths given an arranged subtree.

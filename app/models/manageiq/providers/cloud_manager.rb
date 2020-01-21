@@ -14,30 +14,43 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_cloud" }
     end
 
-    has_many :arbitration_profiles,          :foreign_key => :ems_id, :dependent => :destroy
     has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
     has_many :flavors,                       :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_database_flavors,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_resource_quotas,         :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_volume_types,            :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_backups,          :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_services,                :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
-    has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
+    has_many :key_pairs,                     :class_name  => "AuthKeyPair", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
-    has_many :cloud_networks,                :through     => :network_manager
-    has_many :security_groups,               :through     => :network_manager
+    has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
+    has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
+    # Only taggings mapped from labels, excluding user-assigned tags.
+    has_many :vm_and_template_taggings,      -> { joins(:tag).merge(Tag.controlled_by_mapping) },
+                                             :through     => :vms_and_templates, :source => :taggings
 
-    has_one  :source_tenant, :as => :source, :class_name => 'Tenant'
+    virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
     validates_presence_of :zone
 
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
+
+    after_destroy :destroy_mapped_tenants
+
+    # These are availability zones that are available to be chosen
+    # when creating a new cloud volume for providers that support it.
+    # By default this is all AZs, individual cloud managers
+    # can override this.
+    def volume_availability_zones
+      availability_zones
+    end
 
     # Development helper method for Rails console for opening a browser to the EMS.
     #
@@ -74,12 +87,17 @@ module ManageIQ::Providers
 
       CloudTenant.with_ext_management_system(id).walk_tree do |cloud_tenant, _|
         cloud_tenant_description = cloud_tenant.description.blank? ? cloud_tenant.name : cloud_tenant.description
-        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant_description}
+        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant_description, :source => cloud_tenant}
+
+        tenant_parent = cloud_tenant.parent.try(:source_tenant) || source_tenant
 
         if cloud_tenant.source_tenant
-          _log.info("CloudTenant #{cloud_tenant.name} has tenant #{cloud_tenant.source_tenant.name}")
-          _log.info("Updating Tenant #{cloud_tenant.source_tenant.name} with parameters: #{tenant_params.inspect}")
-          cloud_tenant.source_tenant.update(tenant_params)
+          cloud_tenant.update_source_tenant(tenant_params)
+        elsif existing_source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name])
+          _log.info("CloudTenant #{cloud_tenant.name} has orphaned tenant #{existing_source_tenant.name}")
+          cloud_tenant.source_tenant = existing_source_tenant
+          tenant_params[:parent] = tenant_parent
+          cloud_tenant.update_source_tenant(tenant_params)
         else
           _log.info("CloudTenant #{cloud_tenant.name} has no tenant")
           _log.info("Creating Tenant with parameters: #{tenant_params.inspect}")
@@ -89,10 +107,8 @@ module ManageIQ::Providers
           # provider (EmsCloud)
           # if it is not first level of cloud tenant
           # there is existing parent of CloudTenant and his related tenant is taken
-          tenant_parent = cloud_tenant.parent.try(:source_tenant) || source_tenant
           _log.info("and with parent #{tenant_parent.name}")
           tenant_params[:parent] = tenant_parent
-          tenant_params[:source] = cloud_tenant
           cloud_tenant.source_tenant = Tenant.new(tenant_params)
           _log.info("New Tenant #{cloud_tenant.source_tenant.name} created")
         end
@@ -108,24 +124,49 @@ module ManageIQ::Providers
 
       source_tenant.descendants.each do |tenant|
         next if tenant.source
-        next if tenant.parent == source_tenant # tenant is already under provider's tenant
+
+        if tenant.parent == source_tenant # tenant is already under provider's tenant
+          _log.info("Setting source_id and source_type to nil for #{tenant.name} under provider's tenant #{source_tenant.name}")
+          tenant.update(:source_id => nil, :source_type => nil)
+          next
+        end
 
         # move tenant under the provider's tenant
         _log.info("Moving out #{tenant.name} under provider's tenant #{source_tenant.name}")
-        tenant.update_attributes(:parent => source_tenant)
+        tenant.update(:parent => source_tenant, :source_id => nil, :source_type => nil)
       end
     end
 
     def sync_root_tenant
-      ems_tenant = source_tenant || Tenant.new(:parent => Tenant.root_tenant, :source => self)
+      ems_tenant = source_tenant || Tenant.new(:parent => tenant, :source => self)
 
       ems_tenant_name = "#{self.class.description} Cloud Provider #{name}"
 
-      ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name)
+      ems_tenant.update!(:name => ems_tenant_name, :description => ems_tenant_name)
     end
 
     def create_cloud_tenant(options)
       CloudTenant.create_cloud_tenant(self, options)
     end
+
+    def valid_service_orchestration_resource
+      true
+    end
+
+    def self.display_name(number = 1)
+      n_('Cloud Manager', 'Cloud Managers', number)
+    end
+
+    def destroy_mapped_tenants
+      if source_tenant
+        # We just destroyed ourself, reload the source_tenant association
+        source_tenant.reload
+        source_tenant.all_subtenants.destroy_all
+        source_tenant.all_subprojects.destroy_all
+        source_tenant.destroy
+      end
+    end
+
+    define_method(:allow_duplicate_endpoint_url?) { true }
   end
 end

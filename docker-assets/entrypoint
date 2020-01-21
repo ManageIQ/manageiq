@@ -1,0 +1,65 @@
+#!/bin/bash
+
+/usr/sbin/crond &
+
+# Check if memcached is running, if not start it
+pidof memcached
+test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
+
+# Source EVM environment
+[ -f /etc/default/evm ] &&  . /etc/default/evm
+
+function create_v2_key() {
+  V2_KEY=$(ruby -ropenssl -rbase64 -e 'puts Base64.strict_encode64(Digest::SHA256.digest(OpenSSL::Random.random_bytes(32))[0, 32])')
+  cat > /var/www/miq/vmdb/certs/v2_key << KEY
+---
+:algorithm: aes-256-cbc
+:key: ${V2_KEY}
+KEY
+  unset V2_KEY
+}
+
+# Check postgres server DB init status, if necessary, initdb, start/enable service and inject MIQ role
+
+echo "== Checking MIQ database status =="
+
+[[ -d /var/lib/pgsql/data/base ]]
+if [ $? -eq 0 ]; then
+  echo "** DB already initialized"
+  echo "** Starting postgresql"
+
+  su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
+  test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
+
+  bundle exec rake db:migrate
+else
+  echo "** DB has not been initialized"
+
+  echo "** Launching initdb"
+  su postgres -c "initdb -D ${APPLIANCE_PG_DATA}"
+  test $? -ne 0 && echo "!! Failed to initdb" && exit 1
+
+  echo "** Starting postgresql"
+  su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
+  test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
+
+  sleep 5
+
+  echo "** Creating MIQ role"
+  su postgres -c "psql -c \"CREATE ROLE root SUPERUSER LOGIN PASSWORD 'smartvm'\""
+  test $? -ne 0 && echo "!! Failed to inject MIQ root Role" && exit 1
+
+  echo "** Starting DB setup"
+  pushd ${APP_ROOT}
+    create_v2_key
+    bundle exec rake evm:db:reset
+  popd
+
+  echo "** MIQ database has been initialized"
+
+  generate_miq_server_cert.sh
+fi
+
+rm -f /var/www/miq/vmdb/tmp/pids/evm.pid
+
+exec ruby /var/www/miq/vmdb/lib/workers/bin/evm_server.rb

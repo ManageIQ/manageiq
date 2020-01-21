@@ -1,9 +1,0 @@
-- if @display == 'instances'
-  = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
-- else
-  - if @showtype == "item"
-    = render :partial => "layouts/item"
-  - elsif @showtype == "compare"
-    = render :partial => "layouts/compare"
-  - elsif @showtype == 'main'
-    = render :partial => 'main'

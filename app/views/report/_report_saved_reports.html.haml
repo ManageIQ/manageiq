@@ -1,5 +1,0 @@
-- if @sb[:active_tab] == "saved_reports"
-  - if @view && !@view.table.data.empty?
-    = render :partial => 'layouts/x_gtl'
-  - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => _("No Saved Reports available.")}

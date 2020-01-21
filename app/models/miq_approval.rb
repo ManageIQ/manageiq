@@ -12,7 +12,7 @@ class MiqApproval < ApplicationRecord
 
   def approve(userid, reason)
     user = user_validate(userid)
-    update_attributes(
+    update(
       :state        => "approved",
       :reason       => reason,
       :stamper      => user,
@@ -26,7 +26,7 @@ class MiqApproval < ApplicationRecord
 
   def deny(userid, reason)
     user = user_validate(userid)
-    update_attributes(
+    update(
       :state        => "denied",
       :reason       => reason,
       :stamper      => user,
@@ -38,13 +38,16 @@ class MiqApproval < ApplicationRecord
   end
 
   def authorized?(userid)
-    user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
+    user = userid.kind_of?(User) ? userid : User.lookup_by_userid(userid)
     return false unless user
 
-    return true if user.role_allows?(:identifier => "miq_request_approval")
-    return true if approver.kind_of?(User) && approver == user
+    return true if user.role_allows?(:identifier => "miq_request_approval") || (approver.kind_of?(User) && approver == user)
 
     false
+  end
+
+  def self.display_name(number = 1)
+    n_('Approval', 'Approvals', number)
   end
 
   private
@@ -59,7 +62,7 @@ class MiqApproval < ApplicationRecord
   end
 
   def user_validate(userid)
-    user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
+    user = userid.kind_of?(User) ? userid : User.lookup_by_userid(userid)
     raise "not authorized" unless authorized?(user)
     user
   end

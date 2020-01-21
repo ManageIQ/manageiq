@@ -4,12 +4,12 @@ describe DialogFieldTagControl do
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child
-    entry = FactoryGirl.create(:classification, options)
+    FactoryBot.create(:classification, options)
   end
 
   context "dialog field tag control without options hash" do
-    before(:each) do
-      @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category')
+    before do
+      @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category')
     end
 
     it "#category=" do
@@ -36,6 +36,13 @@ describe DialogFieldTagControl do
       expect(@df.single_value?).to be_truthy
     end
 
+    it "#force_multi_value" do
+      expect(@df.force_multi_value).to be_truthy
+
+      @df.force_single_value = true
+      expect(@df.force_multi_value).to be_falsey
+    end
+
     it "#automate_key_name" do
       expect(@df.automate_key_name).to eq("Array::dialog_#{@df.name}")
     end
@@ -55,8 +62,8 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field tag control with with options hash and category" do
-    before(:each) do
-      @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+    before do
+      @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'}
                               )
     end
@@ -79,9 +86,9 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field with tag control hash and tag categories" do
-    before(:each) do
-      @cat = FactoryGirl.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
-      @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+    before do
+      @cat = FactoryBot.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
+      @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'}
                                )
     end
@@ -89,8 +96,8 @@ describe DialogFieldTagControl do
     it "#single_value?" do
       expect(@df.single_value?).to be_truthy
 
-      cat = FactoryGirl.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
-      df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+      cat = FactoryBot.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
+      df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'}
                               )
 
@@ -99,43 +106,29 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field tag control and Classification seeded" do
-    before(:each) do
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
+    before do
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true)
       add_entry(cat, :name => "dev",  :description => "Development")
       add_entry(cat, :name => "test", :description => "Test")
       add_entry(cat, :name => "prod", :description => "Production")
 
-      cat = FactoryGirl.create(:classification, :description => "Department",  :name => "department",   :single_value => false, :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Department", :name => "department", :single_value => false)
       add_entry(cat, :name => "accounting",  :description => "Accounting")
       add_entry(cat, :name => "engineering", :description => "Engineering")
       add_entry(cat, :name => "marketing",   :description => "Marketing")
     end
 
     it ".allowed_tag_categories" do
-      expected_array = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).collect do |cat|
+      expected_array = Classification.is_category.where(:show => true, :read_only => false).includes(:tag).collect do |cat|
         {:id => cat.id, :description => cat.description, :single_value => cat.single_value}
       end.sort_by { |cat| cat[:description] }
 
       expect(DialogFieldTagControl.allowed_tag_categories).to match_array(expected_array)
     end
 
-    it ".category_tags" do
-      category = Classification.where(:description => "Environment", :parent_id => 0).first
-      expected_array = category.entries.collect { |t| {:id => t.id, :name => t.name, :description => t.description} }
-      expect(DialogFieldTagControl.category_tags(category.id)).to match_array(expected_array)
-    end
-
     context "with dialog field tag control without options hash" do
-      before(:each) do
-        @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag', :name => 'test tag', :options => {:force_single_select => true})
-      end
-
-      it "#values" do
-        cat = Classification.where(:description => "Environment").first
-        @df.options[:category_id] = cat.id
-
-        expected_array = cat.entries.collect { |c| {:id => c.id, :name => c.name, :description => c.description} }.sort_by { |cat| cat[:description] }
-        expect(@df.values).to match_array(expected_array)
+      before do
+        @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag', :name => 'test tag', :options => {:force_single_select => true})
       end
 
       it "automate_output_value with an empty value" do
@@ -152,6 +145,122 @@ describe DialogFieldTagControl do
         tags = [Classification.first, Classification.last]
         @df.value = tags.collect(&:id).join(",")
         expect(@df.automate_output_value.split(",")).to match_array tags.collect { |tag| "#{tag.class.name}::#{tag.id}" }
+      end
+    end
+  end
+
+  describe "#values" do
+    let(:dialog_field) { described_class.new(:options => options, :data_type => data_type, :required => required) }
+    let(:options) { {:category_id => category_id, :sort_by => sort_by, :sort_order => sort_order} }
+    let(:category_id) { 123 }
+    let(:required) { false }
+    let(:sort_by) { :none }
+    let(:sort_order) { :ascending }
+    let(:data_type) { "string" }
+
+    before do
+      allow(Classification).to receive(:find_by).with(:id => category_id).and_return(classification)
+    end
+
+    shared_examples_for "DialogFieldTagControl#values when required is true" do
+      let(:required) { true }
+
+      it "the blank value uses 'Choose' for its name and description" do
+        expect(dialog_field.values[0]).to eq(:id => nil, :name => "<Choose>", :description => "<Choose>")
+      end
+    end
+
+    context "when the classification exists" do
+      let(:classification) { instance_double("Classification", :entries => [entry1, entry2]) }
+      let(:entry1) { instance_double("Classification", :id => 321, :name => "dog", :description => "Dog") }
+      let(:entry2) { instance_double("Classification", :id => 312, :name => "cat", :description => "Cat") }
+
+      context "when the sort by is set to :value" do
+        let(:sort_by) { :value }
+
+        context "when the data type is integer" do
+          let(:data_type) { "integer" }
+          let(:entry1) { instance_double("Classification", :id => 321, :name => "2dog", :description => "Dog") }
+          let(:entry2) { instance_double("Classification", :id => 312, :name => "1cat", :description => "Cat") }
+
+          context "when the sort order is descending" do
+            let(:sort_order) { :descending }
+
+            it_behaves_like "DialogFieldTagControl#values when required is true"
+
+            it "sorts reverse by name converting to integer and adds a blank value to the front" do
+              expect(dialog_field.values).to eq([
+                {:id => nil, :name => "<None>", :description => "<None>"},
+                {:id => 321, :name => "2dog", :description => "Dog"},
+                {:id => 312, :name => "1cat", :description => "Cat"}
+              ])
+            end
+          end
+
+          context "when the sort order is not descending" do
+            let(:sort_order) { :ascending }
+
+            it_behaves_like "DialogFieldTagControl#values when required is true"
+
+            it "sorts by name converting to integer and adds a blank value to the front" do
+              expect(dialog_field.values).to eq([
+                {:id => nil, :name => "<None>", :description => "<None>"},
+                {:id => 312, :name => "1cat", :description => "Cat"},
+                {:id => 321, :name => "2dog", :description => "Dog"}
+              ])
+            end
+          end
+        end
+
+        context "when the data type is not integer" do
+          context "when the sort order is descending" do
+            let(:sort_order) { :descending }
+
+            it_behaves_like "DialogFieldTagControl#values when required is true"
+
+            it "sorts reverse by name and adds a blank value to the front" do
+              expect(dialog_field.values).to eq([
+                {:id => nil, :name => "<None>", :description => "<None>"},
+                {:id => 321, :name => "dog", :description => "Dog"},
+                {:id => 312, :name => "cat", :description => "Cat"}
+              ])
+            end
+          end
+
+          context "when the sort order is not descending" do
+            let(:sort_order) { :ascending }
+
+            it_behaves_like "DialogFieldTagControl#values when required is true"
+
+            it "sorts by name and adds a blank value to the front" do
+              expect(dialog_field.values).to eq([
+                {:id => nil, :name => "<None>", :description => "<None>"},
+                {:id => 312, :name => "cat", :description => "Cat"},
+                {:id => 321, :name => "dog", :description => "Dog"}
+              ])
+            end
+          end
+        end
+      end
+
+      context "when the sort by is set to :none" do
+        it_behaves_like "DialogFieldTagControl#values when required is true"
+
+        it "returns the available tags in whatever order they came in as with a blank value first" do
+          expect(dialog_field.values).to eq([
+            {:id => nil, :name => "<None>", :description => "<None>"},
+            {:id => 321, :name => "dog", :description => "Dog"},
+            {:id => 312, :name => "cat", :description => "Cat"},
+          ])
+        end
+      end
+    end
+
+    context "when the classification does not exist" do
+      let(:classification) { nil }
+
+      it "returns an empty array" do
+        expect(dialog_field.values).to eq([])
       end
     end
   end

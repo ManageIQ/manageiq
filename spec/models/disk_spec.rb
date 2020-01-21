@@ -3,7 +3,7 @@ describe Disk do
 
   describe ".used_disk_storage" do
     context "with nothing" do
-      let(:disk) { FactoryGirl.build(:disk) }
+      let(:disk) { FactoryBot.build(:disk) }
 
       it "calculates in ruby" do
         expect(disk.used_disk_storage).to eq(0)
@@ -16,7 +16,7 @@ describe Disk do
     end
 
     context "with size" do
-      let(:disk) { FactoryGirl.build(:disk, :size => 1024) }
+      let(:disk) { FactoryBot.build(:disk, :size => 1024) }
 
       it "calculates in ruby" do
         expect(disk.used_disk_storage).to eq(1024)
@@ -29,7 +29,7 @@ describe Disk do
     end
 
     context "with size_on_disk" do
-      let(:disk) { FactoryGirl.build(:disk, :size_on_disk => 1024, :size => 10240) }
+      let(:disk) { FactoryBot.build(:disk, :size_on_disk => 1024, :size => 10240) }
 
       it "calculates in ruby" do
         expect(disk.used_disk_storage).to eq(1024)

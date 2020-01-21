@@ -1,20 +1,20 @@
 describe EmsEventHelper do
   context "fb12322 - MiqAeEvent.build_evm_event blows up expecting inputs[:policy] to be an instance of MiqPolicy, but it is a hash of { :vmdb_class => 'MiqPolicy', :vmdb_id => 42}" do
-    before(:each) do
+    before do
       [Zone, ExtManagementSystem, Host, Vm, Storage, EmsEvent, MiqEventDefinition, MiqPolicy, MiqAction, MiqPolicyContent, MiqPolicySet].each(&:delete_all)
 
-      @zone      = FactoryGirl.create(:zone)
-      @ems       = FactoryGirl.create(:ems_vmware,
+      @zone      = FactoryBot.create(:zone)
+      @ems       = FactoryBot.create(:ems_vmware,
                                       :zone      => @zone,
                                       :name      => 'vc7',
                                       :hostname  => 'vc7.manageiq.com',
                                       :ipaddress => '10.10.10.2'
                                      )
-      @storage   = FactoryGirl.create(:storage,
+      @storage   = FactoryBot.create(:storage,
                                       :name       => 'StarM1-Demo5',
                                       :store_type => 'VMFS'
                                      )
-      @host      = FactoryGirl.create(:host,
+      @host      = FactoryBot.create(:host,
                                       :name                  => 'host7',
                                       :ext_management_system => @ems,
                                       :vmm_vendor            => 'vmware',
@@ -24,7 +24,7 @@ describe EmsEventHelper do
                                       :ipaddress             => '192.168.252.28',
                                       :hostname              => 'host7.manageiq.com'
                                      )
-      @vm        = FactoryGirl.create(:vm_vmware,
+      @vm        = FactoryBot.create(:vm_vmware,
                                       :ext_management_system => @ems,
                                       :name                  => 'vm42',
                                       :location              => 'vm42/vm42.vmx',
@@ -34,7 +34,7 @@ describe EmsEventHelper do
       @username = 'fred'
       @chain_id = 12345
       @ems_events = []
-      @ems_events << FactoryGirl.create(:ems_event,
+      @ems_events << FactoryBot.create(:ems_event,
                                         :event_type            => 'PowerOnVM_Task',
                                         :message               => 'Task: Power On virtual machine',
                                         :host_name             => @host.ipaddress,
@@ -50,7 +50,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryGirl.create(:ems_event,
+      @ems_events << FactoryBot.create(:ems_event,
                                         :event_type            => 'VmStartingEvent',
                                         :message               => "#{@vm.name} on host #{@host.ipaddress} in DC1 is starting",
                                         :host_name             => @host.ipaddress,
@@ -66,7 +66,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryGirl.create(:ems_event,
+      @ems_events << FactoryBot.create(:ems_event,
                                         :event_type            => 'VmPoweredOnEvent',
                                         :message               => "#{@vm.name} on  #{@host.ipaddress} in DC1 is powered on",
                                         :host_name             => @host.ipaddress,
@@ -82,7 +82,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryGirl.create(:ems_event,
+      @ems_events << FactoryBot.create(:ems_event,
                                         :event_type            => 'PowerOnVM_Task_Complete',
                                         :message               => 'PowerOnVM_Task Completed',
                                         :host_name             => @host.ipaddress,
@@ -98,15 +98,15 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @miq_event_vm_start = FactoryGirl.create(:miq_event_definition, :name => 'vm_start', :description => 'VM Power On')
+      @miq_event_vm_start = FactoryBot.create(:miq_event_definition, :name => 'vm_start', :description => 'VM Power On')
 
-      @policy_set = FactoryGirl.create(:miq_policy_set)
-      @policy     = FactoryGirl.create(:miq_policy, :towhat => 'Vm', :active => true, :mode => 'control')
+      @policy_set = FactoryBot.create(:miq_policy_set)
+      @policy     = FactoryBot.create(:miq_policy, :towhat => 'Vm', :active => true, :mode => 'control')
       automate_options = {:ae_message => 'create', :ae_hash => {"kevin" => "1", "q" => "1"}}
-      @action     = FactoryGirl.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
+      @action     = FactoryBot.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
       @policy_set.add_member(@policy)
 
-      @policy_content  = FactoryGirl.create(:miq_policy_content,
+      @policy_content  = FactoryBot.create(:miq_policy_content,
                                             :miq_policy           => @policy,
                                             :miq_action           => @action,
                                             :miq_event_definition => @miq_event_vm_start,

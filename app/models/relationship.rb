@@ -1,4 +1,5 @@
 require 'ancestry'
+require 'ancestry_patch'
 
 class Relationship < ApplicationRecord
   has_ancestry
@@ -27,7 +28,7 @@ class Relationship < ApplicationRecord
     of_type = Array.wrap(options[:of_type])
     except_type = Array.wrap(options[:except_type])
     return relationships if of_type.empty? && except_type.empty?
-    if relationships.kind_of?(Array)
+    if relationships.kind_of?(Array) || relationships.try(:loaded?)
       relationships.reject { |r| r.filtered?(of_type, except_type) }
     else
       relationships.filtered(of_type, except_type)
@@ -48,7 +49,7 @@ class Relationship < ApplicationRecord
   end
 
   def self.resource_pair(relationship)
-    relationship.nil? ? nil : relationship.resource_pair
+    relationship.try(:resource_pair)
   end
 
   def self.resource_pairs(relationships)
@@ -76,10 +77,15 @@ class Relationship < ApplicationRecord
   #
 
   def self.flatten_arranged_rels(relationships)
-    relationships.each_with_object([]) do |(rel, children), a|
-      a << rel
-      a.concat(flatten_arranged_rels(children))
+    result             = relationships.keys
+    remaining_children = relationships.values
+    until remaining_children.empty?
+      remaining_children.pop.each do |rel, kids|
+        result << rel
+        remaining_children << kids
+      end
     end
+    result
   end
 
   def self.arranged_rels_to_resources(relationships, initial = true)
@@ -190,8 +196,8 @@ class Relationship < ApplicationRecord
   #
   def grandchild_conditions
     t = self.class.arel_table
-    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true).and(
-                 t[:ancestry].does_not_match("#{child_ancestry}/%", nil, true)))
+    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true)
+                           .and(t[:ancestry].does_not_match("#{child_ancestry}/%/%", nil, true)))
   end
 
   def child_and_grandchild_conditions

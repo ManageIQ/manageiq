@@ -1,0 +1,8 @@
+---
+- name: Role Import Test
+  read_only: false
+  settings:
+    :restrictions:
+      :vms: :user_or_group
+  feature_identifiers:
+  - about

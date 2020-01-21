@@ -5,6 +5,10 @@ class User < ApplicationRecord
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include CustomActionsMixin
+  include ExternalUrlMixin
+
+  before_destroy :check_reference, :prepend => true
 
   has_many   :miq_approvals, :as => :approver
   has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
@@ -21,23 +25,25 @@ class User < ApplicationRecord
   has_many   :notifications, :through => :notification_recipients
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
+  has_many   :authentications, :foreign_key => :evm_owner_id, :dependent => :nullify, :inverse_of => :evm_owner
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
-    joins(:miq_groups => :miq_user_role).where(:miq_user_roles => {:name => MiqUserRole::SUPER_ADMIN_ROLE_NAME })
+    joins(:miq_groups => {:miq_user_role => :miq_product_features})
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
+  delegate   :super_admin_user?, :request_admin_user?, :self_service?, :limited_self_service?, :report_admin_user?, :only_my_user_tasks?,
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
-  validates :userid, :uniqueness => {:conditions => -> { in_my_region } }
-  validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
-    :allow_nil => true, :message => "must be a valid email address"
+  validates :userid, :unique_within_region => {:match_case => false}
+  validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
+                                :allow_nil => true, :message => "must be a valid email address"}
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
@@ -46,6 +52,14 @@ class User < ApplicationRecord
 
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
+
+  scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
+
+  def self.with_roles_excluding(identifier)
+    where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)
+                             .where(:miq_product_features => {:identifier => identifier})
+                             .select(:id))
+  end
 
   def self.scope_by_tenant?
     true
@@ -67,24 +81,36 @@ class User < ApplicationRecord
     {table_name => {:id => users_ids}}
   end
 
-  def self.find_by_userid(userid)
+  def self.lookup_by_userid(userid)
     in_my_region.find_by(:userid => userid)
   end
 
-  def self.find_by_userid!(userid)
+  singleton_class.send(:alias_method, :find_by_userid, :lookup_by_userid)
+  Vmdb::Deprecation.deprecate_methods(self, :find_by_userid => :lookup_by_userid)
+
+  def self.lookup_by_userid!(userid)
     in_my_region.find_by!(:userid => userid)
   end
 
-  def self.find_by_email(email)
+  singleton_class.send(:alias_method, :find_by_userid!, :lookup_by_userid!)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_userid! => :lookup_by_userid!)
+
+  def self.lookup_by_email(email)
     in_my_region.find_by(:email => email)
   end
 
+  singleton_class.send(:alias_method, :find_by_email, :lookup_by_email)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_email => :lookup_by_email)
+
   # find a user by lowercase email
   # often we have the most probably user object onhand. so use that if possible
-  def self.find_by_lower_email(email, cache = [])
+  def self.lookup_by_lower_email(email, cache = [])
     email = email.downcase
     Array.wrap(cache).detect { |u| u.email.try(:downcase) == email } || find_by(['lower(email) = ?', email])
   end
+
+  singleton_class.send(:alias_method, :find_by_lower_email, :lookup_by_lower_email)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_lower_email => :lookup_by_lower_email)
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
   # FIXME: amazon_group too?
@@ -99,10 +125,22 @@ class User < ApplicationRecord
   before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
 
+  def check_reference
+    present_ref = []
+    %w[miq_requests vms miq_widgets miq_templates].each do |association|
+      present_ref << association.classify unless public_send(association).first.nil?
+    end
+
+    unless present_ref.empty?
+      errors.add(:base, "user '#{userid}' with id [#{id}] has references to other models: #{present_ref.join(" ")}")
+      throw :abort
+    end
+  end
+
   def current_group_by_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
-      desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
+      desired_group ||= MiqGroup.in_region(region_id).find_by(:description => group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
   end
@@ -148,7 +186,7 @@ class User < ApplicationRecord
   end
 
   def self.authenticator(username = nil)
-    Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
+    Authenticator.for(::Settings.authentication.to_hash, username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})
@@ -161,6 +199,11 @@ class User < ApplicationRecord
 
   def self.lookup_by_identity(username)
     authenticator(username).lookup_by_identity(username)
+  end
+
+  def self.authorize_user(userid)
+    return if userid.blank? || admin?(userid)
+    authenticator(userid).authorize_user(userid)
   end
 
   def logoff
@@ -193,7 +236,19 @@ class User < ApplicationRecord
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
 
+  def change_current_group
+    user_groups = miq_group_ids
+    user_groups.delete(current_group_id)
+    raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
+    self.current_group = MiqGroup.find_by(:id => user_groups.first)
+    save!
+  end
+
   def admin?
+    self.class.admin?(userid)
+  end
+
+  def self.admin?(userid)
     userid == "admin"
   end
 
@@ -213,6 +268,14 @@ class User < ApplicationRecord
     else
       Vm.all
     end
+  end
+
+  def regional_users
+    self.class.regional_users(self)
+  end
+
+  def self.regional_users(user)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:userid)]).eq(user.userid.downcase)))
   end
 
   def self.super_admin
@@ -235,6 +298,18 @@ class User < ApplicationRecord
     Thread.current[:userid] = saved_userid
   end
 
+  def self.with_user_group(user, group, &block)
+    return yield if user.nil?
+    user = User.find(user) unless user.kind_of?(User)
+    if group && group.kind_of?(MiqGroup)
+      user.current_group = group
+    elsif group != user.current_group_id
+      group = MiqGroup.find_by(:id => group)
+      user.current_group = group if group
+    end
+    User.with_user(user, &block)
+  end
+
   def self.current_user=(user)
     Thread.current[:userid] = user.try(:userid)
     Thread.current[:user] = user
@@ -246,11 +321,22 @@ class User < ApplicationRecord
   end
 
   def self.current_user
-    Thread.current[:user] ||= find_by_userid(current_userid)
+    Thread.current[:user] ||= lookup_by_userid(current_userid)
   end
 
-  def self.with_current_user_groups
-    current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
+  # parallel to MiqGroup.with_groups - only show users with these groups
+  def self.with_groups(miq_group_ids)
+    includes(:miq_groups).where(:miq_groups => {:id => miq_group_ids})
+  end
+
+  def self.missing_user_features(db_user)
+    if !db_user
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
   end
 
   def self.seed
@@ -261,7 +347,7 @@ class User < ApplicationRecord
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 
       group_description = user_attributes.delete(:group)
-      group = MiqGroup.in_my_region.find_by_description(group_description)
+      group = MiqGroup.in_my_region.find_by(:description => group_description)
 
       _log.info("Creating #{user_id} user...")
       user = create(user_attributes)

@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Foreman_ConfigurationManager < MiqAeServiceManageIQ_Providers_ConfigurationManager
-  end
-end

@@ -8,15 +8,15 @@ module MiqProvision::OptionsHelper
   end
 
   def dest_cluster
-    @dest_cluster ||= EmsCluster.find_by_id(get_option(:dest_cluster))
+    @dest_cluster ||= EmsCluster.find_by(:id => get_option(:dest_cluster))
   end
 
   def dest_host
-    @dest_host ||= Host.find_by_id(get_option(:dest_host))
+    @dest_host ||= Host.find_by(:id => get_option(:dest_host))
   end
 
   def dest_datastore
-    @dest_datastore ||= Storage.find_by_id(get_option(:dest_storage))
+    @dest_datastore ||= Storage.find_by(:id => get_option(:dest_storage))
   end
 
   def create_template?
@@ -25,7 +25,7 @@ module MiqProvision::OptionsHelper
 
   def get_source
     source_id = get_option(:src_vm_id)
-    source = VmOrTemplate.find_by_id(source_id)
+    source = VmOrTemplate.find_by(:id => source_id)
     if source.nil?
       raise MiqException::MiqProvisionError,
             _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}
@@ -70,7 +70,7 @@ module MiqProvision::OptionsHelper
     return unless ip_address.to_s.ipv4?
     ip_seg = ip_address.split('.')
     ip_seg[-1] = ip_seg[-1].to_i + pass
-    options.merge!(:ip_addr => ip_seg.join('.'))
+    options[:ip_addr] = ip_seg.join('.')
   end
 
   def set_dns_domain
@@ -78,7 +78,7 @@ module MiqProvision::OptionsHelper
     value = get_option(:dns_domain)
     if value.blank?
       value = get_option(:dns_suffixes).to_s.split(',').first
-      options[:dns_domain] = value.nil? ? nil : value.strip
+      options[:dns_domain] = value.try(:strip)
     end
   end
 end

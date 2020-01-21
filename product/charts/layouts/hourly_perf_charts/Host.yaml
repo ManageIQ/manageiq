@@ -1,5 +1,5 @@
 # Host Hourly performance chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:
@@ -11,14 +11,14 @@
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Virtual Machine CPU States
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_pct_cpu_ready_delta_summation
   - v_pct_cpu_used_delta_summation
@@ -30,10 +30,10 @@
   - Display-VMs-on:VMs that were running
   :max_value: 100.4
   :decimals: 1
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Memory (MB)
@@ -47,10 +47,10 @@
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Disk I/O (KBps)
@@ -62,10 +62,10 @@
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Network I/O (KBps)
@@ -77,18 +77,18 @@
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
-  :menu: 
+  :menu:
   - Chart-Current-Daily:Back to daily
   - Display-VMs-on:VMs that were running
   - Display-VMs-off:VMs that were stopped

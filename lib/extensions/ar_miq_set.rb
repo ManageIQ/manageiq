@@ -33,8 +33,7 @@ module ActsAsMiqSetMember
   end # module SingletonMethods
 
   def make_memberof(set)
-    raise "object of type #{self.class} may not be a member of a set of type #{set.class}" unless self.kind_of?(set.class.model_class)
-    with_relationship_type("membership") { self.parent = set }
+    set.add_member(self)
   end
 end # module ActsAsMiqSetMember
 
@@ -65,6 +64,7 @@ module ActsAsMiqSet
     alias_with_relationship_type :miq_sets,           :children
     alias_with_relationship_type :remove_member,      :remove_child
     alias_with_relationship_type :remove_all_members, :remove_all_children
+    alias_with_relationship_type :add_members,        :add_children
 
     alias_method model_table_name.to_sym, :children
   end

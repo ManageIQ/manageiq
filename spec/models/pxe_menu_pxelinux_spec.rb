@@ -1,5 +1,5 @@
 describe PxeMenuPxelinux do
-  before(:each) do
+  before do
     @contents = <<-PXEMENU
 default vesamenu.c32
 Menu Title ManageIQ TFTP Boot Menu
@@ -87,9 +87,9 @@ PXEMENU
   end
 
   context "#synchronize_images" do
-    before(:each) do
-      @pxe_server = FactoryGirl.create(:pxe_server)
-      @pxe_menu = FactoryGirl.create(:pxe_menu_pxelinux, :contents => @contents, :pxe_server => @pxe_server)
+    before do
+      @pxe_server = FactoryBot.create(:pxe_server)
+      @pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents, :pxe_server => @pxe_server)
     end
 
     it "finds correct number of menu items" do

@@ -1,12 +1,11 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
-  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
-
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
 
   has_many :stacks, :class_name => "OrchestrationStack"
+  has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   default_value_for :draft, false
   default_value_for :orderable, true
@@ -16,19 +15,12 @@ class OrchestrationTemplate < ApplicationRecord
             :if         => :unique_md5?
   validates_presence_of :name
 
+  scope :orderable, -> { where(:orderable => true) }
+
   before_destroy :check_not_in_use
 
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
-
-  # Try to create the template if the name is not found in table
-  def self.seed
-    Dir.glob(TEMPLATE_DIR.join('*.yml')).each do |file|
-      hash = YAML.load_file(file)
-      next if hash[:type].constantize.find_by(:name => hash[:name])
-      find_or_create_by_contents(hash)
-    end
-  end
 
   # available templates for ordering an orchestration service
   def self.available
@@ -50,7 +42,8 @@ class OrchestrationTemplate < ApplicationRecord
         create!(hash.except(:md5)) # always create a new template if it is a draft
         true
       else
-        md5s << calc_md5(with_universal_newline(hash[:content]))
+        klass = hash[:type].present? ? hash[:type].constantize : self
+        md5s << klass.calc_md5(with_universal_newline(hash[:content]))
         false
       end
     end
@@ -88,18 +81,58 @@ class OrchestrationTemplate < ApplicationRecord
     joins(:stacks).distinct
   end
 
+  def valid_service_orchestration_resource
+    true
+  end
+
   # Find all not in use thus editable templates
   def self.not_in_use
     includes(:stacks).where(:orchestration_stacks => {:orchestration_template_id => nil})
+  end
+
+  def tabs
+    [
+      {
+        :title        => "Basic Information",
+        :stack_group  => deployment_options,
+        :param_groups => parameter_groups
+      }
+    ]
   end
 
   def parameter_groups
     raise NotImplementedError, _("parameter_groups must be implemented in subclass")
   end
 
+  # Basic options for all templates, each subclass should add more type/provider specific deployment options
+  # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
+  def deployment_options(_manager_class = nil)
+    stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name           => "stack_name",
+      :label          => "Stack Name",
+      :data_type      => "string",
+      :description    => "Name of the stack",
+      :required       => true,
+      :reconfigurable => false,
+      :constraints    => [
+        OrchestrationTemplate::OrchestrationParameterPattern.new(
+          :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
+        )
+      ]
+    )
+    [stack_name_opt]
+  end
+
+  # Typically the provider's cloud or infra manager class name. Providers that need
+  # something more advanced should define this within their respective subclass.
+  #
+  def self.eligible_manager_types
+    raise NotImplementedError, _("eligible_manager_types must be implemented in subclass")
+  end
+
   # List managers that may be able to deploy this template
   def self.eligible_managers
-    ExtManagementSystem.where(:type => eligible_manager_types.collect(&:name))
+    Rbac::Filterer.filtered(ExtManagementSystem, :named_scope => [[:with_eligible_manager_types, eligible_manager_types]])
   end
 
   delegate :eligible_managers, :to => :class
@@ -116,7 +149,7 @@ class OrchestrationTemplate < ApplicationRecord
     test_managers.each do |mgr|
       return mgr.orchestration_template_validate(self) rescue nil
     end
-    "No #{ui_lookup(:model => 'ExtManagementSystem').downcase} is capable to validate the template"
+    "No provider is capable to validate the template"
   end
 
   def validate_format

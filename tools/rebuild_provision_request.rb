@@ -1,5 +1,6 @@
+#!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
-require 'trollop'
+require 'optimist'
 require 'rest-client'
 #
 # Helper Script to show the json / hash output of an
@@ -19,7 +20,7 @@ end
 
 ARGV.shift if ARGV[0] == '--'
 
-opts = Trollop.options do
+opts = Optimist.options do
   banner <<-EOS
 
 Reconstruct provision request parameters based on an existing request
@@ -61,16 +62,18 @@ Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
 end
 
 if opts[:request_id].nil? && opts[:last_requests].nil?
-  Trollop.die :request_id, "must exist as an option"
+  Optimist.die :request_id, "must exist as an option"
 elsif opts[:last_requests_given] && opts[:count]
-  Trollop.die :count, "must be greater than 0" if opts[:count] <= 0
+  Optimist.die :count, "must be greater than 0" if opts[:count] <= 0
 else
-  Trollop.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
-  Trollop.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
+  Optimist.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
+  Optimist.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
 end
 
 class Tab
   attr_reader :output, :log
+
+  ARRAY_FIELD_NAMES = [:security_groups].freeze
 
   def initialize(dialog_content, provision_options, quiet)
     @dialog_content = dialog_content
@@ -116,7 +119,7 @@ class Tab
   def dialog_field_values(dialog_tab)
     dialog_tab[:fields].keys.each do |field|
       value = @provision_options[field]
-      value = value.first if value.kind_of?(Array)
+      value = process_list_values(field, value)
       yield(field.to_s, value) if value.present?
       @provision_options.delete(field)
     end
@@ -181,6 +184,18 @@ class Tab
     end
     general_tab(tab, dialog_tab)
   end
+
+  private
+
+  def process_list_values(key, value)
+    if ARRAY_FIELD_NAMES.include?(key)
+      value
+    elsif value.kind_of?(Array)
+      value.first
+    else
+      value
+    end
+  end
 end
 
 class Dialog
@@ -240,13 +255,13 @@ class AutomateHash
 
   def run_it
     print "\nRE Running the Rest API POST to request_id: #{@options[:request_id]}\n\n" unless @quiet
-    result = RestClient.post build_url, output.to_json
+    result = RestClient.post(build_url, output.to_json)
     print "#{result}\n"
   end
 
   def console
     print "\nPlace in a Rails console to run the POST API call\n" unless @quiet
-    print "\nRestClient.post '#{build_url}', '#{output.to_json}'\n\n"
+    print "\nrequire 'rest-client'; RestClient.post '#{build_url}', '#{output.to_json}'\n\n"
   end
 
   def hash_output

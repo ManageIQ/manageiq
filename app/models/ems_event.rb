@@ -1,10 +1,6 @@
 class EmsEvent < EventStream
   include_concern 'Automate'
 
-  virtual_column :group,       :type => :symbol
-  virtual_column :group_level, :type => :symbol
-  virtual_column :group_name,  :type => :string
-
   CLONE_TASK_COMPLETE = "CloneVM_Task_Complete"
   SOURCE_DEST_TASKS = [
     'CloneVM_Task',
@@ -21,87 +17,30 @@ class EmsEvent < EventStream
   end
 
   def self.task_final_events
-    VMDB::Config.new('event_handling').config[:task_final_events]
-  end
-
-  def self.event_groups
-    VMDB::Config.new('event_handling').config[:event_groups]
+    ::Settings.event_handling.task_final_events.to_hash
   end
 
   def self.bottleneck_event_groups
-    VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
-  end
-
-  def self.group_and_level(event_type)
-    group, v = event_groups.find { |_k, v| v[:critical].include?(event_type) || v[:detail].include?(event_type) }
-    if group.nil?
-      group, level = :other, :detail
-    else
-      level = v[:detail].include?(event_type) ? :detail : :critical
-    end
-    return group, level
-  end
-
-  def self.group_name(group)
-    return nil if group.nil?
-    group = event_groups[group.to_sym]
-    return nil if group.nil?
-    group[:name]
+    ::Settings.event_handling.bottleneck_event_groups.to_hash
   end
 
   def self.add_queue(meth, ems_id, event)
-    MiqQueue.put(
-      :target_id   => ems_id,
-      :class_name  => "EmsEvent",
-      :method_name => meth,
-      :args        => [event],
-      :queue_name  => "ems",
-      :role        => "event"
-    )
-  end
-
-  def self.add_vc(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Vmware::InfraManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_rhevm(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_openstack(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Openstack::CloudManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_openstack_network(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Openstack::NetworkManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_cinder(ems_id, event)
-    add(ems_id, ManageIQ::Providers::StorageManager::CinderManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_swift(ems_id, event)
-    add(ems_id, ManageIQ::Providers::StorageManager::SwiftManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_openstack_infra(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Openstack::InfraManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_kubernetes(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Kubernetes::ContainerManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_azure(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Azure::CloudManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_google(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Google::CloudManager::EventParser.event_to_hash(event, ems_id))
-  end
-
-  def self.add_vmware_vcloud(ems_id, event)
-    add(ems_id, ManageIQ::Providers::Vmware::CloudManager::EventParser.event_to_hash(event, ems_id))
+    if Settings.prototype.queue_type == 'artemis'
+      MiqQueue.artemis_client('event_handler').publish_topic(
+        :service => "events",
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
+    else
+      MiqQueue.submit_job(
+        :service     => "event",
+        :target_id   => ems_id,
+        :class_name  => "EmsEvent",
+        :method_name => meth,
+        :args        => [event],
+      )
+    end
   end
 
   def self.add(ems_id, event_hash)
@@ -116,7 +55,6 @@ class EmsEvent < EventStream
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
     process_container_entities_in_event!(event_hash)
-    process_middleware_entities_in_event!(event_hash)
 
     # Write the event
     new_event = create_event(event_hash)
@@ -146,13 +84,11 @@ class EmsEvent < EventStream
   def self.process_vm_in_event!(event, options = {})
     prefix           = options[:prefix]
     options[:id_key] = "#{prefix}vm_or_template_id".to_sym
+    uid_ems          = event.delete(:vm_uid_ems)
     process_object_in_event!(Vm, event, options)
 
     if options[:id_key] == :vm_or_template_id && event[:vm_or_template_id].nil?
-      # uid_ems is used for non-VC events, and should be nil for VC events.
-      uid_ems = event.fetch_path(:full_data, :vm, :uid_ems)
-      vm      = VmOrTemplate.find_by_uid_ems(uid_ems) unless uid_ems.nil?
-
+      vm = VmOrTemplate.find_by(:uid_ems => uid_ems) unless uid_ems.nil?
       unless vm.nil?
         event[:vm_or_template_id] = vm.id
         event[:vm_name] ||= vm.name
@@ -166,27 +102,15 @@ class EmsEvent < EventStream
 
   def self.process_container_entities_in_event!(event, _options = {})
     [ContainerNode, ContainerGroup, ContainerReplicator].each do |entity|
-      process_object_in_event!(entity, event, :ems_ref_key => :ems_ref)
+      process_object_in_event!(entity, event)
     end
-    event.except!(:ems_ref)
-  end
-
-  def self.process_middleware_entities_in_event!(event, _options = {})
-    middleware_type = event[:middleware_type]
-    if middleware_type
-      klass = middleware_type.safe_constantize
-      unless klass.nil?
-        process_object_in_event!(klass, event, :ems_ref_key => :middleware_ref)
-      end
-    end
-    event.except!(:middleware_ref, :middleware_type)
   end
 
   def self.process_availability_zone_in_event!(event, options = {})
     process_object_in_event!(AvailabilityZone, event, options)
     if event[:availability_zone_id].nil? && event[:vm_or_template_id]
       vm = VmOrTemplate.find(event[:vm_or_template_id])
-      if vm.respond_to? :availability_zone
+      if vm.respond_to?(:availability_zone)
         availability_zone = vm.availability_zone
         unless availability_zone.nil?
           event[:availability_zone_id]     = availability_zone.id
@@ -208,24 +132,18 @@ class EmsEvent < EventStream
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
+  def parse_event_metadata
+    data = full_data || {}
+    [
+      event_type == "datawarehouse_alert" ? message : nil,
+      data[:severity],
+      data[:url],
+      data[:resolved],
+    ]
+  end
+
   def first_chained_event
     @first_chained_event ||= EmsEvent.first_chained_event(ems_id, chain_id) || self
-  end
-
-  def group
-    return @group unless @group.nil?
-    @group, @group_level = self.class.group_and_level(event_type)
-    @group
-  end
-
-  def group_level
-    return @group_level unless @group_level.nil?
-    @group, @group_level = self.class.group_and_level(event_type)
-    @group_level
-  end
-
-  def group_name
-    @group_name ||= self.class.group_name(group)
   end
 
   def get_target(target_type)
@@ -239,7 +157,7 @@ class EmsEvent < EventStream
 
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
-    target_type = "middleware_server"   if event.event_type == "hawkular_event"
+    target_type = "target"              if event.event_type == "datawarehouse_alert"
 
     event.send(target_type)
   end
@@ -248,20 +166,37 @@ class EmsEvent < EventStream
     (vm_or_template || ext_management_system).tenant_identity
   end
 
+  def manager_refresh_targets
+    require "inventory_refresh"
+    ext_management_system.class::EventTargetParser.new(self).parse
+  end
+
+  def self.display_name(number = 1)
+    n_('Management Event', 'Management Events', number)
+  end
+
   private
 
+  def self.event_allowed_ems_ref_keys
+    %w(vm_ems_ref dest_vm_ems_ref)
+  end
+  private_class_method :event_allowed_ems_ref_keys
+
   def self.create_event(event)
-    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") }
+    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
-      :event_type => event[:event_type],
-      :timestamp  => event[:timestamp],
-      :chain_id   => event[:chain_id],
-      :ems_id     => event[:ems_id]
+      :event_type  => event[:event_type],
+      :timestamp   => event[:timestamp],
+      :chain_id    => event[:chain_id],
+      :ems_id      => event[:ems_id],
+      :ems_ref     => event[:ems_ref],
     )
     new_event.handle_event if new_event
     new_event
   end
+
+  private_class_method :create_event
 
   def self.create_completed_event(event, orig_task = nil)
     if orig_task.nil?
@@ -297,6 +232,7 @@ class EmsEvent < EventStream
         :host_id           => source_event.host_id,
         :vm_name           => source_event.vm_name,
         :vm_location       => source_event.vm_location,
+        :vm_ems_ref        => source_event.vm_ems_ref,
         :vm_or_template_id => source_event.vm_or_template_id
       }
       new_event[:username] = event.username unless event.username.blank?
@@ -311,6 +247,7 @@ class EmsEvent < EventStream
           :dest_host_id           => dest_event.host_id,
           :dest_vm_name           => dest_event.send("#{dest_key}vm_name"),
           :dest_vm_location       => dest_event.send("#{dest_key}vm_location"),
+          :dest_vm_ems_ref        => dest_event.send("#{dest_key}vm_ems_ref"),
           :dest_vm_or_template_id => dest_event.send("#{dest_key}vm_or_template_id")
         )
       end
@@ -318,6 +255,8 @@ class EmsEvent < EventStream
       create_event(new_event)
     end
   end
+
+  private_class_method :create_completed_event
 
   def get_refresh_target(target_type)
     m = "#{target_type}_refresh_target"
@@ -328,6 +267,10 @@ class EmsEvent < EventStream
     (vm_or_template && vm_or_template.ext_management_system ? vm_or_template : host_refresh_target)
   end
   alias_method :src_vm_refresh_target, :vm_refresh_target
+
+  def src_vm_or_dest_host_refresh_target
+    vm_or_template ? vm_refresh_target : dest_host_refresh_target
+  end
 
   def host_refresh_target
     (host && host.ext_management_system ? host : ems_refresh_target)

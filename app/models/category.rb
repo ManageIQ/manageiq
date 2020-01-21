@@ -1,5 +1,5 @@
 class Category < Classification
-  default_scope { where(:parent_id => 0) }
+  default_scope { is_category }
 
   def tags
     Tag.joins(:classification).where(:classifications => {:parent_id => id})

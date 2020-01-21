@@ -2,18 +2,13 @@ module Service::RetirementManagement
   extend ActiveSupport::Concern
   include RetirementMixin
 
-  module ClassMethods
-    def retirement_check
-      services = Service.where("retires_on IS NOT NULL OR retired = ?", true)
-      services.each(&:retirement_check)
-    end
-  end
-
   def before_retirement
     children.each(&:retire_now)
   end
 
   def retire_service_resources
+    # TODO: delete me per https://github.com/ManageIQ/manageiq/pull/16933#discussion_r175805070
+    return
     direct_service_children.each(&:retire_service_resources)
 
     service_resources.each do |sr|

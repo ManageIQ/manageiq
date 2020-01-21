@@ -3,29 +3,27 @@ class Job < ApplicationRecord
   include UuidMixin
   include FilterableMixin
 
+  belongs_to :miq_task, :dependent => :delete
+  belongs_to :miq_server
+
   serialize :options
   serialize :context
   alias_attribute :jobid, :guid
 
   before_destroy :check_active_on_destroy
+  after_update_commit :update_linked_task
 
   DEFAULT_TIMEOUT = 300
   DEFAULT_USERID  = 'system'.freeze
 
-  def self.get_job_class(process_type)
-    return Object.const_get(process_type)
-  rescue NameError
-    raise "Cannot Find Job Class=<#{process_type}> because it is not defined"
-  end
-
-  def self.create_job(process_type, options = {})
-    klass = get_job_class(process_type)
+  def self.create_job(options = {})
     ar_options = options.dup.delete_if { |k, _v| !Job.column_names.include?(k.to_s) }
-    job = klass.new(ar_options)
+    job = new(ar_options)
     job.options = options
     job.initialize_attributes
     job.save
-    $log.info "Job created: guid: [#{job.guid}], userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}], zone: [#{job.zone}]"
+    job.create_miq_task(job.attributes_for_task)
+    $log.info("Job created: #{job.attributes_log}")
     job.signal(:initializing)
     job
   end
@@ -36,44 +34,42 @@ class Job < ApplicationRecord
 
   delegate :current_job_timeout, :to => :class
 
+  def update_linked_task
+    miq_task&.update!(attributes_for_task)
+  end
+
   def initialize_attributes
     self.name ||= "#{type} created on #{Time.now.utc}"
     self.userid ||= DEFAULT_USERID
     self.context ||= {}
     self.options ||= {}
     self.status   = "ok"
-    self.code     = 0
     self.message  = "process initiated"
   end
 
   def check_active_on_destroy
     if self.is_active?
-      _log.warn "Job is active, delete not allowed - guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
-      return false
+      _log.warn("Job is active, delete not allowed - #{attributes_log}")
+      throw :abort
     end
 
-    _log.info "Job deleted: guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], agent class: [#{agent_class}], agent id: [#{agent_id}], zone: [#{zone}]"
+    _log.info("Job deleted: #{attributes_log}")
     true
   end
 
-  def self.agent_state_update_queue(jobid, state, message = nil)
-    job = Job.where("guid = ?", jobid).select("id, state, guid").first
-    unless job.nil?
-      job.agent_state_update(state, message)
+  def self.update_message(job_guid, message)
+    job = Job.find_by(:guid => job_guid)
+    if job
+      job.update_message(message)
     else
-      _log.warn "jobid: [#{jobid}] not found"
+      _log.warn("jobs.guid: [#{jobid}] not found")
     end
-  rescue => err
-    _log.warn "Error '#{err.message}', updating jobid: [#{jobid}]"
-    _log.log_backtrace(err)
   end
 
-  def agent_state_update(agent_state, agent_message = nil)
-    # Handle a single array parm coming from the queue
-    agent_state, agent_message = agent_state if agent_state.kind_of?(Array)
-
-    $log.info("JOB([#{guid}] Agent state update: state: [#{agent_state}], message: [#{agent_message}]")
-    update_attributes(:agent_state => agent_state, :agent_message => agent_message)
+  def update_message(message)
+    $log.info("JOB([#{guid}] Message update: [#{message}]")
+    self.message = message
+    save
 
     return unless self.is_active?
 
@@ -81,32 +77,15 @@ class Job < ApplicationRecord
     MiqQueue.get_worker(guid).try(:update_heartbeat)
   end
 
-  def self.signal_by_taskid(guid, signal, *args)
-    # send a signal to job by guid
-    return if guid.nil?
-
-    _log.info("Guid: [#{guid}], Signal: [#{signal}]")
-
-    job = find_by_guid(guid)
-    return if job.nil?
-
-    begin
-      job.signal(signal, *args)
-    rescue => err
-      _log.info("Guid: [#{guid}], Signal: [#{signal}], unable to deliver signal, #{err}")
-    end
-  end
-
-  def set_status(message, status = "ok", code = 0)
+  def set_status(message, status = "ok")
     self.message = message
     self.status  = status
-    self.code    = code
 
     save
   end
 
   def dispatch_start
-    _log.info "Dispatch Status is 'pending'"
+    _log.info("Dispatch Status is 'pending'")
     self.dispatch_status = "pending"
     save
     @storage_dispatcher_process_finish_flag = false
@@ -114,7 +93,7 @@ class Job < ApplicationRecord
 
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
-    _log.info "Dispatch Status is 'finished'"
+    _log.info("Dispatch Status is 'finished'")
     self.dispatch_status = "finished"
     save
     @storage_dispatcher_process_finish_flag = true
@@ -124,50 +103,49 @@ class Job < ApplicationRecord
     options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
     options[:status] ||= "ok"
-    _log.info "job canceling, #{options[:message]}"
+    _log.info("job canceling, #{options[:message]}")
     signal(:finish, options[:message], options[:status])
   end
 
   def process_error(*args)
     message, status = args
-    _log.error message.to_s
-    set_status(message, status, 1)
+    _log.error(message.to_s)
+    set_status(message, status)
   end
 
   def process_abort(*args)
     message, status = args
-    _log.error "job aborting, #{message}"
-    set_status(message, status, 1)
+    _log.error("job aborting, #{message}")
+    set_status(message, status)
     signal(:finish, message, status)
   end
 
   def process_finished(*args)
     message, status = args
-    _log.info "job finished, #{message}"
+    _log.info("job finished, #{message}")
     set_status(message, status)
     dispatch_finish
   end
 
   def timeout!
-    MiqQueue.put_unless_exists(
+    message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
+    _log.warn("Job: guid: [#{guid}], #{message}, aborting")
+    attributes = { :args => [message, "error"] }
+    MiqQueue.create_with(attributes).put_unless_exists(
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => "signal_abort",
       :role        => "smartstate",
       :zone        => MiqServer.my_zone
-    ) do |_msg, find_options|
-      message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
-      _log.warn("Job: guid: [#{guid}], #{message}, aborting")
-      find_options.merge(:args => [message, "error"])
-    end
+    )
   end
 
   def target_entity
-    target_class.constantize.find_by_id(target_id)
+    target_class.constantize.find_by(:id => target_id) if target_class
   end
 
   def self.check_jobs_for_timeout
-    $log.debug "Checking for timed out jobs"
+    $log.debug("Checking for timed out jobs")
     begin
       in_my_region
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")
@@ -176,9 +154,9 @@ class Job < ApplicationRecord
           next unless job.updated_on < job.current_job_timeout(job.timeout_adjustment).seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
-          if job.agent_class == "MiqServer"
-            # TODO: can we add method_name, queue_name, role, instance_id to the exists?
-            next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid, :class_name => job.agent_class)
+          # TODO: can we add method_name, queue_name, role, instance_id to the exists?
+          if job.miq_server_id
+            next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid, :class_name => "MiqServer")
           end
           job.timeout!
         end
@@ -193,6 +171,9 @@ class Job < ApplicationRecord
     if target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
        target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
       timeout_adjustment = 4
+    elsif target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
+          target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Template)
+      timeout_adjustment = 4
     end
     timeout_adjustment
   end
@@ -202,7 +183,7 @@ class Job < ApplicationRecord
   end
 
   def self.guid_active?(job_guid, timestamp, job_not_found_delay)
-    job = Job.find_by_guid(job_guid)
+    job = Job.find_by(:guid => job_guid)
 
     # If job was found, return whether it is active
     return job.is_active? unless job.nil?
@@ -217,18 +198,6 @@ class Job < ApplicationRecord
     (timestamp >= job_not_found_delay.seconds.ago)
   end
 
-  def self.extend_timeout(_host_id, jobs)
-    jobs = Marshal.load(jobs)
-    job_guids = jobs.collect { |j| j[:taskid] }
-    unless job_guids.empty?
-      Job.where(:guid => job_guids).where.not(:state => 'finished').each do |job|
-        _log.debug("Job: guid: [#{job.guid}], job timeout extended due to work pending.")
-        job.updated_on = Time.now.utc
-        job.save
-      end
-    end
-  end
-
   def is_active?
     !["finished", "waiting_to_start"].include?(state)
   end
@@ -241,12 +210,27 @@ class Job < ApplicationRecord
 
   def self.delete_by_id(ids)
     _log.info("Queuing deletion of jobs with the following ids: #{ids.inspect}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [ids],
-      :zone        => MiqServer.my_zone
     )
+  end
+
+  def attributes_for_task
+    {:status        => status.try(:capitalize),
+     :state         => state == "waiting_to_start" ? MiqTask::STATE_QUEUED : state.try(:capitalize),
+     :name          => name,
+     :message       => message,
+     :userid        => userid,
+     :miq_server_id => miq_server_id,
+     :context_data  => context,
+     :zone          => zone,
+     :started_on    => started_on}
+  end
+
+  def attributes_log
+    "guid: [#{guid}], userid: [#{self.userid}], name: [#{self.name}], target class: [#{target_class}], target id: [#{target_id}], process type: [#{type}], server id: [#{miq_server_id}], zone: [#{zone}]"
   end
 end # class Job

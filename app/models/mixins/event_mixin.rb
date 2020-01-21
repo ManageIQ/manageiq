@@ -8,12 +8,12 @@ module EventMixin
 
   def first_event(assoc = :ems_events)
     event = find_one_event(assoc, "timestamp ASC")
-    event.nil? ? nil : event.timestamp
+    event.try(:timestamp)
   end
 
   def last_event(assoc = :ems_events)
     event = find_one_event(assoc, "timestamp DESC")
-    event.nil? ? nil : event.timestamp
+    event.try(:timestamp)
   end
 
   def first_and_last_event(assoc = :ems_events)

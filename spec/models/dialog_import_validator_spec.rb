@@ -1,5 +1,6 @@
 describe DialogImportValidator do
-  let(:dialog_import_validator) { described_class.new }
+  let(:dialog_field_association_validator) { instance_double("DialogFieldAssociationValidator") }
+  let(:dialog_import_validator) { described_class.new(dialog_field_association_validator) }
 
   describe "#determine_validity" do
     let(:import_file_upload) do
@@ -23,6 +24,39 @@ describe DialogImportValidator do
         expect do
           dialog_import_validator.determine_validity(import_file_upload)
         end.to raise_error(DialogImportValidator::ImportNonYamlError)
+      end
+    end
+
+    context "when the yaml is invalid yaml" do
+      let(:uploaded_content) { "" }
+
+      it "raises a DialogImportValidator::BlankFileError" do
+        expect do
+          dialog_import_validator.determine_validity(import_file_upload)
+        end.to raise_error(DialogImportValidator::BlankFileError)
+      end
+    end
+
+    context "when associations are blank" do
+      let(:uploaded_content) do
+        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1"}]}]}]}].to_yaml
+      end
+
+      it "does not raise an error" do
+        expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
+        expect(dialog_field_association_validator).not_to receive(:check_for_circular_references)
+      end
+    end
+
+    context "when associations present" do
+      let(:uploaded_content) do
+        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}, {"name" => "foo", "dialog_field_responders" => "df1"}]}]}]}].to_yaml
+      end
+
+      it "calls the circular ref checker" do
+        expect(dialog_field_association_validator).to receive(:check_for_circular_references).at_least(:twice)
+
+        dialog_import_validator.determine_validity(import_file_upload)
       end
     end
 
@@ -106,6 +140,20 @@ describe DialogImportValidator do
         expect do
           dialog_import_validator.determine_dialog_validity(dialog_content)
         end.to raise_error(DialogImportValidator::ParsedNonDialogError)
+      end
+    end
+
+    context 'when the loaded yaml has invalid version' do
+      let(:dialog_with_invalid_version) do
+        left, dot, last = DialogImportService::CURRENT_DIALOG_VERSION.rpartition('.')
+        version = "#{left}#{dot}#{last.to_i + 1}" # one more than current version
+        {"label" => "Test", "dialog_tabs" => [], 'export_version' => version}
+      end
+
+      it "raises a InvalidDialogVersionError" do
+        expect do
+          dialog_import_validator.determine_dialog_validity(dialog_with_invalid_version)
+        end.to raise_error(DialogImportValidator::InvalidDialogVersionError)
       end
     end
   end

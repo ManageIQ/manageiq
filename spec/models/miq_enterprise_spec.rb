@@ -1,7 +1,7 @@
 describe MiqEnterprise do
   include_examples ".seed called multiple times"
 
-  let(:enterprise) { FactoryGirl.create(:miq_enterprise) }
+  let(:enterprise) { FactoryBot.create(:miq_enterprise) }
 
   context "with all existing records" do
     it "#miq_regions" do
@@ -11,61 +11,61 @@ describe MiqEnterprise do
     end
 
     it "#ext_management_systems" do
-      ems = [FactoryGirl.create(:ems_vmware), FactoryGirl.create(:ems_vmware)]
+      ems = [FactoryBot.create(:ems_vmware), FactoryBot.create(:ems_vmware)]
 
       expect(enterprise.ext_management_systems).to match_array(ems)
     end
 
     it "#storages" do
-      storage = FactoryGirl.create(:storage)
+      storage = FactoryBot.create(:storage)
 
       expect(enterprise.storages).to eq([storage])
     end
 
     it "#policy_events" do
-      policy_events = [FactoryGirl.create(:policy_event), FactoryGirl.create(:policy_event)]
+      policy_events = [FactoryBot.create(:policy_event), FactoryBot.create(:policy_event)]
 
       expect(enterprise.policy_events).to match_array(policy_events)
     end
   end
 
   context "with some existing records" do
-    before(:each) do
-      @ems  = FactoryGirl.create(:ems_vmware)
+    before do
+      @ems  = FactoryBot.create(:ems_vmware)
     end
 
     it "#vms_and_templates" do
-      vm_1 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
-      FactoryGirl.create(:vm_vmware)
+      vm_1 = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
+      FactoryBot.create(:vm_vmware)
 
-      template_1 = FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
-      FactoryGirl.create(:template_vmware)
+      template_1 = FactoryBot.create(:template_vmware, :ext_management_system => @ems)
+      FactoryBot.create(:template_vmware)
 
       expect(enterprise.vms_and_templates).to match_array([vm_1, template_1])
     end
 
     it "#vms" do
-      vm   = [FactoryGirl.create(:vm_vmware, :ext_management_system => @ems),
-              FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)]
+      vm   = [FactoryBot.create(:vm_vmware, :ext_management_system => @ems),
+              FactoryBot.create(:vm_vmware, :ext_management_system => @ems)]
 
-      FactoryGirl.create(:vm_vmware)
+      FactoryBot.create(:vm_vmware)
 
       expect(enterprise.vms).to match_array(vm)
     end
 
     it "#miq_templates" do
-      template = FactoryGirl.create(:template_redhat, :ext_management_system => @ems)
+      template = FactoryBot.create(:template_redhat, :ext_management_system => @ems)
 
-      FactoryGirl.create(:template_redhat)
+      FactoryBot.create(:template_redhat)
 
       expect(enterprise.miq_templates).to eq([template])
     end
 
     it "#hosts" do
-      hosts = [FactoryGirl.create(:host_vmware, :ext_management_system => @ems),
-               FactoryGirl.create(:host_vmware, :ext_management_system => @ems)]
+      hosts = [FactoryBot.create(:host_vmware, :ext_management_system => @ems),
+               FactoryBot.create(:host_vmware, :ext_management_system => @ems)]
 
-      FactoryGirl.create(:host_vmware)
+      FactoryBot.create(:host_vmware)
 
       expect(enterprise.hosts).to match_array(hosts)
     end

@@ -1,5 +1,8 @@
 class PxeMenu < ApplicationRecord
+  include NewWithTypeStiMixin
+
   belongs_to :pxe_server
+  has_many :pxe_images, :dependent => :destroy
 
   def self.class_from_contents(contents)
     line = contents.to_s.each_line { |l| break l }
@@ -70,5 +73,9 @@ class PxeMenu < ApplicationRecord
     pxe_images.delete(current.values)
 
     _log.info("Synchronizing Menu Items in Menu [#{file_name}] on PXE Server [#{pxe_server.name}]... Complete - #{stats.inspect}")
+  end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu', 'PXE Menus', number)
   end
 end

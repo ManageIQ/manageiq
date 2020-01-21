@@ -1,29 +1,29 @@
 module EmsRefresh::LinkInventory
   # Link EMS inventory through the relationships table
-  def link_ems_inventory(ems, target, prev_relats, new_relats)
+  def link_ems_inventory(ems, target, prev_relats, new_relats, disconnect = true)
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
-    _log.info "#{log_header} Linking EMS Inventory..."
-    _log.debug "#{log_header} prev_relats: #{prev_relats.inspect}"
-    _log.debug "#{log_header} new_relats:  #{new_relats.inspect}"
+    _log.info("#{log_header} Linking EMS Inventory...")
+    _log.debug("#{log_header} prev_relats: #{prev_relats.inspect}")
+    _log.debug("#{log_header} new_relats:  #{new_relats.inspect}")
 
     if prev_relats == new_relats
-      _log.info "#{log_header} Linking EMS Inventory...Complete"
+      _log.info("#{log_header} Linking EMS Inventory...Complete")
       return
     end
 
     # Hook up a relationship from the EMS to the root folder
-    _log.info "#{log_header} Updating EMS root folder relationship."
+    _log.info("#{log_header} Updating EMS root folder relationship.")
     root_id = new_relats[:ext_management_systems_to_folders][ems.id][0]
     if root_id.nil?
-      ems.remove_all_children
+      ems.remove_all_children if disconnect
     else
-      ems.replace_children(instance_with_id(EmsFolder, root_id))
+      ems.replace_children(instance_with_id(EmsFolder, root_id)) if disconnect
     end
 
     # Do the Folders to *, and Clusters to * relationships
     #   For these, we only disconnect when doing an EMS refresh since we don't have
     #   enough information in the filtered data for other refresh types
-    do_disconnect = target.kind_of?(ExtManagementSystem)
+    do_disconnect = target.kind_of?(ExtManagementSystem) if disconnect
 
     # Do the Folders to Folders relationships
     update_relats(:folders_to_folders, prev_relats, new_relats) do |f|
@@ -47,17 +47,12 @@ module EmsRefresh::LinkInventory
     update_relats(:folders_to_hosts, prev_relats, new_relats) do |f|
       folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      [do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil,            # Disconnect proc
-       proc { |h| host = instance_with_id(Host, h); host.replace_parent(folder) unless host.nil? }] # Connect proc
-    end
-
-    # Do the Folders to Vms relationships
-    update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
-      folder = instance_with_id(EmsFolder, f)
-      break if folder.nil?
-      [do_disconnect ? proc { |v| folder.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
-       proc { |v| folder.add_vm(instance_with_id(VmOrTemplate, v)) },                          # Connect proc
-       proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
+      disconnect_proc = do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil
+      connect_proc = proc do |h|
+        host = instance_with_id(Host, h)
+        host.replace_parent(folder) unless host.nil?
+      end
+      [disconnect_proc, connect_proc]
     end
 
     # Do the Folders to Storages relationships
@@ -81,14 +76,25 @@ module EmsRefresh::LinkInventory
     # Do the Hosts to * relationships, ResourcePool to * relationships
     #   For these, we only disconnect when doing an EMS or Host refresh since we don't
     #   have enough information in the filtered data for other refresh types
-    do_disconnect ||= target.kind_of?(Host)
+    do_disconnect ||= target.kind_of?(Host) if disconnect
 
     # Do the Hosts to ResourcePools relationships
     update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
       host = instance_with_id(Host, h)
       break if host.nil?
-      [do_disconnect ? proc { |r| rp = instance_with_id(ResourcePool, r); rp.remove_parent(host) unless rp.nil? } : nil, # Disconnect proc
-       proc { |r| rp = instance_with_id(ResourcePool, r); rp.set_parent(host) unless rp.nil? }]                          # Connect proc
+      disconnect_proc = if do_disconnect
+        proc do |r|
+          rp = instance_with_id(ResourcePool, r)
+          rp.remove_parent(host) unless rp.nil?
+        end
+      else
+        nil
+      end
+      connect_proc = proc do |r|
+        rp = instance_with_id(ResourcePool, r)
+        rp.set_parent(host) unless rp.nil?
+      end
+      [disconnect_proc, connect_proc]
     end
 
     # Do the ResourcePools to ResourcePools relationships
@@ -101,19 +107,30 @@ module EmsRefresh::LinkInventory
     end
 
     # Do the VMs to * relationships
-    #   We do disconnects for all refresh types since we have enough
-    #   information in the filtered data for all refresh types
+    #   We do disconnects for EMS, Host, and Vm target types since
+    #   we have enough information in the filtered data
+
+    do_disconnect ||= target.kind_of?(VmOrTemplate) if disconnect
+
+    # Do the Folders to Vms relationships
+    update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
+      break if folder.nil?
+      [do_disconnect ? proc { |v| folder.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
+       proc { |v| folder.add_vm(instance_with_id(VmOrTemplate, v)) },                          # Connect proc
+       proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
+    end
 
     # Do the ResourcePools to VMs relationships
     update_relats(:resource_pools_to_vms, prev_relats, new_relats) do |r|
       rp = instance_with_id(ResourcePool, r)
       break if rp.nil?
-      [proc { |v|  rp.remove_vm(instance_with_id(VmOrTemplate, v)) }, # Disconnect proc
+      [do_disconnect ? proc { |v| rp.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
        proc { |v|  rp.add_vm(instance_with_id(VmOrTemplate, v)) },    # Connect proc
        proc { |vs| rp.add_vm(instances_with_ids(VmOrTemplate, vs)) }] # Bulk connect proc
     end
 
-    _log.info "#{log_header} Linking EMS Inventory...Complete"
+    _log.info("#{log_header} Linking EMS Inventory...Complete")
   end
 
   def instance_with_id(klass, id)
@@ -134,8 +151,7 @@ module EmsRefresh::LinkInventory
     update_relats_by_ids(prev_ids, new_ids,
                          do_disconnect ? proc { |s| object.send(accessor).delete(instance_with_id(model, s)) } : nil, # Disconnect proc
                          proc { |s| object.send(accessor) << instance_with_id(model, s) },                            # Connect proc
-                         proc { |ss| object.send(accessor) << instances_with_ids(model, ss) }                         # Bulk connect proc
-                        )
+                         proc { |ss| object.send(accessor) << instances_with_ids(model, ss) }) # Bulk connect proc
   end
 
   #
@@ -143,7 +159,7 @@ module EmsRefresh::LinkInventory
   #
 
   def update_relats(type, prev_relats, new_relats)
-    _log.info "Updating #{type.to_s.titleize} relationships."
+    _log.info("Updating #{type.to_s.titleize} relationships.")
 
     if new_relats[type].kind_of?(Array) || prev_relats[type].kind_of?(Array)
       # Case where we have a single set of ids
@@ -170,7 +186,7 @@ module EmsRefresh::LinkInventory
         begin
           disconnect_proc.call(p)
         rescue => err
-          _log.error "An error occurred while disconnecting id [#{p}]: #{err}"
+          _log.error("An error occurred while disconnecting id [#{p}]: #{err}")
           _log.log_backtrace(err)
         end
       end
@@ -181,7 +197,7 @@ module EmsRefresh::LinkInventory
         begin
           bulk_connect.call(new_ids)
         rescue => err
-          _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting ids [#{new_ids.join(',')}]: #{err}"
+          _log.error("EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting ids [#{new_ids.join(',')}]: #{err}")
           _log.log_backtrace(err)
         end
       elsif connect_proc
@@ -189,7 +205,7 @@ module EmsRefresh::LinkInventory
           begin
             connect_proc.call(n)
           rescue => err
-            _log.error "EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}"
+            _log.error("EMS: [#{@ems.name}], id: [#{@ems.id}] An error occurred while connecting id [#{n}]: #{err}")
             _log.log_backtrace(err)
           end
         end

@@ -32,7 +32,7 @@ class ChargebackContainerProject < Chargeback
                 elsif provider_id == "all"
                   ContainerProject.all
                 elsif provider_id.present? && project_id == "all"
-                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                  ContainerProject.where(:ems_id => provider_id)
                 elsif project_id.present?
                   ContainerProject.where(:id => project_id)
                 elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
@@ -42,23 +42,12 @@ class ChargebackContainerProject < Chargeback
     return [[]] if @projects.empty?
 
     build_results_for_report_chargeback(options)
+  ensure
+    @projects = nil
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
-    extra_fields = {
-      "project_name"  => perf.resource_name,
-      "project_uid"   => perf.resource.ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid),
-      "archived"      => perf.resource.archived? ? _("Yes") : _("No")
-    }
-
-    [key, extra_fields]
-  end
-
-  def self.where_clause(records, _options)
-    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
+  def self.where_clause(records, _options, region)
+    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.in_region(region).select(:id))
   end
 
   def self.report_static_cols
@@ -81,8 +70,17 @@ class ChargebackContainerProject < Chargeback
     }
   end
 
-  def get_rate_parents(perf)
-    # Get rate from assigned containers providers only
-    [perf.parent_ems].compact
+  def self.display_name(number = 1)
+    n_('Chargeback for Projects', 'Chargebacks for Projects', number)
+  end
+
+  private
+
+  def init_extra_fields(consumption, _region)
+    self.project_name  = consumption.resource_name
+    self.project_uid   = consumption.resource.ems_ref
+    self.provider_name = consumption.parent_ems.try(:name)
+    self.provider_uid  = consumption.parent_ems.try(:guid)
+    self.archived      = consumption.resource.archived? ? _('Yes') : _('No')
   end
 end # class Chargeback

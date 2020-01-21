@@ -2,7 +2,7 @@ class PrincePdfGenerator < PdfGenerator
   include Vmdb::Logging
   def self.executable
     return @executable if defined?(@executable)
-    @executable = `which prince`.chomp
+    @executable = `which prince 2> /dev/null`.chomp
   end
 
   def self.available?
@@ -16,12 +16,11 @@ class PrincePdfGenerator < PdfGenerator
   def pdf_from_string(html_string, stylesheet)
     options = {
       :params  => {
-        :input    => "html",
-        :style    => stylesheet,
-        :fileroot => Rails.public_path,
-        :log      => Rails.root.join("log/prince.log"),
-        :output   => "-", # Write to stdout
-        "-"       => nil  # Read from stdin
+        :input  => "html",
+        :style  => stylesheet,
+        :log    => Rails.root.join("log", "prince.log"),
+        :output => "-", # Write to stdout
+        "-"     => nil  # Read from stdin
       },
       :in_data => html_string
     }

@@ -1,13 +1,13 @@
 describe VmReconfigureRequest do
-  let(:admin)         { FactoryGirl.create(:user, :userid => "tester") }
-  let(:ems_vmware)    { FactoryGirl.create(:ems_vmware, :zone => zone2) }
-  let(:host_hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
-  let(:host)          { FactoryGirl.build(:host, :hardware => host_hardware) }
-  let(:request)       { FactoryGirl.create(:vm_reconfigure_request, :requester => admin) }
-  let(:vm_hardware)   { FactoryGirl.build(:hardware, :virtual_hw_version => "07") }
-  let(:vm_redhat)     { FactoryGirl.create(:vm_redhat) }
-  let(:vm_vmware)     { FactoryGirl.create(:vm_vmware, :hardware => vm_hardware, :host => host) }
-  let(:zone2)         { FactoryGirl.create(:zone, :name => "zone_2") }
+  let(:admin)         { FactoryBot.create(:user, :userid => "tester") }
+  let(:ems_vmware)    { FactoryBot.create(:ems_vmware, :zone => zone2) }
+  let(:host_hardware) { FactoryBot.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
+  let(:host)          { FactoryBot.build(:host, :hardware => host_hardware) }
+  let(:request)       { FactoryBot.create(:vm_reconfigure_request, :requester => admin) }
+  let(:vm_hardware)   { FactoryBot.build(:hardware, :virtual_hw_version => "07") }
+  let(:vm_redhat)     { FactoryBot.create(:vm_redhat) }
+  let(:vm_vmware)     { FactoryBot.create(:vm_vmware, :hardware => vm_hardware, :host => host) }
+  let(:zone2)         { FactoryBot.create(:zone, :name => "zone_2") }
 
   before { _guid, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone }
 
@@ -15,8 +15,8 @@ describe VmReconfigureRequest do
 
   context '#my_zone' do
     it "with valid source should have the VM's zone, not the requests zone" do
-      vm_vmware.update_attributes(:ems_id => ems_vmware.id)
-      request.update_attributes(:options => {:src_ids => [vm_vmware.id]})
+      vm_vmware.update(:ems_id => ems_vmware.id)
+      request.update(:options => {:src_ids => [vm_vmware.id]})
 
       expect(request.my_zone).to     eq(vm_vmware.my_zone)
       expect(request.my_zone).not_to eq(@zone1.name)
@@ -28,7 +28,7 @@ describe VmReconfigureRequest do
   end
 
   describe "#make_request" do
-    let(:alt_user) { FactoryGirl.create(:user_with_group) }
+    let(:alt_user) { FactoryBot.create(:user_with_group) }
     it "creates and update a request" do
       EvmSpecHelper.local_miq_server
 
@@ -95,7 +95,7 @@ describe VmReconfigureRequest do
       end
 
       it "multiple vms" do
-        @options = {:src_ids => [vm_redhat.id, FactoryGirl.create(:vm_redhat).id]}
+        @options = {:src_ids => [vm_redhat.id, FactoryBot.create(:vm_redhat).id]}
 
         assert_rhev_cpu_and_memory_min_max
       end
@@ -109,8 +109,8 @@ describe VmReconfigureRequest do
       end
 
       it "multiple vms" do
-        hardware = FactoryGirl.build(:hardware, :virtual_hw_version => "07")
-        @options = {:src_ids => [vm_vmware.id, FactoryGirl.create(:vm_vmware, :host => host, :hardware => hardware).id]}
+        hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07")
+        @options = {:src_ids => [vm_vmware.id, FactoryBot.create(:vm_vmware, :host => host, :hardware => hardware).id]}
 
         assert_vmware_cpu_and_memory_min_max
       end

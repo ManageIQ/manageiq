@@ -1,8 +1,8 @@
 describe MiqProvision do
   context "A new provision request," do
-    before(:each) do
+    before do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
-      @admin = FactoryGirl.create(:user_with_group, :role => "admin")
+      @admin = FactoryBot.create(:user_with_group, :role => "admin")
       @target_vm_name = 'clone test'
       @options = {
         :pass          => 1,
@@ -13,18 +13,20 @@ describe MiqProvision do
       }
     end
 
+    let(:miq_region) { MiqRegion.create }
+
     context "with VMware infrastructure" do
-      before(:each) do
-        @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
-        @vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
-        @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
+      before do
+        @ems         = FactoryBot.create(:ems_vmware_with_authentication)
+        @vm_template = FactoryBot.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
+        @vm          = FactoryBot.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
       end
 
       context "with a valid userid and source vm," do
-        before(:each) do
-          @pr = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
+        before do
+          @pr = FactoryBot.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
           @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-          @vm_prov = FactoryGirl.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
+          @vm_prov = FactoryBot.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
         end
 
         it "should get values out of an arrays in the options hash" do
@@ -46,6 +48,7 @@ describe MiqProvision do
         end
 
         it "should populate description, target_name and target_hostname" do
+          allow(@vm_prov).to receive(:get_next_vm_name).and_return("test_vm")
           @vm_prov.after_request_task_create
           expect(@vm_prov.description).not_to be_nil
           expect(@vm_prov.get_option(:vm_target_name)).not_to be_nil
@@ -53,10 +56,15 @@ describe MiqProvision do
         end
 
         it "should create a valid target_name and hostname" do
-          MiqRegion.seed
+          expect(MiqRegion).to receive(:my_region).and_return(miq_region).twice
+          ae_workspace = double("ae_workspace")
+          expect(ae_workspace).to receive(:root).and_return(@target_vm_name)
+          expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).exactly(3).times
+
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_name)).to eq(@target_vm_name)
 
+          expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
           @vm_prov.options[:number_of_vms] = 2
           @vm_prov.after_request_task_create
           name_001 = "#{@target_vm_name}001"
@@ -72,14 +80,58 @@ describe MiqProvision do
           expect(@vm_prov.get_option(:vm_target_hostname)).to eq(name_002.gsub(/ +|_+/, "-"))
         end
 
+        context "#update_vm_name" do
+          it "does not modify a fully resolved vm_name" do
+            @vm_prov.update_vm_name(@target_vm_name)
+            expect(@vm_prov.get_option(:vm_target_name)).to eq(@target_vm_name)
+          end
+
+          it "Enumerates vm_name that contains the naming sequence characters" do
+            expect(MiqRegion).to receive(:my_region).and_return(miq_region)
+
+            @vm_prov.update_vm_name("#{@target_vm_name}$n{3}")
+            expect(@vm_prov.get_option(:vm_target_name)).to eq("#{@target_vm_name}001")
+          end
+
+          it "Updates the request description with only name parameter passed" do
+            expect(@pr).to receive(:update_description_from_tasks).and_call_original
+
+            @vm_prov.update_vm_name(@target_vm_name)
+
+            expect(@vm_prov.description).to eq("Provision from [template1] to [clone test]")
+            expect(@pr.description).to eq(@vm_prov.description)
+          end
+
+          it "Does not update the request description when `update_request` parameter is false" do
+            expect(@pr).not_to receive(:update_description_from_tasks)
+
+            @vm_prov.update_vm_name(@target_vm_name, :update_request => false)
+          end
+
+          it "When task is part of a ServiceTemplateProvisionRequest the description should not update" do
+            request_descripton = "Service Name Test"
+            service_provision_request = FactoryBot.create(:service_template_provision_request, :description => request_descripton)
+            @vm_prov.update(:miq_request_id => service_provision_request.id)
+
+            expect(service_provision_request).not_to receive(:update_description_from_tasks)
+            @vm_prov.update_vm_name(@target_vm_name, :update_request => true)
+
+            expect(service_provision_request.description).to eq(request_descripton)
+          end
+        end
+
         context "when auto naming sequence exceeds the range" do
           before do
-            region = MiqRegion.seed
-            region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
-            region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
+            expect(MiqRegion).to receive(:my_region).exactly(3).times.and_return(miq_region)
+            miq_region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
+            miq_region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
           end
 
           it "should advance to next range but based on the existing sequence number for the new range" do
+            ae_workspace = double("ae_workspace")
+            expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
+            expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).twice
+
             @vm_prov.options[:number_of_vms] = 2
             @vm_prov.after_request_task_create
             expect(@vm_prov.get_option(:vm_target_name)).to eq("#{@target_vm_name}999")  # 3 digits
@@ -94,8 +146,9 @@ describe MiqProvision do
           # Hostname lengths by platform:
           #   Linux   : 63
           #   Windows : 15
-          #                                      1         2         3         4         5         6
-          @vm_prov.options[:vm_name] = '123456789012345678901234567890123456789012345678901234567890123456789'
+          #                        1         2         3         4         5         6
+          long_vm_name = '123456789012345678901234567890123456789012345678901234567890123456789'
+          expect(@vm_prov).to receive(:get_next_vm_name).and_return(long_vm_name).twice
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_hostname).length).to eq(15)
 
@@ -110,7 +163,7 @@ describe MiqProvision do
           @vm_prov.options[:ip_addr] = '127.0.0.100'
           @vm_prov.set_static_ip_address(1)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.100')
-          x = @vm_prov.set_static_ip_address(2)
+          @vm_prov.set_static_ip_address(2)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.101')
         end
 
@@ -141,7 +194,7 @@ describe MiqProvision do
 
   context "#eligible_resources" do
     it "workflow should be called with placement_auto = false and skip_dialog_load = true" do
-      prov     = FactoryGirl.build(:miq_provision)
+      prov     = FactoryBot.build(:miq_provision)
       host     = double('Host', :id => 1, :name => 'my_host')
       workflow = double("MiqProvisionWorkflow", :allowed_hosts => [host])
 
@@ -153,6 +206,46 @@ describe MiqProvision do
       }.and_yield(workflow).and_return(workflow)
 
       prov.eligible_resources(:hosts)
+    end
+  end
+
+  describe "#placement_auto" do
+    let(:miq_provision) { FactoryBot.build(:miq_provision, :options => {:placement_auto => placement_option}) }
+
+    context "when option[:placement_auto] is true" do
+      let(:placement_option) { [true, 1] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+    end
+
+    context "when option[:placement_auto] is false" do
+      let(:placement_option) { [false, 0] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
     end
   end
 end

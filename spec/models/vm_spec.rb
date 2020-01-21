@@ -14,7 +14,7 @@ describe Vm do
   end
 
   context "#template=" do
-    before(:each) { @vm = FactoryGirl.create(:vm_vmware) }
+    before { @vm = FactoryBot.create(:vm_vmware) }
 
     it "false" do
       @vm.update_attribute(:template, false)
@@ -36,22 +36,22 @@ describe Vm do
   end
 
   it "#validate_remote_console_vmrc_support only suppored on vmware" do
-    vm = FactoryGirl.create(:vm_redhat, :vendor => "redhat")
+    vm = FactoryBot.create(:vm_redhat, :vendor => "redhat")
     expect { vm.validate_remote_console_vmrc_support }.to raise_error MiqException::RemoteConsoleNotSupportedError
   end
 
   context ".find_all_by_mac_address_and_hostname_and_ipaddress" do
     before do
-      @hardware1 = FactoryGirl.create(:hardware)
-      @vm1 = FactoryGirl.create(:vm_vmware, :hardware => @hardware1)
+      @hardware1 = FactoryBot.create(:hardware)
+      @vm1 = FactoryBot.create(:vm_vmware, :hardware => @hardware1)
 
-      @hardware2 = FactoryGirl.create(:hardware)
-      @vm2 = FactoryGirl.create(:vm_vmware, :hardware => @hardware2)
+      @hardware2 = FactoryBot.create(:hardware)
+      @vm2 = FactoryBot.create(:vm_vmware, :hardware => @hardware2)
     end
 
     it "mac_address" do
       address = "ABCDEFG"
-      guest_device = FactoryGirl.create(:guest_device, :address => address, :device_type => "ethernet")
+      guest_device = FactoryBot.create(:guest_device, :address => address, :device_type => "ethernet")
       @hardware1.guest_devices << guest_device
 
       expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(address, nil, nil))
@@ -60,7 +60,7 @@ describe Vm do
 
     it "hostname" do
       hostname = "ABCDEFG"
-      network = FactoryGirl.create(:network, :hostname => hostname)
+      network = FactoryBot.create(:network, :hostname => hostname)
       @hardware1.networks << network
 
       expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, hostname, nil))
@@ -69,7 +69,7 @@ describe Vm do
 
     it "ipaddress" do
       ipaddress = "127.0.0.1"
-      network = FactoryGirl.create(:network, :ipaddress => ipaddress)
+      network = FactoryBot.create(:network, :ipaddress => ipaddress)
       @hardware1.networks << network
 
       expect(described_class.find_all_by_mac_address_and_hostname_and_ipaddress(nil, nil, ipaddress))
@@ -83,11 +83,11 @@ describe Vm do
   end
 
   context "with relationships of multiple types" do
-    before(:each) do
-      @rp        = FactoryGirl.create(:resource_pool, :name => "RP")
-      @parent_vm = FactoryGirl.create(:vm_vmware, :name => "Parent VM")
-      @vm        = FactoryGirl.create(:vm_vmware, :name => "VM")
-      @child_vm  = FactoryGirl.create(:vm_vmware, :name => "Child VM")
+    before do
+      @rp        = FactoryBot.create(:resource_pool, :name => "RP")
+      @parent_vm = FactoryBot.create(:vm_vmware, :name => "Parent VM")
+      @vm        = FactoryBot.create(:vm_vmware, :name => "VM")
+      @child_vm  = FactoryBot.create(:vm_vmware, :name => "Child VM")
 
       @rp.with_relationship_type("ems_metadata")     { @rp.add_child(@vm) }
       @parent_vm.with_relationship_type("genealogy") { @parent_vm.add_child(@vm) }
@@ -97,7 +97,7 @@ describe Vm do
     end
 
     context "#destroy" do
-      before(:each) do
+      before do
         @vm.destroy
       end
 
@@ -113,10 +113,12 @@ describe Vm do
   end
 
   context "#invoke_tasks_local" do
-    before(:each) do
-      @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      @host = FactoryGirl.create(:host)
-      @vm = FactoryGirl.create(:vm_vmware, :host => @host)
+    before do
+      Zone.seed
+      EvmSpecHelper.create_guid_miq_server_zone
+
+      @host = FactoryBot.create(:host)
+      @vm = FactoryBot.create(:vm_vmware, :host => @host)
     end
 
     it "sets up standard callback for non Power Operations" do
@@ -127,6 +129,7 @@ describe Vm do
       expect(MiqQueue.count).to eq(1)
       msg = MiqQueue.first
       expect(msg.miq_callback).to eq({:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id, :args => ["Finished"]})
+      expect(msg.miq_task_id).to eq(task.id)
     end
 
     it "sets up powerops callback for Power Operations" do
@@ -137,8 +140,8 @@ describe Vm do
       expect(MiqQueue.count).to eq(1)
       msg = MiqQueue.first
       expect(msg.miq_callback).to eq({:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]})
+      expect(msg.miq_task_id).to eq(task.id)
 
-      allow(Vm).to receive(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
     end
 
@@ -159,18 +162,18 @@ describe Vm do
   context "#start" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
-      @host = FactoryGirl.create(:host_vmware)
-      @vm = FactoryGirl.create(:vm_vmware,
+      @host = FactoryBot.create(:host_vmware)
+      @vm = FactoryBot.create(:vm_vmware,
                                :host      => @host,
-                               :miq_group => FactoryGirl.create(:miq_group)
+                               :miq_group => FactoryBot.create(:miq_group)
                               )
-      FactoryGirl.create(:miq_event_definition, :name => :request_vm_start)
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_start)
       # admin user is needed to process Events
-      User.super_admin || FactoryGirl.create(:user_with_group, :userid => "admin")
+      User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")
     end
 
     it "policy passes" do
-      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_start)
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:start_queue)
 
       allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
       @vm.start
@@ -179,7 +182,7 @@ describe Vm do
     end
 
     it "policy prevented" do
-      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_start)
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:start_queue)
 
       event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
       allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
@@ -190,9 +193,44 @@ describe Vm do
     end
   end
 
+  context "#scan" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @host = FactoryBot.create(:host_vmware)
+      @vm = FactoryBot.create(
+        :vm_vmware,
+        :host      => @host,
+        :miq_group => FactoryBot.create(:miq_group)
+      )
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_scan)
+      # admin user is needed to process Events
+      User.super_admin || FactoryBot.create(:user_with_group, :userid => "admin")
+    end
+
+    it "policy passes" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:raw_scan)
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
+    end
+
+    it "policy prevented" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to_not receive(:raw_scan)
+
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
+      allow_any_instance_of(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'sucess', MiqAeEngine::MiqAeWorkspaceRuntime.new])
+      @vm.scan
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, MiqAeEngine::MiqAeWorkspaceRuntime.new)
+    end
+  end
+
   it "#save_drift_state" do
     # TODO: Beef up with more data
-    vm = FactoryGirl.create(:vm_vmware)
+    vm = FactoryBot.create(:vm_vmware)
     vm.save_drift_state
 
     expect(vm.drift_states.size).to eq(1)
@@ -217,5 +255,61 @@ describe Vm do
       :users               => [],
       :win32_services      => [],
     })
+  end
+
+  it '#set_remote_console_url' do
+    vm = FactoryBot.create(:vm_vmware)
+    vm.send(:remote_console_url=, url = 'http://www.redhat.com', 1)
+
+    console = SystemConsole.find_by(:vm_id => vm.id)
+    expect(console.url).to eq(url)
+    expect(console.url_secret).to be
+  end
+
+  describe '#add_to_service' do
+    let(:vm) { FactoryBot.create(:vm_vmware) }
+    let(:service) { FactoryBot.create(:service) }
+
+    it 'associates the vm to the service' do
+      vm.add_to_service(service)
+
+      expect(service.reload.vms).to include(vm)
+    end
+
+    it 'raise an error if the vm is already part of a service' do
+      vm.add_to_service(service)
+
+      expect { vm.add_to_service(service) }.to raise_error MiqException::Error
+    end
+  end
+
+  context "#cockpit_url" do
+    before do
+      ServerRole.seed
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryBot.create(:ext_management_system, :zone => @zone)
+    end
+
+    it "is direct when no role" do
+      vm = FactoryBot.create(:vm_openstack)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      expect(vm.cockpit_url).to eq(URI::HTTP.build(:host => "10.0.0.1", :port => 9090))
+    end
+
+    it "uses dashboard redirect when cockpit role is active" do
+      vm = FactoryBot.create(:vm_openstack, :ext_management_system => @ems)
+      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
+      server = FactoryBot.create(:miq_server, :ipaddress => "10.0.0.2", :has_active_cockpit_ws => true, :zone => @zone)
+      server.assign_role('cockpit_ws', 1)
+      server.activate_roles('cockpit_ws')
+      expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
+    end
+  end
+
+  context "#supported_consoles" do
+    it 'returns all of the console types' do
+      vm = FactoryBot.create(:vm)
+      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :cockpit])
+    end
   end
 end

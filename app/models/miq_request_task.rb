@@ -16,6 +16,7 @@ class MiqRequestTask < ApplicationRecord
   default_value_for :phase_context, {}
   default_value_for :options,       {}
   default_value_for :state,         'pending'
+  default_value_for :status,        'Ok'
 
   delegate :request_class, :task_description, :to => :class
 
@@ -23,6 +24,15 @@ class MiqRequestTask < ApplicationRecord
 
   include MiqRequestMixin
   include TenancyMixin
+
+  CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
+  CANCEL_STATUS_PROCESSING = "canceling".freeze
+  CANCEL_STATUS_FINISHED   = "canceled".freeze
+  CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
+
+  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+                                                 :allow_nil => true,
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
 
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
@@ -37,7 +47,7 @@ class MiqRequestTask < ApplicationRecord
 
   def update_and_notify_parent(upd_attr)
     upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.key?(:message)
-    update_attributes! upd_attr
+    update!(upd_attr)
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
     parent = miq_request_task || miq_request
@@ -67,7 +77,7 @@ class MiqRequestTask < ApplicationRecord
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished" && state != "finished"
-      req_state = (req_status == 'Ok') ? 'provisioned' : "finished"
+      req_state = req_status == 'Ok' ? completed_state : "finished"
       $log.info("Child tasks finished but current task still processing. Setting state to: [#{req_state}]...")
     end
 
@@ -84,6 +94,10 @@ class MiqRequestTask < ApplicationRecord
     update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
   end
 
+  def completed_state
+    "provisioned"
+  end
+
   def execute_callback(state, message, _result)
     unless state.to_s.downcase == "ok"
       update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error: #{message}")
@@ -93,8 +107,6 @@ class MiqRequestTask < ApplicationRecord
   def self.request_class
     if self <= MiqProvision
       MiqProvisionRequest
-    elsif self <= MiqHostProvision
-      MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize
     end
@@ -140,12 +152,12 @@ class MiqRequestTask < ApplicationRecord
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => my_task_id,
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => options.fetch(:miq_zone, zone),
+        :tracking_label => tracking_label_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -166,14 +178,15 @@ class MiqRequestTask < ApplicationRecord
     zone = source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
 
     queue_options.reverse_merge!(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => "execute",
-      :zone         => options.fetch(:miq_zone, zone),
-      :role         => miq_request.my_role,
-      :task_id      => my_task_id,
-      :deliver_on   => deliver_on,
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "execute",
+      :zone           => options.fetch(:miq_zone, zone),
+      :role           => miq_request.my_role,
+      :queue_name     => miq_request.my_queue_name,
+      :tracking_label => tracking_label_id,
+      :deliver_on     => deliver_on,
+      :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
     MiqQueue.put(queue_options)
 
@@ -199,6 +212,26 @@ class MiqRequestTask < ApplicationRecord
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
       return
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Request Task', 'Request Tasks', number)
+  end
+
+  def cancel
+    raise _("Cancel operation is not supported for %{class}") % {:class => self.class.name}
+  end
+
+  def cancel_requested?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_REQUESTED
+  end
+
+  def canceling?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_PROCESSING
+  end
+
+  def canceled?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_FINISHED
   end
 
   private

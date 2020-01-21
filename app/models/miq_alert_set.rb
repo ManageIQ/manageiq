@@ -1,9 +1,11 @@
 class MiqAlertSet < ApplicationRecord
   acts_as_miq_set
 
-  before_validation :default_name_to_guid, :on => :create
+  before_validation :default_name_to_description, :on => :create
 
   include AssignmentMixin
+
+  virtual_has_one :get_assigned_tos
 
   def self.assigned_to_target(target, options = {})
     get_assigned_for_target(target, options)
@@ -24,69 +26,38 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def export_to_array
-    h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqAlert"] = members.collect { |p| p.export_to_array.first["MiqAlert"] unless p.nil? }
-    [self.class.to_s => h]
+    [self.class.to_s => ContentExporter.export_to_hash(attributes, "MiqAlert", members)]
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(alert_profile, options = {})
-    status = {:class => name, :description => alert_profile["description"], :children => []}
-    ap = alert_profile.delete("MiqAlert") { |_k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
-
-    alerts = []
-    ap.each do |a|
-      alert, s = MiqAlert.import_from_hash(a, options)
-      status[:children].push(s)
-      alerts.push(alert)
-    end
-
-    aset = MiqAlertSet.find_by_guid(alert_profile["guid"])
-    msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
-    if aset.nil?
-      aset = MiqAlertSet.new(alert_profile)
-      status[:status] = :add
-    else
-      status[:old_description] = aset.description
-      aset.attributes = alert_profile
-      status[:status] = :update
-    end
-
-    unless aset.valid?
-      status[:status]   = :conflict
-      status[:messages] = aset.errors.full_messages
-    end
-
-    aset["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
-
-    msg = "#{msg_pfx}, Status: #{status[:status]}"
-    msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
-      MiqPolicy.logger.info(msg)
-      aset.save!
-      alerts.each { |a| aset.add_member(a) }
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
-    end
-
-    return aset, status
+    ContentImporter.import_from_hash(MiqAlertSet, MiqAlert, alert_profile, options)
   end
 
-  def self.import_from_yaml(fd)
-    stats = []
-
+  def self.import_from_yaml(fd, options = {})
     input = YAML.load(fd)
-
-    input.each do |e|
-      _a, stat = import_from_hash(e["MiqAlertSet"])
-      stats.push(stat)
+    input.collect do |e|
+      _a, stat = import_from_hash(e["MiqAlertSet"], options)
+      stat
     end
+  end
 
-    stats
+  def self.seed
+    fixture_file = File.join(FIXTURE_DIR, "miq_alert_sets.yml")
+    return unless File.exist?(fixture_file)
+    File.open(fixture_file) { |fd| MiqAlertSet.import_from_yaml(fd, :save => true) }
+  end
+
+  def self.display_name(number = 1)
+    n_('Alert Profile', 'Alert Profiles', number)
+  end
+
+  private
+
+  def default_name_to_description
+    self.name ||= description
   end
 end

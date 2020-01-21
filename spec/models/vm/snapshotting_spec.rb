@@ -1,10 +1,10 @@
 describe "VM Snapshotting" do
   before { EvmSpecHelper.local_miq_server }
-  let(:vm) { FactoryGirl.create(:vm) }
+  let(:vm) { FactoryBot.create(:vm) }
 
   describe ".v_total_snapshots" do
     it "counts many" do
-      FactoryGirl.create_list(:snapshot, 2, :create_time => 1.minute.ago, :vm_or_template => vm)
+      FactoryBot.create_list(:snapshot, 2, :create_time => 1.minute.ago, :vm_or_template => vm)
       expect(vm.v_total_snapshots).to eq(2)
     end
 
@@ -15,7 +15,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_oldest_name" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :name => "the name")
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :name => "the name")
       expect(vm.v_snapshot_oldest_name).to eq("the name")
     end
 
@@ -26,7 +26,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_oldest_description" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :description => "the description")
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :description => "the description")
       expect(vm.v_snapshot_oldest_description).to eq("the description")
     end
 
@@ -37,7 +37,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_oldest_total_size" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :total_size => 500)
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :total_size => 500)
       expect(vm.v_snapshot_oldest_total_size).to eq(500)
     end
 
@@ -49,7 +49,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_newest_name" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :name => "the name")
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :name => "the name")
       expect(vm.v_snapshot_newest_name).to eq("the name")
     end
 
@@ -60,7 +60,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_newest_description" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :description => "the description")
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :description => "the description")
       expect(vm.v_snapshot_newest_description).to eq("the description")
     end
 
@@ -71,7 +71,7 @@ describe "VM Snapshotting" do
 
   describe ".v_snapshot_newest_total_size" do
     it "returns value" do
-      FactoryGirl.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :total_size => 500)
+      FactoryBot.create(:snapshot, :create_time => 1.minute.ago, :vm_or_template => vm, :total_size => 500)
       expect(vm.v_snapshot_newest_total_size).to eq(500)
     end
 

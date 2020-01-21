@@ -17,7 +17,11 @@ headers:
 - Name
 - Ready Status
 - Creation
-conditions:
+conditions: !ruby/object:MiqExpression
+  exp:
+    IS NULL:
+      field: ContainerGroup-deleted_on
+      value:
 order: Descending
 sortby:
 - ems_created_on

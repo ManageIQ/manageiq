@@ -1,4 +1,5 @@
 require 'ancestry'
+require 'ancestry_patch'
 
 class Tenant < ApplicationRecord
   HARDCODED_LOGO = "custom_logo.png"
@@ -6,6 +7,9 @@ class Tenant < ApplicationRecord
   DEFAULT_URL = nil
 
   include ActiveVmAggregationMixin
+  include CustomActionsMixin
+  include TenantQuotasMixin
+  include ExternalUrlMixin
 
   acts_as_miq_taggable
 
@@ -32,31 +36,23 @@ class Tenant < ApplicationRecord
   has_many :miq_request_tasks, :dependent => :destroy
   has_many :services, :dependent => :destroy
   has_many :shares
+  has_many :authentications, :dependent => :nullify
+  has_many :miq_product_features, :dependent => :destroy
+  has_many :service_template_tenants, :dependent => :destroy
+  has_many :service_templates, :through => :service_template_tenants, :dependent => :destroy
 
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
   belongs_to :source, :polymorphic => true
-
-  # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
-  has_attached_file :logo,
-                    :url  => "/uploads/:basename.:extension",
-                    :path => ":rails_root/public/uploads/:basename.:extension"
-
-  has_attached_file :login_logo,
-                    :url         => "/uploads/:basename.:extension",
-                    :default_url => ":default_login_logo",
-                    :path        => ":rails_root/public/uploads/:basename.:extension"
 
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
-  validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
-
-  # FUTURE: allow more content_types
-  validates_attachment_content_type :logo, :content_type => ['image/png']
-  validates_attachment_content_type :login_logo, :content_type => ['image/png']
+  validates :name, :uniqueness => {:scope      => :ancestry,
+                                   :conditions => -> { in_my_region },
+                                   :message    => "should be unique per parent"}
+  validate :validate_default_tenant, :on => :update, :if => :saved_change_to_default_miq_group_id?
 
   scope :all_tenants,  -> { where(:divisible => true) }
   scope :all_projects, -> { where(:divisible => false) }
@@ -65,7 +61,7 @@ class Tenant < ApplicationRecord
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
-  after_create :create_tenant_group
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
   before_destroy :ensure_can_be_destroyed
 
   def self.scope_by_tenant?
@@ -97,8 +93,28 @@ class Tenant < ApplicationRecord
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  def regional_tenants
+    self.class.regional_tenants(self)
+  end
+
+  def nested_service_templates
+    ServiceTemplate.with_tenant(id)
+  end
+
+  def nested_providers
+    ExtManagementSystem.with_tenant(id)
+  end
+
+  def nested_ae_namespaces
+    MiqAeDomain.with_tenant(id)
+  end
+
+  def self.regional_tenants(tenant)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:name)]).eq(tenant.name.downcase)))
+  end
+
   def accessible_tenant_ids(strategy = nil)
-    (strategy ? send(strategy) : []).append(id)
+    (strategy ? regional_tenants.map(&strategy.to_sym).flatten : []) + regional_tenants.ids
   end
 
   def name
@@ -117,32 +133,6 @@ class Tenant < ApplicationRecord
     tenant_attribute(:login_text, :custom_login_text)
   end
 
-  def logo_file_name
-    tenant_attribute(:logo_file_name, :custom_logo) do |custom_logo|
-      custom_logo && HARDCODED_LOGO
-    end
-  end
-
-  def logo_content_type
-    tenant_attribute(:logo_content_type, :custom_logo) do |_custom_logo|
-      # fails validation when using custom_logo && "image/png"
-      "image/png"
-    end
-  end
-
-  def login_logo_file_name
-    tenant_attribute(:login_logo_file_name, :custom_login_logo) do |custom_logo|
-      custom_logo && HARDCODED_LOGIN_LOGO
-    end
-  end
-
-  def login_logo_content_type
-    tenant_attribute(:login_logo_content_type, :custom_login_logo) do |_custom_logo|
-      # fails validation when using custom_logo && "image/png"
-      "image/png"
-    end
-  end
-
   def get_quotas
     tenant_quotas.each_with_object({}) do |q, h|
       h[q.name.to_sym] = q.quota_hash
@@ -158,7 +148,7 @@ class Tenant < ApplicationRecord
 
         name = name.to_s
         q = tenant_quotas.detect { |tq| tq.name == name } || tenant_quotas.build(:name => name)
-        q.update_attributes!(values)
+        q.update!(values)
         updated_keys << name
       end
       # Delete any quotas that were not passed in
@@ -191,10 +181,12 @@ class Tenant < ApplicationRecord
   end
 
   def combined_quotas
-    tenant_quotas.each_with_object({}) do |q, h|
+    TenantQuota.quota_definitions.each_with_object({}) do |d, h|
+      scope_name, _ = d
+      q = tenant_quotas.send(scope_name).take || tenant_quotas.build(:name => scope_name, :value => 0)
       h[q.name.to_sym] = q.quota_hash
       h[q.name.to_sym][:allocated]   = q.allocated
-      h[q.name.to_sym][:available]   = q.available
+      h[q.name.to_sym][:available]   = q.available unless q.new_record?
       h[q.name.to_sym][:used]        = q.used
     end.reverse_merge(TenantQuota.quota_definitions)
   end
@@ -217,16 +209,8 @@ class Tenant < ApplicationRecord
     !divisible?
   end
 
-  def logo?
-    !!logo_file_name
-  end
-
-  def login_logo?
-    !!login_logo_file_name
-  end
-
   def visible_domains
-    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
+    MiqAeDomain.where(:tenant_id => path_ids).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
   end
 
   def enabled_domains
@@ -265,6 +249,10 @@ class Tenant < ApplicationRecord
   #
   # @return [Tenant] the root tenant
   def self.root_tenant
+    @root_tenant ||= root_tenant_without_cache
+  end
+
+  def self.root_tenant_without_cache
     in_my_region.roots.first
   end
 
@@ -286,9 +274,11 @@ class Tenant < ApplicationRecord
   #     [["tenant/tenant2/project4", 4]]
   #   ]
   def self.tenant_and_project_names
-    tenants_and_projects = Tenant.in_my_region.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
+    all_tenants_and_projects = Tenant.in_my_region.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
+    tenants_by_id = all_tenants_and_projects.index_by(&:id)
+
+    tenants_and_projects = Rbac.filtered(Tenant.in_my_region.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name))
                            .to_a.sort_by { |t| [t.ancestry || "", t.name] }
-    tenants_by_id = tenants_and_projects.index_by(&:id)
 
     tenants_and_projects.partition(&:divisible?).map do |tenants|
       tenants.map do |t|
@@ -320,6 +310,14 @@ class Tenant < ApplicationRecord
     data_tenant
   end
 
+  def allowed?
+    Rbac::Filterer.filtered_object(self).present?
+  end
+
+  def create_miq_product_features_for_tenant_nodes
+    MiqProductFeature.seed_single_tenant_miq_product_features(self)
+  end
+
   private
 
   # when a root tenant has an attribute with a nil value,
@@ -342,28 +340,23 @@ class Tenant < ApplicationRecord
     self.name = nil unless name.present?
   end
 
-  def get_vmdb_config
-    Vmdb::Deprecation.deprecation_warning("Tenant#get_vmdb_config",
-                                          "Prefer using ::Settings directly.", caller)
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
-  end
-
   # validates that there is only one tree
   def validate_only_one_root
     unless parent_id || parent
-      root = self.class.root_tenant
+      root = self.class.root_tenant_without_cache
       errors.add(:parent, "required") if root && root != self
     end
   end
 
   def create_tenant_group
-    update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
+    update!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
     self
   end
 
   def ensure_can_be_destroyed
-    raise _("A tenant with groups associated cannot be deleted.") if miq_groups.non_tenant_groups.exists?
-    raise _("A tenant created by tenant mapping cannot be deleted") if source
+    errors.add(:base, _("A tenant with groups associated cannot be deleted.")) if miq_groups.non_tenant_groups.exists?
+    errors.add(:base, _("A tenant created by tenant mapping cannot be deleted.")) if source&.persisted?
+    throw :abort unless errors[:base].empty?
   end
 
   def validate_default_tenant

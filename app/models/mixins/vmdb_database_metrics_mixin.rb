@@ -1,15 +1,14 @@
 module VmdbDatabaseMetricsMixin
-  def has_perf_data?(interval_name = "hourly")
-    @has_perf_data ||= {}
-    return @has_perf_data[interval_name] if @has_perf_data.key?(interval_name)
-    @has_perf_data[interval_name] = my_metrics.exists?(:capture_interval_name => interval_name)
+  def has_perf_data?
+    return @has_perf_data unless @has_perf_data.nil?
+    @has_perf_data = my_metrics.exists?(:capture_interval_name => 'hourly')
   end
 
   def first_or_last_capture(interval_name, sort_order)
     my_metrics
       .where(:capture_interval_name => interval_name)
       .select(:timestamp)
-      .order("timestamp #{sort_order}")
+      .order(sort_order == "DESC" ? "timestamp DESC" : "timestamp ASC")
       .first.try(:timestamp)
   end
   private :first_or_last_capture

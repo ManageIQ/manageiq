@@ -1,7 +1,7 @@
 describe Metric::Common do
-  let(:host) { FactoryGirl.create(:host) }
+  let(:host) { FactoryBot.create(:host) }
   let(:metric) do
-    FactoryGirl.create(:metric_rollup_host_hr,
+    FactoryBot.create(:metric_rollup_host_hr,
                        :resource  => host,
                        :timestamp => Time.now.next_week(:sunday).utc
                       )
@@ -16,7 +16,7 @@ describe Metric::Common do
 
   context "#apply_time_profile" do
     it "with all days and hours selected it should return true" do
-      profile = FactoryGirl.create(:time_profile,
+      profile = FactoryBot.create(:time_profile,
                                    :description => "foo",
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => TimeProfile::ALL_DAYS,
@@ -27,7 +27,7 @@ describe Metric::Common do
     end
 
     it "with specific days and hours selected it should return false" do
-      profile = FactoryGirl.create(:time_profile,
+      profile = FactoryBot.create(:time_profile,
                                    :description => "foo",
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => [1],
@@ -38,12 +38,12 @@ describe Metric::Common do
     end
 
     it "returns true if time profile were used for aggregation (and rollup record refer to it)" do
-      profile = FactoryGirl.create(:time_profile,
+      profile = FactoryBot.create(:time_profile,
                                    :description => "foo",
                                    :profile     => {:tz    => "New Delhi",
                                                     :days  => [1],
                                                     :hours => [1]})
-      profile_aggr = FactoryGirl.create(:time_profile,
+      profile_aggr = FactoryBot.create(:time_profile,
                                         :description => "used_for_daily_aggregation",
                                         :profile     => {:tz    => "UTC",
                                                          :days  => (2..4),
@@ -76,28 +76,28 @@ describe Metric::Common do
 
   describe ".for_time_range" do
     it "returns nothing for nil dates" do
-      FactoryGirl.create(:metric, :timestamp => 5.days.ago)
+      FactoryBot.create(:metric, :timestamp => 5.days.ago)
       expect(Metric.for_time_range(nil, nil)).to be_empty
     end
 
     it "returns a single date' worth" do
       timestamp = 5.days.ago
-      good = FactoryGirl.create(:metric, :timestamp => timestamp)
-      FactoryGirl.create(:metric, :timestamp => 4.days.ago)
-      FactoryGirl.create(:metric, :timestamp => 6.days.ago)
+      good = FactoryBot.create(:metric, :timestamp => timestamp)
+      FactoryBot.create(:metric, :timestamp => 4.days.ago)
+      FactoryBot.create(:metric, :timestamp => 6.days.ago)
       expect(Metric.for_time_range(timestamp, timestamp)).to eq([good])
     end
 
     it "returns open ended date" do
-      FactoryGirl.create(:metric, :timestamp => 30.days.ago)
-      good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
+      FactoryBot.create(:metric, :timestamp => 30.days.ago)
+      good = FactoryBot.create(:metric, :timestamp => 5.days.ago)
       expect(Metric.for_time_range(10.days.ago, nil)).to eq([good])
     end
 
     it "returns range" do
-      FactoryGirl.create(:metric, :timestamp => 30.days.ago)
-      good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
-      FactoryGirl.create(:metric, :timestamp => 1.day.ago)
+      FactoryBot.create(:metric, :timestamp => 30.days.ago)
+      good = FactoryBot.create(:metric, :timestamp => 5.days.ago)
+      FactoryBot.create(:metric, :timestamp => 1.day.ago)
       expect(Metric.for_time_range(10.days.ago, 3.days.ago)).to eq([good])
     end
   end

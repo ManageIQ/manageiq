@@ -68,10 +68,15 @@ class DescendantLoader
   # and the name of its superclass), given a path to a ruby script file.
   module Parser
     def classes_in(filename)
-      require 'ruby_parser'
+      require 'ripper_ruby_parser'
 
       content = File.read(filename)
-      parsed = RubyParser.for_current_ruby.parse(content)
+      begin
+        parsed = RipperRubyParser::Parser.new.parse(content, filename)
+      rescue => e
+        $stderr.puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
+        raise
+      end
 
       classes = collect_classes(parsed)
 
@@ -93,10 +98,6 @@ class DescendantLoader
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact
-
-    rescue Racc::ParseError
-      puts "\nSyntax error in #{filename}\n\n"
-      raise
     end
 
     def collect_classes(node, parents = [])
@@ -148,7 +149,7 @@ class DescendantLoader
       end
       combos.each do |combo|
         if (i = combo.rindex { |s| s =~ /^::/ })
-          combo.slice! 0, i
+          combo.slice!(0, i)
           combo[0] = combo[0].sub(/^::/, '')
         end
       end
@@ -211,7 +212,7 @@ class DescendantLoader
             possible_superklasses = scoped_name(sklass, search_scopes)
 
             possible_superklasses.each do |possible_superklass|
-              children[possible_superklass].concat possible_names
+              children[possible_superklass].concat(possible_names)
             end
           end
         end
@@ -232,7 +233,7 @@ class DescendantLoader
     names_to_load = class_inheritance_relationships[parent.to_s].dup
     while (name = names_to_load.shift)
       if (_klass = name.safe_constantize) # this triggers the load
-        names_to_load.concat class_inheritance_relationships[name]
+        names_to_load.concat(class_inheritance_relationships[name])
       end
     end
   end
@@ -266,9 +267,11 @@ class DescendantLoader
   end
 end
 
-ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
-ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
-ActsAsArModel.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+# Patch Class to support non-AR models in the models directory
+Class.prepend(DescendantLoader::ArDescendantsWithLoader)
+# Patch ActiveRecord specifically to get ahead of ActiveSupport::DescendantsTracker
+#   The patching of Class does not put it in the right place in the ancestors chain
+ActiveRecord::Base.singleton_class.prepend(DescendantLoader::ArDescendantsWithLoader)
 
 at_exit do
   DescendantLoader.instance.save_cache!

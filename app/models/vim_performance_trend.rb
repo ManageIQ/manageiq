@@ -38,7 +38,7 @@ class VimPerformanceTrend < ActsAsArModel
     #   :target_pcts    => [70, 80, 90, 100],
     # }
 
-    limit_col = options[:limit_col] ? options[:limit_col] : "limit"
+    options[:limit_col] ? options[:limit_col] : "limit"
 
     # group data by resource name
     grouped_objs = perfs.inject({}) do |h, o|
@@ -70,7 +70,6 @@ class VimPerformanceTrend < ActsAsArModel
       options[:target_pcts].each do |pct|
         col_name = "limit_pct_value_#{options[:target_pcts].index(pct) + 1}"
         pct_of_limit = (limit * pct * 0.01)
-        # row[col_name] = self.calc_value_at_target(pct_of_limit, trend_data[name]) || "Unknown"
         row[col_name] = calc_value_at_target(pct_of_limit, trend_data[name])
         if row[col_name].nil?
           row[col_name] = "Unknown"
@@ -102,7 +101,7 @@ class VimPerformanceTrend < ActsAsArModel
       row[:max_trend_value] = ordered_by_trend_col.last.send(options[:trend_col])
 
       # calculate start/end trend values
-      ordered_by_timestamp  = olist_in_time_profile.sort { |a, b| a.timestamp <=> b.timestamp }
+      ordered_by_timestamp  = olist_in_time_profile.sort_by(&:timestamp)
       row[:start_trend_value] = ordered_by_timestamp.first.send(options[:trend_col])
       row[:end_trend_value]   = ordered_by_timestamp.last.send(options[:trend_col])
 
@@ -133,7 +132,6 @@ class VimPerformanceTrend < ActsAsArModel
     else
       begin
         result = MiqStats.solve_for_x(limit, trend_data[:slope], trend_data[:yint])
-        # return Time.at(result).utc.strftime("%m/%d/%Y")
         return Time.at(result).utc
       rescue RangeError
         return nil
@@ -146,19 +144,20 @@ class VimPerformanceTrend < ActsAsArModel
 
   def self.build_trend_data(col, recs)
     trend_data = {}
-    y_array = recs.collect { |r| r.send(col).to_f if r.respond_to?(col) }.compact
-    x_array = recs.collect { |r| r.send(CHART_X_AXIS_COL).to_i if r.respond_to?(CHART_X_AXIS_COL) }.compact
 
-    begin
-      slope_arr = MiqStats.slope(x_array, y_array)
-    rescue ZeroDivisionError
-      slope_arr = []
-    rescue => err
-      _log.warn("#{err.message}, calculating slope")
-      slope_arr = []
-    end
-    trend_data[:slope], trend_data[:yint], trend_data[:corr] = slope_arr
-    trend_data[:count] = x_array.length
+    coordinates = recs.collect do |r|
+      next unless r.respond_to?(CHART_X_AXIS_COL) && r.respond_to?(col)
+      [r.send(CHART_X_AXIS_COL).to_i, r.send(col).to_f]
+    end.compact
+
+    trend_data[:count] = coordinates.length
+    trend_data[:slope], trend_data[:yint], trend_data[:corr] =
+      begin
+        Math.linear_regression(*coordinates)
+      rescue StandardError => err
+        _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+        nil
+      end
 
     trend_data
   end
@@ -247,7 +246,7 @@ class VimPerformanceTrend < ActsAsArModel
       col_headers << Dictionary.gettext([options[:trend_db], options[:limit_col]].join("."), :type => "column", :notfound => :titleize)
     end
 
-    limit_pct_cols = options[:target_pcts].each do |c|
+    options[:target_pcts].each do |c|
       col_order << "limit_pct_value_#{options[:target_pcts].index(c) + 1}"
       col_headers << "#{c}%"
     end
@@ -270,5 +269,9 @@ class VimPerformanceTrend < ActsAsArModel
     title += " (#{start_time.strftime(time_format)} through #{end_time.strftime(time_format)})"
 
     title
+  end
+
+  def self.display_name(number = 1)
+    n_('Performance Trend', 'Performance Trends', number)
   end
 end

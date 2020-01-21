@@ -4,18 +4,16 @@ class Classification < ApplicationRecord
   belongs_to :tag
 
   virtual_column :name, :type => :string
+  virtual_column :ns, :type => :string
 
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
 
   validates :description, :presence => true, :length => {:maximum => 255}
   validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
-    cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
-    unless c.new_record?
-      cond.first << " AND id != ?"
-      cond << c.id
-    end
-    c.class.in_region(region_id).exists?(cond)
+    cond = c.class.in_region(region_id).where(:parent_id => c.parent_id, :description => c.description)
+    cond = cond.where.not(:id => c.id) unless c.new_record?
+    cond.exists?
   }
 
   NAME_MAX_LENGTH = 50
@@ -24,14 +22,19 @@ class Classification < ApplicationRecord
 
   validate :validate_uniqueness_on_tag_name
 
-  validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
+  validates :syntax, :inclusion => {:in      => %w[string integer boolean],
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
 
-  scope :visible,    -> { where :show => true }
-  scope :read_only,  -> { where :read_only => true }
-  scope :writeable,  -> { where :read_only => false }
+  scope :visible,    -> { where(:show => true) }
+  scope :read_only,  -> { where(:read_only => true) }
+  scope :writeable,  -> { where(:read_only => false) }
 
-  DEFAULT_NAMESPACE = "/managed"
+  scope :is_category, -> { where(:parent_id => nil) }
+  scope :is_entry,    -> { where.not(:parent_id => nil) }
+
+  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
+
+  DEFAULT_NAMESPACE = "/managed".freeze
 
   default_value_for :read_only,    false
   default_value_for :syntax,       "string"
@@ -43,11 +46,11 @@ class Classification < ApplicationRecord
   def self.hash_all_by_type_and_name(conditions = {})
     ret = {}
 
-    where(conditions).where(:parent_id => 0).includes(:tag).each do |c|
+    where(conditions).is_category.includes(:tag).each do |c|
       ret.store_path(c.name, :category, c)
     end
 
-    where(conditions).where.not(:parent_id => 0).includes(:tag, :parent => :tag).each do |e|
+    where(conditions).is_entry.includes(:tag, :parent => :tag).each do |e|
       ret.store_path(e.parent.name, :entry, e.name, e) unless e.parent.nil?
     end
 
@@ -55,7 +58,7 @@ class Classification < ApplicationRecord
   end
 
   def self.parent_ids(parent_ids)
-    where :parent_id => parent_ids
+    where(:parent_id => parent_ids)
   end
 
   def self.tags_arel
@@ -74,9 +77,8 @@ class Classification < ApplicationRecord
   attr_writer :ns
 
   def ns
-    @ns ||= DEFAULT_NAMESPACE if self.new_record?
+    @ns ||= DEFAULT_NAMESPACE if new_record?
 
-    # @ns = tag2ns(self.tag.name) unless self.tag.nil?
     return @ns if tag.nil?
 
     return @ns unless @ns.nil?
@@ -88,8 +90,15 @@ class Classification < ApplicationRecord
     end
   end
 
+  # Disable certain rubocop rules that don't really work here. Namely the
+  # find_by warnings and .zero? warnings because of custom methods and
+  # cases where objects could be zero or a real object.
+
+  # rubocop:disable Rails/DynamicFindBy
+  # rubocop:disable Style/NumericPredicate
+
   def self.classify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.find_by_name(category_name, obj.region_id)
+    cat = Classification.lookup_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
       ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
@@ -97,7 +106,7 @@ class Classification < ApplicationRecord
   end
 
   def self.unclassify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.find_by_name(category_name, obj.region_id)
+    cat = Classification.lookup_by_name(category_name, obj.region_id)
     unless cat.nil?
       ent = cat.find_entry_by_name(entry_name, obj.region_id)
       ent.remove_entry_from(obj, is_request) unless ent.nil? || !obj.is_tagged_with?(ent.to_tag, :ns => "none")
@@ -150,7 +159,7 @@ class Classification < ApplicationRecord
 
         begin
           d.remove_entry_from(t)
-        rescue => err
+        rescue StandardError => err
           _log.error("Error occurred while removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_deletes[t] << d
@@ -162,7 +171,7 @@ class Classification < ApplicationRecord
 
         begin
           a.assign_entry_to(t)
-        rescue => err
+        rescue StandardError => err
           _log.error("Error occurred while adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_adds[t] << a
@@ -175,12 +184,12 @@ class Classification < ApplicationRecord
       failed_deletes.each do |target, deletes|
         names = deletes.collect(&:name).sort
         msg += _("  Unable to remove the following tags from %{class_name} %{id}: %{names}.") %
-                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
+               {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       failed_adds.each do |target, adds|
         names = adds.collect(&:name).sort
         msg += _("  Unable to add the following tags to %{class_name} %{id}: %{names}.") %
-                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
+               {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       raise msg
     end
@@ -194,18 +203,16 @@ class Classification < ApplicationRecord
   end
 
   def self.create_category!(options)
-    self.create!(options.merge(:parent_id => 0))
+    is_category.create!(options)
   end
 
   def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    cats = where(:classifications => {:parent_id => 0}).includes(:tag, :children)
-    cats = cats.in_region(region_id) if region_id
+    cats = is_category.in_region(region_id).includes(:tag, :children)
     cats.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    in_region(region_id)
-      .where(:parent_id => 0, :perf_by_tag => true)
+    in_region(region_id).is_category.where(:perf_by_tag => true)
       .includes(:tag)
       .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
       .compact
@@ -217,14 +224,14 @@ class Classification < ApplicationRecord
     end
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
-    where(:tag_id => tag_ids) rescue []
+    where(:tag_id => tag_ids)
   end
 
   def self.first_cat_entry(name, obj)
-    cat = find_by_name(name, obj.region_id)
+    cat = lookup_by_name(name, obj.region_id)
     return nil unless cat
 
-    find_assigned_entries(obj).each do|e|
+    find_assigned_entries(obj).each do |e|
       return e if e.parent_id == cat.id
     end
     nil
@@ -240,8 +247,8 @@ class Classification < ApplicationRecord
   # Splits a fully qualified tag into the namespace, category object, and entry object
   def self.tag_name_to_objects(tag_name)
     ns, cat, entry = tag_name_split(tag_name)
-    cat_obj = find_by_name(cat)
-    entry_obj = cat_obj.nil? ? nil : cat_obj.find_entry_by_name(entry)
+    cat_obj = lookup_by_name(cat)
+    entry_obj = cat_obj && cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
 
@@ -250,8 +257,8 @@ class Classification < ApplicationRecord
     ns, cat, entry = tag_name_to_objects(tag.name)
 
     h = {:id => tag.id, :name => tag.name, :namespace => ns}
-    %w(id name description single_value).each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
-    %w(id name description).each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
+    %w[id name description single_value].each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
+    %w[id name description].each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
     h
   end
 
@@ -259,14 +266,14 @@ class Classification < ApplicationRecord
     raise _("entries can only be added to classifications") unless category?
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
-    children.create(options)
+    children.create!(options)
   end
 
   def entries
     children
   end
 
-  def find_by_entry(type)
+  def lookup_by_entry(type)
     raise _("method is only available for an entry") if category?
     klass = type.constantize
     unless klass.respond_to?("find_tagged_with")
@@ -275,6 +282,9 @@ class Classification < ApplicationRecord
 
     klass.find_tagged_with(:any => name, :ns => ns, :cat => parent.name)
   end
+
+  alias find_by_entry lookup_by_entry
+  Vmdb::Deprecation.deprecate_methods(self, :find_by_entry => :lookup_by_entry)
 
   def assign_entry_to(obj, is_request = true)
     raise _("method is only available for an entry") if category?
@@ -306,7 +316,7 @@ class Classification < ApplicationRecord
   end
 
   def category?
-    parent_id == 0
+    parent_id.nil?
   end
 
   def category
@@ -324,33 +334,32 @@ class Classification < ApplicationRecord
   attr_writer :name
 
   def find_entry_by_name(name, region_id = my_region_number)
-    self.class.find_by_name(name, region_id, ns, self)
+    self.class.lookup_by_name(name, region_id, ns, self)
   end
 
-  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
-    tag = Tag.find_by_classification_name(name, region_id, ns, parent_id)
-    find_by_tag_id(tag.id) if tag
+  # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
+  def self.lookup_by_name(name, region_id = my_region_number, name_space = DEFAULT_NAMESPACE, parent_id = nil)
+    lookup_by_names([name], region_id, name_space, parent_id).first
   end
 
-  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    tag_names = names.map { |name| Classification.name2tag(name, 0, ns) }
+  singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_name => :lookup_by_name)
+
+  # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
+  def self.lookup_by_names(names, region_id = my_region_number, name_space = DEFAULT_NAMESPACE, parent_id = nil)
+    tag_names = names.map { |name| name2tag(name, parent_id, name_space) }
     # NOTE: tags is a subselect - not an array of ids
     tags = Tag.in_region(region_id).where(:name => tag_names).select(:id)
     where(:tag_id => tags)
   end
 
+  singleton_class.send(:alias_method, :find_by_names, :lookup_by_names)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_names => :lookup_by_names)
+
   def tag2ns(tag)
     unless tag.nil?
       ta = tag.split("/")
       ta[0..(ta.length - 2)].join("/")
-
-      # tnew = []
-      # tag.split("/").each {|level|
-      #   p "level=#{level}"
-      #   tnew.push(level) unless level == self.name
-      #   p "level=#{level}, #{tnew.inspect}, #{(level == self.name)}"
-      # }
-      # tnew.join("/")
     end
   end
 
@@ -375,30 +384,23 @@ class Classification < ApplicationRecord
 
   def self.export_to_array
     categories.inject([]) do |a, c|
-      a.concat c.export_to_array
+      a.concat(c.export_to_array)
     end
   end
 
   def self.export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def export_to_array
-    h = attributes
+    h = attributes.except(*%w(id tag_id reserved parent_id))
     h["name"] = name
-    if category?
-      ["id", "tag_id", "reserved"].each { |k| h.delete(k) }
-      h["entries"] = entries.collect(&:export_to_array).flatten
-    else
-      ["id", "tag_id", "reserved", "parent_id"].each { |k| h.delete(k) }
-    end
+    h["entries"] = entries.collect(&:export_to_array).flatten if category?
     [h]
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(classification, parent = nil)
@@ -406,8 +408,8 @@ class Classification < ApplicationRecord
 
     stats = {"categories" => 0, "entries" => 0}
 
-    if classification["parent_id"] == 0 # category
-      cat = find_by_name(classification["name"])
+    if parent.nil? # category
+      cat = lookup_by_name(classification["name"])
       if cat
         _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
         return stats
@@ -415,6 +417,7 @@ class Classification < ApplicationRecord
 
       _log.info("Importing Classification: Category: name=[#{classification["name"]}]")
 
+      classification.delete("parent_id")
       entries = classification.delete("entries")
       cat = create(classification)
       stats["categories"] += 1
@@ -451,66 +454,35 @@ class Classification < ApplicationRecord
     stats
   end
 
+  # rubocop:disable Rails/SkipsModelValidations
+
   def self.seed
     YAML.load_file(FIXTURE_FILE).each do |c|
-      cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-      next if cat
+      category = lookup_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      next if category
 
-      _log.info("Creating #{c[:name]}")
-      add_entries_from_hash(create(c.except(:entries)), c[:entries])
+      category = is_category.new(c.except(:entries))
+      next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
+      _log.info("Creating category #{c[:name]}")
+      category.save!
+      add_entries_from_hash(category, c[:entries])
     end
-
-    # Fix categories that have a nill parent_id
-    where(:parent_id => nil).update_all(:parent_id => 0)
   end
+
+  # rubocop:enable Rails/SkipsModelValidations
 
   def self.sanitize_name(name)
     name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
   end
 
-  private
-
-  def self.add_entries_from_hash(cat, entries)
-    entries.each do |entry|
-      ent = cat.find_entry_by_name(entry[:name])
-      ent ? ent.update_attributes(entry) : cat.add_entry(entry)
-    end
-  end
-
-  def validate_uniqueness_on_tag_name
-    tag = find_tag
-    return if tag.nil?
-    cond = ["tag_id = ?", tag.id]
-    unless self.new_record?
-      cond[0] << " and id <> ?"
-      cond << id
-    end
-    errors.add("name", "has already been taken") if Classification.exists?(cond)
-  end
-
-  def validate_format_of_name
-    unless (name =~ /[^a-z0-9_:]/).nil?
-      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
-    end
-  end
-
-  def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
-    if parent_id == 0
-      File.join(ns, name)
-    else
-      c = parent_id.kind_of?(Classification) ? parent_id : Classification.find(parent_id)
-      File.join(ns, c.name, name) if c
-    end
-  end
-
-  def tag2name(tag)
-    File.split(tag).last unless tag.nil?
+  def self.display_name(number = 1)
+    n_('Category', 'Categories', number)
   end
 
   def self.tag2human(tag)
     c, e = tag.split("/")[2..-1]
 
-    cat = find_by_name(c)
+    cat = lookup_by_name(c)
     cname = cat.nil? ? c.titleize : cat.description
 
     ename = e.titleize
@@ -522,16 +494,70 @@ class Classification < ApplicationRecord
     "#{cname}: #{ename}"
   end
 
+  def self.add_entries_from_hash(cat, entries)
+    entries.each do |entry|
+      ent = cat.find_entry_by_name(entry[:name])
+      ent ? ent.update!(entry) : cat.add_entry(entry)
+    end
+  end
+
+  private_class_method :add_entries_from_hash
+
+  def validate_uniqueness_on_tag_name
+    tag = find_tag
+    return if tag.nil?
+    cond = ["tag_id = ?", tag.id]
+    unless new_record?
+      cond[0] << " and id <> ?"
+      cond << id
+    end
+    errors.add("name", "has already been taken") if Classification.exists?(cond)
+  end
+
+  def self.name2tag(name, parent_id = nil, ns = DEFAULT_NAMESPACE)
+    if parent_id.nil?
+      File.join(ns, name)
+    else
+      c = parent_id.kind_of?(Classification) ? parent_id : Classification.find(parent_id)
+      File.join(ns, c.name, name) if c
+    end
+  end
+
+  private
+
+  def validate_format_of_name
+    unless (name =~ /[^a-z0-9_:]/).nil?
+      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
+    end
+  end
+
+  def tag2name(tag)
+    File.split(tag).last unless tag.nil?
+  end
+
   def find_tag
-    Tag.find_by_classification_name(name, region_id, ns, parent_id)
+    tag_name = Classification.name2tag(name, parent, ns)
+    Tag.in_region(region_id).find_by(:name => tag_name)
   end
 
   def save_tag
-    self.tag = Tag.find_or_create_by_classification_name(name, region_id, ns, parent_id)
+    tag_name = Classification.name2tag(name, parent, ns)
+    if tag_id.present? || tag.present?
+      tag.update(:name => tag_name) unless tag.name == tag_name
+    else
+      self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
+    end
   end
 
   def delete_all_entries
-    entries.each(&:delete_tag_and_taggings)
+    entries.each do |e|
+      e.delete_assignments
+      e.delete_tag_and_taggings
+    end
+  end
+
+  def delete_assignments
+    AssignmentMixin.all_assignments(tag.name).destroy_all
   end
 
   def delete_tag_and_taggings
@@ -542,7 +568,15 @@ class Classification < ApplicationRecord
   end
 
   def delete_tags_and_entries
-    delete_all_entries    if category?
+    if category?
+      delete_all_entries
+    else # entry
+      delete_assignments
+    end
+
     delete_tag_and_taggings
   end
+
+  # rubocop:enable Style/NumericPredicate
+  # rubocop:enable Rails/DynamicFindBy
 end

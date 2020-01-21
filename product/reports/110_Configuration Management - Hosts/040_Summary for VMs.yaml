@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-12 17:36:18.175145 Z
 title: "Host Summary for VMs"
-conditions: 
+conditions:
 updated_on: 2008-08-13 22:01:26.731146 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Host Summary for VMs"
 rpt_group: Custom
 priority: 10
-col_order: 
+col_order:
 - name
 - ipaddress
 - vms.name
@@ -21,15 +21,15 @@ col_order:
 - vms.v_is_a_template
 - vms.retired
 - vms.retires_on
-timeline: 
+timeline:
 id: 84
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  vms: 
-    columns: 
+filename:
+include:
+  vms:
+    columns:
     - name
     - os_image_name
     - v_owning_datacenter
@@ -38,20 +38,20 @@ include:
     - v_is_a_template
     - retired
     - retires_on
-    include: 
-      managed: 
-        columns: 
+    include:
+      managed:
+        columns:
         - power_state
 db: Host
-cols: 
+cols:
 - name
 - ipaddress
 template_type: report
 group: c
-sortby: 
+sortby:
 - name
 - vms.name
-headers: 
+headers:
 - Host Name
 - IP Address
 - VM Name

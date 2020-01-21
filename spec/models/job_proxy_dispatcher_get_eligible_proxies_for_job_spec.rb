@@ -2,9 +2,9 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do
-    before(:each) do
+    before do
       @server1 = EvmSpecHelper.local_miq_server
-      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      @server2 = FactoryBot.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
 
       # Support old style class methods or new instance style
@@ -12,20 +12,20 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
-      before(:each) do
+      before do
         @hosts, @proxies, @storages, @vms = build_entities
         @vm = @vms.first
       end
 
       context "with a vm scan job, " do
-        before(:each) do
-          @job = @vm.scan
+        before do
+          @job = @vm.raw_scan
           @jpd.instance_of?(JobProxyDispatcher) ? @jpd.instance_variable_set(:@vm, @vm) : @jpd.send(:class_variable_set, :@@vm, @vm)
           @jpd.instance_variable_set(:@vm, @vm)
         end
 
         context "and the vm attached to the job was not found, so @vm is nil, " do
-          before(:each) do
+          before do
             @jpd.instance_of?(JobProxyDispatcher) ? @jpd.instance_variable_set(:@vm, nil) : @jpd.send(:class_variable_set, :@@vm, nil)
           end
 
@@ -35,7 +35,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
         end
 
         context "vm on unsupported storage type, " do
-          before(:each) do
+          before do
             store = @vm.storage
             store.store_type = "VMFS2"
             store.save
@@ -47,7 +47,7 @@ describe "JobProxyDispatcherGetEligibleProxiesForJob" do
         end
 
         context "with no proxies for job, " do
-          before(:each) do
+          before do
             allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive_messages(:proxies4job => {:proxies => [], :message => "blah"})
           end
 

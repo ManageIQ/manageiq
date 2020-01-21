@@ -1,99 +1,99 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "VM Resource Utilization"
-conditions: !ruby/object:MiqExpression 
-  context_type: 
-  exp: 
-    not: 
-      "=": 
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    not:
+      "=":
         field: VmPerformance-cpu_usage_rate_average
         value: "0"
-col_options: 
-  cpu_usage_rate_average: 
-    :grouping: 
+col_options:
+  cpu_usage_rate_average:
+    :grouping:
     - :avg
     - :max
-  disk_usage_rate_average: 
-    :grouping: 
+  disk_usage_rate_average:
+    :grouping:
     - :avg
     - :max
-  disk_usage_rate_average__avg: 
-    :grouping: 
+  disk_usage_rate_average__avg:
+    :grouping:
     - :avg
     - :max
-  cpu_usage_rate_average__max: 
-    :grouping: 
+  cpu_usage_rate_average__max:
+    :grouping:
     - :avg
     - :max
-  net_usage_rate_average__max: 
-    :grouping: 
+  net_usage_rate_average__max:
+    :grouping:
     - :avg
     - :max
-  mem_usage_absolute_average__max: 
-    :grouping: 
+  mem_usage_absolute_average__max:
+    :grouping:
     - :avg
     - :max
-  mem_usage_absolute_average: 
-    :grouping: 
+  mem_usage_absolute_average:
+    :grouping:
     - :avg
     - :max
-  net_usage_rate_average: 
-    :grouping: 
+  net_usage_rate_average:
+    :grouping:
     - :avg
     - :max
-  cpu_usage_rate_average__avg: 
-    :grouping: 
+  cpu_usage_rate_average__avg:
+    :grouping:
     - :avg
     - :max
-  net_usage_rate_average__avg: 
-    :grouping: 
+  net_usage_rate_average__avg:
+    :grouping:
     - :avg
     - :max
-  mem_usage_absolute_average__avg: 
-    :grouping: 
+  mem_usage_absolute_average__avg:
+    :grouping:
     - :avg
     - :max
-  disk_usage_rate_average__max: 
-    :grouping: 
+  disk_usage_rate_average__max:
+    :grouping:
     - :avg
     - :max
 order: Ascending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "VM Resource Utilization"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - resource_name
 - v_date
 - cpu_usage_rate_average
 - mem_usage_absolute_average
 - net_usage_rate_average
 - disk_usage_rate_average
-timeline: 
+timeline:
 file_mtime:
-categories: 
-time_profile_id: 
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
-db_options: 
+filename:
+db_options:
   :start_offset: 172800
   :end_offset: 0
   :interval: daily
-col_formats: 
-- 
-- 
-- 
-- 
-- 
-- 
+col_formats:
+-
+-
+-
+-
+-
+-
 include: {}
 
 db: VmPerformance
-cols: 
+cols:
 - resource_name
 - v_date
 - cpu_usage_rate_average
@@ -102,16 +102,16 @@ cols:
 - disk_usage_rate_average
 template_type: report
 group: y
-sortby: 
+sortby:
 - resource_name
 - v_date
 rpt_options: {}
 
-headers: 
+headers:
 - Asset Name
 - Date (MM DD YY)
 - " CPU - Usage (%)"
 - " Memory - Usage (%)"
 - " Network I/O - Avg (KBps)"
 - " Disk I/O - Avg (KBps)"
-display_filter: 
+display_filter:

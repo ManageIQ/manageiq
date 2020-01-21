@@ -1,4 +1,3 @@
-require "spec_helper"
 require 'rufus/scheduler'
 
 describe MiqScheduleWorker::Scheduler do
@@ -50,8 +49,8 @@ describe MiqScheduleWorker::Scheduler do
     end
 
     context "with different parmeters" do
-      it "catches an error on nil first arg" do
-        expect(logger).to receive(:error).once.with(/scheduler_spec.rb/)
+      it "interprets first arg nil as trigger to skip scheduling" do
+        expect(logger).to receive(:warn).once.with(/Duration is empty, scheduling ignored/)
         scheduler.schedule_every(nil) {}
       end
 
@@ -73,7 +72,7 @@ describe MiqScheduleWorker::Scheduler do
       scheduler.schedule_cron("0 0 * * *", :tags => [:a, :b], &work)
       job = rufus_scheduler.jobs.first
 
-      expect(job.frequency).to eq(1.day)
+      expect(job.rough_frequency).to eq(1.day.to_i)
       expect(job.tags).to match_array(%w(a b))
       expect(job.callable).to eq(work)
     end

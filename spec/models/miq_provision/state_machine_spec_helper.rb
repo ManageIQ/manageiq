@@ -25,7 +25,7 @@ module MiqProvision::StateMachineSpecHelper
     @test_poll_destination_powered_off_in_vmdb_setup ||= begin
       expect(task).to receive(:requeue_phase) do
         requeue_phase(__method__)
-        vm.update_attributes(:raw_power_state => "down")
+        vm.update(:raw_power_state => "down")
       end
       expect(EmsRefresh).to receive(:queue_refresh)
     end

@@ -1,25 +1,56 @@
 class CustomButton < ApplicationRecord
   has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
-  serialize :options
-  serialize :applies_to_exp
+  scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
+    order = sanitize_sql_array(["array_position(ARRAY[?]::#{column_type}[], #{table_name}.#{column}::#{column_type})", ids])
+    order(order)
+  }
+
+  serialize :options, Hash
+  serialize :visibility_expression
+  serialize :enablement_expression
   serialize :visibility
 
   validates :applies_to_class, :presence => true
   validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
-  validates :guid, :uniqueness => true, :presence => true
+
+  virtual_attribute :uri_attributes, :string
 
   include UuidMixin
   acts_as_miq_set_member
 
+  TYPES = { "default"          => "Default",
+            "ansible_playbook" => "Ansible Playbook"}.freeze
+
+  PLAYBOOK_METHOD = "Order_Ansible_Playbook".freeze
+
   BUTTON_CLASSES = [
+    AvailabilityZone,
+    CloudNetwork,
+    CloudObjectStoreContainer,
+    CloudSubnet,
     CloudTenant,
+    CloudVolume,
+    ContainerGroup,
+    ContainerImage,
+    ContainerNode,
+    ContainerProject,
+    ContainerTemplate,
+    ContainerVolume,
     EmsCluster,
     ExtManagementSystem,
+    GenericObject,
     Host,
+    MiqGroup,
     MiqTemplate,
+    NetworkRouter,
+    OrchestrationStack,
+    SecurityGroup,
     Service,
     Storage,
+    Switch,
+    Tenant,
+    User,
     Vm,
   ].freeze
 
@@ -45,7 +76,7 @@ class CustomButton < ApplicationRecord
 
   def applies_to
     klass = applies_to_class.constantize
-    applies_to_id.nil? ? klass : klass.find_by_id(applies_to_id)
+    applies_to_id.nil? ? klass : klass.find_by(:id => applies_to_id)
   end
 
   def applies_to=(other)
@@ -62,16 +93,59 @@ class CustomButton < ApplicationRecord
     end
   end
 
-  def invoke(target)
-    args = resource_action.automate_queue_hash(target, {}, User.current_user)
-    MiqQueue.put(
+  def invoke(target, source = nil)
+    args = resource_action.automate_queue_hash(target, {"result_format" => 'ignore'}, User.current_user)
+
+    publish_event(source, target, args)
+    MiqQueue.put(queue_opts(target, args))
+  end
+
+  def publish_event(source, target, args = nil)
+    args ||= resource_action.automate_queue_hash(target, {}, User.current_user)
+    Array(target).each { |t| create_event(source, t, args) }
+  end
+
+  def create_event(source, target, args)
+    CustomButtonEvent.create!(
+      :event_type => 'button.trigger.start',
+      :message    => 'Custom button launched',
+      :source     => source,
+      :target     => target,
+      :username   => args[:username],
+      :user_id    => args[:user_id],
+      :group_id   => args[:miq_group_id],
+      :tenant_id  => args[:tenant_id],
+      :timestamp  => Time.now.utc,
+      :full_data  => {
+        :args                 => args,
+        :automate_entry_point => resource_action.ae_path,
+        :button_id            => id,
+        :button_name          => name
+      }
+    )
+  end
+
+  def queue_opts(target, args)
+    {
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
       :args        => [args],
       :role        => 'automate',
       :zone        => target.try(:my_zone),
       :priority    => MiqQueue::HIGH_PRIORITY,
-    )
+    }
+  end
+
+  def invoke_async(target, source = nil)
+    task_opts = {
+      :action => "Calling automate for user #{userid}",
+      :userid => User.current_user
+    }
+
+    args = resource_action.automate_queue_hash(target, {"result_format" => 'ignore'}, User.current_user)
+
+    publish_event(source, target, args)
+    MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
   end
 
   def to_export_xml(_options)
@@ -118,6 +192,19 @@ class CustomButton < ApplicationRecord
   def get_resource_action
     resource_action || build_resource_action
   end
+
+  def evaluate_enablement_expression_for(object)
+    return true unless enablement_expression
+    return false if enablement_expression && !object # list
+    enablement_expression.lenient_evaluate(object)
+  end
+
+  def evaluate_visibility_expression_for(object)
+    return true unless visibility_expression
+    return false if visibility_expression && !object # object == nil, method is called for list of objects
+    visibility_expression.lenient_evaluate(object)
+  end
+
   # End - Helper methods to support moving automate columns to resource_actions table
 
   def self.parse_uri(uri)
@@ -129,23 +216,27 @@ class CustomButton < ApplicationRecord
     BUTTON_CLASSES.collect(&:name)
   end
 
-  def self.available_for_user(user, group)
-    user = get_user(user)
-    role = user.miq_user_role_name
-    # Return all automation uri's that has his role or is allowed for all roles.
-    all.to_a.select do |uri|
-      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
-    end
+  def visible_for_current_user?
+    return false unless visibility.key?(:roles)
+    visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
   end
 
   def self.get_user(user)
-    user = User.find_by_userid(user) if user.kind_of?(String)
+    user = User.lookup_by_userid(user) if user.kind_of?(String)
     raise _("Unable to find user '%{user}'") % {:user => user} if user.nil?
     user
   end
 
   def copy(options = {})
-    options[:guid] = MiqUUID.new_guid
+    options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
+  end
+
+  def self.display_name(number = 1)
+    n_('Button', 'Buttons', number)
+  end
+
+  def open_url?
+    options[:open_url] == true
   end
 end

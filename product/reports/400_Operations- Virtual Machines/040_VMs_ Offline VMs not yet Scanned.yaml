@@ -1,51 +1,51 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-14 03:42:53.439493 Z
 title: "Offline VMs Never Scanned"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    and: 
-    - IS EMPTY: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS EMPTY:
         field: Vm.host-name
-    - IS EMPTY: 
+    - IS EMPTY:
         field: Vm-last_scan_on
         value: ""
 updated_on: 2008-08-14 03:43:18.356570 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Offline VMs Never Scanned"
 rpt_group: Custom
 priority: 82
-col_order: 
+col_order:
 - name
 - storage.name
 - v_datastore_path
 - last_scan_attempt_on
 - last_scan_on
 - last_sync_on
-timeline: 
+timeline:
 id: 136
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  storage: 
-    columns: 
+filename:
+include:
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_datastore_path
 - last_scan_attempt_on
 - last_scan_on
 - last_sync_on
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - storage.name
 - name
-headers: 
+headers:
 - Name
 - Datastore
 - Datastore Path

@@ -12,14 +12,16 @@ module Vm::Operations::Lifecycle
       end
     end
 
+    supports :publish do
+      if blank? || orphaned? || archived?
+        unsupported_reason_add(:publish, _('Publish operation in not supported'))
+      end
+    end
+
     api_relay_method :retire do |options|
       options
     end
 
     api_relay_method :retire_now, :retire
-  end
-
-  def validate_publish
-    {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end
 end

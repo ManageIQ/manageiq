@@ -1,6 +1,4 @@
-require "models/shared_examples/log_collection"
-
-describe LogFile do
+RSpec.describe LogFile do
   context "With server and zone" do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -77,7 +75,10 @@ describe LogFile do
       end
 
       it "delivering MiqServer._request_logs message should call _post_my_logs with correct args" do
-        expected_options = {:timeout => described_class::LOG_REQUEST_TIMEOUT, :taskid => @task.id, :callback => {:instance_id => @task.id, :class_name => 'MiqTask', :method_name => :queue_callback_on_exceptions, :args => ['Finished']}}
+        expected_options = {:timeout     => described_class::LOG_REQUEST_TIMEOUT,
+                            :taskid      => @task.id, :miq_task_id => nil,
+                            :callback    => {:instance_id => @task.id, :class_name => 'MiqTask',
+                                             :method_name => :queue_callback_on_exceptions, :args => ['Finished']}}
         expect_any_instance_of(MiqServer).to receive(:_post_my_logs).with(expected_options)
 
         @message.delivered(*@message.deliver)
@@ -90,7 +91,7 @@ describe LogFile do
         end
 
         it "MiqServer#post_logs message should have correct args" do
-          expect(message.args).to         eq([{:taskid => @task.id}])
+          expect(message.args).to         eq([{:taskid => @task.id, :miq_task_id => nil}])
           expect(message.priority).to     eq(MiqQueue::HIGH_PRIORITY)
           expect(message.miq_callback).to eq(:instance_id => @task.id, :class_name => 'MiqTask', :method_name => :queue_callback_on_exceptions, :args => ['Finished'])
           expect(message.msg_timeout).to  eq(described_class::LOG_REQUEST_TIMEOUT)
@@ -98,25 +99,28 @@ describe LogFile do
 
         context "with post_logs message" do
           it "#post_logs will only post current logs if flag enabled" do
-            message.deliver
             message.args.first[:only_current] = true
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).never
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
 
           it "#post_logs will post both historical and current logs if flag nil" do
-            message.deliver
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
 
           it "#post_logs will post both historical and current logs if flag false" do
-            message.deliver
             message.args.first[:only_current] = false
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
         end
@@ -162,7 +166,6 @@ describe LogFile do
           allow(VMDB::Util).to receive(:zip_logs).and_return('/tmp/blah')
           allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return('/tmp/blah')
           allow(VMDB::Util).to receive(:get_log_start_end_times).and_return((Time.now.utc - 600), Time.now.utc)
-          allow_any_instance_of(described_class).to receive(:add).and_return("smb://blah.com/share1")
         end
 
         context "with VMDB::Util.zip_logs raising exception" do

@@ -1,29 +1,35 @@
 ---
 :defaults_and_overrides:
+  :formats_by_path:
+    :ContainerVolume-capacity: null
+    :ContainerVolumeKubernetes-capacity: null
+    :PersistentVolume-capacity: null
+    :PersistentVolumeClaim-capacity: null
+
   :formats_by_data_type:
-    :integer:     :general_number_precision_0
-    :decimal:     :general_number_precision_0
-    :fixnum:      :general_number_precision_0
-    :float:       :general_number_precision_2
-    :date:        :date
-    :datetime:    :datetime
-    :timestamp:   :datetime
-    :time:        :datetime
-    :boolean:     :boolean
+    :integer: :general_number_precision_0
+    :decimal: :general_number_precision_0
+    :fixnum: :general_number_precision_0
+    :float: :general_number_precision_2
+    :date: :date
+    :datetime: :datetime
+    :timestamp: :datetime
+    :time: :datetime
+    :boolean: :boolean
     :numeric_set: :basic_set
-    :string_set:  :basic_set
+    :string_set: :basic_set
 
   :formats_by_suffix:
-    :hour:          :date_hour_am_pm
-    :day:           :date
-    :week:          :date_range
-    :month:         :date_range
-    :quarter:       :date_range
-    :year:          :year
-    :hour_of_day:   :hour_am_pm
-    :day_of_week:   :day_full
-    :day_of_month:  :day_of_month
-    :week_of_year:  :week_of_year
+    :hour: :date_hour_am_pm
+    :day: :date
+    :week: :date_range
+    :month: :date_range
+    :quarter: :date_range
+    :year: :year
+    :hour_of_day: :hour_am_pm
+    :day_of_week: :day_full
+    :day_of_month: :day_of_month
+    :week_of_year: :week_of_year
     :month_of_year: :month_full
 
   :precision_by_column:
@@ -34,8 +40,8 @@
     :v_time: :time
     :v_statistic_date: :date
     :v_statistic_time: :time
-    :pid:      :_none_
-    :spid:     :_none_
+    :pid: :_none_
+    :spid: :_none_
     :sql_spid: :_none_
     :chain_id: :_none_
 
@@ -44,6 +50,8 @@
     :cpu_cores_used_cost: :currency_precision_2
     :cpu_allocated_cost: :currency_precision_2
     :cpu_allocated_metric: :general_number_precision_0
+    :cpu_cores_allocated_cost: :currency_precision_2
+    :cpu_cores_allocated_metric: :general_number_precision_0
     :cpu_cost: :currency_precision_2
     :memory_used_cost: :currency_precision_2
     :memory_allocated_cost: :currency_precision_2
@@ -127,8 +135,8 @@
     :size_on_disk: :bytes
     :snapshot_size: :bytes
     :storage_allocated_metric: :bytes
-    :storage_metric: :bytes
-    :storage_used_metric: :bytes
+    :storage_metric: :bytes_precision_2
+    :storage_used_metric: :bytes_precision_2
     :total_space: :bytes
     :total_size: :bytes
     :v_derived_storage_used: :bytes
@@ -148,6 +156,10 @@
     :v_snapshot_newest_total_size: :bytes
     :v_snapshot_oldest_total_size: :bytes
 
+    :disk_total_bytes: :bytes
+    :disk_free_bytes: :bytes
+    :disk_used_bytes: :bytes
+
     :capacity_profile_1_available_host_memory: :bytes
     :capacity_profile_2_available_host_memory: :bytes
     :capacity_profile_2_available_host_vcpu: :mhz
@@ -162,10 +174,10 @@
     :capacity_profile_2_vcpu_per_vm_with_min_max: :mhz_avg
 
     :v_used_space: :bytes
-    :v_total_debris_size:  :bytes
+    :v_total_debris_size: :bytes
     :v_total_snapshot_size: :bytes
-    :v_total_memory_size:  :bytes
-    :v_total_vm_misc_size:  :bytes
+    :v_total_memory_size: :bytes
+    :v_total_vm_misc_size: :bytes
 
     :aggregate_all_vm_memory_on_disk: :bytes
     :aggregate_all_vm_memory: :megabytes
@@ -182,11 +194,12 @@
     :max_derived_memory_available: :megabytes
     :max_derived_memory_reserved: :megabytes
     :max_derived_memory_used: :megabytes
-    :memory_allocated_metric: :megabytes
-    :memory_metric: :megabytes
-    :memory_used_metric: :megabytes
+    :memory_allocated_metric: :megabytes_precision_2
+    :memory_metric: :megabytes_precision_2
+    :memory_used_metric: :megabytes_precision_2
     :memory_mb: :megabytes
     :mem_cpu: :megabytes
+    :metering_used_metric: :hours
     :min_derived_memory_used: :megabytes
     :ram_size: :megabytes
     :trend_derived_memory_used: :megabytes
@@ -196,15 +209,15 @@
     :abs_max_net_usage_rate_average_value: :kbps
     :abs_min_disk_usage_rate_average_value: :kbps
     :abs_min_net_usage_rate_average_value: :kbps
-    :disk_io_metric: :kbps
-    :disk_io_used_metric: :kbps
+    :disk_io_metric: :kbps_precision_2
+    :disk_io_used_metric: :kbps_precision_2
     :disk_usage_rate_average: :kbps
     :max_disk_usage_rate_average: :kbps
     :max_net_usage_rate_average: :kbps
     :min_disk_usage_rate_average: :kbps
     :min_net_usage_rate_average: :kbps
-    :net_io_metric: :kbps
-    :net_io_used_metric: :kbps
+    :net_io_metric: :kbps_precision_2
+    :net_io_used_metric: :kbps_precision_2
     :net_usage_rate_average: :kbps
     :trend_max_disk_usage_rate_average: :kbps
     :trend_max_net_usage_rate_average: :kbps
@@ -228,6 +241,7 @@
     :min_cpu_usagemhz_rate_average: :mhz_avg
     :trend_cpu_usagemhz_rate_average: :mhz_avg
     :trend_max_cpu_usagemhz_rate_average: :mhz_avg
+    :trend_max_cpu_usage_rate_average: :percent
 
     :max_sys_uptime_absolute_latest: :elapsed_time
     :min_sys_uptime_absolute_latest: :elapsed_time
@@ -268,7 +282,6 @@
     :v_pct_used_disk_space: :percent
     :v_snapshot_percent_of_used: :percent
     :v_used_space_percent_of_total: :percent
-    :v_memory_percent_of_used: :percent
     :v_pct_cpu_ready_delta_summation: :percent
     :v_pct_cpu_used_delta_summation: :percent
     :v_pct_cpu_wait_delta_summation: :percent
@@ -297,13 +310,16 @@
     :aggressive_mem_recommended_change: :megabytes
 
   :formats_by_sub_type:
-    :bytes:     :bytes_human
+    :bytes: :bytes_human
     :kilobytes: :kilobytes_human
     :megabytes: :megabytes_human
     :gigabytes: :gigabytes_human
-    :kbps:      :kbps
-    :mhz:       :mhz_precision_2
-    :mhz_avg:   :mhz_avg
+    :kbps: :kbps
+    :mhz: :mhz_precision_2
+    :bytes_precision_2: :bytes_human_precision_2
+    :kbps_precision_2: :kbps_precision_2
+    :megabytes_precision_2: :megabytes_human_precision_2
+    :mhz_avg: :mhz_avg
     :percent: :percent_precision_1
     :elapsed_time: :elapsed_time_human
 
@@ -313,17 +329,26 @@
     :description: Suffixed Bytes (B, KB, MB, GB)
     :columns:
     :sub_types:
-      - :bytes
+    - :bytes
     :function:
       :name: bytes_to_human_size
     :precision: 1
+
+  :bytes_human_precision_2:
+    :description: Suffixed Bytes (B, KB, MB, GB)
+    :columns:
+    :sub_types:
+    - :bytes
+    :function:
+      :name: bytes_to_human_size
+    :precision: 2
 
   :kilobytes_human:
     :description: Suffixed Kilobytes (KB, MB, GB)
     :columns:
 # TODO - find columns that have values in KB
     :sub_types:
-      - :kilobytes
+    - :kilobytes
     :function:
       :name: kbytes_to_human_size
     :precision: 1
@@ -332,26 +357,44 @@
     :description: Suffixed Megabytes (MB, GB)
     :columns:
     :sub_types:
-      - :megabytes
+    - :megabytes
     :function:
       :name: mbytes_to_human_size
     :precision: 1
+
+  :megabytes_human_precision_2:
+    :description: Suffixed Megabytes (MB, GB)
+    :columns:
+    :sub_types:
+    - :megabytes
+    :function:
+      :name: mbytes_to_human_size
+    :precision: 2
 
   :gigabytes_human:
     :description: Suffixed Gigabytes (GB)
     :columns:
     :sub_types:
-      - :gigabytes
+    - :gigabytes
     :function:
       :name: gbytes_to_human_size
     :precision: 1
 
+  :gigabytes_human_precision_2:
+    :description: Suffixed Gigabytes (GB)
+    :columns:
+    :sub_types:
+    - :gigabytes
+    :function:
+      :name: gbytes_to_human_size
+    :precision: 2
+
   :general_number_precision_0:
     :description: Number (1,234)
     :data_types:
-      - :integer
-      - :fixnum
-      - :float
+    - :integer
+    - :fixnum
+    - :float
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -360,7 +403,7 @@
   :general_number_precision_1:
     :description: Number (1,234.0)
     :data_types:
-      - :float
+    - :float
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -369,7 +412,7 @@
   :general_number_precision_2:
     :description: Number, 2 Decimals (1,234.00)
     :data_types:
-      - :float
+    - :float
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -378,7 +421,7 @@
   :currency_precision_2:
     :description: Currency, 2 Decimals ($1,234.00)
     :data_types:
-      - :float
+    - :float
     :function:
       :name: currency_with_delimiter
       :delimiter: ","
@@ -388,19 +431,30 @@
     :description: Kilobytes per Second (10 KBps)
     :columns:
     :sub_types:
-      - :kbps
+    - :kbps
     :function:
       :name: number_with_delimiter
       :delimiter: ","
       :suffix: " KBps"
     :precision: 0
 
+  :kbps_precision_2:
+    :description: Kilobytes per Second (12,34 KBps)
+    :columns:
+    :sub_types:
+    - :kbps
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: " KBps"
+    :precision: 2
+
   :cores:
     :description: Cores
     :columns:
     :sub_types:
-      - :cores
-      - :cores_avg
+    - :cores
+    - :cores_avg
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -411,8 +465,8 @@
     :description: Megahertz (12 Mhz)
     :columns:
     :sub_types:
-      - :mhz
-      - :mhz_avg
+    - :mhz
+    - :mhz_avg
     :function:
       :name: mhz_to_human_size
       :delimiter: ","
@@ -422,19 +476,29 @@
     :description: Megahertz Avg (12.1 Mhz)
     :columns:
     :sub_types:
-      - :mhz
-      - :mhz_avg
+    - :mhz
+    - :mhz_avg
     :function:
       :name: mhz_to_human_size
       :delimiter: ","
     :precision: 1
 
+  :hours:
+    :description: Hours
+    :columns:
+    :sub_types:
+    - :hours
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: ! ' Hours'
+
   :mhz_precision_2:
     :description: Megahertz Avg (12.11 Mhz)
     :columns:
     :sub_types:
-      - :mhz
-      - :mhz_avg
+    - :mhz
+    - :mhz_avg
     :function:
       :name: mhz_to_human_size
       :delimiter: ","
@@ -444,9 +508,9 @@
     :description: Percentage (99%)
     :columns:
     :sub_types:
-      - :percent
-      - :percent
-      - :percent
+    - :percent
+    - :percent
+    - :percent
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -457,9 +521,9 @@
     :description: Percent, 1 Decimal (99.0%)
     :columns:
     :sub_types:
-      - :percent
-      - :percent
-      - :percent
+    - :percent
+    - :percent
+    - :percent
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -470,9 +534,9 @@
     :description: Percent, 2 Decimals (99.00%)
     :columns:
     :sub_types:
-      - :percent
-      - :percent
-      - :percent
+    - :percent
+    - :percent
+    - :percent
     :function:
       :name: number_with_delimiter
       :delimiter: ","
@@ -482,14 +546,14 @@
   :boolean:
     :description: Boolean (True/False)
     :data_types:
-      - :boolean
+    - :boolean
     :function:
       :name: boolean
 
   :boolean_t_f:
     :description: Boolean (T/F)
     :data_types:
-      - :boolean
+    - :boolean
     :function:
       :name: boolean
       :format: t_f
@@ -497,7 +561,7 @@
   :boolean_yes_no:
     :description: Boolean (Yes/No)
     :data_types:
-      - :boolean
+    - :boolean
     :function:
       :name: boolean
       :format: yes_no
@@ -505,7 +569,7 @@
   :boolean_y_n:
     :description: Boolean (Y/N)
     :data_types:
-      - :boolean
+    - :boolean
     :function:
       :name: boolean
       :format: y_n
@@ -513,7 +577,7 @@
   :boolean_pass_fail:
     :description: Boolean (Pass/Fail)
     :data_types:
-      - :boolean
+    - :boolean
     :function:
       :name: boolean
       :format: pass_fail
@@ -521,11 +585,11 @@
   :date:
     :description: Date (M/D/YYYY)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
+    - :day
     :function:
       :name: datetime
       :format: "%m/%d/%Y"
@@ -533,11 +597,11 @@
   :date_yy:
     :description: Date (M/D/YY)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
+    - :day
     :function:
       :name: datetime
       :format: "%m/%d/%y"
@@ -546,9 +610,9 @@
   :date_range:
     :description: Date Range (M/D/Y - M/D/Y)
     :suffixes:
-      - :week
-      - :month
-      - :quarter
+    - :week
+    - :month
+    - :quarter
     :function:
       :name: datetime_range
       :format: "%m/%d/%y"
@@ -556,9 +620,9 @@
   :date_day_range:
     :description: Day Range (M/D - M/D)
     :suffixes:
-      - :week
-      - :month
-      - :quarter
+    - :week
+    - :month
+    - :quarter
     :function:
       :name: datetime_range
       :format: "%m/%d"
@@ -566,9 +630,9 @@
   :date_day_range_start_day:
     :description: Day Range Start (M/D)
     :suffixes:
-      - :week
-      - :month
-      - :quarter
+    - :week
+    - :month
+    - :quarter
     :function:
       :name: datetime_range
       :format: "%m/%d"
@@ -576,11 +640,11 @@
   :date_day:
     :description: Date (M/D)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
+    - :day
     :function:
       :name: datetime
       :format: "%m/%d"
@@ -588,8 +652,8 @@
   :time:
     :description: Time (H:M:S Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :function:
       :name: datetime
       :format: "%H:%M %Z"
@@ -597,8 +661,8 @@
   :datetime:
     :description: Date/Time (M/D/Y H:M:S Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :function:
       :name: datetime
       :format: "%m/%d/%y %H:%M:%S %Z"
@@ -606,10 +670,10 @@
   :date_hour:
     :description: Date/Hour (M/D/Y H:00 Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :hour
+    - :hour
     :function:
       :name: datetime
       :format: "%m/%d/%y %H:00 %Z"
@@ -617,10 +681,10 @@
   :date_hour_am_pm:
     :description: Date/Hour (M/D/Y H AM|PM Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :hour
+    - :hour
     :function:
       :name: datetime
       :format: "%m/%d/%y %I %p %Z"
@@ -628,11 +692,11 @@
   :hour:
     :description: Hour (H:00 Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :hour
-      - :hour_of_day
+    - :hour
+    - :hour_of_day
     :function:
       :name: datetime
       :format: "%H:00 %Z"
@@ -640,11 +704,11 @@
   :hour_am_pm:
     :description: Hour (H AM|PM Z)
     :data_types:
-      - :datetime
-      - :timestamp
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :hour
-      - :hour_of_day
+    - :hour
+    - :hour_of_day
     :function:
       :name: datetime
       :format: "%l %p %Z"
@@ -652,12 +716,12 @@
   :hour_of_day:
     :description: Hour of Day (24)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :hour
-      - :hour_of_day
+    - :hour
+    - :hour_of_day
     :function:
       :name: datetime
       :format: "%k"
@@ -665,12 +729,12 @@
   :day_full:
     :description: Day Full (Monday)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
-      - :day_of_week
+    - :day
+    - :day_of_week
     :function:
       :name: datetime
       :format: "%A"
@@ -678,12 +742,12 @@
   :day_short:
     :description: Day Short (Mon)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
-      - :day_of_week
+    - :day
+    - :day_of_week
     :function:
       :name: datetime
       :format: "%a"
@@ -691,12 +755,12 @@
   :day_number:
     :description: Day of Week (1)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
-      - :day_of_week
+    - :day
+    - :day_of_week
     :function:
       :name: datetime
       :format: "%u"
@@ -704,12 +768,12 @@
   :day_of_month:
     :description: Day of Month (27)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
-      - :day_of_month
+    - :day
+    - :day_of_month
     :function:
       :name: datetime
       :format: "%e"
@@ -717,12 +781,12 @@
   :day_of_month_ordinal:
     :description: Day of Month (27th)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :day
-      - :day_of_month
+    - :day
+    - :day_of_month
     :function:
       :name: datetime_ordinal
       :format: "%e"
@@ -730,11 +794,11 @@
   :month:
     :description: Month and Year (January 2011)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :month
+    - :month
     :function:
       :name: datetime
       :format: "%B %Y"
@@ -742,11 +806,11 @@
   :month_year_short:
     :description: Month and Year Short (Jan 11)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :month
+    - :month
     :function:
       :name: datetime
       :format: "%b %y"
@@ -754,12 +818,12 @@
   :month_full:
     :description: Month Full (January)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :month_of_year
-      - :month
+    - :month_of_year
+    - :month
     :function:
       :name: datetime
       :format: "%B"
@@ -767,12 +831,12 @@
   :month_short:
     :description: Month Short (Jan)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :month_of_year
-      - :month
+    - :month_of_year
+    - :month
     :function:
       :name: datetime
       :format: "%b"
@@ -780,12 +844,12 @@
   :month_of_year:
     :description: Month of Year (12)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :month
-      - :month_of_year
+    - :month
+    - :month_of_year
     :function:
       :name: datetime
       :format: "%m"
@@ -793,12 +857,12 @@
   :week_of_year:
     :description: Week of Year (52)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :week
-      - :week_of_year
+    - :week
+    - :week_of_year
     :function:
       :name: datetime
       :format: "%W"
@@ -806,12 +870,12 @@
   :week_of_year_ordinal:
     :description: Week of Year (52nd)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :week
-      - :week_of_year
+    - :week
+    - :week_of_year
     :function:
       :name: datetime_ordinal
       :format: "%W"
@@ -819,11 +883,11 @@
   :year:
     :description: Year (YYYY)
     :data_types:
-      - :date
-      - :datetime
-      - :timestamp
+    - :date
+    - :datetime
+    - :timestamp
     :suffixes:
-      - :year
+    - :year
     :function:
       :name: datetime
       :format: "%Y"
@@ -838,7 +902,7 @@
     :description: "Elapsed Time (10 Days, 0 Hours, 1 Minute, 44 Seconds)"
     :columns:
     :sub_types:
-      - :elapsed_time
+    - :elapsed_time
     :function:
       :name: elapsed_time_human
     :precision: 1
@@ -846,7 +910,7 @@
   :string_truncate_50:
     :description: String Truncated to 50 Characters with Elipses (...)
     :data_types:
-      - :string
+    - :string
     :function:
       :name: string_truncate
       :length: 50
@@ -854,7 +918,7 @@
   :large_number_to_exponential_form:
     :description: Convert Numbers Larger than 1.0e+15 to Exponential Form
     :data_types:
-      - :float
+    - :float
     :function:
       :name: large_number_to_exponential_form
       :length: 50
@@ -862,6 +926,6 @@
   :model_name:
     :description: Human readable model name
     :data_types:
-      - :string
+    - :string
     :function:
       :name: model_name

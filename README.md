@@ -1,22 +1,26 @@
 # ManageIQ
 
-[![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg)](https://travis-ci.org/ManageIQ/manageiq)
+[![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg?branch=master)](https://travis-ci.org/ManageIQ/manageiq)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq/badges/gpa.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
 [![Codacy](https://api.codacy.com/project/badge/grade/9ffce48ccb924020ae8f9e698048e9a4)](https://www.codacy.com/app/ManageIQ/manageiq)
 [![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=master&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=master)
-[![Dependency Status](https://gemnasium.com/ManageIQ/manageiq.svg)](https://gemnasium.com/ManageIQ/manageiq)
 [![Security](https://hakiri.io/github/ManageIQ/manageiq/master.svg)](https://hakiri.io/github/ManageIQ/manageiq/master)
+[![Open Source Helpers](https://www.codetriage.com/manageiq/manageiq/badges/users.svg)](https://www.codetriage.com/manageiq/manageiq)
 
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Translate](https://img.shields.io/badge/translate-zanata-blue.svg)](https://translate.zanata.org/zanata/project/view/manageiq)
+[![Translate](https://img.shields.io/badge/translate-transifex-blue.svg)](https://www.transifex.com/manageiq/manageiq/dashboard/)
 [![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 
-[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=master&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
+[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=master&includeBuildsFromPullRequest=false&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
 
-ManageIQ is a Cloud Management Platform that delivers the insight, control, and
+## Discover, Optimize, and Control your Hybrid IT
+
+### Manage containers, virtual machines, networks, and storage from a single platform
+
+ManageIQ is an open-source Management Platform that delivers the insight, control, and
 automation that enterprises need to address the challenges of managing hybrid
-cloud environments.  It has the following feature sets:
+IT environments.  It has the following feature sets:
 
 * **Insight**: Discovery, Monitoring, Utilization, Performance, Reporting, Analytics, Chargeback, and Trending.
 * **Control**: Security, Compliance, Alerting, Policy-Based Resource and Configuration Management.
@@ -41,9 +45,14 @@ We respectfully ask that you do not directly email any manageiq committers with
 questions or problems. The community is best served when discussions are held in
 public.
 
-## License
+## Licensing
 
-See [LICENSE.txt](LICENSE.txt)
+See [LICENSE.txt](LICENSE.txt).
+
+Except where otherwise noted, all ManageIQ source files are covered by
+the following copyright and license notice:
+
+Copyright 2014-2019 ManageIQ Authors.
 
 ## Export Notice
 

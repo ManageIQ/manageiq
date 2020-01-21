@@ -1,13 +1,13 @@
 describe Compliance do
   context "A small virtual infrastructure" do
-    let(:ems_vmware) { FactoryGirl.create(:ems_vmware, :zone => zone) }
-    let(:host1)      { FactoryGirl.create(:host, :ext_management_system => ems_vmware) }
-    let(:host2)      { FactoryGirl.create(:host) }
-    let(:vm1)        { FactoryGirl.create(:vm_vmware, :host => host1, :ext_management_system => ems_vmware) }
-    let(:zone)       { FactoryGirl.build(:zone) }
+    let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => zone) }
+    let(:host1)      { FactoryBot.create(:host, :ext_management_system => ems_vmware) }
+    let(:host2)      { FactoryBot.create(:host) }
+    let(:vm1)        { FactoryBot.create(:vm_vmware, :host => host1, :ext_management_system => ems_vmware) }
+    let(:zone)       { FactoryBot.build(:zone) }
 
-    let(:ems_kubernetes_container) { FactoryGirl.create(:ems_kubernetes, :zone => zone) }
-    let(:container_image) { FactoryGirl.create(:container_image, :ext_management_system => ems_kubernetes_container) }
+    let(:ems_kubernetes_container) { FactoryBot.create(:ems_kubernetes, :zone => zone) }
+    let(:container_image) { FactoryBot.create(:container_image, :ext_management_system => ems_kubernetes_container) }
 
     before { allow(MiqServer).to receive(:my_zone).and_return(zone) }
 
@@ -92,23 +92,20 @@ describe Compliance do
 
     context ".check_compliance" do
       shared_examples ".check_compliance" do
-        let(:policy)     { FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true) }
-        let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
-        let(:template)   { FactoryGirl.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
-        let(:action)     { FactoryGirl.create(:miq_action, :name => 'compliance_failed', :action_type => 'default') }
+        let(:policy)     { FactoryBot.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true) }
+        let(:policy_set) { FactoryBot.create(:miq_policy_set) }
+        let(:template)   { FactoryBot.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
+        let(:action)     { FactoryBot.create(:miq_action, :name => 'compliance_failed', :action_type => 'default') }
         let(:content) do
-          FactoryGirl.create(
+          FactoryBot.create(
             :miq_policy_content, :qualifier => 'failure', :failure_sequence => 1, :failure_synchronous => true
           )
         end
-        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
-        let(:container_policy) do
-          FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Container Image', :active => true)
-        end
+        let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
 
         before do
-          policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])
-          policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-id"}))
+          policy.sync_events([FactoryBot.create(:miq_event_definition, :name => "vm_compliance_check")])
+          policy.conditions << FactoryBot.create(:condition, :expression => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-id"}))
           content.miq_event_definition = event_definition
           content.miq_action = action
           policy.miq_policy_contents << content
@@ -123,7 +120,7 @@ describe Compliance do
         end
 
         it "non-compliant" do
-          policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
+          policy.conditions << FactoryBot.create(:condition, :expression => MiqExpression.new(">=" => {"field" => "Vm-num_cpu", "value" => "2"}))
 
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_failed")
           expect(Compliance.check_compliance(subject)).to be_falsey
@@ -143,23 +140,23 @@ describe Compliance do
 
       context "no condition" do
         let(:policy) do
-          FactoryGirl.create(:miq_policy,
+          FactoryBot.create(:miq_policy,
                              :mode       => 'compliance',
                              :towhat     => 'Vm',
                              :expression => MiqExpression.new("=" => {"field" => "Vm-retired", "value" => "true"}),
                              :active     => true)
         end
-        let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
-        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
+        let(:policy_set) { FactoryBot.create(:miq_policy_set) }
+        let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
 
         before do
-          policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])
+          policy.sync_events([FactoryBot.create(:miq_event_definition, :name => "vm_compliance_check")])
           policy_set.add_member(policy)
           ems_vmware.add_policy(policy_set)
         end
 
         it "compliant" do
-          vm1.update_attributes(:retired => true)
+          vm1.update(:retired => true)
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(vm1, "vm_compliance_passed")
           expect(Compliance.check_compliance(vm1)).to be_truthy
           expect(vm1.compliances.last.compliant).to be_truthy
@@ -178,7 +175,7 @@ describe Compliance do
     inputs = objects.extract_options!
     objects.each do |obj|
       expect(MiqQueue).to receive(:put) do |args|
-        expect(args).to have_attributes(
+        expect(args).to include(
           :method_name => "check_compliance",
           :class_name  => "Compliance",
           :args        => [[obj.class.name, obj.id], inputs]
@@ -191,7 +188,7 @@ describe Compliance do
     inputs = objects.extract_options!
     objects.each do |obj|
       expect(MiqQueue).to receive(:put) do |args|
-        expect(args).to have_attributes(
+        expect(args).to include(
           :method_name => "scan_and_check_compliance",
           :class_name  => "Compliance",
           :task_id     => 'vc-refresher',

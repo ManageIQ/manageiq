@@ -1,6 +1,8 @@
 description: tenant_quotas
 title: Tenant Quotas
 content_type: report
+options:
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_
@@ -9,7 +11,7 @@ resource_name: Tenant Quotas
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
-    :interval: 
+    :interval:
       :value: "1"
       :unit: daily
 enabled: true

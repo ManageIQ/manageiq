@@ -1,86 +1,86 @@
 describe "PartitionAlignment" do
   context "Running test" do
-    before(:each) do
+    before do
       aligned = 64.kilobytes
       not_aligned = 1
 
-      @vm1 = FactoryGirl.create(:vm_vmware, :name => "VM 1 Aligned",     :hardware => FactoryGirl.create(:hardware))
-      FactoryGirl.create(:disk,
+      @vm1 = FactoryBot.create(:vm_vmware, :name => "VM 1 Aligned",     :hardware => FactoryBot.create(:hardware))
+      FactoryBot.create(:disk,
                          :device_type => "floppy",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "cdrom-raw",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :disk_type   => "rdm-raw",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm1.hardware.id,
                          :partitions  => [
-                           FactoryGirl.create(:partition, :start_address => aligned),
-                           FactoryGirl.create(:partition, :start_address => aligned)
+                           FactoryBot.create(:partition, :start_address => aligned),
+                           FactoryBot.create(:partition, :start_address => aligned)
                          ]
                         )
 
-      @vm2 = FactoryGirl.create(:vm_vmware, :name => "VM 2 Not Aligned", :hardware => FactoryGirl.create(:hardware))
-      FactoryGirl.create(:disk,
+      @vm2 = FactoryBot.create(:vm_vmware, :name => "VM 2 Not Aligned", :hardware => FactoryBot.create(:hardware))
+      FactoryBot.create(:disk,
                          :device_type => "floppy",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "cdrom-raw",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :disk_type   => "rdm-raw",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryGirl.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
                         )
-      FactoryGirl.create(:disk,
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm2.hardware.id,
                          :partitions  => [
-                           FactoryGirl.create(:partition, :start_address => aligned),
-                           FactoryGirl.create(:partition, :start_address => not_aligned)
+                           FactoryBot.create(:partition, :start_address => aligned),
+                           FactoryBot.create(:partition, :start_address => not_aligned)
                          ]
                         )
 
-      @vm3 = FactoryGirl.create(:vm_vmware, :name => "VM 3 Unknown", :hardware => FactoryGirl.create(:hardware))
+      @vm3 = FactoryBot.create(:vm_vmware, :name => "VM 3 Unknown", :hardware => FactoryBot.create(:hardware))
 
-      @vm4 = FactoryGirl.create(:vm_vmware, :name => "VM 4 Unknown", :hardware => FactoryGirl.create(:hardware))
-      FactoryGirl.create(:disk,
+      @vm4 = FactoryBot.create(:vm_vmware, :name => "VM 4 Unknown", :hardware => FactoryBot.create(:hardware))
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm4.hardware.id
                         )
 
-      @vm5 = FactoryGirl.create(:vm_vmware, :name => "VM 4 Unknown", :hardware => FactoryGirl.create(:hardware))
-      FactoryGirl.create(:disk,
+      @vm5 = FactoryBot.create(:vm_vmware, :name => "VM 4 Unknown", :hardware => FactoryBot.create(:hardware))
+      FactoryBot.create(:disk,
                          :device_type => "disk",
                          :hardware_id => @vm5.hardware.id,
                          :partitions  => [
-                           FactoryGirl.create(:partition, :start_address => aligned),
-                           FactoryGirl.create(:partition)
+                           FactoryBot.create(:partition, :start_address => aligned),
+                           FactoryBot.create(:partition)
                          ]
                         )
     end

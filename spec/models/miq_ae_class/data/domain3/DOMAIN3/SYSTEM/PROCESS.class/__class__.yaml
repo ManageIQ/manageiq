@@ -1,0 +1,35 @@
+---
+object_type: class
+version: 1.0
+created_on: 2014-05-09 15:44:35.159371000 Z
+updated_on: 2014-05-09 15:44:35.159371000 Z
+object:
+  attributes:
+    description:
+    display_name:
+    name: PROCESS
+    type:
+    inherits:
+    visibility:
+    owner:
+  schema:
+  - field:
+      aetype: attribute
+      name: attr1
+      display_name: Simple Attribute
+      datatype:
+      priority: 1
+      owner:
+      default_value: fred
+      substitute: true
+      message: create
+      visibility:
+      collect:
+      scope:
+      description:
+      condition:
+      on_entry:
+      on_exit:
+      on_error:
+      max_retries:
+      max_time:

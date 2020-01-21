@@ -1,22 +1,22 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-12 18:31:56.921599 Z
 title: "VMs on Datastore but not registered to a Host"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    and: 
-    - IS EMPTY: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS EMPTY:
         field: Vm.host-name
         value: ""
-    - IS NOT EMPTY: 
+    - IS NOT EMPTY:
         field: Vm.storage-name
 updated_on: 2008-08-12 19:48:37.339923 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Unregistered VMs"
 rpt_group: Custom
 priority: 231
-col_order: 
+col_order:
 - name
 - storage.name
 - v_datastore_path
@@ -24,30 +24,30 @@ col_order:
 - created_on
 - updated_on
 - hardware.annotation
-timeline: 
+timeline:
 id: 85
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    columns: 
+filename:
+include:
+  hardware:
+    columns:
     - size_on_disk
     - annotation
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_datastore_path
 - created_on
 - updated_on
 template_type: report
-group: 
-sortby: 
-headers: 
+group:
+sortby:
+headers:
 - VM Name
 - Datastore
 - Datastore Path

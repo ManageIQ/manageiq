@@ -1,8 +1,0 @@
-#results_xml_div
-  - if @results
-    #xml_holder
-    :javascript
-      $('#xml_holder').xmlDisplay("#{j_str @results}");
-  - else
-    = render(:partial => 'layouts/info_msg',
-      :locals => {:message => _("Enter Automation Simulation options on the left and press Submit.")})

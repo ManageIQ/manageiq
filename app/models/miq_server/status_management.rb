@@ -21,7 +21,7 @@ module MiqServer::StatusManagement
 
   def process_status
     require 'miq-process'
-    pinfo = MiqProcess.processInfo
+    pinfo = MiqProcess.processInfo(pid)
     # Ensure the hash only contains the values we want to store in the table
     pinfo.keep_if { |k, _v| MiqWorker::PROCESS_INFO_FIELDS.include?(k) }
     pinfo[:os_priority] = pinfo.delete(:priority)
@@ -41,7 +41,7 @@ module MiqServer::StatusManagement
     def log_status
       log_system_status
       svr = my_server(true)
-      _log.info("[#{svr.friendly_name}] Process info: Memory Usage [#{svr.memory_usage}], Memory Size [#{svr.memory_size}], Proportional Set Size: [#{svr.proportional_set_size}], Memory % [#{svr.percent_memory}], CPU Time [#{svr.cpu_time}], CPU % [#{svr.percent_cpu}], Priority [#{svr.os_priority}]") unless svr.nil?
+      _log.info("[#{svr.friendly_name}] Process info: Memory Usage [#{svr.memory_usage}], Memory Size [#{svr.memory_size}], Proportional Set Size: [#{svr.proportional_set_size}], Unique Set Size: [#{svr.unique_set_size}], Memory % [#{svr.percent_memory}], CPU Time [#{svr.cpu_time}], CPU % [#{svr.percent_cpu}], Priority [#{svr.os_priority}]") unless svr.nil?
     end
 
     def log_system_status

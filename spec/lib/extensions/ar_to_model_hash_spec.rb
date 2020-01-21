@@ -1,9 +1,33 @@
-describe ToModelHash do
+RSpec.describe ToModelHash do
   context "#to_model_hash" do
-    let(:test_disk_class)     { Class.new(ActiveRecord::Base) { include ToModelHash; self.table_name = "test_disks" } }
-    let(:test_hardware_class) { Class.new(ActiveRecord::Base) { include ToModelHash; self.table_name = "test_hardwares" } }
-    let(:test_vm_class)       { Class.new(ActiveRecord::Base) { include ToModelHash; self.table_name = "test_vms" } }
-    let(:test_os_class)       { Class.new(ActiveRecord::Base) { include ToModelHash; self.table_name = "test_operating_systems" } }
+    let(:test_disk_class) do
+      Class.new(ActiveRecord::Base) do
+        include ToModelHash
+        self.table_name = "test_disks"
+      end
+    end
+
+    let(:test_hardware_class) do
+      Class.new(ActiveRecord::Base) do
+        include ToModelHash
+        self.table_name = "test_hardwares"
+      end
+    end
+
+    let(:test_vm_class) do
+      Class.new(ActiveRecord::Base) do
+        include ToModelHash
+        self.table_name = "test_vms"
+      end
+    end
+
+    let(:test_os_class) do
+      Class.new(ActiveRecord::Base) do
+        include ToModelHash
+        self.table_name = "test_operating_systems"
+      end
+    end
+
     let(:fixed_options)       { test_vm_class.send(:to_model_hash_options_fixup, @test_to_model_hash_options) }
     let(:mocked_preloader)    { double }
 
@@ -41,7 +65,7 @@ describe ToModelHash do
       test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class,       :inverse_of => false,          :dependent => :destroy
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
-      allow_any_instance_of(ActiveRecord::Base).to receive(:to_model_hash_recursive)
+      allow_any_instance_of(test_vm_class).to receive(:to_model_hash_recursive)
       allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
     end
 

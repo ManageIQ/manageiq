@@ -10,12 +10,12 @@ class MemCache
   # unmarshalled.
 
   def get(key, raw = false)
-    server, cache_key = request_setup key
+    server, cache_key = request_setup(key)
 
     value = if @multithread
-              threadsafe_cache_get server, cache_key
+              threadsafe_cache_get(server, cache_key)
             else
-              cache_get server, cache_key
+              cache_get(server, cache_key)
             end
 
     return nil if value.nil?
@@ -25,7 +25,7 @@ class MemCache
 
     return value
   rescue TypeError, SocketError, SystemCallError, IOError => err
-    handle_error server, err
+    handle_error(server, err)
   end
 
   ##
@@ -44,10 +44,10 @@ class MemCache
 
   def set(key, value, expiry = 0, raw = false)
     raise MemCacheError, "Update of readonly cache" if @readonly
-    server, cache_key = request_setup key
+    server, cache_key = request_setup(key)
     socket = server.socket
 
-    value = Marshal.dump value unless raw
+    value = Marshal.dump(value) unless raw
 
     if value.length > LARGE_VALUE_SIZE
       cache_set_large(key, value, expiry)
@@ -56,7 +56,7 @@ class MemCache
 
       begin
         @mutex.lock if @multithread
-        socket.write command
+        socket.write(command)
         result = socket.gets
         raise MemCacheError, $1.strip if result =~ /^SERVER_ERROR (.*)/
       rescue SocketError, SystemCallError, IOError => err
@@ -80,10 +80,10 @@ class MemCache
 
   def add(key, value, expiry = 0, raw = false)
     raise MemCacheError, "Update of readonly cache" if @readonly
-    server, cache_key = request_setup key
+    server, cache_key = request_setup(key)
     socket = server.socket
 
-    value = Marshal.dump value unless raw
+    value = Marshal.dump(value) unless raw
 
     if value.length > LARGE_VALUE_SIZE
       cache_set_large(key, value, expiry)
@@ -92,7 +92,7 @@ class MemCache
 
       begin
         @mutex.lock if @multithread
-        socket.write command
+        socket.write(command)
         socket.gets
       rescue SocketError, SystemCallError, IOError => err
         server.close
@@ -115,9 +115,9 @@ class MemCache
     chunks = (0...large_value_key[LARGE_VALUE_KEY.length..-1].to_i).collect { |c| "#{cache_key}:chunk_#{c}" }
     chunks_keys = chunks.join(' ')
     values = if @multithread
-               threadsafe_cache_get_multi server, chunks_keys
+               threadsafe_cache_get_multi(server, chunks_keys)
              else
-               cache_get_multi server, chunks_keys
+               cache_get_multi(server, chunks_keys)
              end
 
     values = chunks.collect { |c| values[c] }

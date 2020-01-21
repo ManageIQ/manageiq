@@ -1,0 +1,21 @@
+description: Projects By CPU Usage
+title: Projects By CPU Usage
+content_type: report
+options:
+  :row_count: 10
+  :col_order:
+  - name
+  - max_cpu_usage_rate_average_avg_over_time_period
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Projects By CPU Usage
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

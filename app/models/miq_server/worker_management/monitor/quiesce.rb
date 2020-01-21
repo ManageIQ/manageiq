@@ -5,11 +5,9 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     # do a subset of the monitor_workers loop to allow for graceful exit
     heartbeat
 
-    self.class.monitor_class_names.each do |class_name|
-      check_not_responding(class_name)
-      check_pending_stop(class_name)
-      clean_worker_records(class_name)
-    end
+    check_not_responding
+    check_pending_stop
+    clean_worker_records
 
     return true if miq_workers.all?(&:is_stopped?)
 
@@ -24,7 +22,6 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       return true
     end
 
-    kill_timed_out_worker_quiesce
     false
   end
 
@@ -36,7 +33,16 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     @quiesce_loop_timeout = @worker_monitor_settings[:quiesce_loop_timeout] || 5.minutes
     worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
 
-    miq_workers.each { |w| stop_worker(w) }
+    miq_workers.each do |w|
+      if w.containerized_worker?
+        w.delete_container_objects
+      elsif w.systemd_worker?
+        w.stop_systemd_worker
+      else
+        stop_worker(w)
+      end
+    end
+
     loop do
       reload # Reload from SQL this MiqServer AND its miq_workers association
       break if self.workers_quiesced?
@@ -58,9 +64,5 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       return true
     end
     false
-  end
-
-  def quiesce_timed_out?(allowance)
-    Time.now.utc > (@quiesce_started_on + allowance)
   end
 end

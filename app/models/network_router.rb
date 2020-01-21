@@ -1,6 +1,8 @@
 class NetworkRouter < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
+  include SupportsFeatureMixin
+  include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -10,11 +12,12 @@ class NetworkRouter < ApplicationRecord
   belongs_to :cloud_network
 
   has_many :cloud_subnets
-  has_many :network_ports, :through => :cloud_subnets
-  has_many :vms, :through => :cloud_subnets
+  has_many :network_ports, -> { distinct }, :through => :cloud_subnets
+  has_many :vms, -> { distinct }, :through => :cloud_subnets
 
   has_many :floating_ips, :through => :cloud_network
-  has_many :cloud_networks, :through => :cloud_subnets
+  has_many :cloud_networks, -> { distinct }, :through => :cloud_subnets
+  has_many :security_groups, :dependent => :nullify
 
   alias private_networks cloud_networks
   alias public_network cloud_network
@@ -25,10 +28,12 @@ class NetworkRouter < ApplicationRecord
   virtual_column :external_gateway_info, :type => :string # :hash
   virtual_column :distributed          , :type => :boolean
   virtual_column :routes               , :type => :string # :array
+  virtual_column :propagating_vgws     , :type => :string # :array
+  virtual_column :main_route_table     , :type => :boolean # :array
   virtual_column :high_availability    , :type => :boolean
 
   # Define all getters and setters for extra_attributes related virtual columns
-  %i(external_gateway_info distributed routes high_availability).each do |action|
+  %i(external_gateway_info distributed routes propagating_vgws main_route_table high_availability).each do |action|
     define_method("#{action}=") do |value|
       extra_attributes_save(action, value)
     end

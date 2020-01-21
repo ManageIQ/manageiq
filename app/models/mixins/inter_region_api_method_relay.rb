@@ -1,4 +1,11 @@
+require 'manageiq-api-client'
+
 module InterRegionApiMethodRelay
+  class InterRegionApiMethodRelayError < RuntimeError; end
+
+  INITIAL_INSTANCE_WAIT = 1.second
+  MAX_INSTANCE_WAIT     = 1.minute
+
   def self.extended(klass)
     unless klass.const_defined?("InstanceMethodRelay")
       instance_relay = klass.const_set("InstanceMethodRelay", Module.new)
@@ -22,9 +29,7 @@ module InterRegionApiMethodRelay
         if in_current_region?
           super(*meth_args, &meth_block)
         else
-          InterRegionApiMethodRelay.exec_api_call(region_number, collection_name, action, api_args) do
-            [{:id => id}]
-          end
+          InterRegionApiMethodRelay.exec_api_call(region_number, collection_name, action, api_args, id)
         end
       end
     end
@@ -48,13 +53,8 @@ module InterRegionApiMethodRelay
     end
   end
 
-  def self.api_client_connection_for_region(region_number)
+  def self.api_client_connection_for_region(region_number, user = User.current_userid)
     region = MiqRegion.find_by(:region => region_number)
-
-    unless region.auth_key_configured?
-      _log.error("Region #{region_number} is not configured for central administration")
-      raise "Region #{region_number} is not configured for central administration"
-    end
 
     url = region.remote_ws_url
     if url.nil?
@@ -62,23 +62,46 @@ module InterRegionApiMethodRelay
       raise "Failed to establish API connection to region #{region_number}"
     end
 
-    require 'manageiq-api-client'
-
     ManageIQ::API::Client.new(
       :url      => url,
-      :miqtoken => region.api_system_auth_token(User.current_userid),
+      :miqtoken => region.api_system_auth_token(user),
       :ssl      => {:verify => false}
     )
   end
 
-  def self.exec_api_call(region, collection_name, action, api_args = nil, &resource_block)
+  def self.exec_api_call(region, collection_name, action, api_args = nil, id = nil)
     api_args ||= {}
     collection = api_client_connection_for_region(region).public_send(collection_name)
-    if resource_block
-      collection.public_send(action, api_args, &resource_block)
+    collection_or_instance = id ? collection.find(id) : collection
+    result = collection_or_instance.public_send(action, api_args)
+    case result
+    when ManageIQ::API::Client::ActionResult
+      raise InterRegionApiMethodRelayError, result.message if result.failed?
+      result.attributes
+    when ManageIQ::API::Client::Resource
+      instance_for_resource(result)
+    when Hash
+      # Some of API invocation returning Hash object
+      # Example: retire_resource for Service
+      _log.warn("remote API invocation returned Hash object")
+      result
     else
-      collection.public_send(action, api_args)
+      raise InterRegionApiMethodRelayError, "Got unexpected API result object #{result.class}"
     end
+  end
+
+  def self.instance_for_resource(resource)
+    klass = Api::CollectionConfig.new.klass(resource.collection.name)
+    wait = INITIAL_INSTANCE_WAIT
+
+    while wait < MAX_INSTANCE_WAIT
+      instance = klass.find_by(:id => resource.id)
+      return instance if instance
+      sleep(wait)
+      wait *= 2
+    end
+
+    raise InterRegionApiMethodRelayError, "Failed to retrieve #{klass} instance with id #{resource.id}"
   end
 
   private

@@ -35,14 +35,14 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def get_message_via_drb
     loop do
       begin
-        msg_id, lock_version = @worker_monitor_drb.get_queue_message(@worker.pid)
+        msg_id, lock_version = worker_monitor_drb.get_queue_message(@worker.pid)
       rescue DRb::DRbError => err
         do_exit("Error communicating with WorkerMonitor because <#{err.message}>", 1)
       end
 
       return nil if msg_id.nil?
 
-      msg = MiqQueue.find_by_id(msg_id)
+      msg = MiqQueue.find_by(:id => msg_id)
       if msg.nil?
         _log.debug("#{log_prefix} Message id: [#{msg_id}] stale (msg gone), retrying...")
         next
@@ -57,13 +57,14 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       next if msg.task_id && MiqQueue.exists?(:state => MiqQueue::STATE_DEQUEUE, :zone => [nil, MiqServer.my_zone], :task_id => msg.task_id)
 
       begin
-        msg.update_attributes!(:state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
+        msg.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
         _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now - msg.created_on}] seconds")
         return msg
       rescue ActiveRecord::StaleObjectError
         _log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
         next
       rescue => err
+        msg.update_column(:state, MiqQueue::STATUS_ERROR)
         raise _("%{log} \"%{error}\" attempting to get next message") % {:log => log_prefix, :error => err}
       end
     end
@@ -73,7 +74,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     loop do
       msg = MiqQueue.get(
         :queue_name => @worker.queue_name,
-        :role       => @active_roles,
+        :role       => @worker.required_roles.presence,
         :priority   => @worker.class.queue_priority
       )
       return msg unless msg == :stale
@@ -82,7 +83,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def get_message
-    @worker.update_spid!
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
     else
@@ -91,24 +91,26 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def message_delivery_suspended?
-    if self.class.require_vim_broker?
-      return true unless MiqVimBrokerWorker.available?
-    end
-
-    false
+    self.class.delay_queue_delivery_for_vim_broker? && !MiqVimBrokerWorker.available?
   end
 
-  def deliver_queue_message(msg)
+  def deliver_queue_message(msg, &block)
     reset_poll_escalate if poll_method == :sleep_poll_escalate
 
     begin
       $_miq_worker_current_msg = msg
-      status, message, result = msg.deliver
+      Thread.current[:tracking_label] = msg.tracking_label || msg.task_id
+      heartbeat_message_timeout(msg)
+      status, message, result = msg.deliver(&block)
 
       if status == MiqQueue::STATUS_TIMEOUT
         begin
           _log.info("#{log_prefix} Reconnecting to DB after timeout error during queue deliver")
-          ActiveRecord::Base.connection.reconnect!
+
+          # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+          spec_name = ActiveRecord::Base.connection_specification_name
+          ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
+          @worker.update_spid!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
         end
@@ -121,6 +123,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
+      Thread.current[:tracking_label] = nil
       #
       # This tells the broker to release any memory being held on behalf of this process
       # and reset the global broker handle ($vim_broker_client).
@@ -150,6 +153,16 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg = get_message
       break if msg.nil?
       deliver_message(msg)
+    end
+  end
+
+  private
+
+  # Only for file based heartbeating
+  def heartbeat_message_timeout(message)
+    if ENV["WORKER_HEARTBEAT_METHOD"] == "file" && message.msg_timeout
+      timeout = worker_settings[:poll] + message.msg_timeout
+      heartbeat_to_file(timeout)
     end
   end
 end

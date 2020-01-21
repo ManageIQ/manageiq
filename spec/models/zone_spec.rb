@@ -1,12 +1,15 @@
-describe Zone do
-  include_examples ".seed called multiple times"
+RSpec.describe Zone do
+  context ".seed" do
+    before { MiqRegion.seed }
+    include_examples ".seed called multiple times", 2
+  end
 
   context "with two small envs" do
-    before(:each) do
-      @zone1 = FactoryGirl.create(:small_environment)
+    before do
+      @zone1 = FactoryBot.create(:small_environment)
       @host1 = @zone1.ext_management_systems.first.hosts.first
       @zone1.reload
-      @zone2 = FactoryGirl.create(:small_environment)
+      @zone2 = FactoryBot.create(:small_environment)
       @host2 = @zone2.ext_management_systems.first.hosts.first
       @zone2.reload
     end
@@ -37,15 +40,14 @@ describe Zone do
   end
 
   context "when dealing with clouds" do
-    before :each do
-      guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    before do
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "returns the set of ems_clouds" do
-      ems_clouds = []
-      2.times { ems_clouds << FactoryGirl.create(:ems_openstack, :zone => @zone) }
-      2.times { ems_clouds << FactoryGirl.create(:ems_amazon, :zone => @zone) }
-      ems_infra = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      ems_clouds = FactoryBot.create_list(:ems_openstack, 2, :zone => @zone)
+      ems_clouds += FactoryBot.create_list(:ems_amazon, 2, :zone => @zone)
+      ems_infra = FactoryBot.create(:ems_vmware, :zone => @zone)
 
       zone_clouds = @zone.ems_clouds
       expect(zone_clouds).to match_array(ems_clouds)
@@ -54,11 +56,39 @@ describe Zone do
     end
 
     it "returns the set of availability_zones" do
-      openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
-      azs = []
-      3.times { azs << FactoryGirl.create(:availability_zone, :ems_id => openstack.id) }
-
+      openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
+      azs = FactoryBot.create_list(:availability_zone, 3, :ems_id => openstack.id)
       expect(@zone.availability_zones).to match_array(azs)
+    end
+  end
+
+  describe "#clustered_hosts" do
+    let(:zone) { FactoryBot.create(:zone) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host
+      host_with_cluster
+
+      expect(zone.clustered_hosts).to eq([host_with_cluster])
+    end
+  end
+
+  describe "#non_clustered_hosts" do
+    let(:zone) { FactoryBot.create(:zone) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host
+      host_with_cluster
+
+      expect(zone.non_clustered_hosts).to eq([host])
     end
   end
 
@@ -107,46 +137,7 @@ describe Zone do
     it "false" do
       allow(miq_server).to receive(:active?).and_return(false)
 
-      expect(zone.active?).to be_falsey
-    end
-  end
-
-  context "#ntp_settings" do
-    let(:zone) { described_class.new }
-
-    it "no settings returns default NTP settings" do
-      expect(zone.ntp_settings).to eq(:server => ["0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org"])
-    end
-
-    it "with :ntp key returns what was set" do
-      zone.settings[:ntp] = {:server => ["tock.example.com"]}
-
-      expect(zone.ntp_settings).to eq(:server => ["tock.example.com"])
-    end
-  end
-
-  context "#after_save callback" do
-    before do
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tick.example.com"]}})
-      MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").destroy_all
-    end
-
-    it "settings changed queues ntp reload" do
-      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tock.example.com"]}})
-
-      expect(MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").count).to eq(1)
-    end
-
-    it "settings not changed does not queue ntp reload" do
-      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tick.example.com"]}})
-
-      expect(MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").count).to eq(0)
+      expect(zone.active?).to eq(false)
     end
   end
 
@@ -155,41 +146,82 @@ describe Zone do
   end
 
   context "ConfigurationManagementMixin" do
-    let(:zone) { FactoryGirl.create(:zone) }
+    describe "#remote_cockpit_ws_miq_server" do
+      before do
+        ServerRole.seed
+        _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      end
 
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(zone.settings_for_resource.to_hash).to eq(settings)
+      it "none when not enabled" do
+        expect(@zone.remote_cockpit_ws_miq_server).to eq(nil)
+      end
+
+      it "server when enabled" do
+        server = FactoryBot.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
+        server.assign_role('cockpit_ws', 1)
+        server.activate_roles('cockpit_ws')
+        expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
       end
     end
+  end
 
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(zone).to receive(:reload_all_server_settings)
+  context "#ntp_reload_queue" do
+    it "queues a ntp reload for all active servers in the zone" do
+      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
+      zone     = FactoryBot.create(:zone)
+      server_1 = FactoryBot.create(:miq_server, :zone => zone)
+      FactoryBot.create(:miq_server, :zone => zone, :status => "stopped")
 
-        zone.add_settings_for_resource(settings)
+      zone.ntp_reload_queue
 
-        expect(Vmdb::Settings.for_resource(zone).some_test_setting.setting).to eq(1)
-      end
+      expect(MiqQueue.count).to eq(1)
+      expect(
+        MiqQueue.where(
+          :class_name  => "MiqServer",
+          :instance_id => server_1.id,
+          :method_name => "ntp_reload",
+          :server_guid => server_1.guid,
+        ).count
+      ).to eq(1)
+    end
+  end
+
+  context "maintenance zone" do
+    before { MiqRegion.seed }
+
+    it "is seeded with relation to region" do
+      described_class.seed
+      expect(Zone.maintenance_zone).to have_attributes(
+        :name => a_string_starting_with("__maintenance__")
+      )
+
+      expect(MiqRegion.my_region.maintenance_zone).to eq(Zone.maintenance_zone)
     end
 
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        some_other_zone = FactoryGirl.create(:zone)
-        started_server = FactoryGirl.create(:miq_server, :status => "started", :zone => zone)
-        FactoryGirl.create(:miq_server, :status => "started", :zone => some_other_zone)
-        FactoryGirl.create(:miq_server, :status => "stopped", :zone => zone)
-
-        zone.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(started_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
+    it "is not visible" do
+      described_class.seed
+      expect(described_class.maintenance_zone.visible).to eq(false)
     end
+  end
+
+  context "validate multi region" do
+    let!(:other_region_id)         { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let!(:default_in_other_region) { described_class.create(:name => "default", :description => "Default Zone", :id => other_region_id) }
+    let!(:default_in_my_region)    { described_class.create(:name => "default", :description => "Default Zone") }
+
+    it ".default_zone returns a zone in the current region" do
+      expect(described_class.default_zone).to eq(default_in_my_region)
+    end
+  end
+
+  it "removes queued items on destroy" do
+    MiqRegion.seed
+    Zone.seed
+    zone = FactoryBot.create(:zone)
+    FactoryBot.create(:miq_queue, :zone => zone.name)
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
+    zone.destroy!
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(0)
   end
 end

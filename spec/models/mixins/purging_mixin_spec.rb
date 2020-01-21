@@ -1,19 +1,26 @@
 describe PurgingMixin do
   let(:example_class) { PolicyEvent }
-  let(:example_associated_class) { PolicyEventContent }
   let(:purge_date) { 2.weeks.ago }
 
   describe ".purge_date" do
     it "purge_date should not raise exception" do
-      allow(example_class).to receive(:purge_config).with(:keep_policy_events).and_return(120)
+      stub_settings(:policy_events => {:history => {:keep_policy_events => 120}})
       expect(example_class.purge_date).to be_within(1.second).of(120.seconds.ago.utc)
+    end
+  end
+
+  describe ".purge_mode_and_value" do
+    it "purge_mode_and_value should return proper options" do
+      stub_settings(:policy_events => {:history => {:keep_policy_events => 120}})
+      expect(example_class.purge_mode_and_value.first).to eq(:date)
+      expect(example_class.purge_mode_and_value.last).to be_within(1.second).of(120.seconds.ago.utc)
     end
   end
 
   describe ".purge" do
     let(:events) do
       (-2..2).collect do |date_modifier|
-        FactoryGirl.create(:policy_event, :timestamp => purge_date + date_modifier.days)
+        FactoryBot.create(:policy_event, :timestamp => purge_date + date_modifier.days)
       end
     end
     let(:all_ids) { events.collect(&:id) }

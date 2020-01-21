@@ -16,11 +16,11 @@ class RegistryItem < ApplicationRecord
     deletes = vm.registry_items.pluck(:id, :name)
 
     hashes.each do |nh|
-      found = vm.registry_items.find_by_name(nh[:name])
+      found = vm.registry_items.find_by(:name => nh[:name])
       if found.nil?
         new_reg << nh
-      else
-        found.update_attributes(nh) if nh[:data] != found[:data]
+      elsif nh[:data] != found[:data]
+        found.update(nh)
       end
       deletes.delete_if { |ele| ele[1] == nh[:name] }
     end

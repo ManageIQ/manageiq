@@ -1,7 +1,7 @@
---- 
+---
 :item_type: category
-:definition: 
-  content: 
+:definition:
+  content:
   - target: vmconfig
   - target: vmevents
   - target: accounts

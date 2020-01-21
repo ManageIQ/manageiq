@@ -1,8 +1,6 @@
 desc "Release a new project version"
 task :release do
   require 'pathname'
-  require 'yaml'
-  require 'more_core_extensions/all'
 
   version = ENV["RELEASE_VERSION"]
   if version.nil? || version.empty?
@@ -22,16 +20,22 @@ task :release do
   version_file = root.join("VERSION")
   File.write(version_file, version)
 
-  # Modify the automate domain version
-  ae_file = root.join("db/fixtures/ae_datastore/ManageIQ/System/About.class/__class__.yaml")
-  content = YAML.load_file(ae_file)
-  content.store_path("object", "schema", 0, "field", "default_value", version)
-  File.write(ae_file, content.to_yaml)
+  # Change git based gem source to tag reference in Gemfile
+  gemfile = root.join("Gemfile")
+  content = gemfile.read
+  gemfile.write(content.gsub(":branch => \"#{branch}\"", ":tag => \"#{version}\""))
 
-  # Create the commit and tag
-  exit $?.exitstatus unless system("git add #{version_file} #{ae_file}")
+  # Commit
+  exit $?.exitstatus unless system("git add #{version_file} #{gemfile}")
   exit $?.exitstatus unless system("git commit -m 'Release #{version}'")
+
+  # Tag
   exit $?.exitstatus unless system("git tag #{version}")
+
+  # Revert the Gemfile update
+  gemfile.write(content)
+  exit $?.exitstatus unless system("git add #{gemfile}")
+  exit $?.exitstatus unless system("git commit -m 'Revert Gemfile tag reference update and put back branch reference'")
 
   puts
   puts "The commit on #{branch} with the tag #{version} has been created"

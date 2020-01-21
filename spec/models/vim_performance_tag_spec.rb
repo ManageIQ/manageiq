@@ -1,30 +1,30 @@
 describe VimPerformanceTag do
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server
-    @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+    @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)
 
     allow(Classification).to receive(:category_names_for_perf_by_tag).and_return(["environment"])
     @classification_entries = ["prod", "dev", "test"]
   end
 
   context "with a small environment and tagged VMs" do
-    before(:each) do
+    before do
       @prod = "environment/prod"
       @dev  = "environment/dev"
       @test = "environment/test"
 
       @vms  = []
-      @vms << FactoryGirl.create(:vm_vmware, :name => "prod")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "dev")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "test")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "none")
+      @vms << FactoryBot.create(:vm_vmware, :name => "prod")
+      @vms << FactoryBot.create(:vm_vmware, :name => "dev")
+      @vms << FactoryBot.create(:vm_vmware, :name => "test")
+      @vms << FactoryBot.create(:vm_vmware, :name => "none")
 
-      @host = FactoryGirl.create(:host, :vms => @vms, :vmm_vendor => 'vmware', :vmm_product => "ESX", :type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx")
-      @host = Host.find_by_id(@host.id)
+      @host = FactoryBot.create(:host, :vms => @vms, :vmm_vendor => 'vmware', :vmm_product => "ESX", :type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx")
+      @host = Host.find_by(:id => @host.id)
     end
 
     context "with Vm hourly performances" do
-      before(:each) do
+      before do
         case_sets = {
           :host => {
             "2010-04-13T21:00:00Z" => 1100.0,
@@ -92,31 +92,29 @@ describe VimPerformanceTag do
         @vms.each do |vm|
           case_sets[vm.name.to_sym].each do |timestamp, value|
             if vm.name == "none"
-              perf = FactoryGirl.create(:metric_rollup_vm_hr,
+              perf = FactoryBot.create(:metric_rollup_vm_hr,
                                         :timestamp                 => timestamp,
                                         :cpu_usagemhz_rate_average => value
                                        )
             else
               tag = "environment/#{vm.name}"
-              perf = FactoryGirl.create(:metric_rollup_vm_hr,
+              perf = FactoryBot.create(:metric_rollup_vm_hr,
                                         :timestamp                 => timestamp,
                                         :cpu_usagemhz_rate_average => value,
                                         :tag_names                 => tag
                                        )
             end
             vm.metric_rollups << perf
-            VimPerformanceTagValue.build_from_performance_record(perf)
           end
           vm.save!
         end
 
         case_sets[:host].each do |timestamp, value|
-          perf = FactoryGirl.create(:metric_rollup_host_hr,
+          perf = FactoryBot.create(:metric_rollup_host_hr,
                                     :timestamp                 => timestamp,
                                     :cpu_usagemhz_rate_average => value
                                    )
           @host.metric_rollups << perf
-          VimPerformanceTagValue.build_from_performance_record(perf)
         end
         @host.save!
       end

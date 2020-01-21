@@ -28,7 +28,7 @@ module ServiceOrchestrationOptionsMixin
 
     opts_dump = opts.deep_dup
 
-    proc = MiqPassword.method(encrypt)
+    proc = ManageIQ::Password.method(encrypt)
     opts_dump.each do |_opt_name, opt_val|
       next unless opt_val.kind_of?(Hash)
       opt_val.each { |param_key, param_val| opt_val[param_key] = proc.call(param_val) if param_key =~ /password/i }

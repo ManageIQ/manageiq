@@ -1,6 +1,6 @@
 class MiqProvisionRequestTemplate < MiqProvisionRequest
   def create_tasks_for_service(service_task, parent_svc)
-    template_service_resource = ServiceResource.find_by_id(service_task.options[:service_resource_id])
+    template_service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
     scaling_min = number_of_vms(service_task, parent_svc, template_service_resource)
     scaling_min ||= template_service_resource.try(:scaling_min) || 1
 
@@ -21,6 +21,10 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     MiqProvision
   end
 
+  def service_template_resource_copy
+    dup.tap(&:save!)
+  end
+
   def execute
     # Should not be called.
     raise _("Provision Request Templates do not support the execute method.")
@@ -39,7 +43,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
 
   # NOTE: for services, the requester is the owner
   def owner_options(service_task)
-    user = User.find_by_userid(service_task.userid)
+    user = User.lookup_by_userid(service_task.userid)
     return {} if user.nil?
 
     {
@@ -70,10 +74,11 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   end
 
   def get_parent_task(service_task)
-    MiqRequestTask.find_by_id(service_task.options[:parent_task_id])
+    MiqRequestTask.find_by(:id => service_task.options[:parent_task_id])
   end
 
   def number_of_vms_from_dialog(root_svc, parent_task)
+    return nil unless root_svc.options[:dialog]
     value = root_svc.options[:dialog]["dialog_option_0_number_of_vms"]
     if parent_task.service_resource
       index = parent_task.service_resource.provision_index

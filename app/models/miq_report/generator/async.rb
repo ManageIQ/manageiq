@@ -3,12 +3,11 @@ module MiqReport::Generator::Async
   module ClassMethods
     def async_generate_tables(options = {})
       options[:userid] ||= "system"
-      sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+      sync = ::Settings.product.report_sync
 
       task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
-      MiqQueue.put(
-        :queue_name  => "generic",
-        :role        => "reporting",
+      MiqQueue.submit_job(
+        :service     => "reporting",
         :class_name  => to_s,
         :method_name => "_async_generate_tables",
         :args        => [task.id, options],
@@ -22,7 +21,7 @@ module MiqReport::Generator::Async
     end
 
     def _async_generate_tables(taskid, options = {})
-      task = MiqTask.find_by_id(taskid)
+      task = MiqTask.find_by(:id => taskid)
       unless task
         raise MiqException::Error,
               _("Unable to generate report if a task with id [%{number}] is not found!") % {:number => taskid}
@@ -48,30 +47,28 @@ module MiqReport::Generator::Async
 
   def async_generate_table(options = {})
     options[:userid] ||= "system"
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = ::Settings.product.report_sync
 
     task = MiqTask.create(:name => _("Generate Report: '%{name}'") % {:name => name})
     unless sync # Only queued if sync reporting disabled (default)
       cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
-      unless self.new_record?
-        MiqQueue.put(
-          :queue_name   => "generic",
-          :role         => "reporting",
+      if self.new_record?
+        MiqQueue.submit_job(
+          :service      => "reporting",
           :class_name   => self.class.to_s,
-          :instance_id  => id,
           :method_name  => "_async_generate_table",
-          :args         => [task.id, options],
+          :args         => [task.id, self, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
           :msg_timeout  => queue_timeout
         )
       else
-        MiqQueue.put(
-          :queue_name   => "generic",
-          :role         => "reporting",
+        MiqQueue.submit_job(
+          :service      => "reporting",
           :class_name   => self.class.to_s,
+          :instance_id  => id,
           :method_name  => "_async_generate_table",
-          :args         => [task.id, self, options],
+          :args         => [task.id, options],
           :priority     => MiqQueue::HIGH_PRIORITY,
           :miq_callback => cb,
           :msg_timeout  => queue_timeout
@@ -89,7 +86,7 @@ module MiqReport::Generator::Async
     #  :mode => "adhoc" (default)
     #  :session_id => 123
     # }
-    task = MiqTask.find_by_id(taskid)
+    task = MiqTask.find_by(:id => taskid)
     task.update_status("Active", "Ok", "Generating report") if task
     audit = {:event => "generate_table", :target_class => self.class.base_class.name, :userid => options[:userid], :target_id => id}
     begin

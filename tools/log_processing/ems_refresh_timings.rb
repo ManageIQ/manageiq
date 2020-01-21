@@ -1,16 +1,17 @@
-RAILS_ROOT = ENV['RAILS_ENV'] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
-$LOAD_PATH.push File.join(RAILS_ROOT, 'gems/pending/util') unless ENV['RAILS_ENV']
+#!/usr/bin/env ruby
+RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
 
+require 'manageiq-gems-pending'
 require 'miq_logger_processor'
 require 'active_support/core_ext/enumerable' # Pull in Enumerable sum method
 require 'more_core_extensions/core_ext/array'
-require 'trollop'
+require 'optimist'
 require 'time'
 
 def parse_args(argv)
   logfiles = []
 
-  opts = Trollop.options do
+  opts = Optimist.options do
     banner <<-EOS
 Parse EMS Refreshes from a set of evm.log files and filter on a set of
 provided conditions.

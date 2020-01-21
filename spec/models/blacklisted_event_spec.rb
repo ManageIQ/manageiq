@@ -22,8 +22,8 @@ describe BlacklistedEvent do
     end
 
     it 'does not re-seed existing event filters' do
-      User.current_user = FactoryGirl.create(:user)
-      filter = FactoryGirl.create(:blacklisted_event,
+      User.current_user = FactoryBot.create(:user)
+      filter = FactoryBot.create(:blacklisted_event,
                                   :event_name     => 'AlarmActionTriggeredEvent',
                                   :provider_model => 'ManageIQ::Providers::Vmware::InfraManager'
                                  )
@@ -35,8 +35,8 @@ describe BlacklistedEvent do
   end
 
   it '#enabled=' do
-    User.current_user = FactoryGirl.create(:user)
-    f = FactoryGirl.create(:blacklisted_event, :event_name => 'event_1')
+    User.current_user = FactoryBot.create(:user)
+    f = FactoryBot.create(:blacklisted_event, :event_name => 'event_1')
     expect(f.enabled).to be_truthy
 
     f.enabled = false

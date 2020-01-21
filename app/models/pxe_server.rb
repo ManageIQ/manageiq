@@ -1,5 +1,5 @@
 class PxeServer < ApplicationRecord
-  autoload :WimParser, "win32/wim_parser" # via gems/pending
+  autoload :WimParser, "win32/wim_parser" # via manageiq-gems-pending
 
   include FileDepotMixin
 
@@ -8,6 +8,8 @@ class PxeServer < ApplicationRecord
   default_value_for :customization_directory, ""
 
   serialize :visibility
+
+  acts_as_miq_taggable
 
   validates_presence_of   :name, :uri
   validates_uniqueness_of :name
@@ -31,7 +33,7 @@ class PxeServer < ApplicationRecord
   end
 
   def default_pxe_image_for_windows=(image)
-    image.update_attributes(:default_for_windows => true)
+    image.update(:default_for_windows => true)
     clear_association_cache
   end
 
@@ -142,7 +144,7 @@ class PxeServer < ApplicationRecord
             image   = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
-            image.update_attributes(
+            image.update(
               :name        => image_hash["name"],
               :description => image_hash["description"].blank? ? nil : image_hash["description"],
               :path        => path,
@@ -196,5 +198,19 @@ class PxeServer < ApplicationRecord
       customization_template.delete_files_on_server(self, pxe_image, mac_address, windows_image) unless customization_template.nil?
     end
     _log.info("#{log_message}...Complete")
+  end
+
+  def ensure_menu_list(menu_list)
+    current_menus = pxe_menus.map(&:file_name)
+    to_destroy = current_menus - menu_list
+    to_create = menu_list - current_menus
+    transaction do
+      pxe_menus.where(:file_name => to_destroy).destroy_all
+      to_create.each { |menu| pxe_menus << PxeMenu.create!(:file_name => menu) }
+    end
+  end
+
+  def self.display_name(number = 1)
+    n_('PXE Server', 'PXE Servers', number)
   end
 end

@@ -1,53 +1,157 @@
 class ServiceTemplate < ApplicationRecord
+  include SupportsFeatureMixin
+
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
   GENERIC_ITEM_SUBTYPES = {
-    "custom"          => _("Custom"),
-    "vm"              => _("VM"),
-    "playbook"        => _("Playbook"),
-    "hosted_database" => _("Hosted Database"),
-    "load_balancer"   => _("Load Balancer"),
-    "storage"         => _("Storage")
+    "custom"          => N_("Custom"),
+    "vm"              => N_("Virtual Machine"),
+    "playbook"        => N_("Playbook"),
+    "hosted_database" => N_("Hosted Database"),
+    "load_balancer"   => N_("Load Balancer"),
+    "storage"         => N_("Storage")
   }.freeze
 
+  CATALOG_ITEM_TYPES = {
+    "amazon"                     => N_("Amazon"),
+    "azure"                      => N_("Azure"),
+    "generic"                    => N_("Generic"),
+    "generic_orchestration"      => N_("Orchestration"),
+    "generic_ansible_playbook"   => N_("Ansible Playbook"),
+    "generic_ansible_tower"      => N_("Ansible Tower"),
+    "generic_container_template" => N_("OpenShift Template"),
+    "google"                     => N_("Google"),
+    "microsoft"                  => N_("SCVMM"),
+    "openstack"                  => N_("OpenStack"),
+    "redhat"                     => N_("Red Hat Virtualization"),
+    "vmware"                     => N_("VMware")
+  }.freeze
+
+  SERVICE_TYPE_ATOMIC    = 'atomic'.freeze
+  SERVICE_TYPE_COMPOSITE = 'composite'.freeze
+
+  RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
+                                  :dialog_id,
+                                  :fqname,
+                                  :configuration_template,
+                                  :configuration_template_id,
+                                  :configuration_template_type].freeze
+
+  include CustomActionsMixin
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
+  include ArchivedMixin
+  include CiFeatureMixin
   include_concern 'Filter'
+  include_concern 'Copy'
 
+  validates :name, :presence => true
   belongs_to :tenant
-  belongs_to :blueprint
-  # # These relationships are used to specify children spawned from a parent service
-  # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
-  # belongs_to :parent_service, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
 
-  # # These relationships are used for resources that are processed as part of the service
-  # has_many   :vms_and_templates, :through => :service_resources, :source => :resource, :source_type => 'VmOrTemplate'
   has_many   :service_templates, :through => :service_resources, :source => :resource, :source_type => 'ServiceTemplate'
   has_many   :services
 
-  has_one   :picture,         :dependent => :destroy, :as => :resource, :autosave => true
+  has_many :service_template_tenants, :dependent => :destroy
+  has_many :additional_tenants, :through => :service_template_tenants, :source => :tenant, :dependent => :destroy
 
-  has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
+  has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
+
   belongs_to :service_template_catalog
+  belongs_to :zone
+  belongs_to :currency, :inverse_of => false
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
+  has_many   :miq_schedules, :as => :resource, :dependent => :destroy
 
-  virtual_has_many :custom_buttons
+  has_many   :miq_requests, :as => :source, :dependent => :nullify
+  has_many   :active_requests, -> { where(:request_state => MiqRequest::ACTIVE_STATES) }, :as => :source, :class_name => "MiqRequest"
+
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
+  virtual_column   :archived,                     :type => :boolean
+  virtual_column   :active,                       :type => :boolean
 
-  default_value_for :service_type,  'unknown'
+  default_value_for :internal, false
+  default_value_for :service_type, SERVICE_TYPE_ATOMIC
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
-  virtual_has_one :custom_actions, :class_name => "Hash"
-  virtual_has_one :custom_action_buttons, :class_name => "Array"
+  virtual_has_one :config_info, :class_name => "Hash"
 
-  def readonly?
-    return true if super
-    blueprint.try(:published?)
+  scope :with_service_template_catalog_id,          ->(cat_id) { where(:service_template_catalog_id => cat_id) }
+  scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
+  scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
+  scope :displayed,                                 ->         { where(:display => true) }
+  scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
+
+  supports :order do
+    unsupported_reason_add(:order, 'Service template does not belong to a service catalog') unless service_template_catalog
+    unsupported_reason_add(:order, 'Service template is not configured to be displayed') unless display
+  end
+  alias orderable?     supports_order?
+  alias validate_order supports_order?
+
+
+  def self.with_tenant(tenant_id)
+    tenant = Tenant.find(tenant_id)
+    where(:tenant_id => tenant.ancestor_ids + [tenant_id])
+  end
+
+  def self.with_additional_tenants
+    references(table_name, :tenants).includes(:service_template_tenants => :tenant)
+  end
+
+  def self.catalog_item_types
+    ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
+    ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
+    ci_types.add('generic')
+    CATALOG_ITEM_TYPES.each.with_object({}) do |(key, description), hash|
+      hash[key] = { :description => description, :display => ci_types.include?(key) }
+    end
+  end
+
+  def self.create_catalog_item(options, auth_user)
+    transaction do
+      create_from_options(options).tap do |service_template|
+        config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
+
+        workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+        if workflow_class
+          request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+          service_template.add_resource(request)
+        end
+        service_template.create_resource_actions(options[:config_info])
+      end
+    end
+  end
+
+  def self.class_from_request_data(data)
+    request_type = data['prov_type']
+    if request_type.include?('generic_')
+      generic_type = request_type.split('generic_').last
+      "ServiceTemplate#{generic_type.camelize}".constantize
+    else
+      ServiceTemplate
+    end
+  end
+
+  def update_catalog_item(options, auth_user = nil)
+    config_info = validate_update_config_info(options)
+    unless config_info
+      update!(options)
+      return reload
+    end
+    transaction do
+      update_from_options(options)
+
+      update_service_resources(config_info, auth_user)
+
+      update_resource_actions(config_info)
+      save!
+    end
+    reload
   end
 
   def children
@@ -62,36 +166,12 @@ class ServiceTemplate < ApplicationRecord
     [self] + descendants
   end
 
-  def custom_actions
-    generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
-    custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
-    {
-      :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
-      :button_groups => custom_button_sets_with_generics.collect do |button_set|
-        button_set.serializable_hash.merge(:buttons => button_set.children.collect(&:expanded_serializable_hash))
-      end
-    }
-  end
-
-  def custom_action_buttons
-    custom_buttons + custom_button_sets.collect(&:children).flatten
-  end
-
-  def custom_buttons
-    CustomButton.buttons_for("Service").select { |button| button.parent.nil? } + direct_custom_buttons
-  end
-
-  def direct_custom_buttons
-    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
-  end
-
   def vms_and_templates
     []
   end
 
   def destroy
-    parent_svcs = parent_services
-    unless parent_svcs.blank?
+    if parent_services.present?
       raise MiqException::MiqServiceError, _("Cannot delete a service that is the child of another service.")
     end
 
@@ -102,6 +182,15 @@ class ServiceTemplate < ApplicationRecord
     super
   end
 
+  def archive
+    raise _("Cannot archive while in use") unless active_requests.empty?
+    archive!
+  end
+
+  def retireable?
+    false
+  end
+
   def request_class
     ServiceTemplateProvisionRequest
   end
@@ -110,82 +199,74 @@ class ServiceTemplate < ApplicationRecord
     "clone_to_service"
   end
 
+  def config_info
+    options[:config_info] || construct_config_info
+  end
+
   def create_service(service_task, parent_svc = nil)
     nh = attributes.dup
+
+    # Service#display was renamed to #visible in https://github.com/ManageIQ/manageiq-schema/pull/410
+    nh['visible'] = nh.delete('display') if nh.key?('display')
+
     nh['options'][:dialog] = service_task.options[:dialog]
     (nh.keys - Service.column_names + %w(created_at guid service_template_id updated_at id type prov_type)).each { |key| nh.delete(key) }
 
     # Hide child services by default
-    nh[:display] = false if parent_svc
+    nh['visible'] = false if parent_svc
+
+    # If visible is nil, set it to false
+    nh['visible'] ||= false
 
     # convert template class name to service class name by naming convention
-    nh[:type] = self.class.name.sub('Template', '')
+    nh['type'] = self.class.name.sub('Template', '')
 
-    # Determine service name
-    # target_name = self.get_option(:target_name)
-    # nh.merge!('name' => target_name) unless target_name.blank?
-    svc = Service.create(nh)
-    svc.service_template = self
+    nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    # self.options[:service_guid] = svc.guid
-    service_resources.each do |sr|
-      nh = sr.attributes.dup
-      %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
-      svc.add_resource(sr.resource, nh) unless sr.resource.nil?
-    end
+    service = Service.create!(nh) do |svc|
+      svc.service_template = self
+      set_ownership(svc, service_task.get_user)
 
-    if parent_svc
-      service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
-      parent_svc.add_resource!(svc, service_resource)
-    end
-
-    svc.save
-    svc
-  end
-
-  def set_service_type
-    svc_type = nil
-
-    if service_resources.size.zero?
-      svc_type = 'unknown'
-    else
       service_resources.each do |sr|
-        if sr.resource_type == 'Service' || sr.resource_type == 'ServiceTemplate'
-          svc_type = 'composite'
-          break
-        end
+        nh = sr.attributes.dup
+        %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
+        svc.add_resource(sr.resource, nh) unless sr.resource.nil?
       end
-      svc_type = 'atomic' if svc_type.blank?
     end
 
-    self.service_type = svc_type
+    service.tap do |svc|
+      if parent_svc
+        service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
+        parent_svc.add_resource!(svc, service_resource)
+      end
+    end
   end
 
   def composite?
-    service_type.to_s.include?('composite')
+    service_type.to_s.include?(self.class::SERVICE_TYPE_COMPOSITE)
   end
 
   def atomic?
-    service_type.to_s.include?('atomic')
+    service_type.to_s.include?(self.class::SERVICE_TYPE_ATOMIC)
   end
 
   def type_display
     case service_type
-    when "atomic"    then "Item"
-    when "composite" then "Bundle"
-    when nil         then "Unknown"
+    when self.class::SERVICE_TYPE_ATOMIC    then "Item"
+    when self.class::SERVICE_TYPE_COMPOSITE then "Bundle"
+    when nil                                then "Unknown"
     else
       service_type.to_s.capitalize
     end
   end
 
   def create_tasks_for_service(service_task, parent_svc)
-    return [] unless self.class.include_service_template?(service_task,
-                                                          service_task.source_id,
-                                                          parent_svc) unless parent_svc
+    unless parent_svc
+      return [] unless self.class.include_service_template?(service_task,
+                                                            service_task.source_id,
+                                                            parent_svc)
+    end
     svc = create_service(service_task, parent_svc)
-
-    set_ownership(svc, service_task.get_user)
 
     service_task.destination = svc
 
@@ -234,12 +315,11 @@ class ServiceTemplate < ApplicationRecord
     return if user.nil?
     service.evm_owner = user
     if user.current_group
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}")
       service.miq_group = user.current_group
     else
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}")
     end
-    service.save
   end
 
   def self.default_provisioning_entry_point(service_type)
@@ -261,7 +341,7 @@ class ServiceTemplate < ApplicationRecord
   def template_valid?
     validate_template[:valid]
   end
-  alias_method :template_valid, :template_valid?
+  alias template_valid template_valid?
 
   def template_valid_error_message
     validate_template[:message]
@@ -282,8 +362,199 @@ class ServiceTemplate < ApplicationRecord
     end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
   end
 
-  def validate_order
-    service_template_catalog && display
+  def provision_action
+    resource_actions.find_by(:action => "Provision")
   end
-  alias orderable? validate_order
+
+  def update_resource_actions(ae_endpoints)
+    resource_action_list.each do |action|
+      resource_params = ae_endpoints[action[:param_key]]
+      resource_action = resource_actions.find_by(:action => action[:name])
+      # If the action exists in updated parameters
+      if resource_params
+        # And the resource action exists on the template already, update it
+        if resource_action
+          resource_action.update!(resource_params.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
+        # If the resource action does not exist, create it
+        else
+          build_resource_action(resource_params, action)
+        end
+      elsif resource_action
+        # If the endpoint does not exist in updated parameters, but exists on the template, delete it
+        resource_action.destroy
+      end
+    end
+  end
+
+  def create_resource_actions(ae_endpoints)
+    ae_endpoints ||= {}
+    resource_action_list.each do |action|
+      ae_endpoint = ae_endpoints[action[:param_key]]
+      next unless ae_endpoint
+      build_resource_action(ae_endpoint, action)
+    end
+    save!
+  end
+
+  def self.create_from_options(options)
+    create!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+  end
+  private_class_method :create_from_options
+
+  def provision_request(user, options = nil, request_options = {})
+    request_options[:provision_workflow] = true
+    result = order(user, options, request_options)
+    raise result[:errors].join(", ") if result[:errors].any?
+    result[:request]
+  end
+
+  def picture=(value)
+    if value.kind_of?(Hash)
+      super(Picture.new(value))
+    else
+      super
+    end
+  end
+
+  def queue_order(user_id, options, request_options)
+    MiqQueue.submit_job(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "order",
+      :args        => [user_id, options, request_options],
+    )
+  end
+
+  def order(user_or_id, options = nil, request_options = {}, schedule_time = nil)
+    user     = user_or_id.kind_of?(User) ? user_or_id : User.find(user_or_id)
+    workflow = provision_workflow(user, options, request_options)
+    if schedule_time
+      require 'time'
+      time = Time.parse(schedule_time).utc
+
+      errors = workflow.validate_dialog
+      errors << unsupported_reason(:order)
+      return {:errors => errors} if errors.compact.present?
+
+      schedule = MiqSchedule.create!(
+        :name         => "Order #{self.class.name} #{id} at #{time}",
+        :description  => "Order #{self.class.name} #{id} at #{time}",
+        :sched_action => {:args => [user.id, options, request_options], :method => "queue_order"},
+        :resource     => self,
+        :run_at       => {
+          :interval   => {:unit => "once"},
+          :start_time => time,
+          :tz         => "UTC",
+        },
+      )
+      {:schedule => schedule}
+    else
+      workflow.submit_request
+    end
+  end
+
+  def provision_workflow(user, dialog_options = nil, request_options = {})
+    dialog_options ||= {}
+    request_options.delete(:provision_workflow) if request_options[:submit_workflow]
+    ra_options = request_options.slice(:initiator, :init_defaults, :provision_workflow, :submit_workflow).merge(:target => self)
+
+    ResourceActionWorkflow.new(dialog_options, user, provision_action, ra_options).tap do |wf|
+      wf.request_options = request_options
+    end
+  end
+
+  def add_resource(rsc, options = {})
+    super
+    adjust_service_type
+  end
+
+  def self.display_name(number = 1)
+    n_('Service Catalog Item', 'Service Catalog Items', number)
+  end
+
+  def my_zone
+    # Catalog items can specify a zone to run in.
+    # Catalog bundle are used for grouping catalog items and are therefore treated as zone-agnostic.
+    zone&.name if atomic?
+  end
+
+  private
+
+  def update_service_resources(config_info, auth_user = nil)
+    config_info = config_info.except(:provision, :retirement, :reconfigure)
+    workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+    if workflow_class
+      service_resources.find_by(:resource_type => 'MiqRequest').try(:destroy)
+      new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+
+      add_resource!(new_request)
+    end
+  end
+
+  def build_resource_action(ae_endpoint, action)
+    fqname = ae_endpoint[:fqname] || self.class.send(action[:method], *action[:args]) || ""
+
+    build_options = {:action        => action[:name],
+                     :fqname        => fqname,
+                     :ae_attributes => {:service_action => action[:name]}}
+    build_options.merge!(ae_endpoint.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
+    resource_actions.build(build_options)
+  end
+
+  def validate_update_config_info(options)
+    if options[:service_type] && options[:service_type] != service_type
+      raise _('service_type cannot be changed')
+    end
+    if options[:prov_type] && options[:prov_type] != prov_type
+      raise _('prov_type cannot be changed')
+    end
+    options[:config_info]
+  end
+
+  def resource_action_list
+    [
+      {:name      => ResourceAction::PROVISION,
+       :param_key => :provision,
+       :method    => 'default_provisioning_entry_point',
+       :args      => [service_type]},
+      {:name      => ResourceAction::RECONFIGURE,
+       :param_key => :reconfigure,
+       :method    => 'default_reconfiguration_entry_point',
+       :args      => []},
+      {:name      => ResourceAction::RETIREMENT,
+       :param_key => :retirement,
+       :method    => 'default_retirement_entry_point',
+       :args      => []}
+    ]
+  end
+
+  def update_from_options(params)
+    options[:config_info] = params[:config_info]
+    update!(params.except(:config_info))
+  end
+
+  def construct_config_info
+    config_info = {}
+
+    miq_request_resource = service_resources.find_by(:resource_type => 'MiqRequest')
+    config_info.merge!(miq_request_resource.resource.options.compact) if miq_request_resource
+
+    config_info.merge!(resource_actions_info)
+  end
+
+  def resource_actions_info
+    resource_actions.each_with_object({}) do |resource_action, config_info|
+      resource_options = resource_action.slice(:dialog_id, :configuration_template_type, :configuration_template_id).compact
+      resource_options[:fqname] = resource_action.fqname
+      config_info[resource_action.action.downcase.to_sym] = resource_options.symbolize_keys
+    end
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("Service")
+  end
+
+  def adjust_service_type
+    self.service_type = service_resources.any? { |st| st.resource_type.in?(['Service', 'ServiceTemplate']) } ? self.class::SERVICE_TYPE_COMPOSITE : self.class::SERVICE_TYPE_ATOMIC
+  end
 end

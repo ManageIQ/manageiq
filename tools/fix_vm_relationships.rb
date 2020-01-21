@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 ### Used to fix VM to Parent Resource Pool relationship problems.
 # Normally seen when user clicks on a VM to view VM summary page.
 # Error is displayed "Couldn't find Relationship with id=XXXX [vm_or_template/tree_select]"

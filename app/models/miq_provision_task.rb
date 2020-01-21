@@ -13,4 +13,8 @@ class MiqProvisionTask < MiqRequestTask
   def do_request
     signal :run_provision
   end
+
+  def self.display_name(number = 1)
+    n_('Provision Task', 'Provision Tasks', number)
+  end
 end

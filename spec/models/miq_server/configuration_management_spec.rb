@@ -1,21 +1,21 @@
 describe MiqServer, "::ConfigurationManagement" do
-  describe "#get_config" do
-    shared_examples_for "#get_config" do
+  describe "#settings" do
+    shared_examples_for "#settings" do
       it "with no changes in the database" do
-        config = miq_server.get_config("vmdb")
-        expect(config).to be_kind_of(VMDB::Config)
-        expect(config.config.fetch_path(:api, :token_ttl)).to eq("10.minutes")
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("10.minutes")
       end
 
       it "with changes in the database" do
         miq_server.settings_changes = [
-          FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+          FactoryBot.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
         ]
         Settings.reload!
 
-        config = miq_server.get_config("vmdb")
-        expect(config).to be_kind_of(VMDB::Config)
-        expect(config.config.fetch_path(:api, :token_ttl)).to eq("2.minutes")
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("2.minutes")
       end
     end
 
@@ -24,7 +24,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       before { stub_local_settings(miq_server) }
 
-      include_examples "#get_config"
+      include_examples "#settings"
     end
 
     context "remote server" do
@@ -32,7 +32,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       before { stub_local_settings(nil) }
 
-      include_examples "#get_config"
+      include_examples "#settings"
     end
   end
 
@@ -50,37 +50,31 @@ describe MiqServer, "::ConfigurationManagement" do
   end
 
   context "ConfigurationManagementMixin" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
-
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(miq_server.settings_for_resource.to_hash).to eq(settings)
+    let(:miq_server) { FactoryBot.create(:miq_server) }
+    describe "#config_activated" do
+      let(:zone) { FactoryBot.create(:zone, :name => "My Zone") }
+      let(:zone_other_region) do
+        other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
+        FactoryBot.create(:zone, :id => other_region_id).tap do |z|
+          z.update_column(:name, "My Zone") # Bypass validation for test purposes
+        end
       end
-    end
 
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(miq_server).to receive(:reload_all_server_settings)
+      it "saves settings with the zone in the correct region" do
+        miq_server = EvmSpecHelper.local_miq_server(:zone => zone)
+        zone_other_region
 
-        miq_server.add_settings_for_resource(settings)
+        miq_server.config_activated(OpenStruct.new(:zone => "My Zone"))
 
-        expect(Vmdb::Settings.for_resource(miq_server).some_test_setting.setting).to eq(1)
+        expect(miq_server.reload.zone).to eq(zone)
       end
-    end
 
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        FactoryGirl.create(:miq_server, :status => "started")
+      it "does not overwrite the servers zone_id if the config value is invalid" do
+        _guid, miq_server, zone = EvmSpecHelper.local_guid_miq_server_zone
 
-        miq_server.reload_all_server_settings
+        miq_server.send(:immediately_reload_settings)
 
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(miq_server.id)
-        expect(message.method_name).to eq("reload_settings")
+        expect(MiqServer.my_server.zone).to eq(zone)
       end
     end
   end

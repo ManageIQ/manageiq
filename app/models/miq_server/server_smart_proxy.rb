@@ -3,25 +3,19 @@ require 'yaml'
 module MiqServer::ServerSmartProxy
   extend ActiveSupport::Concern
 
-  included do
-    serialize :capabilities
-  end
+  SMART_ROLES = %w(smartproxy smartstate).freeze
 
   module ClassMethods
     # Called from VM scan job as well as scan_sync_vm
 
     def use_broker_for_embedded_proxy?(type = nil)
-      cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
-      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
+      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? &&
+               ::Settings.coresident_miqproxy[:use_vim_broker]
+      return result if type.blank? || !result
 
       # Check for a specific type (host/ems) if passed
-      unless type.blank?
-        # Default use_vim_broker to true for ems type
-        cores_settings[:use_vim_broker_ems] = true if cores_settings[:use_vim_broker_ems].blank? && cores_settings[:use_vim_broker_ems] != false
-        cores_settings["use_vim_broker_#{type}".to_sym] ||= false
-        result &&= cores_settings["use_vim_broker_#{type}".to_sym]
-      end
-      result
+      # Default use_vim_broker is true for ems type
+      ::Settings.coresident_miqproxy["use_vim_broker_#{type}"] == true
     end
   end
 
@@ -34,7 +28,7 @@ module MiqServer::ServerSmartProxy
   end
 
   def is_vix_disk?
-    self.has_active_role?(:SmartProxy) && capabilities && capabilities[:vixDisk]
+    has_vix_disk_lib? && self.has_active_role?(:SmartProxy)
   end
 
   def vm_scan_host_affinity?
@@ -71,38 +65,28 @@ module MiqServer::ServerSmartProxy
     case ost.method_name
     when "scan_metadata", "sync_metadata"
       worker_setting = MiqSmartProxyWorker.worker_settings
-      #
-      # TODO: until we get location/offset read capability for OpenStack
-      # image data, OpenStack fleecing is prone to timeout (based on image size).
-      # We try to adjust the timeout here - maybe this should be calculated based
-      # on the size of the image, but that information isn't directly available.
-      #
-      timeout_adj = 1
+
+      timeout_adjustment_multiplier = 1
       if ost.method_name == "scan_metadata"
         klass = ost.target_type.constantize
         target = klass.find(ost.target_id)
-        if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
-           target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
-          timeout_adj = 4
-        elsif target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-              target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
-          timeout_adj = 8
+        if target.respond_to?(:scan_timeout_adjustment_multiplier)
+          timeout_adjustment_multiplier = target.scan_timeout_adjustment_multiplier
         end
       end
-      $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
+      _log.debug("queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "smartproxy",
         :class_name  => self.class.name,
         :instance_id => id,
         :method_name => ost.method_name,
         :args        => ost,
-        :server_guid => guid,
-        :role        => "smartproxy",
-        :queue_name  => "smartproxy",
-        :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
+        :server_guid => guid, # this should be derived in service. fix this
+        :msg_timeout => worker_setting[:queue_timeout] * timeout_adjustment_multiplier
       )
     else
-      _log.error "Unsupported method [#{ost.method_name}]"
+      _log.error("Unsupported method [#{ost.method_name}]")
     end
   end
 
@@ -110,21 +94,22 @@ module MiqServer::ServerSmartProxy
   def scan_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
-    _log.debug "#{target.name} (#{target.class.name})"
+    job    = Job.find_by(:guid => ost.taskid)
+    _log.debug("#{target.name} (#{target.class.name})")
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
+      ost.jobid    = job.id
       ost.config = OpenStruct.new(
         :vmdb               => true,
         :forceFleeceDefault => true,
-        :capabilities       => capabilities
+        :capabilities       => {:vixDisk => has_vix_disk_lib?}
       )
 
       target.perform_metadata_scan(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -134,13 +119,13 @@ module MiqServer::ServerSmartProxy
   def sync_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
-    _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
+    job    = Job.find_by(:guid => ost.taskid)
+    _log.debug("#{target.name} (#{target.class.name})")
     begin
       target.perform_metadata_sync(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -153,11 +138,7 @@ module MiqServer::ServerSmartProxy
     errArray = errArray[0, 2] if $log.level > 1
 
     # Print the stack trace to debug logging level
-    errArray.each { |e| $log.error "Error Trace: [#{e}]" }
-  end
-
-  def miq_proxy
-    self
+    errArray.each { |e| $log.error("Error Trace: [#{e}]") }
   end
 
   def forceVmScan
@@ -166,37 +147,22 @@ module MiqServer::ServerSmartProxy
 
   # TODO: This should be moved - where?
   def is_vix_disk_supported?
-    caps = {:vixDisk => false}
+    # This is only available on Linux
+    return false unless Sys::Platform::IMPL == :linux
+
     begin
-      # This is only available on Linux
-      if Sys::Platform::IMPL == :linux
-        require 'VixDiskLib/VixDiskLib'
-        caps[:vixDisk] = true
-      end
-    rescue Exception => err
+      require 'VMwareWebService/VixDiskLib/VixDiskLib'
+      return true
+    rescue Exception
       # It is ok if we hit an error, it just means the library is not available to load.
     end
 
-    caps[:vixDisk]
+    false
   end
 
   def concurrent_job_max
-    update_capabilities
-    capabilities[:concurrent_miqproxies].to_i
-  end
-
-  def max_concurrent_miqproxies
     return 0 unless self.is_a_proxy?
-    MiqSmartProxyWorker.worker_settings[:count]
-  end
 
-  def update_capabilities
-    self.capabilities = {} if capabilities.nil?
-    # We can only update these values if we are working on the local server
-    # since they are determined by local resources.
-    if MiqServer.my_server == self
-      capabilities[:vixDisk] = self.is_vix_disk_supported?
-      capabilities[:concurrent_miqproxies] = max_concurrent_miqproxies
-    end
+    MiqSmartProxyWorker.fetch_worker_settings_from_server(self)[:count].to_i
   end
 end

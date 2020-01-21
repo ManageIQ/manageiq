@@ -23,4 +23,8 @@ class VmdbDatabaseSetting < ApplicationRecord
     desc += "  #{extra_desc}" unless extra_desc.nil?
     desc
   end
+
+  def self.display_name(number = 1)
+    n_('Database Setting', 'Database Settings', number)
+  end
 end

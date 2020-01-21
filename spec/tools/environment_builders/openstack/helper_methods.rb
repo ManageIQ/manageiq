@@ -27,7 +27,7 @@ module Openstack
                     :ipaddress             => hostname,
                     :port                  => port,
                     :api_version           => version,
-                    :zone                  => Zone.first,
+                    :zone                  => Zone.default_zone,
                     :security_protocol     => 'no_ssl',
                     :keystone_v3_domain_id => 'default'}
 
@@ -35,7 +35,7 @@ module Openstack
                                                                                     :hostname => hostname}).first
       puts "Creating EMS for environment #{hostname}" unless @ems
       @ems ||= ManageIQ::Providers::Openstack::CloudManager.new
-      @ems.update_attributes(attributes)
+      @ems.update(attributes)
       @ems.save
 
       @ems.update_authentication(:default => {:userid => userid, :password => password})

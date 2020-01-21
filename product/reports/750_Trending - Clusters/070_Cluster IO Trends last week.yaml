@@ -1,27 +1,27 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "Cluster I/O Utilization Trends (last week)"
-conditions: 
+conditions:
 col_options: {}
 
 order: Ascending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "Cluster I/O Trends (last week)"
 rpt_group: Custom
-priority: 
+priority:
 col_order: []
 
-timeline: 
+timeline:
 file_mtime:
-categories: 
-time_profile_id: 
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
-db_options: 
+filename:
+db_options:
   :limit_val: "102400"
   :trend_col: net_usage_rate_average
   :rpt_type: trend
@@ -29,7 +29,7 @@ db_options:
   :trend_db: EmsClusterPerformance
   :end_offset: 0
   :interval: daily
-  :target_pcts: 
+  :target_pcts:
   - 70
   - 80
   - 90
@@ -41,11 +41,11 @@ db: VimPerformanceTrend
 cols: []
 
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - resource_name
 rpt_options: {}
 
 headers: []
 
-display_filter: 
+display_filter:

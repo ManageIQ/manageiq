@@ -34,9 +34,7 @@ module LiveMetricsMixin
       first = Time.at(firsts.min / 1000).utc
       last = Time.at(lasts.max / 1000).utc
       now = Time.new.utc
-      if interval_name == "hourly"
-        first = (now - first) > 1.hour ? first : nil
-      end
+      first = nil if interval_name == "hourly" && (now - first) <= 1.hour
       [first, last]
     end
 

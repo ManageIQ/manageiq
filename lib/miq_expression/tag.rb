@@ -1,20 +1,56 @@
-class MiqExpression::Tag
-  def self.parse(tag)
-    klass, ns = tag.split(".")
-    ns = "/" + ns.split("-").join("/")
-    ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
-    new(klass.constantize, ns)
+class MiqExpression::Tag < MiqExpression::Target
+  REGEX = /
+(?<model_name>(?:[[:upper:]][[:alnum:]]*(?:::[[:upper:]][[:alnum:]]*)*)?)
+\.?(?<associations>([a-z_]+\.)*)
+(?<namespace>\bmanaged|user_tag\b)
+-(?<column>[a-z]+[_:[:alnum:]]+)
+/x
+
+  MANAGED_NAMESPACE      = 'managed'.freeze
+  USER_NAMESPACE         = 'user'.freeze
+
+  attr_reader :namespace, :base_namespace
+
+  def self.parse(field)
+    return unless field.include?('managed') || field.include?('user_tag')
+    parsed_params = parse_params(field) || return
+    managed = parsed_params[:namespace] == self::MANAGED_NAMESPACE
+    new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column], managed)
   end
 
-  attr_reader :model, :namespace
-
-  def initialize(model, namespace)
-    @model = model
-    @namespace = namespace
+  def initialize(model, associations, column, managed = true)
+    super(model, associations, column)
+    @base_namespace = managed ? MANAGED_NAMESPACE : USER_NAMESPACE
+    @namespace = "/#{@base_namespace}/#{column}"
   end
 
-  def contains(value)
-    ids = model.find_tagged_with(:any => value, :ns => namespace).pluck(:id)
-    model.arel_attribute(:id).in(ids)
+  def to_s
+    "#{[model, *associations, base_namespace].compact.join(".")}-#{column}"
+  end
+
+  def numeric?
+    false
+  end
+
+  def column_type
+    :string
+  end
+
+  def sub_type
+    column_type
+  end
+
+  def attribute_supported_by_sql?
+    false
+  end
+
+  def report_column
+    "#{@base_namespace}.#{column}"
+  end
+
+  private
+
+  def tag_path
+    @namespace
   end
 end

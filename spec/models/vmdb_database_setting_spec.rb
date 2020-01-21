@@ -1,6 +1,6 @@
 describe VmdbDatabaseSetting do
-  before :each do
-    @db = FactoryGirl.create(:vmdb_database)
+  before do
+    @db = FactoryBot.create(:vmdb_database)
   end
 
   it 'has database settings' do

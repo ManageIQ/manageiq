@@ -10,58 +10,94 @@ module VmOrTemplate::Operations
   alias_method :ruby_clone, :clone
 
   def raw_clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
-    raise _("VM has no EMS, unable to clone") unless ext_management_system
-    folder_mor    = folder.ems_ref_obj    if folder.respond_to?(:ems_ref_obj)
-    pool_mor      = pool.ems_ref_obj      if pool.respond_to?(:ems_ref_obj)
-    host_mor      = host.ems_ref_obj      if host.respond_to?(:ems_ref_obj)
-    datastore_mor = datastore.ems_ref_obj if datastore.respond_to?(:ems_ref_obj)
-    run_command_via_parent(:vm_clone, :name => name, :folder => folder_mor, :pool => pool_mor, :host => host_mor, :datastore => datastore_mor, :powerOn => powerOn, :template => template_flag, :transform => transform, :config => config, :customization => customization, :disk => disk)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
+    raise _("VM has no EMS, unable to clone") unless ext_management_system
+
     raw_clone(name, folder, pool, host, datastore, powerOn, template_flag, transform, config, customization, disk)
   end
 
   def raw_mark_as_template
-    raise _("VM has no EMS, unable to mark as template") unless ext_management_system
-    run_command_via_parent(:vm_mark_as_template)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def mark_as_template
+    raise _("VM has no EMS, unable to mark as template") unless ext_management_system
+
     raw_mark_as_template
   end
 
   def raw_mark_as_vm(pool, host = nil)
-    raise _("VM has no EMS, unable to mark as vm") unless ext_management_system
-    pool_mor = pool.ems_ref_obj if pool.respond_to?(:ems_ref_obj)
-    host_mor = host.ems_ref_obj if host.respond_to?(:ems_ref_obj)
-    run_command_via_parent(:vm_mark_as_vm, :pool => pool_mor, :host => host_mor)
+    raise NotImplementedError, _("must be implemented in a subclass")
   end
 
   def mark_as_vm(pool, host = nil)
+    raise _("VM has no EMS, unable to mark as vm") unless ext_management_system
+
     raw_mark_as_vm(pool, host)
   end
 
   def raw_unregister
-    unless ext_management_system
-      raise _("VM has no %{table}, unable to unregister VM") % {:table => ui_lookup(:table => "ext_management_systems")}
-    end
-    run_command_via_parent(:vm_unregister)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def unregister_queue
+    run_command_via_queue("raw_unregister")
   end
 
   def unregister
-    check_policy_prevent(:request_vm_unregister, :raw_unregister)
+    raise _("VM has no Provider, unable to unregister VM") unless ext_management_system
+
+    check_policy_prevent(:request_vm_unregister, :unregister_queue)
   end
 
   def raw_destroy
-    unless ext_management_system
-      raise _("VM has no %{table}, unable to destroy VM") % {:table => ui_lookup(:table => "ext_management_systems")}
-    end
-    run_command_via_parent(:vm_destroy)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def destroy_queue
+    run_command_via_queue("raw_destroy")
   end
 
   def vm_destroy
-    check_policy_prevent(:request_vm_destroy, :raw_destroy)
+    raise _("VM has no Provider, unable to destroy VM") unless ext_management_system
+
+    check_policy_prevent(:request_vm_destroy, :destroy_queue)
+  end
+
+  def raw_rename(new_name)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def rename(new_name)
+    raise _("VM has no Provider, unable to rename VM") unless ext_management_system
+
+    raw_rename(new_name)
+  end
+
+  def rename_queue(userid, new_name)
+    task_opts = {
+      :action => "Renaming VM for user #{userid}",
+      :userid => userid
+    }
+
+    run_command_via_task(task_opts, :method_name => "rename", :args => [new_name])
+  end
+
+  def raw_set_custom_field(_attribute, _value)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def set_custom_field(attribute, value)
+    raise _("VM has no EMS, unable to set custom attribute") unless ext_management_system
+
+    raw_set_custom_field(attribute, value)
+  end
+
+  def log_user_event(user_event)
+    $log.info(user_event)
   end
 
   private
@@ -96,10 +132,10 @@ module VmOrTemplate::Operations
               _('The VM is terminated')
             elsif !has_required_host?
               _('The VM is not connected to a Host')
-            elsif !connection_state.nil? && !connected_to_ems?
+            elsif disconnected?
               _('The VM does not have a valid connection state')
             elsif !has_active_ems?
-              _("The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}")
+              _("The VM is not connected to an active Provider")
             end
       unsupported_reason_add(:control, msg) if msg
     end
@@ -113,10 +149,6 @@ module VmOrTemplate::Operations
 
   def validate_vm_control_powered_on
     validate_vm_control_power_state(true)
-  end
-
-  def validate_vm_control_not_powered_on
-    validate_vm_control_power_state(false)
   end
 
   def validate_vm_control_power_state(check_powered_on)

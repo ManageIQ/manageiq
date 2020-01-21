@@ -2,10 +2,12 @@ module OwnershipMixin
   extend ActiveSupport::Concern
 
   included do
+    before_validation :set_tenant_from_group
+
     belongs_to :evm_owner, :class_name => "User"
     belongs_to :miq_group
 
-    virtual_delegate :email, :name, :userid, :to => :evm_owner, :prefix => true, :allow_nil => true
+    virtual_delegate :email, :name, :userid, :to => :evm_owner, :prefix => true, :allow_nil => true, :type => :string
 
     # Determine whether the selected object is owned by the current user
     # Resulting SQL:
@@ -25,7 +27,7 @@ module OwnershipMixin
       t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(userid))
     end)
 
-    virtual_delegate :owning_ldap_group, :to => "miq_group.description", :allow_nil => true
+    virtual_delegate :owning_ldap_group, :to => "miq_group.description", :allow_nil => true, :type => :string
 
     # Determine whether to return objects owned by the current user's miq_group
     # or not.
@@ -90,7 +92,7 @@ module OwnershipMixin
     private
 
     def user_owned(user)
-      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid)))
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid.downcase)))
     end
 
     def group_owned(miq_group)
@@ -105,5 +107,9 @@ module OwnershipMixin
   def owned_by_current_ldap_group
     ldap_group = User.current_user.try(:ldap_group)
     ldap_group && owning_ldap_group && (owning_ldap_group.downcase == ldap_group.downcase)
+  end
+
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
   end
 end

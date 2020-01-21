@@ -1,5 +1,5 @@
 describe DynamicDialogFieldValueProcessor do
-  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:user) { FactoryBot.create(:user_with_group) }
   let(:dynamic_dialog_field_value_processor) { described_class.new }
 
   describe "#values_from_automate" do

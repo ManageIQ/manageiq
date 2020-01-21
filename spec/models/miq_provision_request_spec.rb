@@ -1,55 +1,61 @@
-describe MiqProvisionRequest do
-  it ".request_task_class_from" do
-    ems = FactoryGirl.create(:ems_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
+RSpec.describe MiqProvisionRequest do
+  context "#request_task_class_from" do
+    it "retrieves the provision class when the vm has EMS" do
+      ems = FactoryBot.create(:ems_vmware)
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
 
-    ems = FactoryGirl.create(:ems_redhat)
-    vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
+      ems = FactoryBot.create(:ems_redhat)
+      vm = FactoryBot.create(:vm_redhat, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
 
-    ems = FactoryGirl.create(:ems_openstack)
-    vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
+      ems = FactoryBot.create(:ems_openstack)
+      vm = FactoryBot.create(:vm_openstack, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
 
-    ems = FactoryGirl.create(:ems_amazon)
-    vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+      ems = FactoryBot.create(:ems_amazon)
+      vm = FactoryBot.create(:vm_amazon, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+    end
+
+    it "fails to retrieve the provision class when the vm has no EMS" do
+      vm = FactoryBot.create(:vm_redhat)
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => vm.id}) }.to raise_error(MiqException::MiqProvisionError)
+    end
+
+    it "fails to retrieve the provision class when the vm does not exist" do
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => -1 }) }.to raise_error(MiqException::MiqProvisionError)
+    end
   end
 
   context "A new provision request," do
-    before            { allow_any_instance_of(User).to receive(:role).and_return("admin") }
-    let(:approver)    { FactoryGirl.create(:user_miq_request_approver) }
-    let(:user)        { FactoryGirl.create(:user) }
-    let(:ems)         { FactoryGirl.create(:ems_vmware) }
-    let(:vm)          { FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
-    let(:vm_template) { FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
+    let(:approver)    { FactoryBot.create(:user_miq_request_approver) }
+    let(:user)        { FactoryBot.create(:user) }
+    let(:ems)         { FactoryBot.create(:ems_vmware) }
+    let(:vm)          { FactoryBot.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx") }
+    let(:vm_template) { FactoryBot.create(:template_vmware, :name => "template1", :ext_management_system => ems) }
 
     it "should not be created without requester being specified" do
-      expect { FactoryGirl.create(:miq_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it "should not be created with an invalid userid being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :userid => 'barney', :src_vm_id => vm_template.id) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryBot.create(:miq_provision_request, :requester => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should not be created with a valid userid but no vm being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryBot.create(:miq_provision_request, :requester => user, :source => nil) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should be created from either a VM or Template" do
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id) }.not_to raise_error
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm.id) }.not_to raise_error
+      expect { FactoryBot.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id) }.not_to raise_error
+      expect { FactoryBot.create(:miq_provision_request, :requester => user, :src_vm_id => vm.id) }.not_to raise_error
     end
 
     it "should not be created with a valid userid but invalid vm being specified" do
-      expect { FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => 42) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryBot.create(:miq_provision_request, :requester => user, :src_vm_id => 42) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     context "with a valid userid and source vm," do
       before do
-        @pr = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
+        @pr = FactoryBot.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
         @request = @pr.miq_request
       end
 
@@ -121,27 +127,146 @@ describe MiqProvisionRequest do
         end
 
         it "should return stats from quota methods" do
-          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_cpus => [2, '2']}
-          @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
+          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
+          @pr2 = FactoryBot.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
 
           stats = @pr.check_quota(:requests_by_owner)
           expect(stats).to be_kind_of(Hash)
 
           expect(stats[:class_name]).to eq("MiqProvisionRequest")
           expect(stats[:count]).to eq(2)
-          expect(stats[:memory]).to eq(2048)
+          expect(stats[:memory]).to eq(2.gigabytes)
           expect(stats[:cpu]).to eq(4)
           expect(stats.fetch_path(:active, :class_name)).to eq("MiqProvision")
+        end
+
+        context "for cloud and infra providers," do
+          def create_request(user, vm_template, prov_options)
+            FactoryBot.create(:miq_provision_request, :requester      => user,
+                                                       :description    => "request",
+                                                       :tenant         => user.current_tenant,
+                                                       :source         => vm_template,
+                                                       :status         => 'Ok',
+                                                       :process        => true,
+                                                       :request_state  => 'active',
+                                                       :approval_state => 'approved',
+                                                       :src_vm_id      => vm_template.id,
+                                                       :options        => prov_options.merge(:owner_email => user.email, :requester_group => user.miq_groups.first.description))
+          end
+
+          let(:create_requests) do
+            ems = FactoryBot.create(:ems_vmware)
+            vmware_tenant = FactoryBot.create(:tenant)
+            group = FactoryBot.create(:miq_group, :tenant => vmware_tenant)
+            @vmware_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+            @vmware_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+            hardware = FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512)
+            @vmware_template = FactoryBot.create(:template_vmware,
+                                                  :ext_management_system => ems,
+                                                  :hardware              => hardware)
+            prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
+            2.times { create_request(@vmware_user1, @vmware_template, prov_options) }
+
+            2.times { create_request(@vmware_user2, @vmware_template, prov_options) }
+
+            ems = FactoryBot.create(:ems_google_with_authentication,
+                                     :availability_zones => [FactoryBot.create(:availability_zone_google)])
+            google_tenant = FactoryBot.create(:tenant)
+            group = FactoryBot.create(:miq_group, :tenant => google_tenant)
+            @google_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+            @google_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+            @google_template = FactoryBot.create(:template_google, :ext_management_system => ems)
+            flavor = FactoryBot.create(:flavor_google, :ems_id => ems.id,
+                                        :cpus => 4, :cpu_cores => 1, :memory => 1024)
+            prov_options = {:number_of_vms => 1, :src_vm_id => vm_template.id, :boot_disk_size => ["10.GB", "10 GB"],
+                            :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
+            2.times { create_request(@google_user1, @google_template, prov_options) }
+
+            2.times { create_request(@google_user2, @google_template, prov_options) }
+          end
+
+          shared_examples_for "check_quota" do
+            it "check" do
+              create_requests
+              stats = request.check_quota(quota_method)
+              expect(stats).to include(counts_hash)
+            end
+          end
+
+          context "active_provisions," do
+            let(:request) { create_request(@vmware_user1, @vmware_template, {}) }
+            let(:quota_method) { :active_provisions }
+            let(:counts_hash) do
+              {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes}
+            end
+            it_behaves_like "check_quota"
+          end
+
+          context "infra," do
+            let(:request) { create_request(@vmware_user1, @vmware_template, {}) }
+            let(:counts_hash) do
+              {:count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 4.gigabytes}
+            end
+
+            context "active_provisions_by_tenant," do
+              let(:quota_method) { :active_provisions_by_tenant }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_group," do
+              let(:quota_method) { :active_provisions_by_group }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
+              end
+              it_behaves_like "check_quota"
+
+              it "fails without owner_email option" do
+                create_requests
+                request.options = {}
+                expect { request.check_quota(quota_method) }.to raise_error(NoMethodError)
+              end
+            end
+          end
+
+          context "cloud," do
+            let(:request) { create_request(@google_user1, @google_template, {}) }
+            let(:counts_hash) do
+              {:count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes}
+            end
+
+            context "active_provisions_by_tenant," do
+              let(:quota_method) { :active_provisions_by_tenant }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_group," do
+              let(:quota_method) { :active_provisions_by_group }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
+              end
+              it_behaves_like "check_quota"
+            end
+          end
         end
       end
 
       context "when processing tags" do
-        before { FactoryGirl.create(:classification_department_with_tags) }
+        before { FactoryBot.create(:classification_department_with_tags) }
 
         it "should add and delete tags from a request" do
           expect(@pr.get_tags.length).to eq(0)
 
-          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+          t = Classification.is_category.where(:description => 'Department').includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
           expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
@@ -188,7 +313,7 @@ describe MiqProvisionRequest do
         it "should return classifications for tags" do
           expect(@pr.get_tags.length).to eq(0)
 
-          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+          t = Classification.is_category.where(:description => 'Department').includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String)
 

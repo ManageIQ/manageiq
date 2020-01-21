@@ -1,52 +1,25 @@
 image: manageiq_gitlabci:master
 before_script:
-  - su postgres -c ". /docker-environment.sh && pg_ctl start -w -D /var/opt/rh/rh-postgresql94/lib/pgsql/data/"
-  - ruby -v
-  - postgres --version
-  - bundle config --global jobs 3
-  - bundle config --global retry 3
-  - echo "1" > REGION
-  - cp certs/v2_key.dev certs/v2_key
-  - cp config/database.pg.yml config/database.yml
-  - export BUNDLE_GEMFILE=$PWD/Gemfile
-  - export RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
-  - export RUBY_GC_HEAP_INIT_SLOTS=600000
-  - export RUBY_GC_HEAP_GROWTH_FACTOR=1.25
+- su postgres -c ". /docker-environment.sh && pg_ctl start -w -D /var/opt/rh/rh-postgresql94/lib/pgsql/data/"
+- ruby -v
+- postgres --version
+- bundle config --global jobs 3
+- bundle config --global retry 3
+- echo "1" > REGION
+- cp certs/v2_key.dev certs/v2_key
+- cp config/database.pg.yml config/database.yml
+- export BUNDLE_GEMFILE=$PWD/Gemfile
+- export RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
+- export RUBY_GC_HEAP_INIT_SLOTS=600000
+- export RUBY_GC_HEAP_GROWTH_FACTOR=1.25
 test:vmdb:
   script:
-    - bundle update
-    - bower install --allow-root -F --config.analytics=false
-    - bundle exec rake test:vmdb:setup
-    - bundle exec rake test:vmdb
-test:automation:
-  script:
-    - bundle update
-    - bundle exec rake test:automation:setup
-    - bundle exec rake test:automation
-test:migrations:
-  script:
-    - bundle update
-    - bundle exec rake test:migrations:setup
-    - bundle exec rake test:migrations
+  - bundle update
+  - bundle exec rake update:ui
+  - bundle exec rake test:vmdb:setup
+  - bundle exec rake test:vmdb
 test:brakeman:
   script:
-    - bundle update
-    - bundle exec rake test:brakeman:setup
-    - bundle exec rake test:brakeman
-test:replication:
-  script:
-    - bundle update
-    - bundle exec rake test:replication:setup
-    - bundle exec rake test:replication
-test:gems-pending:
-  script:
-    - cd gems/pending
-    - export BUNDLE_GEMFILE=$PWD/Gemfile
-    - bundle update
-    - bundle exec rake
-test:javascript:
-  script:
-    - bundle update
-    - bower install --allow-root -F --config.analytics=false
-    - bundle exec rake test:javascript:setup
-    - bundle exec rake test:javascript
+  - bundle update
+  - bundle exec rake test:brakeman:setup
+  - bundle exec rake test:brakeman

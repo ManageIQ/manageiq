@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 ManageIQ::Providers::Vmware::Host.all.each do |host|
   if host.ipaddress.blank?
     STDERR.puts "Host ID=#{host.id.inspect}, Name=#{host.name.inspect} has no IP Address"

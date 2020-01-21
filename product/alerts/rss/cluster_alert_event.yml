@@ -21,7 +21,8 @@ search_method:
 search_conditions: "event_type = 'EVMAlertEvent' AND target_type = 'EmsCluster'"
 limit_to_time:
 limit_to_count:
-orderby: "timestamp DESC"
+orderby:
+  :timestamp: :desc
 
 # tags_include: any or all
 tag_ns:

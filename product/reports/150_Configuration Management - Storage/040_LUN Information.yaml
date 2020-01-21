@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-14 17:47:08.304867 Z
 title: "Datastore LUN Information"
-conditions: 
+conditions:
 updated_on: 2008-08-14 17:47:08.304867 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Datastore LUN Information"
 rpt_group: Custom
 priority: 0
-col_order: 
+col_order:
 - storages.name
 - miq_scsi_luns.canonical_name
 - miq_scsi_luns.uuid
@@ -20,15 +20,15 @@ col_order:
 - miq_scsi_luns.lun_type
 - miq_scsi_luns.block
 - miq_scsi_luns.block_size
-timeline: 
+timeline:
 id: 70
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  miq_scsi_luns: 
-    columns: 
+filename:
+include:
+  miq_scsi_luns:
+    columns:
     - canonical_name
     - uuid
     - device_name
@@ -38,17 +38,17 @@ include:
     - lun_type
     - block
     - block_size
-  storages: 
-    columns: 
+  storages:
+    columns:
     - name
 db: Host
 cols: []
 
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - storages.name
-headers: 
+headers:
 - Datastore Name
 - LUN Canonical Name
 - LUN UUID

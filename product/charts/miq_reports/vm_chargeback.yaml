@@ -1,0 +1,197 @@
+title: Chargeback Preview
+name: Chargeback Preview for Single VM
+db: ChargebackVm
+
+cols:
+- display_range
+- chargeback_rates
+- fixed_compute_metric
+- fixed_compute_1_cost
+- fixed_compute_2_cost
+- cpu_allocated_metric
+- cpu_allocated_cost
+- cpu_used_metric
+- cpu_used_cost
+- cpu_cost
+- memory_allocated_metric
+- memory_allocated_cost
+- memory_used_metric
+- memory_used_cost
+- memory_cost
+- disk_io_used_metric
+- disk_io_used_cost
+- net_io_used_metric
+- net_io_used_cost
+- fixed_storage_1_cost
+- fixed_storage_2_cost
+- storage_allocated_metric
+- storage_allocated_cost
+- storage_used_metric
+- storage_used_cost
+- storage_cost
+- total_cost
+
+col_order:
+- display_range
+- chargeback_rates
+- fixed_compute_metric
+- fixed_compute_1_cost
+- fixed_compute_2_cost
+- cpu_allocated_metric
+- cpu_allocated_cost
+- cpu_used_metric
+- cpu_used_cost
+- cpu_cost
+- memory_allocated_metric
+- memory_allocated_cost
+- memory_used_metric
+- memory_used_cost
+- memory_cost
+- disk_io_used_metric
+- disk_io_used_cost
+- net_io_used_metric
+- net_io_used_cost
+- fixed_storage_1_cost
+- fixed_storage_2_cost
+- storage_allocated_metric
+- storage_allocated_cost
+- storage_used_metric
+- storage_used_cost
+- storage_cost
+- total_cost
+
+headers:
+- Day
+- Chargeback Rates
+- Fixed Compute Metric
+- Fixed Compute Cost 1
+- Fixed Compute Cost 2
+- vCPUs Allocated over Time Period
+- vCPUs Allocated Cost
+- CPU Used
+- CPU Used Cost
+- CPU Total Cost
+- Memory Allocated over Time Period
+- Memory Allocated Cost
+- Memory Used
+- Memory Used Cost
+- Memory Total Cost
+- Disk I/O Used
+- Disk I/O Used Cost
+- Network I/O Used
+- Network I/O Used Cost
+- Fixed Storage Cost 1
+- Fixed Storage Cost 2
+- Storage Allocated
+- Storage Allocated Cost
+- Storage Used
+- Storage Used Cost
+- Storage Total Cost
+- Total Cost
+
+order: Ascending
+
+sortby:
+- vm_name
+- start_date
+
+group: y
+template_type: report
+db_options:
+  :rpt_type: ChargebackVm
+  :options:
+    :interval: daily
+    :interval_size: 14
+    :end_interval_offset: 1
+    :groupby: date
+col_formats:
+tz: UTC
+time_profile_id:
+display_filter:
+col_options:
+  cpu_allocated_cost:
+    :grouping:
+    - :total
+  cpu_allocated_metric:
+    :grouping:
+    - :total
+  cpu_cost:
+    :grouping:
+    - :total
+  cpu_metric:
+    :grouping:
+    - :total
+  cpu_used_cost:
+    :grouping:
+    - :total
+  cpu_used_metric:
+    :grouping:
+    - :total
+  disk_io_used_cost:
+    :grouping:
+    - :total
+  disk_io_used_metric:
+    :grouping:
+    - :total
+  fixed_compute_metric:
+    :grouping:
+    - :total
+  fixed_compute_1_cost:
+    :grouping:
+    - :total
+  fixed_compute_2_cost:
+    :grouping:
+    - :total
+  fixed_cost:
+    :grouping:
+    - :total
+  fixed_storage_1_cost:
+    :grouping:
+    - :total
+  fixed_storage_2_cost:
+    :grouping:
+    - :total
+  memory_allocated_cost:
+    :grouping:
+    - :total
+  memory_allocated_metric:
+    :grouping:
+    - :total
+  memory_cost:
+    :grouping:
+    - :total
+  memory_metric:
+    :grouping:
+    - :total
+  memory_used_cost:
+    :grouping:
+    - :total
+  memory_used_metric:
+    :grouping:
+    - :total
+  net_io_used_cost:
+    :grouping:
+    - :total
+  net_io_used_metric:
+    :grouping:
+    - :total
+  storage_allocated_cost:
+    :grouping:
+    - :total
+  storage_allocated_metric:
+    :grouping:
+    - :total
+  storage_cost:
+    :grouping:
+    - :total
+  storage_used_cost:
+    :grouping:
+    - :total
+  storage_used_metric:
+    :grouping:
+    - :total
+  total_cost:
+    :grouping:
+    - :total
+rpt_options:
+  :page_size: US-Letter

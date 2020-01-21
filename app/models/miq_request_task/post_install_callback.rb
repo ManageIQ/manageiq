@@ -20,12 +20,12 @@ module MiqRequestTask::PostInstallCallback
 
   def provision_completed_queue
     MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => 'provision_completed',
-      :zone        => my_zone,
-      :role        => my_role,
-      :task_id     => my_task_id,
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => 'provision_completed',
+      :zone           => my_zone,
+      :role           => my_role,
+      :tracking_label => tracking_label_id,
     )
   end
 

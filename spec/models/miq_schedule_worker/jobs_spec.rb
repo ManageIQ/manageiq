@@ -8,7 +8,7 @@ describe MiqScheduleWorker::Jobs do
 
     it "with an EMS" do
       _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      FactoryGirl.create(:ems_vmware, :zone => zone)
+      FactoryBot.create(:ems_vmware, :zone => zone)
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)
 
       expect(MiqQueue.count).to eq(1)
@@ -29,7 +29,7 @@ describe MiqScheduleWorker::Jobs do
         schedule_id = 123
         scheduler = Rufus::Scheduler.new
         block = -> { "some work" }
-        rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour, {}, block)
+        rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour.to_i, {}, block)
 
         expect(MiqSchedule).to receive(:queue_scheduled_work).with(schedule_id, rufus_job.job_id, 1.hour.from_now.to_i, {})
 
@@ -46,6 +46,17 @@ describe MiqScheduleWorker::Jobs do
         :class_name  => "Service",
         :method_name => "queue_chargeback_reports",
         :args        => [{:report_source => "Rspec - Chargeback reports queue"}]
+      )
+    end
+  end
+
+  describe "#check_for_timed_out_active_tasks" do
+    it "enqueues update_status_for_timed_out_active_tasks" do
+      allow(MiqServer).to receive(:my_zone)
+      described_class.new.check_for_timed_out_active_tasks
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "MiqTask",
+        :method_name => "update_status_for_timed_out_active_tasks"
       )
     end
   end

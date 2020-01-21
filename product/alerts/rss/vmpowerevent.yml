@@ -6,7 +6,7 @@ feed_link: "/alert/rss?feed=vmpowerevent"
 
 # Item metadata
 item_title: "#{rec.vm_name}"
-   
+
 # item_description: "#{rec.vm_name} was #{rec.event_type == "VmPoweredOnEvent" ? "powered on" : "powered off"} on #{rec.created_on}"
 item_description: |-
     <script>
@@ -24,13 +24,14 @@ item_class: EmsEvent
 #   Custom method is called the following way:
 #     <item_class>.method(<search_method>).<name>, <options>)
 #   A nil value or a value of "find" use the default class find method
-search_method: 
+search_method:
 search_conditions: "event_type = 'VmPoweredOffEvent' OR event_type = 'VmPoweredOnEvent'"
-limit_to_time: 
-limit_to_count: 
-orderby: "created_on DESC"
+limit_to_time:
+limit_to_count:
+orderby:
+  :created_on: :desc
 
 # tags_include: any or all
-tag_ns: 
-tags_include: 
-tags: 
+tag_ns:
+tags_include:
+tags:

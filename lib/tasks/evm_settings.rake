@@ -1,14 +1,20 @@
 module EvmSettings
-  ALLOWED_KEYS = [
+  ALLOWED_KEYS ||= [
+    "/authentication/mode",
+    "/authentication/httpd_role",
     "/authentication/sso_enabled",
     "/authentication/saml_enabled",
+    "/authentication/oidc_enabled",
+    "/authentication/provider_type",
     "/authentication/local_login_disabled"
   ].freeze
 
-  INFO, WARN, ERROR = %w(info warn error)
+  INFO  ||= "info".freeze
+  WARN  ||= "warn".freeze
+  ERROR ||= "error".freeze
 
   def self.get_keys(keylist = nil)
-    keylist = ALLOWED_KEYS unless keylist.present?
+    keylist = ALLOWED_KEYS if keylist.blank?
     settings_hash = Settings.to_hash
     keylist.each do |key|
       validate_key(key)
@@ -32,8 +38,10 @@ module EvmSettings
 
   def self.config_import(import_hash)
     if import_hash.present?
-      full_config_hash = MiqServer.my_server.get_config.config
-      MiqServer.my_server.set_config(full_config_hash.deep_merge(import_hash))
+      full_config_hash = MiqServer.my_server.settings
+      MiqServer.my_server.add_settings_for_resource(
+        full_config_hash.deep_merge(import_hash)
+      )
     end
   end
   private_class_method :config_import
@@ -80,8 +88,8 @@ module EvmSettings
   private_class_method :str_to_value
 
   def self.value_to_str(value)
-    return "true"  if value  || value =~ /true/i
-    return "false" if !value || value =~ /false/i
+    return "true"  if value == true || value =~ /true/i
+    return "false" if value == false || value =~ /false/i
     value
   end
   private_class_method :value_to_str

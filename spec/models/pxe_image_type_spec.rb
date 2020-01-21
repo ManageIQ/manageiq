@@ -22,8 +22,8 @@ describe PxeImageType do
 
   context "duplicated name" do
     it "should raise RecordInvalid error" do
-      FactoryGirl.create(:pxe_image_type, :name => "unique_name")
-      expect { FactoryGirl.create(:pxe_image_type, :name => "unique_name") }.to raise_error(ActiveRecord::RecordInvalid)
+      FactoryBot.create(:pxe_image_type, :name => "unique_name")
+      expect { FactoryBot.create(:pxe_image_type, :name => "unique_name") }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end

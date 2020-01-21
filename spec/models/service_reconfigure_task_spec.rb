@@ -1,7 +1,7 @@
 describe ServiceReconfigureTask do
-  let(:user)     { FactoryGirl.create(:user_with_group) }
-  let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }
-  let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
+  let(:user)     { FactoryBot.create(:user_with_group) }
+  let(:template) { FactoryBot.create(:service_template, :name => 'Test Template') }
+  let(:service)  { FactoryBot.create(:service, :name => 'Test Service', :service_template => template) }
 
   let(:request) do
     ServiceReconfigureRequest.create(:requester    => user,
@@ -44,6 +44,20 @@ describe ServiceReconfigureTask do
         :message => 'Service Reconfigure failed')
       task.after_ae_delivery('error')
     end
+
+    it "updates service's dialog options if reconfigure passes" do
+      service.update(:options => {:dialog => {:var1 => "value"}})
+      task.options[:dialog] = {:var1 => "new_value"}
+      task.after_ae_delivery('ok')
+      expect(service.options[:dialog]).to include(:var1 => "new_value")
+    end
+
+    it "does not update service's dialog options if reconfigure fails" do
+      service.update(:options => {:dialog => {:var1 => "value"}})
+      task.options[:dialog] = {:var1 => "new_value"}
+      task.after_ae_delivery('error')
+      expect(service.options[:dialog]).to include(:var1 => "value")
+    end
   end
 
   describe "#after_request_task_create" do
@@ -54,13 +68,13 @@ describe ServiceReconfigureTask do
   end
 
   describe "#deliver_to_automate" do
-    before(:each) do
+    before do
       allow(request).to receive(:approved?).and_return(true)
     end
 
     context "automation entry point available" do
-      before(:each) do
-        FactoryGirl.create(:resource_action, :action       => 'Reconfigure',
+      before do
+        FactoryBot.create(:resource_action, :action       => 'Reconfigure',
                                              :resource     => template,
                                              :ae_namespace => 'namespace',
                                              :ae_class     => 'class',
@@ -83,12 +97,13 @@ describe ServiceReconfigureTask do
         }
         expect(user.current_tenant).to be_truthy
         expect(MiqQueue).to receive(:put).with(
-          :class_name  => 'MiqAeEngine',
-          :method_name => 'deliver',
-          :args        => [automate_args],
-          :role        => 'automate',
-          :zone        => nil,
-          :task_id     => "service_reconfigure_task_#{task.id}")
+          :class_name     => 'MiqAeEngine',
+          :method_name    => 'deliver',
+          :args           => [automate_args],
+          :role           => 'automate',
+          :zone           => nil,
+          :tracking_label => "r#{request.id}_service_reconfigure_task_#{task.id}"
+        )
         task.deliver_to_automate
       end
 

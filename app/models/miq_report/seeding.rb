@@ -1,79 +1,114 @@
 module MiqReport::Seeding
   extend ActiveSupport::Concern
 
+  REPORT_DIR  = Rails.root.join("product", "reports").freeze
+  COMPARE_DIR = Rails.root.join("product", "compare").freeze
+
   module ClassMethods
-    REPORT_DIR  = File.expand_path(File.join(Rails.root, "product/reports"))
-    COMPARE_DIR = File.expand_path(File.join(Rails.root, "product/compare"))
-
     def seed
-      # Force creation of model instances for all report yaml files that exist in the product/reports directories
-      # that don't already have an instance in the model
-      MiqReport.sync_from_dir("report")
-      MiqReport.sync_from_dir("compare")
-    end
+      transaction do
+        reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
+          seed_filename(f.filename)
+        end
+        # seeding from files, :filename attribute of existing record may be changed in this process
+        seed_files.each do |f|
+          seed_record(f, reports[seed_filename(f)])
+        end
 
-    def seed_report(pattern, type = "report")
-      dir = type == "report" ? REPORT_DIR : COMPARE_DIR
-      files = Dir.glob(File.join(dir, "**/*#{pattern}*"))
-      files.collect do |f|
-        sync_from_file(f, dir, type)
-      end
-    end
+        # now remove Default reports which are not supplied as yaml anymore
+        reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
+          seed_filename(f.filename)
+        end
+        seed_files.each do |f|
+          reports.delete(seed_filename(f))
+        end
+        if reports.any?
+          _log.info("Deleting the following MiqReport(s) as they no longer exist: #{reports.keys.sort.collect(&:inspect).join(", ")}")
 
-    def sync_from_dir(typ)
-      if typ == "report"
-        dir = REPORT_DIR
-        pattern = "*/*.yaml"
-        cond = {:rpt_type => 'Default', :template_type => [typ, nil]}
-      else
-        dir = COMPARE_DIR
-        pattern = "*.yaml"
-        cond = {:rpt_type => 'Default', :template_type => typ}
-      end
-
-      where(cond).where.not(:filename => nil).each do |f|
-        unless File.exist?(File.join(dir, f.filename))
-          $log.info("#{typ.titleize}: file [#{f.filename}] has been deleted from disk, deleting from model")
-          f.destroy
+          # TODO: Can we make this a delete by getting rid of the dependent destroy on miq_report_result and using the purger?
+          MiqReport.destroy(reports.values.map(&:id))
         end
       end
+    end
 
-      Dir.glob(File.join(dir, pattern)).sort.each do |f|
-        sync_from_file(f, dir, typ)
+    # Used for seeding a specific report for test purposes
+    def seed_report(name)
+      path = seed_files.detect { |f| File.basename(f).include?(name) }
+      raise "report #{name.inspect} not found" if path.nil?
+
+      seed_record(path, MiqReport.find_by(:filename => seed_filename(path)))
+    end
+
+    private
+
+    def seed_record(path, report)
+      report ||= MiqReport.new
+
+      # DB and filesystem have different precision so calling round is done in
+      # order to eliminate the second fractions diff otherwise the comparison
+      # of the file time and the report time from db will always be different.
+      mtime = File.mtime(path).utc.round
+      report.file_mtime = mtime
+
+      if report.new_record? || report.changed?
+        filename = seed_filename(path)
+
+        _log.info("#{report.new_record? ? "Creating" : "Updating"} MiqReport #{filename.inspect}")
+
+        yml  = YAML.load_file(path).symbolize_keys
+        name = yml[:menu_name].strip
+
+        attrs = yml.slice(*column_names_symbols)
+        attrs.delete(:id)
+        attrs[:filename]      = filename
+        attrs[:file_mtime]    = mtime
+        attrs[:name]          = name
+        attrs[:priority]      = File.basename(path).split("_").first.to_i
+        attrs[:rpt_group]     = File.basename(File.dirname(path)).split("_").last
+        attrs[:rpt_type]      = "Default"
+        attrs[:template_type] = template_type(path)
+
+        begin
+          report.update!(attrs)
+        rescue ActiveRecord::RecordInvalid
+          duplicate = find_by(:name => name)
+          if duplicate&.rpt_type == "Custom"
+            _log.warn("A custom report already exists with the name #{duplicate.name.inspect}.  Skipping...")
+          elsif duplicate
+            _log.warn("A default report named '#{duplicate.name.inspect}' loaded from '#{duplicate.filename}' already exists. Updating attributes of existing report...")
+            duplicate.update!(attrs)
+          else
+            raise
+          end
+        end
       end
     end
 
-    def sync_from_file(filename, dir, typ)
-      fd = File.open(filename)
-      fd.gets # throw away "--- !ruby/object:MIQ_Report \r\n"
-      yml = YAML.load(fd.read)
-      fd.close
+    def template_type(path)
+      File.dirname(path).include?("reports") ? "report" : "compare"
+    end
 
-      rpt = {}
-      column_names.each { |c| rpt[c.to_sym] = yml[c] }
-      rpt.delete :id
-      rpt[:name] = yml["menu_name"].strip
-      rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
-      rpt[:rpt_type] = "Default"
-      rpt[:filename] = filename.sub(dir + "/", "")
-      # DB and filesystem have different precision
-      # so calling round is done in order to eliminate the second fractions diff
-      # otherwise the comparison of the file time and the report time from db
-      # will always be different
-      rpt[:file_mtime] = File.mtime(filename).utc.round
-      rpt[:priority] = File.basename(filename).split("_").first.to_i
-      rpt[:template_type] = typ
-      rec = find_by_filename(rpt[:filename])
+    def seed_files
+      seed_core_files + seed_plugin_files
+    end
 
-      if rec
-        if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < rpt[:file_mtime])
-          _log.info("#{typ.titleize}: [#{rec.name}] file has been updated on disk, synchronizing with model")
-          rec.update_attributes(rpt)
-          rec.save
-        end
+    def seed_core_files
+      [REPORT_DIR, COMPARE_DIR].flat_map { |dir| Dir.glob(dir.join("**", "*.yaml")).sort }
+    end
+
+    def seed_plugin_files
+      Vmdb::Plugins.flat_map do |plugin|
+        %w[reports compare].flat_map { |dir| Dir.glob(plugin.root.join("content", dir, "**", "*.yaml")).sort }
+      end
+    end
+
+    def seed_filename(path)
+      if File.dirname(path).include?("reports")
+        path.split("reports/").last
+      elsif File.dirname(path).include?("compare")
+        path.split("compare/").last
       else
-        _log.info("#{typ.titleize}: [#{rpt[:name]}] file has been added to disk, adding to model")
-        create(rpt)
+        path
       end
     end
   end

@@ -11,11 +11,11 @@ module ManageIQ::Providers::StorageManager::SwiftManager::RefreshParser::CrossLi
     end
 
     def cross_link
-      @data[:cloud_object_store_containers].each do |container_hash|
+      @data[:cloud_object_store_containers]&.each do |container_hash|
         link_to_tenant(container_hash)
       end
 
-      @data[:cloud_object_store_objects].each do |object_hash|
+      @data[:cloud_object_store_objects]&.each do |object_hash|
         link_to_tenant(object_hash)
       end
     end
@@ -24,10 +24,10 @@ module ManageIQ::Providers::StorageManager::SwiftManager::RefreshParser::CrossLi
       tenant_id = hash[:tenant_id]
       tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == tenant_id }
       unless tenant
-        _log.info "EMS: #{@parent_ems.name}, tenant not found: #{tenant_id}"
+        _log.info("EMS: #{@parent_ems.name}, tenant not found: #{tenant_id}")
         return
       end
-      _log.debug "Found tenant: #{tenant_id}, id = #{tenant.id}"
+      _log.debug("Found tenant: #{tenant_id}, id = #{tenant.id}")
 
       hash[:cloud_tenant_id] = tenant.id
     end

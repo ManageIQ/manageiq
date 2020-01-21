@@ -1,9 +1,0 @@
-%script{:type => "text/javascript"}
-  var ManageIQ.calendar.calDateFrom = new Date(#{@perf_options[:sdate]});
-  var ManageIQ.calendar.calDateTo = new Date(#{@perf_options[:edate]});
-  - if WidgetPresenter.chart_data.present?
-    ManageIQ.charts.chartData = #{WidgetPresenter.chart_data.to_json};
-
-= render :partial => "layouts/flash_msg"
-= render :partial => "layouts/perf_options"
-= render :partial => "layouts/perf_charts"

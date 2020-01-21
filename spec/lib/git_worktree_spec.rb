@@ -29,15 +29,17 @@ describe GitWorktree do
       @ae_db.instance_variable_get('@repo').head.target.oid
     end
 
-    def clone(url)
+    def clone(url, add_options = {})
       dir = Dir.mktmpdir
-      options = {:path          => dir,
-                 :url           => url,
-                 :username      => "user1",
-                 :email         => "user1@example.com",
-                 :ssl_no_verify => true,
-                 :bare          => true,
-                 :clone         => true}
+      options = {
+        :path          => dir,
+        :url           => url,
+        :username      => "user1",
+        :email         => "user1@example.com",
+        :ssl_no_verify => true,
+        :bare          => true,
+        :clone         => true
+      }.merge(add_options)
       return dir, GitWorktree.new(options)
     end
 
@@ -72,7 +74,7 @@ describe GitWorktree do
 
     it "#read_file that exists" do
       fname = 'A/File1.YamL'
-      expect(YAML.load(@ae_db.read_file(fname))).to have_attributes(@default_hash.merge(:fname => fname))
+      expect(YAML.load(@ae_db.read_file(fname))).to eq(@default_hash.merge(:fname => fname))
     end
 
     it "#file_attributes" do
@@ -234,6 +236,28 @@ describe GitWorktree do
       expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
+
+    context "with proxy options" do
+      let(:proxy_url) { "http://example.com/my_proxy" }
+
+      describe ".new" do
+        it "clones the repo using the proxy url" do
+          expect(Rugged::Repository).to receive(:clone_at).with(@master_url, anything, hash_including(:proxy_url => proxy_url))
+          clone(@master_url, :proxy_url => proxy_url)
+        end
+      end
+
+      describe "#pull (private)" do
+        it "fetches the repo with proxy options" do
+          _dir, worktree = clone(@master_url)
+          expect(worktree.instance_variable_get(:@repo)).to receive(:fetch).with("origin", hash_including(:proxy_url => proxy_url))
+
+          worktree.instance_variable_set(:@proxy_url, proxy_url)
+
+          worktree.send(:pull)
+        end
+      end
+    end
   end
 
   describe "git branches" do
@@ -275,6 +299,25 @@ describe GitWorktree do
     end
   end
 
+  describe "git branches with no master" do
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/no_master.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    describe "#branches" do
+      it "all branches" do
+        expect(test_repo.branches).to match_array(%w(branch1 branch2))
+      end
+    end
+
+    describe "#file_list" do
+      it "get list of files in a branch" do
+        test_repo.branch = 'branch2'
+
+        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+      end
+    end
+  end
+
   describe 'git tags' do
     let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
     let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
@@ -301,6 +344,95 @@ describe GitWorktree do
     describe "#tag" do
       it "non existent tag" do
         expect { test_repo.tag = 'nada' }.to raise_exception(GitWorktreeException::TagMissing)
+      end
+    end
+  end
+
+  describe "#new" do
+    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+
+    it "raises an exception if SSH requested, but rugged is not compiled with SSH support" do
+      require "rugged"
+      expect(Rugged).to receive(:features).and_return([:threads, :https])
+
+      expect {
+        GitWorktree.new(:path => git_repo_path, :ssh_private_key => "fake key\nfile content")
+      }.to raise_error(GitWorktreeException::InvalidCredentialType)
+    end
+  end
+
+  describe "#with_remote_options" do
+    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+
+    subject do
+      repo.with_remote_options do |cred_options|
+        cred_options[:credentials].call("url", nil, [])
+      end
+    end
+
+    describe "via plaintext" do
+      let(:repo) { described_class.new(:path => git_repo_path.to_s, :username => username, :password => password) }
+      let(:username) { "fred" }
+      let(:password) { "pa$$w0rd" }
+
+      it "with both username and password" do
+        expect(subject).to be_a Rugged::Credentials::UserPassword
+      end
+
+      context "with no username" do
+        let(:username) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username and password for/)
+        end
+      end
+
+      context "with no password" do
+        let(:password) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username and password for/)
+        end
+      end
+    end
+
+    describe "via SSH" do
+      let(:repo) { described_class.new(:path => git_repo_path.to_s, :username => username, :ssh_private_key => ssh_private_key, :password => password) }
+      let(:username) { "git" }
+      let(:ssh_private_key) { "fake key\nfile content" }
+      let(:password) { "pa$$w0rd" }
+
+      before do
+        require "rugged"
+        allow(Rugged).to receive(:features).and_return([:threads, :https, :ssh])
+      end
+
+      it "with username, ssh_private_key, and password" do
+        expect(subject).to be_a Rugged::Credentials::SshKey
+      end
+
+      context "with no username" do
+        let(:username) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username for/)
+        end
+      end
+
+      context "with no password" do
+        let(:password) { nil }
+
+        it "creates a password-less ssh key cred" do
+          expect(subject).to be_a Rugged::Credentials::SshKey
+        end
+      end
+
+      context "with no ssh_private_key" do
+        let(:ssh_private_key) { nil }
+
+        it "treats it like a user/pass" do
+          expect(subject).to be_a Rugged::Credentials::UserPassword
+        end
       end
     end
   end

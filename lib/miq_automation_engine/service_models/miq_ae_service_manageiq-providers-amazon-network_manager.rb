@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Amazon_NetworkManager < MiqAeServiceManageIQ_Providers_NetworkManager
-  end
-end

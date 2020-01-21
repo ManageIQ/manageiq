@@ -10,10 +10,16 @@ module Vmdb
         @domains
       end
 
+      def self.paths
+        @paths ||= []
+        @paths
+      end
+
       def self.add_domain(name, path, type = :po)
         domains << FastGettext::TranslationRepository.build(name, :path           => path,
                                                                   :type           => type,
                                                                   :report_warning => false)
+        paths << path
       end
 
       def self.initialize_chain_repo

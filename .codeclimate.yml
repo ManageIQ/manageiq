@@ -1,73 +1,42 @@
 ---
-exclude_paths:
-- ".git/"
-- "**.gif"
-- "**.html"
-- "**.json"
-- "**.png"
-- "**.svg"
-- "**.xml"
-- "**.yaml"
-- "**.yml"
-- "app/assets/javascripts/dhtmlx*/"
-- "config/dictionary_strings.rb"
-- "config/model_attributes.rb"
-- "config/yaml_strings.rb"
-- "db/schema.rb"
-- "db/schema.yml"
-- "db/fixtures/**/*.yml"
-- "db/migrate/20130923182042_collapsed_initial_migration.rb"
-- "gems/pending/spec/"
-- "gems/pending/test/"
-- "gems/pending/*/test/"
-- "gems/pending/metadata/linux/test/Packages"
-- "gems/pending/metadata/linux/test/tc_LinuxUtils.rb"
-- "gems/pending/VcoWebService/vmwo.wsdl"
-- "gems/pending/VMwareWebService/wsdl41/"
-- "locale/"
-- "public/javascripts/timeline/"
-- "spec/"
-- "test/"
-- "tmp/"
-- "vendor/assets/"
-engines:
-  brakeman:
-    # very slow :sad_panda:
+version: '2'
+prepare:
+  fetch:
+  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
+    path: ".rubocop_base.yml"
+  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_cc_base.yml
+    path: ".rubocop_cc_base.yml"
+checks:
+  argument-count:
     enabled: false
-  bundler-audit:
-    # requires Gemfile.lock
+  complex-logic:
     enabled: false
-  csslint:
+  file-lines:
     enabled: false
-  duplication:
-    enabled: true
+  method-complexity:
     config:
-      languages:
-      - ruby
-      - javascript
-  eslint:
-    enabled: true
-    channel: "eslint-3"
-  fixme:
-    # let's enable later
+      threshold: 11
+  method-count:
     enabled: false
-  markdownlint:
-    # let's enable later
+  method-lines:
     enabled: false
+  nested-control-flow:
+    enabled: false
+  return-statements:
+    enabled: false
+plugins:
   rubocop:
     enabled: true
-    config: '.rubocop_cc.yml'
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
-  - "**.rake"
-  - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.css"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
+    config: ".rubocop_cc.yml"
+    channel: 'rubocop-0-69'
+exclude_patterns:
+- config/dictionary_strings.rb
+- config/model_attributes.rb
+- config/yaml_strings.rb
+- db/schema.rb
+- lib/generators/**/templates/
+- node_modules/
+- spec/
+- test/
+- tmp/
+- vendor/

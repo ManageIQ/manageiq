@@ -11,13 +11,12 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
       if ems.nil?
         queue_name.titleize
       else
-        _("Event Monitor for %{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_systems"),
-                                                    :name  => ems.name}
+        _("Event Monitor for Provider: %{name}") % {:name => ems.name}
       end
     end
   end
 
-  def self.ems_class
-    parent
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_EVENT_CATCHERS
   end
 end

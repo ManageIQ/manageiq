@@ -10,13 +10,13 @@ describe ResourceSharer do
     end
 
     let(:user) do
-      FactoryGirl.create(:user,
+      FactoryBot.create(:user,
                          :role     => "user",
                          :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
-    let(:resource_to_be_shared) { FactoryGirl.create(:miq_template) }
-    let(:tenants) { [FactoryGirl.create(:tenant)] }
+    let(:resource_to_be_shared) { FactoryBot.create(:miq_template) }
+    let(:tenants) { [FactoryBot.create(:tenant)] }
     let(:features) { :all }
 
     context "with valid arguments" do
@@ -75,24 +75,26 @@ describe ResourceSharer do
     end
 
     context "with an invalid resource" do
-      let(:resource_to_be_shared) { FactoryGirl.build(:miq_group) }
+      let(:resource_to_be_shared) { FactoryBot.build(:miq_group) }
 
       it "is invalid" do
-        expect(subject).not_to be_valid
-        expect(subject.errors.full_messages).to include(a_string_including("Resource is not sharable"))
+        User.with_user(user) do
+          expect(subject).not_to be_valid
+          expect(subject.errors.full_messages).to include(a_string_including("Resource is not sharable"))
+        end
       end
     end
 
     context "attempting to share a resource the user doesn't have access to via RBAC" do
       let(:user) do
-        FactoryGirl.create(:user,
+        FactoryBot.create(:user,
                            :role     => "user",
                            :features => user_allowed_feature,
-                           :tenant   => FactoryGirl.create(:tenant, :name => "Tenant under root"))
+                           :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"))
       end
       let(:resource_to_be_shared) do
-        FactoryGirl.create(:miq_template,
-                           :tenant => FactoryGirl.create(:tenant,
+        FactoryBot.create(:miq_template,
+                           :tenant => FactoryBot.create(:tenant,
                                                          :name => "Sibling tenant"))
       end
       let(:tenants) { [user.current_tenant] } # Attempt to share a resource in Sibling tenant to one's own tenant
@@ -106,7 +108,7 @@ describe ResourceSharer do
     end
 
     context "with tenants that aren't tenants" do
-      let(:tenants) { [FactoryGirl.build(:miq_group)] }
+      let(:tenants) { [FactoryBot.build(:miq_group)] }
 
       it "is invalid" do
         expect(subject).not_to be_valid

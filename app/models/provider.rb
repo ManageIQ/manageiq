@@ -3,7 +3,9 @@ class Provider < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
+  include SupportsFeatureMixin
   include TenancyMixin
+  include UuidMixin
 
   belongs_to :tenant
   belongs_to :zone
@@ -17,8 +19,11 @@ class Provider < ApplicationRecord
            :url,
            :to => :default_endpoint
 
+  virtual_column :url,               :type => :string, :uses => :endpoints
   virtual_column :verify_ssl,        :type => :integer
   virtual_column :security_protocol, :type => :string
+
+  supports :refresh_ems
 
   def self.leaf_subclasses
     descendants.select { |d| d.subclasses.empty? }
@@ -32,6 +37,10 @@ class Provider < ApplicationRecord
 
   def self.short_token
     parent.name.demodulize
+  end
+
+  def self.api_allowed_attributes
+    %w[]
   end
 
   def image_name
@@ -54,13 +63,45 @@ class Provider < ApplicationRecord
   end
   alias_method :zone_name, :my_zone
 
-  def refresh_ems
+  def refresh_ems(opts = {})
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "provider")}
+      raise _("no Provider credentials defined")
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
+      raise _("Provider failed last authentication check")
     end
-    managers.each { |manager| EmsRefresh.queue_refresh(manager) }
+    managers.flat_map { |manager| EmsRefresh.queue_refresh(manager, nil, opts) }
+  end
+
+  def self.destroy_queue(ids)
+    find(ids).each(&:destroy_queue)
+  end
+
+  def destroy_queue
+    msg = "Destroying #{self.class.name} with id: #{id}"
+
+    _log.info(msg)
+    task = MiqTask.create(
+      :name    => msg,
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => msg,
+    )
+    self.class._queue_task('destroy', [id], task.id)
+    task.id
+  end
+
+  def destroy(task_id = nil)
+    _log.info("To destroy managers of provider: #{self.class.name} with id: #{id}")
+    managers.each(&:destroy)
+
+    _log.info("To destroy provider: #{self.class.name} with id: #{id}")
+    super().tap do
+      if task_id
+        msg = "#{self.class.name} with id: #{id} destroyed"
+        MiqTask.update_status(task_id, MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, msg)
+        _log.info(msg)
+      end
+    end
   end
 end

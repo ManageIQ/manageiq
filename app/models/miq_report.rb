@@ -40,26 +40,33 @@ class MiqReport < ApplicationRecord
   belongs_to                :user
   has_many                  :miq_widgets, :as => :resource
 
+  virtual_column  :human_expression, :type => :string
+  virtual_column  :based_on, :type => :string
+
+  alias_attribute :menu_name, :name
+  attr_accessor :ext_options
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
-                           :report_run_time, :chart
+                           :report_run_time, :chart, :skip_references
 
   attr_accessor_that_yamls :reserved # For legacy imports
 
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
+  IMPORT_CLASS_NAMES = %w(MiqReport).freeze
 
-  def self.filter_with_report_results_by(miq_group_ids)
-    miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
-
-    if miq_group_ids.nil?
-      miq_group_relation = where.not(miq_group_condition)
+  scope :for_user, lambda { |user|
+    if user.report_admin_user?
+      all
     else
-      miq_group_relation = where(miq_group_condition)
+      where(
+        arel_table[:rpt_type].eq('Custom').and(arel_table[:miq_group_id].in(user.current_tenant.miq_groups.pluck(:id)))
+        .or(
+          arel_table[:rpt_type].eq('Default')
+        )
+      )
     end
-
-    miq_group_relation.joins(:miq_report_results).distinct
-  end
+  }
 
   # Scope on reports that have report results.
   #
@@ -71,8 +78,7 @@ class MiqReport < ApplicationRecord
     miq_group_ids = options[:miq_groups].collect(&:id) unless options[:miq_groups].nil?
 
     miq_group_ids ||= options[:miq_group_ids]
-
-    q = filter_with_report_results_by(miq_group_ids)
+    q = joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
 
     if options[:select]
       cols = options[:select].to_miq_a
@@ -86,6 +92,14 @@ class MiqReport < ApplicationRecord
   # NOTE: this can by dynamically manipulated
   def cols
     self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
+  end
+
+  def human_expression
+    conditions.to_human
+  end
+
+  def based_on
+    Dictionary.gettext(db, :type => :model, :notfound => :titleize)
   end
 
   def view_filter_columns
@@ -109,50 +123,20 @@ class MiqReport < ApplicationRecord
     reports.each_with_object({}) { |report, hash| hash[report.name] = report.id }
   end
 
-  def self.get_col_type(path)
-    MiqExpression.get_col_type(path)
-  end
-
   def self.get_col_info(path)
-    data_type = get_col_type(path)
+    data_type = MiqExpression.parse_field_or_tag(path).try(:column_type)
     {
       :data_type         => data_type,
       :available_formats => get_available_formats(path, data_type),
-      :default_format    => get_default_format(path, data_type),
+      :default_format    => Formats.default_format_for_path(path, data_type),
       :numeric           => [:integer, :decimal, :fixnum, :float].include?(data_type)
     }
-  end
-
-  def self.display_filter_details(cols, mode)
-    # mode => :field || :tag
-    # Only return cols from has_many sub-tables
-    return [] if cols.nil?
-    cols.inject([]) do |r, c|
-      # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
-      parts = c.last.split(".")
-      parts[-1] = parts.last.split("-").first # Strip off field name from last element
-
-      if parts.last == "managed"
-        next(r) unless mode == :tag
-        parts.pop # Remove "managed" from tail andjust just evaluate relationship
-      else
-        next(r) unless mode == :field
-      end
-
-      model = parts.shift
-      relats = MiqExpression.get_relats(model)
-      # Build relats hash fetch path like: [:reflections, :hardware, :reflections, :disks, :parent, :multivalue]
-      path = parts.inject([]) { |a, p| a << :reflections; a << p.to_sym }
-      path += [:parent, :multivalue]
-      multi = relats.fetch_path(*path)
-      multi == true ? r << c : r
-    end
   end
 
   def list_schedules
     exp = MiqExpression.new("=" => {"field" => "MiqReport-id",
                                     "value" => id})
-    MiqSchedule.filter_matches_with exp
+    MiqSchedule.filter_matches_with(exp)
   end
 
   def add_schedule(data)
@@ -162,10 +146,10 @@ class MiqReport < ApplicationRecord
 
     params['filter'] = MiqExpression.new("=" => {"field" => "MiqReport-id",
                                                  "value" => id})
-    params['towhat'] = "MiqReport"
+    params['resource_type'] = "MiqReport"
     params['prod_default'] = "system"
 
-    MiqSchedule.create! params
+    MiqSchedule.create!(params)
   end
 
   def db_class
@@ -174,7 +158,7 @@ class MiqReport < ApplicationRecord
 
   def contains_records?
     (extras.key?(:total_html_rows) && extras[:total_html_rows] > 0) ||
-      (table && table.data.length > 0)
+      (table && !table.data.empty?)
   end
 
   def to_hash
@@ -194,6 +178,27 @@ class MiqReport < ApplicationRecord
     sortby ? col_order.index(sortby.first) : 0
   end
 
+  def column_is_hidden?(col, controller = nil)
+    return false unless col_options
+
+    @hidden_cols ||= col_options.keys.each_with_object([]) do |c, a|
+      if col_options[c][:hidden]
+        a << c
+      else
+        display_method = col_options[c][:display_method]&.to_sym
+        is_display_method_available = defined?(controller.class::DISPLAY_GTL_METHODS) && controller.class::DISPLAY_GTL_METHODS.include?(display_method) && controller.respond_to?(display_method)
+
+        if controller && display_method && is_display_method_available
+          # when this display_method returns true it means that column is displayed
+          is_column_hidden = !controller.try(display_method)
+          a << c if is_column_hidden
+        end
+      end
+    end
+
+    @hidden_cols.include?(col.to_s)
+  end
+
   def self.from_hash(h)
     new(h)
   end
@@ -202,11 +207,15 @@ class MiqReport < ApplicationRecord
     rpt_options.try(:fetch_path, :pdf, :page_size) || "a4"
   end
 
-  def load_custom_attributes
-    klass = db.safe_constantize
-    return unless klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
+  def all_custom_attributes_are_virtual_sql_attributes?
+    ca_va_cols = CustomAttributeMixin.select_virtual_custom_attributes(cols)
+    ca_va_cols.all? { |custom_attribute| va_sql_cols.include?(custom_attribute) }
+  end
 
-    klass.load_custom_attributes_for(cols.uniq)
+  def load_custom_attributes
+    return unless db_klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
+
+    db_klass.load_custom_attributes_for(cols.uniq)
   end
 
   # this method adds :custom_attributes => {} to MiqReport#include
@@ -222,5 +231,95 @@ class MiqReport < ApplicationRecord
   def remove_loading_relations_for_virtual_custom_attributes
     vc_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
     include.delete(:custom_attributes) if vc_attributes.present? && include && include[:custom_attributes].blank?
+  end
+
+  # determine name column from headers for x-axis in chart
+  def chart_header_column
+    if graph[:column].blank?
+      _log.error("The column for the chart's x-axis must be defined in the report")
+      return
+    end
+
+    chart_column = MiqExpression::Field.parse(graph[:column]).column
+    column_index = col_order.index { |col| col.include?(chart_column) }
+    headers[column_index]
+  end
+
+  def self.display_name(number = 1)
+    n_('Report', 'Reports', number)
+  end
+
+  def userid=(_userid)
+    # Stubbed method to handle 'userid' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
+  end
+
+  def group_description=(_group_description)
+    # Stubbed method to handle 'group_description' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
+  end
+
+  def columns_for_sorting(columns)
+    columns = columns.split(",") if columns && columns.kind_of?(String)
+
+    columns || sortby || col_order
+  end
+
+  def validate_sorting_columns(columns)
+    validate_columns(columns_for_sorting(columns))
+  end
+
+  def validate_columns(sorting_columns)
+    Array(sorting_columns).collect do |attr|
+      if col_order&.include?(attr)
+        attr
+      else
+        raise ArgumentError, N_("%{attribute} is not a valid attribute for %{name}") % {:attribute => attr, :name => name}
+      end
+    end.compact
+  end
+
+  def col_format_hash
+    @col_format_hash ||= col_order.zip(col_formats).to_h
+  end
+
+  def format_row(row, allowed_columns = nil, expand_value_format = nil)
+    tz = get_time_zone(User.current_user.settings.fetch_path(:display, :timezone).presence || Time.zone)
+    row.map do |key, _|
+      value = allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, tz, col_format_hash[key]) : row[key]
+      [key, expand_value_format.present? ? { :value => value, :style_class => get_style_class(key, row, tz) } : value]
+    end.to_h
+  end
+
+  def format_result_set(result_set, skip_columns = nil, hash_value_format = nil)
+    result_set.map { |row| format_row(row, skip_columns, hash_value_format) }
+  end
+
+  def filter_result_set_record(record, filter_options)
+    filter_options.all? { |column, search_string| record[column].include?(search_string) }
+  end
+
+  def filter_result_set(result_set, filter_options)
+    validated_filter_columns = validate_columns(filter_options.keys)
+    formatted_result_set = format_result_set(result_set, validated_filter_columns)
+    result_set_filtered = formatted_result_set.select { |record| filter_result_set_record(record, filter_options) }
+
+    [result_set_filtered, result_set_filtered.count]
+  end
+
+  def self.default_use_sql_view
+    ::Settings.reporting.use_sql_view
+  end
+
+  private
+
+  def va_sql_cols
+    @va_sql_cols ||= cols.select do |col|
+      db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
+    end
+  end
+
+  def db_klass
+    @db_klass ||= db.kind_of?(Class) ? db : Object.const_get(db)
   end
 end

@@ -1,29 +1,29 @@
---- 
-where_clause: 
+---
+where_clause:
 dims: 1
 created_on: 2009-09-30 16:47:56.947000 Z
-reserved: 
+reserved:
 title: "VMs with Volume Free Space > 75% by Line of Business"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    FIND: 
-      search: 
-        IS NOT EMPTY: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    FIND:
+      search:
+        IS NOT EMPTY:
           field: Vm.hardware.volumes-name
-      checkany: 
-        ">": 
+      checkany:
+        ">":
           field: Vm.hardware.volumes-free_space_percent
           value: 75
 updated_on: 2009-10-19 22:17:09.677000 Z
 order: Descending
-graph: 
+graph:
   :other: false
-  :type: PieThreed
+  :type: Pie
   :count: "8"
 menu_name: "VMs w/Free Space > 75% by LOB"
 rpt_group: Custom
 priority: 5
-col_order: 
+col_order:
 - managed.lob
 - name
 - v_owning_cluster
@@ -35,19 +35,19 @@ col_order:
 - hardware.volumes.used_space_percent
 - hardware.volumes.used_space
 - hardware.volumes.filesystem
-timeline: 
+timeline:
 id: 102
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-include: 
-  hardware: 
-    include: 
-      volumes: 
-        columns: 
+include:
+  hardware:
+    include:
+      volumes:
+        columns:
         - name
         - free_space_percent
         - free_space
@@ -55,22 +55,22 @@ include:
         - used_space_percent
         - used_space
         - filesystem
-  managed: 
-    columns: 
+  managed:
+    columns:
     - lob
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_owning_cluster
 template_type: report
 group: c
-sortby: 
+sortby:
 - managed.lob
 - hardware.volumes.free_space_percent
-headers: 
+headers:
 - Line of Business
 - Name
 - Parent Cluster

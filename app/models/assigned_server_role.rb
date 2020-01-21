@@ -2,30 +2,19 @@ class AssignedServerRole < ApplicationRecord
   belongs_to :miq_server
   belongs_to :server_role
 
-  before_save :massage_active_field
+  default_value_for :active, false
+
+  delegate :master_supported?, :name, :to => :server_role
 
   HIGH_PRIORITY        = 1
   MEDIUM_PRIORITY      = 2
   LOW_PRIORITY         = 3
   DEFAULT_PRIORITY     = MEDIUM_PRIORITY
   AVAILABLE_PRIORITIES = [HIGH_PRIORITY,  MEDIUM_PRIORITY, LOW_PRIORITY]
-  validates_inclusion_of :priority, :in => AVAILABLE_PRIORITIES, :allow_nil => true
-
-  def massage_active_field
-    self.active = false if active.nil?
-    nil
-  end
-
-  delegate :name, :to => :server_role
+  validates :priority, :inclusion => {:in => AVAILABLE_PRIORITIES}, :allow_nil => true
 
   def reset
-    update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
-  end
-
-  delegate :master_supported?, :to => :server_role
-
-  def database_owner?
-    server_role == ServerRole.database_owner
+    update(:priority => DEFAULT_PRIORITY, :active => false)
   end
 
   def is_master?
@@ -134,14 +123,14 @@ class AssignedServerRole < ApplicationRecord
   def activate(override = false)
     if override || self.inactive?
       _log.info("Activating Role <#{server_role.name}> on Server <#{miq_server.name}>")
-      update_attributes(:active => true)
+      update(:active => true)
     end
   end
 
   def deactivate(override = false)
     if override || self.active?
       _log.info("Deactivating Role <#{server_role.name}> on Server <#{miq_server.name}>")
-      update_attributes(:active => false)
+      update(:active => false)
     end
   end
 end

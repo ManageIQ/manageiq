@@ -22,8 +22,14 @@ class ServiceTemplateProvisionRequest < MiqRequest
   delegate :picture, :to => :service_template, :allow_nil => true
 
   alias_method :user, :get_user
+  include MiqProvisionQuotaMixin
 
   def process_service_order
+    if cancel_requested?
+      do_cancel
+      return
+    end
+
     case options[:cart_state]
     when ServiceOrder::STATE_ORDERED
       ServiceOrder.order_immediately(self, requester)
@@ -32,11 +38,12 @@ class ServiceTemplateProvisionRequest < MiqRequest
     end
   end
 
-  def my_role
-    'ems_operations'
+  def my_role(action = nil)
+    action == :create_request_tasks ? 'automate' : 'ems_operations'
   end
 
   def my_zone
+    @my_zone ||= dialog_zone || service_template.my_zone
   end
 
   def provision_dialog
@@ -49,6 +56,10 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   def customize_request_task_attributes(req_task_attrs, idx)
     req_task_attrs['options'][:pass] = idx
+  end
+
+  def originating_controller
+    "service"
   end
 
   def my_records

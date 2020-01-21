@@ -1,16 +1,16 @@
 describe ServerRole do
   context "Without Seeding" do
-    before(:each) do
+    before do
       @server_roles = []
       [
         ['event',                   1],
         ['ems_metrics_coordinator', 1],
         ['ems_operations',          0]
-      ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
+      ].each { |r, max| @server_roles << FactoryBot.create(:server_role, :name => r, :max_concurrent => max) }
     end
 
     it "validates uniqueness of name" do
-      expect { FactoryGirl.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryBot.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should return all names" do
@@ -27,7 +27,7 @@ describe ServerRole do
   end
 
   context "With Seeding" do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region
@@ -39,14 +39,14 @@ describe ServerRole do
         ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
         ems_operations,Management System Operations,0,false,zone
         event,Event Monitor,1,false,zone
+        internet_connectivity,Internet Connectivity,0,false,region
         notifier,Alert Processor,1,false,region
         reporting,Reporting,0,false,region
         scheduler,Scheduler,1,false,region
         smartproxy,SmartProxy,0,false,zone
         smartstate,SmartState Analysis,0,false,zone
-        storage_inventory,Storage Inventory,1,false,zone
         user_interface,User Interface,0,false,region
-        websocket,Websocket,0,false,region
+        remote_console,Remote Consoles,0,false,region
         web_services,Web Services,0,false,region
       CSV
 
@@ -61,14 +61,14 @@ describe ServerRole do
 
     it "should import rows properly" do
       roles = @csv.split("\n")
-      cols  = roles.shift
+      roles.shift
       roles.each do |role|
         next if role =~ /^#.*$/ # skip commented lines
         name, description, max_concurrent, external_failover, role_scope = role.split(',')
         max_concurrent = max_concurrent.to_i
         external_failover = true  if external_failover == 'true'
         external_failover = false if external_failover == 'false'
-        sr = ServerRole.find_by_name(name)
+        sr = ServerRole.find_by(:name => name)
         expect(sr.description).to eq(description)
         expect(sr.max_concurrent).to eq(max_concurrent)
         expect(sr.external_failover).to eq(external_failover)

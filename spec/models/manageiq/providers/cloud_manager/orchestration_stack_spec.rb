@@ -1,17 +1,43 @@
 describe ManageIQ::Providers::CloudManager::OrchestrationStack do
   let!(:root_stack) do
-    FactoryGirl.create(:orchestration_stack_cloud).tap do |stack|
-      FactoryGirl.create(:vm_cloud, :orchestration_stack => stack)
-      FactoryGirl.create(:cloud_network, :orchestration_stack => stack)
-      FactoryGirl.create(:security_group, :orchestration_stack => stack)
+    FactoryBot.create(:orchestration_stack_cloud).tap do |stack|
+      FactoryBot.create(:vm_cloud, :orchestration_stack => stack)
+      FactoryBot.create(:cloud_network, :orchestration_stack => stack)
+      FactoryBot.create(:security_group, :orchestration_stack => stack)
     end
   end
 
   let!(:child_stack) do
-    FactoryGirl.create(:orchestration_stack_cloud, :parent => root_stack).tap do |stack|
-      FactoryGirl.create(:vm_cloud, :orchestration_stack => stack)
-      FactoryGirl.create(:cloud_network, :orchestration_stack => stack)
-      FactoryGirl.create(:security_group, :orchestration_stack => stack)
+    FactoryBot.create(:orchestration_stack_cloud, :parent => root_stack).tap do |stack|
+      FactoryBot.create(:vm_cloud, :orchestration_stack => stack)
+      FactoryBot.create(:cloud_network, :orchestration_stack => stack)
+      FactoryBot.create(:security_group, :orchestration_stack => stack)
+    end
+  end
+
+  describe 'set_tenant_from_group' do
+    before { Tenant.seed }
+    let(:tenant1) { FactoryBot.create(:tenant) }
+    let(:tenant2) { FactoryBot.create(:tenant) }
+    let(:group1) { FactoryBot.create(:miq_group, :tenant => tenant1) }
+    let(:group2) { FactoryBot.create(:miq_group, :tenant => tenant2) }
+
+    it "assigns the tenant from the group" do
+      expect(FactoryBot.create(:orchestration_stack, :miq_group => group1).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group_id" do
+      expect(FactoryBot.create(:orchestration_stack, :miq_group_id => group1.id).tenant).to eq(tenant1)
+    end
+
+    it "assigns the tenant from the group over the tenant" do
+      expect(FactoryBot.create(:orchestration_stack, :miq_group => group1, :tenant_id => tenant2).tenant).to eq(tenant1)
+    end
+
+    it "changes the tenant after changing the group" do
+      stack = FactoryBot.create(:orchestration_stack, :miq_group => group1)
+      stack.update(:miq_group_id => group2.id)
+      expect(stack.tenant).to eq(tenant2)
     end
   end
 
@@ -36,8 +62,8 @@ describe ManageIQ::Providers::CloudManager::OrchestrationStack do
   end
 
   describe '#service and #direct_service' do
-    let(:root_service)  { FactoryGirl.create(:service) }
-    let(:child_service) { FactoryGirl.create(:service, :parent => root_service) }
+    let(:root_service)  { FactoryBot.create(:service) }
+    let(:child_service) { FactoryBot.create(:service, :parent => root_service) }
     before { child_service.add_resource!(root_stack) }
 
     it 'finds the service for the stack' do

@@ -2,12 +2,8 @@ require 'thread'
 
 class MiqScheduleWorker::Runner < MiqWorker::Runner
   include ActiveSupport::Callbacks
-  define_callbacks :dst_change
-  set_callback :dst_change, :after, :load_user_schedules
-
-  OPTIONS_PARSER_SETTINGS = MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
-    [:emsid, 'EMS Instance ID', String],
-  ]
+  define_callbacks(:dst_change)
+  set_callback(:dst_change, :after, :load_user_schedules)
 
   ROLES_NEEDING_RESTART = ["scheduler", "ems_metrics_coordinator", "event"]
   SCHEDULE_MEDIUM_PRIORITY = MiqQueue.priority(:normal, :higher, 10)
@@ -45,7 +41,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   end
 
   def enqueue(object)
-    @queue.enq object
+    @queue.enq(object)
   end
 
   def load_system_schedules
@@ -54,16 +50,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedules_for_database_operations_role
     schedules_for_ems_metrics_coordinator_role
     schedules_for_event_role
-    schedules_for_storage_metrics_coordinator_role
-    schedules_for_ldap_synchronization_role
   end
 
   def load_user_schedules
     sync_all_user_schedules if schedule_enabled?(:scheduler)
-  end
-
-  def worker_setting_or_default(keys, default = nil)
-    worker_settings.fetch_path(keys) || default
   end
 
   def schedule_enabled?(role)
@@ -81,169 +71,182 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedule_category = :schedules_for_all_roles
 
     # Schedule - Log current system configuration
-    every = worker_setting_or_default(:log_active_configuration_interval, 1.days)
-    scheduler.schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do
-      enqueue :vmdb_appliance_log_config
-    end
+    scheduler.schedule_every(
+      worker_settings[:log_active_configuration_interval],
+      :tags     => [:vmdb_appliance_log_config, schedule_category]
+    ) { enqueue(:vmdb_appliance_log_config) }
 
     # Schedule - Log current database statistics and bloat
-    every = worker_setting_or_default(:log_database_statistics_interval, 1.days)
-    scheduler.schedule_every(every, :tags => [:log_all_database_statistics, schedule_category]) do
-      enqueue :vmdb_database_log_all_database_statistics
-    end
+    scheduler.schedule_every(
+      worker_settings[:log_database_statistics_interval],
+      :tags     => [:log_all_database_statistics, schedule_category]
+    ) { enqueue(:vmdb_database_log_all_database_statistics) }
 
     # Schedule - Update Server Statistics
-    every = worker_setting_or_default(:server_stats_interval)
     scheduler.schedule_every(
-      every,
-      :first_in => every,
+      worker_settings[:server_stats_interval],
       :tags     => [:status_update, schedule_category]
-    ) { enqueue :miq_server_status_update }
+    ) { enqueue(:miq_server_status_update) }
 
     # Schedule - Log Server and Worker Statistics
-    every = worker_setting_or_default(:server_log_stats_interval)
     scheduler.schedule_every(
-      every,
-      :first_in => every,
+      worker_settings[:server_log_stats_interval],
       :tags     => [:log_status, schedule_category]
-    ) { enqueue :miq_server_worker_log_status }
+    ) { enqueue(:miq_server_worker_log_status) }
 
     # Schedule - Periodic logging of database statistics
-    interval = worker_setting_or_default(:db_diagnostics_interval, 30.minutes)
     scheduler.schedule_every(
-      interval,
+      worker_settings[:db_diagnostics_interval],
       :first_in => 1.minute,
       :tags     => [:log_statistics, schedule_category]
-    ) { enqueue :vmdb_database_connection_log_statistics }
+    ) { enqueue(:vmdb_database_connection_log_statistics) }
 
     # Schedule - Periodic check for updates on appliances only
     if MiqEnvironment::Command.is_appliance?
-      interval = worker_setting_or_default(:yum_update_check, 12.hours)
       scheduler.schedule_every(
-        interval,
+        worker_settings[:yum_update_check],
         :first_in => 1.minute,
         :tags     => [:server_updates, schedule_category]
-      ) { enqueue :miq_server_queue_update_registration_status }
-    end
-
-    # Schedule - Periodic resync of RHN Mirror
-    if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
-      interval = worker_setting_or_default(:resync_rhn_mirror, 12.hours)
-      scheduler.schedule_every(
-        interval,
-        :first_in => 1.minute,
-        :tags     => [:rhn_mirror, schedule_category]
-      ) { enqueue :miq_server_resync_rhn_mirror }
+      ) { enqueue(:miq_server_queue_update_registration_status) }
     end
 
     @schedules[:all]
   end
 
   def schedules_for_scheduler_role
-    # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
+    # These schedules need to run only once in a region per interval, so let the single scheduler role handle them
     return unless schedule_enabled?(:scheduler)
     scheduler = scheduler_for(:scheduler)
     # Schedule - Check for timed out jobs
-    every = worker_setting_or_default(:job_timeout_interval)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :job_check_jobs_for_timeout
+    scheduler.schedule_every(worker_settings[:job_timeout_interval]) do
+      enqueue(:job_check_jobs_for_timeout)
     end
 
-    # Schedule - Check for Retired Services
-    every = worker_setting_or_default(:service_retired_interval)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :service_retirement_check
-    end
-
-    # Schedule - Check for Retired VMs
-    every = worker_setting_or_default(:vm_retired_interval)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :vm_retirement_check
-    end
-
-    # Schedule - Check for Retired Orchestration Stacks
-    every = worker_setting_or_default(:orchestration_stack_retired_interval)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :orchestration_stack_retirement_check
-    end
-
-    # Schedule - Check for Retired Load Balancers
-    every = worker_setting_or_default(:load_balancer_retired_interval)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue :load_balancer_retirement_check
+    # Schedule - Check for retired items and start retirement
+    # TODO: remove redundant settings in follow-up pr
+    every = [worker_settings[:service_retired_interval], worker_settings[:vm_retired_interval], worker_settings[:orchestration_stack_retired_interval]].min
+    scheduler.schedule_every(every) do
+      enqueue(:retirement_check)
     end
 
     # Schedule - Periodic validation of authentications
-    every = worker_setting_or_default(:authentication_check_interval, 1.day)
-    scheduler.schedule_every(every, :first_in => every) do
+    scheduler.schedule_every(worker_settings[:authentication_check_interval]) do
       # Queue authentication checks for CIs with credentials
-      enqueue :host_authentication_check_schedule
-      enqueue :ems_authentication_check_schedule
-      enqueue :storage_authentication_check_schedule
+      enqueue(:host_authentication_check_schedule)
+      enqueue(:ems_authentication_check_schedule)
     end
 
-    # Schedule - Check for session timeouts
-    scheduler.schedule_every(worker_setting_or_default(:session_timeout_interval)) do
-      # Session is global to the region, therefore, run it only once on the scheduler's server
-      enqueue :session_check_session_timeout
+    scheduler.schedule_every(worker_settings[:drift_state_purge_interval]) do
+      enqueue(:drift_state_purge_timer)
+    end
+
+    if Session.enabled?
+      # Schedule - Check for session timeouts
+      scheduler.schedule_every(worker_settings[:session_timeout_interval]) do
+        # Session is global to the region, therefore, run it only once on the scheduler's server
+        enqueue(:session_check_session_timeout)
+      end
     end
 
     # Schedule - Check for rogue EVM snapshots
-    every               = worker_setting_or_default(:evm_snapshot_interval, 1.hour)
-    job_not_found_delay = worker_setting_or_default(:evm_snapshot_delete_delay_for_job_not_found, 1.hour)
-    scheduler.schedule_every(every, :first_in => every) do
-      enqueue [:job_check_for_evm_snapshots, job_not_found_delay]
+    job_not_found_delay = worker_settings[:evm_snapshot_delete_delay_for_job_not_found]
+    scheduler.schedule_every(worker_settings[:evm_snapshot_interval]) do
+      enqueue([:job_check_for_evm_snapshots, job_not_found_delay])
     end
 
     # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
     # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
     # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time
-    scheduler.schedule_every(worker_setting_or_default(:job_proxy_dispatcher_interval)) do
-      enqueue :job_proxy_dispatcher_dispatch
+    scheduler.schedule_every(worker_settings[:job_proxy_dispatcher_interval]) do
+      enqueue(:job_proxy_dispatcher_dispatch)
     end
 
-    stale_interval = worker_setting_or_default(:job_proxy_dispatcher_stale_message_check_interval, 60.seconds)
-    threshold_seconds = worker_setting_or_default(:job_proxy_dispatcher_stale_message_timeout, 2.minutes)
+    stale_interval = worker_settings[:job_proxy_dispatcher_stale_message_check_interval]
+    threshold_seconds = worker_settings[:job_proxy_dispatcher_stale_message_timeout]
     scheduler.schedule_every(stale_interval) do
-      enqueue [:check_for_stuck_dispatch, threshold_seconds]
+      enqueue([:check_for_stuck_dispatch, threshold_seconds])
     end
 
     # Schedule - Hourly Alert Evaluation Timer
     scheduler.schedule_every(1.hour, :first_in => 5.minutes) do
-      enqueue :miq_alert_evaluate_hourly_timer
+      enqueue(:miq_alert_evaluate_hourly_timer)
+    end
+
+    # Schedule - Prune old reports Timer
+    scheduler.schedule_every(worker_settings[:report_result_purge_interval]) do
+      enqueue(:miq_report_result_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:container_entities_purge_interval]) do
+      enqueue(:archived_entities_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:binary_blob_purge_interval]) do
+      enqueue(:binary_blob_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:notifications_purge_interval]) do
+      enqueue(:notification_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:task_purge_interval]) do
+      enqueue(:task_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:compliance_purge_interval]) do
+      enqueue(:compliance_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:vim_performance_states_purge_interval]) do
+      enqueue(:vim_performance_states_purge_timer)
+    end
+
+    scheduler.schedule_every(worker_settings[:queue_timeout_interval]) do
+      enqueue(:queue_miq_queue_check_for_timeout)
     end
 
     # Schedule every 24 hours
-    at = worker_setting_or_default(:storage_file_collection_time_utc)
-    if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
-      time_at = 1.day.from_now.utc.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    else
-      time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    end
+    at = worker_settings[:storage_file_collection_time_utc]
+    time_at = if Time.zone.today.to_time(:utc) + at.seconds < Time.now.utc
+                Time.zone.today.to_time(:utc) + at.seconds + 1.day
+              else
+                Time.zone.today.to_time(:utc) + at.seconds
+              end
     scheduler.schedule_every(
-      worker_setting_or_default(:storage_file_collection_interval),
+      worker_settings[:storage_file_collection_interval],
       :first_at => time_at
-    ) { enqueue :storage_scan_timer }
+    ) { enqueue(:storage_scan_timer) }
 
-    schedule_settings_for_ems_refresh.each do |klass, every|
-      scheduler.schedule_every(every, :first_in => every) do
-        enqueue [:ems_refresh_timer, klass]
+    schedule_settings_for_ems_refresh.each do |klass, local_every|
+      scheduler.schedule_every(local_every) do
+        enqueue([:ems_refresh_timer, klass])
       end
     end
 
-    # run run chargeback generation every day at specific time
+    # run chargeback generation every day at specific time
     schedule_chargeback_report_for_service_daily
+
+    schedule_check_for_task_timeout
+
     @schedules[:scheduler]
   end
 
+  def schedule_check_for_task_timeout
+    every = worker_settings[:task_timeout_check_frequency]
+    scheduler = scheduler_for(:scheduler)
+    scheduler.schedule_every(every, :first_at => Time.current + 1.minute) do
+      enqueue(:check_for_timed_out_active_tasks)
+    end
+  end
+
   def schedule_chargeback_report_for_service_daily
-    every = worker_setting_or_default(:chargeback_generation_interval, 1.day)
-    at = worker_setting_or_default(:chargeback_generation_time_utc, "01:00:00")
+    every = worker_settings[:chargeback_generation_interval]
+    at = worker_settings[:chargeback_generation_time_utc]
     time_at = Time.current.strftime("%Y-%m-%d #{at}").to_time(:utc)
     time_at += 1.day if time_at < Time.current + 1.hour
     scheduler = scheduler_for(:scheduler)
     scheduler.schedule_every(every, :first_at => time_at) do
-      enqueue [:generate_chargeback_for_service, :report_source => "Daily scheduler"]
+      enqueue([:generate_chargeback_for_service, :report_source => "Daily scheduler"])
     end
   end
 
@@ -251,48 +254,55 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
     return unless schedule_enabled?(:database_operations)
     scheduler = scheduler_for(:database_operations)
-    cfg = VMDB::Config.new("vmdb").config
 
-    sched = cfg.fetch_path(:database, :metrics_collection, :collection_schedule)
+    sched = ::Settings.database.metrics_collection.collection_schedule
     _log.info("database_metrics_collection_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_collection_schedule],
-    ) { enqueue :vmdb_database_capture_metrics_timer }
+    ) { enqueue(:vmdb_database_capture_metrics_timer) }
 
-    sched = cfg.fetch_path(:database, :metrics_collection, :daily_rollup_schedule)
+    sched = ::Settings.database.metrics_collection.daily_rollup_schedule
     _log.info("database_metrics_daily_rollup_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
-    ) { enqueue :vmdb_database_rollup_metrics_timer }
+    ) { enqueue(:vmdb_database_rollup_metrics_timer) }
 
-    sched = cfg.fetch_path(:database, :metrics_history, :purge_schedule)
+    sched = ::Settings.database.metrics_history.purge_schedule
     _log.info("database_metrics_purge_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_purge_schedule],
-    ) { enqueue :metric_purge_all_timer }
+    ) { enqueue(:metric_purge_all_timer) }
 
-    @schedules[:database_operations]
-  end
-
-  def schedules_for_ldap_synchronization_role
-    # These schedules need to run with the LDAP SYnchronizartion role
-    return unless schedule_enabled?(:ldap_synchronization)
-    scheduler = scheduler_for(:ldap_synchronization)
-    ldap_synchronization_schedule_default = "0 2 * * *"
-    ldap_synchronization_schedule         = [:ldap_synchronization, :ldap_synchronization_schedule]
-
-    sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
-    _log.info("ldap_synchronization_schedule: #{sched}")
-
+    sched = ::Settings.database.maintenance.reindex_schedule
+    _log.info("database_maintenance_reindex_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
-      :tags => [:ldap_synchronization, :ldap_synchronization_schedule],
-    ) { enqueue :ldap_server_sync_data_from_timer }
+      :tags => %i(database_operations database_maintenance_reindex_schedule),
+    ) { enqueue(:database_maintenance_reindex_timer) }
 
-    @schedules[:ldap_synchronization]
+    sched = ::Settings.database.maintenance.vacuum_schedule
+    _log.info("database_maintenance_vacuum_schedule: #{sched}")
+    scheduler.schedule_cron(
+      sched,
+      :tags => %i(database_operations database_maintenance_vacuum_schedule),
+    ) { enqueue(:database_maintenance_vacuum_timer) }
+
+    scheduler.schedule_every(
+      worker_settings[:performance_realtime_purging_interval],
+      :first_in => worker_settings[:performance_realtime_purging_start_delay],
+      :tags     => [:database_operations, :purge_realtime_timer]
+    ) { enqueue(:metric_purging_purge_realtime_timer) }
+
+    scheduler.schedule_every(
+      worker_settings[:performance_rollup_purging_interval],
+      :first_in => worker_settings[:performance_rollup_purging_start_delay],
+      :tags     => [:database_operations, :purge_rollup_timer]
+    ) { enqueue(:metric_purging_purge_rollup_timer) }
+
+    @schedules[:database_operations]
   end
 
   def schedules_for_ems_metrics_coordinator_role
@@ -300,29 +310,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     return unless schedule_enabled?("ems_metrics_coordinator")
     scheduler = scheduler_for(:ems_metrics_coordinator)
     # Schedule - Performance Collection and Performance Purging
-    every    = worker_setting_or_default(:performance_collection_interval, 3.minutes)
-    first_in = worker_setting_or_default(:performance_collection_start_delay, 5.minutes)
     scheduler.schedule_every(
-      every,
-      :first_in => first_in,
+      worker_settings[:performance_collection_interval],
+      :first_in => worker_settings[:performance_collection_start_delay],
       :tags     => [:ems_metrics_coordinator, :perf_capture_timer]
-    ) { enqueue :metric_capture_perf_capture_timer }
-
-    every    = worker_setting_or_default(:performance_realtime_purging_interval, 15.minutes)
-    first_in = worker_setting_or_default(:performance_realtime_purging_start_delay, 5.minutes)
-    scheduler.schedule_every(
-      every,
-      :first_in => first_in,
-      :tags     => [:ems_metrics_coordinator, :purge_realtime_timer]
-    ) { enqueue :metric_purging_purge_realtime_timer }
-
-    every    = worker_setting_or_default(:performance_rollup_purging_interval, 4.hours)
-    first_in = worker_setting_or_default(:performance_rollup_purging_start_delay, 5.minutes)
-    scheduler.schedule_every(
-      every,
-      :first_in => first_in,
-      :tags     => [:ems_metrics_coordinator, :purge_rollup_timer]
-    ) { enqueue :metric_purging_purge_rollup_timer }
+    ) { enqueue(:metric_capture_perf_capture_timer) }
 
     @schedules[:ems_metrics_coordinator]
   end
@@ -332,60 +324,20 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     return unless schedule_enabled?(:event)
     scheduler = scheduler_for(:event)
     # Schedule - Event Purging
-    interval = worker_setting_or_default(:ems_events_purge_interval, 1.day)
     scheduler.schedule_every(
-      interval,
+      worker_settings[:event_streams_purge_interval],
       :first_in => "300s",
-      :tags     => [:ems_event, :purge_schedule]
-    ) { enqueue :ems_event_purge_timer }
+      :tags     => [:event_stream, :purge_schedule]
+    ) { enqueue(:event_stream_purge_timer) }
 
     # Schedule - Policy Event Purging
-    interval = worker_setting_or_default(:policy_events_purge_interval, 1.day)
     scheduler.schedule_every(
-      interval,
+      worker_settings[:policy_events_purge_interval],
       :first_in => "300s",
       :tags     => [:policy_event, :purge_schedule]
-    ) { enqueue :policy_event_purge_timer }
+    ) { enqueue(:policy_event_purge_timer) }
 
     @schedules[:event]
-  end
-
-  def schedules_for_storage_metrics_coordinator_role
-    # These schedules need to run by the servers with the coordinator role
-    return unless schedule_enabled?(:storage_metrics_coordinator)
-    scheduler = scheduler_for(:storage_metrics_coordinator)
-    cfg = VMDB::Config.new("vmdb").config
-
-    # Schedule - Storage metrics collection
-    sched = cfg.fetch_path(:storage, :metrics_collection, :collection_schedule)
-    _log.info("storage_metrics_collection_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_refresh_metrics }
-
-    # Schedule - Storage metrics hourly rollup
-    sched = cfg.fetch_path(:storage, :metrics_collection, :hourly_rollup_schedule)
-    _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_metrics_rollup_hourly }
-
-    # Schedule - Storage metrics daily rollup
-    base_sched = cfg.fetch_path(:storage, :metrics_collection, :daily_rollup_schedule)
-    TimeProfile.rollup_daily_metrics.each do |tp|
-      tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
-      sched = "#{base_sched} #{tz}"
-      _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      scheduler.schedule_cron(sched) { enqueue [:storage_metrics_rollup_daily, tp.id] }
-    end
-
-    # Schedule - Storage metrics purge
-    sched = cfg.fetch_path(:storage, :metrics_history, :purge_schedule)
-    _log.info("storage_metrics_purge_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :miq_storage_metric_purge_all_timer }
-
-    # Schedule - Storage inventory collection
-    sched = cfg.fetch_path(:storage, :inventory, :full_refresh_schedule)
-    _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    scheduler.schedule_cron(sched) { enqueue :storage_refresh_inventory }
-
-    @schedules[:storage_metrics_coordinator]
   end
 
   def sync_all_user_schedules
@@ -398,7 +350,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def sync_updated_user_schedules
     rufus_remove_stale_schedules
     threshold = @last_checked || Time.at(0)
-    schedules = MiqSchedule.updated_since(threshold)
+    schedules = MiqSchedule.in_my_region.updated_since(threshold)
     @last_checked = Time.now.utc
     reload_schedules(schedules)
   end
@@ -437,21 +389,21 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     options[:job] = true
 
     @schedules[:scheduler] << @user_scheduler.send(method, interval, options) do |rufus_job|
-      enqueue [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
+      enqueue([:miq_schedule_queue_scheduled_work, schedule_id, rufus_job])
     end
   end
 
   def rufus_add_monthly_schedule(options)
     months = options.delete(:months)
     method = options.delete(:method)
-    interval = options.delete(:interval)
+    options.delete(:interval)
     schedule_id = options.delete(:schedule_id)
 
     # Treat months differently since rufus doesn't support :schedule_every with X.months type of options
     sch = MiqSchedule.find(schedule_id)
     next_run = sch.next_interval_time
     @schedules[:scheduler] << @user_scheduler.send(method, next_run, options.dup) do |rufus_job|
-      enqueue [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
+      enqueue([:miq_schedule_queue_scheduled_work, schedule_id, rufus_job])
     end
 
     # Schedule every X months for up to 5 years in the future
@@ -459,7 +411,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     remaining_months.times do
       next_run += months.months
       @schedules[:scheduler] << @user_scheduler.send(method, next_run, options.dup) do |rufus_job|
-        enqueue [:miq_schedule_queue_scheduled_work, schedule_id, rufus_job]
+        enqueue([:miq_schedule_queue_scheduled_work, schedule_id, rufus_job])
       end
     end
     @schedules[:scheduler]
@@ -516,7 +468,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
             # In Rufus::Scheduler Version 2, schedule returns a Job
             # In Rufus::Scheduler Version 3, schedule could return a Job/JobID, depending on whether :job => true is
             # passed to opts
-            if j.kind_of?(Fixnum)
+            if j.kind_of?(Integer)
               @system_scheduler.unschedule(j)
             else
               if j.respond_to?(:tags)
@@ -574,17 +526,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   private
 
+  # @returns Hash<class, Integer> Hash of ems_class => refresh_interval
   def schedule_settings_for_ems_refresh
-    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
-
     ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
       next unless klass.ems_type
-
-      every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
-      every ||= config.fetch(:refresh_interval, 24.hours)
-
-      every   = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
-
+      every = ::Settings.ems_refresh[klass.ems_type].try(:refresh_interval) || ::Settings.ems_refresh.refresh_interval
+      every = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
       hash[klass] = every unless every == 0
     end
   end

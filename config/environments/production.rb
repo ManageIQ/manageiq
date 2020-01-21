@@ -11,15 +11,15 @@ Vmdb::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
-  # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.public_file_server.enabled = false
+  # Disable serving static files from the `/public` folder by default since
+  # Apache or NGINX already handles this.
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Fallback to the asset pipeline if a precompiled asset is missed.
-  # TODO: Once everything is in the asset pipeline, this should be set back to false.
-  config.assets.compile = true
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = false
 
   # Generate digests for assets URLs
   config.assets.digest = true
@@ -58,10 +58,14 @@ Vmdb::Application.configure do
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
-  config.i18n.fallbacks = true
+  config.i18n.fallbacks = [I18n.default_locale]
 
-  # Send deprecation notices to registered listeners
-  config.active_support.deprecation = :notify
+  # Send deprecation notices to registered listeners.
+  # config.active_support.deprecation = :notify
+
+  # Change from rails :notify default since it's unlikely we'll have users setup
+  # notifications for deprecation warnings.
+  config.active_support.deprecation = :log
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
@@ -74,12 +78,5 @@ Vmdb::Application.configure do
 
   config.action_controller.allow_forgery_protection = true
 
-  config.assets.js_compressor = Uglifier.new(
-    :compress => {
-      :unused      => false,
-      :keep_fargs  => true,
-      :keep_fnames => true
-    }
-  )
   config.assets.css_compressor = :sass
 end

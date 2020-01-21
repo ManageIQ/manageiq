@@ -1,0 +1,22 @@
+description: Projects by Number of Containers
+title: Projects by Number of Containers
+content_type: report
+options:
+  :row_count: 10
+  :col_order:
+  - name
+  - containers_count
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Projects by Number of Containers
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

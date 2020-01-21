@@ -1,0 +1,38 @@
+---
+- MiqAlertSet:
+    name: a16168b2-2605-11e7-a475-02420ebf1c88
+    description: Alert Profile Host Import Test
+    set_type: MiqAlertSet
+    guid: a16168b2-2605-11e7-a475-02420ebf1c88
+    read_only:
+    set_data:
+      :notes: This is a Host based alert profile to use for RSpec tests
+    mode: Host
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqAlert:
+    - guid: d2dcbbf8-25fb-11e7-a475-02420ebf1c88
+      description: Alert Import Test 2
+      options:
+        :notifications:
+          :delay_next_evaluation: 3600
+          :evm_event: {}
+          :automate:
+            :event_name: Host_Ballooning
+      db: Host
+      expression:
+        :eval_method: realtime_performance
+        :mode: internal
+        :options:
+          :perf_column: mem_vmmemctl_absolute_average
+          :operator: ">"
+          :value_threshold: '1'
+          :trend_direction: none
+          :trend_steepness:
+          :debug_trace: 'false'
+          :rt_time_threshold: 180
+      responds_to_events: host_perf_complete
+      enabled: true
+      read_only:

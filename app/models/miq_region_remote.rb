@@ -105,4 +105,8 @@ class MiqRegionRemote < ApplicationRecord
       remove_connection
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Region Remote', 'Region Remotes', number)
+  end
 end

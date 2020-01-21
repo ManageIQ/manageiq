@@ -2,6 +2,14 @@ require 'runcmd'
 require 'linux_admin'
 
 module MiqMemcached
+  def self.server_address
+    if ENV["MEMCACHED_SERVICE_HOST"] && ENV["MEMCACHED_SERVICE_PORT"]
+      "#{ENV["MEMCACHED_SERVICE_HOST"]}:#{ENV["MEMCACHED_SERVICE_PORT"]}"
+    else
+      ::Settings.session.memcache_server
+    end
+  end
+
   class Error < RuntimeError; end
   class ControlError < Error; end
 
@@ -17,7 +25,7 @@ module MiqMemcached
     end
 
     def save(fname)
-      File.open(fname, "w") { |f| f.write @config }
+      File.open(fname, "w") { |f| f.write(@config) }
     end
 
     def update(opts = {})

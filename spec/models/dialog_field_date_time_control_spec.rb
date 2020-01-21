@@ -1,11 +1,11 @@
 describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do
-      User.current_user = FactoryGirl.create(:user)
+      User.current_user = FactoryBot.create(:user)
     end
 
     context "with UTC timezone" do
-      before(:each) do
+      before do
         allow(user).to receive(:get_timezone).and_return("UTC")
       end
 
@@ -26,7 +26,7 @@ describe DialogFieldDateTimeControl do
     end
 
     context "with HST timezone" do
-      before(:each) do
+      before do
         allow(user).to receive(:get_timezone).and_return("HST")
       end
 
@@ -49,9 +49,10 @@ describe DialogFieldDateTimeControl do
 
   describe "#automate_output_value" do
     let(:dialog_field) { described_class.new(:value => value) }
+    let(:server) { double("MiqServer", :server_timezone => "UTC") }
 
     before do
-      allow(described_class).to receive(:server_timezone).and_return("UTC")
+      allow(MiqServer).to receive(:my_server).and_return(server)
     end
 
     context "when the dialog_field is blank" do
@@ -83,6 +84,11 @@ describe DialogFieldDateTimeControl do
 
   describe "#value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:server) { double("MiqServer", :server_timezone => "UTC") }
+
+    before do
+      allow(MiqServer).to receive(:my_server).and_return(server)
+    end
 
     context "when the value is not blank" do
       let(:value) { "04/07/2015 00:00" }
@@ -110,22 +116,15 @@ describe DialogFieldDateTimeControl do
       context "when the field is dynamic" do
         let(:dynamic) { true }
 
-        before do
-          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate)
-            .with(dialog_field).and_return("2015-01-02")
-        end
-
-        it "returns the values from the value processor" do
-          expect(dialog_field.value).to eq("01/02/2015 00:00")
+        it "returns tomorrow's date" do
+          Timecop.freeze(Time.utc(2015, 1, 2, 4, 30)) do
+            expect(dialog_field.value).to eq("01/03/2015 04:30")
+          end
         end
       end
 
       context "when the field is not dynamic" do
         let(:dynamic) { false }
-
-        before do
-          allow(described_class).to receive(:server_timezone).and_return("UTC")
-        end
 
         it "returns tomorrow's date" do
           Timecop.freeze(Time.utc(2015, 1, 2, 4, 30)) do
@@ -138,9 +137,10 @@ describe DialogFieldDateTimeControl do
 
   describe "#refresh_json_value" do
     let(:dialog_field) { described_class.new(:read_only => true) }
+    let(:server) { double("MiqServer", :server_timezone => "UTC") }
 
     before do
-      allow(described_class).to receive(:server_timezone).and_return("UTC")
+      allow(MiqServer).to receive(:my_server).and_return(server)
       allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate)
         .with(dialog_field).and_return("2015-02-03T18:50:00Z")
     end

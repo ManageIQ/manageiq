@@ -2,15 +2,13 @@
 
 describe BinaryBlobPart do
   context "#data= and #data" do
-    before(:each) do
-      @part = FactoryGirl.create(:binary_blob_part)
-    end
+    let(:part) { FactoryBot.build(:binary_blob_part) }
 
     subject do
-      @part.data = @data
-      @part.save
-      @part.reload
-      @part.data
+      part.data = @data
+      part.save
+      part.reload
+      part.data
     end
 
     it "without UTF-8 data" do

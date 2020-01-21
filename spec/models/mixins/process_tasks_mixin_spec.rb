@@ -26,6 +26,17 @@ describe ProcessTasksMixin do
       end
     end
 
+    context "with multiple ids" do
+      let(:service1) { FactoryBot.create(:service) }
+      let(:service2) { FactoryBot.create(:service) }
+      let(:service3) { FactoryBot.create(:service) }
+      it "creates multiple requests" do
+        User.current_user = FactoryBot.create(:user)
+        Service.process_tasks(:task => "retire_now", :ids => [service1.id, service2.id, service3.id], :userid => User.current_user.userid)
+        expect(MiqRequest.count).to eq(3)
+      end
+    end
+
     it "queues a message for the specified task" do
       EvmSpecHelper.create_guid_miq_server_zone
       test_class.process_tasks(:task => "test_method", :ids => [5], :userid => "admin")
@@ -77,12 +88,11 @@ describe ProcessTasksMixin do
     end
 
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     end
 
     context "when the server has an ip address" do
       let(:api_connection)    { double("ManageIQ::API::Client connection") }
-      let(:region_auth_token) { double("MiqRegion API auth token") }
 
       before do
         server.ipaddress = "192.0.2.1"
@@ -90,24 +100,16 @@ describe ProcessTasksMixin do
       end
 
       it "calls invoke_api_tasks with the api connection and options" do
-        require "manageiq-api-client"
-
-        expect(MiqRegion).to receive(:api_system_auth_token_for_region)
-          .with(ApplicationRecord.my_region_number, request_user).and_return(region_auth_token)
-
-        client_connection_hash = {
-          :url      => "https://#{server.ipaddress}",
-          :miqtoken => region_auth_token,
-          :ssl      => {:verify => false}
-        }
-        expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          .with(ApplicationRecord.my_region_number, request_user)
+          .and_return(api_connection)
 
         expect(test_class).to receive(:invoke_api_tasks).with(api_connection, test_options)
         test_class.invoke_tasks_remote(test_options)
       end
 
       it "requeues invoke_tasks_remote when invoke_api_tasks fails" do
-        expect(test_class).to receive(:api_client_connection_for_region)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(RuntimeError)
         test_class.invoke_tasks_remote(test_options)
 
@@ -119,10 +121,35 @@ describe ProcessTasksMixin do
       end
 
       it "does not requeue for a NotImplementedError" do
-        expect(test_class).to receive(:api_client_connection_for_region)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(NotImplementedError)
         expect(MiqQueue).not_to receive(:put)
         test_class.invoke_tasks_remote(test_options)
+      end
+
+      context "failing actions" do
+        let(:api_collection) { double("ManageIQ::API::Client collection") }
+        before do
+          api_config = double("Api::CollectionConfig")
+          allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
+          allow(api_config).to receive(:name_for_klass)
+        end
+
+        it "does not requeue if resource not found" do
+          allow(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          allow(api_collection).to receive(:find).and_raise(ManageIQ::API::Client::ResourceNotFound)
+          expect(MiqQueue).not_to receive(:put)
+          test_class.invoke_tasks_remote(test_options)
+        end
+
+        it "does not requeue if NoMethodError raised on resource" do
+          resource0 = double("resource0")
+          allow(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          allow(api_collection).to receive(:find).and_return(resource0)
+          allow(resource0).to receive(:send).and_raise(NoMethodError)
+          expect(MiqQueue).not_to receive(:put)
+          test_class.invoke_tasks_remote(test_options)
+        end
       end
     end
 
@@ -173,6 +200,69 @@ describe ProcessTasksMixin do
 
           test_class.invoke_api_tasks(api_connection, options)
         end
+
+        it "sends :success AuditEvent if task invocation successful" do
+          allow(api_collection).to receive(:the_task)
+          expect(AuditEvent).to receive(:success)
+          expect(AuditEvent).not_to receive(:failure)
+          test_class.invoke_api_tasks(api_connection, :task => "the_task")
+        end
+
+        it "sends :failure AuditEvent and does not raised error if task invocation raised NoMethodError" do
+          allow(api_collection).to receive(:the_task).and_raise(NoMethodError)
+          expect(AuditEvent).to receive(:failure)
+          expect(AuditEvent).not_to receive(:success)
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
+        end
+
+        it "sends :failure AuditEvent and raises error if task invocation raised StandardError other than NoMethodError" do
+          allow(api_collection).to receive(:the_task).and_raise(StandardError)
+          expect(AuditEvent).to receive(:failure)
+          expect(AuditEvent).not_to receive(:success)
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message for AuditEvent in case of :failure on collection" do
+          allow(api_collection).to receive(:the_task).and_raise(StandardError)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:task => "the_task"}, {:message => "'the_task' failed to be initiated on remote collection test_class_collection, with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message for AuditEvent in case of :success on collection" do
+          allow(api_collection).to receive(:the_task)
+          expect(test_class).to receive(:task_audit_event).with(:success, {:task => "the_task"}, {:message => "'the_task' successfully initiated on remote collection test_class_collection, with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
+        end
+      end
+
+      it "with missing remote resource does not raise" do
+        resource0 = double("resource0", :id => 0)
+        expect(api_collection).to receive(:find).with(0).and_raise(ManageIQ::API::Client::ResourceNotFound, "Couldn't find resource with 'id' [0]")
+        options = {
+          :ids  => [0],
+          :task => "the_task",
+          :args => {:some => "args"}
+        }
+        expect(resource0).not_to receive(:the_task)
+
+        expect { test_class.invoke_api_tasks(api_connection, options) }.not_to raise_error
+      end
+
+      context "should not raise when it does not respond_to the method" do
+        let(:api_collection) { [] }
+
+        it "multiple resources (one responds, one does not, both are tried)" do
+          expect(api_collection).to receive(:find).with(0).and_return(Struct.new(:id).new(0))
+          expect(api_collection).to receive(:find).with(1).and_return(double("Something that responds", :id => 0, :the_task => nil))
+
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.send_action) undefined method `the_task' for #<struct id=0>").and_call_original
+          expect(test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")).to eq([0, 1])
+        end
+
+        it "collection" do
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.send_action) undefined method `the_task' for []:Array").and_call_original
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
+        end
       end
 
       context "when passed resource ids" do
@@ -180,8 +270,8 @@ describe ProcessTasksMixin do
         let(:resource1)     { double("resource1", :id => 1) }
 
         before do
-          expect(api_collection).to receive(:find).with(0).and_return(resource0)
-          expect(api_collection).to receive(:find).with(1).and_return(resource1)
+          allow(api_collection).to receive(:find).with(0).and_return(resource0)
+          allow(api_collection).to receive(:find).with(1).and_return(resource1)
         end
 
         it "executes the task on each resource" do
@@ -206,7 +296,76 @@ describe ProcessTasksMixin do
 
           test_class.invoke_api_tasks(api_connection, options)
         end
+
+        it "sends :success AuditEvent if task invocation successful" do
+          allow(resource0).to receive(:the_task)
+          allow(resource1).to receive(:the_task)
+
+          expect(AuditEvent).to receive(:success).twice
+          test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")
+        end
+
+        it "sends :failure AuditEvent and does not raised error if task invocation raised NoMethodError or ManageIQ::API::Client::ResourceNotFound" do
+          allow(resource0).to receive(:the_task).and_raise(NoMethodError)
+          allow(resource1).to receive(:the_task).and_raise(ManageIQ::API::Client::ResourceNotFound)
+
+          expect(AuditEvent).to receive(:failure).twice
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task") }.not_to raise_error
+        end
+
+        it "sends :failure AuditEvent and raises error if task invocation raised StandardError other than NoMethodError or ManageIQ::API::Client::ResourceNotFound" do
+          allow(resource0).to receive(:the_task).and_raise(StandardError)
+          allow(resource1).to receive(:the_task).and_raise(StandardError)
+
+          expect(AuditEvent).to receive(:failure).once
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message for AuditEvent when invocation raises StandardError" do
+          allow(resource0).to receive(:the_task).and_raise(StandardError)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:ids => [0], :task => "the_task"}, {:message => "'the_task' failed to be initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message if remote resource not found" do
+          allow(resource0).to receive(:the_task).and_raise(ManageIQ::API::Client::ResourceNotFound)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:ids => [0], :task => "the_task"}, {:message => "'the_task' failed to be initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.not_to raise_error
+        end
+
+        it "forms proper message for AuditEvent in case of :success on individual object" do
+          allow(resource0).to receive(:the_task)
+          expect(test_class).to receive(:task_audit_event).with(:success, {:ids => [0], :task => "the_task"}, {:message => "'the_task' successfully initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.not_to raise_error
+        end
       end
+    end
+  end
+
+  describe '.validate_task' do
+    let(:ext_management_system) { double("ExtManagementSystem") }
+    let(:instance) { double("Target") }
+    let(:task) { double("Task") }
+    before do
+      Zone.seed
+
+      allow(instance).to receive(:ext_management_system).and_return(ext_management_system)
+    end
+
+    it 'validates task when EMS not paused' do
+      allow(ext_management_system).to receive_messages(:name => 'My provider',
+                                                       :zone => Zone.default_zone)
+
+      expect(task).not_to receive(:error).with("#{ext_management_system.name} is paused")
+      test_class.send(:validate_task, task, instance, {})
+    end
+
+    it 'marks task as invalid when EMS paused' do
+      allow(ext_management_system).to receive_messages(:name => 'My provider',
+                                                       :zone => Zone.maintenance_zone)
+
+      expect(task).to receive(:error).with("#{ext_management_system.name} is paused")
+      test_class.send(:validate_task, task, instance, {})
     end
   end
 end

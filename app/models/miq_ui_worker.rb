@@ -13,17 +13,32 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/manageiq-balancer-ui.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ui'
-  STARTING_PORT              = 3000
-  PROTOCOL                   = 'http'
-  LB_METHOD                  = :busy
-  REDIRECTS                  = '/'
-  CLUSTER                    = 'evmcluster_ui'
+  STARTING_PORT = 3000
 
   def friendly_name
     @friendly_name ||= "User Interface Worker"
   end
 
   include MiqWebServerWorkerMixin
+  include MiqWorker::ServiceWorker
+
+  def self.supports_container?
+    true
+  end
+
+  def self.bundler_groups
+    %w[manageiq_default ui_dependencies graphql_api]
+  end
+
+  def self.kill_priority
+    MiqWorkerType::KILL_PRIORITY_UI_WORKERS
+  end
+
+  def container_port
+    3001
+  end
+
+  def container_image_name
+    "manageiq-ui-worker"
+  end
 end

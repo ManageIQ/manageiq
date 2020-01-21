@@ -4,8 +4,6 @@ class VmdbMetric < ApplicationRecord
   include_concern 'Purging'
 
   def self.rollup_metrics(resource, _interval_name, rollup_date)
-    # tp = TimeProfile.find_by_description("UTC")
-
     rows          = 0
     size          = 0
     wasted_bytes  = 0
@@ -16,7 +14,6 @@ class VmdbMetric < ApplicationRecord
     metric ||= resource.vmdb_metrics.build(:capture_interval_name  => 'daily', :timestamp => rollup_date.beginning_of_day)
 
     # Fetch all hourly records for the table for date requested...
-    # Metric::Finders.find_all_by_day(table, rollup_date, interval_name, tp).each do |h|
     resource.vmdb_metrics.where(:capture_interval_name => 'hourly', :timestamp => (rollup_date.beginning_of_day..rollup_date.end_of_day)).each do |h|
       # Data conversion added, found cases where nil values were stored in db...
       rows += h.rows.to_i
@@ -32,6 +29,10 @@ class VmdbMetric < ApplicationRecord
     percent_bloat /= 24.0
 
     # Create new daily record...
-    metric.update_attributes(:rows => rows, :size => size, :wasted_bytes => wasted_bytes, :percent_bloat => percent_bloat)
+    metric.update(:rows => rows, :size => size, :wasted_bytes => wasted_bytes, :percent_bloat => percent_bloat)
+  end
+
+  def self.display_name(number = 1)
+    n_('Metric', 'Metrics', number)
   end
 end

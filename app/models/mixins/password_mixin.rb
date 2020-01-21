@@ -1,11 +1,12 @@
 module PasswordMixin
   extend ActiveSupport::Concern
 
-  module ClassMethods
-    def encrypted_columns
-      @@encrypted_columns ||= []    # rubocop:disable Style/ClassVars
-    end
+  included do
+    class_attribute :encrypted_columns
+    self.encrypted_columns = []
+  end
 
+  module ClassMethods
     def encrypt_column(column)
       # Given a column of "password", create 4 instance methods:
       #   password            : Get the password in plain text
@@ -20,11 +21,11 @@ module PasswordMixin
 
       mod.send(:define_method, column) do
         val = send("#{column}_encrypted")
-        val.blank? ? val : MiqPassword.decrypt(val)
+        val.blank? ? val : ManageIQ::Password.decrypt(val)
       end
 
       mod.send(:define_method, "#{column}=") do |val|
-        val = MiqPassword.try_encrypt(val) unless val.blank?
+        val = ManageIQ::Password.try_encrypt(val) unless val.blank?
         send("#{column}_encrypted=", val)
       end
 

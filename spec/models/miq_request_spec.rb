@@ -1,21 +1,25 @@
 describe MiqRequest do
-  include MiqRequestMixin
-
-  let(:fred)   { FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
-  let(:barney) { FactoryGirl.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
+  let(:fred)   { FactoryBot.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
+  let(:barney) { FactoryBot.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest                 => {:template              => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate         => {:template              => "VM Provision Template"},
-        :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
-        :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
-        :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
-        :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
-        :AutomationRequest                   => {:automation            => "Automation"},
-        :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},
-        :ServiceReconfigureRequest           => {:service_reconfigure   => "Service Reconfigure"},
+        :MiqProvisionRequest                      => {:template                        => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate              => {:template                        => "VM Provision Template"},
+        :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman           => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
+        :VmReconfigureRequest                     => {:vm_reconfigure                  => "VM Reconfigure"},
+        :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure            => "VM Cloud Reconfigure"},
+        :VmMigrateRequest                         => {:vm_migrate                      => "VM Migrate"},
+        :VmRetireRequest                          => {:vm_retire                       => "VM Retire"},
+        :ServiceRetireRequest                     => {:service_retire                  => "Service Retire"},
+        :OrchestrationStackRetireRequest          => {:orchestration_stack_retire      => "Orchestration Stack Retire"},
+        :AutomationRequest                        => {:automation                      => "Automation"},
+        :ServiceTemplateProvisionRequest          => {:clone_to_service                => "Service Provision"},
+        :ServiceReconfigureRequest                => {:service_reconfigure             => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest           => {:provision_physical_server       => "Physical Server Provision"},
+        :PhysicalServerFirmwareUpdateRequest      => {:physical_server_firmware_update => "Physical Server Firmware Update"},
+        :ServiceTemplateTransformationPlanRequest => {:transformation_plan             => "Transformation Plan"}
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -24,10 +28,10 @@ describe MiqRequest do
 
   context "A new request" do
     let(:event_name)   { "hello" }
-    let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
-    let(:request)      { FactoryGirl.create(:vm_migrate_request, :requester => fred) }
-    let(:ems)          { FactoryGirl.create(:ems_vmware) }
-    let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+    let(:miq_request) { FactoryBot.build(:automation_request, :options => {:src_ids => [1]}) }
+    let(:request)      { FactoryBot.create(:vm_migrate_request, :requester => fred) }
+    let(:ems)          { FactoryBot.create(:ems_vmware) }
+    let(:template)     { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
 
     it { expect(request).to be_valid }
     describe("#request_type_display") { it { expect(request.request_type_display).to eq("VM Migrate") } }
@@ -38,24 +42,24 @@ describe MiqRequest do
 
     context "#set_description" do
       it "should set a description when nil" do
-        expect(host_request.description).to be_nil
-        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        expect(miq_request.description).to be_nil
+        expect(miq_request).to receive(:update).with(:description => "Automation Task")
 
-        host_request.set_description
+        miq_request.set_description
       end
 
       it "should not set description when one exists" do
-        host_request.description = "test description"
-        host_request.set_description
+        miq_request.description = "test description"
+        miq_request.set_description
 
-        expect(host_request.description).to eq("test description")
+        expect(miq_request.description).to eq("test description")
       end
 
       it "should set description when :force => true" do
-        host_request.description = "test description"
-        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        miq_request.description = "test description"
+        expect(miq_request).to receive(:update).with(:description => "Automation Task")
 
-        host_request.set_description(true)
+        miq_request.set_description(true)
       end
     end
 
@@ -65,7 +69,8 @@ describe MiqRequest do
     end
 
     it "#call_automate_event_queue" do
-      allow(MiqServer).to receive(:my_zone).and_return("New York")
+      zone = FactoryBot.create(:zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
 
       expect(MiqQueue.count).to eq(0)
 
@@ -76,29 +81,15 @@ describe MiqRequest do
       expect(msg.class_name).to  eq(request.class.name)
       expect(msg.instance_id).to eq(request.id)
       expect(msg.method_name).to eq("call_automate_event")
-      expect(msg.zone).to        eq("New York")
+      expect(msg.zone).to        eq(zone.name)
       expect(msg.args).to        eq([event_name])
       expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    context "#call_automate_event_sync" do
-      it "successful" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
-
-        expect(request.call_automate_event_sync(event_name)).to eq("foo")
-      end
-
-      it "re-raises exceptions" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
-
-        expect { request.call_automate_event_sync(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
-      end
-    end
-
     context "#call_automate_event" do
       it "successful" do
-        expect(MiqAeEvent).to receive(:raise_evm_event)
-        request.call_automate_event(event_name)
+        expect(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
+        expect(request.call_automate_event(event_name)).to eq("foo")
       end
 
       it "re-raises exceptions" do
@@ -122,7 +113,7 @@ describe MiqRequest do
     end
 
     context "using Polymorphic Resource" do
-      let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
+      let(:provision_request) { FactoryBot.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
 
       it { expect(provision_request.workflow_class).to eq(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow) }
 
@@ -202,10 +193,22 @@ describe MiqRequest do
         end
       end
 
+      it "with auto approval" do
+        FactoryBot.create(:user_admin, :userid => 'admin')
+        allow(MiqServer).to receive_messages(:my_zone => "default")
+
+        expect(request).to receive(:set_description)
+        expect(request).to receive(:log_request_success)
+        expect(request).to receive(:call_automate_event_queue).with("request_created")
+        expect(request).to receive(:call_automate_event_queue).with("request_approved")
+        expect(request).to receive(:execute)
+        request.post_create(true)
+      end
+
       context "with user approvals" do
         let(:reason)          { "Why Not?" }
-        let(:fred_approval)   { FactoryGirl.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
-        let(:barney_approval) { FactoryGirl.create(:miq_approval, :approver => barney) }
+        let(:fred_approval)   { FactoryBot.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
+        let(:barney_approval) { FactoryBot.create(:miq_approval, :approver => barney) }
 
         before { request.miq_approvals = [fred_approval, barney_approval] }
 
@@ -259,6 +262,49 @@ describe MiqRequest do
 
           request.deny(fred, reason)
         end
+
+        describe ".with_reason_like" do
+          let(:reason) { %w(abcd abcde cde) }
+          subject { described_class.with_reason_like(pattern).count }
+
+          before { request.miq_approvals = approvals }
+
+          ["ab*", "*bc*", "*de"].each do |pattern|
+            context "'#{pattern}'" do
+              let(:pattern) { pattern }
+              it { is_expected.to eq(2) }
+            end
+          end
+
+          context "integrates well with .created_recently" do
+            # when joined with MiqApprovals, there are two `created_on` columns
+            let(:pattern) { "*c*" }
+            subject { described_class.with_reason_like(pattern).created_recently(days_ago).distinct.count }
+
+            before do
+              FactoryBot.create(:vm_migrate_request, :requester => fred, :created_on => 10.days.ago, :miq_approvals => approvals)
+              FactoryBot.create(:vm_migrate_request, :requester => fred, :created_on => 14.days.ago, :miq_approvals => approvals)
+              FactoryBot.create(:vm_migrate_request, :requester => fred, :created_on => 3.days.ago,  :miq_approvals => approvals)
+            end
+
+            {
+              7  => 2,
+              11 => 3,
+              15 => 4
+            }.each do |days, count|
+              context "filtering #{days} ago" do
+                let(:days_ago) { days }
+                it { is_expected.to eq(count) }
+              end
+            end
+          end
+
+          def approvals
+            reason.collect do |r|
+              FactoryBot.create(:miq_approval, :approver => fred, :reason => r, :stamper => barney, :stamped_on => Time.now.utc)
+            end
+          end
+        end
       end
     end
 
@@ -266,7 +312,7 @@ describe MiqRequest do
       allow_any_instance_of(MiqApproval).to receive_messages(:authorized? => true)
       allow(MiqServer).to receive_messages(:my_zone => "default")
 
-      provision_request = FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id)
+      provision_request = FactoryBot.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id)
 
       provision_request.deny(fred, "Why Not?")
 
@@ -280,17 +326,62 @@ describe MiqRequest do
     end
   end
 
+  context '#execute' do
+    shared_examples_for "#calls create_request_tasks with the proper role" do
+      it "runs successfully" do
+        expect(request).to receive(:approved?).and_return(true)
+        expect(MiqQueue.count).to eq(0)
+
+        request.execute
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.role).to eq(role)
+      end
+    end
+
+    context 'Service provisioning' do
+      let(:request) { FactoryBot.create(:service_template_provision_request, :approval_state => 'approved', :requester => fred) }
+      let(:role)    { 'automate' }
+
+      context "uses the automate role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+
+    context 'VM provisioning' do
+      let(:template) { FactoryBot.create(:template_vmware, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication)) }
+      let(:request)  { FactoryBot.build(:miq_provision_request, :requester => fred, :src_vm_id => template.id).tap(&:valid?) }
+      let(:role)     { 'ems_operations' }
+
+      context "uses the ems_operations role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+  end
+
   context '#post_create_request_tasks' do
     context 'VM provisioning' do
+      before do
+        ae_workspace = double("ae_workspace")
+        allow(ae_workspace).to receive(:root).and_return("test_vm")
+        allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
+      end
+
       let(:description) { 'my original information' }
-      let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
-      let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
+      let(:template)    { FactoryBot.create(:template_vmware, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication)) }
+      let(:request)     { FactoryBot.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
 
       it 'with 1 task' do
         request.options[:src_vm_id] = template.id
         request.create_request_task(template.id)
         request.post_create_request_tasks
         expect(request.description).to_not eq(description)
+      end
+
+      it 'with 1 task having a Denied status reset to ok for the resulting request_task' do
+        request.options[:src_vm_id] = template.id
+        request.status = 'Denied'
+        new_request = request.create_request_task(template.id)
+        expect(new_request.status).to eq 'Ok'
       end
 
       it 'with 0 tasks' do
@@ -304,37 +395,73 @@ describe MiqRequest do
         request.post_create_request_tasks
         expect(request.description).to eq(description)
       end
+
+      it '#clean_up_keys_for_request_task' do
+        # The db stores 'state' as 'request_state' Pulling out that value to allow the raw arrays to match
+        removable_keys = MiqRequest::REQUEST_UNIQUE_KEYS - ['state']
+        expect(request.attributes.keys & removable_keys).to match_array removable_keys
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs).to_not match_array(removable_keys)
+      end
+
+      it '#clean_up_keys_for_request_task removes options user_message' do
+        request.update!(:options => {:user_message => 'doesntmatter'})
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs["options"]).to_not include(:user_message)
+      end
     end
 
     it 'non VM provisioning' do
       description = 'Service Request'
-      request = FactoryGirl.create(:service_template_provision_request, :description => description, :requester => fred)
+      request = FactoryBot.create(:service_template_provision_request, :description => description, :requester => fred)
       request.post_create_request_tasks
       expect(request.description).to eq(description)
     end
   end
 
   context '#workflow' do
-    let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
-    let(:ems)          { FactoryGirl.create(:ems_vmware) }
-    let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+    let(:provision_request) do
+      FactoryBot.create(:miq_provision_request,
+                         :requester => fred,
+                         :src_vm_id => template.id,
+                         :options => {:src_vm_id => template.id})
+    end
+    let(:ems)          { FactoryBot.create(:ems_vmware) }
+    let(:template)     { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
     let(:host) { double('Host', :id => 1, :name => 'my_host') }
 
     it "calls password_helper when a block is passed in" do
       expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow).to receive(:password_helper).twice
       provision_request.workflow({}, {:allowed_hosts => [host], :skip_dialog_load => true}) { |_x| 'test' }
     end
+
+    it "returns the allowed tags" do
+      FactoryBot.create(:miq_dialog,
+                         :name        => "miq_provision_dialogs",
+                         :dialog_type => MiqProvisionWorkflow)
+
+      FactoryBot.create(:classification_department_with_tags)
+
+      tag = Classification.is_category.where(:description => 'Department').includes(:tag).first
+      provision_request.add_tag(tag.name, tag.children.first.name)
+
+      expected = [a_hash_including(:children)]
+      expect(provision_request.v_allowed_tags).to match(expected)
+    end
   end
 
   context '#create_request_task' do
-    let(:ems)      { FactoryGirl.create(:ems_vmware_with_authentication) }
-    let(:template) { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+    let(:ems)      { FactoryBot.create(:ems_vmware_with_authentication) }
+    let(:template) { FactoryBot.create(:template_vmware, :ext_management_system => ems) }
     let(:request)  do
-      FactoryGirl.create(:miq_provision_request, :requester => fred, :options => @options, :source => template)
+      FactoryBot.create(:miq_provision_request, :requester => fred, :options => @options, :source => template)
     end
 
     before do
-      allow(MiqRegion).to receive(:my_region).and_return(FactoryGirl.create(:miq_region))
+      allow(MiqRegion).to receive(:my_region).and_return(FactoryBot.create(:miq_region))
+      ae_workspace = double("ae_workspace")
+      allow(ae_workspace).to receive(:root).and_return("test_vm")
+      allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
 
       @options = {
         :src_vm_id     => template.id,
@@ -376,6 +503,116 @@ describe MiqRequest do
 
     it "without a request_type" do
       expect { described_class.class_from_request_data({}) }.to raise_error("Invalid request_type")
+    end
+  end
+
+  context "#get_user" do
+    let(:root_tenant) { Tenant.seed }
+    let(:tenant1)     { FactoryBot.create(:tenant, :parent => root_tenant) }
+    let(:group1)      { FactoryBot.create(:miq_group, :description => 'Group 1', :tenant => root_tenant) }
+    let(:group2)      { FactoryBot.create(:miq_group, :description => 'Group 2', :tenant => tenant1) }
+    let(:user)        { FactoryBot.create(:user, :miq_groups => [group1, group2], :current_group => group1) }
+
+    it "takes the requester group" do
+      request = FactoryBot.create(:miq_provision_request, :requester => user, :options => {:requester_group => group2.description})
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group2)
+    end
+
+    it "stays with user's current group" do
+      request = FactoryBot.create(:miq_provision_request, :requester => user)
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group1)
+    end
+
+    it "returns superadmin if user was deleted" do
+      request = FactoryBot.create(:miq_provision_request, :requester => user)
+      user.delete
+      expect(request.get_user).to eq(User.super_admin)
+    end
+  end
+
+  context "#update_request" do
+    before do
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
+    end
+
+    let(:request) do
+      FactoryBot.create(:miq_provision_request,
+                         :requester => fred,
+                         :options   => {:a => "1"})
+    end
+
+    it "user_message" do
+      msg = "Yabba Dabba Doo"
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message]).to eq(msg)
+      expect(request.message).to eq(msg)
+    end
+
+    it "truncates long messages" do
+      msg = "Yabba Dabba Doo" * 30
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message].length).to eq(255)
+      expect(request.message.length).to eq(255)
+    end
+
+    it "non user_message should call after_update_options" do
+      expect(request).to receive(:after_update_options)
+      request.update_request({:abc => 1}, fred)
+
+      expect(request.options[:abc]).to eq(1)
+    end
+  end
+
+  let(:vm_retire_request) { FactoryBot.create(:vm_retire_request, :requester => fred) }
+  it "retire_request has source" do
+    expect(vm_retire_request.source_type).not_to eq(nil)
+  end
+
+  context "retire request source classes" do
+    let(:vm_retire_request)      { FactoryBot.create(:vm_retire_request, :requester => fred) }
+    let(:service_retire_request) { FactoryBot.create(:service_retire_request, :requester => fred) }
+    let(:orch_stack_request)     { FactoryBot.create(:orchestration_stack_retire_request, :requester => fred) }
+
+    it "gets the right source class names" do
+      expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
+      expect(service_retire_request.class::SOURCE_CLASS_NAME).to eq('Service')
+      expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
+    end
+  end
+
+  describe ".user_owned" do
+    let(:regional_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:user) { FactoryBot.create(:user) }
+    let!(:regional_user) { FactoryBot.create(:user, :userid => user.userid.upcase, :id => regional_id) }
+    let!(:request) { FactoryBot.create(:vm_migrate_request, :requester => user) }
+    let!(:regional_request) { FactoryBot.create(:vm_migrate_request, :requester => regional_user) }
+    it "finds request for cross region users" do
+      FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user))
+      FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user), :id => regional_id + 1)
+      expect(MiqRequest.user_owned(regional_user)).to match_array([request, regional_request])
+    end
+  end
+
+  describe ".group_owned" do
+    let(:regional_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:group) { FactoryBot.create(:miq_group) }
+    let(:regional_group) { FactoryBot.create(:miq_group, :id => regional_id) }
+    let(:user) { FactoryBot.create(:user, :miq_groups => [group]) }
+    let!(:regional_user) { FactoryBot.create(:user, :userid => user.userid.upcase, :id => regional_id, :miq_groups => [regional_group]) }
+    let!(:request) { FactoryBot.create(:vm_migrate_request, :requester => user) }
+    let!(:regional_request) { FactoryBot.create(:vm_migrate_request, :requester => regional_user) }
+    it "finds request for cross region groups" do
+      FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user))
+      FactoryBot.create(:vm_migrate_request, :requester => FactoryBot.create(:user), :id => regional_id + 1)
+      expect(MiqRequest.user_owned(regional_user)).to match_array([request, regional_request])
     end
   end
 end

@@ -1,42 +1,42 @@
 describe MiqProvisionRequestTemplate do
-  let(:user)             { FactoryGirl.create(:user) }
+  let(:user)             { FactoryBot.create(:user) }
   let(:template)         do
-    FactoryGirl.create(:template_vmware,
-                       :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
+    FactoryBot.create(:template_vmware,
+                       :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
   end
-  let(:parent_svc) { FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}}) }
+  let(:parent_svc) { FactoryBot.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}}) }
   let(:bundle_parent_svc) do
-    FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}})
+    FactoryBot.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}})
   end
   let(:service_resource) do
-    FactoryGirl.create(:service_resource,
+    FactoryBot.create(:service_resource,
                        :resource_type => 'MiqRequest',
                        :resource_id   => service_template_request.id)
   end
   let(:service_template) do
-    FactoryGirl.create(:service_template)
+    FactoryBot.create(:service_template)
   end
   let(:bundle_service_template) do
-    FactoryGirl.create(:service_template)
+    FactoryBot.create(:service_template)
   end
   let(:service_template_resource) do
-    FactoryGirl.create(:service_resource,
+    FactoryBot.create(:service_resource,
                        :resource_type => 'ServiceTemplate',
                        :resource_id   => service_template.id)
   end
   let(:bundle_service_template_resource) do
-    FactoryGirl.create(:service_resource,
+    FactoryBot.create(:service_resource,
                        :resource_type => 'ServiceTemplate',
                        :resource_id   => bundle_service_template.id)
   end
-  let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
+  let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
-    FactoryGirl.create(:service_template_provision_task,
+    FactoryBot.create(:service_template_provision_task,
                        :miq_request  => service_template_request,
                        :options      => {:service_resource_id => service_resource.id})
   end
   let(:parent_service_task) do
-    FactoryGirl.create(:service_template_provision_task,
+    FactoryBot.create(:service_template_provision_task,
                        :status       => 'Ok',
                        :state        => 'pending',
                        :request_type => 'clone_to_service',
@@ -44,7 +44,7 @@ describe MiqProvisionRequestTemplate do
                        :options      => {:service_resource_id => service_template_resource.id})
   end
   let(:bundle_service_task) do
-    FactoryGirl.create(:service_template_provision_task,
+    FactoryBot.create(:service_template_provision_task,
                        :status       => 'Ok',
                        :state        => 'pending',
                        :request_type => 'clone_to_service',
@@ -52,7 +52,7 @@ describe MiqProvisionRequestTemplate do
                        :options      => {:service_resource_id => bundle_service_template_resource.id})
   end
   let(:provision_request_template) do
-    FactoryGirl.create(:miq_provision_request_template,
+    FactoryBot.create(:miq_provision_request_template,
                        :requester    => user,
                        :src_vm_id    => template.id,
                        :options      => {
@@ -89,17 +89,17 @@ describe MiqProvisionRequestTemplate do
 
     describe "scaling_min" do
       it "runs once with scaling min nil" do
-        service_resource.update_attributes(:scaling_min => nil)
+        service_resource.update(:scaling_min => nil)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(1)
       end
 
       it "runs never with scaling min 0" do
-        service_resource.update_attributes(:scaling_min => 0)
+        service_resource.update(:scaling_min => 0)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(0)
       end
 
       it "runs twice with scaling min 2" do
-        service_resource.update_attributes(:scaling_min => 2)
+        service_resource.update(:scaling_min => 2)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(2)
       end
 
@@ -142,10 +142,10 @@ describe MiqProvisionRequestTemplate do
     end
 
     context "with service_task user" do
-      let(:user) { FactoryGirl.create(:user_with_email) }
+      let(:user) { FactoryBot.create(:user_with_email) }
 
       it "sets owner in options" do
-        service_task.update_attributes(:userid => user.userid)
+        service_task.update(:userid => user.userid)
         task = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
 
         expect(task.options[:owner_email]).to eq(user.email)

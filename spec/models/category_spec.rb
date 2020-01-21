@@ -1,10 +1,10 @@
 describe Category do
   describe "#tags" do
     it "works" do
-      clergy        = FactoryGirl.create(:classification,     :name => "clergy", :single_value => 1)
-      clergy_bishop = FactoryGirl.create(:classification_tag, :name => "bishop", :parent => clergy)
-      chess         = FactoryGirl.create(:classification,     :name => "chess",  :single_value => 1)
-      chess_bishop  = FactoryGirl.create(:classification_tag, :name => "bishop", :parent => chess)
+      clergy        = FactoryBot.create(:classification,     :name => "clergy", :single_value => 1)
+      clergy_bishop = FactoryBot.create(:classification_tag, :name => "bishop", :parent => clergy)
+      chess         = FactoryBot.create(:classification,     :name => "chess",  :single_value => 1)
+      chess_bishop  = FactoryBot.create(:classification_tag, :name => "bishop", :parent => chess)
 
       cat_cl  = Category.find_by(:id => clergy.id)
       tag_clb = clergy_bishop.tag

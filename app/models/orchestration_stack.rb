@@ -1,23 +1,36 @@
 require 'ancestry'
+require 'ancestry_patch'
+
 class OrchestrationStack < ApplicationRecord
   require_nested :Status
 
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
-  include_concern 'RetirementManagement'
-  include VirtualTotalMixin
+  include OwnershipMixin
+  include RetirementMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
+  include SupportsFeatureMixin
+  include CiFeatureMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
   has_ancestry
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :tenant
+  belongs_to :cloud_tenant
 
+  has_many   :authentication_orchestration_stacks
+  has_many   :authentications, :through => :authentication_orchestration_stacks
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
+
+  has_many   :authentication_orchestration_stacks, :dependent => :destroy
+  has_many   :authentications, :through => :authentication_orchestration_stacks
 
   has_many   :direct_vms,             :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :direct_security_groups, :class_name => "SecurityGroup"
@@ -37,9 +50,16 @@ class OrchestrationStack < ApplicationRecord
   virtual_total :total_security_groups, :security_groups
   virtual_total :total_cloud_networks, :cloud_networks
 
+  virtual_column :stdout, :type => :string
+
+  scope :without_type, ->(type) { where.not(:type => type) }
+
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  supports :refresh_ems
+  supports :retire
 
   def orchestration_stacks
     children
@@ -72,6 +92,11 @@ class OrchestrationStack < ApplicationRecord
   def directs_and_indirects(direct_attrs)
     MiqPreloader.preload_and_map(subtree, direct_attrs)
   end
+
+  def stdout(format = nil)
+    format.nil? ? try(:raw_stdout) : try(:raw_stdout, format)
+  end
+
   private :directs_and_indirects
 
   def self.create_stack(orchestration_manager, stack_name, template, options = {})
@@ -84,6 +109,14 @@ class OrchestrationStack < ApplicationRecord
 
   def raw_update_stack(_template, _options = {})
     raise NotImplementedError, _("raw_update_stack must be implemented in a subclass")
+  end
+
+  def valid_service_orchestration_resource
+    true
+  end
+
+  def my_zone
+    ext_management_system.try(:my_zone)
   end
 
   def update_stack(template, options = {})
@@ -107,5 +140,34 @@ class OrchestrationStack < ApplicationRecord
     rstatus && !rstatus.deleted?
   rescue MiqException::MiqOrchestrationStackNotExistError
     false
+  end
+
+  def refresh_ems
+    self.class.refresh_ems(ext_management_system.id, ems_ref)
+  end
+
+  def self.refresh_ems(manager_id, manager_ref)
+    manager = ExtManagementSystem.find_by(:id => manager_id)
+
+    unless manager
+      raise _("No Provider defined")
+    end
+    unless manager.has_credentials?
+      raise _("No Provider credentials defined")
+    end
+    unless manager.authentication_status_ok?
+      raise _("Provider failed last authentication check")
+    end
+
+    if manager.inventory_object_refresh? && manager.allow_targeted_refresh?
+      # Queue new targeted refresh if allowed
+      orchestration_stack_target = InventoryRefresh::Target.new(:manager     => manager,
+                                                                :association => :orchestration_stacks,
+                                                                :manager_ref => {:ems_ref => manager_ref})
+      EmsRefresh.queue_refresh(orchestration_stack_target)
+    else
+      # Otherwise queue a full refresh
+      EmsRefresh.queue_refresh(manager)
+    end
   end
 end

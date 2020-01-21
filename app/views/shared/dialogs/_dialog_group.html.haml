@@ -1,9 +1,0 @@
-%div{:id => "group_#{group.id}_div"}
-  %h3{:title => "#{group.description}"}
-    = group.label
-  - unless group.dialog_fields.empty?
-    .form-horizontal
-      - group.dialog_fields.each do |field|
-        = render :partial => "shared/dialogs/dialog_field",
-                 :locals  => {:wf => wf, :field => field}
-  %hr

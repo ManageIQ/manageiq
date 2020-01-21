@@ -5,7 +5,14 @@ class CustomizationTemplate < ApplicationRecord
   has_many   :pxe_images, :through => :pxe_image_type
 
   validates :pxe_image_type, :presence => true, :unless => :system?
-  # validates :name,           :uniqueness => { :scope => :pxe_image_type }
+  validates :name, :uniqueness => {:scope => :pxe_image_type }, :unless => :seeding?
+
+  scope :with_pxe_image_type_id, ->(pxe_image_type_id) { where(:pxe_image_type_id => pxe_image_type_id) }
+  scope :with_system,            ->(bool = true)       { where(:system => bool) }
+
+  def seeding?
+    system? && pxe_image_type.nil?
+  end
 
   def self.seed_file_name
     @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
@@ -18,7 +25,7 @@ class CustomizationTemplate < ApplicationRecord
   def self.seed
     return unless self == base_class # Prevent subclasses from seeding
 
-    current = where(:system => true).index_by(&:name)
+    current = in_my_region.where(:system => true).index_by(&:name)
 
     seed_data.each do |s|
       log_attrs = s.slice(:name, :type, :description)
@@ -58,5 +65,9 @@ class CustomizationTemplate < ApplicationRecord
     # example:  <% if evm[:addr_mode].first == 'static' %>
     require 'erb'
     ERB.new(erb_text).result(binding)
+  end
+
+  def self.kernel_args(_pxe_server, _pxe_image, _mac_address)
+    {}
   end
 end

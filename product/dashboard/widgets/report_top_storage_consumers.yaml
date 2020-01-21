@@ -1,12 +1,13 @@
 description: report_top_storage_consumers
 title: Top Storage Consumers
-content_type: report   
+content_type: report
 options:
-  :col_order: 
+  :col_order:
   - name
   - ems_cluster.name
   - used_disk_storage
   :row_count: 10
+  :timezone_matters: false
 visibility:
   :roles:
   - _ALL_
@@ -15,8 +16,8 @@ resource_name: Top Storage Consumers
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
-    :interval: 
+    :interval:
       :value: "1"
       :unit: daily
-enabled: true        
+enabled: true
 read_only: true

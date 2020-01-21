@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 require 'csv'
 CSV.open("reports.csv", "w") do |csv|
   csv << %w(Name Title Group Sorting Graph Filter)

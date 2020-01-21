@@ -1,65 +1,40 @@
 #!/usr/bin/env ruby
-require 'pathname'
-require 'fileutils'
-include FileUtils
+require_relative '../lib/manageiq/environment'
 
-# path to your application root.
-APP_ROOT = Pathname.new File.expand_path('../../', __FILE__)
+if ARGV.any?
+  puts <<-EOS
+Usage: bin/update
 
-def system!(*args)
-  system(*args) || abort("\n== Command #{args} failed ==")
+Environment Variable Options:
+    SKIP_DATABASE_SETUP  Skip the migration and seeding of the database.
+    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
+                         true in production mode since the tasks do not exist.
+    SKIP_AUTOMATE_RESET  Skip the reset of the automate domain.
+EOS
+  exit 1
 end
 
-def dev_warn_and_exit_if_missing(file, sample)
-  if ENV.fetch('RAILS_ENV', 'development') == 'development' && !File.exist?(file)
-    warn "Your #{file} is missing, please run 'cp #{sample} #{file}' and try again."
-    exit 1
-  end
-end
+ENV["SKIP_TEST_RESET"] = 'true' if ENV['RAILS_ENV'] == 'production'
 
-chdir APP_ROOT do
-  # This script is a way to update your development environment automatically.
-  # Add necessary update steps to this file.
-  dev_warn_and_exit_if_missing('config/cable.yml', 'config/cable.yml.sample')
-  dev_warn_and_exit_if_missing('config/database.yml', 'config/database.pg.yml')
+Dir.chdir(ManageIQ::Environment::APP_ROOT) do
+  ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='
-  # Run bower in a thread and continue to do the non-js stuff
-  puts "Updating bower assets in parallel..."
-  bower_thread = Thread.new do
-    system! "bower update --allow-root -F --silent --config.analytics=false"
-  end
-  system! 'gem install bundler --conservative'
+  ManageIQ::Environment.install_bundler
+  ManageIQ::Environment.bundle_update
 
-  # TODO: This unlocks your dependencies and installs all updates.
-  # From: https://github.com/ManageIQ/manageiq/pull/11137
-  # It should be system('bundle check') || system!('bundle install').
-  # If we need a "reset all the things" script, we should call it bin/reset.
-  system! 'bundle update'
+  ManageIQ::Environment.while_updating_ui do
+    unless ENV["SKIP_DATABASE_SETUP"]
+      ManageIQ::Environment.migrate_database
+      ManageIQ::Environment.seed_database
+    end
 
-  puts "\n== Updating database =="
-  system! 'bin/rails db:migrate'
-
-  puts "\n== Seeding database =="
-  system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
-
-  puts "\n== Resetting tests =="
-  system! "bin/rails test:vmdb:setup"
-
-  unless ENV["SKIP_AUTOMATE_RESET"]
-    puts "\n== Resetting Automate Domains =="
-    system! "bin/rails evm:automate:reset"
+    ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
+    ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
   end
 
-  # Make sure bower is done before compiling assets
-  bower_thread.join
-  puts "Done running `bower update`."
+  # Make sure update_ui is done before compiling assets
+  ManageIQ::Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
 
-  if ENV['RAILS_ENV'] == 'production'
-    puts "\n== Recompiling assets =="
-    system! "bin/rails evm:compile_assets"
-  end
-
-  puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rails log:clear tmp:clear'
+  ManageIQ::Environment.clear_logs_and_temp
 end

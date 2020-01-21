@@ -3,7 +3,7 @@ module Spec
     module MiqRequestTaskHelper
       def call_method
         @called_states << @current_state
-        task.update_attributes(:phase => @current_state)
+        task.update(:phase => @current_state)
         check_post_install_callback
         task.send(@current_state)
       end

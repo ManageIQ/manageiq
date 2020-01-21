@@ -10,7 +10,7 @@ class TimeProfile < ApplicationRecord
   has_many  :miq_reports
   has_many  :metric_rollups
 
-  scope :rollup_daily_metrics, -> { where :rollup_daily_metrics => true }
+  scope :rollup_daily_metrics, -> { where(:rollup_daily_metrics => true) }
 
   after_create :rebuild_daily_metrics_on_create
   after_save   :rebuild_daily_metrics_on_save
@@ -93,6 +93,10 @@ class TimeProfile < ApplicationRecord
     days.sort == ALL_DAYS && hours.sort == ALL_HOURS
   end
 
+  def default?
+    entire_tz? && tz_or_default == DEFAULT_TZ
+  end
+
   def rebuild_daily_metrics
     oldest_hourly = MetricRollup.select(:timestamp).where(:capture_interval_name => "hourly").order(:timestamp).first
     destroy_metric_rollups
@@ -153,8 +157,8 @@ class TimeProfile < ApplicationRecord
 
   def rebuild_daily_metrics_on_save
     if rollup_daily_metrics
-      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || changed.include_any?("profile", "rollup_daily_metrics")
-    elsif changed.include?("rollup_daily_metrics")
+      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || saved_change_to_profile? || saved_change_to_rollup_daily_metrics?
+    elsif saved_change_to_rollup_daily_metrics?
       destroy_metric_rollups_queue
     end
   ensure

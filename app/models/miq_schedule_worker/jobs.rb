@@ -24,40 +24,21 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "MiqServer", :method_name => "queue_update_registration_status", :server_guid => MiqServer.my_guid)
   end
 
-  def miq_server_resync_rhn_mirror
-    queue_work(:class_name  => "MiqServer", :instance_id => MiqServer.my_server.id, :method_name => "resync_rhn_mirror", :server_guid => MiqServer.my_guid, :msg_timeout => 60.minutes, :task_id => "resync_rhn_mirror")
-  end
-
   def job_check_jobs_for_timeout
     queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_jobs_for_timeout")
   end
 
-  def service_retirement_check
-    queue_work_on_each_zone(:class_name  => "Service", :method_name => "retirement_check")
-  end
-
-  def vm_retirement_check
-    queue_work_on_each_zone(:class_name  => "Vm", :method_name => "retirement_check")
-  end
-
-  def orchestration_stack_retirement_check
-    queue_work_on_each_zone(:class_name  => "OrchestrationStack", :method_name => "retirement_check")
-  end
-
-  def load_balancer_retirement_check
-    queue_work_on_each_zone(:class_name  => "LoadBalancer", :method_name => "retirement_check")
+  def retirement_check
+    queue_work_on_each_zone(:class_name => 'RetirementManager', :method_name => 'check')
+    queue_work(:class_name => 'RetirementManager', :method_name => 'check_per_region', :zone => nil)
   end
 
   def host_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "Host", :method_name => "authentication_check_schedule")
+    queue_work_on_each_zone(:class_name  => "Host", :method_name => "authentication_check_schedule", :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def ems_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule")
-  end
-
-  def storage_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "StorageManager",      :method_name => "authentication_check_schedule")
+    queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule", :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def session_check_session_timeout
@@ -69,7 +50,9 @@ class MiqScheduleWorker::Jobs
   end
 
   def job_proxy_dispatcher_dispatch
-    queue_work_on_each_zone(:class_name  => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate", :state => "ready")
+    if JobProxyDispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
+    end
   end
 
   def ems_refresh_timer(klass)
@@ -85,11 +68,11 @@ class MiqScheduleWorker::Jobs
   end
 
   def metric_capture_perf_capture_timer
-    zone = MiqServer.my_server(true).zone
-    if zone.role_active?("ems_metrics_coordinator")
+    MiqServer.my_server.zone.ems_metrics_collectable.each do |ems|
       queue_work(
         :class_name  => "Metric::Capture",
         :method_name => "perf_capture_timer",
+        :args        => [ems.id],
         :role        => "ems_metrics_coordinator",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :state       => ["ready", "dequeue"]
@@ -105,67 +88,54 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "Metric::Purging", :method_name => "purge_rollup_timer", :zone => nil)
   end
 
-  def ems_event_purge_timer
+  def drift_state_purge_timer
+    queue_work(:class_name => "DriftState", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def event_stream_purge_timer
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def notification_purge_timer
+    queue_work(:class_name => "Notification", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def task_purge_timer
+    queue_work(:class_name => "MiqTask", :method_name => "purge_timer", :zone => nil)
   end
 
   def policy_event_purge_timer
     queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer", :zone => nil)
   end
 
-  def storage_refresh_metrics
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "refresh_metrics",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
+  def compliance_purge_timer
+    queue_work(:class_name => "Compliance", :method_name => "purge_timer", :zone => nil)
   end
 
-  def storage_metrics_rollup_hourly
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "metrics_rollup_hourly",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
+  def miq_report_result_purge_timer
+    queue_work(:class_name => "MiqReportResult", :method_name => "purge_timer", :zone => nil)
   end
 
-  def storage_metrics_rollup_daily(time_profile_id)
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "metrics_rollup_daily",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"],
-      :args        => [time_profile_id]
-    )
+  def archived_entities_purge_timer
+    queue_work(:class_name => "Container", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerNode", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuota", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuotaItem", :method_name => "purge_timer", :zone => nil)
   end
 
-  def miq_storage_metric_purge_all_timer
-    queue_work(
-      :queue_name  => "storage_metrics_collector",
-      :class_name  => "MiqStorageMetric",
-      :method_name => "purge_all_timer",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
+  def binary_blob_purge_timer
+    queue_work(:class_name => "BinaryBlob", :method_name => "purge_timer", :zone => nil)
   end
 
-  def storage_refresh_inventory
-    queue_work(
-      :class_name  => "StorageManager",
-      :method_name => "refresh_inventory",
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :state       => ["ready", "dequeue"]
-    )
+  def vim_performance_states_purge_timer
+    queue_work(:class_name => "VimPerformanceState", :method_name => "purge_timer", :zone => nil)
   end
 
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
     MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
-  end
-
-  def ldap_server_sync_data_from_timer
-    queue_work(:class_name => "LdapServer", :method_name => "sync_data_from_timer")
   end
 
   def vmdb_database_capture_metrics_timer
@@ -182,6 +152,22 @@ class MiqScheduleWorker::Jobs
     ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
       queue_work(:class_name  => class_name, :method_name => "purge_all_timer", :role => "database_operations", :zone => nil)
     end
+  end
+
+  def database_maintenance_reindex_timer
+    ::Settings.database.maintenance.reindex_tables.each do |class_name|
+      queue_work(:class_name => class_name, :method_name => "reindex", :role => "database_operations", :zone => nil)
+    end
+  end
+
+  def database_maintenance_vacuum_timer
+    ::Settings.database.maintenance.vacuum_tables.each do |class_name|
+      queue_work(:class_name => class_name, :method_name => "vacuum", :role => "database_operations", :zone => nil)
+    end
+  end
+
+  def queue_miq_queue_check_for_timeout
+    queue_work(:class_name => "MiqQueue", :method_name => "check_for_timeout", :zone => nil)
   end
 
   def check_for_stuck_dispatch(threshold_seconds)
@@ -207,6 +193,10 @@ class MiqScheduleWorker::Jobs
 
   def generate_chargeback_for_service(args = {})
     queue_work(:class_name => "Service", :method_name => "queue_chargeback_reports", :zone => nil, :args => args)
+  end
+
+  def check_for_timed_out_active_tasks
+    queue_work(:class_name => "MiqTask", :method_name => "update_status_for_timed_out_active_tasks", :zone => nil)
   end
 
   private

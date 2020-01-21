@@ -52,7 +52,7 @@ module MiqServer::UpdateManagement
   end
 
   def update_registration_status
-    attempt_registration unless rhn_mirror?
+    attempt_registration
 
     check_updates
   end
@@ -60,38 +60,43 @@ module MiqServer::UpdateManagement
   def attempt_registration
     return unless register
     attach_products
+    configure_yum_proxy
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
+    update(:upgrade_message => "Registration process completed successfully")
+    _log.info("Registration process completed successfully")
+  rescue LinuxAdmin::SubscriptionManagerError => e
+    _log.error("Registration Failed: #{e.message}")
+    Notification.create(:type => "server_registration_error", :options => {:server_name => MiqServer.my_server.name})
+    raise
   end
 
   def register
-    update_attributes(:upgrade_message => "registering")
-    if LinuxAdmin::RegistrationSystem.registered?
+    update(:upgrade_message => "registering")
+    if LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options)
       _log.info("Appliance already registered")
-      update_attributes(:rh_registered => true)
+      update(:rh_registered => true)
     else
       _log.info("Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
-
-      registration_class = LinuxAdmin::SubscriptionManager
 
       # TODO: Prompt user for environment in UI for Satellite 6 registration, use default environment for now.
       registration_options = assemble_registration_options
       registration_options[:environment] = "Library" if registration_type == "rhn_satellite6"
 
-      registration_class.register(registration_options)
+      LinuxAdmin::SubscriptionManager.register(registration_options)
 
       # Reload the registration_type
-      LinuxAdmin::RegistrationSystem.registration_type(true)
+      LinuxAdmin::SubscriptionManager.registration_type(true)
 
-      update_attributes(:rh_registered => LinuxAdmin::RegistrationSystem.registered?)
+      update(:rh_registered => LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options))
     end
 
     if rh_registered?
-      update_attributes(:upgrade_message => "registration successful")
+      update(:upgrade_message => "registration successful")
       _log.info("Registration Successful")
     else
-      update_attributes(:upgrade_message => "registration failed")
+      update(:upgrade_message => "registration failed")
       _log.error("Registration Failed")
     end
 
@@ -99,16 +104,26 @@ module MiqServer::UpdateManagement
   end
 
   def attach_products
-    update_attributes(:upgrade_message => "attaching products")
+    update(:upgrade_message => "attaching products")
     _log.info("Attaching products based on installed certificates")
-    LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
+    LinuxAdmin::SubscriptionManager.subscribe(assemble_registration_options)
+  end
+
+  def configure_yum_proxy
+    registration_options = assemble_registration_options
+    return unless registration_options[:proxy_address]
+    conf = IniFile.load("/etc/yum.conf")
+    conf["main"]["proxy"] = registration_options[:proxy_address]
+    conf["main"]["proxy_username"] = registration_options[:proxy_username] if registration_options[:proxy_username]
+    conf["main"]["proxy_password"] = registration_options[:proxy_password] if registration_options[:proxy_password]
+    conf.save
   end
 
   def repos_enabled?
-    enabled = LinuxAdmin::RegistrationSystem.enabled_repos
+    enabled = LinuxAdmin::SubscriptionManager.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
       _log.info("Desired update repository is enabled")
-      update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
+      update(:rh_subscribed => true, :upgrade_message => "registered")
       return true
     end
     false
@@ -116,11 +131,12 @@ module MiqServer::UpdateManagement
 
   def enable_repos
     MiqDatabase.first.update_repo_names.each do |repo|
-      update_attributes(:upgrade_message => "enabling #{repo}")
+      update(:upgrade_message => "enabling #{repo}")
       begin
-        LinuxAdmin::RegistrationSystem.enable_repo(repo, assemble_registration_options)
+        LinuxAdmin::SubscriptionManager.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
-        update_attributes(:upgrade_message => "failed to enable #{repo}")
+        update(:upgrade_message => "failed to enable #{repo}")
+        Notification.create(:type => "enable_update_repo_failed", :options => {:repo_name => repo})
       end
     end
   end
@@ -145,7 +161,7 @@ module MiqServer::UpdateManagement
     _log.info("Checking for postgres updates...")
     check_postgres_updates
 
-    _log.info("Checking for %{product} updates..." % {:product => I18n.t('product.name')})
+    _log.info("Checking for %{product} updates..." % {:product => Vmdb::Appliance.PRODUCT_NAME})
     check_cfme_version_available
 
     _log.info("Checking for updates... Complete")
@@ -168,16 +184,16 @@ module MiqServer::UpdateManagement
   private
 
   def check_platform_updates
-    update_attributes(:updates_available => LinuxAdmin::Yum.updates_available?, :last_update_check => Time.now.utc)
+    update(:updates_available => LinuxAdmin::Yum.updates_available?, :last_update_check => Time.now.utc)
   end
 
   def check_postgres_updates
-    MiqDatabase.first.update_attributes(:postgres_update_available => LinuxAdmin::Yum.updates_available?(MiqDatabase.postgres_package_name))
+    MiqDatabase.first.update(:postgres_update_available => LinuxAdmin::Yum.updates_available?(MiqDatabase.postgres_package_name))
   end
 
   def check_cfme_version_available
     cfme = MiqDatabase.cfme_package_name
-    MiqDatabase.first.update_attributes(:cfme_version_available => LinuxAdmin::Yum.version_available(cfme)[cfme])
+    MiqDatabase.first.update(:cfme_version_available => LinuxAdmin::Yum.version_available(cfme)[cfme])
   end
 
   def assemble_registration_options

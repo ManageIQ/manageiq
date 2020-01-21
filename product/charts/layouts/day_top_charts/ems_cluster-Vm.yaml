@@ -1,12 +1,12 @@
 # ems_cluster-Vm Top CIs/day chart layouts
---- 
+---
 
 # TODO: Change to VmOrTemplate after migration and backend code is changed FB #14400
 - :title: Average CPU Used (Mhz)
   :type: Pie
   :columns:
   - cpu_usagemhz_rate_average
-  :menu: 
+  :menu:
   - Chart-Selected-Daily:Daily for <category>
   - Chart-Selected-Hourly:Hourly for <category>
   - Timeline-Selected-Daily:Daily events on <category>
@@ -17,7 +17,7 @@
   :type: Pie
   :columns:
   - v_pct_cpu_ready_delta_summation
-  :menu: 
+  :menu:
   - Chart-Selected-Daily:Daily for <category>
   - Chart-Selected-Hourly:Hourly for <category>
   - Timeline-Selected-Daily:Daily events on <category>
@@ -29,7 +29,7 @@
   :type: Pie
   :columns:
   - derived_memory_used
-  :menu: 
+  :menu:
   - Chart-Selected-Daily:Daily for <category>
   - Chart-Selected-Hourly:Hourly for <category>
   - Timeline-Selected-Daily:Daily events on <category>
@@ -40,7 +40,7 @@
   :type: Pie
   :columns:
   - disk_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Selected-Daily:Daily for <category>
   - Chart-Selected-Hourly:Hourly for <category>
   - Timeline-Selected-Daily:Daily events on <category>
@@ -51,7 +51,7 @@
   :type: Pie
   :columns:
   - net_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Selected-Daily:Daily for <category>
   - Chart-Selected-Hourly:Hourly for <category>
   - Timeline-Selected-Daily:Daily events on <category>

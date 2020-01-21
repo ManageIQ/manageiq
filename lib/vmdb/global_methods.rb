@@ -1,7 +1,7 @@
 module Vmdb
   module GlobalMethods
     def is_numeric?(n)
-      Float n
+      Float(n)
     rescue
       false
     else
@@ -10,7 +10,7 @@ module Vmdb
 
     # Check to see if a field contains a valid integer
     def is_integer?(n)
-      Integer n
+      Integer(n)
     rescue
       false
     else
@@ -28,7 +28,7 @@ module Vmdb
     end
 
     def column_type(model, column)
-      MiqExpression.col_type(model, column)
+      MiqExpression.create_field(model, [], column).column_type
     end
 
     # Had to add timezone methods here, they are being called from models
@@ -47,14 +47,14 @@ module Vmdb
         when "export_filename"                      # for export/log filename
           new_time = new_time.strftime("%Y%m%d_%H%M%S")
         when "tl"
-          new_time = I18n.l new_time
+          new_time = I18n.l(new_time)
         when "raw"                                  # return without formatting
         when "compare_hdr"                          # for drift/compare headers
           new_time = I18n.l(new_time, :format => :long) + new_time.strftime(" %Z")
         when "widget_footer"                        # for widget footers
           new_time = I18n.l(new_time, :format => :long)
         else                                        # for summary screens
-          new_time = I18n.l new_time
+          new_time = I18n.l(new_time)
         end
       else    # if time is nil
         new_time = ""
@@ -73,26 +73,25 @@ module Vmdb
       elsif options[:models]
         Dictionary.gettext(options[:models], :type => :model, :notfound => :titleize, :plural => true)
       elsif options[:ui_title]
-        ui_lookup_for_title(options[:ui_title])
+        Dictionary.gettext(options[:ui_title], :type => :ui_title)
       else
         ''
       end
     end
 
-    def ui_lookup_for_title(text)
-      Dictionary.gettext(text, :type => :ui_title)
-    end
-
     # Wrap a report html table body with html table tags and headers for the columns
-    def report_build_html_table(report, table_body)
+    def report_build_html_table(report, table_body, breakable = true)
       html = ''
-      html << "<table class='table table-striped table-bordered'>"
+      html << "<table class=\"table table-striped table-bordered #{breakable ? '' : 'non-breakable'}\">"
       html << "<thead>"
       html << "<tr>"
 
       # table headings
       unless report.headers.nil?
-        report.headers.each do |h|
+        report.headers.each_with_index do |h, i|
+          col = report.col_order[i]
+          next if report.column_is_hidden?(col)
+
           html << "<th>" << CGI.escapeHTML(_(h.to_s)) << "</th>"
         end
         html << "</tr>"

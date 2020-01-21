@@ -25,6 +25,10 @@ module ActsAsTaggable
     end.map(&:strip).uniq
   end
 
+  def writable_classification_tags
+    tags.merge(Classification.with_writable_parents)
+  end
+
   module ClassMethods
     # @option options :cat [String|nil] optional category for the tags
     # @option options :ns  [String|nil] optional namespace for the tags
@@ -49,7 +53,7 @@ module ActsAsTaggable
       taggings = Tagging.arel_table
       where(Tagging.where(taggings[:taggable_id].eq(arel_table[:id])
                                                 .and(taggings[:taggable_type].eq(base_class.name))
-                                                .and(taggings[:tag_id].in(tag_ids))).exists)
+                                                .and(taggings[:tag_id].in(tag_ids))).arel.exists)
     end
 
     def with_all_tags(tag_ids)
@@ -69,7 +73,7 @@ module ActsAsTaggable
     end
 
     def tags(options = {})
-      options.merge!(:taggable_type => base_class.name)
+      options[:taggable_type] = base_class.name
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
@@ -86,7 +90,7 @@ module ActsAsTaggable
         .where(:taggable_id    => id)
         .where(:taggable_type  => self.class.base_class.name)
         .where(tagging[:tag_id].eq(tag[:id]))
-        .where(tag[:name].matches "#{ns}/%")
+        .where(tag[:name].matches("#{ns}/%"))
         .destroy_all
 
       # Apply new tags
@@ -111,13 +115,27 @@ module ActsAsTaggable
     end
   end
 
+  def tag_remove(list, options = {})
+    ns = Tag.get_namespace(options)
+
+    # Remove tags
+    Tag.transaction do
+      Tag.parse(list).each do |name|
+        name = File.join(ns, name)
+        tag = Tag.find_by(:name => name)
+        next if tag.nil?
+        tag.taggings.where(:taggable => self).destroy_all
+      end
+    end
+  end
+
   def tagged_with(options = {})
     tagging = Tagging.arel_table
     query = Tag.includes(:taggings).references(:taggings)
-    query = query.where(tagging[:taggable_type].eq self.class.base_class.name)
-    query = query.where(tagging[:taggable_id].eq id)
+    query = query.where(tagging[:taggable_type].eq(self.class.base_class.name))
+    query = query.where(tagging[:taggable_id].eq(id))
     ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") if ns
+    query = query.where(Tag.arel_table[:name].matches("#{ns}%")) if ns
     query
   end
 
@@ -144,11 +162,11 @@ module ActsAsTaggable
         raise "unable to evaluate tag, '#{tag}', because it contains multi-value reference, '#{part}' that is not the last reference" if subject.kind_of?(Array)
       end
       relationship = parts.pop
-      unless relationship
+      if relationship
+        macro = subject.class.reflection_with_virtual(relationship.to_sym).macro
+      else
         relationship = "self"
         macro = :has_one
-      else
-        macro = subject.class.reflect_on_association(relationship.to_sym).macro
       end
       if macro == :has_one || macro == :belongs_to
         value = subject.public_send(relationship).public_send(attr)
@@ -156,7 +174,7 @@ module ActsAsTaggable
       else
         subject.send(relationship).any? { |o| o.send(attr).to_s == object }
       end
-    rescue NoMethodError => err
+    rescue NoMethodError
       return false
     end
   end
@@ -181,26 +199,7 @@ module ActsAsTaggable
   end
 
   def tag_list(options = {})
-    ns = Tag.get_namespace(options)
-    return vtag_list(options) if  ns[0..7] == "/virtual"
-    Tag.filter_ns(tags, ns).join(" ")
-  end
-
-  def vtag_list(options = {})
-    ns = Tag.get_namespace(options)
-
-    predicate = ns.split("/")[2..-1] # throw away /virtual
-
-    # p "ns: [#{ns}]"
-    # p "predicate: [#{predicate.inspect}]"
-
-    begin
-      predicate.inject(self) do |target, method|
-        target.public_send method
-      end
-    rescue NoMethodError => err
-      return ""
-    end
+    Tag.list(self, options)
   end
 
   def perf_tags

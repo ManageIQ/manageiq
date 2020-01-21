@@ -2,7 +2,28 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    VIEWS_FOLDER = File.join(Rails.root, "product/views")
+    def view_paths
+      @view_paths ||= (
+        Vmdb::Plugins.map do |engine|
+          path = engine.root.join('product/views')
+          path if path.directory?
+        end.compact
+      )
+    end
+
+    def resolve_view_path(file_name, file_name_no_suffix = nil)
+      view_paths.each do |path|
+        full_path = File.join(path, file_name)
+        return full_path if File.exist?(full_path)
+
+        if file_name_no_suffix
+          full_path_no_suffix = File.join(path, file_name_no_suffix)
+          return full_path_no_suffix if File.exist?(full_path_no_suffix)
+        end
+      end
+      nil
+    end
+
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
 
@@ -11,16 +32,44 @@ module MiqReport::ImportExport
         raise _("Incorrect format, only policy records can be imported.")
       end
 
-      user = options[:user] || User.find_by_userid(options[:userid])
-      report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
+      report[:db_options] ||= report["db_options"]
+      report[:db_options].deep_symbolize_keys! if report[:db_options]
+
+      user = options[:user] || User.lookup_by_userid(options[:userid])
+
+      if options[:preserve_owner]
+        userid = report.delete("userid")
+        group_description = report.delete("group_description")
+
+        report_user = userid.present? ? User.lookup_by_userid(userid) : User.find_by(:id => report["user_id"])
+        if report_user.nil?
+          _log.warn("User '#{userid.presence || report["user_id"]}' for imported report '#{report["name"]}' was not found")
+          report.delete("user_id")
+        else
+          report["user_id"] = report_user.id
+        end
+
+        group = group_description.present? ? MiqGroup.in_my_region.find_by(:description => group_description) : MiqGroup.find_by(:id => report["miq_group_id"])
+        if group.nil?
+          _log.warn("Group '#{group_description}' for imported report '#{report["name"]}' was not found")
+          report.delete("miq_group_id")
+        else
+          report["miq_group_id"] = group.id
+        end
+
+        raise _("Neither user or group to be preserved during import were found") if report_user.nil? && group.nil?
+      else
+        report["miq_group_id"] = user.current_group_id
+        report["user_id"] = user.id
+      end
 
       report["name"] = report.delete("menu_name")
-      rep = MiqReport.find_by_name(report["name"])
+      rep = MiqReport.find_by(:name => report["name"])
       if rep
         # if report exists
         if options[:overwrite]
           # if report exists delete and create new
-          if user.admin_user? || user.current_group_id == rep.miq_group_id
+          if user.report_admin_user? || user.current_group_id == rep.miq_group_id
             msg = "Overwriting Report: [#{report["name"]}]"
             rep.attributes = report
             result = {:message => "Replaced Report: [#{report["name"]}]", :level => :info, :status => :update}
@@ -58,10 +107,16 @@ module MiqReport::ImportExport
     # @param cache [Hash] cache that holds yaml for the views
     def load_from_view_options(db, current_user = nil, options = {}, cache = {})
       filename = MiqReport.view_yaml_filename(db, current_user, options)
-      yaml     = cache[filename] ||= YAML.load_file(filename)
-      view     = MiqReport.new(yaml)
-      view.db  = db if filename.ends_with?("Vm__restricted.yaml")
+      view = load_from_filename(filename, cache)
+      view.db = db if filename.ends_with?("Vm__restricted.yaml")
+      view
+    end
+
+    def load_from_filename(filename, cache)
+      yaml = cache[filename] ||= YAML.load_file(filename)
+      view = MiqReport.new(yaml)
       view.extras ||= {}                        # Always add in the extras hash
+      view.extras[:filename] = File.basename(filename, '.yaml')
       view
     end
 
@@ -74,7 +129,7 @@ module MiqReport::ImportExport
       if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
             ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
         if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-          viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
+          viewfilerestricted = resolve_view_path('Vm__restricted.yaml')
         end
       end
 
@@ -82,22 +137,12 @@ module MiqReport::ImportExport
 
       role = role.name.split("-").last if role.try(:read_only?)
 
-      # Build the view file name
-      if suffix
-        viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{role}.yaml"
-      else
-        viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{role}.yaml"
-      end
+      suffix = suffix ? "-#{suffix}" : ''
 
-      if viewfilerestricted && File.exist?(viewfilerestricted)
-        viewfilerestricted
-      elsif File.exist?(viewfilebyrole)
-        viewfilebyrole
-      else
-        viewfile
-      end
+      viewfile = resolve_view_path("#{db}#{suffix}.yaml", "#{db}.yaml")
+      viewfilebyrole = resolve_view_path("#{db}#{suffix}-#{role}.yaml")
+
+      viewfilerestricted || viewfilebyrole || viewfile
     end
   end
 
@@ -105,6 +150,8 @@ module MiqReport::ImportExport
     h = attributes
     ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
     h["menu_name"] = h.delete("name")
+    h["userid"] = User.find_by(:id => h["user_id"])&.userid.to_s
+    h["group_description"] = MiqGroup.find_by(:id => h["miq_group_id"])&.description.to_s
     [{self.class.to_s => h}]
   end
 end

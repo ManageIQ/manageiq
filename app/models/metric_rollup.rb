@@ -1,4 +1,8 @@
+# @see Metric
 class MetricRollup < ApplicationRecord
+  # Specify the primary key for a model backed by a view
+  self.primary_key = "id"
+
   include Metric::Common
   include_concern 'Metric::ChargebackHelper'
 
@@ -8,9 +12,9 @@ class MetricRollup < ApplicationRecord
                                 net_usage_rate_average derived_vm_used_disk_storage
                                 derived_vm_allocated_disk_storage).freeze
 
-  def self.with_interval_and_time_range(interval, timestamp)
-    where(:capture_interval_name => interval, :timestamp => timestamp)
-  end
+  METERING_USED_METRIC_FIELDS = %w(cpu_usagemhz_rate_average derived_memory_used net_usage_rate_average).freeze
+
+  CAPTURE_INTERVAL_NAMES = %w(hourly daily).freeze
 
   #
   # min_max column getters
@@ -57,9 +61,17 @@ class MetricRollup < ApplicationRecord
     metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
   end
 
-  def chargeback_fields_present?
-    return @chargeback_fields_present if defined?(@chargeback_fields_present)
+  def self.rollups_in_range(resource_type, resource_ids, capture_interval_name, start_date, end_date = nil)
+    capture_interval_name ||= 'hourly'
+    end_date = end_date.nil? ? Time.zone.today : end_date
+    metrics = where(:resource_type         => resource_type,
+                    :capture_interval_name => capture_interval_name,
+                    :timestamp             => start_date.beginning_of_day...end_date.end_of_day)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics.order(:resource_id, :timestamp => :desc)
+  end
 
-    @chargeback_fields_present = CHARGEBACK_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
+  def metering_used_fields_present?
+    @metering_used_fields_present ||= METERING_USED_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
   end
 end

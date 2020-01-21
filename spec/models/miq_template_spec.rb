@@ -12,24 +12,24 @@ describe MiqTemplate do
   end
 
   context "#template=" do
-    before(:each) { @template = FactoryGirl.create(:template_vmware) }
+    let(:template) { FactoryBot.create(:template_vmware) }
 
     it "true" do
-      @template.update_attribute(:template, true)
-      expect(@template.type).to eq("ManageIQ::Providers::Vmware::InfraManager::Template")
-      expect(@template.template).to eq(true)
-      expect(@template.state).to eq("never")
-      expect { @template.reload }.not_to raise_error
-      expect { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.to raise_error ActiveRecord::RecordNotFound
+      template.update_attribute(:template, true)
+      expect(template.type).to eq("ManageIQ::Providers::Vmware::InfraManager::Template")
+      expect(template.template).to eq(true)
+      expect(template.state).to eq("never")
+      expect { template.reload }.not_to raise_error
+      expect { ManageIQ::Providers::Vmware::InfraManager::Vm.find(template.id) }.to raise_error ActiveRecord::RecordNotFound
     end
 
     it "false" do
-      @template.update_attribute(:template, false)
-      expect(@template.type).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-      expect(@template.template).to eq(false)
-      expect(@template.state).to eq("unknown")
-      expect { @template.reload }.to raise_error ActiveRecord::RecordNotFound
-      expect { ManageIQ::Providers::Vmware::InfraManager::Vm.find(@template.id) }.not_to raise_error
+      template.update_attribute(:template, false)
+      expect(template.type).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
+      expect(template.template).to eq(false)
+      expect(template.state).to eq("unknown")
+      expect { template.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect { ManageIQ::Providers::Vmware::InfraManager::Vm.find(template.id) }.not_to raise_error
     end
   end
 
@@ -46,18 +46,18 @@ describe MiqTemplate do
   end
 
   it "#supports_provisioning?" do
-    template = FactoryGirl.create(:template_openstack)
-    FactoryGirl.create(:ems_openstack, :miq_templates => [template])
+    template = FactoryBot.create(:template_openstack)
+    FactoryBot.create(:ems_openstack, :miq_templates => [template])
     expect(template.supports_provisioning?).to be_truthy
 
-    template = FactoryGirl.create(:template_openstack)
+    template = FactoryBot.create(:template_openstack)
     expect(template.supports_provisioning?).to be_falsey
 
-    template = FactoryGirl.create(:template_microsoft)
+    template = FactoryBot.create(:template_microsoft)
     expect(template.supports_provisioning?).to be_falsey
 
-    template = FactoryGirl.create(:template_microsoft)
-    FactoryGirl.create(:ems_openstack, :miq_templates => [template])
+    template = FactoryBot.create(:template_microsoft)
+    FactoryBot.create(:ems_openstack, :miq_templates => [template])
     expect(template.supports_provisioning?).to be_truthy
   end
 end

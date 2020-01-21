@@ -1,8 +1,15 @@
 describe MiqDatabase do
+  describe ".encrypted_columns" do
+    it "returns the encrypted columns" do
+      expected = %w(csrf_secret_token csrf_secret_token_encrypted session_secret_token session_secret_token_encrypted)
+      expect(described_class.encrypted_columns).to match_array(expected)
+    end
+  end
+
   let(:db) { described_class.seed }
 
   let!(:region) do
-    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+    FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
   end
 
   context ".registration_default_value_for_update_repo_name" do
@@ -65,7 +72,7 @@ describe MiqDatabase do
 
       context "existing record" do
         it "will seed nil values" do
-          FactoryGirl.build(:miq_database,
+          FactoryBot.build(:miq_database,
                             :csrf_secret_token    => nil,
                             :session_secret_token => nil
                            ).save(:validate => false)
@@ -76,7 +83,7 @@ describe MiqDatabase do
         end
 
         it "will not change existing values" do
-          FactoryGirl.create(:miq_database,
+          FactoryBot.create(:miq_database,
                              :csrf_secret_token    => "abc",
                              :session_secret_token => "def"
                             )
@@ -107,7 +114,7 @@ describe MiqDatabase do
       MiqDatabase.seed
       EvmSpecHelper.create_guid_miq_server_zone
 
-      expect(MiqTask).to receive(:wait_for_taskid).and_return(FactoryGirl.create(:miq_task, :state => "Finished"))
+      expect(MiqTask).to receive(:wait_for_taskid).and_return(FactoryBot.create(:miq_task, :state => "Finished"))
 
       MiqDatabase.first.verify_credentials(:registration)
     end
@@ -115,12 +122,12 @@ describe MiqDatabase do
 
   context "#registration_organization_name" do
     it "returns registration_organization when registration_organization_display_name is not available" do
-      db = FactoryGirl.create(:miq_database, :registration_organization => "foo")
+      db = FactoryBot.create(:miq_database, :registration_organization => "foo")
       expect(db.registration_organization_name).to eq("foo")
     end
 
     it "returns registration_organization_display_name when available" do
-      db = FactoryGirl.create(:miq_database,
+      db = FactoryBot.create(:miq_database,
                               :registration_organization              => "foo",
                               :registration_organization_display_name => "FOO")
       expect(db.registration_organization_name).to eq("FOO")
@@ -128,8 +135,10 @@ describe MiqDatabase do
   end
 
   if ENV.key?("CI")
-    it "uses region 1 on travis" do
-      expect(MiqDatabase.seed.my_region_number).to eq(1)
+    it "uses a random, non-zero, region number on Travis" do
+      db = MiqDatabase.seed
+      expect(db.region_number).to be > 0
+      expect(db.region_number).to eq(MiqRegion.my_region_number)
     end
   end
 end

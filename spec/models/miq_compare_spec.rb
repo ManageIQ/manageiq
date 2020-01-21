@@ -1,12 +1,12 @@
 describe MiqCompare do
   context "Marshal.dump and Marshal.load" do
     it "with Vms" do
-      vm1 = FactoryGirl.create(:vm_vmware)
-      vm2 = FactoryGirl.create(:vm_vmware)
+      vm1 = FactoryBot.create(:vm_vmware)
+      vm2 = FactoryBot.create(:vm_vmware)
 
-      MiqReport.seed_report("vms", "compare")
+      MiqReport.seed_report("vms")
 
-      report = MiqReport.find_by_name("VMs: Compare Template")
+      report = MiqReport.find_by(:name => "VMs: Compare Template")
       compare = MiqCompare.new({:ids => [vm1.id, vm2.id]}, report)
 
       dumped = loaded = nil
@@ -15,13 +15,13 @@ describe MiqCompare do
     end
 
     it "with Hosts" do
-      host1 = FactoryGirl.create(:host_vmware)
-      host2 = FactoryGirl.create(:host_vmware)
+      host1 = FactoryBot.create(:host_vmware)
+      host2 = FactoryBot.create(:host_vmware)
 
       MiqRegion.seed
-      MiqReport.seed_report("hosts", "compare")
+      MiqReport.seed_report("hosts")
 
-      report = MiqReport.find_by_name("Hosts: Compare Template")
+      report = MiqReport.find_by(:name => "Hosts: Compare Template")
       compare = MiqCompare.new({:ids => [host1.id, host2.id]}, report)
 
       dumped = loaded = nil

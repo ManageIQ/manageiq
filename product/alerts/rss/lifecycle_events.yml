@@ -22,10 +22,11 @@ item_class: LifecycleEvent
 #   Custom method is called the following way:
 #     <item_class>.method(<search_method>).<name>, <options>)
 #   A nil value or a value of "find" use the default class find method
-search_method: 
-limit_to_time: 
-limit_to_count: 
-orderby: "created_on DESC"
+search_method:
+limit_to_time:
+limit_to_count:
+orderby:
+  :created_on: :desc
 
 # Included tables and columns for query performance
 include:
@@ -33,6 +34,5 @@ include:
 
 # tags_include: any or all
 tag_ns: "/managed/lifecycles"
-tags_include: 
-tags: 
-    
+tags_include:
+tags:

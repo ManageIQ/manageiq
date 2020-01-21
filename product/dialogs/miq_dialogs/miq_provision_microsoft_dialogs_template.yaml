@@ -32,7 +32,7 @@
           :data_type: :string
         :owner_first_name:
           :description: First Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager:
@@ -52,7 +52,7 @@
           :data_type: :string
         :owner_last_name:
           :description: Last Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager_mail:
@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -420,7 +420,7 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: vLan
+          :description: Virtual Network
           :required: false
           :display: :edit
           :data_type: :string
@@ -428,6 +428,14 @@
           :description: MAC Address
           :required: false
           :display: :hide
+          :data_type: :string
+        :subnet:
+          :values_from:
+            :method: :allowed_subnets
+          :auto_select_single: false
+          :description: Subnet
+          :required: false
+          :display: :edit
           :data_type: :string
       :display: :show
     :hardware:
@@ -488,6 +496,8 @@
           :data_type: :boolean
         :vm_memory:
           :values:
+            "131072": "131072"
+            "65536": "65536"
             "32768": "32768"
             "16384": "16384"
             "12288": "12288"
@@ -502,6 +512,8 @@
           :data_type: :string
         :vm_maximum_memory:
           :values:
+            "131072": "131072"
+            "65536": "65536"
             "32768": "32768"
             "16384": "16384"
             "12288": "12288"
@@ -516,6 +528,8 @@
           :data_type: :string
         :vm_minimum_memory:
           :values:
+            "131072": "131072"
+            "65536": "65536"
             "32768": "32768"
             "16384": "16384"
             "12288": "12288"

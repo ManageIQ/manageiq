@@ -1,20 +1,23 @@
 ---
-:api:
-  :token_ttl: 10.minutes
-  :authentication_timeout: 30.seconds
 :authentication:
   :basedn:
   :bind_dn:
   :bind_pwd:
+  :bind_timeout: 30
+  :follow_referrals: false
   :get_direct_groups: true
   :group_memberships_max_depth: 2
+  :group_attribute: memberof
   :ldaphost:
   :ldapport: '389'
   :mode: database
+  :search_timeout: 30
   :user_suffix:
   :user_type: userprincipalname
   :amazon_key:
   :amazon_secret:
+:binary_blob:
+  :purge_window_size: 100
 :broker_notify_properties:
   :exclude:
     :HostSystem:
@@ -71,14 +74,52 @@
       :memory_method_description: High Normal Range of Allocated Memory
   :failover:
     :rule: discovered
+:compliances:
+  :history:
+    :keep_compliances: 6.months
+    :purge_window_size: 10000
 :coresident_miqproxy:
   :concurrent_per_ems: 1
   :concurrent_per_host: 1
   :scan_via_host: true
   :use_vim_broker: true
+  :use_vim_broker_ems: true
 :container_scanning:
+  :scanning_job_timeout: 20.minutes
   :concurrent_per_ems: 3
 :database:
+  :maintenance:
+    :reindex_schedule: "1 * * * *"
+    :reindex_tables:
+    - Metric
+    - MiqQueue
+    - MiqWorker
+    :vacuum_schedule: "0 2 * * 6"
+    :vacuum_tables:
+    - BinaryBlob
+    - BinaryBlobPart
+    - CustomizationSpec
+    - EventLog
+    - EventStream
+    - FirewallRule
+    - Host
+    - Job
+    - MiqQueue
+    - MiqRequestTask
+    - MiqSchedule
+    - MiqScsiLun
+    - MiqScsiTarget
+    - MiqSearch
+    - MiqServer
+    - MiqWorker
+    - Network
+    - PolicyEvent
+    - Snapshot
+    - Storage
+    - StorageFile
+    - Tagging
+    - VimPerformanceState
+    - Vm
   :metrics_collection:
     :collection_schedule: "1 * * * *"
     :daily_rollup_schedule: "23 0 * * *"
@@ -86,57 +127,37 @@
     :keep_daily_metrics: 6.months
     :keep_hourly_metrics: 6.months
     :purge_schedule: "50 * * * *"
-    :purge_window_size: 100000
+    :purge_window_size: 10000
+    :queue_timeout: 20.minutes
 :drift_states:
   :history:
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :ems:
-  :ems_redhat:
-    :service:
-      :read_timeout: 1.hour
-  :ems_kubernetes:
-    :miq_namespace: management-infra
-  :ems_amazon:
-    :disabled_regions: []
-:ems_events:
+# provider specific settings are nested here, but they are in the provider repos
+# e.g.:
+#  :ems_<provider_name>:
+#    :use_feature: false
+:event_streams:
   :history:
-    :keep_ems_events: 6.months
+    :keep_events: 6.months
     :purge_window_size: 1000
 :ems_refresh:
+  :debug_trace: false
   :capture_vm_created_on_date: false
-  :ec2:
-    :get_private_images: true
-    :get_shared_images: true
-    :get_public_images: false
-    # configure an array of filters to be added to describe_images
-    # see: http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method
-    :public_images_filters:
-      - :name: image-type
-        :values:
-          - machine
-    :ignore_terminated_instances: true
-  :ansible_tower_configuration:
+  :ansible_tower_automation:
+    :inventory_object_refresh: true
+    :allow_targeted_refresh: true
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
   :foreman_provisioning:
     :refresh_interval: 1.hour
   :full_refresh_threshold: 100
-  :hawkular:
-    :refresh_interval: 15.minutes
-  :kubernetes:
-    :refresh_interval: 15.minutes
-  :openshift:
-    :refresh_interval: 15.minutes
-  :openshift_enterprise:
-    :refresh_interval: 15.minutes
   :raise_vm_snapshot_complete_if_created_within: 15.minutes
   :refresh_interval: 24.hours
   :scvmm:
     :refresh_interval: 15.minutes
-  :vmware_cloud:
-    :get_public_images: false
 :event_handling:
   :bottleneck_event_groups:
     :Capacity:
@@ -182,26 +203,12 @@
       - USER_ADD_VM_TEMPLATE_FINISHED_SUCCESS
       - USER_FAILED_ADD_HOST
       - USER_FAILED_ADD_VM_TEMPLATE
-      - virtualMachines_write_EndRequest
       - GceOperationDone_compute.instances.insert
       - VmConnectedEvent
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
-      - aggregate.addhost.end
-      - aggregate.create.end
-      - aggregate.removehost.end
-      - aggregate.updateprop.end
-      - aggregate.updatemetadata.end
-      - image.update
-      - image.create
-      - image.upload
-      - orchestration.stack.create.end
-      - orchestration.stack.create.error
-      - servergroup.create
-      - REPLICATOR_SUCCESSFULCREATE
-      - REPLICATOR_FAILEDCREATE
-      - CONTAINER_CREATED
+      - VmClonedEvent
       :detail:
       - CloneVM_Task
       - CloneVM_Task_Complete
@@ -220,22 +227,12 @@
       - VmBeingCreatedEvent
       - VmBeingDeployedEvent
       :name: Creation/Addition
-    :application:
-      :critical:
-      - hawkular_datasource.error
-      - hawkular_datasource_remove.error
-      - hawkular_deployment.error
-      - hawkular_deployment_remove.error
-      - hawkular_event.critical
-      :detail:
-      - hawkular_datasource.ok
-      - hawkular_datasource_remove.ok
-      - hawkular_deployment.ok
-      - hawkular_deployment_remove.ok
-      - hawkular_event
-      :name: Application
     :configuration:
       :critical:
+      - ansible_tower_create
+      - ansible_tower_update
+      - ansible_tower_delete
+      - ansible_tower_associate
       - ClusterReconfiguredEvent
       - EnterMaintenanceMode_Task_Complete
       - ExitMaintenanceMode_Task_Complete
@@ -266,18 +263,6 @@
       - VmReconfiguredEvent
       - VmResourcePoolMovedEvent
       - VmToTemplate
-      - compute.instance.rebuild.end
-      - compute.instance.resize.end
-      - orchestration.stack.update.end
-      - orchestration.stack.update.error
-      - orchestration.stack.suspend.end
-      - orchestration.stack.suspend.error
-      - orchestration.stack.resume.end
-      - orchestration.stack.resume.error
-      - orchestration.autoscaling.end
-      - orchestration.autoscaling.error
-      - servergroup.update
-      - servergroup.addmemeber
       :detail:
       - EnterMaintenanceMode_Task
       - ExitMaintenanceMode_Task
@@ -319,15 +304,9 @@
       - USER_REMOVE_VM_FINISHED
       - USER_REMOVE_VM_TEMPLATE
       - USER_REMOVE_VM_TEMPLATE_FINISHED
-      - virtualMachines_delete_EndRequest
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
-      - aggregate.delete.end
-      - image.delete
-      - orchestration.stack.delete.end
-      - orchestration.stack.delete.error
-      - servergroup.delete
       :detail:
       - Destroy_Task
       - Destroy_Task_Complete
@@ -470,7 +449,6 @@
       - VM_SET_TO_UNKNOWN_STATUS
       - VM_WAS_SET_DOWN_DUE_TO_HOST_REBOOT_OR_MANUAL_FENCE
       - VM_RENAMED
-      - hardware.ipmi.metrics.update
       :detail: []
       :name: General Activity
     :import_export:
@@ -505,7 +483,7 @@
       - VM_IMPORT_FAILED
       - VM_IMPORT_INFO
       :detail: []
-      :name: Import / Export
+      :name: Import/Export
     :migration:
       :critical:
       - DatastoreFileMovedEvent
@@ -595,20 +573,6 @@
       - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
       - NETWORK_UPDATE_VM_INTERFACE
       - NETWORK_UPDATE_VM_INTERFACE_FAILED
-      - network.create.end
-      - network.delete.end
-      - network.floating_ip.allocate
-      - network.floating_ip.deallocate
-      - network.floating_ip.associate
-      - network.floating_ip.disassociate
-      - network.update.end
-      - router.create.end
-      - router.delete.end
-      - router.update.end
-      - subnet.create.end
-      - subnet.delete.end
-      - subnet.update.end
-      - POD_HOSTPORTCONFLICT
       :detail: []
       :name: Network
     :power:
@@ -662,9 +626,6 @@
       - USER_SUSPEND_VM_FINISH_FAILURE
       - USER_SUSPEND_VM_FINISH_SUCCESS
       - USER_SUSPEND_VM_OK
-      - virtualMachines_deallocate_EndRequest
-      - virtualMachines_start_EndRequest
-      - virtualMachines_restart_EndRequest
       - GceOperationDone_compute.instances.start
       - GceOperationDone_compute.instances.stop
       - VM_DOWN
@@ -680,25 +641,6 @@
       - VmStartedOnEvent
       - VmStoppedEvent
       - VmSuspendedEvent
-      - compute.instance.create.end
-      - compute.instance.create.error
-      - compute.instance.shutdown.end
-      - compute.instance.shutdown.error
-      - compute.instance.delete.end
-      - compute.instance.power_off.end
-      - compute.instance.power_on.end
-      - compute.instance.soft_delete.end
-      - compute.instance.reboot.end
-      - compute.instance.suspend
-      - compute.instance.resume
-      - compute.instance.pause.end
-      - compute.instance.unpause.end
-      - compute.instance.shelve.end
-      - compute.instance.unshelve.end
-      - compute.instance.shelve_offload.end
-      - NODE_REBOOTED
-      - NODE_NODESCHEDULABLE
-      - NODE_NODENOTSCHEDULABLE
       :detail:
       - PowerOffVM_Task
       - PowerOffVM_Task_Complete
@@ -737,7 +679,6 @@
       - USER_TRY_BACK_TO_SNAPSHOT
       - USER_TRY_BACK_TO_SNAPSHOT_FINISH_FAILURE
       - USER_TRY_BACK_TO_SNAPSHOT_FINISH_SUCCESS
-      - compute.instance.snapshot.end
       :detail: []
       :name: Snapshot Activity
     :status:
@@ -776,19 +717,6 @@
       - VM_FAILURE
       - VM_NOT_RESPONDING
       - VmConfigMissingEvent
-      - NODE_NODEREADY
-      - NODE_NODENOTREADY
-      - POD_FAILEDVALIDATION
-      - POD_DEADLINEEXCEEDED
-      - POD_FAILEDSYNC
-      - POD_INSUFFICIENTFREECPU
-      - CONTAINER_UNHEALTHY
-      - POD_NODESELECTORMISMATCHING
-      - CONTAINER_KILLING
-      - CONTAINER_STARTED
-      - CONTAINER_STOPPED
-      - POD_SCHEDULED
-      - POD_FAILEDSCHEDULING
       :detail:
       - DatacenterRenamedEvent
       - GeneralUserEvent
@@ -803,7 +731,7 @@
       - RenameVM_Task
       - RenameVM_Task_Complete
       - VmRenamedEvent
-      :name: Alarm/Status change/Errors
+      :name: Alarm/Status Change/Errors
     :storage:
       :critical:
       - CONNECT_STORAGE_POOL_FAILED
@@ -844,22 +772,11 @@
       - USER_UPDATE_STORAGE_DOMAIN_FAILED
       - USER_UPDATE_STORAGE_POOL
       - USER_UPDATE_STORAGE_POOL_FAILED
-      - backup.create.start
-      - backup.create.end
-      - backup.restore.start
-      - backup.restore.end
-      - snapshot.create.start
-      - snapshot.create.end
-      - snapshot.delete.end
-      - snapshot.update.end
-      - volume.create.end
-      - volume.delete.end
-      - POD_OUTOFDISK
-      - POD_INSUFFICIENTFREEMEMORY
-      - NODE_FAILEDMOUNT
-      - NODE_INVALIDDISKCAPACITY
       :detail: []
       :name: Storage
+    :update:
+      :detail: []
+      :name: Update
   :task_final_events:
     :ClusterCreatedEvent:
     - CreateClusterEx
@@ -921,7 +838,33 @@
     - MoveIntoResourcePool
     :VmSuspendedEvent:
     - SuspendVM_Task
+:git_repository_proxy:
+  :host:
+  :password:
+  :port:
+  :user:
+  :scheme:
+  :path:
+:help_menu:
+  :documentation:
+    :type: default
+  :product:
+    :type: new_window
+  :about:
+    :type: modal
+:host_delete:
+  :queue_timeout: 20.minutes
+:host_introspect:
+  :queue_timeout: 20.minutes
+:host_manageable:
+  :queue_timeout: 20.minutes
+:host_provide:
+  :queue_timeout: 20.minutes
 :host_scan:
+  :queue_timeout: 20.minutes
+:host_start:
+  :queue_timeout: 20.minutes
+:host_stop:
   :queue_timeout: 20.minutes
 :http_proxy:
   :default:
@@ -929,20 +872,16 @@
     :password:
     :port:
     :user:
-  :azure:
+    :scheme:
+  :gce:
     :host:
     :password:
     :port:
     :user:
-  :ec2:
-    :host:
-    :password:
-    :port:
-    :user:
-:ldap_synchronization:
-  :ldap_synchronization_schedule: "0 2 * * *"
+    :scheme:
 :log:
   :collection:
+    :include_automate_models_and_dialogs: true
     :archive:
       :pattern:
     :current:
@@ -956,6 +895,7 @@
       - "/etc/default/ntp*"
       - "/var/log/messages*"
       - "/var/log/cron*"
+      - "/var/log/tower/*.log"
       - BUILD
       - GUID
       - VERSION
@@ -963,38 +903,43 @@
     :ping_depot_timeout: 20
   :level: info
   :level_rails: info
-  :level_aws: info
-  :level_aws_in_evm: error
-  :level_lenovo: info
-  :level_lenovo_in_evm: error
-  :level_azure: warn
-  :level_azure_in_evm: error
-  :level_mw: info
-  :level_mw_in_evm: error
-  :level_kube: info
-  :level_kube_in_evm: error
   :level_api: info
-  :level_api_in_evm: error
+  :level_automation: info
+  :level_azure_stack: info
+  :level_cn_monitoring: info
   :level_fog: info
-  :level_fog_in_evm: error
-  :level_rhevm: info
-  :level_rhevm_in_evm: error
+  :level_mw: info
+  :level_nuage: info
+  :level_policy: info
   :level_scvmm: info
-  :level_scvmm_in_evm: error
+  :level_vcloud: info
   :level_vim: warn
-  :level_vim_in_evm: error
-:management_system:
-  :power_operation_expiration: 10.minutes
+  :level_remote_console: info
+:notifications:
+  :history:
+    :purge_window_size: 1000
+    :keep_notifications: 1.week
+:ntp:
+  :server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
 :performance:
   :capture_threshold:
+    :default: 10.minutes
     :ems_cluster: 50.minutes
     :host: 50.minutes
     :storage: 60.minutes
     :vm: 50.minutes
+    :container: 50.minutes
+    :container_group: 50.minutes
+    :container_node: 50.minutes
   :capture_threshold_with_alerts:
+    :default: 1.minutes
     :host: 20.minutes
     :vm: 20.minutes
   :concurrent_requests:
+    :historical: 1
     :hourly: 1
     :realtime: 20
   :history:
@@ -1003,147 +948,84 @@
     :keep_hourly_performances: 6.months
     :keep_realtime_performances: 4.hours
     :purge_window_size: 1000
+    :queue_timeout: 20.minutes
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
+  :targets:
+    :archived_for: 8.hours
+  :vim_cache_ttl: 1.hour
 :policy_events:
   :history:
     :keep_policy_events: 6.months
     :purge_window_size: 1000
+:container_entities:
+  :history:
+    :keep_archived_entities: 6.months
+    :keep_archived_quotas: 6.months
+    :purge_window_size: 1000
 :product:
+  :name:
   :maindb: ExtManagementSystem
-  :container_deployment_wizard: false
-:replication:
-  :exclude_tables:
-    - ar_internal_metadata
-    - assigned_server_roles
-    - audit_events
-    - binary_blobs
-    - binary_blob_parts
-    - chargeback_rate_details
-    - chargeback_rates
-    - conditions
-    - conditions_miq_policies
-    - custom_buttons
-    - customization_specs
-    - database_backups
-    - event_logs
-    - file_depots
-    - jobs
-    - log_files
-    - metrics
-    - metrics_00
-    - metrics_01
-    - metrics_02
-    - metrics_03
-    - metrics_04
-    - metrics_05
-    - metrics_06
-    - metrics_07
-    - metrics_08
-    - metrics_09
-    - metrics_10
-    - metrics_11
-    - metrics_12
-    - metrics_13
-    - metrics_14
-    - metrics_15
-    - metrics_16
-    - metrics_17
-    - metrics_18
-    - metrics_19
-    - metrics_20
-    - metrics_21
-    - metrics_22
-    - metrics_23
-    - metric_rollups
-    - miq_actions
-    - miq_ae_classes
-    - miq_ae_fields
-    - miq_ae_instances
-    - miq_ae_methods
-    - miq_ae_namespaces
-    - miq_ae_values
-    - miq_ae_workspaces
-    - miq_alert_statuses
-    - miq_alerts
-    - miq_databases
-    - miq_enterprises
-    - miq_event_definitions
-    - miq_globals
-    - miq_policies
-    - miq_policy_contents
-    - miq_product_features
-    - miq_queue
-    - miq_roles_features
-    - miq_report_result_details
-    - miq_report_results
-    - miq_reports
-    - miq_searches
-    - miq_sets
-    - miq_schedules
-    - miq_shortcuts
-    - miq_tasks
-    - miq_user_roles
-    - miq_widgets
-    - miq_widget_contents
-    - miq_workers
-    - notifications
-    - notification_recipients
-    - notification_types
-    - repl_events
-    - repl_monitor
-    - repl_nodes
-    - rss_feeds
-    - scan_items
-    - schema_migrations
-    - server_roles
-    - sessions
-    - vim_performance_states
-    - vim_performance_tag_values
-    - vmdb_database_metrics
-    - vmdb_databases
-    - vmdb_indexes
-    - vmdb_metrics
-    - vmdb_tables
+  :run_automate_methods_on_service_api_submit: false
+  :allow_api_service_ordering: true
+:prototype:
+  :queue_type: miq_queue
+  :artemis:
+    :queue_hostname: localhost
+    :queue_port: 61616
+    :queue_username: admin
+    :queue_password: smartvm
+:recommendations:
+  :cpu_minimum: 1
+  :mem_minimum: 32.megabytes
 :reporting:
-  :format_by_class:
-    :Fixnum:
-      :function:
-        :name: number_with_delimiter
-    :Float:
-      :function:
-        :name: number_with_delimiter
-  :format_by_column: {}
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
-  :precision:
-    :default: 2
-  :precision_by_column:
-    :slope: 4
   :queue_timeout: 1.hour
+  :use_sql_view: false
 :repository_scanning:
   :defaultsmartproxy:
 :server:
+  :asynchronous_notifications: true
   :case_sensitive_name_search: false
   :company: My Company
+  :console_proxy_disabled: true
+  :console_proxy_port:
+    :start: 6000
+    :end: 7000
+  :custom_brand: false
+  :custom_login_logo: false
   :custom_logo: false
+  :custom_favicon: false
   :events:
     :disk_usage_gt_percent: 80
+  :heartbeat_timeout: 2.minutes
+  :heartbeat_frequency: 30.seconds
   :host:
   :listening_port: '443'
+  :memory_threshold: 2.gigabytes
   :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
-  :name: EVM
-  :rails_server: puma
-  :remote_console_type: VMRC
-  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
+  :monitor_server_roles_timeout: 5.minutes
+  :prefetch_max_per_worker: 10
+  :prefetch_max_per_worker_dequeue: 100
+  :prefetch_min_per_worker_dequeue: 10
+  :prefetch_stale_threshold: 30.seconds
+  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,remote_console,web_services,automate
   :server_dequeue_frequency: 5.seconds
+  :server_log_frequency: 5.minutes
+  :server_log_timings_threshold: 1.second
+  :server_monitor_frequency: 60.seconds
   :session_store: cache
   :startup_timeout: 300
+  :stop_poll: 10.seconds
   :timezone: UTC
+  :worker_dequeue_frequency: 3.seconds
+  :worker_messaging_frequency: 5.seconds
+  :worker_monitor_frequency: 15.seconds
   :worker_monitor:
     :kill_algorithm:
       :name: :used_swap_percent_gt_value
@@ -1156,13 +1038,14 @@
       :value: 60
     :sync_interval: 30.minutes
     :wait_for_started_timeout: 10.minutes
-  :zone: default
 :session:
   :interval: 60
   :memcache_server: 127.0.0.1:11211
   :memcache_server_opts: "-l 127.0.0.1 -I 1M"
   :show_login_info: true
   :timeout: 3600
+  :log_threshold: 100.kilobytes
+  :element_threshold: 10.kilobytes
 :smartproxy_deploy:
   :queue_timeout: 30.minutes
 :smtp:
@@ -1197,22 +1080,29 @@
       - vmtx
       - vswp
       - "%redo%"
-  :inventory:
-    :full_refresh_schedule: "38 * * * *"
-  :metrics_collection:
-    :collection_schedule: "0,15,30,45  * * * *"
-    :hourly_rollup_schedule: "8 * * * *"
-    :daily_rollup_schedule: "23 0 * * *"
-    :collection_interval: 15.minutes
-    :max_gap_to_fill: 6.hours
-  :metrics_history:
-    :purge_schedule: "50 * * * *"
-    :keep_daily_metrics: 6.months
-    :keep_hourly_metrics: 6.months
-    :keep_realtime_metrics: 4.hours
+  :max_parallel_scans_per_ems: 5
+  :max_qitems_per_scan_request: 0
+  :watchdog_interval: 1.minute
+:task:
+  :active_task_timeout: 6.hours
+  :history:
+    :keep_tasks: 1.week
     :purge_window_size: 1000
+:transformation:
+  :job:
+    :retry_interval: 15 # in seconds
+  :limits:
+    :max_concurrent_tasks_per_ems: 10
+    :max_concurrent_tasks_per_conversion_host: 10
+    :cpu_limit_per_host: unlimited
+    :network_limit_per_host: unlimited
 :ui:
   :mark_translated_strings: false
+  :display_ops_database: false
+  :url:
+:vim_performance_states:
+  :history:
+    :purge_window_size: 1000
 :webservices:
   :consume_protocol: https
   :contactwith: ipaddress
@@ -1223,8 +1113,8 @@
   :provide_protocol: https
   :security: none
   :timeout: 120
-  :use_vim_broker: true
   :authentication_timeout: 30.seconds
+  :url:
 :workers:
   :worker_base:
     :defaults:
@@ -1238,8 +1128,12 @@
       :poll: 3.seconds
       :poll_escalate_max: 30.seconds
       :poll_method: :normal
-      :restart_interval: 0.hours
       :starting_timeout: 10.minutes
+      :stopping_timeout: 10.minutes
+      :systemd_enabled: false
+    :agent_coordinator_worker:
+      :heartbeat_timeout: 30.minutes
+      :poll: 30.seconds
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
@@ -1253,75 +1147,10 @@
         :memory_threshold: 2.gigabytes
         :nice_delta: 1
         :poll: 1.seconds
-      :event_catcher_redhat:
-        :poll: 15.seconds
-      :event_catcher_vmware:
-        :flooding_monitor_enabled: true
-        :poll: 1.seconds
-        :ems_event_max_wait: 60
-      :event_catcher_vmware_cloud:
-        :poll: 15.seconds
-        :duration: 10.seconds
-        :capacity: 50
-        :amqp_port: 5672
-        :amqp_heartbeat: 30
-        :amqp_recovery_attempts: 4
-      :event_catcher_openstack:
-        :poll: 15.seconds
-        :topics:
-          :nova: notifications.*
-          :cinder: notifications.*
-          :glance: notifications.*
-          :heat: notifications.*
-        :duration: 10.seconds
-        :capacity: 50
-        :amqp_port: 5672
-        :amqp_heartbeat: 30
-        :amqp_recovery_attempts: 4
-        :ceilometer:
-          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
-      :event_catcher_openstack_infra:
-        :poll: 15.seconds
-        :topics:
-          :nova: notifications.*
-          :cinder: notifications.*
-          :glance: notifications.*
-          :heat: notifications.*
-          :ironic: notifications.*
-        :duration: 10.seconds
-        :capacity: 50
-        :amqp_port: 5672
-        :amqp_heartbeat: 30
-        :amqp_recovery_attempts: 4
-        :ceilometer:
-          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
-      :event_catcher_openstack_network:
-        :poll: 15.seconds
-        :topics:
-          :neutron: "notifications.*"
-        :duration: 10.seconds
-        :capacity: 50
-        :amqp_port: 5672
-        :amqp_heartbeat: 30
-        :amqp_recovery_attempts: 4
-        :ceilometer:
-          :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
-      :event_catcher_amazon:
-        :poll: 15.seconds
-      :event_catcher_azure:
-        :poll: 15.seconds
-      :event_catcher_hawkular:
-        :poll: 10.seconds
+      :event_catcher_ansible_tower:
+        :poll: 20.seconds
       :event_catcher_google:
         :poll: 15.seconds
-      :event_catcher_kubernetes:
-        :poll: 1.seconds
-      :event_catcher_openshift:
-        :poll: 1.seconds
-      :event_catcher_openshift_enterprise:
-        :poll: 1.seconds
-      :event_catcher_atomic_enterprise:
-        :poll: 1.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
@@ -1336,26 +1165,16 @@
       :ems_metrics_collector_worker:
         :defaults:
           :count: 2
+          :memory_threshold: 400.megabytes
           :nice_delta: 3
           :poll_method: :escalate
-        :ems_metrics_collector_worker_azure: {}
-        :ems_metrics_collector_worker_amazon: {}
         :ems_metrics_collector_worker_google: {}
-        :ems_metrics_collector_worker_kubernetes:
-          :metrics_port: 5000
-          :metrics_path: "/hawkular/metrics"
-        :ems_metrics_collector_worker_openshift: {}
-        :ems_metrics_collector_worker_openshift_enterprise: {}
-        :ems_metrics_collector_worker_openstack: {}
-        :ems_metrics_collector_worker_openstack_infra: {}
-        :ems_metrics_collector_worker_openstack_network: {}
-        :ems_metrics_collector_worker_redhat: {}
-        :ems_metrics_collector_worker_vmware: {}
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 600.megabytes
         :nice_delta: 7
         :poll_method: :escalate
+      :ems_operations_worker: {}
       :ems_refresh_worker:
         :defaults:
           :memory_threshold: 2.gigabytes
@@ -1363,42 +1182,19 @@
           :poll: 10.seconds
           :poll_method: :normal
           :queue_timeout: 120.minutes
-          :restart_interval: 2.hours
-        :ems_refresh_worker_amazon: {}
-        :ems_refresh_worker_amazon_network: {}
-        :ems_refresh_worker_ansible_tower_configuration: {}
-        :ems_refresh_worker_azure: {}
-        :ems_refresh_worker_azure_network: {}
+          :dequeue_method: :sql
+        :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
         :ems_refresh_worker_google_network: {}
-        :ems_refresh_worker_hawkular: {}
-        :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_microsoft: {}
-        :ems_refresh_worker_openshift: {}
-        :ems_refresh_worker_openshift_enterprise: {}
-        :ems_refresh_worker_openstack: {}
-        :ems_refresh_worker_openstack_infra: {}
-        :ems_refresh_worker_openstack_network: {}
         :ems_refresh_worker_nuage_network: {}
-        :ems_refresh_worker_redhat: {}
-        :ems_refresh_worker_vmware: {}
-        :ems_refresh_worker_vmware_cloud: {}
-        :ems_refresh_worker_vmware_cloud_network: {}
-        :ems_refresh_worker_cinder: {}
-        :ems_refresh_worker_swift: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
       :generic_worker:
         :count: 2
-      :netapp_refresh_worker:
-        :memory_threshold: 2.gigabytes
-        :nice_delta: 7
-        :poll: 10.seconds
-        :poll_method: :normal
-        :queue_timeout: 60.minutes
       :priority_worker:
         :memory_threshold: 600.megabytes
         :count: 2
@@ -1409,23 +1205,19 @@
         :nice_delta: 7
       :smart_proxy_worker:
         :count: 2
-        :memory_threshold: 600.megabytes
-        :queue_timeout: 20.minutes
-        :restart_interval: 2.hours
-      :storage_metrics_collector_worker:
-        :count: 2
-        :nice_delta: 3
-        :poll_method: :escalate
-      :vmdb_storage_bridge_worker:
         :memory_threshold: 2.gigabytes
-        :nice_delta: 7
-        :poll: 10.seconds
-        :poll_method: :normal
-        :queue_timeout: 120.minutes
+        :queue_timeout: 20.minutes
+        :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
+      :container_entities_purge_interval: 1.day
+      :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour
+      :chargeback_generation_interval: 1.day
+      :chargeback_generation_time_utc: 01:00:00
+      :compliance_purge_interval: 1.day
       :db_diagnostics_interval: 30.minutes
-      :ems_events_purge_interval: 1.day
+      :drift_state_purge_interval: 1.day
+      :event_streams_purge_interval: 1.day
       :evm_snapshot_delete_delay_for_job_not_found: 1.hour
       :evm_snapshot_interval: 1.hour
       :job_proxy_dispatcher_interval: 15.seconds
@@ -1436,32 +1228,29 @@
       :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
       :nice_delta: 3
+      :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes
-      :load_balancer_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
-      :performance_realtime_purging_interval: 15.minutes
+      :performance_realtime_purging_interval: 21.minutes
       :performance_realtime_purging_start_delay: 5.minutes
       :performance_rollup_purging_interval: 4.hours
       :performance_rollup_purging_start_delay: 5.minutes
       :policy_events_purge_interval: 1.day
       :poll: 15.seconds
+      :queue_timeout_interval: 15.seconds
+      :report_result_purge_interval: 1.week
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds
       :service_retired_interval: 10.minutes
       :session_timeout_interval: 30.seconds
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 21600
+      :task_purge_interval: 1.day
+      :task_timeout_check_frequency: 1.hour
+      :vim_performance_states_purge_interval: 1.day
       :vm_retired_interval: 10.minutes
-      :chargeback_generation_time_utc: 01:00:00
-      :chargeback_generation_interval: 1.day
-    :smis_refresh_worker:
-      :memory_threshold: 1.gigabytes
-      :nice_delta: 3
-      :poll: 15.seconds
-      :smis_update_period: 1.hours
-      :stats_update_period: 10.minutes
-      :status_update_period: 5.minutes
+      :yum_update_check: 12.hours
     :ui_worker:
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
@@ -1479,7 +1268,11 @@
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
-    :websocket_worker:
-       :connection_pool_size: 8
-       :memory_threshold: 1.gigabytes
-       :nice_delta: 1
+    :remote_console_worker:
+      :connection_pool_size: 14
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
+    :cockpit_ws_worker:
+      :count: 1
+:hawkular_tenant_labels:
+  :_hawkular_admin: Hawkular Admin

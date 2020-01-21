@@ -78,13 +78,13 @@ end
 
 describe MiqServer do
   context "LogManagement" do
-    let(:server_depot) { FactoryGirl.create(:file_depot) }
-    let(:zone_depot) { FactoryGirl.create(:file_depot) }
-    let(:miq_task) { FactoryGirl.create(:miq_task) }
+    let(:server_depot) { FactoryBot.create(:file_depot) }
+    let(:zone_depot) { FactoryBot.create(:file_depot) }
+    let(:miq_task) { FactoryBot.create(:miq_task) }
 
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      @miq_server2          = FactoryGirl.create(:miq_server, :zone => @zone)
+      @miq_server2          = FactoryBot.create(:miq_server, :zone => @zone)
     end
 
     context "#pg_data_log_patterns" do
@@ -95,21 +95,82 @@ describe MiqServer do
 
       it "pg_data_dir set" do
         allow(@miq_server).to receive_messages(:pg_data_dir => '/var/lib/pgsql/data')
-        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/pg_log/*)
+        expected = %w(/var/lib/pgsql/data/*.conf /var/lib/pgsql/data/pg_log/* /etc/manageiq/postgresql.conf.d/*)
         expect(@miq_server.pg_log_patterns.collect(&:to_s)).to match_array expected
       end
     end
 
     it "#current_log_patterns" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog*))
+      stub_settings(:log => {:collection => {:current => {:pattern => %w(/var/log/syslog*)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
     end
 
     it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf))
+      stub_settings(
+        :log => {:collection => {:current => {:pattern => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
+    end
+
+    context "post current/historical/models/dialogs" do
+      let(:task)                      { FactoryBot.create(:miq_task) }
+      let(:compressed_log_patterns)   { [Rails.root.join("log", "evm*.log.gz").to_s] }
+      let(:current_log_patterns)      { [Rails.root.join("log", "evm.log").to_s] }
+      let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s }
+      let(:log_start)                 { Time.zone.parse("2018-05-11 11:33:12 UTC") }
+      let(:log_end)                   { Time.zone.parse("2018-05-11 15:34:16 UTC") }
+      let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s }
+      let(:log_depot)                 { FactoryBot.create(:file_depot) }
+      let!(:region)                   { MiqRegion.seed }
+      let(:zone)                      { @miq_server.zone }
+      before do
+        require 'vmdb/util'
+        allow(VMDB::Util).to receive(:compressed_log_patterns).and_return(compressed_log_patterns)
+        allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return(compressed_evm_log)
+        allow(VMDB::Util).to receive(:get_log_start_end_times).and_return([log_start, log_end])
+        allow(VMDB::Util).to receive(:zip_logs).and_return(daily_log)
+        allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
+        allow(@miq_server).to receive(:backup_automate_dialogs)
+        allow(@miq_server).to receive(:backup_automate_models)
+        %w(historical_logfile current_logfile).each do |kind|
+          logfile = FactoryBot.create(:log_file, :historical => kind == "historical_logfile")
+          allow(logfile).to receive(:upload)
+          allow(LogFile).to receive(kind).and_return(logfile)
+        end
+      end
+
+      %w(
+        Archive post_historical_logs
+        Current post_current_logs
+        Models post_automate_models
+        Dialogs post_automate_dialogs
+      ).each_slice(2) do |name, method|
+        it "##{method}" do
+          @miq_server.send(method, task.id, log_depot)
+          logfile = @miq_server.reload.log_files.first
+          expected_name = [name, "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
+          expect(logfile).to have_attributes(
+            :file_depot         => log_depot,
+            :local_file         => daily_log,
+            :logging_started_on => log_start,
+            :logging_ended_on   => log_end,
+            :name               => expected_name,
+            :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
+            :miq_task_id        => task.id
+          )
+
+          expected_filename = "#{name}_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
+          expected_filename.gsub!(/\s+/, "_")
+          expect(logfile.destination_file_name).to eq(expected_filename)
+
+          expect(task.reload).to have_attributes(
+            :message => "#{name} log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
+            :state   => "Active",
+            :status  => "Ok",
+          )
+        end
+      end
     end
 
     context "#synchronize_logs" do

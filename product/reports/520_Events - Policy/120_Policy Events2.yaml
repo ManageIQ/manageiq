@@ -1,21 +1,21 @@
---- 
-where_clause: 
-dims: 
+---
+where_clause:
+dims:
 created_on: 2009-04-03 23:04:39 Z
-reserved: 
-title: Policy Events for Last Week - Sample 2
+reserved:
+title: Policy Events for the Last 7 Days
 conditions: !ruby/object:MiqExpression
   exp:
-    ">=":
+    "AFTER":
       field: PolicyEvent.miq_policy_sets-created_on
       value: 7 Days Ago
 updated_on: 2009-04-06 20:18:30 Z
 order: Ascending
-graph: 
-menu_name: Policy Events for Last Week - Sample 2
+graph:
+menu_name: Policy Events for the Last 7 Days
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - miq_policy_sets.created_on
 - miq_policy_sets.updated_on
 - miq_policy_sets.description
@@ -30,7 +30,7 @@ timeline:
   :last_time: "1"
   :field: PolicyEvent.miq_policy_sets-created_on
   :position: Last
-  :bands: 
+  :bands:
   - :gap: 0.0
     :pixels: 100
     :unit: Minute
@@ -49,13 +49,13 @@ timeline:
     :text: false
     :width: 10
 id: 88
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  miq_policy_sets: 
-    columns: 
+filename:
+include:
+  miq_policy_sets:
+    columns:
     - created_on
     - updated_on
     - description
@@ -69,9 +69,9 @@ db: PolicyEvent
 cols: []
 
 template_type: report
-group: 
-sortby: 
-headers: 
+group:
+sortby:
+headers:
 - Miq Policy Set Date Created
 - Miq Policy Set Date Updated
 - Miq Policy Set Description

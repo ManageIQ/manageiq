@@ -1,10 +1,8 @@
 class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::StorageManager
   require_nested :RefreshParser
-  require_nested :RefreshWorker
   require_nested :Refresher
 
-  has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
+  include ManageIQ::Providers::StorageManager::ObjectMixin
 
   delegate :authentication_check,
            :authentication_status,
@@ -49,6 +47,10 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
     @description ||= "Swift ".freeze
   end
 
+  def name
+    "#{parent_manager.try(:name)} Swift Manager"
+  end
+
   def supports_api_version?
     true
   end
@@ -63,5 +65,9 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
 
   def self.event_monitor_class
     ManageIQ::Providers::StorageManager::SwiftManager::EventCatcher
+  end
+
+  def self.display_name(number = 1)
+    n_('Storage Manager (Swift)', 'Storage Managers (Swift)', number)
   end
 end

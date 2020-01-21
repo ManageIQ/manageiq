@@ -1,5 +1,9 @@
 class PxeMenuIpxe < PxeMenu
-  has_many :pxe_images, :class_name => "PxeImageIpxe", :foreign_key => :pxe_menu_id, :dependent => :destroy
+  has_many :pxe_images,
+           :class_name  => "PxeImageIpxe",
+           :foreign_key => :pxe_menu_id,
+           :dependent   => :destroy,
+           :inverse_of  => :pxe_menu
 
   def self.parse_contents(contents)
     menu_items = parse_menu(contents)
@@ -43,7 +47,7 @@ class PxeMenuIpxe < PxeMenu
     items << current_item
 
     bad, good = items.compact.partition { |i| i[:kernel].blank? }
-    bad.each { |i| _log.warn "Image #{i[:label]} missing kernel - Skipping" }
+    bad.each { |i| _log.warn("Image #{i[:label]} missing kernel - Skipping") }
     good
   end
 
@@ -64,5 +68,9 @@ class PxeMenuIpxe < PxeMenu
       items[sp[1]] = sp[2..-1].join(' ')
     end
     items
+  end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu (iPXE)', 'PXE Menus (iPXE)', number)
   end
 end

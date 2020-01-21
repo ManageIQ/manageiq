@@ -70,4 +70,8 @@ class StorageFile < ApplicationRecord
   def v_size_numeric
     size.to_i
   end
+
+  def self.display_name(number = 1)
+    n_('Datastore File', 'Datastore Files', number)
+  end
 end

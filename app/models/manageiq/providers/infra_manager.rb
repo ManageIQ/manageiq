@@ -1,11 +1,37 @@
 module ManageIQ::Providers
   class InfraManager < BaseManager
-    require_nested :Template
+    require_nested :Cluster
+    require_nested :Datacenter
+    require_nested :Folder
     require_nested :ProvisionWorkflow
+    require_nested :ResourcePool
+    require_nested :Storage
+    require_nested :StorageCluster
+    require_nested :Template
     require_nested :Vm
     require_nested :VmOrTemplate
 
     include AvailabilityMixin
+
+    has_many :distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
+    has_many :distributed_virtual_lans, -> { distinct }, :through => :distributed_virtual_switches, :source => :lans
+    has_many :host_virtual_switches, -> { distinct }, :through => :hosts
+
+    has_many :host_hardwares,             :through => :hosts, :source => :hardware
+    has_many :host_operating_systems,     :through => :hosts, :source => :operating_system
+    has_many :host_storages,              :through => :hosts
+    has_many :host_switches,              :through => :hosts
+    has_many :host_networks,              :through => :hosts, :source => :networks
+    has_many :host_guest_devices,         :through => :host_hardwares, :source => :guest_devices
+    has_many :snapshots,                  :through => :vms_and_templates
+    has_many :switches, -> { distinct },  :through => :hosts
+    has_many :lans, -> { distinct },      :through => :hosts
+    has_many :subnets, -> { distinct },   :through => :lans
+    has_many :networks,                   :through => :hardwares
+    has_many :guest_devices,              :through => :hardwares
+    has_many :ems_custom_attributes,      :through => :vms_and_templates
+
+    include HasManyOrchestrationStackMixin
 
     class << model_name
       define_method(:route_key) { "ems_infras" }
@@ -24,23 +50,13 @@ module ManageIQ::Providers
     #     :service
     #        :read_timeout: 1.hour
     #
-    cache_with_timeout(:ems_config, 2.minutes) { VMDB::Config.new("vmdb").config[:ems] || {} }
-
     def self.ems_timeouts(type, service = nil)
-      read_timeout = open_timeout = nil
-      if ems_config[type]
-        if service
-          if ems_config[type][service.downcase.to_sym]
-            config       = ems_config[type][service.downcase.to_sym]
-            read_timeout = config[:read_timeout] if config[:read_timeout]
-            open_timeout = config[:open_timeout] if config[:open_timeout]
-          end
-        end
-        read_timeout = ems_config[type][:read_timeout] if read_timeout.nil?
-        open_timeout = ems_config[type][:open_timeout] if open_timeout.nil?
-      end
-      read_timeout = read_timeout.to_i_with_method if read_timeout
-      open_timeout = open_timeout.to_i_with_method if open_timeout
+      ems_settings = ::Settings.ems[type]
+      return [nil, nil] unless ems_settings
+
+      service = service.try(:downcase)
+      read_timeout = ems_settings.fetch_path([service, :read_timeout].compact).try(:to_i_with_method)
+      open_timeout = ems_settings.fetch_path([service, :open_timeout].compact).try(:to_i_with_method)
       [read_timeout, open_timeout]
     end
 
@@ -48,8 +64,12 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
-    def validate_import_vm
-      false
+    def clusterless_hosts
+      hosts.where(:ems_cluster => nil)
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Infrastructure Manager', 'Infrastructure Managers', number)
   end
 end

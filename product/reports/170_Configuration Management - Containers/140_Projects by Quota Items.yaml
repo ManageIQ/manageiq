@@ -1,0 +1,67 @@
+---
+title: Projects by Quota Items
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerQuota
+cols:
+- name
+include:
+  container_project:
+    columns:
+    - name
+  container_quota_items:
+    columns:
+    - resource
+    - quota_desired_display
+    - quota_enforced_display
+    - quota_observed_display
+col_order:
+- container_project.name
+- name
+- container_quota_items.resource
+- container_quota_items.quota_desired_display
+- container_quota_items.quota_enforced_display
+- container_quota_items.quota_observed_display
+headers:
+- Project Name
+- Quota Name
+- Resource
+- Desired
+- Enforced
+- Observed
+conditions:
+order: Ascending
+sortby:
+- container_project.name
+- container_quota_items.resource
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+miq_group_id: 2
+user_id: 1
+menu_name: Projects by Quota Items

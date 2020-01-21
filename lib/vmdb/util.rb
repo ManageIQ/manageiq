@@ -1,20 +1,9 @@
 module VMDB
   module Util
     def self.http_proxy_uri(proxy_config = :default)
-      # TODO: (julian) This looks really messy. Need to make it look nicer.
-
-      vmdb_proxy = VMDB::Config.new("vmdb").config[:http_proxy]
-
-      return nil unless vmdb_proxy
-
-      if vmdb_proxy[proxy_config].nil?
-        $log.warn("Could not find proxy setting for #{proxy_config}")
-      end
-
-      proxy = vmdb_proxy[proxy_config] || vmdb_proxy
-
-      return nil unless proxy[:host]
-      proxy = proxy.dup
+      proxy = ::Settings.http_proxy[proxy_config].to_hash
+      proxy = ::Settings.http_proxy.to_hash unless proxy[:host]
+      return nil if proxy[:host].blank?
 
       user     = proxy.delete(:user)
       user &&= CGI.escape(user)
@@ -78,7 +67,7 @@ module VMDB
       require 'zlib'
 
       begin
-        _log.info "Opening filename: [#{filename}], size: [#{File.size(filename)}]"
+        _log.info("Opening filename: [#{filename}], size: [#{File.size(filename)}]")
         Zlib::GzipReader.open(filename) do |gz|
           line_count = 0
           start_time_str = nil
@@ -94,21 +83,20 @@ module VMDB
           start_time = log_timestamp(start_time_str)
           end_time   = log_timestamp(end_time_str)
 
-          _log.info "Lines in file: [#{line_count}]"
-          _log.info "Start Time: [#{start_time.inspect}]"
-          _log.info "End   Time: [#{end_time.inspect}]"
+          _log.info("Lines in file: [#{line_count}]")
+          _log.info("Start Time: [#{start_time.inspect}]")
+          _log.info("End   Time: [#{end_time.inspect}]")
 
           return start_time, end_time
         end
       rescue Exception => e
-        _log.error e.to_s
+        _log.error(e.to_s)
         return []
       end
     end
 
     def self.zip_logs(zip_filename, dirs, userid = "system")
-      require 'zip/zipfilesystem'
-
+      require 'zip/filesystem'
       zip_dir = Rails.root.join("data", "user", userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
 
@@ -118,18 +106,21 @@ module VMDB
 
       zfile = zfile.to_s
 
-      _log.info "Creating: [#{zfile_display}]"
-      Zip::ZipFile.open(zfile, Zip::ZipFile::CREATE) do |zip|
+      _log.info("Creating: [#{zfile_display}]")
+      Zip::File.open(zfile, Zip::File::CREATE) do |zip|
         dirs.each do |dir|
           dir = Rails.root.join(dir) unless Pathname.new(dir).absolute?
           Dir.glob(dir).each do |file|
-            entry, mtime = add_zip_entry(zip, file, zfile)
-            _log.info "Adding file: [#{entry}], size: [#{File.size(file)}], mtime: [#{mtime}]"
+            begin
+              entry, _mtime = add_zip_entry(zip, file, zfile)
+            rescue => e
+              _log.error("Failed to add file: [#{entry}]. Error information: #{e.message}")
+            end
           end
         end
         zip.close
       end
-      _log.info "Created: [#{zfile_display}], Size: [#{File.size(zfile)}]"
+      _log.info("Created: [#{zfile_display}], Size: [#{File.size(zfile)}]")
 
       zfile
     end
@@ -141,9 +132,13 @@ module VMDB
       ztime = Zip::DOSTime.at(mtime.to_i)
       if File.directory?(file_path)
         zip.mkdir(entry)
+      elsif File.symlink?(file_path)
+        zip_entry = Zip::Entry.new(zfile, entry, nil, nil, nil, nil, nil, nil, ztime)
+        zip.add(zip_entry, File.realpath(file_path))
       else
         zip_entry = Zip::Entry.new(zfile, entry, nil, nil, nil, nil, nil, nil, ztime)
         zip.add(zip_entry, file_path)
+        _log.info("Adding file: [#{entry}], size: [#{File.size(file_path)}], mtime: [#{mtime}]")
       end
       return entry, mtime
     end

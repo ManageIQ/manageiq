@@ -1,7 +1,0 @@
-- if @sb[:active_tab] == "diagnostics_collect_logs"
-  - if x_node.split('-').first == "root"
-    = render :partial => "diagnostics_savedreports"
-  - else
-    = render :partial => "layouts/flash_msg"
-    = render :partial => "logs_selected"
-  %div{:style => "padding-bottom: 20px"}

@@ -21,6 +21,10 @@ class ActsAsArModel
     superclass == ActsAsArModel ? self : superclass.base_class
   end
 
+  def self.includes_to_references(_inc)
+    []
+  end
+
   class << self; alias_method :base_model, :base_class; end
 
   #
@@ -113,7 +117,7 @@ class ActsAsArModel
   end
 
   include FakeAttributeStore
-  include VirtualFields
+  include ActiveRecord::VirtualAttributes::VirtualFields
 
   include AttributeBag
 
@@ -182,13 +186,13 @@ class ActsAsArModel
 
   def self.find_by_id(*id)
     options = id.extract_options!
-    options.merge!(:conditions => {:id => id.first})
+    options[:conditions] = {:id => id.first}
     first(options)
   end
 
   def self.find_all_by_id(*ids)
     options = ids.extract_options!
-    options.merge!(:conditions => {:id => ids.flatten})
+    options[:conditions] = {:id => ids.flatten}
     all(options)
   end
 

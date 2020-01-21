@@ -1,13 +1,11 @@
+dist: xenial
 language: ruby
 rvm:
-- '2.3.1'
+- 2.5.7
+- 2.6.5
 sudo: false
 cache:
   bundler: true
-  directories:
-    - vendor/assets/bower_components
-before_cache:
-- cat bower.json > vendor/assets/bower_components/bower.json
 env:
   global:
   - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
@@ -16,23 +14,17 @@ env:
   - PARALLEL_TEST_PROCESSORS=2
   matrix:
   - TEST_SUITE=vmdb PARALLEL=true
-  - TEST_SUITE=automation
-  - TEST_SUITE=migrations
   - TEST_SUITE=brakeman
-  - TEST_SUITE=replication
-  - TEST_SUITE=javascript
 matrix:
   fast_finish: true
 addons:
-  postgresql: '9.4'
+  postgresql: '10'
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/before_script.sh
+- bundle exec rake test:$TEST_SUITE:setup
 script:
-- bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
-after_script:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/after_script.sh
+- bundle exec rake test:$TEST_SUITE
 after_failure:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
 notifications:

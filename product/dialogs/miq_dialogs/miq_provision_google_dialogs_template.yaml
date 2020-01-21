@@ -32,7 +32,7 @@
           :data_type: :string
         :owner_first_name:
           :description: First Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager:
@@ -52,7 +52,7 @@
           :data_type: :string
         :owner_last_name:
           :description: Last Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager_mail:
@@ -206,8 +206,8 @@
         :vm_name:
           :description: Instance Name
           :required_method:
-            - :validate_vm_name
-            - :validate_regex
+          - :validate_vm_name
+          - :validate_regex
           :required_regex: !ruby/regexp /\A(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)\Z/
           :required_regex_fail_details: The name must be composed only of lower-case English alphabet characters (a-z), numbers (0-9), and dashes (-). The first character must be a lower-case English alphabet character, and the last character must not be a dash.
           :required: true
@@ -258,7 +258,7 @@
                 2.weeks: 2 Weeks
                 30.days: 30 Days
               :include_equals: false
-              :field: s:retirement
+              :field: :retirement
             :method: :values_less_then
           :description: Retirement Warning
           :required: true
@@ -282,6 +282,7 @@
           :required: true
           :display: :edit
           :data_type: string
+          :sort_by: :none
         :instance_type:
           :values_from:
             :method: :allowed_instance_types
@@ -300,10 +301,77 @@
           :default: false
           :data_type: :boolean
       :display: :show
+    :customize:
+      :description: Customize
+      :fields:
+        :dns_servers:
+          :description: DNS Server list
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :dns_suffixes:
+          :description: DNS Suffix List
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :addr_mode:
+          :values:
+            static: Static
+            dhcp: DHCP
+          :description: Address Mode
+          :required: false
+          :display: :edit
+          :default: dhcp
+          :data_type: :string
+        :linux_host_name:
+          :description: Computer Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :gateway:
+          :description: Gateway
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :linux_domain_name:
+          :description: Domain Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :subnet_mask:
+          :description: Subnet Mask
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :customization_template_id:
+          :values_from:
+            :method: :allowed_customization_templates
+          :auto_select_single: false
+          :description: Script Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
+        :customization_template_script:
+          :description: Script Text
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :root_password:
+          :description: Root Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :hostname:
+          :description: Host Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+      :display: :show
   :dialog_order:
   - :requester
   - :purpose
   - :service
   - :environment
   - :hardware
+  - :customize
   - :schedule

@@ -1,0 +1,11 @@
+name: Optimization & Savings
+set_type: MiqWidgetSet
+description: Optimization
+owner_type: MiqGroup
+read_only: t
+owner_description: EvmGroup-administrator
+set_data_by_description:
+  :col1:
+  - CPU Right Sizing Recommendations
+  :col2: []
+  :col3: []

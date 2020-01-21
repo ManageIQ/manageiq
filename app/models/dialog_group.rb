@@ -17,9 +17,12 @@ class DialogGroup < ApplicationRecord
   def update_dialog_fields(fields)
     updated_fields = []
     fields.each do |field|
+      field['options'].try(:symbolize_keys!)
       if field.key?('id')
         DialogField.find(field['id']).tap do |dialog_field|
-          dialog_field.update_attributes(field)
+          resource_action_fields = field.delete('resource_action') || {}
+          update_resource_fields(resource_action_fields, dialog_field)
+          dialog_field.update(field.except('id', 'href', 'dialog_group_id', 'dialog_field_responders'))
           updated_fields << dialog_field
         end
       else
@@ -45,6 +48,16 @@ class DialogGroup < ApplicationRecord
   def deep_copy
     dup.tap do |new_group|
       new_group.dialog_fields = dialog_fields.collect(&:deep_copy)
+    end
+  end
+
+  private
+
+  def update_resource_fields(resource_action_fields, dialog_field)
+    if resource_action_fields.key?('id')
+      dialog_field.resource_action.update(resource_action_fields.except('id'))
+    elsif resource_action_fields.present?
+      dialog_field.resource_action = ResourceAction.create(resource_action_fields)
     end
   end
 end

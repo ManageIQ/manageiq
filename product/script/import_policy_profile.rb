@@ -3,7 +3,7 @@
 
 # Load the Policy Class so that we get PolicySet defined
 begin
-  p1 = Policy.find(1)
+  Policy.find(1)
 rescue
 end
 

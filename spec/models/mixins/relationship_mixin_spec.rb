@@ -7,7 +7,13 @@ describe RelationshipMixin do
   let(:vms_rel_tree) { {0 => [{1 => [3, 4]}, {2 => [5, 6, {7 => [8, 9]}]}]} }
   let(:vms) { build_relationship_tree(vms_rel_tree) }
   # host with no tree
-  let(:host) { FactoryGirl.create(:host) }
+  let(:host) { FactoryBot.create(:host) }
+
+  describe "#remove_children" do
+    it "handles [nil]" do
+      expect { vms[3].remove_children(nil) }.to_not raise_error
+    end
+  end
 
   context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
@@ -52,10 +58,10 @@ describe RelationshipMixin do
     # than one associated tree node.
 
     context "#set_child on a new parent object" do
-      before(:each) { @parent = FactoryGirl.create(:vm_vmware) }
+      before { @parent = FactoryBot.create(:vm_vmware) }
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
-        child = FactoryGirl.create(:vm_vmware)
+        child = FactoryBot.create(:vm_vmware)
         @parent.with_relationship_type(test_rel_type) { |v| v.set_child(child) }
 
         assert_parent_child_structure(test_rel_type,
@@ -96,10 +102,10 @@ describe RelationshipMixin do
     end
 
     context "#set_parent on a new child object" do
-      before(:each) { @child = FactoryGirl.create(:vm_vmware) }
+      before { @child = FactoryBot.create(:vm_vmware) }
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
-        parent = FactoryGirl.create(:vm_vmware)
+        parent = FactoryBot.create(:vm_vmware)
         @child.with_relationship_type(test_rel_type) { |v| v.set_parent(parent) }
 
         assert_parent_child_structure(test_rel_type,
@@ -140,10 +146,10 @@ describe RelationshipMixin do
     end
 
     context "with a new parent object, #replace_parent" do
-      before(:each) { @parent = FactoryGirl.create(:vm_vmware) }
+      before { @parent = FactoryBot.create(:vm_vmware) }
 
       it "on a second new object will link a new tree node for the parent to a new tree node for the child and be the only parent for the child" do
-        child = FactoryGirl.create(:vm_vmware)
+        child = FactoryBot.create(:vm_vmware)
         child.with_relationship_type(test_rel_type) { |v| v.replace_parent(@parent) }
 
         assert_parent_child_structure(test_rel_type,
@@ -196,8 +202,64 @@ describe RelationshipMixin do
       end
     end
 
+    describe "#add_parent" do
+      let(:folder1) { FactoryBot.create(:ems_folder) }
+      let(:folder2) { FactoryBot.create(:ems_folder) }
+      let(:vm)      { FactoryBot.create(:vm) }
+
+      it "puts an object under another object" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.add_parent(folder1)
+
+          expect(vm.parents).to eq([folder1])
+          expect(vm.parent).to eq(folder1)
+        end
+
+        expect(folder1.with_relationship_type(test_rel_type) { folder1.children }).to eq([vm])
+      end
+
+      it "allows an object to be placed under multiple parents" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.add_parent(folder1)
+          vm.add_parent(folder2)
+
+          expect(vm.parents).to match_array([folder1, folder2])
+          expect { vm.parent }.to raise_error(RuntimeError, "Multiple parents found.")
+        end
+
+        expect(folder1.with_relationship_type(test_rel_type) { folder1.children }).to eq([vm])
+        expect(folder2.with_relationship_type(test_rel_type) { folder2.children }).to eq([vm])
+      end
+    end
+
+    describe "#parent=" do
+      let(:folder) { FactoryBot.create(:ems_folder) }
+      let(:vm)     { FactoryBot.create(:vm) }
+
+      it "puts an object under another object" do
+        vm.with_relationship_type(test_rel_type) do
+          vm.parent = folder
+          expect(vm.parent).to eq(folder)
+        end
+
+        expect(folder.with_relationship_type(test_rel_type) { folder.children }).to eq([vm])
+      end
+
+      it "moves an object that already has a parent under an another object" do
+        vm.with_relationship_type(test_rel_type) { vm.parent = FactoryBot.create(:ems_folder) }
+        vm.reload
+
+        vm.with_relationship_type(test_rel_type) do
+          vm.parent = folder
+          expect(vm.parent).to eq(folder)
+        end
+
+        expect(folder.with_relationship_type(test_rel_type) { folder.children }).to eq([vm])
+      end
+    end
+
     it "#replace_children" do
-      new_vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
+      new_vms = (0...2).collect { FactoryBot.create(:vm_vmware) }
       vms[0].with_relationship_type(test_rel_type) do |v|
         v.replace_children(new_vms)
         expect(new_vms).to match_array(v.children)
@@ -263,10 +325,10 @@ describe RelationshipMixin do
   end
 
   context ".alias_with_relationship_type" do
-    before(:each) do
-      @ws = FactoryGirl.create(:miq_widget_set)
-      @w1 = FactoryGirl.create(:miq_widget)
-      @w2 = FactoryGirl.create(:miq_widget)
+    before do
+      @ws = FactoryBot.create(:miq_widget_set)
+      @w1 = FactoryBot.create(:miq_widget)
+      @w2 = FactoryBot.create(:miq_widget)
       @ws.add_member(@w1)
       @ws.add_member(@w2)
     end
@@ -751,6 +813,58 @@ describe RelationshipMixin do
     end
   end
 
+  describe "#parent_rels" do
+    it "works with relationships" do
+      pars = vms[8].with_relationship_type(test_rel_type, &:parent_rels)
+      pars_vms = pars.map(&:resource)
+      expect(pars_vms).to eq([vms[7]])
+    end
+  end
+
+  describe "#parent_rel_ids" do
+    it "works with relationships" do
+      ids = vms[8].with_relationship_type(test_rel_type, &:parent_rel_ids)
+      parent_vms = Relationship.where(:id => ids).map(&:resource)
+      expect(parent_vms).to eq([vms[7]])
+    end
+
+    it "works with cached relationships" do
+      ids = vms[8].with_relationship_type(test_rel_type) do |o|
+        # load relationships into the cache
+        o.all_relationships
+        o.parent_rel_ids
+      end
+      parent_vms = Relationship.where(:id => ids).map(&:resource)
+      expect(parent_vms).to eq([vms[7]])
+    end
+  end
+
+  describe "#grandchild_rels" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        rels = vms[0].grandchild_rels
+        expect(rels.map(&:resource)).to match_array([vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
+    end
+  end
+
+  describe "#grandchildren" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        expect(vms[0].grandchildren).to match_array([vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
+    end
+  end
+
+  describe "#child_and_grandchild_rels" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        rels = vms[0].child_and_grandchild_rels
+        expect(rels.map(&:resource)).to match_array([vms[1], vms[2], vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
+    end
+  end
+
   protected
 
   def build_relationship_tree(tree, rel_type = test_rel_type, base_factory = :vm_vmware)
@@ -758,8 +872,8 @@ describe RelationshipMixin do
     # allows easy access while building
     # can map to the resource to return all the resources created
     rels = Hash.new do |hash, key|
-      hash[key] = FactoryGirl.create(:relationship,
-                                     :resource     => FactoryGirl.create(base_factory),
+      hash[key] = FactoryBot.create(:relationship,
+                                     :resource     => FactoryBot.create(base_factory),
                                      :relationship => rel_type)
     end
 

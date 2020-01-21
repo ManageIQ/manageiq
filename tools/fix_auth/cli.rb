@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 
 module FixAuth
   class Cli
@@ -6,13 +6,14 @@ module FixAuth
 
     def parse(args, env = {})
       args.shift if args.first == "--" # Handle when called through script/runner
-      self.options = Trollop.options(args) do
-        banner "Usage: ruby #{$PROGRAM_NAME} [options] [database1] [database2] [...]\n" \
-               "       ruby #{$PROGRAM_NAME} [options] -P new_password [database1] [...] to replace all passwords"
+      self.options = Optimist.options(args) do
+        banner "Usage: ruby #{$PROGRAM_NAME} [options] database [...]\n" \
+               "       ruby #{$PROGRAM_NAME} [options] -P new_password database [...] to replace all passwords"
 
         opt :verbose,  "Verbose",           :short => "v"
         opt :dry_run,  "Dry Run",           :short => "d"
         opt :hostname, "Database Hostname", :type => :string,  :short => "h", :default => env['PGHOST']
+        opt :port,     "Database Port",     :type => :integer, :default => 5432
         opt :username, "Database Username", :type => :string,  :short => "U", :default => (env['PGUSER'] || "root")
         opt :password, "Database Password", :type => :string,  :short => "p", :default => env['PGPASSWORD']
         opt :hardcode, "Password to use for all passwords",     :type => :string, :short => "P"
@@ -24,9 +25,10 @@ module FixAuth
         opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
         opt :legacy_key, "Legacy Key",      :type => :string, :short => "K"
+        opt :allow_failures, "Run through all records, even with errors", :type => :boolean, :short => nil, :default => false
       end
 
-      options[:databases] = args.presence || %w(vmdb_production)
+      options[:database] = args.first || "vmdb_production"
       # default to updating the db
       options[:db] = true if !options[:key] && !options[:databaseyml]
       self.options = options.delete_if { |_n, v| v.blank? }

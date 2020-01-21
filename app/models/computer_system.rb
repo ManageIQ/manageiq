@@ -3,4 +3,6 @@ class ComputerSystem < ApplicationRecord
 
   has_one :operating_system, :dependent => :destroy
   has_one :hardware, :dependent => :destroy
+
+  has_many :connected_physical_switches, :through => :hardware
 end

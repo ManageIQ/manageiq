@@ -9,6 +9,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ServiceTemplateProvisionTask
   end
 
+  def my_zone
+    dialog_zone || source.my_zone || MiqServer.my_zone
+  end
+
   def provision_priority
     return 0 if service_resource.nil?
     service_resource.provision_index
@@ -46,7 +50,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       end
       if svc_target_name.blank?
         svc_tmp_id = req_obj.get_option(:src_id)
-        svc_tmp = ServiceTemplate.find_by_id(svc_tmp_id)
+        svc_tmp = ServiceTemplate.find_by(:id => svc_tmp_id)
         svc_target_name = svc_tmp.name
       end
 
@@ -69,13 +73,13 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def create_child_tasks
-    parent_svc = Service.find_by_id(options[:parent_service_id])
+    parent_svc = Service.find_by(:id => options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
-    _log.info "- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
+    _log.info("- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>")
 
     tasks = source.create_tasks_for_service(self, parent_svc)
     tasks.each { |t| miq_request_tasks << t }
-    _log.info "- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
+    _log.info("- created <#{tasks.length}> service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>")
   end
 
   def do_request
@@ -90,16 +94,18 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       update_and_notify_parent(:message => message)
       queue_post_provision
     end
+    destination.update_lifecycle_state
   end
 
   def queue_post_provision
     MiqQueue.put(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => "do_post_provision",
-      :deliver_on   => 1.minutes.from_now.utc,
-      :task_id      => "#{self.class.name.underscore}_#{id}",
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "do_post_provision",
+      :zone           => my_zone,
+      :deliver_on     => 1.minutes.from_now.utc,
+      :tracking_label => tracking_label_id,
+      :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end
 
@@ -115,6 +121,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
     if self.class::AUTOMATE_DRIVES
       dialog_values = options[:dialog] || {}
+      dialog_values["request"] = req_type
 
       args = {
         :object_type      => self.class.name,
@@ -123,11 +130,11 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :class_name       => "ServiceProvision_Template",
         :instance_name    => req_type,
         :automate_message => "create",
-        :attrs            => dialog_values.merge!("request" => req_type)
+        :attrs            => dialog_values
       }
 
       # Automate entry point overrides from the resource_action
-      ra = source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
+      ra = resource_action
 
       unless ra.nil?
         args[:namespace]        = ra.ae_namespace unless ra.ae_namespace.blank?
@@ -136,18 +143,19 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         args[:automate_message] = ra.ae_message   unless ra.ae_message.blank?
         args[:attrs].merge!(ra.ae_attributes)
       end
+
+      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination)) if destination.present?
       args[:user_id]      = get_user.id
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
 
-      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => "#{self.class.name.underscore}_#{id}"
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => options.fetch(:miq_zone, my_zone),
+        :tracking_label => tracking_label_id
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -155,9 +163,13 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     end
   end
 
+  def resource_action
+    source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
+  end
+
   def service_resource
     return nil if options[:service_resource_id].blank?
-    ServiceResource.find_by_id(options[:service_resource_id])
+    ServiceResource.find_by(:id => options[:service_resource_id])
   end
 
   def mark_pending_items_as_finished
@@ -170,7 +182,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def before_ae_starts(_options)
     reload
-    if state.to_s.downcase.in? %w(pending queued)
+    if state.to_s.downcase.in?(%w(pending queued))
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
       update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
     end
@@ -194,15 +206,22 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def update_and_notify_parent(*args)
     prev_state = state
     super
-    task_finished if state == "finished" && prev_state != "finished"
+    try("task_#{state}") if prev_state != state
   end
 
   def task_finished
     service = destination
-    service.raise_provisioned_event unless service.nil?
+    return if service.nil?
+
+    service.raise_provisioned_event
+    service.update_lifecycle_state if service_template_source?
   end
 
   private
+
+  def service_template_source?
+    source_type == "ServiceTemplate"
+  end
 
   def valid_states
     super + ["provisioned"]

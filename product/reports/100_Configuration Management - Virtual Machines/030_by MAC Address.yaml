@@ -1,50 +1,50 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-14 01:18:36.154597 Z
 title: "VMs by MAC Addresses"
-conditions: 
+conditions:
 updated_on: 2008-08-14 01:18:36.154597 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "VMs by MAC Address"
 rpt_group: Custom
 priority: 10
-col_order: 
+col_order:
 - hardware.nics.address
 - hardware.nics.location
 - name
 - host.name
 - storage.name
 - v_datastore_path
-timeline: 
+timeline:
 id: 116
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    include: 
-      nics: 
-        columns: 
+filename:
+include:
+  hardware:
+    include:
+      nics:
+        columns:
         - address
         - location
-  host: 
-    columns: 
+  host:
+    columns:
     - name
-  storage: 
-    columns: 
+  storage:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - v_datastore_path
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - hardware.nics.address
 - name
-headers: 
+headers:
 - MAC Address
 - Device Location
 - VM Name

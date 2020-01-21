@@ -2,9 +2,9 @@ class LoadBalancer < ApplicationRecord
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
-  include_concern 'RetirementManagement'
-  include VirtualTotalMixin
   include TenantIdentityMixin
+  include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -16,10 +16,10 @@ class LoadBalancer < ApplicationRecord
   has_many :load_balancer_pools, :through => :load_balancer_listeners
   has_many :load_balancer_pool_members, -> { distinct }, :through => :load_balancer_pools
 
-  has_many :network_ports
+  has_many :network_ports, :as => :device
   has_many :cloud_subnet_network_ports, :through => :network_ports
   has_many :cloud_subnets, :through => :cloud_subnet_network_ports
-  has_many :floating_ips, :through => :network_ports
+  has_many :floating_ips, :through => :network_ports, :source => :floating_ips
   has_many :security_groups, -> { distinct }, :through => :network_ports
 
   has_many :vms, -> { distinct }, :through => :load_balancer_pool_members

@@ -4,7 +4,17 @@ module AuthenticationMixin
   included do
     has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
 
-    virtual_column :authentication_status,  :type => :string
+    has_one  :authentication_status_severity_level,
+             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) },
+             :as         => :resource,
+             :inverse_of => :resource,
+             :class_name => "Authentication"
+
+    virtual_delegate :authentication_status,
+                     :to        => "authentication_status_severity_level.status",
+                     :default   => "None",
+                     :type      => :string,
+                     :allow_nil => true
 
     def self.authentication_check_schedule
       zone = MiqServer.my_server.zone
@@ -31,7 +41,7 @@ module AuthenticationMixin
   end
 
   def authentication_key_pairs
-    authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
+    authentications.select { |a| a.kind_of?(AuthPrivateKey) }
   end
 
   def authentication_for_providers
@@ -90,11 +100,6 @@ module AuthenticationMixin
     !has_credentials?(type)
   end
 
-  def authentication_status
-    ordered_auths = authentication_for_providers.sort_by(&:status_severity)
-    ordered_auths.last.try(:status) || "None"
-  end
-
   def authentication_status_ok?(type = nil)
     authentication_best_fit(type).try(:status) == "Valid"
   end
@@ -132,9 +137,21 @@ module AuthenticationMixin
       current = {:new => nil, :old => nil}
 
       unless value.key?(:userid) && value[:userid].blank?
-        current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
+        current[:new] = {
+          :user            => value[:userid],
+          :password        => value[:password],
+          :auth_key        => value[:auth_key],
+          :service_account => value[:service_account].presence,
+        }
       end
-      current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
+      if cred
+        current[:old] = {
+          :user            => cred.userid,
+          :password        => cred.password,
+          :auth_key        => cred.auth_key,
+          :service_account => cred.service_account,
+        }
+      end
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }
@@ -166,9 +183,10 @@ module AuthenticationMixin
                                             :type => "AuthUseridPassword")
         end
       end
-      cred.userid = value[:userid]
-      cred.password = value[:password]
-      cred.auth_key = value[:auth_key]
+      cred.userid          = value[:userid]
+      cred.password        = value[:password]
+      cred.auth_key        = value[:auth_key]
+      cred.service_account = value[:service_account].presence
 
       cred.save if options[:save] && id
     end
@@ -246,13 +264,13 @@ module AuthenticationMixin
     if force
       MiqQueue.put(options)
     else
-      MiqQueue.put_unless_exists(options.except(:args, :deliver_on)) do |msg|
+      MiqQueue.create_with(options.slice(:args, :deliver_on)).put_unless_exists(options.except(:args, :deliver_on)) do |msg|
         # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
         help = "Check for a running server"
         help << " in zone: [#{options[:zone]}]"   if options[:zone]
         help << " with role: [#{options[:role]}]" if options[:role]
         _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
-        options
+        nil
       end
     end
   end
@@ -265,7 +283,7 @@ module AuthenticationMixin
     types = args.first                  if types.blank?
     types = [nil]                       if types.blank?
     Array(types).each do |t|
-      success = authentication_check(t, options).first
+      success = authentication_check(t, options.except(:attempt)).first
       retry_scheduled_authentication_check(t, options) unless success
     end
   end
@@ -307,11 +325,65 @@ module AuthenticationMixin
       status == :valid ? auth.validation_successful : auth.validation_failed(status, details)
     end
 
-    return status == :valid, details
+    return status == :valid, details.truncate(20_000)
   end
 
   def default_authentication
     authentication_type(default_authentication_type)
+  end
+
+  # Changes the password of userId on provider client and database.
+  #
+  # @param [current_password] password currently used for connected userId in provider client
+  # @param [new_password]     password that will replace the current one
+  #
+  # @return [Boolean] true if the routine is executed successfully
+  #
+  def change_password(current_password, new_password, auth_type = :default)
+    unless supports?(:change_password)
+      raise MiqException::Error, _("Change Password is not supported for %{class_description} provider") % {:class_description => self.class.description}
+    end
+    if change_password_params_valid?(current_password, new_password)
+      raw_change_password(current_password, new_password)
+      update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})
+    end
+
+    true
+  end
+
+  # Change the password as a queued task and return the task id. The userid,
+  # current password and new password are mandatory. The auth type is optional
+  # and defaults to 'default'.
+  #
+  def change_password_queue(userid, current_password, new_password, auth_type = :default)
+    task_opts = {
+      :action => "Changing the password for Physical Provider named '#{name}'",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'change_password',
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [current_password, new_password, auth_type]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  # This method must provide a way to change password on provider client.
+  #
+  # @param [_current_password]   password currently used for connected userId in provider client
+  # @param [_new_password]       password that will replace the current one
+  #
+  # @return [Boolean]            true if the password was changed successfully
+  #
+  # @raise [MiqException::Error] containing the error message if was not changed successfully
+  def raw_change_password(_current_password, _new_password)
+    raise NotImplementedError, _("must be implemented in subclass.")
   end
 
   private
@@ -333,9 +405,9 @@ module AuthenticationMixin
         end
       end
 
-    details &&= details.to_s.truncate(200)
+    details &&= details.to_s
 
-    _log.warn("#{header} Validation failed: #{status}, #{details}") unless status == :valid
+    _log.warn("#{header} Validation failed: #{status}, #{details.truncate(200)}") unless status == :valid
     return status, details
   end
 
@@ -364,5 +436,18 @@ module AuthenticationMixin
     a = authentication_type(type)
     authentications.destroy(a) unless a.nil?
     a
+  end
+
+  #
+  # Verifies if the change password params are valid
+  #
+  # @raise [MiqException::Error] if some required data is missing
+  #
+  # @return [Boolean] true if the params are fine
+  #
+  def change_password_params_valid?(current_password, new_password)
+    return true unless current_password.blank? || new_password.blank?
+
+    raise MiqException::Error, _("Please, fill the current_password and new_password fields.")
   end
 end

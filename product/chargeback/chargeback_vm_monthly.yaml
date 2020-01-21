@@ -2,7 +2,7 @@
 title: Chargeback_Vm_Monthly
 rpt_group: Custom
 rpt_type: Custom
-priority: 
+priority:
 db: ChargebackVm
 cols:
 - start_date
@@ -58,7 +58,7 @@ headers:
 - Storage Allocated Cost
 - Storage Used
 - Storage Used Cost
-conditions: 
+conditions:
 order: Ascending
 sortby:
 - vm_name
@@ -72,22 +72,22 @@ db_options:
     :interval_size: 6
     :end_interval_offset: 0
 col_formats:
-- 
-- 
-- 
+-
+-
+-
 - :mhz
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
 tz: UTC
 col_options:
   cpu_allocated_cost:
@@ -189,4 +189,3 @@ col_options:
   total_cost:
     :grouping:
     - :total
-

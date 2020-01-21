@@ -19,14 +19,18 @@ module Metric::CiMixin
     Metric::LongTermAverages::AVG_METHODS_WITHOUT_OVERHEAD.each do |vcol|
       virtual_column vcol, :type => :float, :uses => :vim_performance_operating_ranges
     end
+
+    supports :capture do
+      metrics_capture_klass = "#{self.class.parent.name}::MetricsCapture".safe_constantize
+      unless metrics_capture_klass&.method_defined?(:perf_collect_metrics)
+        unsupported_reason_add(:capture, _('This provider does not support metrics collection'))
+      end
+    end
   end
 
-  def has_perf_data?(interval_name = "hourly")
-    @has_perf_data ||= {}
-    unless @has_perf_data.key?(interval_name) # memoize boolean
-      @has_perf_data[interval_name] = associated_metrics(interval_name).exists?
-    end
-    @has_perf_data[interval_name]
+  def has_perf_data?
+    return @has_perf_data unless @has_perf_data.nil?
+    @has_perf_data = associated_metrics('hourly').exists?
   end
 
   def associated_metrics(interval_name)
@@ -71,7 +75,7 @@ module Metric::CiMixin
     slope_steepness = options[:slope_steepness].to_f
     percentage = options[:percentage] if options[:percentage]
     interval_name = options[:interval_name] || "realtime"
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
     now = options[:now] || Time.now.utc # for testing only
 
     # Turn on for the listing of timestamps and values in the debug log
@@ -111,7 +115,7 @@ module Metric::CiMixin
 
     scope = send(meth)
     if Metric.column_names.include?(column.to_s)
-      scope = scope.select "capture_interval_name, capture_interval, timestamp, #{column}"
+      scope = scope.select("capture_interval_name, capture_interval, timestamp, #{column}")
     end
 
     total_records = scope
@@ -145,7 +149,7 @@ module Metric::CiMixin
       total_records = total_records[0..start_on_idx]
     end
 
-    slope, yint = VimPerformanceAnalysis.calc_slope_from_data(total_records.dup, :timestamp, column)
+    slope, _yint = VimPerformanceAnalysis.calc_slope_from_data(total_records.dup, :timestamp, column)
     _log.info("[#{total_records.length}] total records found, slope: #{slope}, counter: [#{column}] criteria: #{interval_name} from [#{total_records.last.timestamp}] to [#{now}]")
 
     # Honor trend direction option by comparing with the calculated slope value
@@ -199,7 +203,7 @@ module Metric::CiMixin
       # Slide the window and subtract the oldest match_history value from the matches_in_window once we have looked at recs_in_window records.
       matches_in_window -= match_history[i - recs_in_window] if i > (recs_in_window - 1) && match_history[i - recs_in_window]
       colvalue = rec.send(column)
-      res = colvalue.nil? ? nil : colvalue.send(operator, value)
+      res = colvalue && colvalue.send(operator, value)
       match_history[i] = res ? 1 : 0
       if res
         matches_in_window += match_history[i]
@@ -215,5 +219,17 @@ module Metric::CiMixin
   def get_daily_time_profile_in_my_region_from_tz(tz)
     return if tz.nil?
     TimeProfile.in_region(region_id).rollup_daily_metrics.find_all_with_entire_tz.detect { |p| p.tz_or_default == tz }
+  end
+
+  def log_target
+    "#{self.class.name} name: [#{name}], id: [#{id}]"
+  end
+
+  def log_specific_target(target)
+    "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
+  end
+
+  def log_specific_targets(targets)
+    targets.map { |target| log_specific_target(target) }.join(" | ")
   end
 end

@@ -2,9 +2,8 @@ class Condition < ApplicationRecord
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 
-  validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
-  validates_uniqueness_of   :name, :description, :guid
-  validates_inclusion_of    :modifier, :in => %w( allow deny )
+  validates :name, :description, :expression, :towhat, :presence => true
+  validates :name, :description, :uniqueness => true
 
   acts_as_miq_taggable
   acts_as_miq_set_member
@@ -44,18 +43,13 @@ class Condition < ApplicationRecord
     when "script"
       result = eval(expression["expr"].strip)
     when "tag"
-      case expression["include"]
-      when "any"
-        result = false
-      when "all", "none"
-        result = true
-      else
+      unless %w(any all none).include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
                 {:name => name, :value => expression["include"]}
       end
 
       result = expression["include"] != "any"
-      expression["tag"].split.each do|tag|
+      expression["tag"].split.each do |tag|
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
@@ -101,9 +95,6 @@ class Condition < ApplicationRecord
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression after substitution: [#{expr}]")
     end
 
-    # Make rec class act as miq taggable if not already since the substitution fully relies on virtual tags
-    rec.class.acts_as_miq_taggable unless rec.respond_to?("tag_list") || rec.kind_of?(Hash)
-
     # <mode>/virtual/operating_system/product_name</mode>
     # <mode WE/JWSref=host>/managed/environment/prod</mode>
     expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, $2.strip, $3.strip, $1.strip) }
@@ -124,7 +115,7 @@ class Condition < ApplicationRecord
       if ref.kind_of?(Hash)
         value = ref.fetch(tag, "")
       else
-        ref.nil? ? value = "" : value = ref.tag_list(:ns => tag)
+        value = ref.nil? ? "" : Tag.list(ref, :ns => tag)
       end
       value = MiqExpression.quote(value, ohash[:type] || "string")
     when "count"
@@ -158,7 +149,7 @@ class Condition < ApplicationRecord
 
     listexp = /<value([^>]*)>(.+)<\/value>/im
     search =~ listexp
-    opts, ref, object = options2hash($1, rec)
+    opts, _ref, _object = options2hash($1, rec)
     methods = $2.split("/")
     methods.shift
     methods.shift
@@ -167,7 +158,7 @@ class Condition < ApplicationRecord
 
     return false if l.empty?
 
-    list = l.collect do|obj|
+    list = l.collect do |obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
@@ -204,7 +195,7 @@ class Condition < ApplicationRecord
     checkattr = tag.split("/").last.strip
 
     result = true
-    list.each do|obj|
+    list.each do |obj|
       opts, ref, object = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
@@ -225,11 +216,11 @@ class Condition < ApplicationRecord
     ohash = {}
     unless opts.blank?
       val = nil
-      opts.split(",").each do|o|
+      opts.split(",").each do |o|
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
       end
-      if ohash[:ref] != rec.class.to_s.downcase
+      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec)
         ref = rec.send(val) if val && rec.respond_to?(val)
       end
 
@@ -241,21 +232,26 @@ class Condition < ApplicationRecord
     return ohash, ref, object
   end
 
+  def self.exclude_from_object_ref_substitution(reference, rec)
+    case reference
+    when "service"
+      rec.kind_of?(Service)
+    end
+  end
+
   def self.registry_data(ref, name, ohash)
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders\Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     # <registry>HKLM\Software\Microsoft\Windows\CurrentVersion\explorer\Shell Folders : Common AppData</registry> == 'C:\Documents and Settings\All Users\Application Data'
     return nil unless ref.respond_to?("registry_items")
-    if ohash[:key_exists]
-      return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
-    elsif ohash[:value_exists]
-      rec = ref.registry_items.find_by_name(name)
-      return !!rec
-    else
-      rec = ref.registry_items.find_by_name(name)
-    end
-    return nil unless rec
 
-    rec.data
+    registry_items = ref.registry_items
+    if ohash[:key_exists]
+      registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
+    elsif ohash[:value_exists]
+      registry_items.where(:name => name).exists?
+    else
+      registry_items.find_by(:name => name)&.data
+    end
   end
 
   def export_to_array
@@ -265,8 +261,12 @@ class Condition < ApplicationRecord
   end
 
   def self.import_from_hash(condition, options = {})
+    # To delete condition modifier in policy from versions 5.8 and older
+    condition["expression"].exp = {"not" => condition["expression"].exp} if condition["modifier"] == 'deny'
+    condition.delete("modifier")
+
     status = {:class => name, :description => condition["description"]}
-    c = Condition.find_by_guid(condition["guid"])
+    c = Condition.find_by(:guid => condition["guid"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 
     if c.nil?
@@ -285,11 +285,11 @@ class Condition < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       c.save!
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return c, status

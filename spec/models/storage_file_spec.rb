@@ -141,8 +141,8 @@ describe StorageFile do
     end
 
     it "saves to database when update=true" do
-      file1 = FactoryGirl.create(:storage_file, :name => 'path1/test1.log')
-      file2 = FactoryGirl.create(:storage_file, :name => 'path2/test2.log', :vm_or_template_id => '1002')
+      file1 = FactoryBot.create(:storage_file, :name => 'path1/test1.log')
+      file2 = FactoryBot.create(:storage_file, :name => 'path2/test2.log', :vm_or_template_id => '1002')
       vm_ids = {
         "path1" => 5001,
         "path2" => 5002
@@ -153,7 +153,7 @@ describe StorageFile do
     end
 
     it "does not save to database when update=false" do
-      file1 = FactoryGirl.create(:storage_file, :name => 'path1/test1.log')
+      file1 = FactoryBot.create(:storage_file, :name => 'path1/test1.log')
       vm_ids = {"path1" => 5001}
       described_class.link_storage_files_to_vms(file1, vm_ids, false)
       expect(file1.vm_or_template_id).to eq(5001)

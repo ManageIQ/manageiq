@@ -1,5 +1,13 @@
 RSpec::Matchers.define :be_same_time_as do |expected|
   match do |actual|
+    regexp = /(.*_spec\.rb:\d+)/
+    called_from = caller.detect { |line| line =~ regexp }
+    puts <<-MESSAGE
+\nWARNING: The `be_same_time_as` matcher is deprecated and will be removed shortly.
+Use the `be_within` matcher instead: `be_same_time_as(expected_time).precision(1) == be_within(0.1).of(expected_time)`
+#{"Called from " + called_from if called_from}
+    MESSAGE
+
     actual.round(precision) == expected.round(precision)
   end
 

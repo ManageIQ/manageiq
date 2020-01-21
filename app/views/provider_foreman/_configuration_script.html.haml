@@ -1,9 +1,0 @@
-= render :partial => "layouts/flash_msg"
-.row
-  .col-md-12.col-lg-8
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_configuration_script_group_properties}
-  .col-md-12.col-lg-8
-    = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Variables"), :items => textual_configuration_script_variables}
-  .col-md-12.col-lg-8
-    - if @record.survey_spec['spec']
-      = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Surveys"), :items => textual_configuration_script_survey}

@@ -1,0 +1,38 @@
+---
+- MiqAlertSet:
+    name: 6917eab2-2605-11e7-a475-02420ebf1c88
+    description: Alert Profile VM Import Test
+    set_type: MiqAlertSet
+    guid: 6917eab2-2605-11e7-a475-02420ebf1c88
+    read_only:
+    set_data:
+      :notes: This is a VM/Instance based alert profile to use for RSpec tests
+    mode: Vm
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqAlert:
+    - guid: 4aa73d36-23b6-11e7-a475-02420ebf1c88
+      description: Alert Import Test
+      options:
+        :notifications:
+          :delay_next_evaluation: 600
+          :email:
+            :to:
+            - manageiq-test@cfserver.com
+          :evm_event: {}
+      db: Vm
+      expression:
+        :eval_method: realtime_performance
+        :mode: internal
+        :options:
+          :perf_column: v_pct_cpu_wait_delta_summation
+          :operator: ">"
+          :value_threshold: '10'
+          :trend_direction: up
+          :debug_trace: 'false'
+          :rt_time_threshold: 180
+      responds_to_events: vm_perf_complete
+      enabled: true
+      read_only:

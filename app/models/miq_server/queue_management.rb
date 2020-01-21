@@ -21,9 +21,11 @@ module MiqServer::QueueManagement
       if status == "timeout"
         begin
           _log.info("Reconnecting to DB after timeout error during queue deliver")
-          ActiveRecord::Base.connection.reconnect!
+          # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+          spec_name = ActiveRecord::Base.connection_specification_name
+          ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
         rescue => err
-          _log.error("Error encountered during <ActiveRecord::Base.connection.reconnect!> error:#{err.class.name}: #{err.message}")
+          _log.error("Error encountered reconnecting to the database, error:#{err.class.name}: #{err.message}")
         end
       end
 
@@ -50,12 +52,13 @@ module MiqServer::QueueManagement
   def restart_queue
     log_message  = "Server restart requested"
     log_message += ", remote server: [#{name}], GUID: [#{guid}], initiated from: [#{MiqServer.my_server.name}], GUID: [#{MiqServer.my_server.guid}]" if self.is_remote?
-    _log.info log_message
+    _log.info(log_message)
     enqueue_for_server('restart')
   end
 
   def ntp_reload_queue
-    return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload's guard clause
+    # matches ntp_reload's guard clause
+    return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
 
     MiqQueue.put(
       :class_name  => "MiqServer",
@@ -63,7 +66,6 @@ module MiqServer::QueueManagement
       :method_name => "ntp_reload",
       :server_guid => guid,
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args => [server_ntp_settings],
       :zone        => my_zone
     )
   end

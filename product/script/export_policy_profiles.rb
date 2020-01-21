@@ -3,7 +3,7 @@
 
 # Load the Policy Class so that we get PolicySet defined
 begin
-  p1 = Policy.find(1)
+  Policy.find(1)
 rescue
 end
 
@@ -22,7 +22,7 @@ MiqPolicySet.all.each do |ps|
     f = File.new(fname, "w")
     f << contents
     f.close
-  rescue ActiveRecord::RecordNotFound => err
+  rescue ActiveRecord::RecordNotFound
     next
   end
 end

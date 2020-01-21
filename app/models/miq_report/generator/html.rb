@@ -1,8 +1,7 @@
 module MiqReport::Generator::Html
   def build_html_rows(clickable_rows = false)
-    tz = get_time_zone(Time.zone.name) if Time.zone
+    time_zone = get_time_zone(Time.zone)
     html_rows = []
-    counter = 0
     group_counter = 0
     row = 0
 
@@ -11,28 +10,11 @@ module MiqReport::Generator::Html
     group_limit = self.rpt_options[:group_limit]
     in_a_widget = self.rpt_options[:in_a_widget] || false
 
-    unless table.nil? || table.data.length == 0
+    unless table.nil? || table.data.empty?
       # Following line commented for now - for not showing repeating column values
       #       prev_data = String.new                # Initialize the prev_data variable
 
-      cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
-      default_precision = cfg[:precision][:default]           # Set the default
-      precision_by_column = cfg[:precision_by_column]         # get the column overrides
-      precisions = {}                                         # Hash to store columns we hit
       hide_detail_rows = self.rpt_options.fetch_path(:summary, :hide_detail_rows) || false
-
-      # derive a default precision by looking at the suffixes of the column hearers
-      zero_precision_suffixes = ["(ms)", "(mb)", "(seconds)", "(b)"]
-      headers.each_with_index do |header, i|
-        next unless header.respond_to?(:downcase)
-        header = header.downcase
-        zero_precision_suffixes.each do |s|
-          if header.ends_with?(s) && precision_by_column[col_order[i]].blank?
-            precisions[col_order[i]] = 0
-            break
-          end
-        end
-      end
 
       row_limit = self.rpt_options && self.rpt_options[:row_limit] ? self.rpt_options[:row_limit] : 0
       save_val = :_undefined_                                 # Hang on to the current group value
@@ -63,31 +45,9 @@ module MiqReport::Generator::Html
         row = 1 - row
 
         col_order.each_with_index do |c, c_idx|
-          style = get_style_class(c, d.data, tz)
-          style_class = !style.nil? ? " class='#{style}'" : nil
-          if c == "resource_type"                     # Lookup models in resource_type col
-            output << "<td#{style_class}>"
-            output << ui_lookup(:model => d.data[c])
-          elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
-            output << "<td#{style_class} " + 'style="text-align:right">'
-            output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
-          elsif ["<compare>", "<drift>"].include?(db.to_s)
-            output << "<td#{style_class}>"
-            output << CGI.escapeHTML(d.data[c].to_s)
-          else
-            if d.data[c].kind_of?(Time)
-              output << "<td#{style_class} " + 'style="text-align:center">'
-            elsif d.data[c].kind_of?(Bignum) || d.data[c].kind_of?(Fixnum) || d.data[c].kind_of?(Float)
-              output << "<td#{style_class} " + 'style="text-align:right">'
-            else
-              output << "<td#{style_class}>"
-            end
-            output << CGI.escapeHTML(format(c.split("__").first,
-                                            d.data[c],
-                                            :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
-                                            :tz     => tz))
-          end
-          output << "</td>"
+          next if column_is_hidden?(c)
+
+          build_html_col(output, c, self.col_formats[c_idx], d.data, time_zone)
         end
 
         output << "</tr>"
@@ -104,6 +64,45 @@ module MiqReport::Generator::Html
     end
 
     html_rows
+  end
+
+  def format_column(col_name, row_data, time_zone, col_format = nil)
+    if col_name == 'resource_type'
+      ui_lookup(:model => row_data[col_name]) # Lookup models in resource_type col
+    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
+      CGI.escapeHTML(TenantQuota.format_quota_value(col_name, row_data[col_name], row_data['tenant_quotas.name']))
+    elsif ['<compare>', '<drift>'].include?(db.to_s)
+      CGI.escapeHTML(row_data[col_name].to_s)
+    else
+      CGI.escapeHTML(format(col_name.split("__").first, row_data[col_name], :format => col_format || :_default_, :tz => time_zone)) # rubocop:disable Style/FormatString
+    end
+  end
+
+  def open_td(style_class, text_align = nil)
+    alignment_style = case text_align
+                      when :right
+                        ' style="text-align:right"'
+                      when :center
+                        ' style="text-align:center"'
+                      else
+                        ''
+                      end
+
+    "<td#{style_class}#{alignment_style}>"
+  end
+
+  def build_html_col(output, col_name, col_format, row_data, time_zone)
+    style = get_style_class(col_name, row_data, time_zone)
+    style_class = !style.nil? ? " class='#{style}'" : nil
+    alignment_style = if db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name']) || row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
+                        :right
+                      elsif row_data[col_name].kind_of?(Time)
+                        :center
+                      end
+
+    output << open_td(style_class, alignment_style)
+    output << format_column(col_name, row_data, time_zone, col_format)
+    output << '</td>'
   end
 
   # Depending on the model the table is based on, return the onclick string for the report row
@@ -182,7 +181,8 @@ module MiqReport::Generator::Html
     atoms = col_options.fetch_path(col, :style) unless col_options.nil?
     return if atoms.nil?
 
-    nh = {}; row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    nh = {}
+    row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|

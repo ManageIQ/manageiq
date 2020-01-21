@@ -1,6 +1,7 @@
 require 'miq-encode'
 
 class OperatingSystem < ApplicationRecord
+  belongs_to :host
   belongs_to :vm_or_template
   belongs_to :vm,           :foreign_key => :vm_or_template_id
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
@@ -11,7 +12,7 @@ class OperatingSystem < ApplicationRecord
 
   @@os_map = [
     ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
-    ["windows_generic", %w(winxppro winxp xp)],
+    ["windows_generic", %w(winxppro winxp)],
     ["windows_generic", %w(vista longhorn)],
     ["windows_generic", %w(win2k win2000)],
     ["windows_generic", %w(microsoft windows winnt)],
@@ -25,7 +26,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_centos",    %w(centos)],
     ["linux_debian",    %w(debian)],
     ["linux_coreos",    %w(coreos)],
-    ["linux_esx",       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
+    ["linux_esx",       %w(vmnixx86 vmwareesxserver esxserver vmwareesxi)],
     ["linux_solaris",   %w(solaris)],
     ["linux_generic",   %w(linux)]
   ]
@@ -43,7 +44,7 @@ class OperatingSystem < ApplicationRecord
     if vm.operating_system.nil?
       vm.operating_system = OperatingSystem.new(nh)
     else
-      vm.operating_system.update_attributes(nh)
+      vm.operating_system.update(nh)
     end
   end
 

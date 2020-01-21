@@ -1,10 +1,11 @@
 class Compliance < ApplicationRecord
+  include_concern 'Purging'
   belongs_to  :resource,  :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 
   def self.check_compliance_queue(targets, inputs = {})
     targets.to_miq_a.each do |target|
-      MiqQueue.put(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => 'check_compliance',
         :args        => [[target.class.name, target.id], inputs]
@@ -32,7 +33,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}
@@ -43,12 +44,11 @@ class Compliance < ApplicationRecord
       raise _("Scan and Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
     end
 
-    log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
-    _log.info("Requesting scan of #{log_target}")
+    _log.info("Requesting scan of #{target.log_target}")
     begin
       MiqEvent.raise_evm_job_event(target, :type => "scan", :prefix => "request")
     rescue => err
-      _log.error("Error raising request scan event for #{log_target}: #{err.message}")
+      _log.error("Error raising request scan event for #{target.log_target}: #{err.message}")
       return
     end
 
@@ -60,7 +60,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}
@@ -112,5 +112,9 @@ class Compliance < ApplicationRecord
         comp.compliance_details.create(dhash)
       end
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Compliance History', 'Compliance Histories', number)
   end
 end

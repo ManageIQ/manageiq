@@ -1,17 +1,17 @@
 describe ServiceOrder do
   def create_request
-    FactoryGirl.create(:service_template_provision_request,
+    FactoryBot.create(:service_template_provision_request,
                        :process   => false,
                        :requester => admin)
   end
 
-  let(:admin)         { FactoryGirl.create(:user_with_group, :userid => "admin") }
-  let(:user)          { FactoryGirl.create(:user_with_group, :tenant => tenant) }
+  let(:admin)         { FactoryBot.create(:user_with_group, :userid => "admin") }
+  let(:user)          { FactoryBot.create(:user_with_group, :tenant => tenant) }
   let(:request)       { create_request }
   let(:request2)      { create_request }
   let(:request3)      { create_request }
   let(:service_order) do
-    FactoryGirl.create(:service_order, :state  => ServiceOrder::STATE_CART,
+    FactoryBot.create(:service_order, :state  => ServiceOrder::STATE_CART,
                                        :user   => user,
                                        :tenant => tenant)
   end
@@ -40,7 +40,7 @@ describe ServiceOrder do
   end
 
   it "should raise an error on checkout for ordered service order" do
-    service_order.update_attributes(:miq_requests => [request], :state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:miq_requests => [request], :state => ServiceOrder::STATE_ORDERED)
     error_message = "Invalid operation [checkout] for Service Order in state [ordered]"
     expect { service_order.checkout }.to raise_error(RuntimeError, error_message)
   end
@@ -66,7 +66,7 @@ describe ServiceOrder do
   end
 
   it "should raise an error while trying to clear the cart on an ordered service order" do
-    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:state => ServiceOrder::STATE_ORDERED)
     service_order.miq_requests << request
     error_message = "Invalid operation [clear] for Service Order in state [ordered]"
     expect { service_order.clear }.to raise_error(RuntimeError, error_message)
@@ -92,9 +92,56 @@ describe ServiceOrder do
   end
 
   it "should raise an error while trying to remove from cart on ordered service order" do
-    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:state => ServiceOrder::STATE_ORDERED)
     service_order.miq_requests << [request, request2]
     error_message = "Invalid operation [remove_from_cart] for Service Order in state [ordered]"
     expect { ServiceOrder.remove_from_cart(request, user) }.to raise_error(RuntimeError, error_message)
+  end
+
+  it "only allows one cart per user, tenant" do
+    service_order
+    expect do
+      ServiceOrder.create!(:state => ServiceOrder::STATE_CART, :user => user, :tenant => tenant)
+    end.to raise_error(ActiveRecord::RecordInvalid, /State has already been taken/)
+  end
+
+  context '#deep_copy' do
+    before do
+      service_order.update(:state => ServiceOrder::STATE_ORDERED)
+    end
+
+    it 'should copy the miq_requests' do
+      service_order.miq_requests << [request, request2]
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.miq_requests.count).to eq(2)
+    end
+
+    it 'should have its order ID in the name unless specified' do
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.name).to eq("Order # #{service_order_copy.id}")
+    end
+
+    it 'should accept new attributes' do
+      service_order_copy = service_order.deep_copy(:name => "foo bar")
+      expect(service_order_copy.name).to eq("foo bar")
+    end
+
+    it 'should be in the cart state' do
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.state).to eq(ServiceOrder::STATE_CART)
+    end
+
+    it 'should create only one new service order' do
+      expect do
+        service_order.deep_copy
+      end.to change(ServiceOrder, :count).by(1)
+    end
+
+    it 'does not allow copying of a service order in the cart state' do
+      service_order.update(:state => ServiceOrder::STATE_CART)
+      expect do
+        service_order.deep_copy
+      end.to raise_error(RuntimeError, 'Cannot copy a service order in the cart state')
+    end
   end
 end

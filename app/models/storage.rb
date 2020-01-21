@@ -1,8 +1,12 @@
 class Storage < ApplicationRecord
+  include NewWithTypeStiMixin
+
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :storages
+
   has_many :vms_and_templates, :foreign_key => :storage_id, :dependent => :nullify, :class_name => "VmOrTemplate"
   has_many :miq_templates,     :foreign_key => :storage_id
   has_many :vms,               :foreign_key => :storage_id
-  has_many :host_storages
+  has_many :host_storages,     :dependent => :destroy
   has_many :hosts,             :through => :host_storages
   has_many :storage_profile_storages,   :dependent  => :destroy
   has_many :storage_profiles,           :through    => :storage_profile_storages
@@ -16,20 +20,14 @@ class Storage < ApplicationRecord
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
   has_many :storage_files,       :dependent => :destroy
-  has_many :storage_files_files, -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
-  has_many :files,               -> { where "rsc_type = 'file'" }, :class_name => "StorageFile", :foreign_key => "storage_id"
-  has_many :host_storages
+  has_many :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
+  has_many :files,               -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
 
   has_many :miq_events, :as => :target, :dependent => :destroy
 
-  has_one  :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
-  virtual_has_one   :file_share,           :class_name => 'SniaFileShare'
-  virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
-  virtual_has_one   :logical_disk,         :class_name => 'CimLogicalDisk'
   virtual_has_many  :storage_clusters
+
+  scope :available, -> { where(:maintenance => [nil, false]) }
 
   validates_presence_of     :name
   # We can't uncomment this until the SmartProxy starts sending location when registering VMs
@@ -40,14 +38,14 @@ class Storage < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include SerializedEmsRefObjMixin
   include FilterableMixin
+  include SupportsFeatureMixin
   include Metric::CiMixin
   include StorageMixin
   include AsyncDeleteMixin
   include AvailabilityMixin
-  include SupportsFeatureMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   virtual_column :v_used_space,                   :type => :integer
   virtual_column :v_used_space_percent_of_total,  :type => :integer
@@ -70,11 +68,19 @@ class Storage < ApplicationRecord
   virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
-  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS FCP ISCSI GLUSTERFS )
+  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
 
   supports :smartstate_analysis do
     if ext_management_systems.blank? || !ext_management_system.class.supports_smartstate_analysis?
       unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
+    elsif ext_management_systems_with_authentication_status_ok.blank?
+      unsupported_reason_add(:smartstate_analysis, _("There are no EMSs with valid credentials for this Datastore"))
+    end
+  end
+
+  supports :delete do
+    if vms_and_templates.any? || hosts.any?
+      unsupported_reason_add(:delete, _("Only storage without VMs and Hosts can be removed"))
     end
   end
 
@@ -97,6 +103,14 @@ class Storage < ApplicationRecord
 
   def ext_management_systems_in_zone(zone_name)
     ext_management_systems.select { |ems| ems.my_zone == zone_name }
+  end
+
+  def ext_management_systems_with_authentication_status_ok
+    ext_management_systems.select(&:authentication_status_ok?)
+  end
+
+  def ext_management_systems_with_authentication_status_ok_in_zone(zone_name)
+    ext_management_systems_with_authentication_status_ok.select { |ems| ems.my_zone == zone_name }
   end
 
   def storage_clusters
@@ -125,21 +139,21 @@ class Storage < ApplicationRecord
     ext_management_system.my_zone
   end
 
-  def scan_starting(miq_task_id, host)
-    miq_task = MiqTask.find_by_id(miq_task_id)
+  def scan_starting(miq_task_id, ems)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
-    message = "Starting File refresh for Storage [#{name}] via Host [#{host.name}]"
+    message = "Starting File refresh for Storage [#{name}] via EMS [#{ems.name}]"
     miq_task.update_message(message)
   end
 
   def scan_complete_callback(miq_task_id, status, _message, result)
-    _log.info "Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
+    _log.info("Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]")
 
-    miq_task = MiqTask.find_by_id(miq_task_id)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
@@ -181,17 +195,17 @@ class Storage < ApplicationRecord
 
   def scan_queue_item(miq_task_id)
     MiqEvent.raise_evm_job_event(self, :type => "scan", :prefix => "request")
-    _log.info "Queueing SmartState Analysis for Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}]"
+    _log.info("Queueing SmartState Analysis for Storage ID: [#{id}], MiqTask ID: [#{miq_task_id}]")
     cb = {:class_name => self.class.name, :instance_id => id, :method_name => :scan_complete_callback, :args => [miq_task_id]}
-    MiqQueue.put(
+    MiqQueue.submit_job(
+      :service      => "ems_operations",
+      :affinity     => ext_management_system,
       :class_name   => self.class.name,
       :instance_id  => id,
       :method_name  => 'smartstate_analysis',
       :args         => [miq_task_id],
       :msg_timeout  => self.class.scan_collection_timeout,
       :miq_callback => cb,
-      :zone         => my_zone,
-      :role         => 'ems_operations'
     )
   end
 
@@ -202,7 +216,7 @@ class Storage < ApplicationRecord
       storage_id = unprocessed.shift
       break if storage_id.nil?
 
-      storage = Storage.find_by_id(storage_id.to_i)
+      storage = Storage.find_by(:id => storage_id.to_i)
       if storage.nil?
         _log.warn("Storage with ID: [#{storage_id}] cannot be found - removing from target list")
         miq_task.context_data[:targets] = miq_task.context_data[:targets].reject { |sid| sid == storage_id }
@@ -247,7 +261,7 @@ class Storage < ApplicationRecord
   end
 
   def self.scan_collection_timeout
-    vmdb_storage_config[:collection] && vmdb_storage_config[:collection][:timeout]
+    ::Settings.storage.collection.timeout
   end
 
   def self.scan_queue_watchdog(miq_task_id)
@@ -265,22 +279,22 @@ class Storage < ApplicationRecord
   end
 
   def self.scan_watchdog(miq_task_id)
-    miq_task = MiqTask.find_by_id(miq_task_id)
+    miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
     if scan_complete?(miq_task)
-      _log.info scan_complete_message(miq_task).to_s
+      _log.info(scan_complete_message(miq_task).to_s)
       return
     end
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       locked_miq_task.context_data[:pending].each do |storage_id, qitem_id|
-        qitem = MiqQueue.find_by_id(qitem_id)
+        qitem = MiqQueue.find_by(:id => qitem_id)
         if qitem.nil?
-          _log.warn "Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue"
+          _log.warn("Pending Scan for Storage ID: [#{storage_id}] is missing MiqQueue ID: [#{qitem_id}] - will requeue")
           locked_miq_task.context_data[:pending].delete(storage_id)
           locked_miq_task.save!
           scan_queue(locked_miq_task)
@@ -290,48 +304,33 @@ class Storage < ApplicationRecord
     scan_queue_watchdog(miq_task.id)
   end
 
-  def self.vmdb_storage_config
-    VMDB::Config.new("storage").config
-  end
-
-  DEFAULT_WATCHDOG_INTERVAL = 1.minute
   def self.scan_watchdog_interval
-    config = vmdb_storage_config
-    return DEFAULT_WATCHDOG_INTERVAL if config['watchdog_interval'].nil?
-    config['watchdog_interval'].to_s.to_i_with_method
+    ::Settings.storage.watchdog_interval.to_s.to_i_with_method
   end
 
-  DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST = 0
   def self.max_qitems_per_scan_request
-    config = vmdb_storage_config
-    config['max_qitems_per_scan_request'] || DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST
-  end
-
-  DEFAULT_MAX_PARALLEL_SCANS_PER_HOST = 1
-  def self.max_parallel_storage_scans_per_host
-    config = vmdb_storage_config
-    config['max_parallel_scans_per_host'] || DEFAULT_MAX_PARALLEL_SCANS_PER_HOST
+    ::Settings.storage.max_qitems_per_scan_request
   end
 
   def self.scan_eligible_storages(zone_name = nil)
     zone_caption = zone_name ? " for zone [#{zone_name}]" : ""
-    _log.info "Computing#{zone_caption} Started"
+    _log.info("Computing#{zone_caption} Started")
     storages = []
     where(:store_type => SUPPORTED_STORAGE_TYPES).each do |storage|
       unless storage.perf_capture_enabled?
-        _log.info "Skipping scan of Storage: [#{storage.name}], performance capture is not enabled"
+        _log.info("Skipping scan of Storage: [#{storage.name}], performance capture is not enabled")
         next
       end
 
       if zone_name && storage.ext_management_systems_in_zone(zone_name).empty?
-        _log.info "Skipping scan of Storage: [#{storage.name}], storage under EMS in a different zone from [#{zone_name}]"
+        _log.info("Skipping scan of Storage: [#{storage.name}], storage under EMS in a different zone from [#{zone_name}]")
         next
       end
 
       storages << storage
     end
 
-    _log.info "Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect(&:id).sort.inspect}"
+    _log.info("Computing#{zone_caption} Complete -- Storage IDs: #{storages.collect(&:id).sort.inspect}")
     storages
   end
 
@@ -347,7 +346,7 @@ class Storage < ApplicationRecord
       :context_data => context_data
     )
 
-    _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{task_name}]"
+    _log.info("Created MiqTask ID: [#{miq_task.id}], Name: [#{task_name}]")
 
     max_qitems = max_qitems_per_scan_request
     max_qitems = storages.length unless max_qitems.kind_of?(Numeric) && (max_qitems > 0) # Queue them all (unlimited) unless greater than 0
@@ -360,7 +359,7 @@ class Storage < ApplicationRecord
     storages = scan_eligible_storages(zone_name)
 
     if storages.empty?
-      _log.info "No Eligible Storages"
+      _log.info("No Eligible Storages")
       return nil
     end
 
@@ -371,15 +370,15 @@ class Storage < ApplicationRecord
   def scan(userid = "system", _role = "ems_operations")
     unless SUPPORTED_STORAGE_TYPES.include?(store_type.upcase)
       raise(MiqException::MiqUnsupportedStorage,
-            _("Action not supported for %{table} type [%{store_type}], [%{name}] with id: [%{id}]") %
-              {:table => ui_lookup(:table => "storages"), :store_type => store_type, :name => name, :id => id})
+            _("Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]") %
+              {:store_type => store_type, :name => name, :id => id})
     end
 
-    hosts = active_hosts_with_authentication_status_ok
-    if hosts.empty?
+    emss = ext_management_systems_with_authentication_status_ok
+    if emss.empty?
       raise(MiqException::MiqStorageError,
-            _("Check that a Host is running and has valid credentials for %{table} [%{name}] with id: [%{id}]") %
-              {:table => ui_lookup(:tables => "storage"), :name => name, :id => id})
+            _("Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id}]") %
+              {:name => name, :id => id})
     end
     task_name = "SmartState Analysis for [#{name}]"
     self.class.create_scan_task(task_name, userid, [self])
@@ -402,8 +401,8 @@ class Storage < ApplicationRecord
   # storages to get total_unmanaged_vms in a report or view is optimized
   cache_with_timeout(:total_unmanaged_vms, 15.seconds) do
     StorageFile.where(:ext_name => "vmx", :vm_or_template_id => nil)
-      .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
-      .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
+               .group("storage_id").count
+               .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
   def total_unmanaged_vms
@@ -413,8 +412,8 @@ class Storage < ApplicationRecord
   cache_with_timeout(:count_of_vmdk_disk_files, 15.seconds) do
     # doesnt match *-111111.vmdk, *-flat.vmdk, or *-delta.vmdk
     StorageFile.where(:ext_name => 'vmdk').where("base_name !~ '-([0-9]{6}|flat|delta)\\.vmdk$'")
-      .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
-      .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
+               .group("storage_id").count
+               .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
   def count_of_vmdk_disk_files
@@ -431,7 +430,7 @@ class Storage < ApplicationRecord
 
   cache_with_timeout(:unmanaged_vm_counts_by_storage_id, 15.seconds) do
     Vm.where("((vms.template = ? AND vms.ems_id IS NOT NULL) OR vms.host_id IS NOT NULL)", true)
-      .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
+      .group("storage_id").count
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
@@ -444,8 +443,7 @@ class Storage < ApplicationRecord
   end
 
   cache_with_timeout(:unregistered_vm_counts_by_storage_id, 15.seconds) do
-    Vm.where("((vms.template = ? AND vms.ems_id IS NULL) OR vms.host_id IS NOT NULL)", true)
-      .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
+    Vm.where(:host => nil).where.not(:storage => nil).group(:storage_id).count
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
@@ -459,7 +457,7 @@ class Storage < ApplicationRecord
 
   cache_with_timeout(:managed_unregistered_vm_counts_by_storage_id, 15.seconds) do
     Vm.where("((vms.template = ? AND vms.ems_id IS NULL) OR vms.host_id IS NOT NULL)", true)
-      .group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
+      .group("storage_id").count
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
@@ -519,12 +517,12 @@ class Storage < ApplicationRecord
     ($_miq_worker_current_msg.class_name == self.class.name) && ($_miq_worker_current_msg.instance_id = id) && ($_miq_worker_current_msg.method_name == method_name)
   end
 
-  def smartstate_analysis_count_for_host_id(host_id)
+  def smartstate_analysis_count_for_ems_id(ems_id)
     MiqQueue.where(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "smartstate_analysis",
-      :target_id   => host_id,
+      :target_id   => ems_id,
       :state       => "dequeue"
     ).count
   end
@@ -533,45 +531,38 @@ class Storage < ApplicationRecord
     method_name = "smartstate_analysis"
 
     unless miq_task_id.nil?
-      miq_task = MiqTask.find_by_id(miq_task_id)
+      miq_task = MiqTask.find_by(:id => miq_task_id)
       miq_task.state_active unless miq_task.nil?
     end
 
-    hosts = active_hosts_with_authentication_status_ok_in_zone(MiqServer.my_zone)
-    if hosts.empty?
-      message = "There are no active Hosts with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
-      _log.warn message
+    emss = ext_management_systems_with_authentication_status_ok_in_zone(MiqServer.my_zone)
+    if emss.empty?
+      message = "There are no EMSs with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
+      _log.warn(message)
       raise MiqException::MiqUnreachableStorage,
-            _("There are no active Hosts with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
+            _("There are no EMSs with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
               {:name => name, :zone => MiqServer.my_zone}
     end
 
-    max_parallel_storage_scans_per_host = self.class.max_parallel_storage_scans_per_host
-    host = nil
-    hosts.each do |h|
-      next if smartstate_analysis_count_for_host_id(h.id) >= max_parallel_storage_scans_per_host
-      host = h
-      break
-    end
-
-    if host.nil?
+    ems = emss.detect { |e| smartstate_analysis_count_for_ems_id(e.id) < ::Settings.storage.max_parallel_scans_per_ems }
+    if ems.nil?
       raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
-      host = hosts.random_element
+      ems = emss.random_element
     end
 
-    $_miq_worker_current_msg.update_attributes!(:target_id => host.id) if qmessage?(method_name)
+    $_miq_worker_current_msg.update!(:target_id => ems.id) if qmessage?(method_name)
 
     st = Time.now
-    message = "Storage [#{name}] via Host [#{host.name}]"
-    _log.info "#{message}...Starting"
-    scan_starting(miq_task_id, host)
-    if host.respond_to?(:refresh_files_on_datastore)
-      host.refresh_files_on_datastore(self)
+    message = "Storage [#{name}] via EMS [#{ems.name}]"
+    _log.info("#{message}...Starting")
+    scan_starting(miq_task_id, ems)
+    if ems.respond_to?(:refresh_files_on_datastore)
+      ems.refresh_files_on_datastore(self)
     else
-      _log.warn "#{message}...Not Supported for #{host.class.name}"
+      _log.warn("#{message}...Not Supported for #{ems.class.name}")
     end
     update_attribute(:last_scan_on, Time.now.utc)
-    _log.info "#{message}...Completed in [#{Time.now - st}] seconds"
+    _log.info("#{message}...Completed in [#{Time.now - st}] seconds")
 
     begin
       MiqEvent.raise_evm_job_event(self, :type => "scan", :suffix => "complete")
@@ -589,7 +580,10 @@ class Storage < ApplicationRecord
   def vm_ids_by_path
     host_ids = hosts.collect(&:id)
     return nil if host_ids.empty?
-    Vm.where(:host_id => host_ids).includes(:storage).inject({}) { |h, v| h[File.dirname(v.path)] = v.id; h }
+    Vm.where(:host_id => host_ids).includes(:storage).inject({}) do |h, v|
+      h[File.dirname(v.path)] = v.id
+      h
+    end
   end
 
   # TODO: Is this still needed?
@@ -631,7 +625,7 @@ class Storage < ApplicationRecord
   end
 
   cache_with_timeout(:vm_counts_by_storage_id, 15.seconds) do
-    Vm.group("storage_id").pluck("storage_id, COUNT(*) AS vm_count")
+    Vm.group("storage_id").count
       .each_with_object(Hash.new(0)) { |(storage_id, count), h| h[storage_id] = count.to_i }
   end
 
@@ -677,38 +671,6 @@ class Storage < ApplicationRecord
     total_space.to_f == 0 ? 0.0 : (v_total_provisioned.to_f / total_space.to_f * 1000.0).round / 10.0
   end
 
-  def base_storage_extents
-    miq_cim_instance.nil? ? [] : miq_cim_instance.base_storage_extents
-  end
-
-  def base_storage_extents_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.base_storage_extents_size
-  end
-
-  def storage_systems
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_systems
-  end
-
-  def storage_systems_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_systems_size
-  end
-
-  def storage_volumes
-    miq_cim_instance.nil? ? [] : miq_cim_instance.storage_volumes
-  end
-
-  def storage_volumes_size
-    miq_cim_instance.nil? ? 0 : miq_cim_instance.storage_volumes_size
-  end
-
-  def file_share
-    miq_cim_instance.nil? ? nil : miq_cim_instance.file_share
-  end
-
-  def logical_disk
-    miq_cim_instance.nil? ? [] : miq_cim_instance.logical_disk
-  end
-
   #
   # Metric methods
   #
@@ -732,19 +694,18 @@ class Storage < ApplicationRecord
   end
 
   # TODO: See if we can reuse the main perf_capture method, and only overwrite the perf_collect_metrics method
-  def perf_capture(interval_name)
+  def perf_capture(interval_name, *_args)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
 
     log_header = "[#{interval_name}]"
-    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    _log.info "#{log_header} Capture for #{log_target}..."
+    _log.info("#{log_header} Capture for #{log_target}...")
 
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       hour = Metric::Helper.nearest_hourly_timestamp(Time.now.utc + 30.minutes)
 
       interval = case interval_name
@@ -822,7 +783,7 @@ class Storage < ApplicationRecord
             vm_attrs[:derived_vm_allocated_disk_storage] = val
             attrs[:derived_vm_allocated_disk_storage] += val unless val.nil?
 
-            ['snapshot', 'mem', 'disk'].each do|a|
+            ['snapshot', 'mem', 'disk'].each do |a|
               col = "derived_storage_#{a}_#{mode}".to_sym
               val = vm_attrs[col]
               attrs[col] ||= 0
@@ -851,10 +812,8 @@ class Storage < ApplicationRecord
         perf   = obj_perfs.fetch_path(self.class.name, id, interval_name, hour)
         perf ||= obj_perfs.store_path(self.class.name, id, interval_name, hour, send(meth).build(:timestamp => hour, :capture_interval_name => interval_name))
 
-        perf.update_attributes(attrs)
+        perf.update(attrs)
       end
-
-      Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
 
       update_attribute(:last_perf_capture_on, hour)
 
@@ -866,31 +825,25 @@ class Storage < ApplicationRecord
       perf_rollup_to_parents(interval_name, hour)
     end
 
-    _log.info "#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}"
+    _log.info("#{log_header} Capture for #{log_target}...Complete - Timings: #{t.inspect}")
   end
 
   def update_vm_perf(vm, vm_perf, vm_attrs)
     vm_attrs.reverse_merge!(vm_perf.attributes.symbolize_keys)
     vm_attrs.merge!(Metric::Processing.process_derived_columns(vm, vm_attrs))
-    vm_perf.update_attributes(vm_attrs)
+    vm_perf.update(vm_attrs)
   end
 
   def vm_scan_affinity
     with_relationship_type("vm_scan_storage_affinity") { parents }
   end
 
-  def self.batch_operation_supported?(operation, ids)
-    Storage.where(:id => ids).all? do |s|
-      if s.respond_to?("supports_#{operation}?")
-        s.public_send("supports_#{operation}?")
-      else
-        s.public_send("validate_#{operation}")[:available]
-      end
-    end
-  end
-
   # @param [String, Storage] store_type upcased version of the storage type
   def self.supports?(store_type)
     Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
+  end
+
+  def self.display_name(number = 1)
+    n_('Datastore', 'Datastores', number)
   end
 end

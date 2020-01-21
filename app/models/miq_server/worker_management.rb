@@ -33,8 +33,12 @@ module MiqServer::WorkerManagement
     acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
     DRb.install_acl(acl)
 
-    drb = DRb.start_service("druby://127.0.0.1:0", self)
-    update_attributes(:drb_uri => drb.uri)
+    require 'tmpdir'
+    Dir::Tmpname.create("worker_monitor", nil) do |path|
+      drb = DRb.start_service("drbunix://#{path}", self)
+      FileUtils.chmod(0o750, path)
+      update(:drb_uri => drb.uri)
+    end
   end
 
   def worker_add(worker_pid)

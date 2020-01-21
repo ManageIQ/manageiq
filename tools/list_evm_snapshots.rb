@@ -1,5 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
 require 'rubygems'
-require 'log4r'
 require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
@@ -13,7 +14,7 @@ ems_name  = ARGV[0]
 # password  = ARGV[2]
 
 begin
-  ems = ExtManagementSystem.find_by_name(ems_name)
+  ems = ExtManagementSystem.find_by(:name => ems_name)
   username, password = ems.auth_user_pwd(:ws)
 
   puts "Connecting to #{ems.hostname}..."

@@ -1,6 +1,5 @@
 class LoadBalancerPoolMember < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -22,8 +21,6 @@ class LoadBalancerPoolMember < ApplicationRecord
   virtual_column :load_balancer_health_check_states_with_reason,
                  :type => :string_set,
                  :uses => :load_balancer_health_check_members
-
-  virtual_total :total_vms, :vms, :uses => :vms
 
   def load_balancer_health_check_states
     @load_balancer_health_check_states ||= load_balancer_health_check_members.collect(&:status)

@@ -1,31 +1,35 @@
-FactoryGirl.define do
+FactoryBot.define do
+  factory :miq_ae_domain_user_locked, :parent => :miq_ae_domain_disabled do
+    source { MiqAeDomain::USER_LOCKED_SOURCE }
+  end
+
   factory :miq_ae_domain_enabled, :parent => :miq_ae_domain do
-    enabled true
+    enabled { true }
   end
 
   factory :miq_ae_domain_disabled, :parent => :miq_ae_domain do
-    enabled false
+    enabled { false }
   end
 
   factory :miq_ae_system_domain, :parent => :miq_ae_domain do
-    enabled false
+    enabled { false }
     source { MiqAeDomain::SYSTEM_SOURCE }
   end
 
   factory :miq_ae_system_domain_enabled, :parent => :miq_ae_domain do
     source { MiqAeDomain::SYSTEM_SOURCE }
-    enabled true
+    enabled { true }
   end
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
     source { MiqAeDomain::REMOTE_SOURCE }
-    git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.example.com/abc') }
+    git_repository { FactoryBot.create(:git_repository) }
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
-    enabled true
+    enabled { true }
     source { MiqAeDomain::USER_SOURCE }
     trait :with_methods do
       transient do
@@ -67,8 +71,8 @@ FactoryGirl.define do
 
     trait :with_small_model do
       transient do
-        ae_class 'CLASS1'
-        ae_namespace 'NS1/NS2'
+        ae_class { 'CLASS1' }
+        ae_namespace { 'NS1/NS2' }
       end
 
       after :create do |aedomain, evaluator|
@@ -78,7 +82,7 @@ FactoryGirl.define do
         items = %w(ae_fields ae_instances ae_methods)
         items.each { |f| args[f] = evaluator.respond_to?(f) ? evaluator.send(f) : {} }
 
-        FactoryGirl.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?('ae_class')
+        FactoryBot.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?('ae_class')
       end
     end
   end

@@ -1,21 +1,20 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 
 require "fix_auth/auth_model"
 require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
 describe FixAuth::AuthConfigModel do
-  let(:v1_key)  { MiqPassword.generate_symmetric }
+  let(:v1_key)  { ManageIQ::Password.generate_symmetric }
   let(:pass)    { "password" }
-  let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
-  let(:bad_v2)  { "v2:{5555555555555555555555==}" }
+  let(:enc_v1)  { ManageIQ::Password.new.encrypt(pass, "v1", v1_key) }
 
   before do
-    MiqPassword.add_legacy_key(v1_key, :v1)
+    ManageIQ::Password.add_legacy_key(v1_key, :v1)
   end
 
   after do
-    MiqPassword.clear_keys
+    ManageIQ::Password.clear_keys
   end
 
   context "#requests" do

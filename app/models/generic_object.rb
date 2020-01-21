@@ -1,22 +1,41 @@
 class GenericObject < ApplicationRecord
   acts_as_miq_taggable
 
+  include ExternalUrlMixin
+
+  virtual_has_one :custom_actions
+  virtual_has_one :custom_action_buttons
+
   belongs_to :generic_object_definition
+  has_one :picture, :through => :generic_object_definition
+  has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
 
   delegate :property_attribute_defined?,
            :property_defined?,
            :type_cast,
-           :property_associations, :property_association_defined?,
+           :property_association_defined?,
            :property_methods, :property_method_defined?,
            :to => :generic_object_definition, :allow_nil => true
+
+  delegate :name, :to => :generic_object_definition, :prefix => true, :allow_nil => false
+  virtual_column :generic_object_definition_name, :type => :string
+  before_destroy :remove_go_from_all_related_services
 
   def initialize(attributes = {})
     # generic_object_definition will be set first since hash iteration is based on the order of key insertion
     attributes = (attributes || {}).symbolize_keys
     attributes = attributes.slice(:generic_object_definition).merge(attributes.except(:generic_object_definition))
     super
+  end
+
+  def custom_actions
+    generic_object_definition&.custom_actions(self)
+  end
+
+  def custom_action_buttons
+    generic_object_definition&.custom_action_buttons(self)
   end
 
   def property_attributes=(options)
@@ -35,9 +54,22 @@ class GenericObject < ApplicationRecord
     end
   end
 
+  def property_associations
+    properties.select { |k, _| property_association_defined?(k) }.each_with_object({}) do |(k, _), h|
+      h[k] = _property_getter(k)
+    end
+  end
+
   def delete_property(name)
-    properties.delete(name.to_s)
-    save!
+    if !property_attribute_defined?(name) && !property_association_defined?(name)
+      valid_property_names = generic_object_definition.property_attributes.keys + generic_object_definition.property_associations.keys
+      raise "Invalid property [#{name}]: must be one of #{valid_property_names.join(", ")}"
+    end
+
+    _property_getter(name).tap do
+      properties.delete(name.to_s)
+      save!
+    end
   end
 
   def add_to_property_association(name, objs)
@@ -45,10 +77,10 @@ class GenericObject < ApplicationRecord
     name = name.to_s
     properties[name] ||= []
 
-    klass = property_associations[name].constantize
+    klass = generic_object_definition.property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
     properties[name] = (properties[name] + selected.pluck(:id)).uniq if selected
-    save
+    save!
   end
 
   def delete_from_property_association(name, objs)
@@ -56,10 +88,22 @@ class GenericObject < ApplicationRecord
     name = name.to_s
     properties[name] ||= []
 
-    klass = property_associations[name].constantize
+    klass = generic_object_definition.property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
-    properties[name] = properties[name] - selected.pluck(:id)
-    save
+    common_ids = properties[name] & selected.pluck(:id)
+    properties[name] = properties[name] - common_ids
+    return unless properties_changed?
+
+    save!
+    klass.where(:id => common_ids).to_a
+  end
+
+  def add_to_service(service)
+    service.add_resource!(self)
+  end
+
+  def remove_from_service(service)
+    service.remove_resource(self)
   end
 
   def inspect
@@ -68,7 +112,7 @@ class GenericObject < ApplicationRecord
     end
 
     attributes_as_string += ["attributes: #{property_attributes}"]
-    attributes_as_string += ["associations: #{property_associations.keys}"]
+    attributes_as_string += ["associations: #{generic_object_definition.property_associations.keys}"]
     attributes_as_string += ["methods: #{property_methods}"]
 
     prefix = Kernel.instance_method(:inspect).bind(self).call.split(' ', 2).first
@@ -114,27 +158,31 @@ class GenericObject < ApplicationRecord
   end
 
   def _property_getter(name)
-    generic_object_definition.property_getter(name, properties[name])
+    generic_object_definition.property_getter(name.to_s, properties[name.to_s])
   end
 
   def _property_setter(name, value)
     name = name.to_s
+
     val =
       if property_attribute_defined?(name)
         # property attribute is of single value, for now
         type_cast(name, value)
       elsif property_association_defined?(name)
         # property association is of multiple values
-        value.select { |v| v.kind_of?(property_associations[name].constantize) }.uniq.map(&:id)
+        value.select { |v| v.kind_of?(generic_object_definition.property_associations[name].constantize) }.uniq.map(&:id)
       end
 
     self.properties = properties.merge(name => val)
   end
 
   # the method parameters are passed into automate as a hash:
-  # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Fixnum"}
+  # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Integer"}
   # the return value from automate is in $evm.root['method_result']
   def _call_automate(method_name, *args)
+    @user ||= User.current_user
+    @group ||= User.current_user.current_group
+    @tenant ||= User.current_user.current_tenant
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
     attrs = { :method_name => method_name }
@@ -155,5 +203,11 @@ class GenericObject < ApplicationRecord
 
     ws = MiqAeEngine.deliver(options)
     ws.root['method_result']
+  end
+
+  def remove_go_from_all_related_services
+    ServiceResource.where(:resource => self).each do |resource|
+      remove_from_service(resource.service) if resource.service
+    end
   end
 end

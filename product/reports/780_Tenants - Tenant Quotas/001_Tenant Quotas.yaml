@@ -1,4 +1,4 @@
---- 
+---
 title: "Tenant Quotas"
 order: Ascending
 menu_name: "Tenant Quotas"
@@ -9,33 +9,34 @@ db: Tenant
 conditions: !ruby/object:MiqExpression
   exp:
     ">":
-      count: tenants.tenant_quotas
+      count: Tenant.tenant_quotas
       value: 0
 include:
   tenant_quotas:
     columns:
     - name
+    - description
     - total
     - used
     - allocated
     - available
 cols:
 - name
-- tenant_quotas.name
+- tenant_quotas.description
 - tenant_quotas.total
 - tenant_quotas.used
 - tenant_quotas.allocated
 - tenant_quotas.available
 col_order:
 - name
-- tenant_quotas.name
+- tenant_quotas.description
 - tenant_quotas.total
 - tenant_quotas.used
 - tenant_quotas.allocated
 - tenant_quotas.available
 template_type: report
 group: y
-sortby: 
+sortby:
 - name
 headers:
 - Tenant Name
@@ -44,4 +45,3 @@ headers:
 - In Use
 - Allocated
 - Available
-

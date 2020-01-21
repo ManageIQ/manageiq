@@ -1,9 +1,0 @@
-= render :partial => "pre_prov"
-%br
-- unless @edit[:explorer]
-  -# = render :partial => 'miq_request/prov_form_buttons'
-  = render(:partial => 'layouts/edit_form_buttons',
-    :locals         => {:action_url => "pre_prov",
-      :ajax_buttons                 => true,
-      :continue_button              => true,
-      :noreset                      => true})

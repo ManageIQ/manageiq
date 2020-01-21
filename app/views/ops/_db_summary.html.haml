@@ -1,8 +1,0 @@
-.row
-  .col-md-12.col-lg-6
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_group_vmdb_connection_properties}
-    = render :partial => "shared/summary/textual", :locals => {:title => _("Capacity Data"), :items => textual_group_vmdb_connection_capacity_data}
-  .col-md-12.col-lg-6
-    = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Tables with Most Rows"), :items => textual_group_vmdb_tables_most_rows}
-    = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Largest Tables"), :items => textual_group_vmdb_tables_largest_size}
-    = render :partial => "shared/summary/textual_listview", :locals => {:title => _("Tables with Most Wasted Space"), :items => textual_group_vmdb_tables_most_wasted_space}

@@ -1,10 +1,5 @@
 ---
-- :name: host_provisioned
-  :message: Host %{subject} has been provisioned.
-  :expires_in: 7.days
-  :level: :success
-  :audience: tenant
-- :name: service_provisioned
+- :name: automate_service_provisioned
   :message: Service %{subject} has been provisioned.
   :expires_in: 7.days
   :level: :success
@@ -14,7 +9,12 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
-- :name: vm_provisioned
+- :name: service_retiring
+  :message: Service %{subject} has started retirement.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: automate_vm_provisioned
   :message: Virtual Machine %{subject} has been provisioned.
   :expires_in: 7.days
   :level: :success
@@ -24,16 +24,32 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
+- :name: vm_retiring
+  :message: Virtual Machine %{subject} has started retirement.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
 - :name: request_approved
   :message: Request %{subject} has been approved.
   :expires_in: 14.days
   :level: :success
-  :audience: tenant
+  :audience: group
 - :name: request_denied
   :message: Request %{subject} has been denied.
   :expires_in: 14.days
   :level: :warning
-  :audience: tenant
+  :audience: group
+- :name: transformation_plan_request_succeeded
+  :message: Plan %{plan_name} has completed successfully
+  :expires_in: 14.days
+  :level: :success
+  :audience: global
+- :name: transformation_plan_request_failed
+  :message: Plan %{plan_name} has completed with errors
+  :expires_in: 14.days
+  :level: :error
+  :audience: global
+  :link_to: "subject"
 - :name: automate_user_success
   :message: '%{message}'
   :expires_in: 24.hours
@@ -94,3 +110,268 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: global
+- :name: evm_server_memory_exceeded
+  :message: 'The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: superadmin
+- :name: role_activate_success
+  :message: 'The role %{role_name} has been activated on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin
+- :name: role_activate_start
+  :message: 'The role %{role_name} has started activation on server %{server_name}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: superadmin
+- :name: vm_cloud_live_migrate_success
+  :message: 'Live migrating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_live_migrate_error
+  :message: 'Live migrating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: vm_cloud_evacuate_success
+  :message: 'Evacuating Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :audience: global
+  :level: :success
+- :name: vm_cloud_evacuate_error
+  :message: 'Evacuating Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: tower_op_success
+  :message: 'The operation %{op_name} %{op_arg} on %{tower} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: tower_op_failure
+  :message: 'The operation %{op_name} %{op_arg} on %{tower} has failed to complete. Please check the logs for further details.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: vm_snapshot_success
+  :message: 'The operation %{snapshot_op} on snapshot of %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: vm_snapshot_failure
+  :message: 'Failed to %{snapshot_op} snapshot of %{subject}: %{error}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
+- :name: orchestration_stack_retired
+  :message: Orchestration Stack %{subject} has been retired.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
+- :name: provider_operation_success
+  :message: 'The operation %{method} on %{target_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: provider_operation_failure
+  :message: 'The operation %{method} on %{target_name} failed: %{error}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: vm_destroy_success
+  :message: 'Destroying Virtual Machine %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: vm_destroy_error
+  :message: 'Destroying Virtual Machine %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: conversion_host_config_success
+  :message: 'Conversion Host %{op_name} of resource %{op_arg} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: conversion_host_config_failure
+  :message: 'Conversion Host %{op_name} of resource %{op_arg} failed. Please check the logs for further details.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_attach_success
+  :message: 'Attaching Volume %{subject} to Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_attach_error
+  :message: 'Attaching Volume %{subject} to Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_detach_success
+  :message: 'Detaching Volume %{subject} from Instance %{instance_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_detach_error
+  :message: 'Detaching Volume %{subject} from Instance %{instance_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_create_success
+  :message: 'Creating Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_create_error
+  :message: 'Creating Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_update_success
+  :message: 'Updating Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_update_error
+  :message: 'Updating Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_delete_success
+  :message: 'Deleting Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_delete_error
+  :message: 'Deleting Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_backup_create_success
+  :message: 'Creating Backup %{backup_name} of Volume %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_create_error
+  :message: 'Creating Backup %{backup_name} of Volume %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_backup_delete_success
+  :message: 'Deleting Backup %{subject} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_delete_error
+  :message: 'Deleting Backup %{subject} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_backup_restore_success
+  :message: 'Restoring Backup %{subject} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_backup_restore_error
+  :message: 'Restoring Backup %{subject} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_snapshot_create_success
+  :message: 'Creating Snapshot %{snapshot_name} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_snapshot_create_error
+  :message: 'Creating Snapshot %{snapshot_name} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_volume_snapshot_delete_success
+  :message: 'Deleting Snapshot %{subject} of Volume %{volume_name} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: cloud_volume_snapshot_delete_error
+  :message: 'Deleting Snapshot %{subject} of Volume %{volume_name} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: cloud_tenant_delete_success
+  :message: 'Deleting Cloud Tenant %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_tenant_delete_error
+  :message: 'Deleting Cloud Tenant %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
+- :name: server_registration_error
+  :message: 'Registration failed for server %{server_name}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: superadmin
+- :name: enable_update_repo_failed
+  :message: 'Subscription Manager failed to enable repo %{repo_name}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: superadmin
+- :name: evm_worker_memory_exceeded
+  :message: 'Killing worker %{name} due to excessive memory usage. %{memory_usage} used memory exceeds limit of %{memory_threshold}.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: none
+- :name: cloud_network_delete_success
+  :message: 'Deleting Cloud Network %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_network_delete_error
+  :message: 'Deleting Cloud Network %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
+- :name: cloud_subnet_delete_success
+  :message: 'Deleting Cloud Subnet %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_subnet_delete_error
+  :message: 'Deleting Cloud Subnet %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
+- :name: network_router_delete_success
+  :message: 'Deleting Network Router %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: network_router_delete_error
+  :message: 'Deleting Network Router %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: generic_task_start
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
+- :name: generic_task_finish
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
+- :name: generic_task_fail
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: error
+  :audience: user
+- :name: generic_task_update
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user

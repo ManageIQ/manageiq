@@ -1,6 +1,9 @@
 class FileDepot < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
+  include_concern 'ImportExport'
+  include YAMLImportExportMixin
+
   has_many              :miq_schedules, :dependent => :nullify
   has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
@@ -9,7 +12,7 @@ class FileDepot < ApplicationRecord
   attr_accessor         :file
 
   def self.supported_depots
-    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
+    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize, :translate => false) }.freeze
   end
 
   def self.supported_protocols
@@ -31,5 +34,9 @@ class FileDepot < ApplicationRecord
 
   def upload_file(file)
     @file = file
+  end
+
+  def merged_uri(uri, _api_port)
+    uri
   end
 end

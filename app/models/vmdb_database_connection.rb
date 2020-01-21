@@ -14,12 +14,9 @@ class VmdbDatabaseConnection < ApplicationRecord
   virtual_column :application,       :type => :string
   virtual_column :command,           :type => :string
   virtual_column :spid,              :type => :integer
-  virtual_column :task_state,        :type => :string
   virtual_column :wait_resource,     :type => :integer  # oid
   virtual_column :wait_time,         :type => :integer
-  virtual_column :vmdb_database_id,  :type => :integer
 
-  virtual_belongs_to :vmdb_database
   virtual_belongs_to :zone
   virtual_belongs_to :miq_server
   virtual_belongs_to :miq_worker
@@ -49,10 +46,6 @@ class VmdbDatabaseConnection < ApplicationRecord
     end
   end
 
-  def vmdb_database_id
-    @vmdb_database_id ||= self.class.vmdb_database.id
-  end
-
   def address
     client_addr
   end
@@ -66,11 +59,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def spid
-    read_attribute 'pid'
-  end
-
-  def task_state
-    waiting
+    read_attribute('pid')
   end
 
   def wait_time
@@ -99,45 +88,36 @@ class VmdbDatabaseConnection < ApplicationRecord
       'xact_start'              => xact_start,
       'last_request_start_time' => query_start,
       'command'                 => query,
-      'task_state'              => waiting,
       'login'                   => usename,
       'application'             => application_name,
       'request_id'              => usesysid,
       'net_address'             => client_addr,
       'host_name'               => client_hostname,
       'client_port'             => client_port,
+      'wait_event_type'         => wait_event_type,
+      'wait_event'              => wait_event,
       'wait_time_ms'            => wait_time_ms,
-      'blocked_by'              => blocked_by,
+      'blocked_by'              => blocked_by
     }
   end
 
-  def vmdb_database
-    VmdbDatabase.find_by_id(vmdb_database_id)
-  end
-
-  def vmdb_database=(db)
-    self.vmdb_database_id = db.id
-  end
-
   def miq_worker
-    return @miq_worker if defined?(@miq_worker)
-    @miq_worker = MiqWorker.find_current_in_my_region.find_by(:sql_spid => spid)
+    @miq_worker ||= MiqWorker.find_current_in_my_region.find_by(:sql_spid => spid)
   end
 
   def miq_server
-    return @miq_server if defined?(@miq_server)
-    w = miq_worker
-    @miq_server = w ? w.miq_server : MiqServer.find_started_in_my_region.find_by(:sql_spid => spid)
+    @miq_server ||= miq_worker.try(:miq_server) || MiqServer.active_miq_servers.in_my_region.find_by(:sql_spid => spid)
   end
 
   def zone
-    return @zone if defined?(@zone)
-    @zone = miq_server && miq_server.zone
+    @zone ||= miq_server.try(:zone)
   end
 
   def pid
-    return @pid if defined?(@pid)
-    parent = miq_worker || miq_server
-    @pid = parent && parent.pid
+    @pid ||= (miq_worker || miq_server).try(:pid)
+  end
+
+  def self.display_name(number = 1)
+    n_('Database Connection', 'Database Connections', number)
   end
 end

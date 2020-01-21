@@ -1,0 +1,6 @@
+Description:
+    Create or update ManageIQ plugin
+
+Examples:
+    rails generate manageiq:plugin ManageIQ::MyPluginName
+    rails generate manageiq:plugin ManageIQ::MyPluginName --path ~/dev

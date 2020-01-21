@@ -1,0 +1,66 @@
+---
+title: Images by Failed OpenSCAP Rule Results
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerImage
+cols:
+- name
+include:
+  openscap_rule_results:
+    columns:
+    - name
+    - result
+    - severity
+col_order:
+- name
+- openscap_rule_results.name
+- openscap_rule_results.result
+- openscap_rule_results.severity
+headers:
+- Container Image Name
+- Rule Name
+- Result
+- Severity
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - not:
+        "=":
+          field: ContainerImage.openscap_rule_results-result
+          value: pass
+    - IS NOT EMPTY:
+        field: ContainerImage.openscap_rule_results-name
+  context_type:
+order: Ascending
+sortby:
+- name
+- openscap_rule_results.name
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+miq_group_id: 1
+user_id: 1
+menu_name: Images by Failed OpenSCAP Rule Results

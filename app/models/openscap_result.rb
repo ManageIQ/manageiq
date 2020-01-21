@@ -1,5 +1,6 @@
 class OpenscapResult < ApplicationRecord
   belongs_to :container_image
+  belongs_to :resource,              :polymorphic => true
   has_one    :binary_blob,           :dependent => :destroy, :autosave => true, :as => :resource, :required => true
   has_many   :openscap_rule_results, :dependent => :destroy, :autosave => true
 
@@ -37,11 +38,17 @@ class OpenscapResult < ApplicationRecord
   def create_results(rule_results, benchmark_items)
     openscap_rule_results.delete_all
     rule_results.each do |openscap_id, result|
+      idents = []
+      benchmark_items[openscap_id].idents.each do |ident|
+        idents << ident.id
+      end
       openscap_rule_results << OpenscapRuleResult.new(
         :name            => ascii8bit_to_utf8(openscap_id),
         :result          => ascii8bit_to_utf8(result.result),
         :openscap_result => self,
-        :severity        => ascii8bit_to_utf8(benchmark_items[openscap_id].severity)
+        :severity        => ascii8bit_to_utf8(benchmark_items[openscap_id].severity),
+        :title           => ascii8bit_to_utf8(benchmark_items[openscap_id].title),
+        :cves            => idents.join(",")
       )
     end
   end
@@ -51,7 +58,7 @@ class OpenscapResult < ApplicationRecord
   end
 
   def with_openscap_arf(raw)
-    self.class.openscap_available?
+    return unless self.class.openscap_available?
     begin
       OpenSCAP.oscap_init
       # ARF - nist standardized 'Asset Reporting Format' Full representation if a scap scan result.

@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 # Convert v4-style provisioning dialogs from Ruby files into YAML format
 # and store in the miq_dialogs table.
 Dir.glob(Rails.root.join("db/fixtures/*.rb")) do |dialog_file|

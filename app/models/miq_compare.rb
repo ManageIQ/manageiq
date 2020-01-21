@@ -165,6 +165,8 @@ class MiqCompare
     end
   end
 
+  private_class_method :build_sections
+
   # Add an include section to the final collected all_sections hash provided
   def self.build_section(all_sections, name, key = nil, group = nil)
     name = name.to_sym
@@ -185,6 +187,8 @@ class MiqCompare
       model.titleize
     end
   end
+
+  private_class_method :build_section
 
   # Resets the master_list to an initial version without dynamic subsections,
   # nor the tag columns
@@ -210,7 +214,7 @@ class MiqCompare
       elsif section == :categories
         column = column.to_s
         section = "#{TAG_PREFIX}#{column}".to_sym
-        c = Classification.find_by_name(column)
+        c = Classification.lookup_by_name(column)
         section_header = (c.nil? || c.description.blank?) ? column.titleize : c.description
         column = nil # columns will be filled in dynamically when we fetch the section data
         key = nil
@@ -248,7 +252,7 @@ class MiqCompare
         @results.each_value { |result| result[section].delete_if { |k, _v| !columns.include?(k) && k.to_s[0, 1] != '_' } }
 
         # Get all of the tag headers
-        cat = Classification.find_by_name(self.class.section_to_tag(section))
+        cat = Classification.lookup_by_name(self.class.section_to_tag(section))
         columns.collect! { |c| {:name => c, :header => cat.find_entry_by_name(c.to_s).description} }
 
         columns.sort! { |x, y| x[:header].to_s.downcase <=> y[:header].to_s.downcase }
@@ -299,7 +303,7 @@ class MiqCompare
       # Get the tag entry name and description from the source
       new_columns = case @mode
                     when :compare
-                      Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
+                      Classification.lookup_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
                     when :drift
                       rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
                     end
@@ -330,7 +334,7 @@ class MiqCompare
       sub_rec = eval_section(rec, section, id)
       columns.each do |col|
         col = col[:name]
-        value = sub_rec.nil? ? nil : eval_column(sub_rec, col, id)
+        value = sub_rec && eval_column(sub_rec, col, id)
         value = EMPTY if value.nil?
         result_section[col] = {:_value_ => value}
       end
@@ -351,10 +355,10 @@ class MiqCompare
           else
             key = r.send(key_name)
             if key.nil?
-              _log.warn "No value was found for the key [#{key_name}] in section [#{section}] for record [#{id}]"
+              _log.warn("No value was found for the key [#{key_name}] in section [#{section}] for record [#{id}]")
               next
             elsif result_section.key?(key)
-              _log.warn "A duplicate key value [#{key}] for the key [#{key_name}] was found in section [#{section}] for record [#{id}]"
+              _log.warn("A duplicate key value [#{key}] for the key [#{key_name}] was found in section [#{section}] for record [#{id}]")
               next
             end
           end
@@ -382,7 +386,7 @@ class MiqCompare
     section.to_s.split('.').each do |part|
       rec = rec.send(part)
       if rec.nil?
-        _log.warn "Unable to evaluate section [#{section}] for record [#{id}], since [.#{part}] returns nil"
+        _log.warn("Unable to evaluate section [#{section}] for record [#{id}], since [.#{part}] returns nil")
         return nil
       end
     end
@@ -396,7 +400,7 @@ class MiqCompare
     parts.each_with_index do |part, i|
       rec = rec.send(part)
       if rec.nil? && i != (parts.length - 1)
-        _log.warn "Unable to evaluate column [#{column}] for record [#{id}], since [.#{part}] returns nil"
+        _log.warn("Unable to evaluate column [#{column}] for record [#{id}], since [.#{part}] returns nil")
         return nil
       end
     end
@@ -545,14 +549,14 @@ class MiqCompare
       new_rec
     end
 
-    _log.error "No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]" unless error_recs.blank?
+    _log.error("No record was found for compare object #{@model}, ids: [#{error_recs.join(", ")}]") unless error_recs.blank?
   end
 
   # Retrieve the record from the source (compare mode)
   def get_compare_record(id)
     return unless @mode == :compare
-    new_rec = @model.find_by_id(id)
-    _log.error "No record was found for compare object #{@model}, id: [#{id}]" if new_rec.nil?
+    new_rec = @model.find_by(:id => id)
+    _log.error("No record was found for compare object #{@model}, id: [#{id}]") if new_rec.nil?
     new_rec
   end
 
@@ -567,14 +571,14 @@ class MiqCompare
   # Retrieve the record from the source (drift mode)
   def get_drift_record(ts)
     return unless @mode == :drift
-    new_rec = drift_model_record.drift_states.find_by_timestamp(ts).data_obj
-    _log.error "No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]" if new_rec.nil?
+    new_rec = drift_model_record.drift_states.find_by(:timestamp => ts).data_obj
+    _log.error("No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]") if new_rec.nil?
     new_rec
   end
 
   def drift_model_record
     return unless @mode == :drift
-    @model_record ||= @model.find_by_id(@model_record_id)
+    @model_record ||= @model.find_by(:id => @model_record_id)
   end
 
   ### Special marshaling methods

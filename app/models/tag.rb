@@ -1,64 +1,84 @@
 class Tag < ApplicationRecord
   has_many :taggings, :dependent => :destroy
   has_one :classification
-  virtual_has_one :category,       :class_name => "Classification"
+  has_one :category, :through => :classification, :source => :parent
   virtual_has_one :categorization, :class_name => "Hash"
 
   has_many :container_label_tag_mappings
 
   before_destroy :remove_from_managed_filters
 
+  # Note those scopes exclude Tags that don't have a Classification.
+  scope :visible,   -> { joins(:classification).merge(Classification.visible) }
+  scope :read_only, -> { joins(:classification).merge(Classification.read_only) }
+  scope :writable,  -> { joins(:classification).merge(Classification.writable) }
+  scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
+  scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
+
+  def self.list(object, options = {})
+    ns = get_namespace(options)
+    if ns[0..7] == "/virtual"
+      ns.gsub!('/virtual/','')  # throw away /virtual
+      ns, virtual_custom_attribute = MiqExpression.escape_virtual_custom_attribute(ns)
+      predicate = ns.split("/")
+
+      if virtual_custom_attribute
+        predicate.map! { |x| URI::RFC2396_Parser.new.unescape(x) }
+        # it is always array with one string element - name of virtual custom attribute because they are supported only
+        # in direct relations
+        custom_attribute = predicate.first
+        object.class.add_custom_attribute(custom_attribute) if object.class < CustomAttributeMixin
+      end
+
+      begin
+        predicate.inject(object) { |target, method| target.public_send(method) }
+      rescue NoMethodError
+        ""
+      end
+    else
+      filter_ns(object.try(:tags) || [], ns).join(" ")
+    end
+  end
+
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
   end
 
   def self.tags(options = {})
-    query = Tag.includes(:taggings)
-    query = query.where(Tagging.arel_table[:taggable_type].eq options[:taggable_type])
-    query = query.where(Tag.arel_table[:name].matches "#{options[:ns]}%") if options[:ns]
+    query = Tag.joins(:taggings)
+
+    if options[:taggable_type].present?
+      query = query.where(Tagging.arel_table[:taggable_type].eq(options[:taggable_type]))
+    end
+
+    if options[:ns].present?
+      query = query.where(Tag.arel_table[:name].matches("#{options[:ns]}%"))
+    end
+
     Tag.filter_ns(query, options[:ns])
   end
 
-  def self.all_tags(options = {})
-    query = Tag.scoped
-    ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") unless ns.blank?
-    Tag.filter_ns(query, ns)
-  end
-
-  def self.tag_count(olist, name, options = {})
-    ns  = Tag.get_namespace(options)
-    tag = find_by_name(File.join(ns, name))
-    return 0 if tag.nil?
-
-    if olist.kind_of?(MIQ_Report) # support for ruport
-      klass        = olist.db
-      taggable_ids = olist.table.data.collect { |o| o.data["id"].to_i }
-    else
-      klass        = olist[0].class # assumes all objects in list are of the same class
-      taggable_ids = olist.collect { |o| o.id.to_i }
-    end
-
-    Tagging.where(:tag_id        => tag.id,
-                  :taggable_id   => taggable_ids,
-                  :taggable_type => klass.base_class.name).count
-  end
-
   def self.parse(list)
-    unless list.kind_of? Array
+    if list.kind_of?(Array)
+      tag_names = list.collect { |tag| tag.try(:to_s) }
+      return tag_names.compact
+    else
       tag_names = []
 
       # don't mangle the caller's copy
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
+      list.gsub!(/\"(.*?)\"\s*/) do
+        tag_names << $1
+        ""
+      end
 
       # then, replace all commas with a space
       list.tr!(',', " ")
 
       # then, get whatever's left
-      tag_names.concat list.split(/\s/)
+      tag_names.concat(list.split(/\s/))
 
       # strip whitespace from the names
       tag_names = tag_names.map(&:strip)
@@ -67,9 +87,6 @@ class Tag < ApplicationRecord
       tag_names = tag_names.delete_if(&:empty?)
 
       return tag_names.uniq
-    else
-      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
-      return tag_names.compact
     end
   end
 
@@ -105,23 +122,15 @@ class Tag < ApplicationRecord
     where(:name => fq_tag_names)
   end
 
-  def self.find_by_classification_name(name, region_id = Classification.my_region_number,
-                                       ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
-    in_region(region_id).find_by_name(Classification.name2tag(name, parent_id, ns))
+  def self.lookup_by_classification_name(name)
+    in_region(my_region_number).find_by(:name => Classification.name2tag(name))
   end
 
-  def self.find_or_create_by_classification_name(name, region_id = Classification.my_region_number,
-                                                 ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
-    tag_name = Classification.name2tag(name, parent_id, ns)
-    in_region(region_id).find_by_name(tag_name) || create(:name => tag_name)
-  end
+  singleton_class.send(:alias_method, :find_by_classification_name, :lookup_by_classification_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_classification_name => :lookup_by_classification_name)
 
   def ==(comparison_object)
     super || name.downcase == comparison_object.to_s.downcase
-  end
-
-  def category
-    @category ||= Classification.find_by_name(name_path.split('/').first, nil)
   end
 
   def show
@@ -134,12 +143,20 @@ class Tag < ApplicationRecord
         {}
       else
         {
-          "name"         => classification.name,
-          "description"  => classification.description,
-          "category"     => {"name" => category.name, "description" => category.description},
-          "display_name" => "#{category.description}: #{classification.description}"
+          "name"         => classification.try(:name),
+          "description"  => classification.try(:description),
+          "category"     => {"name" => category.try(:name), "description" => category.try(:description)},
+          "display_name" => "#{category.try(:description)}: #{classification.try(:description)}"
         }
       end
+  end
+
+  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
+  def self.controlled_by_mapping
+    queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
+      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
+    end
+    queries.inject(:or).read_only.is_entry
   end
 
   private

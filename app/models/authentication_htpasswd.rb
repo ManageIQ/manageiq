@@ -1,2 +1,0 @@
-class AuthenticationHtpasswd < Authentication
-end

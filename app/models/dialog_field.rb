@@ -6,6 +6,22 @@ class DialogField < ApplicationRecord
   belongs_to :dialog_group
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
+  has_many :dialog_field_associations,
+           :foreign_key => :trigger_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+  has_many :reverse_dialog_field_associations,
+           :foreign_key => :respond_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+
+  has_many :dialog_field_responders,
+           :source  => :respond,
+           :through => :dialog_field_associations
+  has_many :dialog_field_triggers,
+           :source  => :trigger,
+           :through => :reverse_dialog_field_associations
+
   alias_attribute :order, :position
 
   validates_presence_of   :name
@@ -13,7 +29,9 @@ class DialogField < ApplicationRecord
                                   :message => "Field Name %{value} is reserved."}
 
   default_value_for :required, false
-  default_value_for(:visible, :allows_nil => false) { true }
+  default_value_for(:visible) { true }
+  validates :visible, inclusion: { in: [ true, false ] }
+  default_value_for :load_values_on_init, true
 
   serialize :values
   serialize :values_method_options,   Hash
@@ -39,22 +57,21 @@ class DialogField < ApplicationRecord
     :dialog_field_button,
     :dialog_field_tag_control,
     :dialog_field_radio_button,
-    :dialog_field_dynamic_list,
     # Enable when UI support is available
     # #:dialog_field_list_view      # Future
   ]
 
   DIALOG_FIELD_TYPES = {
-    "DialogFieldTextBox"         => _("Text Box"),
-    "DialogFieldTextAreaBox"     => _("Text Area Box"),
-    "DialogFieldCheckBox"        => _("Check Box"),
-    "DialogFieldDropDownList"    => _("Drop Down List"),
+    "DialogFieldTextBox"         => N_("Text Box"),
+    "DialogFieldTextAreaBox"     => N_("Text Area Box"),
+    "DialogFieldCheckBox"        => N_("Check Box"),
+    "DialogFieldDropDownList"    => N_("Drop Down List"),
     # Commented out next to field types until they can be implemented
     #    "DialogFieldButton" => "Button",
-    "DialogFieldTagControl"      => _("Tag Control"),
-    "DialogFieldDateControl"     => _("Date Control"),
-    "DialogFieldDateTimeControl" => _("Date/Time Control"),
-    "DialogFieldRadioButton"     => _("Radio Button")
+    "DialogFieldTagControl"      => N_("Tag Control"),
+    "DialogFieldDateControl"     => N_("Date Control"),
+    "DialogFieldDateTimeControl" => N_("Date/Time Control"),
+    "DialogFieldRadioButton"     => N_("Radio Button")
   }
 
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(
@@ -75,8 +92,29 @@ class DialogField < ApplicationRecord
     FIELD_CONTROLS
   end
 
+  def extract_dynamic_values
+    value
+  end
+
+  def initialize_value_context
+    if @value.blank?
+      @value = dynamic ? values_from_automate : default_value
+    end
+  end
+
+  def initialize_static_values
+    if @value.blank? && !dynamic
+      @value = default_value
+    end
+  end
+
+  def initialize_with_given_value(given_value)
+    self.default_value = given_value
+  end
+
   def initialize_with_values(dialog_values)
-    @value = value_from_dialog_fields(dialog_values) || default_value
+    # override in subclasses
+    nil
   end
 
   def update_values(_dialog_values)
@@ -106,7 +144,18 @@ class DialogField < ApplicationRecord
   end
 
   def update_and_serialize_values
+    trigger_automate_value_updates
     DialogFieldSerializer.serialize(self)
+  end
+
+  def trigger_automate_value_updates
+    @value = values_from_automate
+  end
+
+  def update_dialog_field_responders(id_list)
+    dialog_field_responders.destroy_all
+
+    self.dialog_field_responders = available_dialog_field_responders(id_list) unless id_list.blank?
   end
 
   def deep_copy
@@ -116,6 +165,10 @@ class DialogField < ApplicationRecord
   end
 
   private
+
+  def available_dialog_field_responders(id_list)
+    DialogField.find(id_list)
+  end
 
   def default_resource_action
     build_resource_action if resource_action.nil?

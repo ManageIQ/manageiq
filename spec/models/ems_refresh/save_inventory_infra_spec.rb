@@ -4,39 +4,39 @@ describe EmsRefresh::SaveInventoryInfra do
       include EmsRefresh::SaveInventoryInfra
 
       def _log
-        @logger ||= Vmdb.null_logger
+        @logger ||= Vmdb.logger
       end
     end.new
   end
 
   context ".find_host" do
     it "with ems_ref" do
-      FactoryGirl.create(:host, :ems_ref => "some_ems_ref")
+      FactoryBot.create(:host, :ems_ref => "some_ems_ref")
 
       expect(refresher.find_host({:ems_ref => "some_ems_ref"}, nil)).to be_kind_of(Host)
     end
 
     it "with ems_ref and ems_id" do
-      FactoryGirl.create(:host, :ems_ref => "some_ems_ref")
-      host_with_ems_id = FactoryGirl.create(:host, :ems_ref => "some_ems_ref_2", :ems_id => 1)
+      FactoryBot.create(:host, :ems_ref => "some_ems_ref")
+      host_with_ems_id = FactoryBot.create(:host, :ems_ref => "some_ems_ref_2", :ems_id => 1)
 
       expect(refresher.find_host({:ems_ref => "some_ems_ref_2", :name => "name"}, nil)).to be_nil
       expect(refresher.find_host({:ems_ref => "some_ems_ref_2", :name => "name"}, 1)).to   eq(host_with_ems_id)
     end
 
     it "with hostname and ipaddress" do
-      FactoryGirl.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1")
-      expected_host = FactoryGirl.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2")
+      FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1")
+      expected_host = FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2")
 
       expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), nil)).to eq(expected_host)
     end
   end
 
     context ".look_up_host" do
-    let(:host_3_part_hostname)    { FactoryGirl.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.1") }
-    let(:host_4_part_hostname)    { FactoryGirl.create(:host_vmware, :hostname => "test2.dummy.example.com", :ipaddress => "192.168.1.2") }
-    let(:host_duplicate_hostname) { FactoryGirl.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.3", :ems_ref => "host-1", :ems_id => 1) }
-    let(:host_no_ems_id)          { FactoryGirl.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.4", :ems_ref => "host-2") }
+    let(:host_3_part_hostname)    { FactoryBot.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.1") }
+    let(:host_4_part_hostname)    { FactoryBot.create(:host_vmware, :hostname => "test2.dummy.example.com", :ipaddress => "192.168.1.2") }
+    let(:host_duplicate_hostname) { FactoryBot.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.3", :ems_ref => "host-1", :ems_id => 1) }
+    let(:host_no_ems_id)          { FactoryBot.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.4", :ems_ref => "host-2") }
     before do
       host_3_part_hostname
       host_4_part_hostname
@@ -110,9 +110,27 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".save_hosts_inventory" do
-    before(:each) do
-      @zone   = FactoryGirl.create(:zone)
-      @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    let(:ems) { FactoryBot.create(:ems_infra) }
+
+    context "with an archived host" do
+      # NOTE: I had to provide a non-127.0.0.1 ip address which is what is default
+      # from the factory because find_host skips these
+      let(:host) { FactoryBot.create(:host_with_ref, :ipaddress => "10.10.10.10") }
+
+      it "should reconnect a disconnected host" do
+        data = {
+          :name      => host.name,
+          :hostname  => host.hostname,
+          :ipaddress => host.ipaddress,
+          :ems_ref   => "new_ems_ref"
+        }
+
+        EmsRefresh.save_hosts_inventory(ems, [data])
+
+        host.reload
+        expect(host.ext_management_system).to eq(ems)
+        expect(host.ems_ref).to eq("new_ems_ref")
+      end
     end
 
     it "should handle >10 hosts with duplicate hostnames" do
@@ -124,21 +142,9 @@ describe EmsRefresh::SaveInventoryInfra do
         }
       end
 
-      EmsRefresh.save_hosts_inventory(@ems, data)
+      EmsRefresh.save_hosts_inventory(ems, data)
 
-      hosts = Host.all
-      expect(hosts.length).to eq(data.length)
-    end
-
-    it "should not change the name of a host every refresh if there are duplicate names" do
-      FactoryGirl.create(:host, :ems_id => nil,     :ems_ref => "host-1", :name => "localhost",     :hostname => "localhost")
-      FactoryGirl.create(:host, :ems_id => @ems.id, :ems_ref => "host-2", :name => "localhost - 2", :hostname => "localhost")
-
-      data = [{:name => 'localhost', :hostname => 'localhost', :ems_ref => "host-2"}]
-
-      EmsRefresh.save_hosts_inventory(@ems, data)
-
-      expect(Host.where(:ems_ref => "host-2").first.name).to eq("localhost - 2")
+      expect(ems.hosts.length).to eq(data.length)
     end
   end
 end

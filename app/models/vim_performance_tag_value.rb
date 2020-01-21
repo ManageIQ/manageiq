@@ -1,7 +1,5 @@
-class VimPerformanceTagValue < ApplicationRecord
-  belongs_to :metric, :polymorphic => true
-
-  serialize :assoc_ids
+class VimPerformanceTagValue
+  attr_accessor :tag_name, :association_type, :category, :column_name, :value, :assoc_ids
 
   TAG_SEP = "|"
   TAG_COLS = {
@@ -38,36 +36,35 @@ class VimPerformanceTagValue < ApplicationRecord
     "ContainerGroup"      => [],
     "ContainerProject"    => [],
     "ContainerService"    => [],
-    "ContainerReplicator" => []
+    "ContainerReplicator" => [],
+    "Service"             => [:vms]
   }
 
-  def self.build_from_performance_record(parent_perf, options = {:save => true})
+  def initialize(options = {})
+    options.each { |k, v| public_send("#{k}=", v) }
+  end
+
+  def self.build_from_performance_record(parent_perf, options = {})
     RESOURCE_TYPE_TO_ASSOCIATIONS[parent_perf.resource_type].collect { |assoc| build_for_association(parent_perf, assoc, options) }.flatten
   end
 
   cache_with_timeout(:eligible_categories, 5.minutes) { Classification.category_names_for_perf_by_tag }
 
-  def self.build_for_association(parent_perf, assoc, options = {:save => true})
+  def self.build_for_association(parent_perf, assoc, options = {})
     eligible_cats = eligible_categories
     return [] if eligible_cats.empty?
 
     ts = parent_perf.timestamp
     children = parent_perf.resource.send("#{assoc}_from_vim_performance_state_for_ts", ts)
     return [] if children.empty?
+    vim_performance_daily = parent_perf.kind_of?(VimPerformanceDaily)
+    recs = get_metrics(children, ts, parent_perf.capture_interval_name, vim_performance_daily, options[:category])
 
     result = {}
     counts = {}
-    assoc = nil
     association_type = nil
     tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
 
-    if parent_perf.kind_of?(VimPerformanceDaily)
-      recs = MetricRollup.with_interval_and_time_range("hourly", (ts)..(ts+1.day)).where(:resource => children)
-                         .for_tag_names(options[:category], "") # append trailing slash
-    else
-      recs = Metric::Helper.class_for_interval_name(parent_perf.capture_interval_name).where(:resource => children)
-                           .with_interval_and_time_range(parent_perf.capture_interval_name, parent_perf.timestamp)
-    end
     perf_data = {}
     perf_data[:perf_recs] = recs
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
@@ -93,24 +90,19 @@ class VimPerformanceTagValue < ApplicationRecord
             value = perf.send(c)
             c = [c.to_s, tag].join(TAG_SEP).to_sym
 
-            unless c.to_s.starts_with?("assoc_ids")
+            if c.to_s.starts_with?("assoc_ids")
+              assoc = perf.resource.class.table_name.to_sym
+              result[c] ||= {assoc => {:on => []}}
+              result[c][assoc][:on].push(perf.resource_id)
+            else
               result[c] ||= 0
               counts[c] ||= 0
               value *= 1.0 unless value.nil?
               Metric::Aggregation::Aggregate.average(c, nil, result, counts, value)
-            else
-              assoc = perf.resource.class.table_name.to_sym
-              result[c] ||= {assoc => {:on => []}}
-              result[c][assoc][:on].push(perf.resource_id)
             end
           end
         end
       end
-    end
-
-    parent_perf_tag_value_recs = parent_perf.vim_performance_tag_values.inject({}) do |h, tv|
-      h.store_path(tv.association_type, tv.category, tv.tag_name, tv.column_name, tv)
-      h
     end
 
     result.keys.inject([]) do |a, key|
@@ -126,16 +118,22 @@ class VimPerformanceTagValue < ApplicationRecord
       }
       attr = col == 'assoc_ids' ? :assoc_ids : :value
       new_rec[attr] = result[key]
-      if options[:save]
-        tag_value_rec   = parent_perf_tag_value_recs.fetch_path(association_type, category, tag_name, col)
-        tag_value_rec ||= parent_perf_tag_value_recs.store_path(association_type, category, tag_name, col, parent_perf.vim_performance_tag_values.build)
-        tag_value_rec.update_attributes(new_rec)
-      else
-        tag_value_rec = new(new_rec)
-      end
-      a << tag_value_rec
+
+      a << new(new_rec)
     end
   end
+
+  def self.get_metrics(resources, timestamp, capture_interval_name, vim_performance_daily, category)
+    if vim_performance_daily
+      MetricRollup.with_interval_and_time_range("hourly", (timestamp)..(timestamp+1.day)).where(:resource => resources)
+          .for_tag_names(category, "") # append trailing slash
+    else
+      Metric::Helper.class_for_interval_name(capture_interval_name).where(:resource => resources)
+          .with_interval_and_time_range(capture_interval_name, timestamp)
+    end
+  end
+
+  private_class_method :get_metrics
 
   def self.tag_cols(name)
     return TAG_COLS[name.to_sym] if TAG_COLS.key?(name.to_sym)

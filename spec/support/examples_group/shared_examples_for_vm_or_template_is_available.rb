@@ -1,6 +1,6 @@
 shared_examples_for "Vm operation is available when not powered on" do
   it "when powered on" do
-    vm.update_attributes(:raw_power_state => power_state_on)
+    vm.update(:raw_power_state => power_state_on)
     if vm.respond_to?("supports_#{state}?")
       expect(vm.public_send("supports_#{state}?")).to be_falsey
     else
@@ -9,7 +9,7 @@ shared_examples_for "Vm operation is available when not powered on" do
   end
 
   it "when not powered on" do
-    vm.update_attributes(:raw_power_state => power_state_suspended)
+    vm.update(:raw_power_state => power_state_suspended)
     if vm.respond_to?("supports_#{state}?")
       expect(vm.public_send("supports_#{state}?")).to be_truthy
     else
@@ -20,7 +20,7 @@ end
 
 shared_examples_for "Vm operation is available when powered on" do
   it "when powered on" do
-    vm.update_attributes(:raw_power_state => power_state_on)
+    vm.update(:raw_power_state => power_state_on)
     if vm.respond_to?("supports_#{state}?")
       expect(vm.public_send("supports_#{state}?")).to be_truthy
     else
@@ -29,7 +29,7 @@ shared_examples_for "Vm operation is available when powered on" do
   end
 
   it "when not powered on" do
-    vm.update_attributes(:raw_power_state => power_state_suspended)
+    vm.update(:raw_power_state => power_state_suspended)
     if vm.respond_to?("supports_#{state}?")
       expect(vm.public_send("supports_#{state}?")).to be_falsey
     else

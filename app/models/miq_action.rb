@@ -8,19 +8,20 @@ class MiqAction < ApplicationRecord
 
   silence_warnings do
     const_set("TYPES",
-              "create_snapshot"         => "Create a Snapshot",
-              "email"                   => "Send an E-mail",
-              "snmp_trap"               => "Send an SNMP Trap",
-              "tag"                     => "Tag",
-              "reconfigure_memory"      => "Reconfigure Memory",
-              "reconfigure_cpus"        => "Reconfigure CPUs",
-              "custom_automation"       => "Invoke a Custom Automation",
-              "evaluate_alerts"         => "Evaluate Alerts",
-              "assign_scan_profile"     => "Assign Profile to Analysis Task",
-              "set_custom_attribute"    => "Set a Custom Attribute in vCenter",
-              "inherit_parent_tags"     => "Inherit Parent Tags",
-              "remove_tags"             => "Remove Tags",
-              "delete_snapshots_by_age" => "Delete Snapshots by Age"
+              "create_snapshot"         => N_("Create a Snapshot"),
+              "email"                   => N_("Send an E-mail"),
+              "snmp_trap"               => N_("Send an SNMP Trap"),
+              "tag"                     => N_("Tag"),
+              "reconfigure_memory"      => N_("Reconfigure Memory"),
+              "reconfigure_cpus"        => N_("Reconfigure CPUs"),
+              "custom_automation"       => N_("Invoke a Custom Automation"),
+              "evaluate_alerts"         => N_("Evaluate Alerts"),
+              "assign_scan_profile"     => N_("Assign Profile to Analysis Task"),
+              "set_custom_attribute"    => N_("Set a Custom Attribute in vCenter"),
+              "inherit_parent_tags"     => N_("Inherit Parent Tags"),
+              "remove_tags"             => N_("Remove Tags"),
+              "delete_snapshots_by_age" => N_("Delete Snapshots by Age"),
+              "run_ansible_playbook"    => N_("Run Ansible Playbook")
              )
   end
 
@@ -78,7 +79,7 @@ class MiqAction < ApplicationRecord
     when "email"
       self.options ||= {}
       self.options[:to] ||= ""
-      [:from, :to].each do|k|
+      [:from, :to].each do |k|
         if self.options && self.options[k]
           next if k == :from && self.options[k].blank? # allow blank from addres, we use the default.
           match = self.options[k] =~ /^\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z$/i
@@ -102,20 +103,35 @@ class MiqAction < ApplicationRecord
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
     deferred = []
-    # _log.info("succeeded policies: #{succeeded.inspect}")
-    # _log.info("failed policies: #{failed.inspect}")
-
     results = {}
 
     begin
-      failed.each do|p|
+      succeeded.each do |p|
         actions = case p
-                  when MiqPolicy then p.actions_for_event(inputs[:event], :failure).uniq
+                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
                   else            p.actions_for_event
                   end
 
-        #        _log.debug("actions on failure: #{actions.inspect}")
-        actions.each do|a|
+        actions.each do |a|
+          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
+          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
+
+          if a.name == "prevent"
+            deferred.push([a, apply_policies_to, inputs])
+            next
+          end
+
+          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
+          results[name] ||= []
+          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
+        end
+      end
+
+      failed.each do |p|
+        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
+        actions = p.actions_for_event(inputs[:event], :failure).uniq
+
+        actions.each do |a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
           inputs = inputs.merge(:policy => p, :result => false, :sequence => a.sequence, :synchronous => a.synchronous)
           _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
@@ -131,26 +147,7 @@ class MiqAction < ApplicationRecord
         end
       end
 
-      succeeded.each do|p|
-        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
-        actions = p.actions_for_event(inputs[:event], :success).uniq
-        # _log.info("actions on success: #{actions.inspect}")
-        actions.each do|a|
-          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
-          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
-
-          if a.name == "prevent"
-            deferred.push([a, apply_policies_to, inputs])
-            next
-          end
-
-          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
-          results[name] ||= []
-          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
-        end
-      end
-
-      deferred.each do|arr|
+      deferred.each do |arr|
         a, apply_policies_to, inputs = arr
         a.invoke(apply_policies_to, inputs)
       end
@@ -161,7 +158,7 @@ class MiqAction < ApplicationRecord
       MiqPolicy.logger.error("MIQ(action-invoke) Aborting action invocation [#{err.message}]")
       raise
     rescue MiqException::PolicyPreventAction => err
-      MiqPolicy.logger.info "MIQ(action-invoke) [#{err}]"
+      MiqPolicy.logger.info("MIQ(action-invoke) [#{err}]")
       raise
     end
 
@@ -200,7 +197,6 @@ class MiqAction < ApplicationRecord
   end
 
   def action_prevent(_action, _rec, _inputs)
-    #    MiqPolicy.logger.warn("MIQ(action_prevent): Invoking action [prevent] for policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}], entity name: [#{rec.name}], entity type: [#{Dictionary.gettext(rec.class.to_s, :type=>:model)}]")
     raise MiqException::PolicyPreventAction, "preventing current process from proceeding due to policy failure"
   end
 
@@ -219,6 +215,15 @@ class MiqAction < ApplicationRecord
                     :target_id    => rec.id,
                     :target_class => rec.class.base_class.name,
                     :message      => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
+  end
+
+  def action_run_ansible_playbook(action, rec, inputs)
+    service_template = ServiceTemplate.find(action.options[:service_template_id])
+    dialog_options = { :hosts => target_hosts(action, rec) }
+    request_options = { :manageiq_extra_vars => { 'event_target' => rec.href_slug,
+                                                  'event_name'   => inputs[:event].try(:name) },
+                        :initiator           => 'control' }
+    service_template.provision_request(target_user(rec), dialog_options, request_options)
   end
 
   def action_snmp_trap(action, rec, inputs)
@@ -281,9 +286,9 @@ class MiqAction < ApplicationRecord
   end
 
   def action_email(action, rec, inputs)
-    smtp = VMDB::Config.new("vmdb").config[:smtp]
+    return unless MiqRegion.my_region.role_assigned?('notifier')
 
-    action.options[:from] = smtp[:from] if action.options[:from].blank?
+    action.options[:from] = ::Settings.smtp.from if action.options[:from].blank?
 
     email_options = {
       :to   => action.options[:to],
@@ -305,6 +310,7 @@ class MiqAction < ApplicationRecord
         :header            => "Alert Triggered",
         :policy_detail     => "Alert '#{inputs[:policy].description}', triggered",
         :event_description => inputs[:event].description,
+        :event_details     => Notification.notification_text(inputs[:triggering_type], inputs[:triggering_data]),
         :entity_type       => rec.class.to_s,
         :entity_name       => rec.name
       }
@@ -427,8 +433,7 @@ class MiqAction < ApplicationRecord
 
   def self.inheritable_cats
     Classification.in_my_region.categories.inject([]) do |arr, c|
-      next(arr) if c.name.starts_with?("folder_path_")
-      next(arr) if c.entries.size == 0
+      next(arr) if c.name.starts_with?("folder_path_") || c.entries.empty?
       arr << c
     end
   end
@@ -436,51 +441,52 @@ class MiqAction < ApplicationRecord
   def run_script(rec)
     filename = self.options[:filename]
     raise _("unable to execute script, no file name specified") if filename.nil?
+
     unless File.exist?(filename)
-      raise _("unable to execute script, file name [%{file_name} does not exist]") % {:file_name => filename}
+      raise _("unable to execute script, file name [%{file_name}] does not exist") % {:file_name => filename}
     end
 
-    fd    = Tempfile.new("miq_action", SCRIPT_DIR)
-    fname = fd.path
-    fd.puts((File.extname(filename) == ".rb") ? RB_PREAMBLE : SH_PREAMBLE)
-    fd.puts(File.read(filename))
-    fd.close
+    command_result = nil
+    ruby_file = File.extname(filename) == '.rb'
 
-    File.chmod(0755, fname)
+    Tempfile.open('miq_action', SCRIPT_DIR) do |fd|
+      fd.puts ruby_file ? RB_PREAMBLE : SH_PREAMBLE
+      fd.puts File.read(filename)
+      fd.chmod(0755)
 
-    MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
-    if File.extname(filename) == ".rb"
-      runner_cmd = MiqEnvironment::Command.runner_command
-      MiqPolicy.logger.info("MIQ(action_script): Running: [#{runner_cmd} #{fname} '#{rec.name}'}]")
-      command_result = AwesomeSpawn.run(runner_cmd, :params => [fname, rec.name])
-    else
-      MiqPolicy.logger.info("MIQ(action_script): Running: [#{fname}]")
-      command_result = AwesomeSpawn.run(fname)
+      MiqPolicy.logger.info("MIQ(action_script): Executing: [#{filename}]")
+
+      if ruby_file
+        runner_cmd = MiqEnvironment::Command.runner_command
+        MiqPolicy.logger.info("MIQ(action_script): Running: [#{runner_cmd} #{fd.path} '#{rec.name}'}]")
+        command_result = AwesomeSpawn.run(runner_cmd, :params => [fd.path, rec.name])
+      else
+        MiqPolicy.logger.info("MIQ(action_script): Running: [#{fd.path}]")
+        command_result = AwesomeSpawn.run(fname)
+      end
     end
+
     rc = command_result.exit_status
     rc_verbose = RC_HASH[rc] || "Unknown RC: [#{rc}]"
 
-    fd.delete
-
     MiqPolicy.logger.info("MIQ(action_script): Result:\n#{result}")
 
+    info_msg = "MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}"
+
+    fail_msg = _("Action script exited with rc=%{rc_value}, error=%{error_text}") %
+      {:rc_value => rc_verbose, :error_text => command_result.error}
+
     case rc
-    when 0
-      MiqPolicy.logger.info("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
-    when 4
-      MiqPolicy.logger.warn("MIQ(action_script): Result: #{command_result.output}, rc: #{rc_verbose}")
-    when 8
-      raise MiqException::StopAction,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
-    when 16
-      raise MiqException::AbortAction,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
+    when 0  # Success
+      MiqPolicy.logger.info(info_msg)
+    when 4  # Interrupted
+      MiqPolicy.logger.warn(info_msg)
+    when 8  # Exec format error
+      raise MiqException::StopAction, fail_msg
+    when 16 # Resource busy
+      raise MiqException::AbortAction, fail_msg
     else
-      raise MiqException::UnknownActionRc,
-            _("Action script exited with rc=%{rc_value}, error=%{error_text}") % {:rc_value   => rc_verbose,
-                                                                                  :error_text => command_result.error}
+      raise MiqException::UnknownActionRc, fail_msg
     end
   end
 
@@ -520,6 +526,16 @@ class MiqAction < ApplicationRecord
         inputs[:synchronous], action_method, vm_method == "scan" ? "smartstate" : "ems_operations", rec.my_zone,
         rec, vm_method, [], "[#{action.description}] of VM [#{rec.name}]")
     end
+  end
+
+  def action_physical_server_power_on(action, rec, inputs)
+    unless rec.kind_of?(PhysicalServer)
+      MiqPolicy.logger.error("MIQ(physical_server_power_on): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a physical server")
+      return
+    end
+
+    invoke_or_queue(inputs[:synchronous], __method__, "ems_operations", rec.my_zone, rec, 'power_on',
+                    [], "[#{action.description}] of physical server [#{rec.name}]")
   end
 
   def action_vm_mark_as_vm(action, rec, inputs)
@@ -600,9 +616,7 @@ class MiqAction < ApplicationRecord
     age_threshold = (Time.now.utc - action.options[:age])
     has_ch = false
     snaps_to_delete = rec.snapshots.each_with_object([]) do |s, arr|
-      has_ch = true if s.is_a_type?(:consolidate_helper)
-      next          if s.is_a_type?(:evm_snapshot)
-      next          if s.is_a_type?(:vcb_snapshot)
+      next if s.is_a_type?(:evm_snapshot)
 
       arr << s if s.create_time < age_threshold
     end
@@ -612,13 +626,8 @@ class MiqAction < ApplicationRecord
       return
     end
 
-    if has_ch
-      MiqPolicy.logger.warn("#{log_prefix} has a Consolidate Helper snapshot, no shanpshots will be deleted")
-      return
-    end
-
     task_id = "action_#{action.id}_vm_#{rec.id}"
-    snaps_to_delete.sort { |a, b| b.create_time <=> a.create_time }.each do |s| # Delete newest to oldest
+    snaps_to_delete.sort_by(&:create_time).reverse_each do |s| # Delete newest to oldest
       MiqPolicy.logger.info("#{log_prefix} Deleting Snapshot: Name: [#{s.name}] Id: [#{s.id}] Create Time: [#{s.create_time}]")
       rec.remove_snapshot_queue(s.id, task_id)
     end
@@ -635,23 +644,13 @@ class MiqAction < ApplicationRecord
     has_ch = false
     snap   = nil
     rec.snapshots.order("create_time DESC").each do |s|
-      if s.is_a_type?(:consolidate_helper)
-        has_ch = true
-        next
-      end
       next if s.is_a_type?(:evm_snapshot)
-      next if s.is_a_type?(:vcb_snapshot)
 
       snap ||= s # Take the first eligable snapshot
     end
 
     if snap.nil?
       MiqPolicy.logger.info("#{log_prefix} has no snapshots available to delete")
-      return
-    end
-
-    if has_ch
-      MiqPolicy.logger.warn("#{log_prefix} has a Consolidate Helper snapshot, no shanpshot will be deleted")
       return
     end
 
@@ -693,7 +692,7 @@ class MiqAction < ApplicationRecord
 
   def action_ems_refresh(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_ems_refresh): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a Provider")
       return
     end
 
@@ -724,19 +723,15 @@ class MiqAction < ApplicationRecord
     rec.scan
   end
 
-  def action_container_image_annotate_deny_execution(action, rec, inputs)
+  def action_container_image_annotate_scan_results(action, rec, inputs)
+    MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}]")
     error_prefix = "MIQ(#{__method__}): Unable to perform action [#{action.description}], "
     unless rec.kind_of?(ContainerImage)
       MiqPolicy.logger.error("#{error_prefix} object [#{rec.inspect}] is not a Container Image")
       return
     end
 
-    unless rec.try(:ext_management_system).kind_of?(ManageIQ::Providers::Openshift::ContainerManagerMixin)
-      MiqPolicy.logger.error("#{error_prefix} only applicable for OpenShift Providers")
-      return
-    end
-
-    unless rec.digest.present?
+    unless rec.respond_to?(:annotate_scan_policy_results)
       MiqPolicy.logger.error("#{error_prefix} ContainerImage is not linked with an OpenShift image")
       return
     end
@@ -744,18 +739,18 @@ class MiqAction < ApplicationRecord
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(#{__method__}): Now executing  [#{action.description}] for event "\
                             "[#{inputs[:event].description}]")
-      rec.annotate_deny_execution(inputs[:policy].name)
+      rec.annotate_scan_policy_results(inputs[:policy].name, inputs[:result])
     else
       MiqPolicy.logger.info("MIQ(#{__method__}): Queueing [#{action.description}] for event "\
                             "[#{inputs[:event].description}]")
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "ems_operations",
+        :affinity    => rec.ext_management_system,
         :class_name  => rec.class.name,
-        :method_name => "annotate_deny_execution",
-        :args        => inputs[:policy].name,
+        :method_name => :annotate_scan_policy_results,
+        :args        => [inputs[:policy].name, inputs[:result]],
         :instance_id => rec.id,
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => rec.my_zone,
-        :role        => "ems_operations"
       )
     end
   end
@@ -776,22 +771,21 @@ class MiqAction < ApplicationRecord
       MiqPolicy.logger.info("MIQ(#{action_method}): Now executing [#{action.description}] of Host [#{rec.name}]")
       rec.scan
     else
-      role = "smartstate"
       MiqPolicy.logger.info("MIQ(#{action_method}): Queueing [#{action.description}] of Host [#{rec.name}]")
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "smartstate",
+        :affinity    => rec.ext_management_system,
         :class_name  => "Host",
         :method_name => "scan_from_queue",
         :instance_id => rec.id,
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => rec.my_zone,
-        :role        => role
       )
     end
   end
 
   def action_cancel_task(action, rec, inputs)
     unless rec.respond_to?(:ext_management_system) && !rec.ext_management_system.nil?
-      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a #{ui_lookup(:table => "ext_management_systems")}")
+      MiqPolicy.logger.error("MIQ(action_cancel_task): Unable to perform action [#{action.description}], object [#{rec.inspect}] does not have a Provider")
       return
     end
 
@@ -803,7 +797,7 @@ class MiqAction < ApplicationRecord
     end
 
     MiqPolicy.logger.info("MIQ(action_cancel_task): Now executing Cancel of task [#{source_event.event_type}] on VM [#{source_event.vm_name}]")
-    ems = ExtManagementSystem.find_by_id(source_event.ems_id)
+    ems = ExtManagementSystem.find_by(:id => source_event.ems_id)
     raise _("unable to find vCenter with id [%{id}]") % {:id => source_event.ems_id} if ems.nil?
 
     vim = ems.connect
@@ -860,7 +854,7 @@ class MiqAction < ApplicationRecord
 
   def action_evaluate_alerts(action, rec, inputs)
     action.options[:alert_guids].each do |guid|
-      alert = MiqAlert.find_by_guid(guid)
+      alert = MiqAlert.find_by(:guid => guid)
       unless alert
         MiqPolicy.logger.warn("MIQ(action_evaluate_alert): Unable to perform action [#{action.description}], unable to find alert: [#{action.options[:alert_guid]}]")
         next
@@ -873,13 +867,13 @@ class MiqAction < ApplicationRecord
 
   def action_assign_scan_profile(action, _rec, _inputs)
     ScanItem  # Cause the ScanItemSet class to load, if not already loaded
-    profile = ScanItemSet.find_by_name(action.options[:scan_item_set_name])
-    unless profile
-      MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
-      return
-    else
+    profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
+    if profile
       MiqPolicy.logger.info("MIQ(action_assign_scan_profile): Action [#{action.description}], using analysis profile: [#{profile.description}]")
       return ScanItem.get_profile(profile.name)
+    else
+      MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
+      return
     end
   end
 
@@ -902,7 +896,7 @@ class MiqAction < ApplicationRecord
 
   def self.import_from_hash(action, options = {})
     status = {:class => name, :description => action["description"]}
-    a = MiqAction.find_by_description(action["description"])
+    a = MiqAction.find_by(:description => action["description"])
     msg_pfx = "Importing Action: description=[#{action["description"]}]"
 
     if a.nil?
@@ -920,18 +914,21 @@ class MiqAction < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       a.save!
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return a, status
   end
 
   def check_policy_contents_empty_on_destroy
-    raise _("Action is referenced in at least one policy and connot be deleted") unless miq_policy_contents.empty?
+    unless miq_policy_contents.empty?
+      errors.add(:base, _("Action is referenced in at least one policy and cannot be deleted"))
+      throw :abort
+    end
   end
 
   def round_if_memory_reconfigured
@@ -972,7 +969,7 @@ class MiqAction < ApplicationRecord
 
   def self.create_or_update(action_attributes)
     name = action_attributes['name']
-    action = find_by_name(name)
+    action = find_by(:name => name)
     if action
       action.attributes = action_attributes
       if action.changed? || action.options_was != action.options
@@ -987,6 +984,10 @@ class MiqAction < ApplicationRecord
 
   def self.fixture_path
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
+  end
+
+  def self.display_name(number = 1)
+    n_('Action', 'Actions', number)
   end
 
   private
@@ -1010,16 +1011,44 @@ class MiqAction < ApplicationRecord
       target.send(target_method, *target_args)
     else
       MiqPolicy.logger.info("#{log_prefix} Queueing #{log_suffix}")
-      args = {
+
+      options = {
         :class_name  => static ? target.name : target.class.name,
         :method_name => target_method,
+        :instance_id => static ? nil : target.id,
         :args        => target_args,
         :role        => role,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => zone
       }
-      args[:instance_id] = target.id unless static
-      MiqQueue.put(args)
+
+      if role == 'ems_operations'
+        options[:queue_name] = target.try(:queue_name_for_ems_operations) || 'generic'
+      end
+
+      MiqQueue.put(options)
     end
+  end
+
+  def target_hosts(action, rec)
+    if action.options[:use_event_target]
+      ipaddress(rec)
+    elsif action.options[:use_localhost]
+      'localhost'
+    else
+      action.options[:hosts]
+    end
+  end
+
+  def ipaddress(record)
+    record.ipaddresses[0] if record.respond_to?(:ipaddresses)
+  end
+
+  def target_user(record)
+    record.respond_to?(:tenant_identity) ? record.tenant_identity : default_user
+  end
+
+  def default_user
+    User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
   end
 end

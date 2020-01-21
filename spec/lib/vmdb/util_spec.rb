@@ -1,57 +1,73 @@
 describe VMDB::Util do
   context ".http_proxy_uri" do
     it "without config settings" do
-      stub_server_configuration({})
+      stub_settings(:http_proxy => { :default => {} })
       expect(described_class.http_proxy_uri).to be_nil
     end
 
     it "returns proxy for old settings" do
-      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
+      stub_settings_merge(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
     end
 
     it "without a host" do
-      stub_server_configuration(:http_proxy => {:default => {}})
+      stub_settings_merge(:http_proxy => {:default => {}})
+      expect(described_class.http_proxy_uri).to be_nil
+    end
+
+    it "with a blank host" do
+      # We couldn't save nil http_proxy host, so some host values will be ''
+      stub_settings_merge(:http_proxy => {:default => {:host => ''}})
       expect(described_class.http_proxy_uri).to be_nil
     end
 
     it "with host" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
+      stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
     end
 
     it "with host, port" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
+      stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port   => 4321))
     end
 
     it "with host, port, user" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser"))
+      stub_settings_merge(:http_proxy => {:default => {:host     => "1.2.3.4", :port => 4321, :user => "testuser",
+                                                 :password => nil}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port   => 4321, :userinfo => "testuser"))
     end
 
     it "with host, port, user, password" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
+      stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                                 :user => "testuser", :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port => 4321, :userinfo => "testuser:secret"))
     end
 
     it "with user missing" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
+      stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                                 :user => nil, :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port => 4321))
     end
 
     it "with unescaped user value" do
       password = "secret#"
-      config = {:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => password}}}
-      stub_server_configuration(config)
+      config = {:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                             :user => "testuser", :password => password}}}
+      stub_settings_merge(config)
       userinfo = "testuser:secret%23"
       uri_parts = {:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => userinfo}
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(uri_parts))
     end
 
     it "with scheme overridden" do
-      stub_server_configuration(:http_proxy => {:default => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
+      stub_settings_merge(:http_proxy => {:default => {:scheme => "https", :host => "1.2.3.4", :port => 4321,
+                                                 :user => "testuser", :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "https", :host => "1.2.3.4",
+                                                                      :port   => 4321, :userinfo => "testuser:secret"))
     end
   end
 
@@ -106,21 +122,50 @@ describe VMDB::Util do
     assert_zip_entry_from_path("GUID", "/var/www/miq/vmdb/GUID")
   end
 
-  it ".add_zip_entry(private)" do
-    require 'zip/zipfilesystem'
-    file  = "/var/log/messages.log"
-    entry = "ROOT/var/log/messages.log"
-    mtime = Time.parse("2013-09-24 09:00:45 -0400")
-    expect(File).to receive(:mtime).with(file).and_return(mtime)
-    expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
+  context ".add_zip_entry(private)" do
+    require 'zip/filesystem'
 
-    zip       = double
-    ztime     = Zip::DOSTime.at(mtime.to_i)
-    zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
-    expect(zip).to receive(:add).with(zip_entry, file)
-    zip_file = double
+    let(:origin_file) { Tempfile.new 'origin' }
+    let(:symlink_level_1) { create_temp_symlink 'symlink_level_1', origin_file.path }
+    let(:symlink_level_2) { create_temp_symlink 'symlink_level_2', symlink_level_1 }
+    let(:mtime) { origin_file.mtime }
+    let(:ztime) { Zip::DOSTime.at(mtime.to_i) }
+    let(:zip) { double }
+    let(:zip_file) { double }
 
-    expect(described_class.send(:add_zip_entry, zip, file, zip_file)).to eq([entry, mtime])
+    it "entry is a normal file" do
+      file  = "/var/log/messages.log"
+      entry = "ROOT/var/log/messages.log"
+      log_mtime = Time.zone.parse("2013-09-24 09:00:45 -0400")
+      expect(File).to receive(:mtime).with(file).and_return(log_mtime)
+      expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
+
+      log_ztime = Zip::DOSTime.at(log_mtime.to_i)
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, log_ztime)
+      expect(zip).to receive(:add).with(zip_entry, file)
+
+      expect(File).to receive(:size).and_return(1) # a stub size for _log.info
+      expect(described_class.send(:add_zip_entry, zip, file, zip_file)).to eq([entry, log_mtime])
+    end
+
+    it "entry is a symlink to origin file, origin file is added with symlink's name" do
+      entry = 'ROOT' + symlink_level_1
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
+      expect(described_class.send(:add_zip_entry, zip, symlink_level_1, zip_file)).to eq([entry, mtime])
+    end
+
+    it "entry is a symlink to symlink to origin file, origin file is added with symlink's name" do
+      entry = 'ROOT' + symlink_level_2
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
+      expect(described_class.send(:add_zip_entry, zip, symlink_level_2, zip_file)).to eq([entry, mtime])
+    end
+
+    after do
+      origin_file.close
+      origin_file.unlink
+    end
   end
 
   it ".get_evm_log_for_date" do
@@ -128,5 +173,16 @@ describe VMDB::Util do
     allow(Dir).to receive_messages(:glob => log_files)
 
     expect(described_class.get_evm_log_for_date("log/*.log")).to eq("log/evm.log")
+  end
+
+  private
+
+  def create_temp_symlink(name, origin)
+    symlink_file = Tempfile.new name
+    symlink_file.close
+    symlink_name = symlink_file.path
+    symlink_file.unlink
+    FileUtils.ln_s origin, symlink_name
+    symlink_name
   end
 end

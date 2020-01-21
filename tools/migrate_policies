@@ -89,11 +89,11 @@ PolicySet.all.each do |ps|
   
   ps.members.each do |m|
     # puts "Name: #{m.name}"
-    nm = MiqPolicy.find_by_name(m.name)
+    nm = MiqPolicy.find_by(:name => m.name)
     nps.add_member(nm)
   end
   
-  tag = Tag.find_by_name("/policy/assignment/policy_set/#{ps.id}")
+  tag = Tag.find_by(:name => "/policy/assignment/policy_set/#{ps.id}")
   if tag
     Tagging.where(:tag_id => tag.id).each do |tg|
       resource = tg.taggable

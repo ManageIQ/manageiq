@@ -1,41 +1,4 @@
 describe DialogFieldCheckBox do
-  describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
-
-    context "when the dialog field is dynamic" do
-      let(:dynamic) { true }
-
-      context "when the current value is blank" do
-        let(:value) { "" }
-
-        before do
-          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
-        end
-
-        it "returns the values from the value processor" do
-          expect(dialog_field.value).to eq("processor")
-        end
-      end
-
-      context "when the current value is not blank" do
-        let(:value) { "test" }
-
-        it "returns the current value" do
-          expect(dialog_field.value).to eq("test")
-        end
-      end
-    end
-
-    context "when the dialog field is not dynamic" do
-      let(:dynamic) { false }
-      let(:value) { "test" }
-
-      it "returns the current value" do
-        expect(dialog_field.value).to eq("test")
-      end
-    end
-  end
-
   describe "#checked?" do
     let(:dialog_field) { described_class.new(:value => value) }
 
@@ -76,9 +39,10 @@ describe DialogFieldCheckBox do
     let(:dialog_field) { described_class.new }
     let(:automate_hash) do
       {
-        "value"     => value,
-        "required"  => true,
-        "read_only" => true
+        "value"       => value,
+        "required"    => true,
+        "read_only"   => true,
+        "description" => "description"
       }
     end
 
@@ -93,6 +57,10 @@ describe DialogFieldCheckBox do
 
       it "sets the read_only" do
         expect(dialog_field.read_only).to be_truthy
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
     end
 

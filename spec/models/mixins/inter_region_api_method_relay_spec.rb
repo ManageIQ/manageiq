@@ -1,4 +1,4 @@
-describe InterRegionApiMethodRelay do
+RSpec.describe InterRegionApiMethodRelay do
   let(:collection_name) { :test_class_collection }
   let(:api_config)      { double("Api::CollectionConfig") }
 
@@ -8,7 +8,12 @@ describe InterRegionApiMethodRelay do
       allow(api_config).to receive(:name_for_klass).and_return(collection_name)
 
       Class.new do
+        include ActiveRecord::IdRegions
         extend InterRegionApiMethodRelay
+
+        def id
+          1
+        end
 
         def self.name
           "RegionalMethodRelayTestClass"
@@ -83,13 +88,12 @@ describe InterRegionApiMethodRelay do
         end
 
         def expect_api_call(expected_action, expected_args = nil)
-          expect(described_class).to receive(:exec_api_call) do |region_num, collection, action, args, &block|
+          expect(described_class).to receive(:exec_api_call) do |region_num, collection, action, args, instance_id|
             expect(region_num).to eq(region)
             expect(collection).to eq(collection_name)
             expect(action).to eq(expected_action)
             expect(args).to eq(expected_args) if expected_args
-
-            expect(block.call).to eq([{:id => id}])
+            expect(instance_id).to eq(id)
           end
         end
 
@@ -165,112 +169,133 @@ describe InterRegionApiMethodRelay do
 
     describe ".api_client_connection_for_region" do
       let!(:server)           { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
-      let!(:region)           { FactoryGirl.create(:miq_region, :region => region_number) }
+      let!(:region)           { FactoryBot.create(:miq_region, :region => region_number) }
       let(:region_number)     { ApplicationRecord.my_region_number }
-      let(:region_seq_start)  { ApplicationRecord.rails_sequence_start }
       let(:request_user)      { "test_user" }
       let(:api_connection)    { double("ManageIQ::API::Client connection") }
       let(:region_auth_token) { double("MiqRegion API auth token") }
 
       before do
-        expect(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
+        allow(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
       end
 
-      context "with authentication configured" do
-        before do
-          expect(region).to receive(:auth_key_configured?).and_return true
-        end
+      it "opens an api connection to that address when the server has an ip address" do
+        require "manageiq-api-client"
 
-        it "opens an api connection to that address when the server has an ip address" do
-          require "manageiq-api-client"
+        server.ipaddress = "192.0.2.1"
+        server.save!
 
-          server.ipaddress = "192.0.2.1"
-          server.save!
+        expect(User).to receive(:current_userid).and_return(request_user)
+        expect(region).to receive(:api_system_auth_token).with(request_user).and_return(region_auth_token)
 
-          expect(User).to receive(:current_userid).and_return(request_user)
-          expect(region).to receive(:api_system_auth_token).with(request_user).and_return(region_auth_token)
-
-          client_connection_hash = {
-            :url      => "https://#{server.ipaddress}",
-            :miqtoken => region_auth_token,
-            :ssl      => {:verify => false}
-          }
-          expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
-          described_class.api_client_connection_for_region(region_number)
-        end
-
-        it "raises if the server doesn't have an ip address" do
-          expect {
-            described_class.api_client_connection_for_region(region_number)
-          }.to raise_error("Failed to establish API connection to region #{region_number}")
-        end
+        client_connection_hash = {
+          :url      => "https://#{server.ipaddress}",
+          :miqtoken => region_auth_token,
+          :ssl      => {:verify => false}
+        }
+        expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
+        described_class.api_client_connection_for_region(region_number)
       end
 
-      it "raises without authentication configured" do
-        expect(region).to receive(:auth_key_configured?).and_return false
+      it "raises if the server doesn't have an ip address" do
         expect {
           described_class.api_client_connection_for_region(region_number)
-        }.to raise_error("Region #{region_number} is not configured for central administration")
+        }.to raise_error("Failed to establish API connection to region #{region_number}")
       end
     end
 
     describe ".exec_api_call" do
-      let(:region)         { 0 }
-      let(:action)         { :the_action }
-      let(:api_connection) { double("ManageIQ::API::Client Connection") }
-      let(:api_collection) { double("ManageIQ::API::Client Collection") }
+      let(:region)             { 0 }
+      let(:action)             { :the_action }
+      let(:api_connection)     { double("ManageIQ::API::Client Connection") }
+      let(:api_collection)     { double("ManageIQ::API::Client Collection", :name => collection_name) }
+      let(:api_success_result) { ManageIQ::API::Client::ActionResult.new("success" => true, "message" => "success!") }
+      let(:api_failure_result) { ManageIQ::API::Client::ActionResult.new("success" => false, "message" => "failure!") }
+      let(:api_resource)       { ManageIQ::API::Client::Resource.subclass("test_resource").new(api_collection, {}) }
 
       before do
         expect(described_class).to receive(:api_client_connection_for_region).with(region).and_return(api_connection)
         expect(api_connection).to receive(collection_name).and_return(api_collection)
       end
 
-      context "when no block is passed" do
-        it "calls the given action with the given args" do
-          args = {:my => "args", :here => 123}
-          expect(api_collection).to receive(action).with(args)
-          described_class.exec_api_call(region, collection_name, action, args)
-        end
+      it "finds the instance when the api returns a resource" do
+        instance = double("ActiveRecord instance")
+        expect(api_collection).to receive(action).and_return(api_resource)
+        expect(described_class).to receive(:instance_for_resource).with(api_resource).and_return(instance)
 
-        it "defaults the args to an empty hash" do
-          expect(api_collection).to receive(action).with({})
+        expect(described_class.exec_api_call(region, collection_name, action)).to eq(instance)
+      end
+
+      it "raises when the api result is a failure" do
+        expect(api_collection).to receive(action).and_return(api_failure_result)
+        expect {
           described_class.exec_api_call(region, collection_name, action)
-        end
-
-        it "defaults the args to an empty hash when nil is explicitly passed as args" do
-          expect(api_collection).to receive(action).with({})
-          described_class.exec_api_call(region, collection_name, action, nil)
-        end
+        }.to raise_error(described_class::InterRegionApiMethodRelayError)
       end
 
-      context "when a block is passed" do
-        let(:resource_proc) { -> { "some stuff" } }
-
-        it "calls the given action with the given args" do
-          expected_args = {:my => "args", :here => 123}
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq(expected_args)
-            expect(block.call).to eq("some stuff")
-          end
-          described_class.exec_api_call(region, collection_name, action, expected_args, &resource_proc)
-        end
-
-        it "defaults the args to an empty hash" do
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq({})
-            expect(block.call).to eq("some stuff")
-          end
-          described_class.exec_api_call(region, collection_name, action, &resource_proc)
-        end
-
-        it "defaults the args to an empty hash when nil is explicitly passed as args" do
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq({})
-            expect(block.call).to eq("some stuff")
-          end
-          described_class.exec_api_call(region, collection_name, action, nil, &resource_proc)
-        end
+      it "accepts Hash object as api result" do
+        expect(api_collection).to receive(action).and_return({})
+        expect { described_class.exec_api_call(region, collection_name, action) }.not_to raise_error
       end
+
+      it "calls the given action with the given args" do
+        args = {:my => "args", :here => 123}
+        expect(api_collection).to receive(action).with(args).and_return(api_success_result)
+        expect(described_class.exec_api_call(region, collection_name, action, args)).to eq(api_success_result.attributes)
+      end
+
+      it "defaults the args to an empty hash" do
+        expect(api_collection).to receive(action).with({}).and_return(api_success_result)
+        expect(described_class.exec_api_call(region, collection_name, action)).to eq(api_success_result.attributes)
+      end
+
+      it "defaults the args to an empty hash when nil is explicitly passed as args" do
+        expect(api_collection).to receive(action).with({}).and_return(api_success_result)
+        expect(described_class.exec_api_call(region, collection_name, action, nil)).to eq(api_success_result.attributes)
+      end
+
+      it "calls a method on an instance if id is passed" do
+        instance = double("instance")
+        expect(api_collection).to receive(:find).with(4).and_return(instance)
+        expect(instance).to receive(action).and_return(api_success_result)
+        expect(described_class.exec_api_call(region, collection_name, action, nil, 4)).to eq(api_success_result.attributes)
+      end
+    end
+  end
+
+  describe ".instance_for_resource" do
+    let(:collection) { double("ManageIQ::API::Client::Collection", :name => collection_name) }
+    let(:resource)   { double("ManageIQ::API::Client::Resource", :collection => collection, :id => 10) }
+    let(:klass)      { double("MyTestClass") }
+    let(:instance)   { double("MyTestClass instance") }
+
+    before do
+      allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
+      stub_const("InterRegionApiMethodRelay::INITIAL_INSTANCE_WAIT", 0.01)
+      stub_const("InterRegionApiMethodRelay::MAX_INSTANCE_WAIT", 0.03)
+    end
+
+    it "finds the instance with the returned id" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).with(:id => 10).and_return(instance)
+
+      expect(described_class.instance_for_resource(resource)).to eq(instance)
+    end
+
+    it "retries if it can't find the instance" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).twice.with(:id => 10).and_return(nil, instance)
+
+      expect(described_class.instance_for_resource(resource)).to eq(instance)
+    end
+
+    it "raises if it can't find the instance within the timeout" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).twice.with(:id => 10).and_return(nil, nil)
+
+      expect {
+        described_class.instance_for_resource(resource)
+      }.to raise_error(InterRegionApiMethodRelay::InterRegionApiMethodRelayError)
     end
   end
 

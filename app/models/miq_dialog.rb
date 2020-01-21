@@ -1,44 +1,21 @@
 class MiqDialog < ApplicationRecord
-  validates_presence_of   :name, :description
-  validates_uniqueness_of :name, :scope => :dialog_type, :case_sensitive => false
+  include_concern "Seeding"
 
-  DIALOG_DIR = Rails.root.join("product/dialogs/miq_dialogs")
+  validates :name, :description, :presence => true
+  validates :name, :unique_within_region => { :scope => :dialog_type, :match_case => false }
+
+  scope :with_dialog_type, ->(dialog_type) { where(:dialog_type => dialog_type) }
 
   DIALOG_TYPES = [
-    [_("VM Provision"),                "MiqProvisionWorkflow"],
-    [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
-    [_("Host Provision"),              "MiqHostProvisionWorkflow"],
-    [_("VM Migrate"),                  "VmMigrateWorkflow"],
-  ]
+    [N_("VM Provision"),                "MiqProvisionWorkflow"],
+    [N_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
+    [N_("VM Migrate"),                  "VmMigrateWorkflow"],
+    [N_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
+  ].freeze
 
   serialize :content
 
-  def self.seed
-    sync_from_dir
-  end
-
-  def self.sync_from_dir
-    Dir.glob(File.join(DIALOG_DIR, "*.yaml")).each { |f| sync_from_file(f) }
-  end
-
-  def self.sync_from_file(filename)
-    item = YAML.load_file(filename)
-
-    item[:filename] = filename.sub(DIALOG_DIR.to_path + "/", "")
-    item[:file_mtime] = File.mtime(filename).utc
-    item[:default] = true
-
-    rec = find_by(:name => item[:name], :filename => item[:filename])
-
-    if rec
-      if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
-        _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")
-        rec.update_attributes(item)
-        rec.save
-      end
-    else
-      _log.info("[#{item[:name]}] file has been added to disk, adding to model")
-      create(item)
-    end
+  def self.display_name(number = 1)
+    n_('Dialog', 'Dialogs', number)
   end
 end

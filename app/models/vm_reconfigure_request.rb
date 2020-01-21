@@ -5,6 +5,7 @@ class VmReconfigureRequest < MiqRequest
 
   validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
+  include MiqProvisionQuotaMixin
 
   def self.request_limits(options)
     # Memory values are in megabytes
@@ -22,7 +23,7 @@ class VmReconfigureRequest < MiqRequest
 
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
     options[:src_ids].to_miq_a.each do |idx|
-      vm = Vm.find_by_id(idx)
+      vm = Vm.find_by(:id => idx)
       all_vcpus            << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_vcpus].min : vm.max_vcpus)
       all_cores_per_socket << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_cpu_cores_per_socket].min : vm.max_cpu_cores_per_socket)
       all_total_vcpus      << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_total_vcpus].min : vm.max_total_vcpus)
@@ -92,7 +93,7 @@ class VmReconfigureRequest < MiqRequest
     vm.nil? ? super : vm.my_zone
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 end

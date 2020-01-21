@@ -91,7 +91,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def perf_rollup_parents(interval_name = nil)
-    [availability_zone, host_aggregates].compact.flatten unless interval_name == 'realtime'
+    [availability_zone, host_aggregates, service].compact.flatten unless interval_name == 'realtime'
   end
 
   #
@@ -107,7 +107,10 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     true
   end
 
-  def resize(new_flavor)
+  def resize(new_flavor_id)
+    raise ArgumentError, _("new_flavor_id cannot be nil") if new_flavor_id.nil?
+    new_flavor = Flavor.find(new_flavor_id)
+    raise ArgumentError, _("flavor cannot be found") if new_flavor.nil?
     raw_resize(new_flavor)
   end
 
@@ -128,6 +131,29 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
   end
 
+  # Associate an IP address with the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # IP address are mandatory.
+  #
+  def associate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "associating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'associate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def associate_floating_ip(ip_address)
     raw_associate_floating_ip(ip_address)
   end
@@ -136,8 +162,93 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_disassociate_floating_ip must be implemented in a subclass")
   end
 
+  # Disassociate an IP address from the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # IP address are mandatory.
+  #
+  def disassociate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "disassociating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'disassociate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def disassociate_floating_ip(ip_address)
     raw_disassociate_floating_ip(ip_address)
+  end
+
+  def raw_add_security_group(_security_group)
+    raise NotImplementedError, _("raw_add_security_group must be implemented in a subclass")
+  end
+
+  # Add a security group to the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # security group id are mandatory.
+  #
+  def add_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "adding Security Group to Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'add_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def add_security_group(security_group)
+    raw_add_security_group(security_group)
+  end
+
+  def raw_remove_security_group(_security_group)
+    raise NotImplementedError, _("raw_remove_security_group must be implemented in a subclass")
+  end
+
+  # Remove a security group from the VM as a queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid and
+  # security group id are mandatory.
+  #
+  def remove_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "removing Security Group from Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'remove_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def remove_security_group(security_group)
+    raw_remove_security_group(security_group)
   end
 
   def service
@@ -146,6 +257,66 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   def direct_service
     super || orchestration_stack.try(:direct_service)
+  end
+
+  # Live migrate a VM as a high priority queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid
+  # and VM are mandatory, with any options forwarded to the live_migrate method.
+  #
+  def self.live_migrate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "migrating Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => vm.class.name,
+      :method_name => 'live_migrate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :queue_name  => vm.queue_name_for_ems_operations,
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  # Evacuate a VM as a high priority queued task and return the task id.
+  # The queue name and the queue zone are derived from the EMS. The userid
+  # and VM are mandatory, with any options forwarded to the evacuate method.
+  #
+  def self.evacuate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "evacuating Instance for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => vm.class.name,
+      :method_name => 'evacuate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :queue_name  => vm.queue_name_for_ems_operations,
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.live_migrate(vm_id, options)
+    vm = find(vm_id)
+    vm.live_migrate(options)
+  end
+
+  def self.evacuate(vm_id, options)
+    vm = find(vm_id)
+    vm.evacuate(options)
+  end
+
+  def self.display_name(number = 1)
+    n_('Instance', 'Instances', number)
   end
 
   private

@@ -1,5 +1,5 @@
 describe Vmdb::Loggers::FogLogger do
-  before(:each) do
+  before do
     @log_stream = StringIO.new
     @log = described_class.new(@log_stream)
     @log.level = VMDBLogger::DEBUG

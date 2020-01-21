@@ -3,8 +3,8 @@ module MiqReport::Notification
     userid = options[:userid]
     url = options[:email_url_prefix]
 
-    user = User.find_by_userid(userid)
-    from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : VMDB::Config.new("vmdb").config[:smtp][:from]
+    user = User.lookup_by_userid(userid)
+    from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : ::Settings.smtp.from
     to   = options[:email] ? options[:email][:to] : user.try(:email)
 
     msg = nil
@@ -43,34 +43,16 @@ module MiqReport::Notification
       end
     end
 
-    # Avoid ActionMailer bug where the email headers get corrupted when the total length in bytes of all the recipients exceeds approx 150 bytes.
-    # When this happens, the addresses on the end spill over into the headers and cause the content and mime information to be ignored.
-    #
-    # Split recipient list into groups whose total length in bytes is around 100 bytes or the configured limit
-    cut_off = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :recipient_address_byte_limit) || 100
-    sub_group = []
-    grouped_tos = to.uniq.inject([]) do |g, t|
-      sub_group << t
-      if sub_group.join.length >= cut_off || to.index(t) == (to.length - 1)
-        g << sub_group
-        sub_group = []
-      end
-      g
-    end
-    #
-
     begin
-      grouped_tos.each do |group_of_tos|
-        _log.info("Queuing email user: [#{user.name}] report results: [#{result.name}] to: #{group_of_tos.inspect}")
-        options = {
-          :to         => group_of_tos,
-          :from       => from,
-          :subject    => subject,
-          :body       => body,
-          :attachment => attachments,
-        }
-        GenericMailer.deliver_queue(:generic_notification, options)
-      end
+      _log.info("Queuing email user: [#{user.name}] report results: [#{result.name}] to: #{to.inspect}")
+      options = {
+        :to         => to,
+        :from       => from,
+        :subject    => subject,
+        :body       => body,
+        :attachment => attachments,
+      }
+      GenericMailer.deliver_queue(:generic_notification, options)
     rescue => err
       _log.error("Queuing email user: [#{user.name}] report results: [#{result.name}] failed with error: [#{err.class.name}] [#{err}]")
     end

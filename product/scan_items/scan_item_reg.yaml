@@ -1,6 +1,6 @@
 :item_type: registry
 :definition:
-  content: 
+  content:
   - depth: 0
     hive: HKLM
     value: RestrictGuestAccess
@@ -244,11 +244,11 @@
   - depth: 0
     hive: HKLM
     value: Start
-    key: SYSTEM\CurrentControlSet\Services\DHCPServer    
+    key: SYSTEM\CurrentControlSet\Services\DHCPServer
   - depth: 0
     hive: HKLM
     value: DSA Database file
-    key: SYSTEM\CurrentControlSet\Services\NTDS\Parameters    
+    key: SYSTEM\CurrentControlSet\Services\NTDS\Parameters
 :name: sample_registry
 :description: Sample Registry Scan
 :mode: Vm

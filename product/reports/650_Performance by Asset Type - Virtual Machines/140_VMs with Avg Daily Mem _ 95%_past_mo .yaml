@@ -1,27 +1,27 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
+---
+where_clause:
+generate_cols:
+dims:
 created_on: 2009-10-19 19:49:53.082607 Z
-reserved: 
+reserved:
 title: "VMs with Average Daily Memory Usage > 95% over last month"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    and: 
-    - IS NOT EMPTY: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
         field: VmPerformance-sys_uptime_absolute_latest
         value: ""
-    - ">": 
+    - ">":
         field: VmPerformance-mem_usage_absolute_average
         value: 95
 updated_on: 2009-10-19 19:49:53.082607 Z
 order: Descending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "VMs with Avg Daily Mem > 95% (past mo.)"
 rpt_group: Custom
 priority: 110
-col_order: 
+col_order:
 - resource_name
 - host.hostname
 - ems_cluster.name
@@ -30,26 +30,26 @@ col_order:
 - abs_max_mem_usage_absolute_average_value
 - derived_memory_available
 - v_date
-timeline: 
+timeline:
 id: 124
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-db_options: 
+filename:
+db_options:
   :start_offset: 2592000
   :end_offset: 0
   :interval: daily
-col_formats: 
-include: 
-  host: 
-    columns: 
+col_formats:
+include:
+  host:
+    columns:
     - hostname
-  ems_cluster: 
-    columns: 
+  ems_cluster:
+    columns:
     - name
 db: VmPerformance
-cols: 
+cols:
 - resource_name
 - mem_usage_absolute_average
 - max_mem_usage_absolute_average
@@ -58,10 +58,10 @@ cols:
 - v_date
 template_type: report
 group: c
-sortby: 
+sortby:
 - resource_name
 - mem_usage_absolute_average
-headers: 
+headers:
 - VM Name
 - Host Hostname
 - Cluster Name

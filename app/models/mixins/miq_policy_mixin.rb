@@ -25,10 +25,10 @@ module MiqPolicyMixin
   def get_policies(mode = nil)
     ns = "/miq_policy"
     cat = "assignment"
-    tag_list(:ns => ns, :cat => cat).split.collect do|t|
+    tag_list(:ns => ns, :cat => cat).split.collect do |t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
-      policy = klass.camelize.constantize.find_by_id(id.to_i)
+      policy = klass.camelize.constantize.find_by(:id => id.to_i)
       mode.nil? || policy.mode == mode ? policy : nil
     end.compact
   end
@@ -43,7 +43,7 @@ module MiqPolicyMixin
 
   def resolve_profiles(list, event = nil)
     result = []
-    list.each do|pid|
+    list.each do |pid|
       prof = MiqPolicySet.find(pid)
       next unless prof
 
@@ -53,7 +53,7 @@ module MiqPolicyMixin
       next if presults.empty? # skip profiles that had no policies due to the event not matching or no policies in scope
 
       prof_result = "allow"
-      presults.each do|r|
+      presults.each do |r|
         if r["result"] == "deny"
           prof_result = "deny"
           break
@@ -70,7 +70,7 @@ module MiqPolicyMixin
   def passes_policy?(list = nil)
     list.nil? ? plist = policies : plist = resolve_policies(list)
     result = true
-    plist.each do|policy|
+    plist.each do |policy|
       result = false if policy["result"] == "deny"
     end
     result_list = plist.collect { |r| r["result"] }.uniq
@@ -81,7 +81,7 @@ module MiqPolicyMixin
   def passes_profiles?(list)
     plist = resolve_profiles(list)
     result = true
-    plist.each do|prof|
+    plist.each do |prof|
       result = false if prof["result"] == "deny"
     end
     result_list = plist.collect { |r| r["result"] }.uniq
@@ -93,21 +93,46 @@ module MiqPolicyMixin
     MiqEnterprise.my_enterprise
   end
 
+  # cb_method: the MiqQueue callback method along with the parameters that is called
+  #            when automate process is done and the request is not prevented to proceed by policy
+  def prevent_callback_settings(*cb_method)
+    {
+      :class_name  => self.class.to_s,
+      :instance_id => id,
+      :method_name => :check_policy_prevent_callback,
+      :args        => [*cb_method],
+      :server_guid => MiqServer.my_guid
+    }
+  end
+
+  def check_policy_prevent_callback(*action, _status, _message, result)
+    prevented = false
+    if result.kind_of?(MiqAeEngine::MiqAeWorkspaceRuntime)
+      event = result.get_obj_from_path("/")['event_stream']
+      data  = event.attributes["full_data"]
+      prevented = data.fetch_path(:policy, :prevented) if data
+    end
+    prevented ? _log.info(event.attributes["message"]) : send(*action)
+  end
+
   module ClassMethods
     def rsop(event, targets)
-      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
       targets = extract_objects(targets)
 
       result = []
       targets.each do |t|
-        profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do|assoc|
+        profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do |assoc|
           next unless t.respond_to?(assoc)
           t.send(assoc).get_policies unless t.send(assoc).nil?
         end).compact.flatten.uniq
         presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
-        target_result = presults.inject("allow") { |s, r| break "deny" if r["result"] == "deny"; s }
+        target_result = presults.inject("allow") do |s, r|
+          break "deny" if r["result"] == "deny"
+          s
+        end
 
         result_list = presults.collect { |r| r["result"] }.uniq
         target_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
@@ -117,7 +142,7 @@ module MiqPolicyMixin
     end
 
     def rsop_async(event, targets, userid = nil)
-      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
+      eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by(:name => event) : MiqEventDefinition.extract_objects(event)
       raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
 
       targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets
@@ -132,7 +157,7 @@ module MiqPolicyMixin
         :args        => [eventobj.name, targets],
         :priority    => MiqQueue::HIGH_PRIORITY
       }
-      tid = MiqTask.generic_action_with_callback(opts, qopts)
+      MiqTask.generic_action_with_callback(opts, qopts)
     end
   end # module ClassMethods
 end # module MiqPolicyMixin

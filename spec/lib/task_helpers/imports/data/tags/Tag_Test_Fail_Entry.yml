@@ -1,0 +1,52 @@
+---
+- description: Import Test
+  icon:
+  read_only: false
+  syntax: string
+  single_value: true
+  example_text: Brant Test
+  show: true
+  default:
+  perf_by_tag: false
+  name: import_test
+  entries:
+  - description:
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name:
+  - description: One
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: '1'
+  - description: One
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: one
+  - description: New One
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: '1'

@@ -1,7 +1,7 @@
 describe TimeProfile do
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server
-    @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+    @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)
   end
 
   it "will default to the correct profile values" do
@@ -11,8 +11,20 @@ describe TimeProfile do
     expect(t.tz).to be_nil
   end
 
+  describe "#default?" do
+    it "with a default profile" do
+      tp = TimeProfile.seed
+      expect(tp).to be_default
+    end
+
+    it "with a non-default profile" do
+      tp = FactoryBot.create(:time_profile, :tz => "Hawaii")
+      expect(tp).to_not be_default
+    end
+  end
+
   context "will seed the database" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 
@@ -47,13 +59,13 @@ describe TimeProfile do
   end
 
   it "will not rollup daily performances on create if rollups are disabled" do
-    FactoryGirl.create(:time_profile)
+    FactoryBot.create(:time_profile)
     assert_nothing_queued
   end
 
   context "with an existing time profile with rollups disabled" do
-    before(:each) do
-      @tp = FactoryGirl.create(:time_profile)
+    before do
+      @tp = FactoryBot.create(:time_profile)
       MiqQueue.delete_all
     end
 
@@ -72,13 +84,13 @@ describe TimeProfile do
   end
 
   it "will rollup daily performances on create if rollups are enabled" do
-    @tp = FactoryGirl.create(:time_profile_with_rollup)
+    @tp = FactoryBot.create(:time_profile_with_rollup)
     assert_rebuild_daily_queued
   end
 
   context "with an existing time profile with rollups enabled" do
-    before(:each) do
-      @tp = FactoryGirl.create(:time_profile_with_rollup)
+    before do
+      @tp = FactoryBot.create(:time_profile_with_rollup)
       MiqQueue.delete_all
     end
 
@@ -99,21 +111,21 @@ describe TimeProfile do
   end
 
   context "profiles_for_user" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 
     it "gets time profiles for user and global default timeprofile" do
-      tp = TimeProfile.find_by_description(TimeProfile::DEFAULT_TZ)
+      tp = TimeProfile.find_by(:description => TimeProfile::DEFAULT_TZ)
       tp.profile_type = "global"
       tp.save
-      FactoryGirl.create(:time_profile,
+      FactoryBot.create(:time_profile,
                          :description          => "test1",
                          :profile_type         => "user",
                          :profile_key          => "some_user",
                          :rollup_daily_metrics => true)
 
-      FactoryGirl.create(:time_profile,
+      FactoryBot.create(:time_profile,
                          :description          => "test2",
                          :profile_type         => "user",
                          :profile_key          => "foo",
@@ -124,19 +136,19 @@ describe TimeProfile do
   end
 
   context "profile_for_user_tz" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 
     it "gets time profiles that matches user's tz and marked for daily Rollup" do
-      FactoryGirl.create(:time_profile,
+      FactoryBot.create(:time_profile,
                          :description          => "test1",
                          :profile_type         => "user",
                          :profile_key          => "some_user",
                          :tz                   => "other_tz",
                          :rollup_daily_metrics => true)
 
-      FactoryGirl.create(:time_profile,
+      FactoryBot.create(:time_profile,
                          :description          => "test2",
                          :profile_type         => "user",
                          :profile_key          => "foo",
@@ -149,19 +161,19 @@ describe TimeProfile do
 
   describe "#profile_for_each_region" do
     it "returns none for a non rollup metric" do
-      tp = FactoryGirl.create(:time_profile, :rollup_daily_metrics => false)
+      tp = FactoryBot.create(:time_profile, :rollup_daily_metrics => false)
 
       expect(tp.profile_for_each_region).to eq([])
     end
 
     it "returns unique entries" do
-      tp1a = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(5, 1))
-      tp1b = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(5, 2))
-      FactoryGirl.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(5, 3))
-      FactoryGirl.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(5, 4))
-      tp2 = FactoryGirl.create(:time_profile_with_rollup, :id => id_in_region(6, 1))
-      FactoryGirl.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(6, 2))
-      FactoryGirl.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(6, 3))
+      tp1a = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(5, 1))
+      tp1b = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(5, 2))
+      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(5, 3))
+      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(5, 4))
+      tp2 = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(6, 1))
+      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(6, 2))
+      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(6, 3))
 
       results = tp1a.profile_for_each_region
       expect(results.size).to eq(2)
@@ -173,9 +185,9 @@ describe TimeProfile do
 
   describe ".all_timezones" do
     it "works with seeds" do
-      FactoryGirl.create(:time_profile, :tz => "tz")
-      FactoryGirl.create(:time_profile, :tz => "tz")
-      FactoryGirl.create(:time_profile, :tz => "other_tz")
+      FactoryBot.create(:time_profile, :tz => "tz")
+      FactoryBot.create(:time_profile, :tz => "tz")
+      FactoryBot.create(:time_profile, :tz => "other_tz")
 
       expect(TimeProfile.all_timezones).to match_array(%w(tz other_tz))
     end
@@ -183,8 +195,8 @@ describe TimeProfile do
 
   describe ".find_all_with_entire_tz" do
     it "only returns profiles with all days" do
-      FactoryGirl.create(:time_profile, :days => [1, 2])
-      tp = FactoryGirl.create(:time_profile)
+      FactoryBot.create(:time_profile, :days => [1, 2])
+      tp = FactoryBot.create(:time_profile)
 
       expect(TimeProfile.find_all_with_entire_tz).to eq([tp])
     end
@@ -192,19 +204,19 @@ describe TimeProfile do
 
   describe ".profile_for_user_tz" do
     it "finds global profiles" do
-      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
+      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "global")
       expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
     end
 
     it "finds user profiles" do
-      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
+      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => 1)
       expect(TimeProfile.profile_for_user_tz(1, "good")).to be_truthy
     end
 
     it "skips invalid records" do
-      FactoryGirl.create(:time_profile_with_rollup, :tz => "bad", :profile_type => "global")
-      FactoryGirl.create(:time_profile, :tz => "good", :profile_type => "global", :rollup_daily_metrics => false)
-      FactoryGirl.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => "2")
+      FactoryBot.create(:time_profile_with_rollup, :tz => "bad", :profile_type => "global")
+      FactoryBot.create(:time_profile, :tz => "good", :profile_type => "global", :rollup_daily_metrics => false)
+      FactoryBot.create(:time_profile_with_rollup, :tz => "good", :profile_type => "user", :profile_key => "2")
 
       expect(TimeProfile.profile_for_user_tz(1, "good")).not_to be
     end

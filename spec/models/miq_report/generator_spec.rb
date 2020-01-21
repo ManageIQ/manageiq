@@ -1,20 +1,26 @@
 describe MiqReport::Generator do
+  include Spec::Support::ChargebackHelper
+
   before do
     EvmSpecHelper.local_miq_server
-    @user = FactoryGirl.create(:user_with_group)
-    @time_profile_all = FactoryGirl.create(:time_profile_with_rollup, :tz => "UTC")
-    @host1 = FactoryGirl.create(:host)
+    @user = FactoryBot.create(:user_with_group)
+    @host1 = FactoryBot.create(:host)
   end
 
   describe "#generate" do
     context "Memory Utilization Trends report (daily)" do
-      before :each do
-        @miq_report_profile_all = FactoryGirl.create(
+      let(:start_date) { end_date - 4.days }
+      let(:end_date) { Time.zone.yesterday.beginning_of_day }
+      let(:time_profile_all) { FactoryBot.create(:time_profile_with_rollup, :tz => "UTC") }
+      let(:metric_rollup_params) { {:derived_memory_available => 1400, :time_profile_id => time_profile_all.id} }
+
+      before do
+        @miq_report_profile_all = FactoryBot.create(
           :miq_report,
           :db              => "VimPerformanceTrend",
           :order           => "Ascending",
           :sortby          => ["resource_name"],
-          :time_profile_id => @time_profile_all.id,
+          :time_profile_id => time_profile_all.id,
           :db_options      => {:limit_col    => "max_derived_memory_available",
                                :trend_col    => "derived_memory_used",
                                :rpt_type     => "trend",
@@ -27,54 +33,174 @@ describe MiqReport::Generator do
 
       it "returns one row for each host" do
         used_mem_up = [400, 500, 600, 700]
-        @host2 = FactoryGirl.create(:host)
-        create_rollup(@host1, @time_profile_all, used_mem_up)
-        create_rollup(@host2, @time_profile_all, used_mem_up)
+        @host2 = FactoryBot.create(:host)
+        add_metric_rollups_for([@host1, @host2], start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data.size).to eq(2)
       end
 
       it "calculates positive slope which is 'UP' trend" do
         used_mem_up = [400, 500, 600, 700]
-        create_rollup(@host1, @time_profile_all, used_mem_up)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 100, "direction_of_trend" => "Up")
       end
 
       it "calculates negative slope which is 'Down' trend" do
         used_mem_down = [120, 90, 60, 30]
-        create_rollup(@host1, @time_profile_all, used_mem_down)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_down[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => -30, "direction_of_trend" => "Down")
       end
 
       it "calculates 0 slope which is 'Flat' trend" do
         used_mem_flat = [302, 300, 300, 302]
-        create_rollup(@host1, @time_profile_all, used_mem_flat)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_flat[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
         expect(@miq_report_profile_all.table.data[0].data).to include("slope" => 0, "direction_of_trend" => "Flat")
       end
 
       it "calculates max and min trend values" do
         used_mem_up = [400, 500, 600, 700]
-        create_rollup(@host1, @time_profile_all, used_mem_up)
+        add_metric_rollups_for(@host1, start_date...end_date, 1.day, metric_rollup_params, [], :metric_rollup_host_daily, :derived_memory_used => ->(x) { used_mem_up[x] })
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-        report_min = @miq_report_profile_all.table.data[0].data['min_trend_value']
-        report_max = @miq_report_profile_all.table.data[0].data['max_trend_value']
-        expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => used_mem_up.min,
-                                                                      "max_trend_value" => used_mem_up.max)
+        expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => 400,
+                                                                      "max_trend_value" => 700)
       end
     end
+  end
 
-    def create_rollup(host, profile, used_mem)
-      day_midnight = Time.zone.yesterday.beginning_of_day - used_mem.size.days
-      used_mem.size.times do |i|
-        host.metric_rollups << FactoryGirl.create(:metric_rollup_host_daily,
-                                                  :timestamp                => day_midnight + i.day,
-                                                  :time_profile_id          => profile.id,
-                                                  :derived_memory_used      => used_mem[i],
-                                                  :derived_memory_available => 1400)
-      end
+  describe "creates task, queue, audit event" do
+    let(:report) do
+      MiqReport.new(
+        :name      => "Custom VM report",
+        :title     => "Custom VM report",
+        :rpt_group => "Custom",
+        :rpt_type  => "Custom",
+        :db        => "ManageIQ::Providers::InfraManager::Vm",
+      )
+    end
+
+    before do
+      User.seed
+      EvmSpecHelper.local_miq_server
+      ServerRole.seed
+      expect(AuditEvent).to receive(:success)
+    end
+
+    it "#queue_generate_table" do
+      report.queue_generate_table(:userid => "admin")
+      task = MiqTask.first
+      expect(task).to have_attributes(
+        :name   => "Generate Report: '#{report.name}'",
+        :userid => "admin"
+      )
+
+      message = MiqQueue.find_by(:method_name => "_async_generate_table")
+      expect(message).to have_attributes(
+        :role        => "reporting",
+        :zone        => nil,
+        :class_name  => report.class.name,
+        :method_name => "_async_generate_table"
+      )
+
+      expect(message.args.first).to eq(task.id)
+    end
+
+    it "#queue_report_result" do
+      task_id = report.queue_report_result({:userid => "admin"}, {})
+      task = MiqTask.find(task_id)
+      expect(task).to have_attributes(
+        :name   => "Generate Report: '#{report.name}'",
+        :userid => "admin"
+      )
+
+      message = MiqQueue.find_by(:method_name => "build_report_result")
+      expect(message).to have_attributes(
+        :role        => "reporting",
+        :zone        => nil,
+        :class_name  => report.class.name,
+        :method_name => "build_report_result"
+      )
+
+      expect(message.args.first).to eq(task_id)
+    end
+  end
+
+  describe "#cols_for_report" do
+    it "uses cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor version name))
+      expect(rpt.cols_for_report).to eq(%w(vendor version name))
+    end
+
+    it "uses include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => { "columns" => %w(name hostname guid)}})
+      expect(rpt.cols_for_report).to eq(%w(host.name host.hostname host.guid))
+    end
+
+    it "uses extra_cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate")
+      expect(rpt.cols_for_report(%w(vendor))).to eq(%w(vendor))
+    end
+
+    it "derives include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order =>%w(host.name vendor))
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name))
+    end
+
+    it "works with col, col_order and include together" do
+      rpt = MiqReport.new(:db        => "VmOrTemplate",
+                          :cols      => %w(vendor),
+                          :col_order => %w(host.name host.hostname vendor),
+                          :include   => {"host" => { "columns" => %w(name hostname)}}
+                         )
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
+    end
+  end
+
+  describe "#get_include_for_find (private)" do
+    it "returns nil with empty include" do
+      rpt = MiqReport.new(:db      => "VmOrTemplate",
+                          :include => {})
+      expect(rpt.get_include_for_find).to be_nil
+    end
+
+    it "includes virtual_includes from virtual_attributes that are not sql friendly" do
+      rpt = MiqReport.new(:db   => "VmOrTemplate",
+                          :cols => %w(name platform))
+      expect(rpt.get_include_for_find).to eq(:platform => {})
+    end
+
+    it "does not include sql friendly virtual_attributes" do
+      rpt = MiqReport.new(:db   => "VmOrTemplate",
+                          :cols => %w(name v_total_snapshots))
+      expect(rpt.get_include_for_find).to be_nil
+    end
+
+    it "uses include and include_as_hash" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :cols             => %w(name platform),
+                          :include          => {:host => {:columns => %w(name)}, :storage => {:columns => %w(name)}},
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:platform => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+
+    it "uses col, col_order, and virtual attributes and ignores empty include" do
+      # it also allows cols to override col_order for requesting extra columns
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :include          => {},
+                          :cols             => %w[name v_datastore_path],
+                          :col_order        => %w(name host.name storage.name),
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+
+    it "uses col_order and virtual attributes" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :include          => {},
+                          :col_order        => %w[name v_datastore_path host.name storage.name],
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
     end
   end
 end

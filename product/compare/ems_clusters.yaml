@@ -56,7 +56,7 @@ col_order:
 - drs_enabled
 - drs_automation_level
 - drs_migration_threshold
-    
+
 # Column titles, in order
 headers:
 - Name
@@ -77,13 +77,13 @@ headers:
 - DRS Migration Threshold
 
 # Condition(s) string for the SQL query
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order:
 
 # Columns to sort the report on, in order
-sortby: 
+sortby:
 
 # Group rows (y=yes,n=no,c=count)
 group:

@@ -1,8 +1,10 @@
 class VmdbDatabase < ApplicationRecord
-  has_many :vmdb_tables,           :dependent => :destroy
+  has_many :vmdb_tables            # Destroy will be handled by seeder
   has_many :evm_tables,            :class_name => 'VmdbTableEvm'
+  has_many :text_tables,           :class_name => 'VmdbTableText'
+  has_many :vmdb_indexes,          :through => :vmdb_tables
   has_many :vmdb_database_metrics, :dependent => :destroy
-  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order "timestamp DESC" }, :class_name => 'VmdbDatabaseMetric'
+  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order("timestamp DESC") }, :class_name => 'VmdbDatabaseMetric'
 
   virtual_has_many :vmdb_database_settings
   virtual_has_many :vmdb_database_connections
@@ -30,7 +32,7 @@ class VmdbDatabase < ApplicationRecord
   end
 
   def size
-    ActiveRecord::Base.connection.database_size name
+    ActiveRecord::Base.connection.database_size(name)
   end
 
   def top_tables_by(sorted_by, limit = nil)
@@ -75,5 +77,9 @@ class VmdbDatabase < ApplicationRecord
 
   def self.report_client_connections
     connection.client_connections if connection.respond_to?(:client_connections)
+  end
+
+  def self.display_name(number = 1)
+    n_('Database', 'Databases', number)
   end
 end

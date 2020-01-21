@@ -1,4 +1,7 @@
 class GenericObjectDefinition < ApplicationRecord
+  include YAMLImportExportMixin
+  include_concern 'ImportExport'
+
   TYPE_MAP = {
     :boolean  => ActiveModel::Type::Boolean.new,
     :datetime => ActiveModel::Type::DateTime.new,
@@ -8,11 +11,23 @@ class GenericObjectDefinition < ApplicationRecord
     :time     => ActiveModel::Type::Time.new
   }.freeze
 
+  TYPE_NAMES = {
+    :boolean  => N_('Boolean'),
+    :datetime => N_('Date/Time'),
+    :float    => N_('Float'),
+    :integer  => N_('Integer'),
+    :string   => N_('String'),
+    :time     => N_('Time')
+  }.freeze
+
   FEATURES = %w(attribute association method).freeze
   REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
   REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
+  ALLOWED_ASSOCIATION_TYPES = (MiqReport.reportable_models + %w(GenericObject)).freeze
 
   serialize :properties, Hash
+
+  include CustomActionsMixin
 
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
@@ -30,6 +45,9 @@ class GenericObjectDefinition < ApplicationRecord
                     :normalize_property_methods
 
   before_destroy    :check_not_in_use
+
+  delegate :count, :to => :generic_objects, :prefix => true, :allow_nil => false
+  virtual_column :generic_objects_count, :type => :integer
 
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
@@ -79,7 +97,7 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr, value)
-    TYPE_MAP.fetch(property_attributes[attr]).cast(value)
+    TYPE_MAP.fetch(property_attributes[attr.to_s]).cast(value)
   end
 
   def properties=(props)
@@ -89,46 +107,57 @@ class GenericObjectDefinition < ApplicationRecord
 
   def add_property_attribute(name, type)
     properties[:attributes][name.to_s] = type.to_sym
-    save
+    save!
   end
 
   def delete_property_attribute(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:attributes].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 
   def add_property_association(name, type)
-    properties[:associations][name.to_s] = type.to_s.classify
-    save
+    type = type.to_s.classify
+    raise "invalid model for association: [#{type}]" unless type.in?(ALLOWED_ASSOCIATION_TYPES)
+
+    properties[:associations][name.to_s] = type
+    save!
   end
 
   def delete_property_association(name)
     transaction do
+      generic_objects.find_each { |o| o.delete_property(name) }
+
       properties[:associations].delete(name.to_s)
       save!
-
-      generic_objects.find_each { |o| o.delete_property(name) }
     end
   end
 
   def add_property_method(name)
     properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
-    save
+    save!
   end
 
   def delete_property_method(name)
     properties[:methods].delete(name.to_s)
-    save
+    save!
+  end
+
+  def generic_custom_buttons
+    CustomButton.buttons_for("GenericObject")
+  end
+
+  def self.display_name(number = 1)
+    n_('Generic Object Class', 'Generic Object Classes', number)
   end
 
   private
 
   def get_objects_of_association(attr, values)
-    property_associations[attr].constantize.where(:id => values).to_a
+    property_associations[attr.to_s].constantize.where(:id => values).to_a
   end
 
   def normalize_property_attributes
@@ -160,12 +189,10 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def validate_property_associations
-    properties[:associations].each do |name, klass|
-      begin
-        klass.constantize
-      rescue NameError
-        errors[:properties] << "association [#{name}] is not of a valid model: [#{klass}]"
-      end
+    invalid_models = properties[:associations].values - ALLOWED_ASSOCIATION_TYPES
+    errors[:properties] << "invalid models for association: [#{invalid_models.join(",")}]" unless invalid_models.empty?
+
+    properties[:associations].each do |name, _klass|
       errors[:properties] << "invalid association name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
     end
   end

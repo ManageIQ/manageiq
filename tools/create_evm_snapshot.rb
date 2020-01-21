@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def usage
   puts "Error: Must pass only one of the following:"
   puts "  --vm=<vm id>"
@@ -10,7 +13,10 @@ end
 usage unless ARGV.join.strip =~ /--(vm|job) *=?([0-9, ]+)/
 
 type = $1
-ids  = $2.split(',').collect { |id| id.strip!; id.blank? ? nil : id.to_i }.compact.uniq
+ids  = $2.split(',').collect do |id|
+  id.strip!
+  id.blank? ? nil : id.to_i
+end.compact.uniq
 
 case type
 when 'vm'
@@ -20,7 +26,7 @@ when 'vm'
 
   descs = []
   vms.each do
-    descs << "Snapshot for scan job: #{MiqUUID.new_guid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
+    descs << "Snapshot for scan job: #{SecureRandom.uuid}, EVM Server build: #{Vmdb::Appliance.BUILD}  Server Time: #{Time.now.utc.iso8601}"
   end
 when 'job'
   jobs = Job.where(:id => ids)

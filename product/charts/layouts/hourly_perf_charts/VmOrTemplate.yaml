@@ -1,10 +1,10 @@
 # VmOrTemplate Hourly performance chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:
   - cpu_usagemhz_rate_average
-  :menu: 
+  :menu:
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this VM
   :applies_to_method: cpu_mhz_available?
@@ -21,7 +21,7 @@
   :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_pct_cpu_ready_delta_summation
   - v_pct_cpu_used_delta_summation
@@ -37,7 +37,7 @@
   :type: Line
   :columns:
   - derived_memory_used
-  :menu: 
+  :menu:
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this VM
   :applies_to_method: memory_mb_available?
@@ -46,7 +46,7 @@
   :type: Line
   :columns:
   - disk_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this VM
 
@@ -54,6 +54,6 @@
   :type: Line
   :columns:
   - net_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Current-Daily:Back to daily
   - Timeline-Current-Hourly:Hourly events on this VM

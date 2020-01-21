@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 models = MiqReport.reportable_models.collect do |m|
   [Dictionary.gettext(m, :type => :model, :notfound => :titleize).pluralize, m]
 end.sort

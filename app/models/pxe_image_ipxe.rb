@@ -1,14 +1,9 @@
 class PxeImageIpxe < PxeImage
-  def build_pxe_contents(ks_access_path, ks_device)
-    new_kernel  = kernel.to_s.dup
-    new_kernel << " #{super}"
-
-    <<-PXE
-#!ipxe
-kernel #{new_kernel.strip}
-initrd #{initrd}
-boot
-PXE
+  def build_pxe_contents(kernel_args)
+    pxe = "#!ipxe\n"
+    pxe << "kernel #{kernel} #{super}\n"
+    pxe << "initrd #{initrd}\n" if initrd.present?
+    pxe << "boot\n"
   end
 
   def self.pxe_server_filename(mac_address)
@@ -31,7 +26,7 @@ PXE
     end
 
     if current_item[:kernel].blank?
-      _log.warn "Image #{current_item[:label]} missing kernel - Skipping"
+      _log.warn("Image #{current_item[:label]} missing kernel - Skipping")
       return []
     end
 

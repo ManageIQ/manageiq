@@ -4,7 +4,7 @@ module ManageIQ::Providers::CloudManager::Provision::OptionsHelper
   end
 
   def guest_access_key_pair
-    @guest_access_key_pair ||= AuthPrivateKey.find_by(:id => get_option(:guest_access_key_pair))
+    @guest_access_key_pair ||= ManageIQ::Providers::CloudManager::AuthKeyPair.find_by(:id => get_option(:guest_access_key_pair))
   end
 
   def security_groups

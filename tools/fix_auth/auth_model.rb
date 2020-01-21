@@ -1,4 +1,4 @@
-require 'util/miq-password'
+require 'manageiq-password'
 
 module FixAuth
   module AuthModel
@@ -11,26 +11,30 @@ module FixAuth
         column_names & password_columns
       end
 
-      def contenders
-        where(selection_criteria)
+      def select_columns
+        [:id] + available_columns
       end
 
-      # bring back anything with a password column that is not nil or blank
+      def contenders
+        where(selection_criteria).select(select_columns)
+      end
+
+      # bring back anything with a password column that has a non blank v1 or v2 password in it
       def selection_criteria
         available_columns.collect do |column|
-          "(COALESCE(#{column},'') <> '')"
+          "(#{column} like '%v2:{%')"
         end.join(" OR ")
       end
 
       def hardcode(_old_value, new_value)
-        MiqPassword.encrypt(new_value)
+        ManageIQ::Password.encrypt(new_value)
       end
 
       def recrypt(old_value, options = {})
         if options[:hardcode]
           hardcode(old_value, options[:hardcode])
         else
-          MiqPassword.new.recrypt(old_value)
+          ManageIQ::Password.new.recrypt(old_value)
         end
       rescue
         if options[:invalid]
@@ -52,9 +56,9 @@ module FixAuth
 
       def highlight_password(value, options)
         return if value.blank?
-        if options[:hardcode] && (value == MiqPassword.encrypt(options[:hardcode]))
+        if options[:hardcode] && (value == ManageIQ::Password.encrypt(options[:hardcode]))
           "#{value} HARDCODED"
-        elsif options[:invalid] && (value == MiqPassword.encrypt(options[:invalid]))
+        elsif options[:invalid] && (value == ManageIQ::Password.encrypt(options[:invalid]))
           "#{value} HARDCODED (WAS INVALID)"
         else
           value
@@ -81,16 +85,35 @@ module FixAuth
       def run(options = {})
         return if available_columns.empty?
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
+        processed = 0
+        errors = 0
+        would_make_changes = false
         contenders.each do |r|
-          fix_passwords(r, options)
-          if options[:verbose]
-            display_record(r)
-            available_columns.each do |column|
-              display_column(r, column, options)
+          begin
+            fix_passwords(r, options)
+            if options[:verbose]
+              display_record(r)
+              available_columns.each do |column|
+                display_column(r, column, options)
+              end
+            end
+            would_make_changes ||= r.changed?
+            r.save! if !options[:dry_run] && r.changed?
+            processed += 1
+          rescue ArgumentError # undefined class/module
+            errors += 1
+            unless options[:allow_failures]
+              STDERR.puts "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
+              raise
             end
           end
-          r.save! unless options[:dry_run]
+          if !options[:silent] && (errors + processed) % 10_000 == 0
+            puts "processed #{processed} with #{errors} errors"
+          end
         end
+        puts "#{options[:dry_run] ? "viewed" : "processed"} #{processed} records" unless options[:silent]
+        puts "found #{errors} errors" if errors > 0 && !options[:silent]
+        puts "** This was executed in dry-run, and no actual changes will be made to #{table_name} **" if would_make_changes && options[:dry_run]
       end
 
       def clean_up

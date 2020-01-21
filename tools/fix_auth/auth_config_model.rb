@@ -35,12 +35,18 @@ module FixAuth
       def recrypt(old_value, options = {})
         hash = YAML.load(old_value)
 
-        Vmdb::Settings::Walker.walk(hash) do |key, value, _path, owning|
+        Vmdb::SettingsWalker.walk(hash) do |key, value, _path, owning|
           owning[key] = super(value, options) if password_field?(key) && value.present?
         end
 
         symbol_keys ? hash.deep_symbolize_keys! : hash.deep_stringify_keys!
         hash.to_yaml
+      rescue ArgumentError # undefined class/module
+        unless options[:allow_failures]
+          STDERR.puts "potentially bad yaml:"
+          STDERR.puts old_value
+        end
+        raise
       end
     end
   end

@@ -1,5 +1,5 @@
 describe TenantQuota do
-  let(:tenant) { FactoryGirl.create(:tenant) }
+  let(:tenant) { FactoryBot.create(:tenant) }
 
   describe "#valid?" do
     it "rejects invalid name" do
@@ -36,10 +36,10 @@ describe TenantQuota do
   end
 
   describe ".check_for_over_allocation" do
-    let(:child_tenant) { FactoryGirl.create(:tenant) }
-    let(:grandchild_tenant1) { FactoryGirl.create(:tenant, :parent => child_tenant) }
-    let(:grandchild_tenant2) { FactoryGirl.create(:tenant, :parent => child_tenant) }
-    let(:great_grandchild_tenant) { FactoryGirl.create(:tenant, :parent => grandchild_tenant1) }
+    let(:child_tenant) { FactoryBot.create(:tenant) }
+    let(:grandchild_tenant1) { FactoryBot.create(:tenant, :parent => child_tenant) }
+    let(:grandchild_tenant2) { FactoryBot.create(:tenant, :parent => child_tenant) }
+    let(:great_grandchild_tenant) { FactoryBot.create(:tenant, :parent => grandchild_tenant1) }
 
     before do
       child_tenant
@@ -116,36 +116,36 @@ describe TenantQuota do
 
   describe "#format" do
     it "has cpu" do
-      expect(FactoryGirl.build(:tenant_quota_cpu).format).to eq("general_number_precision_0")
+      expect(FactoryBot.build(:tenant_quota_cpu).format).to eq("general_number_precision_0")
     end
   end
 
   describe "#default_unit" do
     it "has cpu" do
-      expect(FactoryGirl.build(:tenant_quota_cpu).default_unit).to eq("fixnum")
+      expect(FactoryBot.build(:tenant_quota_cpu).default_unit).to eq("fixnum")
     end
   end
 
   context "formatted tenant quota values" do
     include Spec::Support::QuotaHelper
 
-    let(:child_tenant) { FactoryGirl.create(:tenant, :parent => @tenant) }
+    let(:child_tenant) { FactoryBot.create(:tenant, :parent => @tenant) }
 
-    let(:child_tenant_quota_cpu)       { FactoryGirl.create(:tenant_quota_cpu, :tenant => child_tenant) }
-    let(:child_tenant_quota_mem)       { FactoryGirl.create(:tenant_quota_mem, :tenant => child_tenant) }
-    let(:child_tenant_quota_storage)   { FactoryGirl.create(:tenant_quota_storage, :tenant => child_tenant) }
-    let(:child_tenant_quota_vms)       { FactoryGirl.create(:tenant_quota_vms, :tenant => child_tenant) }
-    let(:child_tenant_quota_templates) { FactoryGirl.create(:tenant_quota_templates, :tenant => child_tenant) }
+    let(:child_tenant_quota_cpu)       { FactoryBot.create(:tenant_quota_cpu, :tenant => child_tenant) }
+    let(:child_tenant_quota_mem)       { FactoryBot.create(:tenant_quota_mem, :tenant => child_tenant) }
+    let(:child_tenant_quota_storage)   { FactoryBot.create(:tenant_quota_storage, :tenant => child_tenant) }
+    let(:child_tenant_quota_vms)       { FactoryBot.create(:tenant_quota_vms, :tenant => child_tenant) }
+    let(:child_tenant_quota_templates) { FactoryBot.create(:tenant_quota_templates, :tenant => child_tenant) }
 
-    let(:tenant_quota_cpu) { FactoryGirl.create(:tenant_quota_cpu, :tenant => child_tenant, :value => 2) }
-    let(:tenant_quota_mem) { FactoryGirl.create(:tenant_quota_mem, :tenant => child_tenant, :value => 4_294_967_296) }
+    let(:tenant_quota_cpu) { FactoryBot.create(:tenant_quota_cpu, :tenant => child_tenant, :value => 2) }
+    let(:tenant_quota_mem) { FactoryBot.create(:tenant_quota_mem, :tenant => child_tenant, :value => 4_294_967_296) }
 
     let(:tenant_quota_storage) do
-      FactoryGirl.create(:tenant_quota_storage, :tenant => child_tenant, :value => 4_294_967_296)
+      FactoryBot.create(:tenant_quota_storage, :tenant => child_tenant, :value => 4_294_967_296)
     end
 
-    let(:tenant_quota_vms)       { FactoryGirl.create(:tenant_quota_vms, :tenant => child_tenant, :value => 4) }
-    let(:tenant_quota_templates) { FactoryGirl.create(:tenant_quota_templates, :tenant => child_tenant, :value => 4) }
+    let(:tenant_quota_vms)       { FactoryBot.create(:tenant_quota_vms, :tenant => child_tenant, :value => 4) }
+    let(:tenant_quota_templates) { FactoryBot.create(:tenant_quota_templates, :tenant => child_tenant, :value => 4) }
 
     before do
       setup_model
@@ -244,6 +244,19 @@ describe TenantQuota do
     end
   end
 
+  describe ".format_quota_value" do
+    let(:quota_name) { "cpu_allocated" }
+    let(:quota_description) { "Allocated Virtual CPUs" }
+
+    it "returns quota description if field to format is 'tenant_quotas.name'" do
+      expect(described_class.format_quota_value("tenant_quotas.name", "something", quota_name)).to eq(quota_description)
+    end
+
+    it "returns quota description if field to format is 'tenant_quotas.description'" do
+      expect(described_class.format_quota_value("tenant_quotas.description", "something", quota_name)).to eq(quota_description)
+    end
+  end
+
   describe "#quota_hash" do
     it "has cpu_allocated attributes" do
       expect(described_class.new(:tenant => tenant, :name => "cpu_allocated", :value => 4096).tap(&:valid?).quota_hash).to eq(
@@ -291,7 +304,7 @@ describe TenantQuota do
   end
 
   describe ".destroy_missing" do
-    let(:tenant2) { FactoryGirl.create(:tenant) }
+    let(:tenant2) { FactoryBot.create(:tenant) }
 
     it "removes extra quotas only from object in question" do
       tenant.tenant_quotas.create(:name => :vms_allocated, :value => 20)

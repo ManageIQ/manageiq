@@ -5,8 +5,7 @@ module SwiftManagerMixin
     has_one  :swift_manager,
              :foreign_key => :parent_ems_id,
              :class_name  => "ManageIQ::Providers::StorageManager::SwiftManager",
-             :autosave    => true,
-             :dependent   => :destroy
+             :autosave    => true
 
     delegate :cloud_object_store_containers,
              :cloud_object_store_objects,
@@ -26,7 +25,7 @@ module SwiftManagerMixin
       begin
         swift_manager.save
         swift_manager.reload
-        _log.debug "swift_manager.id = #{swift_manager.id}"
+        _log.debug("swift_manager.id = #{swift_manager.id}")
 
         CloudObjectStoreContainer.where(:ems_id => id).update(:ems_id => swift_manager.id)
         CloudObjectStoreObject.where(:ems_id => id).update(:ems_id => swift_manager.id)

@@ -78,7 +78,9 @@ generate_rows:
   - :function: percent_of_col
     :col_name: derived_storage_total
     :pct_col_name: derived_storage_total
-  - 0
+  - :function: percent_of_col
+    :col_name: derived_storage_free
+    :pct_col_name: derived_storage_total
   - :function: percent_of_col
     :col_name: trend_max_v_derived_storage_used
     :pct_col_name: derived_storage_total
@@ -86,12 +88,12 @@ generate_rows:
     :col_name: trend_v_derived_storage_used
     :pct_col_name: derived_storage_total
   - :col_name: derived_storage_total
-  - 0
+  - :col_name: derived_storage_free
   - :col_name: trend_max_v_derived_storage_used
   - :col_name: trend_v_derived_storage_used
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - gen_name
 - gen_timestamp
 - gen_available_percent
@@ -145,13 +147,13 @@ col_formats:
 #    :name: number_with_delimiter
 
 # Condition expression for search filtering
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: ascending
 
 # Columns to sort the report on, in order
-sortby: 
+sortby:
 
 # Group rows (y=yes,n=no,c=count)
 group: n
@@ -167,10 +169,10 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:
 
 template_type: report

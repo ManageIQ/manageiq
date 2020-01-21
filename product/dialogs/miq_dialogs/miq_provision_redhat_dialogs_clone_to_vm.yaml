@@ -32,7 +32,7 @@
           :data_type: :string
         :owner_first_name:
           :description: First Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager:
@@ -52,7 +52,7 @@
           :data_type: :string
         :owner_last_name:
           :description: Last Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager_mail:
@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -136,6 +136,73 @@
     :customize:
       :description: Customize
       :fields:
+        :sysprep_computer_name:
+          :description: Computer Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_organization:
+          :description: Organization Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain:
+          :description: Domain
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_admin_password:
+          :description: Administrator Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_ui:
+          :description: UI Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_user:
+          :description: User Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_input:
+          :description: Input Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_system:
+          :description: System Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_machine_object_ou:
+          :description: Machine Object OU
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_product_key:
+          :description: Product Key
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_timezone:
+          :values_from:
+            :method: :get_timezones
+          :description: Timezone
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain_admin:
+          :description: Domain User Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain_password:
+          :description: Domain Password
+          :required: false
+          :display: :edit
+          :data_type: :string
         :dns_servers:
           :description: DNS Server list
           :required: false
@@ -272,7 +339,7 @@
           :display: :edit
           :data_type: :string
           :min_length:
-          :max_length: 100
+          :max_length: 255
         :vm_prefix:
           :description: VM Name Prefix/Suffix
           :required_method: :validate_vm_name
@@ -317,7 +384,7 @@
           :data_type: :string
           :notes_display: :show
           :min_length:
-          :max_length:
+          :max_length: 255
         :pxe_image_id:
           :values_from:
             :method: :allowed_images
@@ -418,9 +485,11 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: vLan
+          :description: Network
+          :required_description: Virtual NIC Profile ID or Profile Name (Network Name)
           :required: true
           :display: :edit
+          :default: <Template>
           :data_type: :string
         :mac_address:
           :description: MAC Address
@@ -472,6 +541,8 @@
             "12288": "12288"
             "16384": "16384"
             "32768": "32768"
+            "65536": "65536"
+            "131072": "131072"
           :description: Memory (MB)
           :required: false
           :display: :edit

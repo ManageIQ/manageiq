@@ -3,13 +3,13 @@ describe Rbac do
 
   describe ".resources_shared_with" do
     let(:user) do
-      FactoryGirl.create(:user,
+      FactoryBot.create(:user,
                          :role     => "user",
-                         :tenant   => FactoryGirl.create(:tenant, :name => "Tenant under root"),
+                         :tenant   => FactoryBot.create(:tenant, :name => "Tenant under root"),
                          :features => user_allowed_feature)
     end
     let(:user_allowed_feature) { "service" }
-    let(:resource_to_be_shared) { FactoryGirl.create(:vm_vmware, :tenant => user.current_tenant) }
+    let(:resource_to_be_shared) { FactoryBot.create(:vm_vmware, :tenant => user.current_tenant) }
     let(:tenants) { [sharee.current_tenant] }
     let(:features) { :all }
     let!(:share) do
@@ -19,9 +19,9 @@ describe Rbac do
                          :features => features)
     end
     let(:sharee) do
-      FactoryGirl.create(:user,
-                         :miq_groups => [FactoryGirl.create(:miq_group,
-                                                            :tenant => FactoryGirl.create(:tenant, :name => "Sibling tenant"))])
+      FactoryBot.create(:user,
+                         :miq_groups => [FactoryBot.create(:miq_group,
+                                                            :tenant => FactoryBot.create(:tenant, :name => "Sibling tenant"))])
     end
 
     before { Tenant.seed }
@@ -39,11 +39,11 @@ describe Rbac do
     end
 
     context "with tenant inheritance" do
-      let(:sibling_tenant) { FactoryGirl.create(:tenant, :name => "Sibling tenant") }
-      let(:siblings_child) { FactoryGirl.create(:tenant, :parent => sibling_tenant, :name => "Sibling's child tenant") }
+      let(:sibling_tenant) { FactoryBot.create(:tenant, :name => "Sibling tenant") }
+      let(:siblings_child) { FactoryBot.create(:tenant, :parent => sibling_tenant, :name => "Sibling's child tenant") }
       let(:sharee) do
-        FactoryGirl.create(:user,
-                           :miq_groups => [FactoryGirl.create(:miq_group,
+        FactoryBot.create(:user,
+                           :miq_groups => [FactoryBot.create(:miq_group,
                                                               :tenant => siblings_child)])
       end
       let!(:share) do

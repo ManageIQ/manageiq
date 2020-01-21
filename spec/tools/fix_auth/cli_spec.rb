@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 
 require "fix_auth/cli"
 
@@ -6,37 +6,38 @@ describe FixAuth::Cli do
   describe "#parse" do
     it "should assign defaults" do
       opts = described_class.new.parse([], {})
-             .options.slice(:hostname, :username, :password, :hardcode, :databases)
+             .options.slice(:hostname, :port, :username, :password, :hardcode, :database)
       expect(opts).to eq(
-        :username  => "root",
-        :databases => %w(vmdb_production))
+        :username => "root",
+        :database => "vmdb_production",
+        :port     => 5432)
     end
 
     it "should pickup env variables" do
       opts = described_class.new.parse([], "PGUSER" => "envuser", "PGPASSWORD" => "envpass", "PGHOST" => "envhost")
-             .options.slice(:hostname, :username, :password, :hardcode, :databases)
+             .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
-        :username  => "envuser",
-        :databases => %w(vmdb_production),
-        :password  => "envpass",
-        :hostname  => "envhost")
+        :username => "envuser",
+        :database => "vmdb_production",
+        :password => "envpass",
+        :hostname => "envhost")
     end
 
     it "should parse database names" do
-      opts = described_class.new.parse(%w(DB1 DB2))
-             .options.slice(:hostname, :username, :password, :hardcode, :databases)
+      opts = described_class.new.parse(%w(DB1))
+             .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
-        :username  => "root",
-        :databases => %w(DB1 DB2))
+        :username => "root",
+        :database => "DB1")
     end
 
     it "should parse hardcoded password" do
       opts = described_class.new.parse(%w(-P hardcoded))
-             .options.slice(:hostname, :username, :password, :hardcode, :databases)
+             .options.slice(:hostname, :username, :password, :hardcode, :database)
       expect(opts).to eq(
-        :username  => "root",
-        :databases => %w(vmdb_production),
-        :hardcode  => "hardcoded")
+        :username => "root",
+        :database => "vmdb_production",
+        :hardcode => "hardcoded")
     end
 
     it "defaults to updating the database" do

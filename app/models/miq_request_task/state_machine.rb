@@ -1,9 +1,10 @@
 module MiqRequestTask::StateMachine
   delegate :my_role, :to => :miq_request
   delegate :my_zone, :to => :source,      :allow_nil => true
+  delegate :my_queue_name, :to => :miq_request
 
-  def my_task_id
-    "#{self.class.base_model.name.underscore}_#{id}"
+  def tracking_label_id
+    "r#{miq_request_id}_#{self.class.base_model.name.underscore}_#{id}"
   end
 
   def signal_abort
@@ -14,7 +15,7 @@ module MiqRequestTask::StateMachine
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
     self.phase = phase.to_s
-    $log.info "Starting Phase <#{self.phase}>"
+    $log.info("Starting Phase <#{self.phase}>")
     save
 
     begin
@@ -50,13 +51,14 @@ module MiqRequestTask::StateMachine
   def signal_queue(phase)
     method_name, args = phase == :abort ? [:signal_abort, []] : [:signal, [phase]]
     MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => method_name,
-      :args        => args,
-      :zone        => my_zone,
-      :role        => my_role,
-      :task_id     => my_task_id,
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => method_name,
+      :args           => args,
+      :zone           => my_zone,
+      :role           => my_role,
+      :queue_name     => my_queue_name,
+      :tracking_label => tracking_label_id,
     )
   end
 
@@ -69,15 +71,16 @@ module MiqRequestTask::StateMachine
   end
 
   def requeue_phase
+    mark_execution_servers
     save # Save current phase_context
     MiqQueue.put(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => phase,
-      :deliver_on   => 10.seconds.from_now.utc,
-      :zone         => my_zone,
-      :role         => my_role,
-      :task_id      => my_task_id,
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => phase,
+      :deliver_on     => 10.seconds.from_now.utc,
+      :zone           => my_zone,
+      :role           => my_role,
+      :tracking_label => tracking_label_id,
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end

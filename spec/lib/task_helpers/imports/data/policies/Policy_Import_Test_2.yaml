@@ -1,0 +1,20 @@
+---
+- MiqPolicy:
+    name: b314df11-9790-47a1-8e12-14fa124cc862
+    description: Policy Import Test 2
+    expression: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Host-admin_disabled
+          value: 'false'
+      context_type:
+    towhat: Host
+    guid: b314df11-9790-47a1-8e12-14fa124cc862
+    created_by: admin
+    updated_by: admin
+    notes:
+    active: true
+    mode: control
+    read_only:
+    MiqPolicyContent: []
+    Condition: []

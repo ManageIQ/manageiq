@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 def print_switch(indent, switch)
   puts "#{indent}Switch: #{switch.name}"
   switch.lans.order("lower(name)").each do |lan|
@@ -43,5 +46,5 @@ Host.all.each do |host|
     end
   end
 
-  puts; puts
+  puts("\n")
 end

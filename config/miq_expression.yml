@@ -1,0 +1,366 @@
+---
+:base_tables:
+- AuditEvent
+- AvailabilityZone
+- BottleneckEvent
+- ChargebackVm
+- ChargebackContainerProject
+- ChargebackContainerImage
+- CloudResourceQuota
+- CloudTenant
+- CloudVolume
+- Compliance
+- ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
+- ManageIQ::Providers::ConfigurationManager
+- Container
+- ContainerBuild
+- ContainerPerformance
+- ContainerGroup
+- ContainerGroupPerformance
+- ContainerImage
+- ContainerImageRegistry
+- CloudNetwork
+- ContainerNode
+- ContainerNodePerformance
+- ContainerProject
+- ContainerProjectPerformance
+- ContainerQuota
+- ContainerReplicator
+- ContainerRoute
+- ContainerService
+- ContainerTemplate
+- PersistentVolume
+- ManageIQ::Providers::CloudManager
+- ManageIQ::Providers::CloudManager::AuthKeyPair
+- EmsCluster
+- EmsClusterPerformance
+- EmsEvent
+- ManageIQ::Providers::InfraManager
+- ExtManagementSystem
+- ExtManagementSystemPerformance
+- Flavor
+- FloatingIp
+- GuestApplication
+- Host
+- HostAggregate
+- HostPerformance
+- MiqGroup
+- MiqRegion
+- MiqRequest
+- MiqServer
+- MiqTemplate
+- MiqWorker
+- Network
+- OrchestrationStack
+- OrchestrationTemplate
+- PhysicalRack
+- PhysicalChassis
+- PhysicalSwitch
+- PhysicalServer
+- PolicyEvent
+- ResourcePool
+- SecurityGroup
+- Service
+- ServiceTemplate
+- Storage
+- StorageFile
+- StoragePerformance
+- Switch
+- ManageIQ::Providers::CloudManager::Template
+- ManageIQ::Providers::InfraManager::Template
+- MeteringContainerProject
+- MeteringContainerImage
+- MeteringVm
+- Tenant
+- User
+- VimPerformanceTrend
+- Vm
+- ManageIQ::Providers::CloudManager::Vm
+- ManageIQ::Providers::InfraManager::Vm
+- VmPerformance
+- Zone
+:include_tables:
+- advanced_settings
+- archived_container_groups
+- audit_events
+- availability_zones
+- cloud_networks
+- cloud_resource_quotas
+- cloud_tenants
+- compliances
+- compliance_details
+- computer_systems
+- configuration_profiles
+- configuration_managers
+- configured_systems
+- containers
+- container_groups
+- container_projects
+- container_images
+- container_nodes
+- container_quota_items
+- customization_scripts
+- customization_script_media
+- customization_script_ptables
+- disks
+- ems_events
+- ems_clusters
+- ems_custom_attributes
+- evm_owners
+- event_logs
+- ext_management_systems
+- filesystem_drivers
+- filesystems
+- firewall_rules
+- flavors
+- floating_ips
+- groups
+- guest_applications
+- guest_devices
+- hardwares
+- hosts
+- host_aggregates
+- host_services
+- kernel_drivers
+- key_pairs
+- lans
+- last_compliances
+- linux_initprocesses
+- miq_actions
+- miq_approval_stamps
+- miq_custom_attributes
+- miq_policy_sets
+- miq_provisions
+- miq_regions
+- miq_requests
+- miq_scsi_luns
+- miq_servers
+- miq_workers
+- openscap_results
+- openscap_rule_results
+- orchestration_stack_outputs
+- orchestration_stack_parameters
+- orchestration_stack_resources
+- orchestration_templates
+- operating_system_flavors
+- partitions
+- ports
+- processes
+- miq_provision_templates
+- miq_provision_vms
+- miq_templates
+- networks
+- nics
+- operating_systems
+- patches
+- registry_items
+- resource_pools
+- security_groups
+- service_templates
+- services
+- snapshots
+- stacks
+- storages
+- storage_adapters
+- storage_files
+- switches
+- tenant_quotas
+- tenants
+- users
+- vms
+- volumes
+- win32_services
+- zones
+:exclude_columns:
+- "^min_derived_storage.*$"
+- "^max_derived_storage.*$"
+- assoc_ids
+- auth_key
+- capture_interval
+- challenge
+- filters
+- icon
+- intervals_in_rollup
+- max_cpu_ready_delta_summation
+- max_cpu_system_delta_summation
+- max_cpu_used_delta_summation
+- max_cpu_wait_delta_summation
+- max_derived_cpu_available
+- max_derived_cpu_reserved
+- max_derived_memory_available
+- max_derived_memory_reserved
+- memory_usage
+- min_cpu_ready_delta_summation
+- min_cpu_system_delta_summation
+- min_cpu_used_delta_summation
+- min_cpu_wait_delta_summation
+- min_derived_memory_available
+- min_derived_memory_reserved
+- min_derived_cpu_available
+- min_derived_cpu_reserved
+- min_max
+- options
+- password
+- policy_settings
+- "^reserved$"
+- settings
+- tag_names
+- v_qualified_desc
+:exclude_id_columns:
+- "^.*_id$"
+- "^id$"
+- resource_id
+:exclude_exceptions:
+- capacity_profile_1_memory_per_vm_with_min_max
+- capacity_profile_1_vcpu_per_vm_with_min_max
+- capacity_profile_2_memory_per_vm_with_min_max
+- capacity_profile_2_vcpu_per_vm_with_min_max
+- chain_id
+- guid
+- openscap_id
+:tag_classes:
+  ManageIQ::Providers::CloudManager: ext_management_system
+  EmsCluster: ems_cluster
+  ManageIQ::Providers::InfraManager: ext_management_system
+  ManageIQ::Providers::ContainerManager: ext_management_system
+  ExtManagementSystem: ext_management_system
+  Host: host
+  MiqGroup: miq_group
+  MiqTemplate: miq_template
+  ResourcePool: resource_pool
+  Service: service
+  Storage: storage
+  ManageIQ::Providers::CloudManager::Template: miq_template
+  ManageIQ::Providers::InfraManager::Template: miq_template
+  User: user
+  Vm: vm
+  VmOrTemplate: vm
+  ManageIQ::Providers::CloudManager::Vm: vm
+  ManageIQ::Providers::InfraManager::Vm: vm
+  Container: container
+  ContainerBuild: container_build
+  ContainerGroup: container_group
+  ContainerImage: container_image
+  ContainerImageRegistry: container_image_registry
+  ContainerNode: container_node
+  ContainerProject: container_project
+  ContainerReplicator: container_replicator
+  ContainerRoute: container_route
+  ContainerService: container_service
+  ContainerTemplate: container_template
+  PersistentVolume: persistent_volume
+  Flavor: flavor
+  CloudTenant: cloud_tenant
+  FloatingIp: floating_ip
+:exclude_from_relats:
+  ManageIQ::Providers::CloudManager:
+  - hosts
+  - ems_clusters
+  - resource_pools
+:format_sub_types:
+  :boolean:
+    :short_name: <%= _("Boolean") %>
+    :title: <%= _("Enter true or false") %>
+  :bytes:
+    :short_name: <%= _("Bytes") %>
+    :title: <%= _("Enter the number of Bytes") %>
+    :units:
+    - - <%= _("Bytes") %>
+      - :bytes
+    - - <%= _("KB") %>
+      - :kilobytes
+    - - <%= _("MB") %>
+      - :megabytes
+    - - <%= _("GB") %>
+      - :gigabytes
+    - - <%= _("TB") %>
+      - :terabytes
+  :date:
+    :short_name: <%= _("Date") %>
+    :title: <%= _("Click to Choose a Date") %>
+  :datetime:
+    :short_name: <%= _("Date / Time") %>
+    :title: <%= _("Click to Choose a Date / Time") %>
+  :float:
+    :short_name: <%= _("Number") %>
+    :title: <%= _("Enter a Number (like 12.56)") %>
+  :gigabytes:
+    :short_name: <%= _("Gigabytes") %>
+    :title: <%= _("Enter the number of Gigabytes") %>
+  :integer: &integer
+    :short_name: <%= _("Integer") %>
+    :title: <%= _("Enter an Integer") %>
+  :kbps:
+    :short_name: <%= _("KBps") %>
+    :title: <%= _("Enter the Kilobytes per second") %>
+  :kilobytes:
+    :short_name: <%= _("Kilobytes") %>
+    :title: <%= _("Enter the number of Kilobytes") %>
+  :megabytes:
+    :short_name: <%= _("Megabytes") %>
+    :title: <%= _("Enter the number of Megabytes") %>
+  :mhz: &mhz
+    :short_name: <%= _("Mhz") %>
+    :title: <%= _("Enter the number of Megahertz") %>
+  :numeric_set:
+    :short_name: <%= _("Number List") %>
+    :title: <%= _("Enter a list of numbers separated by commas") %>
+  :percent:
+    :short_name: <%= _("Percent") %>
+    :title: <%= _("Enter a Percent (like 12.5)") %>
+  :regexp:
+    :short_name: <%= _("Regular Expression") %>
+    :title: <%= _("Enter a Regular Expression") %>
+  :string: &string
+    :short_name: <%= _("Text String") %>
+    :title: <%= _("Enter a Text String") %>
+  :string_set:
+    :short_name: <%= _("String List") %>
+    :title: <%= _("Enter a list of text strings separated by commas") %>
+  :decimal: *integer
+  :fixnum: *integer
+  :mhz_avg: *mhz
+  :text: *string
+:num_operators:
+- "="
+- "!="
+- "<"
+- "<="
+- ">="
+- ">"
+:string_operators:
+- "="
+- STARTS WITH
+- ENDS WITH
+- INCLUDES
+- IS NULL
+- IS NOT NULL
+- IS EMPTY
+- IS NOT EMPTY
+- REGULAR EXPRESSION MATCHES
+- REGULAR EXPRESSION DOES NOT MATCH
+:set_operators:
+- INCLUDES ALL
+- INCLUDES ANY
+- LIMITED TO
+:regkey_operators:
+- KEY EXISTS
+- VALUE EXISTS
+:boolean_operators:
+- "="
+- IS NULL
+- IS NOT NULL
+:date_time_operators:
+- IS
+- BEFORE
+- AFTER
+- FROM
+- IS EMPTY
+- IS NOT EMPTY
+:style_operators_excludes:
+- REGULAR EXPRESSION MATCHES
+- REGULAR EXPRESSION DOES NOT MATCH
+- FROM
+:deprecated_operators:
+- LIKE
+- NOT LIKE

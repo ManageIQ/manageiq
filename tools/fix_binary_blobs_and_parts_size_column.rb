@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 puts "Fixing BinaryBlob and BinaryBlobPart sizes"
 
 blob_ids = BinaryBlobPart.select(:binary_blob_id).where("size != LENGTH(data)")

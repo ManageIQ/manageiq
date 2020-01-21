@@ -7,12 +7,15 @@ class VmdbIndex < ApplicationRecord
 
   include VmdbDatabaseMetricsMixin
 
-  include_concern 'Seeding'
   include_concern 'VmdbIndex::MetricCapture'
 
   serialize :prior_raw_metrics
 
   def my_metrics
     vmdb_metrics
+  end
+
+  def self.display_name(number = 1)
+    n_('Index', 'Indexes', number)
   end
 end

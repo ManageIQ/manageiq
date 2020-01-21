@@ -1,0 +1,22 @@
+description: Pods per Ready Status
+title: Pods per Ready Status
+content_type: report
+options:
+  :row_count: 10
+  :col_order:
+  - name
+  - ready_condition_status
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Pods per Ready Status
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

@@ -5,9 +5,10 @@ module EmsRefresh::MetadataRelats
   # TODO: Replace with more efficient lookup methods using new relationships
 
   def vmdb_relats(target, relats = nil)
-    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]..."
-
     relats ||= default_relats_hash
+    return relats if target.nil?
+
+    _log.info("Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...")
     if target.kind_of?(ExtManagementSystem)
       vmdb_relats_ems(target, relats)
     else
@@ -15,7 +16,7 @@ module EmsRefresh::MetadataRelats
       vmdb_relats_descendants(target, relats)
     end
 
-    _log.info "Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete"
+    _log.info("Getting VMDB relationships for #{target.class} [#{target.name}] id: [#{target.id}]...Complete")
     relats
   end
 
@@ -37,8 +38,17 @@ module EmsRefresh::MetadataRelats
               next if p_type == :clusters && c_type == :vms
               next if p_type == :hosts && c_type == :vms
 
-              # Handle default resource pools being called differently
-              c_meth = ([:hosts, :clusters].include?(p_type) && c_type == :resource_pools) ? :resource_pools_with_default : c_type
+              c_meth =
+                # Handle default resource pools being called differently
+                if [:hosts, :clusters].include?(p_type) && c_type == :resource_pools
+                  :resource_pools_with_default
+                # Handle both Vm and Template child types
+                elsif c_type == :vms
+                  :vms_and_templates
+                else
+                  c_type
+                end
+
               next unless x.respond_to?(c_meth)
 
               ids = x.send(c_meth).collect(&:id).uniq

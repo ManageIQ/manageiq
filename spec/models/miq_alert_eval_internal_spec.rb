@@ -1,16 +1,16 @@
 describe "MiqAlert Evaluation Internal" do
   context "With VM as a target," do
-    before(:each) do
-      @vm = FactoryGirl.create(:vm_vmware)
+    before do
+      @vm = FactoryBot.create(:vm_vmware)
     end
 
     context "evaluating an event threshold alert" do
-      before(:each) do
+      before do
         @events = []
-        @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => Time.now.utc)
-        @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 1.day.ago.utc)
-        @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 2.days.ago.utc)
-        @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 3.days.ago.utc)
+        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => Time.now.utc)
+        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 1.day.ago.utc)
+        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 2.days.ago.utc)
+        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 3.days.ago.utc)
 
         expression = {
           :eval_method => "event_threshold",
@@ -19,8 +19,8 @@ describe "MiqAlert Evaluation Internal" do
             :event_types    => ["MigrateVM_Task_Complete"],
             :freq_threshold => 3,
             :time_threshold => 3.days}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -32,10 +32,10 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a realtime performance alert" do
-      before(:each) do
+      before do
         t = 2.minutes.ago.utc
         6.times do |i|
-          FactoryGirl.create(:metric_vm_rt, :resource_id => @vm.id, :timestamp => t, :mem_vmmemctl_absolute_average => (250 + (i * 10)))
+          FactoryBot.create(:metric_vm_rt, :resource_id => @vm.id, :timestamp => t, :mem_vmmemctl_absolute_average => (250 + (i * 10)))
           t += 20.seconds
         end
 
@@ -49,8 +49,8 @@ describe "MiqAlert Evaluation Internal" do
             :rt_time_threshold => 60,
             :trend_direction   => 'none',
             :debug_trace       => 'false'}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -62,7 +62,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a changed vm value alert" do
-      before(:each) do
+      before do
         # TODO: create drift for test
         expression = {
           :eval_method => "changed_vm_value",
@@ -70,8 +70,8 @@ describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Changed",
             :hdw_attr => :cpu_affinity}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -83,7 +83,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a reconfigured hardware value alert" do
-      before(:each) do
+      before do
         # TODO: create drift for test
         expression = {
           :eval_method => "reconfigured_hardware_value",
@@ -91,8 +91,8 @@ describe "MiqAlert Evaluation Internal" do
           :options     => {
             :operator => "Decreased",
             :hdw_attr => "memory_mb"}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -104,7 +104,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a VM event log threshold alert" do
-      before(:each) do
+      before do
         # TODO: Create factories with event_logs
         expression = {
           :eval_method => "event_log_threshold",
@@ -118,8 +118,8 @@ describe "MiqAlert Evaluation Internal" do
             :event_log_event_id             => "12345",
             :time_threshold                 => 86400,
             :event_log_level                => "fatal"}}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -131,7 +131,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a VM Alarm alert" do
-      before(:each) do
+      before do
         expression = {
           :eval_method => "ems_alarm",
           :mode        => "internal",
@@ -140,8 +140,8 @@ describe "MiqAlert Evaluation Internal" do
             :ems_alarm_name => "GT VM CPU Usage",
             :ems_alarm_mor  => "alarm-7"
           }}
-        @alert      = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_vm)
+        @alert      = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_vm)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@vm)
       end
@@ -154,12 +154,12 @@ describe "MiqAlert Evaluation Internal" do
   end
 
   context "With Host as a target," do
-    before(:each) do
-      @host = FactoryGirl.create(:host)
+    before do
+      @host = FactoryBot.create(:host)
     end
 
     context "evaluating a hostd log threshold alert" do
-      before(:each) do
+      before do
         # TODO: Create factories with event_logs
         expression = {
           :eval_method => "hostd_log_threshold",
@@ -171,8 +171,8 @@ describe "MiqAlert Evaluation Internal" do
             :event_log_message_filter_value => "exceeds soft limit",
             :time_threshold                 => 86400,
             :event_log_level                => "warn"}}
-        @alert = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set_host)
+        @alert = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set_host)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@host)
       end
@@ -185,15 +185,15 @@ describe "MiqAlert Evaluation Internal" do
   end
 
   context "With MiqServer as a target," do
-    before(:each) do
-      @server = FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone))
+    before do
+      @server = FactoryBot.create(:miq_server, :zone => FactoryBot.create(:zone))
     end
 
     context "evaluating an alert with no expression" do
-      before(:each) do
+      before do
         expression = {:eval_method => "nothing"}
-        @alert = FactoryGirl.create(:miq_alert_vm, :expression => expression)
-        @alert_prof = FactoryGirl.create(:miq_alert_set, :mode => @server.class.name)
+        @alert = FactoryBot.create(:miq_alert_vm, :expression => expression)
+        @alert_prof = FactoryBot.create(:miq_alert_set, :mode => @server.class.name)
         @alert_prof.add_member(@alert)
         @alert_prof.assign_to_objects(@server)
       end

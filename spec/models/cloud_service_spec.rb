@@ -1,8 +1,6 @@
-require 'rails_helper'
-
 RSpec.describe CloudService, :type => :model do
   let(:cloud_service) do
-    FactoryGirl.create(:cloud_service).tap do |cs|
+    FactoryBot.create(:cloud_service).tap do |cs|
       allow(cs).to receive(:fog_service).and_return(fog_service)
     end
   end

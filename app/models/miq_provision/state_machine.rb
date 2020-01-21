@@ -12,7 +12,7 @@ module MiqProvision::StateMachine
   def prepare_provision
     update_and_notify_parent(:message => "Preparing to Clone #{clone_direction}")
     phase_context[:clone_options] = prepare_for_clone_task
-    dumpObj(phase_context[:clone_options], "MIQ(#{self.class.name}##{__method__}) Default Clone Options: ", $log, :info)
+    dump_obj(phase_context[:clone_options], "MIQ(#{self.class.name}##{__method__}) Default Clone Options: ", $log, :info)
     phase_context[:clone_options].merge!(get_option(:clone_options) || {}).delete_nils
 
     signal :start_clone_task
@@ -82,7 +82,7 @@ module MiqProvision::StateMachine
   end
 
   def post_create_destination
-    _log.info "Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}"
+    _log.info("Destination #{destination.class.base_model.name} ID=#{destination.id}, Name=#{destination.name}")
 
     set_description(destination, get_option(:vm_description))
     set_ownership(destination, get_owner || get_user)
@@ -121,6 +121,7 @@ module MiqProvision::StateMachine
   end
 
   def finish
+    mark_execution_servers
     if status != 'Error'
       number_of_vms = get_option(:number_of_vms).to_i
       pass = get_option(:pass)

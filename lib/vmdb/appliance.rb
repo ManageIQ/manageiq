@@ -10,6 +10,19 @@ module Vmdb
       @EVM_BUILD ||= get_build
     end
 
+    def self.CODENAME
+      "Jansa".freeze
+    end
+
+    def self.RELEASE
+      release_file = File.join(File.expand_path(Rails.root), "RELEASE")
+      File.exist?(release_file) ? File.read(release_file).strip : self.CODENAME
+    end
+
+    def self.BANNER
+      "#{self.PRODUCT_NAME} #{self.VERSION}, codename: #{self.CODENAME}"
+    end
+
     def self.BUILD_NUMBER
       @EVM_BUILD_NUMBER ||= self.BUILD.nil? ? "N/A" : self.BUILD.split("-").last   # Grab the build number after the last hyphen
     end
@@ -20,29 +33,52 @@ module Vmdb
       Vmdb::Appliance.log_diagnostics
     end
 
+    def self.PRODUCT_NAME
+      ::Settings.product.name || I18n.t("product.name").freeze
+    end
+
+    def self.USER_AGENT
+      "#{self.PRODUCT_NAME}/#{self.VERSION}".freeze
+    end
+
+    def self.check_automate_disk_version_against_db(fh)
+      ae_domains = MiqAeDomain.where(:source => MiqAeDomain::SYSTEM_SOURCE)
+      ae_domains.each do |domain|
+        if domain.version.blank? || domain.available_version.blank?
+          fh.warn("Cannot check #{domain.name} Automate domain version because version information not found")
+        elsif domain.version != domain.available_version
+          fh.warn("#{domain.name} domain version on disk differs from db version:")
+          fh.warn("Current version - #{domain.version}, Available version - #{domain.available_version}")
+        end
+      end
+    end
+
     def self.log_config(*args)
       options = args.extract_options!
       fh = options[:logger] || $log
       init_msg = options[:startup] == true ? "* [VMDB] started on [#{Time.now}] *" : "* [VMDB] configuration *"
       border = "*" * init_msg.length
-      fh.info border
-      fh.info init_msg
-      fh.info border
+      fh.info(border)
+      fh.info(init_msg)
+      fh.info(border)
 
-      fh.info "Version: #{self.VERSION}"
-      fh.info "Build:   #{self.BUILD}"
-      fh.info "RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}"
-      fh.info "RAILS Environment: #{Rails.env} version #{Rails.version}"
+      fh.info("Release: #{self.RELEASE}")
+      fh.info("Version: #{self.VERSION}")
+      fh.info("Build:   #{self.BUILD}")
+      fh.info("Codename: #{self.CODENAME}")
+      fh.info("RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}")
+      fh.info("RAILS Environment: #{Rails.env} version #{Rails.version}")
+      check_automate_disk_version_against_db(fh)
 
-      fh.info "VMDB settings:"
-      VMDBLogger.log_hashes(fh, VMDB::Config.new("vmdb").config, :filter => Vmdb::Settings::PASSWORD_FIELDS)
-      fh.info "VMDB settings END"
-      fh.info "---"
+      fh.info("VMDB settings:")
+      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
+      fh.info("VMDB settings END")
+      fh.info("---")
 
-      fh.info "DATABASE settings:"
-      VMDBLogger.log_hashes(fh, Rails.configuration.database_configuration[Rails.env])
-      fh.info "DATABASE settings END"
-      fh.info "---"
+      fh.info("DATABASE settings:")
+      VMDBLogger.log_hashes(fh, ActiveRecord::Base.connection_config)
+      fh.info("DATABASE settings END")
+      fh.info("---")
     end
 
     def self.log_server_identity
@@ -56,33 +92,33 @@ module Vmdb
       begin
         startup = VMDBLogger.new(startup_fname)
         log_config(:logger => startup, :startup => true)
-        startup.info "Server GUID: #{MiqServer.my_guid}"
-        startup.info "Server Zone: #{MiqServer.my_zone}"
-        startup.info "Server Role: #{MiqServer.my_role}"
+        startup.info("Server GUID: #{MiqServer.my_guid}")
+        startup.info("Server Zone: #{MiqServer.my_zone}")
+        startup.info("Server Role: #{MiqServer.my_role}")
         s = MiqServer.my_server
         region = MiqRegion.my_region
-        startup.info "Server Region number: #{region.region}, name: #{region.name}" if region
-        startup.info "Server EVM id and name: #{s.id} #{s.name}"
+        startup.info("Server Region number: #{region.region}, name: #{region.name}") if region
+        startup.info("Server EVM id and name: #{s.id} #{s.name}")
 
-        startup.info "Currently assigned server roles:"
-        s.assigned_server_roles(:include => :server_role).each { |r| startup.info "Role: #{r.server_role.name}, Priority: #{r.priority}" }
+        startup.info("Currently assigned server roles:")
+        s.assigned_server_roles.includes(:server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
 
         issue = `cat /etc/issue 2> /dev/null` rescue nil
-        startup.info "OS: #{issue.chomp}" unless issue.blank?
+        startup.info("OS: #{issue.chomp}") unless issue.blank?
 
         network = get_network
         unless network.empty?
-          startup.info "Network Information:"
-          network.each { |k, v| startup.info "#{k}: #{v}" }
+          startup.info("Network Information:")
+          network.each { |k, v| startup.info("#{k}: #{v}") }
         end
         mem = `cat /proc/meminfo 2> /dev/null` rescue nil
-        startup.info "System Memory Information:\n#{mem}" unless mem.blank?
+        startup.info("System Memory Information:\n#{mem}") unless mem.blank?
 
         cpu = `cat /proc/cpuinfo 2> /dev/null` rescue nil
-        startup.info "CPU Information:\n#{cpu}" unless cpu.blank?
+        startup.info("CPU Information:\n#{cpu}") unless cpu.blank?
 
         fstab = `cat /etc/fstab 2> /dev/null` rescue nil
-        startup.info "fstab information:\n#{fstab}" unless fstab.blank?
+        startup.info("fstab information:\n#{fstab}") unless fstab.blank?
       ensure
         startup.close rescue nil
       end
@@ -113,9 +149,8 @@ module Vmdb
       if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
       else
-        date  = Time.now.strftime("%Y%m%d%H%M%S")
         sha   = `git rev-parse --short HEAD`.chomp
-        build = "#{date}_#{sha}"
+        build = "unknown_#{sha}"
       end
 
       build

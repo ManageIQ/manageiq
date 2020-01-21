@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :floating_ip do
     sequence(:address) { |n| ip_from_seq(n) }
   end

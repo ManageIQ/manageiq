@@ -1,33 +1,11 @@
-describe "Server Monitor" do
+RSpec.describe "Server Monitor" do
   context "After Setup," do
-    before(:each) do
-      @csv = <<-CSV.gsub(/^\s+/, "")
-        name,description,max_concurrent,external_failover,role_scope
-        automate,Automation Engine,0,false,region
-        database_operations,Database Operations,0,false,region
-        database_owner,Database Owner,1,false,database
-        ems_inventory,Management System Inventory,1,false,zone
-        ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
-        ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
-        ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
-        ems_operations,Management System Operations,0,false,zone
-        event,Event Monitor,1,false,zone
-        notifier,Alert Processor,1,false,region
-        reporting,Reporting,0,false,region
-        scheduler,Scheduler,1,false,region
-        smartproxy,SmartProxy,0,false,zone
-        smartstate,SmartState Analysis,0,false,zone
-        storage_inventory,Storage Inventory,1,false,zone
-        user_interface,User Interface,0,false,region
-        websocket,Websocket,0,false,region
-        web_services,Web Services,0,false,region
-      CSV
-      allow(ServerRole).to receive(:seed_data).and_return(@csv)
+    before do
       MiqRegion.seed
       ServerRole.seed
 
       # Do this manually, to avoid caching at the class level
-      allow(ServerRole).to receive(:database_owner).and_return(ServerRole.find_by_name('database_owner'))
+      allow(ServerRole).to receive(:database_owner).and_return(ServerRole.find_by(:name => 'database_owner'))
 
       @server_roles = ServerRole.all
     end
@@ -42,7 +20,7 @@ describe "Server Monitor" do
     end
 
     context "with 1 Server" do
-      before(:each) do
+      before do
         @miq_server = EvmSpecHelper.local_miq_server
         @miq_server.monitor_servers
 
@@ -109,7 +87,7 @@ describe "Server Monitor" do
       end
 
       context "after initial monitor_servers" do
-        before(:each) do
+        before do
           @miq_server.monitor_server_roles
         end
 
@@ -230,12 +208,12 @@ describe "Server Monitor" do
     end
 
     context "with 2 Servers in 2 Zones where I am the Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true)
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone)
+        @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
       end
@@ -270,7 +248,7 @@ describe "Server Monitor" do
       end
 
       context "after monitor_servers" do
-        before(:each) do
+        before do
           @miq_server1.monitor_server_roles
           @miq_server2.reload
         end
@@ -284,7 +262,7 @@ describe "Server Monitor" do
       end
 
       context "with Non-Master having the active roles" do
-        before(:each) do
+        before do
           @miq_server2.activate_roles("event")
           @miq_server1.monitor_server_roles
         end
@@ -295,7 +273,7 @@ describe "Server Monitor" do
         end
 
         context "where Non-Master shuts down cleanly" do
-          before(:each) do
+          before do
             @miq_server2.deactivate_all_roles
             @miq_server2.stopped_on = Time.now.utc
             @miq_server2.status = "stopped"
@@ -315,7 +293,7 @@ describe "Server Monitor" do
         end
 
         context "where Non-Master is not responding" do
-          before(:each) do
+          before do
             @miq_server1.monitor_servers
             Timecop.travel 5.minutes do
               @miq_server1.monitor_servers
@@ -348,7 +326,7 @@ describe "Server Monitor" do
     end
 
     context "with 2 Servers where I am the non-Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
@@ -356,7 +334,7 @@ describe "Server Monitor" do
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
+        @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
         @roles2 = [['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1]]
@@ -374,7 +352,7 @@ describe "Server Monitor" do
       end
 
       context "where Master shuts down cleanly" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -401,12 +379,12 @@ describe "Server Monitor" do
       end
 
       context "where Master is not responding" do
-        before(:each) do
+        before do
           Timecop.travel 5.minutes
           @miq_server1.monitor_servers
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -438,18 +416,18 @@ describe "Server Monitor" do
     end
 
     context "with 3 Servers where I am the Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :name => "Miq1")
         @miq_server1.deactivate_all_roles
         @roles1 = [['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2],]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
+        @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
         @miq_server2.deactivate_all_roles
         @roles2 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 3], ['ems_inventory', 2],]
         @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
 
-        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
+        @miq_server3 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
         @miq_server3.deactivate_all_roles
         @roles3 = [['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1]]
         @roles3.each { |role, priority| @miq_server3.assign_role(role, priority) }
@@ -458,6 +436,55 @@ describe "Server Monitor" do
         @miq_server1.monitor_server_roles if @miq_server1.is_master?
         @miq_server2.reload
         @miq_server3.reload
+      end
+
+      it "should support multiple failover transitions from stopped master" do
+        # server1 is first to start, becomes master
+        @miq_server1.monitor_servers
+
+        # Initialize the bookkeeping around current and last master
+        @miq_server2.monitor_servers
+        @miq_server3.monitor_servers
+
+        # server1 is master
+        expect(@miq_server1.reload.is_master).to be_truthy
+        expect(@miq_server2.reload.is_master).to be_falsey
+        expect(@miq_server3.reload.is_master).to be_falsey
+
+        # server 1 shuts down
+        @miq_server1.update(:status => "stopped")
+
+        # server 3 becomes master, server 2 hasn't monitored servers yet
+        @miq_server3.monitor_servers
+        expect(@miq_server1.reload.is_master).to be_falsey
+        expect(@miq_server2.reload.is_master).to be_falsey
+        expect(@miq_server3.reload.is_master).to be_truthy
+
+        # server 3 shuts down
+        @miq_server3.update(:status => "stopped")
+
+        # server 2 finally gets to monitor_servers, takes over
+        @miq_server2.monitor_servers
+        expect(@miq_server1.reload.is_master).to be_falsey
+        expect(@miq_server2.reload.is_master).to be_truthy
+        expect(@miq_server3.reload.is_master).to be_falsey
+      end
+
+      it "should failover from stopped master on startup" do
+        # server 1 is first to start, becomes master
+        @miq_server1.monitor_servers
+
+        # server 1 shuts down
+        @miq_server1.update(:status => "stopped")
+
+        # server 3 boots and hasn't run monitor_servers yet
+        expect(@miq_server1.reload.is_master).to be_truthy
+        expect(@miq_server3.reload.is_master).to be_falsey
+
+        # server 3 runs monitor_servers and becomes master
+        @miq_server3.monitor_servers
+        expect(@miq_server1.reload.is_master).to be_falsey
+        expect(@miq_server3.reload.is_master).to be_truthy
       end
 
       it "should have all roles active after sync between them" do
@@ -497,7 +524,7 @@ describe "Server Monitor" do
       end
 
       context "when Server3 is stopped" do
-        before(:each) do
+        before do
           @miq_server3.deactivate_all_roles
           @miq_server3.stopped_on = Time.now.utc
           @miq_server3.status = "stopped"
@@ -527,7 +554,7 @@ describe "Server Monitor" do
         end
 
         context "and then restarted" do
-          before(:each) do
+          before do
             @miq_server3.status = "started"
             @miq_server3.save!
 
@@ -558,7 +585,7 @@ describe "Server Monitor" do
       end
 
       context "when Server2 is stopped" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -588,7 +615,7 @@ describe "Server Monitor" do
         end
 
         context "and then restarted" do
-          before(:each) do
+          before do
             @miq_server2.status = "started"
             @miq_server2.save!
 
@@ -620,18 +647,18 @@ describe "Server Monitor" do
     end
 
     context "with 3 Servers where I am the non-Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:name => "Server 1")
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
+        @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_metrics_coordinator, ems_operations'
         @miq_server2.activate_roles("event", "ems_metrics_coordinator", 'ems_operations')
 
-        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
+        @miq_server3 = FactoryBot.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
         @miq_server3.deactivate_all_roles
         @miq_server3.role = 'ems_metrics_coordinator, ems_inventory, ems_operations'
         @miq_server3.activate_roles("ems_operations")
@@ -656,7 +683,7 @@ describe "Server Monitor" do
       end
 
       context "where Master shuts down cleanly" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -698,12 +725,12 @@ describe "Server Monitor" do
       end
 
       context "where Master is not responding" do
-        before(:each) do
+        before do
           Timecop.travel 5.minutes
           @miq_server1.monitor_servers
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -738,17 +765,17 @@ describe "Server Monitor" do
     end
 
     context "In 2 Zones," do
-      before(:each) do
-        @zone1 = FactoryGirl.create(:zone)
-        @zone2 = FactoryGirl.create(:zone, :name => "zone2", :description => "Zone 2")
+      before do
+        @zone1 = FactoryBot.create(:zone)
+        @zone2 = FactoryBot.create(:zone, :name => "zone2", :description => "Zone 2")
       end
 
       context "with 2 Servers across Zones where there is no master" do
-        before(:each) do
+        before do
           @miq_server1 = EvmSpecHelper.local_miq_server(:zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
         end
 
@@ -777,13 +804,13 @@ describe "Server Monitor" do
       end
 
       context "with 2 Servers across Zones where I am the Master" do
-        before(:each) do
+        before do
           @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
           @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
           @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => MiqUUID.new_guid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
           @roles2 = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1]]
           @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
@@ -808,7 +835,7 @@ describe "Server Monitor" do
         end
 
         context "Server2 moved into zone of Server 1" do
-          before(:each) do
+          before do
             @miq_server2.zone = @zone1
             @miq_server2.save!
           end

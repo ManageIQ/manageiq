@@ -1,11 +1,11 @@
 describe VmMigrateWorkflow do
   include Spec::Support::WorkflowHelper
-  let(:admin) { FactoryGirl.create(:user_with_group) }
-  let(:ems) { FactoryGirl.create(:ems_vmware) }
-  let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'My VM', :ext_management_system => ems) }
+  let(:admin) { FactoryBot.create(:user_with_group) }
+  let(:ems) { FactoryBot.create(:ems_vmware) }
+  let(:vm) { FactoryBot.create(:vm_vmware, :name => 'My VM', :ext_management_system => ems) }
 
-  let(:redhat_ems) { FactoryGirl.create(:ems_redhat) }
-  let(:redhat_vm) { FactoryGirl.create(:vm_redhat, :name => 'My RHV VM', :ext_management_system => redhat_ems) }
+  let(:redhat_ems) { FactoryBot.create(:ems_redhat) }
+  let(:redhat_vm) { FactoryBot.create(:vm_redhat, :name => 'My RHV VM', :ext_management_system => redhat_ems) }
 
   context "With a Valid Template," do
     context "#allowed_hosts" do
@@ -19,7 +19,7 @@ describe VmMigrateWorkflow do
 
         it "with a host" do
           stub_dialog
-          host = FactoryGirl.create(:host_vmware, :ext_management_system => ems)
+          host = FactoryBot.create(:host_vmware, :ext_management_system => ems)
           host.set_parent(ems)
           allow(workflow).to receive(:process_filter).and_return([host])
 
@@ -38,8 +38,8 @@ describe VmMigrateWorkflow do
         workflow.get_source_and_targets
         target_resource = workflow.instance_variable_get(:@target_resource)
         expect(target_resource).not_to include(:storage_id, :respool_id, :folder_id,
-                                               :datacenter_id)
-        expect(target_resource).to include(:host_id, :cluster_id)
+                                               :datacenter_id, :cluster_id)
+        expect(target_resource).to include(:host_id)
       end
     end
 
@@ -57,7 +57,7 @@ describe VmMigrateWorkflow do
   end
 
   describe "#make_request" do
-    let(:alt_user) { FactoryGirl.create(:user_with_group) }
+    let(:alt_user) { FactoryBot.create(:user_with_group) }
 
     it "creates and update a request" do
       EvmSpecHelper.local_miq_server

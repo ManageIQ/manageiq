@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_OpenshiftEnterprise_ContainerManager < MiqAeServiceManageIQ_Providers_ContainerManager
-  end
-end

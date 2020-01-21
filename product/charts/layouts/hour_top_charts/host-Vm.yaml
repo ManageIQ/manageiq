@@ -1,5 +1,5 @@
 # Top CIs/hour chart layouts
---- 
+---
 - :title: Average CPU Used (Mhz)
   :type: Pie
   :columns:

@@ -56,10 +56,6 @@ module FixAuth
     self.password_prefix = "password::"
     self.symbol_keys = true
     self.table_name = "miq_requests"
-
-    def self.contenders
-      where("options like '%password%'")
-    end
   end
 
   class FixMiqRequestTask < ActiveRecord::Base
@@ -71,10 +67,6 @@ module FixAuth
     self.password_prefix = "password::"
     self.symbol_keys = true
     self.table_name = "miq_request_tasks"
-
-    def self.contenders
-      where("options like '%password%'")
-    end
   end
 
   class FixSettingsChange < ActiveRecord::Base
@@ -85,7 +77,7 @@ module FixAuth
     serialize :value
 
     def self.contenders
-      query = Vmdb::Settings::Walker::PASSWORD_FIELDS.collect do |field|
+      query = Vmdb::SettingsWalker::PASSWORD_FIELDS.collect do |field|
         "(key LIKE '%/#{field}')"
       end.join(" OR ")
 
@@ -95,13 +87,16 @@ module FixAuth
 
   class FixDatabaseYml
     attr_accessor :id
-    attr_accessor :yaml
+    attr_accessor :yml
     include FixAuth::AuthConfigModel
 
     class << self
       attr_accessor :available_columns
       attr_accessor :file_name
-      alias_method  :table_name, :file_name
+
+      def table_name
+        file_name.gsub(".yml", "")
+      end
     end
 
     def initialize(options = {})
@@ -109,16 +104,20 @@ module FixAuth
     end
 
     def load
-      @yaml = File.read(id)
+      @yml = File.read(id)
       self
     end
 
+    def changed?
+      true
+    end
+
     def save!
-      File.write(id, @yaml)
+      File.write(id, @yml)
     end
 
     self.password_fields = %w(password)
-    self.available_columns = %w(yaml)
+    self.available_columns = %w(yml)
 
     def self.contenders
       [new(:id => file_name).load]

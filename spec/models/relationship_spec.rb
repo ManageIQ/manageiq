@@ -1,7 +1,7 @@
 describe Relationship do
   describe "#filtered?" do
-    before(:each) do
-      @rel = FactoryGirl.build(:relationship_vm_vmware)
+    before do
+      @rel = FactoryBot.build(:relationship_vm_vmware)
     end
 
     it "with neither" do
@@ -29,9 +29,9 @@ describe Relationship do
   end
 
   describe ".filter_by_resource_type" do
-    let(:storages) { FactoryGirl.build_list(:relationship_storage_vmware, 1) }
-    let(:vms) { FactoryGirl.build_list(:relationship_vm_vmware, 1) }
-    let(:hosts) { FactoryGirl.build_list(:relationship_host_vmware, 1) }
+    let(:storages) { FactoryBot.build_list(:relationship_storage_vmware, 1) }
+    let(:vms) { FactoryBot.build_list(:relationship_vm_vmware, 1) }
+    let(:hosts) { FactoryBot.build_list(:relationship_host_vmware, 1) }
 
     it "includes" do
       expect(Relationship.filter_by_resource_type(vms + hosts, :of_type => "Host")).to eq(hosts)
@@ -90,12 +90,23 @@ describe Relationship do
       expect(filtered_results).not_to be_kind_of(Array)
       expect(filtered_results).to match_array(vms + hosts)
     end
+
+    it "uses preloaded data" do
+      vms.map(&:save!)
+      hosts.map(&:save!)
+      storages.map(&:save!)
+      rels = Relationship.all.load
+      filtered_results = Relationship.filter_by_resource_type(rels,
+                                                              :of_type     => %w(Host VmOrTemplate),
+                                                              :except_type => %w(Storage))
+      expect(filtered_results).to be_kind_of(Array)
+    end
   end
 
   describe ".filtered" do
-    let(:storages) { FactoryGirl.build_list(:relationship_storage_vmware, 1) }
-    let(:vms) { FactoryGirl.build_list(:relationship_vm_vmware, 1) }
-    let(:hosts) { FactoryGirl.build_list(:relationship_host_vmware, 1) }
+    let(:storages) { FactoryBot.build_list(:relationship_storage_vmware, 1) }
+    let(:vms) { FactoryBot.build_list(:relationship_vm_vmware, 1) }
+    let(:hosts) { FactoryBot.build_list(:relationship_host_vmware, 1) }
 
     it "scopes" do
       vms.map(&:save!)

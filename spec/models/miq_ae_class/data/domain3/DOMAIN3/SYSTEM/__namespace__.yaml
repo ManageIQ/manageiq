@@ -1,0 +1,13 @@
+---
+object_type: namespace
+version: 1.0
+created_on: 2014-05-09 15:44:34.966027000 Z
+updated_on: 2014-05-09 15:44:34.966027000 Z
+object:
+  attributes:
+    name: SYSTEM
+    description:
+    display_name:
+    system:
+    priority:
+    enabled:

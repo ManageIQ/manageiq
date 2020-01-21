@@ -110,7 +110,7 @@ module Metric::Helper
          when 'hourly'
            # Alter the start time to be 2 intervals prior the start time requested
            #   due to VIM data integrity issues for most recent historical data
-           start_time.nil? ? nil : (Time.parse(start_time.to_s).utc - (2 * interval.to_i)).utc.iso8601
+           start_time && (Time.parse(start_time.to_s).utc - (2 * interval.to_i)).utc.iso8601
          else
            start_time.kind_of?(Time) ? start_time.iso8601 : start_time
          end
@@ -120,7 +120,11 @@ module Metric::Helper
   end
 
   def self.remove_duplicate_timestamps(recs)
-    return recs if recs.empty? || !recs.all? { |r| r.kind_of?(Metric) || r.kind_of?(MetricRollup) }
+    if recs.respond_to?(:klass) # active record relation
+      return recs unless recs.klass <= Metric || recs.klass <= MetricRollup
+    elsif recs.empty? || !recs.all? { |r| r.kind_of?(Metric) || r.kind_of?(MetricRollup) }
+      return recs
+    end
 
     recs = recs.sort_by { |r| r.resource_type + r.resource_id.to_s + r.timestamp.iso8601 }
 
@@ -140,19 +144,6 @@ module Metric::Helper
     end
   end
 
-  def self.normalize_value(value, counter)
-    return counter[:rollup] == 'latest' ? nil : 0 if value < 0
-    value = value.to_f * counter[:precision]
-
-    message = nil
-    percent_norm = 100.0
-    if counter[:unit_key] == "percent" && value > percent_norm
-      message = "percent value #{value} is out of range, resetting to #{percent_norm}"
-      value = percent_norm
-    end
-    return value, message
-  end
-
   def self.max_count(counts)
     counts.values.max rescue 0
   end
@@ -168,8 +159,8 @@ module Metric::Helper
   # interval_name of hourly (and others)
   #   Just your typical x.seconds.ago
   #
-  # @param start_offset [Fixnum]
-  # @param end_offset [Fixnum|nil]
+  # @param start_offset [Integer]
+  # @param end_offset [Integer|nil]
   # @return [Range<Datetime,Datetime>] timestamp range for offsets
   def self.time_range_from_offset(interval_name, start_offset, end_offset, tz = nil)
     if interval_name == "daily"
@@ -193,5 +184,13 @@ module Metric::Helper
     start_time = timestamp - state[:capture_interval]
 
     start_time..timestamp
+  end
+
+  def self.latest_metrics(resource_type, since_timestamp, resource_ids = nil)
+    metrics = Metric.where(:resource_type => resource_type)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics = metrics.order(:resource_id, :timestamp => :desc)
+    metrics = metrics.where('timestamp > ?', since_timestamp)
+    metrics.select('DISTINCT ON (metrics.resource_id) metrics.*')
   end
 end

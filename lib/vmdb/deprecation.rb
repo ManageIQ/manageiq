@@ -1,7 +1,7 @@
 module Vmdb
   class Deprecation
     def self.instance
-      @instance ||= ActiveSupport::Deprecation.new("F-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
+      @instance ||= ActiveSupport::Deprecation.new("K-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
     end
 
     def self.method_missing(method_name, *args, &block)
@@ -16,10 +16,8 @@ module Vmdb
       delegate :silence, :warn, :to => :instance
     end
 
-    private
-
     def self.default_behavior
-      [proc_for_default_log].tap { |a| a << ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr] unless Rails.env.production? }
+      Rails.env.production? ? [] : [proc_for_default_log, ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr]]
     end
     private_class_method :default_behavior
 
@@ -31,8 +29,8 @@ module Vmdb
     def self.proc_for_default_log
       return unless default_log
       proc do |message, callstack|
-        default_log.warn message
-        default_log.debug callstack.join("\n  ") if default_log.debug?
+        default_log.warn(message)
+        default_log.debug { callstack.join("\n  ") }
       end
     end
     private_class_method :proc_for_default_log

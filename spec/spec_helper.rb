@@ -1,15 +1,13 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-
-if ENV["TRAVIS"]
+if ENV["TRAVIS"] || ENV['CI']
   require 'coveralls'
+  require 'simplecov'
+  SimpleCov.start
   Coveralls.wear!('rails') { add_filter("/spec/") }
 end
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
-require 'application_helper'
-
-require 'rails-controller-testing'
 require 'rspec/rails'
 require 'vcr'
 require 'cgi'
@@ -21,14 +19,18 @@ Spec::Support::TestContamination.setup
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # include the manageiq-gems-pending matchers
 Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each { |f| require f }
+# include the manageiq-password matchers
+require "manageiq/password/rspec_matchers"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
   config.mock_with :rspec do |c|
+    c.allow_message_expectations_on_nil = false
     c.syntax = :expect
   end
 
@@ -45,48 +47,7 @@ RSpec.configure do |config|
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
 
-  config.define_derived_metadata(:file_path => /spec\/lib\/miq_automation_engine\/models/) do |metadata|
-    metadata[:type] ||= :model
-  end
-
-  config.include Spec::Support::AuthHelper, :type => :view
-  config.include Spec::Support::ViewHelper, :type => :view
-  config.include UiConstants,    :type => :view
-
-  config.include Spec::Support::ControllerHelper, :type => :controller
-  config.include UiConstants,          :type => :controller
-  config.include Spec::Support::AuthHelper, :type => :controller
-
-  config.include Spec::Support::AutomationHelper, :type => :automation
-  config.include AutomationExampleGroup, :type => :automation
-  config.define_derived_metadata(:file_path => /spec\/automation/) do |metadata|
-    metadata[:type] ||= :automation
-  end
-
-  config.extend  Spec::Support::MigrationHelper::DSL
-  config.include Spec::Support::MigrationHelper, :migrations => :up
-  config.include Spec::Support::MigrationHelper, :migrations => :down
-
-  config.include Spec::Support::ApiHelper, :rest_api => true
-  config.include Spec::Support::AuthRequestHelper, :type => :request
-  config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
-    metadata[:aggregate_failures] = true
-    metadata[:rest_api] = true
-  end
-
-  config.include Spec::Support::AuthHelper, :type => :helper
-
-  config.include Spec::Support::PresenterHelper, :type => :presenter
-  config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
-    metadata[:type] ||= :presenter
-  end
-
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
-  config.include Spec::Support::ButtonHelper, :type => :button
-  config.include Spec::Support::AuthHelper, :type => :button
-  config.define_derived_metadata(:file_path => /spec\/helpers\/application_helper\/buttons/) do |metadata|
-    metadata[:type] = :button
-  end
 
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
@@ -95,27 +56,22 @@ RSpec.configure do |config|
   #   EvmSpecHelper.log_ruby_object_usage
   # end
 
-  config.before(:each) do |example|
-    EmsRefresh.try(:debug_failures=, true) if example.metadata[:migrations].blank?
-    ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
+  config.before do
+    EmsRefresh.try(:debug_failures=, true)
   end
-
-  config.before(:each, :rest_api => true) { init_api_spec_env }
 
   config.around(:each) do |example|
     EvmSpecHelper.clear_caches { example.run }
   end
 
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"
-    config.after(:suite) do
+    config.before(:suite) do
       require Rails.root.join("spec/coverage_helper.rb")
     end
   end
 
-  if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
-     config.backtrace_exclusion_patterns.delete(%r{/gems/})
+  if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/})
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
-    config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
 
   config.backtrace_exclusion_patterns << %r{/spec/spec_helper}

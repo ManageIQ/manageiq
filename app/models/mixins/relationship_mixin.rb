@@ -81,7 +81,7 @@ module RelationshipMixin
     self.relationship_type = rel unless rel.nil?
 
     begin
-      return yield self
+      yield(self)
     ensure
       if rel_changed
         relationship_types.pop
@@ -113,14 +113,21 @@ module RelationshipMixin
   # Returns the id in the relationship table for this record's parents
   # from this id, relationship records can be brought back and mapped to the resource of interest
   # NOTE: parent_id is read from ancestry field, while parent is a db hit (N+1)
+  # NOTE: relationships can be an array (from all_relationships cache) - so handle both Array and association
   def parent_rel_ids
-    relationships.where.not(:ancestry => [nil, ""]).select(:ancestry).collect(&:parent_id)
+    rel = relationships
+    if rel.kind_of?(Array) || rel.try(:loaded?)
+      rel.reject { |x| x.ancestry.blank? }.collect(&:parent_id)
+    else
+      rel.where.not(:ancestry => [nil, ""]).select(:ancestry).collect(&:parent_id)
+    end
   end
 
   # Returns all of the relationships of the parents of the record, [] for a root node
   def parent_rels(*args)
     options = args.extract_options!
-    rels = Relationship.where(:id => parent_rel_ids)
+    pri = parent_rel_ids
+    rels = pri.kind_of?(Array) && pri.empty? ? Relationship.none : Relationship.where(:id => pri)
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -398,6 +405,10 @@ module RelationshipMixin
     Relationship.filter_by_resource_type(rels, options)
   end
 
+  def grandchildren(*args)
+    Relationship.resources(grandchild_rels(*args))
+  end
+
   def child_and_grandchild_rels(*args)
     options = args.extract_options!
     rels = relationships.inject(Relationship.none) do |stmt, r|
@@ -497,7 +508,6 @@ module RelationshipMixin
     options = args.extract_options!
     root_id = relationship.try(:root_id)
     return {relationship_for_isolated_root => {}} if root_id.nil?
-    rels = Relationship.subtree_of(root_id).arrange
     Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 
@@ -516,7 +526,7 @@ module RelationshipMixin
     Relationship.resource_types(child_rels(*args))
   end
 
-  def parent=(parent)
+  def add_parent(parent)
     parent.with_relationship_type(relationship_type) { parent.add_child(self) }
   end
 
@@ -554,25 +564,28 @@ module RelationshipMixin
   end
   alias_method :add_child, :add_children
 
-  #
-  # Backward compatibility methods
-  #
-
-  alias_method :set_parent, :parent=
-  alias_method :set_child,  :add_children
-
-  def replace_parent(parent)
+  def parent=(parent)
     if parent.nil?
       remove_all_parents
     else
       parent.with_relationship_type(relationship_type) do
         parent_rel = parent.init_relationship
         init_relationship(parent_rel)  # TODO: Deal with any multi-instances
+
+        parent.clear_relationships_cache
       end
     end
 
     clear_relationships_cache
   end
+  alias_method :replace_parent, :parent=
+
+  #
+  # Backward compatibility methods
+  #
+
+  alias_method :set_parent, :parent=
+  alias_method :set_child,  :add_children
 
   def replace_children(*child_objs)
     child_objs = child_objs.flatten
@@ -602,7 +615,7 @@ module RelationshipMixin
   end
 
   def remove_children(*child_objs)
-    child_objs = child_objs.flatten
+    child_objs = child_objs.flatten.compact
     return child_objs if child_objs.empty?
 
     child_rels = self.child_rels

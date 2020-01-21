@@ -1,5 +1,5 @@
 # Host Aggregate Daily performance chart layouts
---- 
+---
 - :title: CPU (%)
   :type: Line
   :columns:
@@ -18,7 +18,7 @@
 #  :chart2:
 #    :type: Line
 #    :title: Instances
-#    :columns: 
+#    :columns:
 #    - derived_vm_count_on
 
 - :title: Memory (MB)
@@ -34,10 +34,10 @@
   - Chart-Current-Hourly:Hourly for this day
   - Chart-VMs-topday:Top Instances on this day
   - Display-VMs-on:Instances that were running
-#  :chart2: 
+#  :chart2:
 #    :type: Line
 #    :title: Instances
-#    :columns: 
+#    :columns:
 #    - derived_vm_count_on
 
 - :title: Disk I/O (KBps)
@@ -51,10 +51,10 @@
   - Chart-Current-Hourly:Hourly for this day
   - Chart-VMs-topday:Top Instances on this day
   - Display-VMs-on:Instances that were running
-#  :chart2: 
+#  :chart2:
 #    :type: Line
 #    :title: Instances
-#    :columns: 
+#    :columns:
 #    - derived_vm_count_on
 
 - :title: Network I/O (KBps)
@@ -68,18 +68,18 @@
   - Chart-Current-Hourly:Hourly for this day
   - Chart-VMs-topday:Top Instances on this day
   - Display-VMs-on:Instances that were running
-#  :chart2: 
+#  :chart2:
 #    :type: Line
 #    :title: Instances
-#    :columns: 
+#    :columns:
 #    - derived_vm_count_on
 
 - :title: Instances
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Display-VMs-on:Instances that were running
   - Display-VMs-off:Instances that were stopped

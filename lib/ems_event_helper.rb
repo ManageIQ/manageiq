@@ -16,11 +16,11 @@ class EmsEventHelper
   end
 
   def before_handle
-    _log.info "Processing EMS event [#{@event.event_type}] chain_id [#{@event.chain_id}] on EMS [#{@event.ems_id}]..."
+    _log.info("Processing EMS event [#{@event.event_type}] chain_id [#{@event.chain_id}] on EMS [#{@event.ems_id}]...")
   end
 
   def after_handle
-    _log.info "Processing EMS event [#{@event.event_type}] chain_id [#{@event.chain_id}] on EMS [#{@event.ems_id}]...Complete"
+    _log.info("Processing EMS event [#{@event.event_type}] chain_id [#{@event.chain_id}] on EMS [#{@event.ems_id}]...Complete")
   end
 
   def handle_automation_event

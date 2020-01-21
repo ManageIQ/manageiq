@@ -2,10 +2,12 @@ $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
 require 'mount/miq_generic_mount_session'
+require 'util/miq_object_storage'
 
 class EvmDatabaseOps
   include Vmdb::Logging
-  BACKUP_TMP_FILE = "/tmp/miq_backup"
+  BACKUP_TMP_FILE = "/tmp/miq_backup".freeze
+  DUMP_TMP_FILE   = "/tmp/miq_pg_dump".freeze
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
 
@@ -27,6 +29,19 @@ class EvmDatabaseOps
     PostgresAdmin.database_size(opts)
   end
 
+  def self.validate_free_space(database_opts)
+    free_space = backup_destination_free_space(database_opts[:local_file])
+    db_size = database_size(database_opts)
+    if free_space > db_size
+      _log.info("[#{database_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{database_opts[:local_file]}]: [#{free_space} bytes]")
+    else
+      msg = "Destination location: [#{database_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
+      _log.warn(msg)
+      defined?(::MiqEvent) && MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
+      raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
+    end
+  end
+
   def self.backup(db_opts, connect_opts = {})
     # db_opts:
     #   :dbname => 'vmdb_production',
@@ -39,35 +54,21 @@ class EvmDatabaseOps
     #   :password => 'Zug-drep5s',
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
-    db_opts = DEFAULT_OPTS.merge(db_opts)
-
-    begin
-      if db_opts[:local_file].nil?
-        connect_opts[:remote_file_name] ||= File.basename(backup_file_name)
-
-        session = MiqGenericMountSession.new_session(connect_opts)
-
-        uri = File.join(connect_opts[:uri], "db_backup", connect_opts[:remote_file_name])
-        db_opts[:local_file] = session.uri_to_local_path(uri)
-      end
-
-      free_space = backup_destination_free_space(db_opts[:local_file])
-      db_size = database_size(db_opts)
-      if free_space > db_size
-        _log.info("[#{db_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{db_opts[:local_file]}]: [#{free_space} bytes]")
-      else
-        msg = "Destination location: [#{db_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
-        _log.warn(msg)
-        MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
-        raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
-      end
-      backup = PostgresAdmin.backup(db_opts)
-    ensure
-      session.disconnect if session
+    uri = with_file_storage(:backup, db_opts, connect_opts) do |database_opts|
+      backup_result = PostgresAdmin.backup(database_opts)
+      backup_result
     end
+    _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
+    uri
+  end
 
-    uri ||= backup
-    _log.info("[#{db_opts[:dbname]}] database has been backed up to file: [#{uri}]")
+  def self.dump(db_opts, connect_opts = {})
+    # db_opts and connect_opts similar to .backup
+
+    uri = with_file_storage(:dump, db_opts, connect_opts) do |database_opts|
+      PostgresAdmin.backup_pg_dump(database_opts)
+    end
+    _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been dumped up to file: [#{uri}]")
     uri
   end
 
@@ -82,24 +83,136 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    db_opts = DEFAULT_OPTS.merge(db_opts)
+    uri = with_file_storage(:restore, db_opts, connect_opts) do |database_opts, backup_type|
+      prepare_for_restore(database_opts[:local_file], backup_type)
 
-    begin
-      if db_opts[:local_file].nil?
+      # remove all the connections before we restore; AR will reconnect on the next query
+      ActiveRecord::Base.connection_pool.disconnect!
+      PostgresAdmin.restore(database_opts.merge(:backup_type => backup_type))
+    end
+    _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been restored from file: [#{uri}]")
+    uri
+  end
+
+  private_class_method def self.merged_db_opts(db_opts)
+    DEFAULT_OPTS.merge(db_opts)
+  end
+
+  STORAGE_ACTIONS_TO_METHODS = { :backup => :add, :dump => :add, :restore => :download }.freeze
+  private_class_method def self.with_file_storage(action, db_opts, connect_opts)
+    db_opts = merged_db_opts(db_opts)
+
+    if db_opts[:local_file].nil?
+      if action == :restore
         uri = connect_opts[:uri]
-        connect_opts[:uri] = File.dirname(connect_opts[:uri])
-        session = MiqGenericMountSession.new_session(connect_opts)
-        db_opts[:local_file] = session.uri_to_local_path(uri)
-      end
 
-      backup = PostgresAdmin.restore(db_opts)
-    ensure
-      session.disconnect if session
+        connect_uri        = URI::Generic.new(*URI.split(uri))
+        connect_uri.path   = File.dirname(connect_uri.path)
+        connect_opts[:uri] = connect_uri.to_s
+      else
+        connect_opts[:remote_file_name] ||= File.basename(backup_file_name(action))
+        #
+        # If the passed in URI contains query parameters, ignore them
+        # when creating the dump file name. They'll be used in the session object.
+        #
+        uri_parts = [connect_opts[:uri].split('?')[0]]
+        uri_parts << (action == :dump ? "db_dump" : "db_backup") unless connect_opts[:skip_directory]
+        uri_parts << connect_opts[:remote_file_name]
+        uri = File.join(uri_parts)
+      end
+    else
+      uri = db_opts[:local_file]
+
+      # HACK(ish): This just puts the bare minimum necessary for URI.parse to
+      # recognize the :uri option as "file" scheme, and allows MiqFileStorage
+      # to then instantiate MiqLocalMountSession below in the
+      # `.with_interface_class` method.
+      connect_opts[:uri] = "file://"
     end
 
-    uri ||= backup
-    _log.info("[#{db_opts[:dbname]}] database has been restored from file: [#{uri}]")
+    MiqFileStorage.with_interface_class(connect_opts) do |file_storage|
+      send_args = [uri, db_opts[:byte_count]].compact
+
+      if action == :restore
+        # `MiqFileStorage#download` requires a `nil` passed to the block form
+        # to accommodate streaming
+        send_args.unshift(nil)
+        magic_numbers = {
+          :pgdump     => PostgresAdmin::PG_DUMP_MAGIC,
+          :basebackup => PostgresAdmin::BASE_BACKUP_MAGIC
+        }
+        backup_type = file_storage.magic_number_for(uri, :accepted => magic_numbers)
+      end
+
+      # Note:  `input_path` will always be a fifo stream (input coming from
+      # PostgresAdmin, and the output going to the `uri`), since we want to
+      # maintain the same interface for all backup types.
+      #
+      # This means that `uri` will always be the final destination, but
+      # `input_path` below will be an intermediary fifo that will take the
+      # input from `pg_dump`, `pg_restore`, or `pg_basebackup`, and streams the
+      # results from those commands (in ruby) it to whatever file storage
+      # endpoint `uri` is pointing to.
+      #
+      # This also makes sure that the streamed output is never written to disk
+      # locally, unless `uri` is targeting the local machine.  This is why we
+      # set `db_opts` local file to that stream.
+      file_storage.send(STORAGE_ACTIONS_TO_METHODS[action], *send_args) do |input_path|
+        db_opts[:local_file] = input_path
+        if action == :restore
+          yield(db_opts, backup_type)
+        else
+          if file_storage.class <= MiqGenericMountSession
+            # Only check free space on "mountable" storages
+            #
+            # For database dumps, this isn't going to be as accurate (since the
+            # dump size will probably be larger than the calculated DB size), but
+            # it still won't hurt to do as a generic way to get a rough idea if
+            # we have enough disk space on the appliance for the task.
+            free_space_opts = db_opts.merge(:local_file => file_storage.uri_to_local_path(uri))
+            validate_free_space(free_space_opts)
+          end
+          yield(db_opts)
+        end
+      end
+    end
+
     uri
+  end
+
+  private_class_method def self.prepare_for_restore(filename, backup_type = nil)
+    backup_type ||= validate_backup_file_type(filename)
+
+    if application_connections?
+      message = "Database restore failed. Shut down all evmserverd processes before attempting a database restore"
+      _log.error(message)
+      raise message
+    end
+
+    MiqRegion.replication_type = :none
+
+    connection_count = backup_type == :basebackup ? VmdbDatabaseConnection.unscoped.where(:backend_type => "client backend").count : VmdbDatabaseConnection.count
+    if connection_count > 1
+      message = "Database restore failed. #{connection_count - 1} connections remain to the database."
+      _log.error(message)
+      raise message
+    end
+  end
+
+  private_class_method def self.validate_backup_file_type(filename)
+    if PostgresAdmin.base_backup_file?(filename)
+      :basebackup
+    elsif PostgresAdmin.pg_dump_file?(filename)
+      :pgdump
+    else
+      message = "#{filename} is not in a recognized database backup format"
+      _log.error(message)
+      raise message
+    end
+  end
+
+  private_class_method def self.application_connections?
+    VmdbDatabaseConnection.all.map(&:application_name).any? { |app_name| app_name.start_with?("MIQ") }
   end
 
   def self.gc(options = {})
@@ -112,16 +225,6 @@ class EvmDatabaseOps
     conn.client_connections.count { |c| c["database"] == database }
   end
 
-  def self.stop
-    _log.info("Stopping internal database")
-    PostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
-  end
-
-  def self.start
-    _log.info("Starting internal database")
-    PostgresAdmin.start(DEFAULT_OPTS)
-  end
-
   def self.upload(connect_opts, local_file, destination_file)
     MiqGenericMountSession.in_depot_session(connect_opts) { |session| session.upload(local_file, destination_file) }
     destination_file
@@ -132,9 +235,9 @@ class EvmDatabaseOps
     local_file
   end
 
-  def self.backup_file_name
+  def self.backup_file_name(action = :backup)
     time_suffix  = Time.now.utc.strftime("%Y%m%d_%H%M%S")
-    "#{BACKUP_TMP_FILE}_#{time_suffix}"
+    "#{action == :backup ? BACKUP_TMP_FILE : DUMP_TMP_FILE}_#{time_suffix}"
   end
   private_class_method :backup_file_name
 end

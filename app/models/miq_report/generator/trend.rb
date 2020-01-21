@@ -42,17 +42,16 @@ module MiqReport::Generator::Trend
                                   :filter       => db_options[:trend_filter],
                                   :userid       => options[:userid],
                                   :miq_group_id => options[:miq_group_id])
-    klass = db.kind_of?(Class) ? db : Object.const_get(db)
-    self.title = klass.report_title(db_options)
-    self.cols, self.headers = klass.report_cols(db_options)
-    options[:only] ||= (cols + build_cols_from_include(include) + ['id']).uniq
+    self.title = db_klass.report_title(db_options)
+    self.cols, self.headers = db_klass.report_cols(db_options)
+    options[:only] ||= cols_for_report
 
     # Build and filter trend data from performance data
     build_apply_time_profile(results)
-    results = klass.build(results, db_options)
+    results = db_klass.build(results, db_options)
 
-     if conditions
-      tz = User.find_by_userid(options[:userid]).get_timezone if options[:userid]
+    if conditions
+      tz = User.lookup_by_userid(options[:userid]).get_timezone if options[:userid]
       results = results.reject { |obj| conditions.lenient_evaluate(obj, tz) }
     end
     results = results[0...options[:limit]] if options[:limit]
@@ -67,7 +66,7 @@ module MiqReport::Generator::Trend
     begin
       val = MiqStats.solve_for_y(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
       return val > 0 ? val : 0
-    rescue ZeroDivisionError => err
+    rescue ZeroDivisionError
       return nil
     end
   end
@@ -79,33 +78,30 @@ module MiqReport::Generator::Trend
     @trend_data = {}
     recs.sort! { |a, b| a.send(CHART_X_AXIS_COLUMN) <=> b.send(CHART_X_AXIS_COLUMN) } if recs.first.respond_to?(CHART_X_AXIS_COLUMN)
 
-    cols.each do|c|
+    cols.each do |c|
       next unless self.class.is_trend_column?(c)
       @trend_data[c] = {}
 
-      y_array, x_array = recs.inject([]) do |arr, r|
-        arr[0] ||= []; arr[1] ||= []
-        next(arr) unless  r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
+      coordinates = recs.each_with_object([]) do |r, arr|
+        next unless r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
           _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{time_profile.description}]")
-          next(arr)
+          next
         end
-        arr[0] << r.send(c[6..-1]).to_f
-        # arr[1] << r.send(CHART_X_AXIS_COLUMN).to_i # Calculate normal way by using the integer value of the timestamp
-        r.send("#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr[1].length.days.to_i))
-        arr[1] << r.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i # Caculate by using the number of days out from the first timestamp
-        arr
+        y = r.send(c[6..-1]).to_f
+        # y = r.send(CHART_X_AXIS_COLUMN).to_i # Calculate normal way by using the integer value of the timestamp
+        r.send("#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr.length.days.to_i))
+        x = r.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i # Calculate by using the number of days out from the first timestamp
+        arr << [x, y]
       end
 
-      begin
-        slope_arr = MiqStats.slope(x_array, y_array)
-      rescue ZeroDivisionError
-        slope_arr = []
-      rescue => err
-        _log.warn("#{err.message}, calculating slope")
-        slope_arr = []
-      end
-      @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] = slope_arr
+      @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] =
+        begin
+          Math.linear_regression(*coordinates)
+        rescue StandardError => err
+          _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+          nil
+        end
     end
   end
 
@@ -131,7 +127,7 @@ module MiqReport::Generator::Trend
       @extras ||= {}
       @extras[:trend] ||= {}
 
-      limit = recs.sort { |a, b| a.timestamp <=> b.timestamp }.last.send(c) unless recs.empty?
+      limit = recs.max_by(&:timestamp).send(c) unless recs.empty?
 
       attributes.each do |attribute|
         trend_data_key = CHART_TREND_COLUMN_PREFIX + attribute.to_s

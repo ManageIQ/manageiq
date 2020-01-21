@@ -1,13 +1,8 @@
 class DialogFieldCheckBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(required read_only visible).freeze
+  AUTOMATE_VALUE_FIELDS = %w(required read_only visible description).freeze
 
   def checked?
     value == "t"
-  end
-
-  def value
-    @value = values_from_automate if dynamic && @value.blank?
-    @value
   end
 
   def initial_values
@@ -15,7 +10,7 @@ class DialogFieldCheckBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    N_("<Script error>")
   end
 
   def normalize_automate_values(automate_hash)
@@ -30,10 +25,6 @@ class DialogFieldCheckBox < DialogField
   def refresh_json_value
     @value = values_from_automate
     {:checked => checked?, :read_only => read_only?, :visible => visible?}
-  end
-
-  def trigger_automate_value_updates
-    values_from_automate
   end
 
   private

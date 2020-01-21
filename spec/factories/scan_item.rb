@@ -1,6 +1,5 @@
-FactoryGirl.define do
-  factory :scan_item do
-  end
+FactoryBot.define do
+  factory :scan_item
 
   factory :scan_item_category_default, :parent => :scan_item do
     attributes  do

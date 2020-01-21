@@ -1,5 +1,3 @@
-require 'recursive-open-struct'
-
 describe OpenscapResult do
   let(:openscap_result) { described_class.new(:id => 17) }
   context "#html" do
@@ -21,19 +19,22 @@ describe OpenscapResult do
       rule_results = [
         [1, double(:result => 'result_1')],
         [2, double(:result => 'result_2')]]
-      benchmark_items = {1 => double(:severity => 'Bad'),
-                         2 => double(:severity => 'Not That Bad')}
+
+      benchmark_items = {1 => double(:severity => 'Bad', :idents => [], :title => "Bad"),
+                         2 => double(:severity => 'Not That Bad', :idents => [], :title => "Not That Bad")}
 
       openscap_result.instance_eval { create_results(rule_results, benchmark_items) }
       expect(openscap_result.openscap_rule_results[0]).to have_attributes(
         :openscap_result_id => 17,
         :name               => '1',
         :result             => "result_1",
+        :title              => "Bad",
         :severity           => "Bad")
       expect(openscap_result.openscap_rule_results[1]).to have_attributes(
         :openscap_result_id => 17,
         :name               => '2',
         :result             => "result_2",
+        :title              => "Not That Bad",
         :severity           => "Not That Bad")
     end
   end

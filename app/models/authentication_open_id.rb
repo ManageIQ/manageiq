@@ -1,2 +1,0 @@
-class AuthenticationOpenId < Authentication
-end

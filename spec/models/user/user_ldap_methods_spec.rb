@@ -14,6 +14,7 @@ describe Authenticator::Ldap do
 
   context ".lookup_by_identity" do
     let(:current_user) { @auth.lookup_by_identity(@username) }
+    let(:autocreate_current_user) { @auth.autocreate_user(@username) }
 
     before do
       @username    = "upnuser"
@@ -29,16 +30,17 @@ describe Authenticator::Ldap do
     end
 
     it "user exists" do
-      user = FactoryGirl.create(:user_admin, :userid => @fqusername)
-      allow(@auth).to receive(:userprincipal_for).and_return(user)
+      user = FactoryBot.create(:user_admin, :userid => @fqusername)
+      allow(@auth).to receive(:lookup_by_identity).and_return(user)
       expect(current_user).to eq(user)
     end
 
     it "user does not exist" do
       group = create_super_admin_group
+      @auth_config[:authentication][:default_group_for_users] = group.name
       setup_to_create_user(group)
 
-      expect(current_user).to be_present
+      expect(autocreate_current_user).to be_present
       expect(User.all.size).to eq(1)
     end
   end
@@ -56,14 +58,14 @@ describe Authenticator::Ldap do
     it "password is blank" do
       @password = ""
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect { subject }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     it "ldap bind fails" do
       allow(@miq_ldap).to receive_messages(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect { subject }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
     end
 
     context "ldap binds" do
@@ -84,7 +86,6 @@ describe Authenticator::Ldap do
 
         context "with default group for users enabled" do
           it "group exists" do
-            allow(@auth).to receive(:find_or_create_by_ldap)
             group = create_super_admin_group
             setup_to_create_user(group)
             @auth_config[:authentication][:default_group_for_users] = group.description
@@ -101,10 +102,10 @@ describe Authenticator::Ldap do
   end
 
   def create_super_admin_group
-    FactoryGirl.create(
+    FactoryBot.create(
       :miq_group,
       :description   => "EvmGroup-super_administrator",
-      :miq_user_role => FactoryGirl.create(:miq_user_role, :name => "EvmRole-super_administrator")
+      :miq_user_role => FactoryBot.create(:miq_user_role, :role => "super_administrator")
     )
   end
 
@@ -118,7 +119,7 @@ describe Authenticator::Ldap do
   end
 
   def setup_vmdb_config
-    stub_server_configuration(@auth_config)
+    stub_settings(@auth_config)
   end
 
   def setup_to_create_user(group)

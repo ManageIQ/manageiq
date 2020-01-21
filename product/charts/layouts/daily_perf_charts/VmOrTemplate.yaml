@@ -1,5 +1,5 @@
 # VmOrTemplate Daily performance chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:
@@ -9,7 +9,7 @@
   - trend_max_cpu_usagemhz_rate_average
   - resource.cpu_usagemhz_rate_average_high_over_time_period
   - resource.cpu_usagemhz_rate_average_low_over_time_period
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Timeline-Current-Daily:Daily events on this VM
   - Timeline-Current-Hourly:Hourly events on this VM
@@ -33,7 +33,7 @@
   :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_pct_cpu_ready_delta_summation
   - v_pct_cpu_used_delta_summation
@@ -55,7 +55,7 @@
   - trend_max_derived_memory_used
   - resource.derived_memory_used_high_over_time_period
   - resource.derived_memory_used_low_over_time_period
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Timeline-Current-Daily:Daily events on this VM
   - Timeline-Current-Hourly:Hourly events on this VM
@@ -68,7 +68,7 @@
   - min_disk_usage_rate_average
   - max_disk_usage_rate_average
   - trend_max_disk_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Timeline-Current-Daily:Daily events on this VM
   - Timeline-Current-Hourly:Hourly events on this VM
@@ -80,7 +80,7 @@
   - min_net_usage_rate_average
   - max_net_usage_rate_average
   - trend_max_net_usage_rate_average
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Timeline-Current-Daily:Daily events on this VM
   - Timeline-Current-Hourly:Hourly events on this VM

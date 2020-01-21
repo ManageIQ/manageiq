@@ -68,6 +68,25 @@ module Metric::Rollup
       :derived_memory_used,
       :net_usage_rate_average,
       :disk_usage_rate_average
+    ],
+    :Service_vms                           => [
+      :cpu_ready_delta_summation,
+      :cpu_system_delta_summation,
+      :cpu_usage_rate_average,
+      :cpu_usagemhz_rate_average,
+      :cpu_used_delta_summation,
+      :cpu_wait_delta_summation,
+      :derived_vm_allocated_disk_storage,
+      :derived_vm_numvcpus,
+      :derived_vm_used_disk_storage,
+      :derived_memory_used,
+      :derived_memory_available,
+      :disk_devicelatency_absolute_average,
+      :disk_kernellatency_absolute_average,
+      :disk_queuelatency_absolute_average,
+      :disk_usage_rate_average,
+      :mem_usage_absolute_average,
+      :net_usage_rate_average,
     ]
   }
 
@@ -151,8 +170,10 @@ module Metric::Rollup
   ].freeze
   BURST_COLS = [
     :cpu_usage_rate_average,
+    :cpu_usagemhz_rate_average,
     :disk_usage_rate_average,
     :mem_usage_absolute_average,
+    :derived_memory_used,
     :net_usage_rate_average
   ]
   BURST_TYPES = ['min', 'max']
@@ -197,7 +218,7 @@ module Metric::Rollup
   def self.rollup_daily(obj, day, interval_name, time_profile, new_perf, orig_perf)
     tp = TimeProfile.extract_objects(time_profile)
     if tp.nil?
-      _log.info "Skipping [#{interval_name}] Rollup for #{obj.class.name} name: [#{obj.name}], id: [#{obj.id}] for time: [#{day}] since the time profile no longer exists."
+      _log.info("Skipping [#{interval_name}] Rollup for #{obj.class.name} name: [#{obj.name}], id: [#{obj.id}] for time: [#{day}] since the time profile no longer exists.")
       return
     end
 
@@ -219,13 +240,14 @@ module Metric::Rollup
         new_perf_counts[col] ||= 0
 
         value = rt.send(col)
-
-        if obj.kind_of?(VmOrTemplate) && BURST_COLS.include?(col)
-          new_perf[:min_max] ||= {}
-          rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
-        end
-
         Metric::Aggregation::Aggregate.column(col, nil, new_perf, new_perf_counts, value)
+      end
+
+      next unless obj.kind_of?(VmOrTemplate)
+      new_perf[:min_max] ||= {}
+      BURST_COLS.each do |col|
+        value = rt.send(col)
+        rollup_burst(col, new_perf[:min_max], rt.timestamp, value)
       end
     end
 
@@ -343,9 +365,9 @@ module Metric::Rollup
     targets = find_distinct_resources
     return if targets.empty?
 
-    _log.info "Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]..."
+    _log.info("Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]...")
     targets.each { |t| t.perf_rollup_range_queue(start_time, end_time, interval_name, time_profile_id, MiqQueue::LOW_PRIORITY) }
-    _log.info "Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]...Complete"
+    _log.info("Queueing #{interval_name} rollups for range: [#{start_time} - #{end_time}]...Complete")
   end
 
   def self.perf_rollup_gap_queue(start_time, end_time, interval_name, time_profile_id = nil)

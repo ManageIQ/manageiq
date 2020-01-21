@@ -3,6 +3,13 @@ class LiveMetric < ActsAsArModel
 
   class LiveMetricError < RuntimeError; end
 
+  # all attributes are virtual
+  # - attributes are dynamically generated and would be too much work to query/declare them all
+  # - returning true gets the column names into the REST query (via :includes)
+  def self.virtual_attribute?(_c)
+    true
+  end
+
   def self.find(*args)
     raw_query = args[1]
     validate_raw_query(raw_query)
@@ -67,10 +74,10 @@ class LiveMetric < ActsAsArModel
 
   def self.process_timestamps(processed, condition)
     ts = Time.parse("#{condition[:value]} UTC").utc
-    if %w(>= > =).include? condition[:op]
+    if %w(>= > =).include?(condition[:op])
       processed[:start_time] = ts
     end
-    if %w(<= < =).include? condition[:op]
+    if %w(<= < =).include?(condition[:op])
       processed[:end_time] = ts
     end
   end
@@ -105,7 +112,7 @@ class LiveMetric < ActsAsArModel
         processed_metric
       end
     rescue => err
-      _log.error "An error occurred while connecting to #{resource}: #{err}"
+      _log.error("An error occurred while connecting to #{resource}: #{err}")
     end
   end
 end

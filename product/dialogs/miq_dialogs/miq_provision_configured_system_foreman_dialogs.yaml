@@ -32,7 +32,7 @@
           :data_type: :string
         :owner_first_name:
           :description: First Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager:
@@ -52,7 +52,7 @@
           :data_type: :string
         :owner_last_name:
           :description: Last Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
         :owner_manager_mail:
@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string

@@ -1,0 +1,23 @@
+description: CPU Right Sizing Recommendations
+title: CPU Right Sizing Recommendations
+content_type: report
+options:
+  :row_count: 10
+  :col_order:
+  - name
+  - ext_management_system.name
+  - moderate_vcpus_recommended_change_pct
+  - cpu_total_cores
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: CPU Right Sizing Recommendations
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: daily
+enabled: true
+read_only: true

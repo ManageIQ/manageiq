@@ -33,85 +33,6 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_with_findkey(dto_collection, dto, association, deletes, new_records, record_index,
-                                      method = nil)
-    hash   = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
-    # Find the record, and update if found, else create it
-    method ||= :build
-    found  = record_index.fetch(hash)
-    # TODO(lsmola) probably move all this under dto, so it can create or save right here?
-    if found.nil?
-      dto.build_object(association.public_send(method, hash.except(:id)))
-      new_records << dto
-    else
-      # TODO(lsmola) Build object, that is really bad name. it should either really build the object or it could be just
-      # the object setter
-      dto.build_object(found)
-      found.update_attributes!(hash.except(:id, :type))
-      deletes.delete(found) unless deletes.blank?
-    end
-    found
-  end
-
-  def save_dto_inventory_multi_batch(association, dto_collection, deletes, find_key)
-    association.reset
-
-    if deletes == :use_association
-      deletes = association
-    elsif deletes.respond_to?(:reload) && deletes.loaded?
-      deletes.reload
-    end
-
-    deletes_index = deletes.each_with_object({}) { |x, obj| obj[x] = x }
-    record_index = TypedIndex.new(association, find_key)
-
-    new_records = []
-    _log.info("PROCESSING #{dto_collection}")
-    ActiveRecord::Base.transaction do
-      dto_collection.each do |dto|
-        association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-
-        if association_meta_info.options[:through].blank?
-          entity_builder = association
-          method         = :build
-        else
-          entity_builder = dto_collection.model_class
-          method         = :new
-        end
-
-        save_dto_inventory_with_findkey(dto_collection, dto, entity_builder, deletes_index, new_records, record_index, method)
-      end
-    end
-    _log.info("PROCESSED #{dto_collection}")
-
-    # Delete the items no longer found
-    unless deletes_index.blank?
-      deletes = deletes_index.values
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      # TODO(lsmola) If first element has :disconnect_inv, we should be save to call it, unless some STI subclass
-      # overwrite this. Check if this can happen
-      deletes.first.respond_to?(:disconnect_inv) ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association, deletes)
-    end
-
-    _log.info("CREATING #{dto_collection} of size #{new_records.size}")
-    ActiveRecord::Base.transaction do
-      new_records.map(&:save)
-    end
-    _log.info("CREATED #{dto_collection}")
-  end
-
-  def delete_inventory_multi(dto_collection, association, deletes)
-    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-    if association_meta_info.options[:through].blank?
-      association.delete(deletes)
-    else
-      dto_collection.model_class.transaction do
-        deletes.map(&:delete)
-      end
-    end
-  end
-
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
@@ -121,6 +42,9 @@ module EmsRefresh::SaveInventoryHelper
       deletes.reload
     end
     deletes = deletes.to_a
+    deletes_index = deletes.index_by { |x| x }
+    # Alow GC to clean the AR objects as they are removed from deletes_index
+    deletes = nil
 
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
@@ -128,16 +52,22 @@ module EmsRefresh::SaveInventoryHelper
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
-    hashes.each do |h|
-      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
-      save_child_inventory(found, h, child_keys)
+
+    ActiveRecord::Base.transaction do
+      hashes.each do |h|
+        found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+        save_child_inventory(found, h, child_keys)
+      end
     end
 
     # Delete the items no longer found
+    deletes = deletes_index.values
     unless deletes.blank?
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      ActiveRecord::Base.transaction do
+        type = association.proxy_association.reflection.name
+        _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+        disconnect ? deletes.each(&:disconnect_inv) : association.delete(deletes)
+      end
     end
 
     # Add the new items
@@ -154,7 +84,7 @@ module EmsRefresh::SaveInventoryHelper
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys + [:id]
     if child
-      child.update_attributes!(hash.except(:type, *remove_keys))
+      update!(child, hash, [:type, *remove_keys])
     else
       child = parent.send("create_#{type}!", hash.except(*remove_keys))
     end
@@ -168,10 +98,16 @@ module EmsRefresh::SaveInventoryHelper
       found = association.build(hash.except(:id))
       new_records << found
     else
-      found.update_attributes!(hash.except(:id, :type))
+      update!(found, hash, [:id, :type])
       deletes.delete(found) unless deletes.blank?
     end
     found
+  end
+
+  def update!(ar_model, attributes, remove_keys)
+    ar_model.assign_attributes(attributes.except(*remove_keys))
+    # HACK: Avoid empty BEGIN/COMMIT pair until fix is made for https://github.com/rails/rails/issues/17937
+    ar_model.save! if ar_model.changed?
   end
 
   def backup_keys(hash, keys)
@@ -187,19 +123,31 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def store_ids_for_new_records(records, hashes, keys)
+    return if records.blank?
+
     keys = Array(keys)
-    hashes.each do |h|
-      r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
-      h[:id]      = r.id
-      r.send(:clear_association_cache)
-      h[:_object] = r
+    # Lets first index the hashes based on keys, so we can do O(1) lookups
+    record_index = records.index_by { |record| build_index_from_record(keys, record) }
+    record_class = records.first.class.base_class
+
+    hashes.each do |hash|
+      record = record_index[build_index_from_hash(keys, hash, record_class)]
+      hash[:id] = record.id
     end
+  end
+
+  def build_index_from_hash(keys, hash, record_class)
+    keys.map { |key| record_class.type_for_attribute(key.to_s).cast(hash[key]) }
+  end
+
+  def build_index_from_record(keys, record)
+    keys.map { |key| record.send(key) }
   end
 
   def link_children_references(records)
     records.each do |rec|
       parent = records.detect { |r| r.manager_ref == rec.parent_ref } if rec.parent_ref.present?
-      rec.update_attributes(:parent_id => parent.try(:id))
+      rec.update(:parent_id => parent.try(:id))
     end
   end
 
@@ -230,21 +178,23 @@ module EmsRefresh::SaveInventoryHelper
     top_level && (target == true || target.nil? || parent == target) ? :use_association : []
   end
 
-  def get_cluster(ems, cluster_hash, rp_hash, dc_hash)
-    cluster = EmsCluster.find_by(:ems_ref => cluster_hash[:ems_ref], :ems_id => ems.id)
-    if cluster.nil?
-      rp = ems.resource_pools.create!(rp_hash)
-
-      cluster = ems.clusters.create!(cluster_hash)
-
-      cluster.add_resource_pool(rp)
-      cluster.save!
-
-      dc = Datacenter.find_by(:ems_ref => dc_hash[:ems_ref], :ems_id => ems.id)
-      dc.add_cluster(cluster)
-      dc.save!
+  def determine_deletes_using_association(ems, target, disconnect = true)
+    if disconnect && target == ems
+      :use_association
+    else
+      []
     end
+  end
 
-    cluster
+  def hashes_of_target_empty?(hashes, target)
+    hashes.blank? || (hashes[:storages].blank? &&
+    case target
+    when VmOrTemplate
+      hashes[:vms].blank?
+    when Host
+      hashes[:hosts].blank?
+    when EmsFolder
+      hashes[:folders].blank?
+    end)
   end
 end

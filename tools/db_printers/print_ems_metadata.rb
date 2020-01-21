@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 def print_subtree(subtree, indent = '')
   subtree = subtree.sort_by { |obj, _children| [obj.class.name, obj.name.downcase] }
   subtree.each do |obj, children|
@@ -15,5 +18,5 @@ end
 ExtManagementSystem.all.each do |ems|
   puts "EMS: #{ems.name}  (id: #{ems.id})"
   print_subtree(ems.descendants_arranged)
-  puts; puts
+  puts("\n")
 end

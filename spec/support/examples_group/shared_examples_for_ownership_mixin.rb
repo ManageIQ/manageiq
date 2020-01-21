@@ -3,40 +3,45 @@ shared_examples_for "OwnershipMixin" do
     include Spec::Support::ArelHelper
 
     let(:user) do
-      FactoryGirl.create(:user,
+      FactoryBot.create(:user,
                          :userid     => "ownership_user",
-                         :miq_groups => FactoryGirl.create_list(:miq_group, 1))
+                         :miq_groups => FactoryBot.create_list(:miq_group, 1))
     end
 
-    let(:user2)  { FactoryGirl.create(:user) }
+    let(:user2)  { FactoryBot.create(:user) }
     let(:group)  { user.current_group }
-    let(:group2) { FactoryGirl.create(:miq_group) }
+    let(:group2) { FactoryBot.create(:miq_group) }
 
     let(:factory) { described_class.to_s.underscore.to_sym }
 
-    let!(:in_ldap)     { FactoryGirl.create(factory, :name => "in_ldap",     :miq_group => group) }
-    let!(:not_in_ldap) { FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => group2) }
-    let!(:no_group)    { FactoryGirl.create(factory, :name => "no_group") }
-    let!(:user_owned)  { FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user) }
-    let!(:user_owned2) { FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2) }
+    let!(:in_ldap)     { FactoryBot.create(factory, :name => "in_ldap",     :miq_group => group) }
+    let!(:not_in_ldap) { FactoryBot.create(factory, :name => "not_in_ldap", :miq_group => group2) }
+    let!(:no_group)    { FactoryBot.create(factory, :name => "no_group") }
+    let!(:user_owned)  { FactoryBot.create(factory, :name => "user_owned",  :evm_owner => user) }
+    let!(:user_owned2) { FactoryBot.create(factory, :name => "user_owned2", :evm_owner => user2) }
 
     describe ".user_or_group_owned" do
       let(:user_other_region) do
         other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
-        FactoryGirl.create(:user, :id => other_region_id).tap do |u|
+        FactoryBot.create(:user, :id => other_region_id).tap do |u|
           u.update_column(:userid, user.userid) # Bypass validation for test purposes
         end
       end
 
       let(:group_other_region) do
         other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
-        FactoryGirl.create(:miq_group, :id => other_region_id).tap do |g|
+        FactoryBot.create(:miq_group, :id => other_region_id).tap do |g|
           g.update_column(:description, group.description) # Bypass validation for test purposes
         end
       end
 
       context "only with a user" do
         it "in this region" do
+          expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
+        end
+
+        it "with mixed case userid" do
+          user.update(:userid => "MixedCase")
           expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
         end
 

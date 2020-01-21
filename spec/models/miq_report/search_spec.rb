@@ -2,7 +2,7 @@ describe MiqReport do
   include Spec::Support::ArelHelper
 
   context "::Search" do
-    before(:each) do
+    before do
       @miq_report = MiqReport.new(:db => "Vm")
     end
 
@@ -28,7 +28,7 @@ describe MiqReport do
       end
 
       it "detects a virtual association (and that it can't be sorted)" do
-        @miq_report.sortby = ["miq_provision_template.name"]
+        @miq_report.sortby = ["parent_resource_pool.name"]
         order = @miq_report.get_order_info
         expect(order).to be_falsy
       end
@@ -135,7 +135,7 @@ describe MiqReport do
 
       expect(report).to_not receive(:get_cached_page)
 
-      results, attrs = report.paged_view_search(options)
+      results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq(20)
     end
   end

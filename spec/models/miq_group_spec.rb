@@ -1,6 +1,23 @@
 describe MiqGroup do
+  include Spec::Support::ArelHelper
+
+  describe "#settings" do
+    subject { FactoryBot.create(:miq_group) }
+
+    it "returns a HashWithIndifferentAccess" do
+      subject.settings = {:a => 1}
+      expect(subject.settings["a"]).to eq(1)
+    end
+
+    it "returns the same object" do
+      subject.settings = {}
+      subject.settings[:a] = 1
+      expect(subject.settings[:a]).to eq(1)
+    end
+  end
+
   context "as a Super Administrator" do
-    subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
+    subject { FactoryBot.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
     before do
       subject.entitlement.set_managed_filters([['some managed filter']])
@@ -80,13 +97,22 @@ describe MiqGroup do
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
-      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
+    end
+
+    it "should remove FQDN from the groups by user name with external authentication" do
+      ifp_memberships = [%w(foo@fqdn bar@fqdn)]
+      memberships = [%w(foo bar)]
+
+      allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
+
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
     end
   end
 
   describe "#get_ldap_groups_by_user" do
     before do
-      stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
+      stub_settings(:authentication => {:group_memberships_max_depth => 1})
 
       miq_ldap = double('miq_ldap',
                         :fqusername      => 'fred',
@@ -120,64 +146,62 @@ describe MiqGroup do
   end
 
   context "Testing active VM aggregation" do
-    before :each do
-      @ram_size = 1024
-      @disk_size = 1000000
-      @num_cpu = 2
+    let(:miq_group) { FactoryBot.create(:miq_group, :description => "test group") }
+    let(:ram_size) { 1024 }
+    let(:disk_size) { 1_000_000 }
+    let(:num_cpu) { 2 }
+    let(:ems) { FactoryBot.create(:ems_vmware, :name => "test_vcenter") }
+    let(:storage) { FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS") }
+    before do
+      @hw1 = FactoryBot.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw2 = FactoryBot.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw3 = FactoryBot.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw4 = FactoryBot.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @disk1 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw1.id)
+      @disk2 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw2.id)
+      @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw3.id)
+      @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw4.id)
 
-      @miq_group = FactoryGirl.create(:miq_group, :description => "test group")
-      @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
-
-      @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw4 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-      @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
-
-      @active_vm = FactoryGirl.create(:vm_vmware,
+      @active_vm = FactoryBot.create(:vm_vmware,
                                       :name         => "Active VM",
-                                      :miq_group_id => @miq_group.id,
-                                      :ems_id       => @ems.id,
-                                      :storage_id   => @storage.id,
+                                      :miq_group_id => miq_group.id,
+                                      :ems_id       => ems.id,
+                                      :storage_id   => storage.id,
                                       :hardware     => @hw1)
-      @archived_vm = FactoryGirl.create(:vm_vmware,
+      @archived_vm = FactoryBot.create(:vm_vmware,
                                         :name         => "Archived VM",
-                                        :miq_group_id => @miq_group.id,
+                                        :miq_group_id => miq_group.id,
                                         :hardware     => @hw2)
-      @orphaned_vm = FactoryGirl.create(:vm_vmware,
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
                                         :name         => "Orphaned VM",
-                                        :miq_group_id => @miq_group.id,
-                                        :storage_id   => @storage.id,
+                                        :miq_group_id => miq_group.id,
+                                        :storage_id   => storage.id,
                                         :hardware     => @hw3)
-      @retired_vm = FactoryGirl.create(:vm_vmware,
+      @retired_vm = FactoryBot.create(:vm_vmware,
                                        :name         => "Retired VM",
-                                       :miq_group_id => @miq_group.id,
+                                       :miq_group_id => miq_group.id,
                                        :retired      => true,
                                        :hardware     => @hw4)
     end
 
     it "#active_vms" do
-      expect(@miq_group.active_vms).to match_array([@active_vm])
+      expect(miq_group.active_vms).to match_array([@active_vm])
     end
 
     it "#allocated_memory" do
-      expect(@miq_group.allocated_memory).to eq(@ram_size.megabyte)
+      expect(miq_group.allocated_memory).to eq(ram_size.megabyte)
     end
 
     it "#allocated_vcpu" do
-      expect(@miq_group.allocated_vcpu).to eq(@num_cpu)
+      expect(miq_group.allocated_vcpu).to eq(num_cpu)
     end
 
     it "#allocated_storage" do
-      expect(@miq_group.allocated_storage).to eq(@disk_size)
+      expect(miq_group.allocated_storage).to eq(disk_size)
     end
 
     it "#provisioned_storage" do
-      expect(@miq_group.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
+      expect(miq_group.provisioned_storage).to eq(ram_size.megabyte + disk_size)
     end
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
@@ -187,44 +211,57 @@ describe MiqGroup do
     end
 
     it "when the virtual column is nil" do
-      hw = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
-      FactoryGirl.create(:vm_vmware,
+      hw = FactoryBot.create(:hardware, :cpu_sockets => num_cpu, :memory_mb => ram_size)
+      FactoryBot.create(:vm_vmware,
                          :name         => "VM with no disk",
-                         :miq_group_id => @miq_group.id,
-                         :ems_id       => @ems.id,
-                         :storage_id   => @storage.id,
+                         :miq_group_id => miq_group.id,
+                         :ems_id       => ems.id,
+                         :storage_id   => storage.id,
                          :hardware     => hw)
-      expect(@miq_group.allocated_storage).to eq(@disk_size)
+      expect(miq_group.allocated_storage).to eq(disk_size)
     end
   end
 
   describe "#destroy" do
-    let(:group) { FactoryGirl.create(:miq_group) }
+    let(:group) { FactoryBot.create(:miq_group) }
 
     it "can succeed" do
-      expect { group.destroy }.not_to raise_error
+      expect { group.destroy! }.not_to raise_error
     end
 
     it "fails if referenced by user#current_group" do
-      FactoryGirl.create(:user, :miq_groups => [group])
+      FactoryBot.create(:user, :miq_groups => [group])
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
     end
 
-    it "fails if referenced by user#miq_groups" do
-      group2 = FactoryGirl.create(:miq_group)
-      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+    it "succeeds if referenced by multiple user#miq_groups" do
+      group2 = FactoryBot.create(:miq_group)
+      FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      expect { group.destroy! }.not_to raise_error
+    end
 
-      expect {
-        expect { group.destroy }.to raise_error(RuntimeError, /Still has users assigned/)
-      }.to_not change { MiqGroup.count }
+    it "fails if trying to delete the current user's group" do
+      group2 = FactoryBot.create(:miq_group)
+      user = FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group)
+      User.current_user = user
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The login group cannot be deleted")
+    end
+
+    it "fails if one user in the group does not belong to any other group" do
+      group2 = FactoryBot.create(:miq_group)
+      FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      FactoryBot.create(:user, :miq_groups => [group], :current_group => group)
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
-      expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
-        .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
+      group2 = FactoryBot.create(:tenant).default_miq_group
+      expect { group2.reload.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(group2.errors[:base][0]).to eq("A tenant default group can not be deleted")
     end
   end
 
@@ -242,7 +279,7 @@ describe MiqGroup do
 
       expect {
         MiqGroup.seed
-      }.to change { MiqGroup.count }
+      }.to(change { MiqGroup.count })
       expect(MiqGroup.last.name).to eql('EvmRole-test_role')
       expect(MiqGroup.last.sequence).to eql(1)
     end
@@ -251,9 +288,9 @@ describe MiqGroup do
       let!(:tenant) { Tenant.seed }
       let!(:group_with_no_entitlement) { tenant.default_miq_group }
       let!(:group_with_existing_entitlement) do
-        FactoryGirl.create(:miq_group,
+        FactoryBot.create(:miq_group,
                            :tenant_type,
-                           :entitlement => FactoryGirl.create(:entitlement, :miq_user_role => nil))
+                           :entitlement => FactoryBot.create(:entitlement, :miq_user_role => nil))
       end
       let(:default_tenant_role) { MiqUserRole.default_tenant_role }
 
@@ -278,30 +315,39 @@ describe MiqGroup do
   end
 
   context "#ordered_widget_sets" do
-    let(:group) { FactoryGirl.create(:miq_group) }
+    let(:group) { FactoryBot.create(:miq_group) }
     it "uses dashboard_order if present" do
-      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
-      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
-      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
-      group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+      ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
+      FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
 
     it "uses all owned widgets" do
-      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
-      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
-      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
+      ws2 = FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
       expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
+    end
+
+    it "works when settings use strings" do
+      ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
+      _ws2 = FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
   end
 
   context ".sort_by_desc" do
     it "sorts by description" do
-      tenant = FactoryGirl.create(:tenant)
-      gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
-      ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
-      gb = FactoryGirl.create(:miq_group, :description => 'B', :tenant => tenant)
+      tenant = FactoryBot.create(:tenant)
+      gc = FactoryBot.create(:miq_group, :description => 'C', :tenant => tenant)
+      ga = FactoryBot.create(:miq_group, :description => 'a', :tenant => tenant)
+      gb = FactoryBot.create(:miq_group, :description => 'B', :tenant => tenant)
 
       expect(tenant.miq_groups.sort_by_desc).to eq([ga, gb, gc, tenant.default_miq_group])
     end
@@ -309,26 +355,26 @@ describe MiqGroup do
 
   describe "#read_only" do
     it "is not read_only for regular groups" do
-      expect(FactoryGirl.create(:miq_group)).not_to be_read_only
+      expect(FactoryBot.create(:miq_group)).not_to be_read_only
     end
 
     it "is read_only for system groups" do
-      expect(FactoryGirl.create(:miq_group, :system_type)).to be_read_only
+      expect(FactoryBot.create(:miq_group, :system_type)).to be_read_only
     end
 
     it "is read_only for tenant groups" do
-      expect(FactoryGirl.create(:tenant).default_miq_group).to be_read_only
+      expect(FactoryBot.create(:tenant).default_miq_group).to be_read_only
     end
   end
 
   describe "#self_service" do
     it "detects role" do
-      role = FactoryGirl.create(
+      role = FactoryBot.create(
         :miq_user_role,
         :role     => "self_service",
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
-      group = FactoryGirl.create(:miq_group,
+      group = FactoryBot.create(:miq_group,
                                  :description   => "MiqGroup-self_service",
                                  :miq_user_role => role
                                 )
@@ -336,51 +382,51 @@ describe MiqGroup do
     end
 
     it "detects non-role" do
-      group = FactoryGirl.create(:miq_group, :role => "abc")
+      group = FactoryBot.create(:miq_group, :role => "abc")
       expect(group).not_to be_self_service
     end
   end
 
   describe "#system_group?" do
     it "is not system_group for regular groups" do
-      expect(FactoryGirl.create(:miq_group)).not_to be_system_group
+      expect(FactoryBot.create(:miq_group)).not_to be_system_group
     end
 
     it "is system_group for system groups" do
-      expect(FactoryGirl.create(:miq_group, :system_type)).to be_system_group
+      expect(FactoryBot.create(:miq_group, :system_type)).to be_system_group
     end
   end
 
   describe "#tenant_group" do
     it "is not tenant_group for regular groups" do
-      expect(FactoryGirl.create(:miq_group)).not_to be_tenant_group
+      expect(FactoryBot.create(:miq_group)).not_to be_tenant_group
     end
 
     it "is tenant_group for tenant groups" do
-      expect(FactoryGirl.create(:tenant).default_miq_group).to be_tenant_group
+      expect(FactoryBot.create(:tenant).default_miq_group).to be_tenant_group
     end
   end
 
   describe "#tenant=" do
     it "changes for non default groups" do
-      tenant = FactoryGirl.create(:tenant)
-      g = FactoryGirl.create(:miq_group)
-      g.update_attributes(:tenant => tenant)
+      tenant = FactoryBot.create(:tenant)
+      g = FactoryBot.create(:miq_group)
+      g.update(:tenant => tenant)
       expect(g.tenant).to eq(tenant)
     end
 
     it "fails for default groups" do
-      tenant = FactoryGirl.create(:tenant)
-      g = FactoryGirl.create(:tenant).default_miq_group
-      expect { g.update_attributes!(:tenant => tenant) }
+      tenant = FactoryBot.create(:tenant)
+      g = FactoryBot.create(:tenant).default_miq_group
+      expect { g.update!(:tenant => tenant) }
         .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
     end
   end
 
   describe '.tenant_groups' do
     it "brings back only tenant_groups" do
-      tg = FactoryGirl.create(:tenant).default_miq_group
-      g  = FactoryGirl.create(:miq_group)
+      tg = FactoryBot.create(:tenant).default_miq_group
+      g  = FactoryBot.create(:miq_group)
 
       expect(MiqGroup.tenant_groups).to include(tg)
       expect(MiqGroup.tenant_groups).not_to include(g)
@@ -389,8 +435,8 @@ describe MiqGroup do
 
   describe '.non_tenant_groups' do
     it "brings back only non_tenant_groups" do
-      tg = FactoryGirl.create(:tenant).default_miq_group
-      g  = FactoryGirl.create(:miq_group)
+      tg = FactoryBot.create(:tenant).default_miq_group
+      g  = FactoryBot.create(:miq_group)
 
       expect(MiqGroup.non_tenant_groups).not_to include(tg)
       expect(MiqGroup.non_tenant_groups).to include(g)
@@ -405,13 +451,13 @@ describe MiqGroup do
 
     it "detects existing groups" do
       expect(MiqGroup.next_sequence).to be < 999 # sanity check
-      FactoryGirl.create(:miq_group, :sequence => 999)
+      FactoryBot.create(:miq_group, :sequence => 999)
       expect(MiqGroup.next_sequence).to eq(1000)
     end
 
     it "handles nil sequences" do
       MiqGroup.delete_all
-      g = FactoryGirl.create(:miq_group)
+      g = FactoryBot.create(:miq_group)
       g.update_attribute(:sequence, nil)
 
       expect(MiqGroup.next_sequence).to eq(1)
@@ -429,9 +475,9 @@ describe MiqGroup do
     it "builds a sequence based upon select criteria" do
       expect(MiqGroup.next_sequence).to be < 999 # sanity check
 
-      FactoryGirl.create(:miq_group, :description => "want 1", :sequence => 999)
-      FactoryGirl.create(:miq_group, :description => "want 2", :sequence => 1000)
-      FactoryGirl.create(:miq_group, :description => "dont want", :sequence => 1009)
+      FactoryBot.create(:miq_group, :description => "want 1", :sequence => 999)
+      FactoryBot.create(:miq_group, :description => "want 2", :sequence => 1000)
+      FactoryBot.create(:miq_group, :description => "dont want", :sequence => 1009)
 
       expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
     end
@@ -439,14 +485,135 @@ describe MiqGroup do
 
   describe "#user_count" do
     it "counts none" do
-      group = FactoryGirl.create(:miq_group)
+      group = FactoryBot.create(:miq_group)
       expect(group.user_count).to eq(0)
     end
 
     it "counts some" do
-      group = FactoryGirl.create(:miq_group)
-      FactoryGirl.create_list(:user, 2, :miq_groups =>[group])
+      group = FactoryBot.create(:miq_group)
+      FactoryBot.create_list(:user, 2, :miq_groups =>[group])
       expect(group.user_count).to eq(2)
+    end
+  end
+
+  describe "#single_group_users?" do
+    it "returns false if all users in the group belong to an additional group" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      testgroup2 = FactoryBot.create(:miq_group)
+      testgroup3 = FactoryBot.create(:miq_group)
+      FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2])
+      FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup3])
+      expect(testgroup1.single_group_users?).to eq(false)
+    end
+
+    it "returns false if the group has no users" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      expect(testgroup1.single_group_users?).to eq(false)
+    end
+
+    it "returns true if all users in a group do not belong to any other group" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      FactoryBot.create(:user, :miq_groups => [testgroup1])
+      FactoryBot.create(:user, :miq_groups => [testgroup1])
+      expect(testgroup1.single_group_users?).to eq(true)
+    end
+
+    it "returns true if any user in a group does not belong to another group" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      testgroup2 = FactoryBot.create(:miq_group)
+      FactoryBot.create(:user, :miq_groups => [testgroup1])
+      FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2])
+      expect(testgroup1.single_group_users?).to eq(true)
+    end
+  end
+
+  describe "#reset_current_group_for_users" do
+    it "changes the current_group for users that have the deleted group as the current_group" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      testgroup2 = FactoryBot.create(:miq_group)
+      testgroup3 = FactoryBot.create(:miq_group)
+      user1 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
+      user2 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup3], :current_group => testgroup3)
+      user3 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup1)
+
+      testgroup2.destroy
+      expect(user1.reload.current_group.id).to eq(testgroup1.id)
+      expect(user1.miq_group_ids).to eq([testgroup1.id])
+      expect(user2.reload.current_group.id).to eq(testgroup3.id)
+      expect(user2.miq_group_ids).to match_array([testgroup1.id, testgroup3.id])
+      expect(user3.reload.current_group.id).to eq(testgroup1.id)
+      expect(user3.miq_group_ids).to eq([testgroup1.id])
+    end
+
+    it "should not be called if the user does not have the deleted group as the current_group" do
+      testgroup1 = FactoryBot.create(:miq_group)
+      testgroup2 = FactoryBot.create(:miq_group)
+      testgroup3 = FactoryBot.create(:miq_group)
+      user1 = FactoryBot.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
+      user2 = FactoryBot.create(:user, :miq_groups => [testgroup3], :current_group => testgroup3)
+      expect { testgroup1.destroy }.not_to raise_error
+      expect(User.find_by(:id => user1).current_group.id).to eq(testgroup2.id)
+      expect(User.find_by(:id => user2).current_group.id).to eq(testgroup3.id)
+    end
+  end
+
+  describe "#sui_product_features" do
+    let(:role) { double }
+
+    before do
+      allow(subject).to receive(:miq_user_role).and_return(role)
+    end
+
+    it "Returns an empty array for roles without sui support" do
+      allow(role).to receive(:allows?).with(:identifier => 'sui').and_return(false)
+
+      expect(subject.sui_product_features).to be_empty
+    end
+
+    it "Returns the expected sui roles" do
+      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w(sui_role_a sui_role_b sui_role_c))
+      %w(sui sui_role_a sui_role_c).each do |ident|
+        allow(role).to receive(:allows?).with(:identifier => ident).and_return(true)
+      end
+      allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
+
+      expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+    end
+  end
+
+  describe "#miq_user_role_name" do
+    let(:group) { FactoryBot.build(:miq_group, :role => "the_role") }
+
+    it "calculates in ruby" do
+      expect(group.miq_user_role_name).to eq("EvmRole-the_role")
+    end
+
+    it "calculates in the database" do
+      group.save
+      expect(virtual_column_sql_value(MiqGroup.where(:id => group.id), "miq_user_role_name")).to eq("EvmRole-the_role")
+    end
+  end
+
+  describe "#regional_groups" do
+    let(:other_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:group) { FactoryBot.create(:miq_group) }
+    let!(:regional_group) { FactoryBot.create(:miq_group, :description => group.description.upcase, :id => other_id) }
+
+    it "finds regional groups" do
+      FactoryBot.create(:miq_group) # ensure these doen't come back
+      FactoryBot.create(:miq_group, :id => other_id + 1)
+
+      expect(group.regional_groups).to match_array([group, regional_group])
+    end
+  end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a = FactoryBot.create(:miq_group, :features => "good")
+      FactoryBot.create(:miq_group, :features => %w(good everything))
+      FactoryBot.create(:miq_group, :features => "everything")
+
+      expect(MiqGroup.select(:id, :description).with_roles_excluding("everything")).to match_array([a])
     end
   end
 end

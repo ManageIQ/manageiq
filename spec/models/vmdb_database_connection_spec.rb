@@ -1,16 +1,12 @@
 require "concurrent/atomic/event"
 
 describe VmdbDatabaseConnection do
-  before :each do
-    @db = FactoryGirl.create(:vmdb_database)
-  end
-
+  self.use_transactional_tests = false
   after :all do
     # HACK: Some other tests (around Automate) rely on the fact there's
     # only one connection in the pool. It's totally unfair to blame this
     # spec for using the API in a perfectly ordinary way.. but it solves
     # the immediate problem.
-
     VmdbDatabaseConnection.connection_pool.disconnect!
   end
 
@@ -46,6 +42,7 @@ describe VmdbDatabaseConnection do
     VmdbDatabaseConnection.connection_pool.disconnect!
     locked_latch = Concurrent::Event.new
     continue_latch = Concurrent::Event.new
+    wait_latch     = Concurrent::Event.new
 
     get_lock = Thread.new do
       VmdbDatabaseConnection.connection.transaction do
@@ -57,19 +54,17 @@ describe VmdbDatabaseConnection do
 
     wait_for_lock = Thread.new do
       VmdbDatabaseConnection.connection.transaction do
+        wait_latch.set
         locked_latch.wait # wait until `get_lock` has the lock
         VmdbDatabaseConnection.connection.execute('LOCK users IN EXCLUSIVE MODE')
       end
     end
 
     locked_latch.wait # wait until `get_lock` has the lock
-    # spin until `wait_for_lock` is waiting to acquire the lock
-    loop { break if wait_for_lock.status == "sleep" }
-
-    connections = VmdbDatabaseConnection.all
+    wait_latch.wait   # spin until `wait_for_lock` is waiting to acquire the lock
 
     give_up = 10.seconds.from_now
-    until (blocked_conn = connections.detect(&:blocked_by))
+    until (blocked_conn = VmdbDatabaseConnection.all.detect(&:blocked_by))
       if Time.current > give_up
         continue_latch.set
         get_lock.join
@@ -79,7 +74,7 @@ describe VmdbDatabaseConnection do
       sleep 1
     end
 
-    blocked_by = connections.detect { |conn| conn.spid == blocked_conn.blocked_by }
+    blocked_by = VmdbDatabaseConnection.all.detect { |conn| conn.spid == blocked_conn.blocked_by }
     expect(blocked_by).to be_truthy
     expect(blocked_conn.spid).not_to eq(blocked_by.spid)
 
@@ -90,7 +85,7 @@ describe VmdbDatabaseConnection do
 
   it 'computes wait_time' do
     setting = VmdbDatabaseConnection.all.first
-    expect(setting.wait_time).to be_kind_of(Fixnum)
+    expect(setting.wait_time).to be_kind_of(Integer)
   end
 
   it 'wait_time_ms defaults to 0 on nil query_start' do
@@ -105,19 +100,16 @@ describe VmdbDatabaseConnection do
     :blocked_by,
     :command,
     :spid,
-    :task_state,
     :wait_resource,
     :wait_time,
-    :vmdb_database_id,
-    :vmdb_database,
     :zone,
     :miq_server,
     :miq_worker,
-    :pid,
+    :pid
   ].each do |field|
     it "has a #{field}" do
-      setting = VmdbDatabaseConnection.all.first
-      expect(setting).to respond_to(field)
+      connection = VmdbDatabaseConnection.first
+      expect { connection.public_send(field) }.not_to raise_error
     end
   end
 
@@ -142,13 +134,14 @@ describe VmdbDatabaseConnection do
         xact_start
         last_request_start_time
         command
-        task_state
         login
         application
         request_id
         net_address
         host_name
         client_port
+        wait_event_type
+        wait_event
         wait_time_ms
         blocked_by
       )

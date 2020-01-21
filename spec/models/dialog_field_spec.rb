@@ -1,29 +1,27 @@
 describe DialogField do
   context "legacy tests" do
-    before(:each) do
-      @df = FactoryGirl.create(:dialog_field, :label => 'dialog_field', :name => 'dialog_field')
-    end
 
+    let(:df) { FactoryBot.create(:dialog_field) }
     it "sets default value for required attribute" do
-      expect(@df.required).to eq(false)
-      expect(@df.visible).to eq(true)
+      expect(df.required).to eq(false)
+      expect(df.visible).to eq(true)
     end
 
     it "fields named 'action' or 'controller' are invalid" do
-      action_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'action')
+      action_field = FactoryBot.build(:dialog_field, :name => 'action')
       expect(action_field).not_to be_valid
-      controller_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'controller')
+      controller_field = FactoryBot.build(:dialog_field, :name => 'controller')
       expect(controller_field).not_to be_valid
-      foo_field = FactoryGirl.build(:dialog_field, :label => 'dialog_field', :name => 'foo')
+      foo_field = FactoryBot.build(:dialog_field, :name => 'foo')
       expect(foo_field).to be_valid
     end
 
     it "supports more than 255 characters within default_value" do
       str = "0" * 10000
-      @df.default_value = str
-      expect { @df.save }.to_not raise_error
-      @df.reload
-      expect(@df.default_value).to eq(str)
+      df.default_value = str
+      expect { df.save }.to_not raise_error
+      df.reload
+      expect(df.default_value).to eq(str)
     end
 
     describe "#validate" do
@@ -106,39 +104,109 @@ describe DialogField do
         end
       end
     end
+  end
 
-    describe "#initialize_with_values" do
-      it "uses #automate_key_name for extracting initial dialog values" do
-        dialog_value = "dummy dialog value"
-        @df.initialize_with_values(@df.automate_key_name => dialog_value)
-        expect(@df.value).to eq(dialog_value)
+  describe "#initialize_value_context" do
+    let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:field_with_default) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "drew_was_here") }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+
+      context "when the value is blank" do
+        let(:value) { "" }
+        let(:automate_value) { "some value from automate" }
+
+        before do
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(automate_value)
+        end
+
+        it "sets the value to the automate value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("some value from automate")
+        end
       end
 
-      it "initializes to nil with no initial value and no default value" do
-        initial_dialog_values = {}
-        @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to be_nil
+      context "when the value is not blank" do
+        let(:value) { "not blank" }
+
+        it "does not adjust the value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("not blank")
+        end
+      end
+    end
+
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
+
+      context "with a user-adjusted value" do
+        let(:value) { "not dynamic" }
+
+        it "does not adjust the value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+        end
       end
 
-      it "initializes to the default value with no initial value and a default value" do
-        initial_dialog_values = {}
-        @df.default_value = "default_test"
-        @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("default_test")
+      context "without a user-adjusted value" do
+        context "with a default value" do
+          let(:value) { nil }
+
+          it "does adjust the value" do
+            field_with_default.initialize_value_context
+            expect(field_with_default.instance_variable_get(:@value)).to eq("drew_was_here")
+          end
+        end
+      end
+    end
+  end
+
+  describe "#initialize_static_values" do
+    let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:field_with_default) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "test") }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+      let(:value) { "value" }
+
+      it "does not change the value" do
+        field.initialize_static_values
+        expect(field.instance_variable_get(:@value)).to eq("value")
+      end
+    end
+
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
+
+      context "with a user-adjusted value" do
+        let(:value) { "not dynamic" }
+
+        it "does not adjust the value" do
+          field.initialize_static_values
+          expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+        end
       end
 
-      it "initializes to the dialog value with a dialog value and no default value" do
-        initial_dialog_values = {@df.automate_key_name => "test"}
-        @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("test")
-      end
+      context "without a user-adjusted value" do
+        context "with a default value" do
+          let(:value) { nil }
 
-      it "initializes to the dialog value with a dialog value and a default value" do
-        initial_dialog_values = {@df.automate_key_name => "test"}
-        @df.default_value = "default_test"
-        @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("test")
+          it "does adjust the value" do
+            field_with_default.initialize_static_values
+            expect(field_with_default.instance_variable_get(:@value)).to eq("test")
+          end
+        end
       end
+    end
+  end
+
+  describe "#initialize_with_given_value" do
+    let(:field) { described_class.new(:default_value => "not the given value") }
+
+    it "uses the given value" do
+      field.initialize_with_given_value("given_value")
+      expect(field.default_value).to eq("given_value")
     end
   end
 
@@ -167,15 +235,50 @@ describe DialogField do
 
     before do
       allow(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+        "automate values"
+      )
     end
 
-    it "serializes the dialog field" do
-      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+    it "triggers an automate value update and then serializes the field" do
+      expect(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).ordered
+      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field).ordered
       dialog_field.update_and_serialize_values
     end
   end
 
   it "does not use attr_accessor for default_value" do
     expect(described_class.new(:default_value => "test")[:default_value]).to eq("test")
+  end
+
+  describe "#update_dialog_field_responders" do
+    let(:dialog_field) { described_class.create(:name => "field1", :label => "field1") }
+    let(:dialog_field2) { described_class.create(:name => "field2", :label => "field2") }
+    let(:dialog_field3) { described_class.create(:name => "field3", :label => "field3") }
+
+    before do
+      dialog_field.dialog_field_responders = [dialog_field3]
+    end
+
+    context "when the given list is not empty" do
+      it "rebuilds the responder list based on the IDs" do
+        dialog_field.update_dialog_field_responders([dialog_field2.id])
+        expect(dialog_field.dialog_field_responders).to eq([dialog_field2])
+      end
+    end
+
+    context "when the given list is empty" do
+      it "destroys the responders" do
+        dialog_field.update_dialog_field_responders([])
+        expect(dialog_field.dialog_field_responders).to eq([])
+      end
+    end
+
+    context "when the given list is nil" do
+      it "destroys the responders without crashing" do
+        dialog_field.update_dialog_field_responders(nil)
+        expect(dialog_field.dialog_field_responders).to eq([])
+      end
+    end
   end
 end

@@ -41,6 +41,8 @@ class ConfigurationProfile < ApplicationRecord
   virtual_column  :customization_script_ptable_name,   :type => :string
   virtual_column  :operating_system_flavor_name,       :type => :string
 
+  scope :with_manager, ->(manager_id) { where(:manager_id => manager_id) }
+
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
   end
@@ -68,7 +70,7 @@ class ConfigurationProfile < ApplicationRecord
   alias_method :configuration_manager, :manager
 
   def total_configured_systems
-    Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
+    Rbac.filtered(configured_systems).count
   end
 
   def image_name

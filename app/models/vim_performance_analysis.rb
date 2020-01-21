@@ -66,6 +66,7 @@ module VimPerformanceAnalysis
         search_options = {
           :class            => topts[:compute_type].to_s,
           :include_for_find => includes,
+          :references       => includes,
           :userid           => @options[:userid],
           :miq_group_id     => @options[:miq_group_id],
         }
@@ -108,127 +109,6 @@ module VimPerformanceAnalysis
       else
         raise _("unable to get storages for %{name}") % {:name => target.class}
       end
-    end
-
-    # This method answers C&U Planning question 2
-    def vm_how_many_more_can_fit(options = {})
-      options ||= @options
-      vm_needs   = get_vm_needs
-      result     = []
-
-      return result, vm_needs if @compute.blank?
-
-      if @compute.first.kind_of?(EmsCluster)
-        # For clusters, to allow for fragmentation in calculations, calculate using child hosts and aggregate at the end.
-        @hosts_to_cluster = {}
-
-        MiqPreloader.preload(@compute, :hosts => [:hardware, {:vms => :hardware}])
-        compute_hosts = @compute.collect do |c|
-          c.hosts.each { |h| @hosts_to_cluster[h.id] = c }
-          c.hosts
-        end.flatten
-      else
-        MiqPreloader.preload(@compute, [:hardware, {:vms => :hardware}])
-        compute_hosts = @compute
-      end
-
-      if VimPerformanceAnalysis.needs_perf_data?(options[:target_options])
-        perf_cols = [:cpu, :vcpus, :memory, :storage].collect do |t|
-          [options[:target_options].fetch_path(t, :metric), options[:target_options].fetch_path(t, :limit_col)]
-        end.flatten.compact
-      end
-
-      result = compute_hosts.collect do |c|
-        count_hash = {}
-
-        compute_perf = VimPerformanceAnalysis.get_daily_perf(c, options[:range], options[:ext_options], perf_cols)
-        # if we rely upon daily perf columns, make sure we have values for them
-        if perf_cols.nil? || compute_perf.present?
-          ts = compute_perf.last.timestamp if compute_perf
-
-          [:cpu, :vcpus, :memory].each do |type|
-            next if vm_needs[type].nil? || options[:target_options][type].nil?
-            if type == :vcpus && vm_needs[type] > c.total_vcpus
-              count_hash[type] = {:total => 0}
-              next
-            end
-            avail, usage = offers(compute_perf, ts, options[:target_options][type], type, c)
-            count_hash[type] = {:total => can_fit(avail, usage, vm_needs[type])}
-          end
-
-          unless vm_needs[:storage].nil? || options[:target_options][:storage].nil?
-            details = []
-            total   = 0
-            type    = :storage
-            storages_for_compute_target(c).each do |s|
-              avail, usage = offers(compute_perf, ts, options[:target_options][type], type, s)
-              fits = can_fit(avail, usage, vm_needs[type])
-              details << {s.id => fits}
-              total += fits unless fits.nil?
-            end
-            count_hash[type] = {:total => total, :details => details}
-          end
-        end
-        count_hash[:total] = {:total => count_hash.each_value.pluck(:total).compact.max}
-        {:target => c, :count => count_hash}
-      end
-
-      result = how_many_more_can_fit_host_to_cluster_results(result) if @compute.first.kind_of?(EmsCluster)
-
-      # Returns an array of hashes
-      # [{:target => Host/Cluster Object, :count => {:total   => {:total => Overall number of instances of provided VM that will fit in the target},
-      #                                              :cpu     => {:total => Count based on CPU},
-      #                                              :memory  => {:total => Count based on memory},
-      #                                              :storage => {:total => Count based on storage, :details => [{<storage.id> => Count for this storage}, ...],
-      # ...]
-      return result, vm_needs
-    end
-
-    def how_many_more_can_fit_host_to_cluster_results(result)
-      nh = {}
-      result.each do |v|
-        cluster = @hosts_to_cluster[v[:target].id]
-        nh[cluster.id] ||= {:target => cluster}
-        [:cpu, :vcpus, :memory, :storage, :total].each do |type|
-          next if v[:count][type].nil?
-
-          nh[cluster.id][:count] ||= {}
-          nh[cluster.id][:count][type] ||= {:total => 0}
-
-          chash = nh[cluster.id][:count][type]
-          hhash = v[:count][type]
-
-          unless type == :storage
-            chash[:total] += hhash[:total] unless hhash[:total].nil?
-          else
-            # build up array of storage details unique by storage Id
-            chash[:details] ||= []
-            hhash[:details].each do |h|
-              id, = h.to_a.flatten
-              chash[:details] << h unless chash[:details].find { |i| i.keys.first == id }
-            end
-          end
-        end
-      end
-
-      result = []
-      nh.each do |_cid, v|
-        chash = v[:count][:storage]
-        # Calculate storage total based on merged counts.
-        chash[:total] = chash[:details].inject(0) do|t, h|
-          k, val = h.to_a.flatten
-          t += val
-        end if v[:count].key?(:storage)
-        #
-        chash = v[:count]
-        [:cpu, :vcpus, :memory, :storage].each do |type|
-          next unless chash.key?(type)
-          chash[:total][:total] = chash[type][:total] if chash[type][:total] < chash[:total][:total]
-        end
-        result << v
-      end
-
-      result
     end
 
     VM_CONSUMES_METRIC_DEFAULT = {
@@ -437,7 +317,6 @@ module VimPerformanceAnalysis
                   .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
                   .where(options[:conditions]).order("timestamp")
                   .select(options[:select])
-                  .to_a
   end
 
   # @param obj base object
@@ -492,7 +371,7 @@ module VimPerformanceAnalysis
         c, e = t.split("/")
         cat = classifications.fetch_path(c, :category)
         cat_desc = cat.nil? ? c.titleize : cat.description
-        ent = cat.nil? ? nil : classifications.fetch_path(c, :entry, e)
+        ent = cat && classifications.fetch_path(c, :entry, e)
         ent_desc = ent.nil? ? e.titleize : ent.description
         h[tag] = "#{ui_lookup(:model => p.resource_type)}: #{cat_desc}: #{ent_desc}"
       end
@@ -536,11 +415,11 @@ module VimPerformanceAnalysis
         mm[k] = val unless val.nil?
         mm
       end
-      h.reject! { |k, _v| perf_klass.virtual_attribute? k }
+      h.reject! { |k, _v| perf_klass.virtual_attribute?(k) }
     end
 
     result.inject([]) do |recs, k|
-      ts, v = k
+      _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
         Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
@@ -552,36 +431,32 @@ module VimPerformanceAnalysis
   end
 
   def self.calc_slope_from_data(recs, x_attr, y_attr)
-    recs = recs.sort { |a, b| a.send(x_attr) <=> b.send(x_attr) } if recs.first.respond_to?(x_attr)
+    recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
-    y_array, x_array = recs.inject([]) do |arr, r|
-      arr[0] ||= []; arr[1] ||= []
-      next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
+    coordinates = recs.each_with_object([]) do |r, arr|
+      next unless r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
-        next(arr)
+        next
       end
-      arr[0] << r.send(y_attr).to_f
-      # arr[1] << r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
+      y = r.send(y_attr).to_f
+      # y = r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
       adj_x_attr = "time_profile_adjusted_#{x_attr}"
       if r.respond_to?(adj_x_attr)
-        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr[1].length.days.to_i))
-        arr[1] << r.send(adj_x_attr).to_i # Caculate by using the number of days out from the first timestamp
+        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
+        x = r.send(adj_x_attr).to_i # Calculate by using the number of days out from the first timestamp
       else
-        arr[1] << r.send(x_attr).to_i
+        x = r.send(x_attr).to_i
       end
-      arr
+      arr << [x, y]
     end
 
     begin
-      slope_arr = MiqStats.slope(x_array.to_miq_a, y_array.to_miq_a)
-    rescue ZeroDivisionError
-      slope_arr = []
-    rescue => err
-      _log.warn("#{err.message}, calculating slope")
-      slope_arr = []
+      Math.linear_regression(*coordinates)
+    rescue StandardError => err
+      _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+      nil
     end
-    slope_arr
   end
 
   def self.get_daily_perf(obj, range, ext_options, perf_cols)

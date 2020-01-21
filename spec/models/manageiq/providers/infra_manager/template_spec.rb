@@ -9,7 +9,7 @@ describe TemplateInfra do
     end
 
     it "with a host relationship" do
-      subject.host = FactoryGirl.build(:host)
+      subject.host = FactoryBot.build(:host)
 
       expect(subject).to receive(:reconnect_events)
       expect(subject).to receive(:classify_with_parent_folder_path)

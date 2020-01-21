@@ -25,7 +25,7 @@ class FileDepotFtp < FileDepot
                                                                                       :uri     => uri,
                                                                                       :id      => authentication_userid}
       else
-        file.update_attributes(
+        file.update(
           :state   => "available",
           :log_uri => destination_file
         )
@@ -63,7 +63,7 @@ class FileDepotFtp < FileDepot
   end
 
   def connect(cred_hash = nil)
-    host       = URI.split(URI.encode(uri))[2]
+    host = URI(uri).hostname
 
     begin
       _log.info("Connecting to #{self.class.name}: #{name} host: #{host}...")
@@ -90,15 +90,22 @@ class FileDepotFtp < FileDepot
     false
   end
 
+  def self.display_name(number = 1)
+    n_('FTP', 'FTPs', number)
+  end
+
   private
 
   def create_directory_structure(directory_path)
-    Pathname.new(directory_path).descend do |path|
-      next if file_exists?(path)
-
-      _log.info("creating #{path}")
-      ftp.mkdir(path.to_s)
+    pwd = ftp.pwd
+    directory_path.to_s.split('/').each do |directory|
+      unless ftp.nlst.include?(directory)
+        _log.info("creating #{directory}")
+        ftp.mkdir(directory)
+      end
+      ftp.chdir(directory)
     end
+    ftp.chdir(pwd)
   end
 
   def upload(source, destination)

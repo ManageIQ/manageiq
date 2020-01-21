@@ -19,16 +19,53 @@ module EvmDba
     return %w( 127.0.0.1 localhost ).include?(config['host']) || config['host'].blank?
   end
 
-  def self.start
-    require File.expand_path(File.join(Rails.root, 'lib/evm_database_ops'))
-    Dir.chdir(Rails.root)
-    EvmDatabaseOps.start
+  def self.with_options(*option_types, &block)
+    require 'optimist'
+
+    Optimist.options(EvmRakeHelper.extract_command_options) do
+      option_types.each do |type|
+        case type
+        when :db_credentials
+          opt :username,           "Username",                     :type => :string
+          opt :password,           "Password",                     :type => :string
+          opt :hostname,           "Hostname",                     :type => :string
+          opt :port,               "Port",                         :type => :string
+          opt :dbname,             "Database name",                :type => :string
+        when :local_file
+          opt :local_file,         "Destination file",             :type => :string, :required => true
+        when :remote_file
+          opt :skip_directory,     "Don't add backup directory",   :type => :boolean, :default => false
+          opt :remote_file_name,   "Destination depot filename",   :type => :string
+        when :splitable
+          opt :byte_count,         "Size to split files into",     :type => :string
+        when :remote_uri
+          opt :uri,                "Destination depot URI",        :type => :string, :required => true
+          opt :uri_username,       "Destination depot username",   :type => :string
+          opt :uri_password,       "Destination depot password",   :type => :string
+        when :aws
+          opt :aws_region,         "Destination depot AWS region", :type => :string
+        when :exclude_table_data
+          opt :exclude_table_data, "Tables to exclude data",       :type => :strings
+        end
+      end
+      instance_exec(&block) if block_given?
+    end.delete_nils
   end
 
-  def self.stop
-    require File.expand_path(File.join(Rails.root, 'lib/evm_database_ops'))
-    Dir.chdir(Rails.root)
-    EvmDatabaseOps.stop
+  DB_OPT_KEYS = [:dbname, :username, :password, :hostname, :port, :exclude_table_data, :byte_count].freeze
+  def self.collect_db_opts(opts)
+    db_opts = {}
+    DB_OPT_KEYS.each { |k| db_opts[k] = opts[k] if opts[k] }
+    db_opts
+  end
+
+  CONNECT_OPT_KEYS = %i(uri uri_username uri_password aws_region remote_file_name skip_directory).freeze
+  def self.collect_connect_opts(opts)
+    connect_opts = {}
+    CONNECT_OPT_KEYS.each { |k| connect_opts[k] = opts[k] if opts[k] }
+    connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
+    connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+    connect_opts
   end
 end
 
@@ -36,18 +73,18 @@ namespace :evm do
   namespace :db do
     desc 'Start the local ManageIQ EVM Database (VMDB)'
     task :start do
-      EvmDba.start
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
     end
 
     desc 'Stop the local ManageIQ EVM Database (VMDB)'
     task :stop do
-      EvmDba.stop
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
     end
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
       begin
-        EvmDba.start
+        LinuxAdmin::Service.new(PostgresAdmin.service_name).start
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
@@ -56,7 +93,7 @@ namespace :evm do
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
       begin
-        EvmDba.stop
+        LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
@@ -69,12 +106,7 @@ namespace :evm do
 
     desc "clean up database"
     task :gc do
-      require 'trollop'
-      opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-        opt :username,   "Username",         :type => :string
-        opt :password,   "Password",         :type => :string
-        opt :hostname,   "Hostname",         :type => :string
-        opt :dbname,     "Database name",    :type => :string
+      opts = EvmDba.with_options(:db_credentials) do
         opt :aggressive, "Aggressive gc: vaccume with all options and reindexing"
         opt :vacuum,     "Vacuum database"
         opt :reindex,    "Reindex database (or table if --table specified)"
@@ -85,7 +117,7 @@ namespace :evm do
         opt :table,      "Tablename to reindex (if only perorm on one)", :type => :string
       end
 
-      opts = opts.delete_if { |_k, v| v.nil? || v == false }
+      opts = opts.delete_if { |_, v| v == false }
       EvmDatabaseOps.gc(opts)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
@@ -113,28 +145,34 @@ namespace :evm do
     desc "Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices"
     task :reset => [:destroy, 'db:migrate']
 
+    # schema.rb doesn't support views which is used by metrics
+    task :db_setup_not_supported do
+      warn "db:setup and db:reset are not supported! Please use evm:db:reset, db:migrate, or test:vmdb:setup instead."
+      exit 1
+    end
+
     # Example usage:
     #   RAILS_ENV=production bin/rake evm:db:region -- --region 99
 
     desc 'Set the region of the current ManageIQ EVM Database (VMDB)'
     task :region do
-      require 'trollop'
-      opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-        opt :region, "Region number", :type => :integer, :required => true
+      opts = EvmDba.with_options do
+        opt :region, "Region number", :type => :integer, :required => ENV["REGION"].blank?
       end
 
       Dir.chdir(Rails.root)
       begin
         #TODO: Raise an error if region is not valid
-        region = opts[:region]
+        ENV["REGION"] = opts[:region].to_s if opts[:region]
+        region = ENV["REGION"]
 
         region_file = Rails.root.join("REGION")
-        puts "Writing region: #{region} in #{region_file}..."
+        if File.exist?(region_file)
+          old_region = File.read(region_file)
+          File.delete(region_file)
+        end
 
-        old_region = File.exist?(region_file) ? File.read(region_file) : 0
-        File.write(region_file, region)
-
-        puts "Resetting #{Rails.env} database..."
+        puts "Resetting #{Rails.env} database to region #{region}..."
         ENV['VERBOSE'] = 'false' # Do not flood the output with migration details
         Rake::Task['evm:db:reset'].invoke
 
@@ -151,19 +189,6 @@ namespace :evm do
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
 
-    desc 'Check the current schema against the schema.yml file for inconsistencies'
-    task :check_schema => :environment do
-      message = EvmDatabase.check_schema
-      raise message if message
-      puts "The local schema is consistent with schema.yml"
-    end
-
-    desc 'Write the current schema to the schema.yml file'
-    task :write_schema => :environment do
-      EvmDatabase.write_expected_schema
-      puts "Wrote configured schema to schema.yml"
-    end
-
     # Example usage:
     #   bin/rake evm:db:backup:local -- --local-file /tmp/db_backup_test --dbname vmdb_production
     #   bin/rake evm:db:backup:remote -- --uri smb://dev005.manageiq.com/share1 --uri-username samba_one --uri-password "abc" --remote-file-name region1
@@ -174,16 +199,8 @@ namespace :evm do
       require File.expand_path(File.join(Rails.root, "lib", "evm_database_ops"))
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a local file'
       task :local do
-        require 'trollop'
-        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :local_file, "Destination file", :type => :string, :required => true
-          opt :username,   "Username",         :type => :string
-          opt :password,   "Password",         :type => :string
-          opt :hostname,   "Hostname",         :type => :string
-          opt :dbname,     "Database name",    :type => :string
-        end
+        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials)
 
-        opts.delete_if { |k,v| v.nil? }
         EvmDatabaseOps.backup(opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
@@ -191,25 +208,10 @@ namespace :evm do
 
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a remote file'
       task :remote do
-        require 'trollop'
-        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :remote_file_name, "Destination depot filename",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :password,         "Password",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
-        end
+        opts = EvmDba.with_options(:remote_uri, :aws, :remote_file, :splitable, :db_credentials)
 
-        db_opts = {}
-        [:dbname, :username, :password, :hostname].each { |k| db_opts[k] = opts[k] if opts[k] }
-
-        connect_opts = {}
-        [:uri, :uri_username, :uri_password, :remote_file_name].each { |k| connect_opts[k] = opts[k] if opts[k] }
-        connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
-        connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+        db_opts      = EvmDba.collect_db_opts(opts)
+        connect_opts = EvmDba.collect_connect_opts(opts)
 
         EvmDatabaseOps.backup(db_opts, connect_opts)
 
@@ -217,19 +219,34 @@ namespace :evm do
       end
     end
 
+    namespace :dump do
+      require Rails.root.join("lib", "evm_database_ops").expand_path.to_s
+      desc 'Dump the local ManageIQ EVM Database (VMDB) to a local file'
+      task :local do
+        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials, :exclude_table_data)
+
+        EvmDatabaseOps.dump(opts)
+
+        exit # exit so that parameters to the first rake task are not run as rake tasks
+      end
+
+      desc 'Dump the local ManageIQ EVM Database (VMDB) to a remote file'
+      task :remote do
+        opts = EvmDba.with_options(:remote_uri, :aws, :remote_file, :splitable, :db_credentials, :exclude_table_data)
+
+        db_opts      = EvmDba.collect_db_opts(opts)
+        connect_opts = EvmDba.collect_connect_opts(opts)
+
+        EvmDatabaseOps.dump(db_opts, connect_opts)
+
+        exit # exit so that parameters to the first rake task are not run as rake tasks
+      end
+    end
+
     namespace :restore do
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a local backup file'
-      task :local do
-        require 'trollop'
-        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :local_file, "Destination file", :type => :string, :required => true
-          opt :username,   "Username",         :type => :string
-          opt :password,   "Password",         :type => :string
-          opt :hostname,   "Hostname",         :type => :string
-          opt :dbname,     "Database name",    :type => :string
-        end
-
-        opts.delete_if { |k,v| v.nil? }
+      task :local => :environment do
+        opts = EvmDba.with_options(:local_file, :db_credentials)
 
         # If running through runner, disconnect any local connections
         ActiveRecord::Base.clear_all_connections! if ActiveRecord && ActiveRecord::Base
@@ -240,25 +257,11 @@ namespace :evm do
       end
 
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a remote backup file'
-      task :remote do
-        require 'trollop'
-        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :password,         "Password",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
-        end
+      task :remote => :environment do
+        opts = EvmDba.with_options(:remote_uri, :aws, :db_credentials)
 
-        db_opts = {}
-        [:dbname, :username, :password, :hostname].each { |k| db_opts[k] = opts[k] if opts[k] }
-
-        connect_opts = {}
-        [:uri, :uri_username, :uri_password].each { |k| connect_opts[k] = opts[k] if opts[k] }
-        connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
-        connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+        db_opts      = EvmDba.collect_db_opts(opts)
+        connect_opts = EvmDba.collect_connect_opts(opts)
 
         # If running through runner, disconnect any local connections
         ActiveRecord::Base.clear_all_connections! if ActiveRecord && ActiveRecord::Base
@@ -271,14 +274,13 @@ namespace :evm do
 
     # loads the v1 key into the enviroment
     task :environmentlegacykey => :environment do
-      MiqPassword.add_legacy_key('v0_key', :v0)
-      MiqPassword.add_legacy_key('v1_key', :v1)
+      ManageIQ::Password.add_legacy_key('v0_key', :v0)
+      ManageIQ::Password.add_legacy_key('v1_key', :v1)
     end
   end
 end
 
 Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
 
-Rake::Task["db:reset"].enhance do
-  warn "Caution: You ran db:reset which resets the DB from schema.rb. You probably want to re-run all the migrations with the current ruby/rails versions, so run bin/rake evm:db:reset instead."
-end
+Rake::Task["db:setup"].prerequisites.unshift("evm:db:db_setup_not_supported")
+Rake::Task["db:reset"].prerequisites.unshift("evm:db:db_setup_not_supported")

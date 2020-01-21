@@ -13,8 +13,8 @@ describe MiqBulkImport do
 
     it ".upload" do
       @file = StringIO.new("name,owner\nJD-C-T4.0.1.44,Joe\nJD-C-T4.0.1.43,Jerry")
-      vm = FactoryGirl.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
-      template = FactoryGirl.create(:template_vmware, :name => "JD-C-T4.0.1.43")
+      FactoryBot.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
+      FactoryBot.create(:template_vmware, :name => "JD-C-T4.0.1.43")
 
       ati = AssetTagImport.upload('VmOrTemplate', @file)
       expect(ati.stats[:good]).to eq(2)
@@ -22,8 +22,8 @@ describe MiqBulkImport do
 
     it "#apply" do
       @file = StringIO.new("name,owner\nJD-C-T4.0.1.44,Joe\nJD-C-T4.0.1.43,Jerry")
-      vm = FactoryGirl.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
-      template = FactoryGirl.create(:template_vmware, :name => "JD-C-T4.0.1.43")
+      vm = FactoryBot.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
+      template = FactoryBot.create(:template_vmware, :name => "JD-C-T4.0.1.43")
       ati = AssetTagImport.upload('VmOrTemplate', @file)
       ati.apply
 
@@ -50,7 +50,7 @@ describe MiqBulkImport do
     end
 
     it ".upload with no category" do
-      vm = FactoryGirl.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
+      FactoryBot.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
       ci = ClassificationImport.upload(@file)
       expect(ci.stats[:bad]).to eq(1)
       expect(ci.stats[:good]).to eq(0)
@@ -59,10 +59,10 @@ describe MiqBulkImport do
 
     it ".upload" do
       @file = StringIO.new("name,category,entry\nJD-C-T4.0.1.44,Environment,Test\nJD-C-T4.0.1.43,Environment,Test")
-      category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
-      entry = FactoryGirl.create(:classification, :parent_id => category.id, :name => 'test', :description => 'Test')
-      FactoryGirl.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
-      FactoryGirl.create(:template_vmware, :name => "JD-C-T4.0.1.43")
+      category = FactoryBot.create(:classification, :name => 'environment', :description => 'Environment')
+      FactoryBot.create(:classification, :parent_id => category.id, :name => 'test', :description => 'Test')
+      FactoryBot.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
+      FactoryBot.create(:template_vmware, :name => "JD-C-T4.0.1.43")
       ci = ClassificationImport.upload(@file)
       expect(ci.stats[:bad]).to eq(0)
       expect(ci.stats[:good]).to eq(2)
@@ -71,10 +71,10 @@ describe MiqBulkImport do
 
     it "#apply" do
       @file = StringIO.new("name,category,entry\nJD-C-T4.0.1.44,Environment,Test\nJD-C-T4.0.1.43,Environment,Test")
-      category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
-      entry = FactoryGirl.create(:classification, :parent_id => category.id, :name => 'test', :description => 'Test')
-      vm = FactoryGirl.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
-      template = FactoryGirl.create(:template_vmware, :name => "JD-C-T4.0.1.43")
+      category = FactoryBot.create(:classification, :name => 'environment', :description => 'Environment')
+      FactoryBot.create(:classification, :parent_id => category.id, :name => 'test', :description => 'Test')
+      vm = FactoryBot.create(:vm_vmware, :name => "JD-C-T4.0.1.44")
+      template = FactoryBot.create(:template_vmware, :name => "JD-C-T4.0.1.43")
       ci = ClassificationImport.upload(@file)
       ci.apply
 

@@ -24,17 +24,21 @@ cols:
 - miq_event_description
 - miq_policy_description
 - result
+- target_name
+- target_id
+- target_class
 
 # Included tables (joined, has_one, has_many) and columns
 include:
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - event_type
 - miq_event_description
 - miq_policy_description
 - result
+- target_name
 
 # Column titles, in order
 headers:
@@ -43,6 +47,7 @@ headers:
 - Miq Event Description
 - Miq Policy Description
 - Result
+- Target
 
 # Condition(s) string for the SQL query
 conditions:
@@ -76,7 +81,7 @@ dims:
 
 timeline:
   :field: PolicyEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Day
@@ -87,5 +92,5 @@ timeline:
     :unit: Week
     :width: 10
     :height: 0.6
-    :pixels: 200	
+    :pixels: 200
   :position: Last

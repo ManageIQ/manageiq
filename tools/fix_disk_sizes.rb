@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def getDinfo(vim)
   dinfo = []
   vim.virtualMachinesByMor.each do |_k, v|
@@ -16,24 +19,27 @@ def getDinfo(vim)
 end
 
 log_header = "MIQ(#{__FILE__})"
-$log.info "#{log_header} Correcting Disk Sizes..."
+$log.info("#{log_header} Correcting Disk Sizes...")
 
-disks_by_filename = Disk.all.inject({}) { |h, d| h[d.filename] = d; h }
+disks_by_filename = Disk.all.inject({}) do |h, d|
+  h[d.filename] = d
+  h
+end
+
 changed_disks = {}
 
 ExtManagementSystem.all.each do |e|
-  $log.info "#{log_header} Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]..."
+  $log.info("#{log_header} Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...")
 
   begin
     vim = e.connect
     dinfo = getDinfo(vim)
   rescue => err
-    $log.error "#{log_header} Error during Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Skipping"
+    $log.error("#{log_header} Error during Correcting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Skipping")
     $log.log_backtrace(err)
     next
   ensure
     vim.disconnect if vim rescue nil
-    vim = nil
   end
 
   dinfo.each do |di|
@@ -48,12 +54,12 @@ ExtManagementSystem.all.each do |e|
       # Only nil out 'size_on_disk' if the provision size does not match
       data[:new][:size_on_disk] = nil if data[:new][:size] != data[:old][:size]
       changed_disks[d.id] = data
-      d.update_attributes(data[:new])
+      d.update(data[:new])
     end
   end
 
-  $log.info "#{log_header} Collecting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Complete"
+  $log.info("#{log_header} Collecting Disk Sizes for disks under ExtManagementSystem name: [#{e.name}], id: [#{e.id}]...Complete")
 end
 
-$log.info "#{log_header} Changed disks: #{changed_disks.inspect}"
-$log.info "#{log_header} Correcting Disk Sizes...Complete"
+$log.info("#{log_header} Changed disks: #{changed_disks.inspect}")
+$log.info("#{log_header} Correcting Disk Sizes...Complete")

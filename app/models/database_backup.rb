@@ -1,7 +1,9 @@
 class DatabaseBackup < ApplicationRecord
   SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System'
+    'smb'   => 'Samba',
+    'nfs'   => 'Network File System',
+    's3'    => 'AWS S3',
+    'swift' => 'OpenStack Swift'
   }.freeze
 
   def self.supported_depots
@@ -31,8 +33,8 @@ class DatabaseBackup < ApplicationRecord
 
     options[:userid] ||= "system"
 
-    depot = FileDepot.find_by_id(options[:file_depot_id])
-    _backup(:uri => depot.uri, :username => depot.authentication_userid, :password => depot.authentication_password, :remote_file_name => backup_file_name)
+    depot = FileDepot.find_by(:id => options[:file_depot_id])
+    _backup(:uri => depot.uri, :username => depot.authentication_userid, :password => depot.authentication_password, :remote_file_name => backup_file_name, :region => depot.aws_region)
 
     if @sch && @sch.adhoc == true
       _log.info("Removing adhoc schedule: [#{@sch.id}] [#{@sch.name}]")
@@ -46,7 +48,7 @@ class DatabaseBackup < ApplicationRecord
   def _backup(options)
     # add the metadata about this backup to this instance: (region, source hostname, db version, md5, status, etc.)
 
-    connect_opts = options.slice(:uri, :username, :password)
+    connect_opts = options.slice(:uri, :username, :password, :region)
     connect_opts[:remote_file_name] = options[:remote_file_name] if options[:remote_file_name]
     EvmDatabaseOps.backup(current_db_opts, connect_opts)
   end

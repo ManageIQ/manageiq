@@ -1,6 +1,16 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
+  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
+                                 ContainerImage
+                                 ContainerNode
+                                 ContainerProject
+                                 ContainerReplicator
+                                 ExtManagementSystem
+                                 Host
+                                 PhysicalServer
+                                 Vm).freeze
+
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
@@ -8,6 +18,10 @@ class MiqPolicy < ApplicationRecord
   include UuidMixin
   include YAMLImportExportMixin
   before_validation :default_name_to_guid, :on => :create
+
+  default_value_for :towhat, 'Vm'
+  default_value_for :active, true
+  default_value_for :mode,   'control'
 
   # NOTE: If another class references MiqPolicy through an ActiveRecord association,
   #   particularly has_one and belongs_to, calling .conditions will result in
@@ -22,8 +36,14 @@ class MiqPolicy < ApplicationRecord
 
   virtual_has_many :miq_event_definitions, :uses => {:miq_policy_contents => :miq_event_definition}
 
-  validates_presence_of     :name, :description, :guid
-  validates_uniqueness_of   :name, :description, :guid
+  validates :description, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness => true
+  validates :mode, :inclusion => { :in => %w(compliance control) }
+  validates :towhat, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
+                                     :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }
+
+  scope :with_mode,   ->(mode)   { where(:mode => mode) }
+  scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
 
   serialize :expression
 
@@ -55,7 +75,6 @@ class MiqPolicy < ApplicationRecord
             :name        => policy.attributes["name"],
             :description => policy.attributes["description"],
             :expression  => MiqExpression.new(policy.condition),
-            :modifier    => policy.modifier,
             :towhat      => "Vm"
           )]
         else
@@ -101,11 +120,6 @@ class MiqPolicy < ApplicationRecord
       next unless pe.qualifier == on.to_s
       pe.get_action(on)
     end.compact
-  end
-
-  def action_result_for_event(action, event)
-    pe = miq_policy_contents.find_by(:miq_action => action, :miq_event_definition => event)
-    pe.qualifier == "success"
   end
 
   def delete_event(event)
@@ -175,12 +189,17 @@ class MiqPolicy < ApplicationRecord
       MiqEventDefinition.find_by(:name => event)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Policy', 'Policies', number)
+  end
+
   private_class_method :find_event_def
 
   def self.evaluate_conditions(plist, target, mode, inputs, result)
     failed = []
     succeeded = []
-    plist.each do|p|
+    plist.each do |p|
       logger.info("MIQ(policy-enforce_policy): Resolving policy [#{p.description}]...")
       if p.conditions.empty?
         always_condition = {"id" => nil, "description" => "always", "result" => "allow"}
@@ -207,7 +226,7 @@ class MiqPolicy < ApplicationRecord
   def self.evaluate_conditions_for_policy(target, policy, mode, inputs)
     cond_result = "allow"
     clist = []
-    policy.conditions.uniq.each do|c|
+    policy.conditions.uniq.each do |c|
       unless c.applies_to?(target, inputs)
         # skip conditions that do not apply based on applies_to_exp
         logger.info("MIQ(policy-enforce_policy): Resolving policy [#{policy.description}], Condition: [#{c.description}] does not apply, skipping...")
@@ -325,13 +344,9 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.eval_condition(c, rec, inputs = {})
-    possible_results = c['modifier'] == 'allow' ? %w(allow deny) : %w(deny allow)
-    begin
-      index = Condition.evaluate(c, rec, inputs) ? 0 : 1
-      possible_results[index]
-    rescue => err
-      logger.log_backtrace(err)
-    end
+    Condition.evaluate(c, rec, inputs) ? 'allow' : 'deny'
+  rescue => err
+    logger.log_backtrace(err)
   end
   private_class_method :eval_condition
 
@@ -354,18 +369,6 @@ class MiqPolicy < ApplicationRecord
 
   def first_and_last_event
     [first_event, last_event].compact
-  end
-
-  def self.seed
-    all.each do |p|
-      attrs = {}
-      attrs[:towhat] = "Vm"      if p.towhat.nil?
-      attrs[:active] = true      if p.active.nil?
-      attrs[:mode]   = "control" if p.mode.nil?
-      next if attrs.empty?
-      _log.info("Updating [#{p.name}]")
-      p.update_attributes(attrs)
-    end
   end
 
   def self.get_policies_for_target(target, mode, event, inputs = {})
@@ -447,7 +450,6 @@ class MiqPolicy < ApplicationRecord
   def add_action_for_event(event, action, opt_hash = nil)
     # we now expect an options hash provided by the UI, merge the qualifier with the options_hash
     # overwriting with the values from the options hash
-    #    _log.debug("opt_hash: #{opt_hash.inspect}")
     opt_hash = {:qualifier => :failure}.merge(opt_hash)
 
     # update the correct DB sequence and synchronous value with the value from the UI

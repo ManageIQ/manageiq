@@ -2,10 +2,10 @@
 
 describe BinaryBlob do
   context "#binary= and #binary" do
-    before { @blob = FactoryGirl.build(:binary_blob, :name => "test") }
+    before { @blob = FactoryBot.build(:binary_blob, :name => "test") }
 
     subject do
-      @blob.binary = @data.dup # binary= is descructive (it changes the object passed to it)
+      @blob.binary = @data.dup # binary= is destructive (it changes the object passed to it)
       @blob.save
       @blob.reload
       @blob.binary
@@ -47,7 +47,7 @@ describe BinaryBlob do
   end
 
   context "#dump_binary" do
-    before { @blob = FactoryGirl.build(:binary_blob, :name => "test") }
+    before { @blob = FactoryBot.build(:binary_blob, :name => "test") }
 
     subject do
       @blob.binary = @data.dup
@@ -77,7 +77,7 @@ describe BinaryBlob do
 
   describe "serializing and deserializing data" do
     it "can store and load data as YAML" do
-      bb = FactoryGirl.build(:binary_blob)
+      bb = FactoryBot.build(:binary_blob)
       data = "foo"
 
       bb.store_data("YAML", data)
@@ -86,7 +86,7 @@ describe BinaryBlob do
     end
 
     it "can store and load Marshaled data" do
-      bb = FactoryGirl.build(:binary_blob)
+      bb = FactoryBot.build(:binary_blob)
       data = "foo"
 
       bb.store_data("Marshal", data)
@@ -97,12 +97,12 @@ describe BinaryBlob do
 
   describe "#serializer" do
     it "returns YAML if the data_type is YAML" do
-      bb = FactoryGirl.build(:binary_blob, :data_type => "YAML")
+      bb = FactoryBot.build(:binary_blob, :data_type => "YAML")
       expect(bb.serializer).to be(YAML)
     end
 
     it "returns Marshal if data_type is not YAML" do
-      bb = FactoryGirl.build(:binary_blob, :data_type => "unknown")
+      bb = FactoryBot.build(:binary_blob, :data_type => "unknown")
       expect(bb.serializer).to be(Marshal)
     end
   end

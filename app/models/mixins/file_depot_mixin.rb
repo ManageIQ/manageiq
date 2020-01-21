@@ -4,8 +4,10 @@ require 'mount/miq_generic_mount_session'
 module FileDepotMixin
   extend ActiveSupport::Concern
   SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System'
+    'smb'   => 'Samba',
+    'nfs'   => 'Network File System',
+    's3'    => 'Amazon Web Services',
+    'swift' => 'OpenStack Swift'
   }.freeze
 
   included do
@@ -37,7 +39,7 @@ module FileDepotMixin
       # Strip any leading and trailing whitespace
       uri_str.strip!
 
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI.encode(uri_str))
+      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI.encode(uri_str))
       scheme
     end
   end

@@ -1,7 +1,7 @@
 describe "Server Environment Management" do
   context ".spartan_mode" do
-    before(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
-    after(:each) { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
+    before { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
+    after { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
 
     it "when ENV['MIQ_SPARTAN'] is not set" do
       allow(ENV).to receive(:[]).with('MIQ_SPARTAN').and_return(nil)
@@ -45,8 +45,8 @@ describe "Server Environment Management" do
   end
 
   context ".minimal_env_options" do
-    before(:each) { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
-    after(:each) { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
+    before { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
+    after { MiqServer.class_eval { instance_variable_set :@minimal_env_options, nil } }
 
     it "when spartan_mode is 'minimal'" do
       allow(MiqServer).to receive(:spartan_mode).and_return("minimal")
@@ -66,7 +66,7 @@ describe "Server Environment Management" do
 
   context ".startup_mode" do
     context "when minimal_env? is true" do
-      before(:each) { allow(MiqServer).to receive(:minimal_env?).and_return(true) }
+      before { allow(MiqServer).to receive(:minimal_env?).and_return(true) }
 
       it "when minimal_env_options is empty" do
         allow(MiqServer).to receive(:minimal_env_options).and_return([])
@@ -97,13 +97,29 @@ describe "Server Environment Management" do
       expect(MiqQueue.count).to eql 0
     end
 
-    it "database disk exceeds usage" do
-      disks = [{:used_bytes_percent => 85, :mount_point => '/var/lib/pgsql'}]
-      expect(@miq_server.check_disk_usage(disks))
-      queue = MiqQueue.first
+    [
+      '/var/lib/pgsql',        'evm_server_db_disk_high_usage',
+      '/var/www/miq/vmdb/log', 'evm_server_log_disk_high_usage',
+      '/',                     'evm_server_system_disk_high_usage',
+      '/boot',                 'evm_server_boot_disk_high_usage',
+      '/home',                 'evm_server_home_disk_high_usage',
+      '/var',                  'evm_server_var_disk_high_usage',
+      '/var/log',              'evm_server_var_log_disk_high_usage',
+      '/var/log/audit',        'evm_server_var_log_audit_disk_high_usage',
+      '/var/www/miq/vmdb/log', 'evm_server_log_disk_high_usage',
+      '/var/www/miq_tmp',      'evm_server_miq_tmp_disk_high_usage',
+      '/tmp',                  'evm_server_tmp_disk_high_usage'
+    ].each_slice(2) do |path, event|
+      it "raises an event when disk exceeds usage for #{path}" do
+        disks = [{:used_bytes_percent => 85, :mount_point => path}]
+        expect(@miq_server.check_disk_usage(disks))
+        expect(MiqQueue.count).to eql(1)
+        queue = MiqQueue.first
 
-      expect(queue.args[1]).to eql 'evm_server_db_disk_high_usage'
-      expect(queue.args[2][:event_details]).to include disks.first[:mount_point]
+        expect(queue.method_name).to eql("raise_evm_event")
+        expect(queue.args[1]).to eql(event)
+        expect(queue.args[2][:event_details]).to include disks.first[:mount_point]
+      end
     end
   end
 end

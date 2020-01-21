@@ -1,4 +1,5 @@
 describe MiqEventDefinition do
+  let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do
       let!(:set1) { create_set!('host_operations') }
@@ -16,7 +17,7 @@ describe MiqEventDefinition do
         context 'seeding default event definitions from that csv' do
           before do
             allow(File).to receive(:open).and_return(StringIO.new(csv))
-            MiqEventDefinition.seed_default_events
+            MiqEventDefinition.seed_default_events(event_defs)
           end
 
           it 'should create an event definition and make it a member of the set' do
@@ -37,7 +38,7 @@ describe MiqEventDefinition do
             context 'seeding again' do
               before do
                 allow(File).to receive(:open).and_return(StringIO.new(csv))
-                MiqEventDefinition.seed_default_events
+                MiqEventDefinition.seed_default_events(event_defs)
               end
 
               it 'should update the membership' do
@@ -60,14 +61,14 @@ describe MiqEventDefinition do
     it "returns event set type" do
       set_type = 'set_testing'
       set = MiqEventDefinitionSet.create(:name => set_type, :description => "Set testing")
-      event = FactoryGirl.create(:miq_event_definition, :name => "vm_start")
+      event = FactoryBot.create(:miq_event_definition, :name => "vm_start")
       set.add_member(event)
 
       expect(event.etype.name).to eq(set_type)
     end
 
     it "returns nil when not belong to any event set" do
-      event = FactoryGirl.create(:miq_event_definition, :name => "test_event")
+      event = FactoryBot.create(:miq_event_definition, :name => "test_event")
       expect(event.etype).to be_nil
     end
   end
@@ -77,13 +78,13 @@ describe MiqEventDefinition do
 
     before do
       com_set = MiqEventDefinitionSet.create(:name => "compliance", :description => "Compliance Events")
-      FactoryGirl.create(:miq_event_definition,
+      FactoryBot.create(:miq_event_definition,
                          :name       => "host_compliance_check",
                          :event_type => "Default").tap { |e| com_set.add_member(e) }
     end
 
     it 'has all default control policy events with set type' do
-      event = FactoryGirl.create(:miq_event_definition, :name => "some_event", :event_type => "Default")
+      event = FactoryBot.create(:miq_event_definition, :name => "some_event", :event_type => "Default")
       set   = MiqEventDefinitionSet.create(:name => "evm_operations", :description => "EVM Events")
       set.add_member(event)
 
@@ -95,8 +96,59 @@ describe MiqEventDefinition do
     end
 
     it 'has not the events without a set type' do
-      event = FactoryGirl.create(:miq_event_definition, :name => "test_event", :event_type => "Default")
+      event = FactoryBot.create(:miq_event_definition, :name => "test_event", :event_type => "Default")
       expect(subject.include?(event)).to be false
+    end
+  end
+
+  describe ".import_from_hash" do
+    it "won't create an event with a definition (keyed as a string)" do
+      attributes = {
+        "name"        => "foo",
+        "description" => "bar",
+        "definition"  => {:event => {:message => "`rm -rf /super/secret/file`"}}
+      }
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+
+    it "won't create an event with a definition (keyed as a symbol)" do
+      attributes = {
+        "name"        => "foo",
+        "description" => "bar",
+        :definition   => {:event => {:message => "`rm -rf /super/secret/file`"}},
+      }
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+
+    context 'with defaults in db' do
+      before do
+        MiqEventDefinitionSet.seed
+        described_class.seed_default_events(event_defs)
+      end
+
+      it "won't update an event with a definition (keyed as a string)" do
+        name = described_class.first.name
+        attributes = {"name" => name, "definition" => {:event => {:message => "`rm -rf /super/secret/file`"}}}
+
+        event, = described_class.import_from_hash(attributes)
+
+        expect(event.definition).to be_nil
+      end
+
+      it "won't update an event with a definition (keyed as a symbol)" do
+        name = described_class.first.name
+        attributes = {"name" => name, :definition => {:event => {:message => "`rm -rf /super/secret/file`"}}}
+
+        event, = described_class.import_from_hash(attributes)
+
+        expect(event.definition).to be_nil
+      end
     end
   end
 end

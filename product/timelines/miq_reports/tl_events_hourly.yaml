@@ -21,6 +21,7 @@ db: EventStream
 cols:
 - event_type
 - source
+- group_level
 - message
 - timestamp
 - ems_cluster_name
@@ -36,22 +37,22 @@ cols:
 - container_namespace
 - container_name
 - container_replicator_name
-- middleware_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  ext_management_system: 
-    columns: 
+  ext_management_system:
+    columns:
     - name
   availability_zone:
     columns:
     - name
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - event_type
 - source
+- group_level
 - ext_management_system.name
 - message
 - ems_cluster_name
@@ -68,13 +69,13 @@ col_order:
 - container_namespace
 - container_name
 - container_replicator_name
-- middleware_name
 
 # Column titles, in order
 headers:
 - Date Time
 - Event Type
 - Event Source
+- Group Level
 - Provider
 - Message
 - Cluster
@@ -91,7 +92,6 @@ headers:
 - Container Project
 - Container
 - Container Replicator
-- Middleware Resource
 
 # Condition(s) string for the SQL query
 conditions:
@@ -125,7 +125,7 @@ dims:
 
 timeline:
   :field: EmsEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Hour

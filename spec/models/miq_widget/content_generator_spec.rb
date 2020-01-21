@@ -1,8 +1,9 @@
-describe MiqWidget::ContentGenerator do
+RSpec.describe MiqWidget::ContentGenerator do
   let(:content_generator) { described_class.new }
 
   describe "#generate" do
-    let(:widget) { double("MiqWidget", :id => 123, :title => "title", :log_prefix => "") }
+    let(:widget) { instance_double("MiqWidget", :id => 123, :title => "title", :log_prefix => "") }
+    let(:records) { instance_double(ActiveRecord::Relation) }
 
     context "when the class is MiqGroup" do
       let(:klass) { "MiqGroup" }
@@ -15,8 +16,8 @@ describe MiqWidget::ContentGenerator do
       before do
         allow(User).to receive(:where).with(:userid => 1).and_return([user1])
         allow(User).to receive(:where).with(:userid => 2).and_return([user2])
-        record = group
-        allow(MiqGroup).to receive(:find_by).with(:description => "description").and_return(record)
+        allow(MiqGroup).to receive(:in_my_region).and_return(records)
+        allow(records).to receive(:find_by).with(:description => "description").and_return(group)
       end
 
       context "when the group exists" do
@@ -29,6 +30,7 @@ describe MiqWidget::ContentGenerator do
           end
 
           it "returns the result" do
+            expect(MiqGroup).to receive(:in_my_region)
             expect(content_generator.generate(widget, klass, group_description, nil, timezones)).to eq([4, 5])
           end
         end
@@ -63,8 +65,8 @@ describe MiqWidget::ContentGenerator do
       let(:group) { double("MiqGroup") }
 
       before do
-        record = group
-        allow(MiqGroup).to receive(:find_by).with(:description => "EvmGroup-administrator").and_return(record)
+        allow(MiqGroup).to receive(:in_my_region).and_return(records)
+        allow(records).to receive(:find_by).with(:description => "EvmGroup-administrator").and_return(group)
       end
 
       context "when the resulting length is equal to the expected count" do

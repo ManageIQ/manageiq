@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dialog_tab do
     sequence(:label) { |n| "Dialog Tab #{n}" }
 

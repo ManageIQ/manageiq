@@ -1,7 +1,7 @@
 describe "ArExtractObjects" do
   context "ArExtractObjectsTest" do
-    before(:each) do
-      vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
+    before do
+      vms = (0...2).collect { FactoryBot.create(:vm_vmware) }
       @vm1, @vm2 = *vms
       @id1, @id2 = vms.collect(&:id)
     end

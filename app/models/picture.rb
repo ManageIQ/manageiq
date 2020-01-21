@@ -1,15 +1,14 @@
 class Picture < ApplicationRecord
-  has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
-
+  validates :content, :presence => true
   validates :extension,
-            :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' },
-            :if        => :extension
+            :presence  => true,
+            :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' }
 
   virtual_has_one :image_href, :class_name => "String"
 
   URL_ROOT          = Rails.root.join("public").to_s
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
-  Dir.mkdir(DEFAULT_DIRECTORY) unless File.directory?(DEFAULT_DIRECTORY)
+  FileUtils.mkdir_p(DEFAULT_DIRECTORY)
 
   def self.directory
     @directory || DEFAULT_DIRECTORY
@@ -17,7 +16,7 @@ class Picture < ApplicationRecord
 
   def self.directory=(value)
     dir = File.join(URL_ROOT, url_path(value, URL_ROOT))
-    Dir.mkdir(dir) unless File.directory?(dir)
+    FileUtils.mkdir_p(dir)
     @directory = dir
   end
 
@@ -32,36 +31,27 @@ class Picture < ApplicationRecord
     end
   end
 
-  def content
-    binary_blob.try(:binary)
+  def self.create_from_base64(attributes = {})
+    attributes = attributes.with_indifferent_access
+    new(attributes.except(:content)).tap do |picture|
+      picture.content = Base64.strict_decode64(attributes[:content].to_s)
+      picture.save!
+    end
   end
 
   def content=(value)
-    self.binary_blob ||= BinaryBlob.new
-    self.binary_blob.binary = value
+    value.force_encoding('ASCII-8BIT')
+    super(value).tap { self.md5 = Digest::MD5.hexdigest(value) }
   end
 
   def size
     content.try(:length).to_i
   end
 
-  def md5
-    self.binary_blob.try(:md5)
-  end
-
-  def extension
-    self.binary_blob.try(:data_type)
-  end
-
-  def extension=(value)
-    self.binary_blob ||= BinaryBlob.new
-    self.binary_blob.data_type = value
-  end
-
   def basename
     @basename ||= begin
       raise _("must have a numeric id") unless id.kind_of?(Numeric)
-      "#{compressed_id}.#{extension}"
+      "#{id}.#{extension}"
     end
   end
 

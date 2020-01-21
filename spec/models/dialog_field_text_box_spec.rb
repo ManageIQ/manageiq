@@ -1,82 +1,141 @@
 describe DialogFieldTextBox do
-  context "dialog field text box without options hash" do
-    before do
-      @df = FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field')
+  describe "#initialize_value_context" do
+    let(:field) do
+      described_class.new(
+        :dynamic             => dynamic,
+        :load_values_on_init => load_values_on_init,
+        :show_refresh_button => show_refresh_button,
+        :default_value       => "default value"
+      )
+    end
+    let(:automate_value) { "value from automate" }
+    let(:load_values_on_init) { false }
+    let(:show_refresh_button) { false }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(automate_value)
+      end
+
+      context "when show_refresh_button is true" do
+        let(:show_refresh_button) { true }
+
+        context "when load_values_on_init is true" do
+          let(:load_values_on_init) { true }
+
+          it "sets the value to the automate value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("value from automate")
+          end
+        end
+
+        context "when load_values_on_init is false" do
+          let(:load_values_on_init) { false }
+
+          it "uses the default value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("default value")
+          end
+        end
+      end
+
+      context "when show_refresh_button is false" do
+        let(:show_refresh_button) { false }
+
+
+        context "when load_values_on_init is true" do
+          let(:load_values_on_init) { true }
+
+          it "sets the value to the automate value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("value from automate")
+          end
+        end
+
+        context "when load_values_on_init is false" do
+          let(:load_values_on_init) { false }
+
+          it "uses the default value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("default value")
+          end
+        end
+      end
     end
 
-    it "#protected?" do
-      expect(@df).not_to be_protected
-    end
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
 
-    it "#protected=" do
-      @df.protected = true
-      expect(@df).to be_protected
-    end
-
-    describe "#initialize_with_values" do
-      it "decrypts protected automate dialog values" do
-        password = "test"
-        @df.protected = true
-        @df.initialize_with_values(@df.automate_key_name => MiqPassword.encrypt(password))
-        expect(@df.value).to eq(password)
+      it "uses the default value" do
+        field.initialize_value_context
+        expect(field.instance_variable_get(:@value)).to eq("default value")
       end
     end
   end
 
-  context "dialog field text box without protected field" do
-    before do
-      @df = FactoryGirl.build(
-        :dialog_field_text_box,
-        :label   => 'test field',
-        :name    => 'test field',
-        :options => {:protected => false}
-      )
+  describe "#initial_values" do
+    let(:dialog_field) { described_class.new }
+
+    it "returns a blank string" do
+      expect(dialog_field.initial_values).to eq("")
     end
+  end
+
+  context "dialog field text box without options hash" do
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     it "#protected?" do
-      expect(@df).not_to be_protected
+      expect(df).not_to be_protected
+    end
+
+    it "#protected=" do
+      df.protected = true
+      expect(df).to be_protected
+    end
+  end
+
+  context "dialog field text box without protected field" do
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false}) }
+
+    it "#protected?" do
+      expect(df).not_to be_protected
     end
 
     it "#automate_key_name" do
-      expect(@df.automate_key_name).to eq("dialog_test field")
+      expect(df.automate_key_name).to eq("dialog_test field")
     end
   end
 
   context "dialog field text box with protected field" do
-    before do
-      @df = FactoryGirl.build(
-        :dialog_field_text_box,
-        :label   => 'test field',
-        :name    => 'test field',
-        :options => {:protected => true}
-      )
-    end
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
 
     it "#protected?" do
-      expect(@df).to be_protected
+      expect(df).to be_protected
     end
 
     it "#automate_output_value" do
-      @df.value = "test string"
+      df.value = "test string"
 
-      expect(@df.automate_output_value).to be_encrypted("test string")
+      expect(df.automate_output_value).to be_encrypted("test string")
     end
 
     it "#protected? with reset" do
-      @df.value = "test string"
+      df.value = "test string"
 
-      @df.options[:protected] = false
-      expect(@df).not_to be_protected
-      expect(@df.automate_output_value).to eq("test string")
+      df.options[:protected] = false
+      expect(df).not_to be_protected
+      expect(df.automate_output_value).to eq("test string")
     end
 
     it "#automate_key_name" do
-      expect(@df.automate_key_name).to eq("password::dialog_test field")
+      expect(df.automate_key_name).to eq("password::dialog_test field")
     end
   end
 
   context "validation" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     describe "#validate_field_data" do
       let(:dt) { double('DialogTab', :label => 'tab') }
@@ -95,13 +154,33 @@ describe DialogFieldTextBox do
         end
 
         it "returns an error when the value doesn't match the regex rule" do
-          df.value = '123'
+          df.value = 123
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
         end
 
         it "returns an error when no value is set" do
           df.value = nil
           expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is required')
+        end
+
+        context "when the validation rule is supposed to match a set of integers" do
+          before do
+            df.validator_rule = '916'
+          end
+
+          context "when the value is a string" do
+            it "returns nil" do
+              df.value = '916'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
+
+          context "when the value is an integer" do
+            it "returns nil" do
+              df.value = 916
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
+          end
         end
       end
 
@@ -122,14 +201,25 @@ describe DialogFieldTextBox do
         context "when data type is integer" do
           before { df.data_type = 'integer' }
 
-          it "returns nil when the value is a number" do
-            df.value = '123'
-            expect(df.validate_field_data(dt, dg)).to be_nil
+          context "when the value is a number string" do
+            it "returns nil" do
+              df.value = '123'
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
 
-          it "returns an error when the value is not a number" do
-            df.value = 'a12'
-            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+          context "when the value is not a number string" do
+            it "returns an error" do
+              df.value = 'a12'
+              expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
+            end
+          end
+
+          context "when the value is an actual integer" do
+            it "returns nil" do
+              df.value = 123
+              expect(df.validate_field_data(dt, dg)).to be_nil
+            end
           end
         end
       end
@@ -137,92 +227,43 @@ describe DialogFieldTextBox do
   end
 
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value, :data_type => data_type) }
+    let(:dialog_field) { described_class.new(:value => value, :data_type => data_type) }
 
-    context "when the dialog field is dynamic" do
-      let(:dynamic) { true }
+    context "when the value is nil" do
+      let(:value) { nil }
 
-      context "when the dialog field has a value already" do
-        let(:value) { "test" }
+      context "when the data_type is integer" do
+        let(:data_type) { "integer" }
 
-        context "when the data type is integer" do
-          let(:data_type) { "integer" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when the data type is string" do
-          let(:data_type) { "string" }
-
-          it "returns the current value" do
-            expect(dialog_field.value).to eq("test")
-          end
+        it "returns nil" do
+          expect(dialog_field.value).to be_nil
         end
       end
 
-      context "when the dialog field does not have a value" do
-        let(:value) { "" }
+      context "when the data_type is string" do
+        let(:data_type) { "string" }
 
-        before do
-          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
-        end
-
-        context "when the data type is an integer" do
-          let(:data_type) { "integer" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when the data type is a string" do
-          let(:data_type) { "string" }
-
-          it "returns the values from the value processor" do
-            expect(dialog_field.value).to eq("processor")
-          end
+        it "returns nil" do
+          expect(dialog_field.value).to be_nil
         end
       end
     end
 
-    context "when the dialog field is not dynamic" do
-      let(:dynamic) { false }
+    context "when the value is not nil" do
+      let(:value) { "test" }
 
-      context "when the data type is integer" do
+      context "when the data_type is integer" do
         let(:data_type) { "integer" }
 
-        context "when the value is nil" do
-          let(:value) { nil }
-
-          it "returns nil" do
-            expect(dialog_field.value).to eq(nil)
-          end
-        end
-
-        context "when the value is not nil" do
-          let(:value) { "test" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when there is no value" do
-          let(:value) { nil }
-
-          it "does not convert nil value to zero" do
-            expect(dialog_field.value).to be_nil
-          end
+        it "returns an integer converted value" do
+          expect(dialog_field.value).to eq(0)
         end
       end
 
-      context "when the data type is string" do
+      context "when the data_type is string" do
         let(:data_type) { "string" }
-        let(:value) { "test" }
 
-        it "returns the current value" do
+        it "returns the string" do
           expect(dialog_field.value).to eq("test")
         end
       end
@@ -244,6 +285,7 @@ describe DialogFieldTextBox do
         "data_type"      => "datatype",
         "value"          => value,
         "protected"      => true,
+        "description"    => "description",
         "required"       => true,
         "read_only"      => true,
         "validator_type" => "regex",
@@ -262,6 +304,10 @@ describe DialogFieldTextBox do
 
       it "sets the required" do
         expect(dialog_field.required).to be_truthy
+      end
+
+      it "sets the description" do
+        expect(dialog_field.description).to eq("description")
       end
 
       it "sets the read_only" do
@@ -283,7 +329,7 @@ describe DialogFieldTextBox do
       it_behaves_like "DialogFieldTextBox#normalize_automate_values"
 
       it "returns the initial values" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("<None>")
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq("")
       end
     end
 
@@ -374,7 +420,7 @@ describe DialogFieldTextBox do
         let(:protected_attr) { true }
 
         before do
-          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+          allow(ManageIQ::Password).to receive(:encrypt).with("12test").and_return("lol")
         end
 
         it "returns the encrypted value" do
@@ -398,7 +444,7 @@ describe DialogFieldTextBox do
         let(:protected_attr) { true }
 
         before do
-          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+          allow(ManageIQ::Password).to receive(:encrypt).with("12test").and_return("lol")
         end
 
         it "returns the encrypted value" do

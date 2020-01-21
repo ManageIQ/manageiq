@@ -1,8 +1,8 @@
 describe MiqProvisionMixin do
   describe "#get_owner" do
-    let(:owner) { FactoryGirl.create(:user_with_email) }
+    let(:owner) { FactoryBot.create(:user_with_email) }
     let(:options) { {:owner_email => owner.email} }
-    let(:requester) { FactoryGirl.create(:user_with_email) }
+    let(:requester) { FactoryBot.create(:user_with_email) }
     subject do
       Class.new do
         include MiqProvisionMixin
@@ -50,12 +50,12 @@ describe MiqProvisionMixin do
 
     describe ".current_group" do
       before do
-        owner.update_attributes(:current_group => my_group,
+        owner.update(:current_group => my_group,
                                 :miq_groups    => [my_group, my_alt_group])
       end
-      let(:my_group) { FactoryGirl.create(:miq_group) }
-      let(:my_alt_group) { FactoryGirl.create(:miq_group, :description => 'yay') }
-      let(:bad_group) { FactoryGirl.create(:miq_group, :description => 'boo') }
+      let(:my_group) { FactoryBot.create(:miq_group) }
+      let(:my_alt_group) { FactoryBot.create(:miq_group, :description => 'yay') }
+      let(:bad_group) { FactoryBot.create(:miq_group, :description => 'boo') }
 
       it "keeps current_group" do
         expect(subject.get_owner.current_group).to eq(my_group)

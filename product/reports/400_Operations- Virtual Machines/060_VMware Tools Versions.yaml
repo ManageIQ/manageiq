@@ -1,86 +1,86 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "VMware Tools Versions"
-conditions: !ruby/object:MiqExpression 
-  context_type: 
-  exp: 
-    FIND: 
-      search: 
-        INCLUDES: 
+conditions: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    FIND:
+      search:
+        INCLUDES:
           field: Vm.guest_applications-name
           value: VMware
-      checkcount: 
-        ">=": 
+      checkcount:
+        ">=":
           field: <count>
           value: "0"
 col_options: {}
 
 order: Ascending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "VMware Tools Versions"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - guest_applications.name
 - guest_applications.version
 - guest_applications.release
 - name
 - host_name
 - host.vmm_version
-timeline: 
-file_mtime: 
-tz: 
-categories: 
-time_profile_id: 
+timeline:
+file_mtime:
+tz:
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-col_formats: 
-- 
-- 
-- 
-- 
-- 
-- 
-include: 
-  guest_applications: 
-    columns: 
+col_formats:
+-
+-
+-
+-
+-
+-
+include:
+  guest_applications:
+    columns:
     - name
     - version
     - release
-  host: 
-    columns: 
+  host:
+    columns:
     - vmm_version
 db: Vm
-cols: 
+cols:
 - name
 - host_name
 template_type: report
 group: c
-sortby: 
+sortby:
 - guest_applications.version
 - name
 rpt_options: {}
 
-headers: 
+headers:
 - Application Name
 - VMware Tools Version
 - VMware Tools Release
 - VM Name
 - Assigned to Host
 - Host Version
-display_filter: !ruby/object:MiqExpression 
-  context_type: 
-  exp: 
-    or: 
-    - "=": 
+display_filter: !ruby/object:MiqExpression
+  context_type:
+  exp:
+    or:
+    - "=":
         field: Vm.guest_applications-name
         value: VMwareTools
-    - "=": 
+    - "=":
         field: Vm.guest_applications-name
         value: VMware Tools

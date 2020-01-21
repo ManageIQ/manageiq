@@ -1,34 +1,46 @@
 class Hardware < ApplicationRecord
-  include VirtualTotalMixin
   belongs_to  :vm_or_template
   belongs_to  :vm,            :foreign_key => :vm_or_template_id
   belongs_to  :miq_template,  :foreign_key => :vm_or_template_id
   belongs_to  :host
   belongs_to  :computer_system
+  belongs_to  :physical_switch, :foreign_key => :switch_id, :inverse_of => :hardware
 
   has_many    :networks, :dependent => :destroy
+  has_many    :firmwares, :as => :resource, :dependent => :destroy
 
-  has_many    :disks, -> { order :location }, :dependent => :destroy
-  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :disks, -> { order(:location) }, :dependent => :destroy
+  has_many    :hard_disks, -> { where.not(:device_type => 'floppy').where.not(Disk.arel_table[:device_type].lower.matches('%cdrom%')).order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :floppies, -> { where(:device_type => 'floppy').order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :cdroms, -> { where(Disk.arel_table[:device_type].lower.matches('%cdrom%')).order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
 
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
 
   has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :storage_adapters, -> { where(:device_type => 'storage') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :nics, -> { where(:device_type => 'ethernet') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :ports, -> { where.not(:device_type => 'storage') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :physical_ports, -> { where(:device_type => 'physical_port') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :connected_physical_switches, :through => :guest_devices
+
+  has_many    :management_devices, -> { where(:device_type => 'management') }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
+
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
+  virtual_total     :num_disks,              :disks
+  virtual_total     :num_hard_disks,         :hard_disks
 
   def ipaddresses
-    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
+    @ipaddresses ||= if networks.loaded?
+                       networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
+                     else
+                       networks.pluck(:ipaddress, :ipv6address).flatten.tap(&:compact!).tap(&:uniq!)
+                     end
   end
 
   def hostnames
@@ -38,6 +50,15 @@ class Hardware < ApplicationRecord
   def mac_addresses
     @mac_addresses ||= nics.collect(&:address).compact.uniq
   end
+
+  def ram_size_in_bytes
+    memory_mb.to_i * 1.megabyte
+  end
+  # resulting sql: "(CAST("hardwares"."memory_mb" AS bigint) * 1048576)"
+  virtual_attribute :ram_size_in_bytes, :integer, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Multiplication.new(Arel::Nodes::NamedFunction.new("CAST", [t[:memory_mb].as("bigint")]),
+                                               1.megabyte))
+  end)
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
     "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
@@ -69,7 +90,7 @@ class Hardware < ApplicationRecord
       begin
         parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
       rescue => err
-        _log.warn err.to_s
+        _log.warn(err.to_s)
       end
     end
 
@@ -117,6 +138,36 @@ class Hardware < ApplicationRecord
       t[:disk_capacity]) * -100 + 100)
   end)
 
+  def provisioned_storage
+    if has_attribute?("provisioned_storage")
+      self["provisioned_storage"]
+    else
+      allocated_disk_storage.to_i + ram_size_in_bytes
+    end
+  end
+
+  # added casts because we were overflowing integers
+  # resulting sql:
+  # (
+  #   (COALESCE(
+  #     ((SELECT SUM("disks"."size")
+  #       FROM "disks"
+  #       WHERE "hardwares"."id" = "disks"."hardware_id")),
+  #     0
+  #   )) + (COALESCE(
+  #     (CAST("hardwares"."memory_mb" AS bigint)),
+  #     0
+  #   )) * 1048576
+  # )
+  virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
+    t.grouping(
+      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_attribute(:allocated_disk_storage), 0])) +
+      t.grouping(Arel::Nodes::NamedFunction.new(
+                   'COALESCE', [t.grouping(Arel::Nodes::NamedFunction.new('CAST', [t[:memory_mb].as("bigint")])), 0]
+      )) * 1.megabyte
+    )
+  end)
+
   def connect_lans(lans)
     return if lans.blank?
     nics.each do |n|
@@ -161,7 +212,7 @@ class Hardware < ApplicationRecord
         target.create(da)
       else
         da.delete('device_name') if target_type == :disk
-        found.update_attributes(da)
+        found.update(da)
       end
 
       # Remove the devices from the delete list if it matches on device_type and either location or address

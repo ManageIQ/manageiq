@@ -8,72 +8,94 @@ module Metric::Targets
     MiqRegion.my_region.perf_capture_always = options
   end
 
-  def self.capture_infra_targets(zone, options)
-    load_infra_targets_data(zone, options)
-    all_hosts = capture_host_targets(zone)
+  def self.targets_archived_from
+    archived_for_setting = Settings.performance.targets.archived_for
+    archived_for_setting.to_i_with_method.seconds.ago.utc
+  end
+
+  def self.capture_ems_targets(ems, options = {})
+    case ems
+    when EmsCloud                                then capture_cloud_targets([ems], options)
+    when EmsInfra                                then capture_infra_targets([ems], options)
+    when ::ManageIQ::Providers::ContainerManager then capture_container_targets([ems], options)
+    end
+  end
+
+  # If a Cluster, standalone Host, or Storage is not enabled, skip it.
+  # If a Cluster is enabled, capture all of its Hosts.
+  # If a Host is enabled, capture all of its Vms.
+  def self.capture_infra_targets(emses, options)
+    load_infra_targets_data(emses, options)
+    all_hosts = capture_host_targets(emses)
     targets = enabled_hosts = only_enabled(all_hosts)
     targets += capture_storage_targets(all_hosts) unless options[:exclude_storages]
-    targets += capture_vm_targets(enabled_hosts) unless options[:exclude_vms]
+    targets += capture_vm_targets(emses, enabled_hosts)
 
     targets
   end
 
   # Filter to enabled hosts. If it has a cluster consult that, otherwise consult the host itself.
-  # 
+  #
   # NOTE: if capture_storage takes only enabled, then move
   # this logic into capture_host_targets
   def self.only_enabled(hosts)
     hosts.select do |host|
-      host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?
+      host.supports_capture? && (host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?)
     end
   end
 
   # @return vms under all availability zones
   #         and vms under no availability zone
   # NOTE: some stacks (e.g. nova) default to no availability zone
-  def self.capture_cloud_targets(zone, options = {})
-    return [] if options[:exclude_vms]
+  def self.capture_cloud_targets(emses, options = {})
+    MiqPreloader.preload(emses, :vms => [{:availability_zone => :tags}, :ext_management_system])
 
-    MiqPreloader.preload(zone.ems_clouds, :vms => [{:availability_zone => :tags}, :ext_management_system])
-
-    zone.ems_clouds.flat_map(&:vms).select do |vm|
+    emses.flat_map(&:vms).select do |vm|
       vm.state == 'on' && (vm.availability_zone.nil? || vm.availability_zone.perf_capture_enabled?)
     end
   end
 
-  def self.capture_container_targets(zone, _options)
+  def self.with_archived(scope)
+    # We will look also for freshly archived entities, if the entity was short-lived or even sub-hour
+    archived_from = targets_archived_from
+    scope.where(:deleted_on => nil).or(scope.where(:deleted_on => (archived_from..Time.now.utc)))
+  end
+
+  def self.capture_container_targets(emses, _options)
     includes = {
       :container_nodes  => :tags,
       :container_groups => [:tags, :containers => :tags],
     }
 
-    MiqPreloader.preload(zone.ems_containers, includes)
+    MiqPreloader.preload(emses, includes)
 
     targets = []
-    zone.ems_containers.each do |ems|
-      targets += ems.container_nodes
-      targets += ems.container_groups
-      targets += ems.container_groups.flat_map(&:containers)
+    emses.each do |ems|
+      next unless ems.supports_metrics?
+
+      targets += with_archived(ems.all_container_nodes)
+      targets += with_archived(ems.all_container_groups)
+      targets += with_archived(ems.all_containers)
     end
 
     targets
   end
 
-  # preload zone with relations that will be used in cap&u
+  # preload emses with relations that will be used in cap&u
   #
   # tags are needed for determining if it is enabled.
   # ems is needed for determining queue name
   # cluster is used for hierarchies
-  def self.load_infra_targets_data(zone, options)
-    MiqPreloader.preload(zone, preload_hash_infra_targets_data(options))
-    postload_infra_targets_data(zone, options)
+  def self.load_infra_targets_data(emses, options)
+    MiqPreloader.preload(emses, preload_hash_infra_targets_data(options))
+    postload_infra_targets_data(emses, options)
   end
 
   def self.preload_hash_infra_targets_data(options)
     # Preload all of the objects we are going to be inspecting.
-    includes = {:ext_management_systems => {:hosts => {:ems_cluster => :tags, :tags => {}}}}
-    includes[:ext_management_systems][:hosts][:storages] = :tags unless options[:exclude_storages]
-    includes[:ext_management_systems][:hosts][:vms] = {} unless options[:exclude_vms]
+    includes = {:hosts => {:ems_cluster => :tags, :tags => {}}}
+    includes[:hosts][:storages] = :tags unless options[:exclude_storages]
+    includes[:vms] = {}
     includes
   end
 
@@ -86,30 +108,31 @@ module Metric::Targets
   # and since we also rely upon tags and clusters, this causes unnecessary data to be downloaded
   #
   # so we have introduced this to work around preload not working (and inverse_of)
-  def self.postload_infra_targets_data(zone, options)
+  def self.postload_infra_targets_data(emses, options)
     # populate ems (with tags / clusters)
-    zone.ext_management_systems.each do |ems|
+    emses.each do |ems|
       ems.hosts.each do |host|
         host.ems_cluster.association(:ext_management_system).target = ems if host.ems_cluster_id
-        unless options[:exclude_vms]
-          host.vms.each do |vm|
-            vm.association(:ext_management_system).target = ems if vm.ems_id
-            vm.association(:ems_cluster).target = host.ems_cluster if vm.ems_cluster_id
-          end
-        end
         unless options[:exclude_storages]
           host.storages.each do |storage|
             storage.ext_management_system = ems
           end
         end
       end
+      host_ids = ems.hosts.index_by(&:id)
+      clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
+      ems.vms.each do |vm|
+        vm.association(:ext_management_system).target = ems if vm.ems_id
+        vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
+        vm.association(:host).target = host_ids[vm.host_id] if vm.host_id
+      end
     end
   end
 
-  def self.capture_host_targets(zone)
+  def self.capture_host_targets(emses)
     # NOTE: if capture_storage_targets takes only enabled hosts
     # merge only_enabled into this method
-    zone.ext_management_systems.flat_map(&:hosts)
+    emses.flat_map(&:hosts)
   end
 
   # @param [Host] all hosts that have an ems
@@ -120,20 +143,11 @@ module Metric::Targets
     hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
+  # @param [Array<ExtManagementSystem>] emses Typically 1 ems for this zone
   # @param [Host] hosts that are enabled or cluster enabled
-  def self.capture_vm_targets(hosts)
-    hosts.select(&:perf_capture_enabled?)
-         .flat_map { |t| t.vms.select { |v| v.ext_management_system && v.state == 'on' } }
-  end
-
-  # If a Cluster, standalone Host, or Storage is not enabled, skip it.
-  # If a Cluster is enabled, capture all of its Hosts.
-  # If a Host is enabled, capture all of its Vms.
-  def self.capture_targets(zone = nil, options = {})
-    zone = MiqServer.my_server.zone if zone.nil?
-    zone = Zone.find(zone) if zone.kind_of?(Integer)
-    capture_infra_targets(zone, options) + \
-      capture_cloud_targets(zone, options) + \
-      capture_container_targets(zone, options)
+  # we want to work with only enabled_hosts, so hosts needs to be further filtered
+  def self.capture_vm_targets(emses, hosts)
+    enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
+    emses.flat_map { |e| e.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? } }
   end
 end

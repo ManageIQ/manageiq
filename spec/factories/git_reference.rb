@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :git_reference do
     sequence(:name) { |n| "git_ref#{seq_padded_for_sorting(n)}" }
   end

@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+created_on: 2014-05-09 15:43:52.639843000 Z
+updated_on: 2014-05-09 15:43:52.639843000 Z
+object:
+  attributes:
+    display_name:
+    name: inst4
+    inherits:
+    description:
+  fields: []

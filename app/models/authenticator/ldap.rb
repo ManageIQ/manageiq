@@ -4,9 +4,28 @@ module Authenticator
       'LDAP'
     end
 
-    def lookup_by_identity(username)
-      super ||
-        find_or_create_by_ldap(username)
+    def self.authenticates_for
+      super + %w(ldaps)
+    end
+
+    def self.validate_config(config)
+      if config[:ldaphost].blank?
+        [[:ldaphost, "ldaphost can't be blank"]]
+      else
+        []
+      end
+    end
+
+    def autocreate_user(username)
+      # when default group for ldap users is enabled, create the user
+      return unless config[:default_group_for_users]
+      default_group = MiqGroup.in_my_region.find_by(:description => config[:default_group_for_users])
+      return unless default_group
+      create_user_from_ldap(username) { [default_group] }
+    end
+
+    def user_authorizable_without_authentication?
+      true
     end
 
     private
@@ -23,30 +42,6 @@ module Authenticator
     def ldap_bind(username, password)
       ldap = MiqLdap.new(:auth => config)
       ldap if ldap.bind(username, password)
-    end
-
-    def find_or_create_by_ldap(username)
-      username = miq_ldap.fqusername(username)
-      user = userprincipal_for(username)
-      return user unless user.nil?
-
-      raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
-
-      create_user_from_ldap(username) do |lobj|
-        groups = match_groups(groups_for(lobj))
-        if groups.empty?
-          raise _("Unable to auto-create user because unable to match user's group membership to an EVM role")
-        end
-        groups
-      end
-    end
-
-    def autocreate_user(username)
-      # when default group for ldap users is enabled, create the user
-      return unless config[:default_group_for_users]
-      default_group = MiqGroup.find_by(:description => config[:default_group_for_users])
-      return unless default_group
-      create_user_from_ldap(username) { [default_group] }
     end
 
     def create_user_from_ldap(username)
@@ -76,7 +71,7 @@ module Authenticator
         ldap_bind(username, password)
     end
 
-    def find_external_identity(username)
+    def find_external_identity(username, *_args)
       # Ldap will be used for authentication and role assignment
       _log.info("Bind DN: [#{config[:bind_dn]}]")
       _log.info(" User FQDN: [#{username}]")
@@ -84,11 +79,6 @@ module Authenticator
       _log.debug("User obj from LDAP: #{lobj.inspect}")
 
       lobj
-    end
-
-    def userprincipal_for(username)
-      lobj = find_external_identity(username)
-      User.find_by_userid(userid_for(lobj, username))
     end
 
     def userid_for(lobj, username)
@@ -127,11 +117,14 @@ module Authenticator
 
     def update_user_attributes(user, _username, lobj)
       user.userid     = ldap.normalize(ldap.get_attr(lobj, :userprincipalname) || ldap.get_attr(lobj, :dn))
-      user.name       = ldap.get_attr(lobj, :displayname)
       user.first_name = ldap.get_attr(lobj, :givenname)
       user.last_name  = ldap.get_attr(lobj, :sn)
       email           = ldap.get_attr(lobj, :mail)
+      email           = email.first if email.kind_of?(Array)
       user.email      = email unless email.blank?
+      user.name       = ldap.get_attr(lobj, :displayname)
+      user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
+      user.name       = user.userid if user.name.blank?
     end
 
     REQUIRED_LDAP_USER_PROXY_KEYS = [:basedn, :bind_dn, :bind_pwd, :ldaphost, :ldapport, :mode]

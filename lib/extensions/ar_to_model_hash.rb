@@ -112,7 +112,7 @@ module ToModelHash
 
     result = columns.select { |c| parent_class.virtual_attribute?(c) }
 
-    result += includes.collect do |k, v|
+    result + includes.collect do |k, v|
       association_class = parent_class.reflections_with_virtual[k.to_sym].klass
       sub_result        = to_model_hash_build_preload(v, association_class)
       sub_result.blank? ? k : {k => sub_result}

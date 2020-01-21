@@ -8,7 +8,7 @@ module MiqServer::WorkerManagement::Monitor::Settings
 
   def sync_child_worker_settings
     @child_worker_settings = {}
-    self.class.monitor_class_names.each do |class_name|
+    MiqWorkerType.worker_class_names.each do |class_name|
       c = class_name.constantize
       @child_worker_settings[c.settings_name] = c.worker_settings
     end
@@ -30,8 +30,8 @@ module MiqServer::WorkerManagement::Monitor::Settings
   def get_time_threshold(worker)
     settings = @child_worker_settings[worker.class.settings_name]
 
-    heartbeat_timeout  = settings[:heartbeat_timeout] || 2.minutes
-    starting_timeout   = settings[:starting_timeout] || 10.minutes
+    heartbeat_timeout  = settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
+    starting_timeout   = settings[:starting_timeout] || Workers::MiqDefaults.starting_timeout
 
     return starting_timeout if MiqWorker::STATUSES_STARTING.include?(worker.status)
 
@@ -41,10 +41,6 @@ module MiqServer::WorkerManagement::Monitor::Settings
     end
 
     heartbeat_timeout
-  end
-
-  def get_restart_interval(worker)
-    @child_worker_settings[worker.class.settings_name][:restart_interval]
   end
 
   def get_memory_threshold(worker)

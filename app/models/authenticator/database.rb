@@ -11,7 +11,7 @@ module Authenticator
     private
 
     def _authenticate(username, password, _request)
-      user = User.find_by_userid(username)
+      user = case_insensitive_find_by_userid(username)
 
       user && user.authenticate_bcrypt(password)
     end

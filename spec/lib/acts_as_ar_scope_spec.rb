@@ -18,8 +18,8 @@ describe ActsAsArScope do
     end
 
     it "delegates to :aar_scope" do
-      good = FactoryGirl.create_list(:vm, 3)
-      bad = FactoryGirl.create_list(:vm, 1)
+      good = FactoryBot.create_list(:vm, 3)
+      bad = FactoryBot.create_list(:vm, 1)
 
       important_vm_model.vm_ids += good.map(&:id)
 

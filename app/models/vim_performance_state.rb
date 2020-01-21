@@ -1,4 +1,6 @@
 class VimPerformanceState < ApplicationRecord
+  include_concern 'Purging'
+
   serialize :state_data
 
   belongs_to :resource, :polymorphic => true
@@ -46,7 +48,7 @@ class VimPerformanceState < ApplicationRecord
   def self.capture(obj)
     ts = Time.now.utc
     ts = Time.utc(ts.year, ts.month, ts.day, ts.hour)
-    state = obj.vim_performance_states.find_by_timestamp(ts)
+    state = obj.vim_performance_states.find_by(:timestamp => ts)
     return state unless state.nil?
 
     state = obj.vim_performance_states.build(:timestamp => ts)
@@ -151,6 +153,7 @@ class VimPerformanceState < ApplicationRecord
   def capture_disk_types
     if hardware
       self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
+        next if disk.size.nil?
         type = disk.backing.try(:volume_type) || 'unclassified'
         res[type] = (res[type] || 0) + disk.size
       end
@@ -171,8 +174,17 @@ class VimPerformanceState < ApplicationRecord
   def capture_assoc_ids
     result = {}
     ASSOCIATIONS.each do |assoc|
-      method = assoc
-      method = (resource.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
+      method = if assoc == :vms
+                 if resource.kind_of?(EmsCluster)
+                   :all_vms_and_templates
+                 elsif resource.kind_of?(Service)
+                   :vms
+                 else
+                   :vms_and_templates
+                 end
+               else
+                 assoc
+               end
       next unless resource.respond_to?(method)
       assoc_recs = resource.send(method)
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)

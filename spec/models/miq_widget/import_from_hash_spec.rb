@@ -1,15 +1,15 @@
 describe MiqWidget do
   context ".import_from_hash" do
     before do
-      @user       = FactoryGirl.create(:user_admin)
-      @old_report = FactoryGirl.create(:miq_report,
+      @user       = FactoryBot.create(:user_admin)
+      @old_report = FactoryBot.create(:miq_report,
                                        :name      => "Test Report",
                                        :rpt_type  => "Custom",
                                        :tz        => "Eastern Time (US & Canada)",
                                        :col_order => ["name", "boot_time", "disks_aligned"],
                                        :cols      => ["name", "boot_time", "disks_aligned"]
                                       )
-      @old_widget = FactoryGirl.create(:miq_widget,
+      @old_widget = FactoryBot.create(:miq_widget,
                                        :title      => "Test Widget",
                                        :visibility => {:roles => ["_ALL_"]},
                                        :resource   => @old_report
@@ -46,7 +46,7 @@ describe MiqWidget do
       end
 
       context "with existing report" do
-        before { @old_report.update_attributes(:tz => "UTC") }
+        before { @old_report.update(:tz => "UTC") }
 
         it "init status" do
           expect(MiqWidget.count).to eq(0)
@@ -66,8 +66,8 @@ describe MiqWidget do
 
     context "existing widget" do
       before do
-        @old_widget.update_attributes(:visibility => {:roles => ["EvmRole-support"]})
-        @old_report.update_attributes(:tz => "UTC")
+        @old_widget.update(:visibility => {:roles => ["EvmRole-support"]})
+        @old_report.update(:tz => "UTC")
       end
 
       context "with new report" do
@@ -102,70 +102,6 @@ describe MiqWidget do
           expect(MiqWidget.first.visibility).to eq(:roles => ["_ALL_"])
           expect(MiqReport.count).to eq(1)
           expect(MiqReport.first.tz).to eq("UTC")
-        end
-      end
-    end
-
-    context "rss feed" do
-      context "internal" do
-        before do
-          @new_widget = YAML.load("
-            - MiqWidget:
-                description: rss test
-                title: rss test
-                content_type: rss
-                resource_id: 5
-                resource_type: RssFeed
-                enabled: true
-                MiqReportContent:
-                - RssFeed:
-                    name: host_alert_event
-                    link: /alert/rss?feed=host_alert_event"
-                                 ).first["MiqWidget"]
-        end
-
-        context "with new rss feed" do
-          it "init status" do
-            expect(MiqWidget.count).to eq(1)
-            expect(RssFeed.count).to eq(0)
-          end
-
-          it "import" do
-            @options[:save] = true
-            subject
-            expect(MiqWidget.count).to eq(2)
-            expect(RssFeed.count).to eq(1)
-          end
-        end
-      end
-
-      context "external" do
-        before do
-          @new_widget = YAML.load("
-            - MiqWidget:
-                description: National Vulnerability Database
-                title: National Vulnerability Database
-                content_type: rss
-                options:
-                  :row_count: 5
-                  :url: https://nvd.nist.gov/download/nvd-rss-analyzed.xml
-                resource_id:
-                resource_type:"
-                                 ).first["MiqWidget"]
-        end
-
-        context "with new rss feed" do
-          it "init status" do
-            expect(MiqWidget.count).to eq(1)
-            expect(RssFeed.count).to eq(0)
-          end
-
-          it "import" do
-            @options[:save] = true
-            subject
-            expect(MiqWidget.count).to eq(2)
-            expect(RssFeed.count).to eq(0)
-          end
         end
       end
     end

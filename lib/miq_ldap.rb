@@ -4,8 +4,6 @@ class MiqLdap
   include Vmdb::Logging
   DEFAULT_LDAP_PORT      = 389
   DEFAULT_LDAPS_PORT     = 636
-  DEFAULT_BIND_TIMEOUT   = 30
-  DEFAULT_SEARCH_TIMEOUT = 30
 
   attr_accessor :basedn
 
@@ -32,50 +30,52 @@ class MiqLdap
   end
 
   def initialize(options = {})
-    @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
+    @auth = options[:auth] || ::Settings.authentication.to_hash
 
     log_auth = Vmdb::Settings.mask_passwords!(@auth.deep_clone)
     _log.info("Server Settings: #{log_auth.inspect}")
 
-    mode              = options.delete(:mode) || @auth[:mode]
-    @basedn           = options.delete(:basedn) || @auth[:basedn]
-    @user_type        = options.delete(:user_type) || @auth[:user_type]
-    @user_suffix      = options.delete(:user_suffix) || @auth[:user_suffix]
-    @domain_prefix    = options.delete(:domain_prefix) || @auth[:domain_prefix]
-    @bind_timeout     = options.delete(:bind_timeout) || @auth[:bind_timeout] || self.class.default_bind_timeout
-    @search_timeout   = options.delete(:search_timeout) || @auth[:search_timeout] || self.class.default_search_timeout
-    @follow_referrals = options.delete(:follow_referrals) || @auth[:follow_referrals] || false
-    defaults = {
-      :host => @auth[:ldaphost],
-      :port => @auth[:ldapport],
-    }
-    options = defaults.merge(options)
-    options[:encryption] = {:method => :simple_tls} if mode == "ldaps"
-
+    mode              = options.delete(:mode) || ::Settings.authentication.mode
+    @basedn           = options.delete(:basedn) || ::Settings.authentication.basedn
+    @user_type        = options.delete(:user_type) || ::Settings.authentication.user_type
+    @user_suffix      = options.delete(:user_suffix) || ::Settings.authentication.user_suffix
+    @domain_prefix    = options.delete(:domain_prefix) || ::Settings.authentication.domain_prefix
+    @bind_timeout     = options.delete(:bind_timeout) || ::Settings.authentication.bind_timeout.to_i_with_method
+    @search_timeout   = options.delete(:search_timeout) || ::Settings.authentication.search_timeout.to_i_with_method
+    @follow_referrals = options.delete(:follow_referrals) || ::Settings.authentication.follow_referrals
+    @group_attribute  = options.delete(:group_attribute) || ::Settings.authentication.group_attribute
+    options[:host] ||= ::Settings.authentication.ldaphost
+    options[:port] ||= ::Settings.authentication.ldapport
     options[:host] = resolve_host(options[:host], options[:port])
+
+    if mode == "ldaps"
+      options[:encryption] = {:method => :simple_tls}
+      options.store_path(:encryption, :tls_options, :verify_mode, OpenSSL::SSL::VERIFY_NONE) if options[:host].ipaddress?
+    end
 
     # Make sure we do NOT log the clear-text password
     log_options = Vmdb::Settings.mask_passwords!(options.deep_clone)
-    $log.info "options: #{log_options.inspect}"
+    $log.info("options: #{log_options.inspect}")
 
     @ldap = Net::LDAP.new(options)
   end
 
-  IP_REGEXP = /^(\d{1,3}\.){3}\d{1,3}$/
-
   def resolve_host(hosts, port)
     hosts = hosts.to_miq_a
+
     selected_host = nil
+    valid_address = false
 
     hosts.each do |host|
-      if host =~ IP_REGEXP
+      if host.ipaddress?
+        selected_host = host
         addresses = host.to_miq_a # Host is already an IP Address, no need to resolve
       else
         begin
-          canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
+          selected_host, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
           $log.info("MiqLdap.connection: Resolved host [#{host}] has these IP Address: #{addresses.inspect}") if $log
         rescue => err
-          $log.debug "Warning: '#{err.message}', resolving host: [host]"
+          $log.debug("Warning: '#{err.message}', resolving host: [host]")
           next
         end
       end
@@ -84,14 +84,14 @@ class MiqLdap
         begin
           $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
           @conn = TCPSocket.new(address, port)
-          selected_host = address
+          valid_address = true
           break
         rescue => err
-          $log.debug "Warning: '#{err.message}', connecting to IP Address [#{address}]"
+          $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
         end
       end
 
-      return selected_host if selected_host
+      return selected_host if valid_address
     end
 
     raise Net::LDAP::Error.new("unable to establish a connection to server")
@@ -192,7 +192,7 @@ class MiqLdap
     objs.each do |o|
       if o.attribute_names.include?(:search_referrals)
         o.search_referrals.each do |ref|
-          scheme, userinfo, host, port, registry, dn, opaque, query, fragment = URI.split(ref)
+          scheme, _userinfo, host, port, _registry, dn, _opaque, _query, _fragment = URI.split(ref)
           port ||= self.class.default_ldap_port(scheme)
           dn = normalize(dn.split("/").last)
           next if seen[:objects].include?(dn)
@@ -266,8 +266,12 @@ class MiqLdap
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
-  def is_dn?(str)
+  def dn?(str)
     !!(str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/)
+  end
+
+  def upn?(str)
+    !!(str =~ /^.+@.+$/)
   end
 
   def domain_username?(str)
@@ -275,9 +279,11 @@ class MiqLdap
   end
 
   def fqusername(username)
-    return username if self.is_dn?(username) || self.domain_username?(username)
+    return username if dn?(username) || domain_username?(username)
 
     user_type = @user_type.split("-").first
+    return username if user_type != "mail" && upn?(username)
+
     user_prefix = @user_type.split("-").last
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
@@ -286,13 +292,12 @@ class MiqLdap
       return username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
-      return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
-    when"mail"
-      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
-      dbuser = User.find_by_email(username.downcase)
-      dbuser = User.find_by_userid(username.downcase) unless dbuser
+    when "mail"
+      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
+      dbuser = User.lookup_by_email(username.downcase)
+      dbuser ||= User.lookup_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
       return username
@@ -303,9 +308,14 @@ class MiqLdap
 
   def get_user_object(username, user_type = nil)
     user_type ||= @user_type.split("-").first
-    user_type = "dn" if self.is_dn?(username)
+    if dn?(username)
+      user_type = "dn"
+    elsif user_type != "mail" && upn?(username)
+      user_type = "upn"
+    end
+
     begin
-      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
+      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", @group_attribute]}
 
       case user_type
       when "samaccountname"
@@ -328,7 +338,7 @@ class MiqLdap
     obj.first if obj
   end
 
-  def get_user_info(username, user_type = 'mail')
+  def get_user_info(username, user_type = nil)
     user = get_user_object(username, user_type)
     return nil if user.nil?
 
@@ -369,24 +379,24 @@ class MiqLdap
     udata
   end
 
-  def get_memberships(obj, max_depth = 0, attr = :memberof, followed = [], current_depth = 0)
+  def get_memberships(obj, max_depth = 0, attr = @group_attribute.to_sym, followed = [], current_depth = 0)
     current_depth += 1
 
-    _log.debug "Enter get_memberships: #{obj.inspect}"
-    _log.debug "Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}"
+    _log.debug("Enter get_memberships: #{obj.inspect}")
+    _log.debug("Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}")
     result = []
     # puts "obj #{obj.inspect}"
     groups = MiqLdap.get_attr(obj, attr).to_miq_a
-    _log.debug "Groups: #{groups.inspect}"
+    _log.debug("Groups: #{groups.inspect}")
     return result unless groups
 
-    groups.each do|group|
+    groups.each do |group|
       # puts "group #{group}"
       gobj = get(group, [:cn, attr])
       dn   = nil
       cn   = nil
       if gobj.nil?
-        _log.debug "Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed"
+        _log.debug("Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed")
         normalize(group) =~ /^cn[ ]*=[ ]*([^,]+),/
         cn = $1
       else
@@ -396,9 +406,9 @@ class MiqLdap
 
       if cn.nil?
         suffix = gobj.nil? ? "unable to extract CN from DN" : "has no CN"
-        _log.debug "Group: #{group} #{suffix}, skipping"
+        _log.debug("Group: #{group} #{suffix}, skipping")
       else
-        _log.debug "Group: DN: #{group}, extracted CN: #{cn}"
+        _log.debug("Group: DN: #{group}, extracted CN: #{cn}")
         result.push(cn.strip)
       end
 
@@ -407,7 +417,7 @@ class MiqLdap
         result.concat(get_memberships(gobj, max_depth, attr, followed, current_depth)) unless max_depth > 0 && current_depth >= max_depth
       end
     end
-    _log.debug "Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}"
+    _log.debug("Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}")
     result.uniq
   end
 
@@ -434,29 +444,10 @@ class MiqLdap
     end
   end
 
-  def self.default_bind_timeout
-    value = ::Settings.authentication.bind_timeout || DEFAULT_BIND_TIMEOUT
-    value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
-    value
-  end
-
-  def self.default_search_timeout
-    value = ::Settings.authentication.search_timeout || DEFAULT_SEARCH_TIMEOUT
-    value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
-    value
-  end
-
   def self.using_ldap?
-    ::Settings.authentication.mode.include?('ldap')
-  end
-
-  def self.resolve_ldap_host?
-    if @resolve_ldap_host.nil?
-      @resolve_ldap_host = ::Settings.authentication.resolve_ldap_host
-      @resolve_ldap_host = false if @resolve_ldap_host.nil?
+    ::Settings.authentication.mode.include?('ldap').tap do |should_warn|
+      $audit_log.warn("MiqLdap is a deprecated feature. Please convert to using external authentication.") if should_warn
     end
-
-    @resolve_ldap_host
   end
 
   def self.sid_to_s(data)

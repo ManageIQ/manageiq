@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+
+HOSTS=$(awk '!/^#/ {print $1}' $DIR/miqhosts)
+USER=$(whoami)
+
+for i in $HOSTS
+do
+  ssh-copy-id -o StrictHostKeyChecking=no ${USER}@$i
+done

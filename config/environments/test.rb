@@ -10,18 +10,19 @@ Vmdb::Application.configure do
   config.cache_classes = true
   config.eager_load = false
 
-  # Print deprecation notices to the stderr
-  #ActiveSupport::Deprecation.behavior = :stderr
-  ActiveSupport::Deprecation.behavior = :silence
+  # Print deprecation notices to the stderr.
+  config.active_support.deprecation = :stderr
 
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
-  config.static_cache_control = "public, max-age=3600"
+  config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
 
   # Avoid potential warnings and race conditions
   config.assets.configure do |env|
     env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
   end
+
+  config.assets.compile = true
 
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
@@ -48,8 +49,8 @@ Vmdb::Application.configure do
 
   # Any exception that gets past our ApplicationController's rescue_from
   # should just be raised intact
-  config.middleware.delete ::ActionDispatch::ShowExceptions
-  config.middleware.delete ::ActionDispatch::DebugExceptions
+  config.middleware.delete(::ActionDispatch::ShowExceptions)
+  config.middleware.delete(::ActionDispatch::DebugExceptions)
 
   # Customize any additional options below...
 
@@ -60,8 +61,15 @@ Vmdb::Application.configure do
 end
 
 require "minitest"
-require "factory_girl"
+require "factory_bot"
 require "timecop"
 require "vcr"
 require "webmock/rspec"
 require "capybara"
+
+module AssumeAssetPrecompiledInTest
+  def asset_precompiled?(_logical_path)
+    true
+  end
+end
+Vmdb::Application.prepend(AssumeAssetPrecompiledInTest)

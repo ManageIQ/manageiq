@@ -1,2 +1,0 @@
-class AuthenticationAllowAll < Authentication
-end

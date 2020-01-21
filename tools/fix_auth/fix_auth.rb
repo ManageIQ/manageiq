@@ -1,8 +1,8 @@
-require 'util/miq-password'
+require 'manageiq-password'
 
 module FixAuth
   class FixAuth
-    # :host, :username, :password, :databases
+    # :host, :username, :password, :database
     # :verbose, :dry_run, :hardcode
     attr_accessor :options
 
@@ -22,24 +22,24 @@ module FixAuth
 
     def db_attributes(database)
       options.slice(:adapter, :encoding, :username, :password)
-        .merge(:host => options[:hostname], :database => database).delete_if { |_k, v| v.blank? }
+             .merge(:host => options[:hostname], :port => options[:port], :database => database).delete_if { |_k, v| v.blank? }
     end
 
     def run_options
-      options.slice(:verbose, :dry_run, :hardcode, :invalid)
+      options.slice(:verbose, :dry_run, :hardcode, :invalid, :allow_failures)
     end
 
-    def databases
-      options[:databases]
+    def database
+      options[:database]
     end
 
     def models
       [FixAuthentication, FixMiqDatabase, FixMiqAeValue, FixMiqAeField,
-       FixMiqRequest, FixMiqRequestTask, FixSettingsChange]
+       FixSettingsChange, FixMiqRequest, FixMiqRequestTask]
     end
 
     def generate_password
-      MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
+      ManageIQ::Password.generate_symmetric("#{cert_dir}/v2_key")
     rescue Errno::EEXIST => e
       $stderr.puts
       $stderr.puts "Only generate one encryption_key (v2_key) per installation."
@@ -50,36 +50,43 @@ module FixAuth
       raise Errno::EEXIST, e.message
     end
 
+    def print_dry_run_warning
+      method = caller_locations.first.label
+      # Move this message up to `run` if the other methods add dry-run support
+      puts "** #{method} is executing in dry-run mode, and no actual changes will be made **" if options[:dry_run]
+    end
+
     def fix_database_passwords
+      print_dry_run_warning
+
       begin
+        # in specs, this is already setup
         ActiveRecord::Base.connection_config
       rescue ActiveRecord::ConnectionNotEstablished
-        # not configured, lets try again
+        # From the command line, we want to connect to a database
         ActiveRecord::Base.logger = Logger.new("#{options[:root]}/log/fix_auth.log")
-        please_establish_connection = true
+        ActiveRecord::Base.establish_connection(db_attributes(database))
       end
-      databases.each do |database|
-        begin
-          ActiveRecord::Base.establish_connection(db_attributes(database)) if please_establish_connection
-          models.each do |model|
-            model.run(run_options)
-          end
-        ensure
-          ActiveRecord::Base.clear_active_connections! if please_establish_connection
-        end
+      models.each do |model|
+        model.run(run_options)
       end
     end
 
     def fix_database_yml
+      print_dry_run_warning
       FixDatabaseYml.file_name = "#{options[:root]}/config/database.yml"
       FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
     end
 
+    def load_rails
+      require File.expand_path("../../../config/application.rb", __FILE__)
+    end
+
     def set_passwords
-      MiqPassword.key_root = cert_dir if cert_dir
-      MiqPassword.add_legacy_key("v0_key", :v0)
-      MiqPassword.add_legacy_key("v1_key", :v1)
-      if options[:legacy_key] && !MiqPassword.add_legacy_key(options[:legacy_key])
+      ManageIQ::Password.key_root = cert_dir if cert_dir
+      ManageIQ::Password.add_legacy_key("v0_key", :v0)
+      ManageIQ::Password.add_legacy_key("v1_key", :v1)
+      if options[:legacy_key] && !ManageIQ::Password.add_legacy_key(options[:legacy_key])
         puts "WARNING: key #{k} not found"
       end
     end
@@ -89,6 +96,7 @@ module FixAuth
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
+      load_rails if options[:allow_failures]
       fix_database_passwords if options[:db]
     end
   end

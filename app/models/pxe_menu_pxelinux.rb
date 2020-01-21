@@ -1,5 +1,9 @@
 class PxeMenuPxelinux < PxeMenu
-  has_many :pxe_images, :class_name => "PxeImagePxelinux", :foreign_key => :pxe_menu_id, :dependent => :destroy
+  has_many :pxe_images,
+           :class_name  => "PxeImagePxelinux",
+           :foreign_key => :pxe_menu_id,
+           :dependent   => :destroy,
+           :inverse_of  => :pxe_menu
 
   def self.parse_contents(contents)
     items = []
@@ -34,7 +38,7 @@ class PxeMenuPxelinux < PxeMenu
     end
 
     bad, good = items.partition { |i| i[:kernel].blank? }
-    bad.each { |i| _log.warn "Image #{i[:label]} missing kernel - Skipping" }
+    bad.each { |i| _log.warn("Image #{i[:label]} missing kernel - Skipping") }
     good
   end
 
@@ -47,5 +51,9 @@ class PxeMenuPxelinux < PxeMenu
     rejects = %w( initrd= )
     options.reject! { |o| o.blank? || rejects.any? { |r| o.starts_with?(r) } }
     return options.join(' '), initrd
+  end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu (pxelinux)', 'PXE Menus (pxelinux)', number)
   end
 end

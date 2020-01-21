@@ -1,10 +1,27 @@
 describe Authentication do
-  it ".encrypted_columns" do
-    expect(described_class.encrypted_columns).to include('password', 'auth_key')
+  describe ".set_ownership" do
+    let!(:authentication) { FactoryBot.create(:authentication) }
+    let(:tenant) { FactoryBot.create(:tenant) }
+    let!(:group) { FactoryBot.create(:miq_group, :tenant => tenant) }
+
+    it "sets tenant from group" do
+      expect(authentication.tenant).to be_nil
+      authentication.class.set_ownership([authentication.id], :group => group)
+
+      expect(authentication.reload.tenant.id).to eq(tenant.id)
+    end
+  end
+
+  describe ".encrypted_columns" do
+    it "returns the encrypted columns" do
+      expected = %w(password password_encrypted auth_key auth_key_encrypted service_account service_account_encrypted auth_key_password auth_key_password_encrypted become_password become_password_encrypted)
+      expect(described_class.encrypted_columns).to match_array(expected)
+    end
   end
 
   context "with miq events seeded" do
-    before(:each) do
+    before do
+      MiqEventDefinitionSet.seed
       MiqEventDefinition.seed
     end
 
@@ -18,8 +35,7 @@ describe Authentication do
 
   context "with an authentication" do
     let(:pwd_plain) { "smartvm" }
-    let(:pwd_encrypt) { MiqPassword.encrypt(pwd_plain) }
-    let(:auth) { FactoryGirl.create(:authentication, :password => pwd_plain) }
+    let(:auth) { FactoryBot.create(:authentication, :password => pwd_plain) }
 
     it "should return decrypted password" do
       expect(auth.password).to eq(pwd_plain)

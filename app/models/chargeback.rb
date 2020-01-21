@@ -1,79 +1,77 @@
 class Chargeback < ActsAsArModel
   set_columns_hash( # Fields common to any chargeback type
-    :start_date           => :datetime,
-    :end_date             => :datetime,
-    :interval_name        => :string,
-    :display_range        => :string,
-    :chargeback_rates     => :string,
-    :entity               => :binary,
-    :tag_name             => :string,
-    :fixed_compute_metric => :integer,
+    :start_date             => :datetime,
+    :end_date               => :datetime,
+    :interval_name          => :string,
+    :display_range          => :string,
+    :report_interval_range  => :string,
+    :report_generation_date => :datetime,
+    :chargeback_rates       => :string,
+    :entity                 => :binary,
+    :tag_name               => :string,
+    :label_name             => :string,
+    :fixed_compute_metric   => :integer,
   )
 
-  HOURS_IN_DAY = 24
-  HOURS_IN_WEEK = 168
+  ALLOWED_FIELD_SUFFIXES = %w[
+    _rate
+    _cost
+    -owner_name
+    _metric
+    -report_interval_range
+    -report_generation_date
+    -provider_name
+    -provider_uid
+    -project_uid
+    -archived
+    -chargeback_rates
+    -vm_guid
+    -vm_uid
+  ].freeze
 
-  VIRTUAL_COL_USES = {
-    "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
-  }
+  def self.dynamic_rate_columns
+    @chargeable_fields = {}
+    @chargeable_fields[self.class] ||=
+      begin
+        ChargeableField.all.each_with_object({}) do |chargeable_field, result|
+          next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
+          result["#{chargeable_field.rate_name}_rate"] = :string
+        end
+      end
+  end
+
+  def self.refresh_dynamic_metric_columns
+    set_columns_hash(dynamic_rate_columns)
+  end
 
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
 
-    cb = new
-
-    base_rollup = MetricRollup.includes(
-      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
-      :parent_host        => :tags,
-      :parent_ems_cluster => :tags,
-      :parent_storage     => :tags,
-      :parent_ems         => :tags)
-                              .select(*Metric::BASE_COLS).order("resource_id, timestamp")
-    perf_cols = MetricRollup.attribute_names
-    rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
-      rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
-    end
-
-    rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
-    base_rollup = base_rollup.select(*rate_cols)
-
-    timerange = options.report_time_range
     data = {}
+    rates = RatesCache.new(options)
+    _log.debug("With report options: #{options.inspect}")
 
-    interval_duration = options.duration_of_report_step
+    MiqRegion.all.each do |region|
+      _log.debug("For region #{region.region}")
 
-    timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
-      records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
-      records = where_clause(records, options)
-      records = Metric::Helper.remove_duplicate_timestamps(records)
-      next if records.empty?
-      _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
+      ConsumptionHistory.for_report(self, options, region.region) do |consumption|
+        rates_to_apply = rates.get(consumption)
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time, options.interval)
+        key = report_row_key(consumption)
+        _log.debug("Report row key #{key}")
 
-      # we are building hash with grouped calculated values
-      # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
-      records.group_by(&:resource_id).each do |_, metric_rollup_records|
-        metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
-        next if metric_rollup_records.empty?
-
-        # we need to select ChargebackRates for groups of MetricRollups records
-        # and rates are selected by first MetricRollup record
-        metric_rollup_record = metric_rollup_records.first
-        rates_to_apply = cb.get_rates(metric_rollup_record)
-
-        # key contains resource_id and timestamp (query_start_time...query_end_time)
-        # extra_fields there some extra field like resource name and
-        # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record)
-        data[key] ||= new(extra_fields)
+        data[key] ||= new(options, consumption, region.region)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
-        data[key].calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
+        if Settings[:new_chargeback]
+          data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
+        else
+          data[key].calculate_costs(consumption, rates_to_apply)
+        end
       end
     end
 
@@ -82,103 +80,142 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
-  def self.hours_in_interval(query_start_time, query_end_time, interval)
-    return HOURS_IN_DAY if interval == "daily"
-    return HOURS_IN_WEEK if interval == "weekly"
-
-    (query_end_time - query_start_time) / 1.hour
+  def self.report_row_key(consumption)
+    ts_key = @options.start_of_report_step(consumption.timestamp)
+    if @options[:groupby_tag].present?
+      classification = @options.classification_for(consumption)
+      classification_id = classification.present? ? classification.id : 'none'
+      "#{classification_id}_#{ts_key}"
+    elsif @options[:groupby_label].present?
+      "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
+    elsif @options.group_by_tenant?
+      tenant = @options.tenant_for(consumption)
+      "#{tenant ? tenant.id : 'none'}_#{ts_key}"
+    elsif @options.group_by_date_only?
+      ts_key
+    else
+      default_key(consumption, ts_key)
+    end
   end
 
-  def self.key_and_fields(metric_rollup_record)
-    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
-
-    key, extra_fields = if @options[:groupby_tag].present?
-                          get_tag_keys_and_fields(metric_rollup_record, ts_key)
-                        else
-                          get_keys_and_extra_fields(metric_rollup_record, ts_key)
-                        end
-
-    [key, date_fields(metric_rollup_record).merge(extra_fields)]
+  def self.default_key(consumption, ts_key)
+    "#{consumption.resource_id}_#{ts_key}"
   end
 
-  def self.date_fields(metric_rollup_record)
-    start_ts, end_ts, display_range = @options.report_step_range(metric_rollup_record.timestamp)
-
-    {
-      'start_date'       => start_ts,
-      'end_date'         => end_ts,
-      'display_range'    => display_range,
-      'interval_name'    => @options.interval,
-      'chargeback_rates' => '',
-      'entity'           => metric_rollup_record.resource
-    }
+  def self.groupby_label_value(consumption, groupby_label)
+    nil
   end
 
-  def self.get_tag_keys_and_fields(perf, ts_key)
-    tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
-    tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-    classification = @options.tag_hash[tag]
-    classification_id = classification.present? ? classification.id : 'none'
-    key = "#{classification_id}_#{ts_key}"
-    extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
-    [key, extra_fields]
+  def initialize(options, consumption, region)
+    @options = options
+    super()
+    if @options[:groupby_tag].present?
+      classification = @options.classification_for(consumption)
+      self.tag_name = classification.present? ? classification.description : _('<Empty>')
+    elsif @options[:groupby_label].present?
+      label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
+      self.label_name = label_value.present? ? label_value : _('<Empty>')
+    else
+      init_extra_fields(consumption, region)
+    end
+    self.start_date, self.end_date, self.display_range = options.report_step_range(consumption.timestamp)
+    self.interval_name = options.interval
+    self.chargeback_rates = ''
+    self.entity ||= consumption.resource
+    self.tenant_name = consumption.resource.try(:tenant).try(:name) if options.group_by_tenant?
   end
 
-  def get_rates(perf)
-    @rates ||= {}
-    @rates[perf.hash_features_affecting_rate] ||=
-      begin
-        prefix = Chargeback.report_cb_model(self.class.name).underscore
-        ChargebackRate.get_assigned_for_target(perf.resource,
-                                               :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
-                                               :parents  => get_rate_parents(perf))
-      end
+  def showback_category
+    case self
+    when ChargebackVm
+      'Vm'
+    when ChargebackContainerProject
+      'Container'
+    when ChargebackContainerImage
+      'ContainerImage'
+    end
   end
 
-  def calculate_costs(metric_rollup_records, rates, hours_in_interval)
-    chargeback_fields_present = metric_rollup_records.count(&:chargeback_fields_present?)
-    self.fixed_compute_metric = chargeback_fields_present if chargeback_fields_present
+  def new_chargeback_calculate_costs(consumption, rates)
+    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
-      rate.chargeback_rate_details.each do |r|
-        if !chargeback_fields_present && r.fixed?
-          cost = 0
-        else
-          metric_value = r.metric_value_by(metric_rollup_records)
-          r.hours_in_interval = hours_in_interval
-          cost = r.cost(metric_value) * hours_in_interval
-        end
+      plan = ManageIQ::Showback::PricePlan.find_or_create_by(:description => rate.description,
+                                                             :name        => rate.description,
+                                                             :resource    => MiqEnterprise.first)
 
-        accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
+      data = {}
+      rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
+        r.populate_showback_rate(plan, r, showback_category)
+        measure = r.chargeable_field.showback_measure
+        dimension, _, _ = r.chargeable_field.showback_dimension
+        value = r.chargeable_field.measure(consumption, @options)
+        data[measure] ||= {}
+        data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
+      end
+
+      # TODO: duration_of_report_step is 30.days for price plans but for consumption history,
+      # it's used for date ranges and needs to be 1.month with rails 5.1
+      duration = @options.interval == "monthly" ? 30.days : @options.duration_of_report_step
+      results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
+                                                   data:           data,
+                                                   start_time:     consumption.instance_variable_get("@start_time"),
+                                                   end_time:       consumption.instance_variable_get("@end_time"),
+                                                   cycle_duration: duration)
+
+      results.each do |cost_value, sb_rate|
+        r = ChargebackRateDetail.find(sb_rate.concept)
+        metric = r.chargeable_field.metric
+        metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
+        metric_value = data[r.chargeable_field.group][metric_index]
+        metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
+        cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
+        _, total_metric_field, total_field = r.chargeable_field.cost_keys
+        self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
+        self[total_metric_field] = (self[total_metric_field].to_f || 0) + cost_value.to_f
+        self[cost_field] = cost_value.to_f
+        self[metric_field] = metric_value.first.to_f
       end
     end
   end
 
-  def accumulate_metrics_and_costs_per_rate(rate_name, rate_group, metric, cost)
-    cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
-    metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
-    cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
-    metric_group_key = "#{rate_group}_metric" # for total of metrics (e.g. Storage Total)
+  def calculate_fixed_compute_metric(consumption)
+    return unless consumption.chargeback_fields_present
 
-    col_hash = {}
-
-    defined_column_for_report = (self.class.report_col_options.keys & [metric_key, cost_key]).present?
-
-    if defined_column_for_report
-      [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
-      [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
-    end
-
-    col_hash.each do |k, val|
-      next unless self.class.attribute_names.include?(k)
-      self[k] ||= 0
-      self[k] += val
+    if @options.group_by_date_only?
+      self.fixed_compute_metric ||= 0
+      self.fixed_compute_metric += consumption.chargeback_fields_present
+    else
+      self.fixed_compute_metric = consumption.chargeback_fields_present
     end
   end
-  private :accumulate_metrics_and_costs_per_rate
+
+  def calculate_costs(consumption, rates)
+    calculate_fixed_compute_metric(consumption)
+    self.class.try(:refresh_dynamic_metric_columns)
+    self.report_interval_range = "#{consumption.report_interval_start.strftime('%m/%d/%Y')} - #{consumption.report_interval_end.strftime('%m/%d/%Y')}"
+    self.report_generation_date = Time.current
+
+    _log.debug("Consumption Type: #{consumption.class}")
+    rates.each do |rate|
+      _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")
+      rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
+        _log.debug("Metric: #{r.chargeable_field.metric} Group: #{r.chargeable_field.group} Source: #{r.chargeable_field.source}")
+        r.chargeback_tiers.each do |tier|
+          _log.debug("Start: #{tier.start} Finish: #{tier.finish} Fixed Rate: #{tier.fixed_rate} Variable Rate: #{tier.variable_rate}")
+        end
+        r.charge(consumption, @options).each do |field, value|
+          next if @options.skip_field_accumulation?(field, self[field])
+          _log.debug("Calculation with field: #{field} and with value: #{value}")
+          (self[field] = self[field].kind_of?(Numeric) ? (self[field] || 0) + value : value)
+          _log.debug("Accumulated value: #{self[field]}")
+        end
+      end
+    end
+  end
 
   def self.report_cb_model(model)
-    model.gsub(/^Chargeback/, "")
+    model.gsub(/^(Chargeback|Metering)/, "")
   end
 
   def self.db_is_chargeback?(db)
@@ -189,21 +226,31 @@ class Chargeback < ActsAsArModel
     "tag_name"
   end
 
-  def self.get_rate_parents
-    raise "Chargeback: get_rate_parents must be implemented in child class."
+  def self.report_label_field
+    "label_name"
   end
 
-  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, tz)
+  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, groupby_label, tz)
     rpt.cols = %w(start_date display_range)
 
-    static_cols       = group_by == "project" ? report_static_cols - ["image_name"] : report_static_cols
+    static_cols       = report_static_cols
+    static_cols      -= ["image_name"] if group_by == "project"
+    static_cols      -= ["vm_name"] if group_by == "date-only"
     static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
+    static_cols       = group_by == "label" ? [report_label_field] : static_cols
+    static_cols       = group_by == "tenant" ? ['tenant_name'] : static_cols
     rpt.cols         += static_cols
     rpt.col_order     = static_cols + ["display_range"]
     rpt.sortby        = static_cols + ["start_date"]
 
     rpt.col_order.each do |c|
-      header_column = (c == report_tag_field && header_for_tag) ? header_for_tag : c
+      header_column = if (c == report_tag_field && header_for_tag)
+                        header_for_tag
+                      elsif (c == report_label_field && groupby_label)
+                        groupby_label
+                      else
+                        c
+                      end
       rpt.headers.push(Dictionary.gettext(header_column, :type => :column, :notfound => :titleize))
       rpt.col_formats.push(nil) # No formatting needed on the static cols
     end
@@ -235,5 +282,23 @@ class Chargeback < ActsAsArModel
     define_method(custom_attribute.to_sym) do
       entity.send(custom_attribute)
     end
+  end
+
+  def self.default_column_for_format(col)
+    if col.start_with?('storage_allocated')
+      col.ends_with?('cost') ? 'storage_allocated_cost' : 'storage_allocated_metric'
+    else
+      col
+    end
+  end
+
+  def self.rate_column?(col)
+    col.ends_with?("_rate")
+  end
+
+  private
+
+  def relevant_fields
+    @relevant_fields ||= (@options.report_cols || self.class.report_col_options.keys).to_set
   end
 end # class Chargeback

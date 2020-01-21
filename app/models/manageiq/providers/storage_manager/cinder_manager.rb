@@ -2,15 +2,10 @@
 #
 
 class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager
-  require_nested :EventCatcher
-  require_nested :EventParser
   require_nested :RefreshParser
-  require_nested :RefreshWorker
   require_nested :Refresher
 
-  has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_backups,          :foreign_key => :ems_id, :dependent => :destroy
+  include ManageIQ::Providers::StorageManager::BlockMixin
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
@@ -56,6 +51,10 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
     @description ||= "Cinder ".freeze
   end
 
+  def name
+    "#{parent_manager.try(:name)} Cinder Manager"
+  end
+
   def supports_api_version?
     true
   end
@@ -68,7 +67,7 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
     true
   end
 
-  def self.event_monitor_class
-    ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
+  def self.display_name(number = 1)
+    n_('Storage Manager (Cinder)', 'Storage Managers (Cinder)', number)
   end
 end

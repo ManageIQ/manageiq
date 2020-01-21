@@ -1,6 +1,7 @@
 class ServiceOrchestration < Service
   include ServiceOrchestrationMixin
   include ServiceOrchestrationOptionsMixin
+  include_concern 'ProvisionTagging'
 
   # read from DB or parse from dialog
   def stack_name
@@ -16,26 +17,47 @@ class ServiceOrchestration < Service
   end
 
   def orchestration_stack_status
-    return "check_status_failed", "stack has not been deployed" unless orchestration_stack
+    return ['deploy_failed', "can't find orchestration stack job for the service"] unless orchestration_runner_job
 
-    orchestration_stack.raw_status.normalized_status
-  rescue MiqException::MiqOrchestrationStackNotExistError, MiqException::MiqOrchestrationStatusError => err
-    # naming convention requires status to end with "failed"
-    ["check_status_failed", err.message]
+    return ['deploy_failed', orchestration_runner_job.message] if orchestration_runner_job.status == 'error'
+
+    return ['deploy_active', 'waiting for the orchestration stack status'] unless orchestration_runner_job.orchestration_stack_status
+
+    [orchestration_runner_job.orchestration_stack_status, orchestration_runner_job.orchestration_stack_message]
   end
 
   def deploy_orchestration_stack
-    creation_options = stack_options
-    @orchestration_stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(
-      orchestration_manager, stack_name, orchestration_template, creation_options)
+    deploy_stack_options = stack_options
+    job_options = {
+      :create_options            => deploy_stack_options,
+      :orchestration_manager_id  => orchestration_manager.id,
+      :orchestration_template_id => orchestration_template.id,
+      :stack_name                => stack_name,
+      :zone                      => my_zone
+    }
+
+    @deploy_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
+    update(:options => options.merge(:deploy_stack_job_id => @deploy_stack_job.id))
+    @deploy_stack_job.signal(:start)
+
+    wait_on_orchestration_stack
+    orchestration_stack
   ensure
     # create options may never be saved before unless they were overridden
     save_create_options
   end
 
   def update_orchestration_stack
-    # use orchestration_template from service_template, which may be different from existing orchestration_template
-    orchestration_stack.raw_update_stack(service_template.orchestration_template, update_options)
+    job_options = {
+      # use orchestration_template from service_template, which may be different from existing orchestration_template
+      :orchestration_template_id => service_template.orchestration_template.id,
+      :orchestration_stack_id    => orchestration_stack.id,
+      :update_options            => update_options,
+      :zone                      => my_zone
+    }
+    @update_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
+    update(:options => options.merge(:update_stack_job_id => @update_stack_job.id))
+    @update_stack_job.signal(:reconfigure)
   end
 
   def orchestration_stack
@@ -45,6 +67,7 @@ class ServiceOrchestration < Service
     if @orchestration_stack.nil? && options.fetch_path(:orchestration_stack, 'ems_id')
       @orchestration_stack = OrchestrationStack.new(options[:orchestration_stack])
     end
+
     @orchestration_stack
   end
 
@@ -76,11 +99,21 @@ class ServiceOrchestration < Service
     orchestration_stack.vms
   end
 
+  def add_resource(rsc, _options = {})
+    raise "Service Orchestration subclass does not support add_resource for #{rsc.class.name}" unless rsc.try(:valid_service_orchestration_resource)
+    super
+  end
+
   # This is called when provision is completed and stack is added to VMDB through a refresh
   def post_provision_configure
     add_stack_to_resource
     link_orchestration_template
     assign_vms_owner
+    apply_provisioning_tags
+  end
+
+  def my_zone
+    orchestration_manager.try(:my_zone) || super
   end
 
   private
@@ -95,13 +128,13 @@ class ServiceOrchestration < Service
 
   def link_orchestration_template
     # some orchestration stacks do not have associations with their templates in their provider, we can link them here
-    return if @orchestration_stack.nil? || @orchestration_stack.orchestration_template
-    @orchestration_stack.update_attributes(:orchestration_template => orchestration_template)
+    return if orchestration_stack.nil? || orchestration_stack.orchestration_template
+    orchestration_stack.update(:orchestration_template => orchestration_template)
   end
 
   def assign_vms_owner
     all_vms.each do |vm|
-      vm.update_attributes(:evm_owner_id => evm_owner_id, :miq_group_id => miq_group_id)
+      vm.update(:evm_owner_id => evm_owner_id, :miq_group_id => miq_group_id)
     end
   end
 
@@ -134,12 +167,40 @@ class ServiceOrchestration < Service
   end
 
   def save_create_options
-    stack_attributes = @orchestration_stack ?
-                       @orchestration_stack.attributes.compact :
-                       {:name => stack_name}
+    stack_attributes = if orchestration_stack
+                         orchestration_stack.attributes.compact
+                       else
+                         {:name => stack_name}
+                       end
     stack_attributes.delete('id')
     options.merge!(:orchestration_stack => stack_attributes,
                    :create_options      => dup_and_process_password(stack_options))
     save!
+  end
+
+  def deploy_stack_job
+    @deploy_stack_job ||= Job.find_by(:id => options.fetch_path(:deploy_stack_job_id))
+  end
+
+  def update_stack_job
+    @update_stack_job ||= Job.find_by(:id => options.fetch_path(:update_stack_job_id))
+  end
+
+  def orchestration_runner_job
+    update_stack_job || deploy_stack_job
+  end
+
+  def wait_on_orchestration_stack
+    while deploy_stack_job.orchestration_stack.blank?
+      raise _("Orchestration template runner finished with error. Check evm.log for details.") if deploy_stack_job.status == 'error'
+
+      _log.info("Waiting for the deployment of orchestration stack [#{stack_name}]...")
+      sleep 2
+      # Code running with Rails QueryCache enabled,
+      # need to disable caching for the reload to see updates.
+      self.class.uncached { reload }
+      deploy_stack_job.class.uncached { deploy_stack_job.reload }
+    end
+    @orchestration_stack = deploy_stack_job.orchestration_stack
   end
 end

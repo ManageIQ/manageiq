@@ -11,21 +11,25 @@ class DialogFieldSerializer < Serializer
 
   def serialize(dialog_field, all_attributes = false)
     serialized_resource_action = @resource_action_serializer.serialize(dialog_field.resource_action)
-
     extra_attributes = {
-      "resource_action" => serialized_resource_action
+      "resource_action"         => serialized_resource_action,
+      "dialog_field_responders" => dialog_field.dialog_field_responders.map(&:name)
     }
 
     if dialog_field.dynamic?
-      dynamic_values = dialog_field.trigger_automate_value_updates
-      extra_attributes["values"] = dynamic_values
+      key_to_update = dialog_field.kind_of?(DialogFieldSortedItem) ? "values" : "default_value"
+
+      extra_attributes[key_to_update] = dialog_field.extract_dynamic_values
     end
 
     if dialog_field.type == "DialogFieldTagControl"
       category = Category.find_by(:id => dialog_field.category)
-      dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
+      if category
+        dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
+        dialog_field.options[:force_single_value] = dialog_field.options[:force_single_value] || category.single_value
+      end
     end
-
-    included_attributes(dialog_field.as_json(:methods => [:type, :values]), all_attributes).merge(extra_attributes)
+    json_options = dialog_field.dynamic? ? {:methods => [:type], :except => [:values]} : {:methods => %i(type values)}
+    included_attributes(dialog_field.as_json(json_options), all_attributes).merge(extra_attributes)
   end
 end

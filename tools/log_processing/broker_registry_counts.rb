@@ -1,5 +1,6 @@
-RAILS_ROOT = ENV["RAILS_ENV"] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
-$:.push File.join(RAILS_ROOT, "gems/pending/util") unless ENV["RAILS_ENV"]
+#!/usr/bin/env ruby
+RAILS_ROOT = File.expand_path(File.join(__dir__, %w(.. ..)))
+require 'manageiq-gems-pending'
 require 'miq_logger_processor'
 
 logfile = ARGV[0] || File.join(RAILS_ROOT, "log/vim.log")

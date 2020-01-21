@@ -1,23 +1,38 @@
+require 'manageiq-api-client'
+
 module ProcessTasksMixin
   extend ActiveSupport::Concern
+  include RetirementMixin
 
   module ClassMethods
     # Processes tasks received from the UI and queues them
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
-      if options[:task] == "refresh_ems" && respond_to?("refresh_ems")
+      if options[:task] == 'retire_now'
+        options[:ids].each do |id|
+          $log.info("Creating retire request for id #{id} with #{User.current_user}")
+          name.constantize.make_retire_request(id, User.current_user)
+        end
+      elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
         task_audit_event(:success, options, :message => msg)
       else
         assert_known_task(options)
-        options[:userid] ||= "system"
+        options[:userid] ||= User.current_user.try(:userid) || "system"
         invoke_tasks_queue(options)
       end
     end
 
     def invoke_tasks_queue(options)
-      MiqQueue.put(:class_name => name, :method_name => "invoke_tasks", :args => [options])
+      q_hash = {
+        :class_name  => name,
+        :method_name => "invoke_tasks",
+        :args        => [options]
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     # Performs tasks received from the UI via the queue
@@ -44,6 +59,8 @@ module ProcessTasksMixin
         invoke_task_local(task, instance, options, args)
 
         msg = "#{instance.name}: '#{options[:task]}' initiated"
+        msg = "[Name: #{instance.name},Id: #{instance.id}, Ems_ref: #{instance.ems_ref}] Record destroyed" if options[:task] == 'destroy'
+
         task_audit_event(:success, options, :target_id => instance.id, :message => msg)
         task.update_status("Queued", "Ok", "Task has been queued") if task
       end
@@ -54,7 +71,7 @@ module ProcessTasksMixin
         remote_options = options.merge(:ids => ids)
 
         begin
-          remote_connection = api_client_connection_for_region(region, remote_options[:userid])
+          remote_connection = InterRegionApiMethodRelay.api_client_connection_for_region(region, remote_options[:userid])
           invoke_api_tasks(remote_connection, remote_options)
         rescue NotImplementedError => err
           $log.error("#{name} is not currently able to invoke tasks for remote regions")
@@ -70,17 +87,18 @@ module ProcessTasksMixin
 
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
-          MiqQueue.put(
+
+          q_hash = {
             :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
             :deliver_on  => Time.now.utc + 1.minute
-          )
+          }
+          user = User.current_user
+          q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+          MiqQueue.submit_job(q_hash)
           next
         end
-
-        msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
-        task_audit_event(:success, options, :message => msg)
       end
     end
 
@@ -98,37 +116,37 @@ module ProcessTasksMixin
 
       collection   = api_client.send(collection_name)
       action       = action_for_task(remote_options[:task])
-      post_args    = remote_options[:args] || {}
       resource_ids = remote_options[:ids]
 
       if resource_ids.present?
         resource_ids.each do |id|
-          obj = collection.find(id)
-          _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-          obj.send(action, post_args)
+          send_action(action, collection_name, collection, remote_options, id)
         end
       else
-        _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
-        collection.send(action, post_args)
+        send_action(action, collection_name, collection, remote_options)
       end
     end
 
-    def api_client_connection_for_region(region, user)
-      hostname = MiqRegion.find_by_region(region).remote_ws_address
-      if hostname.nil?
-        $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
-        raise "Failed to establish API connection to region #{region}"
+    def send_action(action, collection_name, collection, remote_options, id = nil)
+      post_args = remote_options[:args] || {}
+      begin
+        if id.present?
+          msg_desination = "remote object: #{id} for collection #{collection_name},  with args #{post_args}"
+          destination = collection.find(id)
+        else
+          msg_desination = "remote collection #{collection_name}, with args #{post_args}"
+          destination = collection
+        end
+        _log.info("Invoking task #{action} on #{msg_desination}")
+        destination.send(action, post_args)
+        task_audit_event(:success, remote_options, :message => "'#{action}' successfully initiated on #{msg_desination}")
+      rescue StandardError => err
+        task_audit_event(:failure, remote_options, :message => "'#{action}' failed to be initiated on #{msg_desination}")
+        _log.error(err.message)
+        raise err unless err.kind_of?(NoMethodError) || err.kind_of?(ManageIQ::API::Client::ResourceNotFound)
       end
-
-      require 'manageiq-api-client'
-
-      ManageIQ::API::Client.new(
-        :url      => "https://#{hostname}",
-        :miqtoken => MiqRegion.api_system_auth_token_for_region(region, user),
-        :ssl      => {:verify => false}
-      )
     end
-    private :api_client_connection_for_region
+    private :send_action
 
     # default: invoked by task, can be overridden
     def task_invoked_by(_options)
@@ -151,13 +169,17 @@ module ProcessTasksMixin
         :args        => ["Finished"]
       } if task
 
-      MiqQueue.put(
+      q_hash = {
         :class_name   => name,
         :instance_id  => instance.id,
         :method_name  => options[:task],
         :args         => args,
+        :miq_task_id  => task&.id,
         :miq_callback => cb
-      )
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     private
@@ -179,8 +201,13 @@ module ProcessTasksMixin
       return instances, tasks
     end
 
-    # default: validate retirement, can be overridden
+    # default: validate retirement and maintenance zone, can be overridden
     def validate_task(task, instance, options)
+      if instance.try(:ext_management_system)&.zone == Zone.maintenance_zone
+        task.error("#{instance.ext_management_system.name} is paused")
+        return false
+      end
+
       return true unless options[:task] == "retire_now" && instance.retired?
       task.error("#{instance.name} is already retired")
       false

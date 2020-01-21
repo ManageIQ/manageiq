@@ -12,4 +12,7 @@ module GitWorktreeException
   class DirectoryAlreadyExists < RuntimeError; end
   class BranchMissing < RuntimeError; end
   class TagMissing < RuntimeError; end
+  class RefMissing < RuntimeError; end
+  class InvalidCredentials < RuntimeError; end
+  class InvalidCredentialType < RuntimeError; end
 end

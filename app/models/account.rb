@@ -23,7 +23,7 @@ class Account < ApplicationRecord
       member_map[nh[:name]] = nh.delete(:members)
 
       found = parent.accounts.find_by(:name => nh[:name], :accttype => typeName)
-      found.nil? ? new_accts << nh : found.update_attributes(nh)
+      found.nil? ? new_accts << nh : found.update(nh)
       deletes.delete_if { |ele| ele[1] == nh[:name] }
     end
 
@@ -89,9 +89,9 @@ class Account < ApplicationRecord
     Account.accttype_opposite(accttype)
   end
 
-  def with_valid_account_type(valid_account_type, &block)
+  def with_valid_account_type(valid_account_type)
     if accttype == valid_account_type
-      block.call
+      yield
     else
       raise _("Cannot call method '%{caller}' on an Account of type '%{type}'") % {:caller => caller[0][/`.*'/][1..-2],
                                                                                    :type   => accttype}
@@ -104,7 +104,7 @@ class Account < ApplicationRecord
   end
 
   def add_user(owns)
-    with_valid_account_type('group') { set_child(owns) }
+    with_valid_account_type('group') { add_child(owns) }
   end
 
   def remove_user(owns)
@@ -120,7 +120,7 @@ class Account < ApplicationRecord
   end
 
   def add_group(owner)
-    with_valid_account_type('user') { set_parent(owner) }
+    with_valid_account_type('user') { add_parent(owner) }
   end
 
   def remove_group(owner)

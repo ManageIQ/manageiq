@@ -1,13 +1,16 @@
 name,description
-evm_operations,CFME Operation
-ems_operations,Provider Operation
-host_operations,Host Operation
+auth_validation,Authentication Validation (Provider)
+authentication,Authentication Validation
 compliance,Compliance
-tags,Company Tag
-vm_operational,VM Operation
-vm_configurational,VM Configuration
-vm_process,VM Lifecycle
+container_operations,Container Operation
+ems_operations,Provider Operation
+evm_operations,Appliance Operation
+host_operations,Host Operation
+orchestration_process,Orchestration Lifecycle
+physical_server_operations,Physical Server Operation
 service_process,Service Lifecycle
 storage_operational,Datastore Operation
-auth_validation,Authentication Validation
-container_operations,Container Operation
+tags,Company Tag
+vm_configurational,VM Configuration
+vm_operational,VM Operation
+vm_process,VM Lifecycle

@@ -27,7 +27,7 @@ class MiqExpression::RelativeDatetime
 
     if rt.ends_with?("ago")
       # Time spec <value> <interval> Ago
-      value, interval, ago = rt.split
+      value, interval, _ago = rt.split
       interval = interval.pluralize
 
       if interval == "quarters"

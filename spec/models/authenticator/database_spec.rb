@@ -1,6 +1,7 @@
 describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
-  let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }
+  let!(:alice) { FactoryBot.create(:user, :userid => 'alice', :password => 'secret') }
+  let!(:vincent) { FactoryBot.create(:user, :userid => 'Vincent', :password => 'secret') }
 
   describe '#uses_stored_password?' do
     it "is true" do
@@ -15,6 +16,12 @@ describe Authenticator::Database do
 
     it "doesn't create new users" do
       expect(subject.lookup_by_identity('bob')).not_to be
+    end
+  end
+
+  describe '#lookup_by_principalname' do
+    it "finds existing users" do
+      expect(subject.lookup_by_principalname('alice').first).to eq(alice)
     end
   end
 
@@ -45,16 +52,21 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:failure)
         authenticate
       end
+
       it "updates lastlogon" do
-        expect(-> { authenticate }).to change { alice.reload.lastlogon }
+        expect { authenticate }.to(change { alice.reload.lastlogon })
       end
     end
 
     context "with bad password" do
       let(:password) { 'incorrect' }
 
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
       it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
       end
 
       it "records one failing audit entry" do
@@ -66,21 +78,27 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
+
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
       end
+
       it "doesn't change lastlogon" do
-        expect(-> { authenticate rescue nil }).not_to change { alice.reload.lastlogon }
+        expect { authenticate rescue nil }.not_to(change { alice.reload.lastlogon })
       end
     end
 
     context "with unknown username" do
       let(:username) { 'bob' }
 
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
       it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
+        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError)
       end
 
       it "records one failing audit entry" do
@@ -92,10 +110,37 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
+
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
+      end
+    end
+
+    context "with mixed case username" do
+      let(:username) { 'vInCeNt' }
+
+      it "succeeds" do
+        expect(authenticate).to eq(vincent)
+      end
+
+      it "records two successful audit entries" do
+        expect(AuditEvent).to receive(:success).with(
+          :event   => 'authenticate_database',
+          :userid  => 'vincent',
+          :message => "User vincent successfully validated by EVM",
+        )
+        expect(AuditEvent).to receive(:success).with(
+          :event   => 'authenticate_database',
+          :userid  => 'vincent',
+          :message => "Authentication successful for user vincent",
+        )
+        expect(AuditEvent).not_to receive(:failure)
+        authenticate
+      end
+      it "updates lastlogon" do
+        expect { authenticate }.to(change { vincent.reload.lastlogon })
       end
     end
   end

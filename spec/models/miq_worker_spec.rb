@@ -16,17 +16,10 @@ describe MiqWorker do
   context ".sync_workers" do
     it "stops extra workers, returning deleted pids" do
       expect_any_instance_of(described_class).to receive(:stop)
-      worker = FactoryGirl.create(:miq_worker, :status => "started")
+      worker = FactoryBot.create(:miq_worker, :status => "started")
       worker.class.workers = 0
       expect(worker.class.sync_workers).to eq(:adds => [], :deletes => [worker.pid])
     end
-  end
-
-  it "renice" do
-    allow(AwesomeSpawn).to receive(:launch)
-    allow(described_class).to receive(:worker_settings).and_return(:nice_delta => 5)
-    result = described_class.renice(123)
-    expect(result.command_line).to eq "renice -n 5 -p 123"
   end
 
   context ".has_required_role?" do
@@ -35,15 +28,15 @@ describe MiqWorker do
       expect(described_class.has_required_role?).to eq(expected_result)
     end
 
-    before(:each) do
-      active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
+    before do
+      active_roles = %w(foo bar).map { |rn| FactoryBot.create(:server_role, :name => rn) }
       @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
 
     context "clean_active_messages" do
       before do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server => @server)
-        @message = FactoryGirl.create(:miq_queue, :handler => @worker, :state => 'dequeue')
+        @worker = FactoryBot.create(:miq_worker, :miq_server => @server)
+        @message = FactoryBot.create(:miq_queue, :handler => @worker, :state => 'dequeue')
       end
 
       it "normal" do
@@ -91,16 +84,30 @@ describe MiqWorker do
         check_has_required_role(["bah"], false)
       end
     end
+
+    context "when worker roles is a lambda" do
+      it "that is empty" do
+        check_has_required_role(-> { [] }, true)
+      end
+
+      it "that is a subset of server roles" do
+        check_has_required_role(-> { ["foo"] }, true)
+      end
+
+      it "that is not a subset of server roles" do
+        check_has_required_role(-> { ["bah"] }, false)
+      end
+    end
   end
 
   context ".workers_configured_count" do
-    before(:each) do
+    before do
       @configured_count = 2
       allow(described_class).to receive(:worker_settings).and_return(:count => @configured_count)
       @maximum_workers_count = described_class.maximum_workers_count
     end
 
-    after(:each) do
+    after do
       described_class.maximum_workers_count = @maximum_workers_count
     end
 
@@ -140,7 +147,8 @@ describe MiqWorker do
               }
             }
           }
-        }
+        },
+        :ems     => {:ems_amazon => {}}
       }
     end
 
@@ -192,17 +200,55 @@ describe MiqWorker do
       end
     end
 
+    context "with mixed memory value types" do
+      # Same settings from above, just using integers and integers/floats as strings
+      let(:settings) do
+        {
+          :workers => {
+            :worker_base => {
+              :defaults          => {:memory_threshold => "100.megabytes"},
+              :queue_worker_base => {
+                :defaults           => {:memory_threshold => 314_572_800}, # 300.megabytes
+                :ems_refresh_worker => {
+                  :defaults                  => {:memory_threshold => "524288000"}, # 500.megabytes
+                  :ems_refresh_worker_amazon => {
+                    :memory_threshold => "1181116006.4" # 1.1.gigabtye
+                  }
+                }
+              }
+            }
+          },
+          :ems     => {:ems_amazon => {}}
+        }
+      end
+
+      let(:worker_base)  { MiqWorker.worker_settings[:memory_threshold] }
+      let(:queue_worker) { MiqQueueWorkerBase.worker_settings[:memory_threshold] }
+      let(:ems_worker)   { ManageIQ::Providers::BaseManager::RefreshWorker.worker_settings[:memory_threshold] }
+      let(:aws_worker)   { ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings[:memory_threshold] }
+
+      it "converts everyting to integers properly" do
+        expect(worker_base).to  eq(100.megabytes)
+        expect(queue_worker).to eq(300.megabytes)
+        expect(ems_worker).to   eq(500.megabytes)
+        expect(aws_worker).to   eq(1_181_116_006)
+      end
+    end
+
     it "at the base class" do
       actual = MiqWorker.worker_settings[:memory_threshold]
       expect(actual).to eq(100.megabytes)
     end
 
     it "uses passed in config" do
-      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
+                          :ems_refresh_worker_amazon, :memory_threshold, "5.terabyte")
       stub_settings(settings)
 
-      config = VMDB::Config.new("vmdb")
-      actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings(:config => config)[:memory_threshold]
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
+                          :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
+               .worker_settings(:config => settings)[:memory_threshold]
       expect(actual).to eq(1.terabyte)
     end
   end
@@ -211,28 +257,17 @@ describe MiqWorker do
     before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
 
-      @zone = FactoryGirl.create(:zone)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone)
+      @zone = FactoryBot.create(:zone)
+      @server = FactoryBot.create(:miq_server, :zone => @zone)
       allow(MiqServer).to receive(:my_server).and_return(@server)
-      @worker = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server)
+      @worker = FactoryBot.create(:ems_refresh_worker_amazon, :miq_server => @server)
 
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone)
-      @worker2 = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server2)
+      @server2 = FactoryBot.create(:miq_server, :zone => @zone)
+      @worker2 = FactoryBot.create(:ems_refresh_worker_amazon, :miq_server => @server2)
     end
 
     it ".server_scope" do
       expect(described_class.server_scope).to eq([@worker])
-    end
-
-    it ".server_scope with a different server" do
-      expect(described_class.server_scope(@server2.id)).to eq([@worker2])
-    end
-
-    it ".server_scope after already scoping on a different server" do
-      described_class.where(:miq_server_id => @server2.id).scoping do
-        expect(described_class.server_scope).to eq([@worker2])
-        expect(described_class.server_scope(@server.id)).to eq([@worker2])
-      end
     end
 
     describe "#worker_settings" do
@@ -318,13 +353,78 @@ describe MiqWorker do
   end
 
   context "instance" do
-    before(:each) do
+    before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
-      @worker = FactoryGirl.create(:miq_worker)
+      @worker = FactoryBot.create(:miq_worker)
     end
 
     it "#worker_options" do
       expect(@worker.worker_options).to eq(:guid => @worker.guid)
+    end
+
+    context "#command_line" do
+      it "without guid in worker_options" do
+        allow(@worker).to receive(:worker_options).and_return({})
+        expect { @worker.command_line }.to raise_error(ArgumentError)
+      end
+
+      it "without ENV['APPLIANCE']" do
+        allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
+        expect(@worker.command_line).to_not include("nice")
+      end
+
+      it "with ENV['APPLIANCE']" do
+        begin
+          allow(MiqWorker).to receive(:nice_increment).and_return("10")
+          allow(@worker).to receive(:worker_options).and_return(:ems_id => 1234, :guid => @worker.guid)
+          old_env = ENV.delete('APPLIANCE')
+          ENV['APPLIANCE'] = 'true'
+          cmd = @worker.command_line
+          expect(cmd).to start_with("nice -n 10")
+          expect(cmd).to include("--ems-id 1234")
+          expect(cmd).to include("--guid #{@worker.guid}")
+          expect(cmd).to include("--heartbeat")
+          expect(cmd).to end_with("MiqWorker")
+        ensure
+          # ENV['x'] = nil deletes the key because ENV accepts only string values
+          ENV['APPLIANCE'] = old_env
+        end
+      end
+    end
+
+    describe "#stopping_for_too_long?" do
+      subject { @worker.stopping_for_too_long? }
+
+      it "false if started" do
+        @worker.update(:status => described_class::STATUS_STARTED)
+        expect(subject).to be_falsey
+      end
+
+      it "true if stopping and not heartbeated recently" do
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 30.minutes.ago)
+        expect(subject).to be_truthy
+      end
+
+      it "true if stopping and last heartbeat is within the queue message timeout of an active message" do
+        @worker.messages << FactoryBot.create(:miq_queue, :msg_timeout => 60.minutes)
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 90.minutes.ago)
+        expect(subject).to be_truthy
+      end
+
+      it "false if stopping and last heartbeat is older than the queue message timeout of the work item" do
+        @worker.messages << FactoryBot.create(:miq_queue, :msg_timeout => 60.minutes, :state => "dequeue")
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 30.minutes.ago)
+        expect(subject).to be_falsey
+      end
+
+      it "false if stopping and heartbeated recently" do
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 1.minute.ago)
+        expect(subject).to be_falsey
+      end
     end
 
     it "is_current? false when starting" do
@@ -371,7 +471,8 @@ describe MiqWorker do
           :cpu_time              => 660,
           :priority              => "31",
           :name                  => "ruby",
-          :proportional_set_size => 198_721_987
+          :proportional_set_size => 198_721_987,
+          :unique_set_size       => 172_122_122
         }
 
         fields = described_class::PROCESS_INFO_FIELDS.dup
@@ -392,6 +493,7 @@ describe MiqWorker do
           expect(@worker.public_send(field)).to be_present
         end
         expect(@worker.proportional_set_size).to eq 198_721_987
+        expect(@worker.unique_set_size).to       eq 172_122_122
       end
     end
   end

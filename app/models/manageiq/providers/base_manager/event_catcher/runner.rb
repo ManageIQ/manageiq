@@ -8,20 +8,13 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
   include DuplicateBlocker
 
-  self.wait_for_worker_monitor = false
-
-  OPTIONS_PARSER_SETTINGS = ::MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
-    [:ems_id, 'EMS Instance ID', String],
-  ]
-
   def after_initialize
     @ems = ExtManagementSystem.find(@cfg[:ems_id])
     do_exit("Unable to find instance for EMS ID [#{@cfg[:ems_id]}].", 1) if @ems.nil?
     do_exit("EMS ID [#{@cfg[:ems_id]}] failed authentication check.", 1) unless @ems.authentication_check.first
 
     @filtered_events = @ems.blacklisted_event_names
-    _log.info "#{log_prefix} Event Catcher skipping the following events:"
-    $log.log_hashes(@filtered_events)
+    _log.info("#{log_prefix} Event Catcher skipping the following events:\n#{@filtered_events.to_a.join("\n")}")
 
     configure_event_flooding_prevention if worker_settings.try(:[], :flooding_monitor_enabled)
 

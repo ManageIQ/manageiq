@@ -1,2 +1,0 @@
-class OntapFileShare < SniaFileShare
-end

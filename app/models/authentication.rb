@@ -1,4 +1,8 @@
 class Authentication < ApplicationRecord
+  acts_as_miq_taggable
+  include_concern 'ImportExport'
+  include YAMLImportExportMixin
+
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication
@@ -10,13 +14,34 @@ class Authentication < ApplicationRecord
 
   include PasswordMixin
   encrypt_column :auth_key
+  encrypt_column :auth_key_password
+  encrypt_column :become_password
   encrypt_column :password
   encrypt_column :service_account
 
   belongs_to :resource, :polymorphic => true
 
+  has_many :authentication_configuration_script_bases,
+           :dependent => :destroy
+  has_many :configuration_script_bases,
+           :through => :authentication_configuration_script_bases
+
+  has_many :authentication_orchestration_stacks,
+           :dependent => :destroy
+  has_many :orchestration_stacks,
+           :through => :authentication_orchestration_stacks
+
+  has_many :configuration_script_sources
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
+
+  serialize :options
+
+  include OwnershipMixin
+  include TenancyMixin
+
+  belongs_to :tenant
 
   # TODO: DELETE ME!!!!
   ERRORS = {
@@ -34,7 +59,28 @@ class Authentication < ApplicationRecord
     "invalid"     => 3,
   ).freeze
 
+  # Builds a case statement that case be used in a sql ORDER BY.
+  #
+  # Generated SQL looks like:
+  #
+  #   CASE
+  #   WHEN LOWER(status) = ''      THEN -1
+  #   WHEN LOWER(status) = 'valid' THEN 0
+  #   ...
+  #   ELSE -1
+  #
+  STATUS_SEVERITY_AREL = Arel::Nodes::Case.new.tap do |arel_case|
+    STATUS_SEVERITY.each do |value, sort_weight|
+      arel_case.when(arel_table[:status].lower.eq(value)).then(sort_weight)
+    end
+  end.else(-1)
+
   RETRYABLE_STATUS = %w(error unreachable).freeze
+
+  CREDENTIAL_TYPES = {
+    :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
+    :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
+  }.freeze
 
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
@@ -66,14 +112,14 @@ class Authentication < ApplicationRecord
   def validation_successful
     new_status = :valid
     _log.info("[#{resource_type}] [#{resource_id}], previously valid/invalid on: [#{last_valid_on}]/[#{last_invalid_on}], previous status: [#{status}]") if status != new_status.to_s
-    update_attributes(:status => new_status.to_s.capitalize, :status_details => 'Ok', :last_valid_on => Time.now.utc)
+    update(:status => new_status.to_s.capitalize, :status_details => 'Ok', :last_valid_on => Time.now.utc)
     raise_event(new_status)
   end
 
   def validation_failed(status = :unreachable, message = nil)
     message ||= ERRORS[status]
     _log.warn("[#{resource_type}] [#{resource_id}], previously valid on: #{last_valid_on}, previous status: [#{self.status}]")
-    update_attributes(:status => status.to_s.capitalize, :status_details => message.to_s, :last_invalid_on => Time.now.utc)
+    update(:status => status.to_s.capitalize, :status_details => message.to_s.truncate(200), :last_invalid_on => Time.now.utc)
     raise_event(status, message)
   end
 
@@ -89,6 +135,19 @@ class Authentication < ApplicationRecord
 
   def assign_values(options)
     self.attributes = options
+  end
+
+  def self.build_credential_options
+    CREDENTIAL_TYPES.each_with_object({}) do |(k, v), hash|
+      hash[k] = v.constantize.descendants.each_with_object({}) do |klass, fields|
+        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
+      end
+    end
+  end
+
+  def native_ref
+    # to be overridden by individual provider/manager
+    manager_ref
   end
 
   private

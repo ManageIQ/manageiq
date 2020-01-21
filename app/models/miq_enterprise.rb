@@ -16,6 +16,7 @@ class MiqEnterprise < ApplicationRecord
 
   acts_as_miq_taggable
 
+  include SupportsFeatureMixin
   include AggregationMixin
 
   include MiqPolicyMixin
@@ -28,14 +29,6 @@ class MiqEnterprise < ApplicationRecord
   end
 
   cache_with_timeout(:my_enterprise) { in_my_region.first }
-
-  def self.is_enterprise?
-    # TODO: Need to implement a way to determine whether we're running on an "enterprise" server or a "regional" server.
-    #       This will do for now...
-    MiqRegion.count > 1
-  end
-
-  delegate :is_enterprise?, :to => :class
 
   def my_zone
     MiqServer.my_zone
@@ -73,14 +66,6 @@ class MiqEnterprise < ApplicationRecord
     PolicyEvent.all
   end
 
-  alias_method :all_vms_and_templates,  :vms_and_templates
-  alias_method :all_vm_or_template_ids, :vm_or_template_ids
-  alias_method :all_vms,                :vms
-  alias_method :all_vm_ids,             :vm_ids
-  alias_method :all_miq_templates,      :miq_templates
-  alias_method :all_miq_template_ids,   :miq_template_ids
-  alias_method :all_hosts,              :hosts
-  alias_method :all_host_ids,           :host_ids
   alias_method :all_storages,           :storages
 
   def get_reserve(field)
@@ -105,8 +90,13 @@ class MiqEnterprise < ApplicationRecord
     # No rollup parents
   end
 
-  def perf_capture_enabled
+  def perf_capture_enabled?
     @perf_capture_enabled ||= ext_management_systems.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled?, :perf_capture_enabled
+  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
+
+  def self.display_name(number = 1)
+    n_('Enterprise', 'Enterprises', number)
+  end
 end # class MiqEnterprise

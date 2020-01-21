@@ -5,8 +5,8 @@ module VmdbMetric::Purging
   module ClassMethods
     def purge_date(interval)
       type  = "keep_#{interval}_metrics".to_sym
-      value = VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, type)
-      value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
+      value = ::Settings.database.metrics_history[type]
+      value = value.to_i.days if value.kind_of?(Integer) # Default unit is days
       value = value.to_i_with_method.seconds.ago.utc unless value.nil?
       value
     end
@@ -18,29 +18,31 @@ module VmdbMetric::Purging
 
     def purge_daily_timer(ts = nil)
       interval = "daily"
-      ts ||= purge_date(interval) || 6.months.ago.utc
+      ts ||= purge_date(interval)
       purge_timer(ts, interval)
     end
 
     def purge_hourly_timer(ts = nil)
       interval = "hourly"
-      ts ||= purge_date(interval) || 6.months.ago.utc
+      ts ||= purge_date(interval)
       purge_timer(ts, interval)
     end
 
     def purge_timer(value, interval)
-      MiqQueue.put_unless_exists(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "purge_#{interval}",
-        :role        => "database_operations",
-        :queue_name  => "generic",
-      ) do |_msg, find_options|
-        find_options.merge(:args => [value])
-      end
+        :args        => [value],
+        :msg_timeout => msg_timeout
+      )
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, :purge_window_size) || 10000
+      ::Settings.database.metrics_history.purge_window_size
+    end
+
+    def msg_timeout
+      ::Settings.database.metrics_history.queue_timeout.to_i_with_method
     end
 
     def purge_count(mode, value, interval)
@@ -59,7 +61,7 @@ module VmdbMetric::Purging
     # queue is calling purge_interval directly. (and mode is no longer used)
     # keeping around in case messages are in the queue for upgrades
     def purge(_mode, older_than, interval, window = nil, &block)
-      send("purge_#{interval}", older_than, window, &block)
+      purge_by_date(older_than, interval, window, &block)
     end
 
     private

@@ -2,23 +2,33 @@ class EmsEvent
   module Automate
     extend ActiveSupport::Concern
 
+    def manager_refresh(sync: false)
+      refresh_targets = manager_refresh_targets
+
+      return if refresh_targets.empty?
+
+      EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
+    end
+
     def refresh(*targets, sync)
+      return if ext_management_system&.supports_streaming_refresh?
+
       targets = targets.flatten
       return if targets.blank?
 
       refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
       return if refresh_targets.empty?
 
-      EmsRefresh.queue_refresh(refresh_targets, nil, sync)
+      EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
     end
 
     def refresh_new_target
       ems = ext_management_system
       if ems.supports_refresh_new_target?
         ep_class = ems.class::EventParser
-        target_hash = ep_class.parse_new_target(full_data, message, ems, event_type)
+        target_hash, target_class, target_find = ep_class.parse_new_target(full_data, message, ems, event_type)
 
-        EmsRefresh.queue_refresh_new_target(target_hash, ems)
+        EmsRefresh.queue_refresh_new_target(ems, target_hash, target_class, target_find)
       else
         EmsRefresh.queue_refresh(ems)
       end
@@ -87,10 +97,6 @@ class EmsEvent
       call("src_vm", "snapshots.destroy_all")
     end
 
-    def src_vm_disconnect_storage
-      call("src_vm", "disconnect_storage")
-    end
-
     private
 
     def parse_policy_parameters(target_str, policy_event, param)
@@ -109,7 +115,7 @@ class EmsEvent
     def parse_policy_source(target, param)
       param.blank? ? ext_management_system : target.send(param)
     rescue => err
-      _log.warn "Error: #{err.message}, getting policy source, skipping policy evaluation"
+      _log.warn("Error: #{err.message}, getting policy source, skipping policy evaluation")
     end
 
     def call(target_str, method, options = {})
@@ -117,7 +123,7 @@ class EmsEvent
 
       target = target_original = get_target(target_str)
       if target.nil?
-        _log.info "Unable to find target [#{target_str}].  Performing refresh."
+        _log.info("Unable to find target [#{target_str}].  Performing refresh.")
         return refresh(target_str)
       end
 

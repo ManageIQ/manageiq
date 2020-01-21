@@ -1,11 +1,11 @@
 describe PerEmsWorkerMixin do
-  before(:each) do
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
+  before do
+    _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    @ems = FactoryBot.create(:ems_vmware, :with_unvalidated_authentication, :zone => zone)
     @ems_queue_name = "ems_#{@ems.id}"
 
     # General stubbing for testing any worker (methods called during initialize)
-    @worker_record = FactoryGirl.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
+    @worker_record = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
     @worker_class  = @worker_record.class
   end
 
@@ -13,6 +13,18 @@ describe PerEmsWorkerMixin do
     expect(@worker_class.queue_name_for_ems(nil)).to be_nil
     expect(@worker_class.queue_name_for_ems("foo")).to eq("foo")
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
+  end
+
+  it ".lookup_by_ems" do
+    expect(@worker_class.lookup_by_ems(@ems).first).to eq(@worker_record)
+  end
+
+  it ".all_valid_ems_in_zone" do
+    expect(@worker_class.all_valid_ems_in_zone).to be_empty
+
+    @ems.update(:enabled => true)
+    @ems.authentications.first.validation_successful
+    expect(@worker_class.all_valid_ems_in_zone).to eq([@ems])
   end
 
   it "#worker_options" do
@@ -34,7 +46,7 @@ describe PerEmsWorkerMixin do
 
   context ".stop_worker_for_ems" do
     context "when worker status is started" do
-      before(:each) do
+      before do
         @worker_record.status = MiqWorker::STATUS_STARTED
         @worker_record.save
       end
@@ -62,7 +74,7 @@ describe PerEmsWorkerMixin do
     end
 
     context "when worker status is not started" do
-      before(:each) do
+      before do
         @worker_record.status = MiqWorker::STATUS_STARTING
         @worker_record.save
       end

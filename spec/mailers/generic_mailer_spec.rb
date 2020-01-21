@@ -1,5 +1,5 @@
 describe GenericMailer do
-  before(:each) do
+  before do
     @miq_server = EvmSpecHelper.local_miq_server
     @args = {
       :to      => "you@bedrock.gov",
@@ -10,21 +10,39 @@ describe GenericMailer do
     ActionMailer::Base.deliveries.clear
   end
 
-  it "call deliver_queue for generic_notification" do
-    @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
-    expect(BinaryBlob.count).to eq(0)
-    GenericMailer.deliver_queue(:generic_notification, @args)
-    expect(BinaryBlob.count).to eq(1)
-    expect(MiqQueue.exists?(:method_name => 'deliver',
-                            :class_name  => described_class.name,
-                            :role        => 'notifier')).to be_truthy
+  context 'with a notifier within a region' do
+    before do
+      MiqRegion.seed
+      ServerRole.seed
+      @miq_server.server_roles << ServerRole.where(:name => 'notifier')
+      @miq_server.save!
+    end
+
+    it "call deliver_queue for generic_notification" do
+      @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+      expect(BinaryBlob.count).to eq(0)
+      GenericMailer.deliver_queue(:generic_notification, @args)
+      expect(BinaryBlob.count).to eq(1)
+      expect(MiqQueue.exists?(:method_name => 'deliver',
+                              :class_name  => described_class.name,
+                              :role        => 'notifier')).to be_truthy
+    end
+
+    it "call deliver_queue for automation_notification" do
+      GenericMailer.deliver_queue(:automation_notification, @args)
+      expect(MiqQueue.exists?(:method_name => 'deliver',
+                              :class_name  => described_class.name,
+                              :role        => 'notifier')).to be_truthy
+    end
   end
 
-  it "call deliver_queue for automation_notification" do
-    GenericMailer.deliver_queue(:automation_notification, @args)
-    expect(MiqQueue.exists?(:method_name => 'deliver',
-                            :class_name  => described_class.name,
-                            :role        => 'notifier')).to be_truthy
+  context 'without a notifier within a region' do
+    before { MiqRegion.seed }
+
+    it 'does not queue any mail notifications' do
+      @args[:attachment] = [{:content_type => "text/plain", :filename => "generic_mailer_test.txt", :body => "generic_notification with text/plain attachment" * 10}]
+      expect { GenericMailer.deliver_queue(:generic_notification, @args) }.not_to(change { MiqQueue.count })
+    end
   end
 
   context "delivery error" do
@@ -80,7 +98,7 @@ describe GenericMailer do
   end
 
   it "call deliver for generic_notification without a 'from' address" do
-    stub_server_configuration(:smtp => {:from => "test@123.com"})
+    stub_settings(:smtp => {:from => "test@123.com"})
     new_args = @args.dup
     new_args.delete(:from)
     msg = GenericMailer.deliver(:generic_notification, new_args)
@@ -115,7 +133,7 @@ describe GenericMailer do
   it "call blob_to_attachment and attachment_to_blob" do
     @args[:attachment] = [{:content_type => "application/txt", :filename => "generic_mailer_test.txt", :body => "maryhadalittlelamb" * 10}]
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(1)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("generic_mailer_test.txt")
@@ -128,7 +146,7 @@ describe GenericMailer do
                           {:content_type => "application/txt", :filename => nil, :body => "itsfleecewaswhiteassnow" * 10}]
     expect(@args[:attachment][0][:filename]).to be_nil
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(2)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("evm_attachment_1")
@@ -141,7 +159,7 @@ describe GenericMailer do
     @args[:attachment] = [{:content_type => "application/txt", :filename => "maryhadalittlelamb.txt", :body => "maryhadalittlelamb" * 10},
                           {:content_type => "application/txt", :filename => "itsfleecewaswhiteassnow.txt", :body => "itsfleecewaswhiteassnow" * 10}]
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(2)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("maryhadalittlelamb.txt")
@@ -195,8 +213,8 @@ describe GenericMailer do
 
   describe "#test_mail" do
     it "should be called directly" do
-      mail = GenericMailer.test_email(@args[:to], settings = {})
-      expect(mail.subject).to start_with I18n.t("product.name")
+      mail = GenericMailer.test_email(@args[:to], {})
+      expect(mail.subject).to start_with Vmdb::Appliance.PRODUCT_NAME
     end
 
     it "should not change the input parameters" do
@@ -204,5 +222,13 @@ describe GenericMailer do
       GenericMailer.test_email(@args[:to], settings)
       expect(settings[:host]).to eq("localhost")
     end
+  end
+
+  it "returns an array of authentication modes" do
+    expect(GenericMailer.authentication_modes).to eq([["login", "login"], ["plain", "plain"], ["none", "none"]])
+  end
+
+  it "returns an array of openssl verify modes" do
+    expect(GenericMailer.openssl_verify_modes).to eq([["None", "none"], ["Peer", "peer"], ["Client Once", "client_once"], ["Fail If No Peer Cert", "fail_if_no_peer_cert"]])
   end
 end

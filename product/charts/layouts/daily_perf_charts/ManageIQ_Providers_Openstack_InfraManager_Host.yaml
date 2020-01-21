@@ -1,5 +1,5 @@
 # Host Daily performance chart layouts
---- 
+---
 - :title: CPU (Mhz)
   :type: Line
   :columns:
@@ -18,10 +18,10 @@
   :trends:
   - max_derived_cpu_reserved:Projected to hit reserve
   - max_derived_cpu_available:Projected to hit available
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Memory (MB)
@@ -42,10 +42,10 @@
   :trends:
   - max_derived_memory_reserved:Projected to hit reserve
   - max_derived_memory_available:Projected to hit available
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Disk I/O (blocks per second)
@@ -61,10 +61,10 @@
   - Timeline-Current-Daily:Daily events on this Host
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Network I/O (datagrams per second)
@@ -80,18 +80,18 @@
   - Timeline-Current-Daily:Daily events on this Host
   - Timeline-Current-Hourly:Hourly events on this Host
   - Display-VMs-on:VMs that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: VMs
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Display-VMs-on:VMs that were running
   - Display-VMs-off:VMs that were stopped

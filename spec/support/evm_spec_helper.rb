@@ -14,11 +14,18 @@ module EvmSpecHelper
 
   module EmsMetadataHelper
     def self.vmware_nested_folders(ems)
-      datacenters = FactoryGirl.create(:ems_folder, :name => 'Datacenters').tap { |x| x.parent = ems }
-      nested = FactoryGirl.create(:ems_folder, :name => 'nested').tap { |x| x.parent = datacenters }
-      testing = FactoryGirl.create(:ems_folder, :name => 'testing').tap { |x| x.parent = nested }
-      FactoryGirl.create(:datacenter).tap { |x| x.parent = testing }
+      datacenters = FactoryBot.create(:ems_folder, :name => 'Datacenters').tap { |x| x.parent = ems }
+      nested = FactoryBot.create(:ems_folder, :name => 'nested').tap { |x| x.parent = datacenters }
+      testing = FactoryBot.create(:ems_folder, :name => 'testing').tap { |x| x.parent = nested }
+      FactoryBot.create(:datacenter).tap { |x| x.parent = testing }
     end
+  end
+
+  def self.assign_embedded_ansible_role(miq_server = nil)
+    MiqRegion.seed
+    miq_server ||= local_miq_server
+    ServerRole.find_by(:name => "embedded_ansible") || FactoryBot.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
+    miq_server.assign_role('embedded_ansible').update(:active => true)
   end
 
   # Clear all EVM caches
@@ -31,7 +38,11 @@ module EvmSpecHelper
 
     clear_instance_variables(MiqEnvironment::Command)
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
+    clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
+    clear_instance_variable(Tenant, :@root_tenant) if defined?(Tenant)
+
+    MiqWorker.my_guid = nil
 
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
@@ -52,11 +63,13 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
+  def self.stub_as_local_server(server)
+    allow(MiqServer).to receive(:my_guid).and_return(server.guid)
+    MiqServer.my_server_clear_cache
+  end
+
   def self.local_miq_server(attrs = {})
-    remote_miq_server(attrs).tap do |server|
-      allow(MiqServer).to receive(:my_guid).and_return(server.guid)
-      MiqServer.my_server_clear_cache
-    end
+    remote_miq_server(attrs).tap { |server| stub_as_local_server(server) }
   end
 
   def self.local_guid_miq_server_zone
@@ -71,8 +84,7 @@ module EvmSpecHelper
   def self.remote_miq_server(attrs = {})
     Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => false)
 
-    server = FactoryGirl.create(:miq_server, attrs)
-    server
+    FactoryBot.create(:miq_server, attrs)
   end
 
   def self.remote_guid_miq_server_zone
@@ -88,9 +100,17 @@ module EvmSpecHelper
 
   def self.seed_specific_product_features(*features)
     features.flatten!
-    hashes   = YAML.load_file(MiqProductFeature.feature_yaml)
+
+    root_file, other_files = MiqProductFeature.seed_files
+
+    hashes = YAML.load_file(root_file)
+    other_files.each do |f|
+      hashes[:children] += Array.wrap(YAML.load_file(f))
+    end
+
     filtered = filter_specific_features([hashes], features).first
     MiqProductFeature.seed_from_hash(filtered)
+    MiqProductFeature.seed_tenant_miq_product_features
   end
 
   def self.filter_specific_features(hashes, features)
@@ -116,12 +136,6 @@ module EvmSpecHelper
     end
   end
 
-  def self.stub_amqp_support
-    require 'openstack/events/openstack_rabbit_event_monitor'
-    allow(OpenstackRabbitEventMonitor).to receive(:available?).and_return(true)
-    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).and_return(true)
-  end
-
   def self.import_yaml_model(dirname, domain, attrs = {})
     options = {'import_dir' => dirname, 'preview' => false, 'domain' => domain}
     yaml_import(domain, options, attrs)
@@ -135,7 +149,7 @@ module EvmSpecHelper
   def self.yaml_import(domain, options, attrs = {})
     Tenant.seed
     MiqAeImport.new(domain, options.merge('tenant' => Tenant.root_tenant)).import
-    dom = MiqAeNamespace.find_by_fqname(domain)
-    dom.update_attributes!(attrs.reverse_merge(:enabled => true)) if dom
+    dom = MiqAeNamespace.lookup_by_fqname(domain)
+    dom&.update(attrs.reverse_merge(:enabled => true))
   end
 end

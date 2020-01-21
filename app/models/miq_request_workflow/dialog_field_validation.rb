@@ -2,13 +2,17 @@
 module MiqRequestWorkflow::DialogFieldValidation
   def validate_tags(field, values, _dlg, fld, _value)
     selected_tags_categories = values[field].to_miq_a.collect do |tag_id|
-      Classification.find_by_id(tag_id).parent.name.to_sym
+      Classification.find_by(:id => tag_id).parent.name.to_sym
     end
 
     required_tags = fld[:required_tags].to_miq_a.collect(&:to_sym)
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect do |category|
-      Classification.find_by_name(category.to_s).description rescue nil
+      begin
+        Classification.lookup_by_name(category.to_s).description
+      rescue StandardError
+        nil
+      end
     end.compact
 
     return nil if missing_categories_names.blank?
@@ -35,6 +39,14 @@ module MiqRequestWorkflow::DialogFieldValidation
       error << _(". %{details}") % {:details => fld[:required_regex_fail_details] } if fld[:required_regex_fail_details]
 
       error
+    end
+  end
+
+  def validate_blacklist(_field, _values, dlg, fld, value)
+    blacklist = fld[:blacklist]
+    return _("%{name} is required") % {:name => required_description(dlg, fld)} if value.blank?
+    if blacklist && blacklist.include?(value)
+      _("%{name} may not contain blacklisted value") % {:name => required_description(dlg, fld)}
     end
   end
 end

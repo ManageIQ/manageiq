@@ -1,20 +1,31 @@
 describe Picture do
-  subject { FactoryGirl.build :picture }
+  subject { FactoryBot.build(:picture) }
 
   it "auto-creates needed directory" do
     expect(File.directory?(described_class.directory)).to be_truthy
   end
 
-  it "#content" do
-    expect(subject.content).to be_nil
-    expected = "FOOBAR"
-    subject.content         = expected.dup
-    expect(subject.content).to eq(expected)
+  context "#content" do
+    it 'returns expected content' do
+      expected = "FOOBAR"
+      subject.content = expected.dup
+      expect(subject.content).to eq(expected)
+    end
+
+    it 'requires content' do
+      subject.content = ''
+      expect(subject.valid?).to be_falsey
+    end
   end
 
   context "#extension" do
+    it 'is required' do
+      subject.extension = nil
+      expect(subject.valid?).to be_falsey
+      expect(subject.errors.messages).to eq(:extension => ["can't be blank", "must be a png, jpg, or svg"])
+    end
+
     it "accepts only png, jpg, or svg" do
-      expect(subject.extension).to be_nil
       subject.extension = "foo"
 
       expect(subject.valid?).to be_falsey
@@ -29,45 +40,11 @@ describe Picture do
       subject.extension = "svg"
       expect(subject.valid?).to be_truthy
     end
-
-    it "on new record" do
-      expect(subject.extension).to be_nil
-      ext = "png"
-      subject.extension = ext.dup
-      expect(subject.extension).to eq(ext)
-
-      subject.save
-
-      p = described_class.first
-      expect(p.extension).to eq(ext)
-
-      subject.reload
-      expect(subject.extension).to eq(ext)
-    end
-
-    it "on existing record" do
-      subject.save
-
-      subject.reload
-      expect(subject.extension).to be_nil
-      ext = "jpg"
-      subject.extension = ext.dup
-      expect(subject.extension).to eq(ext)
-
-      subject.save
-
-      p = described_class.first
-      expect(p.extension).to eq(ext)
-
-      subject.reload
-      expect(subject.extension).to eq(ext)
-    end
   end
 
   it "#size" do
-    expect(subject.size).to eq(0)
     expected = "FOOBAR"
-    subject.content         = expected.dup
+    subject.content = expected.dup
     expect(subject.size).to eq(expected.length)
   end
 
@@ -77,16 +54,33 @@ describe Picture do
     end
 
     context "works when record is saved" do
-      it "without extension" do
-        subject.save
-        expect(subject.basename).to eq("#{subject.compressed_id}.")
-      end
-
       it "with extension" do
         subject.extension = "png"
         subject.save
-        expect(subject.basename).to eq("#{subject.compressed_id}.#{subject.extension}")
+        expect(subject.basename).to eq("#{subject.id}.#{subject.extension}")
       end
+    end
+  end
+
+  context '.create_from_base64' do
+    let(:attributes) do
+      {
+        :extension => 'png',
+        :content   => 'aW1hZ2U='
+      }
+    end
+
+    it 'creates a picture' do
+      expect do
+        Picture.create_from_base64(attributes)
+      end.to change(Picture, :count).by(1)
+    end
+
+    it 'requires valid base64' do
+      attributes[:content] = 'bogus'
+      expect do
+        Picture.create_from_base64(attributes)
+      end.to raise_error(StandardError, 'invalid base64')
     end
   end
 

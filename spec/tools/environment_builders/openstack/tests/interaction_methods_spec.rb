@@ -1,6 +1,6 @@
 require_relative '../interaction_methods'
 
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 
 describe Openstack::InteractionMethods do
   let(:host1_data) { {:name => "name1", :connection_state => 'connection_state1', :settings => {}} }
@@ -39,13 +39,13 @@ describe Openstack::InteractionMethods do
     }
   end
 
-  let(:host1) { FactoryGirl.create(:host, host1_data) }
-  let(:host2) { FactoryGirl.create(:host, host2_data) }
-  let(:host3) { FactoryGirl.create(:host, host3_data) }
-  let(:host4) { FactoryGirl.create(:host, host4_data) }
-  let(:host5) { FactoryGirl.create(:host, host5_data) }
-  let(:host6) { FactoryGirl.create(:host, host6_data) }
-  let(:host7) { FactoryGirl.create(:host, host7_data) }
+  let(:host1) { FactoryBot.create(:host, host1_data) }
+  let(:host2) { FactoryBot.create(:host, host2_data) }
+  let(:host3) { FactoryBot.create(:host, host3_data) }
+  let(:host4) { FactoryBot.create(:host, host4_data) }
+  let(:host5) { FactoryBot.create(:host, host5_data) }
+  let(:host6) { FactoryBot.create(:host, host6_data) }
+  let(:host7) { FactoryBot.create(:host, host7_data) }
 
   let(:data) do
     [
@@ -62,7 +62,7 @@ describe Openstack::InteractionMethods do
   context "#Openstack::InteractionMethods" do
     let(:subject) { (Class.new { include Openstack::InteractionMethods }).new }
 
-    before :each do
+    before do
       allow($stdout).to receive(:puts)
     end
 

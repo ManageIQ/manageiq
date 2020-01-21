@@ -5,6 +5,8 @@ module Metric::CiMixin::StateFinders
     @states_by_ts ||= {}
     state = @states_by_ts[ts]
     if state.nil?
+      # TODO: vim_performance_states.loaded? works only when doing resource.vim_performance_states.all, not when loading
+      # a subset based on available timestamps
       if vim_performance_states.loaded?
         # Look for requested time in cache
         t = ts.to_time(:utc)
@@ -16,8 +18,9 @@ module Metric::CiMixin::StateFinders
           state = vim_performance_states.detect { |s| s.timestamp == t }
         end
       else
-        state = vim_performance_states.find_by_timestamp(ts)
+        state = vim_performance_states.find_by(:timestamp => ts)
       end
+      # TODO: index perf_capture_state to avoid fetching it everytime for a missing ts and hour
       state ||= perf_capture_state
       @states_by_ts[ts] = state
     end
@@ -27,6 +30,10 @@ module Metric::CiMixin::StateFinders
 
   def preload_vim_performance_state_for_ts(conditions = {})
     @states_by_ts = vim_performance_states.where(conditions).index_by(&:timestamp)
+  end
+
+  def preload_vim_performance_state_for_ts_iso8601(conditions = {})
+    @states_by_ts = vim_performance_states.where(conditions).index_by { |x| x.timestamp.utc.iso8601 }
   end
 
   def hosts_from_vim_performance_state_for_ts(ts)

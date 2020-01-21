@@ -38,11 +38,11 @@ class ManageIQ::Providers::InfraManager::ProvisionWorkflow < ::MiqProvisionVirtW
     add_target(:placement_rp_name,      :respool, ResourcePool, result)
     add_target(:placement_folder_name,  :folder,  EmsFolder,    result)
 
-    unless result[:folder_id].nil?
+    if result[:folder_id].nil?
+      add_target(:placement_dc_name, :datacenter, EmsFolder, result)
+    else
       result[:datacenter] = find_datacenter_for_ci(result[:folder], get_ems_metadata_tree(result))
       result[:datacenter_id] = result[:datacenter].id unless result[:datacenter].nil?
-    else
-      add_target(:placement_dc_name, :datacenter, EmsFolder, result)
     end
 
     rails_logger('get_source_and_targets', 1)

@@ -1,7 +1,7 @@
 describe OrchestrationTemplate do
   describe ".find_or_create_by_contents" do
     context "when the template does not exist" do
-      let(:query_hash) { FactoryGirl.build(:orchestration_template).as_json.symbolize_keys }
+      let(:query_hash) { FactoryBot.build(:orchestration_template).as_json.symbolize_keys }
 
       it "creates a new template" do
         expect(OrchestrationTemplate.count).to eq(0)
@@ -16,7 +16,7 @@ describe OrchestrationTemplate do
 
     context "when the template already exists" do
       before do
-        @existing_record = FactoryGirl.create(:orchestration_template)
+        @existing_record = FactoryBot.create(:orchestration_template)
         # prepare the query with different name and description; it is considered the same template
         # because the body (:template and :md5) does not change
         @query_hash = @existing_record.as_json.symbolize_keys.except(:id)
@@ -36,14 +36,31 @@ describe OrchestrationTemplate do
         expect(@existing_record).not_to eq(OrchestrationTemplate.find_or_create_by_contents(@query_hash)[0])
         expect(OrchestrationTemplate.count).to eq(2)
       end
+
+      it "uses subclass if type is present" do
+        expect(ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate).to receive(:calc_md5).at_least(:once)
+        expect(described_class).not_to receive(:calc_md5)
+
+        @query_hash[:draft] = false
+        @query_hash[:type] = ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.name
+        OrchestrationTemplate.find_or_create_by_contents(@query_hash)
+      end
+
+      it "uses parent if type is not present" do
+        expect(described_class).to receive(:calc_md5).at_least(:once)
+
+        @query_hash[:draft] = false
+        @query_hash[:type] = nil
+        OrchestrationTemplate.find_or_create_by_contents(@query_hash)
+      end
     end
   end
 
   context "when both types of templates, either alone or with deployed stacks, are present" do
     before do
       # prepare a mini environment with an orphan template and a template with deployed stacks
-      @template_alone      = FactoryGirl.create(:orchestration_template)
-      @template_with_stack = FactoryGirl.create(:orchestration_template_with_stacks)
+      @template_alone      = FactoryBot.create(:orchestration_template)
+      @template_with_stack = FactoryBot.create(:orchestration_template_with_stacks)
     end
 
     describe "#in_use?" do
@@ -78,24 +95,38 @@ describe OrchestrationTemplate do
   end
 
   describe "#eligible_managers" do
+    let!(:miq_server)  { EvmSpecHelper.local_miq_server }
+    let(:user_admin)   { FactoryBot.create(:user_admin) }
+    let(:tenant)       { FactoryBot.create(:tenant) }
+    let(:other_tenant) { FactoryBot.create(:tenant) }
+    let!(:user)        { FactoryBot.create(:user_with_group, :tenant => tenant) }
+
     before do
       allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types =>
                                                          [ManageIQ::Providers::Amazon::CloudManager,
                                                           ManageIQ::Providers::Openstack::CloudManager])
-      @template = FactoryGirl.create(:orchestration_template)
-      @aws = FactoryGirl.create(:ems_amazon)
-      @openstack = FactoryGirl.create(:ems_openstack)
+      @template = FactoryBot.create(:orchestration_template)
+      @aws = FactoryBot.create(:ems_amazon, :tenant => other_tenant)
+      @openstack = FactoryBot.create(:ems_openstack, :tenant => tenant)
     end
 
     it "lists all eligible managers for a template" do
-      expect(@template.eligible_managers).to match_array([@aws, @openstack])
+      User.with_user(user_admin) do
+        expect(@template.eligible_managers).to match_array([@aws, @openstack])
+      end
+    end
+
+    it "lists all eligible managers for a template regard to user's tenant" do
+      User.with_user(user) do
+        expect(@template.eligible_managers).to match_array([@openstack])
+      end
     end
   end
 
   describe "#validate_content" do
     before do
-      @template = FactoryGirl.create(:orchestration_template)
-      @manager = FactoryGirl.create(:ems_amazon)
+      @template = FactoryBot.create(:orchestration_template)
+      @manager = FactoryBot.create(:ems_amazon)
       allow(@manager).to receive_messages(:orchestration_template_validate => "Validation Message")
     end
 
@@ -116,11 +147,11 @@ describe OrchestrationTemplate do
 
   describe "#draft=" do
     context "when existing record is not a draft" do
-      let(:existing_template) { FactoryGirl.create(:orchestration_template, :draft => false) }
+      let(:existing_template) { FactoryBot.create(:orchestration_template, :draft => false) }
 
       it "allows duplicated draft record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => true)
+        dup_template.update!(:draft => true)
       end
 
       it "forbids duplicated final record from being added" do
@@ -131,23 +162,23 @@ describe OrchestrationTemplate do
     end
 
     context "when existing record is a draft" do
-      let(:existing_template) { FactoryGirl.create(:orchestration_template, :draft => true) }
+      let(:existing_template) { FactoryBot.create(:orchestration_template, :draft => true) }
 
       it "allows duplicated draft record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => true)
+        dup_template.update!(:draft => true)
       end
 
       it "allows duplicated final record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => false)
+        dup_template.update!(:draft => false)
       end
     end
   end
 
   describe ".find_with_content" do
     it "avoids content comparison but through content hash value comparison" do
-      existing_template = FactoryGirl.create(:orchestration_template)
+      existing_template = FactoryBot.create(:orchestration_template)
       allow(Digest::MD5).to receive(:hexdigest).and_return(existing_template.md5)
 
       result = OrchestrationTemplate.find_with_content("#{existing_template.content} content changed")
@@ -158,7 +189,7 @@ describe OrchestrationTemplate do
   context "when content has non-universal newlines" do
     let(:raw_text) { "abc\r\nxyz\r123\nend" }
     let(:content) { "abc\nxyz\n123\nend\n" }
-    let(:existing_template) { FactoryGirl.create(:orchestration_template, :content => raw_text) }
+    let(:existing_template) { FactoryBot.create(:orchestration_template, :content => raw_text) }
 
     it "stores content with universal newlines" do
       expect(existing_template.content).to eq(content)
@@ -179,14 +210,14 @@ describe OrchestrationTemplate do
   describe ".save_as_orderable!" do
     let(:content) { "content of the test template" }
     let(:existing_orderable_template) do
-      FactoryGirl.create(:orchestration_template, :content => content, :orderable => true)
+      FactoryBot.create(:orchestration_template, :content => content, :orderable => true)
     end
     let(:existing_discovered_template) do
-      FactoryGirl.create(:orchestration_template, :content => content, :orderable => false)
+      FactoryBot.create(:orchestration_template, :content => content, :orderable => false)
     end
 
     context "save new template" do
-      let(:template) { FactoryGirl.build(:orchestration_template, :content => content) }
+      let(:template) { FactoryBot.build(:orchestration_template, :content => content) }
 
       context "when format validation fails" do
         it "raises an error showing the failure reason" do
@@ -232,7 +263,7 @@ describe OrchestrationTemplate do
     end
 
     context "modify and save an existing template" do
-      let(:template) { FactoryGirl.create(:orchestration_template, :content => "old content") }
+      let(:template) { FactoryBot.create(:orchestration_template, :content => "old content") }
 
       before { template.content = content }
 
@@ -247,7 +278,7 @@ describe OrchestrationTemplate do
 
       context "when conflicts with existing discovered template" do
         let!(:stack) do
-          FactoryGirl.create(:orchestration_stack_cloud, :orchestration_template => existing_discovered_template)
+          FactoryBot.create(:orchestration_stack_cloud, :orchestration_template => existing_discovered_template)
         end
 
         it "updates the stacks from the discovered template to use the working template" do
@@ -270,45 +301,32 @@ describe OrchestrationTemplate do
     end
   end
 
-  describe ".seed" do
-    let(:azure_template) { "azure-single-vm-from-user-image" }
-
-    context "the first time seeding" do
-      it "adds templates from default location" do
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
+  describe "#deployment_options" do
+    it do
+      options = subject.deployment_options
+      assert_deployment_option(options[0], "stack_name", :OrchestrationParameterPattern, true)
     end
+  end
 
-    context "when the seeding has been run before" do
-      before do
-        OrchestrationTemplate.seed
-      end
-
-      let(:seeded_template) { OrchestrationTemplate.find_by(:name => azure_template) }
-
-      it "does not add new templates from following runs" do
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-
-      it "does not add new template if the original template has been only renamed" do
-        seeded_template.update_attributes(:name => 'other')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(0)
-      end
-
-      it "does not add new template if the original template has modified content" do
-        seeded_template.update_attributes(:content => '{}')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
-
-      it "adds new template if the original template has been renamed and modified" do
-        seeded_template.update_attributes(:name => 'other', :content => '{}')
-        OrchestrationTemplate.seed
-        expect(OrchestrationTemplate.where(:name => azure_template).count).to eq(1)
-      end
+  describe ".tabs" do
+    it do
+      expect(subject).to receive(:deployment_options).and_return('deployment-options')
+      expect(subject).to receive(:parameter_groups).and_return('parameter-groups')
+      expect(subject.tabs).to eq(
+        [
+          {
+            :title        => 'Basic Information',
+            :stack_group  => 'deployment-options',
+            :param_groups => 'parameter-groups'
+          }
+        ]
+      )
     end
+  end
+
+  def assert_deployment_option(option, name, constraint_type, required)
+    expect(option.name).to eq(name)
+    expect(option.required?).to eq(required)
+    expect(option.constraints[0]).to be_kind_of("OrchestrationTemplate::#{constraint_type}".constantize)
   end
 end

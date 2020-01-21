@@ -5,13 +5,14 @@ class VmMigrateRequest < MiqRequest
 
   validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
+  include MiqProvisionQuotaMixin
 
   def my_zone
     vm = Vm.find_by(:id => options[:src_ids])
     vm.nil? ? super : vm.my_zone
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 end

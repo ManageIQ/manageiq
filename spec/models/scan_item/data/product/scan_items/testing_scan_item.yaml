@@ -1,0 +1,13 @@
+---
+:item_type: category
+:definition:
+  content:
+  - target: vmconfig
+  - target: vmevents
+  - target: accounts
+  - target: software
+  - target: services
+  - target: system
+:name: testing_scan_item
+:description: Testing ScanItem
+:mode: Vm

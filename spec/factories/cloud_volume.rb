@@ -1,11 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cloud_volume do
-  end
-
-  factory :cloud_volume_amazon, :class => "ManageIQ::Providers::Amazon::CloudManager::CloudVolume", :parent => :cloud_volume do
+    sequence(:volume_type) { |n| "volume_type_#{seq_padded_for_sorting(n)}" }
   end
 
   factory :cloud_volume_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume", :parent => :cloud_volume do
-    status "available"
+    status { "available" }
   end
 end

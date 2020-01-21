@@ -1,6 +1,6 @@
 describe GenericObjectDefinition do
   let(:definition) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :generic_object_definition,
       :name       => "test_definition",
       :properties => {
@@ -34,12 +34,17 @@ describe GenericObjectDefinition do
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it 'raises an error if any property association is not a reportable model' do
+    testdef = described_class.new(:name => 'test', :properties => {:associations => {'folders' => :ems_folder}})
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it 'property name is unique among attributes, associations and methods' do
     testdef = described_class.new(
       :name       => 'test',
       :properties => {
         :attributes   => {:vms => "float", 'server' => 'localhost'},
-        :associations => {'vms' => :strang_model, 'hosts' => :host},
+        :associations => {'vms' => :vm, 'hosts' => :host},
         :methods      => [:hosts, :some_method]
       }
     )
@@ -69,9 +74,14 @@ describe GenericObjectDefinition do
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it 'accepts GenericObject as an association' do
+    testdef = described_class.create(:name => 'test', :properties => {:associations => {'balancers' => :generic_object}})
+    expect(testdef.properties[:associations]).to include('balancers' => 'GenericObject')
+  end
+
   describe '#destroy' do
     let(:generic_object) do
-      FactoryGirl.build(:generic_object, :generic_object_definition => definition, :name => 'test')
+      FactoryBot.build(:generic_object, :generic_object_definition => definition, :name => 'test')
     end
 
     it 'raises an error if the definition is in use' do
@@ -91,7 +101,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_attribute' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :attributes => {:status => "string"}})
     end
@@ -118,7 +128,7 @@ describe GenericObjectDefinition do
 
   describe '#delete_property_attribute' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :attributes => {:status => "string"}})
     end
@@ -142,7 +152,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_method' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :methods => %w(method1) })
     end
@@ -160,7 +170,7 @@ describe GenericObjectDefinition do
 
   describe '#delete_property_method' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :methods => %w(method1) })
     end
@@ -178,7 +188,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_association' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :associations => { :vms => 'Vm' } })
     end
@@ -194,14 +204,23 @@ describe GenericObjectDefinition do
     end
 
     it 'updates the association with different class' do
-      definition.add_property_association(:vms, 'vm_or_template')
-      expect(definition.properties[:associations]).to include('vms' => 'VmOrTemplate')
+      definition.add_property_association(:vms, 'zone')
+      expect(definition.properties[:associations]).to include('vms' => 'Zone')
+    end
+
+    it 'accepts GenericObject as the association' do
+      definition.add_property_association(:balancers, 'generic_object')
+      expect(definition.properties[:associations]).to include('balancers' => 'GenericObject')
+    end
+
+    it 'raises an error if the association is not a reportable model' do
+      expect { definition.add_property_association(:folders, 'ems_folder') }.to raise_error(RuntimeError, "invalid model for association: [EmsFolder]")
     end
   end
 
   describe '#delete_property_association' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => {:associations => {:vms => 'Vm'}})
     end
@@ -217,8 +236,8 @@ describe GenericObjectDefinition do
     end
 
     it 'deletes the association from associated generic objects' do
-      vm = FactoryGirl.create(:vm)
-      go = FactoryGirl.create(:generic_object, :name => 'test', :generic_object_definition => definition)
+      vm = FactoryBot.create(:vm)
+      go = FactoryBot.create(:generic_object, :name => 'test', :generic_object_definition => definition)
       go.add_to_property_association('vms', vm)
       expect(go.vms.size).to eq(1)
 
@@ -257,21 +276,117 @@ describe GenericObjectDefinition do
 
     it 'raises an error with undefined attributes' do
       @options = {:max_number => 10, :attr1 => true, :attr2 => 1}
-      expect { subject }.to raise_error(RuntimeError,
-                                        "[attr1, attr2]: not searchable for Generic Object of #{definition.name}")
+      expect { subject }.to raise_error(RuntimeError, "[attr1, attr2]: not searchable for Generic Object of #{definition.name}")
     end
 
     it 'finds by associations' do
-      vm = []
-      3.times { vm << FactoryGirl.create(:vm_vmware) }
-
+      vms = FactoryBot.create_list(:vm_vmware, 3)
       definition.add_property_association(:vms, 'vm')
-      @g1.vms = [vm[0], vm[1], vm[2]]
+      @g1.vms = vms
       @g1.save!
 
-      @options = {:vms => [vm[0].id, vm[1].id]}
+      @options = {:vms => [vms[0].id, vms[1].id]}
       expect(subject.size).to eq(1)
       expect(subject.first).to eq(@g1)
+    end
+  end
+
+  describe "#custom_actions" do
+    it "returns the custom actions in a hash grouped by buttons and button groups" do
+      FactoryBot.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
+      generic_group = FactoryBot.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
+      generic_group_set = FactoryBot.create(:custom_button_set, :name => "generic_group_set", :set_data => {:button_order => [generic_group.id]})
+
+      FactoryBot.create(
+        :custom_button,
+        :name             => "assigned_no_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group = FactoryBot.create(
+        :custom_button,
+        :name             => "assigned_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group_set = FactoryBot.create(:custom_button_set, :name => "assigned_group_set", :set_data => {:button_order => [assigned_group.id]})
+      definition.update(:custom_button_sets => [assigned_group_set])
+
+      expected = {
+        :buttons       => a_collection_containing_exactly(
+          a_hash_including("name" => "generic_no_group"),
+          a_hash_including("name" => "assigned_no_group")
+        ),
+        :button_groups => a_collection_containing_exactly(
+          a_hash_including(
+            "name"   => "assigned_group_set",
+            :buttons => [a_hash_including("name" => "assigned_group")]
+          ),
+          a_hash_including(
+            "name"   => "generic_group_set",
+            :buttons => [a_hash_including("name" => "generic_group")]
+          )
+        )
+      }
+      expect(definition.custom_actions).to match(expected)
+    end
+
+    context "expression evaluation" do
+      let(:generic) { FactoryBot.build(:generic_object, :generic_object_definition => definition, :name => 'hello') }
+      let(:true_expression_on_definition) do
+        MiqExpression.new("=" => {"field" => "GenericObjectDefinition-name", "value" => "test_definition"})
+      end
+      let(:false_expression_on_definition) do
+        MiqExpression.new("=" => {"field" => "GenericObjectDefinition-name", "value" => "not_test_definition"})
+      end
+      let(:true_expression_on_generic) do
+        MiqExpression.new("=" => {"field" => "GenericObject-name", "value" => "hello"})
+      end
+      let(:false_expression_on_generic) do
+        MiqExpression.new("=" => {"field" => "GenericObject-name", "value" => "not_hello"})
+      end
+
+      before do
+        FactoryBot.create(:custom_button,
+                           :name                  => "visible button on Generic Object",
+                           :applies_to_class      => "GenericObject",
+                           :visibility_expression => true_expression_on_generic)
+        FactoryBot.create(:custom_button,
+                           :name                  => "hidden button on Generic Object",
+                           :applies_to_class      => "GenericObject",
+                           :visibility_expression => false_expression_on_generic)
+        FactoryBot.create(:custom_button,
+                           :name                  => "visible button on Generic Object Definition",
+                           :applies_to_class      => "GenericObjectDefinition",
+                           :applies_to_id         => definition.id,
+                           :visibility_expression => true_expression_on_definition)
+        FactoryBot.create(:custom_button,
+                           :name                  => "hidden button on Generic Object Definition",
+                           :applies_to_class      => "GenericObjectDefinition",
+                           :applies_to_id         => definition.id,
+                           :visibility_expression => false_expression_on_definition)
+      end
+
+      it "uses appropriate object: parameter, which is GenericObject or definition for expression evaluation" do
+        expected = {
+          :buttons       => a_collection_containing_exactly(
+            a_hash_including("name" => "visible button on Generic Object"),
+            a_hash_including("name" => "visible button on Generic Object Definition")
+          ),
+          :button_groups => []
+        }
+        expect(definition.custom_actions(generic)).to match(expected)
+      end
+
+      it "uses GenericObjectDefinition object to evaluate expressionif if no parameter passed" do
+        expected = {
+          :buttons       => [
+            a_hash_including("name" => "visible button on Generic Object Definition")
+          ],
+          :button_groups => []
+        }
+        expect(definition.custom_actions).to match(expected)
+      end
     end
   end
 

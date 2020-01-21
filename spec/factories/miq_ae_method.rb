@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_ae_method do
     sequence(:name) { |n| "miq_ae_method#{seq_padded_for_sorting(n)}" }
 
@@ -9,7 +9,7 @@ FactoryGirl.define do
 
       after :create do |aemethod, evaluator|
         evaluator.params.each do |name, f|
-          FactoryGirl.create(:miq_ae_field,
+          FactoryBot.create(:miq_ae_field,
                              :name          => name,
                              :datatype      => f['datatype'],
                              :aetype        => f['aetype'],

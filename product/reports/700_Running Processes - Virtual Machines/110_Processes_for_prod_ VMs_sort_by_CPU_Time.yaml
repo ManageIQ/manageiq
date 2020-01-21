@@ -1,21 +1,21 @@
---- 
-where_clause: 
-dims: 
+---
+where_clause:
+dims:
 created_on: 2009-05-15 15:57:22.526477 Z
-reserved: 
+reserved:
 title: "Processes for prod VMs sorted by CPU Time"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    STARTS WITH: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    STARTS WITH:
       field: Vm-name
       value: prod_
 updated_on: 2009-05-19 00:55:46.491384 Z
 order: Descending
-graph: 
+graph:
 menu_name: "Processes for prod VMs sort by CPU Time"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - name
 - operating_system.processes.cpu_time
 - operating_system.processes.percent_cpu
@@ -27,19 +27,19 @@ col_order:
 - operating_system.processes.percent_memory
 - operating_system.processes.pid
 - operating_system.processes.priority
-timeline: 
+timeline:
 id: 100
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-include: 
-  operating_system: 
-    include: 
-      processes: 
-        columns: 
+include:
+  operating_system:
+    include:
+      processes:
+        columns:
         - cpu_time
         - percent_cpu
         - created_on
@@ -51,14 +51,14 @@ include:
         - pid
         - priority
 db: Vm
-cols: 
+cols:
 - name
 template_type: report
 group: c
-sortby: 
+sortby:
 - name
 - operating_system.processes.cpu_time
-headers: 
+headers:
 - Name
 - Process Cpu Time
 - Process Percent Cpu

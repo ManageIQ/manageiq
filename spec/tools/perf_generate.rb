@@ -1,6 +1,6 @@
-require 'trollop'
+require 'optimist'
 ARGV.shift if ARGV[0] == '--'
-opts = Trollop.options do
+opts = Optimist.options do
   banner "Generate metrics records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
   opt :realtime,    "Realtime range",      :default => "4.hours"
   opt :hourly,      "Hourly range",        :default => "6.months"
@@ -14,9 +14,9 @@ opts = Trollop.options do
   opt :no_delete,   "Skips deleting of the generated files"
   opt :dry_run,     "Same as --no-generate --no-import --no-delete"
 end
-Trollop.die "script must be run with rails runner" unless Object.const_defined?(:Rails)
-Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
-Trollop.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
+Optimist.die "script must be run with rails runner" unless Object.const_defined?(:Rails)
+Optimist.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
+Optimist.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
 opts[:no_generate] = opts[:no_import] = opts[:no_delete] = true if opts[:dry_run]
 
 require 'ruby-progressbar'

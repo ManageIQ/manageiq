@@ -3,47 +3,19 @@
 module MiqReport::Formatting
   extend ActiveSupport::Concern
 
-  format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join("miq_report_formats.yml"))
-  FORMATS                       = format_hash[:formats].freeze
-  FORMAT_DEFAULTS_AND_OVERRIDES = format_hash[:defaults_and_overrides].freeze
-
   module ClassMethods
     def get_available_formats(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
-      is_break_sfx = (sfx && self.is_break_suffix?(sfx))
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMATS.keys.inject({}) do |h, k|
-        # Ignore formats that don't include suffix if the column name has a break suffix
-        next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
-
-        if FORMATS[k][:columns] && FORMATS[k][:columns].include?(col)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:sub_types] && FORMATS[k][:sub_types].include?(sub_type)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:data_types] && FORMATS[k][:data_types].include?(dt)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:suffixes] && FORMATS[k][:suffixes].include?(sfx.to_sym)
-          h[k] = FORMATS[k][:description]
-        end
-        h
-      end
-    end
-
-    def get_default_format(path, dt)
-      col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last
-      sfx = sfx.to_sym if sfx
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
+      MiqReport::Formats.available_formats_for(col, sfx, dt)
     end
   end
 
   def javascript_format(col, format_name)
-    format_name ||= self.class.get_default_format(col, nil)
+    format_name ||= MiqReport::Formats.default_format_for_path(col, nil)
     return nil unless format_name && format_name != :_none_
 
-    format = FORMATS[format_name]
+    format = MiqReport::Formats.details(format_name)
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
@@ -64,12 +36,17 @@ module MiqReport::Formatting
         options[:format] = :cores
       end
     end
+
+    # TODO: remove this and update storing column format to instance of report in UI (this requires migration)
+    options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
+    col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
+
     format = options.delete(:format)
     return "" if value.nil?
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
 
     # Format name passed in as a symbol or string
-    format = FORMATS[format.to_sym] if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
+    format = MiqReport::Formats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
 
     # Look in this report object for column format
     self.col_formats ||= []
@@ -77,19 +54,13 @@ module MiqReport::Formatting
       idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
         col = col_order[idx]
-        format = FORMATS[self.col_formats[idx]]
+        format = MiqReport::Formats.details(self.col_formats[idx])
       end
     end
 
     # Use default format for column stil nil
     if format.nil? || format == :_default_
-      expression_col = col_to_expression_col(col)
-      dt = self.class.get_col_type(expression_col)
-      dt = value.class.to_s.downcase.to_sym if dt.nil?
-      dt = dt.to_sym unless dt.nil?
-      format = FORMATS[self.class.get_default_format(expression_col, dt)]
-      format = format.deep_clone if format # Make sure we don't taint the original
-      format[:precision] = FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym] if format && FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
+      format = format_from_miq_expression(col, value)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
@@ -98,10 +69,8 @@ module MiqReport::Formatting
 
     # Chargeback Reports: Add the selected currency in the assigned rate to options
     if Chargeback.db_is_chargeback?(db)
-      compute_selected_rate = ChargebackRate.get_assignments(:compute)[0]
-      storage_selected_rate = ChargebackRate.get_assignments(:storage)[0]
-      selected_rate = compute_selected_rate.nil? ? storage_selected_rate : compute_selected_rate
-      options[:unit] = selected_rate[:cb_rate].chargeback_rate_details[0].detail_currency.symbol unless selected_rate.nil?
+      @rates_cache ||= Chargeback::RatesCache.new
+      options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
     format.merge!(options) if format # Merge additional options that were passed in as overrides
@@ -204,7 +173,7 @@ module MiqReport::Formatting
     return val unless val.kind_of?(Time) || stime.kind_of?(Date)
 
     col = options[:column]
-    col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
+    _col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
     val = val.in_time_zone(get_time_zone("UTC"))
     if val.respond_to?("beginning_of_#{sfx}")
@@ -240,7 +209,6 @@ module MiqReport::Formatting
     val = val.to_i
 
     names = %w(day hour minute second)
-    arr = []
 
     days    = (val / 86400)
     hours   = (val / 3600) - (days * 24)
@@ -276,5 +244,20 @@ module MiqReport::Formatting
 
   def format_model_name(val, _options = {})
     ui_lookup(:model => val)
+  end
+
+  private
+
+  def format_from_miq_expression(col, value)
+    @miq_exp_dt_map ||= {}
+    expression_col = col_to_expression_col(col)
+
+    unless @miq_exp_dt_map.key?(col)
+      @miq_exp_dt_map[col] = MiqExpression.parse_field_or_tag(expression_col).try(:column_type)
+    end
+    dt = @miq_exp_dt_map[col]
+    dt = value.class.to_s.downcase if dt.nil?
+    dt = dt.to_sym unless dt.nil?
+    MiqReport::Formats.default_format_details_for(expression_col, col, dt)
   end
 end

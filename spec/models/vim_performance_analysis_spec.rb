@@ -1,17 +1,14 @@
 RSpec.describe VimPerformanceAnalysis do
   let(:tag_text) { "operations/good" }
-  let(:tag_good) { FactoryGirl.create(:tag, :name => "/managed/#{tag_text}") }
-  let(:tag_bad)  { FactoryGirl.create(:tag, :name => "/managed/operations/bad") }
-  let(:time_profile) { FactoryGirl.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
-
-  let(:user) { FactoryGirl.create(:user_admin) }
-
-  let(:ems) { FactoryGirl.create(:ems_vmware) }
+  let(:tag_good) { FactoryBot.create(:tag, :name => "/managed/#{tag_text}") }
+  let(:tag_bad)  { FactoryBot.create(:tag, :name => "/managed/operations/bad") }
+  let(:time_profile) { FactoryBot.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
+  let(:ems) { FactoryBot.create(:ems_vmware) }
 
   let(:good_day) { DateTime.current - 2.day }
   let(:bad_day)  { DateTime.current - 4.months }
   let(:vm1) do
-    FactoryGirl.create(:vm_vmware, :name => "test_vm", :tags => [tag_good], :ext_management_system => ems).tap do |vm|
+    FactoryBot.create(:vm_vmware, :name => "test_vm", :tags => [tag_good], :ext_management_system => ems).tap do |vm|
       [7, 8, 9, 10].each do |hour|
         add_rollup(vm, (good_day + hour.hours).to_s, tag_text)
         add_rollup(vm, (bad_day + hour.hours).to_s, tag_text)
@@ -20,10 +17,10 @@ RSpec.describe VimPerformanceAnalysis do
     end
   end
 
-  let(:storage) { FactoryGirl.create(:storage_target_vmware) }
+  let(:storage) { FactoryBot.create(:storage_target_vmware) }
   let(:host1) do
-    FactoryGirl.create(:host,
-                       :hardware => FactoryGirl.create(:hardware,
+    FactoryBot.create(:host,
+                       :hardware => FactoryBot.create(:hardware,
                                                        :memory_mb       => 8124,
                                                        :cpu_total_cores => 1,
                                                        :cpu_speed       => 9576),
@@ -32,7 +29,7 @@ RSpec.describe VimPerformanceAnalysis do
   end
 
   let(:ems_cluster) do
-    FactoryGirl.create(:ems_cluster, :ext_management_system => ems, :hosts => [host1])
+    FactoryBot.create(:ems_cluster, :ext_management_system => ems, :hosts => [host1])
   end
 
   before do
@@ -51,7 +48,6 @@ RSpec.describe VimPerformanceAnalysis do
 
       # currently, only vms have data, but only host data is returned
       results = VimPerformanceAnalysis.find_child_perf_for_time_period(ems, "daily", options)
-      # expect(results).not_to be_empty
       VimPerformanceAnalysis.group_perf_by_timestamp(ems, results, cols)
 
       # for now, we're just content that it did not blow up
@@ -60,7 +56,7 @@ RSpec.describe VimPerformanceAnalysis do
 
   describe '.group_perf_by_timestamp' do
     let(:storage_metric) do
-      FactoryGirl.create(:metric_rollup,
+      FactoryBot.create(:metric_rollup,
                          :derived_storage_total => '42',
                          :derived_storage_free  => '13')
     end
@@ -77,16 +73,9 @@ RSpec.describe VimPerformanceAnalysis do
     end
   end
 
-  # describe ".child_tags_over_time_period" do
-  #   it "returns only tagged nodes" do
-  #     good_vm = FactoryGirl.create(:vm_vmware, :tags => [tag_good])
-  #     bad_vm  = FactoryGirl.create(:vm_vmware, :tags => [tag_bad])
-  #   end
-  # end
-
   describe ".get_daily_perf" do
     it "should not raise an error" do
-      range       = {:days => 7, :end_date => "2016-04-19T23:00:00Z".to_time}
+      range       = {:days => 7, :end_date => "2016-04-19T23:00:00Z".to_time(:utc)}
       ext_options = {:tz => "UTC", :time_profile => time_profile}
       perf_cols   = [:max_cpu_usagemhz_rate_average, :derived_cpu_available, :total_vcpus, :max_derived_memory_used, :derived_memory_available, :used_space, :total_space]
       expect { described_class.get_daily_perf(host1, range, ext_options, perf_cols).all.inspect }.not_to raise_error
@@ -96,7 +85,7 @@ RSpec.describe VimPerformanceAnalysis do
   private
 
   def add_rollup(vm, timestamp, tag = tag_text)
-    vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily, :with_data,
+    vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_daily, :with_data,
                                             :timestamp          => timestamp,
                                             :tag_names          => tag,
                                             :parent_host        => vm.host,

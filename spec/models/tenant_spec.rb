@@ -2,6 +2,11 @@ describe Tenant do
   include_examples ".seed called multiple times"
 
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
+  let(:user_admin) {
+    user = FactoryBot.create(:user_admin)
+    allow(user).to receive(:get_timezone).and_return("UTC")
+    user
+  }
 
   let(:default_tenant) do
     root_tenant
@@ -25,7 +30,7 @@ describe Tenant do
     end
 
     it "can update the root_tenant" do
-      root_tenant.update_attributes!(:name => 'newname', :use_config_for_attributes => false)
+      root_tenant.update!(:name => 'newname', :use_config_for_attributes => false)
       expect(root_tenant.reload.name).to eq('newname')
     end
   end
@@ -76,8 +81,8 @@ describe Tenant do
   end
 
   describe "#display_type" do
-    let(:tenant)  { FactoryGirl.build(:tenant) }
-    let(:project) { FactoryGirl.build(:tenant, :divisible => false) }
+    let(:tenant)  { FactoryBot.build(:tenant) }
+    let(:project) { FactoryBot.build(:tenant, :divisible => false) }
 
     it "detects Tenant" do
       expect(tenant.display_type).to eql  'Tenant'
@@ -92,8 +97,8 @@ describe Tenant do
 
   describe ".all_tenants" do
     it "returns divisible projects (root and created is divisible)" do
-      FactoryGirl.create(:tenant, :parent => root_tenant)
-      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
+      FactoryBot.create(:tenant, :parent => root_tenant)
+      FactoryBot.create(:tenant, :parent => root_tenant, :divisible => false)
 
       expect(Tenant.all_tenants.count).to eql(2)
     end
@@ -101,8 +106,8 @@ describe Tenant do
 
   describe ".app_projects" do
     it "returns non-divisible projects (root is divisible))" do
-      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
-      FactoryGirl.create(:tenant, :parent => root_tenant, :divisible => false)
+      FactoryBot.create(:tenant, :parent => root_tenant, :divisible => false)
+      FactoryBot.create(:tenant, :parent => root_tenant, :divisible => false)
 
       expect(Tenant.all_projects.count).to eql 2
     end
@@ -110,12 +115,12 @@ describe Tenant do
 
   context "subtenants and subprojects" do
     before do
-      @t1  = FactoryGirl.create(:tenant, :parent => root_tenant, :name => "T1")
-      @t2  = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2")
-      @t2p = FactoryGirl.create(:tenant, :parent => @t1, :name => "T2 Project", :divisible => false)
-      @t3  = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3")
-      @t3a = FactoryGirl.create(:tenant, :parent => @t2, :name => "T3a")
-      @t4p = FactoryGirl.create(:tenant, :parent => @t3, :name => "T4 Project", :divisible => false)
+      @t1  = FactoryBot.create(:tenant, :parent => root_tenant, :name => "T1")
+      @t2  = FactoryBot.create(:tenant, :parent => @t1, :name => "T2")
+      @t2p = FactoryBot.create(:tenant, :parent => @t1, :name => "T2 Project", :divisible => false)
+      @t3  = FactoryBot.create(:tenant, :parent => @t2, :name => "T3")
+      @t3a = FactoryBot.create(:tenant, :parent => @t2, :name => "T3a")
+      @t4p = FactoryBot.create(:tenant, :parent => @t3, :name => "T4 Project", :divisible => false)
     end
 
     it "#all_subtenants" do
@@ -145,18 +150,18 @@ describe Tenant do
     end
 
     it "is unique per parent tenant" do
-      FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant)
-      expect { FactoryGirl.create(:tenant, :name => "common", :parent => root_tenant) }
+      FactoryBot.create(:tenant, :name => "common", :parent => root_tenant)
+      expect { FactoryBot.create(:tenant, :name => "common", :parent => root_tenant) }
         .to raise_error(ActiveRecord::RecordInvalid, /Name should be unique per parent/)
     end
 
     it "can be the same for different parents" do
-      parent1 = FactoryGirl.create(:tenant, :name => "parent1", :parent => root_tenant)
-      parent2 = FactoryGirl.create(:tenant, :name => "parent2", :parent => root_tenant)
+      parent1 = FactoryBot.create(:tenant, :name => "parent1", :parent => root_tenant)
+      parent2 = FactoryBot.create(:tenant, :name => "parent2", :parent => root_tenant)
 
-      FactoryGirl.create(:tenant, :name => "common", :parent => parent1)
+      FactoryBot.create(:tenant, :name => "common", :parent => parent1)
       expect do
-        FactoryGirl.create(:tenant, :name => "common", :parent => parent2)
+        FactoryBot.create(:tenant, :name => "common", :parent => parent2)
       end.not_to raise_error
     end
 
@@ -174,158 +179,11 @@ describe Tenant do
   end
 
   it "#parent_name" do
-    t1 = FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant)
-    t2 = FactoryGirl.create(:tenant, :name => "T2", :parent => t1, :divisible => false)
+    t1 = FactoryBot.create(:tenant, :name => "T1", :parent => root_tenant)
+    t2 = FactoryBot.create(:tenant, :name => "T2", :parent => t1, :divisible => false)
 
     expect(t2.parent_name).to eql "T1"
     expect(default_tenant.parent_name).to eql nil
-  end
-
-  describe "#logo" do
-    # would prefer if url was nil, but this is how paperclip works
-    # but basically checking tht it is not /uploads/custom_logo
-    it "has bogus url (but not typical custom logo)" do
-      tenant.save!
-      expect(tenant.logo.url).to match(/missing/)
-    end
-
-    it "has the correct logo url" do
-      tenant.update_attributes!(:logo_file_name => "custom_logo.png")
-      expect(tenant.logo.url).to eq("/uploads/custom_logo.png")
-    end
-
-    it "points to the correct logo file" do
-      tenant.update_attributes!(:logo_file_name => "custom_logo.png")
-      expect(tenant.logo.path).to eq(Rails.root.join("public/uploads/custom_logo.png").to_s)
-    end
-
-    it "has no logo for root_tenant" do
-      stub_settings(:server => {})
-      expect(root_tenant.logo.url).to match(/missing/)
-    end
-
-    context "with server configurations" do
-      it "uses configurations value for root_tenant" do
-        stub_settings(:server => {:custom_logo => true})
-        expect(root_tenant.logo.url).to eq("/uploads/custom_logo.png")
-      end
-
-      it "overrides configurations for root_tenant" do
-        root_tenant.update_attributes(:logo_file_name => "different.png", :use_config_for_attributes => false)
-        expect(root_tenant.logo.url).to eq("/uploads/different.png")
-      end
-
-      # would prefer if url was nil, but this is how paperclip works
-      it "does not use configurations for regular tenant" do
-        tenant.save!
-        expect(tenant.logo.url).to match(/missing/)
-      end
-    end
-  end
-
-  describe "#logo?" do
-    let(:settings) { {:server => {:custom_logo => false}} }
-
-    it "knows there is a logo" do
-      tenant.logo_file_name = "custom_logo.png"
-      expect(tenant).to be_logo
-    end
-
-    it "knows there is no logo" do
-      expect(tenant).not_to be_logo
-    end
-
-    context "for root_tenant" do
-      it "knows there is no logo from configuration" do
-        expect(root_tenant).not_to be_logo
-      end
-
-      it "knows there is a logo overriding configuration" do
-        root_tenant.logo_file_name = "custom_logo.png"
-        root_tenant.use_config_for_attributes = false
-        expect(root_tenant).to be_logo
-      end
-
-      context "#with custom_logo configuration" do
-        it "knows there is a logo from configuration" do
-          stub_settings(:server => {:custom_logo => true})
-          expect(root_tenant).to be_logo
-        end
-
-        it "knows there is no logo when not using config" do
-          root_tenant.use_config_for_attributes = false
-          expect(root_tenant).not_to be_logo
-        end
-      end
-    end
-  end
-
-  # NOTE: much of this functionality was tested in #logo?
-  describe "#logo_file_name" do
-    it "has custom filename" do
-      tenant.logo_file_name = "custom_logo.png"
-      expect(tenant.logo_file_name).to eq("custom_logo.png")
-    end
-  end
-
-  describe "#logo_content_type" do
-    it "has custom content_type" do
-      tenant.logo_content_type = "image/jpg"
-      expect(tenant.logo_content_type).to eq("image/jpg")
-    end
-
-    it "has no custom content_type" do
-      expect(tenant.logo_content_type).to be_nil
-    end
-
-    context "for root_tenant" do
-      it "has custom content_type" do
-        expect(root_tenant.logo_content_type).to eq("image/png")
-      end
-
-      context "#with custom logo configuration" do
-        let(:settings) { {:server => {:custom_logo => true}} }
-
-        it "has custom content_type" do
-          expect(root_tenant.logo_content_type).to eq("image/png")
-        end
-      end
-    end
-  end
-
-  describe "#login_logo" do
-    # NOTE: initializers/paperclip.rb sets up :default_login_logo
-
-    it "has a default login image" do
-      tenant.save!
-      expect(tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
-    end
-
-    it "has a default login image for root_tenant" do
-      expect(root_tenant.login_logo.url).to match(/login-screen-logo.*\.png/)
-    end
-
-    it "has custom login logo" do
-      tenant.update_attributes(:login_logo_file_name => "custom_login_logo.png")
-      expect(tenant.login_logo.url).to match(/custom_login_logo.png/)
-    end
-
-    context "with custom login logo configuration" do
-      it "has custom login logo" do
-        stub_settings(:server => {:custom_login_logo => true})
-        expect(root_tenant.login_logo.url).to match(/custom_login_logo.png/)
-      end
-    end
-  end
-
-  describe "#login_logo?" do
-    it "knows when there is a login logo" do
-      expect(described_class.new(:login_logo_file_name => "image.png")).to be_login_logo
-    end
-
-    it "knows when there is no login logo" do
-      expect(described_class.new).not_to be_login_logo
-    end
   end
 
   describe "#nil_blanks" do
@@ -354,39 +212,50 @@ describe Tenant do
 
   context "#validate_default_tenant" do
     it "fails assigning a group with the wrong tenant" do
-      tenant1 = FactoryGirl.create(:tenant)
-      tenant2 = FactoryGirl.create(:tenant)
-      g = FactoryGirl.create(:miq_group, :tenant => tenant1)
-      expect { tenant2.update_attributes!(:default_miq_group => g) }
+      tenant1 = FactoryBot.create(:tenant)
+      tenant2 = FactoryBot.create(:tenant)
+      g = FactoryBot.create(:miq_group, :tenant => tenant1)
+      expect { tenant2.update!(:default_miq_group => g) }
         .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
 
     # we may want to change this in the future
     it "prevents changing default_miq_group" do
-      g = FactoryGirl.create(:miq_group, :tenant => tenant)
-      expect { tenant.update_attributes!(:default_miq_group => g) }
+      g = FactoryBot.create(:miq_group, :tenant => tenant)
+      expect { tenant.update!(:default_miq_group => g) }
         .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
   end
 
+  context "validate multi region" do
+    let(:other_region_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+
+    it "allows same name as tenant in a different region" do
+      described_class.create(:name => "GT", :description => "GT Tenant in other region", :id => other_region_id)
+      expect(described_class.new(:name => "GT", :description => "GT Tenant in this region").valid?).to be_truthy
+    end
+  end
+
   context "#ensure_can_be_destroyed" do
-    let(:tenant)       { FactoryGirl.create(:tenant) }
-    let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }
+    let(:tenant)       { FactoryBot.create(:tenant) }
+    let(:cloud_tenant) { FactoryBot.create(:cloud_tenant) }
 
     it "wouldn't delete tenant with groups associated" do
-      FactoryGirl.create(:miq_group, :tenant => tenant)
-      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant with groups.*cannot be deleted/)
+      FactoryBot.create(:miq_group, :tenant => tenant)
+      expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(tenant.errors.full_messages[0]).to eq("A tenant with groups associated cannot be deleted.")
     end
 
     it "does not delete tenant created by tenant mapping process" do
       tenant.source = cloud_tenant
-      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant created by tenant mapping cannot be deleted/)
+      expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(tenant.errors.full_messages[0]).to eq("A tenant created by tenant mapping cannot be deleted.")
     end
   end
 
   describe "#description" do
     it "has description" do
-      tenant.update_attributes(:description => 'very important vm')
+      tenant.update(:description => 'very important vm')
       expect(tenant.description).not_to be_nil
     end
   end
@@ -402,29 +271,29 @@ describe Tenant do
   end
 
   context "#admins" do
-    let(:self_service_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
+    let(:self_service_role) { FactoryBot.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}}) }
+    let(:admin_with_brand) { FactoryBot.create(:miq_user_role, :name => "tenant_admin-brand-master") }
 
-    let(:brand_feature) { FactoryGirl.create(:miq_product_feature, :identifier => "edit-brand") }
-    let(:admin_with_brand) { FactoryGirl.create(:miq_user_role, :name => "tenant_admin-brand-master") }
-
-    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant1) { FactoryBot.create(:tenant) }
     let(:tenant1_admins) do
-      FactoryGirl.create(:miq_group,
+      FactoryBot.create(:miq_group,
                          :miq_user_role => admin_with_brand,
                          :tenant        => tenant1
                         )
     end
     let(:tenant1_users) do
-      FactoryGirl.create(:miq_group,
+      FactoryBot.create(:miq_group,
                          :tenant        => tenant1,
                          :miq_user_role => self_service_role)
     end
-    let(:admin) { FactoryGirl.create(:user, :miq_groups => [tenant1_users, tenant1_admins]) }
-    let(:user1) { FactoryGirl.create(:user, :miq_groups => [tenant1_users]) }
-    let(:user2) { FactoryGirl.create(:user) }
+    let(:admin) { FactoryBot.create(:user, :miq_groups => [tenant1_users, tenant1_admins]) }
+    let(:user1) { FactoryBot.create(:user, :miq_groups => [tenant1_users]) }
+    let(:user2) { FactoryBot.create(:user) }
 
     it "has users" do
-      admin; user1; user2
+      admin
+      user1
+      user2
       expect(tenant1.users).to include(admin)
       expect(tenant1.users).to include(user1)
       expect(tenant1.users).not_to include(user2)
@@ -432,21 +301,21 @@ describe Tenant do
   end
 
   context "#miq_ae_domains" do
-    let(:t1) { FactoryGirl.create(:tenant, :name => "T1", :parent => root_tenant) }
-    let(:t2) { FactoryGirl.create(:tenant, :name => "T2", :parent => root_tenant) }
-    let(:dom1) { FactoryGirl.create(:miq_ae_domain, :tenant => t1, :name => 'DOM1', :priority => 20) }
-    let(:dom2) { FactoryGirl.create(:miq_ae_domain, :tenant => t2, :name => 'DOM2', :priority => 40) }
-    let(:t1_1) { FactoryGirl.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
-    let(:t2_2) { FactoryGirl.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
+    let(:t1) { FactoryBot.create(:tenant, :name => "T1", :parent => root_tenant) }
+    let(:t2) { FactoryBot.create(:tenant, :name => "T2", :parent => root_tenant) }
+    let(:dom1) { FactoryBot.create(:miq_ae_domain, :tenant => t1, :name => 'DOM1', :priority => 20) }
+    let(:dom2) { FactoryBot.create(:miq_ae_domain, :tenant => t2, :name => 'DOM2', :priority => 40) }
+    let(:t1_1) { FactoryBot.create(:tenant, :name => 'T1_1', :domain => 'a.a.com', :parent => t1) }
+    let(:t2_2) { FactoryBot.create(:tenant, :name => 'T2_1', :domain => 'b.b.com', :parent => t2) }
 
     context "reset priority" do
       it "#reset_domain_priority_by_ordered_ids" do
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
+        FactoryBot.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
                            :tenant_id => root_tenant.id)
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
+        FactoryBot.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
                            :tenant_id => root_tenant.id)
-        dom3 = FactoryGirl.create(:miq_ae_domain, :name => 'A', :tenant_id => root_tenant.id)
-        dom4 = FactoryGirl.create(:miq_ae_domain, :name => 'B', :tenant_id => root_tenant.id)
+        dom3 = FactoryBot.create(:miq_ae_domain, :name => 'A', :tenant_id => root_tenant.id)
+        dom4 = FactoryBot.create(:miq_ae_domain, :name => 'B', :tenant_id => root_tenant.id)
 
         expect(root_tenant.visible_domains.collect(&:name)).to eq(%w(B A Redhat ManageIQ))
         ids = [dom4.id, dom3.id]
@@ -457,14 +326,14 @@ describe Tenant do
       end
 
       it "#reset_domain_priority_by_ordered_ids by subtenant" do
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
+        FactoryBot.create(:miq_ae_system_domain, :name => 'ManageIQ', :priority => 0,
                            :tenant_id => root_tenant.id)
-        FactoryGirl.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
+        FactoryBot.create(:miq_ae_system_domain, :name => 'Redhat', :priority => 1,
                            :tenant_id => root_tenant.id)
-        FactoryGirl.create(:miq_ae_domain, :name => 'T1_A', :tenant_id => t1.id)
-        FactoryGirl.create(:miq_ae_domain, :name => 'T1_B', :tenant_id => t1.id)
-        dom5 = FactoryGirl.create(:miq_ae_domain, :name => 'T1_1_A', :tenant_id => t1_1.id)
-        dom6 = FactoryGirl.create(:miq_ae_domain, :name => 'T1_1_B', :tenant_id => t1_1.id)
+        FactoryBot.create(:miq_ae_domain, :name => 'T1_A', :tenant_id => t1.id)
+        FactoryBot.create(:miq_ae_domain, :name => 'T1_B', :tenant_id => t1.id)
+        dom5 = FactoryBot.create(:miq_ae_domain, :name => 'T1_1_A', :tenant_id => t1_1.id)
+        dom6 = FactoryBot.create(:miq_ae_domain, :name => 'T1_1_B', :tenant_id => t1_1.id)
         expect(t1_1.visible_domains.collect(&:name)).to eq(%w(T1_1_B T1_1_A T1_B T1_A Redhat ManageIQ))
         ids = [dom6.id, dom5.id]
         t1_1.reset_domain_priority_by_ordered_ids(ids)
@@ -474,9 +343,9 @@ describe Tenant do
 
     it '#sequenceable_domains' do
       t1_1
-      FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+      FactoryBot.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
                          :tenant_id => t1_1.id)
-      FactoryGirl.create(:miq_ae_system_domain, :name => 'DOM10', :priority => 10,
+      FactoryBot.create(:miq_ae_system_domain, :name => 'DOM10', :priority => 10,
                          :tenant_id => root_tenant.id, :enabled => false)
 
       expect(t1_1.sequenceable_domains.collect(&:name)).to eq(%w(DOM15))
@@ -486,16 +355,24 @@ describe Tenant do
       before do
         dom1
         dom2
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
+        FactoryBot.create(:miq_ae_domain, :name => 'DOM15', :priority => 15,
                            :tenant_id => root_tenant.id)
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM10', :priority => 10,
+        FactoryBot.create(:miq_ae_domain, :name => 'DOM10', :priority => 10,
                            :tenant_id => root_tenant.id, :enabled => false)
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
+        FactoryBot.create(:miq_ae_domain, :name => 'DOM3', :priority => 3,
                            :tenant_id => t1_1.id)
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM5', :priority => 7,
+        FactoryBot.create(:miq_ae_domain, :name => 'DOM5', :priority => 7,
                            :tenant_id => t1_1.id)
-        FactoryGirl.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
+        FactoryBot.create(:miq_ae_domain, :name => 'DOM4', :priority => 5,
                            :tenant_id => t2_2.id)
+      end
+
+      # This spec is here to confirm that we don't mutate the memoized
+      # ancestor_ids value when calling `Tenant#visible_domains`.
+      it "does not affect the memoized ancestor_ids variable" do
+        expected_ancestor_ids = t1_1.ancestor_ids.dup  # dup required, don't remove
+        t1_1.visible_domains
+        expect(t1_1.ancestor_ids).to eq(expected_ancestor_ids)
       end
 
       it "#visibile_domains sub_tenant" do
@@ -539,7 +416,7 @@ describe Tenant do
 
     it "no editable domains available for current tenant" do
       t1_1
-      FactoryGirl.create(:miq_ae_system_domain,
+      FactoryBot.create(:miq_ae_system_domain,
                          :name      => 'non_editable',
                          :priority  => 3,
                          :tenant_id => t1_1.id)
@@ -548,7 +425,7 @@ describe Tenant do
 
     it "editable domains available for current_tenant" do
       t1_1
-      FactoryGirl.create(:miq_ae_domain,
+      FactoryBot.create(:miq_ae_domain,
                          :name      => 'editable',
                          :priority  => 3,
                          :tenant_id => t1_1.id)
@@ -557,7 +434,7 @@ describe Tenant do
   end
 
   describe ".set_quotas" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant)  { FactoryBot.build(:tenant, :parent => default_tenant) }
 
     it "can set quotas" do
       tenant.set_quotas(:vms_allocated => {:value => 20})
@@ -629,7 +506,7 @@ describe Tenant do
   end
 
   describe ".get_quotas" do
-    let(:tenant)  { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant)  { FactoryBot.build(:tenant, :parent => default_tenant) }
 
     it "can get quotas" do
       expect(tenant.get_quotas).not_to be_empty
@@ -672,41 +549,41 @@ describe Tenant do
   end
 
   describe ".used_quotas" do
-    let(:tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
-    let(:ems) { FactoryGirl.create(:ems_vmware, :name => 'ems', :tenant => tenant) }
+    let(:tenant) { FactoryBot.create(:tenant, :parent => default_tenant) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :name => 'ems', :tenant => tenant) }
 
     let(:vm1) do
-      FactoryGirl.create(
+      FactoryBot.create(
         :vm_vmware,
         :tenant_id             => tenant.id,
         :host_id               => 1,
         :ext_management_system => ems,
-        :hardware              => FactoryGirl.create(
+        :hardware              => FactoryBot.create(
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
 
     let(:vm2) do
-      FactoryGirl.create(
+      FactoryBot.create(
         :vm_vmware,
         :tenant_id             => tenant.id,
         :host_id               => 1,
         :ext_management_system => ems,
-        :hardware              => FactoryGirl.create(
+        :hardware              => FactoryBot.create(
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
 
     let(:template) do
-      FactoryGirl.create(
+      FactoryBot.create(
         :miq_template,
         :name                  => "test",
         :location              => "test.vmx",
@@ -714,11 +591,11 @@ describe Tenant do
         :tenant_id             => tenant.id,
         :host_id               => 1,
         :ext_management_system => ems,
-        :hardware              => FactoryGirl.create(
+        :hardware              => FactoryBot.create(
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryGirl.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -759,9 +636,10 @@ describe Tenant do
   end
 
   context "quota allocation" do
-    let(:parent_tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
-    let(:child_tenant1) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
-    let(:child_tenant2) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+    let(:parent_tenant) { FactoryBot.create(:tenant, :parent => default_tenant) }
+    let(:child_tenant1) { FactoryBot.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant2) { FactoryBot.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant3) { FactoryBot.create(:tenant, :parent => parent_tenant) }
 
     before do
       parent_tenant.set_quotas(
@@ -847,6 +725,22 @@ describe Tenant do
       expect(combined[:storage_allocated][:used]).to          eql 2
       expect(combined[:templates_allocated][:used]).to        eql 2
     end
+
+    it "combined quotas get used value when no quotas are defined for tenant" do
+      combined = child_tenant3.combined_quotas
+
+      expect(combined[:vms_allocated][:used]).to              eql 2
+      expect(combined[:mem_allocated][:used]).to              eql 2
+      expect(combined[:cpu_allocated][:used]).to              eql 2
+      expect(combined[:storage_allocated][:used]).to          eql 2
+      expect(combined[:templates_allocated][:used]).to        eql 2
+
+      expect(combined[:vms_allocated][:value]).to             eql 0.0
+      expect(combined[:mem_allocated][:value]).to             eql 0.0
+      expect(combined[:cpu_allocated][:value]).to             eql 0.0
+      expect(combined[:storage_allocated][:value]).to         eql 0.0
+      expect(combined[:templates_allocated][:value]).to       eql 0.0
+    end
   end
 
   describe ".tenant_and_project_names" do
@@ -858,24 +752,28 @@ describe Tenant do
     #   ten1
     #     ten2
     it "builds names with dots" do
-      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
-      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => ten1)
+      ten1 = FactoryBot.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryBot.create(:tenant, :name => "ten2", :parent => ten1)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants).to eq([["root", root_tenant.id], ["root/ten1", ten1.id], ["root/ten1/ten2", ten2.id]])
-      expect(projects).to be_empty
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants).to eq([["root", root_tenant.id], ["root/ten1", ten1.id], ["root/ten1/ten2", ten2.id]])
+        expect(projects).to be_empty
+      end
     end
 
     # root
     #   proj1
     #   proj2
     it "separates projects" do
-      proj2 = FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => root_tenant)
-      proj1 = FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => root_tenant)
+      proj2 = FactoryBot.create(:tenant, :name => "proj2", :divisible => false, :parent => root_tenant)
+      proj1 = FactoryBot.create(:tenant, :name => "proj1", :divisible => false, :parent => root_tenant)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants).to eq([["root", root_tenant.id]])
-      expect(projects).to eq([["root/proj1", proj1.id], ["root/proj2", proj2.id]])
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants).to eq([["root", root_tenant.id]])
+        expect(projects).to eq([["root/proj1", proj1.id], ["root/proj2", proj2.id]])
+      end
     end
 
     # root
@@ -886,25 +784,27 @@ describe Tenant do
     #     proj2
     #   ten3
     it "separates tenants from projects" do
-      FactoryGirl.create(:tenant, :name => "ten3", :parent => root_tenant)
-      ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
-      ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => root_tenant)
-      FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => ten2)
-      FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => ten1)
-      FactoryGirl.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
+      FactoryBot.create(:tenant, :name => "ten3", :parent => root_tenant)
+      ten1 = FactoryBot.create(:tenant, :name => "ten1", :parent => root_tenant)
+      ten2 = FactoryBot.create(:tenant, :name => "ten2", :parent => root_tenant)
+      FactoryBot.create(:tenant, :name => "proj2", :divisible => false, :parent => ten2)
+      FactoryBot.create(:tenant, :name => "proj1", :divisible => false, :parent => ten1)
+      FactoryBot.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
-      expect(tenants.first.last).to eq(root_tenant.id)
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
+        expect(tenants.first.last).to eq(root_tenant.id)
 
-      expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
+        expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
+      end
     end
   end
 
   describe ".build_tenant_tree" do
-    let!(:tenant)   { FactoryGirl.create(:tenant) }
-    let!(:tenantA)  { FactoryGirl.create(:tenant, :parent => tenant) }
-    let!(:tenantA1) { FactoryGirl.create(:tenant, :parent => tenantA) }
+    let!(:tenant)   { FactoryBot.create(:tenant) }
+    let!(:tenantA)  { FactoryBot.create(:tenant, :parent => tenant) }
+    let!(:tenantA1) { FactoryBot.create(:tenant, :parent => tenantA) }
 
     it "returns subtenants of a tenant" do
       expected_array = [{:name => tenantA.name, :id => tenantA.id, :parent => tenant.id},
@@ -914,6 +814,120 @@ describe Tenant do
 
     it "returns [] of a tenant without subtenants" do
       expect(tenantA1.build_tenant_tree).to be_empty
+    end
+  end
+
+  describe "setting a parent for a new record" do
+    it "passes back the parent assigned" do
+      tenant.save!
+      sub_tenant = FactoryBot.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent = tenant).to eq(tenant)
+    end
+
+    it "passes back the parent_id assigned" do
+      tenant.save!
+      sub_tenant = FactoryBot.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent_id = tenant.id).to eq(tenant.id)
+    end
+  end
+
+  describe "#create" do
+    it "properly creates a default group" do
+      # create a tenant, but one that doesn't have a default_miq_group
+      # this is only possibly during an upgrade
+      tenant.save!
+      tenant.default_miq_group.delete
+      # We are using update_attribute to create an invalid tenant.
+      # rubocop:disable Rails/SkipsModelValidations
+      tenant.update_attribute(:default_miq_group_id, nil)
+      # rubocop:enable Rails/SkipsModelValidations
+      # lets make sure the tenant doesn't get assigned this user created group (the bug)
+      false_group = FactoryBot.create(:miq_group, :tenant_id => tenant.id)
+
+      # 20151021174140_assign_tenant_default_group.rb
+      tenant.send(:create_tenant_group)
+
+      expect(tenant.default_miq_group).not_to eq(false_group)
+      expect(tenant.default_miq_group).to be_tenant_group
+    end
+
+    context 'dynamic product features' do
+      let!(:miq_product_feature_1) { FactoryBot.create(:miq_product_feature, :identifier => 'dialog_edit_editor') }
+      let!(:miq_product_feature_2) { FactoryBot.create(:miq_product_feature, :identifier => 'dialog_new_editor') }
+
+      let(:tenant_product_feature) { FactoryBot.create(:tenant) }
+
+      it "properly creates a related product feature" do
+        features = tenant_product_feature.miq_product_features.map { |x| x.slice(:name, :description, :identifier, :feature_type) }
+        expect(features).to match_array([{"name" => "#{miq_product_feature_1.name} (#{tenant_product_feature.name})", "description" => "#{miq_product_feature_1.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_edit_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"},
+                                         {"name" => "#{miq_product_feature_2.name} (#{tenant_product_feature.name})",
+                                          "description" => "#{miq_product_feature_2.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_new_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"}])
+      end
+
+      describe "#create_miq_product_features_for_tenant_nodes" do
+        let(:tenant_product_feature) { FactoryBot.create(:tenant) }
+
+        it "creates product features for tenant nodes" do
+          expect(tenant_product_feature.create_miq_product_features_for_tenant_nodes).to match_array(["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "dialog_new_editor_tenant_#{tenant_product_feature.id}"])
+        end
+      end
+
+      it "destroys product features on destroy" do
+        tenant_product_feature.destroy
+
+        expect(MiqProductFeature.where(:identifier => ["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "ab_group_admin_tenant_#{tenant_product_feature.id}"], :feature_type => 'tenant').count).to be_zero
+      end
+    end
+  end
+
+  context "using more regions with factory" do
+    let!(:other_region) { FactoryGirl.create(:miq_region) }
+
+    context "without MiqRegion.seed" do
+      it "uses other region" do
+        expect(MiqRegion.count).to eq(1)
+        exception_message = "You need to seed default MiqRegion with MiqRegion.seed"
+        expect { FactoryGirl.create(:tenant, :in_other_region,  :other_region => other_region) }.to raise_error(exception_message)
+      end
+    end
+
+    context "with MiqRegion.seed" do
+      before do
+        MiqRegion.seed
+      end
+
+      let!(:tenant) { FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region) }
+
+      it "uses other region" do
+        expect(MiqRegion.count).to eq(2)
+        expect(tenant.miq_region.region).to eq(other_region.region)
+        expect(tenant.default_miq_group.miq_region.region).to eq(other_region.region)
+      end
+
+      it "raises error when region is not passed" do
+        exception_message = "You need to pass specific region  with :other_region: \n"\
+                            "FactoryGirl.create(:tenant, :in_other_region, :other_region => <region>) "
+        expect { FactoryGirl.create(:tenant, :in_other_region) }.to raise_error(exception_message)
+      end
+
+      let!(:root_tenant_other_region) do
+        tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region)
+        tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
+        tenant_other_region
+      end
+
+      let!(:root_tenant) { Tenant.seed }
+
+      it "creates root tenant in other region" do
+        expect(root_tenant.root?).to be_truthy
+        expect(Tenant.find(root_tenant_other_region.id).root?).to be_truthy
+        expect(Tenant.find(root_tenant_other_region.id).parent).to be_nil
+        expect(MiqRegion.my_region_number).not_to eq(MiqRegion.find_by(:region => root_tenant_other_region.region_id).region)
+      end
     end
   end
 end

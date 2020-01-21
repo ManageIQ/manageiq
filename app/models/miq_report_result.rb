@@ -1,42 +1,107 @@
 class MiqReportResult < ApplicationRecord
   include_concern 'Purging'
+  include_concern 'ResultSetOperations'
 
   belongs_to :miq_report
   belongs_to :miq_group
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
+  has_one    :miq_widget_content, :dependent => :nullify
   has_many   :miq_report_result_details, :dependent => :delete_all
-  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
+  has_many   :html_details, -> { where("data_type = 'html'") }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
 
   serialize :report
 
-  virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true
-  virtual_delegate :state_or_status, :to => "miq_task", :allow_nil => true
-  virtual_attribute :status, :string, :uses => :state_or_status
+  virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true, :type => :string
+  virtual_attribute :status, :string
   virtual_column :status_message,        :type => :string, :uses => :miq_task
-
   virtual_has_one :result_set,           :class_name => "Hash"
+
+  scope :for_groups, lambda { |group_ids|
+    condition = {:miq_group_id => group_ids}
+    if group_ids.nil?
+      where.not(condition)
+    else
+      where(condition)
+    end
+  }
+  scope :for_user, lambda { |user|
+    for_groups(user.report_admin_user? ? nil : user.miq_group_ids)
+  }
 
   before_save do
     user_info = userid.to_s.split("|")
     if user_info.length == 1
-      user = User.find_by_userid(user_info.first)
+      user = User.lookup_by_userid(user_info.first)
       self.miq_group_id ||= user.current_group_id unless user.nil?
     end
   end
 
+  # These two hooks prevent temporary chargeback aggregation data to be
+  # retained in each miq_report_results row, which was found and fixed as part
+  # of the following BZ:
+  #
+  #   https://bugzilla.redhat.com/show_bug.cgi?id=1590908
+  #
+  # These two hooks remove extra data on the `@extras` instance variable, since
+  # it is not necessary to be saved to the DB, but allows it to be retained for
+  # the remainder of the object's instantiation.  The `after_commit` hook
+  # specifically is probably overkill, but allows us to not break existing code
+  # that expects the temporary chargeback data in the instantiated object.
+  before_save  { @_extra_groupings = report.extras.delete(:grouping) if report.kind_of?(MiqReport) && report.extras }
+  after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) && report.extras }
+
   delegate :table, :to => :report_results, :allow_nil => true
+
+  def result_set_for_reporting(options)
+    self.class.result_set_for_reporting(self, options)
+  end
+
+  def report_or_miq_report
+    report || miq_report
+  end
+
+  def friendly_title
+    report_source == MiqWidget::WIDGET_REPORT_SOURCE && miq_widget_content ? miq_widget_content.miq_widget.title : report.title
+  end
 
   def result_set
     (table || []).map(&:to_hash)
   end
 
   def status
-    MiqTask.human_status(state_or_status)
+    if miq_task
+      miq_task.human_status
+    else
+      report_results_blank? ? "Error" : "Complete"
+    end
+  end
+
+  # This method doesn't run through all binary blob parts to determine if it has any
+  def report_results_blank?
+    if binary_blob
+      binary_blob.parts.zero?
+    elsif report.kind_of?(MiqReport)
+      report.blank?
+    end
   end
 
   def status_message
-    miq_task.nil? ? _("Report results are no longer available") : miq_task.message
+    miq_task.nil? ? _("The task associated with this report is no longer available") : miq_task.message
+  end
+
+  # Use this method over `report_results` if you don't plan on using the
+  # `binary_blob` associated with the MiqReportResult (chances are you don't
+  # need it).
+  def valid_report_column?
+    report.kind_of?(MiqReport)
+  end
+
+  # Use this over `report_results.contains_records?` if you don't need to
+  # access the binary_blob associated with the MiqReportResult (chances are you
+  # don't need it)
+  def contains_records?
+    (report && (report.extras || {})[:total_html_rows].to_i.positive?) || html_details.exists?
   end
 
   def report_results
@@ -74,7 +139,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def save_for_user(userid)
-    update_attributes(:userid => userid, :report_source => "Saved by user")
+    update(:userid => userid, :report_source => "Saved by user")
   end
 
   def report
@@ -85,7 +150,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def report=(val)
-    write_attribute(:report, val.nil? ? nil : val.to_hash)
+    write_attribute(:report, val.try(:to_hash))
   end
 
   def build_html_rows_for_legacy
@@ -99,12 +164,6 @@ class MiqReportResult < ApplicationRecord
     self.report = report
 
     save
-  end
-
-  def self.atStartup
-    _log.info("Purging adhoc report results...")
-    purge_for_user
-    _log.info("Purging adhoc report results... complete")
   end
 
   #########################################################################################################
@@ -128,6 +187,10 @@ class MiqReportResult < ApplicationRecord
     raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
   end
 
+  def self.purge_for_all_users
+    purge_for_user(:userid => "%")
+  end
+
   def self.purge_for_user(options = {})
     options[:userid] ||= "%" # This will purge for all users
     cond = ["userid like ? and userid NOT like 'widget%' and last_accessed_on < ?", "#{options[:userid]}|%", 1.day.ago.utc]
@@ -149,7 +212,7 @@ class MiqReportResult < ApplicationRecord
 
     html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
 
-    PdfGenerator.pdf_from_string(html_string, 'pdf_report')
+    PdfGenerator.pdf_from_string(html_string, "pdf_report.css")
   end
 
   # Generate the header html section for pdfs
@@ -162,7 +225,6 @@ class MiqReportResult < ApplicationRecord
     hdr << "@page{size: #{page_size} landscape}"
     hdr << "@page{margin: 40pt 30pt 40pt 30pt}"
     hdr << "@page{@top{content: '#{title}';color:blue}}"
-    hdr << "@page{@bottom-left{content: url('#{ActionController::Base.helpers.image_path('layout/reportbanner_small1.png')}')}}"
     hdr << "@page{@bottom-center{font-size: 75%;content: '" + _("Report date: %{report_date}") % {:report_date => run_date} + "'}}"
     hdr << "@page{@bottom-right{font-size: 75%;content: '" + _("Page %{page_number} of %{total_pages}") % {:page_number => " ' counter(page) '", :total_pages => " ' counter(pages)}}"}
     hdr << "</style></head>"
@@ -184,11 +246,10 @@ class MiqReportResult < ApplicationRecord
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{report.name}'", :userid => options[:userid])
     task.update_status("Queued", "Ok", "Task has been queued")
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = ::Settings.product.report_sync
 
-    MiqQueue.put(
-      :queue_name  => "generic",
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "_async_generate_result",
@@ -212,10 +273,10 @@ class MiqReportResult < ApplicationRecord
   end
 
   def _async_generate_result(taskid, result_type, options = {})
-    task = MiqTask.find_by_id(taskid)
+    task = MiqTask.find_by(:id => taskid)
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
-    user = options[:user] || User.find_by_userid(options[:userid])
+    user = options[:user] || User.lookup_by_userid(options[:userid])
     raise _("Unable to find user with userid 'options[:userid]'") if user.nil?
 
     rpt = report_results
@@ -236,7 +297,7 @@ class MiqReportResult < ApplicationRecord
       new_res.report_results = user.with_my_timezone do
         case result_type.to_sym
         when :csv then rpt.to_csv
-        when :pdf then to_pdf
+        when :pdf then html_rows.join
         when :txt then rpt.to_text
         else
           raise _("Result type %{result_type} not supported") % {:result_type => result_type}
@@ -297,12 +358,11 @@ class MiqReportResult < ApplicationRecord
   def self.delete_by_userid(userids)
     userids = userids.to_miq_a
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [["userid IN (?)", userids]],
-      :zone        => MiqServer.my_zone
     )
   end
 
@@ -320,7 +380,7 @@ class MiqReportResult < ApplicationRecord
 
   def self.with_current_user_groups
     current_user = User.current_user
-    current_user.admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
+    current_user.report_admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
   end
 
   def self.with_chargeback
@@ -336,10 +396,12 @@ class MiqReportResult < ApplicationRecord
             miq_report_results.miq_report_id")
   end
 
-  private
+  def self.display_name(number = 1)
+    n_('Report Result', 'Report Results', number)
+  end
 
   def user_timezone
-    user = userid.include?("|") ? nil : User.find_by_userid(userid)
+    user = userid.include?("|") ? nil : User.lookup_by_userid(userid)
     user ? user.get_timezone : MiqServer.my_server.server_timezone
   end
 end

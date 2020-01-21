@@ -1,9 +1,10 @@
 describe AutomationRequest do
-  let(:admin) { FactoryGirl.create(:user, :role => "admin") }
-  before(:each) do
+  let(:admin) { FactoryBot.create(:user, :role => "admin") }
+  before do
+    MiqRegion.seed
     allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
-    @zone        = FactoryGirl.create(:zone, :name => "fred")
-    @approver    = FactoryGirl.create(:user_miq_request_approver)
+    @zone        = FactoryBot.create(:zone, :name => "fred")
+    @approver    = FactoryBot.create(:user_miq_request_approver)
 
     @version     = 1
     @ae_instance = "IIII"
@@ -36,15 +37,46 @@ describe AutomationRequest do
       expect(ar.options[:attrs][:var2]).to eq(@ae_var2)
       expect(ar.options[:attrs][:var3]).to eq(@ae_var3)
       expect(ar.options[:attrs][:userid]).to eq(admin.userid)
+      expect(ar.options[:schedule_type]).to eq("immediately")
+      expect(ar.options[:schedule_time]).to eq(nil)
+      expect(ar.options[:attrs].keys).to eq([:var1, :var2, :var3, :userid])
     end
 
-    it "doesnt allow overriding userid who is NOT in the database" do
+    it "with object in parameters" do
+      parameters = {'var1' => @ae_var1.to_s, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s, 'VmOrTemplate::vm' => 10}
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, parameters, {})
+      expect(ar.options[:attrs].keys).to include("VmOrTemplate::vm")
+    end
+
+    context "with schedule" do
+      it "with schedule_time param" do
+        @parameters['schedule_time'] = "2019-08-14 17:41:06 UTC"
+        ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+
+        expect(ar.options[:schedule_type]).to eq("schedule")
+        expect(ar.options[:schedule_time]).to be_within(1.second).of Time.zone.parse("2019-08-14 17:41:06 UTC")
+      end
+
+      it "immediately" do
+        ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+
+        expect(ar.options[:schedule_type]).to eq("immediately")
+      end
+    end
+
+    it 'does not downcase and stringify objects in the parameters hash' do
+      @object_parameters = {'VmOrTemplate::vm' => 10, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @object_parameters, {})
+      expect(ar.options[:attrs]).to include("VmOrTemplate::vm" => 10, :var2 => @ae_var2.to_s)
+      expect(@object_parameters).to include("VmOrTemplate::vm" => 10)
+    end
+
+    it "does not allow overriding userid who is NOT in the database" do
       user_name = 'oleg'
 
       expect do
         AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, "user_name" => user_name.to_s)
       end.to raise_error(ActiveRecord::RecordNotFound)
-
     end
 
     it "with requester string overriding userid who is in the database" do
@@ -68,6 +100,7 @@ describe AutomationRequest do
     end
 
     it "with requester string overriding userid AND auto_approval" do
+      FactoryBot.create(:user_admin, :userid => 'admin')
       ar = AutomationRequest.create_from_ws(@version, admin,
                                             @uri_parts, @parameters,
                                             "user_name" => @approver.userid.to_s, 'auto_approve' => 'true')
@@ -89,7 +122,8 @@ describe AutomationRequest do
   end
 
   context ".create_from_scheduled_task" do
-    let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
+    let(:admin) { FactoryBot.create(:user_miq_request_approver) }
+    before { FactoryBot.create(:user_admin, :userid => 'admin') }
 
     it "with prescheduled task" do
       ar = described_class.create_from_scheduled_task(admin, @uri_parts, @parameters)
@@ -101,7 +135,7 @@ describe AutomationRequest do
         "approval_state" => "approved",
         "userid"         => admin.userid.to_s,
       )
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS",
         :user_id    => admin.id
@@ -111,7 +145,7 @@ describe AutomationRequest do
     it "allows /System/Process to be passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/System", :class_name => "Process")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS"
       )
@@ -120,7 +154,7 @@ describe AutomationRequest do
     it "locks scheduled tasks to /System/Process when other namespaces and class_names are passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/Test", :class_name => "TestClass")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM",
         :class_name => "PROCESS"
       )
@@ -129,7 +163,7 @@ describe AutomationRequest do
     it "locks class_name to Process when something else is passed in" do
       uri_parts = @uri_parts.merge(:class_name => "TestClass")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :class_name => "PROCESS"
       )
     end
@@ -137,7 +171,7 @@ describe AutomationRequest do
     it "locks namespace to System when something else is passed in" do
       uri_parts = @uri_parts.merge(:namespace => "/Test")
       ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
-      expect(ar.options).to have_attributes(
+      expect(ar.options).to include(
         :namespace  => "SYSTEM"
       )
     end
@@ -151,7 +185,7 @@ describe AutomationRequest do
 
   context "#approve" do
     context "an unapproved request with a single approver" do
-      before(:each) do
+      before do
         @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
         @reason = "Why Not?"
       end
@@ -162,19 +196,18 @@ describe AutomationRequest do
       end
 
       it "calls #call_automate_event_queue('request_approved')" do
-        expect_any_instance_of(AutomationRequest).to receive(:call_automate_event_queue).with('request_approved').once
+        expect(@ar).to receive(:call_automate_event_queue).with('request_approved').once
         @ar.approve(@approver, @reason)
       end
 
       it "calls #execute" do
-        expect_any_instance_of(AutomationRequest).to receive(:execute).once
+        expect(@ar).to receive(:execute).once
         @ar.approve(@approver, @reason)
       end
     end
   end
 
   describe "#make_request" do
-    let(:alt_user) { FactoryGirl.create(:user_with_group) }
     it "creates and update a request" do
       expect(AuditEvent).not_to receive(:success)
       values = {}
@@ -192,12 +225,12 @@ describe AutomationRequest do
   end
 
   context "#create_request_tasks" do
-    before(:each) do
+    before do
       @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
       root = {'ae_result' => 'ok'}
-      ws = double('ws')
-      allow(ws).to receive_messages(:root => root)
-      allow_any_instance_of(AutomationRequest).to receive(:call_automate_event_sync).and_return(ws)
+      @ws = double('ws')
+      allow(@ws).to receive_messages(:root => root)
+      allow(@ar).to receive(:call_automate_event).and_return(@ws)
 
       @ar.create_request_tasks
       @ar.reload
@@ -212,6 +245,7 @@ describe AutomationRequest do
 
   context "validate zone" do
     before do
+      FactoryBot.create(:user_admin, :userid => 'admin')
       allow_any_instance_of(MiqRequest).to receive(:automate_event_failed?).and_return(false)
     end
 

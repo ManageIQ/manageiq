@@ -1,6 +1,6 @@
-describe MiqAction do
+RSpec.describe MiqAction do
   describe "#invoke_or_queue" do
-    before(:each) do
+    before do
       @action = MiqAction.new
     end
 
@@ -12,13 +12,12 @@ describe MiqAction do
   end
 
   context "#action_custom_automation" do
-    before(:each) do
-      tenant = FactoryGirl.create(:tenant)
-      group  = FactoryGirl.create(:miq_group, :tenant => tenant)
-      @user = FactoryGirl.create(:user, :userid => "test", :miq_groups => [group])
-      @vm   = FactoryGirl.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
-      FactoryGirl.create(:miq_action, :name => "custom_automation")
-      @action = MiqAction.find_by_name("custom_automation")
+    before do
+      tenant = FactoryBot.create(:tenant)
+      group  = FactoryBot.create(:miq_group, :tenant => tenant)
+      @user = FactoryBot.create(:user, :userid => "test", :miq_groups => [group])
+      @vm   = FactoryBot.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
+      @action = FactoryBot.create(:miq_action)
       expect(@action).not_to be_nil
       @action.options = {:ae_request => "test_custom_automation"}
       @args = {
@@ -44,6 +43,7 @@ describe MiqAction do
       q_options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
+        :instance_id => nil,
         :args        => [@args],
         :role        => 'automate',
         :zone        => nil,
@@ -54,7 +54,7 @@ describe MiqAction do
     end
 
     it "passes source event to automate if set" do
-      ems_event = FactoryGirl.create(:ems_event, :event_type => "CloneVM_Task")
+      ems_event = FactoryBot.create(:ems_event, :event_type => "CloneVM_Task")
       args = {:attrs => {:request => "test_custom_automation", "EventStream::event_stream" => ems_event.id}}
       expect(MiqAeEngine).to receive(:deliver).with(hash_including(args)).once
 
@@ -64,20 +64,20 @@ describe MiqAction do
 
   context "#action_evm_event" do
     it "for Vm" do
-      ems = FactoryGirl.create(:ems_vmware)
-      host = FactoryGirl.create(:host_vmware)
-      vm = FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems)
-      action = FactoryGirl.create(:miq_action)
-      res = action.action_evm_event(action, vm, :policy => FactoryGirl.create(:miq_policy))
+      ems = FactoryBot.create(:ems_vmware)
+      host = FactoryBot.create(:host_vmware)
+      vm = FactoryBot.create(:vm_vmware, :host => host, :ext_management_system => ems)
+      action = FactoryBot.create(:miq_action)
+      res = action.action_evm_event(action, vm, :policy => FactoryBot.create(:miq_policy))
 
       expect(res).to be_kind_of(MiqEvent)
       expect(res.target).to eq(vm)
     end
 
     it "for Datastore" do
-      storage = FactoryGirl.create(:storage)
-      action  = FactoryGirl.create(:miq_action)
-      result  = action.action_evm_event(action, storage, :policy => FactoryGirl.create(:miq_policy))
+      storage = FactoryBot.create(:storage)
+      action  = FactoryBot.create(:miq_action)
+      result  = action.action_evm_event(action, storage, :policy => FactoryBot.create(:miq_policy))
 
       expect(result).to be_kind_of(MiqEvent)
       expect(result.target).to eq(storage)
@@ -85,15 +85,15 @@ describe MiqAction do
   end
 
   context "#raise_automation_event" do
-    before(:each) do
-      @vm   = FactoryGirl.create(:vm_vmware)
+    before do
+      @vm   = FactoryBot.create(:vm_vmware)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
-      FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
-      FactoryGirl.create(:miq_event_definition, :name => "vm_start")
-      FactoryGirl.create(:miq_action, :name => "raise_automation_event")
-      @action = MiqAction.find_by_name("raise_automation_event")
+      FactoryBot.create(:miq_event_definition, :name => "raise_automation_event")
+      FactoryBot.create(:miq_event_definition, :name => "vm_start")
+      FactoryBot.create(:miq_action, :name => "raise_automation_event")
+      @action = MiqAction.find_by(:name => "raise_automation_event")
       expect(@action).not_to be_nil
-      @event = MiqEventDefinition.find_by_name("vm_start")
+      @event = MiqEventDefinition.find_by(:name => "vm_start")
       expect(@event).not_to be_nil
       @aevent = {
         :vm     => @vm,
@@ -120,6 +120,7 @@ describe MiqAction do
       q_options = {
         :class_name  => "MiqAeEvent",
         :method_name => "raise_synthetic_event",
+        :instance_id => nil,
         :args        => [@vm, @event.name, @aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
         :zone        => "vm_zone",
@@ -131,11 +132,11 @@ describe MiqAction do
   end
 
   context "#action_ems_refresh" do
-    before(:each) do
-      FactoryGirl.create(:miq_action, :name => "ems_refresh")
-      @action = MiqAction.find_by_name("ems_refresh")
+    before do
+      FactoryBot.create(:miq_action, :name => "ems_refresh")
+      @action = MiqAction.find_by(:name => "ems_refresh")
       expect(@action).not_to be_nil
-      @zone1 = FactoryGirl.create(:small_environment)
+      @zone1 = FactoryBot.create(:small_environment)
       @vm = @zone1.vms.first
     end
 
@@ -152,12 +153,43 @@ describe MiqAction do
     end
   end
 
+  context "#action_vm_stop" do
+    before do
+      @zone   = FactoryBot.create(:zone)
+      @ems    = FactoryBot.create(:ems_vmware, :zone => @zone)
+      @host   = FactoryBot.create(:host_vmware)
+      @vm     = FactoryBot.create(:vm_vmware, :host => @host, :ext_management_system => @ems)
+      @action = FactoryBot.create(:miq_action, :name => "vm_stop")
+    end
+
+    it "synchronous" do
+      input = {:synchronous => true}
+      expect(MiqQueue).not_to receive(:put)
+      @action.action_vm_stop(@action, @vm, input)
+    end
+
+    it "asynchronous" do
+      input = {:synchronous => false}
+      @action.action_vm_stop(@action, @vm, input)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.where(:class_name => @vm.class.name).first).to have_attributes(
+        :class_name  => @vm.class.name,
+        :method_name => 'stop',
+        :role        => 'ems_operations',
+        :queue_name  => @ems.queue_name_for_ems_operations,
+        :zone        => @ems.my_zone,
+        :args        => []
+      )
+    end
+  end
+
   context "#action_vm_retire" do
     before do
-      @vm     = FactoryGirl.create(:vm_vmware)
+      @vm     = FactoryBot.create(:vm_vmware)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
-      @event  = FactoryGirl.create(:miq_event_definition, :name => "assigned_company_tag")
-      @action = FactoryGirl.create(:miq_action, :name => "vm_retire")
+      @event  = FactoryBot.create(:miq_event_definition, :name => "assigned_company_tag")
+      @action = FactoryBot.create(:miq_action, :name => "vm_retire")
     end
 
     it "synchronous" do
@@ -168,7 +200,7 @@ describe MiqAction do
 
         expect(VmOrTemplate).to receive(:retire) do |vms, options|
           expect(vms).to eq([@vm])
-          expect(options[:date]).to be_same_time_as date
+          expect(options[:date]).to be_within(0.1).of(date)
         end
         @action.action_vm_retire(@action, @vm, input)
       end
@@ -176,8 +208,8 @@ describe MiqAction do
 
     it "asynchronous" do
       input = {:synchronous => false}
-      zone  = 'Test Zone'
-      allow(@vm).to receive_messages(:my_zone => zone)
+      zone  = FactoryBot.create(:zone)
+      allow(@vm).to receive_messages(:my_zone => zone.name)
 
       Timecop.freeze do
         date   = Time.now.utc - 1.day
@@ -188,17 +220,17 @@ describe MiqAction do
         expect(msg.class_name).to eq(@vm.class.name)
         expect(msg.method_name).to eq('retire')
         expect(msg.args).to eq([[@vm], :date => date])
-        expect(msg.zone).to eq(zone)
+        expect(msg.zone).to eq(zone.name)
       end
     end
   end
 
   context "#action_container_image_analyze" do
-    let(:container_image) { FactoryGirl.create(:container_image) }
-    let(:container_image_registry) { FactoryGirl.create(:container_image_registry) }
-    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
-    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => "request_containerimage_scan") }
-    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_analyze") }
+    let(:container_image) { FactoryBot.create(:container_image) }
+    let(:container_image_registry) { FactoryBot.create(:container_image_registry) }
+    let(:event) { FactoryBot.create(:miq_event_definition, :name => "whatever") }
+    let(:event_loop) { FactoryBot.create(:miq_event_definition, :name => "request_containerimage_scan") }
+    let(:action) { FactoryBot.create(:miq_action, :name => "container_image_analyze") }
 
     it "scans container images" do
       expect(container_image).to receive(:scan).once
@@ -206,13 +238,30 @@ describe MiqAction do
     end
 
     it "avoids non container images" do
-      expect(container_image_registry).to receive(:scan).exactly(0).times
-      action.action_container_image_analyze(action, container_image_registry, :event => event)
+      error_message = "MIQ(action_container_image_analyze): Unable to perform action [#{action.description}],"\
+        " object [#{container_image_registry.inspect}] is not a Container Image"
+
+      expect(MiqPolicy.logger).to receive(:error).with(error_message)
+      expect(action.action_container_image_analyze(action, container_image_registry, :event => event)).to be_nil
     end
 
     it "avoids an event loop" do
-      expect(container_image_registry).to receive(:scan).exactly(0).times
-      action.action_container_image_analyze(action, container_image_registry, :event => event_loop)
+      error_message = "MIQ(action_container_image_analyze): Invoking action [#{action.description}] for event"\
+        " [#{event_loop.description}] would cause infinite loop, skipping"
+
+      expect(MiqPolicy.logger).to receive(:warn).with(error_message)
+      expect(action.action_container_image_analyze(action, container_image, :event => event_loop)).to be_nil
+    end
+  end
+
+  context "#action_container_image_annotate_scan_results" do
+    let(:container_image) { FactoryBot.create(:container_image) }
+    let(:event) { FactoryBot.create(:miq_event_definition, :name => "whatever") }
+    let(:action) { FactoryBot.create(:miq_action, :name => "container_image_annotate_deny_execution") }
+
+    it "will not annotate if the method is unavailable" do
+      expect(MiqQueue).to receive(:put).exactly(0).times
+      action.action_container_image_annotate_scan_results(action, container_image, :event => event)
     end
   end
 
@@ -369,22 +418,166 @@ describe MiqAction do
   end
 
   context 'validate action email should have correct type' do
-    it 'should generate a MiqAction invoking action_email' do
-      action = MiqAction.new
-      inputs = {
-        :policy      => nil,
-        :synchronous => false
-      }
-      q_options = {
+    before do
+      MiqRegion.seed
+      ServerRole.seed
+    end
+
+    let(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:action) { MiqAction.new }
+    let(:inputs) { { :policy => nil, :synchronous => false } }
+
+    let(:q_options) do
+      {
         :class_name  => "MiqAction",
         :method_name => "queue_email",
+        :instance_id => nil,
         :args        => [{:to => nil, :from => "cfadmin@cfserver.com"}],
         :role        => "notifier",
         :priority    => 20,
         :zone        => nil
       }
-      expect(MiqQueue).to receive(:put).with(q_options).once
-      action.action_email(action, nil, inputs)
+    end
+
+    context 'when notifier role is off' do
+      it 'is not generating a MiqAction invoking action_email' do
+        expect(MiqQueue).not_to receive(:put).with(q_options)
+        action.action_email(action, nil, inputs)
+      end
+    end
+
+    context 'when notifier role is on' do
+      before do
+        miq_server.server_roles << ServerRole.where(:name => 'notifier')
+        miq_server.save!
+      end
+
+      it 'should generate a MiqAction invoking action_email' do
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        action.action_email(action, nil, inputs)
+      end
+
+      context 'when alerting' do
+        before do
+          NotificationType.instance_variable_set(:@names, nil)
+          NotificationType.seed if NotificationType.all.empty?
+        end
+
+        let(:description) { 'my alert' }
+        let(:alert) { MiqAlert.new(:description => description) }
+        let(:event) { MiqEventDefinition.new(:name => "AlertEvent", :description => "Alert condition met") }
+        let(:vm) { Vm.new(:name => "vm1") }
+        let(:inputs) do
+          {
+            :policy          => alert,
+            :event           => event,
+            :synchronous     => false,
+            :results         => true,
+            :sequence        => 1,
+            :triggering_type => "vm_retired",
+            :triggering_data => {:subject => 'vm1'},
+          }
+        end
+
+        let(:args) do
+          [{
+            :to              => nil,
+            :from            => "cfadmin@cfserver.com",
+            :subject         => "Alert Triggered: my alert, for (VM) vm1",
+            :miq_action_hash => {
+              :header            => "Alert Triggered",
+              :policy_detail     => "Alert 'my alert', triggered",
+              :event_description => "Alert condition met",
+              :event_details     => "Virtual Machine vm1 has been retired.",
+              :entity_type       => "Vm",
+              :entity_name       => "vm1",
+            }
+          }]
+        end
+
+        it 'generates an MiqAlert email' do
+          q_options[:args] = args
+
+          expect(MiqQueue).to receive(:put).with(q_options).once
+          action.action_email(action, vm, inputs)
+        end
+      end
+    end
+  end
+
+  context 'run_ansible_playbook' do
+    let(:tenant) { FactoryBot.create(:tenant) }
+    let(:group)  { FactoryBot.create(:miq_group, :tenant => tenant) }
+    let(:user) { FactoryBot.create(:user, :userid => "test", :miq_groups => [group]) }
+    let(:vm)   { FactoryBot.create(:vm_vmware, :evm_owner => user, :miq_group => group, :hardware => hardware) }
+    let(:action) { FactoryBot.create(:miq_action, :name => "run_ansible_playbook", :options => action_options) }
+    let(:stap) { FactoryBot.create(:service_template_ansible_playbook) }
+    let(:ip1) { "1.1.1.94" }
+    let(:ip2) { "1.1.1.96" }
+    let(:event_name) { "Fred" }
+
+    let(:miq_event_def) do
+      FactoryBot.create(:miq_event_definition, :name => event_name)
+    end
+    let(:hardware) do
+      FactoryBot.create(:hardware).tap do |h|
+        h.ipaddresses << ip1
+        h.ipaddresses << ip2
+      end
+    end
+
+    let(:request_options) do
+      { :manageiq_extra_vars => { "event_target" => vm.href_slug, "event_name" => event_name },
+        :initiator           => 'control' }
+    end
+
+    shared_examples_for "#workflow check" do
+      it "run playbook" do
+        miq_request = instance_double(MiqRequest)
+        allow(vm).to receive(:tenant_identity).and_return(user)
+        expect(ServiceTemplate).to receive(:find).with(stap.id).and_return(stap)
+        expect(stap).to receive(:provision_request).with(user, dialog_options, request_options).and_return(miq_request)
+
+        action.action_run_ansible_playbook(action, vm, :event => miq_event_def)
+      end
+    end
+
+    context "use event target" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :use_event_target    => true }
+      end
+      let(:dialog_options) { {:hosts => ip1 } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use localhost" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :use_localhost       => true }
+      end
+      let(:dialog_options) { {:hosts => 'localhost' } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use hosts" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :hosts               => "ip1, ip2" }
+      end
+      let(:dialog_options) { {:hosts => 'ip1, ip2' } }
+
+      it_behaves_like "#workflow check"
+    end
+  end
+
+  describe "#destroy" do
+    it "does not destroy this action if it referenced in at least one policy" do
+      action = FactoryBot.create(:miq_action)
+      FactoryBot.create(:miq_policy_content, :miq_action => action)
+      expect { action.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
     end
   end
 end

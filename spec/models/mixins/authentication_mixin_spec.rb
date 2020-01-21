@@ -1,4 +1,11 @@
 describe AuthenticationMixin do
+  include Spec::Support::ArelHelper
+
+  let(:host)            { FactoryBot.create(:host) }
+  let(:invalid_auth)    { FactoryBot.create(:authentication, :resource => host, :status => "Invalid") }
+  let(:valid_auth)      { FactoryBot.create(:authentication, :resource => host, :status => "Valid") }
+  let(:authentications) { [invalid_auth, valid_auth] }
+
   let(:test_class_instance) do
     Class.new(ActiveRecord::Base) do
       def self.name; "TestClass"; end
@@ -89,13 +96,14 @@ describe AuthenticationMixin do
   end
 
   context "authorization event and check for container providers" do
-    before(:each) do
-      allow(MiqServer).to receive(:my_zone).and_return("default")
+    before do
+      zone = FactoryBot.create(:zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
     end
 
     it "should be triggered for kubernetes" do
       auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
-      FactoryGirl.create(:ems_kubernetes, :authentications => [auth])
+      FactoryBot.create(:ems_kubernetes, :authentications => [auth])
 
       expect(MiqQueue.count).to eq(2)
       expect(MiqQueue.find_by(:method_name => 'raise_evm_event')).not_to be_nil
@@ -104,7 +112,7 @@ describe AuthenticationMixin do
 
     it "should be triggered for openshift" do
       auth = AuthToken.new(:name => "bearer", :auth_key => "valid-token")
-      FactoryGirl.create(:ems_openshift, :authentications => [auth])
+      FactoryBot.create(:ems_openshift, :authentications => [auth])
 
       expect(MiqQueue.count).to eq(2)
       expect(MiqQueue.find_by(:method_name => 'raise_evm_event')).not_to be_nil
@@ -137,7 +145,7 @@ describe AuthenticationMixin do
   context "#retry_scheduled_authentication_check" do
     let(:host) do
       EvmSpecHelper.local_miq_server
-      FactoryGirl.create(:host_with_authentication).tap { MiqQueue.destroy_all }
+      FactoryBot.create(:host_with_authentication).tap { MiqQueue.destroy_all }
     end
 
     it "works" do
@@ -161,19 +169,19 @@ describe AuthenticationMixin do
   end
 
   context "with server and zone" do
-    before(:each) do
+    before do
       @miq_server = EvmSpecHelper.local_miq_server
       @data = {:default => {:userid => "test", :password => "blah"}}
     end
 
     context "with multiple zones, emses, and hosts" do
-      before(:each) do
+      before do
         @zone1 = @miq_server.zone
-        @zone2 = FactoryGirl.create(:zone, :name => 'test1')
-        @ems1  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone1)
-        @ems2  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone2)
-        @host1 = FactoryGirl.create(:host_with_authentication, :ext_management_system => @ems1)
-        @host2 = FactoryGirl.create(:host_with_authentication, :ext_management_system => @ems2)
+        @zone2 = FactoryBot.create(:zone, :name => 'test1')
+        @ems1  = FactoryBot.create(:ems_vmware_with_authentication, :zone => @zone1)
+        @ems2  = FactoryBot.create(:ems_vmware_with_authentication, :zone => @zone2)
+        @host1 = FactoryBot.create(:host_with_authentication, :ext_management_system => @ems1)
+        @host2 = FactoryBot.create(:host_with_authentication, :ext_management_system => @ems2)
 
         # Destroy any queued auth checks from creating the new CI's with authentications
         MiqQueue.destroy_all
@@ -248,15 +256,58 @@ describe AuthenticationMixin do
             expect(messages.count).to eq(1)
             expect(messages.first.args.last).to eq(:attempt => 2)
           end
+
+          it "filters out attempt from the authentication_check call" do
+            expect(@host1).to receive(:authentication_check).with(nil, hash_excluding(:attempt)).and_return([true, ""])
+            expect(@host1).to receive(:authentication_check).with(nil, hash_including(:attempt)).and_return([true, ""]).never
+            @host1.authentication_check_types(:attempt => 1)
+          end
         end
       end
     end
 
+    context ".validate_credentials_task" do
+      let(:args) { %w(userid password foo) }
+      let(:queue_opts) do
+        {
+          :args        => [*args],
+          :class_name  => "ExtManagementSystem",
+          :method_name => "raw_connect?",
+          :queue_name  => "generic",
+          :role        => "ems_operations",
+          :zone        => 'zone'
+        }
+      end
+      let(:task_opts) do
+        {
+          :action => "Validate EMS Provider Credentials",
+          :userid => 'userid'
+        }
+      end
+
+      it "returns success with no error message" do
+        ok_task = FactoryBot.create(:miq_task, :status => 'Ok')
+        allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
+        allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(ok_task)
+
+        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([true, nil])
+      end
+
+      it "returns failure with an error message" do
+        message = 'Login failed due to a bad username or password.'
+        error_task = FactoryBot.create(:miq_task, :status => 'Error', :message => message)
+        allow(MiqTask).to receive(:generic_action_with_callback).with(task_opts, queue_opts).and_return(1)
+        allow(MiqTask).to receive(:wait_for_taskid).with(1, :timeout => 30).and_return(error_task)
+
+        expect(ExtManagementSystem.validate_credentials_task(args, 'userid', 'zone')).to eq([false, message])
+      end
+    end
+
     context "with a host and ems" do
-      before(:each) do
-        @host         = FactoryGirl.create(:host_vmware_esx_with_authentication)
-        @host_no_auth = FactoryGirl.create(:host_vmware_esx)
-        @ems          = FactoryGirl.create(:ems_vmware_with_authentication)
+      before do
+        @host         = FactoryBot.create(:host_vmware_esx_with_authentication)
+        @host_no_auth = FactoryBot.create(:host_vmware_esx)
+        @ems          = FactoryBot.create(:ems_vmware_with_authentication)
         MiqQueue.destroy_all
         @auth = @ems.authentication_type(:default)
         @orig_ems_user, @orig_ems_pwd = @ems.auth_user_pwd(:default)
@@ -269,88 +320,88 @@ describe AuthenticationMixin do
 
       it "#authentication_status_ok? true if no type, default is Valid and second one is Invalid" do
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Invalid")
+        @ems.authentications << FactoryBot.build(:authentication, :authtype => :some_type, :status => "Invalid")
         expect(@ems.authentication_status_ok?).to be_truthy
       end
 
       it "#authentication_status_ok? false if no type, default is Invalid and second one is Valid" do
         @auth.update_attribute(:status, "Invalid")
-        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Valid")
+        @ems.authentications << FactoryBot.build(:authentication, :authtype => :some_type, :status => "Valid")
         expect(@ems.authentication_status_ok?).to be_falsey
       end
 
       it "#authentication_status_ok? true if type is Valid" do
         @auth.update_attribute(:status, "Invalid")
-        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Valid")
+        @ems.authentications << FactoryBot.build(:authentication, :authtype => :some_type, :status => "Valid")
         expect(@ems.authentication_status_ok?(:some_type)).to be_truthy
       end
 
       it "#authentication_status_ok? false if type is Invalid" do
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << FactoryGirl.build(:authentication, :authtype => :some_type, :status => "Invalid")
+        @ems.authentications << FactoryBot.build(:authentication, :authtype => :some_type, :status => "Invalid")
         expect(@ems.authentication_status_ok?(:some_type)).to be_falsey
       end
 
       it "should return 'Invalid' authentication_status with one valid, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Invalid' authentication_status with one error, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Error")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Invalid' authentication_status with one unreachable, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Unreachable")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Invalid' authentication_status with one incomplete, one invalid" do
         highest = "Invalid"
         @auth.update_attribute(:status, "Incomplete")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Error' authentication_status with one incomplete, one error" do
         highest = "Error"
         @auth.update_attribute(:status, "Incomplete")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Error' authentication_status with one valid, one error" do
         highest = "Error"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Valid' authentication_status with both valid" do
         highest = "Valid"
         @auth.update_attribute(:status, highest)
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'Incomplete' authentication_status with one valid, one incomplete" do
         highest = "Incomplete"
         @auth.update_attribute(:status, "Valid")
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq(highest)
       end
 
       it "should return 'None' authentication_status with one nil, one nil" do
         highest = nil
         @auth.update_attribute(:status, nil)
-        @ems.authentications << FactoryGirl.create(:authentication, :status => highest)
+        @ems.authentications << FactoryBot.create(:authentication, :status => highest)
         expect(@ems.authentication_status).to eq('None')
       end
 
@@ -438,6 +489,7 @@ describe AuthenticationMixin do
         end
 
         it "(:save => true) updates status" do
+          @host.authentications.first.update(:status => nil) # start unauthorized
           allow(@host).to receive(:verify_credentials).and_return(true)
           @host.authentication_check(:save => true)
           expect(@host.authentication_type(:default).status).to eq("Valid")
@@ -445,6 +497,7 @@ describe AuthenticationMixin do
         end
 
         it "(:save => false) does not update status" do
+          @host.authentications.first.update(:status => nil) # start unauthorized
           allow(@host).to receive(:missing_credentials?).and_return(false)
           @host.authentication_check(:save => false)
           expect(@host.authentication_type(:default).status).to be_nil
@@ -537,13 +590,13 @@ describe AuthenticationMixin do
       end
 
       context "with credentials_changed_on set to now and jump 1 minute" do
-        before(:each) do
+        before do
           @before = Time.now.utc
           @auth.update_attribute(:credentials_changed_on, @before)
           Timecop.travel 1.minute
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -561,7 +614,7 @@ describe AuthenticationMixin do
       end
 
       context "with saved authentications" do
-        before(:each) do
+        before do
           @ems.update_authentication(@data, :save => true)
           @conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
           @queued_auth_checks = MiqQueue.where(@conditions)
@@ -579,7 +632,7 @@ describe AuthenticationMixin do
       end
 
       context "creds unchanged" do
-        before(:each) do
+        before do
           @data[:default][:userid] = @orig_ems_user
           @data[:default][:password] = @orig_ems_pwd
         end
@@ -602,7 +655,7 @@ describe AuthenticationMixin do
       end
 
       context "creds incomplete userid" do
-        before(:each) do
+        before do
           @data[:default][:userid] = nil
           @data[:default][:password] = @orig_ems_pwd
         end
@@ -648,6 +701,127 @@ describe AuthenticationMixin do
           expect(@host.has_authentication_type?(:default)).to be_truthy
           expect(@host.auth_user_pwd(:default)).to eq([@orig_ems_user, ''])
         end
+      end
+
+      context "password changes" do
+        let(:current_password) { "current_pass" }
+        let(:new_password) { "new_pass" }
+        let(:confirm_password) { "new_pass" }
+
+        context "#change_password_queue" do
+          it 'queues an update task with update_volume_queue' do
+            task_id = @ems.change_password_queue('test_user', current_password, new_password)
+
+            expect(MiqTask.find(task_id)).to have_attributes(
+              :name   => "Changing the password for Physical Provider named '#{@ems.name}'",
+              :state  => "Queued",
+              :status => "Ok"
+            )
+
+            expect(MiqQueue.where(:class_name => @ems.class.name).first).to have_attributes(
+              :class_name  => @ems.class.name,
+              :method_name => 'change_password',
+              :role        => 'ems_operations',
+              :queue_name  => @ems.queue_name_for_ems_operations,
+              :zone        => @ems.my_zone,
+              :args        => [current_password, new_password, :default]
+            )
+          end
+        end
+
+        context "#change_password" do
+          it "should fail if some param is blank" do
+            current_password = ""
+            allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+            expect { @ems.change_password(current_password, new_password, confirm_password) }
+              .to raise_error(MiqException::Error, "Please, fill the current_password and new_password fields.")
+          end
+
+          it "should fail if the provider doesn't support this operation" do
+            expect { @ems.change_password(current_password, new_password, confirm_password) }
+              .to raise_error(MiqException::Error, "Change Password is not supported for #{@ems.class.description} provider")
+          end
+
+          it "should update the provider password" do
+            allow(@ems).to receive(:raw_change_password) { true }
+            allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+            expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
+          end
+        end
+      end
+    end
+  end
+
+  describe "#authentication_status_severity_level" do
+    it "uses the least valid status" do
+      EvmSpecHelper.local_miq_server
+      authentications
+      expect(host.authentication_status_severity_level.status).to eq("Invalid")
+    end
+  end
+
+  describe "#authentication_status" do
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    context "with no authentications" do
+      before { host }
+
+      it "is nil with sql" do
+        expect(virtual_column_sql_value(Host, "authentication_status")).to be_nil
+      end
+
+      it "is 'None' with pure ruby (via relations)" do
+        expect(host.authentication_status).to eq("None")
+      end
+
+      it "is 'None' when accessed via ruby, but fetched via sql" do
+        fetched_host = Host.select(:id, :authentication_status).first
+        expect(fetched_host.attributes[:authentication_status]).to be_nil
+        expect(fetched_host.authentication_status).to eq("None")
+      end
+    end
+
+    context "with a valid authentication" do
+      before { valid_auth }
+
+      it "is 'Valid' with sql" do
+        h = Host.select(:id, :authentication_status).first
+
+        expect do
+          expect(h.authentication_status).to eq("Valid")
+        end.to match_query_limit_of(0)
+        expect(h.association(:authentication_status_severity_level)).not_to be_loaded
+      end
+
+      it "is 'Valid' with ruby" do
+        h = Host.first # clean host record
+
+        expect(h.authentication_status).to eq("Valid")
+        expect(h.association(:authentication_status_severity_level)).to be_loaded
+      end
+    end
+
+    context "with a valid and invalid authentication" do
+      before { authentications }
+
+      it "is 'Invalid' with sql" do
+        h = Host.select(:id, :authentication_status).first
+
+        expect do
+          expect(h.authentication_status).to eq("Invalid")
+        end.to match_query_limit_of(0)
+        expect(h.association(:authentication_status_severity_level)).not_to be_loaded
+      end
+
+      it "is 'Valid' with ruby" do
+        h = Host.first # clean host record
+
+        expect(h.authentication_status).to eq("Invalid")
+        expect(h.association(:authentication_status_severity_level)).to be_loaded
       end
     end
   end

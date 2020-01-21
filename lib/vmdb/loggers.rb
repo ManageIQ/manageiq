@@ -1,14 +1,11 @@
+require 'manageiq'
+require 'manageiq-loggers'
+require 'miq_environment'
 require 'util/vmdb-logger'
-
-Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
 
 module Vmdb
   def self.logger
     $log
-  end
-
-  def self.null_logger
-    @null_logger ||= Loggers::NullLogger.new
   end
 
   def self.rails_logger
@@ -23,75 +20,103 @@ module Vmdb
     end
 
     def self.apply_config(config)
-      apply_config_value(config, $log,        :level)
-      apply_config_value(config, $rails_log,  :level_rails)
-      apply_config_value(config, $vim_log,    :level_vim,    :level_vim_in_evm)
-      apply_config_value(config, $rhevm_log,  :level_rhevm,  :level_rhevm_in_evm)
-      apply_config_value(config, $aws_log,    :level_aws,    :level_aws_in_evm)
-      apply_config_value(config, $kube_log,   :level_kube,   :level_kube_in_evm)
-      apply_config_value(config, $mw_log,     :level_mw,     :level_mw_in_evm)
-      apply_config_value(config, $scvmm_log,  :level_scvmm,  :level_scvmm_in_evm)
-      apply_config_value(config, $api_log,    :level_api,    :level_api_in_evm)
-      apply_config_value(config, $fog_log,    :level_fog,    :level_fog_in_evm)
-      apply_config_value(config, $azure_log,  :level_azure,  :level_azure_in_evm)
-      apply_config_value(config, $lenovo_log, :level_lenovo, :level_lenovo_in_evm)
+      apply_config_value(config, $log,                :level)
+      apply_config_value(config, $journald_log,       :level) if $journald_log
+      apply_config_value(config, $rails_log,          :level_rails)
+      apply_config_value(config, $ansible_tower_log,  :level_ansible_tower)
+      apply_config_value(config, $api_log,            :level_api)
+      apply_config_value(config, $miq_ae_logger,      :level_automation)
+      apply_config_value(config, $aws_log,            :level_aws)
+      apply_config_value(config, $azure_log,          :level_azure)
+      apply_config_value(config, $azure_stack_log,    :level_azure_stack)
+      apply_config_value(config, $cn_monitoring_log,  :level_cn_monitoring)
+      apply_config_value(config, $datawarehouse_log,  :level_datawarehouse)
+      apply_config_value(config, $fog_log,            :level_fog)
+      apply_config_value(config, $kube_log,           :level_kube)
+      apply_config_value(config, $lenovo_log,         :level_lenovo)
+      apply_config_value(config, $nuage_log,          :level_nuage)
+      apply_config_value(config, $policy_log,         :level_policy)
+      apply_config_value(config, $redfish_log,        :level_redfish)
+      apply_config_value(config, $rhevm_log,          :level_rhevm)
+      apply_config_value(config, $scvmm_log,          :level_scvmm)
+      apply_config_value(config, $vcloud_log,         :level_vcloud)
+      apply_config_value(config, $vim_log,            :level_vim)
+      apply_config_value(config, $remote_console_log, :level_remote_console)
     end
 
-    private
-
     def self.create_loggers
-      # Intentionally setting false to enable logging so we can
-      # diagnose an Automate method failure
-      if false && ENV.key?("CI")
-        $log       = $rails_log = $audit_log = $fog_log = $policy_log = $vim_log = $rhevm_log = Vmdb.null_logger
-        $aws_log   = $kube_log = $mw_log = $scvmm_log = $api_log = $miq_ae_logger = $websocket_log = Vmdb.null_logger
-        $azure_log = $lenovo_log = Vmdb.null_logger
-      else
-        path_dir = Rails.root.join("log")
+      path_dir = ManageIQ.root.join("log")
 
-        $log           = VMDBLogger.new(path_dir.join("evm.log"))
-        $rails_log     = VMDBLogger.new(path_dir.join("#{Rails.env}.log"))
-        $audit_log     = AuditLogger.new(path_dir.join("audit.log"))
-        $fog_log       = FogLogger.new(path_dir.join("fog.log"))
-        $policy_log    = MirroredLogger.new(path_dir.join("policy.log"),     "<PolicyEngine> ")
-        $vim_log       = MirroredLogger.new(path_dir.join("vim.log"),        "<VIM> ")
-        $rhevm_log     = MirroredLogger.new(path_dir.join("rhevm.log"),      "<RHEVM> ")
-        $aws_log       = MirroredLogger.new(path_dir.join("aws.log"),        "<AWS> ")
-        $lenovo_log    = MirroredLogger.new(path_dir.join("lenovo.log"),     "<LENOVO> ")
-        $kube_log      = MirroredLogger.new(path_dir.join("kubernetes.log"), "<KUBERNETES> ")
-        $mw_log        = MirroredLogger.new(path_dir.join("middleware.log"), "<MIDDLEWARE> ")
-        $scvmm_log     = MirroredLogger.new(path_dir.join("scvmm.log"),      "<SCVMM> ")
-        $azure_log     = MirroredLogger.new(path_dir.join("azure.log"),      "<AZURE> ")
-        $api_log       = MirroredLogger.new(path_dir.join("api.log"),        "<API> ")
-        $websocket_log = MirroredLogger.new(path_dir.join("websocket.log"),  "<WEBSOCKET> ")
-        $miq_ae_logger = MirroredLogger.new(path_dir.join("automation.log"), "<AutomationEngine> ")
-        $miq_ae_logger.mirror_level = VMDBLogger::INFO
-      end
+      $audit_log          = AuditLogger.new(path_dir.join("audit.log"))
+      $container_log      = ContainerLogger.new
+      $journald_log       = create_journald_logger
+      $log                = create_multicast_logger(path_dir.join("evm.log"))
+      $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
+      $api_log            = create_multicast_logger(path_dir.join("api.log"))
+      $ansible_tower_log  = create_multicast_logger(path_dir.join("ansible_tower.log"))
+      $miq_ae_logger      = create_multicast_logger(path_dir.join("automation.log"))
+      $aws_log            = create_multicast_logger(path_dir.join("aws.log"))
+      $azure_log          = create_multicast_logger(path_dir.join("azure.log"), AzureLogger)
+      $azure_stack_log    = create_multicast_logger(path_dir.join("azure_stack.log"))
+      $cn_monitoring_log  = create_multicast_logger(path_dir.join("container_monitoring.log"))
+      $datawarehouse_log  = create_multicast_logger(path_dir.join("datawarehouse.log"))
+      $fog_log            = create_multicast_logger(path_dir.join("fog.log"), FogLogger)
+      $kube_log           = create_multicast_logger(path_dir.join("kubernetes.log"))
+      $lenovo_log         = create_multicast_logger(path_dir.join("lenovo.log"))
+      $nuage_log          = create_multicast_logger(path_dir.join("nuage.log"))
+      $policy_log         = create_multicast_logger(path_dir.join("policy.log"))
+      $redfish_log        = create_multicast_logger(path_dir.join("redfish.log"))
+      $rhevm_log          = create_multicast_logger(path_dir.join("rhevm.log"))
+      $scvmm_log          = create_multicast_logger(path_dir.join("scvmm.log"))
+      $vcloud_log         = create_multicast_logger(path_dir.join("vcloud.log"))
+      $vim_log            = create_multicast_logger(path_dir.join("vim.log"))
+      $remote_console_log = create_multicast_logger(path_dir.join("remote_console.log"))
 
       configure_external_loggers
+    end
+    private_class_method :create_loggers
+
+    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
+      logger_class.new(log_file_path).tap do |logger|
+        logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
+        logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
+      end
+    end
+    private_class_method :create_multicast_logger
+
+    private_class_method def self.create_journald_logger
+      return unless MiqEnvironment::Command.supports_systemd?
+
+      require "manageiq/loggers/journald"
+      ManageIQ::Loggers::Journald.new
+    rescue LoadError
+      nil
     end
 
     def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
-    end
 
+      require 'log_decorator'
+      LogDecorator.logger = $log
+
+      require 'inventory_refresh'
+      InventoryRefresh.logger = $log
+    end
     private_class_method :configure_external_loggers
 
-    def self.apply_config_value(config, logger, key, mirror_key = nil)
-      return if logger.kind_of?(Vmdb::Loggers::NullLogger)
-      apply_config_value_logged(config, logger, :level, key)
-      apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
-    end
-
-    def self.apply_config_value_logged(config, logger, level_method, key)
-      old_level      = logger.send(level_method)
+    def self.apply_config_value(config, logger, key)
+      old_level      = logger.level
       new_level_name = (config[key] || "INFO").to_s.upcase
       new_level      = VMDBLogger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
-        logger.send("#{level_method}=", new_level)
+        logger.level = new_level
       end
     end
+    private_class_method :apply_config_value
   end
 end
+
+require_relative "loggers/instrument"
+Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }

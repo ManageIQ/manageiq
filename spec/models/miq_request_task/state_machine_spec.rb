@@ -2,7 +2,7 @@ describe MiqRequestTask do
   context "::StateMachine" do
     context "#signal" do
       it "will deal with exceptions" do
-        task = FactoryGirl.create(:miq_request_task)
+        task = FactoryBot.create(:miq_request_task)
         allow(task).to receive_messages(:miq_request => double("MiqRequest").as_null_object)
         exception = String.xxx rescue $!
         allow(task).to receive(:some_state).and_raise(exception)

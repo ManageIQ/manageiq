@@ -27,11 +27,11 @@ class ServiceOrchestration
 
     def stack_parameters
       params = {}
-      @dialog_options.each do |attr, val|
+      @dialog_options.with_indifferent_access.each do |attr, val|
         if attr.start_with?('dialog_param_')
           params[attr['dialog_param_'.size..-1]] = val
         elsif attr.start_with?('password::dialog_param_')
-          params[attr['password::dialog_param_'.size..-1]] = MiqPassword.decrypt(val)
+          params[attr['password::dialog_param_'.size..-1]] = ManageIQ::Password.decrypt(val)
         end
       end
       params

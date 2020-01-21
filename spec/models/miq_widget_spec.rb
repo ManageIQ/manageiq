@@ -1,22 +1,27 @@
 describe MiqWidget do
-  include_examples(".seed called multiple times", 10)
+  describe '.seed' do
+    before { [MiqReport].each(&:seed) }
+    include_examples(".seed called multiple times", begin
+      Dir.glob(Rails.root.join(MiqWidget::WIDGET_DIR, "**", "*.yaml")).count
+    end)
+  end
 
-  before(:each) do
+  before do
     EvmSpecHelper.local_miq_server
   end
 
   context "setup" do
-    before(:each) do
+    before do
       MiqReport.seed_report("Vendor and Guest OS")
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
-      @user1   = FactoryGirl.create(:user, :role => "role1", :features => feature1)
+      @user1   = FactoryBot.create(:user, :role => "role1", :features => feature1)
       @group1  = @user1.current_group
 
       feature2 = MiqProductFeature.find_all_by_identifier("everything")
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :features => feature2)
-      @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
-      @user2   = FactoryGirl.create(:user, :miq_groups => [@group2])
+      @role2   = FactoryBot.create(:miq_user_role, :name => "Role2", :features => feature2)
+      @group2  = FactoryBot.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
+      @user2   = FactoryBot.create(:user, :miq_groups => [@group2])
 
       @widget_report_vendor_and_guest_os = MiqWidget.sync_from_hash(YAML.load('
         description: report_vendor_and_guest_os
@@ -51,8 +56,42 @@ describe MiqWidget do
       '))
     end
 
+    describe "#filter_for_schedule" do
+      it "returns Hash object representing valid MiqExpression" do
+        exp = MiqExpression.new(@widget_chart_vendor_and_guest_os.filter_for_schedule)
+        expect(exp.valid?).to be_truthy
+      end
+    end
+
+    describe "#sync_schedule" do
+      let(:schedule) do
+        filter = @widget_chart_vendor_and_guest_os.filter_for_schedule
+        FactoryBot.create(:miq_schedule, :filter => MiqExpression.new(filter), :resource_type => "MiqWidget",
+                          :name => @widget_chart_vendor_and_guest_os.name)
+      end
+
+      it "uses existing schedule if link between widget and schedule broken" do
+        expect(@widget_chart_vendor_and_guest_os.miq_schedule).to be_nil
+        @widget_chart_vendor_and_guest_os.sync_schedule(:run_at => schedule.run_at)
+
+        expect(MiqSchedule.count).to eq(1)
+        expect(@widget_chart_vendor_and_guest_os.miq_schedule.id).to eq(schedule.id)
+      end
+
+      it "rename existing scheduler by adding timestamp to name if existing scheduler use different filter" do
+        schedule.update(:filter => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => 9999}))
+
+        time_now = Time.now.utc
+        Timecop.freeze(time_now) { @widget_chart_vendor_and_guest_os.sync_schedule(:run_at => schedule.run_at) }
+        schedule.reload
+
+        expect(MiqSchedule.count).to eq(2)
+        expect(schedule.name.end_with?(time_now.to_s)).to be_truthy
+      end
+    end
+
     context "#queue_generate_content_for_users_or_group" do
-      before(:each) do
+      before do
         @widget = @widget_report_vendor_and_guest_os
         @queue_conditions = {
           :method_name => "generate_content",
@@ -88,7 +127,7 @@ describe MiqWidget do
       end
 
       it "ignores the legacy format admin|db_name" do
-        ws = FactoryGirl.create(:miq_widget_set, :name => "#{@user1.userid}|Home")
+        ws = FactoryBot.create(:miq_widget_set, :name => "#{@user1.userid}|Home")
         @widget_report_vendor_and_guest_os.make_memberof(ws)
         expect(@widget_report_vendor_and_guest_os.grouped_subscribers).to be_kind_of(Hash)
         expect(@widget_report_vendor_and_guest_os.grouped_subscribers).to be_empty
@@ -96,7 +135,7 @@ describe MiqWidget do
 
       context 'with subscribers' do
         before do
-          ws = FactoryGirl.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
+          ws = FactoryBot.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
           @widget_report_vendor_and_guest_os.make_memberof(ws)
         end
 
@@ -143,20 +182,27 @@ describe MiqWidget do
           result = @widget_report_vendor_and_guest_os.grouped_subscribers
           expect(result.size).to eq(0)
         end
+
+        it 'only returns groups in the current region' do
+          groups = MiqGroup.where(:id => [@group1, @group2])
+          expect(MiqGroup).to receive(:in_my_region).and_return(groups)
+          allow(groups).to receive(:where).and_return(groups)
+          @widget_report_vendor_and_guest_os.grouped_subscribers
+        end
       end
 
       def add_user(group)
-        FactoryGirl.create(:user, :miq_groups => [group])
+        FactoryBot.create(:user, :miq_groups => [group])
       end
 
       def add_dashboard_for_user(db_name, userid, group)
-        FactoryGirl.create(:miq_widget_set, :name => db_name, :userid => userid, :group_id => group)
+        FactoryBot.create(:miq_widget_set, :name => db_name, :userid => userid, :group_id => group)
       end
     end
 
     context "#contents_for_user" do
-      it "user owned" do
-        content = FactoryGirl.create(:miq_widget_content,
+      it "returns user owned widget contents in UTC timezone if user's timezone not specified" do
+        content = FactoryBot.create(:miq_widget_content,
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
                                      :user_id      => @user1.id,
                                      :miq_group_id => @user1.current_group_id,
@@ -165,33 +211,35 @@ describe MiqWidget do
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
       end
 
-      it "owned by miq_group and in user's timezone" do
+      it "returns widget contents in user's timezone when content from different timezone also available" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        content = FactoryGirl.create(:miq_widget_content,
-                                     :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :miq_group_id => @group1.id,
-                                     :timezone     => "Eastern Time (US & Canada)"
-                                    )
-        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
+        FactoryBot.create(:miq_widget_content,
+                          :miq_widget   => @widget_report_vendor_and_guest_os,
+                          :miq_group_id => @group1.id,
+                          :timezone     => "UTC")
+        content_user_timezone = FactoryBot.create(:miq_widget_content,
+                                                  :miq_widget   => @widget_report_vendor_and_guest_os,
+                                                  :miq_group_id => @group1.id,
+                                                  :timezone     => "Eastern Time (US & Canada)")
+        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content_user_timezone)
       end
 
-      it "owned by miq_group and not in user's timezone" do
+      it "returns widget contents if only content available is not in user's timezone" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        content = FactoryGirl.create(:miq_widget_content,
-                                     :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :miq_group_id => @group1.id,
-                                     :timezone     => "UTC"
-                                    )
-        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to be_nil
+        content_utc = FactoryBot.create(:miq_widget_content,
+                                        :miq_widget   => @widget_report_vendor_and_guest_os,
+                                        :miq_group_id => @group1.id,
+                                        :timezone     => "UTC")
+        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content_utc)
       end
 
       it "both user and miq_group owned" do
-        content1 = FactoryGirl.create(:miq_widget_content,
+        FactoryBot.create(:miq_widget_content,
                                       :miq_widget   => @widget_report_vendor_and_guest_os,
                                       :miq_group_id => @group1.id,
                                       :timezone     => "Eastern Time (US & Canada)"
                                      )
-        content2 = FactoryGirl.create(:miq_widget_content,
+        content2 = FactoryBot.create(:miq_widget_content,
                                       :miq_widget   => @widget_report_vendor_and_guest_os,
                                       :miq_group_id => @group1.id,
                                       :user_id      => @user1.id,
@@ -205,13 +253,13 @@ describe MiqWidget do
       subject { MiqWidget.available_for_user(@user) }
 
       it "by role" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:roles => @group2.miq_user_role.name})
+        @widget_report_vendor_and_guest_os.update(:visibility => {:roles => @group2.miq_user_role.name})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
 
       it "by group" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => @group2.description})
+        @widget_report_vendor_and_guest_os.update(:visibility => {:groups => @group2.description})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
@@ -219,14 +267,14 @@ describe MiqWidget do
   end
 
   context "#queue_generate_content" do
-    before(:each) do
+    before do
       MiqReport.seed_report("Top CPU Consumers weekly")
 
-      role1 = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-support')
-      group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup-support", :miq_user_role => role1)
-      user1  = FactoryGirl.create(:user, :miq_groups => [group1])
+      role1 = FactoryBot.create(:miq_user_role, :name => 'EvmRole-support')
+      group1 = FactoryBot.create(:miq_group, :description => "EvmGroup-support", :miq_user_role => role1)
+      user1  = FactoryBot.create(:user, :miq_groups => [group1])
 
-      @user2  = FactoryGirl.create(:user_admin)
+      @user2  = FactoryBot.create(:user_admin)
       @group2 = @user2.current_group
 
       attrs = YAML.load('
@@ -255,18 +303,25 @@ describe MiqWidget do
         read_only: true
       ')
 
-      ws1 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => user1.userid, :group_id => group1.id)
-      ws2 = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => @user2.userid, :group_id => @group2.id)
+      ws1 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user1.userid, :group_id => group1.id)
+      ws2 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => @user2.userid, :group_id => @group2.id)
       @widget = MiqWidget.sync_from_hash(attrs)
       ws1.add_member(@widget)
       ws2.add_member(@widget)
 
       @q_options = {:queue_name  => "reporting",
                     :role        => "reporting",
+                    :zone        => nil,
                     :class_name  => @widget.class.name,
                     :instance_id => @widget.id,
                     :msg_timeout => 3600
       }
+    end
+
+    it "returns MiqTask id if successful" do
+      return_value = @widget.queue_generate_content
+      expect(return_value).to equal(MiqTask.where(:name => "Generate Widget: '#{@widget.title}'",
+                                                  :id   => @widget.reload.miq_task_id).first.id)
     end
 
     it "for groups without visibility" do
@@ -283,6 +338,29 @@ describe MiqWidget do
     it "for all groups with visibility to all" do
       @widget.visibility[:roles] = "_ALL_"
       expect(@widget).to receive(:queue_generate_content_for_users_or_group).twice
+      @widget.queue_generate_content
+    end
+
+    it "does not generate content if visibility set to group only and there are no users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+      @user2.delete
+
+      expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
+      @widget.queue_generate_content
+    end
+
+    it "does not generate content if content_type of widget is 'menu'" do
+      @widget.update(:content_type => "menu")
+      expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
+      @widget.queue_generate_content
+    end
+
+    it "generate content if visibility set to group only with users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+
+      expect(@widget).to receive(:queue_generate_content_for_users_or_group).once
       @widget.queue_generate_content
     end
 
@@ -370,7 +448,7 @@ describe MiqWidget do
       expect(task.pct_complete).to eq(100)
 
       @widget.visibility[:roles] = "_ALL_"
-      new_user  = FactoryGirl.create(:user, :userid => "test task", :role => "random")
+      new_user  = FactoryBot.create(:user, :userid => "test task", :role => "random")
 
       @widget.create_initial_content_for_user(new_user)
       q = MiqQueue.first
@@ -394,9 +472,9 @@ describe MiqWidget do
     end
 
     it "with multiple timezones in one group" do
-      user_est =  FactoryGirl.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
-      ws = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => "user_est", :group_id => @group2.id)
+      ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :group_id => @group2.id)
       ws.add_member(@widget)
 
       expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
@@ -407,18 +485,16 @@ describe MiqWidget do
     end
 
     it "with report_sync" do
-      stub_server_configuration(:product => {:report_sync => true})
-
-      user_est =  FactoryGirl.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
+      user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
-      ws = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => "user_est", :group_id => @group2.id)
+      ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :group_id => @group2.id)
       ws.add_member(@widget)
 
       expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil,
                                                                            ["Eastern Time (US & Canada)"])
 
-      stub_settings(:server => {:timezone => "Eastern Time (US & Canada)"})
-
+      stub_settings(:server  => {:timezone => "Eastern Time (US & Canada)"},
+                    :product => {:report_sync => true})
       @widget.queue_generate_content
       expect(MiqQueue.where(@q_options).count).to eq(0)
     end
@@ -431,15 +507,15 @@ describe MiqWidget do
 
       it "multiple" do
         @widget.visibility[:roles] = "_ALL_"
-        new_group1 = FactoryGirl.create(:miq_group, :role => "operator")
-        new_ws1 = FactoryGirl.create(:miq_widget_set,
+        new_group1 = FactoryBot.create(:miq_group, :role => "operator")
+        new_ws1 = FactoryBot.create(:miq_widget_set,
                                      :name     => "default",
                                      :userid   => @user2.userid,
                                      :group_id => new_group1.id)
         new_ws1.add_member(@widget)
 
-        new_group2 = FactoryGirl.create(:miq_group, :role => "approver")
-        new_ws2 = FactoryGirl.create(:miq_widget_set,
+        new_group2 = FactoryBot.create(:miq_group, :role => "approver")
+        new_ws2 = FactoryBot.create(:miq_widget_set,
                                      :name     => "default",
                                      :userid   => @user2.userid,
                                      :group_id => new_group2.id)
@@ -454,8 +530,8 @@ describe MiqWidget do
       it "none" do
         @widget.visibility[:roles] = "_ALL_"
         MiqWidgetSet.destroy_all
-        user = FactoryGirl.create(:user, :userid => 'alone', :miq_groups => [@group2])
-        ws = FactoryGirl.create(:miq_widget_set, :name => "default", :userid => user.userid)
+        user = FactoryBot.create(:user, :userid => 'alone', :miq_groups => [@group2])
+        ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user.userid)
         ws.add_member(@widget)
 
         expect(@widget).to receive(:generate_content_options).never
@@ -472,7 +548,7 @@ describe MiqWidget do
 
     before do
       allow(MiqWidget::ContentOptionGenerator).to receive(:new).and_return(content_option_generator)
-      allow(content_option_generator).to receive(:generate).with(group, users).and_return("content options")
+      allow(content_option_generator).to receive(:generate).with(group, users, true).and_return("content options")
     end
 
     it "returns the content options" do
@@ -481,7 +557,7 @@ describe MiqWidget do
   end
 
   context "#generate_content" do
-    let(:widget) { described_class.new(:miq_task => miq_task) }
+    let(:widget) { described_class.new(:miq_task => miq_task, :content_type => "report", :title => "title", :description => "foo") }
     let(:content_generator) { double("MiqWidget::ContentGenerator") }
     let(:klass) { "klass" }
     let(:userids) { "userids" }
@@ -518,6 +594,17 @@ describe MiqWidget do
       it "does not attempt to call state_active on nil" do
         expect { widget.generate_content(klass, group_description, nil, timezones) }.to_not raise_error
       end
+
+      it "does not generate content if content_type of widget is 'menu'" do
+        widget.update(:content_type => "menu")
+        expect(content_generator).not_to receive(:generate)
+        widget.generate_content(klass, group_description, nil, timezones)
+      end
+
+      it "does not generate content if content_type of widget is not 'menu'" do
+        expect(content_generator).to receive(:generate)
+        widget.generate_content(klass, group_description, nil, timezones)
+      end
     end
   end
 
@@ -533,10 +620,10 @@ describe MiqWidget do
 
   context "#create_initial_content_for_user" do
     before do
-      self_service_role  = FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}})
-      self_service_group = FactoryGirl.create(:miq_group, :miq_user_role => self_service_role)
-      @user              = FactoryGirl.create(:user, :miq_groups => [self_service_group])
-      @widget            = FactoryGirl.create(:miq_widget)
+      self_service_role  = FactoryBot.create(:miq_user_role, :settings => {:restrictions => {:vms => :user}})
+      self_service_group = FactoryBot.create(:miq_group, :miq_user_role => self_service_role)
+      @user              = FactoryBot.create(:user, :miq_groups => [self_service_group])
+      @widget            = FactoryBot.create(:miq_widget)
     end
 
     it "with single user" do
@@ -545,27 +632,29 @@ describe MiqWidget do
   end
 
   context "multiple groups" do
-    let(:widget) { MiqWidget.find_by_description("chart_vendor_and_guest_os") }
+    let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
 
     before do
       MiqReport.seed_report("Vendor and Guest OS")
       MiqWidget.seed_widget("chart_vendor_and_guest_os")
 
-      @role   = FactoryGirl.create(:miq_user_role)
-      @group  = FactoryGirl.create(:miq_group, :miq_user_role => @role)
-      @user1  = FactoryGirl.create(:user,
+      # tests are written for timezone_matters = true
+      widget.options[:timezone_matters] = true if widget.options
+      @role   = FactoryBot.create(:miq_user_role)
+      @group  = FactoryBot.create(:miq_group, :miq_user_role => @role)
+      @user1  = FactoryBot.create(:user,
                                    :settings   => {:display => {:timezone => "Eastern Time (US & Canada)"}},
                                    :miq_groups => [@group])
-      @user2  = FactoryGirl.create(:user,
+      @user2  = FactoryBot.create(:user,
                                    :settings   => {:display => {:timezone => "Pacific Time (US & Canada)"}},
                                    :miq_groups => [@group])
 
-      @ws1 = FactoryGirl.create(:miq_widget_set,
+      @ws1 = FactoryBot.create(:miq_widget_set,
                                 :name     => "HOME",
                                 :userid   => @user1.userid,
                                 :group_id => @group.id
                                )
-      @ws2 = FactoryGirl.create(:miq_widget_set,
+      @ws2 = FactoryBot.create(:miq_widget_set,
                                 :name     => "HOME",
                                 :userid   => @user2.userid,
                                 :group_id => @group.id
@@ -576,14 +665,15 @@ describe MiqWidget do
       before do
         widget.make_memberof(@ws1)
         widget.make_memberof(@ws2)
-        widget.queue_generate_content
       end
 
       it "queued based on group/TZs of User's in the group" do
+        widget.queue_generate_content
         expect(MiqQueue.count).to eq(1)
       end
 
       it "contents created for each timezone of the group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         expect(MiqWidgetContent.count).to eq(2)
         MiqWidgetContent.all.each do |content|
@@ -593,14 +683,27 @@ describe MiqWidget do
         end
       end
 
+      it "contents created for one timezone per group with timezone_matters = false" do
+        widget.options = {:timezone_matters => false }
+        widget.queue_generate_content
+        MiqQueue.first.deliver
+        expect(MiqWidgetContent.count).to eq(1)
+        MiqWidgetContent.all.each do |content|
+          expect(content.user_id).to be_nil
+          expect(content.miq_group_id).to eq(@group.id)
+          expect(content.timezone).to eq("UTC")
+        end
+      end
+
       it "when changing to self service group" do
+        widget.queue_generate_content
         MiqQueue.first.deliver
         MiqWidgetContent.all.each do |content|
           expect(content.user_id).to be_nil
         end
         MiqQueue.destroy_all
 
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+        @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
         widget.queue_generate_content
         MiqQueue.first.deliver
 
@@ -613,7 +716,7 @@ describe MiqWidget do
 
     context "for self service user" do
       before do
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
+        @role.update(:settings => {:restrictions => {:vms => :user}})
         widget.make_memberof(@ws1)
         widget.make_memberof(@ws2)
         widget.queue_generate_content
@@ -636,9 +739,9 @@ describe MiqWidget do
 
     context "for non-current self service group" do
       before do
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
-        @group2 = FactoryGirl.create(:miq_group, :miq_user_role => @role)
-        @ws3    = FactoryGirl.create(:miq_widget_set,
+        @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
+        @group2 = FactoryBot.create(:miq_group, :miq_user_role => @role)
+        @ws3    = FactoryBot.create(:miq_widget_set,
                                      :name     => "HOME",
                                      :userid   => @user1.userid,
                                      :group_id => @group2.id
@@ -650,10 +753,10 @@ describe MiqWidget do
 
         @winos_pruduct_name = 'Windows 7 Enterprise'
         7.times do |i|
-          vm = FactoryGirl.build(:vm_vmware,
+          vm = FactoryBot.build(:vm_vmware,
                                  :name             => "vm_win_#{i}",
                                  :vendor           => "vmware",
-                                 :operating_system => FactoryGirl.create(:operating_system,
+                                 :operating_system => FactoryBot.create(:operating_system,
                                                                          :product_name => @winos_pruduct_name,
                                                                          :name         => 'my_pc'),
                                 )
@@ -663,10 +766,10 @@ describe MiqWidget do
 
         @rhos_product_name = 'Red Hat Enterprise Linux 6 (64-bit)'
         3.times do |i|
-          vm = FactoryGirl.build(:vm_redhat,
+          vm = FactoryBot.build(:vm_redhat,
                                  :name             => "vm_rh_#{i}",
                                  :vendor           => "redhat",
-                                 :operating_system => FactoryGirl.create(:operating_system,
+                                 :operating_system => FactoryBot.create(:operating_system,
                                                                          :product_name => @rhos_product_name,
                                                                          :name         => 'my_linux'),
                                 )
@@ -708,6 +811,31 @@ describe MiqWidget do
         @user1.destroy
         expect(MiqWidgetContent.count).to eq(0)
       end
+    end
+  end
+
+  describe "#queued_at" do
+    it "is nil when no task" do
+      widget = FactoryBot.build(:miq_widget)
+      expect(widget.queued_at).to be_nil
+    end
+
+    it "uses task value" do
+      dt = Time.now.utc
+      widget = FactoryBot.build(:miq_widget, :miq_task => FactoryBot.build(:miq_task, :created_on => dt))
+      expect(widget.queued_at).to eq(dt)
+    end
+  end
+
+  describe "#status_message" do
+    it "is nil when no task" do
+      widget = FactoryBot.build(:miq_widget)
+      expect(widget.status_message).to eq("Unknown")
+    end
+
+    it "uses task value" do
+      widget = FactoryBot.build(:miq_widget, :miq_task => FactoryBot.build(:miq_task, :message => "message"))
+      expect(widget.status_message).to eq("message")
     end
   end
 end

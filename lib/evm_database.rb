@@ -1,15 +1,15 @@
 class EvmDatabase
   include Vmdb::Logging
 
-  SCHEMA_FILE = Rails.root.join("db/schema.yml").freeze
-
-  PRIMORDIAL_CLASSES = %w(
+  # A ordered list of classes that are seeded before server initialization.
+  PRIMORDIAL_SEEDABLE_CLASSES = %w[
     MiqDatabase
     MiqRegion
     MiqEnterprise
     Zone
     MiqServer
     ServerRole
+    MiqWorkerType
     Tenant
     MiqProductFeature
     MiqUserRole
@@ -17,78 +17,118 @@ class EvmDatabase
     User
     MiqReport
     VmdbDatabase
-  )
+  ].freeze
 
-  ORDERED_CLASSES = %w(
-    RssFeed
+  # An ordered list of classes that will complete the seeding, but occuring
+  # after server initialization.
+  OTHER_SEEDABLE_CLASSES = %w[
     MiqWidget
     MiqAction
+    MiqEventDefinitionSet
     MiqEventDefinition
     MiqPolicySet
-  )
+    ChargebackRateDetailMeasure
+    ChargeableField
+    ChargebackRate
+    Currency
 
-  RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
+    BlacklistedEvent
+    Classification
+    CustomizationTemplate
+    Dialog
+    ManageIQ::Providers::EmbeddedAnsible
+    MiqAlert
+    MiqAlertSet
+    MiqDialog
+    MiqSearch
+    MiqShortcut
+    MiqWidgetSet
+    NotificationType
+    PxeImageType
+    ScanItem
+    TimeProfile
 
-  def self.find_seedable_model_class_names
-    @found_model_class_names ||= begin
-      Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
-    end
-  end
+    MiqAeDatastore
+  ].freeze
 
-  def self.seedable_model_class_names
-    ORDERED_CLASSES + (find_seedable_model_class_names - ORDERED_CLASSES) + RAILS_ENGINE_MODEL_CLASS_NAMES
+  SEEDABLE_CLASSES = PRIMORDIAL_SEEDABLE_CLASSES + OTHER_SEEDABLE_CLASSES
+
+  def self.seed(classes = nil, exclude_list = [])
+    classes ||= SEEDABLE_CLASSES
+    classes  -= exclude_list
+    classes   = classes.collect(&:constantize)
+
+    invalid = classes.reject { |c| c.respond_to?(:seed) }
+    raise ArgumentError, "class(es) #{invalid.join(", ")} do not respond to seed" if invalid.any?
+
+    seed_classes(classes)
   end
 
   def self.seed_primordial
-    if ENV['SKIP_PRIMORDIAL_SEED'] && MiqDatabase.count > 0
-      puts "** Primordial seedings is skipped."
-      puts "** Unset SKIP_PRIMORDIAL_SEED to re-enable"
-    else
-      seed(PRIMORDIAL_CLASSES)
+    if skip_seeding?
+      puts "** Seeding is skipped on startup. Unset SKIP_SEEDING to re-enable" # rubocop:disable Rails/Output
+      return
     end
+
+    seed(PRIMORDIAL_SEEDABLE_CLASSES)
   end
 
-  def self.seed_last
-    seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
+  def self.seed_rest
+    return if skip_seeding?
+    seed(OTHER_SEEDABLE_CLASSES)
   end
 
-  def self.seed(classes = nil, exclude_list = [])
+  # Returns whether or not a primordial seed has completed.
+  def self.seeded_primordially?
+    # While not technically accurate, as someone could just insert a record
+    # directly, this is the simplest check at the moment to guess whether or not
+    # a primordial seed has completed.
+    MiqDatabase.any? && MiqRegion.in_my_region.any?
+  end
+
+  # Returns whether or not a full seed has completed.
+  def self.seeded?
+    # While not technically accurate, as someone could just insert a record
+    # directly, this is the simplest check at the moment to guess whether or not
+    # a full seed has completed.
+    #
+    # MiqAction was chosen because it cannot be added by a user directly.
+    seeded_primordially? && MiqAction.in_my_region.any?
+  end
+
+  def self.skip_seeding?
+    ENV['SKIP_SEEDING'] && seeded_primordially?
+  end
+  private_class_method :skip_seeding?
+
+  def self.seed_classes(classes)
     _log.info("Seeding...")
 
-    classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
-    classes -= exclude_list
+    lock_timeout = (ENV["SEEDING_LOCK_TIMEOUT"].presence || 10.minutes).to_i
 
-    # Only 1 machine can go through this at a time
-    # Populating the DB takes 20 seconds
-    # Not populating the db takes 3 seconds
-    MiqDatabase.with_lock(10.minutes) do
-      classes.each do |klass|
-        begin
-          klass = klass.constantize if klass.kind_of?(String)
-        rescue => err
-          _log.log_backtrace(err)
-          raise
-        end
-
-        if klass.respond_to?(:seed)
-          _log.info("Seeding #{klass}")
-          begin
-            klass.seed
-          rescue => err
-            _log.log_backtrace(err)
-            raise
-          end
-        else
-          _log.error("Class #{klass} does not have a seed")
+    total = Benchmark.ms do
+      # Only 1 machine can go through this at a time
+      MiqDatabase.with_lock(lock_timeout) do
+        classes.each do |c|
+          _log.info("Seeding #{c}...")
+          ms = Benchmark.ms { c.seed }
+          _log.info("Seeding #{c}... Complete in #{ms}ms")
         end
       end
     end
 
-    _log.info("Seeding... Complete")
+    _log.info("Seeding... Complete in #{total}ms")
+  rescue Timeout::Error
+    _log.error("Seeding... Timed out after #{lock_timeout} seconds")
+    raise
+  rescue StandardError => err
+    _log.log_backtrace(err)
+    raise
   end
+  private_class_method :seed_classes
 
   def self.host
-    Rails.configuration.database_configuration[Rails.env]['host']
+    ActiveRecord::Base.configurations.fetch_path(ENV['RAILS_ENV'], 'host')
   end
 
   def self.local?
@@ -96,24 +136,9 @@ class EvmDatabase
   end
 
   # Determines the average time to the database in milliseconds
-  def self.ping(connection = ApplicationRecord.connection)
+  def self.ping(connection = ActiveRecord::Base.connection)
     query = "SELECT 1"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
-  end
-
-  # Determines if the schema currently being used is the same as the one we expect
-  #
-  # @param connection Check the database at this connection against the local file
-  # @return nil if the schemas match, an error message otherwise
-  def self.check_schema(connection = ActiveRecord::Base.connection)
-    check_schema_tables(connection) || check_schema_columns(connection)
-  end
-
-  # Writes the schema to SCHEMA_FILE as it currently exists in the database
-  #
-  # @param connection Write the schema at this connection to the file
-  def self.write_expected_schema(connection = ActiveRecord::Base.connection)
-    File.write(SCHEMA_FILE, current_schema(connection).to_yaml)
   end
 
   def self.raise_server_event(event)
@@ -121,70 +146,71 @@ class EvmDatabase
     MiqEvent.raise_evm_event_queue(MiqServer.my_server, event, :event_details => msg)
   end
 
-  class << self
-    private
+  def self.restart_failover_monitor_service
+    service = LinuxAdmin::Service.new("evm-failover-monitor")
+    service.restart if service.running?
+  end
 
-    def expected_schema
-      YAML.load_file(SCHEMA_FILE)
-    end
+  def self.restart_failover_monitor_service_queue
+    MiqQueue.put(
+      :class_name  => name,
+      :method_name => 'restart_failover_monitor_service',
+      :role        => 'database_operations',
+      :zone        => nil
+    )
+  end
 
-    def current_schema(connection)
-      connection.tables.sort.each_with_object({}) do |t, h|
-        h[t] = connection.columns(t).map(&:name)
+  def self.run_failover_monitor(monitor = nil)
+    require 'manageiq-postgres_ha_admin'
+    ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
+
+    monitor ||= ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config", "ha_admin.yml"))
+
+    configure_rails_handler(monitor)
+    configure_logical_replication_handlers(monitor)
+
+    _log.info("Starting database failover monitor")
+    monitor.monitor_loop
+  end
+
+  def self.configure_rails_handler(monitor)
+    file_path = Rails.root.join("config", "database.yml")
+    rails_handler = ManageIQ::PostgresHaAdmin::RailsConfigHandler.new(:file_path => file_path, :environment => Rails.env)
+    _log.info("Configuring database failover for #{file_path}'s #{Rails.env} environment")
+
+    rails_handler.before_failover { LinuxAdmin::Service.new("evmserverd").stop }
+    rails_handler.after_failover do
+      # refresh the rails connection info after the config handler changed database.yml
+      begin
+        ActiveRecord::Base.remove_connection
+      rescue PG::Error
+        # We expect this to fail because it cannot access the database in the cached config
       end
+      ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
+
+      raise_server_event("db_failover_executed")
+      LinuxAdmin::Service.new("evmserverd").restart
     end
 
-    def check_schema_columns(connection)
-      compare_schema = current_schema(connection)
+    monitor.add_handler(rails_handler)
+  end
+  private_class_method :configure_rails_handler
 
-      errors = []
-      expected_schema.each do |table, expected_columns|
-        next if compare_schema[table] == expected_columns
+  def self.configure_logical_replication_handlers(monitor)
+    return unless MiqServer.my_server.has_active_role?("database_operations")
 
-        errors << <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed for host #{db_connection_host(connection)}:
+    local_db_conninfo = ActiveRecord::Base.connection.raw_connection.conninfo_hash.delete_blanks
+    PglogicalSubscription.all.each do |s|
+      handler = ManageIQ::PostgresHaAdmin::LogicalReplicationConfigHandler.new(:subscription => s.id, :conn_info => local_db_conninfo)
+      _log.info("Configuring database failover for replication subscription #{s.id} ")
 
-          Columns for table #{table} in the current schema do not match the columns listed in #{SCHEMA_FILE}
-
-          expected:
-          #{expected_columns.inspect}
-
-          got:
-          #{compare_schema[table].inspect}
-        ERROR
+      handler.after_failover do |new_conn_info|
+        s.delete
+        PglogicalSubscription.new(new_conn_info.slice(:dbname, :host, :user, :password, :port)).save
       end
-      errors.empty? ? nil : errors.join("\n")
-    end
 
-    def check_schema_tables(connection)
-      current_tables  = current_schema(connection).keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
-      expected_tables = expected_schema.keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
-
-      return if current_tables == expected_tables
-
-      diff_in_current  = current_tables - expected_tables
-      diff_in_expected = expected_tables - current_tables
-      if diff_in_current.empty? && diff_in_expected.empty?
-        <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed for host #{db_connection_host(connection)}:
-
-          Expected schema table order does not match sorted current tables.
-          Use 'rake evm:db:write_schema' to generate the new expected schema when making changes.
-        ERROR
-      else
-        <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed for host #{db_connection_host(connection)}:
-
-          Current schema tables do not match expected
-
-          Additional tables in current schema: #{diff_in_current}
-          Missing tables in current schema: #{diff_in_expected}
-        ERROR
-      end
-    end
-
-    def db_connection_host(connection)
-      connection.raw_connection.conninfo_hash[:host] || "localhost"
+      monitor.add_handler(handler)
     end
   end
+  private_class_method :configure_logical_replication_handlers
 end

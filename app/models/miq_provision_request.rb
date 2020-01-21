@@ -13,8 +13,7 @@ class MiqProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,
                          :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
-  validates_presence_of  :source_id,      :message => "must have valid template"
-  validate               :must_have_valid_vm
+  validates :source, :presence => true
   validate               :must_have_user
 
   default_value_for :options,      :number_of_vms => 1
@@ -27,20 +26,27 @@ class MiqProvisionRequest < MiqRequest
 
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
-    vm_or_template = VmOrTemplate.find_by_id(source_id)
-    raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if vm_or_template.nil?
+    vm_or_template = source_vm_or_template!(source_id)
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
     vm_or_template.ext_management_system.class.provision_class(via)
   end
 
+  def self.source_vm_or_template!(source_id)
+    vm_or_template = VmOrTemplate.find_by(:id => source_id)
+    if vm_or_template.nil?
+      raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]"
+    end
+
+    if vm_or_template.ext_management_system.nil?
+      raise MiqException::MiqProvisionError, "Source Template/Vm with id [#{source_id}] has no EMS, unable to provision"
+    end
+    vm_or_template
+  end
+
   def self.new_request_task(attribs)
     klass = request_task_class_from(attribs)
     klass.new(attribs)
-  end
-
-  def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
   end
 
   def set_description(force = false)
@@ -51,15 +57,19 @@ class MiqProvisionRequest < MiqRequest
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
     attrs = {:options => options.merge(:delivered_on => nil)}
     attrs[:description] = prov_description unless prov_description.nil?
-    update_attributes(attrs)
+    update(attrs)
   end
 
   def post_create_request_tasks
-    return unless requested_task_idx.length == 1
-    update_attributes(:description => miq_request_tasks.first.description)
+    update_description_from_tasks
   end
 
-  def my_role
+  def update_description_from_tasks
+    return unless requested_task_idx.length == 1
+    update(:description => miq_request_tasks.reload.first.description)
+  end
+
+  def my_role(_action = nil)
     'ems_operations'
   end
 

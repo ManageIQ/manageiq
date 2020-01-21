@@ -14,10 +14,11 @@ class MiqEvent < EventStream
     }
   }
 
-  SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage, EmsCluster, ResourcePool,
-                                        MiqServer, ExtManagementSystem,
-                                        ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage,
-                                        MiddlewareServer].freeze
+  SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage,
+                                        EmsCluster, ResourcePool, MiqServer,
+                                        ExtManagementSystem,
+                                        ContainerReplicator, ContainerGroup, ContainerProject,
+                                        ContainerNode, ContainerImage, PhysicalServer].freeze
 
   def self.raise_evm_event(target, raw_event, inputs = {}, options = {})
     # Target may have been deleted if it's a worker
@@ -39,19 +40,18 @@ class MiqEvent < EventStream
       return
     end
 
-    event_obj = build_evm_event(event, target)
+    event_obj = build_evm_event(event, target, inputs[:full_data])
     inputs.merge!('MiqEvent::miq_event' => event_obj.id, :miq_event_id => event_obj.id)
     inputs.merge!('EventStream::event_stream' => event_obj.id, :event_stream_id => event_obj.id)
 
     # save the EmsEvent that are required by some actions later in policy resolution
-    event_obj.update_attributes(:full_data => {:source_event_id => inputs[:ems_event].id}) if inputs[:ems_event]
+    event_obj.update(:full_data => {:source_event_id => inputs[:ems_event].id}) if inputs[:ems_event]
 
     MiqAeEvent.raise_evm_event(raw_event, target, inputs, options)
     event_obj
   end
 
   def process_evm_event(inputs = {})
-    _log.info("target = [#{target.inspect}]")
     return if target.nil?
 
     return unless target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
@@ -60,14 +60,16 @@ class MiqEvent < EventStream
     results = {}
     inputs[:type] ||= target.class.name
     inputs[:source_event] = source_event if source_event
+    inputs[:triggering_type] = event_type
+    inputs[:triggering_data] = full_data
 
     _log.info("Event Raised [#{event_type}]")
     begin
       results[:policy] = MiqPolicy.enforce_policy(target, event_type, inputs)
       update_with_policy_result(results)
-      update_attributes(:message => 'Policy resolved successfully!')
+      update(:message => 'Policy resolved successfully!')
     rescue MiqException::PolicyPreventAction => err
-      update_attributes(:full_data => {:policy => {:prevented => true}}, :message => err.message)
+      update(:full_data => {:policy => {:prevented => true}}, :message => err.message)
     end
 
     _log.info("Alert for Event [#{event_type}]")
@@ -78,24 +80,35 @@ class MiqEvent < EventStream
     results
   end
 
-  def self.build_evm_event(event, target)
-    MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY', :timestamp => Time.now.utc)
+  def self.build_evm_event(event, target, full_data = nil)
+    options = {
+      :event_type => event,
+      :target     => target,
+      :full_data  => full_data,
+      :source     => 'POLICY',
+      :timestamp  => Time.now.utc
+    }
+    user = User.current_user
+    options.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+    MiqEvent.create(options)
   end
 
   def update_with_policy_result(result = {})
-    update_attributes(
-      :full_data => {
-        :policy => {
-          :actions => {
-            :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+    if result.fetch_path(:policy, :actions, :assign_scan_profile)
+      update(
+        :full_data => {
+          :policy => {
+            :actions => {
+              :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+            }
           }
         }
-      }
-    ) if result.fetch_path(:policy, :actions, :assign_scan_profile)
+      )
+    end
   end
 
   def self.normalize_event(event)
-    return event if MiqEventDefinition.find_by_name(event)
+    return event if MiqEventDefinition.find_by(:name => event)
     "unknown"
   end
 
@@ -166,5 +179,9 @@ class MiqEvent < EventStream
 
     source_event_id = full_data.fetch_path(:source_event_id)
     @source_event = EventStream.find_by(:id => source_event_id) if source_event_id
+  end
+
+  def self.display_name(number = 1)
+    n_('Event', 'Events', number)
   end
 end

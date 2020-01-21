@@ -30,4 +30,8 @@ class MiqPolicyContent < ApplicationRecord
     h["MiqAction"] = miq_action.export_to_array.first["MiqAction"] if miq_action
     [self.class.to_s => h]
   end
+
+  def self.display_name(number = 1)
+    n_('Policy Content', 'Policy Contents', number)
+  end
 end

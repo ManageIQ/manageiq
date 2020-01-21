@@ -2,7 +2,7 @@ module Spec
   module Support
     module QuotaHelper
       def create_category_and_tag(category, tag)
-        cat = Classification.find_by_name(category)
+        cat = Classification.lookup_by_name(category)
         cat = Classification.create_category!(:name         => category,
                                               :single_value => false,
                                               :description  => category) unless cat
@@ -33,18 +33,18 @@ module Spec
         @disk_size = 1_000_000
         @num_cpu = 0
 
-        @hw1 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
-        @hw2 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
-        @hw3 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
-        @hw4 = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+        @hw1 = FactoryBot.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+        @hw2 = FactoryBot.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+        @hw3 = FactoryBot.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+        @hw4 = FactoryBot.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
         create_disks
       end
 
       def create_disks
-        @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-        @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-        @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-        @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+        @disk1 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
+        @disk2 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
+        @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
+        @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
       end
 
       def create_tenant_quota
@@ -56,46 +56,54 @@ module Spec
       end
 
       def create_vmware_vms
-        @active_vm = FactoryGirl.create(:vm_vmware,
+        @active_vm = FactoryBot.create(:vm_vmware,
                                         :miq_group_id => @miq_group.id,
+                                        :evm_owner_id => @user.id,
                                         :ems_id       => @ems.id,
                                         :storage_id   => @storage.id,
                                         :hardware     => @hw1,
                                         :tenant       => @tenant)
-        @archived_vm = FactoryGirl.create(:vm_vmware,
+        @archived_vm = FactoryBot.create(:vm_vmware,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :hardware     => @hw2)
-        @orphaned_vm = FactoryGirl.create(:vm_vmware,
+        @orphaned_vm = FactoryBot.create(:vm_vmware,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :storage_id   => @storage.id,
                                           :hardware     => @hw3)
-        @retired_vm = FactoryGirl.create(:vm_vmware,
+        @retired_vm = FactoryBot.create(:vm_vmware,
                                          :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
                                          :retired      => true,
                                          :hardware     => @hw4)
       end
 
       def create_google_vms
-        @active_vm = FactoryGirl.create(:vm_google,
+        @active_vm = FactoryBot.create(:vm_google,
                                         :miq_group_id          => @miq_group.id,
+                                        :evm_owner_id          => @user.id,
                                         :ext_management_system => @ems,
                                         :tenant                => @tenant)
-        @archived_vm = FactoryGirl.create(:vm_google,
+        @archived_vm = FactoryBot.create(:vm_google,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :tenant       => @tenant)
-        @orphaned_vm = FactoryGirl.create(:vm_google,
+        @orphaned_vm = FactoryBot.create(:vm_google,
                                           :miq_group_id => @miq_group.id,
+                                          :evm_owner_id => @user.id,
                                           :tenant       => @tenant)
-        @retired_vm = FactoryGirl.create(:vm_google,
+        @retired_vm = FactoryBot.create(:vm_google,
                                          :miq_group_id => @miq_group.id,
+                                         :evm_owner_id => @user.id,
                                          :retired      => true,
                                          :tenant       => @tenant)
       end
 
       def create_request(prov_options)
-        @miq_provision_request = FactoryGirl.create(:miq_provision_request,
+        @miq_provision_request = FactoryBot.create(:miq_provision_request,
                                                     :requester => @user,
-                                                    :src_vm_id => @vm_template.id,
+                                                    :source    => @vm_template,
                                                     :options   => prov_options)
         @miq_request = @miq_provision_request
       end
@@ -108,21 +116,53 @@ module Spec
          :cores_per_socket  => [2, '2']}
       end
 
+      def vmware_template
+        @ems = FactoryBot.create(:ems_vmware)
+        FactoryBot.create(:template_vmware,
+                           :hardware => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
+      end
+
       def vmware_model
-        @ems = FactoryGirl.create(:ems_vmware)
-        @vm_template = FactoryGirl.create(:template_vmware,
-                                          :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
-        @storage = FactoryGirl.create(:storage_nfs)
+        @vm_template = vmware_template
+        @storage = FactoryBot.create(:storage_nfs)
         create_request(vmware_requested_quota_values)
         create_hardware
         create_vmware_vms
       end
 
+      def vmware_reconfigure_model
+        @ems = FactoryBot.create(:ems_vmware)
+        @storage = FactoryBot.create(:storage_nfs)
+        create_hardware
+        create_vmware_vms
+        @reconfigure_request = FactoryBot.create(:vm_reconfigure_request, :requester => @user)
+        @vm_hardware = FactoryBot.build(:hardware, :virtual_hw_version => "07", :cpu_total_cores => 2,\
+         :memory_mb => 4096, :cpu_sockets => 2, :cpu_cores_per_socket => 1)
+        @vm_vmware = FactoryBot.create(:vm_vmware, :hardware => @vm_hardware)
+        @vm_vmware.update(:ems_id => @ems.id)
+      end
+
+      def google_requested_quota_values
+        {:number_of_vms     => 1,
+         :instance_type     => [@small_flavor.id, @small_flavor.name],
+         :boot_disk_size    => ["10.GB", "10 GB"],
+         :placement_auto    => [true, 1],
+         :owner_email       => 'tester@miq.com',
+         :vm_memory         => [1024, '1024'],
+         :number_of_sockets => [2, '2'],
+         :st_prov_type      => 'google',
+         :cores_per_socket  => [2, '2']}
+      end
+
+      def google_template
+        @ems = FactoryBot.create(:ems_google_with_authentication,
+                                  :availability_zones => [FactoryBot.create(:availability_zone_google)])
+        FactoryBot.create(:template_google, :ext_management_system => @ems)
+      end
+
       def google_model
-        ems = FactoryGirl.create(:ems_google_with_authentication,
-                                 :availability_zones => [FactoryGirl.create(:availability_zone_google)])
-        @vm_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
-        m2_small_flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id, :cloud_subnet_required => false,
+        @vm_template = google_template
+        m2_small_flavor = FactoryBot.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
                                              :cpus => 4, :cpu_cores => 1, :memory => 1024)
         create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
                                             :src_vm_id      => @vm_template.id,
@@ -132,16 +172,20 @@ module Spec
         create_google_vms
       end
 
+      def generic_template
+        FactoryBot.create(:service_template,
+                           :name         => 'generic',
+                           :service_type => 'atomic',
+                           :prov_type    => 'generic')
+      end
+
       def build_generic_service_item
-        @service_template = FactoryGirl.create(:service_template,
-                                               :name         => 'generic',
-                                               :service_type => 'atomic',
-                                               :prov_type    => 'generic')
+        @service_template = generic_template
         @service_request = build_service_template_request("generic", @user, :dialog => {"test" => "dialog"})
       end
 
       def build_generic_ansible_tower_service_item
-        @service_template = FactoryGirl.create(:service_template,
+        @service_template = FactoryBot.create(:service_template,
                                                :name         => 'generic_ansible_tower',
                                                :service_type => 'atomic',
                                                :prov_type    => 'generic_ansible_tower')
@@ -150,19 +194,41 @@ module Spec
       end
 
       def build_vmware_service_item
-        options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
+        options = {:src_vm_id => @vm_template.id, :requester_id => @user.id}.merge(vmware_requested_quota_values)
         model = {"vmware_service_item" => {:type      => 'atomic',
                                            :prov_type => 'vmware',
-                                           :request   => options}
-                 }
+                                           :request   => options}}
         build_service_template_tree(model)
         @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
       end
 
-      def setup_model(vendor = "vmware")
-        @user = FactoryGirl.create(:user_with_group)
+      def build_google_service_item
+        @small_flavor = FactoryBot.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
+                                          :cpus => 1, :cpu_cores => 1, :memory => 1024)
+
+        options = {:src_vm_id => @vm_template.id, :requester_id => @user.id}.merge(google_requested_quota_values)
+        model = {"google_service_item" => {:type      => 'atomic',
+                                           :prov_type => 'google',
+                                           :request   => options}}
+        build_service_template_tree(model)
+        @service_request = build_service_template_request("google_service_item", @user, :dialog => {"test" => "dialog"})
+      end
+
+      def create_service_bundle(items)
+        user_setup
+        create_tenant_quota
+        build_model_from_vms(items)
+        @service_request = build_service_template_request("top", @user, :dialog => {"test" => "dialog"})
+      end
+
+      def user_setup
+        @user = FactoryBot.create(:user_with_group)
         @miq_group = @user.current_group
         @tenant = @miq_group.tenant
+      end
+
+      def setup_model(vendor = "vmware")
+        user_setup
         create_tenant_quota
         send("#{vendor}_model") unless vendor == 'generic'
       end

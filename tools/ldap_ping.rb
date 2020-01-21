@@ -1,6 +1,8 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "ldap_ping.log")
-# File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("INFO")
 
@@ -25,17 +27,10 @@ class MiqLdap
   end
 end
 
-authentication = VMDB::Config.new("vmdb").config[:authentication]
-
-if authentication.nil?
-  log(:info, "Authentication Section Not Configured")
-  exit
-end
-
-ldap_hosts   = authentication[:ldaphost]
-username     = authentication[:bind_dn]
-password     = authentication[:bind_pwd]
-bind_timeout = authentication[:bind_timeout] || MiqLdap.default_bind_timeout
+ldap_hosts   = ::Settings.authentication.ldaphost
+username     = ::Settings.authentication.bind_dn
+password     = ::Settings.authentication.bind_pwd
+bind_timeout = ::Settings.authentication.bind_timeout.to_i_with_method
 if ldap_hosts.to_s.strip.empty?
   log(:info, "LDAP Host cannot be blank")
   exit
@@ -43,7 +38,7 @@ end
 
 ldap_addresses = []
 ldap_hosts.to_miq_a.each do |host|
-  canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host)
+  _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host)
   log(:info, "Resolved host <#{host}> has these IP Address: #{addresses.inspect}")
   ldap_addresses += addresses
 end

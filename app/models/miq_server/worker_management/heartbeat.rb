@@ -31,25 +31,10 @@ module MiqServer::WorkerManagement::Heartbeat
       h[:queue_name] ||= queue_name
     end unless @workers_lock.nil?
 
-    # Special process the sync_ messages to send the current values of what to synchronize
-    messages.collect do |message, *args|
-      case message
-      when "sync_active_roles"
-        [message, {:roles => @active_role_names}]
-      else
-        [message, *args]
-      end
-    end
+    messages
   end
 
   def worker_set_message(w, message, *args)
-    # Special process for this compound message, by breaking it up into 2 simpler messages
-    if message == 'sync_active_roles_and_config'
-      worker_set_message(w, 'sync_active_roles')
-      worker_set_message(w, 'sync_config')
-      return
-    end
-
     _log.info("#{w.format_full_log_msg} is being requested to #{message}")
     @workers_lock.synchronize(:EX) do
       worker_add_message(w.pid, [message, *args]) if @workers.key?(w.pid)
@@ -57,31 +42,39 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def message_for_worker(wid, message, *args)
-    w = MiqWorker.find_by_id(wid)
+    w = MiqWorker.find_by(:id => wid)
     worker_set_message(w, message, *args) unless w.nil?
   end
 
-  def post_message_for_workers(class_name = nil, resync_needed = false, sync_message = nil)
-    processed_worker_ids = []
-    miq_workers.each do |w|
-      next unless class_name.nil? || (w.type == class_name)
-      next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
-      processed_worker_ids << w.id
-      next unless validate_worker(w)
-      worker_set_message(w, sync_message) if resync_needed
+  # Get the latest heartbeat between the SQL and memory (updated via DRb)
+  def persist_last_heartbeat(w)
+    last_heartbeat = workers_last_heartbeat(w)
+
+    if w.last_heartbeat.nil?
+      last_heartbeat ||= Time.now.utc
+      w.update(:last_heartbeat => last_heartbeat)
+    elsif !last_heartbeat.nil? && last_heartbeat > w.last_heartbeat
+      w.update(:last_heartbeat => last_heartbeat)
     end
-    processed_worker_ids
   end
 
-  # Get the latest heartbeat between the SQL and memory (updated via DRb)
-  def validate_heartbeat(w)
-    if w.last_heartbeat.nil?
-      w.last_heartbeat ||= @workers[w.pid][:last_heartbeat] if @workers.key?(w.pid)
-      w.last_heartbeat ||= Time.now.utc
-    else
-      if @workers.key?(w.pid) && !@workers[w.pid][:last_heartbeat].nil? && @workers[w.pid][:last_heartbeat] > w.last_heartbeat
-        w.update_attributes(:last_heartbeat => @workers[w.pid][:last_heartbeat])
-      end
+  def clean_heartbeat_files
+    Dir.glob(Rails.root.join("tmp", "*.hb")).each { |f| File.delete(f) }
+  end
+
+  private
+
+  def workers_last_heartbeat(w)
+    ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? workers_last_heartbeat_to_file(w) : workers_last_heartbeat_to_drb(w)
+  end
+
+  def workers_last_heartbeat_to_drb(w)
+    @workers_lock.synchronize(:SH) do
+      @workers.fetch_path(w.pid, :last_heartbeat)
     end
+  end
+
+  def workers_last_heartbeat_to_file(w)
+    File.mtime(w.heartbeat_file).utc if File.exist?(w.heartbeat_file)
   end
 end

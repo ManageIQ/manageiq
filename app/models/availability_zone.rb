@@ -4,7 +4,7 @@ class AvailabilityZone < ApplicationRecord
   include Metric::CiMixin
   include EventMixin
   include ProviderObjectMixin
-  include VirtualTotalMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
