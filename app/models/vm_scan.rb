@@ -26,6 +26,8 @@ class VmScan < Job
       :data               => {'scanning'                  => 'scanning',
                               'synchronizing'             => 'synchronizing',
                               'finished'                  => 'finished'},
+      :scan_retry         => {'scanning'                  => 'scanning'},
+      :abort_retry        => {'scanning'                  => 'scanning'},
       :abort_job          => {'*'                         => 'aborting'},
       :cancel             => {'*'                         => 'canceling'},
       :error              => {'*'                         => '*'},
