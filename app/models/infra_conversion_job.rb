@@ -42,10 +42,8 @@ class InfraConversionJob < Job
       :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
       :transform_vm                         => {'shutting_down_vm' => 'transforming_vm'},
       :poll_transform_vm_complete           => {'transforming_vm' => 'transforming_vm'},
-      :poll_inventory_refresh_complete      => {
-        'transforming_vm'               => 'waiting_for_inventory_refresh',
-        'waiting_for_inventory_refresh' => 'waiting_for_inventory_refresh'
-      },
+      :inventory_refresh                    => {'transforming_vm' => 'waiting_for_inventory_refresh'},
+      :poll_inventory_refresh_complete      => {'waiting_for_inventory_refresh' => 'waiting_for_inventory_refresh'},
       :apply_right_sizing                   => {'waiting_for_inventory_refresh' => 'applying_right_sizing'},
       :restore_vm_attributes                => {'applying_right_sizing' => 'restoring_vm_attributes'},
       :power_on_vm                          => {
@@ -450,11 +448,23 @@ class InfraConversionJob < Job
       raise migration_task.options[:virtv2v_message]
     when 'succeeded'
       update_migration_task_progress(:on_exit)
-      queue_signal(:poll_inventory_refresh_complete)
+      queue_signal(:inventory_refresh)
     end
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
+  end
+
+  def inventory_refresh
+    update_migration_task_progress(:on_entry)
+    if migration_task.options[:destination_vm_uuid].present?
+      EmsRefresh.refresh(migration_task.destination_ems, :vms, migration_task.options[:destination_vm_uuid])
+    end
+    update_migration_task_progress(:on_exit)
+    queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    queue_signal(:poll_inventory_refresh_complete)
   end
 
   # This methods waits for the destination EMS inventory to refresh.

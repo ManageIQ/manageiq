@@ -242,6 +242,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         updates[:virtv2v_status] = 'failed'
       elsif !canceling?
         updates[:virtv2v_status] = 'succeeded'
+        updates[:destination_vm_uuid] = virtv2v_state['vm_id']
         updated_disks.each { |d| d[:percent] = 100 }
       end
     end

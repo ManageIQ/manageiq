@@ -470,7 +470,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete inventory_refresh poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -479,7 +479,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine].each do |signal|
+    %w[start start_precopying_disks poll_precopying_disks wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete inventory_refresh poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete mark_vm_migrated abort_virtv2v poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -666,7 +666,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it_behaves_like 'allows poll_transform_vm_complete signal'
-      it_behaves_like 'allows poll_inventory_refresh_complete signal'
+      it_behaves_like 'allows inventory_refresh signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
@@ -681,6 +681,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow shutdown_vm signal'
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
+      it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
@@ -711,6 +712,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
+      it_behaves_like 'doesn\'t allow inventory_refresh signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
       it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
@@ -1319,12 +1321,37 @@ RSpec.describe InfraConversionJob, :v2v do
           task.update_options(:virtv2v_status => 'succeeded')
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
-          expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete)
+          expect(job).to receive(:queue_signal).with(:inventory_refresh)
           job.signal(:poll_transform_vm_complete)
           expect(task.reload.options[:progress][:states][job.state.to_sym]).to include(:percent => 100.0)
         end
       end
     end
+  end
+
+  context '#inventory_refresh' do
+    before do
+      job.state = 'transforming_vm'
+      task.update_options(:destination_vm_uuid => '01234567-89ab-cdef-0123-456789ab-cdef')
+    end
+
+    it "aborts if conversion failed" do
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_raise('Fake error message')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
+      expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete)
+      job.signal(:inventory_refresh)
+    end
+
+    it "exits after triggering targeted refresh succeeded" do
+      Timecop.freeze(2019, 2, 6) do
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
+        expect(EmsRefresh).to receive(:refresh).with(ems_redhat, :vms, '01234567-89ab-cdef-0123-456789ab-cdef')
+        expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+        job.signal(:inventory_refresh)
+      end
+    end
+ 
   end
 
   context '#poll_inventory_refresh_complete' do
