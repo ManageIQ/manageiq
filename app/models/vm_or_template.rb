@@ -180,6 +180,7 @@ class VmOrTemplate < ApplicationRecord
 
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+  delegate :queue_name_for_smartstate, :to => :ext_management_system, :allow_nil => true
 
   after_save :save_genealogy_information
 

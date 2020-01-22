@@ -12,7 +12,11 @@ module VmOrTemplate::Scanning
       return nil
     end
 
-    check_policy_prevent(:request_vm_scan, :raw_scan, userid, options)
+    check_policy_prevent(:request_vm_scan, :scan_queue, userid, options)
+  end
+
+  def scan_queue(userid = "system", options = {})
+    run_command_via_queue("raw_scan", :queue_name => queue_name_for_smartstate, :role => "smartstate", :args => [userid, options])
   end
 
   def scan_job_class

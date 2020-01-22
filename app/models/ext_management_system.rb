@@ -616,6 +616,10 @@ class ExtManagementSystem < ApplicationRecord
     'generic'
   end
 
+  def queue_name_for_smartstate
+    'generic'
+  end
+
   def enforce_policy(target, event)
     inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)

@@ -228,6 +228,7 @@ class MiqQueue < ApplicationRecord
     when "smartstate"
       options[:role] = service
       options[:zone] = resource.try(:my_zone) || MiqServer.my_zone
+      options[:queue_name] = resource.try(:queue_name_for_smartstate) || "generic"
     end
 
     # Note, options[:zone] is set in 'put' via 'determine_queue_zone' and handles setting

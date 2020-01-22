@@ -81,7 +81,8 @@ class VmScan < Job
       :method_name => "signal",
       :args        => [:before_scan],
       :zone        => from_zone,
-      :role        => "smartstate"
+      :role        => "smartstate",
+      :queue_name  => vm.queue_name_for_smartstate
     )
   end
 
