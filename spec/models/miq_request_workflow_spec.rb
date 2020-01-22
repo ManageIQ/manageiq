@@ -3,7 +3,7 @@ RSpec.describe MiqRequestWorkflow do
   let(:ems) { FactoryBot.create(:ext_management_system) }
   let(:resource_pool) { FactoryBot.create(:resource_pool) }
   let(:ems_folder) { FactoryBot.create(:ems_folder) }
-  let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
+  let(:datacenter) { FactoryBot.create(:vmware_datacenter) }
 
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
@@ -471,7 +471,7 @@ RSpec.describe MiqRequestWorkflow do
     before do
       resource_pool.ext_management_system = ems
       ems_folder.ext_management_system = ems
-      attrs = ems_folder.attributes.merge(:object => ems_folder)
+      attrs = ems_folder.attributes.merge(:object => workflow.ems_folder_to_hash_struct(ems_folder))
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = { ResourcePool => { resource_pool.id => xml_hash } }
       workflow.instance_variable_set("@ems_xml_nodes", hash)
@@ -512,7 +512,7 @@ RSpec.describe MiqRequestWorkflow do
   context "#folder_to_datacenter" do
     before do
       datacenter.ext_management_system = ems
-      attrs = datacenter.attributes.merge(:object => datacenter, :ems => ems)
+      attrs = datacenter.attributes.merge(:object => workflow.ems_folder_to_hash_struct(datacenter), :ems => ems)
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = { EmsFolder => { datacenter.id => xml_hash } }
       workflow.instance_variable_set("@ems_xml_nodes", hash)
