@@ -19,7 +19,7 @@ RSpec.describe MiqServer do
     let(:guid_file) { Rails.root.join("GUID") }
 
     it "should return the GUID from the file" do
-      MiqServer.my_guid_cache = nil
+      MiqServer.my_guid = nil
       expect(File).to receive(:exist?).with(guid_file).and_return(true)
       expect(File).to receive(:read).with(guid_file).and_return("an-existing-guid\n\n")
       expect(MiqServer.my_guid).to eq("an-existing-guid")
@@ -31,14 +31,14 @@ RSpec.describe MiqServer do
 
       Tempfile.create do |tempfile|
         stub_const("MiqServer::GUID_FILE", tempfile.path)
-        MiqServer.my_guid_cache = nil
+        MiqServer.my_guid = nil
         expect(MiqServer.my_guid).to eq(test_guid)
         expect(File.read(tempfile)).to eq(test_guid)
       end
     end
 
     it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
-      MiqServer.my_guid_cache = nil
+      MiqServer.my_guid = nil
       expect(SecureRandom).to receive(:uuid).and_raise(StandardError)
       expect(File).to receive(:exist?).with(guid_file).and_return(false)
       expect(File).not_to receive(:write)

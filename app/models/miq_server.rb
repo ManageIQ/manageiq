@@ -26,8 +26,6 @@ class MiqServer < ApplicationRecord
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target
 
-  cattr_accessor          :my_guid_cache
-
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
@@ -552,9 +550,16 @@ class MiqServer < ApplicationRecord
   #
   # Zone and Role methods
   #
+  @@my_guid_mutex = Mutex.new
   def self.my_guid
-    @my_guid_mutex ||= Mutex.new
-    @my_guid_mutex.synchronize { @@my_guid_cache ||= load_or_generate_guid }
+    @@my_guid_mutex.synchronize { @@my_guid ||= load_or_generate_guid }
+  end
+
+  # Under normal circumstances there really shouldn't be any reason to use
+  # this method. It should only be used for tests and when we need to monitor
+  # multiple servers.
+  def self.my_guid=(guid)
+    @@my_guid_mutex.synchronize { @@my_guid = guid }
   end
 
   def self.load_or_generate_guid
