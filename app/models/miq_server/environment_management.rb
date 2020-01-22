@@ -54,16 +54,6 @@ module MiqServer::EnvironmentManagement
       [ipaddr, hostname, mac_address]
     end
 
-    def validate_database
-      # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
-      spec_name = ActiveRecord::Base.connection_specification_name
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
-
-      # Log the Versions
-      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)
-      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]") if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
-    end
-
     def start_memcached
       # TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
       return unless ::Settings.server.session_store.to_s == 'cache'
