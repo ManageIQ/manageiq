@@ -51,13 +51,13 @@ class EvmServer
   end
 
   def stop_servers
-    for_each_server { @server.shutdown }
+    for_each_server { @current_server.shutdown }
   end
 
   def kill_servers
     for_each_server do
-      @server.kill_all_workers
-      @server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
+      @current_server.kill_all_workers
+      @current_server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     end
   end
 
@@ -109,21 +109,21 @@ class EvmServer
 
     Vmdb::Appliance.log_config_on_startup
 
-    @server.ntp_reload
-    @server.set_database_application_name
+    @current_server.ntp_reload
+    @current_server.set_database_application_name
 
     EvmDatabase.seed_rest
 
     MiqServer.start_memcached
     MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
 
-    MiqEvent.raise_evm_event(@server, "evm_server_start")
+    MiqEvent.raise_evm_event(@current_server, "evm_server_start")
 
     msg = "Server starting in #{MiqServer.startup_mode} mode."
     _log.info(msg)
     puts "** #{msg}"
 
-    @server.starting_server_record
+    @current_server.starting_server_record
 
     configure_server_roles
     clear_queue
@@ -133,16 +133,16 @@ class EvmServer
     MiqServer.clean_dequeued_messages
     MiqServer.purge_report_results
 
-    @server.delete_active_log_collections_queue
+    @current_server.delete_active_log_collections_queue
 
     start_workers
 
-    @server.update(:status => "started")
+    @current_server.update(:status => "started")
     _log.info("Server starting complete")
   end
 
   def monitor
-    _dummy, timings = Benchmark.realtime_block(:total_time) { @server.monitor }
+    _dummy, timings = Benchmark.realtime_block(:total_time) { @current_server.monitor }
     _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < ::Settings.server.server_log_timings_threshold.to_i_with_method
   end
 
@@ -183,26 +183,26 @@ class EvmServer
     end
 
     if config_hash.any?
-      Vmdb::Settings.save!(@server, :server => config_hash)
+      Vmdb::Settings.save!(@current_server, :server => config_hash)
       ::Settings.reload!
     end
 
-    @server.update(server_hash)
+    @current_server.update(server_hash)
   end
 
   def set_local_server_vm
-    if @server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(@server.mac_address, @server.hostname, @server.ipaddress)
+    if @current_server.vm_id.nil?
+      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(@current_server.mac_address, @current_server.hostname, @current_server.ipaddress)
       if vms.length > 1
         _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
       elsif vms.length == 1
-        @server.update(:vm_id => vms.first.id)
+        @current_server.update(:vm_id => vms.first.id)
       end
     end
   end
 
   def reset_server_runtime_info
-    @server.update(
+    @current_server.update(
       :drb_uri        => nil,
       :last_heartbeat => nil,
       :memory_usage   => nil,
@@ -214,9 +214,9 @@ class EvmServer
   end
 
   def log_server_info
-    _log.info("Server IP Address: #{@server.ipaddress}")    unless @server.ipaddress.blank?
-    _log.info("Server Hostname: #{@server.hostname}")       unless @server.hostname.blank?
-    _log.info("Server MAC Address: #{@server.mac_address}") unless @server.mac_address.blank?
+    _log.info("Server IP Address: #{@current_server.ipaddress}")    unless @current_server.ipaddress.blank?
+    _log.info("Server Hostname: #{@current_server.hostname}")       unless @current_server.hostname.blank?
+    _log.info("Server MAC Address: #{@current_server.mac_address}") unless @current_server.mac_address.blank?
     _log.info("Server GUID: #{MiqServer.my_guid}")
     _log.info("Server Zone: #{MiqServer.my_zone}")
     _log.info("Server Role: #{MiqServer.my_role}")
@@ -226,7 +226,7 @@ class EvmServer
   end
 
   def configure_server_roles
-    @server.ensure_default_roles
+    @current_server.ensure_default_roles
 
     #############################################################
     # Server Role Assignment
@@ -236,31 +236,31 @@ class EvmServer
     # - Role activation should happen inside monitor_servers
     # - Synchronize active roles to monitor for role changes
     #############################################################
-    @server.deactivate_all_roles
-    @server.set_database_owner_role(EvmDatabase.local?)
-    @server.monitor_servers
-    @server.monitor_server_roles if @server.is_master?
-    @server.sync_active_roles
-    @server.set_active_role_flags
+    @current_server.deactivate_all_roles
+    @current_server.set_database_owner_role(EvmDatabase.local?)
+    @current_server.monitor_servers
+    @current_server.monitor_server_roles if @current_server.is_master?
+    @current_server.sync_active_roles
+    @current_server.set_active_role_flags
   end
 
   def clear_queue
     #############################################################
     # Clear the MiqQueue for server and its workers
     #############################################################
-    @server.clean_stop_worker_queue_items
-    @server.clear_miq_queue_for_this_server
+    @current_server.clean_stop_worker_queue_items
+    @current_server.clear_miq_queue_for_this_server
   end
 
   def start_workers
     #############################################################
     # Start all the configured workers
     #############################################################
-    @server.clean_heartbeat_files
-    @server.sync_config
-    @server.start_drb_server
-    @server.sync_workers
-    @server.wait_for_started_workers
+    @current_server.clean_heartbeat_files
+    @current_server.sync_config
+    @current_server.start_drb_server
+    @current_server.sync_workers
+    @current_server.wait_for_started_workers
   end
 
   ######################################################################
@@ -275,24 +275,24 @@ class EvmServer
   # contents of the global ::Settings constant.
   ######################################################################
   def for_each_server
-    initial_server = @server
+    initial_server = @current_server
     servers_to_monitor.each do |s|
       impersonate_server(s)
       yield
     end
   ensure
-    clear_server_caches if @server != initial_server
+    clear_server_caches if @current_server != initial_server
   end
 
   def impersonate_server(s)
-    return if s == @server
+    return if s == @current_server
 
     # generic log message to say we're switching servers?
 
     MiqServer.my_guid = s.guid
     # It is important that we continue to use the same server instance here.
     # A lot of "global" state is stored in instance variables on the server.
-    @server = s
+    @current_server = s
     Vmdb::Settings.init
   end
 

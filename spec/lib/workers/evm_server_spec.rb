@@ -90,7 +90,7 @@ describe EvmServer do
       server = EvmSpecHelper.local_miq_server
       subject.send(:for_each_server) do
         expect(MiqServer.my_server.guid).to eq(server.guid)
-        expect(subject.instance_variable_get(:@server).guid).to eq(server.guid)
+        expect(subject.instance_variable_get(:@current_server).guid).to eq(server.guid)
       end
     end
 
@@ -104,7 +104,7 @@ describe EvmServer do
 
       it "sets the server variable to each server" do
         received_guids = []
-        subject.send(:for_each_server) { received_guids << subject.instance_variable_get(:@server).guid }
+        subject.send(:for_each_server) { received_guids << subject.instance_variable_get(:@current_server).guid }
 
         expect(received_guids).to match_array(expected_guids)
       end
