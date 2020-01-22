@@ -55,7 +55,10 @@ class InfraConversionJob < Job
         'aborting_virtv2v'        => 'powering_on_vm'
       },
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
-      :mark_vm_migrated                     => {'running_migration_playbook' => 'marking_vm_migrated'},
+      :mark_vm_migrated                     => {
+        'powering_on_vm'             => 'marking_vm_migrated',
+        'running_migration_playbook' => 'marking_vm_migrated'
+      },
       :poll_automate_state_machine          => {
         'powering_on_vm'      => 'running_in_automate',
         'marking_vm_migrated' => 'running_in_automate',
@@ -123,7 +126,7 @@ class InfraConversionJob < Job
         :max_retries => 15.minutes / state_retry_interval
       },
       :marking_vm_migrated           => {
-        :description => "Mark source as migrated",
+        :description => "Virtual machine successfully migrated",
         :weight      => 1
       },
       :aborting_virtv2v              => {
@@ -331,9 +334,13 @@ class InfraConversionJob < Job
     # If the target VM is powered off, we won't get an IP address, so no need to wait.
     # We don't block powered off VMs, because the playbook could still be relevant.
     if target_vm.power_state == 'on'
-      if target_vm.ipaddresses.empty?
-        update_migration_task_progress(:on_retry)
-        return queue_signal(:wait_for_ip_address)
+      # If the source VM didn't report IP addresses during pre-flight check, there's no need to wait.
+      # We don't block VMsi with no IP address, because the playbook could still be relevant.
+      unless migration_task.options[:source_vm_ipaddresses].empty?
+        if target_vm.ipaddresses.empty?
+          update_migration_task_progress(:on_retry)
+          return queue_signal(:wait_for_ip_address)
+        end
       end
     end
 
@@ -579,12 +586,10 @@ class InfraConversionJob < Job
     return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on' && !migration_task.canceling?
 
     migration_task.canceled if migration_task.canceling?
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:mark_vm_migrated)
   rescue StandardError
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
-    handover_to_automate
     queue_signal(:poll_automate_state_machine)
   end
 
@@ -611,9 +616,11 @@ class InfraConversionJob < Job
   end
 
   def mark_vm_migrated
+    update_migration_task_progress(:on_entry)
     migration_task.mark_vm_migrated
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
+    update_migration_task_progress(:on_exit)
   end
 
   def abort_virtv2v

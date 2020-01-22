@@ -196,9 +196,6 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
     describe '#cancel' do
       it 'catches cancel state' do
-        task.options[:infra_conversion_job_id] = infra_conversion_job.id
-        expect(task).to receive(:infra_conversion_job).and_return(infra_conversion_job)
-        expect(infra_conversion_job).to receive(:cancel)
         task.cancel
         expect(task.cancelation_status).to eq(MiqRequestTask::CANCEL_STATUS_REQUESTED)
         expect(task.cancel_requested?).to be_truthy

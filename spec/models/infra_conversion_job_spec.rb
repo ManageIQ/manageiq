@@ -786,6 +786,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it_behaves_like 'allows poll_power_on_vm_complete signal'
       it_behaves_like 'allows wait_for_ip_address signal'
+      it_behaves_like 'allows mark_vm_migrated signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -804,7 +805,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
-      it_behaves_like 'doesn\'t allow mark_vm_migrated signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
     end
 
@@ -994,7 +994,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#wait_for_ip_address' do
       before do
-        task.update_options(:migration_phase => 'pre')
+        task.update_options(:migration_phase => 'pre', :source_vm_ipaddresses => ['10.0.0.1'])
         job.state = 'started'
       end
 
@@ -1549,9 +1549,8 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update_options(:source_vm_power_state => 'off')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:mark_vm_migrated)
       job.signal(:power_on_vm)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     it 'sends start request to VM if VM is off' do
