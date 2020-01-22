@@ -167,15 +167,36 @@ RSpec.describe "VM Retirement Management" do
     end
 
     it "with user as initiated_by" do
-      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
-      Vm.make_retire_request(@vm.id, user, :initiated_by => user)
-      q = MiqQueue.first
-      status, message, result = q.deliver
       log_stub = instance_double("_log")
-      expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
+      expect(Vm).to receive(:_log).and_return(log_stub).at_least(:once)
       expect(log_stub).to receive(:info).at_least(:once)
+      expect(log_stub).not_to receive(:error).with("Retirement of [Vm] IDs: [] skipped - target(s) does not exist")
+      Vm.make_retire_request(@vm.id, user, :initiated_by => user)
+
+      q = MiqQueue.first
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
+      expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
       expect(log_stub).to receive(:error).with(/Validation failed: VmRetireRequest: Initiated by is not included in the list/)
       expect(log_stub).to receive(:log_backtrace)
+      status, message, result = q.deliver
+
+      q.delivered(status, message, result)
+    end
+
+    it "with user as initiated_by, with unknown vm.id" do
+      log_stub = instance_double("_log")
+      expect(Vm).to receive(:_log).and_return(log_stub).at_least(:once)
+      expect(log_stub).to receive(:info).at_least(:once)
+      expect(log_stub).to receive(:error).with("Retirement of [Vm] IDs: [123] skipped - target(s) does not exist")
+      Vm.make_retire_request(@vm.id, 123, user, :initiated_by => user)
+
+      q = MiqQueue.first
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
+      expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
+      expect(log_stub).to receive(:error).with(/Validation failed: VmRetireRequest: Initiated by is not included in the list/)
+      expect(log_stub).to receive(:log_backtrace)
+      status, message, result = q.deliver
       q.delivered(status, message, result)
     end
 
