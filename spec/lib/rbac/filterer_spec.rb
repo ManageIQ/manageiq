@@ -230,6 +230,60 @@ RSpec.describe Rbac::Filterer do
         end
       end
 
+      context 'searching for instances of IsoImages' do
+        let!(:iso_image) { FactoryBot.create_list(:iso_image, 2).first }
+
+        before do
+          iso_image.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged IsoImages' do
+          results = described_class.search(:class => IsoImage, :user => user).first
+          expect(results).to match_array [iso_image]
+        end
+
+        it 'lists only all IsoImage' do
+          results = described_class.search(:class => IsoImage, :user => admin_user).first
+          expect(results).to match_array IsoImage.all
+        end
+      end
+
+      context 'searching for instances of WindowsImages' do
+        let!(:windows_image) { FactoryBot.create_list(:windows_image, 2).first }
+
+        before do
+          windows_image.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged WindowsImages' do
+          results = described_class.search(:class => WindowsImage, :user => user).first
+          expect(results).to match_array [windows_image]
+        end
+
+        it 'lists only all WindowsImage' do
+          results = described_class.search(:class => WindowsImage, :user => admin_user).first
+          expect(results).to match_array WindowsImage.all
+        end
+      end
+
+      context 'searching for instances of PxeServers' do
+        let!(:pxe_server) { FactoryBot.create_list(:pxe_server, 2).first }
+
+        before do
+          pxe_server.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged PxeServers' do
+          results = described_class.search(:class => PxeServer, :user => user).first
+          expect(results).to match_array [pxe_server]
+        end
+
+        it 'lists only all PxeServers' do
+          results = described_class.search(:class => PxeServer, :user => admin_user).first
+          expect(results).to match_array PxeServer.all
+        end
+      end
+
       context 'searching for instances of Switches' do
         let!(:switch) { FactoryBot.create_list(:switch, 2).first }
 
