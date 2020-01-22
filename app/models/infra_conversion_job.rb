@@ -462,7 +462,7 @@ class InfraConversionJob < Job
     end
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue
     update_migration_task_progress(:on_error)
     queue_signal(:poll_inventory_refresh_complete)
   end

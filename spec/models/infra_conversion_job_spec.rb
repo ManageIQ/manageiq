@@ -1351,7 +1351,6 @@ RSpec.describe InfraConversionJob, :v2v do
         job.signal(:inventory_refresh)
       end
     end
- 
   end
 
   context '#poll_inventory_refresh_complete' do
