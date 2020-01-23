@@ -3,17 +3,17 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     MiqProvisionWorkflow
   end
 
+  # Find the appropriate workflow class for the given +platform+ string. For
+  # example, the argument "openstack" would become:
+  #
+  #  "ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow"
+  #
   def self.class_for_platform(platform)
     classy = platform.classify
 
-    if classy =~ /(.*)Infra/
-      find_matching_constant("MiqProvision#{classy}Workflow") ||
-        find_matching_constant("ManageIQ::Providers::#{$1}::InfraManager::ProvisionWorkflow")
-    else
-      find_matching_constant("MiqProvision#{classy}Workflow") ||
-        find_matching_constant("ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow") ||
-        find_matching_constant("ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow")
-    end
+    find_matching_constant("MiqProvision#{classy}Workflow") ||
+      find_matching_constant("ManageIQ::Providers::#{classy}::CloudManager::ProvisionWorkflow") ||
+      find_matching_constant("ManageIQ::Providers::#{classy}::InfraManager::ProvisionWorkflow")
   end
 
   def self.find_matching_constant(string)
