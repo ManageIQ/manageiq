@@ -154,6 +154,8 @@ class Host < ApplicationRecord
   include DriftStateMixin
   virtual_delegate :last_scan_on, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true, :type => :datetime
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   include UuidMixin
   include MiqPolicyMixin
   include AlertMixin
@@ -1286,6 +1288,8 @@ class Host < ApplicationRecord
       :method_name  => "scan_from_queue",
       :miq_callback => cb,
       :msg_timeout  => timeout,
+      :role         => "ems_operations",
+      :queue_name   => queue_name_for_ems_operations,
       :zone         => my_zone
     )
   end

@@ -647,33 +647,35 @@ RSpec.describe Host do
   end
 
   describe "#scan_queue" do
-    let(:ems) { double("ExtManagementSystem") }
+    let(:host) { FactoryBot.create(:host_vmware, :ext_management_system => ems) }
+
     before do
       MiqRegion.seed
       Zone.seed
-
-      @host = FactoryBot.create(:host_vmware)
-      allow(@host).to receive(:ext_management_system).and_return(ems)
     end
 
-    it 'creates task with Error status when EMS paused' do
-      allow(ems).to receive_messages(:name => 'My provider',
-                                     :zone => Zone.maintenance_zone)
-      @host.scan_queue
-      task = MiqTask.first
-      expect(task.status_error?).to eq(true)
-      expect(task.message).to eq("#{ems.name} is paused")
+    context "when the EMS is paused" do
+      let(:ems) { FactoryBot.create(:ems_infra, :name => "My Provider", :zone => Zone.maintenance_zone, :enabled => false) }
+
+      it 'creates task with Error status when EMS paused' do
+        expect(MiqQueue).not_to receive(:put)
+
+        host.scan_queue
+        task = MiqTask.first
+        expect(task.status_error?).to eq(true)
+        expect(task.message).to eq("#{ems.name} is paused")
+      end
     end
 
-    it 'creates task with valid status EMS active' do
-      allow(ems).to receive_messages(:my_zone => Zone.default_zone,
-                                     :name    => 'My provider',
-                                     :zone    => Zone.default_zone)
-      allow(MiqQueue).to receive(:put).and_return(double)
+    context "when the EMS is active" do
+      let(:ems) { FactoryBot.create(:ems_infra, :name => "My Provider", :zone => Zone.default_zone) }
+      it 'creates task with valid status EMS active' do
+        allow(MiqQueue).to receive(:put).and_return(double)
 
-      @host.scan_queue
-      task = MiqTask.first
-      expect(task.status_ok?).to eq(true)
+        host.scan_queue
+        task = MiqTask.first
+        expect(task.status_ok?).to eq(true)
+      end
     end
   end
 
