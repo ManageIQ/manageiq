@@ -37,7 +37,7 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
   end
 
   describe "#reload_settings" do
-    let(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:miq_server) { EvmSpecHelper.local_miq_server.tap(&:setup_drb_variables) }
 
     it "reloads the new changes into the settings for the resource" do
       Vmdb::Settings.save!(miq_server, :some_test_setting => 2)

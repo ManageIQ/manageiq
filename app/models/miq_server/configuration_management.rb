@@ -10,7 +10,12 @@ module MiqServer::ConfigurationManagement
     return if is_remote?
 
     Vmdb::Settings.reload!
+
     activate_settings_for_appliance
+    sync_config
+    sync_assigned_roles
+    reset_queue_messages
+    update_sync_timestamp(Time.now.utc)
   end
 
   # The purpose of this method is to do special activation of things
@@ -51,17 +56,10 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_config
-    @config_last_loaded = Vmdb::Settings.last_loaded
     sync_log_level
     sync_worker_monitor_settings
     sync_child_worker_settings
     $log.log_hashes(@worker_monitor_settings)
-  end
-
-  def sync_config_changed?
-    stale = @config_last_loaded != Vmdb::Settings.last_loaded
-    @config_last_loaded = Vmdb::Settings.last_loaded if stale
-    stale
   end
 
   def sync_log_level
