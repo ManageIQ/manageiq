@@ -72,9 +72,9 @@ RSpec.describe Storage do
       @zone2     = FactoryBot.create(:zone, :name => 'Bedrock')
       @ems1      = FactoryBot.create(:ems_vmware_with_authentication,           :name => "test_vcenter1", :zone => @zone)
       @ems2      = FactoryBot.create(:ems_vmware, :with_invalid_authentication, :name => "test_vcenter2", :zone => @zone2)
-      @storage1  = FactoryBot.create(:storage,               :name => "test_storage_vmfs", :store_type => "VMFS")
-      @storage2  = FactoryBot.create(:storage,               :name => "test_storage_nfs",  :store_type => "NFS")
-      @storage3  = FactoryBot.create(:storage,               :name => "test_storage_foo",  :store_type => "FOO")
+      @storage1  = FactoryBot.create(:storage, :name => "test_storage_vmfs", :store_type => "VMFS", :ems_id => @ems1.id)
+      @storage2  = FactoryBot.create(:storage, :name => "test_storage_nfs",  :store_type => "NFS", :ems_id => @ems2.id)
+      @storage3  = FactoryBot.create(:storage, :name => "test_storage_foo",  :store_type => "FOO", :ems_id => @ems1.id)
       @host1     = FactoryBot.create(:host, :name => "test_host1", :hostname => "test_host1", :state => 'on', :ems_id => @ems1.id, :storages => [@storage1, @storage3])
       @host2     = FactoryBot.create(:host, :name => "test_host2", :hostname => "test_host2", :state => 'on', :ems_id => @ems2.id, :storages => [@storage2, @storage3])
     end
@@ -182,25 +182,7 @@ RSpec.describe Storage do
       it "#ext_management_systems" do
         expect(@storage1.ext_management_systems).to eq([@ems1])
         expect(@storage2.ext_management_systems).to eq([@ems2])
-        expect(@storage3.ext_management_systems).to match_array [@ems1, @ems2]
-      end
-
-      it "#ext_management_systems_in_zone" do
-        expect(@storage1.ext_management_systems_in_zone(@zone.name)).to eq([@ems1])
-        expect(@storage1.ext_management_systems_in_zone(@zone2.name)).to eq([])
-        expect(@storage2.ext_management_systems_in_zone(@zone.name)).to eq([])
-        expect(@storage2.ext_management_systems_in_zone(@zone2.name)).to eq([@ems2])
-        expect(@storage3.ext_management_systems_in_zone(@zone.name)).to eq([@ems1])
-        expect(@storage3.ext_management_systems_in_zone(@zone2.name)).to eq([@ems2])
-      end
-
-      it "#ext_management_systems_with_authentication_status_ok" do
-        expect(@storage1.ext_management_systems_with_authentication_status_ok).to eq([@ems1])
-      end
-
-      it "#ext_management_systems_with_authentication_status_ok_in_zone" do
-        expect(@storage1.ext_management_systems_with_authentication_status_ok_in_zone(@zone.name)).to eq([@ems1])
-        expect(@storage1.ext_management_systems_with_authentication_status_ok_in_zone(@zone2.name)).to eq([])
+        expect(@storage3.ext_management_systems).to eq([@ems1])
       end
 
       it "#scan" do
@@ -413,20 +395,14 @@ RSpec.describe Storage do
   end
 
   context "#is_available? for Smartstate Analysis" do
-    before do
-      @storage =  FactoryBot.create(:storage)
-    end
-
     it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
-      FactoryBot.create(:host_vmware,
-                        :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication),
-                        :storages              => [@storage])
-
-      expect(@storage.supports_smartstate_analysis?).to eq(true)
+      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
+      expect(storage.supports_smartstate_analysis?).to eq(true)
     end
 
     it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
-      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
+      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
+      expect(storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
 
@@ -463,19 +439,14 @@ RSpec.describe Storage do
   end
 
   context "#is_available? for Smartstate Analysis" do
-    before do
-      @storage = FactoryBot.create(:storage)
-    end
-
     it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
-      FactoryBot.create(:host_vmware,
-                        :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication),
-                        :storages              => [@storage])
-      expect(@storage.supports_smartstate_analysis?).to eq(true)
+      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
+      expect(storage.supports_smartstate_analysis?).to eq(true)
     end
 
     it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
-      expect(@storage.supports_smartstate_analysis?).to_not eq(true)
+      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
+      expect(storage.supports_smartstate_analysis?).to_not eq(true)
     end
   end
   describe "#smartstate_analysis_count_for_ems_id" do
@@ -531,7 +502,7 @@ RSpec.describe Storage do
 
     before         { admin }
     it "has tenant from provider" do
-      storage = FactoryBot.create(:storage, :hosts => [host])
+      storage = FactoryBot.create(:storage, :ext_management_system => ems, :hosts => [host])
 
       expect(storage.tenant_identity).to                eq(admin)
       expect(storage.tenant_identity.current_group).to  eq(ems.tenant.default_miq_group)

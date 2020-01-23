@@ -73,9 +73,9 @@ class Storage < ApplicationRecord
   SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
 
   supports :smartstate_analysis do
-    if ext_management_systems.blank? || !ext_management_system.class.supports_smartstate_analysis?
+    if !ext_management_system&.class&.supports_smartstate_analysis?
       unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
-    elsif ext_management_systems_with_authentication_status_ok.blank?
+    elsif !ext_management_system&.authentication_status_ok?
       unsupported_reason_add(:smartstate_analysis, _("There are no EMSs with valid credentials for this Datastore"))
     end
   end
@@ -90,29 +90,9 @@ class Storage < ApplicationRecord
     name
   end
 
-  def ext_management_system=(ems)
-    @ext_management_system = ems
-  end
-
-  def ext_management_system
-    @ext_management_system ||= ext_management_systems.first
-  end
-
+  # deprecated - here for UI rollup methods and PERF_ROLLUP_CHILDREN
   def ext_management_systems
-    @ext_management_systems ||= ExtManagementSystem.joins(:hosts => :storages).where(
-      :host_storages => {:storage_id => id}).distinct.to_a
-  end
-
-  def ext_management_systems_in_zone(zone_name)
-    ext_management_systems.select { |ems| ems.my_zone == zone_name }
-  end
-
-  def ext_management_systems_with_authentication_status_ok
-    ext_management_systems.select(&:authentication_status_ok?)
-  end
-
-  def ext_management_systems_with_authentication_status_ok_in_zone(zone_name)
-    ext_management_systems_with_authentication_status_ok.select { |ems| ems.my_zone == zone_name }
+    [ext_management_system].compact
   end
 
   def storage_clusters
@@ -136,9 +116,7 @@ class Storage < ApplicationRecord
   end
 
   def my_zone
-    return MiqServer.my_zone if     ext_management_systems.empty?
-    return MiqServer.my_zone unless ext_management_systems_in_zone(MiqServer.my_zone).empty?
-    ext_management_system.my_zone
+    ext_management_system&.my_zone || MiqServer.my_zone
   end
 
   def scan_starting(miq_task_id, ems)
@@ -324,7 +302,7 @@ class Storage < ApplicationRecord
         next
       end
 
-      if zone_name && storage.ext_management_systems_in_zone(zone_name).empty?
+      if zone_name && storage.my_zone != zone_name
         _log.info("Skipping scan of Storage: [#{storage.name}], storage under EMS in a different zone from [#{zone_name}]")
         next
       end
@@ -376,8 +354,7 @@ class Storage < ApplicationRecord
               {:store_type => store_type, :name => name, :id => id})
     end
 
-    emss = ext_management_systems_with_authentication_status_ok
-    if emss.empty?
+    unless ext_management_system&.authentication_status_ok?
       raise(MiqException::MiqStorageError,
             _("Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id}]") %
               {:name => name, :id => id})
@@ -537,8 +514,7 @@ class Storage < ApplicationRecord
       miq_task.state_active unless miq_task.nil?
     end
 
-    emss = ext_management_systems_with_authentication_status_ok_in_zone(MiqServer.my_zone)
-    if emss.empty?
+    unless ext_management_system.authentication_status_ok?
       message = "There are no EMSs with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
       _log.warn(message)
       raise MiqException::MiqUnreachableStorage,
@@ -546,10 +522,9 @@ class Storage < ApplicationRecord
               {:name => name, :zone => MiqServer.my_zone}
     end
 
-    ems = emss.detect { |e| smartstate_analysis_count_for_ems_id(e.id) < ::Settings.storage.max_parallel_scans_per_ems }
-    if ems.nil?
+    ems = ext_management_system
+    unless smartstate_analysis_count_for_ems_id(ems.id) < ::Settings.storage.max_parallel_scans_per_ems
       raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
-      ems = emss.random_element
     end
 
     $_miq_worker_current_msg.update!(:target_id => ems.id) if qmessage?(method_name)
