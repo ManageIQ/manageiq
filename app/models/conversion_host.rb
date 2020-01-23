@@ -203,6 +203,10 @@ class ConversionHost < ApplicationRecord
   #
   # @return [String] podman command to be executed on conversion host
   def build_podman_command(task_id)
+    uci_settings = Settings.transformation.uci.container
+    uci_image = uci_settings.image
+    uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
+
     "/usr/bin/podman run --privileged"\
     " --name conversion-#{task_id}"\
     " --volume /dev:/dev"\
@@ -211,7 +215,7 @@ class ConversionHost < ApplicationRecord
     " --volume /var/lib/uci/#{task_id}:/var/lib/uci"\
     " --volume /var/log/uci/#{task_id}:/var/log/uci"\
     " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
-    " registry.access.redhat.com/manageiq/kubevirt-v2v-conversion:ims"\
+    " #{uci_image}"
   end
 
   # Run the virt-v2v-wrapper script on the remote host and return a hash

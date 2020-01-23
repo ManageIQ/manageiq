@@ -541,7 +541,7 @@ RSpec.describe ConversionHost, :v2v do
         " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
         " --volume /var/log/uci/#{task.id}:/var/log/uci"\
         " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
-        " registry.access.redhat.com/manageiq/kubevirt-v2v-conversion:ims"
+        " manageiq/v2v-conversion-host:latest"
       )
     end
   end
