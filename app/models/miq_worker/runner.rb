@@ -246,7 +246,6 @@ class MiqWorker::Runner
     # Sync settings
     Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
-    sync_log_level
     sync_worker_settings
     sync_blacklisted_events
     after_sync_config
@@ -257,11 +256,6 @@ class MiqWorker::Runner
     $log.log_hashes(@cfg)
 
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
-  end
-
-  def sync_log_level
-    # TODO: Can this be removed since the Vmdb::Settings::Activator will do this anyway?
-    Vmdb::Loggers.apply_config(::Settings.log)
   end
 
   def sync_worker_settings

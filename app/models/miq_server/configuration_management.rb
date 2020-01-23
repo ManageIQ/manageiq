@@ -56,14 +56,8 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_config
-    sync_log_level
     sync_worker_monitor_settings
     sync_child_worker_settings
     $log.log_hashes(@worker_monitor_settings)
-  end
-
-  def sync_log_level
-    # TODO: Can this be removed since the Vmdb::Settings::Activator will do this anyway?
-    Vmdb::Loggers.apply_config(::Settings.log)
   end
 end
