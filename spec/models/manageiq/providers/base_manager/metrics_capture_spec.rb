@@ -196,36 +196,6 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         end
       end
     end
-
-    context "for queue prioritization" do
-      it "should queue up realtime capture for vm" do
-        vm.perf_capture_realtime_now
-        expect(MiqQueue.count).to eq(1)
-
-        msg = MiqQueue.first
-        expect(msg.priority).to eq(MiqQueue::HIGH_PRIORITY)
-        expect(msg.instance_id).to eq(vm.id)
-        expect(msg.class_name).to eq("ManageIQ::Providers::Vmware::InfraManager::Vm")
-      end
-
-      it "should raise the priority of the existing queue item" do
-        vm.perf_capture_realtime_now
-        MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
-        vm.perf_capture_realtime_now
-
-        expect(MiqQueue.count).to eq(1)
-        expect(MiqQueue.first.priority).to eq(MiqQueue::HIGH_PRIORITY)
-      end
-
-      it "should not lower the priority of the existing queue item" do
-        vm.perf_capture_realtime_now
-        MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
-        vm.perf_capture_realtime_now
-
-        expect(MiqQueue.count).to eq(1)
-        expect(MiqQueue.first.priority).to eq(MiqQueue::MAX_PRIORITY)
-      end
-    end
   end
 
   def trigger_capture(last_perf_capture_on = nil, options = {:interval => "realtime"})
