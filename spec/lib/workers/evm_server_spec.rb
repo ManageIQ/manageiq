@@ -63,6 +63,21 @@ describe EvmServer do
         expect(subject.servers_to_monitor.map(&:id)).to match_array(MiqServer.all.map(&:id))
       end
 
+      it "removes a server when it is removed from the database" do
+        server = FactoryBot.create(:miq_server)
+        expect(subject.servers_to_monitor.map(&:id)).to include(server.id)
+        expect(subject.servers_to_monitor.count).to eq(2)
+
+        monitor_server = subject.servers_to_monitor.find { |s| s.id == server.id }
+        expect(monitor_server).to receive(:shutdown)
+
+        server.delete
+        subject.refresh_servers_to_monitor
+
+        expect(subject.servers_to_monitor.map(&:id)).not_to include(server.id)
+        expect(subject.servers_to_monitor.count).to eq(1)
+      end
+
       # Note: this is a very important spec
       # A lot of the data about the current server is stored as instance variables
       # so losing the particular instance we're using to do worker management would
