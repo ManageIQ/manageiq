@@ -85,10 +85,10 @@ describe EvmServer do
     end
   end
 
-  describe "#for_each_server (private)" do
+  describe "#as_each_server (private)" do
     it "yields the local server when not podified" do
       server = EvmSpecHelper.local_miq_server
-      subject.send(:for_each_server) do
+      subject.send(:as_each_server) do
         expect(MiqServer.my_server.guid).to eq(server.guid)
         expect(subject.instance_variable_get(:@current_server).guid).to eq(server.guid)
       end
@@ -104,14 +104,14 @@ describe EvmServer do
 
       it "sets the server variable to each server" do
         received_guids = []
-        subject.send(:for_each_server) { received_guids << subject.instance_variable_get(:@current_server).guid }
+        subject.send(:as_each_server) { received_guids << subject.instance_variable_get(:@current_server).guid }
 
         expect(received_guids).to match_array(expected_guids)
       end
 
       it "sets my_server to each server" do
         received_guids = []
-        subject.send(:for_each_server) { received_guids << MiqServer.my_server.guid }
+        subject.send(:as_each_server) { received_guids << MiqServer.my_server.guid }
 
         expect(received_guids).to match_array(expected_guids)
       end
@@ -122,7 +122,7 @@ describe EvmServer do
         end
 
         received_ids = []
-        subject.send(:for_each_server) { received_ids << ::Settings.special.settings[:id] }
+        subject.send(:as_each_server) { received_ids << ::Settings.special.settings[:id] }
         expect(received_ids).to match_array(MiqServer.pluck(:id))
       end
     end

@@ -39,23 +39,23 @@ class EvmServer
 
   def start_servers
     refresh_servers_to_monitor
-    for_each_server { start_server }
+    as_each_server { start_server }
   end
 
   def monitor_servers
     loop do
       refresh_servers_to_monitor
-      for_each_server { monitor }
+      as_each_server { monitor }
       sleep ::Settings.server.monitor_poll.to_i_with_method
     end
   end
 
   def stop_servers
-    for_each_server { @current_server.shutdown }
+    as_each_server { @current_server.shutdown }
   end
 
   def kill_servers
-    for_each_server do
+    as_each_server do
       @current_server.kill_all_workers
       @current_server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     end
@@ -274,7 +274,7 @@ class EvmServer
   # such as MiqServer.my_server and MiqServer.my_guid, and also the
   # contents of the global ::Settings constant.
   ######################################################################
-  def for_each_server
+  def as_each_server
     initial_server = @current_server
     servers_to_monitor.each do |s|
       impersonate_server(s)
