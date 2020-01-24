@@ -61,8 +61,7 @@ module MiqApache
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
-        cmd = "apachectl #{command}"
-        res = MiqUtil.runcmd(cmd)
+        res = MiqUtil.runcmd("apachectl", :params => [[command]])
       rescue => err
         $log.warn("MIQ(MiqApache::Control.run_apache_cmd) Apache command #{command} with result: #{res} failed with error: #{err}") if $log
       end
