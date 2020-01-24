@@ -76,6 +76,13 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   def update_catalog_item(options, _auth_user = nil)
+    if config_info[:warm_migration] &&
+       options.key?(:config_info) &&
+       options[:config_info].key?(:warm_migration_cutover_datetime) &&
+       options.dig(:config_info, :warm_migration_cutover_datetime).blank?
+      return delete_cutover_datetime
+    end
+
     if options.dig(:config_info, :warm_migration_cutover_datetime)
       return update_cutover_datetime(options[:config_info][:warm_migration_cutover_datetime])
     end
@@ -116,6 +123,14 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
       save
       reload
     end
+  end
+
+  def delete_cutover_datetime
+    raise _('Cannot delete cutover date for non-warm migration') unless config_info[:warm_migration]
+
+    config_info[:warm_migration_cutover_datetime] = nil
+    save
+    reload
   end
 
   def enforce_single_service_parent(_resource)
