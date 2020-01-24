@@ -287,16 +287,19 @@ class EvmServer
 
     # generic log message to say we're switching servers?
 
+    MiqServer.my_server_clear_cache
     MiqServer.my_guid = s.guid
+
     # It is important that we continue to use the same server instance here.
     # A lot of "global" state is stored in instance variables on the server.
     @current_server = s
-    Vmdb::Settings.init
+    Vmdb::Settings.reset_settings_constant(s.settings_for_resource)
   end
 
   def clear_server_caches
     MiqServer.my_guid = nil
     MiqServer.my_server_clear_cache
-    Vmdb::Settings.init
+    # Use Vmdb::Settings.for_resource(:my_server) here as MiqServer.my_server might be nil
+    Vmdb::Settings.reset_settings_constant(Vmdb::Settings.for_resource(:my_server))
   end
 end
