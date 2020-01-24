@@ -285,7 +285,7 @@ class EvmServer
   def impersonate_server(s)
     return if s == @current_server
 
-    # generic log message to say we're switching servers?
+    _log.info("Impersonating server - id: #{s.id}, guid: #{s.guid}")
 
     MiqServer.my_server_clear_cache
     MiqServer.my_guid = s.guid
