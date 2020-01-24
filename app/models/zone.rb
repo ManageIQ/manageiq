@@ -29,7 +29,9 @@ class Zone < ApplicationRecord
   has_many :containers,            :through => :container_managers
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
+  before_destroy :remove_servers_if_podified
   before_destroy :check_zone_in_use_on_destroy
+  after_create :create_server_if_podified
 
   include AuthenticationMixin
 
@@ -240,6 +242,19 @@ class Zone < ApplicationRecord
   end
 
   protected
+
+  def remove_servers_if_podified
+    return unless MiqEnvironment::Command.is_podified?
+
+    miq_servers.destroy_all
+  end
+
+  def create_server_if_podified
+    return unless MiqEnvironment::Command.is_podified?
+    return if name == "default" || !visible
+
+    miq_servers.create!(:name => name)
+  end
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
