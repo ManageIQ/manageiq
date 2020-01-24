@@ -114,18 +114,9 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
       msg.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
       do_exit("Exiting worker due to timeout error", 1) if status == MiqQueue::STATUS_TIMEOUT
-    rescue MiqException::MiqVimBrokerUnavailable
-      _log.error("#{log_prefix} VimBrokerWorker is not available.  Requeueing message...")
-      msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
       Thread.current[:tracking_label] = nil
-      #
-      # This tells the broker to release any memory being held on behalf of this process
-      # and reset the global broker handle ($vim_broker_client).
-      # This is a NOOP if global broker handle is not set.
-      #
-      clean_broker_connection
     end
   end
 

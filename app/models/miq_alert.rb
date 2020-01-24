@@ -502,10 +502,6 @@ class MiqAlert < ApplicationRecord
       msg = "Request to retrieve alarms timed out after #{to} seconds"
       $log.warn(msg)
       raise msg
-    rescue MiqException::MiqVimBrokerUnavailable
-      msg = "Unable to retrieve alarms, Management System Connection Broker is currently unavailable"
-      $log.warn(msg)
-      raise msg
     rescue => err
       $log.warn("'#{err.message}', attempting to retrieve alarms")
       raise

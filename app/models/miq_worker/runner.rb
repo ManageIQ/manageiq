@@ -443,15 +443,6 @@ class MiqWorker::Runner
     end
   end
 
-  def clean_broker_connection
-    if $vim_broker_client
-      $vim_broker_client.releaseSession(Process.pid)
-      $vim_broker_client = nil
-    end
-  rescue => err
-    _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
-  end
-
   def process_title
     type   = @worker.abbreviated_class_name
     title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
