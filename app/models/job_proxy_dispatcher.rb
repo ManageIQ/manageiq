@@ -23,8 +23,6 @@ class JobProxyDispatcher
 
       # Skip work if there are no jobs to dispatch
       if jobs_to_dispatch.length > 0
-        logged_broker_unavailable = false
-
         Benchmark.realtime_block(:active_vm_scans) { active_vm_scans_by_zone }
         Benchmark.realtime_block(:busy_proxies) { busy_proxies }
         Benchmark.realtime_block(:busy_resources_for_embedded_scanning) { busy_resources_for_embedded_scanning }

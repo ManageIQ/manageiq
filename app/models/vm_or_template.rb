@@ -438,12 +438,8 @@ class VmOrTemplate < ApplicationRecord
   private_class_method :task_arguments
 
   def powerops_callback(task_id, status, msg, result, queue_item)
-    if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
-      queue_item.requeue(:deliver_on => 1.minute.from_now.utc)
-    else
-      task = MiqTask.find_by(:id => task_id)
-      task.queue_callback("Finished", status, msg, result) if task
-    end
+    task = MiqTask.find_by(:id => task_id)
+    task.queue_callback("Finished", status, msg, result) if task
   end
 
   # override
