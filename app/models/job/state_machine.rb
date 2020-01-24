@@ -51,7 +51,7 @@ module Job::StateMachine
     end
   end
 
-  def queue_signal(*args, priority: MiqQueue::NORMAL_PRIORITY, role: nil, deliver_on: nil, server_guid: nil)
+  def queue_signal(*args, priority: MiqQueue::NORMAL_PRIORITY, role: nil, deliver_on: nil, server_guid: nil, queue_name: nil)
     MiqQueue.put(
       :class_name  => self.class.name,
       :method_name => "signal",
@@ -59,6 +59,7 @@ module Job::StateMachine
       :priority    => priority,
       :role        => role,
       :zone        => zone,
+      :queue_name  => queue_name,
       :task_id     => guid,
       :args        => args,
       :deliver_on  => deliver_on,
