@@ -42,6 +42,7 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
     it "reloads the new changes into the settings for the resource" do
       Vmdb::Settings.save!(miq_server, :some_test_setting => 2)
       expect(Settings.some_test_setting).to be_nil
+      expect(miq_server).to receive(:update_sync_timestamp)
 
       miq_server.reload_settings
 
