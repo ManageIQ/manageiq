@@ -16,7 +16,7 @@ module TaskHelpers
         # CustomizationTemplate Hash
         if my_object[:class].include?("CustomizationTemplate")
           image_type_name = my_object.fetch_path(:pxe_image_type, :name) || "Examples"
-          tmp_filename = "#{image_type_name}-#{object[:name]}"
+          tmp_filename = "#{image_type_name}-#{my_object[:name]}"
         # Provisioning Dialog Hash
         elsif my_object[:class].include?("MiqDialog")
           tmp_filename = "#{my_object[:dialog_type]}-#{my_object[:name]}"
