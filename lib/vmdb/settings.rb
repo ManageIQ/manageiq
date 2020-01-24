@@ -25,17 +25,10 @@ module Vmdb
     RESET_COMMAND = "<<reset>>".freeze
     RESET_VALUE = HashDiffer::MissingKey
 
-    cattr_accessor :last_loaded
-
     def self.init
       ::Config.overwrite_arrays = true
       ::Config.merge_nil_values = false
       reset_settings_constant(for_resource(:my_server))
-      on_reload
-    end
-
-    def self.on_reload
-      self.last_loaded = Time.now.utc
       dump_to_log_directory(::Settings)
     end
 

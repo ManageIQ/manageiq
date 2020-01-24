@@ -124,17 +124,12 @@ module MiqServer::WorkerManagement::Monitor
     @last_sync ||= Time.now.utc
     sync_interval         = @worker_monitor_settings[:sync_interval] || 30.minutes
     sync_interval_reached = sync_interval.seconds.ago.utc > @last_sync
-    config_changed        = self.sync_config_changed?
     roles_changed         = self.active_roles_changed?
-    resync_needed         = config_changed || roles_changed || sync_interval_reached
+    resync_needed         = roles_changed || sync_interval_reached
 
     roles_added, roles_deleted, _roles_unchanged = role_changes
 
     if resync_needed
-      @last_sync = Time.now.utc
-
-      sync_config                if config_changed
-      sync_assigned_roles        if config_changed
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
@@ -144,8 +139,9 @@ module MiqServer::WorkerManagement::Monitor
 
       EvmDatabase.restart_failover_monitor_service if (roles_added | roles_deleted).include?("database_operations")
 
-      reset_queue_messages       if config_changed || roles_changed
+      reset_queue_messages       if roles_changed
 
+      @last_sync = Time.now.utc
       update_sync_timestamp(@last_sync)
     end
   end
