@@ -172,6 +172,13 @@ RSpec.describe MiqServer do
 
         expect(@miq_server.errors.full_messages.first).to match(/recently/)
       end
+
+      it "doesn't enforce when podified" do
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+        allow(@miq_server).to receive(:is_local?).and_return(true)
+        @miq_server.last_heartbeat = 2.minutes.ago.utc
+        @miq_server.destroy!
+      end
     end
 
     context "#ntp_reload_queue" do
