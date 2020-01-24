@@ -70,7 +70,7 @@ module MiqEnvironment
 
       begin
         # If 'which apachectl' returns non-zero, it wasn't found
-        MiqUtil.runcmd("#{which} #{cmd}")
+        MiqUtil.runcmd(which, :params => [[cmd]])
       rescue
         false
       else
