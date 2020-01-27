@@ -36,6 +36,8 @@ class PhysicalServer < ApplicationRecord
   virtual_column :v_host_os, :type => :string, :uses => :host
   virtual_delegate :emstype, :to => "ext_management_system", :allow_nil => true
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
 
   supports :refresh_ems

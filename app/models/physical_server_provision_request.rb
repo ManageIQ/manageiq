@@ -10,6 +10,14 @@ class PhysicalServerProvisionRequest < MiqRequest
     'ems_operations'
   end
 
+  def my_queue_name
+    source.nil? ? super : source.queue_name_for_ems_operations
+  end
+
+  def source
+    @source ||= self.class.source_physical_server(source_id)
+  end
+
   def self.request_task_class
     PhysicalServerProvisionTask
   end
