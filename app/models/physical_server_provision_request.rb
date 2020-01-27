@@ -15,7 +15,7 @@ class PhysicalServerProvisionRequest < MiqRequest
   end
 
   def source
-    @source ||= self.class.source_physical_server(source_id)
+    @source ||= PhysicalServer.find_by(:id => source_id)
   end
 
   def self.request_task_class

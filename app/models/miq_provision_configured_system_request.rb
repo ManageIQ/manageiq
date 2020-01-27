@@ -26,7 +26,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   end
 
   def my_queue_name
-    src_configured_systems.first&.manager&.queue_name_for_ems_operations
+    src_configured_systems.first.nil? ? super : src_configured_systems.first&.queue_name_for_ems_operations
   end
 
   def self.request_task_class_from(_attribs)
