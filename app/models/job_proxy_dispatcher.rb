@@ -23,9 +23,6 @@ class JobProxyDispatcher
 
       # Skip work if there are no jobs to dispatch
       if jobs_to_dispatch.length > 0
-        broker_available, = Benchmark.realtime_block(:miq_vim_broker_available) { MiqVimBrokerWorker.available_in_zone?(@zone) }
-        logged_broker_unavailable = false
-
         Benchmark.realtime_block(:active_vm_scans) { active_vm_scans_by_zone }
         Benchmark.realtime_block(:busy_proxies) { busy_proxies }
         Benchmark.realtime_block(:busy_resources_for_embedded_scanning) { busy_resources_for_embedded_scanning }
@@ -50,16 +47,6 @@ class JobProxyDispatcher
             _log.warn("VM with id: [#{job.target_id}] no longer exists, aborting job [#{job.guid}]")
             job.signal(:abort, "VM with id: [#{job.target_id}] no longer exists, job aborted.", "warn")
             next
-          end
-
-          if @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Vm) || @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Template)
-            unless broker_available
-              unless logged_broker_unavailable
-                _log.warn("Skipping dispatch because broker is currently unavailable")
-                logged_broker_unavailable = true
-              end
-              next
-            end
           end
 
           proxy = nil

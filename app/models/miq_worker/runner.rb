@@ -90,29 +90,6 @@ class MiqWorker::Runner
     end
   end
 
-  ###############################
-  # VimBrokerWorker Methods
-  ###############################
-
-  def self.delay_startup_for_vim_broker?
-    !!@delay_startup_for_vim_broker
-  end
-
-  class << self
-    attr_writer :delay_startup_for_vim_broker
-  end
-
-  def self.delay_queue_delivery_for_vim_broker?
-    !!@delay_queue_delivery_for_vim_broker
-  end
-
-  class << self
-    attr_writer :delay_queue_delivery_for_vim_broker
-
-    alias require_vim_broker? delay_queue_delivery_for_vim_broker?
-    alias require_vim_broker= delay_queue_delivery_for_vim_broker=
-  end
-
   def start
     prepare
     run
@@ -128,7 +105,6 @@ class MiqWorker::Runner
     set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
-    do_delay_startup_for_vim_broker if self.class.delay_startup_for_vim_broker? && MiqVimBrokerWorker.workers > 0
     do_before_work_loop
     self
   end
@@ -270,16 +246,6 @@ class MiqWorker::Runner
 
   def do_work
     raise NotImplementedError, _("must be implemented in a subclass")
-  end
-
-  def do_delay_startup_for_vim_broker
-    _log.info("#{log_prefix} Checking that VIM Broker has started before doing work")
-    loop do
-      break if MiqVimBrokerWorker.available?
-      heartbeat
-      sleep 3
-    end
-    _log.info("#{log_prefix} Starting work since VIM Broker has started")
   end
 
   def do_work_loop
@@ -475,15 +441,6 @@ class MiqWorker::Runner
     else
       _log.warn("#{log_prefix} Message [#{message}] is not recognized, ignoring")
     end
-  end
-
-  def clean_broker_connection
-    if $vim_broker_client
-      $vim_broker_client.releaseSession(Process.pid)
-      $vim_broker_client = nil
-    end
-  rescue => err
-    _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
   def process_title
