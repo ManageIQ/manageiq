@@ -203,6 +203,11 @@ RSpec.describe Zone do
       described_class.seed
       expect(described_class.maintenance_zone.visible).to eq(false)
     end
+
+    it "cannot be destroyed" do
+      described_class.seed
+      expect { described_class.maintenance_zone.destroy! }.to raise_error(RuntimeError)
+    end
   end
 
   context "validate multi region" do
@@ -226,15 +231,30 @@ RSpec.describe Zone do
   end
 
   it "doesn't create a server for the zone when not podified" do
-    zone = Zone.create!(:name => "my_zone", :description => "some zone")
+    zone = FactoryBot.create(:zone)
     expect(zone.miq_servers.count).to eq(0)
   end
 
-  it "fails to destroy a zone with servers when not podified" do
-    MiqRegion.seed
-    zone = Zone.create!(:name => "my_zone", :description => "some zone")
-    zone.miq_servers.create!(:name => "my_server")
-    expect { zone.destroy! }.to raise_error(RuntimeError)
+  describe "#destroy" do
+    before { MiqRegion.seed }
+
+    it "fails for a zone with servers when not podified" do
+      zone = FactoryBot.create(:zone)
+      zone.miq_servers.create!(:name => "my_server")
+      expect { zone.destroy! }.to raise_error(RuntimeError)
+    end
+
+    it "fails for the default zone" do
+      described_class.seed
+      expect { described_class.default_zone.destroy! }.to raise_error(RuntimeError)
+    end
+
+    it "fails for a zone with a provider" do
+      zone = FactoryBot.create(:zone)
+      FactoryBot.create(:ext_management_system, :zone => zone)
+
+      expect { zone.destroy! }.to raise_error(RuntimeError)
+    end
   end
 
   context "when podified" do
@@ -261,8 +281,6 @@ RSpec.describe Zone do
         expect(zone.miq_servers.count).to eq(0)
       end
     end
-
-
 
     it ".destroy deletes the server in the zone" do
       MiqRegion.seed

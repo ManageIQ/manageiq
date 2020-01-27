@@ -241,6 +241,13 @@ class Zone < ApplicationRecord
     servers.each(&:ntp_reload_queue)
   end
 
+  def message_for_invalid_delete
+    return _("cannot delete default zone") if name == "default"
+    return _("cannot delete maintenance zone") if self == miq_region.maintenance_zone
+    return _("zone name '%{name}' is used by a server") % {:name => name} if miq_servers.present?
+    _("zone name '%{name}' is used by a provider") % {:name => name} if ext_management_systems.present?
+  end
+
   protected
 
   def remove_servers_if_podified
@@ -257,8 +264,7 @@ class Zone < ApplicationRecord
   end
 
   def check_zone_in_use_on_destroy
-    raise _("cannot delete default zone") if name == "default"
-    raise _("cannot delete maintenance zone") if self == miq_region.maintenance_zone
-    raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
+    msg = message_for_invalid_delete
+    raise msg if msg
   end
 end
