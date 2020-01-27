@@ -1,4 +1,6 @@
 class ServiceOrder < ApplicationRecord
+  include NewWithStiMixin
+
   STATE_CART    = 'cart'.freeze
   STATE_WISH    = 'wish'.freeze
   STATE_ORDERED = 'ordered'.freeze
