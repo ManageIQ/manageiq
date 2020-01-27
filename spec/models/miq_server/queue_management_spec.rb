@@ -3,8 +3,8 @@ RSpec.describe "Queue Management" do
 
   describe "#ntp_reload_queue" do
     it "enqueues a message if the server is an appliance, but not a container" do
-      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
 
       server.ntp_reload_queue
 
@@ -12,7 +12,7 @@ RSpec.describe "Queue Management" do
     end
 
     it "doesn't enqueue a message if the server is not an appliance" do
-      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
 
       server.ntp_reload_queue
 
@@ -20,8 +20,8 @@ RSpec.describe "Queue Management" do
     end
 
     it "doesn't enqueue a message if the server is a container" do
-      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
 
       server.ntp_reload_queue
 
