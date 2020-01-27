@@ -83,12 +83,6 @@ class EvmServer
 
   private
 
-  def monitoring_server?(server)
-    servers_to_monitor.any? do |monitor_server|
-      monitor_server.id == server.id
-    end
-  end
-
   def servers_from_db
     MiqEnvironment::Command.is_podified? ? MiqServer.in_my_region.to_a : [MiqServer.my_server(true)].compact
   end
