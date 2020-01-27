@@ -69,7 +69,7 @@ RSpec.describe InfraConversionJob, :v2v do
   let(:transformation_plan) { ServiceTemplateTransformationPlan.create_catalog_item(transformation_plan_catalog_item_options) }
 
   let(:request)         { FactoryBot.create(:service_template_transformation_plan_request, :source => transformation_plan) }
-  let(:task)            { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+  let(:task)            { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.userid) }
   let(:job_options)     { {:target_class => task.class.name, :target_id => task.id} }
   let(:job)             { described_class.create_job(job_options) }
 
@@ -1063,7 +1063,7 @@ RSpec.describe InfraConversionJob, :v2v do
               expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
               expect(job).to receive(:queue_signal).with(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
               job.signal(:run_migration_playbook)
-              service_request = ServiceTemplateProvisionRequest.find(job.context[:pre_migration_playbook_service_request_id])
+              service_request = ServiceTemplateProvisionRequest.find(task.reload.options["#{task.options[:migration_phase]}_migration_playbook_service_request_id".to_sym])
               expect(service_request).to have_attributes(
                 :description => "Provisioning Service [#{embedded_ansible_service_template.name}] from [#{embedded_ansible_service_template.name}]",
                 :state       => 'pending',
@@ -1092,14 +1092,13 @@ RSpec.describe InfraConversionJob, :v2v do
       before do
         job.state = 'running_migration_playbook'
         embedded_ansible_service = FactoryBot.create(:service_ansible_playbook)
-        FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.id)
+        FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.userid)
         FactoryBot.create(:service_resource, :resource => FactoryBot.create(:embedded_ansible_job), :service => embedded_ansible_service)
       end
 
       context "migration_phase is 'pre'" do
         before do
-          task.update_options(:migration_phase => 'pre')
-          job.context[:pre_migration_playbook_service_request_id] = embedded_ansible_service_request.id
+          task.update_options(:migration_phase => 'pre', :pre_migration_playbook_service_request_id => embedded_ansible_service_request.id)
         end
 
         it 'abort_conversion when running_migration_playbook times out' do
@@ -1137,8 +1136,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       context "migration_phase is 'post'" do
         before do
-          task.update_options(:migration_phase => 'post')
-          job.context[:post_migration_playbook_service_request_id] = embedded_ansible_service_request.id
+          task.update_options(:migration_phase => 'post', :post_migration_playbook_service_request_id => embedded_ansible_service_request.id)
         end
 
         it "exits to next state in case of success" do

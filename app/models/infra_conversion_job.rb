@@ -355,11 +355,12 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
     unless service_template.nil?
+      user_id = User.find_by(:userid => migration_task.userid).id
       service_dialog_options = {
-        :credentials => service_template.config_info[:provision][:credential_id],
-        :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
+        :credential => service_template.config_info[:provision][:credential_id],
+        :hosts      => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
       }
-      context["#{migration_phase}_migration_playbook_service_request_id".to_sym] = service_template.provision_request(migration_task.userid.to_i, service_dialog_options).id
+      migration_task.update_options("#{migration_phase}_migration_playbook_service_request_id".to_sym => service_template.provision_request(user_id, service_dialog_options).id)
       update_migration_task_progress(:on_exit)
       return queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
@@ -379,7 +380,7 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     return abort_conversion('Running migration playbook timed out', 'error') if polling_timeout
 
-    service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id".to_sym])
+    service_request = ServiceTemplateProvisionRequest.find(migration_task.options["#{migration_phase}_migration_playbook_service_request_id".to_sym])
     playbooks_status = migration_task.get_option(:playbooks) || {}
     playbooks_status[migration_phase] = { :job_state => service_request.request_state }
     migration_task.update_options(:playbooks => playbooks_status)
