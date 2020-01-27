@@ -226,7 +226,7 @@ group :web_server, :manageiq_default do
   gem "puma",                           "~>4.2"
   gem "responders",                     "~>2.0"
   gem "ruby-dbus" # For external auth
-  gem "secure_headers",                 "~>3.0.0"
+  gem "secure_headers",                 "~>3.9"
 end
 
 group :web_socket, :manageiq_default do
