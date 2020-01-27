@@ -25,6 +25,10 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
     'ems_operations'
   end
 
+  def my_queue_name
+    src_configured_systems.first&.manager&.queue_name_for_ems_operations
+  end
+
   def self.request_task_class_from(_attribs)
     ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask
   end
