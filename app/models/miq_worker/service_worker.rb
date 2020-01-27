@@ -27,7 +27,6 @@ class MiqWorker
     def delete_container_objects
       orch = ContainerOrchestrator.new
       orch.delete_deployment(worker_deployment_name)
-      orch.delete_service(service_name)
     end
 
     def stop_container
