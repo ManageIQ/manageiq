@@ -66,7 +66,7 @@ class InfraConversionJob < Job
       :abort_job                            => {'*'                => 'aborting'},
       :cancel                               => {'*'                => 'canceling'},
       :abort_virtv2v                        => {
-        'canceling'        => 'aborting_virtv2v',
+        '*'                => 'aborting_virtv2v',
         'aborting_virtv2v' => 'aborting_virtv2v'
       },
       :error                                => {'*'                => '*'}
@@ -143,15 +143,6 @@ class InfraConversionJob < Job
     36.hours
   end
 
-  def process_abort(*args)
-    message, status = args
-    _log.error("job aborting, #{message}")
-    set_status(message, status)
-
-    migration_task.canceling
-    queue_signal(:abort_virtv2v)
-  end
-
   # ---           Job relationships helper methods           --- #
 
   def state_retry_interval
@@ -217,7 +208,7 @@ class InfraConversionJob < Job
   end
 
   def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
+    progress = migration_task.options[:progress] || {:current_state => state, :status => "ok", :percent => 0.0, :states => {}}
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
     if state_phase == :on_entry
@@ -232,12 +223,21 @@ class InfraConversionJob < Job
   # Temporary method to allow switching from InfraConversionJob to Automate.
   # In Automate, another method waits for workflow_runner to be 'automate'.
   def handover_to_automate
+    if migration_task.canceling?
+      migration_task.canceled
+      queue_signal(:abort_job)
+    end
+
     migration_task.update_options(:workflow_runner => 'automate')
   end
 
   def abort_conversion(message, status)
-    migration_task.cancel unless migration_task.cancel_requested?
-    queue_signal(:abort_job, message, status)
+    migration_task.canceling
+    progress = migration_task.options[:progress]
+    progress[:current_description] = "Migration failed: #{message}. Cancelling"
+    progress[:status] = "error"
+    migration_task.update_options(:progress => progress)
+    queue_signal(:abort_virtv2v)
   end
 
   def polling_timeout
@@ -545,7 +545,12 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_exit)
     return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on' && !migration_task.canceling?
 
-    migration_task.canceled if migration_task.canceling?
+    if migration_task.canceling?
+      migration_task.canceled
+      handover_to_automate
+      return queue_signal(:poll_automate_state_machine)
+    end
+
     queue_signal(:mark_vm_migrated)
   rescue StandardError
     update_migration_task_progress(:on_error)
@@ -584,7 +589,6 @@ class InfraConversionJob < Job
   end
 
   def abort_virtv2v
-    migration_task.get_conversion_state
     virtv2v_runs = migration_task.options[:virtv2v_started_on].present? && migration_task.options[:virtv2v_finished_on].nil? && migration_task.options[:virtv2v_wrapper].present?
     return queue_signal(:power_on_vm) unless virtv2v_runs
 

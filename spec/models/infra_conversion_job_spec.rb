@@ -463,7 +463,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'aborts conversion if task cancel is requested' do
         task.cancel
         expect(job).to receive(:abort_conversion).once.ordered.with('Migration cancelation requested', 'ok').and_call_original
-        expect(job).to receive(:queue_signal).once.ordered.with(:abort_job, 'Migration cancelation requested', 'ok')
+        expect(job).to receive(:queue_signal).once.ordered.with(:abort_virtv2v)
         job.update_migration_task_progress(:on_entry)
       end
     end
