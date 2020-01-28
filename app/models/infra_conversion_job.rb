@@ -208,7 +208,7 @@ class InfraConversionJob < Job
   end
 
   def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || { :current_state => state, :status => "ok", :percent => 0.0, :states => {} }
+    progress = migration_task.options[:progress] || {:current_state => state, :status => "ok", :percent => 0.0, :states => {}}
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
     if state_phase == :on_entry
