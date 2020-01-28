@@ -473,7 +473,7 @@ class InfraConversionJob < Job
       InventoryRefresh::Target.new(
         :association => :vms,
         :manager_ref => {:ems_ref => destination_vm_ems_ref(migration_task.options[:destination_vm_uuid])},
-        :manager => migration_task.destination_ems
+        :manager     => migration_task.destination_ems
       )
     end
     update_migration_task_progress(:on_exit)
