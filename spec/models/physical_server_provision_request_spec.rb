@@ -19,6 +19,10 @@ RSpec.describe PhysicalServerProvisionRequest do
     expect(subject.my_role).to eq('ems_operations')
   end
 
+  it "#my_queue_name" do
+    expect(subject.my_queue_name).to be_nil
+  end
+
   describe '.new_request_task' do
     before do
       allow(ems.class).to receive(:provision_class).and_return(task)

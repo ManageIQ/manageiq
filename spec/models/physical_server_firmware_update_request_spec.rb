@@ -19,6 +19,15 @@ RSpec.describe PhysicalServerFirmwareUpdateRequest do
     expect(subject.my_role).to eq('ems_operations')
   end
 
+  describe '#my_queue_name' do
+    let(:ems)             { FactoryBot.create(:ems_physical_infra) }
+    let(:physical_server) { FactoryBot.create(:physical_server, :ext_management_system => ems) }
+
+    it "returns the ems's queue_name_for_ems_operations" do
+      expect(physical_server.queue_name_for_ems_operations).to eq(ems.queue_name_for_ems_operations)
+    end
+  end
+
   it '#requested_task_idx' do
     expect(subject.requested_task_idx).to eq([-1])
   end
