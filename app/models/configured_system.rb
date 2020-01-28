@@ -28,7 +28,8 @@ class ConfiguredSystem < ApplicationRecord
   delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
   delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
   delegate :name, :to => :provider,                      :prefix => true, :allow_nil => true
-  delegate :my_zone, :provider, :queue_name_for_ems_operations, :zone, :to => :manager
+  delegate :my_zone, :provider, :zone, :to => :manager
+  delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
 
   virtual_column  :my_zone,                            :type => :string
   virtual_column  :configuration_architecture_name,    :type => :string
