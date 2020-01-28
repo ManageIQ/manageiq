@@ -164,6 +164,18 @@ class InfraConversionJob < Job
     @destination_vm ||= migration_task.destination
   end
 
+  def destination_vm_ems_ref(uuid)
+    send("destination_vm_ems_ref_#{migration_task.destination_ems.emstype}", uuid)
+  end
+
+  def destination_vm_ems_ref_rhevm(uuid)
+    "/api/vms/#{uuid}"
+  end
+
+  def destination_vm_ems_ref_openstack(uuid)
+    uuid
+  end
+
   def target_vm
     return @target_vm = source_vm if migration_phase == 'pre' || migration_task.canceling?
     return @target_vm = destination_vm if migration_phase == 'post'
@@ -458,8 +470,11 @@ class InfraConversionJob < Job
   def inventory_refresh
     update_migration_task_progress(:on_entry)
     if migration_task.options[:destination_vm_uuid].present?
-      target_collection = InventoryRefresh::TargetCollection.new(:manager => migration_task.destination_ems)
-      target_collection.add_target(:association => :vms, :manager_ref => {:ems_ref => migration_task.options[:destination_vm_uuid]})
+      InventoryRefresh::Target.new(
+        :association => :vms,
+        :manager_ref => {:ems_ref => destination_vm_ems_ref(migration_task.options[:destination_vm_uuid])},
+        :manager => migration_task.destination_ems
+      )
     end
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)

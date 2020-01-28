@@ -1348,8 +1348,11 @@ RSpec.describe InfraConversionJob, :v2v do
       Timecop.freeze(2019, 2, 6) do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
-        expect(InventoryRefresh::TargetCollection).to receive(:new).with(:manager => ems_redhat).and_return(target_collection)
-        expect(target_collection).to receive(:add_target).with(:association => :vms, :manager_ref => {:ems_ref => '01234567-89ab-cdef-0123-456789ab-cdef'})
+        expect(InventoryRefresh::Target).to receive(:new).with(
+          :association => :vms,
+          :manager     => ems_redhat,
+          :manager_ref => {:ems_ref => '/api/vms/01234567-89ab-cdef-0123-456789ab-cdef'}
+        )
         expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
         job.signal(:inventory_refresh)
       end
