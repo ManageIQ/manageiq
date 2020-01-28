@@ -28,4 +28,23 @@ RSpec.describe PhysicalServer do
       expect(subject.firmware_compatible?(binary2)).to eq(false)
     end
   end
+
+  describe "#queue_name_for_ems_operations" do
+    context "with an active configured_system" do
+      let(:manager)         { FactoryBot.create(:physical_infra) }
+      let(:physical_server) { FactoryBot.create(:physical_server, :with_asset_detail, :ext_management_system => manager) }
+
+      it "uses the manager's queue_name_for_ems_operations" do
+        expect(physical_server.queue_name_for_ems_operations).to eq(manager.queue_name_for_ems_operations)
+      end
+    end
+
+    context "with an archived configured_system" do
+      let(:physical_server) { FactoryBot.create(:physical_server, :with_asset_detail) }
+
+      it "uses the manager's queue_name_for_ems_operations" do
+        expect(physical_server.queue_name_for_ems_operations).to be_nil
+      end
+    end
+  end
 end
