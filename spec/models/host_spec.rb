@@ -194,9 +194,27 @@ RSpec.describe Host do
       EvmSpecHelper.local_miq_server
 
       @password = "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}"
-      @host = FactoryBot.create(:host_vmware_esx)
+      @ems = FactoryBot.create(:ems_vmware)
+      @host = FactoryBot.create(:host_vmware_esx, :ext_management_system => @ems)
       @data = {:default => {:userid => "root", :password => @password}}
       @options = {:save => false}
+    end
+
+    context "#verify_credentials_task" do
+      it "verifies the credentials" do
+        @host.update_authentication(@data, @options)
+        @host.save
+        @host.verify_credentials_task(FactoryBot.create(:user).userid)
+
+        expect(MiqQueue.last).to have_attributes(
+          :method_name => "verify_credentials?",
+          :instance_id => @host.id,
+          :class_name  => @host.class.name,
+          :role        => "ems_operations",
+          :zone        => @ems.zone.name,
+          :queue_name  => @ems.queue_name_for_ems_operations,
+        )
+      end
     end
 
     context "default credentials" do
