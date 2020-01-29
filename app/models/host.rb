@@ -796,9 +796,9 @@ class Host < ApplicationRecord
       # connect_ssh logs address and user name(s) being used to make connection
       _log.info("Verifying Host SSH credentials for [#{name}]")
       connect_ssh(options) { |ssu| ssu.exec("uname -a") }
-    rescue MiqException::MiqInvalidCredentialsError
-      raise MiqException::MiqInvalidCredentialsError, _("Login failed due to a bad username or password.")
-    rescue MiqException::MiqSshUtilHostKeyMismatch
+    rescue Net::SSH::AuthenticationFailed => err
+      raise err, _("Login failed due to a bad username or password.")
+    rescue Net::SSH::HostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception => err
       _log.warn(err.inspect)
@@ -1055,7 +1055,7 @@ class Host < ApplicationRecord
   end
 
   def connect_ssh(options = {})
-    require 'MiqSshUtil'
+    require 'manageiq-ssh-util'
 
     rl_user, rl_password, su_user, su_password, additional_options = ssh_users_and_passwords
     options.merge!(additional_options)
@@ -1070,7 +1070,7 @@ class Host < ApplicationRecord
 
     _log.info("Initiating SSH connection to Host:[#{name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]")
     begin
-      MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, _shell|
+      ManageIQ::SSH::Util.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, _shell|
         _log.info("SSH connection established to [#{hostname}]")
         yield(ssu)
       end
@@ -1407,7 +1407,7 @@ class Host < ApplicationRecord
 
             save
           end
-        rescue MiqException::MiqSshUtilHostKeyMismatch
+        rescue Net::SSH::HostKeyMismatch
           # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
         rescue => err
           _log.log_backtrace(err)
