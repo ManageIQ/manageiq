@@ -78,9 +78,9 @@ class ConversionHost < ApplicationRecord
       Net::SSH.start(host, auth.userid, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   rescue Net::SSH::AuthenticationFailed => err
-    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
+    raise err, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
   rescue Net::SSH::HostKeyMismatch => err
-    raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
+    raise err, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
   rescue Exception => err
     raise _("Unknown error - %{error_message}") % {:error_message => err.message}
   else
@@ -155,8 +155,8 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Integer] length of data written to file
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
   def apply_task_limits(task_id, limits = {})
@@ -392,12 +392,12 @@ class ConversionHost < ApplicationRecord
     options.clone.tap { |h| h.each { |k, _v| h[k] = "__FILTERED__" if ignore.any? { |i| k.to_s.end_with?(i) } } }
   end
 
-  # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
+  # Connect to the conversion host using the ManageIQ::SSH::Util wrapper using the authentication
   # parameters appropriate for that type of resource.
   #
   def connect_ssh
     require 'manageiq-ssh-util'
-    MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
+    ManageIQ::SSH::Util.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
       yield(ssu)
     end
   rescue Exception => e
