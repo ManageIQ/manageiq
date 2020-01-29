@@ -165,7 +165,7 @@ class ConversionHost < ApplicationRecord
       command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-limits.json", "/var/lib/uci/#{task_id}/limits.json"])
       ssu.shell_exec(command, nil, nil, nil)
     end
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
@@ -266,7 +266,7 @@ class ConversionHost < ApplicationRecord
     filtered_options = filter_options(conversion_options)
     prepare_conversion(task_id, conversion_options)
     connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id, conversion_options), nil, nil, nil) }
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
   rescue => err
     raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
@@ -297,7 +297,7 @@ class ConversionHost < ApplicationRecord
   def get_conversion_state(task_id)
     json_state = connect_ssh { |ssu| ssu.get_file("/var/lib/uci/#{task_id}/state.json", nil) }
     JSON.parse(json_state)
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and retrieve conversion state data from file '/var/lib/uci/#{task_id}/state.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '/var/lib/uci/#{task_id}/state.json': #{json_state}"
@@ -396,7 +396,7 @@ class ConversionHost < ApplicationRecord
   # parameters appropriate for that type of resource.
   #
   def connect_ssh
-    require 'MiqSshUtil'
+    require 'manageiq-ssh-util'
     MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
       yield(ssu)
     end
