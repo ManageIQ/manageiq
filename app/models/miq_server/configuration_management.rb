@@ -12,10 +12,8 @@ module MiqServer::ConfigurationManagement
     Vmdb::Settings.reload!
 
     activate_settings_for_appliance
-    sync_config
-    sync_assigned_roles
-    reset_queue_messages
-    update_sync_timestamp(Time.now.utc)
+    reset_server_caches
+    notify_workers_of_config_change(Time.now.utc)
   end
 
   # The purpose of this method is to do special activation of things
@@ -59,5 +57,11 @@ module MiqServer::ConfigurationManagement
     sync_worker_monitor_settings
     sync_child_worker_settings
     $log.log_hashes(@worker_monitor_settings)
+  end
+
+  def reset_server_caches
+    sync_config
+    sync_assigned_roles
+    reset_queue_messages
   end
 end
