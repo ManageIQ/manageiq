@@ -331,6 +331,8 @@ class MiqServer < ApplicationRecord
   end
 
   def is_deleteable?
+    return true if MiqEnvironment::Command.is_podified?
+
     if self.is_local?
       message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
       @errors ||= ActiveModel::Errors.new(self)

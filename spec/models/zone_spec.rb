@@ -167,8 +167,8 @@ RSpec.describe Zone do
 
   context "#ntp_reload_queue" do
     it "queues a ntp reload for all active servers in the zone" do
-      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
-      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
+      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
       zone     = FactoryBot.create(:zone)
       server_1 = FactoryBot.create(:miq_server, :zone => zone)
       FactoryBot.create(:miq_server, :zone => zone, :status => "stopped")
@@ -203,6 +203,11 @@ RSpec.describe Zone do
       described_class.seed
       expect(described_class.maintenance_zone.visible).to eq(false)
     end
+
+    it "cannot be destroyed" do
+      described_class.seed
+      expect { described_class.maintenance_zone.destroy! }.to raise_error(RuntimeError)
+    end
   end
 
   context "validate multi region" do
@@ -223,5 +228,67 @@ RSpec.describe Zone do
     expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
     zone.destroy!
     expect(MiqQueue.where(:zone => zone.name).count).to eq(0)
+  end
+
+  it "doesn't create a server for the zone when not podified" do
+    zone = FactoryBot.create(:zone)
+    expect(zone.miq_servers.count).to eq(0)
+  end
+
+  describe "#destroy" do
+    before { MiqRegion.seed }
+
+    it "fails for a zone with servers when not podified" do
+      zone = FactoryBot.create(:zone)
+      zone.miq_servers.create!(:name => "my_server")
+      expect { zone.destroy! }.to raise_error(RuntimeError)
+    end
+
+    it "fails for the default zone" do
+      described_class.seed
+      expect { described_class.default_zone.destroy! }.to raise_error(RuntimeError)
+    end
+
+    it "fails for a zone with a provider" do
+      zone = FactoryBot.create(:zone)
+      FactoryBot.create(:ext_management_system, :zone => zone)
+
+      expect { zone.destroy! }.to raise_error(RuntimeError)
+    end
+  end
+
+  context "when podified" do
+    before do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+    end
+
+    describe ".create" do
+      it "automatically creates a server" do
+        zone = Zone.create!(:name => "my_zone", :description => "some zone")
+        expect(zone.miq_servers.count).to eq(1)
+
+        server = zone.miq_servers.first
+        expect(server.name).to eq("my_zone")
+      end
+
+      it "doesn't create a server for non-visible zones" do
+        zone = Zone.create!(:name => "my_zone", :description => "some zone", :visible => false)
+        expect(zone.miq_servers.count).to eq(0)
+      end
+
+      it "doesn't create a server for the default zone" do
+        zone = Zone.create!(:name => "default", :description => "Default Zone")
+        expect(zone.miq_servers.count).to eq(0)
+      end
+    end
+
+    it ".destroy deletes the server in the zone" do
+      MiqRegion.seed
+      zone = Zone.create!(:name => "my_zone", :description => "some zone")
+      server = zone.miq_servers.first
+      zone.destroy!
+
+      expect(MiqServer.find_by(:id => server.id)).to be_nil
+    end
   end
 end

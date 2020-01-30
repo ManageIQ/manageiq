@@ -55,18 +55,21 @@ describe EvmServer do
         expect(subject.servers_to_monitor.first.id).to eq(MiqServer.first.id)
 
         4.times { FactoryBot.create(:miq_server) }
-        expect(subject).to receive(:impersonate_server).exactly(4).times
-        expect(subject).to receive(:start_server).exactly(4).times
+
+        num_servers = MiqServer.count
+
+        # one for each new server
+        expect(subject).to receive(:impersonate_server).exactly(num_servers - 1).times
+        expect(subject).to receive(:start_server).exactly(num_servers - 1).times
         subject.refresh_servers_to_monitor
 
-        expect(subject.servers_to_monitor.count).to eq(5)
+        expect(subject.servers_to_monitor.count).to eq(num_servers)
         expect(subject.servers_to_monitor.map(&:id)).to match_array(MiqServer.all.map(&:id))
       end
 
       it "removes a server when it is removed from the database" do
         server = FactoryBot.create(:miq_server)
         expect(subject.servers_to_monitor.map(&:id)).to include(server.id)
-        expect(subject.servers_to_monitor.count).to eq(2)
 
         monitor_server = subject.servers_to_monitor.find { |s| s.id == server.id }
         expect(monitor_server).to receive(:shutdown)
@@ -75,7 +78,6 @@ describe EvmServer do
         subject.refresh_servers_to_monitor
 
         expect(subject.servers_to_monitor.map(&:id)).not_to include(server.id)
-        expect(subject.servers_to_monitor.count).to eq(1)
       end
 
       # Note: this is a very important spec
@@ -86,8 +88,8 @@ describe EvmServer do
         initial_object_id = subject.servers_to_monitor.first.object_id
 
         4.times { FactoryBot.create(:miq_server) }
-        expect(subject).to receive(:impersonate_server).exactly(4).times
-        expect(subject).to receive(:start_server).exactly(4).times
+        allow(subject).to receive(:impersonate_server)
+        allow(subject).to receive(:start_server)
         subject.refresh_servers_to_monitor
 
         new_objects = subject.servers_to_monitor.map(&:object_id)
