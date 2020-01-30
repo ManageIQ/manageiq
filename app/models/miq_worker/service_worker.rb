@@ -7,11 +7,9 @@ class MiqWorker
     def create_container_objects
       orchestrator = ContainerOrchestrator.new
 
-      orchestrator.create_service(service_name, service_label, SERVICE_PORT)
       orchestrator.create_deployment(worker_deployment_name) do |definition|
         configure_worker_deployment(definition)
 
-        definition[:spec][:serviceName] = service_name
         definition[:spec][:template][:metadata][:labels].merge!(service_label)
 
         container = definition[:spec][:template][:spec][:containers].first
@@ -42,11 +40,7 @@ class MiqWorker
     end
 
     def service_label
-      {:service => service_name}
-    end
-
-    def service_name
-      worker_deployment_name.delete_prefix(deployment_prefix)
+      {:service => worker_deployment_name.delete_prefix(deployment_prefix)}
     end
 
     # Can be overriden by including classes
