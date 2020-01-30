@@ -13,8 +13,8 @@ module CloudTenancyMixin
     end
 
     def tenant_joins_clause(scope)
-      scope.includes(:cloud_tenant => "source_tenant", :ext_management_system => {})
-           .references(:cloud_tenants, :tenants, :ext_management_systems) # needed for the where to work
+      scope.includes(:cloud_tenant => :source_tenant, :ext_management_system => {})
+           .left_joins(:cloud_tenant => :source_tenant, :ext_management_system => {})
     end
   end
 end

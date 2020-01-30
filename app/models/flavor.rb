@@ -44,8 +44,8 @@ class Flavor < ApplicationRecord
   end
 
   def self.tenant_joins_clause(scope)
-    scope.includes(:cloud_tenants => "source_tenant", :ext_management_system => {})
-         .references(:cloud_tenants, :tenants, :ext_management_system)
+    scope.includes(:cloud_tenants => :source_tenant, :ext_management_system => {})
+         .left_joins(:cloud_tenants => :source_tenant, :ext_management_system => {})
   end
 
   # Create a flavor as a queued task and return the task id. The queue name and

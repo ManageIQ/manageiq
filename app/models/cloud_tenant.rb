@@ -186,6 +186,6 @@ class CloudTenant < ApplicationRecord
 
   def self.tenant_joins_clause(scope)
     scope.includes(:source_tenant, :ext_management_system)
-         .references(:source_tenant, :ext_management_system)
+         .left_joins(:source_tenant, :ext_management_system)
   end
 end
