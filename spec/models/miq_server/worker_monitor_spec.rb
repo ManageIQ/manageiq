@@ -252,14 +252,15 @@ RSpec.describe "MiqWorker Monitor" do
         end
 
         context "for messaging through a key store" do
+          let(:key_store) { double("KeyStore") }
           before do
-            allow(@miq_server).to receive(:key_store).and_return(@key_store)
+            allow(@miq_server).to receive(:key_store).and_return(key_store)
             @ts = Time.now.utc
           end
 
           it "should update timestamp with config or role changes" do
-            expect(@miq_server).to receive(:set_last_change).with("last_config_change", @ts)
-            @miq_server.update_sync_timestamp(@ts)
+            expect(key_store).to receive(:set).with("last_config_change", @ts)
+            @miq_server.notify_workers_of_config_change(@ts)
           end
         end
       end

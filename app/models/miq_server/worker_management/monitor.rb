@@ -141,12 +141,8 @@ module MiqServer::WorkerManagement::Monitor
       reset_queue_messages       if roles_changed
 
       @last_sync = Time.now.utc
-      update_sync_timestamp(@last_sync)
+      notify_workers_of_config_change(@last_sync)
     end
-  end
-
-  def set_last_change(key, value)
-    key_store.set(key, value)
   end
 
   def key_store
@@ -154,7 +150,7 @@ module MiqServer::WorkerManagement::Monitor
     @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
   end
 
-  def update_sync_timestamp(last_sync)
-    set_last_change("last_config_change", last_sync)
+  def notify_workers_of_config_change(last_sync)
+    key_store.set("last_config_change", last_sync)
   end
 end
