@@ -239,7 +239,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
       if virtv2v_state['failed']
         updates[:virtv2v_status] = 'failed'
-        raise "Disks transformation failed."
       else
         updates[:virtv2v_status] = 'succeeded'
         updates[:destination_vm_uuid] = virtv2v_state['vm_id']
@@ -247,6 +246,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       end
     end
     updates[:virtv2v_disks] = updated_disks
+    update_options(:get_conversion_state_failures => 0)
+  rescue
+    failures = options[:get_conversion_state_failures] || 0
+    update_options(:get_conversion_state_failures => failures + 1)
+    raise "Failed to get conversion state 5 times in a row" if options[:get_conversion_state_failures] > 5
   ensure
     _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
     update_options(updates)
