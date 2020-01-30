@@ -273,9 +273,9 @@ module Rbac
       scope = scope.except(:offset, :limit, :order)
       scope = scope_targets(klass, scope, user_filters, user, miq_group)
               .where(conditions).where(sub_filter).where(where_clause).where(exp_sql).where(ids_clause)
-              .includes(include_for_find).includes(exp_includes)
               .order(order)
 
+      scope = add_includes(scope, klass, include_for_find, exp_includes)
       scope = include_references(scope, klass, references, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
@@ -368,8 +368,12 @@ module Rbac
       end
     end
 
-    def include_references(scope, klass, include_for_find, exp_includes)
-      scope.references(klass.includes_to_references(include_for_find)).references(klass.includes_to_references(exp_includes))
+    def add_includes(scope, klass, *includeses)
+      includeses.compact.inject(scope) { |scp, includes| scp.includes(includes) }
+    end
+
+    def include_references(scope, klass, *includeses)
+      includeses.compact.inject(scope) { |scp, includes| scp.references(klass.includes_to_references(includes)) }
     end
 
     # @param includes [Array, Hash]
