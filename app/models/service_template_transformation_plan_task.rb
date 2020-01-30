@@ -229,6 +229,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
+      updates[:virtv2v_status] = 'active'
       updated_disks.each do |disk|
         matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
         raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
@@ -239,7 +240,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
       if virtv2v_state['failed']
         updates[:virtv2v_status] = 'failed'
-      else
+      elsif !canceling?
         updates[:virtv2v_status] = 'succeeded'
         updates[:destination_vm_uuid] = virtv2v_state['vm_id']
         updated_disks.each { |d| d[:percent] = 100 }
