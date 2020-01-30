@@ -49,31 +49,31 @@ RSpec.describe Authenticator do
     end
 
     it "returns external groups matching internal ones" do
-      create_groups(%w(group1 group2 group3))
-      matched_groups = authenticator.send(:match_groups, %w(group2 group4))
-      expect(matched_groups.collect(&:description)).to match_array(%w(group2))
+      create_groups(%w[group1 group2 group3])
+      matched_groups = authenticator.send(:match_groups, %w[group2 group4])
+      expect(matched_groups.collect(&:description)).to match_array(%w[group2])
     end
 
     it "matches groups without case sensitivity" do
-      create_groups(%w(group1 group2 GROUP3 GROUP4))
-      matched_groups = authenticator.send(:match_groups, %w(Group3 Group5))
-      expect(matched_groups.collect(&:description)).to match_array(%w(GROUP3))
+      create_groups(%w[group1 group2 GROUP3 GROUP4])
+      matched_groups = authenticator.send(:match_groups, %w[Group3 Group5])
+      expect(matched_groups.collect(&:description)).to match_array(%w[GROUP3])
     end
 
     it "returns empty list when no groups match" do
-      create_groups(%w(group1 group2))
-      matched_groups = authenticator.send(:match_groups, %w(group3))
+      create_groups(%w[group1 group2])
+      matched_groups = authenticator.send(:match_groups, %w[group3])
       expect(matched_groups).to be_empty
     end
 
     it "only returns matched group for the current region" do
       FactoryBot.create(:miq_group,
-                         :description => "group2",
-                         :id          => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
+                        :description => "group2",
+                        :id          => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
       FactoryBot.create(:miq_group, :description => "group1")
       group2 = FactoryBot.create(:miq_group, :description => "group2")
 
-      matched_groups = authenticator.send(:match_groups, %w(group2))
+      matched_groups = authenticator.send(:match_groups, %w[group2])
       expect(MiqGroup.where(:description => "group2").count).to eq(2)
       expect(matched_groups.count).to             eq(1)
       expect(matched_groups.first.id).to          eq(group2.id)
