@@ -280,8 +280,7 @@ module Rbac
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
       if inline_view?(options, scope)
-        inner_scope = scope.except(:select, :includes, :references)
-        scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
+        inner_scope = scope.except(:select, :references)
         if inner_scope.order_values.present?
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
