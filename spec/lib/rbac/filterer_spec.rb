@@ -709,7 +709,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references without includes" do
-        expect(results.references_values).to eq []
+        expect(results.left_outer_joins_values).to eq []
       end
 
       context "with :include_for_find" do
@@ -722,7 +722,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(results.left_outer_joins_values).to eq([:evm_owner => {}])
         end
       end
     end
@@ -739,7 +739,7 @@ RSpec.describe Rbac::Filterer do
       end
 
       it "does not add references with no includes" do
-        expect(results.references_values).to eq []
+        expect(results.left_outer_joins_values).to eq []
       end
 
       context "with :include_for_find" do
@@ -751,7 +751,7 @@ RSpec.describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array %w[users]
+          expect(results.left_outer_joins_values).to eq([:evm_owner => {}])
         end
       end
     end
@@ -1161,7 +1161,7 @@ RSpec.describe Rbac::Filterer do
           # having the virtual attribute in references is the current way.
           # even though resource is polymorphic, it is ending up in the join tables
           result = described_class.search :class            => "MetricRollup",
-                                          :include_for_find => @include, :references => @include
+                                          :include_for_find => @include, :references => @include, :use_sql_view => true
         end.not_to raise_error
         expect(result.first.length).to eq(1)
       end
@@ -2515,24 +2515,18 @@ RSpec.describe Rbac::Filterer do
     let(:exp_includes)     { { :host => {} } }
 
     it "adds include_for_find .references to the scope" do
-      method_args      = [scope, klass, include_for_find, nil]
-      resulting_scope  = subject.send(:include_references, *method_args)
-
-      expect(resulting_scope.references_values).to eq(%w[miq_servers])
+      resulting_scope = subject.send(:include_references, scope, klass, include_for_find, nil)
+      expect(resulting_scope.left_outer_joins_values).to eq([include_for_find])
     end
 
     it "adds exp_includes .references to the scope" do
-      method_args      = [scope, klass, nil, exp_includes]
-      resulting_scope  = subject.send(:include_references, *method_args)
-
-      expect(resulting_scope.references_values).to eq(%w[hosts])
+      resulting_scope = subject.send(:include_references, scope, klass, nil, exp_includes)
+      expect(resulting_scope.left_outer_joins_values).to eq([exp_includes])
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
-      method_args      = [scope, klass, include_for_find, exp_includes]
-      resulting_scope  = subject.send(:include_references, *method_args)
-
-      expect(resulting_scope.references_values).to eq(%w[miq_servers hosts])
+      resulting_scope = subject.send(:include_references, scope, klass, include_for_find, exp_includes)
+      expect(resulting_scope.left_outer_joins_values).to match_array([include_for_find, exp_includes])
     end
 
     context "if the include is polymorphic" do
@@ -2540,10 +2534,8 @@ RSpec.describe Rbac::Filterer do
       let(:include_for_find) { { :resource => {} } }
 
       it "does not add .references to the scope" do
-        method_args      = [scope, klass, include_for_find, nil]
-        resulting_scope  = subject.send(:include_references, *method_args)
-
-        expect(resulting_scope.references_values).to eq([])
+        resulting_scope = subject.send(:include_references, scope, klass, include_for_find, nil)
+        expect(resulting_scope.left_outer_joins_values).to eq([])
       end
     end
   end

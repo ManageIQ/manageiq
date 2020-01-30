@@ -281,9 +281,7 @@ module Rbac
 
       if inline_view?(options, scope)
         inner_scope = scope.except(:select, :references)
-        if inner_scope.order_values.present?
-          inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
-        end
+        inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         scope = scope.from(Arel.sql("(#{inner_scope.to_sql})").as(scope.table_name))
                      .except(:offset, :limit, :where)
 
@@ -353,6 +351,8 @@ module Rbac
     # We currently assume that all regular columns are already in the SELECT.
     # So this is just returning the functions (e.g. LOWER(name))
     def select_from_order_columns(columns)
+      return if columns.nil?
+
       columns.compact.map do |column|
         if column.kind_of?(Arel::Nodes::Ordering)
           column.expr
@@ -372,7 +372,12 @@ module Rbac
     end
 
     def include_references(scope, klass, *includeses)
-      includeses.compact.inject(scope) { |scp, includes| scp.references(klass.includes_to_references(includes)) }
+      includeses.compact.inject(scope) do |scp, includes|
+        # add to join clause (add distinct if necessary)
+        scp = add_joins(klass, scp, includes)
+        # add select just in case a distinct column got in there
+        apply_select(klass, scp, select_from_order_columns(scp.order_values))
+      end
     end
 
     # @param includes [Array, Hash]
