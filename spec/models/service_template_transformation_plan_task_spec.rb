@@ -391,7 +391,21 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           allow(Time).to receive(:now).and_return(time_now)
         end
 
-        it "raises when conversion is failed" do
+        it "rescues when conversion_host.get_conversion_state fails less than 5 times" do
+          task_1.update_options(:get_conversion_state_failures => 2)
+          allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_raise("Fake error")
+          task_1.get_conversion_state
+          expect(task_1.options[:get_conversion_state_failures]).to eq(3)
+        end
+
+        it "rescues when conversion_host.get_conversion_state fails more than 5 times" do
+          task_1.update_options(:get_conversion_state_failures => 5)
+          allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_raise("Fake error")
+          expect { task_1.get_conversion_state }.to raise_error("Fake error")
+          expect(task_1.options[:get_conversion_state_failures]).to eq(6)
+        end
+
+        it "updates progress when conversion is failed" do
           allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
             "failed"       => true,
             "finished"     => true,
@@ -408,7 +422,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               "type"    => "error"
             }
           )
-          expect { task_1.get_conversion_state }.to raise_error("Disks transformation failed.")
+          task_1.get_conversion_state
           expect(task_1.options[:virtv2v_status]).to eq('failed')
           expect(task_1.options[:virtv2v_finished_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
           expect(task_1.options[:virtv2v_message]).to eq('virt-v2v failed somehow')
