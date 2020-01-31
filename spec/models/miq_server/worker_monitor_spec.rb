@@ -192,65 +192,6 @@ RSpec.describe "MiqWorker Monitor" do
           end
         end
 
-        context "when worker queues up message for server" do
-          before do
-            @ems_id = 7
-            @worker1.send_message_to_worker_monitor('reconnect_ems', @ems_id.to_s)
-          end
-
-          it "should queue up work for the server" do
-            q = MiqQueue.first
-            expect(q.class_name).to eq("MiqServer")
-            expect(q.instance_id).to eq(@miq_server.id)
-            expect(q.method_name).to eq('message_for_worker')
-            expect(q.args).to eq([@worker1.id, 'reconnect_ems', @ems_id.to_s])
-            expect(q.queue_name).to eq('miq_server')
-            expect(q.zone).to eq(@miq_server.zone.name)
-            expect(q.server_guid).to eq(@miq_server.guid)
-          end
-        end
-
-        context "when server has a single non-sync message" do
-          before do
-            @miq_server.message_for_worker(@worker1.id, "foo")
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['foo']])
-          end
-        end
-
-        context "when server has a single sync_config message" do
-          before do
-            @miq_server.message_for_worker(@worker1.id, "sync_config")
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['sync_config']])
-          end
-        end
-
-        context "when server has a single reconnect_ems message with a parameter" do
-          before do
-            @ems_id = 7
-            @miq_server.message_for_worker(@worker1.id, 'reconnect_ems', @ems_id.to_s)
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s]])
-          end
-
-          context "and an exit message" do
-            before do
-              @miq_server.message_for_worker(@worker1.id, 'exit')
-            end
-
-            it "#worker_get_messages should return proper message via drb" do
-              expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s], ['exit']])
-            end
-          end
-        end
-
         context "for messaging through a key store" do
           let(:key_store) { double("KeyStore") }
           before do
