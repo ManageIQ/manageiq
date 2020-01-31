@@ -578,7 +578,7 @@ RSpec.describe MiqExpression do
     context "date/time support" do
       it "generates the SQL for a = expression with a date field" do
         sql, * = described_class.new("=" => {"field" => "Vm-retires_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."retires_on" = '2016-01-01'))
+        expect(sql).to eq(%q("vms"."retires_on" = '2016-01-01 00:00:00'))
       end
 
       it "generates the SQL for an AFTER expression" do
@@ -601,7 +601,7 @@ RSpec.describe MiqExpression do
 
       it "generates the SQL for a != expression with a date field" do
         sql, * = described_class.new("!=" => {"field" => "Vm-retires_on", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq(%q("vms"."retires_on" != '2016-01-01'))
+        expect(sql).to eq(%q("vms"."retires_on" != '2016-01-01 00:00:00'))
       end
 
       it "generates the SQL for an IS expression" do
