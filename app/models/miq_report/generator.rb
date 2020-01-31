@@ -80,10 +80,14 @@ module MiqReport::Generator
     @table2class[table]
   end
 
+  # models that are preloaded for later use
   def get_include_for_find
-    get_include.deep_merge(include_for_find || {}).presence
+    include_for_find.presence
   end
 
+  # models that are necessary / in the SELECT, WHERE, or ORDER clause
+  #
+  # get from include hash or derive from col_order)
   def get_include
     include_as_hash(include.presence || invent_report_includes)
   end

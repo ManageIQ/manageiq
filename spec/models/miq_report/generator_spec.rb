@@ -165,10 +165,10 @@ RSpec.describe MiqReport::Generator do
       expect(rpt.get_include_for_find).to be_nil
     end
 
-    it "includes virtual_includes from virtual_attributes that are not sql friendly" do
+    it "does not includes virtual_includes from virtual_attributes that are not sql friendly" do
       rpt = MiqReport.new(:db   => "VmOrTemplate",
                           :cols => %w[name platform])
-      expect(rpt.get_include_for_find).to eq(:platform => {})
+      expect(rpt.get_include_for_find).to be_nil
     end
 
     it "does not include sql friendly virtual_attributes" do
@@ -177,30 +177,12 @@ RSpec.describe MiqReport::Generator do
       expect(rpt.get_include_for_find).to be_nil
     end
 
-    it "uses include and include_as_hash" do
+    it "uses only include_for_find" do
       rpt = MiqReport.new(:db               => "VmOrTemplate",
                           :cols             => %w[name platform],
                           :include          => {:host => {:columns => %w[name]}, :storage => {:columns => %w[name]}},
                           :include_for_find => {:snapshots => {}})
-      expect(rpt.get_include_for_find).to eq(:platform => {}, :host => {}, :storage => {}, :snapshots => {})
-    end
-
-    it "uses col, col_order, and virtual attributes and ignores empty include" do
-      # it also allows cols to override col_order for requesting extra columns
-      rpt = MiqReport.new(:db               => "VmOrTemplate",
-                          :include          => {},
-                          :cols             => %w[name v_datastore_path],
-                          :col_order        => %w[name host.name storage.name],
-                          :include_for_find => {:snapshots => {}})
-      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
-    end
-
-    it "uses col_order and virtual attributes" do
-      rpt = MiqReport.new(:db               => "VmOrTemplate",
-                          :include          => {},
-                          :col_order        => %w[name v_datastore_path host.name storage.name],
-                          :include_for_find => {:snapshots => {}})
-      expect(rpt.get_include_for_find).to eq(:v_datastore_path => {}, :host => {}, :storage => {}, :snapshots => {})
+      expect(rpt.get_include_for_find).to eq(:snapshots => {})
     end
   end
 
