@@ -288,12 +288,20 @@ class MiqWorker::Runner
       _log.info("#{log_prefix} Synchronizing configuration complete...")
     end
 
+    register_worker_with_worker_monitor unless MiqEnvironment::Command.is_podified?
+
     @last_hb = now
     do_heartbeat_work
   rescue SystemExit, SignalException
     raise
   rescue Exception => err
     do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
+  end
+
+  def register_worker_with_worker_monitor
+    worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
+  rescue DRb::DRbError => err
+    do_exit("Error processing messages from MiqServer because #{err.class.name}: #{err.message}", 1)
   end
 
   def heartbeat_to_file(timeout = nil)
