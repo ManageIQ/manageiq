@@ -7,5 +7,8 @@ FactoryBot.define do
       name { "shopping cart" }
       state { "cart" }
     end
+
+    factory :service_order_cart, :parent => :service_order,
+                                 :class  => "ServiceOrderCart"
   end
 end
