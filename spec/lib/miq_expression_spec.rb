@@ -493,17 +493,17 @@ RSpec.describe MiqExpression do
       expect(sql).to eq("\"vms\".\"id\" IN (SELECT DISTINCT \"guest_applications\".\"vm_or_template_id\" FROM \"guest_applications\" WHERE \"guest_applications\".\"name\" = 'foo')")
     end
 
-    it "cant generates the SQL for a CONTAINS expression with association.association-field" do
+    it "can't generate the SQL for a CONTAINS expression with association.association-field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications.host-name", "value" => "foo"}).to_sql
       expect(sql).to be_nil
     end
 
-    it "cant generat the SQL for a CONTAINS expression virtualassociation" do
+    it "can't generate the SQL for a CONTAINS expression virtualassociation" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.processes-name", "value" => "foo"}).to_sql
       expect(sql).to be_nil
     end
 
-    it "cant generat the SQL for a CONTAINS expression with [association.virtualassociation]" do
+    it "can't generate the SQL for a CONTAINS expression with [association.virtualassociation]" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users.active_vms-name", "value" => "foo"}).to_sql
       expect(sql).to be_nil
     end
