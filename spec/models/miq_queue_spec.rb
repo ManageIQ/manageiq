@@ -4,7 +4,6 @@ RSpec.describe MiqQueue do
   context "#deliver" do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      MiqServer.define_singleton_method(:setup_data_directory) {}
     end
 
     it "requires class_name" do
@@ -133,8 +132,8 @@ RSpec.describe MiqQueue do
 
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
-      allow(MiqServer).to receive(:setup_data_directory).and_raise(ex)
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'setup_data_directory')
+      allow(MiqServer).to receive(:pidfile).and_raise(ex)
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'pidfile')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
