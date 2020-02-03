@@ -4,6 +4,7 @@ RSpec.describe MiqQueue do
   context "#deliver" do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      MiqServer.define_singleton_method(:setup_data_directory) {}
     end
 
     it "requires class_name" do
