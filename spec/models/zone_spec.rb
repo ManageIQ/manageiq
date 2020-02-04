@@ -291,4 +291,38 @@ RSpec.describe Zone do
       expect(MiqServer.find_by(:id => server.id)).to be_nil
     end
   end
+
+  describe "#message_for_invalid_delete" do
+    it "returns an error for the default zone" do
+      described_class.seed
+      message = described_class.default_zone.message_for_invalid_delete
+      expect(message).to eq("cannot delete default zone")
+    end
+
+    it "returns an error for the maintenance zone" do
+      described_class.seed
+      message = described_class.maintenance_zone.message_for_invalid_delete
+      expect(message).to eq("cannot delete maintenance zone")
+    end
+
+    it "returns an error when the zone has providers" do
+      zone = FactoryBot.create(:zone)
+      FactoryBot.create(:ext_management_system, :zone => zone)
+      message = zone.message_for_invalid_delete
+      expect(message).to eq("zone name '#{zone.name}' is used by a provider")
+    end
+
+    it "returns an error when the zone has servers and not running in pods" do
+      zone = FactoryBot.create(:miq_server).zone
+      message = zone.message_for_invalid_delete
+      expect(message).to eq("zone name '#{zone.name}' is used by a server")
+    end
+
+    it "does not return an error when the zone has a server and running in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      zone = FactoryBot.create(:miq_server).zone
+      message = zone.message_for_invalid_delete
+      expect(message).to be_nil
+    end
+  end
 end
