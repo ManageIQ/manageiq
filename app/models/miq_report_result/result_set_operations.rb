@@ -45,7 +45,7 @@ module MiqReportResult::ResultSetOperations
         end
 
         result_set.map! { |x| x.slice(*report.col_order) }
-        result_set = result_set.stable_sort_by(sorting_columns, options[:sort_order])
+        result_set = result_set.tabular_sort(sorting_columns, options[:sort_order])
         result_set = apply_limit_and_offset(result_set, options)
       end
 
