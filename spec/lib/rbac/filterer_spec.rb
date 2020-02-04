@@ -1119,7 +1119,7 @@ RSpec.describe Rbac::Filterer do
       end
     end
 
-    context "for Metrics::Rollup" do
+    context "for polymorphic includes/references" do
       before do
         vm = FactoryBot.create(:vm_vmware)
         FactoryBot.create(
@@ -1147,20 +1147,53 @@ RSpec.describe Rbac::Filterer do
           :max_disk_usage_rate_average     => {},
           :min_net_usage_rate_average      => {},
           :max_net_usage_rate_average      => {},
-          :v_derived_storage_used          => {}
+          :v_derived_storage_used          => {},
+          :resource                        => {}
         }
       end
 
       # NOTE:  Think long and hard before you consider removing this test.
       # Many-a-hours wasted here determining this bug that resulted in
       # re-adding this test again.
-      it "should not raise an error when a polymorphic reflection is included" do
-        result = nil
+      #
+      # 2nd NOTE:  I did think (and wrote the above comment as well), however,
+      # now it seems we DO NOT SUPPORT polymorphic code, since we removed it
+      # here:
+      #
+      #   https://github.com/ManageIQ/manageiq/commit/8cc2277b
+      #
+      # That said, we should make sure this is erroring and no other callers
+      # are trying to do this (example:  MiqReport), so make sure this raises
+      # an error to inform the caller that fixing needs to happen.
+      #
+      it "raises an error when a polymorphic reflection is included and referenced" do
+        # NOTE: Fails if :references is passed with a value, or with no key,
+        # which it uses :include_for_find as the default.
         expect do
-          result = described_class.search :class            => "MetricRollup",
-                                          :include_for_find => @include
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => @include
+        end.to raise_error(Rbac::PolymorphicError)
+
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include
+        end.to raise_error(Rbac::PolymorphicError)
+      end
+
+      it "does not raise an error when a polymorphic reflection is only included" do
+        # NOTE:  if references is passed in, but is blank, then it is fine
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => {}
         end.not_to raise_error
-        expect(result.first.length).to eq(1)
+
+        expect do
+          described_class.search :class            => "MetricRollup",
+                                 :include_for_find => @include,
+                                 :references       => nil
+        end.not_to raise_error
       end
     end
   end

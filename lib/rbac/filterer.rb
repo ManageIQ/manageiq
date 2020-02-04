@@ -1,4 +1,6 @@
 module Rbac
+  class PolymorphicError < ArgumentError; end
+
   class Filterer
     # This list is used to detemine whether RBAC, based on assigned tags, should be applied for a class in a search that is based on the class.
     # Classes should be added to this list ONLY after:
@@ -319,6 +321,8 @@ module Rbac
       attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       return targets, attrs
+    rescue ActiveRecord::EagerLoadPolymorphicError
+      raise Rbac::PolymorphicError
     end
 
     def is_sti?(klass)
