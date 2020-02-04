@@ -126,7 +126,7 @@ class ConversionHost < ApplicationRecord
   def check_ssh_connection
     connect_ssh { |ssu| ssu.shell_exec('uname -a') }
     true
-  rescue StandardError
+  rescue
     false
   end
 
@@ -164,7 +164,7 @@ class ConversionHost < ApplicationRecord
     raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
-  rescue StandardError => err
+  rescue => err
     raise "Could not apply the limits for task '#{task_id}' on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
@@ -193,8 +193,28 @@ class ConversionHost < ApplicationRecord
     raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON for task '#{task_id}' from options '#{filtered_options}' with [#{err.class}: #{err}]"
-  rescue StandardError => err
+  rescue => err
     raise "Preparation of conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
+  end
+
+  # Checks that LUKS keys vault exists and is valid JSON
+  # We don't care about the file content, as virt-v2v-wrapper will check it later
+  #
+  # @return [Boolean] true if the file can be retrieved and parsed, false otherwise
+  #
+  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
+  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [JSON::ParserError] if file cannot be parsed as JSON
+  def luks_keys_vault_valid?
+    luks_keys_vault_json = connect_ssh { |ssu| ssu.get_file("/root/.v2v_luks_keys_vault.json", nil) }
+    luks_keys_vault = JSON.parse(luks_keys_vault_json)
+    true
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and retrieve LUKS keys vault from file '/root/.v2v_luks_keys_vault.json' with [#{err.class}: #{err}]"
+  rescue JSON::ParserError
+    raise "Could not parse conversion state data from file '/root/.v2v_luks_keys_vault.json': #{json_state}"
+  rescue
+    false
   end
 
   # Build the podman command to execute conversion
@@ -202,22 +222,22 @@ class ConversionHost < ApplicationRecord
   # @param [Integer] id of the task that conversion applies to
   #
   # @return [String] podman command to be executed on conversion host
-  def build_podman_command(task_id)
+  def build_podman_command(task_id, conversion_options)
     uci_settings = Settings.transformation.uci.container
     uci_image = uci_settings.image
     uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
 
-    "/usr/bin/podman run --privileged"\
-    " --name conversion-#{task_id}"\
-    " --volume /dev:/dev"\
-    " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
-    " --volume /var/tmp:/var/tmp"\
-    " --volume /var/lib/uci/#{task_id}:/var/lib/uci"\
-    " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"\
-    " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"\
-    " --volume /var/log/uci/#{task_id}:/var/log/uci"\
-    " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
-    " #{uci_image}"
+    command = "sudo /usr/bin/podman run --privileged"
+    command += " --name conversion-#{task_id}"
+    command += " --volume /dev:/dev"
+    command += " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"
+    command += " --volume /var/tmp:/var/tmp"
+    command += " --volume /var/lib/uci/#{task_id}:/var/lib/uci"
+    command += " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key" if conversion_options[:transport_method] == 'ssh'
+    command += " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json" if luks_keys_vault_valid?
+    command += " --volume /var/log/uci/#{task_id}:/var/log/uci"
+    command += " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"
+    command += " #{uci_image}"
   end
 
   # Run the virt-v2v-wrapper script on the remote host and return a hash
@@ -230,17 +250,17 @@ class ConversionHost < ApplicationRecord
   def run_conversion(task_id, conversion_options)
     filtered_options = filter_options(conversion_options)
     prepare_conversion(task_id, conversion_options)
-    connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id), nil, nil, nil) }
+    connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id, conversion_options), nil, nil, nil) }
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
-  rescue StandardError => err
+  rescue => err
     raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
   def create_cutover_file(task_id)
     connect_ssh { |ssu| ssu.shell_exec("touch /var/lib/uci/#{task_id}/cutover") }
     true
-  rescue StandardError
+  rescue
     false
   end
 
@@ -264,7 +284,7 @@ class ConversionHost < ApplicationRecord
     raise "Failed to connect and retrieve conversion state data from file '/var/lib/uci/#{task_id}/state.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '/var/lib/uci/#{task_id}/state.json': #{json_state}"
-  rescue StandardError => err
+  rescue => err
     raise "Error retrieving and parsing conversion state file '/var/lib/uci/#{task_id}/state.json' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
@@ -272,7 +292,7 @@ class ConversionHost < ApplicationRecord
   #
   def get_conversion_log(task_id, log_type)
     connect_ssh { |ssu| ssu.get_file("/var/log/uci/#{task_id}/#{log_type}.log", nil) }
-  rescue StandardError => err
+  rescue => err
     raise "Could not get #{log_type} log for task '#{task_id}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 

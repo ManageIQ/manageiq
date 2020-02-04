@@ -529,16 +529,36 @@ RSpec.describe ConversionHost, :v2v do
   context "#build_podman_command" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz'} }
     let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
 
-    it "works as expected and returns the command" do
-      expect(conversion_host.build_podman_command(task.id)).to eq(
-        "/usr/bin/podman run --privileged"\
+    it "works as expected and returns the command when transport is VDDK and LUKS keys vault check fails" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise('Fake error')
+      expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
+        "sudo /usr/bin/podman run --privileged"\
         " --name conversion-#{task.id}"\
         " --volume /dev:/dev"\
         " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
         " --volume /var/tmp:/var/tmp"\
         " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
+        " --volume /var/log/uci/#{task.id}:/var/log/uci"\
+        " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
+        " manageiq/v2v-conversion-host:latest"
+      )
+    end
+
+    it "works as expected and returns the command when transport is SSH and LUKS keys vault check succeeds" do
+      conversion_options[:transport_method] = 'ssh'
+      allow(conversion_host).to receive(:connect_ssh).and_return('{"fake": "json"}')
+      expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
+        "sudo /usr/bin/podman run --privileged"\
+        " --name conversion-#{task.id}"\
+        " --volume /dev:/dev"\
+        " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
+        " --volume /var/tmp:/var/tmp"\
+        " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
+        " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"\
+        " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"\
         " --volume /var/log/uci/#{task.id}:/var/log/uci"\
         " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
         " manageiq/v2v-conversion-host:latest"
