@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 129 ending 2020-02-02
+
+### Added
+
+* Job method "queue signal" to take a "queue name" [(#19764)](https://github.com/ManageIQ/manageiq/pull/19764)
+* Bump "secure headers" gem to a more recent version [(#19752)](https://github.com/ManageIQ/manageiq/pull/19752)
+* Monitor multiple servers when running in pods [(#19734)](https://github.com/ManageIQ/manageiq/pull/19734)
+* Map server to zone in pods [(#19770)](https://github.com/ManageIQ/manageiq/pull/19770)
+* Remove Vmdb::Settings "last loaded" and simplify server settings reload [(#19758)](https://github.com/ManageIQ/manageiq/pull/19758)
+* Commit the data directory rather than creating it when the server starts [(#19745)](https://github.com/ManageIQ/manageiq/pull/19745)
+* Remove the unsafe "cattr accessor" for "my guid cache" [(#19744)](https://github.com/ManageIQ/manageiq/pull/19744)
+* Upgrade to config gem for ruby 2.7 support [(#19757)](https://github.com/ManageIQ/manageiq/pull/19757)
+
+### Fixed
+
+* Fix nondescript "unknown unknowns" for timestamps [(#19774)](https://github.com/ManageIQ/manageiq/pull/19774)
+
 # Unreleased as of Sprint 128 ending 2020-01-20
 
 ### Added
