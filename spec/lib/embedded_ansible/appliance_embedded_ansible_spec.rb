@@ -315,7 +315,7 @@ describe ApplianceEmbeddedAnsible do
         miq_database.ansible_secret_key = "supersecretkey"
         expect(subject).to receive(:find_or_create_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
 
-        expect(AwesomeSpawn).to receive(:run!).and_raise(AwesomeSpawn::CommandResultError.new("error", 1))
+        expect(AwesomeSpawn).to receive(:run!).and_raise(AwesomeSpawn::CommandResultError.new("error", AwesomeSpawn::CommandResult.new("systemctl start ansible-tower", "", "Failed", 1)))
         expect { subject.start }.to raise_error(AwesomeSpawn::CommandResultError)
         expect(miq_database.reload.ansible_secret_key).not_to be_present
       end
