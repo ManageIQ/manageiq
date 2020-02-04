@@ -38,6 +38,7 @@ class MiqServer < ApplicationRecord
   virtual_delegate :description, :to => :zone, :prefix => true, :allow_nil => true, :type => :string
 
   validate :validate_zone_not_maintenance?
+  validate :zone_unchanged_in_pods, :on => :update
 
   GUID_FILE = Rails.root.join("GUID").freeze
 
@@ -478,5 +479,13 @@ class MiqServer < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Server', 'Servers', number)
+  end
+
+  private
+
+  def zone_unchanged_in_pods
+    return unless MiqEnvironment::Command.is_podified?
+
+    errors.add(:zone, N_('cannot be changed when running in containers')) if zone_id_changed?
   end
 end # class MiqServer
