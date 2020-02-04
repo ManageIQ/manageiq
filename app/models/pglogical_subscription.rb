@@ -260,12 +260,12 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def remote_node_lsn
-    with_remote_connection(&:xlog_location)
+    with_remote_connection(5.seconds) { |conn| conn.xlog_location }
   end
 
-  def with_remote_connection
+  def with_remote_connection(connect_timeout = 0)
     find_password
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout) do |conn|
       yield conn
     end
   end
