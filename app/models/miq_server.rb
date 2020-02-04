@@ -481,6 +481,10 @@ class MiqServer < ApplicationRecord
     n_('Server', 'Servers', number)
   end
 
+  def self.zone_is_modifiable?
+    Zone.visible.in_my_region.count > 1 && !MiqEnvironment::Command.is_podified?
+  end
+
   private
 
   def zone_unchanged_in_pods
