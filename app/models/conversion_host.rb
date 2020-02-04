@@ -207,7 +207,7 @@ class ConversionHost < ApplicationRecord
   # @raise [JSON::ParserError] if file cannot be parsed as JSON
   def luks_keys_vault_valid?
     luks_keys_vault_json = connect_ssh { |ssu| ssu.get_file("/root/.v2v_luks_keys_vault.json", nil) }
-    luks_keys_vault = JSON.parse(luks_keys_vault_json)
+    JSON.parse(luks_keys_vault_json)
     true
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and retrieve LUKS keys vault from file '/root/.v2v_luks_keys_vault.json' with [#{err.class}: #{err}]"
@@ -237,7 +237,7 @@ class ConversionHost < ApplicationRecord
     command += " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json" if luks_keys_vault_valid?
     command += " --volume /var/log/uci/#{task_id}:/var/log/uci"
     command += " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"
-    command += " #{uci_image}"
+    command + " #{uci_image}"
   end
 
   # Run the virt-v2v-wrapper script on the remote host and return a hash
