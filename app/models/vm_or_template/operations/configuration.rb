@@ -99,6 +99,16 @@ module VmOrTemplate::Operations::Configuration
     raw_remove_disk(disk_name, options)
   end
 
+  def resize_disk(disk_name, disk_size_mb, options = {})
+    raise _("VM has no EMS, unable to resize disk") unless ext_management_system
+
+    raw_resize_disk(disk_name, disk_size_mb, options)
+  end
+
+  def raw_resize_disk(_disk_name, _disk_size_mb, _options = {})
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
   def raw_attach_volume(volume_id, device = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
