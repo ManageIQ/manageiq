@@ -81,17 +81,17 @@ RSpec.describe RegistrationSystem do
 
   context ".verify_credentials" do
     it "with valid credentials" do
-      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass").and_return(true)
+      expect(LinuxAdmin::SubscriptionManager).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass").and_return(true)
       expect(RegistrationSystem.verify_credentials(creds)).to be_truthy
     end
 
     it "with invalid credentials" do
-      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.and_raise(LinuxAdmin::CredentialError, AwesomeSpawn::CommandResult.new("command_line", "Invalid username or password", "Invalid username or password", 1))
+      expect(LinuxAdmin::SubscriptionManager).to receive(:validate_credentials).once.and_raise(LinuxAdmin::CredentialError, AwesomeSpawn::CommandResult.new("command_line", "Invalid username or password", "Invalid username or password", 1))
       expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
     it "should rescue NotImplementedError" do
-      allow(LinuxAdmin::RegistrationSystem).to receive(:registration_type_uncached).and_return(LinuxAdmin::RegistrationSystem)
+      allow(LinuxAdmin::SubscriptionManager).to receive(:registration_type_uncached).and_return(LinuxAdmin::RegistrationSystem)
       expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
@@ -103,7 +103,7 @@ RSpec.describe RegistrationSystem do
         :registration_server            => "http://abc.net",
         :registration_http_proxy_server => "1.1.1.1"
       )
-      expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass", :server_url => "http://abc.net", :registration_type => "sm_hosted", :proxy_address => "1.1.1.1", :proxy_username => "bob", :proxy_password => "pass").and_return(true)
+      expect(LinuxAdmin::SubscriptionManager).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass", :server_url => "http://abc.net", :registration_type => "sm_hosted", :proxy_address => "1.1.1.1", :proxy_username => "bob", :proxy_password => "pass").and_return(true)
       expect(RegistrationSystem.verify_credentials).to be_truthy
     end
   end
