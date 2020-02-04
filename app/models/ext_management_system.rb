@@ -578,11 +578,11 @@ class ExtManagementSystem < ApplicationRecord
   def destroy(task_id = nil)
     disable!(:validate => false) if enabled?
 
-    _log.info("Destroying #{child_managers.count} child_managers")
-    child_managers.destroy_all
-
     # kill workers
     MiqWorker.find_alive.where(:queue_name => queue_name).each(&:kill)
+
+    _log.info("Destroying #{child_managers.count} child_managers")
+    child_managers.destroy_all
 
     super().tap do
       if task_id
