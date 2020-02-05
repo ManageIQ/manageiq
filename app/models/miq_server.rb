@@ -482,7 +482,9 @@ class MiqServer < ApplicationRecord
   end
 
   def self.zone_is_modifiable?
-    Zone.visible.in_my_region.count > 1 && !MiqEnvironment::Command.is_podified?
+    return false if MiqEnvironment::Command.is_podified?
+
+    Zone.visible.in_my_region.count > 1
   end
 
   private
