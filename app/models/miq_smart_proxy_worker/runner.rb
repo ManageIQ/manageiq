@@ -50,18 +50,24 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
     end
   end
 
-  def do_work
-    if @tid.nil? || !@tid.alive?
-      unless @tid.try(:status)
-        dead_tid, @tid = @tid, nil
-        _log.info("#{log_prefix} Waiting for the Heartbeat Thread to exit...")
-        dead_tid.join # raise the exception the dead thread failed with
-      end
+  def ensure_heartbeat_thread_started
+    # start the thread and return if it has not been started yet
+    if @tid.nil?
+      @tid = start_heartbeat_thread
+      return
+    end
+
+    # if the thread is dead, start a new one and kill it if it is aborting
+    if !@tid.alive?
+      @tid.kill if @tid.status == "aborting"
 
       _log.info("#{log_prefix} Heartbeat Thread gone. Restarting...")
       @tid = start_heartbeat_thread
     end
+  end
 
+  def do_work
+    ensure_heartbeat_thread_started
     super
   end
 end
