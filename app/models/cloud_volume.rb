@@ -19,6 +19,8 @@ class CloudVolume < ApplicationRecord
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   acts_as_miq_taggable
 
   def self.volume_types

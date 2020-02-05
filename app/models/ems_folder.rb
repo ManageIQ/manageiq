@@ -18,6 +18,8 @@ class EmsFolder < ApplicationRecord
   virtual_has_many :miq_templates,     :uses => :all_relationships
   virtual_has_many :hosts,             :uses => :all_relationships
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   #
   # Relationship methods
   #
