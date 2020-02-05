@@ -1,8 +1,4 @@
 class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
-  def do_before_work_loop
-    @tid = start_heartbeat_thread
-  end
-
   def before_exit(message, _exit_code)
     @exit_requested = true
     #
