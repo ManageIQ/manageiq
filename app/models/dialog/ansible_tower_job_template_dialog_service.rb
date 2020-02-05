@@ -48,11 +48,13 @@ class Dialog
         :data_type      => "string",
         :display        => "edit",
         :required       => false,
+        :dynamic        => false,
         :options        => {:protected => false},
         :label          => options[:label],
         :position       => position,
-        :reconfigurable => true,
-        :dialog_group   => group
+        :reconfigurable => false,
+        :dialog_group   => group,
+        :read_only      => false
       )
     end
 
@@ -106,14 +108,17 @@ class Dialog
         :name           => "param_#{parameter['variable']}",
         :display        => "edit",
         :required       => parameter['required'],
+        :dynamic        => false,
         :options        => {:force_multi_value => parameter["type"] == "multiselect"},
         :values         => dropdown_list,
         :default_value  => default_value || dropdown_list.first,
         :label          => parameter['question_name'],
         :description    => parameter['question_description'],
-        :reconfigurable => true,
+        :reconfigurable => false,
+        :data_type      => "string",
         :position       => position,
-        :dialog_group   => group
+        :dialog_group   => group,
+        :read_only      => false
       )
     end
 
@@ -124,13 +129,15 @@ class Dialog
         :data_type      => parameter['type'] == 'integer' ? 'integer' : 'string',
         :display        => "edit",
         :required       => parameter['required'],
+        :dynamic        => false,
         :default_value  => parameter['default'],
         :options        => {:protected => parameter['type'] == 'password'},
         :label          => parameter['question_name'],
         :description    => parameter['question_description'],
-        :reconfigurable => true,
+        :reconfigurable => false,
         :position       => position,
-        :dialog_group   => group
+        :dialog_group   => group,
+        :read_only      => false
       )
     end
 
@@ -154,10 +161,11 @@ class Dialog
         :data_type      => "string",
         :display        => "edit",
         :required       => false,
+        :dynamic        => false,
         :default_value  => value,
         :label          => key,
         :description    => key,
-        :reconfigurable => true,
+        :reconfigurable => false,
         :position       => position,
         :dialog_group   => group,
         :read_only      => true

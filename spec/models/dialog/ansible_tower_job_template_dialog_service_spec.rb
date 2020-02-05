@@ -69,8 +69,8 @@ describe Dialog::AnsibleTowerJobTemplateDialogService do
     expect(group).to have_attributes(:label => "Options", :display => "edit")
     fields = group.dialog_fields
     expect(fields.size).to eq(2)
-    expect(fields[0]).to have_attributes(:label => "Service Name", :name => "service_name", :required => false, :data_type => 'string')
-    expect(fields[1]).to have_attributes(:label => "Limit", :name => "limit", :required => false, :data_type => 'string')
+    expect(fields[0]).to have_attributes(:required => false, :data_type => 'string', :dynamic => false, :reconfigurable => false, :read_only => false, :label => "Service Name", :name => "service_name")
+    expect(fields[1]).to have_attributes(:required => false, :data_type => 'string', :dynamic => false, :reconfigurable => false, :read_only => false, :label => "Limit",        :name => "limit")
   end
 
   def assert_field(field, clss, attributes)
@@ -83,13 +83,13 @@ describe Dialog::AnsibleTowerJobTemplateDialogService do
     fields = group.dialog_fields
     expect(fields.size).to eq(7)
 
-    assert_field(fields[0], DialogFieldTextBox,      :name => 'param_param1', :data_type => 'integer',   :default_value => "19")
-    assert_field(fields[1], DialogFieldTextBox,      :name => 'param_param2', :data_type => 'string',    :default_value => "as")
-    assert_field(fields[2], DialogFieldTextAreaBox,  :name => 'param_param3', :data_type => 'string',    :default_value => "no\nhello")
-    assert_field(fields[3], DialogFieldTextBox,      :name => 'param_param4', :data_type => 'string',    :default_value => "mypassword", :options => {:protected => true})
-    assert_field(fields[4], DialogFieldDropDownList, :name => "param_param5", :default_value => "Peach", :values => [%w[Apple Apple], %w[Banana Banana], %w[Peach Peach]], :options => {:force_multi_value => false})
-    assert_field(fields[5], DialogFieldDropDownList, :name => "param_param6", :default_value => "[\"opt1\", \"222\"]",  :values => [%w[222 222], %w[opt1 opt1], %w[opt3 opt3]], :options => {:force_multi_value => true})
-    assert_field(fields[6], DialogFieldTextBox,      :name => 'param_param7', :data_type => 'string', :default_value => "14.5")
+    assert_field(fields[0], DialogFieldTextBox,      :name => 'param_param1', :data_type => 'integer', :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "19")
+    assert_field(fields[1], DialogFieldTextBox,      :name => 'param_param2', :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "as")
+    assert_field(fields[2], DialogFieldTextAreaBox,  :name => 'param_param3', :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "no\nhello")
+    assert_field(fields[3], DialogFieldTextBox,      :name => 'param_param4', :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "mypassword", :options => {:protected => true})
+    assert_field(fields[4], DialogFieldDropDownList, :name => "param_param5", :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "Peach", :values => [%w[Apple Apple], %w[Banana Banana], %w[Peach Peach]], :options => {:force_multi_value => false})
+    assert_field(fields[5], DialogFieldDropDownList, :name => "param_param6", :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "[\"opt1\", \"222\"]", :values => [%w[222 222], %w[opt1 opt1], %w[opt3 opt3]], :options => {:force_multi_value => true})
+    assert_field(fields[6], DialogFieldTextBox,      :name => 'param_param7', :data_type => 'string',  :reconfigurable => false, :dynamic => false, :read_only => false, :default_value => "14.5")
   end
 
   def assert_variables_group(group)
@@ -98,8 +98,8 @@ describe Dialog::AnsibleTowerJobTemplateDialogService do
     fields = group.dialog_fields
     expect(fields.size).to eq(3)
 
-    assert_field(fields[0], DialogFieldTextBox, :name => 'param_some_extra_var', :default_value => 'blah', :data_type => 'string', :read_only => true)
-    assert_field(fields[1], DialogFieldTextBox, :name => 'param_other_extra_var', :default_value => '{"name":"some_value"}', :data_type => 'string', :read_only => true)
-    assert_field(fields[2], DialogFieldTextBox, :name => 'param_array_extra_var', :default_value => '[{"name":"some_value"}]', :data_type => 'string', :read_only => true)
+    assert_field(fields[0], DialogFieldTextBox, :name => 'param_some_extra_var',  :data_type => 'string', :dynamic => false, :read_only => true, :reconfigurable => false, :default_value => 'blah')
+    assert_field(fields[1], DialogFieldTextBox, :name => 'param_other_extra_var', :data_type => 'string', :dynamic => false, :read_only => true, :reconfigurable => false, :default_value => '{"name":"some_value"}')
+    assert_field(fields[2], DialogFieldTextBox, :name => 'param_array_extra_var', :data_type => 'string', :dynamic => false, :read_only => true, :reconfigurable => false, :default_value => '[{"name":"some_value"}]')
   end
 end
