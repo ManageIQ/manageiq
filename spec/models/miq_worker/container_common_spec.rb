@@ -12,7 +12,7 @@ RSpec.describe MiqWorker::ContainerCommon do
         {:subject => MiqGenericWorker.new, :name => deployment_name_for("generic")},
         {:subject => MiqUiWorker.new,      :name => deployment_name_for("ui")},
         {:subject => ManageIQ::Providers::Openshift::ContainerManager::EventCatcher.new(:queue_name => "ems_2"), :name => deployment_name_for("openshift-container-event-catcher-2")},
-        {:subject => ManageIQ::Providers::Redhat::NetworkManager::MetricsCollectorWorker.new, :name => deployment_name_for("redhat-network-metrics-collector")}
+        {:subject => ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker.new, :name => deployment_name_for("redhat-infra-metrics-collector")}
       ]
     end
 
