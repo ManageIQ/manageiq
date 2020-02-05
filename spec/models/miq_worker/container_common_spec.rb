@@ -6,6 +6,46 @@ RSpec.describe MiqWorker::ContainerCommon do
     "#{compressed_server_id}-#{name}"
   end
 
+  describe "#configure_worker_deplyoment" do
+    let(:test_deployment) do
+      {
+        :metadata => {
+          :name      => "test",
+          :labels    => {:app => "manageiq"},
+          :namespace => "manageiq",
+        },
+        :spec     => {
+          :selector => {:matchLabels => {:name => "test"}},
+          :template => {
+            :metadata => {:name => "test", :labels => {:name => "test", :app => "manageiq"}},
+            :spec     => {
+              :serviceAccountName => "miq-anyuid",
+              :containers         => [{
+                :name => "test",
+                :env  => []
+              }]
+            }
+          }
+        }
+      }
+    end
+
+    it "adds a node selector based on the zone name" do
+      worker = FactoryBot.create(:miq_generic_worker)
+      worker.configure_worker_deployment(test_deployment)
+
+      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone-#{MiqServer.my_zone}" => "true")
+    end
+
+    it "doesn't add a node selector for the default zone" do
+      MiqServer.my_server.zone.update(:name => "default")
+      worker = FactoryBot.create(:miq_generic_worker)
+      worker.configure_worker_deployment(test_deployment)
+
+      expect(test_deployment.dig(:spec, :template, :spec).keys).not_to include(:nodeSelector)
+    end
+  end
+
   describe "#worker_deployment_name" do
     let(:test_cases) do
       [

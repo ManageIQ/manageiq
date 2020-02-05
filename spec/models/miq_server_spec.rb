@@ -420,4 +420,48 @@ RSpec.describe MiqServer do
       expect(s.description).to eq(s.name)
     end
   end
+
+  describe "#zone_unchanged_in_pods" do
+    it "allows zone changes when not in pods" do
+      server = FactoryBot.create(:miq_server)
+      zone = FactoryBot.create(:zone)
+
+      server.zone = zone
+      expect(server.zone_id_changed?).to be_truthy
+      expect(server.save).to be_truthy
+    end
+
+    it "prevents zone changes in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      server = FactoryBot.create(:miq_server)
+      zone = FactoryBot.create(:zone)
+
+      server.zone = zone
+      expect(server.zone_id_changed?).to be_truthy
+      expect(server.save).to be_falsey
+    end
+  end
+
+  describe ".zone_is_modifiable?" do
+    it "is true when there are multiple zones in the region" do
+      FactoryBot.create(:miq_server)
+      FactoryBot.create(:zone)
+
+      expect(described_class.zone_is_modifiable?).to be_truthy
+    end
+
+    it "is false when there is only one zone" do
+      FactoryBot.create(:miq_server)
+      expect(Zone.count).to eq(1)
+      expect(described_class.zone_is_modifiable?).to be_falsey
+    end
+
+    it "is false when in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      FactoryBot.create(:miq_server)
+      FactoryBot.create(:zone)
+
+      expect(described_class.zone_is_modifiable?).to be_falsey
+    end
+  end
 end
