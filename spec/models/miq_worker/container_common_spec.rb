@@ -34,7 +34,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       worker = FactoryBot.create(:miq_generic_worker)
       worker.configure_worker_deployment(test_deployment)
 
-      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone" => MiqServer.my_zone)
+      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone/#{MiqServer.my_zone}" => "true")
     end
 
     it "doesn't add a node selector for the default zone" do

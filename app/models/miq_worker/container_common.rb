@@ -24,7 +24,7 @@ class MiqWorker
     end
 
     def zone_selector
-      {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone" => MiqServer.my_zone}
+      {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone/#{MiqServer.my_zone}" => "true"}
     end
 
     def container_image_namespace
