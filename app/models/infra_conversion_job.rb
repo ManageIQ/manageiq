@@ -470,11 +470,12 @@ class InfraConversionJob < Job
   def inventory_refresh
     update_migration_task_progress(:on_entry)
     if migration_task.options[:destination_vm_uuid].present?
-      InventoryRefresh::Target.new(
+      target = InventoryRefresh::Target.new(
         :association => :vms,
         :manager_ref => {:ems_ref => destination_vm_ems_ref(migration_task.options[:destination_vm_uuid])},
         :manager     => migration_task.destination_ems
       )
+      EmsRefresh.queue_refresh_task(target)
     end
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)

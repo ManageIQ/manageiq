@@ -1330,7 +1330,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context '#inventory_refresh' do
-    let(:target_collection) { double(InventoryRefresh::TargetCollection) }
+    let(:target) { double(InventoryRefresh::TargetCollection) }
 
     before do
       job.state = 'transforming_vm'
@@ -1348,11 +1348,12 @@ RSpec.describe InfraConversionJob, :v2v do
       Timecop.freeze(2019, 2, 6) do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
-        expect(InventoryRefresh::Target).to receive(:new).with(
+        allow(InventoryRefresh::Target).to receive(:new).with(
           :association => :vms,
           :manager     => ems_redhat,
           :manager_ref => {:ems_ref => '/api/vms/01234567-89ab-cdef-0123-456789ab-cdef'}
-        )
+        ).and_return(target)
+        expect(EmsRefresh).to receive(:queue_refresh_task).with(target)
         expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
         job.signal(:inventory_refresh)
       end
