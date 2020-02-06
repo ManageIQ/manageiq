@@ -537,6 +537,7 @@ RSpec.describe ConversionHost, :v2v do
       expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
         "sudo /usr/bin/podman run --privileged"\
         " --name conversion-#{task.id}"\
+        " --network host" \
         " --volume /dev:/dev"\
         " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
         " --volume /var/tmp:/var/tmp"\
@@ -553,6 +554,7 @@ RSpec.describe ConversionHost, :v2v do
       expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
         "sudo /usr/bin/podman run --privileged"\
         " --name conversion-#{task.id}"\
+        " --network host"\
         " --volume /dev:/dev"\
         " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
         " --volume /var/tmp:/var/tmp"\

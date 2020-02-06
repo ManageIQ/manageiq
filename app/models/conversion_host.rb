@@ -229,6 +229,7 @@ class ConversionHost < ApplicationRecord
 
     command = "sudo /usr/bin/podman run --privileged"
     command += " --name conversion-#{task_id}"
+    command += " --network host"
     command += " --volume /dev:/dev"
     command += " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"
     command += " --volume /var/tmp:/var/tmp"
