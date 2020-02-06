@@ -385,20 +385,20 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "rescues when conversion_host.get_conversion_state fails less than 5 times" do
           task_1.update_options(:get_conversion_state_failures => 2)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_raise("Fake error")
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
           task_1.get_conversion_state
           expect(task_1.options[:get_conversion_state_failures]).to eq(3)
         end
 
         it "rescues when conversion_host.get_conversion_state fails more than 5 times" do
           task_1.update_options(:get_conversion_state_failures => 5)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_raise("Fake error")
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
           expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 5 times in a row")
           expect(task_1.options[:get_conversion_state_failures]).to eq(6)
         end
 
         it "updates progress when conversion is failed" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
             "failed"       => true,
             "finished"     => true,
             "started"      => true,
@@ -421,7 +421,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         end
 
         it "updates disks progress" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
             "started"    => true,
             "disks"      => [
               { "path" => src_disk_1.filename, "progress" => 100.0 },
@@ -441,7 +441,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         end
 
         it "sets disks progress to 100% when conversion is finished and successful" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -467,7 +467,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "sets disks progress to 100% when conversion is finished and successful unless canceling" do
           task_1.canceling
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.options[:virtv2v_wrapper]['state_file']).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -679,7 +679,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             expect(task_1.conversion_options).to eq(
               :vm_name                    => src_vm_1.name,
               :vm_uuid                    => src_vm_1.ems_ref,
-              :conversion_host_uuid       => openstack_conversion_host_vm.ems_ref,
+              :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'vddk',
               :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri                 => "esx://esx_user@10.0.0.1/?no_verify=1",
@@ -721,7 +721,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             expect(task_1.conversion_options).to eq(
               :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vm_uuid                    => src_vm_1.ems_ref,
-              :conversion_host_uuid       => openstack_conversion_host_vm.ems_ref,
+              :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'ssh',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
