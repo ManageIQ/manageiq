@@ -1353,7 +1353,7 @@ RSpec.describe InfraConversionJob, :v2v do
           :manager     => ems_redhat,
           :manager_ref => {:ems_ref => '/api/vms/01234567-89ab-cdef-0123-456789ab-cdef'}
         ).and_return(target)
-        expect(EmsRefresh).to receive(:queue_refresh_task).with(target)
+        expect(EmsRefresh).to receive(:queue_refresh).with(target)
         expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
         job.signal(:inventory_refresh)
       end

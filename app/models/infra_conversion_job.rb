@@ -475,7 +475,7 @@ class InfraConversionJob < Job
         :manager_ref => {:ems_ref => destination_vm_ems_ref(migration_task.options[:destination_vm_uuid])},
         :manager     => migration_task.destination_ems
       )
-      EmsRefresh.queue_refresh_task(target)
+      EmsRefresh.queue_refresh(target)
     end
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_inventory_refresh_complete, :deliver_on => Time.now.utc + state_retry_interval)
