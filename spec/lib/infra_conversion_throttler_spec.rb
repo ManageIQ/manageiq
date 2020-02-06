@@ -35,8 +35,8 @@ RSpec.describe InfraConversionThrottler, :v2v do
   let(:task_running_1) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm) }
   let(:task_running_2) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm) }
   let(:job_waiting) { FactoryBot.create(:infra_conversion_job, :state => 'waiting_to_start') }
-  let(:job_running_1) { FactoryBot.create(:infra_conversion_job, :state => 'running') }
-  let(:job_running_2) { FactoryBot.create(:infra_conversion_job, :state => 'running') }
+  let(:job_running_1) { FactoryBot.create(:infra_conversion_job, :state => 'waiting_for_inventory_refresh') }
+  let(:job_running_2) { FactoryBot.create(:infra_conversion_job, :state => 'aborting_virtv2v') }
 
   before do
     allow(host).to receive(:supports_conversion_host?).and_return(true)
