@@ -1,4 +1,4 @@
-describe ContainerGroup do
+RSpec.describe ContainerGroup do
   it "has container volumes and pods" do
     pvc = FactoryBot.create(
       :persistent_volume_claim,

@@ -1,12 +1,20 @@
-describe MiqRequestWorkflow do
+RSpec.describe MiqRequestWorkflow do
   let(:workflow) { FactoryBot.build(:miq_provision_workflow) }
   let(:ems) { FactoryBot.create(:ext_management_system) }
   let(:resource_pool) { FactoryBot.create(:resource_pool) }
   let(:ems_folder) { FactoryBot.create(:ems_folder) }
-  let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
+  let(:datacenter) { FactoryBot.create(:vmware_datacenter) }
 
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
+
+    before do
+      workflow.define_singleton_method(:some_validation_method) {}
+      workflow.define_singleton_method(:other_validation_method) {}
+      workflow.define_singleton_method(:some_required_method) {}
+      workflow.define_singleton_method(:some_required_method_1) {}
+      workflow.define_singleton_method(:some_required_method_2) {}
+    end
 
     context "validation_method" do
       it "skips validation if no validation_method is defined" do
@@ -17,14 +25,14 @@ describe MiqRequestWorkflow do
       it "calls the validation_method if defined" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).once
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).once
         expect(workflow.validate({})).to be true
       end
 
       it "returns false when validation fails" do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
@@ -43,7 +51,7 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required_method, :some_required_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:some_required_method, any_args).and_return("Some Error")
         expect(workflow.validate({})).to be false
       end
     end
@@ -54,8 +62,8 @@ describe MiqRequestWorkflow do
                                                                                             :some_required_method_2])
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :required, true)
 
-        expect(workflow).to receive(:some_required_method_1)
-        expect(workflow).to receive(:some_required_method_2)
+        expect(workflow).to receive(:send).with(:some_required_method_1, any_args)
+        expect(workflow).to receive(:send).with(:some_required_method_2, any_args)
         expect(workflow.validate({})).to be true
       end
     end
@@ -65,8 +73,8 @@ describe MiqRequestWorkflow do
         dialog.store_path(:dialogs, :customize, :fields, :root_password, :validation_method, :some_validation_method)
         dialog.store_path(:dialogs, :customize, :fields, :root_password_2, :validation_method, :other_validation_method)
 
-        expect(workflow).to receive(:some_validation_method).and_return("Some Error")
-        expect(workflow).to receive(:other_validation_method)
+        expect(workflow).to receive(:send).with(:some_validation_method, any_args).and_return("Some Error")
+        expect(workflow).to receive(:send).with(:other_validation_method, any_args)
         expect(workflow.validate({})).to be false
       end
     end
@@ -463,7 +471,7 @@ describe MiqRequestWorkflow do
     before do
       resource_pool.ext_management_system = ems
       ems_folder.ext_management_system = ems
-      attrs = ems_folder.attributes.merge(:object => ems_folder)
+      attrs = ems_folder.attributes.merge(:object => workflow.ems_folder_to_hash_struct(ems_folder))
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = { ResourcePool => { resource_pool.id => xml_hash } }
       workflow.instance_variable_set("@ems_xml_nodes", hash)
@@ -504,7 +512,7 @@ describe MiqRequestWorkflow do
   context "#folder_to_datacenter" do
     before do
       datacenter.ext_management_system = ems
-      attrs = datacenter.attributes.merge(:object => datacenter, :ems => ems)
+      attrs = datacenter.attributes.merge(:object => workflow.ems_folder_to_hash_struct(datacenter), :ems => ems)
       xml_hash = XmlHash::Element.new('EmsFolder', attrs)
       hash = { EmsFolder => { datacenter.id => xml_hash } }
       workflow.instance_variable_set("@ems_xml_nodes", hash)

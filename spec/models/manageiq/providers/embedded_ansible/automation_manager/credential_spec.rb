@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
   let(:embedded_ansible) { ManageIQ::Providers::EmbeddedAnsible::AutomationManager }
   let(:manager) do
     FactoryBot.create(:provider_embedded_ansible, :default_organization => 1).managers.first

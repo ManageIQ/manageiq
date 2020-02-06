@@ -1,4 +1,4 @@
-describe VmScan do
+RSpec.describe VmScan do
   # test cases for BZ #1454936
   context "A VM Scan job in multiple zones" do
     before do

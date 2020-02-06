@@ -1,6 +1,4 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker::Runner < ::MiqQueueWorkerBase::Runner
-  self.delay_startup_for_vim_broker = true # NOTE: For ems_inventory role, TODO: only for VMware
-
   def after_initialize
     @emss = ExtManagementSystem.find([@cfg[:ems_id]])
     @emss.each do |ems|

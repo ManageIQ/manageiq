@@ -1,4 +1,4 @@
-describe Vmdb::Plugins do
+RSpec.describe Vmdb::Plugins do
   it ".all" do
     all = described_class.all
 

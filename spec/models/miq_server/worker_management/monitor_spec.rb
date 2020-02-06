@@ -1,4 +1,4 @@
-describe MiqServer::WorkerManagement::Monitor do
+RSpec.describe MiqServer::WorkerManagement::Monitor do
   context "#check_not_responding" do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) do

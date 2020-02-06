@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraManager::MetricsCapture do
+RSpec.describe ManageIQ::Providers::InfraManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
   let(:miq_server) { EvmSpecHelper.local_miq_server }
@@ -25,13 +25,13 @@ describe ManageIQ::Providers::InfraManager::MetricsCapture do
 
   describe ".capture_ems_targets" do
     it "finds enabled targets" do
-      targets = described_class.new(nil, ems).send(:capture_ems_targets)
+      targets = described_class.new(nil, ems).capture_ems_targets
       assert_infra_targets_enabled targets
       expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host Storage])
     end
 
     it "finds enabled targets excluding storages" do
-      targets = described_class.new(nil, ems).send(:capture_ems_targets, :exclude_storages => true)
+      targets = described_class.new(nil, ems).capture_ems_targets(:exclude_storages => true)
       assert_infra_targets_enabled targets
       expect(targets.map { |t| t.class.name }).to match_array(%w[ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host])
     end

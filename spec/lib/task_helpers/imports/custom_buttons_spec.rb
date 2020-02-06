@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::CustomButtons do
+RSpec.describe TaskHelpers::Imports::CustomButtons do
   let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'custom_buttons') }
   let(:custom_button_file)            { 'CustomButtons.yaml' }
   let(:bad_custom_button_file)        { 'CustomButtonsBad.yaml' }

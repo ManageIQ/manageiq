@@ -42,7 +42,7 @@ shared_examples_for "heartbeat file checker" do |heartbeat_file = nil|
   end
 end
 
-describe Workers::Heartbeat do
+RSpec.describe Workers::Heartbeat do
   describe ".file_check" do
     context "using the default heartbeat_file" do
       let(:test_heartbeat_file) { ManageIQ.root.join("tmp", "spec", "test.hb") }

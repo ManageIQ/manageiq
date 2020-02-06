@@ -1,4 +1,4 @@
-describe Relationship do
+RSpec.describe Relationship do
   describe "#filtered?" do
     before do
       @rel = FactoryBot.build(:relationship_vm_vmware)

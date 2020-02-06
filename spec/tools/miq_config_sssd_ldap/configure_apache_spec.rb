@@ -5,7 +5,7 @@ require "tempfile"
 require "fileutils"
 require 'auth_template_files'
 
-describe MiqConfigSssdLdap::ConfigureApache do
+RSpec.describe MiqConfigSssdLdap::ConfigureApache do
   before do
     @spec_name = File.basename(__FILE__).split(".rb").first.freeze
   end

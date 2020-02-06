@@ -1,5 +1,5 @@
 # this is basically copied from miq_report_result/purging.rb
-describe DriftState do
+RSpec.describe DriftState do
   context "::Purging" do
     before do
       @vmdb_config = {

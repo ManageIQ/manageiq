@@ -154,6 +154,8 @@ class Host < ApplicationRecord
   include DriftStateMixin
   virtual_delegate :last_scan_on, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true, :type => :datetime
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   include UuidMixin
   include MiqPolicyMixin
   include AlertMixin
@@ -735,6 +737,31 @@ class Host < ApplicationRecord
     errors.empty? ? true : errors
   end
 
+  def verify_credentials_task(userid, auth_type = nil, options = {})
+    task_opts = {
+      :action => "Verify Host Credentials",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :args        => [auth_type, options],
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "verify_credentials?",
+      :queue_name  => queue_name_for_ems_operations,
+      :role        => "ems_operations",
+      :zone        => my_zone
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def verify_credentials?(*args)
+    # Prevent the connection details, including the password, from being leaked into the logs
+    # and MiqQueue by only returning true/false
+    !!verify_credentials(*args)
+  end
+
   def verify_credentials(auth_type = nil, options = {})
     raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
     if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
@@ -1286,6 +1313,8 @@ class Host < ApplicationRecord
       :method_name  => "scan_from_queue",
       :miq_callback => cb,
       :msg_timeout  => timeout,
+      :role         => "ems_operations",
+      :queue_name   => queue_name_for_ems_operations,
       :zone         => my_zone
     )
   end

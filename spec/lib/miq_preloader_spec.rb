@@ -1,4 +1,4 @@
-describe MiqPreloader do
+RSpec.describe MiqPreloader do
   describe ".preload" do
     it "preloads once from an object" do
       ems = FactoryBot.create(:ems_infra)

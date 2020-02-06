@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
+RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   let(:job)     { described_class.create_job(*options).tap { |job| job.state = state } }
   let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], {:verbosity => 3}] }
   let(:state)   { "waiting_to_start" }

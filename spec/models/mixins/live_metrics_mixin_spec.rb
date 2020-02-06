@@ -1,4 +1,4 @@
-describe LiveMetricsMixin do
+RSpec.describe LiveMetricsMixin do
   subject do
     Class.new do
       include LiveMetricsMixin

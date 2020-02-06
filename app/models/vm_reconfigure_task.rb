@@ -9,37 +9,51 @@ class VmReconfigureTask < MiqRequestTask
     VmReconfigureTask
   end
 
-  def self.get_description(req_obj)
-    name = nil
-    if req_obj.source.nil?
-      # Single source has not been selected yet
-      if req_obj.options[:src_ids].length == 1
-        v = Vm.find_by(:id => req_obj.options[:src_ids].first)
-        name = v.nil? ? "" : v.name
-      else
-        name = "Multiple VMs"
-      end
-    else
-      name = req_obj.source.name
-    end
+  def self.get_description(req)
+    options = req.options
 
-    new_settings = []
-    if req_obj.options[:vm_memory].present?
-      new_settings << "Memory: #{req_obj.options[:vm_memory].to_i} MB"
-    end
-    new_settings << "Processor Sockets: #{req_obj.options[:number_of_sockets].to_i}" if req_obj.options[:number_of_sockets].present?
-    new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" if req_obj.options[:cores_per_socket].present?
-    new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" if req_obj.options[:number_of_cpus].present?
-    new_settings << "Add Disks: #{req_obj.options[:disk_add].length}" if req_obj.options[:disk_add].present?
-    new_settings << "Remove Disks: #{req_obj.options[:disk_remove].length}" if req_obj.options[:disk_remove].present?
-    new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" if req_obj.options[:disk_resize].present?
-    new_settings << "Add Network Adapters: #{req_obj.options[:network_adapter_add].length}" if req_obj.options[:network_adapter_add].present?
-    new_settings << "Remove Network Adapters: #{req_obj.options[:network_adapter_remove].length}" if req_obj.options[:network_adapter_remove].present?
-    new_settings << "Edit Network Adapters: #{req_obj.options[:network_adapter_edit].length}" if req_obj.options[:network_adapter_edit].present?
-    new_settings << "Attach CD/DVDs: #{req_obj.options[:cdrom_connect].length}" if req_obj.options[:cdrom_connect].present?
-    new_settings << "Detach CD/DVDs: #{req_obj.options[:cdrom_disconnect].length}" if req_obj.options[:cdrom_disconnect].present?
-    "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
+    msg = []
+    msg << build_message(options, :vm_memory, "Memory: %d MB")
+    msg << build_message(options, :number_of_sockets, "Processor Sockets: %d")
+    msg << build_message(options, :cores_per_socket, "Processor Cores Per Socket: %d")
+    msg << build_message(options, :number_of_cpus, "Total Processors: %d")
+    msg << build_disk_message(options)
+    msg << build_message(options, :disk_remove, "Remove Disks: %d", :length)
+    msg << build_message(options, :disk_resize, "Resize Disks: %d", :length)
+    msg << build_message(options, :network_adapter_add, "Add Network Adapters: %d", :length)
+    msg << build_message(options, :network_adapter_remove, "Remove Network Adapters: %d", :length)
+    msg << build_message(options, :network_adapter_edit, "Edit Network Adapters: %d", :length)
+    msg << build_message(options, :cdrom_connect, "Attach CD/DVDs: %d", :length)
+    msg << build_message(options, :cdrom_disconnect, "Detach CD/DVDs: %d", :length)
+    "#{request_class::TASK_DESCRIPTION} for: #{display_name(req)} - #{msg.compact.join(", ")}"
   end
+
+  def self.build_message(options, key, message, modifier = nil)
+    if options[key].present?
+      value = options[key]
+      value = value.send(modifier) if modifier
+      message % value
+    end
+  end
+  private_class_method :build_message
+
+  def self.build_disk_message(options)
+    if options[:disk_add].present?
+      disk_sizes = options[:disk_add].collect { |d| d["disk_size_in_mb"].to_i.megabytes.to_s(:human_size) }
+      "Add Disks: #{options[:disk_add].length} : #{disk_sizes.join(", ")} "
+    end
+  end
+  private_class_method :build_disk_message
+
+  def self.display_name(req)
+    return req.source.name if req.source
+    return "Multiple VMs"  if req.options[:src_ids].length > 1
+
+    # Single source has not been selected yet
+    vm = Vm.find_by(:id => req.options[:src_ids])
+    vm.nil? ? "" : vm.name
+  end
+  private_class_method :display_name
 
   def after_request_task_create
     update_attribute(:description, get_description)

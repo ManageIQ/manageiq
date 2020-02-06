@@ -1,4 +1,4 @@
-describe EmsRefresh::MetadataRelats do
+RSpec.describe EmsRefresh::MetadataRelats do
   context ".vmdb_relats" do
     before do
       @zone        = FactoryBot.create(:zone)

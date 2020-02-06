@@ -1,4 +1,4 @@
-describe ServiceResource do
+RSpec.describe ServiceResource do
   it "default values" do
     expect(subject.group_idx).to eq(0)
     expect(subject.scaling_min).to eq(1)

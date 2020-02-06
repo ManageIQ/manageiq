@@ -165,6 +165,7 @@
   - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
+  - vm_native_console
   - vm_perf
   - vm_policy_sim
   - vm_show

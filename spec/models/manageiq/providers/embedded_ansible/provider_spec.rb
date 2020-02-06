@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::Provider do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   subject { FactoryBot.create(:provider_embedded_ansible) }
 
   let(:miq_server) { FactoryBot.create(:miq_server) }

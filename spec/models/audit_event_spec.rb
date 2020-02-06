@@ -1,4 +1,4 @@
-describe AuditEvent do
+RSpec.describe AuditEvent do
   it "should be invalid with empty attributes" do
     event = AuditEvent.new
     expect(event).not_to be_valid

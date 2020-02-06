@@ -1,4 +1,4 @@
-describe MiqReportResult do
+RSpec.describe MiqReportResult do
   before do
     EvmSpecHelper.local_miq_server
 

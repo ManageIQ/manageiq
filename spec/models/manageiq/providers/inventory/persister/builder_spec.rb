@@ -1,7 +1,7 @@
 require "inventory_refresh"
 require_relative 'test_persister'
 
-describe ManageIQ::Providers::Inventory::Persister::Builder do
+RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
   before :each do
     @ems = FactoryBot.create(:ems_cloud)
     @persister = create_persister

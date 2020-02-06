@@ -1,4 +1,4 @@
-describe "DatabaseConfiguration patch" do
+RSpec.describe "DatabaseConfiguration patch" do
   let(:db_config_path) { File.expand_path "../../../config/database.yml", __dir__ }
   let(:fake_db_config) { Pathname.new("does/not/exist") }
 

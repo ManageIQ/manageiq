@@ -1,4 +1,4 @@
-describe Dialog::ContainerTemplateServiceDialog do
+RSpec.describe Dialog::ContainerTemplateServiceDialog do
   describe "#create_dialog" do
     let(:container_template) { FactoryBot.create(:container_template) }
     let(:params) { [] }

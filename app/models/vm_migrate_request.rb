@@ -7,12 +7,19 @@ class VmMigrateRequest < MiqRequest
   validate               :must_have_user
   include MiqProvisionQuotaMixin
 
+  def vm
+    @vm ||= Vm.find_by(:id => options[:src_ids])
+  end
+
   def my_zone
-    vm = Vm.find_by(:id => options[:src_ids])
     vm.nil? ? super : vm.my_zone
   end
 
   def my_role(_action = nil)
     'ems_operations'
+  end
+
+  def my_queue_name
+    vm.nil? ? super : vm.queue_name_for_ems_operations
   end
 end

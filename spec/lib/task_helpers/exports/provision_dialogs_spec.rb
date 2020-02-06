@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::ProvisionDialogs do
+RSpec.describe TaskHelpers::Exports::ProvisionDialogs do
   let(:dialog_name1) { "default_dialog" }
   let(:dialog_name2) { "custom_dialog" }
   let(:dialog_desc1) { "Default Provisioning Dialog" }

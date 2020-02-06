@@ -1,37 +1,25 @@
-describe Vmdb::Settings do
-  describe ".on_reload" do
+RSpec.describe Vmdb::Settings do
+  describe ".dump_to_log_directory" do
     it "is called on top-level ::Settings.reload!" do
-      expect(described_class).to receive(:on_reload)
+      expect(described_class).to receive(:dump_to_log_directory)
 
       ::Settings.reload!
     end
 
-    it "updates the last_loaded time" do
-      Timecop.freeze(Time.now.utc) do
-        expect(described_class.last_loaded).to_not eq(Time.now.utc)
+    it "writes them" do
+      ::Settings.api.token_ttl = "1.minute"
+      described_class.dump_to_log_directory(::Settings)
 
-        described_class.on_reload
-
-        expect(described_class.last_loaded).to eq(Time.now.utc)
-      end
+      dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
+      expect(dumped_yaml.fetch_path(:api, :token_ttl)).to eq "1.minute"
     end
 
-    context "dumping the settings to the log directory" do
-      it "writes them" do
-        ::Settings.api.token_ttl = "1.minute"
-        described_class.on_reload
+    it "masks passwords" do
+      ::Settings.authentication.bind_pwd = "pa$$w0rd"
+      described_class.dump_to_log_directory(::Settings)
 
-        dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
-        expect(dumped_yaml.fetch_path(:api, :token_ttl)).to eq "1.minute"
-      end
-
-      it "masks passwords" do
-        ::Settings.authentication.bind_pwd = "pa$$w0rd"
-        described_class.on_reload
-
-        dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
-        expect(dumped_yaml.fetch_path(:authentication, :bind_pwd)).to eq "********"
-      end
+      dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
+      expect(dumped_yaml.fetch_path(:authentication, :bind_pwd)).to eq "********"
     end
   end
 

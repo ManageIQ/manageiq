@@ -1,4 +1,4 @@
-describe EmsFolder do
+RSpec.describe EmsFolder do
   context "with folder tree" do
     before do
       @root = FactoryBot.create(:ems_folder, :name => "root")

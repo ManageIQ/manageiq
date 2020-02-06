@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
   context "with a local repo" do
     let(:manager) do
       FactoryBot.create(:provider_embedded_ansible, :default_organization => 1).managers.first

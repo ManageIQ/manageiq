@@ -1,6 +1,6 @@
 require "stringio"
 
-describe SysprepFile do
+RSpec.describe SysprepFile do
   let(:good_ini) { "[section1]\n; some comment on section1\nvar1 = foo\nvar2 = bar" }
   let(:bad_ini)  { "; some comment on section1\nvar1_foo\nINI_DATA" }
   let(:good_xml) { "<?xml version=\"1.0\"?><unattend/>" }

@@ -1,4 +1,4 @@
-describe ResourceSharer do
+RSpec.describe ResourceSharer do
   before { allow(User).to receive_messages(:server_timezone => "UTC") }
 
   describe "#share" do

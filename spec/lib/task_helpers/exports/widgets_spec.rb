@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::Widgets do
+RSpec.describe TaskHelpers::Exports::Widgets do
   let(:export_dir) do
     Dir.mktmpdir('miq_exp_dir')
   end

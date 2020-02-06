@@ -1,4 +1,4 @@
-describe ServiceResource do
+RSpec.describe ServiceResource do
   context "default values" do
     before do
       @resource = ServiceResource.new

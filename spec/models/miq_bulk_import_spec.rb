@@ -1,4 +1,4 @@
-describe MiqBulkImport do
+RSpec.describe MiqBulkImport do
   context AssetTagImport do
     before do
       @file = StringIO.new("name,owner\nJD-C-T4.0.1.44,Joe")

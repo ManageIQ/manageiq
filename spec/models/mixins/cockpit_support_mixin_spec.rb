@@ -1,4 +1,4 @@
-describe CockpitSupportMixin do
+RSpec.describe CockpitSupportMixin do
   context '#supports_launch_cockpit?' do
     context 'Container Groups' do
       before do

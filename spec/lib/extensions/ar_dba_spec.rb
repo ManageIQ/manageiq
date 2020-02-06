@@ -1,4 +1,4 @@
-describe "ar_dba extension" do
+RSpec.describe "ar_dba extension" do
   let(:connection) { ApplicationRecord.connection }
 
   describe "#xlog_location" do

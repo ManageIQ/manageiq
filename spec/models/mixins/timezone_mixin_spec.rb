@@ -1,4 +1,4 @@
-describe TimezoneMixin do
+RSpec.describe TimezoneMixin do
   let(:test_class) do
     Class.new do
       include TimezoneMixin

@@ -1,4 +1,4 @@
-describe MiqPglogical do
+RSpec.describe MiqPglogical do
   let(:ar_connection) { ApplicationRecord.connection }
   let(:pglogical)     { PG::LogicalReplication::Client.new(ar_connection.raw_connection) }
 

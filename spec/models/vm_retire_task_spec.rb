@@ -1,4 +1,4 @@
-describe VmRetireTask do
+RSpec.describe VmRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:vm) { FactoryBot.create(:vm) }
   let(:miq_request) { FactoryBot.create(:vm_retire_request, :requester => user) }

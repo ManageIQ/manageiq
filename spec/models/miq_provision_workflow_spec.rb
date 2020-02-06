@@ -1,6 +1,6 @@
 silence_warnings { MiqProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
 
-describe MiqProvisionWorkflow do
+RSpec.describe MiqProvisionWorkflow do
   let(:admin) { FactoryBot.create(:user_admin) }
   let(:server) { EvmSpecHelper.local_miq_server }
   let(:dialog) { FactoryBot.create(:miq_dialog_provision) }

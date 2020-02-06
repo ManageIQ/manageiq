@@ -1,4 +1,4 @@
-describe SettingsChange do
+RSpec.describe SettingsChange do
   describe "#key_path" do
     it "with multiple parts in the key" do
       change = described_class.new(:key => "/api/token_ttl")

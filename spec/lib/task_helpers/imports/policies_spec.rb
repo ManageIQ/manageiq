@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::Policies do
+RSpec.describe TaskHelpers::Imports::Policies do
   let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'policies') }
   let(:policy_file)     { 'Policy_Import_Test.yaml' }
   let(:bad_policy_file) { 'Bad_Policy_Import_Test.yml' }

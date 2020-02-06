@@ -1,4 +1,4 @@
-describe PhysicalServerFirmwareUpdateTask do
+RSpec.describe PhysicalServerFirmwareUpdateTask do
   it '#description' do
     expect(subject.description).to eq('Physical Server Firmware Update')
   end

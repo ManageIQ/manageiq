@@ -1,4 +1,4 @@
-describe EventStream do
+RSpec.describe EventStream do
   describe ".event_groups" do
     EventStream.event_groups.each do |group_name, group_data|
       EventStream::GROUP_LEVELS.each do |level|

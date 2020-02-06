@@ -1,4 +1,4 @@
-describe Filesystem do
+RSpec.describe Filesystem do
   let(:filesystem_conf_file_ascii) do
     <<-EOT
 ## NB: Unpolished config file

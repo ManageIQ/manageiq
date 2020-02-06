@@ -596,5 +596,26 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
         service_template.update_catalog_item(updated_catalog_item_options_with_vms_added)
       end.to raise_error(StandardError, 'Must select a list of valid vms')
     end
+
+    it 'updates the cutover datetime for warm migration plan' do
+      service_template = described_class.create_catalog_item(updated_catalog_item_options_with_warm_migration)
+      service_template.miq_requests = []
+      cutover_datetime = Time.current + 3600
+      service_template.update_catalog_item(:config_info => {:warm_migration_cutover_datetime => cutover_datetime.iso8601})
+      expect(service_template.config_info[:warm_migration_cutover_datetime]).to eq(cutover_datetime.iso8601)
+    end
+
+    it 'rejects the cutover datetime for warm migration set to past' do
+      service_template = described_class.create_catalog_item(updated_catalog_item_options_with_warm_migration)
+      service_template.miq_requests = []
+      cutover_datetime = Time.current - 3600
+      expect { service_template.update_catalog_item(:config_info => {:warm_migration_cutover_datetime => cutover_datetime.iso8601}) }.to raise_exception(StandardError, 'Cannot set cutover date in the past')
+    end
+
+    it 'rejects invalid datetime for warm migration' do
+      service_template = described_class.create_catalog_item(updated_catalog_item_options_with_warm_migration)
+      service_template.miq_requests = []
+      expect { service_template.update_catalog_item(:config_info => {:warm_migration_cutover_datetime => 'nonsense'}) }.to raise_exception(StandardError, 'Error parsing datetime: invalid date: "nonsense"')
+    end
   end
 end

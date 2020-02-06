@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::VmOrTemplate do
+RSpec.describe ManageIQ::Providers::CloudManager::VmOrTemplate do
   describe "#all" do
     it "scopes" do
       vm = FactoryBot.create(:vm_openstack)

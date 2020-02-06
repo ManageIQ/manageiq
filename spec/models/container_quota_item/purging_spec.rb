@@ -1,4 +1,4 @@
-describe ContainerQuotaItem do
+RSpec.describe ContainerQuotaItem do
   context "::Purging" do
     context ".purge_queue" do
       before do

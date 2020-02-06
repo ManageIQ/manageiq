@@ -1,4 +1,4 @@
-describe Service do
+RSpec.describe Service do
   include_examples "OwnershipMixin"
 
   context "service events" do

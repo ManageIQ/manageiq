@@ -53,7 +53,10 @@ class InfraConversionJob < Job
         'aborting_virtv2v'        => 'powering_on_vm'
       },
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
-      :mark_vm_migrated                     => {'running_migration_playbook' => 'marking_vm_migrated'},
+      :mark_vm_migrated                     => {
+        'powering_on_vm'             => 'marking_vm_migrated',
+        'running_migration_playbook' => 'marking_vm_migrated'
+      },
       :poll_automate_state_machine          => {
         'powering_on_vm'      => 'running_in_automate',
         'marking_vm_migrated' => 'running_in_automate',
@@ -63,7 +66,7 @@ class InfraConversionJob < Job
       :abort_job                            => {'*'                => 'aborting'},
       :cancel                               => {'*'                => 'canceling'},
       :abort_virtv2v                        => {
-        'canceling'        => 'aborting_virtv2v',
+        '*'                => 'aborting_virtv2v',
         'aborting_virtv2v' => 'aborting_virtv2v'
       },
       :error                                => {'*'                => '*'}
@@ -121,7 +124,7 @@ class InfraConversionJob < Job
         :max_retries => 15.minutes / state_retry_interval
       },
       :marking_vm_migrated           => {
-        :description => "Mark source as migrated",
+        :description => "Virtual machine successfully migrated",
         :weight      => 1
       },
       :aborting_virtv2v              => {
@@ -138,15 +141,6 @@ class InfraConversionJob < Job
 
   def self.current_job_timeout(_timeout_adjustment = 1)
     36.hours
-  end
-
-  def process_abort(*args)
-    message, status = args
-    _log.error("job aborting, #{message}")
-    set_status(message, status)
-
-    migration_task.canceling
-    queue_signal(:abort_virtv2v)
   end
 
   # ---           Job relationships helper methods           --- #
@@ -214,7 +208,7 @@ class InfraConversionJob < Job
   end
 
   def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
+    progress = migration_task.options[:progress] || {:current_state => state, :status => "ok", :percent => 0.0, :states => {}}
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
     if state_phase == :on_entry
@@ -229,12 +223,21 @@ class InfraConversionJob < Job
   # Temporary method to allow switching from InfraConversionJob to Automate.
   # In Automate, another method waits for workflow_runner to be 'automate'.
   def handover_to_automate
+    if migration_task.canceling?
+      migration_task.canceled
+      queue_signal(:abort_job)
+    end
+
     migration_task.update_options(:workflow_runner => 'automate')
   end
 
   def abort_conversion(message, status)
-    migration_task.cancel unless migration_task.cancel_requested?
-    queue_signal(:abort_job, message, status)
+    migration_task.canceling
+    progress = migration_task.options[:progress]
+    progress[:current_description] = "Migration failed: #{message}. Cancelling"
+    progress[:status] = "error"
+    migration_task.update_options(:progress => progress)
+    queue_signal(:abort_virtv2v)
   end
 
   def polling_timeout
@@ -307,9 +310,13 @@ class InfraConversionJob < Job
     # If the target VM is powered off, we won't get an IP address, so no need to wait.
     # We don't block powered off VMs, because the playbook could still be relevant.
     if target_vm.power_state == 'on'
-      if target_vm.ipaddresses.empty?
-        update_migration_task_progress(:on_retry)
-        return queue_signal(:wait_for_ip_address)
+      # If the source VM didn't report IP addresses during pre-flight check, there's no need to wait.
+      # We don't block VMsi with no IP address, because the playbook could still be relevant.
+      unless migration_task.options[:source_vm_ipaddresses].empty?
+        if target_vm.ipaddresses.empty?
+          update_migration_task_progress(:on_retry)
+          return queue_signal(:wait_for_ip_address)
+        end
       end
     end
 
@@ -324,11 +331,12 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
     unless service_template.nil?
+      user_id = User.find_by(:userid => migration_task.userid).id
       service_dialog_options = {
-        :credentials => service_template.config_info[:provision][:credential_id],
-        :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
+        :credential => service_template.config_info[:provision][:credential_id],
+        :hosts      => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
       }
-      context["#{migration_phase}_migration_playbook_service_request_id".to_sym] = service_template.provision_request(migration_task.userid.to_i, service_dialog_options).id
+      migration_task.update_options("#{migration_phase}_migration_playbook_service_request_id".to_sym => service_template.provision_request(user_id, service_dialog_options).id)
       update_migration_task_progress(:on_exit)
       return queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
@@ -348,7 +356,7 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     return abort_conversion('Running migration playbook timed out', 'error') if polling_timeout
 
-    service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id".to_sym])
+    service_request = ServiceTemplateProvisionRequest.find(migration_task.options["#{migration_phase}_migration_playbook_service_request_id".to_sym])
     playbooks_status = migration_task.get_option(:playbooks) || {}
     playbooks_status[migration_phase] = { :job_state => service_request.request_state }
     migration_task.update_options(:playbooks => playbooks_status)
@@ -537,13 +545,16 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_exit)
     return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on' && !migration_task.canceling?
 
-    migration_task.canceled if migration_task.canceling?
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    if migration_task.canceling?
+      migration_task.canceled
+      handover_to_automate
+      return queue_signal(:poll_automate_state_machine)
+    end
+
+    queue_signal(:mark_vm_migrated)
   rescue StandardError
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
-    handover_to_automate
     queue_signal(:poll_automate_state_machine)
   end
 
@@ -570,13 +581,14 @@ class InfraConversionJob < Job
   end
 
   def mark_vm_migrated
+    update_migration_task_progress(:on_entry)
     migration_task.mark_vm_migrated
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
+    update_migration_task_progress(:on_exit)
   end
 
   def abort_virtv2v
-    migration_task.get_conversion_state
     virtv2v_runs = migration_task.options[:virtv2v_started_on].present? && migration_task.options[:virtv2v_finished_on].nil? && migration_task.options[:virtv2v_wrapper].present?
     return queue_signal(:power_on_vm) unless virtv2v_runs
 

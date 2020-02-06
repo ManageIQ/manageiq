@@ -69,7 +69,7 @@ RSpec.describe InfraConversionJob, :v2v do
   let(:transformation_plan) { ServiceTemplateTransformationPlan.create_catalog_item(transformation_plan_catalog_item_options) }
 
   let(:request)         { FactoryBot.create(:service_template_transformation_plan_request, :source => transformation_plan) }
-  let(:task)            { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+  let(:task)            { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.userid) }
   let(:job_options)     { {:target_class => task.class.name, :target_id => task.id} }
   let(:job)             { described_class.create_job(job_options) }
 
@@ -463,7 +463,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'aborts conversion if task cancel is requested' do
         task.cancel
         expect(job).to receive(:abort_conversion).once.ordered.with('Migration cancelation requested', 'ok').and_call_original
-        expect(job).to receive(:queue_signal).once.ordered.with(:abort_job, 'Migration cancelation requested', 'ok')
+        expect(job).to receive(:queue_signal).once.ordered.with(:abort_virtv2v)
         job.update_migration_task_progress(:on_entry)
       end
     end
@@ -783,6 +783,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it_behaves_like 'allows poll_power_on_vm_complete signal'
       it_behaves_like 'allows wait_for_ip_address signal'
+      it_behaves_like 'allows mark_vm_migrated signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -801,7 +802,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
-      it_behaves_like 'doesn\'t allow mark_vm_migrated signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
     end
 
@@ -991,7 +991,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#wait_for_ip_address' do
       before do
-        task.update_options(:migration_phase => 'pre')
+        task.update_options(:migration_phase => 'pre', :source_vm_ipaddresses => ['10.0.0.1'])
         job.state = 'started'
       end
 
@@ -1060,7 +1060,7 @@ RSpec.describe InfraConversionJob, :v2v do
               expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
               expect(job).to receive(:queue_signal).with(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
               job.signal(:run_migration_playbook)
-              service_request = ServiceTemplateProvisionRequest.find(job.context[:pre_migration_playbook_service_request_id])
+              service_request = ServiceTemplateProvisionRequest.find(task.reload.options["#{task.options[:migration_phase]}_migration_playbook_service_request_id".to_sym])
               expect(service_request).to have_attributes(
                 :description => "Provisioning Service [#{embedded_ansible_service_template.name}] from [#{embedded_ansible_service_template.name}]",
                 :state       => 'pending',
@@ -1089,14 +1089,13 @@ RSpec.describe InfraConversionJob, :v2v do
       before do
         job.state = 'running_migration_playbook'
         embedded_ansible_service = FactoryBot.create(:service_ansible_playbook)
-        FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.id)
+        FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.userid)
         FactoryBot.create(:service_resource, :resource => FactoryBot.create(:embedded_ansible_job), :service => embedded_ansible_service)
       end
 
       context "migration_phase is 'pre'" do
         before do
-          task.update_options(:migration_phase => 'pre')
-          job.context[:pre_migration_playbook_service_request_id] = embedded_ansible_service_request.id
+          task.update_options(:migration_phase => 'pre', :pre_migration_playbook_service_request_id => embedded_ansible_service_request.id)
         end
 
         it 'abort_conversion when running_migration_playbook times out' do
@@ -1134,8 +1133,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       context "migration_phase is 'post'" do
         before do
-          task.update_options(:migration_phase => 'post')
-          job.context[:post_migration_playbook_service_request_id] = embedded_ansible_service_request.id
+          task.update_options(:migration_phase => 'post', :post_migration_playbook_service_request_id => embedded_ansible_service_request.id)
         end
 
         it "exits to next state in case of success" do
@@ -1515,9 +1513,8 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update_options(:source_vm_power_state => 'off')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:mark_vm_migrated)
       job.signal(:power_on_vm)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     it 'sends start request to VM if VM is off' do

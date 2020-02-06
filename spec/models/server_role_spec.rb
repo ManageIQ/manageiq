@@ -1,4 +1,4 @@
-describe ServerRole do
+RSpec.describe ServerRole do
   context "Without Seeding" do
     before do
       @server_roles = []

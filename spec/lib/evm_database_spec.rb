@@ -1,6 +1,6 @@
 require 'manageiq-postgres_ha_admin'
 
-describe EvmDatabase do
+RSpec.describe EvmDatabase do
   subject { described_class }
   context "#local?" do
     ["localhost", "127.0.0.1", "", nil].each do |host|

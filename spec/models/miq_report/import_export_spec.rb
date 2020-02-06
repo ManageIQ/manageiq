@@ -1,4 +1,4 @@
-describe MiqReport::ImportExport do
+RSpec.describe MiqReport::ImportExport do
   before do
     @some_user = FactoryGirl.create(:user)
     @some_group = FactoryGirl.create(:miq_group)

@@ -2,6 +2,59 @@
 # Each line is a file pattern followed by one or more owners.
 
 # These owners will be the default owners for everything in the repo.
-*                                            @fryguy
-/app/models/manageiq/providers/              @agrare @fryguy
-/app/models/manageiq/providers/inventory/    @agrare @fryguy @slemrmartin
+*                                               @fryguy  @gtanzillo
+#
+/app/models/manageiq/providers/                 @agrare @fryguy
+/app/models/manageiq/providers/inventory/       @agrare @fryguy @slemrmartin
+/app/channels                                   @skateman
+/app/mailers                                    @skateman
+/app/models                                     @agrare @fryguy @kbrock
+/app/models/authenticator*                      @jvlcek
+/app/models/chargeback*                         @lpichler
+/app/models/cloud*                              @agrare
+/app/models/compliance*                         @lfu
+/app/models/container*                          @agrare
+/app/models/conversion_host*                    @fdupont-redhat
+/app/models/dialog*                             @tinaaftiz
+/app/models/ems_event*                          @agrare
+/app/models/ems_refresh*                        @agrare
+/app/models/event_stream*                       @agrare @lfu
+/app/models/file_depot*                         @NickLaMuro @jerryk55
+/app/models/firmware_registry*                  @agrare
+/app/models/generic_object_definition*          @lfu @bzwei
+/app/models/job*                                @agrare
+/app/models/manageiq/providers                  @agrare
+/app/models/metric*                             @agrare
+/app/models/miq_cockpit_ws_worker*              @jrafanie
+/app/models/miq_dialog*                         @tinaafitz
+/app/models/miq_ems_metrics_processor_worker*   @agrare
+/app/models/miq_event_handler*                  @agrare
+/app/models/miq_policy*                         @lfu
+/app/models/miq_product_feature*                @hkataria
+/app/models/miq_provision*                      @gmcullough
+/app/models/miq_remote_console_worker*          @skateman
+/app/models/miq_report*                         @kbrock @lpichler
+/app/models/miq_request*                        @gmcullough
+/app/models/miq_schedule*                       @jrafanie
+/app/models/miq_search*                         @lpichler
+/app/models/miq_server*                         @jrafanie @carbonin
+/app/models/miq_template*                       @agrare
+/app/models/miq_widget*                         @yrudman
+/app/models/miq_worker*                         @jrafanie
+/app/models/notification*                       @skateman
+/app/models/orchestration_stack*                @bzwei
+/app/models/orchestration_template*             @bzwei
+/app/models/physical_server*                    @agrare
+/app/models/policy_event*                       @lfu
+/app/models/scan_item*                          @roliveri
+/app/models/service*                            @gmcullough
+/app/models/transformation_mapping*             @fdupont-redhat
+/app/models/vim_performance_state*              @agrare
+/app/models/vm                                  @agrare
+/app/models/vm_migrate_workflow                 @fdupont-redhat
+/app/models/vm_or_template                      @agrare
+/bin                                            @jrafanie @bdunne
+/content                                        @bdunne
+/config                                         @jrafanie
+/db                                             @agrare @carboni @bdunne
+/product*                                       @hkataria

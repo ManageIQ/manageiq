@@ -1,4 +1,4 @@
-describe EventStream do
+RSpec.describe EventStream do
   context "::Purging" do
     context ".purge_queue" do
       before do

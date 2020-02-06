@@ -1,4 +1,4 @@
-describe Metric::Finders do
+RSpec.describe Metric::Finders do
   before do
     MiqRegion.seed
 

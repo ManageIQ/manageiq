@@ -14,4 +14,8 @@ class ContainerTemplate < ApplicationRecord
   serialize :object_labels, Hash
 
   acts_as_miq_taggable
+
+  def instantiate(_params, _project_name)
+    raise NotImplementedError, _("instantiate must be implemented in a subclass")
+  end
 end

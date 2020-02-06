@@ -1,4 +1,4 @@
-describe Metric::Purging do
+RSpec.describe Metric::Purging do
   let(:settings) do
     {
       :performance => {

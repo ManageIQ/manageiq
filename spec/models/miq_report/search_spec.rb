@@ -1,4 +1,4 @@
-describe MiqReport do
+RSpec.describe MiqReport do
   include Spec::Support::ArelHelper
 
   context "::Search" do

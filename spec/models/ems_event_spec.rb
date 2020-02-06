@@ -1,4 +1,4 @@
-describe EmsEvent do
+RSpec.describe EmsEvent do
   context "model" do
     let(:ems1) { FactoryBot.create(:ems_kubernetes) }
     let(:ems2) { FactoryBot.create(:ems_kubernetes) }

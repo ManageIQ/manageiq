@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::ServiceDialogs do
+RSpec.describe TaskHelpers::Imports::ServiceDialogs do
   let(:data_dir)         { File.join(File.expand_path(__dir__), 'data', 'service_dialogs') }
   let(:dialog_file)      { 'Simple_Dialog.yaml' }
   let(:mod_dialog_file)  { 'Simple_Dialog_modified.yml' }

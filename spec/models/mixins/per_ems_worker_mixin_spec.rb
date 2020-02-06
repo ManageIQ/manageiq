@@ -1,4 +1,4 @@
-describe PerEmsWorkerMixin do
+RSpec.describe PerEmsWorkerMixin do
   before do
     _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryBot.create(:ems_vmware, :with_unvalidated_authentication, :zone => zone)

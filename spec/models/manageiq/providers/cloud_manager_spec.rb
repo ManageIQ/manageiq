@@ -1,4 +1,4 @@
-describe EmsCloud do
+RSpec.describe EmsCloud do
   it ".types" do
     expected_types = [ManageIQ::Providers::Amazon::CloudManager,
                       ManageIQ::Providers::Azure::CloudManager,

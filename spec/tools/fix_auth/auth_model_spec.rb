@@ -4,7 +4,7 @@ require "fix_auth/auth_model"
 require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
-describe FixAuth::AuthModel do
+RSpec.describe FixAuth::AuthModel do
   let(:v0_key)  { ManageIQ::Password::Key.new("AES-128-CBC", Base64.encode64("9999999999999999"), Base64.encode64("5555555555555555")) }
   let(:v1_key)  { ManageIQ::Password.generate_symmetric }
   let(:pass)    { "password" }

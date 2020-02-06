@@ -16,7 +16,7 @@ RSpec.describe MiqAction do
       tenant = FactoryBot.create(:tenant)
       group  = FactoryBot.create(:miq_group, :tenant => tenant)
       @user = FactoryBot.create(:user, :userid => "test", :miq_groups => [group])
-      @vm   = FactoryBot.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
+      @vm   = FactoryBot.create(:vm_infra, :evm_owner => @user, :miq_group => group)
       @action = FactoryBot.create(:miq_action)
       expect(@action).not_to be_nil
       @action.options = {:ae_request => "test_custom_automation"}
@@ -64,9 +64,9 @@ RSpec.describe MiqAction do
 
   context "#action_evm_event" do
     it "for Vm" do
-      ems = FactoryBot.create(:ems_vmware)
-      host = FactoryBot.create(:host_vmware)
-      vm = FactoryBot.create(:vm_vmware, :host => host, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_infra)
+      host = FactoryBot.create(:host)
+      vm = FactoryBot.create(:vm_infra, :host => host, :ext_management_system => ems)
       action = FactoryBot.create(:miq_action)
       res = action.action_evm_event(action, vm, :policy => FactoryBot.create(:miq_policy))
 
@@ -86,7 +86,7 @@ RSpec.describe MiqAction do
 
   context "#raise_automation_event" do
     before do
-      @vm   = FactoryBot.create(:vm_vmware)
+      @vm   = FactoryBot.create(:vm_infra)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       FactoryBot.create(:miq_event_definition, :name => "raise_automation_event")
       FactoryBot.create(:miq_event_definition, :name => "vm_start")
@@ -156,9 +156,9 @@ RSpec.describe MiqAction do
   context "#action_vm_stop" do
     before do
       @zone   = FactoryBot.create(:zone)
-      @ems    = FactoryBot.create(:ems_vmware, :zone => @zone)
-      @host   = FactoryBot.create(:host_vmware)
-      @vm     = FactoryBot.create(:vm_vmware, :host => @host, :ext_management_system => @ems)
+      @ems    = FactoryBot.create(:ems_infra, :zone => @zone)
+      @host   = FactoryBot.create(:host)
+      @vm     = FactoryBot.create(:vm_infra, :host => @host, :ext_management_system => @ems)
       @action = FactoryBot.create(:miq_action, :name => "vm_stop")
     end
 
@@ -186,7 +186,7 @@ RSpec.describe MiqAction do
 
   context "#action_vm_retire" do
     before do
-      @vm     = FactoryBot.create(:vm_vmware)
+      @vm     = FactoryBot.create(:vm_infra)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       @event  = FactoryBot.create(:miq_event_definition, :name => "assigned_company_tag")
       @action = FactoryBot.create(:miq_action, :name => "vm_retire")
@@ -509,7 +509,7 @@ RSpec.describe MiqAction do
     let(:tenant) { FactoryBot.create(:tenant) }
     let(:group)  { FactoryBot.create(:miq_group, :tenant => tenant) }
     let(:user) { FactoryBot.create(:user, :userid => "test", :miq_groups => [group]) }
-    let(:vm)   { FactoryBot.create(:vm_vmware, :evm_owner => user, :miq_group => group, :hardware => hardware) }
+    let(:vm)   { FactoryBot.create(:vm_infra, :evm_owner => user, :miq_group => group, :hardware => hardware) }
     let(:action) { FactoryBot.create(:miq_action, :name => "run_ansible_playbook", :options => action_options) }
     let(:stap) { FactoryBot.create(:service_template_ansible_playbook) }
     let(:ip1) { "1.1.1.94" }

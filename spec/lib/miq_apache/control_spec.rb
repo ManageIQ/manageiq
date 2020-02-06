@@ -1,4 +1,4 @@
-describe MiqApache::Control do
+RSpec.describe MiqApache::Control do
   it "should run_apache_cmd with start when calling start" do
     expect(MiqApache::Control).to receive(:run_apache_cmd).with('start')
     MiqApache::Control.start

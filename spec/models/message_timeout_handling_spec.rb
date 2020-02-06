@@ -1,4 +1,4 @@
-describe "Message Timeout Handling" do
+RSpec.describe "Message Timeout Handling" do
   before do
     @guid = SecureRandom.uuid
     allow(MiqServer).to receive(:my_guid).and_return(@guid)

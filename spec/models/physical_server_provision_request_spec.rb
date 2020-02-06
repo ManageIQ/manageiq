@@ -1,4 +1,4 @@
-describe PhysicalServerProvisionRequest do
+RSpec.describe PhysicalServerProvisionRequest do
   it '.TASK_DESCRIPTION' do
     expect(described_class::TASK_DESCRIPTION).to eq('Physical Server Provisioning')
   end
@@ -17,6 +17,10 @@ describe PhysicalServerProvisionRequest do
 
   it '#my_role' do
     expect(subject.my_role).to eq('ems_operations')
+  end
+
+  it "#my_queue_name" do
+    expect(subject.my_queue_name).to be_nil
   end
 
   describe '.new_request_task' do

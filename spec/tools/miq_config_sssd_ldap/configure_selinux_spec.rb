@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "miq_config_sssd_ldap"
 
-describe MiqConfigSssdLdap::ConfigureSELinux do
+RSpec.describe MiqConfigSssdLdap::ConfigureSELinux do
   describe '#configure' do
     before do
       @initial_settings = {:ldapport => '22'}

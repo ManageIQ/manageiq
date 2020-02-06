@@ -1,6 +1,6 @@
 require "inventory_refresh"
 
-describe EmsRefresh do
+RSpec.describe EmsRefresh do
   context ".queue_refresh" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -34,8 +34,7 @@ describe EmsRefresh do
     end
 
     it "with Storage" do
-      allow_any_instance_of(Storage).to receive_messages(:ext_management_systems => [@ems])
-      target = FactoryBot.create(:storage_vmware)
+      target = FactoryBot.create(:storage_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target, [target])
     end
 

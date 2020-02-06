@@ -26,7 +26,7 @@ class ContainerOrchestrator
       }
     end
 
-    def service_definition(name, port)
+    def service_definition(name, selector, port)
       {
         :metadata => {
           :name      => name,
@@ -34,7 +34,7 @@ class ContainerOrchestrator
           :namespace => my_namespace
         },
         :spec     => {
-          :selector => {:name => name},
+          :selector => selector,
           :ports    => [{
             :name       => "#{name}-#{port}",
             :port       => port,

@@ -1,4 +1,4 @@
-describe Tenant do
+RSpec.describe Tenant do
   include_examples ".seed called multiple times"
 
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }

@@ -1,3 +1,5 @@
+require "VMwareWebService/VimTypes"
+
 class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   def artemis?
     Settings.prototype.queue_type == 'artemis'

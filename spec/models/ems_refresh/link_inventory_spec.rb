@@ -1,4 +1,4 @@
-describe EmsRefresh::LinkInventory do
+RSpec.describe EmsRefresh::LinkInventory do
   context ".link_ems_inventory" do
     let!(:ems) do
       _, _, zone = EvmSpecHelper.local_guid_miq_server_zone

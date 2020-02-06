@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
   context 'catalog types' do
     let(:ems) { FactoryBot.create(:embedded_automation_manager_ansible) }
 

@@ -4,7 +4,7 @@ require "fix_auth/auth_model"
 require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
-describe FixAuth::AuthConfigModel do
+RSpec.describe FixAuth::AuthConfigModel do
   let(:v1_key)  { ManageIQ::Password.generate_symmetric }
   let(:pass)    { "password" }
   let(:enc_v1)  { ManageIQ::Password.new.encrypt(pass, "v1", v1_key) }

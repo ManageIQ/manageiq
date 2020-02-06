@@ -1,4 +1,4 @@
-describe "Service Retirement Management" do
+RSpec.describe "Service Retirement Management" do
   let(:user) { FactoryBot.create(:user_miq_request_approver) }
   let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
   let(:stack_with_owner) { FactoryBot.create(:orchestration_stack, :evm_owner => user) }

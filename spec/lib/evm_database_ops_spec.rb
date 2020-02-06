@@ -1,5 +1,5 @@
 require 'util/runcmd'
-describe EvmDatabaseOps do
+RSpec.describe EvmDatabaseOps do
   let(:file_storage) { double("MiqSmbSession", :disconnect => nil) }
   let(:local_backup) { "/tmp/backup_1" }
   let(:input_path)   { "foo/bar/mkfifo" }

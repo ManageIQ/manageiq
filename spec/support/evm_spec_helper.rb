@@ -30,8 +30,7 @@ module EvmSpecHelper
 
   # Clear all EVM caches
   def self.clear_caches
-    @settings_loaded = Vmdb::Settings.last_loaded
-
+    settings_digest = Digest::MD5.hexdigest(::Settings.to_json)
     yield if block_given?
   ensure
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
@@ -47,7 +46,7 @@ module EvmSpecHelper
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
 
-    ::Settings.reload! if @settings_loaded != Vmdb::Settings.last_loaded
+    ::Settings.reload! if Digest::MD5.hexdigest(::Settings.to_json) != settings_digest
   end
 
   def self.clear_instance_variables(instance)

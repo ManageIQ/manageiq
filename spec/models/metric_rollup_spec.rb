@@ -1,4 +1,4 @@
-describe MetricRollup do
+RSpec.describe MetricRollup do
   describe "metric_rollups view" do
     it "creates an object with an id" do
       metric = described_class.create!(:timestamp => Time.now.utc)

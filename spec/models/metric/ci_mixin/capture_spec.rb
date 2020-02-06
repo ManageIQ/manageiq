@@ -1,4 +1,4 @@
-describe Metric::CiMixin::Capture do
+RSpec.describe Metric::CiMixin::Capture do
   require ManageIQ::Providers::Openstack::Engine.root.join("spec/tools/openstack_data/openstack_data_test_helper")
   let(:zone) { EvmSpecHelper.create_guid_miq_server_zone[2] }
   let(:mock_meter_list) { OpenstackMeterListData.new }

@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
+RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
   let(:job) { FactoryBot.create(:embedded_ansible_job) }
 
   before do

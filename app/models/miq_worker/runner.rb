@@ -90,29 +90,6 @@ class MiqWorker::Runner
     end
   end
 
-  ###############################
-  # VimBrokerWorker Methods
-  ###############################
-
-  def self.delay_startup_for_vim_broker?
-    !!@delay_startup_for_vim_broker
-  end
-
-  class << self
-    attr_writer :delay_startup_for_vim_broker
-  end
-
-  def self.delay_queue_delivery_for_vim_broker?
-    !!@delay_queue_delivery_for_vim_broker
-  end
-
-  class << self
-    attr_writer :delay_queue_delivery_for_vim_broker
-
-    alias require_vim_broker? delay_queue_delivery_for_vim_broker?
-    alias require_vim_broker= delay_queue_delivery_for_vim_broker=
-  end
-
   def start
     prepare
     run
@@ -128,7 +105,6 @@ class MiqWorker::Runner
     set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
-    do_delay_startup_for_vim_broker if self.class.delay_startup_for_vim_broker? && MiqVimBrokerWorker.workers > 0
     do_before_work_loop
     self
   end
@@ -238,12 +214,6 @@ class MiqWorker::Runner
     exit exit_code
   end
 
-  def message_sync_config(*_args)
-    _log.info("#{log_prefix} Synchronizing configuration...")
-    sync_config
-    _log.info("#{log_prefix} Synchronizing configuration complete...")
-  end
-
   def sync_config
     # Sync roles
     @active_roles = MiqServer.my_active_roles(true)
@@ -252,7 +222,6 @@ class MiqWorker::Runner
     # Sync settings
     Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
-    sync_log_level
     sync_worker_settings
     sync_blacklisted_events
     after_sync_config
@@ -263,11 +232,6 @@ class MiqWorker::Runner
     $log.log_hashes(@cfg)
 
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
-  end
-
-  def sync_log_level
-    # TODO: Can this be removed since the Vmdb::Settings::Activator will do this anyway?
-    Vmdb::Loggers.apply_config(::Settings.log)
   end
 
   def sync_worker_settings
@@ -282,16 +246,6 @@ class MiqWorker::Runner
 
   def do_work
     raise NotImplementedError, _("must be implemented in a subclass")
-  end
-
-  def do_delay_startup_for_vim_broker
-    _log.info("#{log_prefix} Checking that VIM Broker has started before doing work")
-    loop do
-      break if MiqVimBrokerWorker.available?
-      heartbeat
-      sleep 3
-    end
-    _log.info("#{log_prefix} Starting work since VIM Broker has started")
   end
 
   def do_work_loop
@@ -326,7 +280,16 @@ class MiqWorker::Runner
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
 
-    ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? heartbeat_to_file : heartbeat_to_drb
+    heartbeat_to_file
+
+    if config_out_of_date?
+      _log.info("#{log_prefix} Synchronizing configuration...")
+      sync_config
+      _log.info("#{log_prefix} Synchronizing configuration complete...")
+    end
+
+    register_worker_with_worker_monitor unless MiqEnvironment::Command.is_podified?
+
     @last_hb = now
     do_heartbeat_work
   rescue SystemExit, SignalException
@@ -335,41 +298,32 @@ class MiqWorker::Runner
     do_exit("Error heartbeating because #{err.class.name}: #{err.message}\n#{err.backtrace.join('\n')}", 1)
   end
 
-  def heartbeat_to_drb
+  def register_worker_with_worker_monitor
+    worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
+  rescue DRb::DRbError => err
+    do_exit("Error processing messages from MiqServer because #{err.class.name}: #{err.message}", 1)
+  end
+
+  def heartbeat_to_file(timeout = nil)
     # Disable heartbeat check.  Useful if a worker is running in isolation
     # without the oversight of MiqServer::WorkerManagement
     return if skip_heartbeat?
 
-    worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
-    worker_monitor_drb.update_worker_last_heartbeat(@worker.pid)
-
-    worker_monitor_drb.worker_get_messages(@worker.pid).each do |msg, *args|
-      process_message(msg, *args)
-    end
-  rescue DRb::DRbError => err
-    do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
-  end
-
-  def heartbeat_to_file(timeout = nil)
     timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
     File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
-
-    get_messages.each { |msg, *args| process_message(msg, *args) }
   end
 
-  def get_messages
-    messages = []
+  def config_out_of_date?
     @my_last_config_change ||= Time.now.utc
 
     last_config_change = server_last_change(:last_config_change)
     if last_config_change && last_config_change > @my_last_config_change
       _log.info("#{log_prefix} Configuration has changed, New TS: #{last_config_change}, Old TS: #{@my_last_config_change}")
-      messages << ["sync_config"]
-
       @my_last_config_change = last_config_change
+      return true
     end
 
-    messages
+    false
   end
 
   def key_store
@@ -484,15 +438,6 @@ class MiqWorker::Runner
     else
       _log.warn("#{log_prefix} Message [#{message}] is not recognized, ignoring")
     end
-  end
-
-  def clean_broker_connection
-    if $vim_broker_client
-      $vim_broker_client.releaseSession(Process.pid)
-      $vim_broker_client = nil
-    end
-  rescue => err
-    _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
   def process_title

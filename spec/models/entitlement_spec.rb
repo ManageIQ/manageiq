@@ -1,4 +1,4 @@
-describe Entitlement do
+RSpec.describe Entitlement do
   describe "validation" do
     it "can have a managed filter if it doesn't have a filter expression" do
       entitlement = FactoryBot.build(:entitlement)

@@ -1,4 +1,4 @@
-describe Provider do
+RSpec.describe Provider do
   let(:provider) { described_class.new }
 
   describe "#verify_ssl" do

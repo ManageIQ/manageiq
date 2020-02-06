@@ -71,7 +71,7 @@ module Authenticator
         ldap_bind(username, password)
     end
 
-    def find_external_identity(username, *_args)
+    def find_external_identity(username, _user_attrs, _membership_list)
       # Ldap will be used for authentication and role assignment
       _log.info("Bind DN: [#{config[:bind_dn]}]")
       _log.info(" User FQDN: [#{username}]")

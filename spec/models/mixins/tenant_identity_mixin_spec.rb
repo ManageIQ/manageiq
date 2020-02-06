@@ -1,4 +1,4 @@
-describe TenantIdentityMixin do
+RSpec.describe TenantIdentityMixin do
   describe '#tenant_identity' do
     let(:admin)      { FactoryBot.create(:user_with_group, :userid => "admin") }
     let(:tenant)     { FactoryBot.create(:tenant) }

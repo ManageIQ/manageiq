@@ -1,4 +1,4 @@
-describe ServiceTemplate do
+RSpec.describe ServiceTemplate do
   include_examples "OwnershipMixin"
 
   describe ".with_tenant" do

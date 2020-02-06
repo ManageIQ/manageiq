@@ -1,4 +1,4 @@
-describe ContainerNode do
+RSpec.describe ContainerNode do
   context "::Purging" do
     context ".purge_queue" do
       before do

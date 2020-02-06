@@ -1,4 +1,4 @@
-describe ServiceOrchestration do
+RSpec.describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryBot.create(:ems_amazon) }
   let(:template_by_setter) { FactoryBot.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryBot.create(:ems_amazon) }
@@ -187,6 +187,7 @@ describe ServiceOrchestration do
           :orchestration_manager_id  => manager_by_dialog.id,
           :stack_name                => service_with_dialog_options.stack_name,
           :orchestration_template_id => template_by_dialog.id,
+          :execution_ttl             => 10,
           :zone                      => service_with_dialog_options.my_zone
         )
         expect(options[:create_options]).to include(
@@ -199,6 +200,8 @@ describe ServiceOrchestration do
           :timeout_in_minutes => 30
         )
       end.and_return(job)
+
+      service_with_dialog_options.options[:execution_ttl] = 10
       service_with_dialog_options.deploy_orchestration_stack
     end
 
@@ -235,9 +238,11 @@ describe ServiceOrchestration do
         expect(options).to include(
           :orchestration_stack_id    => @stack.id,
           :orchestration_template_id => template_by_setter.id,
+          :execution_ttl             => 10,
           :zone                      => reconfigurable_service.my_zone
         )
       end.and_return(job)
+      reconfigurable_service.options[:reconfigure_automate_timeout] = 10
       reconfigurable_service.update_orchestration_stack
     end
   end

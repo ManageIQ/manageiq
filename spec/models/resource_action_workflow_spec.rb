@@ -1,4 +1,4 @@
-describe ResourceActionWorkflow do
+RSpec.describe ResourceActionWorkflow do
   let(:admin) { FactoryBot.create(:user_with_group) }
 
   context "#create" do

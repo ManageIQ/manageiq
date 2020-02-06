@@ -1,4 +1,4 @@
-describe CustomButton do
+RSpec.describe CustomButton do
   describe '.with_array_order' do
     context 'order by array' do
       let!(:custom_button_1) { FactoryBot.create(:custom_button, :name => 'AAA', :applies_to_id => 100, :applies_to_class => Vm) }

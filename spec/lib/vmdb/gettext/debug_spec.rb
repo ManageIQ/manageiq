@@ -1,4 +1,4 @@
-describe Vmdb::Gettext::Debug do
+RSpec.describe Vmdb::Gettext::Debug do
   before { Vmdb::FastGettextHelper.register_locales }
 
   let(:instance) do

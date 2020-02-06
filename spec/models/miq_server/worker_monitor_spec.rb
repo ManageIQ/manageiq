@@ -1,4 +1,4 @@
-describe "MiqWorker Monitor" do
+RSpec.describe "MiqWorker Monitor" do
   context "After Setup," do
     before do
       allow(MiqWorker).to receive(:nice_increment).and_return("+10")
@@ -192,74 +192,16 @@ describe "MiqWorker Monitor" do
           end
         end
 
-        context "when worker queues up message for server" do
-          before do
-            @ems_id = 7
-            @worker1.send_message_to_worker_monitor('reconnect_ems', @ems_id.to_s)
-          end
-
-          it "should queue up work for the server" do
-            q = MiqQueue.first
-            expect(q.class_name).to eq("MiqServer")
-            expect(q.instance_id).to eq(@miq_server.id)
-            expect(q.method_name).to eq('message_for_worker')
-            expect(q.args).to eq([@worker1.id, 'reconnect_ems', @ems_id.to_s])
-            expect(q.queue_name).to eq('miq_server')
-            expect(q.zone).to eq(@miq_server.zone.name)
-            expect(q.server_guid).to eq(@miq_server.guid)
-          end
-        end
-
-        context "when server has a single non-sync message" do
-          before do
-            @miq_server.message_for_worker(@worker1.id, "foo")
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['foo']])
-          end
-        end
-
-        context "when server has a single sync_config message" do
-          before do
-            @miq_server.message_for_worker(@worker1.id, "sync_config")
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['sync_config']])
-          end
-        end
-
-        context "when server has a single reconnect_ems message with a parameter" do
-          before do
-            @ems_id = 7
-            @miq_server.message_for_worker(@worker1.id, 'reconnect_ems', @ems_id.to_s)
-          end
-
-          it "#worker_get_messages should return proper message via drb" do
-            expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s]])
-          end
-
-          context "and an exit message" do
-            before do
-              @miq_server.message_for_worker(@worker1.id, 'exit')
-            end
-
-            it "#worker_get_messages should return proper message via drb" do
-              expect(@miq_server.worker_get_messages(@worker1.pid)).to eq([['reconnect_ems', @ems_id.to_s], ['exit']])
-            end
-          end
-        end
-
         context "for messaging through a key store" do
+          let(:key_store) { double("KeyStore") }
           before do
-            allow(@miq_server).to receive(:key_store).and_return(@key_store)
+            allow(@miq_server).to receive(:key_store).and_return(key_store)
             @ts = Time.now.utc
           end
 
           it "should update timestamp with config or role changes" do
-            expect(@miq_server).to receive(:set_last_change).with("last_config_change", @ts)
-            @miq_server.update_sync_timestamp(@ts)
+            expect(key_store).to receive(:set).with("last_config_change", @ts)
+            @miq_server.notify_workers_of_config_change(@ts)
           end
         end
       end

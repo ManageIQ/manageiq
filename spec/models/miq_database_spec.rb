@@ -1,4 +1,4 @@
-describe MiqDatabase do
+RSpec.describe MiqDatabase do
   describe ".encrypted_columns" do
     it "returns the encrypted columns" do
       expected = %w(csrf_secret_token csrf_secret_token_encrypted session_secret_token session_secret_token_encrypted)

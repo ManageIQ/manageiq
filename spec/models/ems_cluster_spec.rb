@@ -1,4 +1,4 @@
-describe EmsCluster do
+RSpec.describe EmsCluster do
   context("VMware") do
     before do
       @cluster = FactoryBot.create(:ems_cluster)

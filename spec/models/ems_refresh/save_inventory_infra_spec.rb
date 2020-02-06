@@ -1,4 +1,4 @@
-describe EmsRefresh::SaveInventoryInfra do
+RSpec.describe EmsRefresh::SaveInventoryInfra do
   let(:refresher) do
     Class.new do
       include EmsRefresh::SaveInventoryInfra

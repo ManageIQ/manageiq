@@ -1,6 +1,6 @@
 require 'rufus/scheduler'
 
-describe MiqScheduleWorker::Scheduler do
+RSpec.describe MiqScheduleWorker::Scheduler do
   let(:logger) { double("Logger") }
   let(:schedules) { [] }
   let(:rufus_scheduler) { Rufus::Scheduler.new }

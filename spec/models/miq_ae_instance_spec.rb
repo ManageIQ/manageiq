@@ -1,4 +1,4 @@
-describe MiqAeInstance do
+RSpec.describe MiqAeInstance do
   context "legacy tests" do
     before do
       @user = FactoryBot.create(:user_with_group)

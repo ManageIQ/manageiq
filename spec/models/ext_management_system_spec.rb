@@ -1,4 +1,4 @@
-describe ExtManagementSystem do
+RSpec.describe ExtManagementSystem do
   describe ".with_tenant" do
     # tenant_root
     #   \___ tenant_eye_bee_em (service_template_eye_bee_em)
@@ -712,10 +712,15 @@ describe ExtManagementSystem do
 
   describe ".raw_connect?" do
     it "returns true if validation was successful" do
-      connection = double
-      allow(ManageIQ::Providers::Amazon::CloudManager).to receive(:raw_connect).and_return(connection)
+      allow(described_class).to receive(:raw_connect).and_return(double)
+      expect(described_class.raw_connect?).to eq(true)
+    end
+  end
 
-      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
+  context "raw_connect" do
+    it 'defines a raw_connect method which raises an error' do
+      expect(described_class).to respond_to(:raw_connect)
+      expect { described_class.raw_connect }.to raise_error(NotImplementedError, _("must be implemented in a subclass"))
     end
   end
 

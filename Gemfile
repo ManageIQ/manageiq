@@ -34,7 +34,7 @@ gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        ">=1.15",        :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
-gem "config",                         "~>2.0",         :require => false
+gem "config",                         "~>2.2", ">=2.2.1", :require => false
 gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
@@ -72,7 +72,7 @@ gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>2.0.0",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
-gem "sprockets",                      "~>3.0",         :require => false
+gem "sprockets",                      "~>3.7.2",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sync",                           "~>0.5",         :require => false
 gem "sys-filesystem",                 "~>1.3.1"
@@ -166,7 +166,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.4.0"
+  gem "vmware_web_service", "~>1.0"
 end
 
 ### shared dependencies
@@ -205,7 +205,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.3.1",       :require => false
+  gem "manageiq-smartstate",            "~>0.5.0",       :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -227,7 +227,7 @@ group :web_server, :manageiq_default do
   gem "puma",                           "~>4.2"
   gem "responders",                     "~>2.0"
   gem "ruby-dbus" # For external auth
-  gem "secure_headers",                 "~>3.0.0"
+  gem "secure_headers",                 "~>3.9"
 end
 
 group :web_socket, :manageiq_default do

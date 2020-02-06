@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::AuthKeyPair do
+RSpec.describe ManageIQ::Providers::CloudManager::AuthKeyPair do
   let(:ems) { FactoryBot.create(:ems_cloud) }
   let(:user) { FactoryBot.create(:user, :userid => 'test') }
   let(:auth_key_pair) { FactoryBot.create(:auth_key_pair_cloud, :resource => ems) }

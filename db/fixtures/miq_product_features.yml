@@ -5438,6 +5438,10 @@
         :description: Open the Cockpit console for VMs
         :feature_type: control
         :identifier: cockpit_console
+      - :name: Native Console
+        :description: Open the Native console for VMs
+        :feature_type: control
+        :identifier: vm_native_console
       - :name: Edit Tags
         :description: Edit VM Tags
         :feature_type: control
@@ -6412,6 +6416,10 @@
     :feature_type: node
     :identifier: sui_dashboard
     :children:
+    - :name: View Dashboard
+      :description: Display any dashboards
+      :feature_type: view
+      :identifier: sui_dashboard_show
     - :name: Monthly Charge view
       :description: Display monthly charges
       :feature_type: view

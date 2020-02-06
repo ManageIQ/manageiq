@@ -1,4 +1,4 @@
-describe VimPerformanceState do
+RSpec.describe VimPerformanceState do
   context "::Purging" do
     describe ".purge_by_orphaned" do
       it "purges all the orphaned rows for all referenced classes" do

@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraManager::VmOrTemplate do
+RSpec.describe ManageIQ::Providers::InfraManager::VmOrTemplate do
   describe "#all" do
     it "scopes" do
       vm = FactoryBot.create(:vm_vmware)

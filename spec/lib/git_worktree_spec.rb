@@ -1,4 +1,4 @@
-describe GitWorktree do
+RSpec.describe GitWorktree do
   context "repository" do
     before do
       @git_db = "TestGit.git"

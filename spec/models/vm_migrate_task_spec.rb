@@ -1,4 +1,4 @@
-describe VmMigrateTask do
+RSpec.describe VmMigrateTask do
   describe '.do_request' do
     let(:vm) { Vm.new }
     let(:folder) { FactoryBot.create(:ems_folder) }

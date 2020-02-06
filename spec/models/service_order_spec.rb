@@ -1,4 +1,4 @@
-describe ServiceOrder do
+RSpec.describe ServiceOrder do
   def create_request
     FactoryBot.create(:service_template_provision_request,
                        :process   => false,

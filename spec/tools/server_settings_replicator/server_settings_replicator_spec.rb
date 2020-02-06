@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "server_settings_replicator/server_settings_replicator"
 
-describe ServerSettingsReplicator do
+RSpec.describe ServerSettingsReplicator do
   let(:miq_server) { EvmSpecHelper.local_miq_server }
   let!(:miq_server_remote) { EvmSpecHelper.remote_miq_server }
   let(:settings) { {:k1 => {:k2 => {:k3 => 'v3'}}} }

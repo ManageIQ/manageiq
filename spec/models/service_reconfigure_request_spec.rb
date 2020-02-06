@@ -1,4 +1,4 @@
-describe ServiceReconfigureRequest do
+RSpec.describe ServiceReconfigureRequest do
   let(:request) do
     described_class.new(:options => {:src_id => 123})
   end

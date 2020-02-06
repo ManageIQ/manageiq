@@ -1,4 +1,4 @@
-describe ActsAsTaggable do
+RSpec.describe ActsAsTaggable do
   before do
     @host1 = FactoryBot.create(:host, :name => "HOST1")
     @host1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")

@@ -1,4 +1,4 @@
-describe RetirementManager do
+RSpec.describe RetirementManager do
   describe "#check" do
     it "with retirement date, runs retirement checks" do
       _, _, zone = EvmSpecHelper.local_guid_miq_server_zone

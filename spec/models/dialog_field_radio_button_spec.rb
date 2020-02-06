@@ -1,4 +1,4 @@
-describe DialogFieldRadioButton do
+RSpec.describe DialogFieldRadioButton do
   let(:dialog_field_radio_button) do
     DialogFieldRadioButton.new(
       :dialog          => dialog,

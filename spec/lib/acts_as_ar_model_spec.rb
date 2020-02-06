@@ -1,4 +1,4 @@
-describe ActsAsArModel do
+RSpec.describe ActsAsArModel do
   # id is a default column included regardless if it's in the set_columns_hash
   let(:col_names_strs) { %w(str id int flt dt) }
 

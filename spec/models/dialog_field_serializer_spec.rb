@@ -1,4 +1,4 @@
-describe DialogFieldSerializer do
+RSpec.describe DialogFieldSerializer do
   let(:resource_action_serializer) { double("ResourceActionSerializer") }
   let(:dialog_field_serializer) { described_class.new(resource_action_serializer) }
 

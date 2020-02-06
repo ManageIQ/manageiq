@@ -1,4 +1,4 @@
-describe FirmwareBinary do
+RSpec.describe FirmwareBinary do
   subject { FactoryBot.create(:firmware_binary) }
 
   describe '#allow_duplicate_endpoint_url?' do

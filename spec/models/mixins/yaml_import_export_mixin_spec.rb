@@ -1,4 +1,4 @@
-describe YAMLImportExportMixin do
+RSpec.describe YAMLImportExportMixin do
   let(:test_class) { Class.new { include YAMLImportExportMixin } }
 
   before do

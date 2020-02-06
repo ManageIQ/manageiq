@@ -4,7 +4,7 @@ require "fix_auth"
 require "tempfile"
 require "yaml"
 
-describe FixAuth::FixDatabaseYml do
+RSpec.describe FixAuth::FixDatabaseYml do
   # TODO: add legacy password tests
 
   it "updates password" do

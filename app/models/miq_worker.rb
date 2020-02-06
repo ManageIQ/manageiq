@@ -272,7 +272,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.create_worker_record(*params)
-    init_worker_object(*params).tap(&:save)
+    init_worker_object(*params).tap(&:save!)
   end
 
   def self.start_worker(*params)
@@ -290,25 +290,6 @@ class MiqWorker < ApplicationRecord
   def self.log_status_all(level = :info)
     MiqWorker.log_status(level)
   end
-
-  def self.send_message_to_worker_monitor(wid, message, *args)
-    w = MiqWorker.find_by(:id => wid)
-    raise _("Worker with id=<%{id}> does not exist") % {:id => wid} if w.nil?
-    w.send_message_to_worker_monitor(message, *args)
-  end
-
-  def send_message_to_worker_monitor(message, *args)
-    MiqQueue.put_deprecated(
-      :class_name  => 'MiqServer',
-      :instance_id => miq_server.id,
-      :method_name => 'message_for_worker',
-      :args        => [id, message, *args],
-      :queue_name  => 'miq_server',
-      :zone        => miq_server.zone.name,
-      :server_guid => miq_server.guid
-    )
-  end
-
 
   # Overriding queue_name as now some queue names can be
   # arrays of names for some workers not just a singular name.
@@ -414,6 +395,11 @@ class MiqWorker < ApplicationRecord
   end
 
   def kill_process
+    if containerized_worker?
+      delete_container_objects
+      return
+    end
+
     unless pid.nil?
       begin
         _log.info("Killing worker: ID [#{id}], PID [#{pid}], GUID [#{guid}], status [#{status}]")

@@ -1,4 +1,4 @@
-describe ResourceActionSerializer do
+RSpec.describe ResourceActionSerializer do
   let(:resource_action_serializer) { described_class.new }
 
   describe "#serialize" do

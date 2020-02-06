@@ -1,4 +1,4 @@
-describe DialogYamlSerializer do
+RSpec.describe DialogYamlSerializer do
   let(:dialog_tab_serializer) { double("DialogTabSerializer") }
   let(:dialog_yaml_serializer) { described_class.new(dialog_tab_serializer) }
 

@@ -1,4 +1,4 @@
-describe DialogField do
+RSpec.describe DialogField do
   context "legacy tests" do
 
     let(:df) { FactoryBot.create(:dialog_field) }

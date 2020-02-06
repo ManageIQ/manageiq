@@ -1,4 +1,4 @@
-describe MiqServer do
+RSpec.describe MiqServer do
   context ".seed" do
     before do
       MiqRegion.seed
@@ -19,7 +19,7 @@ describe MiqServer do
     let(:guid_file) { Rails.root.join("GUID") }
 
     it "should return the GUID from the file" do
-      MiqServer.my_guid_cache = nil
+      MiqServer.my_guid = nil
       expect(File).to receive(:exist?).with(guid_file).and_return(true)
       expect(File).to receive(:read).with(guid_file).and_return("an-existing-guid\n\n")
       expect(MiqServer.my_guid).to eq("an-existing-guid")
@@ -31,14 +31,14 @@ describe MiqServer do
 
       Tempfile.create do |tempfile|
         stub_const("MiqServer::GUID_FILE", tempfile.path)
-        MiqServer.my_guid_cache = nil
+        MiqServer.my_guid = nil
         expect(MiqServer.my_guid).to eq(test_guid)
         expect(File.read(tempfile)).to eq(test_guid)
       end
     end
 
     it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
-      MiqServer.my_guid_cache = nil
+      MiqServer.my_guid = nil
       expect(SecureRandom).to receive(:uuid).and_raise(StandardError)
       expect(File).to receive(:exist?).with(guid_file).and_return(false)
       expect(File).not_to receive(:write)
@@ -72,23 +72,6 @@ describe MiqServer do
         expect(@miq_server).to receive(:exit).never
         @miq_server.monitor_myself
         expect(Notification.count).to eq(0)
-      end
-    end
-
-    describe "#monitor_loop" do
-      it "calls shutdown_and_exit if SIGTERM is raised" do
-        expect(@miq_server).to receive(:monitor).and_raise(SignalException, "SIGTERM")
-        expect(@miq_server).to receive(:shutdown_and_exit)
-
-        @miq_server.monitor_loop
-      end
-
-      it "kills the server and exits if SIGINT is raised" do
-        expect(@miq_server).to receive(:monitor).and_raise(Interrupt)
-        expect(MiqServer).to receive(:kill)
-        expect(@miq_server).to receive(:exit).with(1)
-
-        @miq_server.monitor_loop
       end
     end
 
@@ -188,6 +171,13 @@ describe MiqServer do
         @miq_server.destroy
 
         expect(@miq_server.errors.full_messages.first).to match(/recently/)
+      end
+
+      it "doesn't enforce when podified" do
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+        allow(@miq_server).to receive(:is_local?).and_return(true)
+        @miq_server.last_heartbeat = 2.minutes.ago.utc
+        @miq_server.destroy!
       end
     end
 
@@ -428,6 +418,50 @@ describe MiqServer do
     it "doesnt blowup" do
       s = described_class.new(:name => "name")
       expect(s.description).to eq(s.name)
+    end
+  end
+
+  describe "#zone_unchanged_in_pods" do
+    it "allows zone changes when not in pods" do
+      server = FactoryBot.create(:miq_server)
+      zone = FactoryBot.create(:zone)
+
+      server.zone = zone
+      expect(server.zone_id_changed?).to be_truthy
+      expect(server.save).to be_truthy
+    end
+
+    it "prevents zone changes in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      server = FactoryBot.create(:miq_server)
+      zone = FactoryBot.create(:zone)
+
+      server.zone = zone
+      expect(server.zone_id_changed?).to be_truthy
+      expect(server.save).to be_falsey
+    end
+  end
+
+  describe ".zone_is_modifiable?" do
+    it "is true when there are multiple zones in the region" do
+      FactoryBot.create(:miq_server)
+      FactoryBot.create(:zone)
+
+      expect(described_class.zone_is_modifiable?).to be_truthy
+    end
+
+    it "is false when there is only one zone" do
+      FactoryBot.create(:miq_server)
+      expect(Zone.count).to eq(1)
+      expect(described_class.zone_is_modifiable?).to be_falsey
+    end
+
+    it "is false when in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      FactoryBot.create(:miq_server)
+      FactoryBot.create(:zone)
+
+      expect(described_class.zone_is_modifiable?).to be_falsey
     end
   end
 end

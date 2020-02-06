@@ -1,4 +1,4 @@
-describe ServiceReconfigureTask do
+RSpec.describe ServiceReconfigureTask do
   let(:user)     { FactoryBot.create(:user_with_group) }
   let(:template) { FactoryBot.create(:service_template, :name => 'Test Template') }
   let(:service)  { FactoryBot.create(:service, :name => 'Test Service', :service_template => template) }

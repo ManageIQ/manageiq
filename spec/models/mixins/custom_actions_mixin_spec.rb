@@ -1,4 +1,4 @@
-describe CustomActionsMixin do
+RSpec.describe CustomActionsMixin do
   let(:test_class) do
     Class.new(ActiveRecord::Base) do
       def self.name; "TestClass"; end

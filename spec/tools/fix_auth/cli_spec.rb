@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 
 require "fix_auth/cli"
 
-describe FixAuth::Cli do
+RSpec.describe FixAuth::Cli do
   describe "#parse" do
     it "should assign defaults" do
       opts = described_class.new.parse([], {})

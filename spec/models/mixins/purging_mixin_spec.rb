@@ -1,4 +1,4 @@
-describe PurgingMixin do
+RSpec.describe PurgingMixin do
   let(:example_class) { PolicyEvent }
   let(:purge_date) { 2.weeks.ago }
 

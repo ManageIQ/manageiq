@@ -1,6 +1,6 @@
 require 'fileutils'
 
-describe MiqDialog do
+RSpec.describe MiqDialog do
   describe "::Seeding" do
     include_examples(".seed called multiple times", 20)
 

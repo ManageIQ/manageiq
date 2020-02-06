@@ -1,4 +1,4 @@
-describe MiqProvisionRequestTemplate do
+RSpec.describe MiqProvisionRequestTemplate do
   let(:user)             { FactoryBot.create(:user) }
   let(:template)         do
     FactoryBot.create(:template_vmware,

@@ -2,7 +2,7 @@ $LOAD_PATH << Rails.root.join("tools", "miq_config_sssd_ldap").to_s
 
 require "configure_appliance_settings"
 
-describe MiqConfigSssdLdap::ConfigureApplianceSettings do
+RSpec.describe MiqConfigSssdLdap::ConfigureApplianceSettings do
   before do
     stub_const("LOGGER", double)
     allow(LOGGER).to receive(:debug)
@@ -22,7 +22,6 @@ describe MiqConfigSssdLdap::ConfigureApplianceSettings do
 
     it 'upates the authentication settings for external auth' do
       # Needed to avoid pitfalls of not running on a live appliance with real settings
-      allow_any_instance_of(Vmdb::Settings).to receive(:activate)
       allow_any_instance_of(ConfigurationManagementMixin).to receive(:reload_all_server_settings)
 
       Vmdb::Settings.save!(miq_server, @auth_config)
@@ -38,7 +37,6 @@ describe MiqConfigSssdLdap::ConfigureApplianceSettings do
 
     it 'sets httpd_role to ldap_role if ldap_role is specified' do
       # Needed to avoid pitfalls of not running on a live appliance with real settings
-      allow_any_instance_of(Vmdb::Settings).to receive(:activate)
       allow_any_instance_of(ConfigurationManagementMixin).to receive(:reload_all_server_settings)
 
       Vmdb::Settings.save!(miq_server, @auth_config)

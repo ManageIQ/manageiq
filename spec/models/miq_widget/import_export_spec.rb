@@ -1,4 +1,4 @@
-describe MiqWidget::ImportExport do
+RSpec.describe MiqWidget::ImportExport do
   context "legacy tests" do
     before do
       MiqReport.seed_report("Vendor and Guest OS")

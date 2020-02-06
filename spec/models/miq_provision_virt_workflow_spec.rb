@@ -1,4 +1,4 @@
-describe MiqProvisionVirtWorkflow do
+RSpec.describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryBot.create(:miq_provision_virt_workflow) }
 
   context "#new" do
@@ -231,8 +231,9 @@ describe MiqProvisionVirtWorkflow do
 
     it "with a provider model defined" do
       ems = FactoryBot.create(:ems_vmware)
-      expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
+      workflow = FactoryBot.create(:miq_provision_virt_workflow_vmware)
 
+      expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
       expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
     end
   end

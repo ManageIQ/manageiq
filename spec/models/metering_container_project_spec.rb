@@ -1,4 +1,4 @@
-describe MeteringContainerProject do
+RSpec.describe MeteringContainerProject do
   include Spec::Support::ChargebackHelper
 
   let(:admin) { FactoryBot.create(:user_admin) }

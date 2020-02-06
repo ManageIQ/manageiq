@@ -1,4 +1,4 @@
-describe MiqWebServerWorkerMixin do
+RSpec.describe MiqWebServerWorkerMixin do
   it "build_uri (ipv6)" do
     test_class = Class.new do
       include MiqWebServerWorkerMixin

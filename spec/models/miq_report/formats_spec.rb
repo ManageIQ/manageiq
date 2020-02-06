@@ -1,4 +1,4 @@
-describe MiqReport::Formats do
+RSpec.describe MiqReport::Formats do
   describe '.default_format_details_for' do
     let(:human_mb_details) do
       { :description => 'Suffixed Megabytes (MB, GB)',

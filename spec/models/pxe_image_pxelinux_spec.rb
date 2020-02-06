@@ -1,4 +1,4 @@
-describe PxeImagePxelinux do
+RSpec.describe PxeImagePxelinux do
   let(:image) { FactoryBot.create(:pxe_image_pxelinux) }
 
   context "#build_pxe_contents" do

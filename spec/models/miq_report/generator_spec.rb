@@ -1,4 +1,4 @@
-describe MiqReport::Generator do
+RSpec.describe MiqReport::Generator do
   include Spec::Support::ChargebackHelper
 
   before do

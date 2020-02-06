@@ -1,4 +1,4 @@
-describe Authenticator::Database do
+RSpec.describe Authenticator::Database do
   subject { Authenticator::Database.new({}) }
   let!(:alice) { FactoryBot.create(:user, :userid => 'alice', :password => 'secret') }
   let!(:vincent) { FactoryBot.create(:user, :userid => 'Vincent', :password => 'secret') }

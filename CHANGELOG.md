@@ -4,6 +4,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 129 ending 2020-02-02
+
+### Added
+
+* Job method "queue signal" to take a "queue name" [(#19764)](https://github.com/ManageIQ/manageiq/pull/19764)
+* Bump "secure headers" gem to a more recent version [(#19752)](https://github.com/ManageIQ/manageiq/pull/19752)
+* Monitor multiple servers when running in pods [(#19734)](https://github.com/ManageIQ/manageiq/pull/19734)
+* Map server to zone in pods [(#19770)](https://github.com/ManageIQ/manageiq/pull/19770)
+* Remove Vmdb::Settings "last loaded" and simplify server settings reload [(#19758)](https://github.com/ManageIQ/manageiq/pull/19758)
+* Commit the data directory rather than creating it when the server starts [(#19745)](https://github.com/ManageIQ/manageiq/pull/19745)
+* Remove the unsafe "cattr accessor" for "my guid cache" [(#19744)](https://github.com/ManageIQ/manageiq/pull/19744)
+* Upgrade to config gem for ruby 2.7 support [(#19757)](https://github.com/ManageIQ/manageiq/pull/19757)
+
+### Fixed
+
+* Fix nondescript "unknown unknowns" for timestamps [(#19774)](https://github.com/ManageIQ/manageiq/pull/19774)
+
+# Unreleased as of Sprint 128 ending 2020-01-20
+
+### Added
+
+* Split up MetricsCapture into provider subclasses [(#19543)](https://github.com/ManageIQ/manageiq/issues/19543)
+* Add a queue_name to MiqProvisionRequest to allow to be run on specialized workers [(#19705)](https://github.com/ManageIQ/manageiq/pull/19705)
+* Add a native_viewer VM console option for RHV/Ovirt [(#19675)](https://github.com/ManageIQ/manageiq/pull/19675)
+* Differentiate deployment names by server [(#19712)](https://github.com/ManageIQ/manageiq/pull/19712)
+* Always use file based heartbeat [(#19666)](https://github.com/ManageIQ/manageiq/pull/19666)
+
+### Removed
+
+* Remove the VMwareWebService gem from the core Gemfile [(#19704)](https://github.com/ManageIQ/manageiq/pull/19704)
+
+### Fixed
+
+* Autoload Rails Models unless called from safe_load [(#19701)](https://github.com/ManageIQ/manageiq/pull/19701)
+
+# Unreleased as of Sprint 127 ending 2020-01-06
+
+### Added
+
+* Switch from git source to rubygems.manageiq.org [(#19564)](https://github.com/ManageIQ/manageiq/pull/19564)
+* Added a tool to visualize Jobs in graphviz [(#19626)](https://github.com/ManageIQ/manageiq/pull/19626)
+* Updated rubyzip gem to version 2 [(#19629)](https://github.com/ManageIQ/manageiq/pull/19629)
+* Updated linux_admin gem to version 2 [(#19639)](https://github.com/ManageIQ/manageiq/pull/19639)
+* Added sync gem [(#19682)](https://github.com/ManageIQ/manageiq/pull/19682)
+
+### Fixed
+
+* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
+* Avoid starting every metrics collector worker for every EMS type simply because the role is enabled. [(#19683)](https://github.com/ManageIQ/manageiq/pull/19683)
+
 # Unreleased as of Sprint 126 ending 2019-12-09
 
 ### Added

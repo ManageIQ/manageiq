@@ -80,7 +80,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   end
 
   def capture_ems_targets(options = {})
-    Metric::Targets.capture_ems_targets(ems, options)
+    raise(NotImplementedError, _("must be implemented in subclass"))
   end
 
   # if it has not been run, or it was a very long time ago, just run it

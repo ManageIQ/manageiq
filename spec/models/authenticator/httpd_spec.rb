@@ -1,4 +1,4 @@
-describe Authenticator::Httpd do
+RSpec.describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
   let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
   let!(:cheshire) { FactoryBot.create(:user, :userid => 'cheshire@example.com') }

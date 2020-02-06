@@ -1,4 +1,4 @@
-describe User do
+RSpec.describe User do
   context "validations" do
     it "should ensure presence of name" do
       expect(FactoryBot.build(:user, :name => nil)).not_to be_valid

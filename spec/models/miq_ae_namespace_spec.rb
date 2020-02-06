@@ -1,4 +1,4 @@
-describe MiqAeNamespace do
+RSpec.describe MiqAeNamespace do
   describe "name attribute validation" do
     subject { described_class.new }
 

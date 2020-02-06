@@ -1,4 +1,4 @@
-describe Dialog::OrchestrationTemplateServiceDialog do
+RSpec.describe Dialog::OrchestrationTemplateServiceDialog do
   let(:orchestration_template) do
     FactoryBot.create(:orchestration_template).tap do |template|
       allow(template).to receive(:parameter_groups).and_return(param_groups)

@@ -1,4 +1,4 @@
-describe MiqFilter do
+RSpec.describe MiqFilter do
   let(:ems)             { FactoryBot.create(:ems_vmware, :name => 'ems') }
   let(:datacenter)      { FactoryBot.create(:ems_folder, :name => "Datacenters").tap { |dc| dc.parent = ems } }
   let(:mtc)             { FactoryBot.create(:datacenter, :name => "MTC").tap { |mtc| mtc.parent = datacenter } }

@@ -1,4 +1,4 @@
-describe "Service Retirement Management" do
+RSpec.describe "Service Retirement Management" do
   let(:user) { FactoryBot.create(:user_miq_request_approver) }
   let(:service_with_owner) { FactoryBot.create(:service, :evm_owner => user) }
   let(:service_ansible_playbook) { FactoryBot.create(:service_ansible_playbook) }

@@ -90,10 +90,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     end
   end
 
-  def message_delivery_suspended?
-    self.class.delay_queue_delivery_for_vim_broker? && !MiqVimBrokerWorker.available?
-  end
-
   def deliver_queue_message(msg, &block)
     reset_poll_escalate if poll_method == :sleep_poll_escalate
 
@@ -118,18 +114,9 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
       msg.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
       do_exit("Exiting worker due to timeout error", 1) if status == MiqQueue::STATUS_TIMEOUT
-    rescue MiqException::MiqVimBrokerUnavailable
-      _log.error("#{log_prefix} VimBrokerWorker is not available.  Requeueing message...")
-      msg.unget
     ensure
       $_miq_worker_current_msg = nil # to avoid log messages inadvertantly prefixed by previous task_id
       Thread.current[:tracking_label] = nil
-      #
-      # This tells the broker to release any memory being held on behalf of this process
-      # and reset the global broker handle ($vim_broker_client).
-      # This is a NOOP if global broker handle is not set.
-      #
-      clean_broker_connection
     end
   end
 
@@ -149,7 +136,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     loop do
       heartbeat
       break if thresholds_exceeded?
-      break if message_delivery_suspended?
       msg = get_message
       break if msg.nil?
       deliver_message(msg)
@@ -160,7 +146,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   # Only for file based heartbeating
   def heartbeat_message_timeout(message)
-    if ENV["WORKER_HEARTBEAT_METHOD"] == "file" && message.msg_timeout
+    if message.msg_timeout
       timeout = worker_settings[:poll] + message.msg_timeout
       heartbeat_to_file(timeout)
     end

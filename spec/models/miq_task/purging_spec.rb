@@ -1,4 +1,4 @@
-describe MiqTask do
+RSpec.describe MiqTask do
   context "::Purging" do
     describe ".purge_by_date" do
       before do

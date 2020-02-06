@@ -1,4 +1,4 @@
-describe MeteringVm do
+RSpec.describe MeteringVm do
   include Spec::Support::ChargebackHelper
 
   let(:admin) { FactoryBot.create(:user_admin) }

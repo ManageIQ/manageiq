@@ -1,4 +1,4 @@
-describe ApplicationRecord do
+RSpec.describe ApplicationRecord do
   context ".human_attribute_name includes the class name in the validation error for easier troubleshooting" do
     it "single level" do
       Zone.create!(:name => "example", :description => "example")

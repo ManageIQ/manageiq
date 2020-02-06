@@ -112,6 +112,7 @@ unless options[:dry_run]
     $log.info("Starting #{worker.class.name} with runner options #{runner_options}")
     worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
   ensure
+    FileUtils.rm_f(worker.heartbeat_file)
     $log.info("Deleting worker record for #{worker.class.name}, id #{worker.id}")
     worker.delete
   end

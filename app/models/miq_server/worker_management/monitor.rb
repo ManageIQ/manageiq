@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
-    resync_needed = sync_needed?
+    sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
     sync_workers
@@ -32,8 +32,6 @@ module MiqServer::WorkerManagement::Monitor
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
       next unless validate_worker(worker)
-      # Tell the valid workers to sync config if needed
-      worker_set_message(worker, "sync_config") if resync_needed
     end
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
@@ -44,7 +42,6 @@ module MiqServer::WorkerManagement::Monitor
     _log.warn(msg)
     MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_killed", :event_details => msg, :type => w.class.name)
     w.kill
-    MiqVimBrokerWorker.cleanup_for_pid(w.pid)
   end
 
   def sync_workers
@@ -122,21 +119,16 @@ module MiqServer::WorkerManagement::Monitor
     end
   end
 
-  def sync_needed?
+  def sync_monitor
     @last_sync ||= Time.now.utc
     sync_interval         = @worker_monitor_settings[:sync_interval] || 30.minutes
     sync_interval_reached = sync_interval.seconds.ago.utc > @last_sync
-    config_changed        = self.sync_config_changed?
     roles_changed         = self.active_roles_changed?
-    resync_needed         = config_changed || roles_changed || sync_interval_reached
+    resync_needed         = roles_changed || sync_interval_reached
 
     roles_added, roles_deleted, _roles_unchanged = role_changes
 
     if resync_needed
-      @last_sync = Time.now.utc
-
-      sync_config                if config_changed
-      sync_assigned_roles        if config_changed
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
@@ -146,16 +138,11 @@ module MiqServer::WorkerManagement::Monitor
 
       EvmDatabase.restart_failover_monitor_service if (roles_added | roles_deleted).include?("database_operations")
 
-      reset_queue_messages       if config_changed || roles_changed
+      reset_queue_messages       if roles_changed
 
-      update_sync_timestamp(@last_sync)
+      @last_sync = Time.now.utc
+      notify_workers_of_config_change(@last_sync)
     end
-
-    resync_needed
-  end
-
-  def set_last_change(key, value)
-    key_store.set(key, value)
   end
 
   def key_store
@@ -163,7 +150,7 @@ module MiqServer::WorkerManagement::Monitor
     @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
   end
 
-  def update_sync_timestamp(last_sync)
-    set_last_change("last_config_change", last_sync)
+  def notify_workers_of_config_change(last_sync)
+    key_store.set("last_config_change", last_sync)
   end
 end

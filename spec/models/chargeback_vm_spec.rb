@@ -1,4 +1,4 @@
-describe ChargebackVm do
+RSpec.describe ChargebackVm do
   include Spec::Support::ChargebackHelper
 
   let(:admin) { FactoryBot.create(:user_admin) }

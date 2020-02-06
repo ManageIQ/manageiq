@@ -5,20 +5,6 @@ module MiqServer::ServerSmartProxy
 
   SMART_ROLES = %w(smartproxy smartstate).freeze
 
-  module ClassMethods
-    # Called from VM scan job as well as scan_sync_vm
-
-    def use_broker_for_embedded_proxy?(type = nil)
-      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? &&
-               ::Settings.coresident_miqproxy[:use_vim_broker]
-      return result if type.blank? || !result
-
-      # Check for a specific type (host/ems) if passed
-      # Default use_vim_broker is true for ems type
-      ::Settings.coresident_miqproxy["use_vim_broker_#{type}"] == true
-    end
-  end
-
   def is_a_proxy?
     self.has_role?(:SmartProxy)
   end

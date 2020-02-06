@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::BaseManager do
+RSpec.describe ManageIQ::Providers::BaseManager do
   context ".default_blacklisted_event_names" do
     it 'returns an empty array for the base class' do
       expect(described_class.default_blacklisted_event_names).to eq([])

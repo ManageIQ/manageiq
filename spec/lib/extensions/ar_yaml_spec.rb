@@ -1,4 +1,4 @@
-describe ActiveRecord::AttributeAccessorThatYamls do
+RSpec.describe ActiveRecord::AttributeAccessorThatYamls do
   Vm.class_eval do
     include ActiveRecord::AttributeAccessorThatYamls
     attr_accessor_that_yamls :access1, :access2

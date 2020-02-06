@@ -1,4 +1,4 @@
-describe MiqReportResult do
+RSpec.describe MiqReportResult do
   context "::Purging" do
     let(:settings) do
       {

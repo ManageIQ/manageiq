@@ -1,4 +1,4 @@
-describe MiqScheduleWorker::Runner do
+RSpec.describe MiqScheduleWorker::Runner do
   context ".new" do
     before do
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)

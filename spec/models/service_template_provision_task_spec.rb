@@ -1,4 +1,4 @@
-describe ServiceTemplateProvisionTask do
+RSpec.describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
     before do
       @admin = FactoryBot.create(:user_with_group)

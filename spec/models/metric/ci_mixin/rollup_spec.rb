@@ -1,4 +1,4 @@
-describe Metric::CiMixin::Rollup do
+RSpec.describe Metric::CiMixin::Rollup do
   before do
     MiqRegion.seed
 

@@ -1,4 +1,4 @@
-describe MiqWidget do
+RSpec.describe MiqWidget do
   describe '.seed' do
     before { [MiqReport].each(&:seed) }
     include_examples(".seed called multiple times", begin

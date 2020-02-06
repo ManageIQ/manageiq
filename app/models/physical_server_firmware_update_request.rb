@@ -10,6 +10,10 @@ class PhysicalServerFirmwareUpdateRequest < MiqRequest
     'ems_operations'
   end
 
+  def my_queue_name
+    affected_ems.queue_name_for_ems_operations
+  end
+
   def self.request_task_class
     PhysicalServerFirmwareUpdateTask
   end

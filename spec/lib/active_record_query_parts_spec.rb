@@ -1,4 +1,4 @@
-describe ActiveRecordQueryParts do
+RSpec.describe ActiveRecordQueryParts do
   context "glob to sql" do
     it "replaces '*'" do
       expect(described_class.glob_to_sql_like("a*b*c")).to eq("a%b%c")

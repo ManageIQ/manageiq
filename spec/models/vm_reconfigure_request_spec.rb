@@ -1,4 +1,4 @@
-describe VmReconfigureRequest do
+RSpec.describe VmReconfigureRequest do
   let(:admin)         { FactoryBot.create(:user, :userid => "tester") }
   let(:ems_vmware)    { FactoryBot.create(:ems_vmware, :zone => zone2) }
   let(:host_hardware) { FactoryBot.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
@@ -24,6 +24,19 @@ describe VmReconfigureRequest do
 
     it "with no source should be the same as the request's zone" do
       expect(request.my_zone).to eq(@zone1.name)
+    end
+  end
+
+  context "#my_queue_name" do
+    it "with valid source should have the VM's queue_name_for_ems_operations" do
+      vm_vmware.update(:ems_id => ems_vmware.id)
+      request.update(:options => {:src_ids => [vm_vmware.id]})
+
+      expect(request.my_queue_name).to eq(vm_vmware.queue_name_for_ems_operations)
+    end
+
+    it "with no source should be nil" do
+      expect(request.my_queue_name).to be_nil
     end
   end
 

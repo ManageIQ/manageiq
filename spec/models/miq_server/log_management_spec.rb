@@ -76,7 +76,7 @@ shared_examples "post_logs_fails" do |is_zone_depot, is_server_depot, context|
   end
 end
 
-describe MiqServer do
+RSpec.describe MiqServer do
   context "LogManagement" do
     let(:server_depot) { FactoryBot.create(:file_depot) }
     let(:zone_depot) { FactoryBot.create(:file_depot) }
@@ -147,23 +147,41 @@ describe MiqServer do
         Dialogs post_automate_dialogs
       ).each_slice(2) do |name, method|
         it "##{method}" do
-          @miq_server.send(method, task.id, log_depot)
-          logfile = @miq_server.reload.log_files.first
-          expected_name = [name, "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
-          expect(logfile).to have_attributes(
-            :file_depot         => log_depot,
-            :local_file         => daily_log,
-            :logging_started_on => log_start,
-            :logging_ended_on   => log_end,
-            :name               => expected_name,
-            :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
-            :miq_task_id        => task.id
-          )
+          logfile = nil
 
-          expected_filename = "#{name}_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
-          expected_filename.gsub!(/\s+/, "_")
-          expect(logfile.destination_file_name).to eq(expected_filename)
+          now = Time.zone.now
+          Timecop.freeze(now) do
+            @miq_server.send(method, task.id, log_depot)
+            logfile = @miq_server.reload.log_files.first
+          end
 
+          if %w[Current Archive].include?(name)
+            expected_name = [name, "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
+            expect(logfile).to have_attributes(
+              :file_depot         => log_depot,
+              :local_file         => daily_log,
+              :logging_started_on => log_start,
+              :logging_ended_on   => log_end,
+              :name               => expected_name,
+              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
+              :miq_task_id        => task.id
+            )
+            expected_filename = "#{name}_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
+            expected_filename.gsub!(/\s+/, "_")
+            expect(logfile.destination_file_name).to eq(expected_filename)
+          else
+            formatted_now = now.strftime("%Y%m%d_%H%M%S")
+            expected_name = [name, "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, formatted_now, formatted_now].join(" ")
+            expect(logfile).to have_attributes(
+              :file_depot         => log_depot,
+              :local_file         => daily_log,
+              :logging_started_on => be_within(1).of(now),
+              :logging_ended_on   => be_within(1).of(now),
+              :name               => expected_name,
+              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} #{formatted_now} #{formatted_now}",
+              :miq_task_id        => task.id
+            )
+          end
           expect(task.reload).to have_attributes(
             :message => "#{name} log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
             :state   => "Active",

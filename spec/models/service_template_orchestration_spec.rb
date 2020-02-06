@@ -1,4 +1,4 @@
-describe ServiceTemplateOrchestration do
+RSpec.describe ServiceTemplateOrchestration do
   subject { FactoryBot.create(:service_template_orchestration) }
 
   describe '#create_subtasks' do

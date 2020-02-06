@@ -1,5 +1,10 @@
-describe ProviderObjectMixin do
-  let(:test_class) { Class.new { include ProviderObjectMixin } }
+RSpec.describe ProviderObjectMixin do
+  let(:test_class) do
+    Class.new do
+      include ProviderObjectMixin
+      attr_accessor :ext_management_system
+    end
+  end
 
   def mock_ems_with_connection
     @ems        = double("ems")

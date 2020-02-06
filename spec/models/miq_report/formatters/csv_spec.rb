@@ -1,4 +1,4 @@
-describe MiqReport::Formatters::Csv do
+RSpec.describe MiqReport::Formatters::Csv do
   describe "#to_csv" do
     let(:col_options) { nil }
     let(:table_data) do

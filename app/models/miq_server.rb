@@ -26,8 +26,6 @@ class MiqServer < ApplicationRecord
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target
 
-  cattr_accessor          :my_guid_cache
-
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
@@ -40,6 +38,7 @@ class MiqServer < ApplicationRecord
   virtual_delegate :description, :to => :zone, :prefix => true, :allow_nil => true, :type => :string
 
   validate :validate_zone_not_maintenance?
+  validate :zone_unchanged_in_pods, :on => :update
 
   GUID_FILE = Rails.root.join("GUID").freeze
 
@@ -91,12 +90,6 @@ class MiqServer < ApplicationRecord
     EventStream.where(:target_id => server_id, :target_type => "MiqServer").destroy_all
   end
 
-  def self.setup_data_directory
-    # create root data directory
-    data_dir = File.join(File.expand_path(Rails.root), "data")
-    Dir.mkdir(data_dir) unless File.exist?(data_dir)
-  end
-
   def self.pidfile
     @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
   end
@@ -104,60 +97,6 @@ class MiqServer < ApplicationRecord
   def self.running?
     p = PidFile.new(pidfile)
     p.running? ? p.pid : false
-  end
-
-  def start
-    MiqEvent.raise_evm_event(self, "evm_server_start")
-
-    msg = "Server starting in #{self.class.startup_mode} mode."
-    _log.info(msg)
-    puts "** #{msg}"
-
-    starting_server_record
-    ensure_default_roles
-
-    #############################################################
-    # Server Role Assignment
-    #
-    # - Deactivate all roles from last time
-    # - Assert database_owner role - based on vmdb being local
-    # - Role activation should happen inside monitor_servers
-    # - Synchronize active roles to monitor for role changes
-    #############################################################
-    deactivate_all_roles
-    set_database_owner_role(EvmDatabase.local?)
-    monitor_servers
-    monitor_server_roles if self.is_master?
-    sync_active_roles
-    set_active_role_flags
-
-    #############################################################
-    # Clear the MiqQueue for server and its workers
-    #############################################################
-    clean_stop_worker_queue_items
-    clear_miq_queue_for_this_server
-
-    #############################################################
-    # Other startup actions
-    #############################################################
-    self.class.log_managed_entities
-    self.class.clean_all_workers
-    self.class.clean_dequeued_messages
-    self.class.purge_report_results
-
-    delete_active_log_collections_queue
-
-    #############################################################
-    # Start all the configured workers
-    #############################################################
-    clean_heartbeat_files
-    sync_config
-    start_drb_server
-    sync_workers
-    wait_for_started_workers
-
-    update(:status => "started")
-    _log.info("Server starting complete")
   end
 
   def self.seed
@@ -169,90 +108,6 @@ class MiqServer < ApplicationRecord
       _log.info("Creating Default MiqServer... Complete")
     end
     my_server
-  end
-
-  def self.start
-    validate_database
-
-    EvmDatabase.seed_primordial
-
-    setup_data_directory
-    check_migrations_up_to_date
-    Vmdb::Settings.activate
-
-    server = my_server(true)
-    server_hash = {}
-    config_hash = {}
-
-    ipaddr, hostname, mac_address = get_network_information
-
-    if ipaddr =~ Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex).freeze
-      server_hash[:ipaddress] = config_hash[:host] = ipaddr
-    end
-
-    if hostname.present? && hostname.hostname?
-      hostname = nil if hostname =~ /.*localhost.*/
-      server_hash[:hostname] = config_hash[:hostname] = hostname
-    end
-
-    unless mac_address.blank?
-      server_hash[:mac_address] = mac_address
-    end
-
-    if config_hash.any?
-      Vmdb::Settings.save!(server, :server => config_hash)
-      ::Settings.reload!
-    end
-
-    # Determine the corresponding Vm
-    if server.vm_id.nil?
-      vms = Vm.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddr)
-      if vms.length > 1
-        _log.warn("Found multiple Vms that may represent this MiqServer: #{vms.collect(&:id).sort.inspect}")
-      elsif vms.length == 1
-        server_hash[:vm_id] = vms.first.id
-      end
-    end
-
-    unless server.new_record?
-      [
-        # Reset the DRb URI
-        :drb_uri, :last_heartbeat,
-        # Reset stats
-        :memory_usage, :memory_size, :percent_memory, :percent_cpu, :cpu_time
-      ].each { |k| server_hash[k] = nil }
-    end
-
-    server.update(server_hash)
-
-    _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
-    _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
-    _log.info("Server MAC Address: #{server.mac_address}") unless server.mac_address.blank?
-    _log.info("Server GUID: #{my_guid}")
-    _log.info("Server Zone: #{my_zone}")
-    _log.info("Server Role: #{my_role}")
-    region = MiqRegion.my_region
-    _log.info("Server Region number: #{region.region}, name: #{region.name}") unless region.nil?
-    _log.info("Database Latency: #{EvmDatabase.ping(connection)} ms")
-
-    Vmdb::Appliance.log_config_on_startup
-
-    server.ntp_reload
-    server.set_database_application_name
-
-    EvmDatabase.seed_rest
-
-    start_memcached
-    MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
-    server.start
-    server.monitor_loop
-  end
-
-  def self.check_migrations_up_to_date
-    up_to_date, *message = SchemaMigration.up_to_date?
-    level = up_to_date ? :info : :warn
-    message.to_miq_a.each { |msg| _log.send(level, msg) }
-    up_to_date
   end
 
   def validate_is_deleteable
@@ -281,10 +136,6 @@ class MiqServer < ApplicationRecord
     end
   end
 
-  def monitor_poll
-    ::Settings.server.monitor_poll.to_i_with_method
-  end
-
   def stop_poll
     ::Settings.server.stop_poll.to_i_with_method
   end
@@ -303,10 +154,6 @@ class MiqServer < ApplicationRecord
 
   def server_log_frequency
     ::Settings.server.server_log_frequency.to_i_with_method
-  end
-
-  def server_log_timings_threshold
-    ::Settings.server.server_log_timings_threshold.to_i_with_method
   end
 
   def worker_dequeue_frequency
@@ -380,21 +227,6 @@ class MiqServer < ApplicationRecord
       Notification.create(:type => "evm_server_memory_exceeded", :options => notification_options)
       shutdown_and_exit(1)
     end
-  end
-
-  def monitor_loop
-    loop do
-      _dummy, timings = Benchmark.realtime_block(:total_time) { monitor }
-      _log.info("Server Monitoring Complete - Timings: #{timings.inspect}") unless timings[:total_time] < server_log_timings_threshold
-      sleep monitor_poll
-    end
-  rescue Interrupt => e
-    _log.info("Received #{e.message} signal, killing server")
-    self.class.kill
-    exit 1
-  rescue SignalException => e
-    _log.info("Received #{e.message} signal, shutting down server")
-    shutdown_and_exit
   end
 
   def stop(sync = false)
@@ -500,6 +332,8 @@ class MiqServer < ApplicationRecord
   end
 
   def is_deleteable?
+    return true if MiqEnvironment::Command.is_podified?
+
     if self.is_local?
       message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
       @errors ||= ActiveModel::Errors.new(self)
@@ -552,9 +386,16 @@ class MiqServer < ApplicationRecord
   #
   # Zone and Role methods
   #
+  @@my_guid_mutex = Mutex.new
   def self.my_guid
-    @my_guid_mutex ||= Mutex.new
-    @my_guid_mutex.synchronize { @@my_guid_cache ||= load_or_generate_guid }
+    @@my_guid_mutex.synchronize { @@my_guid ||= load_or_generate_guid }
+  end
+
+  # Under normal circumstances there really shouldn't be any reason to use
+  # this method. It should only be used for tests and when we need to monitor
+  # multiple servers.
+  def self.my_guid=(guid)
+    @@my_guid_mutex.synchronize { @@my_guid = guid }
   end
 
   def self.load_or_generate_guid
@@ -638,5 +479,19 @@ class MiqServer < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Server', 'Servers', number)
+  end
+
+  def self.zone_is_modifiable?
+    return false if MiqEnvironment::Command.is_podified?
+
+    Zone.visible.in_my_region.count > 1
+  end
+
+  private
+
+  def zone_unchanged_in_pods
+    return unless MiqEnvironment::Command.is_podified?
+
+    errors.add(:zone, N_('cannot be changed when running in containers')) if zone_id_changed?
   end
 end # class MiqServer

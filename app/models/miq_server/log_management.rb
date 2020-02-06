@@ -109,7 +109,12 @@ module MiqServer::LogManagement
     task = logfile.miq_task
     log_prefix = "Task: [#{task.id}]"
 
-    log_start, log_end = log_start_and_end_for_pattern(pattern)
+    log_start, log_end = if logfile.logging_started_on
+                           [logfile.logging_started_on, logfile.logging_ended_on]
+                         else
+                           log_start_and_end_for_pattern(pattern)
+                         end
+
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
 
     msg = "Zipping and posting #{log_type.downcase} logs for [#{who_am_i}] from: [#{log_start}] to [#{log_end}]"
@@ -145,9 +150,13 @@ module MiqServer::LogManagement
   def post_automate_models(taskid, log_depot)
     domain_zip = Rails.root.join("log", "domain.zip")
     backup_automate_models(domain_zip)
+    now = Time.zone.now
 
     logfile = LogFile.historical_logfile
-    logfile.update(:file_depot => log_depot, :miq_task => MiqTask.find(taskid))
+    logfile.update(:file_depot         => log_depot,
+                   :miq_task           => MiqTask.find(taskid),
+                   :logging_started_on => now,
+                   :logging_ended_on   => now)
     post_one_log_pattern(domain_zip, logfile, "Models")
   ensure
     FileUtils.rm_rf(domain_zip)
@@ -163,9 +172,13 @@ module MiqServer::LogManagement
     dialog_directory = Rails.root.join("log", "service_dialogs")
     FileUtils.mkdir_p(dialog_directory)
     backup_automate_dialogs(dialog_directory)
+    now = Time.zone.now
 
     logfile = LogFile.historical_logfile
-    logfile.update(:file_depot => log_depot, :miq_task => MiqTask.find(taskid))
+    logfile.update(:file_depot         => log_depot,
+                   :miq_task           => MiqTask.find(taskid),
+                   :logging_started_on => now,
+                   :logging_ended_on   => now)
     post_one_log_pattern(dialog_directory.join("*"), logfile, "Dialogs")
   ensure
     FileUtils.rm_rf(dialog_directory)

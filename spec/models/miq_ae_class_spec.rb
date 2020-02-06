@@ -1,4 +1,4 @@
-describe MiqAeClass do
+RSpec.describe MiqAeClass do
   include Spec::Support::AutomationHelper
 
   describe "name attribute validation" do

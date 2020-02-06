@@ -1,4 +1,4 @@
-describe LiveMetric do
+RSpec.describe LiveMetric do
   let(:raw_conditions) do
     "resource_type = 'VmOrTemplate' and resource_id = 6 " \
     "and timestamp >= '2016-04-03 00:00:00' and timestamp <= '2016-04-05 23:00:00' " \

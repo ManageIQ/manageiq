@@ -1,4 +1,4 @@
-describe MiqReport do
+RSpec.describe MiqReport do
   let(:miq_report) { FactoryBot.create(:miq_report) }
 
   before do

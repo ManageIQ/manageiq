@@ -18,44 +18,6 @@
   :amazon_secret:
 :binary_blob:
   :purge_window_size: 100
-:broker_notify_properties:
-  :exclude:
-    :HostSystem:
-    - config.consoleReservation
-    - config.dateTimeInfo
-    - config.network
-    - config.service
-    - summary
-    - summary.overallStatus
-    - summary.runtime.bootTime
-    - summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo
-    :VirtualMachine:
-    - config.locationId
-    - config.memoryAllocation.overheadLimit
-    - config.npivWorldWideNameType
-    - guest.disk
-    - guest.guestFamily
-    - guest.guestFullName
-    - guest.guestId
-    - guest.ipStack
-    - guest.net
-    - guest.screen
-    - guest.screen.height
-    - guest.screen.width
-    - guest.toolsRunningStatus
-    - guest.toolsStatus
-    - resourceConfig
-    - summary
-    - summary.guest.guestFullName
-    - summary.guest.guestId
-    - summary.guest.toolsRunningStatus
-    - summary.overallStatus
-    - summary.runtime.bootTime
-    - summary.runtime.memoryOverhead
-    - summary.runtime.numMksConnections
-    - summary.storage
-    - summary.storage.committed
-    - summary.storage.unshared
 :capacity:
   :profile:
     :1:
@@ -82,8 +44,6 @@
   :concurrent_per_ems: 1
   :concurrent_per_host: 1
   :scan_via_host: true
-  :use_vim_broker: true
-  :use_vim_broker_ems: true
 :container_scanning:
   :scanning_job_timeout: 20.minutes
   :concurrent_per_ems: 3
@@ -1255,15 +1215,6 @@
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
-    :vim_broker_worker:
-      :memory_threshold: 2.gigabytes
-      :nice_delta: 3
-      :poll: 1.seconds
-      :reconnect_retry_interval: 5.minutes
-      :vim_broker_status_interval: 15.minutes
-      :vim_broker_update_interval: 0.seconds
-      :vim_broker_max_wait: 60
-      :vim_broker_max_objects: 250
     :web_service_worker:
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes

@@ -1,4 +1,4 @@
-describe NotificationType, :type => :model do
+RSpec.describe NotificationType, :type => :model do
   describe '.seed' do
     it 'has not seeded records before seed is run' do
       expect(described_class.count).to be_zero

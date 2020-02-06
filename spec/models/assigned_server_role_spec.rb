@@ -1,4 +1,4 @@
-describe AssignedServerRole do
+RSpec.describe AssignedServerRole do
   context "and Server Role seeded for 1 Region/Zone" do
     before do
       @miq_server = EvmSpecHelper.local_miq_server

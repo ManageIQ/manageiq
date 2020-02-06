@@ -3,6 +3,7 @@ module ManageIQ::Providers
     require_nested :Cluster
     require_nested :Datacenter
     require_nested :Folder
+    require_nested :MetricsCapture
     require_nested :ProvisionWorkflow
     require_nested :ResourcePool
     require_nested :Storage

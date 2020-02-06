@@ -64,7 +64,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
     raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
-    update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
+    update_options(
+      :source_vm_power_state => source.power_state, # This will determine power_state of destination_vm
+      :source_vm_ipaddresses => source.ipaddresses  # This will determine if we need to wait for ip addresses to appear
+    )
     destination_cluster
     virtv2v_disks
     network_mappings
@@ -174,7 +177,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def cancel
     update!(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
-    infra_conversion_job.cancel
   end
 
   def canceling
@@ -227,6 +229,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
+      updates[:virtv2v_status] = 'active'
       updated_disks.each do |disk|
         matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
         raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
@@ -237,21 +240,27 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
       if virtv2v_state['failed']
         updates[:virtv2v_status] = 'failed'
-        raise "Disks transformation failed."
-      else
+      elsif !canceling?
         updates[:virtv2v_status] = 'succeeded'
         updated_disks.each { |d| d[:percent] = 100 }
       end
     end
     updates[:virtv2v_disks] = updated_disks
+    update_options(:get_conversion_state_failures => 0)
+  rescue
+    failures = options[:get_conversion_state_failures] || 0
+    update_options(:get_conversion_state_failures => failures + 1)
+    raise "Failed to get conversion state 5 times in a row" if options[:get_conversion_state_failures] > 5
   ensure
     _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
     update_options(updates)
   end
 
   def cutover
-    unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
-      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+    if options[:virtv2v_wrapper]['cutover_file'].present?
+      unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
+        raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+      end
     end
   end
 

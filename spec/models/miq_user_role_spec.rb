@@ -1,4 +1,4 @@
-describe MiqUserRole do
+RSpec.describe MiqUserRole do
   before do
     @expected_user_role_count = 20
   end

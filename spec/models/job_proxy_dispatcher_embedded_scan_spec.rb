@@ -1,4 +1,4 @@
-describe "JobProxyDispatcherEmbeddedScanSpec" do
+RSpec.describe "JobProxyDispatcherEmbeddedScanSpec" do
   describe "dispatch embedded" do
     include Spec::Support::JobProxyDispatcherHelper
 
@@ -64,8 +64,6 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
 
       context "and a scan job for each vm" do
         before do
-          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-
           @jobs = @vms.collect(&:raw_scan)
         end
 

@@ -1,4 +1,4 @@
-describe "MiqServer::ServerSmartProxy" do
+RSpec.describe "MiqServer::ServerSmartProxy" do
   let(:server) { EvmSpecHelper.local_miq_server }
   before { ServerRole.seed }
 

@@ -1,4 +1,4 @@
-describe ServiceAnsibleTower do
+RSpec.describe ServiceAnsibleTower do
   let(:tower) { FactoryBot.create(:automation_manager_ansible_tower) }
   let(:template_by_dialog) { FactoryBot.create(:ansible_configuration_script, :manager => tower) }
   let(:template_by_setter) { FactoryBot.create(:ansible_configuration_script, :manager => tower) }

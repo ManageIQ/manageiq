@@ -76,6 +76,17 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   def update_catalog_item(options, _auth_user = nil)
+    if config_info[:warm_migration] &&
+       options.key?(:config_info) &&
+       options[:config_info].key?(:warm_migration_cutover_datetime) &&
+       options.dig(:config_info, :warm_migration_cutover_datetime).blank?
+      return delete_cutover_datetime
+    end
+
+    if options.dig(:config_info, :warm_migration_cutover_datetime)
+      return update_cutover_datetime(options[:config_info][:warm_migration_cutover_datetime])
+    end
+
     raise _("Editing a plan in progress is prohibited") if %w(active pending).include?(miq_requests.sort_by(&:created_on).last.try(:request_state))
 
     if miq_requests.any? || options[:config_info].nil?
@@ -97,6 +108,30 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   private
+
+  def update_cutover_datetime(datetime)
+    raise _('Cannot update cutover date for non-warm migration') unless config_info[:warm_migration]
+
+    begin
+      dt = Time.iso8601(datetime)
+    rescue ArgumentError => err
+      raise _('Error parsing datetime: %{error}') % {:error => err}
+    else
+      raise _('Cannot set cutover date in the past') if Time.current > dt
+
+      config_info[:warm_migration_cutover_datetime] = datetime
+      save
+      reload
+    end
+  end
+
+  def delete_cutover_datetime
+    raise _('Cannot delete cutover date for non-warm migration') unless config_info[:warm_migration]
+
+    config_info[:warm_migration_cutover_datetime] = nil
+    save
+    reload
+  end
 
   def enforce_single_service_parent(_resource)
   end

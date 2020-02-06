@@ -1,4 +1,4 @@
-describe ServiceOrchestration::ProvisionTagging do
+RSpec.describe ServiceOrchestration::ProvisionTagging do
   shared_examples_for 'service_orchestration VM tagging' do
     it 'assign tags' do
       expect(miq_request_task).to receive(:provision_priority).and_return(provision_priority)

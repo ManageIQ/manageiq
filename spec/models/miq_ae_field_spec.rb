@@ -1,4 +1,4 @@
-describe MiqAeField do
+RSpec.describe MiqAeField do
   describe "#to_export_xml" do
     let(:default_value) { nil }
     let(:miq_ae_field) do

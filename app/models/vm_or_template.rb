@@ -349,7 +349,7 @@ class VmOrTemplate < ApplicationRecord
     vms = where(:id => src_ids)
 
     missing_ids = src_ids - vms.pluck(:id)
-    _log.error("Retirement of [Vm] IDs: [#{missing_ids.join(', ')}] skipped - target(s) does not exist")
+    _log.error("Retirement of [Vm] IDs: [#{missing_ids.join(', ')}] skipped - target(s) does not exist") if missing_ids.present?
 
     vms.each do |target|
       target.check_policy_prevent('request_vm_retire', "retire_request_after_policy_check", requester.userid, :initiated_by => initiated_by)
@@ -438,12 +438,8 @@ class VmOrTemplate < ApplicationRecord
   private_class_method :task_arguments
 
   def powerops_callback(task_id, status, msg, result, queue_item)
-    if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
-      queue_item.requeue(:deliver_on => 1.minute.from_now.utc)
-    else
-      task = MiqTask.find_by(:id => task_id)
-      task.queue_callback("Finished", status, msg, result) if task
-    end
+    task = MiqTask.find_by(:id => task_id)
+    task.queue_callback("Finished", status, msg, result) if task
   end
 
   # override

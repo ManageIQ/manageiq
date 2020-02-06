@@ -1,4 +1,4 @@
-describe TaskHelpers::Exports::Policies do
+RSpec.describe TaskHelpers::Exports::Policies do
   let(:guid) { "a61314d5-67bd-435f-9c82-b82226e0a7fe" }
   let(:guid2) { "ac7e2972-f2b2-4ebe-b29d-97eefaac7615" }
 

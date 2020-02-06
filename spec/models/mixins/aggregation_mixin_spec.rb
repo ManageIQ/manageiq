@@ -1,4 +1,4 @@
-describe AggregationMixin do
+RSpec.describe AggregationMixin do
   let(:cpu_speed) { 2_999 * 8 }
   let(:memory)    { 2_048 }
   let(:hardware_args) do

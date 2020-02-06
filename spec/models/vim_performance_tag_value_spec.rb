@@ -1,4 +1,4 @@
-describe VimPerformanceTagValue do
+RSpec.describe VimPerformanceTagValue do
   context "#get_metrics" do
     let(:ts) { Time.zone.now }
     let(:category) { [] }
