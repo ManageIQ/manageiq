@@ -465,7 +465,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             ],
             "pid"         => 5855,
             "return_code" => 0,
-            "disk_count"  => 1
+            "disk_count"  => 1,
+            "vm_id"       => "01234567-89ab-cdef-0123-456789ab-cdef"
           )
           task_1.get_conversion_state
           expect(task_1.options[:virtv2v_disks]).to eq(
