@@ -66,11 +66,21 @@ module VerifyCredentialsMixin
     # Ensure that any passwords are encrypted before putting them onto the queue for any
     # DDF fields which are a password type
     def encrypt_verify_credential_params!(options)
-      params_for_create[:fields].each do |field|
-        key_path = field[:name].split(".")
-        if options.key_path?(key_path)
-          options.store_path(key_path, MiqPassword.try_encrypt(options.fetch_path(key_path))) if field[:type] == "password"
+      ddf_traverse(params_for_create) do |field|
+        key_path = field[:name].try(:split, '.')
+        if options.key_path?(key_path) && field[:type] == 'password'
+          options.store_path(key_path, MiqPassword.try_encrypt(options.fetch_path(key_path)))
         end
+      end
+    end
+
+    def ddf_traverse(structure, &block)
+      recure = ->(item) { ddf_traverse(item, &block) }
+      if structure.kind_of?(Array)
+        structure.each(&recure)
+      elsif structure.kind_of?(Hash)
+        yield(structure)
+        structure.try(:[], :fields).try(:each, &recure)
       end
     end
   end
