@@ -164,6 +164,18 @@ describe "VM Retirement Management" do
       Vm.make_retire_request(@vm.id, vm2.id, user)
     end
 
+    it "with user as initiated_by" do
+      expect(Vm).not_to receive(:_log)
+      Vm.make_retire_request(@vm.id, user, :initiated_by => user)
+    end
+
+    it "with user as initiated_by, with unknown vm.id" do
+      log_stub = instance_double("_log")
+      expect(Vm).to receive(:_log).and_return(log_stub).at_least(:once)
+      expect(log_stub).to receive(:error).with("Retirement of [Vm] IDs: [123] skipped - target(s) does not exist")
+      Vm.make_retire_request(@vm.id, 123, user, :initiated_by => user)
+    end
+
     it "policy prevents" do
       expect(VmRetireRequest).not_to receive(:make_request)
 
