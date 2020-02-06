@@ -240,6 +240,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         raise "Disks transformation failed."
       else
         updates[:virtv2v_status] = 'succeeded'
+        updates[:destination_vm_uuid] = virtv2v_state['vm_id']
         updated_disks.each { |d| d[:percent] = 100 }
       end
     end
