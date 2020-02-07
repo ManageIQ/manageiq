@@ -78,7 +78,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         :priority   => @worker.class.queue_priority
       )
       return msg unless msg == :stale
-      heartbeat
     end
   end
 
