@@ -19,6 +19,8 @@ class CloudVolume < ApplicationRecord
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   acts_as_miq_taggable
 
   def self.volume_types
@@ -33,6 +35,15 @@ class CloudVolume < ApplicationRecord
     # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
     ext_management_system && ext_management_system.class::CloudVolume
+  end
+
+  def self.my_zone(ems)
+    # TODO(pblaho): find unified way how to do that
+    ems ? ems.my_zone : MiqServer.my_zone
+  end
+
+  def my_zone
+    self.class.my_zone(ext_management_system)
   end
 
   # Create a cloud volume as a queued task and return the task id. The queue
