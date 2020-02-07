@@ -1,3 +1,5 @@
+require 'tempfile'
+
 RSpec.describe "DatabaseConfiguration patch" do
   let(:db_config_path) { File.expand_path "../../../config/database.yml", __dir__ }
   let(:fake_db_config) { Pathname.new("does/not/exist") }
@@ -10,14 +12,14 @@ RSpec.describe "DatabaseConfiguration patch" do
   end
 
   context "ERB in the template" do
-    before do
-      database_config = StringIO.new "---\nvalue: <%= 1 %>\n"
-      allow(database_config).to receive(:exist?).and_return(true)
-      allow(Pathname).to receive(:new).and_return(database_config)
-    end
-
     it "doesn't execute" do
-      expect(@app.config.database_configuration).to eq('value' => '<%= 1 %>')
+      Tempfile.create do |database_config|
+        database_config.write("---\nvalue: <%= 1 %>\n")
+        database_config.flush
+
+        allow(Pathname).to receive(:new).with(db_config_path).and_return(Pathname.new(database_config.path))
+        expect(@app.config.database_configuration).to eq('value' => '<%= 1 %>')
+      end
     end
   end
 
