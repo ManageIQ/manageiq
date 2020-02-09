@@ -90,6 +90,7 @@ RSpec.describe ExtManagementSystem do
       "vmware_cloud_network"                    => "VMware Cloud Network",
       "cinder"                                  => "Cinder ",
       "swift"                                   => "Swift ",
+      "autosde"                                 => "Autosde",
     }
   end
 

@@ -1,0 +1,373 @@
+---
+- description: Transform VM
+  buttons: submit,cancel
+  label: Transform VM
+  dialog_tabs:
+  - description: 
+    display: edit
+    label: Main
+    display_method: 
+    display_method_options: 
+    position: 0
+    dialog_groups:
+    - description: Import given virtual machine to another infrastructure provider
+      display: edit
+      label: Transform Virtual Machine
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: tag_category
+        description: Tag category
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: migration_group
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Tag Category
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_tag_categories
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders:
+        - tag_name
+        values: 
+      - name: tag_name
+        description: Tag name
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Tag Name
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: true
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_tag_names
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+        values: 
+      - name: name
+        description: Name of the newly created virtual machine
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Name
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: show_name
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+      - name: provider
+        description: Target infrastructure provider to which this virtual machine
+          should be imported.
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Provider
+        position: 3
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_infra_providers
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+        values: 
+      - name: cluster
+        description: Target cluster
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Cluster
+        position: 4
+        validator_type: 
+        validator_rule: 
+        reconfigurable: false
+        dynamic: true
+        show_refresh_button: false
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: true
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_clusters
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders:
+        - storage
+        values: 
+      - name: storage
+        description: Target storage
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: ''
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Storage
+        position: 5
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: false
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: true
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_storages
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+        values: 
+      - name: sparse
+        description: Use thin allocation for virtual disks
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: f
+        values: 
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Thin provisioning
+        position: 6
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: 
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: 
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldCheckBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+      - name: install_drivers
+        description: Install necessary Windows drivers as a part of the conversion
+          process
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values_method: 
+        values_method_options: {}
+        options: {}
+        label: Install Windows Drivers
+        position: 7
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldCheckBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: install_drivers
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders:
+        - drivers_iso
+      - name: drivers_iso
+        description: Image with drivers
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :force_multi_value: false
+          :sort_by: :description
+        label: Drivers
+        position: 8
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: true
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Infrastructure/VM/Transform
+          ae_class: Import
+          ae_instance: list_driver_isos
+          ae_message: 
+          ae_attributes: {}
+        dialog_field_responders: []
+        values: 
+  export_version: '5.11'

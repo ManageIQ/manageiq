@@ -1,0 +1,10 @@
+---
+object_type: namespace
+version: 1.0
+object:
+  attributes:
+    name: Provider
+    description: Provider
+    display_name: 
+    priority: 
+    enabled: 

@@ -102,6 +102,10 @@ group :ansible_tower, :manageiq_default do
   manageiq_plugin "manageiq-providers-ansible_tower"
 end
 
+group :autosde, :manageiq_default do
+  manageiq_plugin "manageiq-providers-autosde"
+end
+
 group :azure, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure"
 end

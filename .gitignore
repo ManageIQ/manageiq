@@ -24,6 +24,7 @@
 BUILD
 ca/root
 certs/v2_key
+certs/server*
 config/secrets.yml*
 coverage/
 Gemfile.lock*
@@ -36,6 +37,7 @@ SyntaxCheck
 xfer_*.xml
 Thumbs.db
 Procfile
+.repo/
 
 # bin/
 bin/*

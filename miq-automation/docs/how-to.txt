@@ -1,0 +1,20 @@
+Currently, only domains, buttons, sevice dialogs are managed
+Others object will be added as needed
+
+In order to push automation to git:
+
+1. export automation stuff
+change script's destinatation dir if needed
+use script scripts/rh-export.sh
+
+# optional 
+2. copy data to right location in code-base, unless already done by export script
+
+3. use git as usual to push data to repository
+
+In order to use automation stuff , stored in git repository
+
+1. use git pull as ususal
+2. use script scipts/rh-import.sh
+3. make sure all is imported
+

@@ -13,6 +13,8 @@ class CloudVolume < ApplicationRecord
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
+  belongs_to :storage_resource, :foreign_key => :storage_resource_id, :class_name => "StorageResource"
+  belongs_to :storage_service, :foreign_key => :storage_service_id, :class_name => "StorageService"
   has_many   :cloud_volume_backups
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
@@ -156,6 +158,42 @@ class CloudVolume < ApplicationRecord
   def raw_delete_volume
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
+
+
+  # ========================================== safe-delete ==========================================
+  def safe_delete_volume_queue(userid)
+    task_opts = {
+        :action => "Safe deleting Cloud Volume for user #{userid}",
+        :userid => userid
+    }
+
+    queue_opts = {
+        :class_name => self.class.name,
+        :method_name => 'safe_delete_volume',
+        :instance_id => id,
+        :role => 'ems_operations',
+        :queue_name => ext_management_system.queue_name_for_ems_operations,
+        :zone => ext_management_system.my_zone,
+        :args => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def safe_delete_volume
+    raw_safe_delete_volume
+  end
+
+  def raw_safe_delete_volume
+    raise NotImplementedError, _("raw_safe_delete_volume must be implemented in a subclass")
+  end
+
+
+  def validate_safe_delete_volume
+    validate_unsupported("Safe Delete Volume Operation")
+  end
+
+  # ==================================================================================================
 
   def available_vms
     raise NotImplementedError, _("available_vms must be implemented in a subclass")

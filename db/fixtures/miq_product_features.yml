@@ -6052,6 +6052,100 @@
         :feature_type: admin
         :identifier: ems_object_storage_delete
 
+
+# Storage System
+- :name: Storage Systems
+  :description: Everything under Storage Systems
+  :feature_type: node
+  :identifier: storage_system
+  :children:
+    - :name: View
+      :description: View Storage Systems
+      :feature_type: view
+      :identifier: storage_system_view
+      :children:
+        - :name: List
+          :description: Display Lists of Storage Systems
+          :feature_type: view
+          :identifier: storage_system_show_list
+        - :name: Show
+          :description: Display Individual Storage Systems
+          :feature_type: view
+          :identifier: storage_system_show
+    - :name: Operate
+      :description: Perform Operations on Storage Systems
+      :feature_type: control
+      :identifier: storage_system_control
+      :children:
+        - :name: Edit Tags
+          :description: Edit Tags of Storage Systems
+          :feature_type: control
+          :identifier: storage_system_tag
+    - :name: Modify
+      :description: Modify Storage Systems
+      :feature_type: admin
+      :identifier: storage_system_admin
+      :children:
+        - :name: Add
+          :description: Add a Storage System
+          :feature_type: admin
+          :identifier: storage_system_new
+        - :name: Edit
+          :description: Edit a Storage System
+          :feature_type: admin
+          :identifier: storage_system_edit
+        - :name: Remove
+          :description: Remove Storage Systems
+          :feature_type: admin
+          :identifier: storage_system_delete
+
+  # Storage Resource
+- :name: Storage Resources
+  :description: Everything under Storage Resources
+  :feature_type: node
+  :identifier: storage_resource
+  :children:
+    - :name: View
+      :description: View Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_view
+      :children:
+        - :name: List
+          :description: Display Lists of Storage Resources
+          :feature_type: view
+          :identifier: storage_resource_show_list
+        - :name: Show
+          :description: Display Individual Storage Resources
+          :feature_type: view
+          :identifier: storage_resource_show
+    - :name: Operate
+      :description: Perform Operations on Storage Resources
+      :feature_type: control
+      :identifier: storage_resource_control
+      :children:
+        - :name: Edit Tags
+          :description: Edit Tags of Storage Resources
+          :feature_type: control
+          :identifier: storage_resource_tag
+    - :name: Modify
+      :description: Modify Storage Resources
+      :feature_type: admin
+      :identifier: storage_resource_admin
+      :children:
+        - :name: Add
+          :description: Add a Storage Resource
+          :feature_type: admin
+          :identifier: storage_resource_new
+        - :name: Edit
+          :description: Edit a Storage Resource
+          :feature_type: admin
+          :identifier: storage_resource_edit
+        - :name: Remove
+          :description: Remove Storage Resources
+          :feature_type: admin
+          :identifier: storage_resource_delete
+
+
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
   :description: Everything under Physical Infrastructure Providers

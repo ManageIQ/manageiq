@@ -48,9 +48,15 @@ RSpec.describe MiqCockpit::WS do
 
     context "when using the same server as the ui without apache" do
       it "it uses defaults with apache" do
-        expected = URI::HTTP.build(:host => "10.0.0.1",
-                                   :port => 9002,
-                                   :path => "/cws/=default-host")
+        if MiqEnvironment::Command::is_appliance?
+          expected = URI::HTTPS.build(:host => "10.0.0.1",
+                                     :path => "/cws/=default-host")
+        else
+          expected = URI::HTTP.build(:host => "10.0.0.1",
+                                     :port => 9002,
+                                     :path => "/cws/=default-host")
+        end
+
         expect(MiqCockpit::WS.url(@miq_server, nil, "default-host")).to eq(expected)
       end
     end
@@ -77,9 +83,15 @@ RSpec.describe MiqCockpit::WS do
 
     context "when using custom port with the same server without apache" do
       it "it uses the port" do
-        with_port = URI::HTTP.build(:host => "10.0.0.1",
-                                    :port => 8080,
-                                    :path => "/cws/=default-host")
+        if MiqEnvironment::Command::is_appliance?
+          with_port = URI::HTTPS.build(:host => "10.0.0.1",
+                                      :path => "/cws/=default-host")
+        else
+          with_port = URI::HTTP.build(:host => "10.0.0.1",
+                                     :port => 8080,
+                                     :path => "/cws/=default-host")
+        end
+
         expect(MiqCockpit::WS.url(@miq_server,
                                   { :port => 8080 },
                                   "default-host")).to eq(with_port)
