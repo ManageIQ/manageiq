@@ -1,12 +1,6 @@
 module VerifyCredentialsMixin
   extend ActiveSupport::Concern
 
-  included do
-    class << self
-      Vmdb::Deprecation.deprecate_methods self, :validate_credentials_task => :verify_credentials_task
-    end
-  end
-
   module ClassMethods
     def validate_credentials_task(args, user_id, zone)
       task_opts = {
