@@ -131,33 +131,33 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
-=begin
   describe ".first" do
     it "retrieves the first record with records" do
       with_records
-      rec = described_class.find(:first)
+      rec = described_class.first
       expect(rec.attributes).to eq(expected_attrs.first)
     end
 
     it "returns nil with no records" do
       with_no_records
-      expect(described_class.find(:first)).to be_nil
+      expect(described_class.first).to be_nil
     end
   end
 
   describe ".last" do
     it "retrieves the last record with :last" do
       with_records
-      rec = described_class.find(:last)
+      rec = described_class.last
       expect(rec.attributes).to eq(expected_attrs.last)
     end
 
     it "returns nil with :last" do
       with_no_records
-      expect(described_class.find(:last)).to be_nil
+      expect(described_class.last).to be_nil
     end
   end
 
+=begin
   describe ".find" do
     it "retrieves the specified record with records" do
       with_records
