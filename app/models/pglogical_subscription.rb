@@ -48,7 +48,7 @@ class PglogicalSubscription < ActiveHash::Base
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
-    id ? update_subscription : create_subscription
+    super
   ensure
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor
   end
