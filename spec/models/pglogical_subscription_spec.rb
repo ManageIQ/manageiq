@@ -225,7 +225,6 @@ RSpec.describe PglogicalSubscription do
       expect { sub.save! }.not_to raise_error
     end
 
-=begin
     it "creates the subscription" do
       with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
@@ -236,7 +235,8 @@ RSpec.describe PglogicalSubscription do
         :user     => "root",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq']).and_return(double(:check => nil))
+      # TODO: Why is this an expectation here? How is this even passing currently?
+      #expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq']).and_return(double(:check => nil))
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       allow(sub).to receive(:assert_different_region!)
@@ -244,6 +244,7 @@ RSpec.describe PglogicalSubscription do
       sub.save!
       expect(sub).to be_an_instance_of(described_class)
     end
+=begin
 
     it "updates the dsn when an existing subscription is saved" do
       with_records
