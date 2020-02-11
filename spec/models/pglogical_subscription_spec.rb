@@ -171,12 +171,11 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
-=begin
   describe ".lookup_by_id" do
     it "returns the specified record with records" do
       with_records
       expected = expected_attrs.first
-      rec = described_class.lookup_by_id(expected["id"])
+      rec = described_class.lookup_by_id(expected[:id])
       expect(rec.attributes).to eq(expected)
     end
 
@@ -226,6 +225,7 @@ RSpec.describe PglogicalSubscription do
       expect { sub.save! }.not_to raise_error
     end
 
+=begin
     it "creates the subscription" do
       with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
@@ -263,7 +263,9 @@ RSpec.describe PglogicalSubscription do
       expect(pglogical).to receive(:set_subscription_conninfo).with(sub.id, new_dsn)
       expect(sub.save!).to eq(sub)
     end
+=end
   end
+=begin
 
   describe ".delete_all" do
     let(:subscription1) { double }
