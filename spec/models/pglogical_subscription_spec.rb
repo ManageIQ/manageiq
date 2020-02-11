@@ -288,7 +288,6 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
-=begin
   describe ".save_all!" do
     after do
       expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
@@ -346,6 +345,7 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
+=begin
   describe "#delete" do
     let(:sub) { described_class.find(:first) }
 
