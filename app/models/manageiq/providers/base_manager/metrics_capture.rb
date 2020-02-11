@@ -228,8 +228,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
   def queue_items_for_interval(target, interval_name, start_time, end_time)
     if interval_name == 'historical'
-      start_time = Metric::Capture.historical_start_time if start_time.nil?
-      end_time ||= 1.day.from_now.utc.beginning_of_day # Ensure no more than one historical collection is queue up in the same day
       split_capture_intervals(interval_name, start_time, end_time)
     else
       # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
