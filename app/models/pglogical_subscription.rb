@@ -200,7 +200,7 @@ class PglogicalSubscription < ActiveHash::Base
   private_class_method :remote_region_attributes
 
   def self.subscriptions
-    pglogical.subscriptions(connection.current_database)
+    self.data = pglogical.subscriptions(connection.current_database)
   end
   private_class_method :subscriptions
 

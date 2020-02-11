@@ -345,13 +345,14 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
-=begin
   describe "#delete" do
-    let(:sub) { described_class.find(:first) }
+    before do
+      described_class.data = subscriptions
+    end
+
+    let(:sub) { described_class.first }
 
     it "drops the subscription" do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
-
       expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true)
       expect(MiqRegion).to receive(:destroy_region)
         .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
@@ -360,8 +361,6 @@ RSpec.describe PglogicalSubscription do
     end
 
     it "doesn't queue a failover monitor restart when passed false" do
-      allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
-
       expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true)
       expect(MiqQueue.where(:method_name => "restart_failover_monitor_service")).to be_empty
 
@@ -369,7 +368,6 @@ RSpec.describe PglogicalSubscription do
     end
 
     it "removes the subscription when the publisher is unreachable" do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
       exception = PG::InternalError.new(<<~MESSAGE)
         ERROR:  could not connect to publisher when attempting to drop the replication slot "region_#{remote_region1}_subscription"
         DETAIL:  The error was: could not connect to server: Connection refused
@@ -389,7 +387,6 @@ RSpec.describe PglogicalSubscription do
     end
 
     it "removes the subscription when the replication slot is missing" do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
       exception = PG::InternalError.new(<<~MESSAGE)
         ERROR:  could not drop the replication slot "NONE" on publisher
         DETAIL:  The error was: ERROR:  replication slot "NONE" does not exist
@@ -406,7 +403,6 @@ RSpec.describe PglogicalSubscription do
     end
 
     it "re-raises other PG::InternalErrors" do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
       exception = PG::InternalError.new(<<~MESSAGE)
         ERROR:  badness happened :(
       MESSAGE
@@ -416,6 +412,7 @@ RSpec.describe PglogicalSubscription do
       expect { sub.delete }.to raise_error(exception)
     end
   end
+=begin
 
   describe "#validate" do
     it "validates existing subscriptions with new parameters" do
