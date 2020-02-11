@@ -1,7 +1,12 @@
 require 'pg/dsn_parser'
 require 'pg/logical_replication'
+require 'active_hash'
 
-class PglogicalSubscription < ActsAsArModel
+class PglogicalSubscription < ActiveHash::Base
+  fields :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
+
+  # The fields method does this.
+=begin
   set_columns_hash(
     :id                   => :string,
     :status               => :string,
@@ -13,7 +18,10 @@ class PglogicalSubscription < ActsAsArModel
     :provider_region      => :integer,
     :provider_region_name => :string
   )
+=end
 
+  # Already baked into ActiveHash.
+=begin
   def self.find(*args)
     case args.first
     when :all then find_all
@@ -21,7 +29,13 @@ class PglogicalSubscription < ActsAsArModel
     else find_id(args.first)
     end
   end
+=end
 
+  # Alias for backwards compatability.
+  class << self
+    alias lookup_by_id find_by_id
+  end
+=begin
   def self.lookup_by_id(to_find)
     find(to_find)
   rescue ActiveRecord::RecordNotFound
@@ -30,6 +44,7 @@ class PglogicalSubscription < ActsAsArModel
 
   singleton_class.send(:alias_method, :find_by_id, :lookup_by_id)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
+=end
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
@@ -83,6 +98,7 @@ class PglogicalSubscription < ActsAsArModel
     pglogical.enable_subscription(id).check
   end
 
+  # Singleton instance variable?
   def self.pglogical(refresh = false)
     @pglogical = nil if refresh
     @pglogical ||= PG::LogicalReplication::Client.new(connection.raw_connection)
@@ -92,6 +108,7 @@ class PglogicalSubscription < ActsAsArModel
     self.class.pglogical(refresh)
   end
 
+  # Do we need sym arguments here?
   def validate(new_connection_params = {})
     find_password if new_connection_params['password'].blank?
     connection_hash = attributes.merge(new_connection_params.delete_blanks)
@@ -178,6 +195,12 @@ class PglogicalSubscription < ActsAsArModel
   end
   private_class_method :subscriptions
 
+  def self.data=(subscriptions)
+    super(subscriptions.map{ |sub| subscription_to_columns(sub) })
+  end
+
+  # I think these are essentially baked into ActiveHash
+=begin
   def self.find_all
     subscriptions.collect { |s| new(subscription_to_columns(s)) }
   end
@@ -196,6 +219,7 @@ class PglogicalSubscription < ActsAsArModel
     raise ActiveRecord::RecordNotFound, "Coundn't find subscription with id #{to_find}"
   end
   private_class_method :find_id
+=end
 
   private
 
