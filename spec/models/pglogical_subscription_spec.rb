@@ -157,21 +157,21 @@ RSpec.describe PglogicalSubscription do
     end
   end
 
-=begin
   describe ".find" do
     it "retrieves the specified record with records" do
       with_records
       expected = expected_attrs.first
-      rec = described_class.find(expected["id"])
+      rec = described_class.find(expected[:id])
       expect(rec.attributes).to eq(expected)
     end
 
     it "raises when no record is found" do
       with_no_records
-      expect { described_class.find("doesnt_exist") }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { described_class.find("doesnt_exist") }.to raise_error(ActiveHash::RecordNotFound)
     end
   end
 
+=begin
   describe ".lookup_by_id" do
     it "returns the specified record with records" do
       with_records
