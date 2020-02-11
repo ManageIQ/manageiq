@@ -128,14 +128,16 @@ END_OF_CONFIG
 
     def self.killall
       MiqUtil.runcmd("killall -9 memcached")
-    rescue => err
-      raise unless err.to_s =~ /memcached: no process/
+    rescue AwesomeSpawn::CommandResultError => err
+      raise unless err.result.output =~ /memcached: no process/
     end
 
     def self.status
       begin
         res = MiqUtil.runcmd('service memcached status').to_s.chomp
-      rescue RuntimeError => err
+      rescue AwesomeSpawn::CommandResultError => err
+        return false, err.result.output.chomp
+      rescue => err
         return false, err.to_s.chomp
       else
         return true, res
