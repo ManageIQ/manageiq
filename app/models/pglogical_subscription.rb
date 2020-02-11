@@ -5,6 +5,14 @@ require 'active_hash'
 class PglogicalSubscription < ActiveHash::Base
   fields :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
 
+  def self.connection
+    ActiveRecord::Base.connection
+  end
+
+  def connection
+    self.class.connection
+  end
+
   # The fields method does this.
 =begin
   set_columns_hash(
@@ -48,7 +56,7 @@ class PglogicalSubscription < ActiveHash::Base
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
-    update_subscription unless new_record?
+    new_record? ? create_subscription : update_subscription
     super
   ensure
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor
