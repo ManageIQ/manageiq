@@ -48,6 +48,7 @@ class PglogicalSubscription < ActiveHash::Base
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
+    update_subscription unless new_record?
     super
   ensure
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor
@@ -242,6 +243,12 @@ class PglogicalSubscription < ActiveHash::Base
 
   def new_subscription_name
     "region_#{remote_region_number}_subscription"
+  end
+
+  def update
+    find_password if password.blank?
+    pglogical.set_subscription_conninfo(id, conn_info_hash)
+    super
   end
 
   def update_subscription
