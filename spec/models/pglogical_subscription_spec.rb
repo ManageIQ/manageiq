@@ -268,7 +268,6 @@ RSpec.describe PglogicalSubscription do
         :password => "p=as\' s\'"
       }
 
-
       expect(pglogical).to receive(:set_subscription_conninfo).with(sub.id, new_dsn)
       expect(sub.save!).to eql(true)
     end

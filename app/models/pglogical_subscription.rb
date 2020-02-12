@@ -235,7 +235,7 @@ class PglogicalSubscription < ActiveHash::Base
   # ActiveHash objects.
   #
   def self.data=(subscriptions)
-    super(subscriptions.map{ |sub| subscription_to_columns(sub) })
+    super(subscriptions.map { |sub| subscription_to_columns(sub) })
   end
 
   private
