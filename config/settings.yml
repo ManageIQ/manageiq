@@ -1211,6 +1211,7 @@
       :vim_performance_states_purge_interval: 1.day
       :vm_retired_interval: 10.minutes
       :yum_update_check: 12.hours
+      :audit_vm_total: 1.days
     :ui_worker:
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
