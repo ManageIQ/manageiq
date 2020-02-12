@@ -59,40 +59,48 @@ RSpec.describe PglogicalSubscription do
   let(:expected_attrs) do
     [
       {
-        :id                   => "region_#{remote_region1}_subscription",
-        :status               => "replicating",
-        :dbname               => "vmdb's_test",
-        :host                 => "example.com",
-        :user                 => "root",
-        :provider_region      => remote_region1,
-        :provider_region_name => "The region"
+        :id                     => "region_#{remote_region1}_subscription",
+        :status                 => "replicating",
+        :dbname                 => "vmdb's_test",
+        :host                   => "example.com",
+        :user                   => "root",
+        :provider_region        => remote_region1,
+        :provider_region_name   => "The region",
+        :subscription_dsn       => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
+        :remote_replication_lsn => "0/420D9A0"
       },
       {
-        :id              => "region_#{remote_region3}_subscription",
-        :status          => "down",
-        :dbname          => "vmdb_development",
-        :host            => "example.com",
-        :user            => "root",
-        :port            => 5432,
-        :provider_region => remote_region3
+        :id                     => "region_#{remote_region3}_subscription",
+        :status                 => "down",
+        :dbname                 => "vmdb_development",
+        :host                   => "example.com",
+        :user                   => "root",
+        :port                   => 5432,
+        :provider_region        => remote_region3,
+        :subscription_dsn       => "dbname=vmdb_development host=example.com user='root' port=5432",
+        :remote_replication_lsn => "0/420D9A0"
       },
       {
-        :id              => "region_#{remote_region4}_subscription",
-        :status          => "initializing",
-        :dbname          => "vmdb_production",
-        :host            => "example.com",
-        :user            => "root",
-        :port            => 5432,
-        :provider_region => remote_region4
+        :id                     => "region_#{remote_region4}_subscription",
+        :status                 => "initializing",
+        :dbname                 => "vmdb_production",
+        :host                   => "example.com",
+        :user                   => "root",
+        :port                   => 5432,
+        :provider_region        => remote_region4,
+        :subscription_dsn       => "dbname=vmdb_production host=example.com user='root' port=5432",
+        :remote_replication_lsn => "0/420D9A0"
       },
       {
-        :id              => "region_#{remote_region2}_subscription",
-        :status          => "disabled",
-        :dbname          => "vmdb_test2",
-        :host            => "test.example.com",
-        :user            => "postgres",
-        :port            => 5432,
-        :provider_region => remote_region2
+        :id                     => "region_#{remote_region2}_subscription",
+        :status                 => "disabled",
+        :dbname                 => "vmdb_test2",
+        :host                   => "test.example.com",
+        :user                   => "postgres",
+        :port                   => 5432,
+        :provider_region        => remote_region2,
+        :subscription_dsn       => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
+        :remote_replication_lsn => "1/53E9A8"
       }
     ]
   end
@@ -111,7 +119,6 @@ RSpec.describe PglogicalSubscription do
     allow(described_class).to receive(:pglogical).and_return(pglogical)
   end
 
-=begin
   describe ".all" do
     it "retrieves all records with records" do
       with_records
@@ -131,9 +138,7 @@ RSpec.describe PglogicalSubscription do
       expect(described_class.find(:all)).to be_empty
     end
   end
-=end
 
-=begin
   describe ".first" do
     it "retrieves the first record with records" do
       with_records
@@ -187,7 +192,6 @@ RSpec.describe PglogicalSubscription do
       expect(described_class.lookup_by_id("some_subscription")).to be_nil
     end
   end
-=end
 
   describe "#save!" do
     context "failover monitor reloading" do
