@@ -7,10 +7,14 @@ class PglogicalSubscription < ActiveHash::Base
 
   fields :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
 
+  # Simple wrapper around the ActiveRecord::Base.connection method.
+  #
   def self.connection
     ActiveRecord::Base.connection
   end
 
+  # Instance wrapper method around the +connection+ singleton method.
+  #
   def connection
     self.class.connection
   end
@@ -20,6 +24,12 @@ class PglogicalSubscription < ActiveHash::Base
     alias lookup_by_id find_by_id
   end
 
+  # Ensure the subscription region is different than the current region, then
+  # create or update the description.
+  #
+  # If the create or udpate fails and +reload_failover_monitor+ is set to true
+  # then an evm-failover-monitor service restart will be queued.
+  #
   def save!(reload_failover_monitor = true)
     assert_different_region!
     new_record? ? create_subscription : update_subscription
@@ -28,6 +38,9 @@ class PglogicalSubscription < ActiveHash::Base
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor
   end
 
+  # Mostly a synonym for the save! method, but returns a boolean indicating
+  # success or failure.
+  #
   def save
     save!
     true
@@ -35,6 +48,9 @@ class PglogicalSubscription < ActiveHash::Base
     false
   end
 
+  # Bulk save for a subscription list. After saving each subscription, an
+  # evm-failover-monitor service restart is automatically queued.
+  #
   def self.save_all!(subscription_list)
     errors = []
     subscription_list.each do |s|
@@ -53,37 +69,62 @@ class PglogicalSubscription < ActiveHash::Base
     subscription_list
   end
 
+  # Safely delete the subscription, then delete the region, and restart
+  # the evm-failover-monitor service as a queued operation if the
+  # +reload_failover_monitor_service+ argument is set to true, which is
+  # the default.
+  #
   def delete(reload_failover_monitor_service = true)
     safe_delete
     MiqRegion.destroy_region(connection, provider_region)
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor_service
   end
 
+  # Delete a list of subscriptions, or all of them by default if the +list+
+  # argument is nil. Afterwards the evm-failover-monitor service is run as
+  # a queued operation.
+  #
   def self.delete_all(list = nil)
     (list.nil? ? find(:all) : list)&.each { |sub| sub.delete(false) }
     EvmDatabase.restart_failover_monitor_service_queue
     nil
   end
 
+  # Wraps the Pg::LogicalReplicationClient#disable_subscription
+  # method, then checks the result state.
+  #
   def disable
     pglogical.disable_subscription(id).check
   end
 
+  # Wraps the Pg::LogicalReplicationClient#enable_subscription
+  # method, then checks the result state.
+  #
   def enable
     pglogical.enable_subscription(id).check
   end
 
-  # Singleton instance variable?
+  # The postgres logical replication client. Creates a new
+  # PG::LogicalReplication::Client if the +refresh+ argument is set to true.
+  # By default the +refresh+ argument is set to false.
+  #
   def self.pglogical(refresh = false)
     @pglogical = nil if refresh
     @pglogical ||= PG::LogicalReplication::Client.new(connection.raw_connection)
   end
 
+  # Instance method wrapper around the +pglogical+ singleton method.
+  #
   def pglogical(refresh = false)
     self.class.pglogical(refresh)
   end
 
-  # Do we need sym arguments here?
+  # Validate the +new_connection_params+ hash using the MiqRegionRemote model.
+  # The keys it looks for are password, host, port, user and dbname.
+  #
+  # If the params[:password] is blank it wil parse it out of the
+  # subscription DSN.
+  #
   def validate(new_connection_params = {})
     params = new_connection_params.symbolize_keys
     find_password if params[:password].blank?
@@ -98,6 +139,10 @@ class PglogicalSubscription < ActiveHash::Base
     )
   end
 
+  # Essentially a wrapper around our custom +xlog_location_diff+ method, defined
+  # in the ar_dba.rb file. However, this will instead log an error and return nil
+  # if the current status isn't "replicating".
+  #
   def backlog
     if status != "replicating"
       _log.error("Is `#{dbname}` running on host `#{host}` and accepting TCP/IP connections on port #{port} ?")
@@ -111,6 +156,8 @@ class PglogicalSubscription < ActiveHash::Base
     end
   end
 
+  # Wrapper around the Pg::LogicalReplication::Client#sync_subscription method.
+  #
   def sync_tables
     pglogical.sync_subscription(id)
   end
@@ -136,6 +183,13 @@ class PglogicalSubscription < ActiveHash::Base
   end
   private_class_method :subscription_to_columns
 
+  # Returns a subscription status based on the number of +workers+ and whether
+  # or not the subscription is +enabled+.
+  #
+  # If the subscription is not enabled, then the result is "disabled" no matter
+  # what. Otherwise, the status is "down" if there are no workers, "replicating"
+  # if there is one worker, or "initializing" if there is more than one worker.
+  #
   def self.subscription_status(workers, enabled)
     return "disabled" unless enabled
 
@@ -168,17 +222,29 @@ class PglogicalSubscription < ActiveHash::Base
   end
   private_class_method :remote_region_attributes
 
+  # Wrapper for the Pg::LogicalReplication::Client#subscriptions method.
+  # The results of that method are also assigned as the data for the
+  # ActiveHash object.
+  #
   def self.subscriptions
     self.data = pglogical.subscriptions(connection.current_database)
   end
   private_class_method :subscriptions
 
+  # Takes an array of hash subscriptions, and converts them into proper
+  # ActiveHash objects.
+  #
   def self.data=(subscriptions)
     super(subscriptions.map{ |sub| subscription_to_columns(sub) })
   end
 
   private
 
+  # Safely drop a subscription. Certain errors are ignored, i.e. if a connection
+  # to the publisher cannot be made, or if the replication slot does not exist.
+  # In those cases the slot name is renamed to 'NONE' and the operation is
+  # retried.
+  #
   def safe_delete
     pglogical.drop_subscription(id, true)
   rescue PG::InternalError => e
