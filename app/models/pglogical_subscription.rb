@@ -3,6 +3,8 @@ require 'pg/logical_replication'
 require 'active_hash'
 
 class PglogicalSubscription < ActiveHash::Base
+  include Vmdb::Logging
+
   fields :status, :dbname, :host, :user, :password, :port, :provider_region, :provider_region_name
 
   def self.connection
@@ -13,46 +15,10 @@ class PglogicalSubscription < ActiveHash::Base
     self.class.connection
   end
 
-  # The fields method does this.
-=begin
-  set_columns_hash(
-    :id                   => :string,
-    :status               => :string,
-    :dbname               => :string,
-    :host                 => :string,
-    :user                 => :string,
-    :password             => :string,
-    :port                 => :integer,
-    :provider_region      => :integer,
-    :provider_region_name => :string
-  )
-=end
-
-  # Already baked into ActiveHash.
-=begin
-  def self.find(*args)
-    case args.first
-    when :all then find_all
-    when :first, :last then find_one(args.first)
-    else find_id(args.first)
-    end
-  end
-=end
-
   # Alias for backwards compatability.
   class << self
     alias lookup_by_id find_by_id
   end
-=begin
-  def self.lookup_by_id(to_find)
-    find(to_find)
-  rescue ActiveRecord::RecordNotFound
-    nil
-  end
-
-  singleton_class.send(:alias_method, :find_by_id, :lookup_by_id)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_id => :lookup_by_id)
-=end
 
   def save!(reload_failover_monitor = true)
     assert_different_region!
@@ -119,13 +85,17 @@ class PglogicalSubscription < ActiveHash::Base
 
   # Do we need sym arguments here?
   def validate(new_connection_params = {})
-    find_password if new_connection_params['password'].blank?
-    connection_hash = attributes.merge(new_connection_params.delete_blanks)
-    MiqRegionRemote.validate_connection_settings(connection_hash['host'],
-                                                 connection_hash['port'],
-                                                 connection_hash['user'],
-                                                 connection_hash['password'],
-                                                 connection_hash['dbname'])
+    params = new_connection_params.symbolize_keys
+    find_password if params[:password].blank?
+    connection_hash = attributes.merge(params.delete_blanks)
+
+    MiqRegionRemote.validate_connection_settings(
+      connection_hash[:host],
+      connection_hash[:port],
+      connection_hash[:user],
+      connection_hash[:password],
+      connection_hash[:dbname]
+    )
   end
 
   def backlog
@@ -134,7 +104,7 @@ class PglogicalSubscription < ActiveHash::Base
       return nil
     end
     begin
-      connection.xlog_location_diff(remote_region_lsn, subscription_attributes["remote_replication_lsn"])
+      connection.xlog_location_diff(remote_region_lsn, remote_replication_lsn)
     rescue PG::Error => e
       _log.error(e.message)
       nil
@@ -154,14 +124,13 @@ class PglogicalSubscription < ActiveHash::Base
     cols.delete(:owner)
     cols.delete(:slot_name)
     cols.delete(:publications)
-    cols.delete(:remote_replication_lsn)
     cols.delete(:local_replication_lsn)
 
     cols[:id]     = cols.delete(:subscription_name)
     cols[:status] = subscription_status(cols.delete(:worker_count), cols.delete(:enabled))
 
     # create the individual dsn columns
-    cols.merge!(dsn_attributes(cols.delete(:subscription_dsn)))
+    cols.merge!(dsn_attributes(cols[:subscription_dsn]))
 
     cols.merge!(remote_region_attributes(cols[:id]))
   end
@@ -208,28 +177,6 @@ class PglogicalSubscription < ActiveHash::Base
     super(subscriptions.map{ |sub| subscription_to_columns(sub) })
   end
 
-  # I think these are essentially baked into ActiveHash
-=begin
-  def self.find_all
-    subscriptions.collect { |s| new(subscription_to_columns(s)) }
-  end
-  private_class_method :find_all
-
-  def self.find_one(which)
-    s = subscriptions.send(which)
-    new(subscription_to_columns(s)) if s
-  end
-  private_class_method :find_one
-
-  def self.find_id(to_find)
-    subscriptions.each do |s|
-      return new(subscription_to_columns(s)) if s.symbolize_keys[:subscription_name] == to_find
-    end
-    raise ActiveRecord::RecordNotFound, "Coundn't find subscription with id #{to_find}"
-  end
-  private_class_method :find_id
-=end
-
   private
 
   def safe_delete
@@ -268,8 +215,7 @@ class PglogicalSubscription < ActiveHash::Base
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
     return password if password.present?
-    s = subscription_attributes.symbolize_keys
-    dsn_hash = PG::DSNParser.parse(s.delete(:subscription_dsn))
+    dsn_hash = PG::DSNParser.parse(subscription_dsn)
     self.password = dsn_hash[:password]
   end
 
@@ -308,9 +254,5 @@ class PglogicalSubscription < ActiveHash::Base
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout) do |conn|
       yield conn
     end
-  end
-
-  def subscription_attributes
-    pglogical.subscriptions.find { |s| s["subscription_name"] == id }
   end
 end

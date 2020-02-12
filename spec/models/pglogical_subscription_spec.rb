@@ -111,6 +111,7 @@ RSpec.describe PglogicalSubscription do
     allow(described_class).to receive(:pglogical).and_return(pglogical)
   end
 
+=begin
   describe ".all" do
     it "retrieves all records with records" do
       with_records
@@ -130,7 +131,9 @@ RSpec.describe PglogicalSubscription do
       expect(described_class.find(:all)).to be_empty
     end
   end
+=end
 
+=begin
   describe ".first" do
     it "retrieves the first record with records" do
       with_records
@@ -184,6 +187,7 @@ RSpec.describe PglogicalSubscription do
       expect(described_class.lookup_by_id("some_subscription")).to be_nil
     end
   end
+=end
 
   describe "#save!" do
     context "failover monitor reloading" do
@@ -412,19 +416,21 @@ RSpec.describe PglogicalSubscription do
       expect { sub.delete }.to raise_error(exception)
     end
   end
-=begin
 
   describe "#validate" do
-    it "validates existing subscriptions with new parameters" do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first])
+    before do
+      described_class.data = subscriptions
+    end
 
-      sub = described_class.find(:first)
+    it "validates existing subscriptions with new parameters" do
+      sub = described_class.first
       expect(sub.host).to eq "example.com"
       expect(sub.port).to be_blank
       expect(sub.user).to eq "root"
 
       expect(MiqRegionRemote).to receive(:validate_connection_settings)
         .with("another-example.net", 5423, "root", "p=as' s'", "vmdb's_test")
+
       sub.validate('host' => "another-example.net", 'port' => 5423)
     end
 
@@ -453,7 +459,7 @@ RSpec.describe PglogicalSubscription do
     let(:remote_connection) { double(:remote_connection) }
 
     before do
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first])
+      described_class.data = subscriptions
     end
 
     it "returns the correct value" do
@@ -476,7 +482,6 @@ RSpec.describe PglogicalSubscription do
       expect(described_class.first.backlog).to be nil
     end
   end
-=end
 
   private
 
