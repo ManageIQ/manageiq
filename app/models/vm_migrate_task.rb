@@ -53,10 +53,7 @@ class VmMigrateTask < MiqRequestTask
     datastore_id = get_option(:placement_ds_name)
     datastore = Storage.find_by(:id => datastore_id)
 
-    disk_transform = case get_option(:disk_format)
-                     when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
-                     when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
-                     end
+    disk_transform = get_option(:disk_format)
 
     # Determine if we call migrate for relocate
     vc_method = if datastore || disk_transform
