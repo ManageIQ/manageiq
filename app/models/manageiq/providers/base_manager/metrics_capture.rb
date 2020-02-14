@@ -223,7 +223,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   #  [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
   #   [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
   #   [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-  def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
+  def split_capture_intervals(interval_name, start_time = nil, end_time = nil, threshold = 1.day)
+    return [] unless start_time
+
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
       [interval_name, s_time, e_time]
     end.reverse
@@ -236,21 +238,24 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
     # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
     # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
-    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
     if interval_name == 'historical'
-      split_capture_intervals(interval_name, start_time, end_time)
+      split_capture_intervals("historical", start_time, end_time)
     elsif interval_name == "hourly"
-      [[interval_name]]
-    # interval_name == "realtime"
-    elsif target.last_perf_capture_on.nil? && Metric::Capture.historical_days != 0
-      [[interval_name]] +
-        split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
-    elsif target.last_perf_capture_on && target.last_perf_capture_on < realtime_cut_off
-      # TODO: we need to limit the number of historical days captured here
-      [[interval_name]] +
-        split_capture_intervals("historical", target.last_perf_capture_on, realtime_cut_off)
+      [["hourly"]]
     else
-      [[interval_name]]
+      [["realtime"]] + split_capture_intervals("historical", *historical_dates(target.last_perf_capture_on))
+    end
+  end
+
+  def historical_dates(last_perf_capture_on)
+    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
+
+    if last_perf_capture_on.nil? && Metric::Capture.historical_days != 0
+      [Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day]
+    elsif last_perf_capture_on && last_perf_capture_on < realtime_cut_off
+      [last_perf_capture_on, realtime_cut_off]
+    else
+      []
     end
   end
 
