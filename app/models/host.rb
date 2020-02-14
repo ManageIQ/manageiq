@@ -154,6 +154,9 @@ class Host < ApplicationRecord
   virtual_total :v_total_vms, :vms
   virtual_total :v_total_miq_templates, :miq_templates
 
+  scope :active,   -> { where.not(:ems_id => nil) }
+  scope :archived, -> { where(:ems_id => nil) }
+
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
   alias_method :parent_cluster, :ems_cluster

@@ -481,4 +481,19 @@ describe MiqServer do
       expect(s.description).to eq(s.name)
     end
   end
+
+  context ".audit_managed_resources" do
+    let(:ems) { FactoryBot.create(:ems_infra) }
+    let!(:active_vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems) }
+    let!(:archived_vm) { FactoryBot.create(:vm_infra) }
+    let!(:active_host) { FactoryBot.create(:host, :ext_management_system => ems) }
+    let!(:archived_host) { FactoryBot.create(:host) }
+
+    it "with active and archived vms and hosts" do
+      expected_message = "Under Management: #{{"vms" => 1, "hosts" => 1}.to_json}"
+
+      expect($audit_log).to receive(:info).with(expected_message)
+      described_class.audit_managed_resources
+    end
+  end
 end
