@@ -1215,6 +1215,7 @@
         :queue_timeout: 20.minutes
         :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
+      :audit_managed_resources: 1.days
       :container_entities_purge_interval: 1.day
       :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour

@@ -125,6 +125,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue(:miq_server_queue_update_registration_status) }
     end
 
+    # Schedule - Add audit log entry for total number of vms managed by system.
+    scheduler.schedule_every(
+      worker_settings[:audit_managed_resources],
+      :tags =>[:miq_server_audit_managed_resources, schedule_category]
+    ) { enqueue(:miq_server_audit_managed_resources) }
     @schedules[:all]
   end
 

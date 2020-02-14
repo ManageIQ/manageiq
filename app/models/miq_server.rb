@@ -639,4 +639,18 @@ class MiqServer < ApplicationRecord
   def self.display_name(number = 1)
     n_('Server', 'Servers', number)
   end
+
+  def self.audit_managed_resources
+    total_vms     = 0
+    total_hosts   = 0
+
+    ExtManagementSystem.all.each do |e|
+      vms     = e.all_vms_and_templates.count
+      hosts   = e.all_hosts.count
+      total_vms += vms
+      total_hosts += hosts
+    end
+    totals = {"vms" => total_vms, "hosts" => total_hosts}
+    $audit_log.info("Under Management: #{totals.to_json}")
+  end
 end # class MiqServer
