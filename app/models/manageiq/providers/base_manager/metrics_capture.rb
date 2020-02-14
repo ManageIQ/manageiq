@@ -237,16 +237,16 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       if target.last_perf_capture_on.nil?
         # for initial refresh of non-Storage objects, also go back historically
         if !target.kind_of?(Storage) && Metric::Capture.historical_days != 0
-          [[interval_name, realtime_cut_off]] +
+          [[interval_name]] +
             split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
         else
-          [[interval_name, realtime_cut_off]]
+          [[interval_name]]
         end
       elsif target.last_perf_capture_on < realtime_cut_off
-        [[interval_name, realtime_cut_off]] +
+        [[interval_name]] +
           split_capture_intervals("historical", target.last_perf_capture_on, realtime_cut_off)
       else
-        [interval_name]
+        [[interval_name]]
       end
     end
   end
