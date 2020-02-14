@@ -16,8 +16,8 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
-  def miq_audit_vm_total
-    queue_work(:class_name  => "MiqServer", :method_name => "audit_vm_totals", :task_id => "audit_vm_total", :server_guid => MiqServer.my_guid)
+  def miq_server_audit_managed_resources
+    queue_work(:class_name  => "MiqServer", :method_name => "audit_managed_resources", :task_id => "audit_managed_resources", :server_guid => MiqServer.my_guid)
   end
 
   def vmdb_database_connection_log_statistics

@@ -487,7 +487,7 @@ class MiqServer < ApplicationRecord
     Zone.visible.in_my_region.count > 1
   end
 
-  def self.audit_vm_totals
+  def self.audit_managed_resources
     total_vms     = 0
     total_hosts   = 0
 
@@ -497,7 +497,8 @@ class MiqServer < ApplicationRecord
       total_vms += vms
       total_hosts += hosts
     end
-    $audit_log.info("Under Management: VMs: [#{total_vms}], Hosts: [#{total_hosts}]")
+    totals = {"vms" => total_vms, "hosts" => total_hosts}
+    $audit_log.info("Under Management: #{totals.to_json}")
   end
 
   private
