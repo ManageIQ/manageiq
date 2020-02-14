@@ -170,6 +170,6 @@ module Metric::CiMixin::Capture
     # For UI to enable refresh of realtime charts on demand
     _log.info("Realtime capture requested for #{log_target}")
 
-    perf_capture_object.queue_captures([self], self => {:interval => 'realtime'})
+    perf_capture_object.perf_capture_realtime_queue
   end
 end

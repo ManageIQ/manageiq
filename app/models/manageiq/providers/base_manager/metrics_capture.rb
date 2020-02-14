@@ -33,6 +33,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     queue_captures(targets, target_options)
   end
 
+  def perf_capture_realtime_queue
+    queue_captures(Array(target), target => {:interval => 'realtime'})
+  end
+
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
   # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def queue_captures(targets, target_options)
