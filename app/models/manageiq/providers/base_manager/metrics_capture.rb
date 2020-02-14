@@ -214,40 +214,43 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     end
   end
 
+  # split capture interval for historical queue captures (so the fetch is not too big)
+  # an array of ordered pairs from start_time to end_time partitioned by each day. (most recent day first / reverse chronological)
+  #
+  # example:
+  #
+  #  start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
+  #  [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+  #   [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+  #   [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
   def split_capture_intervals(interval_name, start_time, end_time, threshold = 1.day)
-    # Create an array of ordered pairs from start_time and end_time so that each ordered pair is contained
-    # within the threshold.  Then, reverse it so the newest ordered pair is first:
-    # start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
-    # [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
-    #  [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
-    #  [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
       [interval_name, s_time, e_time]
     end.reverse
   end
 
+  # Note: default values are also derived in ci_mixin/capture.rb#fix_capture_start_end_time
+  # @return realtime_interval, realtime_date, historical_start, historical_end
   def queue_items_for_interval(target, interval_name, start_time, end_time)
+    # if last_perf_capture_on is nil (initial refresh), also go back historically
+    # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
+    # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
+    # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
+    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
     if interval_name == 'historical'
       split_capture_intervals(interval_name, start_time, end_time)
+    elsif interval_name == "hourly"
+      [[interval_name]]
+    # interval_name == "realtime"
+    elsif target.last_perf_capture_on.nil? && Metric::Capture.historical_days != 0
+      [[interval_name]] +
+        split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
+    elsif target.last_perf_capture_on && target.last_perf_capture_on < realtime_cut_off
+      # TODO: we need to limit the number of historical days captured here
+      [[interval_name]] +
+        split_capture_intervals("historical", target.last_perf_capture_on, realtime_cut_off)
     else
-      # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
-      # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
-      # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
-      realtime_cut_off = 4.hours.ago.utc.beginning_of_day
-      if target.last_perf_capture_on.nil?
-        # for initial refresh of non-Storage objects, also go back historically
-        if !target.kind_of?(Storage) && Metric::Capture.historical_days != 0
-          [[interval_name]] +
-            split_capture_intervals("historical", Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day)
-        else
-          [[interval_name]]
-        end
-      elsif target.last_perf_capture_on < realtime_cut_off
-        [[interval_name]] +
-          split_capture_intervals("historical", target.last_perf_capture_on, realtime_cut_off)
-      else
-        [[interval_name]]
-      end
+      [[interval_name]]
     end
   end
 
