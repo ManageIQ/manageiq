@@ -33,6 +33,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     queue_captures(targets, target_options)
   end
 
+  def perf_capture_realtime_queue
+    queue_captures(Array(target), target => {:interval => 'realtime'})
+  end
+
   # @param targets [Array<Object>] list of the targets for capture (from `capture_ems_targets`)
   # @param target_options [ Hash{Object => Hash{Symbol => Object}}] list of options indexed by target
   def queue_captures(targets, target_options)
@@ -161,7 +165,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     # for gap, interval_name = historical, start and end time present.
     start_time = options[:start_time]
     end_time   = options[:end_time]
-    priority   = options[:priority] || Metric::Capture.interval_priority(interval_name)
     task_id    = options[:task_id]
 
     # cb is the task used to group cluster realtime metrics
@@ -183,26 +186,23 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       # Should both interval name and args (dates) be part of uniqueness query?
       queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
       queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
-      next if item_interval != 'realtime' && messages[start_and_end_time].try(:priority) == priority
+      next if item_interval != 'realtime' && messages[start_and_end_time]
 
       MiqQueue.put_or_update(queue_item_options) do |msg, qi|
         # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
         qi[:miq_task_id] = task_id if task_id && item_interval == "realtime"
         if msg.nil?
-          qi[:priority] = priority
+          qi[:priority] = Metric::Capture.interval_priority(item_interval)
           qi.delete(:state)
           if cb && item_interval == "realtime"
             qi[:miq_callback] = cb
           end
           qi
-        elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
-          qi[:priority] = priority
-          # rerun the job (either with new task or higher priority)
+        elsif msg.state == "ready" && task_id && item_interval == "realtime"
+          # rerun the job
           qi.delete(:state)
-          if task_id && item_interval == "realtime"
-            existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
-            qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
-          end
+          existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
+          qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
           qi
         else
           interval = qi[:method_name].sub("perf_capture_", "")
