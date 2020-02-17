@@ -15,7 +15,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def dequeue_method_via_drb?
-    @dequeue_method == :drb
+    @dequeue_method == :drb && drb_dequeue_available?
   end
 
   def thresholds_exceeded?
@@ -130,6 +130,8 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def do_work
+    register_worker_with_worker_monitor if dequeue_method_via_drb?
+
     # Keep collecting messages from the queue until the queue is empty,
     #   so we don't sleep in between messages
     loop do
@@ -142,6 +144,21 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   private
+
+  def register_worker_with_worker_monitor
+    worker_monitor_drb.register_worker(@worker.pid, @worker.class.name, @worker.queue_name)
+  rescue DRb::DRbError => err
+    do_exit("Failed to register worker with worker monitor: #{err.class.name}: #{err.message}", 1)
+  end
+
+  def drb_dequeue_available?
+    @drb_dequeue_available ||=
+      begin
+        server.drb_uri.present? && worker_monitor_drb.respond_to?(:register_worker)
+      rescue DRb::DRbError
+        false
+      end
+  end
 
   # Only for file based heartbeating
   def heartbeat_message_timeout(message)
