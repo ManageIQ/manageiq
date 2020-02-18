@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 130 ending 2020-02-17
+
+### Added
+
+* Use the server's zone to determine a node selector when running in pods [(#19789)](https://github.com/ManageIQ/manageiq/pull/19789)
+* Use a single query to get count of active VMs and Hosts [(#19835)](https://github.com/ManageIQ/manageiq/pull/19835)
+
+### Fixed
+
+* Fix smartproxy worker heartbeat thread [(#19816)](https://github.com/ManageIQ/manageiq/pull/19816)
+* Fix polymorphic issues with MiqReport + Rbac [(#19804)](https://github.com/ManageIQ/manageiq/pull/19804)
+* Add a connection timeout for remote region connections [(#19791)](https://github.com/ManageIQ/manageiq/pull/19791)
+* Remove storage references to multiple emses [(#19754)](https://github.com/ManageIQ/manageiq/pull/19754)
+* Only register queue workers using drb for dequeue [(#19829)](https://github.com/ManageIQ/manageiq/pull/19829)
+
 # Unreleased as of Sprint 129 ending 2020-02-02
 
 ### Added
