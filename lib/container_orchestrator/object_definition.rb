@@ -14,7 +14,7 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
             :spec     => {
-              :serviceAccountName => "miq-anyuid",
+              :serviceAccountName => "#{app_name}-anyuid",
               :containers         => [{
                 :name          => name,
                 :env           => default_environment,
@@ -89,7 +89,7 @@ class ContainerOrchestrator
     end
 
     def app_name
-      Vmdb::Appliance.PRODUCT_NAME.downcase
+      ENV["APP_NAME"]
     end
   end
 end
