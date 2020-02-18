@@ -4,10 +4,11 @@ raise "Ruby versions >= 2.7.0 are unsupported!" if RUBY_VERSION >= "2.7.0"
 source 'https://rubygems.org'
 
 source 'http://rubygems.manageiq.org' do
-  gem "manageiq-gems-pending", ">0",        :require => "manageiq-gems-pending"
   gem "handsoap",              "=0.2.5.5",  :require => false
   gem "rugged",                "=0.28.2.2", :require => false
   gem "ruport",                "=1.7.0.3"
+  gem "manageiq-gems-pending", ">0",        :require => "manageiq-gems-pending"
+  gem "manageiq-schema"
 end
 
 plugin "bundler-inject", "~> 1.1"
@@ -19,8 +20,6 @@ def manageiq_plugin(plugin_name)
     gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
   end
 end
-
-manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-virtual_attributes", "~>1.5.0"
