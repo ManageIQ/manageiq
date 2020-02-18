@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 
 * Fix smartproxy worker heartbeat thread [(#19816)](https://github.com/ManageIQ/manageiq/pull/19816)
-* Fixup polymorphic issues with MiqReport + Rbac [(#19804)](https://github.com/ManageIQ/manageiq/pull/19804)
+* Fix polymorphic issues with MiqReport + Rbac [(#19804)](https://github.com/ManageIQ/manageiq/pull/19804)
 * Add a connection timeout for remote region connections [(#19791)](https://github.com/ManageIQ/manageiq/pull/19791)
 * Remove storage references to multiple emses [(#19754)](https://github.com/ManageIQ/manageiq/pull/19754)
 * Only register queue workers using drb for dequeue [(#19829)](https://github.com/ManageIQ/manageiq/pull/19829)
