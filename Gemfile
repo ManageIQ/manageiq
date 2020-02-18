@@ -7,9 +7,9 @@ source 'http://rubygems.manageiq.org' do
   gem "handsoap",              "=0.2.5.5",  :require => false
   gem "rugged",                "=0.28.2.2", :require => false
   gem "ruport",                "=1.7.0.3"
-  gem "manageiq-gems-pending", ">0",        :require => "manageiq-gems-pending"
-  gem "manageiq-schema"
 end
+
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
 
 plugin "bundler-inject", "~> 1.1"
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
@@ -20,6 +20,8 @@ def manageiq_plugin(plugin_name)
     gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
   end
 end
+
+manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-virtual_attributes", "~>1.5.0"
