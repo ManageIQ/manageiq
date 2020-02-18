@@ -84,8 +84,9 @@ class ContainerOrchestrator
       }
     end
 
+    NAMESPACE_FILE = "/run/secrets/kubernetes.io/serviceaccount/namespace".freeze
     def my_namespace
-      ENV["MY_POD_NAMESPACE"]
+      @my_namespace ||= File.read(NAMESPACE_FILE)
     end
 
     def app_name
