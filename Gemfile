@@ -111,7 +111,6 @@ end
 
 group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
-  gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 end
 
 group :google, :manageiq_default do
