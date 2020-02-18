@@ -4,8 +4,10 @@ raise "Ruby versions >= 2.7.0 are unsupported!" if RUBY_VERSION >= "2.7.0"
 source 'https://rubygems.org'
 
 source 'http://rubygems.manageiq.org' do
-  gem "manageiq-gems-pending", ">0", :require => "manageiq-gems-pending", :branch => "master"
-  gem "handsoap", "=0.2.5.5", :require => false
+  gem "manageiq-gems-pending", ">0",        :require => "manageiq-gems-pending"
+  gem "handsoap",              "=0.2.5.5",  :require => false
+  gem "rugged",                "=0.28.2.2", :require => false
+  gem "ruport",                "=1.7.0.3"
 end
 
 plugin "bundler-inject", "~> 1.1"
@@ -75,8 +77,6 @@ gem "sys-filesystem",                 "~>1.3.1"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
-gem "rugged",                         "=0.28.2.2", :source => "http://rubygems.manageiq.org", :require => false
-gem "ruport",                         "=1.7.0.3",  :source => "http://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
