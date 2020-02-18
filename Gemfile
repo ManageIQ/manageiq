@@ -7,9 +7,13 @@ plugin "bundler-inject", "~> 1.1"
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
 source 'http://rubygems.manageiq.org' do
-  gem "handsoap",              "=0.2.5.5",  :require => false
-  gem "rugged",                "=0.28.2.2", :require => false
-  gem "ruport",                "=1.7.0.3"
+  gem "handsoap", "=0.2.5.5",  :require => false
+  gem "rugged",   "=0.28.2.2", :require => false
+  gem "ruport",   "=1.7.0.3"
+
+  group :ui_dependencies do
+    gem "jquery-rjs", "=0.1.1.1"
+  end
 end
 
 gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
@@ -210,8 +214,6 @@ end
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
   manageiq_plugin "manageiq-ui-classic"
-  # Modified gems (forked on Github)
-  gem "jquery-rjs",                     "=0.1.1.1", :source => "http://rubygems.manageiq.org"
 end
 
 group :v2v, :ui_dependencies do
