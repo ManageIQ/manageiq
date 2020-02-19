@@ -111,8 +111,8 @@ RSpec.describe Vmdb::Plugins do
         Dir.chdir(dir) do
           `
           git init &&
-          touch foo  && git add -A && git commit -m "Added foo" &&
-          touch foo2 && git add -A && git commit -m "Added foo2"
+          touch foo  && git add -A && git commit -m "Added foo" --no-gpg-sign &&
+          touch foo2 && git add -A && git commit -m "Added foo2" --no-gpg-sign
           `
 
           if options[:branch] == "master"
