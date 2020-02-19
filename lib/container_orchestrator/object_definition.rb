@@ -14,7 +14,7 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
             :spec     => {
-              :serviceAccountName => "miq-anyuid",
+              :serviceAccountName => "#{app_name}-anyuid",
               :containers         => [{
                 :name          => name,
                 :env           => default_environment,
@@ -72,7 +72,7 @@ class ContainerOrchestrator
         {:name      => "DATABASE_USER",
          :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
         {:name      => "ENCRYPTION_KEY",
-         :valueFrom => {:secretKeyRef=>{:name => "#{app_name}-secrets", :key => "encryption-key"}}}
+         :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
       ]
     end
 
@@ -90,7 +90,7 @@ class ContainerOrchestrator
     end
 
     def app_name
-      Vmdb::Appliance.PRODUCT_NAME.downcase
+      ENV["APP_NAME"]
     end
   end
 end
