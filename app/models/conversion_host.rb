@@ -124,7 +124,8 @@ class ConversionHost < ApplicationRecord
   # underlying provider.
   #
   def check_ssh_connection
-    connect_ssh { |ssu| ssu.shell_exec('uname -a') }
+    command = AwesomeSpawn.build_command_line("uname", [:a])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue StandardError
     false
@@ -188,7 +189,8 @@ class ConversionHost < ApplicationRecord
   end
 
   def create_cutover_file(path)
-    connect_ssh { |ssu| ssu.shell_exec("touch #{path}") }
+    command = AwesomeSpawn.build_command_line("touch", [path])
+    connect_ssh { |ssu| ssu.shell_exec(command) }
     true
   rescue StandardError
     false
@@ -198,7 +200,8 @@ class ConversionHost < ApplicationRecord
   # if no signal is specified.
   #
   def kill_process(pid, signal = 'TERM')
-    connect_ssh { |ssu| ssu.shell_exec("/bin/kill -s #{signal} #{pid}") }
+    command = AwesomeSpawn.build_command_line("/bin/kill", [:s, signal, pid])
+    connect_ssh { |ssu| ssu.shell_exec(command) }
     true
   rescue
     false
@@ -343,10 +346,15 @@ class ConversionHost < ApplicationRecord
     host = hostname || ipaddress
     raise "#{resource.class.name.demodulize} '#{resource.name}' doesn't have a hostname or IP address in inventory" if host.nil?
 
-    command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
+    params = [
+      playbook,
+      :become,
+      [:inventory, "#{host},"],
+      {:extra_vars= => "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"}
+    ]
 
     auth = find_credentials(auth_type)
-    command << " --user #{auth.userid}"
+    params << [:user, auth.userid]
 
     case auth
     when AuthUseridPassword
@@ -358,13 +366,14 @@ class ConversionHost < ApplicationRecord
       ensure
         ssh_private_key_file.close
       end
-      command << " --private-key #{ssh_private_key_file.path}"
+      params << {:private_key => ssh_private_key_file.path}
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: %{auth_type}") % {:auth_type => auth.authtype}
     end
 
-    command << " --extra-vars '#{extra_vars.to_json}'"
+    params << {:extra_vars => "'#{extra_vars.to_json}'"}
 
+    command = AwesomeSpawn.build_command_line("ansible-playbook", params)
     result = AwesomeSpawn.run(command)
 
     if result.failure?
