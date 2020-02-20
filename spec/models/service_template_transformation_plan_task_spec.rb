@@ -171,11 +171,16 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     describe '#transformation_log' do
       before do
         task.conversion_host = conversion_host
+        task.update_options(:virtv2v_wrapper => { "v2v_log" => "/fake/log/path" })
+        task.save
       end
 
       it 'gets the transformation log content' do
+        puts task.options
+        puts task.conversion_host.inspect
+        puts conversion_host.inspect
         msg = 'my transformation migration log'
-        allow(conversion_host).to receive(:get_conversion_log).with(task.id, 'v2v').and_return(msg)
+        allow(conversion_host).to receive(:get_conversion_log).with("/fake/log/path").and_return(msg)
         expect(task.transformation_log("v2v")).to eq(msg)
       end
     end

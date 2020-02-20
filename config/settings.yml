@@ -1058,8 +1058,8 @@
     :network_limit_per_host: unlimited
   :uci:
     :container:
-      registry:
-      image: manageiq/v2v-conversion-host:latest
+      :registry:
+      :image: manageiq/v2v-conversion-host:latest
 :ui:
   :mark_translated_strings: false
   :display_ops_database: false

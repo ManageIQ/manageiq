@@ -141,7 +141,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       raise MiqException::Error, msg
     end
 
-    conversion_host.get_conversion_log(id, log_type)
+    logfile = options.fetch_path(:virtv2v_wrapper, "#{log_type}_log")
+    puts "LOGFILE: #{logfile}"
+    if logfile.blank?
+      msg = "The location of #{log_type} log was not set. Download of #{log_type} log aborted."
+      _log.error(msg)
+      raise MiqException::Error, msg
+    end
+
+    conversion_host.get_conversion_log(logfile)
   end
 
   # Intend to be called by UI to display transformation log. The log is stored in MiqTask#task_results

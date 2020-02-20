@@ -159,7 +159,10 @@ class ConversionHost < ApplicationRecord
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
   def apply_task_limits(task_id, limits = {})
-    connect_ssh { |ssu| ssu.put_file("/var/lib/uci/#{task_id}/limits.json", limits.to_json) }
+    connect_ssh do |ssu|
+      ssu.put_file("/tmp/#{task_id}-limits.json", limits.to_json)
+      ssu.shell_exec("mv /tmp/#{task_id}-limits.json /var/lib/uci/#{task_id}/limits.json", nil, nil, nil)
+    end
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
@@ -187,7 +190,8 @@ class ConversionHost < ApplicationRecord
       ssu.shell_exec("mkdir -p /var/lib/uci/#{task_id} /var/log/uci/#{task_id}", nil, nil, nil)
 
       # Write the conversion options file
-      ssu.put_file("/var/lib/uci/#{task_id}/input.json", conversion_options.to_json)
+      ssu.put_file("/tmp/#{task_id}-input.json", conversion_options.to_json)
+      ssu.shell_exec("mv /tmp/#{task_id}-input.json /var/lib/uci/#{task_id}/input.json", nil, nil, nil)
     end
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
@@ -227,7 +231,7 @@ class ConversionHost < ApplicationRecord
     uci_image = uci_settings.image
     uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
 
-    command = "sudo /usr/bin/podman run --privileged"
+    command = "/usr/bin/podman run --detach --privileged"
     command += " --name conversion-#{task_id}"
     command += " --network host"
     command += " --volume /dev:/dev"
@@ -268,8 +272,8 @@ class ConversionHost < ApplicationRecord
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
   # if no signal is specified.
   #
-  def kill_virtv2v(task_id)
-    connect_ssh { |ssu| ssu.shell_exec("/usr/bin/podman kill conversion-#{task_id}") }
+  def kill_virtv2v(task_id, signal)
+    connect_ssh { |ssu| ssu.shell_exec("/usr/bin/podman exec conversion-#{task_id} /bin/killall -s #{signal} virt-v2v") }
     true
   rescue
     false
@@ -291,10 +295,10 @@ class ConversionHost < ApplicationRecord
 
   # Get and return the contents of the remote conversion log at +path+.
   #
-  def get_conversion_log(task_id, log_type)
-    connect_ssh { |ssu| ssu.get_file("/var/log/uci/#{task_id}/#{log_type}.log", nil) }
+  def get_conversion_log(path)
+    connect_ssh { |ssu| ssu.get_file(path, nil) }
   rescue => err
-    raise "Could not get #{log_type} log for task '#{task_id}' from '#{resource.name}' with [#{err.class}: #{err}"
+    raise "Could not get conversion log '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   def check_conversion_host_role(miq_task_id = nil)

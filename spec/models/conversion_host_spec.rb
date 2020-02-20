@@ -134,12 +134,12 @@ RSpec.describe ConversionHost, :v2v do
     context "#kill_process" do
       it "returns false if if kill command failed" do
         allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
-        expect(conversion_host_1.kill_virtv2v(task_1.id)).to eq(false)
+        expect(conversion_host_1.kill_virtv2v(task_1.id, 'TERM')).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
         allow(conversion_host_1).to receive(:connect_ssh)
-        expect(conversion_host_1.kill_virtv2v(task_1.id)).to eq(true)
+        expect(conversion_host_1.kill_virtv2v(task_1.id, 'KILL')).to eq(true)
       end
     end
   end
@@ -535,7 +535,7 @@ RSpec.describe ConversionHost, :v2v do
     it "works as expected and returns the command when transport is VDDK and LUKS keys vault check fails" do
       allow(conversion_host).to receive(:connect_ssh).and_raise('Fake error')
       expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
-        "sudo /usr/bin/podman run --privileged"\
+        "/usr/bin/podman run --detach --privileged"\
         " --name conversion-#{task.id}"\
         " --network host" \
         " --volume /dev:/dev"\
@@ -552,7 +552,7 @@ RSpec.describe ConversionHost, :v2v do
       conversion_options[:transport_method] = 'ssh'
       allow(conversion_host).to receive(:connect_ssh).and_return('{"fake": "json"}')
       expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
-        "sudo /usr/bin/podman run --privileged"\
+        "/usr/bin/podman run --detach --privileged"\
         " --name conversion-#{task.id}"\
         " --network host"\
         " --volume /dev:/dev"\
