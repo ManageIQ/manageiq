@@ -333,7 +333,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def conversion_options_source_provider_vmwarews_vddk(_storage)
     {
       :vm_name              => source.name,
-      :vm_uuid              => source.ems_ref,
+      :vm_uuid              => source.uid_ems,
       :conversion_host_uuid => conversion_host.resource.ems_ref,
       :transport_method     => 'vddk',
       :vmware_fingerprint   => source.host.thumbprint_sha1,
@@ -359,7 +359,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :host     => source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
-      :vm_uuid              => source.ems_ref,
+      :vm_uuid              => source.uid_ems,
       :conversion_host_uuid => conversion_host.resource.ems_ref,
       :transport_method     => 'ssh',
       :daemonize            => false

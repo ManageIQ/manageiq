@@ -571,7 +571,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
               :vm_name              => src_vm_1.name,
-              :vm_uuid              => src_vm_1.ems_ref,
+              :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'vddk',
               :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
@@ -603,7 +603,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
               :vm_name              => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vm_uuid              => src_vm_1.ems_ref,
+              :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
@@ -685,7 +685,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
               :vm_name                    => src_vm_1.name,
-              :vm_uuid                    => src_vm_1.ems_ref,
+              :vm_uuid                    => src_vm_1.uid_ems,
               :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'vddk',
               :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
@@ -727,7 +727,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
               :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vm_uuid                    => src_vm_1.ems_ref,
+              :vm_uuid                    => src_vm_1.uid_ems,
               :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'ssh',
               :osp_environment            => {

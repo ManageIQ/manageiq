@@ -124,7 +124,8 @@ class ConversionHost < ApplicationRecord
   # underlying provider.
   #
   def check_ssh_connection
-    connect_ssh { |ssu| ssu.shell_exec('uname -a') }
+    command = AwesomeSpawn.build_command_line("uname", [:a])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
     false
@@ -161,7 +162,8 @@ class ConversionHost < ApplicationRecord
   def apply_task_limits(task_id, limits = {})
     connect_ssh do |ssu|
       ssu.put_file("/tmp/#{task_id}-limits.json", limits.to_json)
-      ssu.shell_exec("mv /tmp/#{task_id}-limits.json /var/lib/uci/#{task_id}/limits.json", nil, nil, nil)
+      command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-limits.json", "/var/lib/uci/#{task_id}/limits.json"])
+      ssu.shell_exec(command, nil, nil, nil)
     end
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
@@ -187,11 +189,13 @@ class ConversionHost < ApplicationRecord
 
     connect_ssh do |ssu|
       # Prepare the conversion folders
-      ssu.shell_exec("mkdir -p /var/lib/uci/#{task_id} /var/log/uci/#{task_id}", nil, nil, nil)
+      command = AwesomeSpawn.build_command_line("mkdir", [:p, "/var/lib/uci/#{task_id}", "/var/log/uci/#{task_id}"])
+      ssu.shell_exec(command, nil, nil, nil)
 
       # Write the conversion options file
       ssu.put_file("/tmp/#{task_id}-input.json", conversion_options.to_json)
-      ssu.shell_exec("mv /tmp/#{task_id}-input.json /var/lib/uci/#{task_id}/input.json", nil, nil, nil)
+      command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-input.json", "/var/lib/uci/#{task_id}/input.json"])
+      ssu.shell_exec(command, nil, nil, nil)
     end
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
@@ -231,18 +235,24 @@ class ConversionHost < ApplicationRecord
     uci_image = uci_settings.image
     uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
 
-    command = "/usr/bin/podman run --detach --privileged"
-    command += " --name conversion-#{task_id}"
-    command += " --network host"
-    command += " --volume /dev:/dev"
-    command += " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"
-    command += " --volume /var/tmp:/var/tmp"
-    command += " --volume /var/lib/uci/#{task_id}:/var/lib/uci"
-    command += " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key" if conversion_options[:transport_method] == 'ssh'
-    command += " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json" if luks_keys_vault_valid?
-    command += " --volume /var/log/uci/#{task_id}:/var/log/uci"
-    command += " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"
-    command + " #{uci_image}"
+    params = [
+      "run",
+      :detach,
+      :privileged,
+      [:name,    "conversion-#{task_id}"],
+      [:network, "host"],
+      [:volume,  "/dev:/dev"],
+      [:volume,  "/etc/pki/ca-trust:/etc/pki/ca-trust"],
+      [:volume,  "/var/tmp:/var/tmp"],
+      [:volume,  "/var/lib/uci/#{task_id}:/var/lib/uci"],
+      [:volume,  "/var/log/uci/#{task_id}:/var/log/uci"],
+      [:volume,  "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"]
+    ]
+    params << [:volume, "/root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"] if conversion_options[:transport_method] == 'ssh'
+    params << [:volume, "/root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"] if luks_keys_vault_valid?
+    params << uci_image
+
+    AwesomeSpawn.build_command_line("/usr/bin/podman", params)
   end
 
   # Run the virt-v2v-wrapper script on the remote host and return a hash
@@ -263,7 +273,8 @@ class ConversionHost < ApplicationRecord
   end
 
   def create_cutover_file(task_id)
-    connect_ssh { |ssu| ssu.shell_exec("touch /var/lib/uci/#{task_id}/cutover") }
+    command = AwesomeSpawn.build_command_line("touch", ["/var/lib/uci/#{task_id}/cutover"])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
     false
@@ -273,7 +284,8 @@ class ConversionHost < ApplicationRecord
   # if no signal is specified.
   #
   def kill_virtv2v(task_id, signal)
-    connect_ssh { |ssu| ssu.shell_exec("/usr/bin/podman exec conversion-#{task_id} /bin/killall -s #{signal} virt-v2v") }
+    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :s, signal, "virt-v2v"])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
     false
@@ -417,10 +429,15 @@ class ConversionHost < ApplicationRecord
 
     host = hostname || ipaddress
 
-    command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
+    params = [
+      playbook,
+      :become,
+      [:inventory, "#{host},"],
+      {:extra_vars= => "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"}
+    ]
 
     auth = find_credentials(auth_type)
-    command << " --user #{auth.userid}"
+    params << [:user, auth.userid]
 
     case auth
     when AuthUseridPassword
@@ -432,13 +449,14 @@ class ConversionHost < ApplicationRecord
       ensure
         ssh_private_key_file.close
       end
-      command << " --private-key #{ssh_private_key_file.path}"
+      params << {:private_key => ssh_private_key_file.path}
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: %{auth_type}") % {:auth_type => auth.authtype}
     end
 
-    command << " --extra-vars '#{extra_vars.to_json}'"
+    params << {:extra_vars => "'#{extra_vars.to_json}'"}
 
+    command = AwesomeSpawn.build_command_line("ansible-playbook", params)
     result = AwesomeSpawn.run(command)
 
     if result.failure?
