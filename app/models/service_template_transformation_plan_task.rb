@@ -142,7 +142,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
 
     logfile = options.fetch_path(:virtv2v_wrapper, "#{log_type}_log")
-    puts "LOGFILE: #{logfile}"
     if logfile.blank?
       msg = "The location of #{log_type} log was not set. Download of #{log_type} log aborted."
       _log.error(msg)
