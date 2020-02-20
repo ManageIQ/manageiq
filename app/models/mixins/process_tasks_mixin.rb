@@ -1,5 +1,3 @@
-require 'manageiq-api-client'
-
 module ProcessTasksMixin
   extend ActiveSupport::Concern
   include RetirementMixin
@@ -128,6 +126,7 @@ module ProcessTasksMixin
     end
 
     def send_action(action, collection_name, collection, remote_options, id = nil)
+      require 'manageiq-api-client'
       post_args = remote_options[:args] || {}
       begin
         if id.present?

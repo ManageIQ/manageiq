@@ -1,3 +1,5 @@
+require 'manageiq-api-client'
+
 RSpec.describe ProcessTasksMixin do
   let(:test_class) do
     Class.new(ApplicationRecord) do
