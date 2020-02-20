@@ -145,7 +145,7 @@ class ActsAsArModel
   #
   # Find routines
   #
-  def self.find(*args)
+  def self.find(*_args)
     raise NotImplementedError, _("find must be implemented in a subclass")
   end
 
