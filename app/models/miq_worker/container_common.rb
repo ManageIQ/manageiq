@@ -1,5 +1,3 @@
-require 'kubeclient'
-
 class MiqWorker
   module ContainerCommon
     extend ActiveSupport::Concern
