@@ -49,7 +49,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.bundler_groups
-    %w[manageiq_default]
+    %w[manageiq_default ui_dependencies]
   end
 
   def self.kill_priority
