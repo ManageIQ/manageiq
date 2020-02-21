@@ -134,12 +134,12 @@ RSpec.describe ConversionHost, :v2v do
     context "#kill_process" do
       it "returns false if if kill command failed" do
         allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
-        expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(false)
+        expect(conversion_host_1.kill_virtv2v(task_1.id, 'TERM')).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
         allow(conversion_host_1).to receive(:connect_ssh)
-        expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(true)
+        expect(conversion_host_1.kill_virtv2v(task_1.id, 'KILL')).to eq(true)
       end
     end
   end
@@ -500,93 +500,150 @@ RSpec.describe ConversionHost, :v2v do
     end
   end
 
-  context "#run_conversion" do
+  context "#prepare_conversion" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
-    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz' } }
+    let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz'} }
     let(:filtered_options) { conversion_options.clone.update(:ssh_key => '__FILTERED__', :password => '__FILTERED__') }
 
-    it "works as expected if the connection is successful and the JSON is valid" do
-      allow(conversion_host).to receive(:connect_ssh).and_return({:alpha => {:beta => 'hello'}}.to_json)
-      expect(conversion_host.run_conversion(conversion_options)).to eql('alpha' => {'beta' => 'hello'})
-    end
-
     it "works as expected if the connection is successful but the JSON is invalid" do
-      allow(conversion_host).to receive(:connect_ssh).and_return('bogus')
-      expected_message = "Could not parse result data after running virt-v2v-wrapper using "\
-        "options: #{filtered_options}. Result was: bogus."
-      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(expected_message)
+      allow(conversion_host).to receive(:connect_ssh).and_raise(JSON::GeneratorError, 'fake unparser error')
+      expected_message = "Could not generate JSON for task '#{task.id}' from options '#{filtered_options}' with [JSON::GeneratorError: fake unparser error]"
+      expect { conversion_host.prepare_conversion(task.id, conversion_options) }.to raise_error(expected_message)
     end
 
     it "works as expected if the connection is unsuccessful" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
-      expected_message = "Failed to connect and run conversion using options #{filtered_options}"
-      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(/#{expected_message}/)
+      expected_message = "Failed to connect and prepare conversion for task '#{task.id}'"
+      expect { conversion_host.prepare_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
     end
 
     it "works as expected if an unknown error occurs" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError)
-      expected_message = "Starting conversion failed on '#{vm.name}'"
-      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(/#{expected_message}/)
+      expected_message = "Preparation of conversion for task '#{task.id}' failed on '#{vm.name}'"
+      expect { conversion_host.prepare_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
+    end
+  end
+
+  context "#build_podman_command" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz'} }
+    let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
+
+    it "works as expected and returns the command when transport is VDDK and LUKS keys vault check fails" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise('Fake error')
+      expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
+        "/usr/bin/podman run --detach --privileged"\
+        " --name conversion-#{task.id}"\
+        " --network host" \
+        " --volume /dev:/dev"\
+        " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
+        " --volume /var/tmp:/var/tmp"\
+        " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
+        " --volume /var/log/uci/#{task.id}:/var/log/uci"\
+        " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
+        " manageiq/v2v-conversion-host:latest"
+      )
+    end
+
+    it "works as expected and returns the command when transport is SSH and LUKS keys vault check succeeds" do
+      conversion_options[:transport_method] = 'ssh'
+      allow(conversion_host).to receive(:connect_ssh).and_return('{"fake": "json"}')
+      expect(conversion_host.build_podman_command(task.id, conversion_options)).to eq(
+        "/usr/bin/podman run --detach --privileged"\
+        " --name conversion-#{task.id}"\
+        " --network host"\
+        " --volume /dev:/dev"\
+        " --volume /etc/pki/ca-trust:/etc/pki/ca-trust"\
+        " --volume /var/tmp:/var/tmp"\
+        " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
+        " --volume /var/log/uci/#{task.id}:/var/log/uci"\
+        " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
+        " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"\
+        " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"\
+        " manageiq/v2v-conversion-host:latest"
+      )
+    end
+  end
+
+  context "#run_conversion" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello', :password => 'xxx', :ssh_key => 'xyz' } }
+    let(:filtered_options) { conversion_options.clone.update(:ssh_key => '__FILTERED__', :password => '__FILTERED__') }
+
+    it "works as expected if the connection is unsuccessful" do
+      allow(conversion_host).to receive(:prepare_conversion).and_raise(MiqException::MiqInvalidCredentialsError)
+      expected_message = "Failed to connect and run conversion using options #{filtered_options}"
+      expect { conversion_host.run_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
+    end
+
+    it "works as expected if an unknown error occurs" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError)
+      expected_message = "Starting conversion for task '#{task.id}' failed on '#{vm.name}'"
+      expect { conversion_host.run_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
     end
   end
 
   context "#get_conversion_state" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
-    let(:path) { 'some_path' }
+    let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
 
     it "works as expected if the connection is successful and the JSON is valid" do
       allow(conversion_host).to receive(:connect_ssh).and_return({:alpha => {:beta => 'hello'}}.to_json)
-      expect(conversion_host.get_conversion_state(path)).to eql('alpha' => {'beta' => 'hello'})
+      expect(conversion_host.get_conversion_state(task.id)).to eql('alpha' => {'beta' => 'hello'})
     end
 
     it "works as expected if the connection is successful but the JSON is invalid" do
       allow(conversion_host).to receive(:connect_ssh).and_return('bogus')
-      expected_message = "Could not parse conversion state data from file '#{path}': bogus"
-      expect { conversion_host.get_conversion_state(path) }.to raise_error(expected_message)
+      expected_message = "Could not parse conversion state data from file '/var/lib/uci/#{task.id}/state.json': bogus"
+      expect { conversion_host.get_conversion_state(task.id) }.to raise_error(expected_message)
     end
 
     it "works as expected if the connection is unsuccessful" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
-      expected_message = "Failed to connect and retrieve conversion state data from file '#{path}'"
-      expect { conversion_host.get_conversion_state(path) }.to raise_error(/#{expected_message}/)
+      expected_message = "Failed to connect and retrieve conversion state data from file '\/var\/lib\/uci\/#{task.id}\/state.json'"
+      expect { conversion_host.get_conversion_state(task.id) }.to raise_error(/#{expected_message}/)
     end
 
     it "works as expected if an unknown error occurs" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError)
-      expected_message = "Error retrieving and parsing conversion state file '#{path}' from '#{vm.name}'"
-      expect { conversion_host.get_conversion_state(path) }.to raise_error(/#{expected_message}/)
+      expected_message = "Error retrieving and parsing conversion state file '\/var\/lib\/uci\/#{task.id}\/state.json' from '#{vm.name}'"
+      expect { conversion_host.get_conversion_state(task.id) }.to raise_error(/#{expected_message}/)
     end
   end
 
   context "#apply_task_limits" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
-    let(:path) { 'some_path' }
+    let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host) }
     let(:limits) { { :cpu => '50', :network => '10' } }
 
     it "works as expected if the connection is successful and the JSON is generated" do
       allow(conversion_host).to receive(:connect_ssh).and_return(true)
-      expect(conversion_host.apply_task_limits(path, limits)).to be_truthy
+      expect(conversion_host.apply_task_limits(task.id, limits)).to be_truthy
     end
 
     it "works as expected if the connection is successful but the JSON is invalid" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(JSON::GeneratorError, 'fake unparser error')
       expected_message = "Could not generate JSON from limits '#{limits}' with [JSON::GeneratorError: fake unparser error]"
-      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
+      expect { conversion_host.apply_task_limits(task.id, limits) }.to raise_error(expected_message)
     end
 
     it "works as expected if the connection is unsuccessful" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
-      expected_message = "Failed to connect and apply limits in file '#{path}'"
-      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(/#{expected_message}/)
+      expected_message = "Failed to connect and apply limits for task '#{task.id}'"
+      expect { conversion_host.apply_task_limits(task.id, limits) }.to raise_error(/#{expected_message}/)
     end
 
     it "works as expected if an unknown error occurs" do
       allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError, 'fake error')
-      expected_message = "Could not apply the limits in '#{path}' on '#{vm.name}' with [StandardError: fake error]"
-      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
+      expected_message = "Could not apply the limits for task '#{task.id}' on '#{vm.name}' with [StandardError: fake error]"
+      expect { conversion_host.apply_task_limits(task.id, limits) }.to raise_error(expected_message)
     end
   end
 
