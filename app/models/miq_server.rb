@@ -489,7 +489,7 @@ class MiqServer < ApplicationRecord
 
   def self.managed_resources
     {
-      :vms                     => VmOrTemplate.active.count,
+      :vms                     => Vm.active.count,
       :hosts                   => Host.active.count,
       :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.active),
     }
@@ -497,7 +497,7 @@ class MiqServer < ApplicationRecord
 
   def self.unmanaged_resources
     {
-      :vms                     => VmOrTemplate.not_active.count,
+      :vms                     => Vm.not_active.count,
       :hosts                   => Host.archived.count,
       :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.archived),
     }
