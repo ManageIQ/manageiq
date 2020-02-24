@@ -49,7 +49,7 @@ module Metric::CiMixin::Capture
     elsif interval_name == "hourly"
       start_time ||= last_perf_capture_on || 4.hours.ago.utc
     else # interval_name == realtime
-      start_time ||= [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].max
+      start_time ||= [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].compact.max
     end
     [start_time, end_time]
   end
