@@ -148,11 +148,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
         expect(queue_timings).to eq(
           "realtime"   => {
-            host  => [[4.hours.ago.utc.beginning_of_day]],
-            host2 => [[4.hours.ago.utc.beginning_of_day]],
-            host3 => [[4.hours.ago.utc.beginning_of_day]],
-            vm    => [[4.hours.ago.utc.beginning_of_day]],
-            vm2   => [[4.hours.ago.utc.beginning_of_day]]
+            host  => [[]],
+            host2 => [[]],
+            host3 => [[]],
+            vm    => [[]],
+            vm2   => [[]]
           },
           "historical" => {
             host  => arg_day_range(bod - 7.days, bod + 1.day),
@@ -162,7 +162,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
             vm2   => arg_day_range(bod - 7.days, bod + 1.day)
           },
           "hourly"     => {
-            storage => [[4.hours.ago.utc.beginning_of_day]]
+            storage => [[]]
           }
         )
       end
@@ -190,7 +190,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
           bod = Time.now.utc.beginning_of_day
 
           expect(queue_timings).to eq(
-            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[4.hours.ago.utc.beginning_of_day]] },
+            "realtime"   => vms.each_with_object({}) { |k, h| h[k] = [[]] },
             "historical" => vms.each_with_object({}) { |k, h| h[k] = arg_day_range(bod - 7.days, bod + 1.day) }
           )
         end
@@ -214,14 +214,14 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
+          "realtime" => {vm => [[]]}
         )
 
         Timecop.travel(20.minutes)
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime" => {vm => [[4.hours.ago.utc.beginning_of_day]]}
+          "realtime" => {vm => [[]]}
         )
       end
     end
@@ -233,25 +233,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-      end
-    end
-
-    it "creates historical only when requesting historical and with last_perf_capture_on.nil? (first time) with initial_capture" do
-      stub_performance_settings(:history => {:initial_capture_days => 7})
-      MiqQueue.delete_all
-      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        trigger_capture(nil, :interval => "historical")
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-
-        Timecop.travel(20.minutes)
-        trigger_capture(nil, :interval => "historical")
-
-        expect(queue_timings).to eq(
+          "realtime"   => {vm => [[]]},
           "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
         )
       end
@@ -264,7 +246,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end
@@ -289,7 +271,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(last_perf_capture_on, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
 
@@ -297,59 +279,25 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         trigger_capture(nil, :interval => "realtime")
 
         expect(queue_timings).to eq(
-          "realtime"   => {vm => [[4.hours.ago.utc.beginning_of_day]]},
+          "realtime"   => {vm => [[]]},
           "historical" => {vm => arg_day_range(last_perf_capture_on, Time.now.utc.beginning_of_day)}
         )
       end
     end
 
-    it "creates queue item with task_id (which will set MiqTask#started_on)" do
-      MiqQueue.delete_all
-      task = FactoryBot.create(:miq_task)
-      trigger_capture(nil, :interval => "realtime", :task_id => task.id)
-
-      expect(MiqQueue.first.miq_task_id).to eq task.id
-    end
-
-    it "creates historical only when requesting historical and with old last_perf_capture_on with initial_capture" do
+    it "creates historical with no last_perf_capture_on" do
       stub_performance_settings(:history => {:initial_capture_days => 7})
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "historical")
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-
-        Timecop.travel(20.minutes)
-        trigger_capture(last_perf_capture_on, :interval => "historical")
+        trigger_capture(nil, :interval => "historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
 
         expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
+          "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
         )
       end
     end
 
-    it "creates historical only when requesting historical and recent last_perf_capture_on with initial_capture" do
-      stub_performance_settings(:history => {:initial_capture_days => 7})
-      MiqQueue.delete_all
-      Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "historical")
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-
-        Timecop.travel(20.minutes)
-        trigger_capture(last_perf_capture_on, :interval => "historical")
-
-        expect(queue_timings).to eq(
-          "historical" => {vm => arg_day_range(7.days.ago.utc.beginning_of_day, 1.day.from_now.utc.beginning_of_day)}
-        )
-      end
-    end
-
-    it "creates historical only when requesting historical with dates with recent last_perf_capture_on" do
+    it "creates historical even with recent last_perf_capture_on" do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago

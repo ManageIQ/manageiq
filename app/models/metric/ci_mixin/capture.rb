@@ -45,14 +45,11 @@ module Metric::CiMixin::Capture
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
-      start_time = Metric::Capture.historical_start_time if start_time.nil?
-    else
-      start_time = last_perf_capture_on if start_time.nil?
-      if start_time.nil? && interval_name == 'hourly'
-        # For hourly on the first capture, we don't want to get all of the
-        #   historical data, so we shorten the query
-        start_time = 4.hours.ago.utc
-      end
+      start_time ||= Metric::Capture.historical_start_time
+    elsif interval_name == "hourly"
+      start_time ||= last_perf_capture_on || 4.hours.ago.utc
+    else # interval_name == realtime
+      start_time ||= [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].max
     end
     [start_time, end_time]
   end
