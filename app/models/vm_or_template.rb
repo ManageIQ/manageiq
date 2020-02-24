@@ -190,6 +190,7 @@ class VmOrTemplate < ApplicationRecord
   scope :archived,     ->       { where(:ems_id => nil, :storage_id => nil) }
   scope :orphaned,     ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
   scope :retired,      ->       { where(:retired => true) }
+  scope :not_active,   ->       { where(:ems_id => nil) }
   scope :not_archived, ->       { where.not(:ems_id => nil).or(where.not(:storage_id => nil)) }
   scope :not_orphaned, ->       { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
   scope :not_retired,  ->       { where(:retired => false).or(where(:retired => nil)) }
