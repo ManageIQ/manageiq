@@ -1,4 +1,4 @@
-describe ReportFormatter::TimelineMessage do
+describe ManageIQ::Reporting::Formatter::TimelineMessage do
   describe '#message_html on container event' do
     row = {}
     let(:ems) { FactoryBot.create(:ems_redhat, :id => 42) }
@@ -22,7 +22,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
+        val = ManageIQ::Reporting::Formatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
@@ -47,7 +47,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
+        val = ManageIQ::Reporting::Formatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
@@ -73,7 +73,7 @@ describe ReportFormatter::TimelineMessage do
 
       before { event.contents << event_content }
 
-      subject { ReportFormatter::TimelineMessage.new({'event_type' => 'vm_poweroff'}, event, {}, 'PolicyEvent').message_html('target_name') }
+      subject { ManageIQ::Reporting::Formatter::TimelineMessage.new({'event_type' => 'vm_poweroff'}, event, {}, 'PolicyEvent').message_html('target_name') }
 
       it 'generates a link to the affected policy profile' do
         is_expected.to include("?profile=#{policy_set.id}")
@@ -83,7 +83,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'vm_poweroff'
-        val = ReportFormatter::TimelineMessage.new(row, event, {}, 'PolicyEvent').message_html(column)
+        val = ManageIQ::Reporting::Formatter::TimelineMessage.new(row, event, {}, 'PolicyEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
@@ -131,7 +131,7 @@ describe ReportFormatter::TimelineMessage do
     end
 
     it 'shows correct count of timeline events based on categories' do
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(30)
@@ -140,7 +140,7 @@ describe ReportFormatter::TimelineMessage do
 
     it 'shows correct count of timeline events together for report object with no categories' do
       @report.rpt_options = {}
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(45)
@@ -148,7 +148,7 @@ describe ReportFormatter::TimelineMessage do
 
     it 'shows correct count of timeline events for timeline based report when rpt_options is nil' do
       @report.rpt_options = nil
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(45)
@@ -216,7 +216,7 @@ describe ReportFormatter::TimelineMessage do
     end
 
     it 'shows correct count of timeline events based on categories' do
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(5)
@@ -225,7 +225,7 @@ describe ReportFormatter::TimelineMessage do
 
     it 'shows correct count of timeline events together for report object with no categories' do
       @report.rpt_options = {}
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(12)
@@ -233,7 +233,7 @@ describe ReportFormatter::TimelineMessage do
 
     it 'shows correct count of timeline events for timeline based report when rpt_options is nil' do
       @report.rpt_options = nil
-      formatter = ReportFormatter::ReportTimeline.new
+      formatter = ManageIQ::Reporting::Formatter::Timeline.new
       formatter.options.mri = @report
       events = formatter.build_document_body
       expect(JSON.parse(events)[0]["data"][0].length).to eq(12)
@@ -275,7 +275,7 @@ describe '#set data for headers that exist in col headers' do
 
   it 'shows headers only if they exist in report col headers' do
     @report.rpt_options = nil
-    formatter = ReportFormatter::ReportTimeline.new
+    formatter = ManageIQ::Reporting::Formatter::Timeline.new
     formatter.options.mri = @report
     events = formatter.build_document_body
     json = JSON.parse(events)[0]["data"][0][0]["event"]

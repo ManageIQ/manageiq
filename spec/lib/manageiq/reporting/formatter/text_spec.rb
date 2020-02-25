@@ -1,9 +1,9 @@
-describe ReportFormatter::ReportText do
+describe ManageIQ::Reporting::Formatter::Text do
   include Spec::Support::ReportHelper
 
   before do
-    allow(Charting).to receive(:backend).and_return(:text)
-    allow(Charting).to receive(:format).and_return(:text)
+    allow(ManageIQ::Reporting::Charting).to receive(:backend).and_return(:text)
+    allow(ManageIQ::Reporting::Charting).to receive(:format).and_return(:text)
   end
 
   it "expands report width for really long filter condition" do

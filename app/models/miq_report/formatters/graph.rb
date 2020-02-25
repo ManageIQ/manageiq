@@ -10,7 +10,7 @@ module MiqReport::Formatters::Graph
   end
 
   def to_chart(theme = nil, show_title = false, graph_options = nil)
-    ReportFormatter::ReportRenderer.render(Charting.format) do |e|
+    ManageIQ::Reporting::Formatter::ReportRenderer.render(ManageIQ::Reporting::Charting.format) do |e|
       e.options.mri           = self
       e.options.show_title    = show_title
       e.options.graph_options = graph_options unless graph_options.nil?

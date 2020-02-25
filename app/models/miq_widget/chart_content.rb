@@ -6,6 +6,6 @@ class MiqWidget::ChartContent < MiqWidget::ContentGeneration
     theme ||= "MIQ"
 
     report.to_chart(theme, false, MiqReport.graph_options)
-    Charting.serialized(report.chart)
+    ManageIQ::Reporting::Charting.serialized(report.chart)
   end
 end

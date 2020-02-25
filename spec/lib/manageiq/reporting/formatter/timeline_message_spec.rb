@@ -1,4 +1,4 @@
-describe ReportFormatter::TimelineMessage do
+describe ManageIQ::Reporting::Formatter::TimelineMessage do
   context "#message_html" do
     context "for unknown column names" do
       subject { described_class.new({'column' => @value}, nil, {:time_zone => 'Mexico City'}, nil).message_html('column') }

@@ -16,8 +16,8 @@ RSpec.describe MiqReport do
     @show_title   = true
     @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
-    allow(Charting).to receive(:backend).and_return(:c3)
-    allow(Charting).to receive(:format).and_return(:c3)
+    allow(ManageIQ::Reporting::Charting).to receive(:backend).and_return(:c3)
+    allow(ManageIQ::Reporting::Charting).to receive(:format).and_return(:c3)
   end
 
   context 'graph_options' do

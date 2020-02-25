@@ -8,12 +8,12 @@
 #    # ./lib/report_formatter/chart_common.rb:555:in `build_performance_chart'
 #    # ./lib/report_formatter/chart_common.rb:57:in `call'
 
-describe ReportFormatter::C3Formatter do
+describe ManageIQ::Reporting::Formatter::C3 do
   include Spec::Support::ReportHelper
 
   before do
-    allow(Charting).to receive(:backend).and_return(:c3)
-    allow(Charting).to receive(:format).and_return(:c3)
+    allow(ManageIQ::Reporting::Charting).to receive(:backend).and_return(:c3)
+    allow(ManageIQ::Reporting::Charting).to receive(:format).and_return(:c3)
   end
   context '#build_performance_chart_area' do
     it "builds a daily chart with all nils" do
