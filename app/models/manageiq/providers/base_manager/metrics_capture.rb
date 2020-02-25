@@ -2,6 +2,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   include Vmdb::Logging
 
   attr_reader :target, :ems
+
+  # @param target [Array[Host,Vm],Vm,Host] object(s) that needs perf capture
   def initialize(target, ems = nil)
     @target = target
     @ems = ems
