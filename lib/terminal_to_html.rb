@@ -9,7 +9,7 @@ class TerminalToHtml
   end
 
   def self.wrap_html_container(rendered)
-    stylesheet = File.read(File.join(Bundler.environment.specs["terminal"].first.full_gem_path, "/app/assets/stylesheets/terminal.css"))
+    stylesheet = File.read(File.join(Bundler.load.specs["terminal"].first.full_gem_path, "/app/assets/stylesheets/terminal.css"))
     <<~EOHTML
       <div>
       <style scoped>

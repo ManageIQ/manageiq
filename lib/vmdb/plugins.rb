@@ -135,7 +135,7 @@ module Vmdb
       # bug where on Ruby 2.5 the full_gem_path is a nonexistent directory for
       # gems that are also default gems.
       # See https://github.com/bundler/bundler/issues/6930.
-      @bundler_specs_by_path ||= Bundler.environment.specs.index_by { |s| File.realpath(s.full_gem_path) rescue nil }.tap { |s| s.delete(nil) }
+      @bundler_specs_by_path ||= Bundler.load.specs.index_by { |s| File.realpath(s.full_gem_path) rescue nil }.tap { |s| s.delete(nil) }
     end
 
     def content_directories(engine, subfolder)
