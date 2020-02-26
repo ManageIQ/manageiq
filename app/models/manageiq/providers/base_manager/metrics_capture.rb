@@ -46,6 +46,9 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     rescue => err
       _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
+
+    # Purge tasks older than 4 hours
+    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'") if rollups
   end
 
   private
@@ -118,39 +121,40 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # The rest just set the zone
   def calc_target_options(all_targets)
     targets_by_rollup_parent = calc_targets_by_rollup_parent(all_targets)
-    # Purge tasks older than 4 hours
-    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
 
-    task_end_time           = Time.now.utc.iso8601
-    default_task_start_time = 1.hour.ago.utc.iso8601
-
-    # Create a new task for each rollup parent
-    # mark each target with the rollup parent
     targets_by_rollup_parent.each_with_object({}) do |(parent, targets), h|
-      pkey = "#{parent.class.name}:#{parent.id}"
-      name = "Performance rollup for #{pkey}"
-      prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
-      task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
+      task = create_rollup_task_for_cluster(parent, targets)
 
-      task = MiqTask.create(
-        :name         => name,
-        :identifier   => pkey,
-        :state        => MiqTask::STATE_QUEUED,
-        :status       => MiqTask::STATUS_OK,
-        :message      => "Task has been queued",
-        :context_data => {
-          :start    => task_start_time,
-          :end      => task_end_time,
-          :parent   => pkey,
-          :targets  => targets.map { |target| "#{target.class}:#{target.id}" },
-          :complete => [],
-          :interval => "realtime"
-        }
-      )
-      _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]")
       targets.each do |target|
         h[target] = task.id
       end
+    end
+  end
+
+  def create_rollup_task_for_cluster(ems_cluster, hosts)
+    return unless ems_cluster
+
+    pkey = "#{ems_cluster.class.name}:#{ems_cluster.id}"
+    prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
+    task_start_time = prev_task ? prev_task.context_data[:end] : 1.hour.ago.utc.iso8601
+    task_end_time = Time.now.utc.iso8601
+
+    MiqTask.create(
+      :name         => "Performance rollup for #{pkey}",
+      :identifier   => pkey,
+      :state        => MiqTask::STATE_QUEUED,
+      :status       => MiqTask::STATUS_OK,
+      :message      => "Task has been queued",
+      :context_data => {
+        :start    => task_start_time,
+        :end      => task_end_time,
+        :parent   => pkey,
+        :targets  => hosts.map { |target| "#{target.class}:#{target.id}" },
+        :complete => [],
+        :interval => "realtime"
+      }
+    ).tap do |task|
+      _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{hosts.inspect} for time range: [#{task_start_time} - #{task_end_time}]")
     end
   end
 
