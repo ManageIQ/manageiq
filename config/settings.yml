@@ -1094,7 +1094,7 @@
       :poll_method: :normal
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
-      :systemd_enabled: false
+      :systemd_enabled: true
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
