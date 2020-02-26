@@ -21,7 +21,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   def perf_capture_all_queue
     perf_capture_health_check
     @target = filter_perf_capture_now(capture_ems_targets)
-    perf_capture_queue(:rollups => true)
+    perf_capture_queue("realtime", :rollups => true)
   end
 
   def perf_capture_gap(start_time, end_time)
@@ -33,18 +33,17 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     perf_capture_queue('realtime')
   end
 
-  def perf_capture_queue(interval = nil, start_time: nil, end_time: nil, rollups: false)
-    targets = Array(@target)
-    target_options = rollups ? calc_target_options(targets) : {}
-
-    targets.each do |target|
-      task_id = target_options[target]
-      perf_capture_queue_target(target, interval || perf_target_to_interval_name(target),
-                                :start_time => start_time,
-                                :end_time   => end_time,
-                                :task_id    => task_id)
-    rescue => err
-      _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
+  def perf_capture_queue(interval, start_time: nil, end_time: nil, rollups: false)
+    targets_by_class = Array(@target).group_by { |t| t.class.base_class.name }
+    targets_by_class.each do |class_name, class_targets|
+      if class_name == "Host" && rollups
+        class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
+          perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
+        end
+      else
+        class_interval = class_name == "Storage" ? "hourly" : interval
+        perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
+      end
     end
 
     # Purge tasks older than 4 hours
@@ -99,38 +98,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     MiqAlert.target_needs_realtime_capture?(target)
   end
 
-  # Collect realtime targets and group them by their rollup parent
-  #
-  # 1. Only calculate rollups for Hosts
-  # 2. Some Hosts have an EmsCluster as a parent, others have none.
-  # 3. Only Hosts with a parent are rolled up.
-  # 4. Only used for VMWare
-  # @param [Array<Host|VmOrTemplate|Storage>] @targets The nodes to rollup
-  # @returns Hash<String,Array<Host>>
-  #   e.g.: {EmsCluster:4=>[Host:4], EmsCluster:5=>[Host:1, Host:2]}
-  def calc_targets_by_rollup_parent(targets)
-    realtime_targets = targets.select do |target|
-      target.kind_of?(Host) &&
-        target.ems_cluster_id
-    end
-    realtime_targets.group_by(&:ems_cluster)
-  end
-
-  # Determine queue options for each target
-  # Is only generating options for Vmware Hosts, which have a task for rollups.
-  # The rest just set the zone
-  def calc_target_options(all_targets)
-    targets_by_rollup_parent = calc_targets_by_rollup_parent(all_targets)
-
-    targets_by_rollup_parent.each_with_object({}) do |(parent, targets), h|
-      task = create_rollup_task_for_cluster(parent, targets)
-
-      targets.each do |target|
-        h[target] = task.id
-      end
-    end
-  end
-
   def create_rollup_task_for_cluster(ems_cluster, hosts)
     return unless ems_cluster
 
@@ -155,6 +122,15 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       }
     ).tap do |task|
       _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{hosts.inspect} for time range: [#{task_start_time} - #{task_end_time}]")
+    end
+  end
+
+  def perf_capture_queue_targets(targets, interval, start_time: nil, end_time: nil, parent: nil)
+    task = create_rollup_task_for_cluster(parent, targets) if parent
+    targets.each do |target|
+      perf_capture_queue_target(target, interval, :start_time => start_time, :end_time => end_time, :task_id => task&.id)
+    rescue => err
+      _log.warn("Failed to queue perf_capture for target [#{target.class.name}], [#{target.id}], [#{target.name}]: #{err}")
     end
   end
 
@@ -248,14 +224,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       [last_perf_capture_on, realtime_cut_off]
     else
       []
-    end
-  end
-
-  def perf_target_to_interval_name(target)
-    case target
-    when Host, VmOrTemplate then                       "realtime"
-    when ContainerNode, Container, ContainerGroup then "realtime"
-    when Storage then                                  "hourly"
     end
   end
 end
