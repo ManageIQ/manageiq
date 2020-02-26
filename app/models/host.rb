@@ -39,10 +39,13 @@ class Host < ApplicationRecord
   has_many                  :storages, :through => :host_storages
   has_many                  :writable_accessible_host_storages, -> { writable_accessible }, :class_name => "HostStorage"
   has_many                  :writable_accessible_storages, :through => :writable_accessible_host_storages, :source => :storage
+
   has_many                  :host_virtual_switches, :class_name => "Switch", :dependent => :destroy, :inverse_of => :host
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
   has_many                  :lans,     :through => :switches
+  has_many                  :host_virtual_lans, :through => :host_virtual_switches, :source => :lans
+
   has_many                  :subnets,  :through => :lans
   has_many                  :networks, :through => :hardware
   has_many                  :patches, :dependent => :destroy
