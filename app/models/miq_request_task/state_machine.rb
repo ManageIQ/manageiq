@@ -12,7 +12,6 @@ module MiqRequestTask::StateMachine
   end
 
   def signal(phase)
-    $log.warn("SIGNAL(#{phase})")
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
     self.phase = phase.to_s
@@ -20,7 +19,6 @@ module MiqRequestTask::StateMachine
     save
 
     begin
-      $log.warn("SEND(#{phase})")
       send(phase)
     rescue => err
       case phase
