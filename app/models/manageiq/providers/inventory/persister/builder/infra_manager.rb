@@ -200,8 +200,17 @@ module ManageIQ::Providers
 
         def distributed_virtual_lans
           add_properties(
+            :model_class                  => Lan,
             :manager_ref                  => %i(switch uid_ems),
             :parent_inventory_collections => %i(distributed_virtual_switches),
+          )
+        end
+
+        def host_virtual_lans
+          add_properties(
+            :model_class                  => Lan,
+            :manager_ref                  => %i[switch uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
