@@ -358,6 +358,10 @@ class VmOrTemplate < ApplicationRecord
     ext_management_system.send(verb, self, options)
   end
 
+  def make_retire_request(requester_id)
+    self.class.make_retire_request(id, User.find(requester_id))
+  end
+
   # keep the same method signature as others in retirement mixin
   def self.make_retire_request(*src_ids, requester, initiated_by: 'user')
     vms = where(:id => src_ids)
