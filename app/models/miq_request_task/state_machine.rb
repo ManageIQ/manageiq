@@ -12,6 +12,7 @@ module MiqRequestTask::StateMachine
   end
 
   def signal(phase)
+    $log.warn("SIGNAL(#{phase})")
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
     self.phase = phase.to_s
@@ -19,31 +20,18 @@ module MiqRequestTask::StateMachine
     save
 
     begin
+      $log.warn("SEND(#{phase})")
       send(phase)
     rescue => err
-      if [:finish, :provision_error].include?(phase.to_sym)
-        _log.error("[#{err.message}] encountered during [#{phase}]")
-        _log.log_backtrace(err)
+      case phase
+      when :finish
+        $log.error("[#{err.class}: #{err.message}] encountered during [#{phase}]")
+        $log.log_backtrace(err)
+      when :provision_error
+        update_and_notify_parent(:state => "finished", :status => "Error", :message => err.message)
+        signal(:finish)
       else
-        phase_context.delete(:error_message)
-
-        # HACK: Psych is unable to deserialize an Exception that contains a
-        #   NameError::message as its message.  When deserialized, it will raise
-        #   "TypeError: allocator undefined for NameError::message".  Calling
-        #   .message will dereference it and turn it into a String which is
-        #   serializable.  For more information about NameError::message, see
-        #   http://www.carboni.ca/blog/p/Ruby-Did-You-Know-That-5-NameErrormessage
-        #
-        #   In addition, backtrace information is not available, because it is
-        #   not an instance variable, but is instead dynamically generated.
-        #
-        #   As such, we store the exception's components separately in the
-        #   phase context.
-        phase_context[:exception_class]     = err.class.name
-        phase_context[:exception_message]   = err.message
-        phase_context[:exception_backtrace] = err.backtrace
-        phase_context[:error_phase]         = phase
-        signal :provision_error
+        signal(:provision_error)
       end
     end
   end
@@ -84,19 +72,5 @@ module MiqRequestTask::StateMachine
       :tracking_label => tracking_label_id,
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
-  end
-
-  def provision_error
-    exception_class     = phase_context.delete(:exception_class).try(:constantize)
-    exception_message   = phase_context.delete(:exception_message)
-    exception_backtrace = phase_context.delete(:exception_backtrace)
-    error_phase         = phase_context.delete(:error_phase)
-    error_message       = phase_context.delete(:error_message) || "[#{exception_class}]: #{exception_message}"
-
-    _log.error("[#{error_message}] encountered during phase [#{error_phase}]")
-    $log.error(exception_backtrace.join("\n")) if exception_backtrace && exception_class && !(exception_class <= MiqException::MiqProvisionError)
-
-    update_and_notify_parent(:state => "finished", :status => "Error", :message => error_message)
-    signal :finish
   end
 end
