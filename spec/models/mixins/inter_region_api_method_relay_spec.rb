@@ -1,3 +1,5 @@
+require 'manageiq-api-client'
+
 RSpec.describe InterRegionApiMethodRelay do
   let(:collection_name) { :test_class_collection }
   let(:api_config)      { double("Api::CollectionConfig") }

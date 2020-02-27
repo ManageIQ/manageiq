@@ -1,5 +1,3 @@
-require 'manageiq-api-client'
-
 module InterRegionApiMethodRelay
   class InterRegionApiMethodRelayError < RuntimeError; end
 
@@ -54,6 +52,7 @@ module InterRegionApiMethodRelay
   end
 
   def self.api_client_connection_for_region(region_number, user = User.current_userid)
+    require 'manageiq-api-client'
     region = MiqRegion.find_by(:region => region_number)
 
     url = region.remote_ws_url
