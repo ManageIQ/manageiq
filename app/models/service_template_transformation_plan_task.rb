@@ -71,6 +71,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster
     virtv2v_disks
     network_mappings
+
+    begin
+      raise unless source.host.verify_credentials?
+    rescue => err
+      msg = "Invalid credentials for '#{source.host.name}'"
+      msg += ": #{err.message}" unless err.message.empty?
+      raise msg
+    end
+
     { :status => 'Ok', :message => 'Preflight check is successful' }
   rescue StandardError => error
     { :status => 'Error', :message => error.message }
