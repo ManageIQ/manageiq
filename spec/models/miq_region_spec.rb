@@ -67,10 +67,6 @@ RSpec.describe MiqRegion do
       allow(MiqRegion).to receive_messages(:my_region_number => @region_number + 1)
       expect { MiqRegion.seed }.to raise_error(Exception)
     end
-
-    it "sets the migrations_ran column" do
-      expect(MiqRegion.first.migrations_ran).to match_array(ActiveRecord::SchemaMigration.normalized_versions)
-    end
   end
 
   describe ".replication_type" do
