@@ -34,16 +34,28 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   end
 
   def perf_capture_queue(interval, start_time: nil, end_time: nil, rollups: false)
+    if interval == "realtime" && Metric::Capture.historical_days != 0
+      historical_start = Metric::Capture.historical_start_time
+      historical_end   = 1.day.from_now.utc.beginning_of_day
+    end
+
     targets_by_class = Array(@target).group_by { |t| t.class.base_class.name }
     targets_by_class.each do |class_name, class_targets|
+      class_interval = class_name == "Storage" ? "hourly" : interval
+
       if class_name == "Host" && rollups
         class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
           perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
         end
       else
-        class_interval = class_name == "Storage" ? "hourly" : interval
         perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       end
+
+      if class_interval == "realtime" # implied: class_name != "Storage"
+        if historical_start
+          target_newbies = class_targets.select { |target| target.last_perf_capture_on.nil? }
+          perf_capture_queue_targets(target_newbies, "historical", :start_time => historical_start, :end_time => historical_end)
+        end
     end
 
     # Purge tasks older than 4 hours
@@ -218,9 +230,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   def historical_dates(last_perf_capture_on)
     realtime_cut_off = 4.hours.ago.utc.beginning_of_day
 
-    if last_perf_capture_on.nil? && Metric::Capture.historical_days != 0
-      [Metric::Capture.historical_start_time, 1.day.from_now.utc.beginning_of_day]
-    elsif last_perf_capture_on && last_perf_capture_on < realtime_cut_off
+    if last_perf_capture_on && last_perf_capture_on < realtime_cut_off
       [last_perf_capture_on, realtime_cut_off]
     else
       []
