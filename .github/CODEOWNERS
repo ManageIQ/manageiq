@@ -57,4 +57,5 @@
 /content                                        @bdunne
 /config                                         @jrafanie
 /db                                             @agrare @carboni @bdunne
+/lib/manageiq/reporting                         @panspagetka @jrafanie
 /product*                                       @hkataria
