@@ -556,7 +556,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           end
         end
 
-        context "#prelight_check" do 
+        context "#prelight_check" do
           it "passes preflight check regardless of power_state" do
             allow(src_host).to receive(:verify_credentials?).and_return(true)
             src_vm_1.send(:power_state=, 'anything')
