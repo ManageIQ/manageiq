@@ -38,12 +38,13 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       historical_start = Metric::Capture.historical_start_time
       historical_end   = 1.day.from_now.utc.beginning_of_day
     end
+    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
 
     targets_by_class = Array(@target).group_by { |t| t.class.base_class.name }
     targets_by_class.each do |class_name, class_targets|
       class_interval = class_name == "Storage" ? "hourly" : interval
 
-      if class_name == "Host" && rollups
+      if class_name == "Host" && rollups # implied: class_interval == realtime
         class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
           perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
         end
@@ -51,11 +52,23 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       end
 
+      # handle scenarios that add historial captures to the realtime captures
       if class_interval == "realtime" # implied: class_name != "Storage"
+        targets_already_captured, targets_not_captured = class_targets.partition(&:last_perf_capture_on)
+
+        # targets with no captured metrics
         if historical_start
-          target_newbies = class_targets.select { |target| target.last_perf_capture_on.nil? }
-          perf_capture_queue_targets(target_newbies, "historical", :start_time => historical_start, :end_time => historical_end)
+          perf_capture_queue_targets(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
         end
+
+        # targets that haven't captured realtime metrics in a while
+        # TODO: send these in batches instead of one offs (use split_capture_intervals logic to send 1 day at a time)
+        # TODO: if it has been months, do we want a limit to the total time duration of these captures?
+        gapped_targets = targets_already_captured.select { |t| t.last_perf_capture_on < realtime_cut_off }
+        gapped_targets.each do |target|
+          perf_capture_queue_target(target, "historical", :start_time => target.last_perf_capture_on, :end_time => realtime_cut_off)
+        end
+      end
     end
 
     # Purge tasks older than 4 hours
@@ -214,26 +227,12 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # Note: default values are also derived in ci_mixin/capture.rb#fix_capture_start_end_time
   # @return realtime_interval, realtime_date, historical_start, historical_end
   def queue_items_for_interval(target, interval_name, start_time, end_time)
-    # if last_perf_capture_on is nil (initial refresh), also go back historically
-    # if last_perf_capture_on is earlier than 4.hour.ago.beginning_of_day,
-    # then create *one* realtime capture for start_time = 4.hours.ago.beginning_of_day (no end_time)
-    # and create historical captures for each day from last_perf_capture_on until 4.hours.ago.beginning_of_day
     if interval_name == 'historical'
       split_capture_intervals("historical", start_time, end_time)
     elsif interval_name == "hourly"
       [["hourly"]]
     else
-      [["realtime"]] + split_capture_intervals("historical", *historical_dates(target.last_perf_capture_on))
-    end
-  end
-
-  def historical_dates(last_perf_capture_on)
-    realtime_cut_off = 4.hours.ago.utc.beginning_of_day
-
-    if last_perf_capture_on && last_perf_capture_on < realtime_cut_off
-      [last_perf_capture_on, realtime_cut_off]
-    else
-      []
+      [["realtime"]]
     end
   end
 end
