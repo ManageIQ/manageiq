@@ -180,8 +180,8 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Integer] length of data written to conversion options file
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
   def prepare_conversion(task_id, conversion_options)
@@ -197,7 +197,7 @@ class ConversionHost < ApplicationRecord
       command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-input.json", "/var/lib/uci/#{task_id}/input.json"])
       ssu.shell_exec(command, nil, nil, nil)
     end
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON for task '#{task_id}' from options '#{filtered_options}' with [#{err.class}: #{err}]"
@@ -210,14 +210,14 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Boolean] true if the file can be retrieved and parsed, false otherwise
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::ParserError] if file cannot be parsed as JSON
   def luks_keys_vault_valid?
     luks_keys_vault_json = connect_ssh { |ssu| ssu.get_file("/root/.v2v_luks_keys_vault.json", nil) }
     JSON.parse(luks_keys_vault_json)
     true
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and retrieve LUKS keys vault from file '/root/.v2v_luks_keys_vault.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '/root/.v2v_luks_keys_vault.json': #{json_state}"
