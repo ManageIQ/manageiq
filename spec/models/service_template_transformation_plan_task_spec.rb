@@ -334,6 +334,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:src_switch) { FactoryBot.create(:switch, :ems_id => src_ems.id) }
       let(:src_lans) { FactoryBot.create_list(:lan, 2, :switch => src_switch) }
       let!(:src_host_switch) { FactoryBot.create(:host_switch, :host => src_host, :switch => src_switch) }
+      let(:host_auth) { FactoryBot.create(:authentication, :status_details => 'fake error') }
 
       let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lans.first) }
       let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lans.last) }
@@ -558,14 +559,20 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "#prelight_check" do
           it "passes preflight check regardless of power_state" do
+            src_host.authentications << host_auth
             allow(src_host).to receive(:authentication_status_ok?).and_return(true)
             src_vm_1.send(:power_state=, 'anything')
             expect(task_1.preflight_check).to eq(:status => 'Ok', :message => 'Preflight check is successful')
           end
 
-          it "fails preflight check if we can't verify host credentials" do
+          it "fails preflight check if host has no credentials" do
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "No credentials configured for '#{src_host.name}'")
+          end
+
+          it "fails preflight check if host authentication failed" do
+            src_host.authentications << host_auth
             allow(src_host).to receive(:authentication_status_ok?).and_return(false)
-            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}'")
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}': fake error")
           end
         end
 
@@ -680,14 +687,20 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "preflight_check" do
           it "fails preflight check if src is power off" do
+            src_host.authentications << host_auth
             allow(src_host).to receive(:authentication_status_ok?).and_return(true)
             src_vm_1.send(:power_state=, 'off')
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => 'OSP destination and source power_state is off')
           end
 
-          it "fails preflight check if we can't verify host credentials" do
+          it "fails preflight check if host has no credentials" do
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "No credentials configured for '#{src_host.name}'")
+          end
+
+          it "fails preflight check if host authention failed" do
+            src_host.authentications << host_auth
             allow(src_host).to receive(:authentication_status_ok?).and_return(false)
-            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}'")
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}': fake error")
           end
         end
 

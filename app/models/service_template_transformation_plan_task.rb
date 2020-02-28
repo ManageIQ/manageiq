@@ -71,7 +71,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster
     virtv2v_disks
     network_mappings
-    raise "Invalid authentication for '#{source.host.name}'" unless source.host.authentication_status_ok?
+
+    host = source.host
+    raise "No credentials configured for '#{host.name}'" if host.missing_credentials?
+    raise "Invalid authentication for '#{host.name}': #{host.default_authentication.status_details}" unless host.authentication_status_ok?
 
     { :status => 'Ok', :message => 'Preflight check is successful' }
   rescue StandardError => error
