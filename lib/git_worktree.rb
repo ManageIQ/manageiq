@@ -25,6 +25,19 @@ class GitWorktree
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
 
+    # The libssh2 library must already be installed at gem installation time
+    # for the 'ssh' feature to be available.
+    #
+    # For Fedora/Centos, the presence of libssh2 seems to be enough to get it
+    # to build properly.
+    #
+    # For OSX:
+    #
+    #     $ brew install libssh2
+    #     $ gem uninstall rugged  # if required
+    #     $ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
+    #     $ bin/bundle
+    #
     if @ssh_private_key && !Rugged.features.include?(:ssh)
       raise GitWorktreeException::InvalidCredentialType, "ssh credentials are not enabled for use. Recompile the rugged/libgit2 gem with ssh support to enable it."
     end
