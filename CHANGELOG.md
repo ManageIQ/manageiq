@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Ivanchuk-3
+
+### Added
+* Updated rubyzip gem to version 2 [(#19629)](https://github.com/ManageIQ/manageiq/pull/19629)
+* Updated linux_admin gem to version 2 [(#19639)](https://github.com/ManageIQ/manageiq/pull/19639)
+
+### Fixed
+* Fixed missing display of available disk space under Utilization [(#19502)](https://github.com/ManageIQ/manageiq/pull/19502)
+* Adding Volume Snapshot (CloudVolumeSnapshot) to RBAC [(#19356)](https://github.com/ManageIQ/manageiq/pull/19356)
+* Adding Volume Type (CloudVolumeType) to RBAC [(#19408)](https://github.com/ManageIQ/manageiq/pull/19408)
+* Generate retire requests from the base class name [(#19398)](https://github.com/ManageIQ/manageiq/pull/19398)
+* Adding task error status to log management [(#19480)](https://github.com/ManageIQ/manageiq/pull/19480)
+* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
+* Cleanup after Ansible runner. [(#19383)](https://github.com/ManageIQ/manageiq/pull/19383)
+* Fix key_pair class lookup [(#19486)](https://github.com/ManageIQ/manageiq/pull/19486)
+
+### Security
+* A flaw triggered remote code execution through NFS schedule backup[(CVE-2019-14894)](https://access.redhat.com/security/cve/cve-2019-14894)
+
 ## Ivanchuk-2
 
 ### Added
