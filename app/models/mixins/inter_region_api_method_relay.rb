@@ -69,6 +69,7 @@ module InterRegionApiMethodRelay
   end
 
   def self.exec_api_call(region, collection_name, action, api_args = nil, id = nil)
+    require 'manageiq-api-client'
     api_args ||= {}
     collection = api_client_connection_for_region(region).public_send(collection_name)
     collection_or_instance = id ? collection.find(id) : collection
