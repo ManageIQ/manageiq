@@ -81,7 +81,7 @@ class InfraConversionThrottler
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
       if ch.nil?
-        bad_tasks = jobs.collect { |j| j.migration_task.source.name }.join(', ')
+        bad_tasks = jobs.map { |j| j.migration_task&.source&.name }.compact.join(', ')
         _log.error("The following migrating VMs don't have a conversion host: #{bad_tasks}.")
         next
       end
