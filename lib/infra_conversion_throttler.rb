@@ -80,7 +80,10 @@ class InfraConversionThrottler
   # Applying the limits is done via the conversion_host which handles the writing.
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
-      next if ch.nil?
+      if ch.nil?
+        _log.error("Migration task for '#{migration_task.source.name}' is running but has no conversion host")
+        next
+      end
 
       number_of_jobs = jobs.size
 

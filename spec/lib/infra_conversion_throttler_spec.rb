@@ -119,7 +119,7 @@ RSpec.describe InfraConversionThrottler, :v2v do
       }
       task_running_1.update_options(
         :virtv2v_started_on => Time.now.utc,
-        :virtv2v_wrapper => {'state_file' => "/var/lib/uci/#{task_running_1.id}/state.json"}
+        :virtv2v_wrapper    => {'state_file' => "/var/lib/uci/#{task_running_1.id}/state.json"}
       )
       task_running_2.options[:virtv2v_started_on] = Time.now.utc
       task_running_2.options[:virtv2v_wrapper] = {'state_file' => "/var/lib/uci/#{task_running_2.id}/state.json"}
