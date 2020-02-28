@@ -558,14 +558,14 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "#prelight_check" do
           it "passes preflight check regardless of power_state" do
-            allow(src_host).to receive(:verify_credentials?).and_return(true)
+            allow(src_host).to receive(:authentication_status_ok?).and_return(true)
             src_vm_1.send(:power_state=, 'anything')
             expect(task_1.preflight_check).to eq(:status => 'Ok', :message => 'Preflight check is successful')
           end
 
           it "fails preflight check if we can't verify host credentials" do
-            allow(src_host).to receive(:verify_credentials?).and_return(false)
-            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid credentials for '#{src_host.name}'")
+            allow(src_host).to receive(:authentication_status_ok?).and_return(false)
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}'")
           end
         end
 
@@ -680,14 +680,14 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "preflight_check" do
           it "fails preflight check if src is power off" do
-            allow(src_host).to receive(:verify_credentials?).and_return(true)
+            allow(src_host).to receive(:authentication_status_ok?).and_return(true)
             src_vm_1.send(:power_state=, 'off')
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => 'OSP destination and source power_state is off')
           end
 
           it "fails preflight check if we can't verify host credentials" do
-            allow(src_host).to receive(:verify_credentials?).and_raise("fake error")
-            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid credentials for '#{src_host.name}': fake error")
+            allow(src_host).to receive(:authentication_status_ok?).and_return(false)
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "Invalid authentication for '#{src_host.name}'")
           end
         end
 
