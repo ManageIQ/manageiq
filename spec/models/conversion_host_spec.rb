@@ -482,7 +482,7 @@ RSpec.describe ConversionHost, :v2v do
       authentication = FactoryBot.create(:authentication_ssh_keypair)
       conversion_host_vm.authentications << authentication
       allow(Net::SSH).to receive(:start).and_raise(Net::SSH::AuthenticationFailed.new)
-      expect { conversion_host_vm.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError)
+      expect { conversion_host_vm.verify_credentials }.to raise_error(Net::SSH::AuthenticationFailed, /Incorrect credentials/)
     end
 
     it "works if there are multiple associated validations" do
