@@ -80,6 +80,12 @@ class InfraConversionThrottler
   # Applying the limits is done via the conversion_host which handles the writing.
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
+      if ch.nil?
+        bad_tasks = jobs.map { |j| j.migration_task&.source&.name }.compact.join(', ')
+        _log.error("The following migrating VMs don't have a conversion host: #{bad_tasks}.")
+        next
+      end
+
       number_of_jobs = jobs.size
 
       cpu_limit = ch.cpu_limit || Settings.transformation.limits.cpu_limit_per_host
