@@ -1,10 +1,10 @@
 # ManageIQ
 
-[![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg?branch=master)](https://travis-ci.org/ManageIQ/manageiq)
+[![Build Status](https://travis-ci.org/ManageIQ/manageiq.svg?branch=jansa)](https://travis-ci.org/ManageIQ/manageiq)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq/badges/gpa.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
 [![Codacy](https://api.codacy.com/project/badge/grade/9ffce48ccb924020ae8f9e698048e9a4)](https://www.codacy.com/app/ManageIQ/manageiq)
-[![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=master&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=master)
-[![Security](https://hakiri.io/github/ManageIQ/manageiq/master.svg)](https://hakiri.io/github/ManageIQ/manageiq/master)
+[![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=jansa&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=jansa)
+[![Security](https://hakiri.io/github/ManageIQ/manageiq/jansa.svg)](https://hakiri.io/github/ManageIQ/manageiq/jansa)
 [![Open Source Helpers](https://www.codetriage.com/manageiq/manageiq/badges/users.svg)](https://www.codetriage.com/manageiq/manageiq)
 
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -12,7 +12,7 @@
 [![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 
-[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=master&includeBuildsFromPullRequest=false&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
+[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=jansa&includeBuildsFromPullRequest=false&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
 
 ## Discover, Optimize, and Control your Hybrid IT
 
