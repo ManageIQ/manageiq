@@ -855,6 +855,7 @@ en:
       ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
       ManageIQ::Providers::Openstack::CloudManager::CloudTenant:            Cloud Tenant (OpenStack)
       ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::StorageManager::CinderManager:        Cinder Block Storage Manager (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
