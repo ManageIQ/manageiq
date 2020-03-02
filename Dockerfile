@@ -4,12 +4,12 @@ MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
 
-RUN yum -y install --setopt=tsflags=nodocs \
-                   memcached               \
-                   postgresql-server       \
-                   mod_ssl                 \
-                   &&                      \
-    yum clean all
+RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
+      memcached               \
+      postgresql-server       \
+      mod_ssl                 \
+      &&                      \
+    dnf clean all
 
 ## Copy/link the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
