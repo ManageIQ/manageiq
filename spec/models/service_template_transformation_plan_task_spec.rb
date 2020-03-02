@@ -574,7 +574,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           end
 
           it "fails if a VM already exists in destination" do
-            existing_vm = FactoryBot.create(:vm_redhat, :name => src_vm_1.name, :ext_management_system => redhat_ems, :ems_cluster => redhat_cluster)
+            FactoryBot.create(:vm_redhat, :name => src_vm_1.name, :ext_management_system => redhat_ems, :ems_cluster => redhat_cluster)
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination provider")
           end
 
@@ -707,7 +707,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           end
 
           it "fails if a VM already exists in destination" do
-            existing_vm = FactoryBot.create(:vm_openstack, :name => src_vm_1.name, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant)
+            FactoryBot.create(:vm_openstack, :name => src_vm_1.name, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant)
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination provider")
           end
 
