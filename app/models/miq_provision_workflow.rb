@@ -3,10 +3,16 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     MiqProvisionWorkflow
   end
 
-  # Find the appropriate workflow class for the given +platform+ string. For
-  # example, the argument "openstack" would become:
+  # Find the appropriate workflow class for the given 'platform' string.
   #
-  #  "ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow"
+  # @example openstack
+  #   "ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow"
+  #
+  # @param platform [String]
+  #   A string of the one of the ManageIQ providers. The case of this
+  #   string is ignored.
+  #
+  # @return [String] A scoped provider constant name.
   #
   def self.class_for_platform(platform)
     classy = platform.classify
