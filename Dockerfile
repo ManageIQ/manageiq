@@ -15,9 +15,6 @@ RUN yum -y install --setopt=tsflags=nodocs \
                    &&                      \
     yum clean all
 
-VOLUME [ "/var/lib/pgsql/data" ]
-VOLUME [ ${APP_ROOT} ]
-
 ## Copy/link the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
@@ -56,3 +53,6 @@ LABEL io.k8s.description="ManageIQ is a management and automation platform for v
       io.k8s.display-name="ManageIQ" \
       io.openshift.expose-services="443:https" \
       io.openshift.tags="ManageIQ,miq,manageiq"
+
+VOLUME [ "/var/lib/pgsql/data" ]
+VOLUME [ ${APP_ROOT} ]
