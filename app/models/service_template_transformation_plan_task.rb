@@ -69,6 +69,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :source_vm_ipaddresses => source.ipaddresses  # This will determine if we need to wait for ip addresses to appear
     )
     destination_cluster
+    preflight_check_vm_exists_in_destination
     virtv2v_disks
     network_mappings
 
@@ -79,6 +80,22 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     { :status => 'Ok', :message => 'Preflight check is successful' }
   rescue StandardError => error
     { :status => 'Error', :message => error.message }
+  end
+
+  def preflight_check_vm_exists_in_destination
+    send("preflight_check_vm_exists_in_destination_#{destination_ems.emstype}")
+  end
+
+  def preflight_check_vm_exists_in_destination_rhevm
+    unless destination_ems.vms_and_templates.where(:name => source.name, :ems_cluster => destination_cluster).count.zero?
+      raise "A VM named '#{source.name}' already exist in destination cluster"
+    end
+  end
+
+  def preflight_check_vm_exists_in_destination_openstack
+    unless destination_ems.vms_and_templates.where(:name => source.name, :cloud_tenant => destination_cluster).count.zero?
+      raise "A VM named '#{source.name}' already exist in destination cloud tenant"
+    end
   end
 
   def source_cluster
