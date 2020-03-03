@@ -27,7 +27,6 @@ if [ $? -eq 0 ]; then
   test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
 
   bundle exec rake db:migrate
-  exit 0
 else
   echo "** DB has not been initialized"
 
@@ -54,5 +53,6 @@ else
   echo "** MIQ database has been initialized"
 
   generate_miq_server_cert.sh
-  exit 0
 fi
+
+rm -f /var/www/miq/vmdb/tmp/pids/evm.pid
