@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 131 ending 2020-03-02
+
+### Added
+
+* Make systemd the default for worker management [(#19874)](https://github.com/ManageIQ/manageiq/pull/19874)
+* Delay load manageiq-api-client until needed [(#19860)](https://github.com/ManageIQ/manageiq/pull/19860)
+* Delay load kubeclient and it's exception. [(#19860)]https://github.com/ManageIQ/manageiq/pull/19859)
+* Productize pods without product name [(#19847)](https://github.com/ManageIQ/manageiq/pull/19847)
+* Add the provided image pull secret to deployed worker containers [(#19856)](https://github.com/ManageIQ/manageiq/pull/19856)
+* Replace yum commands with dnf in the Dockerfile [(#19912)](https://github.com/ManageIQ/manageiq/pull/19912)
+
+### Fixed
+
+* Move report formatter and charting to core [(#19873)](https://github.com/ManageIQ/manageiq/pull/19873)
+* Bump version of rake to >=12.3.3 for CVE-2020-8130 [(#19893)](https://github.com/ManageIQ/manageiq/pull/19893)
+
 # Unreleased as of Sprint 130 ending 2020-02-17
 
 ### Added
