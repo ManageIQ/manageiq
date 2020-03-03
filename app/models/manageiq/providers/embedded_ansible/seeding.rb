@@ -5,7 +5,8 @@ module ManageIQ::Providers::EmbeddedAnsible::Seeding
     def seed
       provider = ManageIQ::Providers::EmbeddedAnsible::Provider.in_my_region.first_or_initialize
       provider.update!(
-        :name => "Embedded Ansible"
+        :name => "Embedded Ansible",
+        :zone => provider.zone || MiqServer.my_server.zone
       )
 
       manager = provider.automation_manager

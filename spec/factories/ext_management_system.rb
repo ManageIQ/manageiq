@@ -97,17 +97,23 @@ FactoryBot.define do
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
           :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
 
   factory :ems_cinder,
           :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
           :class   => "ManageIQ::Providers::StorageManager::CinderManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
 
   factory :ems_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
           :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
 
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
@@ -225,7 +231,9 @@ FactoryBot.define do
   factory :ems_vmware_cloud_network,
           :aliases => ["manageiq/providers/vmware/network_manager"],
           :class   => "ManageIQ::Providers::Vmware::NetworkManager",
-          :parent  => :ems_cloud
+          :parent  => :ems_cloud do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
 
   # Leaf classes for ems_cloud
 
