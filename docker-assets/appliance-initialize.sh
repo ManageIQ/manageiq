@@ -21,6 +21,12 @@ echo "== Checking MIQ database status =="
 [[ -d /var/lib/pgsql/data/base ]]
 if [ $? -eq 0 ]; then
   echo "** DB already initialized"
+  echo "** Starting postgresql"
+
+  su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
+  test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
+
+  bundle exec rake db:migrate
   exit 0
 else
   echo "** DB has not been initialized"
