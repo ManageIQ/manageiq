@@ -708,7 +708,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           it "fails if a VM already exists in destination" do
             FactoryBot.create(:vm_openstack, :name => src_vm_1.name, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant)
-            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination cloud_tenant")
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination cloud tenant")
           end
 
           it "fails preflight check if host has no credentials" do
