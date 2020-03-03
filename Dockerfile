@@ -18,6 +18,7 @@ RUN yum -y install --setopt=tsflags=nodocs \
     yum clean all
 
 VOLUME [ "/var/lib/pgsql/data" ]
+VOLUME [ ${APP_ROOT} ]
 
 # Initialize SSH
 RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
