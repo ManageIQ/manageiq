@@ -4669,6 +4669,24 @@
         :description: Add a Provider
         :feature_type: admin
         :identifier: provider_foreman_add_provider
+  - :name: Configuration Profiles
+    :description: Configuration Profiles
+    :feature_type: node
+    :identifier: configuration_profile
+    :children:
+    - :name: View
+      :description: View Configuration Profiles
+      :feature_type: view
+      :identifier: configuration_profile_view
+    - :name: Operate
+      :description: Perform Operations on Configuration Profiles
+      :feature_type: control
+      :identifier: configuration_profile_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Configuration Profiles Tags
+        :feature_type: control
+        :identifier: configuration_profile_tag
   - :name: Configured Systems
     :description: Everything under Configured Systems accordion
     :feature_type: node
