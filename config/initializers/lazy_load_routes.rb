@@ -40,3 +40,19 @@ end
 # This is loaded anyway by actionpack/lib/action_dispatch/middleware/debug_exceptions.rb
 require "action_dispatch/routing/inspector"
 ActionDispatch::Routing::RoutesInspector.prepend(RoutesInspectorLazyLoadRoutes)
+
+
+module ACControllerLazyLoadRoutes
+  def initialize(*args)
+    if Rails.application.routes.empty?
+      $force_routes_load = true
+      Rails.application.reloader.reload!
+      should_raise = false
+    end
+    super
+  end
+end
+
+ActionController::Base.prepend(ACControllerLazyLoadRoutes)
+ActionController::API.prepend(ACControllerLazyLoadRoutes)
+ActionDispatch::Integration::Session.prepend(ACControllerLazyLoadRoutes)
