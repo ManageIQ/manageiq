@@ -68,6 +68,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :nics, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
+  belongs_to                :cloud_tenant
   belongs_to                :flavor
 
   belongs_to                :storage
