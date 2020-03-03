@@ -11,9 +11,6 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       &&                      \
     dnf clean all
 
-VOLUME [ "/var/lib/pgsql/data" ]
-VOLUME [ ${APP_ROOT} ]
-
 ## Copy/link the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
@@ -25,3 +22,6 @@ COPY docker-assets/entrypoint /usr/local/bin
 EXPOSE 443
 
 LABEL name="manageiq"
+
+VOLUME [ "/var/lib/pgsql/data" ]
+VOLUME [ ${APP_ROOT} ]
