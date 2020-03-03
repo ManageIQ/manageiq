@@ -87,13 +87,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def preflight_check_vm_exists_in_destination_rhevm
-    vms = Vm.where(:name => source.name, :ems_cluster => destination_cluster)
-    raise "A VM named '#{source.name}' already exist in destination provider" unless vms.empty?
+    unless destination_ems.vms_and_templates.where(:name => source.name, :ems_cluster => destination_cluster).count.zero?
+      raise "A VM named '#{source.name}' already exist in destination cluster"
+    end
   end
 
   def preflight_check_vm_exists_in_destination_openstack
-    vms = Vm.where(:name => source.name, :cloud_tenant_id => destination_cluster.id)
-    raise "A VM named '#{source.name}' already exist in destination provider" unless vms.empty?
+    unless destination_ems.vms_and_templates.where(:name => source.name, :cloud_tenant => destination_cluster).count.zero?
+      raise "A VM named '#{source.name}' already exist in destination cloud tenant"
+    end
   end
 
   def source_cluster
