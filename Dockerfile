@@ -1,4 +1,4 @@
-ARG IMAGE_REF=jansa
+ARG IMAGE_REF=latest-jansa
 FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
