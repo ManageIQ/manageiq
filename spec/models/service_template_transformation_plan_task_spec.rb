@@ -573,6 +573,11 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             expect(task_1.preflight_check).to eq(:status => 'Ok', :message => 'Preflight check is successful')
           end
 
+          it "fails if a VM already exists in destination" do
+            FactoryBot.create(:vm_redhat, :name => src_vm_1.name, :ext_management_system => redhat_ems, :ems_cluster => redhat_cluster)
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination cluster")
+          end
+
           it "fails preflight check if host has no credentials" do
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => "No credentials configured for '#{src_host.name}'")
           end
@@ -693,6 +698,11 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             allow(src_host).to receive(:authentication_status_ok?).and_return(true)
             src_vm_1.send(:power_state=, 'off')
             expect(task_1.preflight_check).to eq(:status => 'Error', :message => 'OSP destination and source power_state is off')
+          end
+
+          it "fails if a VM already exists in destination" do
+            FactoryBot.create(:vm_openstack, :name => src_vm_1.name, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant)
+            expect(task_1.preflight_check).to eq(:status => 'Error', :message => "A VM named '#{src_vm_1.name}' already exist in destination cloud tenant")
           end
 
           it "fails preflight check if host has no credentials" do
