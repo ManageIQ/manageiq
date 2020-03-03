@@ -12,23 +12,11 @@ RUN yum -y install --setopt=tsflags=nodocs \
                    postgresql-server       \
                    repmgr10                \
                    mod_ssl                 \
-                   openssh-clients         \
-                   openssh-server          \
                    &&                      \
     yum clean all
 
 VOLUME [ "/var/lib/pgsql/data" ]
 VOLUME [ ${APP_ROOT} ]
-
-# Initialize SSH
-RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
-    ssh-keygen -q -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key && \
-    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa && \
-    cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys && \
-    for key in /etc/ssh/ssh_host_*_key.pub; do echo "localhost $(cat ${key})" >> /root/.ssh/known_hosts; done && \
-    echo "root:smartvm" | chpasswd && \
-    chmod 700 /root/.ssh && \
-    chmod 600 /root/.ssh/*
 
 ## Copy/link the appliance files again so that we get ssl
 RUN ${APPLIANCE_ROOT}/setup && \
@@ -38,7 +26,7 @@ RUN ${APPLIANCE_ROOT}/setup && \
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.sh /usr/bin
 
-EXPOSE 443 22
+EXPOSE 443
 
 ## Atomic Labels
 # The UNINSTALL label by DEFAULT will attempt to delete a container (rm) and image (rmi) if the container NAME is the same as the actual IMAGE
