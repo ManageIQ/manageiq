@@ -6307,6 +6307,19 @@
   :feature_type: node
   :identifier: api_exclusive
   :children:
+  - :name: Configured Systems
+    :description: Everything under Configured Systems
+    :feature_type: node
+    :identifier: configured_systems
+    :children:
+    - :name: View
+      :description: View Configured Systems
+      :feature_type: view
+      :identifier: configured_system_view
+    - :name: Operate
+      :description: Perform Operations on Configured Systems
+      :feature_type: control
+      :identifier: configured_system_control
   # Pictures
   - :name: Pictures
     :description: Everything under Pictures
