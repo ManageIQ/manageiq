@@ -428,6 +428,7 @@ class ConversionHost < ApplicationRecord
     task = MiqTask.find(miq_task_id) if miq_task_id.present?
 
     host = hostname || ipaddress
+    raise "#{resource.class.name.demodulize} '#{resource.name}' doesn't have a hostname or IP address in inventory" if host.nil?
 
     params = [
       playbook,
