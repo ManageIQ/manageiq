@@ -212,6 +212,22 @@ RSpec.describe ConversionHost, :v2v do
         expect { conversion_host.enable_conversion_host_role }.to raise_error("vmware_vddk_package_url is mandatory if transformation method is vddk")
       end
 
+      it "enable_conversion_host_role raises if resource has no hostname nor IP address" do
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        enable_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk',
+          :v2v_vddk_package_url => package_url
+        }
+        check_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk'
+        }
+        allow(host).to receive(:hostname).and_return(nil)
+        allow(host).to receive(:ipaddresses).and_return([])
+        expect { conversion_host.enable_conversion_host_role('http://file.example.com/vddk-stable.tar.gz', nil) }.to raise_error("Host '#{host.name}' doesn't have a hostname or IP address in inventory")
+      end
+
       it "enable_conversion_host_role calls ansible_playbook with extra_vars" do
         check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
         enable_extra_vars = {
