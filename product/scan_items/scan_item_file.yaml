@@ -25,6 +25,8 @@
   - target: /opt/IBM/WebSphere/AppServer/profiles/AppSrv01
   - target: /opt/rh/eap7/root/usr/share/wildfly/domain/configuration/domain.xml
   - target: /opt/rh/eap7/root/usr/share/wildfly/standalone/configuration/standalone.xml
+  - target: /usr/java/latest/release
+    content: true
   - target: /opt/tomcat/bin/catalina.sh
   - target: /opt/tomcat/conf/server.xml
   - target: /u01/app/oracle/domains/base/bin/startNodeManager.sh
