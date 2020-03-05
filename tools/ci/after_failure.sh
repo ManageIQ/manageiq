@@ -1,3 +1,4 @@
+#!/bin/bash
 set -v
 
 echo "Errors and warnings in log files"
