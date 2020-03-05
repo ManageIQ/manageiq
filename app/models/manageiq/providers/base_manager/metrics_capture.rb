@@ -171,46 +171,36 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
   def perf_capture_queue_target(target, interval_name, start_time: nil, end_time: nil, task_id: nil)
     # cb is the task used to group cluster realtime metrics
-    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id && interval_name == 'realtime'
-    items = queue_items_for_interval(target, interval_name, start_time, end_time)
+    cb = {:class_name => target.class.name, :instance_id => target.id, :method_name => :perf_capture_callback, :args => [[task_id]]} if task_id
 
     # Queue up the actual items
     queue_item = {
       :class_name  => target.class.name,
+      :method_name => "perf_capture_#{interval_name}",
+      :priority    => Metric::Capture.interval_priority(interval_name),
       :instance_id => target.id,
       :role        => 'ems_metrics_collector',
       :queue_name  => ems.metrics_collector_queue_name,
       :zone        => my_zone,
       :state       => ['ready', 'dequeue'],
     }
+    queue_item[:args] = [start_time, end_time] if start_time
 
-    items.each do |item_interval, *start_and_end_time|
-      # Should both interval name and args (dates) be part of uniqueness query?
-      queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
-      queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
-
-      MiqQueue.put_or_update(queue_item_options) do |msg, qi|
-        # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
-        qi[:miq_task_id] = task_id if task_id && item_interval == "realtime"
-        if msg.nil?
-          qi[:priority] = Metric::Capture.interval_priority(item_interval)
-          qi.delete(:state)
-          if cb && item_interval == "realtime"
-            qi[:miq_callback] = cb
-          end
-          qi
-        elsif msg.state == "ready" && task_id && item_interval == "realtime"
-          # rerun the job
-          qi.delete(:state)
-          existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
-          qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
-          qi
-        else
-          interval = qi[:method_name].sub("perf_capture_", "")
-          _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval} is still running")
-          # NOTE: do not update the message queue
-          nil
-        end
+    # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
+    MiqQueue.create_with(:miq_task_id => task_id, :miq_callback => cb).put_or_update(queue_item) do |msg, qi|
+      if msg.nil?
+        qi.delete(:state)
+        qi
+      elsif msg.state == "ready" && task_id
+        # rerun the job
+        qi.delete(:state)
+        existing_tasks = ((msg.miq_callback || {})[:args] || []).first || []
+        qi[:miq_callback] = cb.merge(:args => [existing_tasks + [task_id]])
+        qi
+      else
+        _log.debug("Skipping capture of #{target.log_target} - Performance capture for interval #{interval_name} is still running")
+        # NOTE: do not update the message queue
+        nil
       end
     end
   end
@@ -230,17 +220,5 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
       [s_time, e_time]
     end.reverse
-  end
-
-  # Note: default values are also derived in ci_mixin/capture.rb#fix_capture_start_end_time
-  # @return realtime_interval, realtime_date, historical_start, historical_end
-  def queue_items_for_interval(target, interval_name, start_time, end_time)
-    if interval_name == 'historical'
-      [["historical", start_time, end_time]]
-    elsif interval_name == "hourly"
-      [["hourly"]]
-    else
-      [["realtime"]]
-    end
   end
 end
