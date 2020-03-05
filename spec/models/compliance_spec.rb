@@ -92,7 +92,7 @@ RSpec.describe Compliance do
 
     context ".check_compliance" do
       shared_examples ".check_compliance" do
-        let(:policy)     { FactoryBot.create(:miq_policy, :mode => 'compliance', :resource_type => 'Vm', :active => true) }
+        let(:policy)     { FactoryBot.create(:miq_policy, :mode => 'compliance', :target_class_name => 'Vm', :active => true) }
         let(:policy_set) { FactoryBot.create(:miq_policy_set) }
         let(:template)   { FactoryBot.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
         let(:action)     { FactoryBot.create(:miq_action, :name => 'compliance_failed', :action_type => 'default') }
@@ -142,7 +142,7 @@ RSpec.describe Compliance do
         let(:policy) do
           FactoryBot.create(:miq_policy,
                              :mode          => 'compliance',
-                             :resource_type => 'Vm',
+                             :target_class_name => 'Vm',
                              :expression    => MiqExpression.new("=" => {"field" => "Vm-retired", "value" => "true"}),
                              :active        => true)
         end

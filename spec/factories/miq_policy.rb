@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence(:name)        { |num| "policy_#{seq_padded_for_sorting(num)}" }
     sequence(:description) { |num| "Test Policy_#{seq_padded_for_sorting(num)}" }
     mode                   { 'control' }
-    resource_type          { "Vm" }
+    target_class_name          { "Vm" }
   end
 
   factory :miq_policy_read_only, :parent => :miq_policy do

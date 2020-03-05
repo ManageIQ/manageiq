@@ -158,7 +158,7 @@ RSpec.describe Condition do
         "description"   => "test condition",
         "expression"    => MiqExpression.new(">" => {"field" => "Vm-cpu_num", "value" => 2}),
         "modifier"      => 'deny',
-        "resource_type" => "Vm"
+        "target_class_name" => "Vm"
       }
       condition, _s = Condition.import_from_hash(cond_hash)
       expect(condition.expression.exp).to eq("not" => {">" => {"field" => "Vm-cpu_num", "value" => 2}})

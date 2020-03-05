@@ -5,7 +5,7 @@ RSpec.describe MiqPolicy::ImportExport do
         "name"             => "t_name",
         "description"      => "t_description",
         "expression"       => nil,
-        "resource_type"    => "ContainerImage",
+        "target_class_name"    => "ContainerImage",
         "guid"             => "e7a270bc-109b-11e6-86ba-02424d459b45",
         "mode"             => "control",
         "read_only"        => true,

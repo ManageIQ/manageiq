@@ -8,7 +8,7 @@
           field: Host-admin_disabled
           value: 'false'
       context_type:
-    resource_type: Host
+    target_class_name: Host
     guid: b314df11-9790-47a1-8e12-14fa124cc862
     created_by: admin
     updated_by: admin

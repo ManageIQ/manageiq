@@ -179,7 +179,7 @@ RSpec.describe MiqPolicy do
         expect(result).to include(
           'name'          => policies[1].name,
           'description'   => policies[1].description,
-          'resource_type' => policies[1].resource_type,
+          'target_class_name' => policies[1].target_class_name,
           'expression'    => policies[1].expression,
           'result'        => 'N/A'
         )
@@ -249,7 +249,7 @@ RSpec.describe MiqPolicy do
   describe ".built_in_policies" do
     it 'creates built in policies' do
       policy = described_class.built_in_policies[0]
-      %w(name description resource_type active mode conditions).each do |m|
+      %w(name description target_class_name active mode conditions).each do |m|
         expect(policy.send(m)).not_to be_nil
       end
       expect(policy.events).not_to                      be_empty
@@ -291,7 +291,7 @@ RSpec.describe MiqPolicy do
   context '.default_value_for' do
     it 'sets defaults' do
       expect(described_class.create!(:description => 'x')).to have_attributes(
-        :resource_type => "Vm",
+        :target_class_name => "Vm",
         :active        => true,
         :mode          => "control",
       )
@@ -299,9 +299,9 @@ RSpec.describe MiqPolicy do
 
     it 'allows override of defaults' do
       expect(described_class.create!(
-              :resource_type => "Host", :mode => "compliance", :active => false, :description => 'x',
+              :target_class_name => "Host", :mode => "compliance", :active => false, :description => 'x',
       )).to have_attributes(
-        :resource_type => "Host",
+        :target_class_name => "Host",
         :active        => false,
         :mode          => "compliance",
       )
@@ -309,18 +309,18 @@ RSpec.describe MiqPolicy do
   end
 
   context '.validates' do
-    it 'validates resource_type' do
-      expect(FactoryBot.build(:miq_policy, :resource_type => "Host")).to be_valid
+    it 'validates target_class_name' do
+      expect(FactoryBot.build(:miq_policy, :target_class_name => "Host")).to be_valid
     end
 
     it 'reports invalid towhat' do
-      policy = FactoryBot.build(:miq_policy, :resource_type => "BobsYourUncle")
-      resource_type_error = "should be one of ContainerGroup, ContainerImage, "\
+      policy = FactoryBot.build(:miq_policy, :target_class_name => "BobsYourUncle")
+      target_class_name_error = "should be one of ContainerGroup, ContainerImage, "\
                             "ContainerNode, ContainerProject, ContainerReplicator, "\
                             "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid
-      expect(policy.errors.messages).to include(:resource_type => [resource_type_error])
+      expect(policy.errors.messages).to include(:target_class_name => [target_class_name_error])
     end
   end
 end
