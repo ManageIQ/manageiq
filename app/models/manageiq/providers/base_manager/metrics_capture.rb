@@ -48,6 +48,8 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         class_targets.group_by(&:ems_cluster).each do |ems_cluster, hosts|
           perf_capture_queue_targets(hosts, interval, :start_time => start_time, :end_time => end_time, :parent => ems_cluster)
         end
+      elsif class_interval == "historical"
+        perf_capture_queue_targets_hist(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       else
         perf_capture_queue_targets(class_targets, class_interval, :start_time => start_time, :end_time => end_time)
       end
@@ -58,7 +60,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
 
         # targets with no captured metrics
         if historical_start
-          perf_capture_queue_targets(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
+          perf_capture_queue_targets_hist(targets_not_captured, "historical", :start_time => historical_start, :end_time => historical_end)
         end
 
         # targets that haven't captured realtime metrics in a while
@@ -66,13 +68,21 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         # TODO: if it has been months, do we want a limit to the total time duration of these captures?
         gapped_targets = targets_already_captured.select { |t| t.last_perf_capture_on < realtime_cut_off }
         gapped_targets.each do |target|
-          perf_capture_queue_target(target, "historical", :start_time => target.last_perf_capture_on, :end_time => realtime_cut_off)
+          split_capture_intervals(target.last_perf_capture_on, realtime_cut_off).each do |s, e|
+            perf_capture_queue_target(target, "historical", :start_time => s, :end_time => e)
+          end
         end
       end
     end
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'") if rollups
+  end
+
+  def perf_capture_queue_targets_hist(targets, interval, start_time: nil, end_time: nil)
+    split_capture_intervals(start_time, end_time).each do |st, ed|
+      perf_capture_queue_targets(targets, interval, :start_time => st, :end_time => ed)
+    end
   end
 
   private
@@ -174,12 +184,10 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
       :state       => ['ready', 'dequeue'],
     }
 
-    messages = MiqQueue.where.not(:method_name => 'perf_capture_realtime').where(queue_item).index_by(&:args)
     items.each do |item_interval, *start_and_end_time|
       # Should both interval name and args (dates) be part of uniqueness query?
       queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
       queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
-      next if item_interval != 'realtime' && messages[start_and_end_time]
 
       MiqQueue.put_or_update(queue_item_options) do |msg, qi|
         # reason for setting MiqQueue#miq_task_id is to initializes MiqTask.started_on column when message delivered.
@@ -213,14 +221,14 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # example:
   #
   #  start_time = 2017/01/01 12:00:00, end_time = 2017/01/04 12:00:00
-  #  [[interval_name, 2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
-  #   [interval_name, 2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
-  #   [interval_name, 2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
-  def split_capture_intervals(interval_name, start_time = nil, end_time = nil, threshold = 1.day)
+  #  [[2017-01-03 12:00:00 UTC, 2017-01-04 12:00:00 UTC],
+  #   [2017-01-02 12:00:00 UTC, 2017-01-03 12:00:00 UTC],
+  #   [2017-01-01 12:00:00 UTC, 2017-01-02 12:00:00 UTC]]
+  def split_capture_intervals(start_time = nil, end_time = nil, threshold = 1.day)
     return [] unless start_time
 
     (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
-      [interval_name, s_time, e_time]
+      [s_time, e_time]
     end.reverse
   end
 
@@ -228,7 +236,7 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
   # @return realtime_interval, realtime_date, historical_start, historical_end
   def queue_items_for_interval(target, interval_name, start_time, end_time)
     if interval_name == 'historical'
-      split_capture_intervals("historical", start_time, end_time)
+      [["historical", start_time, end_time]]
     elsif interval_name == "hourly"
       [["hourly"]]
     else
