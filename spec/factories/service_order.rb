@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory(:service_order) do
+  factory(:service_order, :class => :ServiceOrderCart) do
     name { "service order" }
     state { "ordered" }
 
