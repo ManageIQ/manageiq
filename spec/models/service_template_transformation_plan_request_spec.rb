@@ -29,6 +29,10 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
     end
   end
 
+  describe 'SERVICE_ORDER_CLASS' do
+    it { expect(described_class::SERVICE_ORDER_CLASS).to eq(ServiceOrderV2V) }
+  end
+
   describe '#validate_conversion_hosts' do
     context 'no conversion host exists in EMS' do
       let(:src_ems) { FactoryBot.create(:ems_vmware) }
@@ -169,6 +173,15 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
       expect(request.request_state).to eq('finished')
       expect(request.status).to eq('Error')
       expect(request.message).to eq('Request is canceled by user.')
+    end
+  end
+
+  describe "#process_service_order" do
+    it "creates a V2V Service Order instance" do
+      request.options[:cart_state] = ServiceOrder::STATE_ORDERED
+      request.process_service_order
+
+      expect(request.service_order).to be_kind_of(ServiceOrderV2V)
     end
   end
 end

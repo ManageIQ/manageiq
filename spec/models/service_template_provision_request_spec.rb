@@ -1,5 +1,10 @@
 RSpec.describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryBot.create(:user_admin) }
+
+  describe 'SERVICE_ORDER_CLASS' do
+    it { expect(described_class::SERVICE_ORDER_CLASS).to eq(ServiceOrderCart) }
+  end
+
   context "with multiple tasks" do
     before do
       @request  = FactoryBot.create(:service_template_provision_request, :description => 'Service Request', :requester => admin)

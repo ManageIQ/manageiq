@@ -1,0 +1,2 @@
+class ServiceOrderCart < ServiceOrder
+end
