@@ -1,0 +1,1 @@
+::EmsContainer = ::ManageIQ::Providers::ContainerManager
