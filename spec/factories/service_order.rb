@@ -9,6 +9,8 @@ FactoryBot.define do
     end
 
     factory :service_order_cart, :parent => :service_order,
-                                 :class  => "ServiceOrderCart"
+                                 :class  => "ServiceOrderCart" do
+                                   state { "cart" }
+                                 end
   end
 end
