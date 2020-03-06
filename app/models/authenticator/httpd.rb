@@ -1,5 +1,9 @@
+require_dependency 'authenticator/httpd_oauth2'
+
 module Authenticator
   class Httpd < Base
+    include HttpdOauth2
+
     def self.proper_name
       'External httpd'
     end
@@ -25,9 +29,15 @@ module Authenticator
       true
     end
 
-    def _authenticate(_username, _password, request)
-      request.present? &&
-        request.headers['X-REMOTE-USER'].present?
+    def _authenticate(username, password, request)
+      if !user_data_collected?(request) && request.present? && oidc_configured?
+        if password.present?
+          oidc_authenticate(username, password, request)
+        else
+          authenticate_with_jwt(request)
+        end
+      end
+      user_data_collected?(request)
     end
 
     def failure_reason(_username, request)
@@ -156,6 +166,10 @@ module Authenticator
       require_dependency "httpd_dbus_api"
 
       HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
+    end
+
+    def user_data_collected?(request)
+      request.present? && request.headers['X-REMOTE-USER'].present?
     end
   end
 end
