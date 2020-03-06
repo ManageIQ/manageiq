@@ -1,5 +1,6 @@
 class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   TASK_DESCRIPTION = 'VM Transformations'.freeze
+  SERVICE_ORDER_CLASS = ServiceOrderV2V
 
   delegate :transformation_mapping, :vm_resources, :to => :source
 
