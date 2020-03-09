@@ -235,7 +235,15 @@ class GitWorktree
     current_index.remove_dir(old_dir)
   end
 
+  def checkout_to(target_directory)
+    tree = lookup_commit_tree
+    @repo.checkout_tree(tree, :target_directory => target_directory, :strategy => :force)
+  end
+
   def checkout_at(target_directory)
+    checkout_to(target_directory)
+  rescue Rugged::SubmoduleError
+    FileUtils.rm_rf(target_directory) # cleanup from failed checkout above
     GitWorktree.checkout_at(@path, target_directory)
   end
 
