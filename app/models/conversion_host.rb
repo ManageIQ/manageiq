@@ -233,7 +233,7 @@ class ConversionHost < ApplicationRecord
   def build_podman_command(task_id, conversion_options)
     uci_settings = Settings.transformation.uci.container
     uci_image = uci_settings.image
-    uci_image = "#{uci_settings.registry}/#{uci_image}" if uci_settings.registry.present?
+    uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
 
     params = [
       "run",
