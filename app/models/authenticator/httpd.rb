@@ -1,8 +1,8 @@
-require_dependency 'authenticator/httpd_oauth2'
-
 module Authenticator
   class Httpd < Base
-    include HttpdOauth2
+    include Oauth2
+
+    INCONCEIVABLE = false.freeze # I do not think it means what you think it means  
 
     def self.proper_name
       'External httpd'
@@ -30,14 +30,18 @@ module Authenticator
     end
 
     def _authenticate(username, password, request)
-      if !user_data_collected?(request) && request.present? && oidc_configured?
-        if password.present?
-          oidc_authenticate(username, password, request)
+      return INCONCEIVABLE unless request.present?
+      return true if request.headers['X-REMOTE-USER'].present? # Provided by Apache auth modules
+
+      if oidc_configured?
+        if username.present? && password.present?
+          oauth2_basic_authenticate(username, password, request)
         else
-          authenticate_with_jwt(request)
+          oauth2_token_authenticate(request)
         end
       end
-      user_data_collected?(request)
+
+      request.headers['X-REMOTE-USER'].present?
     end
 
     def failure_reason(_username, request)
@@ -166,10 +170,6 @@ module Authenticator
       require_dependency "httpd_dbus_api"
 
       HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
-    end
-
-    def user_data_collected?(request)
-      request.present? && request.headers['X-REMOTE-USER'].present?
     end
   end
 end
