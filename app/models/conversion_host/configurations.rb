@@ -69,7 +69,7 @@ module ConversionHost::Configurations
 
       ssh_key = params.delete(:conversion_host_ssh_private_key)
 
-      tls_ca_certs = params.delete(:tls_ca_certs)
+      openstack_tls_ca_certs = params.delete(:openstack_tls_ca_certs)
 
       new(params).tap do |conversion_host|
         if ssh_key
@@ -81,7 +81,7 @@ module ConversionHost::Configurations
           )
         end
 
-        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key, tls_ca_certs, miq_task_id)
+        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key, openstack_tls_ca_certs, miq_task_id)
         conversion_host.save!
 
         if miq_task_id
