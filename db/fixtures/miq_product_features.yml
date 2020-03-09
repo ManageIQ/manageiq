@@ -6644,3 +6644,24 @@
         :description: Order cart
         :feature_type: control
         :identifier: sui_cart_order
+
+# Common UI related features that are available thru several places in UI
+- :name: Common Features in UI
+  :description: Common Features in UI
+  :feature_type: node
+  :hidden: false
+  :identifier: common_features
+  :children:
+  # Advanced search thru out UI
+  - :name: Search
+    :description: Advanced Search
+    :feature_type: node
+    :hidden: false
+    :identifier: advanced_search
+    :children:
+    # Ability to add global search filter
+    - :name: Add Global Filters
+      :description: Ability to add global filter
+      :feature_type: control
+      :hidden: false
+      :identifier: add_global_filter
