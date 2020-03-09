@@ -215,14 +215,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def run_conversion
     start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
     updates = {}
-    conversion_host.run_conversion(id, conversion_options)
-    updates[:virtv2v_wrapper] = {
-      "state_file"      => "/var/lib/uci/#{id}/state.json",
-      "throttling_file" => "/var/lib/uci/#{id}/limits.json",
-      "cutover_file"    => "/var/lib/uci/#{id}/cutover",
-      "v2v_log"         => "/var/log/uci/#{id}/virt-v2v.log",
-      "wrapper_log"     => "/var/log/uci/#{id}/virt-v2v-wrapper.log"
-    }
+    updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
     updates[:virtv2v_started_on] = start_timestamp
     updates[:virtv2v_status] = 'active'
     _log.info("InfraConversionJob run_conversion to update_options: #{updates}")
@@ -231,7 +224,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def get_conversion_state
     updates = {}
-    virtv2v_state = conversion_host.get_conversion_state(id)
+    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
     updated_disks = virtv2v_disks
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
@@ -265,12 +258,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cutover
-    unless conversion_host.create_cutover_file(id)
-      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+    if options[:virtv2v_wrapper]['cutover_file'].present?
+      unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
+        raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+      end
     end
   end
 
-  def kill_virtv2v
+  def kill_virtv2v(signal = 'TERM')
     get_conversion_state
 
     unless virtv2v_running?
@@ -278,18 +273,23 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       return false
     end
 
-    _log.info("Killing conversion pod for task '#{id}'.")
-    conversion_host.kill_virtv2v(id)
-  end
+    unless options[:virtv2v_pid]
+      _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
+      return false
+    end
 
-  def virtv2v_running?
-    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
+    _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
+    conversion_host.kill_process(options[:virtv2v_pid], signal)
   end
 
   private
 
   def vm_resource
     miq_request.vm_resources.find_by(:resource => source)
+  end
+
+  def virtv2v_running?
+    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
   end
 
   def create_error_status_task(userid, msg)
@@ -332,37 +332,31 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def conversion_options_source_provider_vmwarews_vddk(_storage)
     {
-      :vm_name              => source.name,
-      :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host.resource.ems_ref,
-      :transport_method     => 'vddk',
-      :vmware_fingerprint   => source.host.thumbprint_sha1,
-      :vmware_uri           => URI::Generic.build(
+      :vm_name            => source.name,
+      :transport_method   => 'vddk',
+      :vmware_fingerprint => source.host.thumbprint_sha1,
+      :vmware_uri         => URI::Generic.build(
         :scheme   => 'esx',
         :userinfo => CGI.escape(source.host.authentication_userid),
         :host     => source.host.ipaddress,
         :path     => '/',
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
-      :vmware_password      => source.host.authentication_password,
-      :two_phase            => true,
-      :warm                 => warm_migration?,
-      :daemonize            => false
+      :vmware_password    => source.host.authentication_password,
+      :two_phase          => true,
+      :warm               => warm_migration?
     }
   end
 
   def conversion_options_source_provider_vmwarews_ssh(storage)
     {
-      :vm_name              => URI::Generic.build(
+      :vm_name          => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
-      :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host.resource.ems_ref,
-      :transport_method     => 'ssh',
-      :daemonize            => false
+      :transport_method => 'ssh'
     }
   end
 
