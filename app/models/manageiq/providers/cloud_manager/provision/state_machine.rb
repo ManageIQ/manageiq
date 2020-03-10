@@ -52,16 +52,16 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
       phase_context[:new_vm_ems_ref] = clone_task_ref
 
       manager = source.ext_management_system
-      if manager.inventory_object_refresh? && manager.allow_targeted_refresh?
+      target = if manager.allow_targeted_refresh?
         # Queue new targeted refresh if allowed
-        vm_target = InventoryRefresh::Target.new(:manager     => manager,
-                                                 :association => :vms,
-                                                 :manager_ref => {:ems_ref => clone_task_ref})
-        EmsRefresh.queue_refresh(vm_target)
+        InventoryRefresh::Target.new(:manager => manager, :association => :vms, :manager_ref => {:ems_ref => clone_task_ref})
       else
         # Otherwise queue a full refresh
-        EmsRefresh.queue_refresh(manager)
+        manager
       end
+
+      EmsRefresh.queue_refresh(target)
+
       signal :poll_destination_in_vmdb
     else
       requeue_phase
