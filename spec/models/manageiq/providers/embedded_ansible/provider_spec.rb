@@ -68,4 +68,11 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
       expect(Hardware.count).to              eq(0)
     end
   end
+
+  context "ensure_managers callback" do
+    it "automatically creates an automation manager if none is provided" do
+      provider = FactoryBot.create(:provider_embedded_ansible)
+      expect(provider.automation_manager).to be_kind_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager)
+    end
+  end
 end
