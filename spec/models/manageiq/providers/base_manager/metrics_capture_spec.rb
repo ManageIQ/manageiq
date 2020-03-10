@@ -1,7 +1,6 @@
 RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   include Spec::Support::MetricHelper
 
-  subject { described_class.new(nil, ems) }
   let(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
 
@@ -10,13 +9,15 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     let(:vm2) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
 
     it "should queue up realtime capture for vm" do
-      subject.queue_captures([vm, vm2], {})
+      pco = described_class.new([vm, vm2], ems)
+      pco.perf_capture_queue
+
       expect(MiqQueue.count).to eq(2)
 
-      expect(subject._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
-      expect(subject._log).to receive(:info).with(/0 "hourly" captures on the queue/)
-      expect(subject._log).to receive(:info).with(/0 "historical" captures on the queue/)
-      subject.send(:perf_capture_health_check)
+      expect(pco._log).to receive(:info).with(/2 "realtime" captures on the queue.*oldest:.*recent:/)
+      expect(pco._log).to receive(:info).with(/0 "hourly" captures on the queue/)
+      expect(pco._log).to receive(:info).with(/0 "historical" captures on the queue/)
+      pco.send(:perf_capture_health_check)
     end
   end
 
@@ -57,6 +58,8 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
   end
 
   describe ".perf_capture_now?" do
+    subject { described_class.new(nil, ems) }
+
     before do
       stub_performance_settings(
         :capture_threshold_with_alerts => {:host => "2.minutes"},
@@ -119,7 +122,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
   end
 
-  describe ".perf_capture_queue" do
+  describe ".perf_capture_all_queue" do
     before do
       MiqRegion.seed
     end
@@ -137,12 +140,12 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
     let(:vm2)     { FactoryBot.create(:vm_vmware, :ext_management_system => ems, :host => host2) }
     let(:host3)   { FactoryBot.create(:host_vmware, :ext_management_system => ems, :perf_capture_enabled => true) }
-    let(:storage) { FactoryBot.create(:storage_vmware, :perf_capture_enabled => true) }
+    let(:storage) { FactoryBot.create(:storage_vmware, :ems_id => ems.id, :perf_capture_enabled => true) }
 
     context "with vmware targets" do
       it "should queue up targets properly" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
 
         bod = Time.now.utc.beginning_of_day
 
@@ -168,11 +171,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| m.update(:state => "dequeue") }
 
-        ems.perf_capture_object.queue_captures([vm, vm2, storage, host, host2, host3], {})
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| expect(m.lock_version).to eq(1) }
       end
@@ -185,7 +188,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       context "executing perf_capture_timer" do
         it "should queue up enabled targets" do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          ems.perf_capture_object.queue_captures(vms, {})
+          ems.perf_capture_object(vms).perf_capture_queue
 
           bod = Time.now.utc.beginning_of_day
 
@@ -198,9 +201,9 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     end
   end
 
-  def trigger_capture(last_perf_capture_on = nil, options = {:interval => "realtime"})
+  def trigger_capture(interval, last_perf_capture_on = nil, start_time: nil, end_time: nil, rollups: false)
     vm.last_perf_capture_on = last_perf_capture_on if last_perf_capture_on
-    ems.perf_capture_object.queue_captures([vm], vm => options)
+    ems.perf_capture_object([vm]).perf_capture_queue(interval, :start_time => start_time, :end_time => end_time, :rollups => rollups)
   end
 
   describe "#queue_items_for_interval" do
@@ -211,14 +214,14 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       stub_performance_settings(:history => {:initial_capture_days => nil})
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        trigger_capture(nil, :interval => "realtime")
+        trigger_capture("realtime")
 
         expect(queue_timings).to eq(
           "realtime" => {vm => [[]]}
         )
 
         Timecop.travel(20.minutes)
-        trigger_capture(nil, :interval => "realtime")
+        trigger_capture("realtime")
 
         expect(queue_timings).to eq(
           "realtime" => {vm => [[]]}
@@ -230,7 +233,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       stub_performance_settings(:history => {:initial_capture_days => 7})
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        trigger_capture(nil, :interval => "realtime")
+        trigger_capture("realtime")
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
@@ -243,7 +246,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "realtime")
+        trigger_capture("realtime", last_perf_capture_on)
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
@@ -256,7 +259,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (2.hours + 5.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "realtime")
+        trigger_capture("realtime", last_perf_capture_on)
 
         expect(queue_timings).to eq(
           "realtime" => {vm => [[]]}
@@ -268,7 +271,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (10.days + 5.hours + 23.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "realtime")
+        trigger_capture("realtime", last_perf_capture_on)
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
@@ -276,7 +279,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
         )
 
         Timecop.travel(20.minutes)
-        trigger_capture(nil, :interval => "realtime")
+        trigger_capture("realtime")
 
         expect(queue_timings).to eq(
           "realtime"   => {vm => [[]]},
@@ -289,7 +292,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       stub_performance_settings(:history => {:initial_capture_days => 7})
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
-        trigger_capture(nil, :interval => "historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
+        trigger_capture("historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
 
         expect(queue_timings).to eq(
           "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
@@ -301,7 +304,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       MiqQueue.delete_all
       Timecop.freeze(Time.now.utc.end_of_day - 6.hours) do
         last_perf_capture_on = (2.days + 5.hours + 23.minutes).ago
-        trigger_capture(last_perf_capture_on, :interval => "historical", :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
+        trigger_capture("historical", last_perf_capture_on, :start_time => 4.days.ago.utc, :end_time => 2.days.ago.utc)
         expect(queue_timings).to eq(
           "historical" => {vm => arg_day_range(4.days.ago.utc, 2.days.ago.utc)}
         )
