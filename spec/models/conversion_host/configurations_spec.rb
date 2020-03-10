@@ -117,6 +117,11 @@ RSpec.describe ConversionHost, :v2v do
     context ".enable_queue" do
       let(:op) { 'enable' }
 
+      it "raises an error if the resource is already configured as a conversion host" do
+        FactoryBot.create(:conversion_host, :resource => vm)
+        expect { described_class.enable_queue(:resource => vm) }.to raise_error("the resource '#{vm.name}' is already configured as a conversion host")
+      end
+
       it "to queue with a task" do
         task_id = described_class.enable_queue(params)
         expected_context_data = {:request_params => params.except(:resource)}
