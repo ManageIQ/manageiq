@@ -2,8 +2,6 @@ module Authenticator
   class Httpd < Base
     include Oauth2
 
-    INCONCEIVABLE = false.freeze # I do not think it means what you think it means
-
     def self.proper_name
       'External httpd'
     end
@@ -30,7 +28,7 @@ module Authenticator
     end
 
     def _authenticate(username, password, request)
-      return INCONCEIVABLE if request.blank?
+      return false if request.blank?
       return true if request.headers['X-REMOTE-USER'].present? # Provided by Apache auth modules
 
       if oidc_configured?
