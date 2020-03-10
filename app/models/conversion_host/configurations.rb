@@ -48,6 +48,8 @@ module ConversionHost::Configurations
       params = params.symbolize_keys
       resource = params.delete(:resource)
 
+      raise "the resource '#{resource.name}' is already configured as a conversion host" if ConversionHost.exists?(:resource => resource)
+
       params[:resource_id] = resource.id
       params[:resource_type] = resource.class.base_class.name
 
