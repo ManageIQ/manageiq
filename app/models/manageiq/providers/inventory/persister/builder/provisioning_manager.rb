@@ -2,7 +2,12 @@ module ManageIQ::Providers
   class Inventory::Persister
     class Builder
       class ProvisioningManager < ::ManageIQ::Providers::Inventory::Persister::Builder
-        def customization_scripts
+        def customization_script_media
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def customization_script_ptables
           add_properties(:manager_ref => %i[manager_ref])
           add_default_values(:manager_id => ->(persister) { persister.manager.id })
         end
@@ -23,6 +28,31 @@ module ManageIQ::Providers
         end
 
         def configuration_tags
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def configuration_architectures
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def configuration_compute_profiles
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def configuration_domains
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def configuration_environments
+          add_properties(:manager_ref => %i[manager_ref])
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
+        end
+
+        def configuration_realms
           add_properties(:manager_ref => %i[manager_ref])
           add_default_values(:manager_id => ->(persister) { persister.manager.id })
         end
