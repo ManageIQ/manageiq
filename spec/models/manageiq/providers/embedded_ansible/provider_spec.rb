@@ -4,6 +4,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   let(:miq_server) { FactoryBot.create(:miq_server) }
 
   before do
+    MiqRegion.seed
+    Zone.seed
     EvmSpecHelper.assign_embedded_ansible_role(miq_server)
   end
 
@@ -70,10 +72,6 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   end
 
   context "ensure_managers callback" do
-    before do
-      EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
-    end
-
     it "automatically creates an automation manager if none is provided" do
       provider = FactoryBot.create(:provider_embedded_ansible)
       expect(provider.automation_manager).to be_kind_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager)
