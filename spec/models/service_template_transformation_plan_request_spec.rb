@@ -30,7 +30,7 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
   end
 
   describe 'SERVICE_ORDER_CLASS' do
-    it { expect(described_class::SERVICE_ORDER_CLASS).to eq(ServiceOrderV2V) }
+    it { expect(described_class::SERVICE_ORDER_CLASS.safe_constantize).to eq(ServiceOrderV2V) }
   end
 
   describe '#validate_conversion_hosts' do
