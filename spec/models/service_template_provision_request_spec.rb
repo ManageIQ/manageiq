@@ -2,7 +2,7 @@ RSpec.describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryBot.create(:user_admin) }
 
   describe 'SERVICE_ORDER_CLASS' do
-    it { expect(described_class::SERVICE_ORDER_CLASS).to eq(ServiceOrderCart) }
+    it { expect(described_class::SERVICE_ORDER_CLASS.safe_constantize).to eq(ServiceOrderCart) }
   end
 
   context "with multiple tasks" do
