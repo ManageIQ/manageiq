@@ -75,7 +75,7 @@
   - physical_storage
   - physical_infra_topology
   - policy_import_export
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - pxe
   - resource_pool
   - rss
@@ -316,7 +316,7 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage_view
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - vm_clone
   - vm_compare
   - vm_cloud_explorer
@@ -432,7 +432,7 @@
   - resource_pool_tag
   - rss
   - service_view
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - storage_delete
   - storage_scan
   - storage_show
@@ -900,7 +900,7 @@
   - my_settings_visuals
   - miq_request_admin
   - miq_request_view
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - service_edit
   - service_delete
   - service_reconfigure
@@ -958,7 +958,7 @@
   - miq_template_timeline
   - my_settings_default_views
   - my_settings_visuals
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - vm_check_compliance
   - vm_clone
   - vm_cloud_explorer
@@ -1043,7 +1043,7 @@
   - miq_template
   - orchestration_stack
   - policy_import_export
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - pxe
   - rbac_group
   - rbac_role_view
@@ -1098,7 +1098,7 @@
   - miq_template
   - orchestration_stack
   - policy_import_export
-  - provider_foreman_explorer
+  - configuration_manager_explorer
   - pxe
   - rbac_tenant_view
   - rbac_tenant_manage_quotas
@@ -1292,7 +1292,7 @@
   - physical_server_view
   - physical_storage_view
   - policy_log
-  - provider_foreman_view
+  - configuration_manager_view
   - pxe_image_type_view
   - pxe_server_view
   - rbac_group_view

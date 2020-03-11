@@ -296,8 +296,8 @@
   :startup: true
 - :name: configuration_management
   :description: Configuration / Management
-  :url: provider_foreman/explorer
-  :rbac_feature_name: provider_foreman_explorer
+  :url: configuration_manager/explorer
+  :rbac_feature_name: configuration_manager_explorer
   :startup: true
 - :name: ems_networks
   :description: Networks / Providers

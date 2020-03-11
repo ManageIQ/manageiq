@@ -4616,7 +4616,7 @@
 - :name: Configuration Management
   :description: Everything under Configuration Management
   :feature_type: node
-  :identifier: provider_foreman_explorer
+  :identifier: configuration_manager_explorer
   :children:
   - :name: Providers
     :description: Everything under Providers accordion
@@ -4626,11 +4626,11 @@
     - :name: View
       :description: View Providers, Configuration Profiles, Configured Systems
       :feature_type: view
-      :identifier: provider_foreman_view
+      :identifier: configuration_manager_view
     - :name: Operate
       :description: Perform Operations on Providers and Configured Systems
       :feature_type: control
-      :identifier: provider_foreman_control
+      :identifier: configuration_manager_control
       :children:
       - :name: Edit Tags
         :description: Edit Tags of Foreman Provider
@@ -4639,11 +4639,11 @@
       - :name: Provision Configured Systems
         :description: Provision Configured Systems
         :feature_type: control
-        :identifier: provider_foreman_configured_system_provision
+        :identifier: configuration_manager_configured_system_provision
       - :name: Refresh Providers
         :description: Refresh relationships for all items related of Provider
         :feature_type: control
-        :identifier: provider_foreman_refresh_provider
+        :identifier: configuration_manager_refresh_provider
     - :name: Modify
       :description: Modify Providers
       :feature_type: admin
@@ -4652,23 +4652,23 @@
       - :name: Remove Providers
         :description: Remove Provier
         :feature_type: admin
-        :identifier: provider_foreman_delete_provider
+        :identifier: configuration_manager_delete_provider
       - :name: Edit Provider
         :description: Edit a Provider
         :feature_type: admin
-        :identifier: provider_foreman_edit_provider
+        :identifier: configuration_manager_edit_provider
       - :name: Pause
         :description: Pause a Provider
         :feature_type: admin
-        :identifier: provider_foreman_pause
+        :identifier: configuration_manager_pause
       - :name: Resume
         :description: Resume a Provider
         :feature_type: admin
-        :identifier: provider_foreman_resume
+        :identifier: configuration_manager_resume
       - :name: Add Provider
         :description: Add a Provider
         :feature_type: admin
-        :identifier: provider_foreman_add_provider
+        :identifier: configuration_manager_add_provider
   - :name: Configuration Profiles
     :description: Configuration Profiles
     :feature_type: node
