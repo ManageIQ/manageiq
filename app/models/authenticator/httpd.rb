@@ -32,7 +32,7 @@ module Authenticator
       return true if request.headers['X-REMOTE-USER'].present? # Provided by Apache auth modules
 
       if oidc_configured?
-        if username.present? && password.present?
+        if username.present?
           oauth2_basic_authenticate(username, password, request)
         else
           oauth2_token_authenticate(request)
