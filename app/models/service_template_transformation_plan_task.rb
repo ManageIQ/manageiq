@@ -366,7 +366,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :vmware_uri           => URI::Generic.build(
         :scheme   => 'esx',
         :userinfo => CGI.escape(source.host.authentication_userid),
-        :host     => source.host.ipaddress,
+        :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,
         :path     => '/',
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
