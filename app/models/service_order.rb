@@ -79,7 +79,7 @@ class ServiceOrder < ApplicationRecord
 
   def self.add_to_cart(request, requester)
     _log.info("Service Order add_to_cart for Request: #{request.id} Requester: #{requester.userid}")
-    service_order = request.class::SERVICE_ORDER_CLASS.find_or_create_by(
+    service_order = request.class::SERVICE_ORDER_CLASS.safe_constantize.find_or_create_by(
       :state  => STATE_CART,
       :user   => requester,
       :tenant => requester.current_tenant
@@ -98,7 +98,7 @@ class ServiceOrder < ApplicationRecord
   end
 
   def self.order_immediately(request, requester)
-    request.class::SERVICE_ORDER_CLASS.create(
+    request.class::SERVICE_ORDER_CLASS.safe_constantize.create(
       :state        => STATE_ORDERED,
       :user         => requester,
       :miq_requests => [request],
