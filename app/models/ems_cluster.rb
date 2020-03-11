@@ -289,6 +289,6 @@ class EmsCluster < ApplicationRecord
   end
 
   def self.display_name(number = 1)
-    n_('Cluster / Deployment Role', 'Clusters / Deployment Roles', number)
+    n_('Cluster', 'Clusters', number)
   end
 end

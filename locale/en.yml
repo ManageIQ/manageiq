@@ -721,7 +721,7 @@ en:
       ContainerReplicator:      Container Replicator
       ContainerService:         Container Service
       ContainerTemplate:        Container Template
-      EmsCluster:               Cluster / Deployment Role
+      EmsCluster:               Cluster
       EmsClusterPerformance:    Performance - Cluster
       EmsEvent:                 Management Event
       EmsFolder:                Folder
@@ -740,7 +740,7 @@ en:
       GenericObjectDefinition:  Generic Object Class
       GuestApplication:         Guest Application
       GuestDevice:              Guest Device
-      Host:                     Host / Node
+      Host:                     Host
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
       IsoImage:                 ISO Image
@@ -1005,8 +1005,8 @@ en:
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
       ems_clouds:                  Cloud Providers
-      ems_cluster:                 Cluster / Deployment Role
-      ems_clusters:                Clusters / Deployment Roles
+      ems_cluster:                 Cluster
+      ems_clusters:                Clusters
       ems_custom_attribute:        VC Custom Attribute
       ems_custom_attributes:       VC Custom Attributes
       ems_event:                   Management Event
@@ -1038,8 +1038,8 @@ en:
       floating_ip:                 Floating IP
       floppies:                    Floppy Drives
       guest_devices:               Devices
-      host:                        Host / Node
-      hosts:                       Hosts / Nodes
+      host:                        Host
+      hosts:                       Hosts
       host_services:               Services
       iso_datastore:               ISO Datastore
       iso_image:                   ISO Image

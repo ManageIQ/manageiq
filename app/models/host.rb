@@ -1785,6 +1785,6 @@ class Host < ApplicationRecord
   end
 
   def self.display_name(number = 1)
-    n_('Host / Node', 'Hosts / Nodes', number)
+    n_('Host', 'Hosts', number)
   end
 end
