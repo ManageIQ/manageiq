@@ -32,6 +32,8 @@ class GitWorktree
     @proxy_url            = options[:proxy_url]
     @certificate_check_cb = options[:certificate_check]
 
+    @options              = options
+
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
 
@@ -244,7 +246,7 @@ class GitWorktree
     checkout_to(target_directory)
   rescue Rugged::SubmoduleError
     FileUtils.rm_rf(target_directory) # cleanup from failed checkout above
-    GitWorktree.checkout_at(@path, target_directory)
+    GitWorktree.checkout_at(@path, target_directory, @options)
   end
 
   def checkout
@@ -252,7 +254,7 @@ class GitWorktree
     @repo.submodules.each do |submodule|
       submodule.init
       module_path = File.expand_path(submodule.path, @path)
-      GitWorktree.checkout_at(submodule.url, module_path, :commit_sha => submodule.head_oid)
+      GitWorktree.checkout_at(submodule.url, module_path, @options.merge(:commit_sha => submodule.head_oid))
     end
   end
 
