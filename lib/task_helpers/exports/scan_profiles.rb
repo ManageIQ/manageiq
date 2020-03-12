@@ -18,7 +18,7 @@ module TaskHelpers
 
           scan_profile = profile.to_yaml
 
-          filename = Exports.safe_filename(scan_item_set.name, options[:keep_spaces])
+          filename = Exports.safe_filename(scan_item_set.name, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", scan_profile)
         end
       end

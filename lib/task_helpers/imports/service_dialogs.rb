@@ -8,7 +8,7 @@ module TaskHelpers
         Dir.glob(glob) do |filename|
           $log.info("Importing Service Dialogs from: #{filename}")
 
-          DialogImportService.new.import_all_service_dialogs_from_yaml_file(filename)
+          DialogImportService.new.import_from_file(filename)
         end
       end
     end

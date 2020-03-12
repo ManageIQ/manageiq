@@ -32,7 +32,7 @@ module TaskHelpers
           category_array = category.export_to_array
           category_array.first["ns"] = category.ns unless category.ns == '/managed'
 
-          filename = Exports.safe_filename(category.description, options[:keep_spaces])
+          filename = Exports.safe_filename(category.description, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", category_array.to_yaml)
         end
       end

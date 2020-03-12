@@ -9,7 +9,7 @@ module TaskHelpers
         policies.order(:id).each do |policy|
           $log.info("Exporting Policy: #{policy.description} (ID: #{policy.id})")
 
-          filename = Exports.safe_filename(policy.description, options[:keep_spaces])
+          filename = Exports.safe_filename(policy.description, options[:keep_spaces], options[:super_safe_filename])
           File.write("#{export_dir}/#{filename}.yaml", policy.export_to_yaml)
         end
       end
