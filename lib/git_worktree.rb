@@ -246,7 +246,7 @@ class GitWorktree
     checkout_to(target_directory)
   rescue Rugged::SubmoduleError
     FileUtils.rm_rf(target_directory) # cleanup from failed checkout above
-    GitWorktree.checkout_at(@path, target_directory, @options)
+    GitWorktree.checkout_at(@path, target_directory, @options.merge(:commit_sha => @commit_sha))
   end
 
   def checkout
