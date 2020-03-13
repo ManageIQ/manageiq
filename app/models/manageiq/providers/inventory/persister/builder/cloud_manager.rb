@@ -57,51 +57,6 @@ module ManageIQ::Providers
           )
         end
 
-        def orchestration_stacks
-          add_properties(
-            :attributes_blacklist => %i(parent),
-          )
-
-          add_common_default_values
-        end
-
-        def orchestration_stacks_resources
-          add_properties(
-            :model_class                  => ::OrchestrationStackResource,
-            :parent_inventory_collections => %i(orchestration_stacks)
-          )
-        end
-
-        def orchestration_stacks_outputs
-          add_properties(
-            :model_class                  => ::OrchestrationStackOutput,
-            :parent_inventory_collections => %i(orchestration_stacks)
-          )
-        end
-
-        def orchestration_stacks_parameters
-          add_properties(
-            :model_class                  => ::OrchestrationStackParameter,
-            :parent_inventory_collections => %i(orchestration_stacks)
-          )
-        end
-
-        def orchestration_templates
-          # TODO(lsmola) do refactoring, we shouldn't need this custom saving block\
-          orchestration_templates_save_block = lambda do |_ems, inventory_collection|
-            hashes = inventory_collection.data.map(&:attributes)
-
-            templates = inventory_collection.model_class.find_or_create_by_contents(hashes)
-            inventory_collection.data.zip(templates).each do |inventory_object, template|
-              inventory_object.id = template.id
-            end
-          end
-
-          add_properties(
-            :custom_save_block => orchestration_templates_save_block
-          )
-        end
-
         def orchestration_stack_ancestry
           skip_auto_inventory_attributes
           skip_model_class
