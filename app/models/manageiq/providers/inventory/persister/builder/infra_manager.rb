@@ -40,6 +40,14 @@ module ManageIQ::Providers
           )
         end
 
+        def host_disks
+          add_properties(
+            :model_class                  => ::Disk,
+            :manager_ref                  => %i(hardware device_name),
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
         def host_system_services
           add_properties(
             :model_class                  => ::SystemService,
@@ -257,10 +265,6 @@ module ManageIQ::Providers
         end
 
         def ems_licenses
-          add_common_default_values
-        end
-
-        def orchestration_templates
           add_common_default_values
         end
 
