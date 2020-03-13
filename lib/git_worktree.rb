@@ -6,6 +6,16 @@ class GitWorktree
   DEFAULT_FILE_MODE = 0100644
   LOCK_REFERENCE = 'refs/locks'
 
+  def self.checkout_at(url, directory, options = {})
+    worktree_opts = options.merge(
+      :path  => directory,
+      :url   => url,
+      :clone => true,
+      :bare  => false
+    )
+    GitWorktree.new(worktree_opts).checkout
+  end
+
   def initialize(options = {})
     require 'rugged'
 
@@ -21,6 +31,8 @@ class GitWorktree
     @fast_forward_merge   = options[:ff] || true
     @proxy_url            = options[:proxy_url]
     @certificate_check_cb = options[:certificate_check]
+
+    @options              = options
 
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
@@ -225,9 +237,25 @@ class GitWorktree
     current_index.remove_dir(old_dir)
   end
 
-  def checkout(target_directory)
+  def checkout_to(target_directory)
     tree = lookup_commit_tree
     @repo.checkout_tree(tree, :target_directory => target_directory, :strategy => :force)
+  end
+
+  def checkout_at(target_directory)
+    checkout_to(target_directory)
+  rescue Rugged::SubmoduleError
+    FileUtils.rm_rf(target_directory) # cleanup from failed checkout above
+    GitWorktree.checkout_at(@path, target_directory, @options)
+  end
+
+  def checkout
+    @repo.checkout(@commit_sha || current_branch, :strategy => :force)
+    @repo.submodules.each do |submodule|
+      submodule.init
+      module_path = File.expand_path(submodule.path, @path)
+      GitWorktree.checkout_at(submodule.url, module_path, @options.merge(:commit_sha => submodule.head_oid))
+    end
   end
 
   def with_remote_options
@@ -340,7 +368,7 @@ class GitWorktree
 
   def process_repo(options)
     if options[:url]
-      clone(options[:url])
+      clone(options[:url], options.key?(:bare) ? options[:bare] : true)
     elsif options[:new]
       create_repo
     else
@@ -359,9 +387,9 @@ class GitWorktree
     @repo = Rugged::Repository.new(@path)
   end
 
-  def clone(url)
+  def clone(url, bare = true)
     @repo = with_remote_options do |remote_options|
-      options = remote_options.merge(:bare => true, :remote => @remote_name)
+      options = remote_options.merge(:bare => bare, :remote => @remote_name)
       Rugged::Repository.clone_at(url, @path, options)
     end
   end
