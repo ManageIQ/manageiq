@@ -32,7 +32,7 @@ class GitWorktree
     @proxy_url            = options[:proxy_url]
     @certificate_check_cb = options[:certificate_check]
 
-    @options              = options
+    @options              = options.dup
 
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
