@@ -1,5 +1,7 @@
 module Authenticator
   class Httpd < Base
+    include Oauth2
+
     def self.proper_name
       'External httpd'
     end
@@ -25,9 +27,19 @@ module Authenticator
       true
     end
 
-    def _authenticate(_username, _password, request)
-      request.present? &&
-        request.headers['X-REMOTE-USER'].present?
+    def _authenticate(username, password, request)
+      return false if request.blank?
+      return true if request.headers['X-REMOTE-USER'].present? # Provided by Apache auth modules
+
+      if oidc_configured?
+        if username.present?
+          oauth2_basic_authenticate(username, password, request)
+        else
+          oauth2_token_authenticate(request)
+        end
+      end
+
+      request.headers['X-REMOTE-USER'].present?
     end
 
     def failure_reason(_username, request)
