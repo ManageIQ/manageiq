@@ -2181,8 +2181,8 @@ RSpec.describe MiqExpression do
       relats  = MiqExpression.get_relats(Vm)
       details = MiqExpression._model_details(relats, {})
       cluster_sorted = details.select { |d| d.first.starts_with?("Cluster") }.sort
-      expect(cluster_sorted.map(&:first)).to include("Cluster / Deployment Role : Total Number of Physical CPUs")
-      expect(cluster_sorted.map(&:first)).to include("Cluster / Deployment Role : Total Number of Logical CPUs")
+      expect(cluster_sorted.map(&:first)).to include("Cluster : Total Number of Physical CPUs")
+      expect(cluster_sorted.map(&:first)).to include("Cluster : Total Number of Logical CPUs")
       hardware_sorted = details.select { |d| d.first.starts_with?("Hardware") }.sort
       expect(hardware_sorted.map(&:first)).not_to include("Hardware : Logical Cpus")
     end
@@ -2285,7 +2285,7 @@ RSpec.describe MiqExpression do
 
       it "generates a human readable string for a TAG expression" do
         exp = MiqExpression.new("CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod"})
-        expect(exp.to_human).to eq("Host / Node.My Company Tags : Environment CONTAINS 'Production'")
+        expect(exp.to_human).to eq("Host.My Company Tags : Environment CONTAINS 'Production'")
       end
 
       it "generates a human readable string for a TAG expression with alias" do
