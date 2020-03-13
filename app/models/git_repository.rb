@@ -60,7 +60,7 @@ class GitRepository < ApplicationRecord
       message = "Checking out #{url}@#{ref} to #{path}..."
       _log.info(message)
       worktree.ref = ref
-      worktree.checkout(path)
+      worktree.checkout_at(path)
       _log.info("#{message}...Complete")
     end
     path
