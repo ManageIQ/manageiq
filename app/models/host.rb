@@ -1753,30 +1753,6 @@ class Host < ApplicationRecord
     !plist.blank?
   end
 
-  cache_with_timeout(:node_types) do # TODO: This doesn't belong here
-    if !openstack_hosts_exists?
-      :non_openstack
-    elsif non_openstack_hosts_exists?
-      :mixed_hosts
-    else
-      :openstack
-    end
-  end
-
-  def self.openstack_hosts_exists? # TODO: This doesn't belong here
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    ems.empty? ? false : Host.where(:ems_id => ems).exists?
-  end
-
-  def self.non_openstack_hosts_exists? # TODO: This doesn't belong here
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    Host.where.not(:ems_id => ems).exists?
-  end
-
-  def openstack_host? # TODO: This doesn't belong here
-    ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
-  end
-
   def writable_storages
     if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }
       host_storages.reject(&:read_only).map(&:storage)
@@ -1809,6 +1785,6 @@ class Host < ApplicationRecord
   end
 
   def self.display_name(number = 1)
-    n_('Host / Node', 'Hosts / Nodes', number)
+    n_('Host', 'Hosts', number)
   end
 end
