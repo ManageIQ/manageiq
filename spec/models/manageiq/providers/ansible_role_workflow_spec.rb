@@ -109,7 +109,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
     context "with roles_path" do
       it "succeeds" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to_not receive(:checkout_git_repository)
-        expect(job).to receive(:queue_signal).with(:execute)
+        expect(job).to receive(:queue_signal).with(:execute, :deliver_on => nil)
 
         job.signal(:pre_execute)
 
@@ -122,12 +122,20 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
       it "will checkout the git repository to a temp dir before proceeding" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
-        expect(job).to receive(:queue_signal).with(:execute)
+        expect(job).to receive(:queue_signal).with(:execute, :deliver_on => nil)
 
         job.signal(:pre_execute)
 
         expect(job.options[:roles_path]).to start_with File.join(Dir.tmpdir, "ansible-runner-git")
         expect(job.options[:roles_path]).to end_with roles_relative_path
+      end
+
+      it "doesn't queue the next state when running in pods" do
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+        expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
+        expect(job).to receive(:signal).with(:execute)
+
+        job.pre_execute
       end
     end
 
@@ -179,18 +187,36 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
       ]
 
       expect(Ansible::Runner).to receive(:run_role_async).with(*runner_options).and_return(response_async)
-      expect(job).to receive(:queue_signal).with(:poll_runner)
+      expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
 
       job.signal(:execute)
 
       expect(job.context[:ansible_runner_response]).to eq(response_async.dump)
     end
 
+    it "doesn't queue the next state when running in pods with a success response" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
+
+      expect(Ansible::Runner).to receive(:run_role_async).and_return(response_async)
+      expect(job).to receive(:signal).with(:poll_runner)
+
+      job.execute
+    end
+
     it "ansible-runner fails" do
       expect(Ansible::Runner).to receive(:run_role_async).and_return(nil)
-      expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible role", "error")
+      expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible role", "error", :deliver_on => nil)
 
       job.signal(:execute)
+    end
+
+    it "doesn't queue the next state when running in pods with a failure response" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      expect(Ansible::Runner).to receive(:run_role_async).and_return(nil)
+      expect(job).to receive(:signal).with(:abort, "Failed to run ansible role", "error")
+
+      job.execute
     end
   end
 
@@ -217,9 +243,20 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
       response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
       expect(response_async).to receive(:response).and_return(response)
-      expect(job).to receive(:queue_signal).with(:post_execute)
+      expect(job).to receive(:queue_signal).with(:post_execute, :deliver_on => nil)
 
       job.signal(:poll_runner)
+    end
+
+    it "doesn't queue the next state when running in pods and ansible-runner completed " do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      expect(response_async).to receive(:running?).and_return(false)
+
+      response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
+      expect(response_async).to receive(:response).and_return(response)
+      expect(job).to receive(:signal).with(:post_execute)
+
+      job.poll_runner
     end
 
     it "ansible-runner still running" do
@@ -231,15 +268,39 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
       job.signal(:poll_runner)
     end
 
+    it "doesn't queue the next state when running in pods and ansible-runner still running" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      now = Time.now.utc
+      allow(Time).to receive(:now).and_return(now)
+      expect(response_async).to receive(:running?).and_return(true)
+      expect(job).to receive(:sleep).with(1)
+      expect(job).to receive(:signal).with(:poll_runner)
+
+      job.poll_runner
+    end
+
     it "fails if the role has been running too long" do
       time = job.started_on + job.options[:timeout] + 5.minutes
 
       Timecop.travel(time) do
         expect(response_async).to receive(:running?).and_return(true)
         expect(response_async).to receive(:stop)
-        expect(job).to receive(:queue_signal).with(:abort, "ansible role has been running longer than timeout", "error")
+        expect(job).to receive(:queue_signal).with(:abort, "ansible role has been running longer than timeout", "error", :deliver_on => nil)
 
         job.signal(:poll_runner)
+      end
+    end
+
+    it "Doesn't queue abort state when the role times out and running in pods" do
+      allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      time = job.started_on + job.options[:timeout] + 5.minutes
+
+      Timecop.travel(time) do
+        expect(response_async).to receive(:running?).and_return(true)
+        expect(response_async).to receive(:stop)
+        expect(job).to receive(:signal).with(:abort, "ansible role has been running longer than timeout", "error")
+
+        job.poll_runner
       end
     end
 

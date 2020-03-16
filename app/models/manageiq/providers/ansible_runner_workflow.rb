@@ -29,7 +29,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def pre_execute
     verify_options
     prepare_repository
-    queue_signal(:execute)
+    route_signal(:execute)
   end
 
   def launch_runner
@@ -40,7 +40,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     response = launch_runner
 
     if response.nil?
-      queue_signal(:abort, "Failed to run ansible #{execution_type}", "error")
+      route_signal(:abort, "Failed to run ansible #{execution_type}", "error")
     else
       context[:ansible_runner_response] = response.dump
 
@@ -48,7 +48,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       update!(:context => context, :started_on => started_on)
       miq_task.update!(:started_on => started_on)
 
-      queue_signal(:poll_runner)
+      route_signal(:poll_runner)
     end
   end
 
@@ -58,9 +58,9 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       if started_on + options[:timeout] < Time.now.utc
         response.stop
 
-        queue_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
+        route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
       else
-        queue_signal(:poll_runner, :deliver_on => deliver_on)
+        route_signal(:poll_runner, :deliver_on => deliver_on)
       end
     else
       result = response.response
@@ -74,7 +74,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       else
         set_status("ansible #{execution_type} completed with no errors", "ok")
       end
-      queue_signal(:post_execute)
+      route_signal(:post_execute)
     end
   end
 
@@ -90,6 +90,15 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   alias error        process_error
 
   protected
+
+  def route_signal(*args, deliver_on: nil)
+    if MiqEnvironment::Command.is_podified?
+      sleep(deliver_on - Time.now.utc) if deliver_on
+      signal(*args)
+    else
+      queue_signal(*args, :deliver_on => deliver_on)
+    end
+  end
 
   def queue_signal(*args, deliver_on: nil)
     role     = options[:role] || "ems_operations"
