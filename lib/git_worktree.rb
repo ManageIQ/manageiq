@@ -32,7 +32,7 @@ class GitWorktree
     @proxy_url            = options[:proxy_url]
     @certificate_check_cb = options[:certificate_check]
 
-    @options              = options
+    @options              = options.dup
 
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
@@ -233,7 +233,7 @@ class GitWorktree
     checkout_to(target_directory)
   rescue Rugged::SubmoduleError
     FileUtils.rm_rf(target_directory) # cleanup from failed checkout above
-    GitWorktree.checkout_at(@path, target_directory, @options)
+    GitWorktree.checkout_at(@path, target_directory, @options.merge(:commit_sha => @commit_sha))
   end
 
   def checkout
