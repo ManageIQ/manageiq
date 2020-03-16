@@ -409,8 +409,9 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def picture=(value)
+    save!
     if value.kind_of?(Hash)
-      super(Picture.new(value))
+      Picture.create_from_base64(value.merge(:resource_type => "ServiceTemplate", :resource_id => self.id))
     else
       super
     end
