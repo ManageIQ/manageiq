@@ -57,20 +57,6 @@ module ManageIQ::Providers
           )
         end
 
-        def orchestration_stack_ancestry
-          skip_auto_inventory_attributes
-          skip_model_class
-
-          add_properties(
-            :custom_save_block => orchestration_stack_ancestry_save_block
-          )
-
-          add_dependency_attributes(
-            :orchestration_stacks           => ->(persister) { [persister.collections[:orchestration_stacks]] },
-            :orchestration_stacks_resources => ->(persister) { [persister.collections[:orchestration_stacks_resources]] }
-          )
-        end
-
         def vm_and_miq_template_ancestry
           skip_auto_inventory_attributes
           skip_model_class
@@ -87,32 +73,6 @@ module ManageIQ::Providers
       end
 
       private
-
-      def orchestration_stack_ancestry_save_block
-        lambda do |_ems, inventory_collection|
-          stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)
-
-          return if stacks_inventory_collection.blank?
-
-          stacks_parents = stacks_inventory_collection.data.each_with_object({}) do |x, obj|
-            parent_id = x.data[:parent].try(:load).try(:id)
-            obj[x.id] = parent_id if parent_id
-          end
-
-          model_class = stacks_inventory_collection.model_class
-
-          stacks_parents_indexed = model_class.select(%i(id ancestry))
-                                              .where(:id => stacks_parents.values).find_each.index_by(&:id)
-
-          ActiveRecord::Base.transaction do
-            model_class.select(%i(id ancestry))
-                       .where(:id => stacks_parents.keys).find_each do |stack|
-              parent = stacks_parents_indexed[stacks_parents[stack.id]]
-              stack.update_attribute(:parent, parent)
-            end
-          end
-        end
-      end
 
       def vm_and_miq_template_ancestry_save_block
         lambda do |_ems, inventory_collection|
