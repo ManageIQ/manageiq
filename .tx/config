@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[manageiq.manageiq-master]
+[manageiq.manageiq-jansa]
 file_filter = locale/<lang>/manageiq.po
 source_file = locale/manageiq.pot
 source_lang = en
