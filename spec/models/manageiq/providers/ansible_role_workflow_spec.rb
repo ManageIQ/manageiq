@@ -268,13 +268,17 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
       job.signal(:poll_runner)
     end
 
-    it "doesn't queue the next state when running in pods and ansible-runner still running" do
+    it "if ansible-runner still runningin pods it loops until the job is done" do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
-      now = Time.now.utc
-      allow(Time).to receive(:now).and_return(now)
-      expect(response_async).to receive(:running?).and_return(true)
+      expect(response_async).to receive(:running?).and_return(true, false)
+
+      # First loop, the job is still running so we sleep for the poll interval
       expect(job).to receive(:sleep).with(1)
-      expect(job).to receive(:signal).with(:poll_runner)
+
+      # Second loop we get a response and signal the post_execute state
+      response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
+      expect(response_async).to receive(:response).and_return(response)
+      expect(job).to receive(:signal).with(:post_execute)
 
       job.poll_runner
     end

@@ -53,28 +53,40 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   def poll_runner
-    response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
-    if response.running?
-      if started_on + options[:timeout] < Time.now.utc
-        response.stop
+    loop do
+      response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
+      if response.running?
+        if started_on + options[:timeout] < Time.now.utc
+          response.stop
 
-        route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
+          route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
+        else
+          if MiqEnvironment::Command.is_podified?
+            # If we're running in pods loop so we don't exhaust the stack limit in very long jobs
+            sleep options[:poll_interval]
+            next
+          else
+            queue_signal(:poll_runner, :deliver_on => deliver_on)
+          end
+        end
       else
-        route_signal(:poll_runner, :deliver_on => deliver_on)
-      end
-    else
-      result = response.response
+        result = response.response
 
-      context[:ansible_runner_return_code] = result.return_code
-      context[:ansible_runner_stdout]      = result.parsed_stdout
+        context[:ansible_runner_return_code] = result.return_code
+        context[:ansible_runner_stdout]      = result.parsed_stdout
 
-      if result.return_code != 0
-        set_status("ansible #{execution_type} failed", "error")
-        _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
-      else
-        set_status("ansible #{execution_type} completed with no errors", "ok")
+        if result.return_code != 0
+          set_status("ansible #{execution_type} failed", "error")
+          _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
+        else
+          set_status("ansible #{execution_type} completed with no errors", "ok")
+        end
+        route_signal(:post_execute)
       end
-      route_signal(:post_execute)
+
+      # Break out of the loop when we've either queued a message
+      # or, if we're running in pods, the job has finished
+      break
     end
   end
 
@@ -91,9 +103,10 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
 
   protected
 
+  # Continue in the current process if we're running in pods, or queue the message for the next worker otherwise
+  # We can't queue in pods as jobs of this type depend on filesystem state
   def route_signal(*args, deliver_on: nil)
     if MiqEnvironment::Command.is_podified?
-      sleep(deliver_on - Time.now.utc) if deliver_on
       signal(*args)
     else
       queue_signal(*args, :deliver_on => deliver_on)
