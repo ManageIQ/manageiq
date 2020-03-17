@@ -3,8 +3,10 @@ RSpec.describe ContainerOrchestrator do
   let(:kube_connection)      { subject.send(:kube_connection) }
   let(:cert)                 { Tempfile.new("cert") }
   let(:token)                { Tempfile.new("token") }
+  let(:namespace_file)       { Tempfile.new("namespace") }
   let(:cert_path)            { cert.path }
   let(:token_path)           { token.path }
+  let(:namespace_path)       { namespace_file.path }
   let(:kube_host)            { "kube.example.com" }
   let(:kube_port)            { "8443" }
   let(:namespace)            { "manageiq" }
@@ -12,17 +14,18 @@ RSpec.describe ContainerOrchestrator do
   before do
     stub_const("ContainerOrchestrator::CA_CERT_FILE", cert_path)
     stub_const("ContainerOrchestrator::TOKEN_FILE", token_path)
+    stub_const("ContainerOrchestrator::ObjectDefinition::NAMESPACE_FILE", namespace_path)
     ENV["KUBERNETES_SERVICE_HOST"] = kube_host
     ENV["KUBERNETES_SERVICE_PORT"] = kube_port
-    ENV["MY_POD_NAMESPACE"] = namespace
+    File.write(namespace_path, namespace)
   end
 
   after do
     FileUtils.rm_f(cert_path)
     FileUtils.rm_f(token_path)
+    FileUtils.rm_f(namespace_path)
     ENV.delete("KUBERNETES_SERVICE_HOST")
     ENV.delete("KUBERNETES_SERVICE_PORT")
-    ENV.delete("MY_POD_NAMESPACE")
   end
 
   describe ".available" do

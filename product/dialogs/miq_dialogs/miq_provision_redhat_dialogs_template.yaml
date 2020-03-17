@@ -523,14 +523,23 @@
       :fields:
         :disk_format:
           :values:
-            preallocated: Preallocated
-            thin: Thin
-            default: Default
+            cow: qcow2
+            raw: raw
+            default: Same as in template
           :description: Disk Format
-          :required: false
           :display: :edit
           :default: default
           :data_type: :string
+        :disk_sparsity:
+          :values:
+            preallocated: Preallocated
+            thin: Thin
+            default: Same as in template
+          :description: Disk Sparsity
+          :display: :edit
+          :default: default
+          :data_type: :string
+          :validation_method: :validate_disks_configuration
         :number_of_sockets:
           :values:
             1: "1"

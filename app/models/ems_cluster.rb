@@ -38,6 +38,8 @@ class EmsCluster < ApplicationRecord
 
   has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
   include ProviderObjectMixin
 
   include FilterableMixin
@@ -286,31 +288,7 @@ class EmsCluster < ApplicationRecord
     hosts(:include => [:taggings, :tags]).select(&:perf_capture_enabled?)
   end
 
-  cache_with_timeout(:node_types) do
-    if !openstack_clusters_exists?
-      :non_openstack
-    elsif non_openstack_clusters_exists?
-      :mixed_clusters
-    else
-      :openstack
-    end
-  end
-
-  def self.openstack_clusters_exists?
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    ems.empty? ? false : EmsCluster.where(:ems_id => ems).exists?
-  end
-
-  def self.non_openstack_clusters_exists?
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    EmsCluster.where.not(:ems_id => ems).exists?
-  end
-
-  def openstack_cluster?
-    ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
-  end
-
   def self.display_name(number = 1)
-    n_('Cluster / Deployment Role', 'Clusters / Deployment Roles', number)
+    n_('Cluster', 'Clusters', number)
   end
 end

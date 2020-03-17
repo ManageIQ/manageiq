@@ -1,17 +1,6 @@
 module MiqServer::WorkerManagement::Heartbeat
   extend ActiveSupport::Concern
 
-  def register_worker(worker_pid, worker_class, queue_name)
-    worker_class = worker_class.constantize if worker_class.kind_of?(String)
-
-    @workers_lock.synchronize(:EX) do
-      worker_add(worker_pid)
-      h = @workers[worker_pid]
-      h[:class] ||= worker_class
-      h[:queue_name] ||= queue_name
-    end unless @workers_lock.nil?
-  end
-
   def persist_last_heartbeat(w)
     last_heartbeat = workers_last_heartbeat(w)
 

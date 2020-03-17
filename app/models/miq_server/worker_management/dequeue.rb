@@ -97,6 +97,17 @@ module MiqServer::WorkerManagement::Dequeue
     queue_names
   end
 
+  def register_worker(worker_pid, worker_class, queue_name)
+    worker_class = worker_class.constantize if worker_class.kind_of?(String)
+
+    @workers_lock.synchronize(:EX) do
+      worker_add(worker_pid)
+      h = @workers[worker_pid]
+      h[:class] ||= worker_class
+      h[:queue_name] ||= queue_name
+    end unless @workers_lock.nil?
+  end
+
   def populate_queue_messages
     queue_names = get_worker_count_and_priority_by_queue_name
     @queue_messages_lock.synchronize(:EX) do

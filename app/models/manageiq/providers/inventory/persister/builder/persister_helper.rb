@@ -41,6 +41,10 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
     ::ManageIQ::Providers::Inventory::Persister::Builder::CloudManager
   end
 
+  def configuration
+    ::ManageIQ::Providers::Inventory::Persister::Builder::ConfigurationManager
+  end
+
   # builder_class for add_collection()
   def network
     ::ManageIQ::Providers::Inventory::Persister::Builder::NetworkManager
@@ -64,6 +68,10 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   # builder class for add_collection()
   def physical_infra
     ::ManageIQ::Providers::Inventory::Persister::Builder::PhysicalInfraManager
+  end
+
+  def provisioning
+    ::ManageIQ::Providers::Inventory::Persister::Builder::ProvisioningManager
   end
 
   def container

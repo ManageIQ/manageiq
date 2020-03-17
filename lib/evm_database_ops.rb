@@ -17,7 +17,8 @@ class EvmDatabaseOps
     FileUtils.mkdir_p(parent_directory)
 
     free_space = begin
-      output = MiqUtil.runcmd("df -P #{parent_directory}")
+      cmd_args  = {:params => {:P => parent_directory}}
+      output    = MiqUtil.runcmd("df", cmd_args)
       data_line = output.split("\n")[1] if output.kind_of?(String)
       data_line.split[3].to_i * 1024 if data_line
     end

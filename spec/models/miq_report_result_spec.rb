@@ -105,7 +105,7 @@ RSpec.describe MiqReportResult do
       @show_title   = true
       @options = MiqReport.graph_options({ :title => "CPU (Mhz)", :type => "Line", :columns => ["col"] })
 
-      allow(Charting).to receive(:detect_available_plugin).and_return(C3Charting)
+      allow(ManageIQ::Reporting::Charting).to receive(:detect_available_plugin).and_return(ManageIQ::Reporting::C3Charting)
     end
 
     it "should save the original report metadata and the generated table as a binary blob" do

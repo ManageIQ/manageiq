@@ -145,6 +145,9 @@ class ActsAsArModel
   #
   # Find routines
   #
+  def self.find(*_args)
+    raise NotImplementedError, _("find must be implemented in a subclass")
+  end
 
   # This method is called by QueryRelation upon executing the query.
   #   Since it will receive non-legacy search options, we need to convert

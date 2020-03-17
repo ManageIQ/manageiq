@@ -464,4 +464,18 @@ RSpec.describe MiqServer do
       expect(described_class.zone_is_modifiable?).to be_falsey
     end
   end
+
+  context ".managed_resources" do
+    before { MiqRegion.seed }
+
+    let(:ems) { FactoryBot.create(:ems_infra) }
+    let!(:active_vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems) }
+    let!(:archived_vm) { FactoryBot.create(:vm_infra) }
+    let!(:active_host) { FactoryBot.create(:host, :ext_management_system => ems) }
+    let!(:archived_host) { FactoryBot.create(:host) }
+
+    it "with active and archived vms and hosts" do
+      expect(described_class.managed_resources).to include(:vms => 1, :hosts => 1)
+    end
+  end
 end

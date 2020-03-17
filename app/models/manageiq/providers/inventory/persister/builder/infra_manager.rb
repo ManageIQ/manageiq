@@ -40,6 +40,14 @@ module ManageIQ::Providers
           )
         end
 
+        def host_disks
+          add_properties(
+            :model_class                  => ::Disk,
+            :manager_ref                  => %i(hardware device_name),
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
         def host_system_services
           add_properties(
             :model_class                  => ::SystemService,
@@ -200,8 +208,17 @@ module ManageIQ::Providers
 
         def distributed_virtual_lans
           add_properties(
+            :model_class                  => Lan,
             :manager_ref                  => %i(switch uid_ems),
             :parent_inventory_collections => %i(distributed_virtual_switches),
+          )
+        end
+
+        def host_virtual_lans
+          add_properties(
+            :model_class                  => Lan,
+            :manager_ref                  => %i[switch uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
@@ -248,10 +265,6 @@ module ManageIQ::Providers
         end
 
         def ems_licenses
-          add_common_default_values
-        end
-
-        def orchestration_templates
           add_common_default_values
         end
 

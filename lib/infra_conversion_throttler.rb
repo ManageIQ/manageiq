@@ -62,7 +62,7 @@ class InfraConversionThrottler
 
   # @return [Hash] the list of jobs in state 'running', grouped by conversion host
   def self.running_conversion_jobs
-    running = InfraConversionJob.where(:state => 'running')
+    running = InfraConversionJob.where.not(:state => ['waiting_to_start', 'finished'])
     _log.info("Running InfraConversionJob: #{running.count}")
     running.group_by { |job| job.migration_task.conversion_host }
   end
@@ -80,6 +80,12 @@ class InfraConversionThrottler
   # Applying the limits is done via the conversion_host which handles the writing.
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
+      if ch.nil?
+        bad_tasks = jobs.map { |j| j.migration_task&.source&.name }.compact.join(', ')
+        _log.error("The following migrating VMs don't have a conversion host: #{bad_tasks}.")
+        next
+      end
+
       number_of_jobs = jobs.size
 
       cpu_limit = ch.cpu_limit || Settings.transformation.limits.cpu_limit_per_host
@@ -90,14 +96,14 @@ class InfraConversionThrottler
 
       jobs.each do |job|
         migration_task = job.migration_task
-        throttling_file_path = migration_task.options.fetch_path(:virtv2v_wrapper, 'throttling_file')
-        next unless throttling_file_path
+        next unless migration_task.virtv2v_running?
+
         limits = {
           :cpu     => cpu_limit,
           :network => network_limit
         }
         unless migration_task.options[:virtv2v_limits] == limits
-          ch.apply_task_limits(throttling_file_path, limits)
+          ch.apply_task_limits(migration_task.id, limits)
           migration_task.update_options(:virtv2v_limits => limits)
         end
       end

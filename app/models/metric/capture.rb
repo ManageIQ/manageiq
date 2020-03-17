@@ -48,8 +48,7 @@ module Metric::Capture
     _log.info("Queueing performance capture...")
 
     ems = ExtManagementSystem.find(ems_id)
-    pco = ems.perf_capture_object
-    pco.perf_capture
+    ems.perf_capture_object.perf_capture_all_queue
 
     _log.info("Queueing performance capture...Complete")
   end

@@ -126,7 +126,7 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
 
   def process_alive?(pid)
     return false if pid.nil?
-    process_struct = Sys::ProcTable.ps(pid)
+    process_struct = Sys::ProcTable.ps(:pid => pid)
     return false if process_struct.nil?
     return true if process_struct.state != "Z"
 

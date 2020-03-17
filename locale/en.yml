@@ -6,8 +6,6 @@ en:
     name: ManageIQ
     name_full: ManageIQ
     copyright: "Copyright (c) 2019 ManageIQ. Sponsored by Red Hat Inc."
-    support_website: "http://www.manageiq.org"
-    support_website_text: "ManageIQ.org"
   activerecord:
     attributes:
       ems_cloud:
@@ -723,7 +721,7 @@ en:
       ContainerReplicator:      Container Replicator
       ContainerService:         Container Service
       ContainerTemplate:        Container Template
-      EmsCluster:               Cluster / Deployment Role
+      EmsCluster:               Cluster
       EmsClusterPerformance:    Performance - Cluster
       EmsEvent:                 Management Event
       EmsFolder:                Folder
@@ -742,7 +740,7 @@ en:
       GenericObjectDefinition:  Generic Object Class
       GuestApplication:         Guest Application
       GuestDevice:              Guest Device
-      Host:                     Host / Node
+      Host:                     Host
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
       IsoImage:                 ISO Image
@@ -857,6 +855,7 @@ en:
       ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
       ManageIQ::Providers::Openstack::CloudManager::CloudTenant:            Cloud Tenant (OpenStack)
       ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::StorageManager::CinderManager:        Cinder Block Storage Manager (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
@@ -1006,8 +1005,8 @@ en:
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
       ems_clouds:                  Cloud Providers
-      ems_cluster:                 Cluster / Deployment Role
-      ems_clusters:                Clusters / Deployment Roles
+      ems_cluster:                 Cluster
+      ems_clusters:                Clusters
       ems_custom_attribute:        VC Custom Attribute
       ems_custom_attributes:       VC Custom Attributes
       ems_event:                   Management Event
@@ -1039,8 +1038,8 @@ en:
       floating_ip:                 Floating IP
       floppies:                    Floppy Drives
       guest_devices:               Devices
-      host:                        Host / Node
-      hosts:                       Hosts / Nodes
+      host:                        Host
+      hosts:                       Hosts
       host_services:               Services
       iso_datastore:               ISO Datastore
       iso_image:                   ISO Image

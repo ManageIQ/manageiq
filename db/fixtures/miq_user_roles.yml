@@ -9,6 +9,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - add_global_filter
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager

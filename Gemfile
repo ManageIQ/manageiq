@@ -66,7 +66,7 @@ gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.1.7"
 gem "rails-i18n",                     "~>5.x"
-gem "rake",                           ">=11.0",        :require => false
+gem "rake",                           ">=12.3.3",      :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
@@ -111,7 +111,6 @@ end
 
 group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
-  gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 end
 
 group :google, :manageiq_default do
@@ -166,7 +165,6 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service", "~>1.0"
 end
 
 ### shared dependencies
@@ -252,7 +250,7 @@ unless ENV["APPLIANCE"]
   group :test do
     gem "brakeman",         "~>3.3",    :require => false
     gem "capybara",         "~>2.5.0",  :require => false
-    gem "coveralls",                    :require => false
+    gem "coveralls",        "~>0.8.23", :require => false
     gem "factory_bot",      "~>5.1",    :require => false
 
     # TODO: faker is used for url generation in git repository factory and the lenovo

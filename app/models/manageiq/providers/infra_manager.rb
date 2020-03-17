@@ -17,6 +17,7 @@ module ManageIQ::Providers
     has_many :distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
     has_many :distributed_virtual_lans, -> { distinct }, :through => :distributed_virtual_switches, :source => :lans
     has_many :host_virtual_switches, -> { distinct }, :through => :hosts
+    has_many :host_virtual_lans, -> { distinct }, :through => :hosts
 
     has_many :host_hardwares,             :through => :hosts, :source => :hardware
     has_many :host_operating_systems,     :through => :hosts, :source => :operating_system
@@ -24,6 +25,7 @@ module ManageIQ::Providers
     has_many :host_switches,              :through => :hosts
     has_many :host_networks,              :through => :hosts, :source => :networks
     has_many :host_guest_devices,         :through => :host_hardwares, :source => :guest_devices
+    has_many :host_disks,                 :through => :host_hardwares, :source => :disks
     has_many :snapshots,                  :through => :vms_and_templates
     has_many :switches, -> { distinct },  :through => :hosts
     has_many :lans, -> { distinct },      :through => :hosts

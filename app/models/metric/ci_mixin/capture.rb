@@ -1,9 +1,9 @@
 module Metric::CiMixin::Capture
-  def perf_capture_object
+  def perf_capture_object(targets = nil)
     if self.kind_of?(ExtManagementSystem)
-      self.class::MetricsCapture.new(nil, ext_management_system)
+      self.class::MetricsCapture.new(targets, ext_management_system)
     else
-      self.class.parent::MetricsCapture.new(self, ext_management_system)
+      self.class.parent::MetricsCapture.new(targets || self, ext_management_system)
     end
   end
 
@@ -45,14 +45,11 @@ module Metric::CiMixin::Capture
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
-      start_time = Metric::Capture.historical_start_time if start_time.nil?
-    else
-      start_time = last_perf_capture_on if start_time.nil?
-      if start_time.nil? && interval_name == 'hourly'
-        # For hourly on the first capture, we don't want to get all of the
-        #   historical data, so we shorten the query
-        start_time = 4.hours.ago.utc
-      end
+      start_time ||= Metric::Capture.historical_start_time
+    elsif interval_name == "hourly"
+      start_time ||= last_perf_capture_on || 4.hours.ago.utc
+    else # interval_name == realtime
+      start_time ||= [last_perf_capture_on, 4.hours.ago.utc.beginning_of_day].compact.max
     end
     [start_time, end_time]
   end
@@ -170,6 +167,6 @@ module Metric::CiMixin::Capture
     # For UI to enable refresh of realtime charts on demand
     _log.info("Realtime capture requested for #{log_target}")
 
-    perf_capture_object.queue_captures([self], self => {:interval => 'realtime', :priority => MiqQueue::HIGH_PRIORITY})
+    perf_capture_object.perf_capture_realtime_queue
   end
 end

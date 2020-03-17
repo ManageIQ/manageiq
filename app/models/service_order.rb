@@ -17,6 +17,12 @@ class ServiceOrder < ApplicationRecord
   before_create :assign_user
   after_create  :create_order_name
 
+  def initialize(*args)
+    raise NotImplementedError, _("must be implemented in a subclass") if self.class == ServiceOrder
+
+    super
+  end
+
   def self.find_for_user(requester, id)
     find_by!(:user => requester, :tenant => requester.current_tenant, :id => id)
   end
@@ -73,9 +79,11 @@ class ServiceOrder < ApplicationRecord
 
   def self.add_to_cart(request, requester)
     _log.info("Service Order add_to_cart for Request: #{request.id} Requester: #{requester.userid}")
-    service_order = ServiceOrder.find_or_create_by(:state  => STATE_CART,
-                                                   :user   => requester,
-                                                   :tenant => requester.current_tenant)
+    service_order = request.class::SERVICE_ORDER_CLASS.safe_constantize.find_or_create_by(
+      :state  => STATE_CART,
+      :user   => requester,
+      :tenant => requester.current_tenant
+    )
     service_order.miq_requests << request
     service_order
   end
@@ -90,10 +98,12 @@ class ServiceOrder < ApplicationRecord
   end
 
   def self.order_immediately(request, requester)
-    ServiceOrder.create(:state        => STATE_ORDERED,
-                        :user         => requester,
-                        :miq_requests => [request],
-                        :tenant       => requester.current_tenant).checkout_immediately
+    request.class::SERVICE_ORDER_CLASS.safe_constantize.create(
+      :state        => STATE_ORDERED,
+      :user         => requester,
+      :miq_requests => [request],
+      :tenant       => requester.current_tenant
+    ).checkout_immediately
   end
 
   def deep_copy(new_attributes = {})

@@ -487,6 +487,27 @@ class MiqServer < ApplicationRecord
     Zone.visible.in_my_region.count > 1
   end
 
+  def self.managed_resources
+    {
+      :vms                     => Vm.active.count,
+      :hosts                   => Host.active.count,
+      :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.active),
+    }
+  end
+
+  def self.unmanaged_resources
+    {
+      :vms                     => Vm.not_active.count,
+      :hosts                   => Host.archived.count,
+      :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.archived),
+    }
+  end
+
+  def self.audit_managed_resources
+    totals = managed_resources.slice(:vms, :hosts)
+    $audit_log.info("Under Management: #{totals.to_json}")
+  end
+
   private
 
   def zone_unchanged_in_pods

@@ -294,34 +294,6 @@ RSpec.describe Host do
     it("#enabled_inbound_ports")      { expect(subject.enabled_inbound_ports).to      match_array([1003, 1001]) }
   end
 
-  context ".node_types" do
-    it "returns :mixed_hosts when there are both openstack & non-openstack hosts in db" do
-      FactoryBot.create(:host_openstack_infra, :ext_management_system => FactoryBot.create(:ems_openstack_infra))
-      FactoryBot.create(:host_vmware_esx,      :ext_management_system => FactoryBot.create(:ems_vmware))
-
-      expect(Host.node_types).to eq(:mixed_hosts)
-    end
-
-    it "returns :openstack when there are only openstack hosts in db" do
-      FactoryBot.create(:host_openstack_infra, :ext_management_system => FactoryBot.create(:ems_openstack_infra))
-
-      expect(Host.node_types).to eq(:openstack)
-    end
-
-    it "returns :non_openstack when there are non-openstack hosts in db" do
-      FactoryBot.create(:host_vmware_esx, :ext_management_system => FactoryBot.create(:ems_vmware))
-
-      expect(Host.node_types).to eq(:non_openstack)
-    end
-  end
-
-  context "#openstack_host?" do
-    it("false") { expect(FactoryBot.build(:host).openstack_host?).to be false }
-
-    it "true" do
-      expect(FactoryBot.build(:host_openstack_infra, :ext_management_system => FactoryBot.create(:ems_openstack_infra))).to be_openstack_host
-    end
-  end
 
   def assert_default_credentials_validated
     allow(@host).to receive(:verify_credentials_with_ws)

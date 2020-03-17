@@ -4,6 +4,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
   let(:miq_server) { FactoryBot.create(:miq_server) }
 
   before do
+    MiqRegion.seed
+    Zone.seed
     EvmSpecHelper.assign_embedded_ansible_role(miq_server)
   end
 
@@ -66,6 +68,25 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::Provider do
       expect(ComputerSystem.count).to        eq(0)
       expect(OperatingSystem.count).to       eq(0)
       expect(Hardware.count).to              eq(0)
+    end
+  end
+
+  context "ensure_managers callback" do
+    it "automatically creates an automation manager if none is provided" do
+      provider = FactoryBot.create(:provider_embedded_ansible)
+      expect(provider.automation_manager).to be_kind_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager)
+    end
+
+    it "sets the automation manager to disabled if created in the maintenance zone" do
+      provider = FactoryBot.create(:provider_embedded_ansible, :zone => Zone.maintenance_zone)
+      expect(provider.automation_manager.enabled).to eql(false)
+      expect(provider.automation_manager.zone).to eql(Zone.maintenance_zone)
+    end
+
+    it "sets the automation manager to enabled if not created in the maintenance zone" do
+      provider = FactoryBot.create(:provider_embedded_ansible, :zone => Zone.default_zone)
+      expect(provider.automation_manager.enabled).to eql(true)
+      expect(provider.automation_manager.zone).to eql(Zone.default_zone)
     end
   end
 end

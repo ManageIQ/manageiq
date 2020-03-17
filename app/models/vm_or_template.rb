@@ -63,6 +63,7 @@ class VmOrTemplate < ApplicationRecord
 
   belongs_to                :host
   belongs_to                :ems_cluster
+  belongs_to                :cloud_tenant
   belongs_to                :flavor
 
   belongs_to                :storage
@@ -76,6 +77,8 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :users, -> { where(:accttype => 'user') }, :class_name => "Account"
   has_many                  :groups, -> { where(:accttype => 'group') }, :class_name => "Account"
   has_many                  :disks, :through => :hardware
+  has_many                  :networks, :through => :hardware
+  has_many                  :nics, :through => :hardware
   has_many                  :miq_provisions_from_template, :class_name => "MiqProvision", :as => :source, :dependent => :nullify
   has_many                  :miq_provision_vms, :through => :miq_provisions_from_template, :source => :destination, :source_type => "VmOrTemplate"
   has_many                  :miq_provision_requests, :as => :source
@@ -188,6 +191,7 @@ class VmOrTemplate < ApplicationRecord
   scope :archived,     ->       { where(:ems_id => nil, :storage_id => nil) }
   scope :orphaned,     ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
   scope :retired,      ->       { where(:retired => true) }
+  scope :not_active,   ->       { where(:ems_id => nil) }
   scope :not_archived, ->       { where.not(:ems_id => nil).or(where.not(:storage_id => nil)) }
   scope :not_orphaned, ->       { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
   scope :not_retired,  ->       { where(:retired => false).or(where(:retired => nil)) }
@@ -342,6 +346,10 @@ class VmOrTemplate < ApplicationRecord
   def run_command_via_queue(method_name, queue_options = {})
     queue_options[:method_name] = method_name
     MiqQueue.put(command_queue_options(queue_options))
+  end
+
+  def make_retire_request(requester_id)
+    self.class.make_retire_request(id, User.find(requester_id))
   end
 
   # keep the same method signature as others in retirement mixin

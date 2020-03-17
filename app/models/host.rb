@@ -39,10 +39,13 @@ class Host < ApplicationRecord
   has_many                  :storages, :through => :host_storages
   has_many                  :writable_accessible_host_storages, -> { writable_accessible }, :class_name => "HostStorage"
   has_many                  :writable_accessible_storages, :through => :writable_accessible_host_storages, :source => :storage
+
   has_many                  :host_virtual_switches, :class_name => "Switch", :dependent => :destroy, :inverse_of => :host
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
   has_many                  :lans,     :through => :switches
+  has_many                  :host_virtual_lans, :through => :host_virtual_switches, :source => :lans
+
   has_many                  :subnets,  :through => :lans
   has_many                  :networks, :through => :hardware
   has_many                  :patches, :dependent => :destroy
@@ -142,6 +145,9 @@ class Host < ApplicationRecord
   virtual_total :v_total_storages, :host_storages
   virtual_total :v_total_vms, :vms
   virtual_total :v_total_miq_templates, :miq_templates
+
+  scope :active,   -> { where.not(:ems_id => nil) }
+  scope :archived, -> { where(:ems_id => nil) }
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
@@ -1747,30 +1753,6 @@ class Host < ApplicationRecord
     !plist.blank?
   end
 
-  cache_with_timeout(:node_types) do # TODO: This doesn't belong here
-    if !openstack_hosts_exists?
-      :non_openstack
-    elsif non_openstack_hosts_exists?
-      :mixed_hosts
-    else
-      :openstack
-    end
-  end
-
-  def self.openstack_hosts_exists? # TODO: This doesn't belong here
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    ems.empty? ? false : Host.where(:ems_id => ems).exists?
-  end
-
-  def self.non_openstack_hosts_exists? # TODO: This doesn't belong here
-    ems = ManageIQ::Providers::Openstack::InfraManager.pluck(:id)
-    Host.where.not(:ems_id => ems).exists?
-  end
-
-  def openstack_host? # TODO: This doesn't belong here
-    ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
-  end
-
   def writable_storages
     if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }
       host_storages.reject(&:read_only).map(&:storage)
@@ -1803,6 +1785,6 @@ class Host < ApplicationRecord
   end
 
   def self.display_name(number = 1)
-    n_('Host / Node', 'Hosts / Nodes', number)
+    n_('Host', 'Hosts', number)
   end
 end

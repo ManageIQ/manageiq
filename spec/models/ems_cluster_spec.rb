@@ -176,50 +176,6 @@ RSpec.describe EmsCluster do
     end
   end
 
-  context "#node_types" do
-    before do
-      @ems1 = FactoryBot.create(:ems_vmware)
-      @ems2 = FactoryBot.create(:ems_openstack_infra)
-    end
-
-    it "returns :mixed_clusters when there are both openstack & non-openstack clusters in db" do
-      FactoryBot.create(:ems_cluster, :ems_id => @ems1.id)
-      FactoryBot.create(:ems_cluster, :ems_id => @ems2.id)
-
-      result = EmsCluster.node_types
-      expect(result).to eq(:mixed_clusters)
-    end
-
-    it "returns :openstack when there are only openstack clusters in db" do
-      FactoryBot.create(:ems_cluster, :ems_id => @ems2.id)
-      result = EmsCluster.node_types
-      expect(result).to eq(:openstack)
-    end
-
-    it "returns :non_openstack when there are non-openstack clusters in db" do
-      FactoryBot.create(:ems_cluster, :ems_id => @ems1.id)
-      result = EmsCluster.node_types
-      expect(result).to eq(:non_openstack)
-    end
-  end
-
-  context "#openstack_cluster?" do
-    it "returns true for openstack cluster" do
-      ems = FactoryBot.create(:ems_openstack_infra)
-      cluster = FactoryBot.create(:ems_cluster, :ems_id => ems.id)
-
-      result = cluster.openstack_cluster?
-      expect(result).to be_truthy
-    end
-
-    it "returns false for non-openstack cluster" do
-      ems = FactoryBot.create(:ems_vmware)
-      cluster = FactoryBot.create(:ems_cluster, :ems_id => ems.id)
-      result = cluster.openstack_cluster?
-      expect(result).to be_falsey
-    end
-  end
-
   context "#tenant_identity" do
     let(:admin)    { FactoryBot.create(:user_with_group, :userid => "admin") }
     let(:tenant)   { FactoryBot.create(:tenant) }

@@ -1056,6 +1056,10 @@
     :max_concurrent_tasks_per_conversion_host: 10
     :cpu_limit_per_host: unlimited
     :network_limit_per_host: unlimited
+  :uci:
+    :container:
+      :registry:
+      :image: manageiq/v2v-conversion-host:latest
 :ui:
   :mark_translated_strings: false
   :display_ops_database: false
@@ -1090,7 +1094,7 @@
       :poll_method: :normal
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
-      :systemd_enabled: false
+      :systemd_enabled: true
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
@@ -1169,6 +1173,7 @@
         :queue_timeout: 20.minutes
         :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
+      :audit_managed_resources: 1.days
       :container_entities_purge_interval: 1.day
       :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour

@@ -125,13 +125,13 @@ RSpec.describe ExtManagementSystem do
     expect([v.valid?, v.emstype]).to eq([true, 'vmwarews'])
     expect([e.valid?, e.emstype]).to eq([true, 'vmwarews'])
     expect([s.valid?, s.emstype]).to eq([true, 'swift'])
-    expect { ManageIQ::Providers::BaseManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
-    expect { ManageIQ::Providers::InfraManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
-    expect { ManageIQ::Providers::CloudManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
-    expect { ManageIQ::Providers::AutomationManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
-    expect(ManageIQ::Providers::Vmware::InfraManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
-    expect(ManageIQ::Providers::Foreman::ConfigurationManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
-    expect(ManageIQ::Providers::Foreman::ProvisioningManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
+    expect { ManageIQ::Providers::BaseManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::InfraManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::CloudManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::AutomationManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect(ManageIQ::Providers::Vmware::InfraManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
+    expect(ManageIQ::Providers::Foreman::ConfigurationManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
+    expect(ManageIQ::Providers::Foreman::ProvisioningManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
   end
 
   context "#ipaddress / #ipaddress=" do

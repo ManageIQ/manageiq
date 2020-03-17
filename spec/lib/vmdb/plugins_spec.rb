@@ -111,8 +111,8 @@ RSpec.describe Vmdb::Plugins do
         Dir.chdir(dir) do
           `
           git init &&
-          touch foo  && git add -A && git commit -m "Added foo" &&
-          touch foo2 && git add -A && git commit -m "Added foo2"
+          touch foo  && git add -A && git commit -m "Added foo" --no-gpg-sign &&
+          touch foo2 && git add -A && git commit -m "Added foo2" --no-gpg-sign
           `
 
           if options[:branch] == "master"
@@ -147,7 +147,7 @@ RSpec.describe Vmdb::Plugins do
         expect(source).to receive(:revision).and_return(sha) if type == :git
 
         spec = instance_double(Gem::Specification, :full_gem_path => dir, :source => source)
-        expect(Bundler.environment).to receive(:specs).and_return([spec])
+        expect(Bundler.load).to receive(:specs).and_return([spec])
 
         yield(sha && sha[0, 8])
       end

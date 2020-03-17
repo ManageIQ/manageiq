@@ -1,4 +1,5 @@
-require 'kubeclient'
+autoload(:Kubeclient, 'kubeclient')
+autoload(:KubeException, 'kubeclient')
 
 class ContainerOrchestrator
   include_concern 'ObjectDefinition'
