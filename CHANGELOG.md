@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 132 ending 2020-03-16
+
+### Added
+
+* Schedule a daily count of managed VMs and print result to audit log. [(#19830)](https://github.com/ManageIQ/manageiq/pull/19830)
+* Added new section in product features to handle common UI features [(#19916)](https://github.com/ManageIQ/manageiq/pull/19916)
+* Add permissions for ConfigurationProfiles [(#19924)](https://github.com/ManageIQ/manageiq/pull/19924)
+* Add VM SmartState Analysis policies to default policy set [(#18906)](https://github.com/ManageIQ/manageiq/pull/18906)
+* Add API ConfiguredSystems product features [(#19928)](https://github.com/ManageIQ/manageiq/pull/19928)
+* Move API OIDC/OAuth2 support from API to ManageIQ core [(#19936)](https://github.com/ManageIQ/manageiq/pull/19936)
+* Update master codename to Kasparov [(#19922)](https://github.com/ManageIQ/manageiq/pull/19922)
+
+### Fixed
+
+* Re-worded "Ansible Automation Inside" to "Embedded Ansible" for standardisation [(#19081)](https://github.com/ManageIQ/manageiq/pull/19081)
+* Fix ivanchuk container image [(#19919)](https://github.com/ManageIQ/manageiq/pull/19919)
+* Make monolithic image work when built with buildah [(#19920)](https://github.com/ManageIQ/manageiq/pull/19920)
+
 # Unreleased as of Sprint 131 ending 2020-03-02
 
 ### Added
