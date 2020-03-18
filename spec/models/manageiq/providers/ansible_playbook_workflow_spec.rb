@@ -109,7 +109,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     context "with playbook_path" do
       it "succeeds" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to_not receive(:checkout_git_repository)
-        expect(job).to receive(:queue_signal).with(:execute)
+        expect(job).to receive(:queue_signal).with(:execute, :deliver_on => nil)
 
         job.signal(:pre_execute)
 
@@ -122,7 +122,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
       it "will checkout the git repository to a temp dir before proceeding" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
-        expect(job).to receive(:queue_signal).with(:execute)
+        expect(job).to receive(:queue_signal).with(:execute, :deliver_on => nil)
 
         job.signal(:pre_execute)
 
@@ -181,7 +181,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       ]
 
       expect(Ansible::Runner).to receive(:run_async).with(*runner_options).and_return(response_async)
-      expect(job).to receive(:queue_signal).with(:poll_runner)
+      expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => nil)
 
       job.signal(:execute)
 
@@ -190,7 +190,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
     it "ansible-runner fails" do
       expect(Ansible::Runner).to receive(:run_async).and_return(nil)
-      expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error")
+      expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error", :deliver_on => nil)
 
       job.signal(:execute)
     end
@@ -213,7 +213,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
       response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
       expect(response_async).to receive(:response).and_return(response)
-      expect(job).to receive(:queue_signal).with(:post_execute)
+      expect(job).to receive(:queue_signal).with(:post_execute, :deliver_on => nil)
 
       job.signal(:poll_runner)
     end
@@ -233,7 +233,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       Timecop.travel(time) do
         expect(response_async).to receive(:running?).and_return(true)
         expect(response_async).to receive(:stop)
-        expect(job).to receive(:queue_signal).with(:abort, "ansible playbook has been running longer than timeout", "error")
+        expect(job).to receive(:queue_signal).with(:abort, "ansible playbook has been running longer than timeout", "error", :deliver_on => nil)
 
         job.signal(:poll_runner)
       end
