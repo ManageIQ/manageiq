@@ -54,10 +54,10 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
 
   def poll_runner
     loop do
-      response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
-      if response.running?
+      monitor = runner_monitor
+      if monitor.running?
         if started_on + options[:timeout] < Time.now.utc
-          response.stop
+          monitor.stop
 
           route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
         else
@@ -70,7 +70,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
           end
         end
       else
-        result = response.response
+        result = monitor.response
 
         context[:ansible_runner_return_code] = result.return_code
         context[:ansible_runner_stdout]      = result.parsed_stdout
@@ -142,6 +142,10 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   private
+
+  def runner_monitor
+    Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
+  end
 
   def verify_options
     raise NotImplementedError, "must be implemented in a subclass"
