@@ -10,7 +10,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
 
     it "should queue up realtime capture for vm" do
       pco = described_class.new([vm, vm2], ems)
-      pco.perf_capture_queue
+      pco.perf_capture_queue("realtime")
 
       expect(MiqQueue.count).to eq(2)
 
@@ -145,7 +145,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
     context "with vmware targets" do
       it "should queue up targets properly" do
         stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
-        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue("realtime")
 
         bod = Time.now.utc.beginning_of_day
 
@@ -171,11 +171,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       end
 
       it "calling perf_capture_timer when existing capture messages are on the queue in dequeue state should NOT merge" do
-        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue("realtime")
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| m.update(:state => "dequeue") }
 
-        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue
+        ems.perf_capture_object([vm, vm2, storage, host, host2, host3]).perf_capture_queue("realtime")
         messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
         messages.each { |m| expect(m.lock_version).to eq(1) }
       end
@@ -188,7 +188,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::MetricsCapture do
       context "executing perf_capture_timer" do
         it "should queue up enabled targets" do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
-          ems.perf_capture_object(vms).perf_capture_queue
+          ems.perf_capture_object(vms).perf_capture_queue("realtime")
 
           bod = Time.now.utc.beginning_of_day
 
