@@ -278,6 +278,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
           matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
           raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
           raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1
+
           disk[:percent] = matching_disks.first['progress']
         end
       end

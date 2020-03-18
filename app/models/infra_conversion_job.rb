@@ -26,12 +26,12 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing                         => {'initialize'         => 'waiting_to_start'},
-      :start                                => {'waiting_to_start'   => 'started'},
-      :start_precopying_disks               => {'started'            => 'precopying_disks'},
-      :poll_precopying_disks                => {'precopying_disks'   => 'precopying_disks'},
-      :pause_disks_precopy                  => {'precopying_disks'            => 'pausing_disks_precopy'},
-      :poll_pause_disks_precopy_complete    => {'pausing_disks_precopy'   => 'pausing_disks_precopy'},
+      :initializing                         => {'initialize' => 'waiting_to_start'},
+      :start                                => {'waiting_to_start' => 'started'},
+      :start_precopying_disks               => {'started' => 'precopying_disks'},
+      :poll_precopying_disks                => {'precopying_disks' => 'precopying_disks'},
+      :pause_disks_precopy                  => {'precopying_disks' => 'pausing_disks_precopy'},
+      :poll_pause_disks_precopy_complete    => {'pausing_disks_precopy' => 'pausing_disks_precopy'},
       :wait_for_ip_address                  => {
         'started'                => 'waiting_for_ip_address',
         'pausing_disks_precopy'  => 'waiting_for_ip_address',
@@ -300,7 +300,7 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     migration_task.run_conversion
     queue_signal(:poll_precopying_disks, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -318,7 +318,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:pause_disks_precopy)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -327,7 +327,7 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     migration_task.pause_disks_precopy
     queue_signal(:poll_pause_disks_precopy_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -336,7 +336,6 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     return abort_conversion('Pausing disks precopy timed out', 'error') if polling_timeout
 
-    paused = true
     migration_task.get_conversion_state
     unless migration_task.options[:virtv2v_status] == 'paused'
       update_migration_task_progress(:on_retry)
@@ -345,6 +344,9 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:wait_for_ip_address)
+  rescue => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
   end
 
   def wait_for_ip_address
@@ -366,7 +368,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:run_migration_playbook)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -389,7 +391,7 @@ class InfraConversionJob < Job
     return queue_signal(:shutdown_vm) if migration_phase == 'pre'
 
     queue_signal(:mark_vm_migrated)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     return abort_conversion(error.message, 'error') if migration_phase == 'pre'
 
@@ -418,7 +420,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_retry)
     queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     return abort_conversion(error.message, 'error') if migration_phase == 'pre'
 
@@ -439,7 +441,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:transform_vm)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -455,7 +457,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_retry)
     queue_signal(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -466,7 +468,7 @@ class InfraConversionJob < Job
     migration_task.cutover
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -498,7 +500,7 @@ class InfraConversionJob < Job
       update_migration_task_progress(:on_exit)
       queue_signal(:inventory_refresh)
     end
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -537,7 +539,7 @@ class InfraConversionJob < Job
     migration_task.update_options(:migration_phase => 'post')
     update_migration_task_progress(:on_exit)
     queue_signal(:apply_right_sizing)
-  rescue StandardError => error
+  rescue => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
   end
@@ -552,7 +554,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:restore_vm_attributes)
-  rescue StandardError
+  rescue
     update_migration_task_progress(:on_error)
     queue_signal(:restore_vm_attributes)
   end
@@ -591,7 +593,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     queue_signal(:power_on_vm)
-  rescue StandardError
+  rescue
     update_migration_task_progress(:on_error)
     queue_signal(:power_on_vm)
   end
@@ -615,7 +617,7 @@ class InfraConversionJob < Job
     end
 
     queue_signal(:mark_vm_migrated)
-  rescue StandardError
+  rescue
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
     queue_signal(:poll_automate_state_machine)
@@ -636,7 +638,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_retry)
     queue_signal(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
-  rescue StandardError
+  rescue
     update_migration_task_progress(:on_error)
     migration_task.canceled if migration_task.canceling?
     handover_to_automate
