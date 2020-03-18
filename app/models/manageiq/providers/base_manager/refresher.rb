@@ -95,18 +95,7 @@ module ManageIQ
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
-
-          if parsed.kind_of?(ManageIQ::Providers::Inventory::Persister)
-            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...")
-            # We have array of InventoryCollection, we want to use that data for post refresh
-            Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
-            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete")
-          end
         end
-      end
-
-      def manager_refresh_post_processing(_ems, _target, _inventory_collections)
-        # Implement post refresh actions in a specific refresher
       end
 
       def collect_inventory_for_targets(ems, targets)
