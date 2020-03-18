@@ -46,11 +46,7 @@ class Filesystem < ApplicationRecord
         nh = e.attributes.to_h
 
         nh[:base_name] = nh[:name]
-        if nh[:fqname]
-          nh[:name] = nh[:fqname]
-        else
-          nh[:name] = File.join(path, nh[:name])
-        end
+        nh[:name] = nh[:fqname] || File.join(path, nh[:name])
         nh[:rsc_type] = e.name
         nh.delete(:fqname)
         nh[:mtime] = Time.parse(nh[:mtime])
