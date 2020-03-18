@@ -25,7 +25,7 @@ class VmReconfigureTask < MiqRequestTask
     msg << build_message(options, :network_adapter_edit, "Edit Network Adapters: %d", :length)
     msg << build_message(options, :cdrom_connect, "Attach CD/DVDs: %d", :length)
     msg << build_message(options, :cdrom_disconnect, "Detach CD/DVDs: %d", :length)
-    "#{request_class::TASK_DESCRIPTION} for: #{display_name(req)} - #{msg.compact.join(", ")}"
+    "#{request_class::TASK_DESCRIPTION} for: #{resource_name(req)} - #{msg.compact.join(", ")}"
   end
 
   def self.build_message(options, key, message, modifier = nil)
@@ -45,7 +45,7 @@ class VmReconfigureTask < MiqRequestTask
   end
   private_class_method :build_disk_message
 
-  def self.display_name(req)
+  def self.resource_name(req)
     return req.source.name if req.source
     return "Multiple VMs"  if req.options[:src_ids].length > 1
 
@@ -53,7 +53,7 @@ class VmReconfigureTask < MiqRequestTask
     vm = Vm.find_by(:id => req.options[:src_ids])
     vm.nil? ? "" : vm.name
   end
-  private_class_method :display_name
+  private_class_method :resource_name
 
   def after_request_task_create
     update_attribute(:description, get_description)
