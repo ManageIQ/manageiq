@@ -53,41 +53,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   def poll_runner
-    loop do
-      monitor = runner_monitor
-      if monitor.running?
-        if started_on + options[:timeout] < Time.now.utc
-          monitor.stop
-
-          route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
-        else
-          if MiqEnvironment::Command.is_podified?
-            # If we're running in pods loop so we don't exhaust the stack limit in very long jobs
-            sleep options[:poll_interval]
-            next
-          else
-            queue_signal(:poll_runner, :deliver_on => deliver_on)
-          end
-        end
-      else
-        result = monitor.response
-
-        context[:ansible_runner_return_code] = result.return_code
-        context[:ansible_runner_stdout]      = result.parsed_stdout
-
-        if result.return_code != 0
-          set_status("ansible #{execution_type} failed", "error")
-          _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
-        else
-          set_status("ansible #{execution_type} completed with no errors", "ok")
-        end
-        route_signal(:post_execute)
-      end
-
-      # Break out of the loop when we've either queued a message
-      # or, if we're running in pods, the job has finished
-      break
-    end
+    MiqEnvironment::Command.is_podified? ? wait_for_runner_process : wait_for_runner_process_async
   end
 
   def post_execute
@@ -142,6 +108,53 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   private
+
+  def wait_for_runner_process
+    monitor = runner_monitor
+
+    # If we're running in pods loop so we don't exhaust the stack limit in very long jobs
+    loop do
+      break unless monitor.running?
+      return handle_runner_timeout(monitor) if job_timeout_exceeded?
+
+      sleep options[:poll_interval]
+    end
+
+    process_runner_result(monitor.response)
+  end
+
+  def wait_for_runner_process_async
+    monitor = runner_monitor
+
+    if monitor.running?
+      return handle_runner_timeout(monitor) if job_timeout_exceeded?
+      queue_signal(:poll_runner, :deliver_on => deliver_on)
+    else
+      process_runner_result(monitor.response)
+    end
+  end
+
+  def process_runner_result(result)
+    context[:ansible_runner_return_code] = result.return_code
+    context[:ansible_runner_stdout]      = result.parsed_stdout
+
+    if result.return_code != 0
+      set_status("ansible #{execution_type} failed", "error")
+      _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
+    else
+      set_status("ansible #{execution_type} completed with no errors", "ok")
+    end
+    route_signal(:post_execute)
+  end
+
+  def handle_runner_timeout(monitor)
+    monitor.stop
+    route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
+  end
+
+  def job_timeout_exceeded?
+    started_on + options[:timeout] < Time.now.utc
+  end
 
   def runner_monitor
     Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
