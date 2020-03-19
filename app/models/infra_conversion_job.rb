@@ -321,20 +321,18 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     return abort_conversion('Waiting for IP address timed out', 'error') if polling_timeout
 
-    # The IP address is used only for pre and post-migration playbooks.
-    # If no playbook is expected to run, we don't need to wait for the IP address.
-    service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
-    unless service_template.nil?
-      # If the target VM is powered off, we won't get an IP address, so no need to wait.
-      # We don't block powered off VMs, because the playbook could still be relevant.
-      if target_vm.power_state == 'on'
-        # If the source VM didn't report IP addresses during pre-flight check, there's no need to wait.
-        # We don't block VMsi with no IP address, because the playbook could still be relevant.
-        unless migration_task.options[:source_vm_ipaddresses].empty?
-          if target_vm.ipaddresses.empty?
-            update_migration_task_progress(:on_retry)
-            return queue_signal(:wait_for_ip_address)
-          end
+    # If the target VM is powered off, we won't get an IP address, so no need to wait.
+    # We don't block powered off VMs, because the playbook could still be relevant.
+    if target_vm.power_state == 'on'
+      # If the source VM didn't report IP addresses during pre-flight check, there's no need to wait.
+      # We don't block VMs with no IP address, because the playbook could still be relevant.
+      unless migration_task.options[:source_vm_ipaddresses].empty?
+        # The IP address is used only for pre and post-migration playbooks.
+        # If no playbook is expected to run, we don't need to wait for the IP address.
+        service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
+        if target_vm.ipaddresses.empty? && service_template.present?
+          update_migration_task_progress(:on_retry)
+          return queue_signal(:wait_for_ip_address)
         end
       end
     end
