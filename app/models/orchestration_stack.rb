@@ -159,15 +159,14 @@ class OrchestrationStack < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
 
-    if manager.inventory_object_refresh? && manager.allow_targeted_refresh?
-      # Queue new targeted refresh if allowed
-      orchestration_stack_target = InventoryRefresh::Target.new(:manager     => manager,
-                                                                :association => :orchestration_stacks,
-                                                                :manager_ref => {:ems_ref => manager_ref})
-      EmsRefresh.queue_refresh(orchestration_stack_target)
-    else
-      # Otherwise queue a full refresh
-      EmsRefresh.queue_refresh(manager)
-    end
+    target = if manager.allow_targeted_refresh?
+               # Queue new targeted refresh if allowed
+               InventoryRefresh::Target.new(:manager => manager, :association => :orchestration_stacks, :manager_ref => {:ems_ref => manager_ref})
+             else
+               # Otherwise queue a full refresh
+               manager
+             end
+
+    EmsRefresh.queue_refresh(target)
   end
 end
