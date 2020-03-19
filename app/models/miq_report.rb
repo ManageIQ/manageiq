@@ -31,7 +31,7 @@ class MiqReport < ApplicationRecord
   serialize :display_filter
 
   validates_presence_of     :name, :title, :db, :rpt_group
-  validates_uniqueness_of   :name
+  validates_uniqueness_of   :name, :unless => :seeding?
   validates_inclusion_of    :rpt_type, :in => %w( Default Custom )
 
   has_many                  :miq_report_results, :dependent => :destroy
@@ -44,7 +44,7 @@ class MiqReport < ApplicationRecord
   virtual_column  :based_on, :type => :string
 
   alias_attribute :menu_name, :name
-  attr_accessor :ext_options
+  attr_accessor :ext_options, :seeding
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
@@ -309,6 +309,10 @@ class MiqReport < ApplicationRecord
 
   def self.default_use_sql_view
     ::Settings.reporting.use_sql_view
+  end
+
+  def seeding?
+    @seeding
   end
 
   private
