@@ -1004,6 +1004,14 @@ RSpec.describe InfraConversionJob, :v2v do
         job.signal(:wait_for_ip_address)
       end
 
+      it 'exits if no playbook is expected to run' do
+        allow(job.migration_task).to receive(:pre_ansible_playbook_service_template).and_return(nil)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job).to receive(:queue_signal).with(:run_migration_playbook)
+        job.signal(:wait_for_ip_address)
+      end
+
       it 'exits if VM is powered off' do
         vm_vmware.update!(:raw_power_state => 'poweredOff')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
