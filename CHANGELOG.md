@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+## Ivanchuk-4
+
+### Added
+* [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+* [V2V] Pin InfraConversionJob to first server where it runs [(#19416)](https://github.com/ManageIQ/manageiq/pull/19416)
+* [V2V] Add VM validation for warm migration eligibility and updated specs to deal with warm migration [(#19401)](https://github.com/ManageIQ/manageiq/pull/19401)
+* Use a single query to get count of active VMs and Hosts [(#19835)](https://github.com/ManageIQ/manageiq/pull/19835)
+
+### Fixed
+* [V2V] Remove handover from shutdown_vm transition [(#19371)](https://github.com/ManageIQ/manageiq/pull/19371)
+* [V2V] Extend InfraConversionJob timeout [(#19373)](https://github.com/ManageIQ/manageiq/pull/19373)
+* [V2V] Fix progress percentage calculation [(#19375)](https://github.com/ManageIQ/manageiq/pull/19375)
 
 ## Ivanchuk-3
 
