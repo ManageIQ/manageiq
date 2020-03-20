@@ -32,24 +32,22 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
-  def self.artemis_client(client_ref)
-    @artemis_client ||= {}
-    @artemis_client[client_ref] ||= begin
+  def self.queue_type
+    Settings.prototype.queue_type
+  end
+
+  def self.queue_client(client_ref)
+    @queue_client ||= {}
+    return if queue_type == "miq_queue"
+
+    @queue_client[client_ref] ||= begin
       require "manageiq-messaging"
       ManageIQ::Messaging.logger = _log
-      queue_settings = Settings.prototype.artemis
-      connect_opts = {
-        :host       => ENV["ARTEMIS_QUEUE_HOSTNAME"] || queue_settings.queue_hostname,
-        :port       => (ENV["ARTEMIS_QUEUE_PORT"] || queue_settings.queue_port).to_i,
-        :username   => ENV["ARTEMIS_QUEUE_USERNAME"] || queue_settings.queue_username,
-        :password   => ENV["ARTEMIS_QUEUE_PASSWORD"] || queue_settings.queue_password,
-        :client_ref => client_ref,
-      }
 
       # caching the client works, even if the connection becomes unavailable
       # internally the client will track the state of the connection and re-open it,
       # once it's available again - at least thats true for a stomp connection
-      ManageIQ::Messaging::Client.open(connect_opts)
+      ManageIQ::Messaging::Client.open(messaging_client_options.merge(:client_ref => client_ref))
     end
   end
 
@@ -640,6 +638,29 @@ class MiqQueue < ApplicationRecord
   end
 
   private_class_method :optional_values
+
+  def self.messaging_client_options
+    queue_settings = Settings.prototype[queue_type]
+
+    {
+      :host     => ENV["QUEUE_HOSTNAME"] || queue_settings.queue_hostname,
+      :port     => (ENV["QUEUE_PORT"] || queue_settings.queue_port).to_i,
+      :username => ENV["QUEUE_USERNAME"] || queue_settings.queue_username,
+      :password => ENV["QUEUE_PASSWORD"] || queue_settings.queue_password,
+      :protocol => messaging_client_protocol
+    }
+  end
+  private_class_method :messaging_client_options
+
+  def self.messaging_client_protocol
+    case queue_type
+    when "artemis"
+      :Stomp
+    when "kafka"
+      :Kafka
+    end
+  end
+  private_class_method :messaging_client_protocol
 
   def destroy_potentially_stale_record
     destroy

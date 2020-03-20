@@ -134,7 +134,27 @@ RSpec.describe EmsEvent do
           }
 
           expect(queue_client).to receive(:publish_topic).with(expected_queue_payload)
-          expect(MiqQueue).to receive(:artemis_client).with('event_handler').and_return(queue_client)
+          expect(MiqQueue).to receive(:queue_client).with('event_handler').and_return(queue_client)
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+
+      context "queue_type: kafka" do
+        before { stub_settings_merge(:prototype => {:queue_type => 'kafka'}) }
+
+        it "Adds event to Kafka topic" do
+          queue_client = double("ManageIQ::Messaging")
+
+          expected_queue_payload = {
+            :service => "events",
+            :sender  => ems.id,
+            :event   => event_hash[:event_type],
+            :payload => event_hash,
+          }
+
+          expect(queue_client).to receive(:publish_topic).with(expected_queue_payload)
+          expect(MiqQueue).to receive(:queue_client).with('event_handler').and_return(queue_client)
 
           described_class.add_queue('add', ems.id, event_hash)
         end
