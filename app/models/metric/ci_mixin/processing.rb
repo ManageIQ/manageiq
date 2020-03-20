@@ -94,6 +94,8 @@ module Metric::CiMixin::Processing
       resources.each do |resource|
         resource.perf_rollup_to_parents(interval_orig, start_time, end_time)
       end
+
+      publish_metrics(rt_rows)
     end
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
 
@@ -196,5 +198,22 @@ module Metric::CiMixin::Processing
       value = percent_norm
     end
     return value, message
+  end
+
+  def publish_metrics(metrics)
+    return if MiqQueue.messaging_type == "miq_queue"
+
+    metrics.each_value do |metric|
+      resource = metric.delete(:resource)
+      metric[:resource_type] = resource.class.base_class.name
+      metric[:resource_id]   = resource.id
+
+      MiqQueue.messaging_client("metrics_capture").publish_topic(
+        :service => "metrics",
+        :sender  => resource.ext_management_system&.id,
+        :event   => "metrics",
+        :payload => metric
+      )
+    end
   end
 end
