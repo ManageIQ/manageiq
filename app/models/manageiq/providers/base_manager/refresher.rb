@@ -107,6 +107,7 @@ module ManageIQ
         #
         # override this method and return an array of:
         #   [[target1, inventory_for_target1], [target2, inventory_for_target2]]
+        return [[ems, nil]] unless ems.inventory_object_refresh?
 
         targets.map do |target|
           inventory = inventory_class_for(ems.class).build(ems, target)
@@ -123,11 +124,16 @@ module ManageIQ
         log_header = format_ems_for_logging(ems)
         _log.debug("#{log_header} Parsing inventory...")
 
-        persister = inventory.parse
+        hashes_or_persister =
+          if ems.inventory_object_refresh?
+            inventory.parse
+          else
+            parse_legacy_inventory(ems)
+          end
 
         _log.debug("#{log_header} Parsing inventory...Complete")
 
-        persister
+        hashes_or_persister
       end
 
       def parse_legacy_inventory(ems)
@@ -211,6 +217,7 @@ module ManageIQ
       def preprocess_targets_manager_refresh
         @targets_by_ems_id.each do |ems_id, targets|
           ems = @ems_by_ems_id[ems_id]
+          next unless ems.inventory_object_refresh?
 
           # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
           # we could be missing some crosslinks in the refreshed data
