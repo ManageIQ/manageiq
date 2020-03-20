@@ -294,10 +294,18 @@
   :url: /migration/#settings
   :rbac_feature_name: migration_settings
   :startup: true
-- :name: configuration_management
-  :description: Configuration / Management
-  :url: configuration_manager/explorer
-  :rbac_feature_name: configuration_manager_explorer
+- :name: configuration_manager
+  :description: Configuration / Providers
+  :url: configuration_manager/show_list
+  :rbac_feature_name: configuration_manager_show_list
+- :name: configuration_profile
+  :description: Configuration / Profiles
+  :url: configuration_profile/show_list
+  :rbac_feature_name: configuration_profile_show_list
+- :name: configured_system
+  :description: Configured / Systems
+  :url: configured_system/show_list
+  :rbac_feature_name: configured_system_show_list
   :startup: true
 - :name: ems_networks
   :description: Networks / Providers

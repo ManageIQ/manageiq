@@ -4616,17 +4616,26 @@
 - :name: Configuration Management
   :description: Everything under Configuration Management
   :feature_type: node
-  :identifier: configuration_manager_explorer
+  :identifier: configuration_management
   :children:
   - :name: Providers
     :description: Everything under Providers accordion
     :feature_type: node
-    :identifier: providers_accord
+    :identifier: configuration_manager
     :children:
     - :name: View
-      :description: View Configuration Manager Providers, Configuration Profiles, Configured Systems
+      :description: View Configuration Manager Providers
       :feature_type: view
       :identifier: configuration_manager_view
+      :children:
+      - :name: List
+        :description: Display Lists of Configuration Manager Providers
+        :feature_type: view
+        :identifier: configuration_manager_show_list
+      - :name: Show
+        :description: Display Individual Configuration Manager Provider
+        :feature_type: view
+        :identifier: configuration_manager_show
     - :name: Operate
       :description: Perform Operations on Configuration Manager Providers and Configured Systems
       :feature_type: control
@@ -4678,6 +4687,15 @@
       :description: View Configuration Profiles
       :feature_type: view
       :identifier: configuration_profile_view
+      :children:
+      - :name: List
+        :description: Display Lists of Configuration Profiles
+        :feature_type: view
+        :identifier: configuration_profile_show_list
+      - :name: Show
+        :description: Display Individual Configuration Profile
+        :feature_type: view
+        :identifier: configuration_profile_show
     - :name: Operate
       :description: Perform Operations on Configuration Profiles
       :feature_type: control
@@ -4688,18 +4706,27 @@
         :feature_type: control
         :identifier: configuration_profile_tag
   - :name: Configured Systems
-    :description: Everything under Configured Systems accordion
+    :description: Everything under Configured Systems
     :feature_type: node
-    :identifier: configured_systems_filter_accord
+    :identifier: configured_system
     :children:
     - :name: View
       :description: View Configured Systems
       :feature_type: view
-      :identifier: configured_systems_filter_accord_view
+      :identifier: configured_system_view
+      :children:
+       - :name: List
+         :description: Display Lists of Configured Systems
+         :feature_type: view
+         :identifier: configured_system_show_list
+       - :name: Show
+         :description: Display Individual Configured System
+         :feature_type: view
+         :identifier: configured_system_show
     - :name: Operate
       :description: Perform Operations on Configured Systems
       :feature_type: control
-      :identifier: configuredsystem_control
+      :identifier: configured_system_control
       :children:
       - :name: Edit Tags
         :description: Edit Configured Systems Tags
