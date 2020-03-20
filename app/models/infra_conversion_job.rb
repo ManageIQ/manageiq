@@ -467,8 +467,12 @@ class InfraConversionJob < Job
 
   def transform_vm
     update_migration_task_progress(:on_entry)
-    migration_task.run_conversion unless migration_task.warm_migration?
-    migration_task.cutover
+    if migration_task.warm_migration?
+      migration_task.cutover
+      migration_task.unpause_disks_precopy
+    else
+      migration_task.run_conversion
+    end
     update_migration_task_progress(:on_exit)
     queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue => error
