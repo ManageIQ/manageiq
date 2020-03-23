@@ -199,7 +199,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 * [V2V]Fix create_job in JobProxyDispatcher specs [(#19461)](https://github.com/ManageIQ/manageiq/pull/19461)
 
 ### Removed
-Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
+* Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
 
 ## Ivanchuk-1 - Released 2019-09-18
 
