@@ -32,15 +32,15 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
-  def self.queue_type
-    ENV["QUEUE_TYPE"] || Settings.prototype.queue_type
+  def self.messaging_type
+    ENV["MESSAGING_TYPE"] || Settings.prototype.messaging_type
   end
 
-  def self.queue_client(client_ref)
-    @queue_client ||= {}
-    return if queue_type == "miq_queue"
+  def self.messaging_client(client_ref)
+    @messaging_client ||= {}
+    return if messaging_type == "miq_queue"
 
-    @queue_client[client_ref] ||= begin
+    @messaging_client[client_ref] ||= begin
       require "manageiq-messaging"
       ManageIQ::Messaging.logger = _log
 
@@ -640,27 +640,27 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   def self.messaging_client_options
-    queue_settings = Settings.prototype[queue_type]
+    messaging_settings = Settings.prototype[messaging_type]
 
     {
-      :host     => ENV["QUEUE_HOSTNAME"] || queue_settings.queue_hostname,
-      :port     => (ENV["QUEUE_PORT"] || queue_settings.queue_port).to_i,
-      :username => ENV["QUEUE_USERNAME"] || queue_settings.queue_username,
-      :password => ENV["QUEUE_PASSWORD"] || queue_settings.queue_password,
-      :protocol => messaging_client_protocol
+      :host     => ENV["MESSAGING_HOSTNAME"] || messaging_settings.messaging_hostname,
+      :port     => (ENV["MESSAGING_PORT"] || messaging_settings.messaging_port).to_i,
+      :username => ENV["MESSAGING_USERNAME"] || messaging_settings.messaging_username,
+      :password => ENV["MESSAGING_PASSWORD"] || messaging_settings.messaging_password,
+      :protocol => messaging_protocol
     }
   end
   private_class_method :messaging_client_options
 
-  def self.messaging_client_protocol
-    case queue_type
+  def self.messaging_protocol
+    case messaging_type
     when "artemis"
       :Stomp
     when "kafka"
       :Kafka
     end
   end
-  private_class_method :messaging_client_protocol
+  private_class_method :messaging_protocol
 
   def destroy_potentially_stale_record
     destroy

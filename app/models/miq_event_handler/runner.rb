@@ -1,17 +1,17 @@
 class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   def miq_queue?
-    MiqQueue.queue_type == "miq_queue"
+    MiqQueue.messaging_type == "miq_queue"
   end
 
   def do_before_work_loop
     unless miq_queue?
       topic_options = {
-        :service     => "events",
+        :service     => "manageiq.events",
         :persist_ref => "event_handler"
       }
 
       # this block is stored in a lambda callback and is executed in another thread once a msg is received
-      MiqQueue.queue_client('event_handler').subscribe_topic(topic_options) do |sender, event, payload|
+      MiqQueue.messaging_client('event_handler').subscribe_topic(topic_options) do |sender, event, payload|
         _log.info "Received Event (#{event}) by sender #{sender}: #{payload[:event_type]} #{payload[:chain_id]}"
         EmsEvent.add(sender.to_i, payload)
       end
@@ -31,7 +31,7 @@ class MiqEventHandler::Runner < MiqQueueWorkerBase::Runner
   def before_exit(_message, _exit_code)
     return if miq_queue?
 
-    MiqQueue.queue_client('event_handler').close
+    MiqQueue.messaging_client('event_handler').close
   rescue => e
     safe_log("Could not close artemis connection: #{e}", 1)
   end
