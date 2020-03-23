@@ -411,7 +411,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :vm_name              => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
-        :host     => source.host.ipaddress,
+        :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
       :vm_uuid              => source.uid_ems,
