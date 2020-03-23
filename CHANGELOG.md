@@ -4,25 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-# Unreleased as of Sprint 130 ending 2020-02-17
+## Jansa-1 Alpha-1
 
 ### Added
-
 * Use the server's zone to determine a node selector when running in pods [(#19789)](https://github.com/ManageIQ/manageiq/pull/19789)
 * Use a single query to get count of active VMs and Hosts [(#19835)](https://github.com/ManageIQ/manageiq/pull/19835)
-
-### Fixed
-
-* Fix smartproxy worker heartbeat thread [(#19816)](https://github.com/ManageIQ/manageiq/pull/19816)
-* Fix polymorphic issues with MiqReport + Rbac [(#19804)](https://github.com/ManageIQ/manageiq/pull/19804)
-* Add a connection timeout for remote region connections [(#19791)](https://github.com/ManageIQ/manageiq/pull/19791)
-* Remove storage references to multiple emses [(#19754)](https://github.com/ManageIQ/manageiq/pull/19754)
-* Only register queue workers using drb for dequeue [(#19829)](https://github.com/ManageIQ/manageiq/pull/19829)
-
-# Unreleased as of Sprint 129 ending 2020-02-02
-
-### Added
-
 * Job method "queue signal" to take a "queue name" [(#19764)](https://github.com/ManageIQ/manageiq/pull/19764)
 * Bump "secure headers" gem to a more recent version [(#19752)](https://github.com/ManageIQ/manageiq/pull/19752)
 * Monitor multiple servers when running in pods [(#19734)](https://github.com/ManageIQ/manageiq/pull/19734)
@@ -31,79 +17,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 * Commit the data directory rather than creating it when the server starts [(#19745)](https://github.com/ManageIQ/manageiq/pull/19745)
 * Remove the unsafe "cattr accessor" for "my guid cache" [(#19744)](https://github.com/ManageIQ/manageiq/pull/19744)
 * Upgrade to config gem for ruby 2.7 support [(#19757)](https://github.com/ManageIQ/manageiq/pull/19757)
-
-### Fixed
-
-* Fix nondescript "unknown unknowns" for timestamps [(#19774)](https://github.com/ManageIQ/manageiq/pull/19774)
-
-# Unreleased as of Sprint 128 ending 2020-01-20
-
-### Added
-
 * Split up MetricsCapture into provider subclasses [(#19543)](https://github.com/ManageIQ/manageiq/issues/19543)
 * Add a queue_name to MiqProvisionRequest to allow to be run on specialized workers [(#19705)](https://github.com/ManageIQ/manageiq/pull/19705)
 * Add a native_viewer VM console option for RHV/Ovirt [(#19675)](https://github.com/ManageIQ/manageiq/pull/19675)
 * Differentiate deployment names by server [(#19712)](https://github.com/ManageIQ/manageiq/pull/19712)
 * Always use file based heartbeat [(#19666)](https://github.com/ManageIQ/manageiq/pull/19666)
-
-### Removed
-
-* Remove the VMwareWebService gem from the core Gemfile [(#19704)](https://github.com/ManageIQ/manageiq/pull/19704)
-
-### Fixed
-
-* Autoload Rails Models unless called from safe_load [(#19701)](https://github.com/ManageIQ/manageiq/pull/19701)
-
-# Unreleased as of Sprint 127 ending 2020-01-06
-
-### Added
-
 * Switch from git source to rubygems.manageiq.org [(#19564)](https://github.com/ManageIQ/manageiq/pull/19564)
 * Added a tool to visualize Jobs in graphviz [(#19626)](https://github.com/ManageIQ/manageiq/pull/19626)
 * Updated rubyzip gem to version 2 [(#19629)](https://github.com/ManageIQ/manageiq/pull/19629)
 * Updated linux_admin gem to version 2 [(#19639)](https://github.com/ManageIQ/manageiq/pull/19639)
 * Added sync gem [(#19682)](https://github.com/ManageIQ/manageiq/pull/19682)
-
-### Fixed
-
-* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
-* Avoid starting every metrics collector worker for every EMS type simply because the role is enabled. [(#19683)](https://github.com/ManageIQ/manageiq/pull/19683)
-
-# Unreleased as of Sprint 126 ending 2019-12-09
-
-### Added
-
 * Streamline Cap and U capture [(#19599)](https://github.com/ManageIQ/manageiq/pull/19599)
 * Development environment performance improvement by removing the seeding of the database on startup [(#19535)](https://github.com/ManageIQ/manageiq/pull/19535)
 * Drop support for forking workers, use spawn by default [(#19556)](https://github.com/ManageIQ/manageiq/pull/19556)
-
-### Fixed
-
-* Look up worker by guid not pid because pid is unreliable in a container deployment [(#19557)](https://github.com/ManageIQ/manageiq/pull/19557)
-* Fix currency list on new symbol, UZS [(#19567)](https://github.com/ManageIQ/manageiq/pull/19567)
-* Raise an exception if an invalid path is passed to autoload [(#19537)](https://github.com/ManageIQ/manageiq/pull/19537)
-
-# Unreleased as of Sprint 125 ending 2019-11-25
-
-### Added
 * Improved metrics_capture support [(#19511)](https://github.com/ManageIQ/manageiq/pull/19511), [(#19506)](https://github.com/ManageIQ/manageiq/pull/19506), [(#19522)](https://github.com/ManageIQ/manageiq/pull/19522)
 * Added support for configuring SAML and OIDC authentication settings enabling automated configuration from the appliance_console CLI [(#19525)](https://github.com/ManageIQ/manageiq/pull/19525)
 * Added the ability for the orchestrator to run on either OpenShift or Kubernetes by using only objects supported by both.  [(#19500)](https://github.com/ManageIQ/manageiq/pull/19500)
 * Added MiqWorkerType model replacing the worker type constant [(#19536)](https://github.com/ManageIQ/manageiq/pull/19536)
 * Use table currencies if they exist in ChargebackRateDetailCurrency [(#19350)](https://github.com/ManageIQ/manageiq/pull/19350)
-
-### Fixed
-
-* Removed no longer supported oVirt V3 api calls [(#19508)](https://github.com/ManageIQ/manageiq/pull/19508)
-* Fixed starting of metrics collector workers, even when the role was not active [(#19494)](https://github.com/ManageIQ/manageiq/pull/19494)
-* Ensure dashboard names are only unique within a group [(#19491)](https://github.com/ManageIQ/manageiq/pull/19491)
-* Fixed missing display of available disk space under Utilization [(#19502)](https://github.com/ManageIQ/manageiq/pull/19502)
-* Fix user lookups by email when provisioning [(#19515)](https://github.com/ManageIQ/manageiq/pull/19515)
-
-
-# Unreleased as of Sprint 124 ending 2019-11-11
-
-### Added
 * [V2V] Add VM validation for warm migration eligibility and updated specs to … [(#19401)](https://github.com/ManageIQ/manageiq/pull/19401)
 * Add AuthenticationMixin to Vm [(#19444)](https://github.com/ManageIQ/manageiq/pull/19444)
 * Add support to automate external auth config for ldap [(#19228)](https://github.com/ManageIQ/manageiq/pull/19228)
@@ -114,16 +45,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 * Optionally symlink a plugin's spec/manageiq [(#19481)](https://github.com/ManageIQ/manageiq/pull/19481)
 * Return MiqTask id from MiqWidget.queue_generate_content [(#19445)](https://github.com/ManageIQ/manageiq/pull/19445)
 * Update the orchestrator for new database secret format [(#19457)](https://github.com/ManageIQ/manageiq/pull/19457)
-
-### Fixed
-* Adding task error status to log management [(#19480)](https://github.com/ManageIQ/manageiq/pull/19480)
-* Base monolithic container image on pods ui worker [(#19463)](https://github.com/ManageIQ/manageiq/pull/19463)
-* Fix key_pair class lookup [(#19486)](https://github.com/ManageIQ/manageiq/pull/19486)
-* Remove the check for a "current" snapshot [(#19458)](https://github.com/ManageIQ/manageiq/pull/19458)
-
-# Unreleased as of Sprint 123 ending 2019-10-28
-
-### Added
 * Update puma to latest.  Be less conservative. [(#19389)](https://github.com/ManageIQ/manageiq/pull/19389)
 * Update to config gem 2.0.0 [(#19418)](https://github.com/ManageIQ/manageiq/pull/19418)
 * Add a base Job#queue_signal method [(#19281)](https://github.com/ManageIQ/manageiq/pull/19281)
@@ -139,9 +60,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 * Enumerable#reverse_each is faster than Enumerable#reverse.each [(#19409)](https://github.com/ManageIQ/manageiq/pull/19409)
 * Prefer block version of File.open to ensure file handle gets automatically closed [(#19412)](https://github.com/ManageIQ/manageiq/pull/19412)
 * Revert "Prefer block version of File.open to ensure file handle gets automatically closed" [(#19427)](https://github.com/ManageIQ/manageiq/pull/19427)
-
+* [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+* Add a verify_credentials_task method [(#19346)](https://github.com/ManageIQ/manageiq/pull/19346)
+* CloudNetwork NetworkPort and SecurityGroup belong to a ResourceGroup [(#19343)](https://github.com/ManageIQ/manageiq/pull/19343)
+* Convert unsafe SQL to pure active record methods (rails 5.2) [(#19366)](https://github.com/ManageIQ/manageiq/pull/19366)
+* Pluggable ScanItems [(#19388)](https://github.com/ManageIQ/manageiq/pull/19388)
+* Rbac no references array [(#19318)](https://github.com/ManageIQ/manageiq/pull/19318)
+* Reload stale source_tenant after destroying self (rails 5.2) [(#19367)](https://github.com/ManageIQ/manageiq/pull/19367)
+* Removing groups changes users current group [(#19376)](https://github.com/ManageIQ/manageiq/pull/19376)
+* Update default_value_for rails 5.2/6 support [(#19370)](https://github.com/ManageIQ/manageiq/pull/19370)
+* Add check for nil group to system_context_requester [(#19309)](https://github.com/ManageIQ/manageiq/pull/19309)
+* Add copying tag as optional choice [(#19206)](https://github.com/ManageIQ/manageiq/pull/19206)
+* Make direct_vms a relation [(#19201)](https://github.com/ManageIQ/manageiq/pull/19201)
 
 ### Fixed
+* Fix smartproxy worker heartbeat thread [(#19816)](https://github.com/ManageIQ/manageiq/pull/19816)
+* Fix polymorphic issues with MiqReport + Rbac [(#19804)](https://github.com/ManageIQ/manageiq/pull/19804)
+* Add a connection timeout for remote region connections [(#19791)](https://github.com/ManageIQ/manageiq/pull/19791)
+* Remove storage references to multiple emses [(#19754)](https://github.com/ManageIQ/manageiq/pull/19754)
+* Only register queue workers using drb for dequeue [(#19829)](https://github.com/ManageIQ/manageiq/pull/19829)
+* Fix nondescript "unknown unknowns" for timestamps [(#19774)](https://github.com/ManageIQ/manageiq/pull/19774)
+* Autoload Rails Models unless called from safe_load [(#19701)](https://github.com/ManageIQ/manageiq/pull/19701)
+* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
+* Avoid starting every metrics collector worker for every EMS type simply because the role is enabled. [(#19683)](https://github.com/ManageIQ/manageiq/pull/19683)
+* Look up worker by guid not pid because pid is unreliable in a container deployment [(#19557)](https://github.com/ManageIQ/manageiq/pull/19557)
+* Fix currency list on new symbol, UZS [(#19567)](https://github.com/ManageIQ/manageiq/pull/19567)
+* Raise an exception if an invalid path is passed to autoload [(#19537)](https://github.com/ManageIQ/manageiq/pull/19537)
+* Removed no longer supported oVirt V3 api calls [(#19508)](https://github.com/ManageIQ/manageiq/pull/19508)
+* Fixed starting of metrics collector workers, even when the role was not active [(#19494)](https://github.com/ManageIQ/manageiq/pull/19494)
+* Ensure dashboard names are only unique within a group [(#19491)](https://github.com/ManageIQ/manageiq/pull/19491)
+* Fixed missing display of available disk space under Utilization [(#19502)](https://github.com/ManageIQ/manageiq/pull/19502)
+* Fix user lookups by email when provisioning [(#19515)](https://github.com/ManageIQ/manageiq/pull/19515)
+* Adding task error status to log management [(#19480)](https://github.com/ManageIQ/manageiq/pull/19480)
+* Base monolithic container image on pods ui worker [(#19463)](https://github.com/ManageIQ/manageiq/pull/19463)
+* Fix key_pair class lookup [(#19486)](https://github.com/ManageIQ/manageiq/pull/19486)
+* Remove the check for a "current" snapshot [(#19458)](https://github.com/ManageIQ/manageiq/pull/19458)
 * Adding Volume Type (CloudVolumeType) to RBAC [(#19408)](https://github.com/ManageIQ/manageiq/pull/19408)
 * Revert "Remove unused Service::RetirementManagement.retire_service_resources method" [(#19417)](https://github.com/ManageIQ/manageiq/pull/19417)
 * Passes result_format when automate workspace is not expected [(#19407)](https://github.com/ManageIQ/manageiq/pull/19407)
@@ -153,60 +106,100 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 * SystemService: don't use gettext in model constants [(#19403)](https://github.com/ManageIQ/manageiq/pull/19403)
 * replicate_server_settings is parsing serverid incorrect [(#19433)](https://github.com/ManageIQ/manageiq/pull/19433)
 * Cleanup after Ansible runner. [(#19383)](https://github.com/ManageIQ/manageiq/pull/19383)
+* Service display has been renamed to visible. [(#19211)](https://github.com/ManageIQ/manageiq/pull/19211)
+* fix schedule_settings [(#19386)](https://github.com/ManageIQ/manageiq/pull/19386)
+* Adding Volume Snapshot (CloudVolumeSnapshot) to RBAC [(#19356)](https://github.com/ManageIQ/manageiq/pull/19356)
+* [V2V] Extend InfraConversionJob timeout [(#19373)](https://github.com/ManageIQ/manageiq/pull/19373)
+* [V2V] Fix progress percentage calculation [(#19375)](https://github.com/ManageIQ/manageiq/pull/19375)
+* [V2V] Remove handover from shutdown_vm transition [(#19371)](https://github.com/ManageIQ/manageiq/pull/19371)
+* Set default OrchestrationTemplateRunner timeout to 100 minutes. [(#19381)](https://github.com/ManageIQ/manageiq/pull/19381)
+* Drop load balancer from the custom buttons tree in automate [(#19331)](https://github.com/ManageIQ/manageiq/pull/19331)
+* Users without groups should use admin retirement [(#19319)](https://github.com/ManageIQ/manageiq/pull/19319)
+* Removed advanced config option to switch between "puma" and "thin" [(#19304)](https://github.com/ManageIQ/manageiq/pull/19304)
+* Remove unnecessary log message. [(#19299)](https://github.com/ManageIQ/manageiq/pull/19299)
+* Set result_format to ignore for all custom buttons. [(#19270)](https://github.com/ManageIQ/manageiq/pull/19270)
+* [MiqQueue] Format .format_full_log_msg [(#19296)](https://github.com/ManageIQ/manageiq/pull/19296)
+* Set default playbook service timeout to 100 minutes [(#19279)](https://github.com/ManageIQ/manageiq/pull/19279)
+* Remove value2tag [(#19275)](https://github.com/ManageIQ/manageiq/pull/19275)
+* Make description unique for tenant groups in MiqGroup [(#19272)](https://github.com/ManageIQ/manageiq/pull/19272)
+* Schedule compliance purging [(#19264)](https://github.com/ManageIQ/manageiq/pull/19264)
+* Do not calculate backlog when subscription not active [(#19254)](https://github.com/ManageIQ/manageiq/pull/19254)
+* Fixed 'TypeError'  in ApplicationCable::Connection#connect [(#19248)](https://github.com/ManageIQ/manageiq/pull/19248)
+* Fix Embedded Ansible Plays in the Job UI (v2/rebased with master) [(#19247)](https://github.com/ManageIQ/manageiq/pull/19247)
+* Workflow cloud_tenant fix [(#19237)](https://github.com/ManageIQ/manageiq/pull/19237)
+* Do not  attempt to calculate backlog unless subscription status is "replicating" [(#19234)](https://github.com/ManageIQ/manageiq/pull/19234)
+* Update the button order on copy [(#19227)](https://github.com/ManageIQ/manageiq/pull/19227)
 
+### Removed
+* Remove the VMwareWebService gem from the core Gemfile [(#19704)](https://github.com/ManageIQ/manageiq/pull/19704)
 
-# Unreleased as of Sprint 122 ending 2019-10-14
-
-### Added
-- [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
-- Add a verify_credentials_task method [(#19346)](https://github.com/ManageIQ/manageiq/pull/19346)
-- CloudNetwork NetworkPort and SecurityGroup belong to a ResourceGroup [(#19343)](https://github.com/ManageIQ/manageiq/pull/19343)
-- Convert unsafe SQL to pure active record methods (rails 5.2) [(#19366)](https://github.com/ManageIQ/manageiq/pull/19366)
-- Pluggable ScanItems [(#19388)](https://github.com/ManageIQ/manageiq/pull/19388)
-- Rbac no references array [(#19318)](https://github.com/ManageIQ/manageiq/pull/19318)
-- Reload stale source_tenant after destroying self (rails 5.2) [(#19367)](https://github.com/ManageIQ/manageiq/pull/19367)
-- Removing groups changes users current group [(#19376)](https://github.com/ManageIQ/manageiq/pull/19376)
-- Update default_value_for rails 5.2/6 support [(#19370)](https://github.com/ManageIQ/manageiq/pull/19370)
-
-### Fixed
-- Service display has been renamed to visible. [(#19211)](https://github.com/ManageIQ/manageiq/pull/19211)
-- fix schedule_settings [(#19386)](https://github.com/ManageIQ/manageiq/pull/19386)
-- Adding Volume Snapshot (CloudVolumeSnapshot) to RBAC [(#19356)](https://github.com/ManageIQ/manageiq/pull/19356)
-- [V2V] Extend InfraConversionJob timeout [(#19373)](https://github.com/ManageIQ/manageiq/pull/19373)
-- [V2V] Fix progress percentage calculation [(#19375)](https://github.com/ManageIQ/manageiq/pull/19375)
-- [V2V] Remove handover from shutdown_vm transition [(#19371)](https://github.com/ManageIQ/manageiq/pull/19371)
-- Set default OrchestrationTemplateRunner timeout to 100 minutes. [(#19381)](https://github.com/ManageIQ/manageiq/pull/19381)
-
-## Unreleased as of Sprint 121 ending 2019-09-30
-
-### Added
-- Add check for nil group to system_context_requester [(#19309)](https://github.com/ManageIQ/manageiq/pull/19309)
-
-### Fixed
-- Drop load balancer from the custom buttons tree in automate [(#19331)](https://github.com/ManageIQ/manageiq/pull/19331)
-- Users without groups should use admin retirement [(#19319)](https://github.com/ManageIQ/manageiq/pull/19319)
-- Removed advanced config option to switch between "puma" and "thin" [(#19304)](https://github.com/ManageIQ/manageiq/pull/19304)
-- Remove unnecessary log message. [(#19299)](https://github.com/ManageIQ/manageiq/pull/19299)
-- Set result_format to ignore for all custom buttons. [(#19270)](https://github.com/ManageIQ/manageiq/pull/19270)
-
-## Unreleased as of Sprint 120 ending 2019-09-16
+## Ivanchuk-4
 
 ### Added
-- Add copying tag as optional choice [(#19206)](https://github.com/ManageIQ/manageiq/pull/19206)
-- Make direct_vms a relation [(#19201)](https://github.com/ManageIQ/manageiq/pull/19201)
+* [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+* [V2V] Pin InfraConversionJob to first server where it runs [(#19416)](https://github.com/ManageIQ/manageiq/pull/19416)
+* [V2V] Add VM validation for warm migration eligibility and updated specs to deal with warm migration [(#19401)](https://github.com/ManageIQ/manageiq/pull/19401)
+* Use a single query to get count of active VMs and Hosts [(#19835)](https://github.com/ManageIQ/manageiq/pull/19835)
 
 ### Fixed
-- [MiqQueue] Format .format_full_log_msg [(#19296)](https://github.com/ManageIQ/manageiq/pull/19296)
-- Set default playbook service timeout to 100 minutes [(#19279)](https://github.com/ManageIQ/manageiq/pull/19279)
-- Remove value2tag [(#19275)](https://github.com/ManageIQ/manageiq/pull/19275)
-- Make description unique for tenant groups in MiqGroup [(#19272)](https://github.com/ManageIQ/manageiq/pull/19272)
-- Schedule compliance purging [(#19264)](https://github.com/ManageIQ/manageiq/pull/19264)
-- Do not calculate backlog when subscription not active [(#19254)](https://github.com/ManageIQ/manageiq/pull/19254)
-- Fixed 'TypeError'  in ApplicationCable::Connection#connect [(#19248)](https://github.com/ManageIQ/manageiq/pull/19248)
-- Fix Embedded Ansible Plays in the Job UI (v2/rebased with master) [(#19247)](https://github.com/ManageIQ/manageiq/pull/19247)
-- Workflow cloud_tenant fix [(#19237)](https://github.com/ManageIQ/manageiq/pull/19237)
-- Do not  attempt to calculate backlog unless subscription status is "replicating" [(#19234)](https://github.com/ManageIQ/manageiq/pull/19234)
-- Update the button order on copy [(#19227)](https://github.com/ManageIQ/manageiq/pull/19227)
+* [V2V] Remove handover from shutdown_vm transition [(#19371)](https://github.com/ManageIQ/manageiq/pull/19371)
+* [V2V] Extend InfraConversionJob timeout [(#19373)](https://github.com/ManageIQ/manageiq/pull/19373)
+* [V2V] Fix progress percentage calculation [(#19375)](https://github.com/ManageIQ/manageiq/pull/19375)
+
+## Ivanchuk-3
+
+### Added
+* Updated rubyzip gem to version 2 [(#19629)](https://github.com/ManageIQ/manageiq/pull/19629)
+* Updated linux_admin gem to version 2 [(#19639)](https://github.com/ManageIQ/manageiq/pull/19639)
+
+### Fixed
+* Fixed missing display of available disk space under Utilization [(#19502)](https://github.com/ManageIQ/manageiq/pull/19502)
+* Adding Volume Snapshot (CloudVolumeSnapshot) to RBAC [(#19356)](https://github.com/ManageIQ/manageiq/pull/19356)
+* Adding Volume Type (CloudVolumeType) to RBAC [(#19408)](https://github.com/ManageIQ/manageiq/pull/19408)
+* Generate retire requests from the base class name [(#19398)](https://github.com/ManageIQ/manageiq/pull/19398)
+* Adding task error status to log management [(#19480)](https://github.com/ManageIQ/manageiq/pull/19480)
+* Fixed Cockpit, Web console access [(#19631)](https://github.com/ManageIQ/manageiq/pull/19631)
+* Cleanup after Ansible runner. [(#19383)](https://github.com/ManageIQ/manageiq/pull/19383)
+* Fix key_pair class lookup [(#19486)](https://github.com/ManageIQ/manageiq/pull/19486)
+
+### Security
+* A flaw triggered remote code execution through NFS schedule backup[(CVE-2019-14894)](https://access.redhat.com/security/cve/cve-2019-14894)
+
+## Ivanchuk-2
+
+### Added
+* Add Settings attribute for displaying the ops/database screen [(#19208)](https://github.com/ManageIQ/manageiq/pull/19208)
+* Add VmOrTemplate.remove_all_snapshots_queue [(#19150)](https://github.com/ManageIQ/manageiq/pull/19150)
+* Allow error messages in ServiceTemplate.validate_order [(#19186)](https://github.com/ManageIQ/manageiq/pull/19186)
+* Add export/import of schedules to rake task [(#19192)](https://github.com/ManageIQ/manageiq/pull/19192)
+* [V2V] Remove .py extension from calls to virt-v2v-wrapper [(#19194)](https://github.com/ManageIQ/manageiq/pull/19194)
+* [V2V] Add order option to SupportsFeatureMixin module [(#19203)](https://github.com/ManageIQ/manageiq/pull/19203)
+* [V2V] Lan validation in Transformation Mapping [(#19220)](https://github.com/ManageIQ/manageiq/pull/19220)
+* Add distributed_virtual_lans to persister [(#19306)](https://github.com/ManageIQ/manageiq/pull/19306)
+* [V2V] Remove removing_snapshots state [(#19374)](https://github.com/ManageIQ/manageiq/pull/19374)
+* Pluggable ScanItems [(#19388)](https://github.com/ManageIQ/manageiq/pull/19388)
+* [V2V] Pin InfraConversionJob to first server where it runs [(#19416)](https://github.com/ManageIQ/manageiq/pull/19416)
+* Adding ability to update additional authentication settings [(#19525)](https://github.com/ManageIQ/manageiq/pull/19525)
+
+### Fixed
+* Update translations for ivanchuk [(#19301)](https://github.com/ManageIQ/manageiq/pull/19301)
+* Service retirement request should be per region. [(#19143)](https://github.com/ManageIQ/manageiq/pull/19143)
+* Fixed MiqSearch.seed  when search name was changed and corrected typo miq_search.yml [(#19151)](https://github.com/ManageIQ/manageiq/pull/19151)
+* Schedule compliance purging [(#19264)](https://github.com/ManageIQ/manageiq/pull/19264)
+* Remove unnecessary log message. [(#19299)](https://github.com/ManageIQ/manageiq/pull/19299)
+* Add check for nil group to system_context_requester [(#19309)](https://github.com/ManageIQ/manageiq/pull/19309)
+* Drop load balancer from the custom buttons tree in automate [(#19331)](https://github.com/ManageIQ/manageiq/pull/19331)
+* [EmbeddedAnsible] Force embedded_ansible role for workflow [(#19187)](https://github.com/ManageIQ/manageiq/pull/19187)
+* Use find_by to skip exceptions in Export of schedules [(#19191)](https://github.com/ManageIQ/manageiq/pull/19191)
+* Fix inverse_of for DistributedVirtualSwitch [(#19221)](https://github.com/ManageIQ/manageiq/pull/19221)
+* [V2V] Allow active InfraConversionJob to be throttled [(#19277)](https://github.com/ManageIQ/manageiq/pull/19277)
+* Update translations for ivanchuk [(#19301)](https://github.com/ManageIQ/manageiq/pull/19301)
+* [EmbeddedAnsible] Fix job_plays for API [(#19320)](https://github.com/ManageIQ/manageiq/pull/19320)
+* Fix an exception calling compliance_purge_timer [(#19326)](https://github.com/ManageIQ/manageiq/pull/19326)
+* [V2V]Fix create_job in JobProxyDispatcher specs [(#19461)](https://github.com/ManageIQ/manageiq/pull/19461)
+
+### Removed
+Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
 
 ## Ivanchuk-1 - Released 2019-09-18
 
