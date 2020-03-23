@@ -62,10 +62,6 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
     true
   end
 
-  def inventory_object_refresh?
-    true
-  end
-
   def allow_targeted_refresh?
     false
   end
