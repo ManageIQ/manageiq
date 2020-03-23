@@ -288,23 +288,6 @@ module EmsRefresh::SaveInventory
     end
   end
 
-  def save_networks_inventory(hardware, hashes, mode = :refresh)
-    return if hashes.nil?
-
-    case mode
-    when :refresh
-      deletes = hardware.networks.reload.to_a
-
-      # Remove networks that were already saved via guest devices
-      saved_hashes, new_hashes = hashes.partition { |h| h[:id] }
-      saved_hashes.each { |h| deletes.delete_if { |d| d.id == h[:id] } } unless deletes.empty? || saved_hashes.empty?
-
-      save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress, :ipv6address], nil, :guest_device)
-    when :scan
-      save_inventory_multi(hardware.networks, hashes, :use_association, [:description, :guid])
-    end
-  end
-
   def save_firmwares_inventory(hardware, hashes)
     return if hashes.nil?
 

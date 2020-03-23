@@ -15,8 +15,6 @@ class Network < ApplicationRecord
     if parent.respond_to?(:hardware)
       # it's possible that the hardware for this vm does not exist, so create it
       parent.hardware = Hardware.new if parent.hardware.nil?
-
-      EmsRefresh.save_networks_inventory(parent.hardware, hashes, :scan)
     end
   end
 
