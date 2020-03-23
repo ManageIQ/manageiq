@@ -158,10 +158,6 @@ module Vmdb
       Vmdb::Loggers.apply_config(::Settings.log)
     end
 
-    initializer :prepare_productization, :after => :append_asset_paths do
-      Vmdb::Productization.new.prepare
-    end
-
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
