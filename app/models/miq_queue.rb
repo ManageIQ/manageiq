@@ -33,7 +33,7 @@ class MiqQueue < ApplicationRecord
   PRIORITY_DIR    = [:higher, :lower]
 
   def self.queue_type
-    Settings.prototype.queue_type
+    ENV["QUEUE_TYPE"] || Settings.prototype.queue_type
   end
 
   def self.queue_client(client_ref)
