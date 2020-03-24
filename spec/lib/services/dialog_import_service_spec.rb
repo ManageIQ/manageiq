@@ -517,6 +517,9 @@ RSpec.describe DialogImportService do
       expect do
         dialog_import_service.import(dialogs.first)
       end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Dialog: Name is not unique within region/)
+        .and change { DialogTab.count }.by(0)
+                                       .and change { DialogGroup.count }.by(0)
+                                                                        .and change { DialogField.count }.by(0)
     end
   end
 
