@@ -27,7 +27,7 @@ class EmsEvent < EventStream
   def self.add_queue(meth, ems_id, event)
     unless MiqQueue.messaging_type == "miq_queue"
       MiqQueue.messaging_client('event_handler').publish_topic(
-        :service => "manageiq.events",
+        :service => "manageiq.ems-events",
         :sender  => ems_id,
         :event   => event[:event_type],
         :payload => event

@@ -127,7 +127,7 @@ RSpec.describe EmsEvent do
           messaging_client = double("ManageIQ::Messaging")
 
           expected_queue_payload = {
-            :service => "manageiq.events",
+            :service => "manageiq.ems-events",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
             :payload => event_hash,
@@ -147,7 +147,7 @@ RSpec.describe EmsEvent do
           messaging_client = double("ManageIQ::Messaging")
 
           expected_queue_payload = {
-            :service => "manageiq.events",
+            :service => "manageiq.ems-events",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
             :payload => event_hash,
