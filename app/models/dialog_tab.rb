@@ -1,6 +1,6 @@
 class DialogTab < ApplicationRecord
   include DialogMixin
-  has_many   :dialog_groups, -> { order(:position) }, :dependent => :destroy
+  has_many   :dialog_groups, -> { order(:position) }, :dependent => :destroy, autosave: true
   belongs_to :dialog
   validate :validate_children
 
