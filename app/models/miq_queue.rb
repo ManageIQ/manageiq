@@ -647,7 +647,8 @@ class MiqQueue < ApplicationRecord
       :port     => (ENV["MESSAGING_PORT"] || messaging_settings.messaging_port).to_i,
       :username => ENV["MESSAGING_USERNAME"] || messaging_settings.messaging_username,
       :password => ENV["MESSAGING_PASSWORD"] || messaging_settings.messaging_password,
-      :protocol => messaging_protocol
+      :protocol => messaging_protocol,
+      :encoding => "json"
     }
   end
   private_class_method :messaging_client_options
