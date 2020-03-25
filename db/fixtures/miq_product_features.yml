@@ -4619,7 +4619,7 @@
   :identifier: configuration_management
   :children:
   - :name: Providers
-    :description: Everything under Providers accordion
+    :description: Everything under Providers
     :feature_type: node
     :identifier: configuration_manager
     :children:
@@ -4679,7 +4679,7 @@
         :feature_type: admin
         :identifier: configuration_manager_add_provider
   - :name: Configuration Profiles
-    :description: Configuration Profiles
+    :description: Everything under Configuration Profiles
     :feature_type: node
     :identifier: configuration_profile
     :children:
@@ -4713,20 +4713,20 @@
     - :name: View
       :description: View Configured Systems
       :feature_type: view
-      :identifier: configured_system_view
+      :identifier: configured_systems_view
       :children:
-       - :name: List
-         :description: Display Lists of Configured Systems
-         :feature_type: view
-         :identifier: configured_system_show_list
-       - :name: Show
-         :description: Display Individual Configured System
-         :feature_type: view
-         :identifier: configured_system_show
+      - :name: List
+       :description: Display Lists of Configured Systems
+       :feature_type: view
+       :identifier: configured_system_show_list
+      - :name: Show
+       :description: Display Individual Configured System
+       :feature_type: view
+       :identifier: configured_system_show
     - :name: Operate
       :description: Perform Operations on Configured Systems
       :feature_type: control
-      :identifier: configured_system_control
+      :identifier: configured_systems_control
       :children:
       - :name: Edit Tags
         :description: Edit Configured Systems Tags
