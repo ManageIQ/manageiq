@@ -413,7 +413,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
       :transport_method     => 'ssh',
       :vmware_fingerprint   => source.host.thumbprint_sha1,
-      :vmware_uri => URI::Generic.build(
+      :vmware_uri           => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,

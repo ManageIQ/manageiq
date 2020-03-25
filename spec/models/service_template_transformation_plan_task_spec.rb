@@ -658,7 +658,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
-              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri           => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vmware_password      => 'esx_passwd',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
@@ -682,7 +682,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
-              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri           => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vmware_password      => 'esx_passwd',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
@@ -832,7 +832,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :transport_method           => 'ssh',
               :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri                 => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vmware_password      => 'esx_passwd',
+              :vmware_password            => 'esx_passwd',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
                   :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
