@@ -260,7 +260,7 @@ class EmsCluster < ApplicationRecord
     end
 
     hids = cl_hash.values.flat_map { |v| v[:ho_ids] }.compact.uniq
-    hosts_by_id = Host.where(:id => hids).includes(:tags, :taggings).select(:id, :name).index_by(&:id)
+    hosts_by_id = Host.where(:id => hids).includes(:tags, :taggings).select(:id, :name, :vmm_vendor, :ems_cluster_id).index_by(&:id)
 
     cl_hash.each do |_k, v|
       hosts = hosts_by_id.values_at(*v[:ho_ids]).compact
