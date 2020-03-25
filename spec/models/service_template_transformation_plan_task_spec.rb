@@ -399,18 +399,18 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           )
         end
 
-        it "rescues when conversion_host.get_conversion_state fails less than 5 times" do
+        it "rescues when conversion_host.get_conversion_state fails less than 20 times" do
           task_1.update_options(:get_conversion_state_failures => 2)
           allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
           task_1.get_conversion_state
           expect(task_1.options[:get_conversion_state_failures]).to eq(3)
         end
 
-        it "rescues when conversion_host.get_conversion_state fails more than 5 times" do
-          task_1.update_options(:get_conversion_state_failures => 5)
+        it "rescues when conversion_host.get_conversion_state fails more than 20 times" do
+          task_1.update_options(:get_conversion_state_failures => 20)
           allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
-          expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 5 times in a row")
-          expect(task_1.options[:get_conversion_state_failures]).to eq(6)
+          expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 20 times in a row")
+          expect(task_1.options[:get_conversion_state_failures]).to eq(21)
         end
 
         it "updates progress when conversion is failed" do
@@ -654,10 +654,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name              => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vm_name              => src_vm_1.name,
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
+              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_uri           => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vmware_password      => 'esx_passwd',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -666,6 +669,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
               :insecure_connection  => true,
+              :two_phase            => true,
+              :warm                 => false,
               :daemonize            => false
             )
           end
@@ -673,10 +678,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash with host custom IP address" do
             src_host.miq_custom_set('TransformationIPAddress', '192.168.254.1')
             expect(task_1.conversion_options).to eq(
-              :vm_name              => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vm_name              => src_vm_1.name,
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
+              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_uri           => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vmware_password      => 'esx_passwd',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -685,6 +693,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
               :insecure_connection  => true,
+              :two_phase            => true,
+              :warm                 => false,
               :daemonize            => false
             )
           end
@@ -816,10 +826,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vm_name                    => src_vm_1.name,
               :vm_uuid                    => src_vm_1.uid_ems,
               :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'ssh',
+              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_uri                 => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vmware_password      => 'esx_passwd',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
                   :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
@@ -840,6 +853,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings           => task_1.network_mappings,
+              :two_phase                  => true,
+              :warm                       => false,
               :daemonize                  => false
             )
           end

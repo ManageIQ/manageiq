@@ -297,7 +297,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   rescue
     failures = options[:get_conversion_state_failures] || 0
     update_options(:get_conversion_state_failures => failures + 1)
-    raise "Failed to get conversion state 5 times in a row" if options[:get_conversion_state_failures] > 5
+    raise "Failed to get conversion state 20 times in a row" if options[:get_conversion_state_failures] > 20
   ensure
     _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
     update_options(updates)
@@ -400,7 +400,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
       :vmware_password      => source.host.authentication_password,
-      :two_phase            => warm_migration?,
+      :two_phase            => source.snapshots.empty?,
       :warm                 => warm_migration?,
       :daemonize            => false
     }
@@ -408,15 +408,20 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def conversion_options_source_provider_vmwarews_ssh(storage)
     {
-      :vm_name              => URI::Generic.build(
+      :vm_name              => source.name,
+      :vm_uuid              => source.uid_ems,
+      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
+      :transport_method     => 'ssh',
+      :vmware_fingerprint   => source.host.thumbprint_sha1,
+      :vmware_uri => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
-      :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
-      :transport_method     => 'ssh',
+      :vmware_password      => source.host.authentication_password,
+      :two_phase            => source.snapshots.empty?,
+      :warm                 => false,
       :daemonize            => false
     }
   end
