@@ -4,7 +4,8 @@ class MiqAeField < ApplicationRecord
 
   belongs_to :ae_class,   :class_name => "MiqAeClass",  :foreign_key => :class_id, :touch => true
   belongs_to :ae_method,  :class_name => "MiqAeMethod", :foreign_key => :method_id, :touch => true
-  has_many   :ae_values,  :class_name => "MiqAeValue",  :foreign_key => :field_id, :dependent => :destroy
+  has_many   :ae_values,  :class_name => "MiqAeValue",  :foreign_key => :field_id, :dependent => :destroy,
+                          :inverse_of => :ae_field
 
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :method_id]
   validates_presence_of   :name

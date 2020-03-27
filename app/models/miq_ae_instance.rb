@@ -2,10 +2,12 @@ class MiqAeInstance < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
+  belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => "MiqAeClass", :foreign_key => :class_id
   has_many   :ae_values, -> { includes(:ae_field) }, :class_name => "MiqAeValue", :foreign_key => :instance_id,
                          :dependent => :destroy, :autosave => true
 
+  before_validation :set_relative_path
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
   validates_presence_of   :name
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
@@ -63,10 +65,13 @@ class MiqAeInstance < ApplicationRecord
   end
 
   def fqname
-    "#{ae_class.fqname}/#{name}"
+    ["", domain&.name, relative_path].compact.join("/")
   end
 
-  delegate :domain, :to => :ae_class
+  # my instance's fqname is /domain/namespace1/namespace2/class/instance
+  def namespace
+    fqname.split("/")[0..-3].join("/")
+  end
 
   def export_ae_fields
     ae_values_sorted.collect(&:to_export_yaml).compact
@@ -75,7 +80,11 @@ class MiqAeInstance < ApplicationRecord
   # TODO: Limit search to within the context of a class id?
   def self.search(str)
     str[-1, 1] = "%" if str[-1, 1] == "*"
-    where("lower(name) LIKE ?", str.downcase).pluck(:name)
+
+    query = where(arel_table[:relative_path].lower.matches(str.downcase, nil, true)) # This uses 'like'.
+
+    domain_id = query.joins(:domain).order("miq_ae_namespaces.priority DESC").limit(1).pluck(:domain_id)
+    query.where(:domain_id => domain_id)
   end
 
   def to_export_xml(options = {})
@@ -139,6 +148,12 @@ class MiqAeInstance < ApplicationRecord
     n_('Automate Instance', 'Automate Instances', number)
   end
 
+  def self.find_best_match_by(user, relative_path)
+    domain_ids = user.current_tenant.enabled_domains.collect(&:id)
+    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids}).order("miq_ae_namespaces.priority DESC")
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+  end
+
   def self.get_homonymic_across_domains(user, fqname, enabled = nil, prefix: true)
     return get_homonymic_across_domains_noprefix(user, fqname, enabled) unless prefix
 
@@ -150,6 +165,11 @@ class MiqAeInstance < ApplicationRecord
 
     ns, klass, instance, _ = MiqAeEngine::MiqAePath.split(path)
     MiqAeDatastore.get_sorted_matching_objects(user, ::MiqAeInstance, ns, klass, instance, enabled)
+  end
+
+  def set_relative_path
+    self.domain_id ||= ae_class.domain_id
+    self.relative_path = "#{ae_class.relative_path}/#{name}" if name_changed? || relative_path_changed?
   end
 
   private

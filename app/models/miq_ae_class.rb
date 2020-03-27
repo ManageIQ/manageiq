@@ -3,23 +3,28 @@ class MiqAeClass < ApplicationRecord
   include MiqAeYamlImportExportMixin
 
   belongs_to :ae_namespace, :class_name => "MiqAeNamespace", :foreign_key => :namespace_id
+  belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   has_many   :ae_fields,    -> { order(:priority) }, :class_name => "MiqAeField",     :foreign_key => :class_id,
-                            :dependent => :destroy, :autosave => true
+                            :dependent => :destroy, :autosave => true, :inverse_of => :ae_class
   has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
-                            :dependent => :destroy
+                            :dependent => :destroy, :inverse_of => :ae_class
   has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
-                            :dependent => :destroy
+                            :dependent => :destroy, :inverse_of => :ae_class
 
-  validates_presence_of   :name, :namespace_id
+  validates_presence_of   :name, :namespace_id, :domain_id
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ . - characters")
+  before_validation :set_relative_path
+  after_save :set_children_relative_path
 
   virtual_attribute :fqname, :string
 
-  def self.lookup_by_fqname(fqname, args = {})
-    ns, name = parse_fqname(fqname)
-    lookup_by_namespace_and_name(ns, name, args)
+  def self.lookup_by_fqname(fqname, _args = {})
+    fqname = fqname[1..-1] if fqname[0] == '/'
+    dname, *partial = fqname.downcase.split('/')
+    domain_id = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname)).where(:domain_id => nil).select(:id)
+    where(arel_table[:relative_path].lower.eq(partial.join("/"))).find_by(:domain_id => domain_id)
   end
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
@@ -90,14 +95,14 @@ class MiqAeClass < ApplicationRecord
   end
 
   def fqname
-    self.class.fqname(namespace, name)
+    ["", domain&.name, relative_path].compact.join("/")
   end
 
-  delegate :domain, :to => :ae_namespace
-
+  # my class's fqname is /domain/namespace1/namespace2/class
   def namespace
     return nil if ae_namespace.nil?
-    ae_namespace.fqname
+
+    fqname.split("/")[0..-2].join("/")
   end
 
   def namespace=(ns)
@@ -172,6 +177,21 @@ class MiqAeClass < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Automate Class', 'Automate Classes', number)
+  end
+
+  def set_relative_path
+    return if ae_namespace.blank?
+
+    self.domain_id ||= domain&.id || ae_namespace.domain_id
+    self.domain_id ||= ae_namespace.id if ae_namespace.root?
+    self.relative_path = [ae_namespace.relative_path, name].compact.join("/") if name_changed? || relative_path.nil?
+  end
+
+  def set_children_relative_path
+    return unless saved_change_to_relative_path?
+
+    ae_instances.each { |instance| instance.update!(:ae_class => self, :relative_path => nil) }
+    ae_methods.each { |method| method.update!(:ae_class => self, :relative_path => nil) }
   end
 
   private
