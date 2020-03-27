@@ -14,6 +14,18 @@ EOS
   exit 1
 end
 
+def skip_ui_update?
+  ENV["CI"]
+end
+
+def skip_database_setup?
+  ENV["SKIP_DATABASE_SETUP"] || ENV["CI"]
+end
+
+def skip_test_reset?
+  ENV["SKIP_TEST_RESET"]
+end
+
 Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.ensure_config_files
 
@@ -21,15 +33,15 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.install_bundler
   ManageIQ::Environment.bundle_update
 
-  ui_thread = ManageIQ::Environment.update_ui_thread unless ENV["CI"]
+  ui_thread = ManageIQ::Environment.update_ui_thread unless skip_ui_update?
 
-  unless ENV["SKIP_DATABASE_SETUP"]
+  unless skip_database_setup?
     ManageIQ::Environment.create_database
     ManageIQ::Environment.migrate_database
     ManageIQ::Environment.seed_database
   end
 
-  ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
+  ManageIQ::Environment.setup_test_environment unless skip_test_reset?
 
   ui_thread&.join
 
