@@ -1,5 +1,4 @@
 class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::StorageManager
-  require_nested :RefreshParser
   require_nested :Refresher
 
   include ManageIQ::Providers::StorageManager::ObjectMixin
@@ -61,6 +60,10 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
 
   def supports_provider_id?
     true
+  end
+
+  def allow_targeted_refresh?
+    false
   end
 
   def self.event_monitor_class

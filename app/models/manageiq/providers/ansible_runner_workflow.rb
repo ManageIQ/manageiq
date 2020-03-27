@@ -29,7 +29,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def pre_execute
     verify_options
     prepare_repository
-    queue_signal(:execute)
+    route_signal(:execute)
   end
 
   def launch_runner
@@ -40,7 +40,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     response = launch_runner
 
     if response.nil?
-      queue_signal(:abort, "Failed to run ansible #{execution_type}", "error")
+      route_signal(:abort, "Failed to run ansible #{execution_type}", "error")
     else
       context[:ansible_runner_response] = response.dump
 
@@ -48,34 +48,12 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       update!(:context => context, :started_on => started_on)
       miq_task.update!(:started_on => started_on)
 
-      queue_signal(:poll_runner)
+      route_signal(:poll_runner)
     end
   end
 
   def poll_runner
-    response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
-    if response.running?
-      if started_on + options[:timeout] < Time.now.utc
-        response.stop
-
-        queue_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
-      else
-        queue_signal(:poll_runner, :deliver_on => deliver_on)
-      end
-    else
-      result = response.response
-
-      context[:ansible_runner_return_code] = result.return_code
-      context[:ansible_runner_stdout]      = result.parsed_stdout
-
-      if result.return_code != 0
-        set_status("ansible #{execution_type} failed", "error")
-        _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
-      else
-        set_status("ansible #{execution_type} completed with no errors", "ok")
-      end
-      queue_signal(:post_execute)
-    end
+    MiqEnvironment::Command.is_podified? ? wait_for_runner_process : wait_for_runner_process_async
   end
 
   def post_execute
@@ -90,6 +68,16 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   alias error        process_error
 
   protected
+
+  # Continue in the current process if we're running in pods, or queue the message for the next worker otherwise
+  # We can't queue in pods as jobs of this type depend on filesystem state
+  def route_signal(*args, deliver_on: nil)
+    if MiqEnvironment::Command.is_podified?
+      signal(*args)
+    else
+      queue_signal(*args, :deliver_on => deliver_on)
+    end
+  end
 
   def queue_signal(*args, deliver_on: nil)
     role     = options[:role] || "ems_operations"
@@ -120,6 +108,57 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   private
+
+  def wait_for_runner_process
+    monitor = runner_monitor
+
+    # If we're running in pods loop so we don't exhaust the stack limit in very long jobs
+    loop do
+      break unless monitor.running?
+      return handle_runner_timeout(monitor) if job_timeout_exceeded?
+
+      sleep options[:poll_interval]
+    end
+
+    process_runner_result(monitor.response)
+  end
+
+  def wait_for_runner_process_async
+    monitor = runner_monitor
+
+    if monitor.running?
+      return handle_runner_timeout(monitor) if job_timeout_exceeded?
+      queue_signal(:poll_runner, :deliver_on => deliver_on)
+    else
+      process_runner_result(monitor.response)
+    end
+  end
+
+  def process_runner_result(result)
+    context[:ansible_runner_return_code] = result.return_code
+    context[:ansible_runner_stdout]      = result.parsed_stdout
+
+    if result.return_code != 0
+      set_status("ansible #{execution_type} failed", "error")
+      _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
+    else
+      set_status("ansible #{execution_type} completed with no errors", "ok")
+    end
+    route_signal(:post_execute)
+  end
+
+  def handle_runner_timeout(monitor)
+    monitor.stop
+    route_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
+  end
+
+  def job_timeout_exceeded?
+    started_on + options[:timeout] < Time.now.utc
+  end
+
+  def runner_monitor
+    Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
+  end
 
   def verify_options
     raise NotImplementedError, "must be implemented in a subclass"

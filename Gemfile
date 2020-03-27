@@ -49,7 +49,7 @@ gem "kubeclient",                     "~>4.0",         :require => false # For s
 gem "linux_admin",                    "~>2.0",         :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
 gem "manageiq-api-client",            "~>0.3.3",       :require => false
-gem "manageiq-loggers",               "~>0.3.0",       :require => false
+gem "manageiq-loggers",               "~>0.5.0",       :require => false
 gem "manageiq-messaging",             "~>0.1.4",       :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
 gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
@@ -75,7 +75,7 @@ gem "snmp",                           "~>1.2.0",       :require => false
 gem "sprockets",                      "~>3.7.2",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sync",                           "~>0.5",         :require => false
-gem "sys-filesystem",                 "~>1.3.1"
+gem "sys-filesystem",                 "~>1.3.4"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
@@ -203,7 +203,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.5.0",       :require => false
+  gem "manageiq-smartstate",            "~>0.5.3",       :require => false
 end
 
 group :consumption, :manageiq_default do

@@ -95,18 +95,7 @@ module ManageIQ
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
-
-          if parsed.kind_of?(ManageIQ::Providers::Inventory::Persister)
-            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...")
-            # We have array of InventoryCollection, we want to use that data for post refresh
-            Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
-            _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...Complete")
-          end
         end
-      end
-
-      def manager_refresh_post_processing(_ems, _target, _inventory_collections)
-        # Implement post refresh actions in a specific refresher
       end
 
       def collect_inventory_for_targets(ems, targets)
@@ -118,9 +107,6 @@ module ManageIQ
         #
         # override this method and return an array of:
         #   [[target1, inventory_for_target1], [target2, inventory_for_target2]]
-
-        return [[ems, nil]] unless ems.inventory_object_refresh?
-
         targets.map do |target|
           inventory = inventory_class_for(ems.class).build(ems, target)
           inventory.collect!
@@ -136,16 +122,11 @@ module ManageIQ
         log_header = format_ems_for_logging(ems)
         _log.debug("#{log_header} Parsing inventory...")
 
-        hashes_or_persister =
-          if ems.inventory_object_refresh?
-            inventory.parse
-          else
-            parse_legacy_inventory(ems)
-          end
+        persister = inventory.parse
 
         _log.debug("#{log_header} Parsing inventory...Complete")
 
-        hashes_or_persister
+        persister
       end
 
       def parse_legacy_inventory(ems)
@@ -229,7 +210,6 @@ module ManageIQ
       def preprocess_targets_manager_refresh
         @targets_by_ems_id.each do |ems_id, targets|
           ems = @ems_by_ems_id[ems_id]
-          next unless ems.inventory_object_refresh?
 
           # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
           # we could be missing some crosslinks in the refreshed data

@@ -449,8 +449,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           task_1.get_conversion_state
           expect(task_1.options[:virtv2v_disks]).to eq(
             [
-              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 100, :weight => 50 },
-              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 50, :weight => 50 }
+              {"path" => src_disk_1.filename, "progress" => 100},
+              {"path" => src_disk_2.filename, "progress" => 50}
             ]
           )
           expect(task_1.options[:virtv2v_status]).to eq('active')
@@ -655,6 +655,25 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
               :vm_name              => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :vm_uuid              => src_vm_1.uid_ems,
+              :conversion_host_uuid => conversion_host.resource.ems_ref,
+              :transport_method     => 'ssh',
+              :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster          => redhat_cluster.name,
+              :rhv_storage          => redhat_storages.first.name,
+              :rhv_password         => redhat_ems.authentication_password,
+              :source_disks         => [src_disk_1.filename, src_disk_2.filename],
+              :network_mappings     => task_1.network_mappings,
+              :install_drivers      => true,
+              :insecure_connection  => true,
+              :daemonize            => false
+            )
+          end
+
+          it "generates conversion options hash with host custom IP address" do
+            src_host.miq_custom_set('TransformationIPAddress', '192.168.254.1')
+            expect(task_1.conversion_options).to eq(
+              :vm_name              => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',

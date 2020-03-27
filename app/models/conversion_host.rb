@@ -246,8 +246,8 @@ class ConversionHost < ApplicationRecord
       [:volume,  "/var/tmp:/var/tmp"],
       [:volume,  "/var/lib/uci/#{task_id}:/var/lib/uci"],
       [:volume,  "/var/log/uci/#{task_id}:/var/log/uci"],
-      [:volume,  "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"]
     ]
+    params << [:volume, "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"] unless conversion_options[:transport_method] == 'ssh'
     params << [:volume, "/root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"] if conversion_options[:transport_method] == 'ssh'
     params << [:volume, "/root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"] if luks_keys_vault_valid?
     params << uci_image
@@ -272,6 +272,22 @@ class ConversionHost < ApplicationRecord
     raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
+  def create_pause_disks_precopy_file(task_id)
+    command = AwesomeSpawn.build_command_line("touch", ["/var/lib/uci/#{task_id}/pause_operations"])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
+    true
+  rescue
+    false
+  end
+
+  def delete_pause_disks_precopy_file(task_id)
+    command = AwesomeSpawn.build_command_line("rm", {:f =>["/var/lib/uci/#{task_id}/pause_operations"]})
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
+    true
+  rescue
+    false
+  end
+
   def create_cutover_file(task_id)
     command = AwesomeSpawn.build_command_line("touch", ["/var/lib/uci/#{task_id}/cutover"])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
@@ -284,7 +300,7 @@ class ConversionHost < ApplicationRecord
   # if no signal is specified.
   #
   def kill_virtv2v(task_id, signal = 'TERM')
-    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :s, signal, "virt-v2v"])
+    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :signal, signal, "virt-v2v"])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
