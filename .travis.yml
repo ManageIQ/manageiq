@@ -21,7 +21,7 @@ env:
 matrix:
   fast_finish: true
 services:
-  - postgresql
+- postgresql
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
