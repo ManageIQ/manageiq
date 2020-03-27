@@ -34,17 +34,17 @@ RSpec.describe MiqAeNamespace do
 
     context "with a duplicite names" do
       let(:domain) { FactoryBot.create(:miq_ae_domain) }
-      let(:ns1)    { FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => domain.id) }
+      let(:ns1)    { FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => domain) }
 
       before do
-        FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns1.id)
+        FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent => ns1)
       end
 
       it "with a distinct path is allowed" do
         # domain/ns1/namespace
         # domain/ns2/namespace
-        ns2 = FactoryBot.create(:miq_ae_namespace, :name => 'ns2', :parent_id => domain.id)
-        dup_namespace = FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns2.id)
+        ns2 = FactoryBot.create(:miq_ae_namespace, :name => 'ns2', :parent => domain)
+        dup_namespace = FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent => ns2)
 
         expect(ns2.valid?).to be_truthy
         expect(dup_namespace.valid?).to be_truthy
@@ -54,7 +54,7 @@ RSpec.describe MiqAeNamespace do
         # domain/ns1/namespace
         # domain/ns1/NAMESPACE
         expect do
-          FactoryBot.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent_id => ns1.id)
+          FactoryBot.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent => ns1)
         end.to raise_error("Validation failed: MiqAeNamespace: Name has already been taken")
       end
     end
@@ -92,9 +92,9 @@ RSpec.describe MiqAeNamespace do
     n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     expect(n1.editable?(@user)).to be_falsey
 
-    n2 = MiqAeNamespace.create!(:name => 'ns2', :parent_id => n1.id)
+    n2 = MiqAeNamespace.create!(:name => 'ns2', :parent => n1)
 
-    n3 = MiqAeNamespace.create!(:name => 'ns3', :parent_id => n2.id)
+    n3 = MiqAeNamespace.create!(:name => 'ns3', :parent => n2)
     expect(n3.editable?(@user)).to be_falsey
   end
 

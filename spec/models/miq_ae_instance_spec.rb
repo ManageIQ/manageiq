@@ -2,7 +2,8 @@ RSpec.describe MiqAeInstance do
   context "legacy tests" do
     before do
       @user = FactoryBot.create(:user_with_group)
-      @c1 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test")
+      @ns = FactoryBot.create(:miq_ae_namespace, :name => "TEST", :parent => FactoryBot.create(:miq_ae_domain))
+      @c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "instance_test")
       @fname1 = "field1"
       @f1 = @c1.ae_fields.create(:name => @fname1)
     end
@@ -149,7 +150,7 @@ RSpec.describe MiqAeInstance do
 
     it "should return editable as false if the parent namespace/class is not editable" do
       d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => User.current_tenant)
-      n1 = FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id)
+      n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
       c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_falsey
@@ -158,7 +159,7 @@ RSpec.describe MiqAeInstance do
     it "should return editable as true if the parent namespace/class is editable" do
       User.current_user = @user
       d1 = FactoryBot.create(:miq_ae_domain, :tenant => User.current_tenant)
-      n1 = FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id)
+      n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
       c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_truthy
@@ -204,14 +205,14 @@ RSpec.describe MiqAeInstance do
 
   context "#copy" do
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :priority => 1)
+      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @i1 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
       @i2 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
 
       @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2)
-      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
     end
 
     it "copies instances under specified namespace" do
@@ -261,8 +262,8 @@ RSpec.describe MiqAeInstance do
     let(:u1) { FactoryBot.create(:user_with_group, :name => 'user1') }
     let(:d1) { FactoryBot.create(:miq_ae_domain, :name => 'dom1', :priority => 1) }
     let(:d2) { FactoryBot.create(:miq_ae_domain, :name => 'dom2', :priority => 2) }
-    let(:n1) { FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id, :name => "namespace") }
-    let(:n2) { FactoryBot.create(:miq_ae_namespace, :parent_id => d2.id, :name => "namespace") }
+    let(:n1) { FactoryBot.create(:miq_ae_namespace, :parent => d1, :name => "namespace") }
+    let(:n2) { FactoryBot.create(:miq_ae_namespace, :parent => d2, :name => "namespace") }
     let(:c1) { FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "class") }
     let(:c2) { FactoryBot.create(:miq_ae_class, :namespace_id => n2.id, :name => "class") }
     let!(:i1) { FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "instance") }
