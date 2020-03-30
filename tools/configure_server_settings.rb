@@ -14,7 +14,7 @@ opts = Optimist.options(ARGV) do
          "Example (Array):   #{__FILE__} -s 1 -p ntp/server -v 0.pool.ntp.org,1.pool.ntp.org -t array"
 
   opt :dry_run,         "Dry Run",                                  :short => "d"
-  opt :serverid,        "Server Id",                                :short => "s", :type => :integer, :required => true
+  opt :serverid,        "Server Id",                                :short => "s", :type => :integer, :required => false
   opt :path,            "Path within advanced settings hash",       :short => "p", :type => :string,  :required => true
   opt :value,           "New Value for setting",                    :short => "v", :type => :string,  :required => true
   opt :force,           "Force change value regardless of type",    :short => "f", :type => :boolean, :default  => false
