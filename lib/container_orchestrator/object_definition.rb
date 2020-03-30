@@ -62,6 +62,8 @@ class ContainerOrchestrator
         {:name => "GUID",                    :value => MiqServer.my_guid},
         {:name => "MEMCACHED_SERVER",        :value => ENV["MEMCACHED_SERVER"]},
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
+        {:name => "MESSAGING_PORT",          :value => ENV["MESSAGING_PORT"]},
+        {:name => "MESSAGING_TYPE",          :value => ENV["MESSAGING_TYPE"]},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name      => "DATABASE_HOSTNAME",
@@ -73,7 +75,13 @@ class ContainerOrchestrator
         {:name      => "DATABASE_USER",
          :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
         {:name      => "ENCRYPTION_KEY",
-         :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
+         :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}},
+        {:name      => "MESSAGING_HOSTNAME",
+         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "hostname"}}},
+        {:name      => "MESSAGING_PASSWORD",
+         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "password"}}},
+        {:name      => "MESSAGING_USERNAME",
+         :valueFrom => {:secretKeyRef=>{:name => "kafka-secrets", :key => "username"}}}
       ]
     end
 
