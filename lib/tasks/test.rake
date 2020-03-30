@@ -3,9 +3,13 @@ require_relative './evm_test_helper'
 if defined?(RSpec)
 namespace :test do
   task :initialize do
-    ENV['RAILS_ENV'] ||= "test"
-    Rails.env = ENV['RAILS_ENV'] if defined?(Rails)
-    ENV['VERBOSE']   ||= "false"
+    if ENV['RAILS_ENV'] && ENV["RAILS_ENV"] != "test"
+      warn "Warning: RAILS_ENV is currently set to '#{ENV["RAILS_ENV"]}'. Forcing to 'test' for this run."
+    end
+    ENV['RAILS_ENV'] = "test"
+    Rails.env = 'test' if defined?(Rails)
+
+    ENV['VERBOSE'] ||= "false"
   end
 
   task :verify_no_db_access_loading_rails_environment do
