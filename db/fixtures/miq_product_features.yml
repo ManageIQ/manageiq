@@ -4716,13 +4716,13 @@
       :identifier: configured_systems_view
       :children:
       - :name: List
-       :description: Display Lists of Configured Systems
-       :feature_type: view
-       :identifier: configured_system_show_list
+        :description: Display Lists of Configured Systems
+        :feature_type: view
+        :identifier: configured_system_show_list
       - :name: Show
-       :description: Display Individual Configured System
-       :feature_type: view
-       :identifier: configured_system_show
+        :description: Display Individual Configured System
+        :feature_type: view
+        :identifier: configured_system_show
     - :name: Operate
       :description: Perform Operations on Configured Systems
       :feature_type: control
