@@ -32,24 +32,22 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
-  def self.artemis_client(client_ref)
-    @artemis_client ||= {}
-    @artemis_client[client_ref] ||= begin
+  def self.messaging_type
+    ENV["MESSAGING_TYPE"] || Settings.prototype.messaging_type
+  end
+
+  def self.messaging_client(client_ref)
+    @messaging_client ||= {}
+    return if messaging_type == "miq_queue"
+
+    @messaging_client[client_ref] ||= begin
       require "manageiq-messaging"
       ManageIQ::Messaging.logger = _log
-      queue_settings = Settings.prototype.artemis
-      connect_opts = {
-        :host       => ENV["ARTEMIS_QUEUE_HOSTNAME"] || queue_settings.queue_hostname,
-        :port       => (ENV["ARTEMIS_QUEUE_PORT"] || queue_settings.queue_port).to_i,
-        :username   => ENV["ARTEMIS_QUEUE_USERNAME"] || queue_settings.queue_username,
-        :password   => ENV["ARTEMIS_QUEUE_PASSWORD"] || queue_settings.queue_password,
-        :client_ref => client_ref,
-      }
 
       # caching the client works, even if the connection becomes unavailable
       # internally the client will track the state of the connection and re-open it,
       # once it's available again - at least thats true for a stomp connection
-      ManageIQ::Messaging::Client.open(connect_opts)
+      ManageIQ::Messaging::Client.open(messaging_client_options.merge(:client_ref => client_ref))
     end
   end
 
@@ -640,6 +638,30 @@ class MiqQueue < ApplicationRecord
   end
 
   private_class_method :optional_values
+
+  def self.messaging_client_options
+    messaging_settings = Settings.prototype[messaging_type]
+
+    {
+      :host     => ENV["MESSAGING_HOSTNAME"] || messaging_settings.messaging_hostname,
+      :port     => (ENV["MESSAGING_PORT"] || messaging_settings.messaging_port).to_i,
+      :username => ENV["MESSAGING_USERNAME"] || messaging_settings.messaging_username,
+      :password => ENV["MESSAGING_PASSWORD"] || messaging_settings.messaging_password,
+      :protocol => messaging_protocol,
+      :encoding => "json"
+    }
+  end
+  private_class_method :messaging_client_options
+
+  def self.messaging_protocol
+    case messaging_type
+    when "artemis"
+      :Stomp
+    when "kafka"
+      :Kafka
+    end
+  end
+  private_class_method :messaging_protocol
 
   def destroy_potentially_stale_record
     destroy
