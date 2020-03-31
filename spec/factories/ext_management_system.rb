@@ -126,7 +126,9 @@ FactoryBot.define do
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
           :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    provider :factory => :provider
+  end
 
   # Automation managers
 
@@ -138,7 +140,9 @@ FactoryBot.define do
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
           :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    provider :factory => :provider
+  end
 
   # Leaf classes for ems_infra
 
