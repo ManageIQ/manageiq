@@ -4656,7 +4656,7 @@
     - :name: Modify
       :description: Modify Configuration Manager Providers
       :feature_type: admin
-      :identifier: provider_admin
+      :identifier: configuration_manager_admin
       :children:
       - :name: Remove Configuration Manager Providers
         :description: Remove Configuration Manager Provider
