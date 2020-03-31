@@ -1,6 +1,11 @@
 FactoryBot.define do
   factory :ext_management_system,
           :class   => "ManageIQ::Providers::Vmware::InfraManager" do
+    # The provider has to be set before the hostname/ipaddress sequences as in some cases these attributes
+    # might be delegated to the provider. As the attributes are being set based on the order in this file,
+    # it is important to keep this line at the beginning of the factory.
+    provider { nil }
+
     sequence(:name)      { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname)  { |n| "ems-#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
@@ -91,8 +96,6 @@ FactoryBot.define do
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
-
-
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
@@ -333,7 +336,6 @@ FactoryBot.define do
     end
   end
 
-
   factory :ems_openshift,
           :aliases => ["manageiq/providers/openshift/container_manager"],
           :class   => "ManageIQ::Providers::Openshift::ContainerManager",
@@ -344,7 +346,9 @@ FactoryBot.define do
   factory :configuration_manager_foreman,
           :aliases => ["manageiq/providers/foreman/configuration_manager"],
           :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
-          :parent  => :configuration_manager
+          :parent  => :configuration_manager do
+    provider :factory => :provider_foreman
+  end
 
   trait(:provider) do
     after(:build, &:create_provider)
@@ -376,5 +380,7 @@ FactoryBot.define do
   factory :provisioning_manager_foreman,
           :aliases => ["manageiq/providers/foreman/provisioning_manager"],
           :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
-          :parent  => :provisioning_manager
+          :parent  => :provisioning_manager do
+    provider :factory => :provider_foreman
+  end
 end
