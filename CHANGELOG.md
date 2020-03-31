@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 133 ending 2020-03-30
+
+### Added
+
+* Add additional privilege escalation methods [(#20019)](https://github.com/ManageIQ/manageiq/pull/20019)
+* Add kafka connection info to worker containers [(#20000)](https://github.com/ManageIQ/manageiq/pull/20000)
+* Add kafka as an option for prototype.queue_type [(#19984)](https://github.com/ManageIQ/manageiq/pull/19984)
+* Consolidate existing server setting CLI tools [(#19848)](https://github.com/ManageIQ/manageiq/pull/19848)
+
+### Fixed
+
+* Remove the journald logger to resolve segfaults [(#20004)](https://github.com/ManageIQ/manageiq/pull/20004)
+* Don't queue things that need to run on the same worker container [(#19956)](https://github.com/ManageIQ/manageiq/pull/19956)
+* Embedded ansible provider should allow creation in maintenance zone [(#19947)](https://github.com/ManageIQ/manageiq/pull/19947)
+
 # Unreleased as of Sprint 132 ending 2020-03-16
 
 ### Added
