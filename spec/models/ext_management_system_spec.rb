@@ -130,8 +130,10 @@ RSpec.describe ExtManagementSystem do
     expect { ManageIQ::Providers::CloudManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
     expect { ManageIQ::Providers::AutomationManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate! }.to raise_error(ActiveRecord::RecordInvalid)
     expect(ManageIQ::Providers::Vmware::InfraManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
-    expect(ManageIQ::Providers::Foreman::ConfigurationManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
-    expect(ManageIQ::Providers::Foreman::ProvisioningManager.new(:hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
+
+    foreman_provider = ManageIQ::Providers::Foreman::Provider.new
+    expect(ManageIQ::Providers::Foreman::ConfigurationManager.new(:provider => foreman_provider, :hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
+    expect(ManageIQ::Providers::Foreman::ProvisioningManager.new(:provider => foreman_provider, :hostname => "abc", :name => "abc", :zone => FactoryBot.build(:zone)).validate!).to eq(true)
   end
 
   context "#ipaddress / #ipaddress=" do
