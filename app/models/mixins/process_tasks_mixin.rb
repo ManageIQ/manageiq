@@ -187,7 +187,7 @@ module ProcessTasksMixin
     def validate_tasks(options)
       tasks = []
 
-      instances = base_class.where(:id => options[:ids]).order("lower(name)").to_a
+      instances = base_class.where(:id => options[:ids]).order(Arel.sql("lower(name)")).to_a
       return instances, tasks unless options[:invoke_by] == :task # jobs will be used instead of tasks for feedback
 
       instances.each do |instance|
