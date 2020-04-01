@@ -208,7 +208,7 @@ module Metric::CiMixin::Processing
       metric[:resource_type] = resource.class.base_class.name
       metric[:resource_id]   = resource.id
 
-      MiqQueue.messaging_client("metrics_capture").publish_topic(
+      MiqQueue.messaging_client("metrics_capture")&.publish_topic(
         :service => "metrics",
         :sender  => resource.ext_management_system&.id,
         :event   => "metrics",
