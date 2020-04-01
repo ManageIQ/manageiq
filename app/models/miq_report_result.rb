@@ -384,7 +384,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.with_chargeback
-    includes(:miq_report).where(:miq_reports => {:db => Chargeback.subclasses})
+    includes(:miq_report).where(:miq_reports => {:db => Chargeback.subclasses.collect(&:name)})
   end
 
   def self.with_saved_chargeback_reports(report_id = nil)
