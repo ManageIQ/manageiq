@@ -22,15 +22,10 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   # @see documentation https://github.com/ManageIQ/guides/tree/master/providers/persister/inventory_collections.md
   #
   def add_collection(builder_class, collection_name, extra_properties = {}, settings = {}, &block)
-    builder = builder_class.prepare_data(collection_name,
-                                         self.class,
-                                         make_builder_settings(settings),
-                                         &block)
+    builder = builder_class.prepare_data(collection_name, manager.class, self.class, make_builder_settings(settings), &block)
 
     builder.add_properties(extra_properties) if extra_properties.present?
-
     builder.add_properties({:manager_uuids => references(collection_name)}, :if_missing) if targeted?
-
     builder.evaluate_lambdas!(self)
 
     collections[collection_name] = builder.to_inventory_collection

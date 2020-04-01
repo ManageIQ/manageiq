@@ -33,9 +33,9 @@ module ManageIQ::Providers
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
-      def self.prepare_data(name, persister_class, options = {})
+      def self.prepare_data(name, manager_class, persister_class, options = {})
         options = default_options.merge(options)
-        builder = new(name, persister_class, options)
+        builder = new(name, manager_class, persister_class, options)
         builder.construct_data
 
         yield(builder) if block_given?
@@ -43,9 +43,12 @@ module ManageIQ::Providers
         builder
       end
 
+      attr_reader :manager_class, :persister_class
+
       # @see prepare_data()
-      def initialize(name, persister_class, options = self.class.default_options)
+      def initialize(name, manager_class, persister_class, options = self.class.default_options)
         @name = name
+        @manager_class   = manager_class
         @persister_class = persister_class
 
         @properties = {}
