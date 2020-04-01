@@ -207,6 +207,8 @@ module Metric::CiMixin::Processing
       resource = metric.delete(:resource)
       metric[:resource_type] = resource.class.base_class.name
       metric[:resource_id]   = resource.id
+      metric[:resource_ref]  = resource.ems_ref if resource.respond_to?(:ems_ref)
+      metric[:resource_uid]  = resource.uid_ems if resource.respond_to?(:uid_ems)
 
       MiqQueue.messaging_client("metrics_capture")&.publish_topic(
         :service => "metrics",
