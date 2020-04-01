@@ -1390,6 +1390,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
         it 'returns a message stating conversion has not started' do
           task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
+          allow(job.migration_task).to receive(:two_phase?).and_return(false)
           Timecop.freeze(2019, 2, 6) do
             expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
             expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Disk transformation is initializing.', :percent => 1).and_call_original
@@ -1413,7 +1414,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
         it "updates message and percentage, and retries if conversion is cold and not finished" do
           task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
-          allow(job.migration_task).to receive(:warm_migration?).and_return(false)
+          allow(job.migration_task).to receive(:two_phase?).and_return(false)
           Timecop.freeze(2019, 2, 6) do
             expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
             expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Converting disk 2 / 2 [43.75%].', :percent => 43.75).and_call_original
