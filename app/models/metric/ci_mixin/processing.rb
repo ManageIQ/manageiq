@@ -213,7 +213,7 @@ module Metric::CiMixin::Processing
       MiqQueue.messaging_client("metrics_capture")&.publish_topic(
         :service => "metrics",
         :sender  => resource.ext_management_system&.id,
-        :event   => "metrics",
+        :event   => "manageiq.metrics",
         :payload => metric
       )
     end
