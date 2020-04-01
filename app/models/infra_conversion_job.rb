@@ -487,7 +487,7 @@ class InfraConversionJob < Job
     migration_task.get_conversion_state
     case migration_task.options[:virtv2v_status]
     when 'active'
-      unless migration_task.warm_migration?
+      unless migration_task.two_phase?
         virtv2v_disks = migration_task.options[:virtv2v_disks]
         converted_disks = virtv2v_disks.reject { |disk| disk[:percent].zero? }
         if converted_disks.empty?
