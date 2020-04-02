@@ -294,10 +294,10 @@
   :url: /migration/#settings
   :rbac_feature_name: migration_settings
   :startup: true
-- :name: configuration_manager
+- :name: ems_configuration
   :description: Configuration / Providers
-  :url: configuration_manager/show_list
-  :rbac_feature_name: configuration_manager_show_list
+  :url: ems_configuration/show_list
+  :rbac_feature_name: ems_configuration_show_list
 - :name: configuration_profile
   :description: Configuration / Profiles
   :url: configuration_profile/show_list

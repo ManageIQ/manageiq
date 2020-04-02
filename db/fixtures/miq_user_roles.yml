@@ -36,7 +36,7 @@
   - container_dashboard
   - ems_container
   - configuration_job
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - container_project
@@ -290,7 +290,7 @@
   - about
   - all_vm_rules
   - automation_manager
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - dashboard
@@ -366,7 +366,7 @@
   - embedded_automation_manager
   - chargeback
   - chargeback_reports
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - dashboard
@@ -891,7 +891,7 @@
   - embedded_automation_manager
   - ems_physical_infra_console
   - catalog_items_view
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - miq_task_my_ui
@@ -950,7 +950,7 @@
   - about
   - all_vm_rules
   - automation_manager
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - embedded_automation_manager
@@ -1027,7 +1027,7 @@
   - chargeback
   - catalog
   - cloud_tenant
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - control_explorer
@@ -1087,7 +1087,7 @@
   - chargeback
   - catalog
   - cloud_tenant
-  - configuration_manager
+  - ems_configuration
   - configuration_profile
   - configured_system
   - control_explorer
@@ -1306,7 +1306,7 @@
   - physical_server_view
   - physical_storage_view
   - policy_log
-  - configuration_manager_view
+  - ems_configuration_view
   - pxe_image_type_view
   - pxe_server_view
   - rbac_group_view

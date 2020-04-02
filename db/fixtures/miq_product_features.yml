@@ -4612,130 +4612,125 @@
     :feature_type: view
     :identifier: physical_infra_overview_view
 
-# Configuration Management
-- :name: Configuration Management
-  :description: Everything under Configuration Management
+# Configuration Managemers
+- :name: Configuration Managers
+  :description: Everything under Providers
   :feature_type: node
-  :identifier: configuration_management
+  :identifier: ems_configuration
   :children:
-  - :name: Providers
-    :description: Everything under Providers
-    :feature_type: node
-    :identifier: configuration_manager
+  - :name: View
+    :description: View Configuration Manager Providers
+    :feature_type: view
+    :identifier: ems_configuration_view
     :children:
-    - :name: View
-      :description: View Configuration Manager Providers
+    - :name: List
+      :description: Display Lists of Configuration Manager Providers
       :feature_type: view
-      :identifier: configuration_manager_view
-      :children:
-      - :name: List
-        :description: Display Lists of Configuration Manager Providers
-        :feature_type: view
-        :identifier: configuration_manager_show_list
-      - :name: Show
-        :description: Display Individual Configuration Manager Provider
-        :feature_type: view
-        :identifier: configuration_manager_show
-    - :name: Operate
-      :description: Perform Operations on Configuration Manager Providers and Configured Systems
+      :identifier: ems_configuration_show_list
+    - :name: Show
+      :description: Display Individual Configuration Manager Provider
+      :feature_type: view
+      :identifier: ems_configuration_show
+  - :name: Operate
+    :description: Perform Operations on Configuration Manager Providers and Configured Systems
+    :feature_type: control
+    :identifier: ems_configuration_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Configuration Manager Provider
       :feature_type: control
-      :identifier: configuration_manager_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Configuration Manager Provider
-        :feature_type: control
-        :identifier: configuration_manager_provider_tag
-      - :name: Provision Configured Systems
-        :description: Provision Configured Systems
-        :feature_type: control
-        :identifier: configuration_manager_configured_system_provision
-      - :name: Refresh Configuration Manager Providers
-        :description: Refresh relationships for all items related to Configuration Manager Provider
-        :feature_type: control
-        :identifier: configuration_manager_refresh_provider
-    - :name: Modify
-      :description: Modify Configuration Manager Providers
+      :identifier: ems_configuration_tag
+    - :name: Provision Configured Systems
+      :description: Provision Configured Systems
+      :feature_type: control
+      :identifier: ems_configuration_configured_system_provision
+    - :name: Refresh Configuration Manager Providers
+      :description: Refresh relationships for all items related to Configuration Manager Provider
+      :feature_type: control
+      :identifier: ems_configuration_refresh
+  - :name: Modify
+    :description: Modify Configuration Manager Providers
+    :feature_type: admin
+    :identifier: ems_configuration_admin
+    :children:
+    - :name: Remove Configuration Manager Providers
+      :description: Remove Configuration Manager Provider
       :feature_type: admin
-      :identifier: configuration_manager_admin
-      :children:
-      - :name: Remove Configuration Manager Providers
-        :description: Remove Configuration Manager Provider
-        :feature_type: admin
-        :identifier: configuration_manager_delete_provider
-      - :name: Edit Configuration Manager Provider
-        :description: Edit a Configuration Manager Provider
-        :feature_type: admin
-        :identifier: configuration_manager_edit_provider
-      - :name: Pause
-        :description: Pause a Configuration Manager Provider
-        :feature_type: admin
-        :identifier: configuration_manager_pause
-      - :name: Resume
-        :description: Resume a Configuration Manager Provider
-        :feature_type: admin
-        :identifier: configuration_manager_resume
-      - :name: Add Configuration Manager Provider
-        :description: Add a Configuration Manager Provider
-        :feature_type: admin
-        :identifier: configuration_manager_add_provider
-  - :name: Configuration Profiles
-    :description: Everything under Configuration Profiles
-    :feature_type: node
-    :identifier: configuration_profile
+      :identifier: ems_configuration_delete
+    - :name: Edit Configuration Manager Provider
+      :description: Edit a Configuration Manager Provider
+      :feature_type: admin
+      :identifier: ems_configuration_edit
+    - :name: Pause
+      :description: Pause a Configuration Manager Provider
+      :feature_type: admin
+      :identifier: ems_configuration_pause
+    - :name: Resume
+      :description: Resume a Configuration Manager Provider
+      :feature_type: admin
+      :identifier: ems_configuration_resume
+    - :name: Add Configuration Manager Provider
+      :description: Add a Configuration Manager Provider
+      :feature_type: admin
+      :identifier: ems_configuration_add
+- :name: Configuration Profiles
+  :description: Everything under Configuration Profiles
+  :feature_type: node
+  :identifier: configuration_profile
+  :children:
+  - :name: View
+    :description: View Configuration Profiles
+    :feature_type: view
+    :identifier: configuration_profile_view
     :children:
-    - :name: View
-      :description: View Configuration Profiles
+    - :name: List
+      :description: Display Lists of Configuration Profiles
       :feature_type: view
-      :identifier: configuration_profile_view
-      :children:
-      - :name: List
-        :description: Display Lists of Configuration Profiles
-        :feature_type: view
-        :identifier: configuration_profile_show_list
-      - :name: Show
-        :description: Display Individual Configuration Profile
-        :feature_type: view
-        :identifier: configuration_profile_show
-    - :name: Operate
-      :description: Perform Operations on Configuration Profiles
-      :feature_type: control
-      :identifier: configuration_profile_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Configuration Profiles Tags
-        :feature_type: control
-        :identifier: configuration_profile_tag
-  - :name: Configured Systems
-    :description: Everything under Configured Systems
-    :feature_type: node
-    :identifier: configured_system
+      :identifier: configuration_profile_show_list
+    - :name: Show
+      :description: Display Individual Configuration Profile
+      :feature_type: view
+      :identifier: configuration_profile_show
+  - :name: Operate
+    :description: Perform Operations on Configuration Profiles
+    :feature_type: control
+    :identifier: configuration_profile_control
     :children:
-    - :name: View
-      :description: View Configured Systems
-      :feature_type: view
-      :identifier: configured_systems_view
-      :children:
-      - :name: List
-        :description: Display Lists of Configured Systems
-        :feature_type: view
-        :identifier: configured_system_show_list
-      - :name: Show
-        :description: Display Individual Configured System
-        :feature_type: view
-        :identifier: configured_system_show
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
+    - :name: Edit Tags
+      :description: Edit Configuration Profiles Tags
       :feature_type: control
-      :identifier: configured_systems_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Configured Systems Tags
-        :feature_type: control
-        :identifier: configured_system_tag
-      - :name: Provision Configured Systems
-        :description: Provision Configured Systems
-        :feature_type: control
-        :identifier: configured_system_provision
+      :identifier: configuration_profile_tag
+- :name: Configured Systems
+  :description: Everything under Configured Systems
+  :feature_type: node
+  :identifier: configured_system
+  :children:
+  - :name: View
+    :description: View Configured Systems
+    :feature_type: view
+    :identifier: configured_systems_view
+    :children:
+    - :name: List
+      :description: Display Lists of Configured Systems
+      :feature_type: view
+      :identifier: configured_system_show_list
+    - :name: Show
+      :description: Display Individual Configured System
+      :feature_type: view
+      :identifier: configured_system_show
+  - :name: Operate
+    :description: Perform Operations on Configured Systems
+    :feature_type: control
+    :identifier: configured_systems_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Configured Systems Tags
+      :feature_type: control
+      :identifier: configured_system_tag
+    - :name: Provision Configured Systems
+      :description: Provision Configured Systems
+      :feature_type: control
+      :identifier: configured_system_provision
   - :name: Ansible Tower Job Templates
     :description: Everything under Ansible Tower Job Templates accordion
     :feature_type: node
