@@ -1,5 +1,8 @@
+require 'ancestry'
+require 'ancestry_patch'
+
 class MiqAeNamespace < ApplicationRecord
-  acts_as_tree
+  has_ancestry
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
@@ -8,24 +11,26 @@ class MiqAeNamespace < ApplicationRecord
                          /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
                          /^last_import_on/, /^source/, /^top_level_namespace/].freeze
 
-  belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
-  has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy
-  has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => "MiqAeClass",      :foreign_key => :namespace_id, :dependent => :destroy
+  has_many :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) }, :class_name => "MiqAeClass",
+           :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => false
 
-  validates_presence_of   :name
-  validates_format_of     :name, :with    => /\A[\w\.\-\$]+\z/i,
-                                 :message => N_("may contain only alphanumeric and _ . - $ characters")
-  validates_uniqueness_of :name, :scope => :parent_id, :case_sensitive => false
+  validates :name,
+            :format     => {:with => /\A[\w\.\-\$]+\z/i, :message => N_("may contain only alphanumeric and _ . - $ characters")},
+            :presence   => true,
+            :uniqueness => {:scope => :ancestry, :case_sensitive => false}
+
+  alias ae_namespaces children
+  virtual_has_many :ae_namespaces
 
   def self.lookup_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname   = fqname[0] == '/' ? fqname : "/#{fqname}"
-    fqname   = fqname.downcase
-    last     = fqname.split('/').last
+    fqname = fqname[0] == '/' ? fqname : "/#{fqname}"
+    fqname = fqname.downcase
+    last = fqname.split('/').last
     low_name = arel_table[:name].lower
-    query    = includes(:parent)
-    query    = query.includes(:ae_classes) if include_classes
+
+    query = include_classes ? includes(:ae_classes) : all
     query.where(low_name.eq(last)).detect { |namespace| namespace.fqname.downcase == fqname }
   end
 
@@ -35,21 +40,22 @@ class MiqAeNamespace < ApplicationRecord
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname   = fqname[1..-1] if fqname[0] == '/'
+    fqname = fqname[1..-1] if fqname[0] == '/'
     found = lookup_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
     parts = fqname.split('/')
     new_parts = [parts.pop]
     loop do
+      break if parts.empty?
+
       found = lookup_by_fqname(parts.join('/'), include_classes)
       break unless found.nil?
       new_parts.unshift(parts.pop)
-      break if parts.empty?
     end
 
     new_parts.each do |p|
-      found = create(:name => p, :parent_id => found.try(:id))
+      found = found ? create(:name => p, :parent => found) : create(:name => p)
     end
 
     found
@@ -82,7 +88,7 @@ class MiqAeNamespace < ApplicationRecord
   end
 
   def fqname
-    @fqname ||= "/#{ancestors.collect(&:name).reverse.push(name).join('/')}"
+    @fqname ||= "/#{path.pluck(:name).join('/')}"
   end
 
   def editable?(user = User.current_user)
@@ -106,15 +112,11 @@ class MiqAeNamespace < ApplicationRecord
   end
 
   def domain
-    if domain?
-      self
-    elsif (ns = ancestors.last) && ns.domain?
-      ns
-    end
+    root if root.domain?
   end
 
   def domain?
-    parent_id.nil? && name != '$'
+    root? && name != '$'
   end
 
   def self.display_name(number = 1)
