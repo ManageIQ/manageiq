@@ -12,21 +12,6 @@ class ServiceTemplate < ApplicationRecord
     "storage"         => N_("Storage")
   }.freeze
 
-  CATALOG_ITEM_TYPES = {
-    "amazon"                     => N_("Amazon"),
-    "azure"                      => N_("Azure"),
-    "generic"                    => N_("Generic"),
-    "generic_orchestration"      => N_("Orchestration"),
-    "generic_ansible_playbook"   => N_("Ansible Playbook"),
-    "generic_ansible_tower"      => N_("Ansible Tower"),
-    "generic_container_template" => N_("OpenShift Template"),
-    "google"                     => N_("Google"),
-    "microsoft"                  => N_("SCVMM"),
-    "openstack"                  => N_("OpenStack"),
-    "redhat"                     => N_("Red Hat Virtualization"),
-    "vmware"                     => N_("VMware")
-  }.freeze
-
   SERVICE_TYPE_ATOMIC    = 'atomic'.freeze
   SERVICE_TYPE_COMPOSITE = 'composite'.freeze
 
@@ -103,12 +88,28 @@ class ServiceTemplate < ApplicationRecord
     references(table_name, :tenants).includes(:service_template_tenants => :tenant)
   end
 
+  def self.all_catalog_item_types
+    @all_catalog_item_types ||= begin
+      builtin_catalog_item_types = {
+        "generic"               => N_("Generic"),
+        "generic_orchestration" => N_("Orchestration"),
+      }
+
+      ExtManagementSystem.supported_types_for_catalog
+        .flat_map(&:catalog_types)
+        .reduce(builtin_catalog_item_types, :merge)
+    end
+  end
+
   def self.catalog_item_types
-    ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
+    ems_classes = Rbac.filtered(ExtManagementSystem.all).collect(&:class).uniq.select(&:supported_for_catalog?)
+    ci_types = Set.new(ems_classes.flat_map(&:catalog_types).reduce({}, :merge).keys)
+
     ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
     ci_types.add('generic')
-    CATALOG_ITEM_TYPES.each.with_object({}) do |(key, description), hash|
-      hash[key] = { :description => description, :display => ci_types.include?(key) }
+
+    all_catalog_item_types.each.with_object({}) do |(key, description), hash|
+      hash[key] = {:description => description, :display => ci_types.include?(key)}
     end
   end
 
