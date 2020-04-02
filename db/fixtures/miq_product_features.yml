@@ -4612,9 +4612,9 @@
     :feature_type: view
     :identifier: physical_infra_overview_view
 
-# Configuration Managemers
+# Configuration Managers
 - :name: Configuration Managers
-  :description: Everything under Providers
+  :description: Everything under Configuration Manager Providers
   :feature_type: node
   :identifier: ems_configuration
   :children:
