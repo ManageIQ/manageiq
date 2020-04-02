@@ -39,6 +39,7 @@ RSpec.describe MiqAeClass do
 
   before do
     @user = FactoryBot.create(:user_with_group)
+    @ns = FactoryBot.create(:miq_ae_namespace, :name => "TEST", :parent => FactoryBot.create(:miq_ae_domain))
   end
 
   it "should not create class without namespace" do
@@ -46,20 +47,20 @@ RSpec.describe MiqAeClass do
   end
 
   it "should not create class without name" do
-    expect { MiqAeClass.new(:namespace => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:namespace_id => @ns.id).save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "should set the updated_by field on save" do
-    c1 = MiqAeClass.create(:namespace => "TEST", :name => "oleg")
+    c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "oleg")
     expect(c1.updated_by).to eq('system')
   end
 
   it "should not create classes with the same name in the same namespace" do
-    c1 = MiqAeClass.new(:namespace => "TEST", :name => "oleg")
+    c1 = MiqAeClass.new(:namespace_id => @ns.id, :name => "oleg")
     expect(c1).not_to be_nil
     expect(c1.save!).to be_truthy
-    expect { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
-    c2 = MiqAeClass.new(:namespace => "PROD", :name => "oleg")
+    expect { MiqAeClass.new(:namespace_id => @ns.id, :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    c2 = MiqAeClass.new(:namespace_id => FactoryBot.create(:miq_ae_namespace).id, :name => "oleg")
     expect(c2).not_to be_nil
     expect(c2.save!).to be_truthy
   end

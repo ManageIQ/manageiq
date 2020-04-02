@@ -29,7 +29,7 @@ class MiqAeClass < ApplicationRecord
     name_space = MiqAeNamespace.lookup_by_fqname(name_space)
     return nil if name_space.nil?
 
-    name_space.ae_classes.detect { |c| name.casecmp(c.name).zero? }
+    find_by(:namespace_id => name_space.id).where(arel_table[:name].lower.eq(name.downcase))
   end
 
   singleton_class.send(:alias_method, :find_by_namespace_and_name, :lookup_by_namespace_and_name)
