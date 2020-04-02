@@ -388,7 +388,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.with_saved_chargeback_reports(report_id = nil)
-    with_report(report_id).auto_generated.with_current_user_groups.with_chargeback.order('LOWER(miq_reports.name)')
+    with_report(report_id).auto_generated.with_current_user_groups.with_chargeback.order(Arel.sql('LOWER(miq_reports.name)'))
   end
 
   def self.select_distinct_results

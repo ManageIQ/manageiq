@@ -278,8 +278,8 @@ RSpec.describe Classification do
       expect(all_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
       expect(any_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
 
-      expect(all_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
-      expect(any_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(all_tagged_with(Host.order(Arel.sql('lower(name)')), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order(Arel.sql('lower(name)')), ent11.name, ent11.parent.name)).to eq([host1])
 
       expect(all_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
       expect(any_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
