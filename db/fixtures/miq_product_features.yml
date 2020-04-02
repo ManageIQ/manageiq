@@ -4647,7 +4647,7 @@
     - :name: Refresh Configuration Manager Providers
       :description: Refresh relationships for all items related to Configuration Manager Provider
       :feature_type: control
-      :identifier: ems_configuration_refresh
+      :identifier: ems_configuration_refresh_provider
   - :name: Modify
     :description: Modify Configuration Manager Providers
     :feature_type: admin
@@ -4656,23 +4656,15 @@
     - :name: Remove Configuration Manager Providers
       :description: Remove Configuration Manager Provider
       :feature_type: admin
-      :identifier: ems_configuration_delete
+      :identifier: ems_configuration_delete_provider
     - :name: Edit Configuration Manager Provider
       :description: Edit a Configuration Manager Provider
       :feature_type: admin
-      :identifier: ems_configuration_edit
-    - :name: Pause
-      :description: Pause a Configuration Manager Provider
-      :feature_type: admin
-      :identifier: ems_configuration_pause
-    - :name: Resume
-      :description: Resume a Configuration Manager Provider
-      :feature_type: admin
-      :identifier: ems_configuration_resume
+      :identifier: ems_configuration_edit_provider
     - :name: Add Configuration Manager Provider
       :description: Add a Configuration Manager Provider
       :feature_type: admin
-      :identifier: ems_configuration_add
+      :identifier: ems_configuration_add_provider
 - :name: Configuration Profiles
   :description: Everything under Configuration Profiles
   :feature_type: node
