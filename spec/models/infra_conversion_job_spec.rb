@@ -1412,7 +1412,7 @@ RSpec.describe InfraConversionJob, :v2v do
           ]
         end
 
-        it "updates message and percentage, and retries if conversion is cold and not finished" do
+        it "updates message and percentage, and retries if conversion is one-phase and not finished" do
           task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
           allow(job.migration_task).to receive(:two_phase?).and_return(false)
           Timecop.freeze(2019, 2, 6) do
@@ -1427,12 +1427,12 @@ RSpec.describe InfraConversionJob, :v2v do
           end
         end
 
-        it "retries if conversion is warm and not finished" do
+        it "retries if conversion is two-phase and not finished" do
           task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
           allow(job.migration_task).to receive(:warm_migration?).and_return(true)
           Timecop.freeze(2019, 2, 6) do
             expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
-            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Warm migration in progress')
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Converting disks')
             expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
             job.signal(:poll_transform_vm_complete)
           end
