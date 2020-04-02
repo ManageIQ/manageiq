@@ -1009,6 +1009,8 @@ en:
       ems_clouds:                  Cloud Providers
       ems_cluster:                 Cluster
       ems_clusters:                Clusters
+      ems_configuration:           Configuration Manager
+      ems_configurations:          Configuration Managers
       ems_custom_attribute:        VC Custom Attribute
       ems_custom_attributes:       VC Custom Attributes
       ems_event:                   Management Event
