@@ -498,7 +498,6 @@ class InfraConversionJob < Job
           converted_disks.each { |disk| percent += (disk[:percent].to_f * disk[:weight].to_f / 100.0) }
           message = "Converting disk #{converted_disks.length} / #{virtv2v_disks.length} [#{percent.round(2)}%]."
         end
-        update_migration_task_progress(:on_retry, :message => message, :percent => percent)
       else
         update_migration_task_progress(:on_retry, :message => 'Warm migration in progress')
       end
