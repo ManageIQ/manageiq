@@ -40,13 +40,13 @@ RSpec.describe MiqAeMethod do
 
   context "#copy" do
     let(:d2) { FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
-    let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id) }
+    let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1) }
     let(:m1) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
     let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent => nil, :priority => 1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
-      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => d2)
     end
 
     it "copies instances under specified namespace" do
@@ -117,7 +117,7 @@ RSpec.describe MiqAeMethod do
 
   it "#domain" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
@@ -130,7 +130,7 @@ RSpec.describe MiqAeMethod do
 
   it "#to_export_yaml" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
