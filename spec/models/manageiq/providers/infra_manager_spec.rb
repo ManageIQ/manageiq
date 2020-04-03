@@ -25,4 +25,14 @@ RSpec.describe ManageIQ::Providers::InfraManager do
       expect(described_class.ems_timeouts(:ems_redhat, :InVentory)).to eq [5.hours, nil]
     end
   end
+
+  describe '.clusterless_hosts' do
+    it "hosts with no ems" do
+      ems = FactoryBot.create(:ems_infra)
+      host = FactoryBot.create(:host, :ext_management_system => ems)
+      FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => FactoryBot.create(:ems_cluster))
+
+      expect(ems.clusterless_hosts).to eq([host])
+    end
+  end
 end
