@@ -32,6 +32,7 @@ module ManageIQ::Providers
     has_many :networks,                   :through => :hardwares
     has_many :guest_devices,              :through => :hardwares
     has_many :ems_custom_attributes,      :through => :vms_and_templates
+    has_many :clusterless_hosts, -> { where(:ems_cluster =>nil) }, :class_name => "Host", :foreign_key => "ems_id", :inverse_of => :ext_management_system
 
     include HasManyOrchestrationStackMixin
 
@@ -64,10 +65,6 @@ module ManageIQ::Providers
 
     def validate_authentication_status
       {:available => true, :message => nil}
-    end
-
-    def clusterless_hosts
-      hosts.where(:ems_cluster => nil)
     end
   end
 
