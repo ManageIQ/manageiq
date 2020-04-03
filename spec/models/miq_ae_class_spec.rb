@@ -178,13 +178,13 @@ RSpec.describe MiqAeClass do
 
   context "#copy" do
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent => nil, :priority => 1)
+      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
       @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
-      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
     end
 
     it "copies classes under specified namespace" do
