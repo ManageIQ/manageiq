@@ -28,9 +28,10 @@ module ManageIQ
 
     def self.ensure_config_files
       config_files = {
-        "certs/v2_key.dev"        => "certs/v2_key",
-        "config/cable.yml.sample" => "config/cable.yml",
-        "config/database.pg.yml"  => "config/database.yml",
+        "certs/v2_key.dev"           => "certs/v2_key",
+        "config/cable.yml.sample"    => "config/cable.yml",
+        "config/database.pg.yml"     => "config/database.yml",
+        "config/messaging.kafka.yml" => "config/messaging.yml",
       }
 
       config_files.each do |source, dest|
