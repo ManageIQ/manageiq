@@ -42,9 +42,9 @@ bin/*
 
 # config/
 config/apache
+config/cable.yml
 config/cockpit
 config/database.yml*
-config/cable.yml
 config/vmdb.yml.db
 
 config/initializers/*.local.rb
