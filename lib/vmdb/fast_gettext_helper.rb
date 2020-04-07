@@ -30,20 +30,18 @@ module Vmdb
       # - it
       # - nl
       #
-      YAML.load_file(supported_locales_filename)
+      @supported_locales ||= supported_locales_files.flat_map { |file| YAML.load_file(file) }
     end
 
-    def self.supported_locales_filename
-      @supported_locales_filename ||= Rails.root.join("config", "supported_locales.yml")
-    end
-
-    def self.supported_locales_specified?
-      File.exist?(supported_locales_filename)
+    private_class_method def self.supported_locales_files
+      Vmdb::Plugins.to_a.unshift(Rails)
+        .map { |source| source.root.join("config", "supported_locales.yml") }
+        .select(&:exist?)
     end
 
     def self.find_available_locales
       available_locales = find_available_locales_via_directories
-      available_locales &= supported_locales if supported_locales_specified?
+      available_locales &= supported_locales if supported_locales.any?
       available_locales
     end
 
