@@ -5,17 +5,17 @@
     source {{ miq_profile }} &&              \
     {{ miq_home_dir }}/bin/rails r "puts MiqServer.my_server.id"
   register: shell_output
-  
+
 - set_fact:
     server_id: "{{ shell_output.stdout }}"
-    
+
 - name: CFME | SmartState Analysis | Enable the server roles
   shell: |
     {{ miq_tools_dir }}/configure_server_settings.rb \
     -s {{ server_id }}                               \
     -p server/role                                   \
     -v automate,database_operations,ems_inventory,ems_operations,event,notifier,reporting,scheduler,smartproxy,smartstate,user_interface,web_services
-    
+
 - name: CFME | SmartState Analysis | Set the number of SmartProxy workers to 5
   shell: |
     {{ miq_tools_dir }}/configure_server_settings.rb                  \
@@ -23,7 +23,7 @@
     -p workers/worker_base/queue_worker_base/smart_proxy_worker/count \
     -v 5                                                              \
     -t integer
-    
+
 - name: CFME | SmartState Analysis | Set scan_via_host to false
   shell: |
     {{ miq_tools_dir }}/configure_server_settings.rb \
@@ -31,7 +31,7 @@
     -p coresident_miqproxy/scan_via_host             \
     -v false                                         \
     -t boolean
-    
+
 - name: CFME | SmartState Analysis | Set concurrent_per_ems to 5
   shell: |
     {{ miq_tools_dir }}/configure_server_settings.rb \

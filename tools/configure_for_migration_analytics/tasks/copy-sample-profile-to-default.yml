@@ -7,10 +7,10 @@
       default_si = ScanItemSet.find_by(:name => 'default')
       puts default_si.id unless default_si.nil?"
   register: shell_output
-      
+
 - set_fact:
     default_profile_id: "{{ shell_output.stdout }}"
-  
+
 - name: CFME | Set the default SmartState profile | Copy the sample profile to default
   shell: |
     set -o pipefail                   \

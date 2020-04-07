@@ -1,4 +1,4 @@
 ---
-miq_home_dir:  "/var/www/miq/vmdb"
+miq_home_dir: "/var/www/miq/vmdb"
 miq_tools_dir: "{{ miq_home_dir }}/tools"
-miq_profile:   "/etc/profile.d/evm.sh"
+miq_profile: "/etc/profile.d/evm.sh"
