@@ -28,7 +28,7 @@ production:
   <<: *base
   database: vmdb_production
 
-test: &test
+test:
   <<: *base
   pool: 3
   database: vmdb_test<%= ENV['TEST_ENV_NUMBER'] %>
