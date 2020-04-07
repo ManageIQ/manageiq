@@ -643,16 +643,10 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   def self.messaging_client_options
-    messaging_settings = Settings.prototype[messaging_type]
-
-    {
-      :host     => ENV["MESSAGING_HOSTNAME"] || messaging_settings.messaging_hostname,
-      :port     => (ENV["MESSAGING_PORT"] || messaging_settings.messaging_port).to_i,
-      :username => ENV["MESSAGING_USERNAME"] || messaging_settings.messaging_username,
-      :password => ENV["MESSAGING_PASSWORD"] || messaging_settings.messaging_password,
+    (messaging_options_from_env || messaging_options_from_file).merge(
+      :encoding => "json",
       :protocol => messaging_protocol,
-      :encoding => "json"
-    }
+    ).tap { |h| h[:password] = MiqPassword.try_decrypt(h.delete(:password)) }
   end
   private_class_method :messaging_client_options
 
@@ -665,6 +659,24 @@ class MiqQueue < ApplicationRecord
     end
   end
   private_class_method :messaging_protocol
+
+  private_class_method def self.messaging_options_from_env
+    return unless ENV["MESSAGING_HOSTNAME"] && ENV["MESSAGING_PORT"] && ENV["MESSAGING_USERNAME"] && ENV["MESSAGING_PASSWORD"]
+
+    {
+      :host     => ENV["MESSAGING_HOSTNAME"],
+      :port     => ENV["MESSAGING_PORT"].to_i,
+      :username => ENV["MESSAGING_USERNAME"],
+      :password => ENV["MESSAGING_PASSWORD"],
+    }
+  end
+
+  MESSAGING_CONFIG_FILE = Rails.root.join("config", "messaging.yml")
+  private_class_method def self.messaging_options_from_file
+    return unless MESSAGING_CONFIG_FILE.file?
+
+    YAML.load_file(MESSAGING_CONFIG_FILE)[Rails.env].symbolize_keys.tap { |h| h[:host] = h.delete(:hostname) }
+  end
 
   def destroy_potentially_stale_record
     destroy

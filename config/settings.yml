@@ -931,16 +931,6 @@
   :allow_api_service_ordering: true
 :prototype:
   :messaging_type: miq_queue
-  :artemis:
-    :messaging_hostname: localhost
-    :messaging_port: 61616
-    :messaging_username: admin
-    :messaging_password: smartvm
-  :kafka:
-    :messaging_hostname: localhost
-    :messaging_port: 9092
-    :messaging_username: admin
-    :messaging_password: smartvm
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
