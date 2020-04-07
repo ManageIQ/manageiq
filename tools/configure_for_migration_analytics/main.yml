@@ -2,20 +2,20 @@
 - name: Setup SmartState Analysis
   hosts: localhost
   vars_files:
-    - vars/miq_vars.yml
+  - vars/miq_vars.yml
 
   tasks:
-    - import_tasks: tasks/configure-server-settings.yml
+  - import_tasks: tasks/configure-server-settings.yml
 
-    - import_tasks: tasks/set-control-policy.yml
+  - import_tasks: tasks/set-control-policy.yml
 
-    - import_tasks: tasks/copy-sample-profile-to-default.yml
+  - import_tasks: tasks/copy-sample-profile-to-default.yml
 
-    - name: CFME | SmartState Analysis | Check that the VDDK file {{ vddk_path }} exists
-      stat:
-        path: "{{ vddk_path }}"
-      register: stat_result
+  - name: CFME | SmartState Analysis | Check that the VDDK file {{ vddk_path }} exists
+    stat:
+      path: "{{ vddk_path }}"
+    register: stat_result
 
-    - name: CFME | SmartState Analysis | Install VDDK
-      include_tasks: tasks/install-vddk.yml
-      when: stat_result.stat.exists
+  - name: CFME | SmartState Analysis | Install VDDK
+    include_tasks: tasks/install-vddk.yml
+    when: stat_result.stat.exists

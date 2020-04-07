@@ -2,15 +2,15 @@
 - set_fact:
     vmware_provider_ids: []
     provider_type: 'ManageIQ::Providers::Vmware::InfraManager'
- 
-- name: Generate an API token  
+
+- name: Generate an API token
   shell: |
     set -o pipefail                    \
     source {{ miq_profile }} &&        \
     {{ miq_home_dir }}/bin/rails r "   \
       puts Api::UserTokenService.new.generate_token('admin', 'api')"
   register: shell_output
-  
+
 - set_fact:
     api_token: "{{ shell_output.stdout }}"
 
@@ -23,10 +23,10 @@
     validate_certs: no
     body_format: json
   register: rest_return
-  
+
 - set_fact:
     control_profile_href: "{{ rest_return.json.resources[0].href }}"
-       
+
 - name: CFME | Add Control Profile | Get the VMware provider IDs
   uri:
     url: https://localhost/api/providers?filter[]=type={{ provider_type }}&expand=resources&attributes=name,id
@@ -36,13 +36,13 @@
     validate_certs: no
     body_format: json
   register: rest_return
-    
+
 - set_fact:
     vmware_provider_ids: "{{ vmware_provider_ids + [ item ] }}"
   with_items: "{{ rest_return|json_query('json.resources[*].id') }}"
-    
+
 - debug:
-    var: vmware_provider_ids  
+    var: vmware_provider_ids
 
 - name: CFME | Add Control Profile | Assign the profile to the VMware provider IDs
   uri:
@@ -58,5 +58,3 @@
         href: "{{ control_profile_href }}"
   with_items: "{{ vmware_provider_ids }}"
   register: rest_return
-  
-
