@@ -1,0 +1,15 @@
+---
+base: &base
+  hostname: localhost
+  port: 9092
+  username: admin
+  password: smartvm
+
+development:
+  <<: *base
+
+production:
+  <<: *base
+
+test:
+  <<: *base
