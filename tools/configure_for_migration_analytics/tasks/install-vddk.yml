@@ -1,0 +1,39 @@
+---
+- name: CFME | Install VDDK | Create Temp Directory
+  tempfile:
+    state: directory
+    prefix: vmware
+  register: tmp_dir
+
+- name: CFME | Install VDDK | Extract VDDK
+  unarchive:
+    src: "{{ vddk_path }}"
+    dest: "{{ tmp_dir['path'] }}"
+
+- name: CFME | Install VDDK | Sync Folder to /usr/lib
+  copy:
+    src:  "{{ tmp_dir['path'] }}/vmware-vix-disklib-distrib/"
+    dest: /usr/lib/vmware-vix-disklib
+
+- name: CFME | Install VDDK | Link libvixDiskLib.so
+  file:
+    src: /usr/lib/vmware-vix-disklib/lib64/libvixDiskLib.so
+    dest: /usr/lib/libvixDiskLib.so
+    state: link
+  register: link_result_one
+
+- name: CFME | Install VDDK | Link libvixDiskLib.so.6
+  file:
+    src: /usr/lib/vmware-vix-disklib/lib64/libvixDiskLib.so.6
+    dest: /usr/lib/libvixDiskLib.so.6
+    state: link
+  register: link_result_two
+
+- name: CFME | Install VDDK | Clean Up /tmp
+  file:
+    path: "{{ tmp_dir['path'] }}"
+    state: absent
+
+- name: CFME | Install VDDK | Run ldconfig
+  command: 'ldconfig'
+  when: link_result_one is changed or link_result_two is changed
