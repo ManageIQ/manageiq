@@ -109,7 +109,7 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_find_vms_by_owner_and_group(options)
-    scope = Vm.not(:host_id => nil)
+    scope = Vm.where.not(:host_id => nil)
     if options[:retired_vms_only] == true
       scope = scope.where(:retired => true)
     elsif options[:include_retired_vms] == false
