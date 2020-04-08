@@ -67,6 +67,8 @@ module ActsAsMiqSet
     alias_with_relationship_type :add_members,        :add_children
 
     alias_method model_table_name.to_sym, :children
+
+    virtual_has_many model_table_name.to_sym, :uses => :all_relationships
   end
 
   module ClassMethods

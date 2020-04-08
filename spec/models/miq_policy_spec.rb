@@ -207,6 +207,15 @@ RSpec.describe MiqPolicy do
       end
     end
 
+    describe "#miq_policies (virtual_has_many)" do
+      before { profiles }
+
+      it "gets the policies under a profile" do
+        expect(MiqPolicySet.find_by(:name => "ps3").miq_policies).to match_array([policies[0]])
+        expect(MiqPolicySet.find_by(:name => "ps4").miq_policies).to match_array([policies[1]])
+      end
+    end
+
     describe ".enforce_policy" do
       it 'executes policies for a target' do
         allow(target).to receive(:get_policies).and_return(profiles)
