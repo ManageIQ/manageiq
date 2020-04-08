@@ -312,6 +312,34 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
+  describe "refresh" do
+    let(:ems) { FactoryBot.create(:ext_management_system) }
+
+    it "raises an error if the authentication check fails" do
+      allow(ems).to receive(:missing_credentials?).and_return(false)
+      allow(ems).to receive(:authentication_status_ok?).and_return(false)
+
+      expect { ems.refresh }.to raise_error(RuntimeError, "Provider failed last authentication check")
+    end
+
+    it "raises an error if no provider credentials are defined" do
+      allow(ems).to receive(:authentication_status_ok?).and_return(true)
+      allow(ems).to receive(:missing_credentials?).and_return(true)
+
+      expect { ems.refresh }.to raise_error(RuntimeError, "no Provider credentials defined")
+    end
+
+    it "calls the EmsRefresh.refresh method internally" do
+      allow(ems).to receive(:missing_credentials?).and_return(false)
+      allow(ems).to receive(:authentication_status_ok?).and_return(true)
+      allow(EmsRefresh).to receive(:refresh)
+
+      ems.refresh
+
+      expect(EmsRefresh).to have_received(:refresh)
+    end
+  end
+
   context "with virtual totals" do
     before do
       @ems = FactoryBot.create(:ems_vmware)
