@@ -22,10 +22,6 @@ module MiqProvisionQuotaMixin
     quota_vm_stats(:quota_find_vms_by_owner, options)
   end
 
-  def quota_vms_by_owner_and_group(options)
-    quota_vm_stats(:quota_find_vms_by_owner_and_group, options)
-  end
-
   # Collect stats about retired VMs that have not been deleted and are in the same LDAP group as the owner
   # making the request
   def quota_retired_vms_by_group(options)
@@ -35,10 +31,6 @@ module MiqProvisionQuotaMixin
   # Collect stats about retired VMs that have not been deleted and are assigned to the owner making the request
   def quota_retired_vms_by_owner(options)
     quota_vm_stats(:quota_find_retired_vms_by_owner, options)
-  end
-
-  def quota_retired_vms_by_owner_and_group(options)
-    quota_vm_stats(:quota_find_retired_vms_by_owner_and_group, options)
   end
 
   # Collect stats based on provisions running on the same day as this request and
@@ -108,17 +100,6 @@ module MiqProvisionQuotaMixin
     vms
   end
 
-  def quota_find_vms_by_owner_and_group(options)
-    scope = Vm.where.not(:host_id => nil)
-    if options[:retired_vms_only] == true
-      scope = scope.where(:retired => true)
-    elsif options[:include_retired_vms] == false
-      scope = scope.where.not(:retired => true)
-    end
-
-    scope.user_or_group_owned(prov_owner, prov_owner.current_group).includes(:hardware => :disks).to_a
-  end
-
   def quota_find_vms_by_owner(options)
     vms = []
     prov_owner = get_owner
@@ -146,10 +127,6 @@ module MiqProvisionQuotaMixin
 
   def quota_find_retired_vms_by_owner(options)
     quota_find_vms_by_owner(options.merge(:retired_vms_only => true))
-  end
-
-  def quota_find_retired_vms_by_owner_and_group(options)
-    quota_find_vms_by_owner_and_group(options.merge(:retired_vms_only => true))
   end
 
   def quota_vm_stats(vms_method, options)
