@@ -206,6 +206,8 @@ module Metric::CiMixin::Processing
     metrics.each_value do |metric|
       resource = metric.delete(:resource)
 
+      metric[:parent_ems_type] = resource.ext_management_system&.class&.ems_type
+
       metric[:resource_type] = resource.class.base_class.name
       metric[:resource_id]   = resource.id
 
@@ -213,9 +215,9 @@ module Metric::CiMixin::Processing
       metric[:resource_manager_uid] = resource.uid_ems if resource.respond_to?(:uid_ems)
 
       MiqQueue.messaging_client("metrics_capture")&.publish_topic(
-        :service => "metrics",
+        :service => "manageiq.metrics",
         :sender  => resource.ext_management_system&.id,
-        :event   => "manageiq.metrics",
+        :event   => "metrics",
         :payload => metric
       )
     end
