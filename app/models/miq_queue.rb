@@ -47,7 +47,10 @@ class MiqQueue < ApplicationRecord
       # caching the client works, even if the connection becomes unavailable
       # internally the client will track the state of the connection and re-open it,
       # once it's available again - at least thats true for a stomp connection
-      ManageIQ::Messaging::Client.open(messaging_client_options.merge(:client_ref => client_ref))
+      options = messaging_client_options&.merge(:client_ref => client_ref)
+      return if options.nil?
+
+      ManageIQ::Messaging::Client.open(options)
     rescue => err
       _log.warn("Failed to open messaging client: #{err}")
       nil
@@ -643,10 +646,10 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   def self.messaging_client_options
-    (messaging_options_from_env || messaging_options_from_file).merge(
+    (messaging_options_from_env || messaging_options_from_file)&.merge(
       :encoding => "json",
       :protocol => messaging_protocol,
-    ).tap { |h| h[:password] = MiqPassword.try_decrypt(h.delete(:password)) }
+    )&.tap { |h| h[:password] = MiqPassword.try_decrypt(h.delete(:password)) }
   end
   private_class_method :messaging_client_options
 
