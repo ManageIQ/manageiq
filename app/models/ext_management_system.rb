@@ -561,6 +561,7 @@ class ExtManagementSystem < ApplicationRecord
   def refresh
     raise _("no Provider credentials defined") if missing_credentials?
     raise _("Provider failed last authentication check") unless authentication_status_ok?
+
     EmsRefresh.refresh(self)
   end
 
