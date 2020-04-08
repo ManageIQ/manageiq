@@ -414,7 +414,7 @@ module Rbac
     # the associated application model.  See #rbac_class method
     #
     def apply_rbac_through_association?(klass)
-      klass != VimPerformanceDaily && (klass < MetricRollup || klass < Metric)
+      klass != VimPerformanceDaily && klass != VimPerformanceTag && (klass < MetricRollup || klass < Metric)
     end
 
     def rbac_base_class(klass)
