@@ -66,7 +66,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
     update_options(
       :source_vm_power_state => source.power_state, # This will determine power_state of destination_vm
-      :source_vm_ipaddresses => source.ipaddresses  # This will determine if we need to wait for ip addresses to appear
+      :source_vm_ipaddresses => source.ipaddresses, # This will determine if we need to wait for ip addresses to appear
+      :two_phase             => two_phase?          # This will help the UI to know how to display the data
     )
     destination_cluster
     preflight_check_vm_exists_in_destination
@@ -96,6 +97,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     unless destination_ems.vms_and_templates.where(:name => source.name, :cloud_tenant => destination_cluster).count.zero?
       raise "A VM named '#{source.name}' already exist in destination cloud tenant"
     end
+  end
+
+  def two_phase?
+    source.snapshots.empty?
   end
 
   def source_cluster
@@ -271,7 +276,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
       updates[:virtv2v_status] = virtv2v_state['status'] == 'Paused' ? 'paused' : 'active'
-      if warm_migration?
+      if two_phase?
         updated_disks = virtv2v_state['disks']
       else
         updated_disks.each do |disk|
@@ -297,7 +302,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   rescue
     failures = options[:get_conversion_state_failures] || 0
     update_options(:get_conversion_state_failures => failures + 1)
-    raise "Failed to get conversion state 5 times in a row" if options[:get_conversion_state_failures] > 5
+    raise "Failed to get conversion state 20 times in a row" if options[:get_conversion_state_failures] > 20
   ensure
     _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
     update_options(updates)
@@ -400,7 +405,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
       :vmware_password      => source.host.authentication_password,
-      :two_phase            => warm_migration?,
+      :two_phase            => two_phase?,
       :warm                 => warm_migration?,
       :daemonize            => false
     }
@@ -408,15 +413,20 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def conversion_options_source_provider_vmwarews_ssh(storage)
     {
-      :vm_name              => URI::Generic.build(
+      :vm_name              => source.name,
+      :vm_uuid              => source.uid_ems,
+      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
+      :transport_method     => 'ssh',
+      :vmware_fingerprint   => source.host.thumbprint_sha1,
+      :vmware_uri           => URI::Generic.build(
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
-      :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
-      :transport_method     => 'ssh',
+      :vmware_password      => source.host.authentication_password,
+      :two_phase            => two_phase?,
+      :warm                 => false,
       :daemonize            => false
     }
   end

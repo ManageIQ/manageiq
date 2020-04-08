@@ -487,7 +487,9 @@ class InfraConversionJob < Job
     migration_task.get_conversion_state
     case migration_task.options[:virtv2v_status]
     when 'active'
-      unless migration_task.warm_migration?
+      if migration_task.two_phase?
+        update_migration_task_progress(:on_retry, :message => 'Converting disks')
+      else
         virtv2v_disks = migration_task.options[:virtv2v_disks]
         converted_disks = virtv2v_disks.reject { |disk| disk[:percent].zero? }
         if converted_disks.empty?
@@ -499,8 +501,6 @@ class InfraConversionJob < Job
           message = "Converting disk #{converted_disks.length} / #{virtv2v_disks.length} [#{percent.round(2)}%]."
         end
         update_migration_task_progress(:on_retry, :message => message, :percent => percent)
-      else
-        update_migration_task_progress(:on_retry, :message => 'Warm migration in progress')
       end
       queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
     when 'failed'
