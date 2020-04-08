@@ -540,6 +540,9 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  # Queue an EMS refresh using +opts+. Credentials must exist, and the
+  # authentication status must be ok, otherwise an error is raised.
+  #
   def refresh_ems(opts = {})
     if missing_credentials?
       raise _("no Provider credentials defined")
@@ -548,6 +551,17 @@ class ExtManagementSystem < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self, nil, opts)
+  end
+
+  alias queue_refresh refresh_ems
+
+  # Execute an EMS refresh immediately. Credentials must exist, and the
+  # authentication status must be ok, otherwise an error is raised.
+  #
+  def refresh
+    raise _("no Provider credentials defined") if missing_credentials?
+    raise _("Provider failed last authentication check") unless authentication_status_ok?
+    EmsRefresh.refresh(self)
   end
 
   def self.ems_infra_discovery_types
