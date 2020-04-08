@@ -338,10 +338,6 @@ RSpec.describe ExtManagementSystem do
 
       expect(EmsRefresh).to have_received(:refresh)
     end
-
-    it "defines a queue_refresh alias for refresh_ems" do
-      expect(ems.method(:refresh_ems)).to eql(ems.method(:queue_refresh))
-    end
   end
 
   context "with virtual totals" do
