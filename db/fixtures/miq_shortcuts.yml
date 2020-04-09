@@ -298,10 +298,12 @@
   :description: Configuration / Providers
   :url: ems_configuration/show_list
   :rbac_feature_name: ems_configuration_show_list
+  :startup: true
 - :name: configuration_profile
   :description: Configuration / Profiles
   :url: configuration_profile/show_list
   :rbac_feature_name: configuration_profile_show_list
+  :startup: true
 - :name: configured_system
   :description: Configured / Systems
   :url: configured_system/show_list

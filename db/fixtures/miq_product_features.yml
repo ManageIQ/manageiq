@@ -4700,7 +4700,7 @@
   - :name: View
     :description: View Configured Systems
     :feature_type: view
-    :identifier: configured_systems_view
+    :identifier: configured_system_view
     :children:
     - :name: List
       :description: Display Lists of Configured Systems
@@ -4713,7 +4713,7 @@
   - :name: Operate
     :description: Perform Operations on Configured Systems
     :feature_type: control
-    :identifier: configured_systems_control
+    :identifier: configured_system_control
     :children:
     - :name: Edit Tags
       :description: Edit Configured Systems Tags
@@ -4723,28 +4723,6 @@
       :description: Provision Configured Systems
       :feature_type: control
       :identifier: configured_system_provision
-  - :name: Ansible Tower Job Templates
-    :description: Everything under Ansible Tower Job Templates accordion
-    :feature_type: node
-    :identifier: configuration_scripts_accord
-    :children:
-    - :name: View
-      :description: View Ansible Tower Job Templates
-      :feature_type: view
-      :identifier: configuration_script_view
-    - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
-      :feature_type: control
-      :identifier: configuration_script_control
-      :children:
-      - :name: Create Service Dialog
-        :description: Create Service Dialog
-        :feature_type: admin
-        :identifier: configscript_service_dialog
-      - :name: Edit Tags
-        :description: Edit Job Templates Tags
-        :feature_type: control
-        :identifier: configuration_script_tag
 
 # Embedded Automation Manager
 - :name: Embedded Automation Manager
@@ -4923,17 +4901,17 @@
         :description: Edit Configured Systems Tags
         :feature_type: control
         :identifier: automation_manager_configured_system_tag
-  - :name: Automation Scripts
-    :description: Everything under Automation Scripts accordion
+  - :name: Templates
+    :description: Everything under Templates accordion
     :feature_type: node
     :identifier: automation_manager_configuration_scripts_accord
     :children:
     - :name: View
-      :description: View Automation Scripts
+      :description: View Templates
       :feature_type: view
       :identifier: automation_manager_configuration_script_view
     - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+      :description: Perform Operations on Templates
       :feature_type: control
       :identifier: automation_manager_configuration_script_control
       :children:
@@ -6321,19 +6299,6 @@
   :feature_type: node
   :identifier: api_exclusive
   :children:
-  - :name: Configured Systems
-    :description: Everything under Configured Systems
-    :feature_type: node
-    :identifier: configured_systems
-    :children:
-    - :name: View
-      :description: View Configured Systems
-      :feature_type: view
-      :identifier: configured_system_view
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
-      :feature_type: control
-      :identifier: configured_system_control
   # Pictures
   - :name: Pictures
     :description: Everything under Pictures
