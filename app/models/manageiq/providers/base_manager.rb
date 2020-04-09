@@ -16,9 +16,10 @@ module ManageIQ::Providers
       self
     end
 
-    def supported_catalog_types
-      []
+    def self.catalog_types
+      {}
     end
+    delegate :catalog_types, :to => :class
 
     def refresher
       self.class::Refresher

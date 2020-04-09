@@ -86,8 +86,16 @@ RSpec.describe ExtManagementSystem do
     expect(described_class.types).to match_array(all_types_and_descriptions.keys)
   end
 
-  it ".supported_types" do
-    expect(described_class.supported_types).to match_array(all_types_and_descriptions.keys)
+  describe ".supported_types" do
+    it "with default permissions" do
+      expect(described_class.supported_types).to match_array(all_types_and_descriptions.keys)
+    end
+
+    it "with removed permissions" do
+      stub_vmdb_permission_store_with_types(["ems-type:vmwarews"]) do
+        expect(described_class.supported_types).not_to include("vmwarews")
+      end
+    end
   end
 
   describe ".supported_types_and_descriptions_hash" do
