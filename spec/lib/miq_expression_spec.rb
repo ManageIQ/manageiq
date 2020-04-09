@@ -9,6 +9,7 @@ RSpec.describe MiqExpression do
          display_range
          entity
          tag_name
+         tenant_name
          label_name
          id
          vm_id
@@ -16,7 +17,10 @@ RSpec.describe MiqExpression do
     end
 
     it 'lists custom attributes in ChargebackVm' do
-      skip('removing of virtual custom attributes is needed to do first in other specs')
+      # sometimes this is called before this, other times not
+      # this can be invoked by running a chargeback report like we in have specs:
+      # https://github.com/ManageIQ/manageiq/blob/1a4de9c0193651c3bc6d2e6c44fdc1429a61c6fe/spec/models/miq_report_spec.rb#L1131
+      ChargebackVm.load_custom_attributes_for(['virtual_custom_attribute_attr_1'])
 
       displayed_columms = described_class.reporting_available_fields('ChargebackVm').map(&:second)
       expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
