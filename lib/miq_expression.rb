@@ -1376,13 +1376,7 @@ class MiqExpression
         ids = tag.model.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
         tag.model.arel_attribute(:id).in(ids)
       else
-        raise unless field.associations.one?
-        reflection = field.reflections.first
-        arel = arel_attribute.eq(parsed_value)
-        arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
-        field.model.arel_attribute(:id).in(
-          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
-        )
+        subquery_for_contains(field, arel_attribute.eq(parsed_value))
       end
     when "is"
       value = parsed_value
@@ -1404,24 +1398,90 @@ class MiqExpression
     end
   end
 
-  def extract_where_values(klass, scope)
-    relation = ActiveRecord::Relation.new(klass, klass.arel_table, klass.predicate_builder)
-    relation = relation.instance_eval(&scope)
+  # build a subquery for an `MiqExpression` `"CONTAINS"` statement
+  #
+  # @param field [MiqExpression::Field] field name with association chain from main table to the field
+  # @param limiter_query [Arel] query to add to the in clause (e.g. typically field = 'string')
+  # @return [Arel] "IN" clause on the main table that ensures field = limiter_value
+  #
+  # @example Display all Emses that have a clustered host running "RHEL"
+  #
+  #    # The caller requests `MiqExpression` for this subquery:
+  #
+  #    subquery = MiqExpression.new("CONTAINS" => {"field" => "ExtManagementSystem.clustered_hosts.operating_system", "value" => "RHEL"}).to_sql
+  #
+  #    # `MiqExpression` requests the subquery from this method:
+  #
+  #    subquery_for_contains(
+  #      Field.parse("ExtManagementSystem.clustered_hosts.operating_system-name"),
+  #      Arel::Nodes::Equality.new(OperatingSystem.arel_table[:name], Arel::Nodes::Quoted.new("RHEL"))
+  #    )
+  #
+  #    # This method generates a helper query:
+  #
+  #    A1|  SELECT DISTINCT "hosts"."ems_id"
+  #    A2|  FROM "ext_management_systems"
+  #    A3|  INNER JOIN "hosts"
+  #    A4|    ON "hosts"."ems_id" = "ext_management_systems"."id"
+  #    A5|    AND "hosts"."ems_cluster_id" IS NULL
+  #    A6|  INNER JOIN "operating_systems"
+  #    A7|    ON "operating_systems"."host_id" = "hosts"."id"
+  #    A8|  WHERE "operating_systems"."name" = 'RHEL'
+  #
+  #    # Then this method massages the helper query and returns the subquery (as an `Arel` AST):
+  #
+  #    B1|  "ext_management_systems"."id" IN (
+  #    B2|    SELECT DISTINCT "hosts"."ems_id"
+  #    B3|    FROM "hosts"
+  #    B4|    INNER JOIN "operating_systems"
+  #    B5|      ON "operating_systems"."host_id" = "hosts"."id"
+  #    B6|    WHERE "operating_systems"."name" = 'RHEL'
+  #    B7|      AND "hosts"."ems_cluster_id" IS NULL
+  #    B8|  )
+  #
+  #    # The caller uses the subquery to display the emses:
+  #
+  #    ExtManagementSystem.where(subquery)
+  #
+  def subquery_for_contains(field, limiter_query)
+    return limiter_query if field.reflections.empty?
 
-    begin
-      # This is basically ActiveRecord::Relation#to_sql, only using our
-      # custom visitor instance
+    # Remove the default scopes via `base_class`. The scope is already in the main query and not needed in the subquery
+    main_model = field.model.base_class
 
-      connection = klass.connection
-      visitor    = WhereExtractionVisitor.new(connection)
+    to_ref = field.reflections.first
+    join_keys = to_ref.join_keys
+    primary_attribute = field.model.arel_attribute(join_keys.foreign_key)
+    secondary_attribute = to_ref.klass.arel_attribute(join_keys.key)
 
-      arel  = relation.arel
-      binds = relation.bound_attributes
-      binds = binds.collect(&:value_for_database)
-      binds.map! { |value| connection.quote(value) }
-      collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
-      collect.substitute_binds(binds).join
-    end
+    # Generate a helper query (A1-A7)
+    # Note: B2, B4, B5, B6 are already done (from A1, A6, A7, A8)
+    includes_associations = field.reflections.reverse.inject({}) { |i, k| {k.name => i} }
+    query_relation = main_model.select(secondary_attribute).distinct # A1,A2
+                               .joins(includes_associations)         # A3-A7
+                               .where(limiter_query)                 # A8
+    query = query_relation.arel
+
+    # Remove join query (A3-A5) from the query (A1-A7). This is a JOIN between the main table and secondary table
+    join = query.source.right.shift
+
+    # Replace the FROM table (A2) in the query with the JOIN table (A3) producing B3
+    query.source.left = join.left
+
+    # Focus on the Join's ON query clause (A4-A5)
+    join_query = join.right.expr
+
+    # a) Remove the main table join (A4) from the join query
+    #    Typically there will be no extra part (A5) of the join query, and this will return nil
+    # b) Also Convert binds to sql values in the join clause (A5)
+    binds = ActiveRecord.version.to_s >= "5.2" ? [] : query_relation.bound_attributes
+    join_query = QueryHelper.accept(join_query, primary_attribute.eq(secondary_attribute), binds)
+
+    # If there is a join clause (A5), add it to the query producing B7
+    query.where(join_query) if join_query
+
+    # Wrap in the query in an IN clause producing B1, B8
+    primary_attribute.in(query)
   end
 
   def self.determine_relat_path(ref)
