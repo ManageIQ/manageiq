@@ -41,28 +41,29 @@ module MiqReport::Formatting
     options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
     col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
 
-    format = options.delete(:format)
+    column_formatter = options.delete(:format)
     return "" if value.nil?
-    return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
+    return value.to_s if column_formatter == :_none_ # Raw value was requested, do not attempt to format
 
+    default_format_attributes = nil
     # Format name passed in as a symbol or string
-    format = MiqReport::Formats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
+    default_format_attributes = MiqReport::Formats.details(column_formatter) if (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String)) && column_formatter != :_default_
 
     # Look in this report object for column format
     self.col_formats ||= []
-    if format.nil?
+    if column_formatter.nil? && default_format_attributes.nil?
       idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
         col = col_order[idx]
-        format = MiqReport::Formats.details(self.col_formats[idx])
+        default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
       end
     end
 
     # Use default format for column stil nil
-    if format.nil? || format == :_default_
-      format = format_from_miq_expression(col, value)
+    if (column_formatter.nil? || column_formatter == :_default_) && default_format_attributes.nil?
+      default_format_attributes = format_from_miq_expression(col, value)
     else
-      format = format.deep_clone # Make sure we don't taint the original
+      default_format_attributes = format_from_miq_expression.deep_clone # Make sure we don't taint the original
     end
 
     options[:column] = col
@@ -73,8 +74,8 @@ module MiqReport::Formatting
       options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
-    format.merge!(options) if format # Merge additional options that were passed in as overrides
-    value = apply_format_function(value, format) if format && !format[:function].nil?
+    default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
+    value = apply_format_function(value, default_format_attributes) if default_format_attributes && !default_format_attributes[:function].nil?
 
     String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
   end
