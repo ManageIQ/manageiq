@@ -92,9 +92,9 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "with removed permissions" do
-      stub_vmdb_permission_store_with_types(["ems-type:vmwarews"]) do
-        expect(described_class.supported_types).not_to include("vmwarews")
-      end
+      allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).and_return(true)
+      allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).with("vmwarews").and_return(false)
+      expect(described_class.supported_types).not_to include("vmwarews")
     end
   end
 
