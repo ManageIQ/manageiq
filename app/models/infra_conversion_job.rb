@@ -642,7 +642,7 @@ class InfraConversionJob < Job
     end
 
     migration_task.kill_virtv2v('TERM') if context["retries_#{state}".to_sym] == 1
-    queue_signal(:abort_virtv2v)
+    queue_signal(:abort_virtv2v, :deliver_on => Time.now.utc + state_retry_interval)
   end
 
   def poll_automate_state_machine

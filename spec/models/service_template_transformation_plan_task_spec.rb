@@ -246,6 +246,14 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         expect(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
         expect(task.kill_virtv2v('KILL')).to eq(true)
       end
+
+      it "considers virt-v2v finished or returns false if an exception occurs" do
+        Timecop.freeze(2019, 2, 6) do
+          allow(task).to receive(:get_conversion_state).and_raise('fake error')
+          expect(task.kill_virtv2v('TERM')).to eq(false)
+          expect(task.options[:virtv2v_finished_on]).to eq(Time.now.utc.strftime('%F %T'))
+        end
+      end
     end
   end
 
