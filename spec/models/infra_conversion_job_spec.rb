@@ -1637,15 +1637,19 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it 'sends TERM signal and retries to virt-v2v when entering state for the first time' do
-        expect(job.migration_task).to receive(:kill_virtv2v).with('TERM')
-        expect(job).to receive(:queue_signal).with(:abort_virtv2v)
-        job.abort_virtv2v
+        Timecop.freeze(2019, 2, 6) do
+          expect(job.migration_task).to receive(:kill_virtv2v).with('TERM')
+          expect(job).to receive(:queue_signal).with(:abort_virtv2v, :deliver_on => Time.now.utc + job.state_retry_interval)
+          job.abort_virtv2v
+        end
       end
 
       it 'retries if not entering the state for the first time' do
-        job.context[:retries_aborting_virtv2v] = 1
-        expect(job).to receive(:queue_signal).with(:abort_virtv2v)
-        job.abort_virtv2v
+        Timecop.freeze(2019, 2, 6) do
+          job.context[:retries_aborting_virtv2v] = 1
+          expect(job).to receive(:queue_signal).with(:abort_virtv2v, :deliver_on => Time.now.utc + job.state_retry_interval)
+          job.abort_virtv2v
+        end
       end
     end
   end

@@ -302,6 +302,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
     _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
     conversion_host.kill_process(options[:virtv2v_pid], signal)
+  rescue => err
+    _log.error("Couldn't kill virt_v2v process with PID #{options[:virtv2v_pid]}")
+    update_options(:virtv2v_finished_on => Time.now.utc.strftime('%F %T'))
+    false
   end
 
   private
