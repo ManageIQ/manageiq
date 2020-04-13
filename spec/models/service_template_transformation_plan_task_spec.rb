@@ -596,12 +596,33 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             conversion_host.vddk_transport_supported = true
           end
 
-          it "generates conversion options hash" do
+          it "generates conversion options hash with host admin IP address" do
             expect(task_1.conversion_options).to eq(
               :vm_name             => src_vm_1.name,
               :transport_method    => 'vddk',
               :vmware_fingerprint  => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri          => "esx://esx_user@10.0.0.1/?no_verify=1",
+              :vmware_password     => 'esx_passwd',
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
+              :source_disks        => [src_disk_1.filename, src_disk_2.filename],
+              :network_mappings    => task_1.network_mappings,
+              :install_drivers     => true,
+              :insecure_connection => true,
+              :two_phase           => true,
+              :warm                => true
+            )
+          end
+
+          it "generates conversion options hash with host custom IP address" do
+            src_host.miq_custom_set('TransformationIPAddress', '192.168.254.1')
+            expect(task_1.conversion_options).to eq(
+              :vm_name             => src_vm_1.name,
+              :transport_method    => 'vddk',
+              :vmware_fingerprint  => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
+              :vmware_uri          => "esx://esx_user@192.168.254.1/?no_verify=1",
               :vmware_password     => 'esx_passwd',
               :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster         => redhat_cluster.name,
@@ -625,9 +646,25 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             conversion_host.ssh_transport_supported = true
           end
 
-          it "generates conversion options hash" do
+          it "generates conversion options hash with host admin IP address" do
             expect(task_1.conversion_options).to eq(
               :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
+              :transport_method    => 'ssh',
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
+              :source_disks        => [src_disk_1.filename, src_disk_2.filename],
+              :network_mappings    => task_1.network_mappings,
+              :install_drivers     => true,
+              :insecure_connection => true
+            )
+          end
+
+          it "generates conversion options hash with host custom IP address" do
+            src_host.miq_custom_set('TransformationIPAddress', '192.168.254.1')
+            expect(task_1.conversion_options).to eq(
+              :vm_name             => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :transport_method    => 'ssh',
               :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster         => redhat_cluster.name,
