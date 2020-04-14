@@ -411,29 +411,6 @@ class MiqExpression
     col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
   end
 
-  def self.expand_conditional_clause(klass, cond)
-    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.kind_of?(Hash)
-
-    cond = klass.predicate_builder.resolve_column_aliases(cond)
-    cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
-
-    klass.predicate_builder.build_from_hash(cond).map { |b| klass.connection.visitor.compile(b) }.join(' AND ')
-  end
-
-  def self.merge_where_clauses(*list)
-    list = list.compact.collect do |s|
-      expand_conditional_clause(MiqReport, s)
-    end.compact
-
-    if list.empty?
-      nil
-    elsif list.size == 1
-      list.first
-    else
-      "(#{list.join(") AND (")})"
-    end
-  end
-
   def self.get_cols_from_expression(exp, options = {})
     result = {}
     if exp.kind_of?(Hash)
