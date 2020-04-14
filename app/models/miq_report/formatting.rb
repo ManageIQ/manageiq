@@ -24,6 +24,18 @@ module MiqReport::Formatting
     [function_name, options]
   end
 
+  def format_options_by(column)
+    format_options = {}
+
+    if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
+      if column == "cpu_used_metric" || column == "cpu_metric"
+        format_options[:format] = :cores
+      end
+    end
+
+    format_options || {}
+  end
+
   def format(col, value, options = {})
     if db.to_s == "VimPerformanceTrend"
       if col == "limit_col_value"
@@ -31,11 +43,9 @@ module MiqReport::Formatting
       elsif col.to_s.ends_with?("_value")
         col = db_options[:trend_col] || col
       end
-    elsif db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-      if col == "cpu_used_metric" || col == "cpu_metric"
-        options[:format] = :cores
-      end
     end
+
+    options = options.merge(format_options_by(col))
 
     # TODO: remove this and update storing column format to instance of report in UI (this requires migration)
     options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
