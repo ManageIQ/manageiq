@@ -42,7 +42,9 @@ module MiqReport::Formatting
   end
 
   def column_to_format(column)
-    if db.to_s == "VimPerformanceTrend"
+    if is_numeric?(column)
+      col_order[column]
+    elsif db.to_s == "VimPerformanceTrend"
       if col == "limit_col_value"
         db_options[:limit_col]
       elsif col.to_s.ends_with?("_value")
@@ -68,11 +70,8 @@ module MiqReport::Formatting
     # Look in this report object for column format
     self.col_formats ||= []
     if column_formatter.nil? && default_format_attributes.nil?
-      idx = col.kind_of?(String) ? col_order.index(col) : col
-      if idx
-        col = col_order[idx]
-        default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
-      end
+      idx = col_order.index(col)
+      default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
     end
 
     # Use default format for column stil nil
