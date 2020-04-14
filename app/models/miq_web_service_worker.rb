@@ -15,4 +15,9 @@ class MiqWebServiceWorker < MiqWorker
   def self.supports_container?
     true
   end
+
+  def self.preload_for_worker_role
+    super
+    Api::ApiConfig.collections.each { |_k, v| v.klass.try(:constantize).try(:descendants) }
+  end
 end
