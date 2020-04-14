@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 134 ending 2020-04-13
+
+### Fixed
+
+* Fix messaging_client exception if no ENV and no yaml are present [(#20062)](https://github.com/ManageIQ/manageiq/pull/20062)
+* Fix a bug when running Rbac on VimPerformanceDaily [(#20058)](https://github.com/ManageIQ/manageiq/pull/20058)
+* Fix improperly addressed rubocop warning [(#20044)](https://github.com/ManageIQ/manageiq/pull/20044)
+* Only show catalog types for supported EMSs [(#20039)](https://github.com/ManageIQ/manageiq/pull/20039)
+* Fix storage profile ems foreign key [(#20038)](https://github.com/ManageIQ/manageiq/pull/20038)
+
 # Unreleased as of Sprint 133 ending 2020-03-30
 
 ### Added
