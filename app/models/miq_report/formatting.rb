@@ -41,18 +41,21 @@ module MiqReport::Formatting
     format_options || {}
   end
 
-  def format(col, value, options = {})
+  def column_to_format(column)
     if db.to_s == "VimPerformanceTrend"
       if col == "limit_col_value"
-        col = db_options[:limit_col] || col
+        db_options[:limit_col]
       elsif col.to_s.ends_with?("_value")
-        col = db_options[:trend_col] || col
+        db_options[:trend_col]
       end
-    end
+    elsif Chargeback.db_is_chargeback?(db)
+      Chargeback.default_column_for_format(col.to_s)
+    end || column
+  end
 
+  def format(col, value, options = {})
+    col = column_to_format(col)
     options = options.merge(format_options_by(col))
-
-    col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
 
     column_formatter = options.delete(:format)
     return "" if value.nil?
