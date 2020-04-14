@@ -67,6 +67,23 @@ RSpec.describe MiqReport::Generator do
         expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => 400,
                                                                       "max_trend_value" => 700)
       end
+
+      it "handles merging WHERE clauses from MiqReport#where_clause and options[:where_clause]" do
+        FactoryBot.create(:vm)       # filtered out by option[:where_clause]
+        FactoryBot.create(:template) # filtered out by report.where_clause
+        vm = FactoryBot.create(:vm, :vendor => "redhat")
+
+        rpt = FactoryBot.create(
+          :miq_report,
+          :db           => "VmOrTemplate",
+          :where_clause => ["vms.type = ?", "Vm"],
+          :col_order    => %w[id name host.name vendor]
+        )
+        rpt.generate_table(:userid => @user.userid, :where_clause => {"vms.vendor" => "redhat"})
+
+        expect(rpt.table.size).to eq(1)
+        expect(rpt.table.first.id.to_s).to eq(vm.id.to_s)
+      end
     end
   end
 

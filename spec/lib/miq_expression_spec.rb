@@ -2441,45 +2441,6 @@ RSpec.describe MiqExpression do
     end
   end
 
-  describe ".merge_where_clauses" do
-    it "returns nil for nil" do
-      expect(MiqExpression.merge_where_clauses(nil)).to be_nil
-    end
-
-    it "returns nil for blank" do
-      expect(MiqExpression.merge_where_clauses("")).to be_nil
-    end
-
-    it "returns nil for multiple empty arrays" do
-      expect(MiqExpression.merge_where_clauses([],[])).to be_nil
-    end
-
-    it "returns same string single results" do
-      expect(MiqExpression.merge_where_clauses("a=5")).to eq("a=5")
-    end
-
-    it "returns same string when concatinating blank results" do
-      expect(MiqExpression.merge_where_clauses("a=5", [])).to eq("a=5")
-    end
-
-    # would be nice if we returned a hash
-    it "returns a string if the only argument is a hash" do
-      expect(MiqExpression.merge_where_clauses({"vms.id" => 5})).to eq("\"vms\".\"id\" = 5")
-    end
-
-    it "concatinates 2 arrays" do
-      expect(MiqExpression.merge_where_clauses(["a=?",5], ["b=?",5])).to eq("(a=5) AND (b=5)")
-    end
-
-    it "concatinates 2 string" do
-      expect(MiqExpression.merge_where_clauses("a=5", "b=5")).to eq("(a=5) AND (b=5)")
-    end
-
-    it "concatinates a string and a hash" do
-      expect(MiqExpression.merge_where_clauses("a=5", {"vms.id" => 5})).to eq("(a=5) AND (\"vms\".\"id\" = 5)")
-    end
-  end
-
   describe ".parse_field_or_tag" do
     subject { described_class.parse_field_or_tag(@field).try(:column_type) }
     let(:string_custom_attribute) do
