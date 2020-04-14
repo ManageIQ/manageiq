@@ -25,7 +25,7 @@ module MiqReport::Formatting
   end
 
   def format_options_by(column)
-    format_options = {}
+    format_options = {:column => column_to_format(column)}
 
     if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
       if column == "cpu_used_metric" || column == "cpu_metric"
@@ -38,7 +38,7 @@ module MiqReport::Formatting
       format_options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
-    format_options || {}
+    format_options
   end
 
   def column_to_format(column)
@@ -56,11 +56,11 @@ module MiqReport::Formatting
   end
 
   def format(col, value, options = {})
-    col = column_to_format(col)
+    return "" if value.nil?
+
     options = options.merge(format_options_by(col))
 
     column_formatter = options.delete(:format)
-    return "" if value.nil?
     return value.to_s if column_formatter == :_none_ # Raw value was requested, do not attempt to format
 
     default_format_attributes = nil
@@ -80,8 +80,6 @@ module MiqReport::Formatting
     else
       default_format_attributes = format_from_miq_expression.deep_clone # Make sure we don't taint the original
     end
-
-    options[:column] = col
 
     default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
     value = apply_format_function(value, default_format_attributes) if default_format_attributes && !default_format_attributes[:function].nil?
