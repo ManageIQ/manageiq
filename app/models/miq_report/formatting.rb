@@ -31,6 +31,11 @@ module MiqReport::Formatting
       if column == "cpu_used_metric" || column == "cpu_metric"
         format_options[:format] = :cores
       end
+    elsif Chargeback.db_is_chargeback?(db)
+      format_options[:format] = :_none_ if Chargeback.rate_column?(column.to_s)
+      # Chargeback Reports: Add the selected currency in the assigned rate to options
+      @rates_cache ||= Chargeback::RatesCache.new
+      format_options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
     format_options || {}
@@ -47,8 +52,6 @@ module MiqReport::Formatting
 
     options = options.merge(format_options_by(col))
 
-    # TODO: remove this and update storing column format to instance of report in UI (this requires migration)
-    options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
     col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
 
     column_formatter = options.delete(:format)
@@ -77,12 +80,6 @@ module MiqReport::Formatting
     end
 
     options[:column] = col
-
-    # Chargeback Reports: Add the selected currency in the assigned rate to options
-    if Chargeback.db_is_chargeback?(db)
-      @rates_cache ||= Chargeback::RatesCache.new
-      options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
-    end
 
     default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
     value = apply_format_function(value, default_format_attributes) if default_format_attributes && !default_format_attributes[:function].nil?
