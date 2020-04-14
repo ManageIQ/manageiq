@@ -4640,10 +4640,6 @@
       :description: Edit Tags of Configuration Manager Provider
       :feature_type: control
       :identifier: ems_configuration_tag
-    - :name: Provision Configured Systems
-      :description: Provision Configured Systems
-      :feature_type: control
-      :identifier: ems_configuration_configured_system_provision
     - :name: Refresh Configuration Manager Providers
       :description: Refresh relationships for all items related to Configuration Manager Provider
       :feature_type: control
