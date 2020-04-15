@@ -77,21 +77,26 @@ module MiqReport::Formatting
     return value.to_s if column_formatter == :_none_ # Raw value was requested, do not attempt to format
 
     default_format_attributes = nil
-    # Format name passed in as a symbol or string
-    default_format_attributes = MiqReport::Formats.details(column_formatter) if (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String)) && column_formatter != :_default_
 
-    # Look in this report object for column format
-    self.col_formats ||= []
-    if column_formatter.nil? && default_format_attributes.nil?
-      idx = col_order.index(col)
-      default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
-    end
-
-    # Use default format for column stil nil
-    if (column_formatter.nil? || column_formatter == :_default_) && default_format_attributes.nil?
+    if column_formatter == :_default_
       default_format_attributes = format_from_miq_expression(col, value)
     else
-      default_format_attributes = format_from_miq_expression.deep_clone # Make sure we don't taint the original
+      # Format name passed in as a symbol or string
+      default_format_attributes = MiqReport::Formats.details(column_formatter) if (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
+
+      # Look in this report object for column format
+      self.col_formats ||= []
+      if column_formatter.nil? && default_format_attributes.nil?
+        idx = col_order.index(col)
+        default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
+      end
+
+      # Use default format for column stil nil
+      if column_formatter.nil? && default_format_attributes.nil?
+        default_format_attributes = format_from_miq_expression(col, value)
+      else
+        default_format_attributes = format_from_miq_expression.deep_clone # Make sure we don't taint the original
+      end
     end
 
     default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
