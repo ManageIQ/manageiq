@@ -43,7 +43,7 @@ module MiqReport::Formatting
     format_options = {:column => column_to_format(column)}
 
     formatter = formatter_by(column)
-    formatter[:format] = formatter if formatter
+    format_options[:format] = formatter if formatter
 
     if Chargeback.db_is_chargeback?(db)
       # Chargeback Reports: Add the selected currency in the assigned rate to options
@@ -64,7 +64,7 @@ module MiqReport::Formatting
         db_options[:trend_col]
       end
     elsif Chargeback.db_is_chargeback?(db)
-      Chargeback.default_column_for_format(col.to_s)
+      Chargeback.default_column_for_format(column.to_s)
     end || column
   end
 
@@ -80,26 +80,24 @@ module MiqReport::Formatting
 
     if column_formatter == :_default_
       default_format_attributes = format_from_miq_expression(col, value)
-    else
-      # Format name passed in as a symbol or string
-      default_format_attributes = MiqReport::Formats.details(column_formatter) if (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
-
+    elsif (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
+      default_format_attributes = MiqReport::Formats.details(column_formatter)
+    elsif column_formatter
+      default_format_attributes = column_formatter.deep_clone # Make sure we don't taint the original
+    elsif column_formatter.nil?
       # Look in this report object for column format
       self.col_formats ||= []
-      if column_formatter.nil? && default_format_attributes.nil?
-        idx = col_order.index(col)
-        default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
-      end
+      idx = col_order.index(col)
+      default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
+    end
 
-      # Use default format for column stil nil
-      if column_formatter.nil? && default_format_attributes.nil?
-        default_format_attributes = format_from_miq_expression(col, value)
-      else
-        default_format_attributes = format_from_miq_expression.deep_clone # Make sure we don't taint the original
-      end
+    # Use default format for column stil nil
+    if default_format_attributes.nil?
+      default_format_attributes = format_from_miq_expression(col, value)
     end
 
     default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
+
     value = apply_format_function(value, default_format_attributes) if default_format_attributes && !default_format_attributes[:function].nil?
 
     String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
