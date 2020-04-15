@@ -44,6 +44,8 @@
 - Host
 - HostAggregate
 - HostPerformance
+- MiqAlert
+- MiqAlertStatus
 - MiqGroup
 - MiqRegion
 - MiqRequest
@@ -127,6 +129,8 @@
 - last_compliances
 - linux_initprocesses
 - miq_actions
+- miq_alerts
+- miq_alert_statuses
 - miq_approval_stamps
 - miq_custom_attributes
 - miq_policy_sets
@@ -225,6 +229,8 @@
   ManageIQ::Providers::ContainerManager: ext_management_system
   ExtManagementSystem: ext_management_system
   Host: host
+  MiqAlert: miq_alert
+  MiqAlertStatus: miq_alert_status
   MiqGroup: miq_group
   MiqTemplate: miq_template
   ResourcePool: resource_pool

@@ -1,0 +1,45 @@
+---
+dims:
+created_on: 2020-04-15 22:29:55.101908 Z
+title: "Vms with Alerts"
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: MiqAlertStatus-resource_type
+      value: VmOrTemplate
+updated_on: 2020-04-15 22:29:55.101908 Z
+order: Ascending
+graph:
+menu_name: "Vms with Alerts"
+rpt_group: Custom
+priority: 231
+col_order:
+- resource_id
+- miq_alert_id
+- ems_id
+- miq_alert.description
+timeline:
+id: 81
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  miq_alert:
+    columns:
+    - id
+    - description
+db: MiqAlertStatus
+cols:
+- resource_type
+- resource_id
+- ems_id
+template_type: report
+group:
+sortby:
+- resource_id
+headers:
+- Vm Id
+- Alert Id
+- Ems Id
+- Alert Description
