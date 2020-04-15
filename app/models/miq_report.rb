@@ -42,6 +42,7 @@ class MiqReport < ApplicationRecord
 
   virtual_column  :human_expression, :type => :string
   virtual_column  :based_on, :type => :string
+  virtual_column :col_format_with_defaults, :type => :string_set
 
   alias_attribute :menu_name, :name
   attr_accessor :ext_options
@@ -87,6 +88,22 @@ class MiqReport < ApplicationRecord
     end
 
     q
+  end
+
+  def col_format_with_defaults
+    return [] unless cols.present?
+
+    cols.each_with_index.map do |column, index|
+      column_format = col_formats.try(:[], index)
+      if column_format
+        column_format
+      else
+        column = Chargeback.default_column_for_format(column.to_s) if Chargeback.db_is_chargeback?(db)
+        expression_col = col_to_expression_col(column)
+        column_type = MiqExpression.parse_field_or_tag(expression_col).try(:column_type)&.to_sym
+        MiqReport::Formats.default_format_for_path(expression_col, column_type)
+      end
+    end
   end
 
   # NOTE: this can by dynamically manipulated
