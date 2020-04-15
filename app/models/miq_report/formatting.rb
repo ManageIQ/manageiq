@@ -24,15 +24,28 @@ module MiqReport::Formatting
     [function_name, options]
   end
 
+  def formatter_by(column)
+    formatter = nil
+    if Chargeback.db_is_chargeback?(db)
+      if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
+        if column == "cpu_used_metric" || column == "cpu_metric"
+          formatter = :cores
+        end
+      end
+
+      formatter = :_none_ if Chargeback.rate_column?(column.to_s)
+    end
+
+    formatter
+  end
+
   def format_options_by(column)
     format_options = {:column => column_to_format(column)}
 
-    if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-      if column == "cpu_used_metric" || column == "cpu_metric"
-        format_options[:format] = :cores
-      end
-    elsif Chargeback.db_is_chargeback?(db)
-      format_options[:format] = :_none_ if Chargeback.rate_column?(column.to_s)
+    formatter = formatter_by(column)
+    formatter[:format] = formatter if formatter
+
+    if Chargeback.db_is_chargeback?(db)
       # Chargeback Reports: Add the selected currency in the assigned rate to options
       @rates_cache ||= Chargeback::RatesCache.new
       format_options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
