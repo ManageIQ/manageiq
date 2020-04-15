@@ -5,9 +5,10 @@ class ContainerOrchestrator
     def deployment_definition(name)
       {
         :metadata => {
-          :name      => name,
-          :labels    => {:app => app_name},
-          :namespace => my_namespace,
+          :name            => name,
+          :labels          => {:app => app_name},
+          :namespace       => my_namespace,
+          :ownerReferences => owner_references
         },
         :spec     => {
           :selector => {:matchLabels => {:name => name}},
@@ -30,9 +31,10 @@ class ContainerOrchestrator
     def service_definition(name, selector, port)
       {
         :metadata => {
-          :name      => name,
-          :labels    => {:app => app_name},
-          :namespace => my_namespace
+          :name            => name,
+          :labels          => {:app => app_name},
+          :namespace       => my_namespace,
+          :ownerReferences => owner_references
         },
         :spec     => {
           :selector => selector,
@@ -48,9 +50,10 @@ class ContainerOrchestrator
     def secret_definition(name, string_data)
       {
         :metadata   => {
-          :name      => name,
-          :labels    => {:app => app_name},
-          :namespace => my_namespace
+          :name            => name,
+          :labels          => {:app => app_name},
+          :namespace       => my_namespace,
+          :ownerReferences => owner_references
         },
         :stringData => string_data
       }
@@ -100,6 +103,17 @@ class ContainerOrchestrator
 
     def app_name
       ENV["APP_NAME"]
+    end
+
+    def owner_references
+      [{
+        :apiVersion         => "v1",
+        :blockOwnerDeletion => true,
+        :controller         => true,
+        :kind               => "Pod",
+        :name               => ENV["POD_NAME"],
+        :uid                => ENV["POD_UID"]
+      }]
     end
   end
 end
