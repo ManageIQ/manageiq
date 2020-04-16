@@ -67,13 +67,15 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
   def stop_cockpit_ws_process
     return unless @pid
     Process.kill("TERM", @pid)
+    @stdout&.close
+    @stderr&.close
     wait_on_cockpit_ws
   end
 
   # Waits for a cockpit-ws process to stop.  The process is expected to be
   #   in the act of shutting down, and thus it will wait 5 minutes
   #   before issuing a kill.
-  def wait_on_cockpit_ws(pid)
+  def wait_on_cockpit_ws(pid = nil)
     pid ||= @pid
     # TODO: Use Process.waitpid or one of its async variants
     begin
@@ -148,13 +150,18 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
       "XDG_CONFIG_DIRS" => cockpit_ws.config_dir,
       "DRB_URI"         => @drb_uri
     }
-    Bundler.with_clean_env do
-      stdin, stdout, stderr, wait_thr = Open3.popen3(env, *cockpit_ws.command(BINDING_ADDRESS), :unsetenv_others => true)
+    _log.info("Starting cockpit-ws process with command: #{cockpit_ws.command(BINDING_ADDRESS)} ")
+    _log.info("Cockpit environment #{env} ")
+    stdin, stdout, stderr, wait_thr = Bundler.with_clean_env do
+      Open3.popen3(env, cockpit_ws.command(BINDING_ADDRESS), :unsetenv_others => true)
     end
-    stdin.close
-
-    _log.info("#{log_prefix} cockpit-ws process started - pid=#{@pid}")
-    return wait_thr.pid, stdout, stderr
+    stdin&.close
+    if wait_thr
+      _log.info("#{log_prefix} cockpit-ws process started - pid=#{wait_thr.pid}")
+      return wait_thr.pid, stdout, stderr
+    else
+      raise "Cockpit-ws process failed to start"
+    end
   end
 
   def check_drb_service
