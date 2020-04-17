@@ -288,7 +288,7 @@ class MiqReport < ApplicationRecord
 
   def validate_columns(sorting_columns)
     Array(sorting_columns).collect do |attr|
-      if col_order&.include?(attr)
+      if cols_for_report.include?(attr)
         attr
       else
         raise ArgumentError, N_("%{attribute} is not a valid attribute for %{name}") % {:attribute => attr, :name => name}
