@@ -66,9 +66,9 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
 
   def stop_cockpit_ws_process
     return unless @pid
-    Process.kill("TERM", @pid)
     @stdout&.close
     @stderr&.close
+    Process.kill("TERM", @pid)
     wait_on_cockpit_ws
   end
 
