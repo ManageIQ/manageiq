@@ -71,7 +71,7 @@ module MiqCockpit
 
     def initialize(opts = {})
       @opts = opts || {}
-      @config_dir = File.join(__dir__, "..", "config")
+      @config_dir = Rails.root.join("config").to_s
       @cockpit_conf_dir = File.join(@config_dir, "cockpit")
       FileUtils.mkdir_p(@cockpit_conf_dir)
     end
