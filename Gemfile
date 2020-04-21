@@ -203,7 +203,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.3.7",       :require => false
+  gem "manageiq-smartstate",            "~>0.3.8",       :require => false
 end
 
 group :consumption, :manageiq_default do
