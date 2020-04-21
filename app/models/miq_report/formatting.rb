@@ -68,6 +68,23 @@ module MiqReport::Formatting
     end || column
   end
 
+  def format_attributes_for(column_formatter, col, value)
+    format_attributes = if column_formatter == :_default_
+                           format_from_miq_expression(col, value)
+                        elsif (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
+                          MiqReport::Formats.details(column_formatter)
+                        elsif column_formatter
+                          column_formatter.deep_clone # Make sure we don't taint the original
+                        elsif column_formatter.nil?
+                          # Look in this report object for column format
+                          self.col_formats ||= []
+                          idx = col_order.index(col)
+                          MiqReport::Formats.details(self.col_formats[idx])
+                        end
+
+    format_attributes || format_from_miq_expression(col, value)
+  end
+
   def format(col, value, options = {})
     return "" if value.nil?
 
@@ -76,20 +93,7 @@ module MiqReport::Formatting
     column_formatter = options.delete(:format)
     return value.to_s if column_formatter == :_none_ # Raw value was requested, do not attempt to format
 
-    default_format_attributes = nil
-
-    if column_formatter == :_default_
-      default_format_attributes = format_from_miq_expression(col, value)
-    elsif (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
-      default_format_attributes = MiqReport::Formats.details(column_formatter)
-    elsif column_formatter
-      default_format_attributes = column_formatter.deep_clone # Make sure we don't taint the original
-    elsif column_formatter.nil?
-      # Look in this report object for column format
-      self.col_formats ||= []
-      idx = col_order.index(col)
-      default_format_attributes = MiqReport::Formats.details(self.col_formats[idx])
-    end
+    default_format_attributes = format_attributes_for(column_formatter, col, value)
 
     # Use default format for column stil nil
     if default_format_attributes.nil?
