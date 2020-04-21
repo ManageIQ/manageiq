@@ -95,14 +95,9 @@ module MiqReport::Formatting
 
     default_format_attributes = format_attributes_for(column_formatter, col, value)
 
-    # Use default format for column stil nil
-    if default_format_attributes.nil?
-      default_format_attributes = format_from_miq_expression(col, value)
+    if default_format_attributes && default_format_attributes.merge!(options)[:function]
+      value = apply_format_function(value, default_format_attributes)
     end
-
-    default_format_attributes.merge!(options) if default_format_attributes # Merge additional options that were passed in as overrides
-
-    value = apply_format_function(value, default_format_attributes) if default_format_attributes && !default_format_attributes[:function].nil?
 
     String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
   end
