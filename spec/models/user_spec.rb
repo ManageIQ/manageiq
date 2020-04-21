@@ -145,6 +145,21 @@ RSpec.describe User do
     end
   end
 
+  describe '#fail_login!' do
+    let(:user) { FactoryBot.create(:user, :password => "smartvm", :failed_login_attempts => 0) }
+
+    it 'increases the number of failed login attempts' do
+      user.fail_login!
+      expect(user.reload.failed_login_attempts).to eq(1)
+    end
+
+    it 'queues an unlock task if the account is locked' do
+      allow(user).to receive(:locked?).and_return(true)
+      expect(user).to receive(:unlock_queue)
+      user.fail_login!
+    end
+  end
+
   context "#authorize_ldap" do
     before do
       @fq_user = "thin1@manageiq.com"

@@ -53,6 +53,8 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
+  default_value_for :failed_login_attempts, 0
+
   scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
 
   def self.with_roles_excluding(identifier)
@@ -166,6 +168,20 @@ class User < ApplicationRecord
       self.password = newpwd
       self.save!
     end
+  end
+
+  def locked?
+    ::Settings.authentication.max_failed_login_attempts.positive? && failed_login_attempts >= ::Settings.authentication.max_failed_login_attempts
+  end
+
+  def unlock!
+    update!(:failed_login_attempts => 0)
+  end
+
+  def fail_login!
+    update!(:failed_login_attempts => failed_login_attempts + 1)
+
+    unlock_queue if locked?
   end
 
   def ldap_group
@@ -366,4 +382,17 @@ class User < ApplicationRecord
     File.exist?(seed_file_name) ? YAML.load_file(seed_file_name) : []
   end
   private_class_method :seed_data
+
+  private
+
+  def unlock_queue
+    MiqQueue.put_or_update(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'unlock!',
+      :priority    => MiqQueue::MAX_PRIORITY
+    ) do |_msg, queue_options|
+      queue_options.merge(:deliver_on => Time.now.utc + ::Settings.authentication.locked_account_timeout.to_i)
+    end
+  end
 end
