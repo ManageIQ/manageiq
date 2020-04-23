@@ -96,7 +96,7 @@ module MiqReport::Formatting
     default_format_attributes = format_attributes_for(column_formatter, col, value)
 
     if default_format_attributes && default_format_attributes.merge!(options)[:function]
-      value = apply_format_function(value, default_format_attributes)
+      value = apply_format_function(value, default_format_attributes.deep_clone)
     end
 
     String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
