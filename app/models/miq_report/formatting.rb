@@ -28,7 +28,7 @@ module MiqReport::Formatting
     formatter = nil
     if Chargeback.db_is_chargeback?(db)
       if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-        if column == "cpu_used_metric" || column == "cpu_metric"
+        if %w[cpu_used_metric cpu_metric].include?(column)
           formatter = :cores
         end
       end
@@ -70,8 +70,8 @@ module MiqReport::Formatting
 
   def format_attributes_for(column_formatter, col, value)
     format_attributes = if column_formatter == :_default_
-                           format_from_miq_expression(col, value)
-                        elsif (column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String))
+                          format_from_miq_expression(col, value)
+                        elsif column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String)
                           MiqReport::Formats.details(column_formatter)
                         elsif column_formatter
                           column_formatter.deep_clone # Make sure we don't taint the original
