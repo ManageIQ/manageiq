@@ -7,7 +7,7 @@ module Spec
         models = ApplicationRecord.subclasses - skip_models
 
         # Skip attributes that always change between refreshes
-        skip_attrs_global   = ["created_on", "updated_on"]
+        skip_attrs_global   = ["created_on", "created_at", "updated_on", "updated_at"]
         skip_attrs_by_model = {
           "ExtManagementSystem" => ["last_refresh_date", "last_inventory_date"],
         }
