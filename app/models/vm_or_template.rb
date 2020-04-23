@@ -196,6 +196,9 @@ class VmOrTemplate < ApplicationRecord
   scope :not_orphaned, ->       { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
   scope :not_retired,  ->       { where(:retired => false).or(where(:retired => nil)) }
 
+  scope :from_cloud_managers, -> { where(:ext_management_system => ManageIQ::Providers::CloudManager.all) }
+  scope :from_infra_managers, -> { where(:ext_management_system => ManageIQ::Providers::InfraManager.all) }
+
   # The SQL form of `#registered?`, with it's inverse as well.
   # TODO: Vmware Specific (copied (old) TODO from #registered?)
   scope :registered, (lambda do
