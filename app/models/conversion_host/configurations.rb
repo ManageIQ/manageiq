@@ -54,6 +54,7 @@ module ConversionHost::Configurations
       params = params.symbolize_keys
       resource = params.delete(:resource)
 
+      raise "#{resource.class.name.demodulize} '#{resource.name}' doesn't have a hostname or IP address in inventory" if resource.hostname.nil? && resource.ipaddresses.empty?
       raise "the resource '#{resource.name}' is already configured as a conversion host" if ConversionHost.exists?(:resource => resource)
 
       params[:resource_id] = resource.id
@@ -108,6 +109,8 @@ module ConversionHost::Configurations
   end
 
   def disable_queue(auth_user = nil)
+    raise "There are active migration tasks running on this conversion host" if active_tasks.present?
+
     self.class.queue_configuration('disable', id, resource, {}, auth_user)
   end
 
