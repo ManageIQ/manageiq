@@ -109,19 +109,18 @@ module ConversionHost::Configurations
   end
 
   def disable_queue(auth_user = nil)
-    raise "There are active migration tasks running on this conversion host" if active_tasks.present?
-
     self.class.queue_configuration('disable', id, resource, {}, auth_user)
   end
 
   def disable(_params = nil, _auth_user = nil)
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
-    _log.debug("Disabling a conversion_host #{resource_info}")
+    raise "There are active migration tasks running on this conversion host" if active_tasks.present?
 
+    _log.debug("Disabling a conversion_host #{resource_info}")
     disable_conversion_host_role
     destroy!
   rescue StandardError => error
-    raise
+    raise error
   ensure
     self.class.notify_configuration_result('disable', error.nil?, resource_info)
   end

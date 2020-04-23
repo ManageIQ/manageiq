@@ -90,11 +90,11 @@ RSpec.describe ConversionHost, :v2v do
         conversion_host.disable
       end
 
-      it "to fail and send notification" do
+      it "to raise if active tasks exist" do
         expected_notify[:type] = :conversion_host_config_failure
-        allow(conversion_host).to receive(:disable_conversion_host_role).and_raise
+        FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host, :state => 'migrate')
         expect(Notification).to receive(:create).with(expected_notify)
-        expect { conversion_host.disable }.to raise_error(StandardError)
+        expect { conversion_host.disable }.to raise_error(StandardError, "There are active migration tasks running on this conversion host")
       end
 
       it "tags the associated resource as expected" do
@@ -165,12 +165,6 @@ RSpec.describe ConversionHost, :v2v do
             :op_arg  => "type=#{vm.class.name} id=#{vm.id}"
           }
         }
-      end
-
-      it "to raise if active tasks exist" do
-        allow(vm).to receive(:ipaddresses).and_return(['10.0.0.1'])
-        FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host, :state => 'migrate')
-        expect { conversion_host.disable_queue }.to raise_error("There are active migration tasks running on this conversion host")
       end
 
       it "to queue with a task" do
