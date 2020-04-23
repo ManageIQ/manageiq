@@ -91,7 +91,7 @@ module MiqReport::Formatting
     options = options.merge(format_options_by(col))
 
     column_formatter = options.delete(:format)
-    return value.to_s if column_formatter == :_none_ # Raw value was requested, do not attempt to format
+    return String.new(value.to_s) if column_formatter == :_none_ # Raw value was requested, do not attempt to format
 
     default_format_attributes = format_attributes_for(column_formatter, col, value)
 
