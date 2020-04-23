@@ -90,11 +90,11 @@ RSpec.describe ConversionHost, :v2v do
         conversion_host.disable
       end
 
-      it "to fail and send notification" do
+      it "to raise if active tasks exist" do
         expected_notify[:type] = :conversion_host_config_failure
-        allow(conversion_host).to receive(:disable_conversion_host_role).and_raise
+        FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host, :state => 'migrate')
         expect(Notification).to receive(:create).with(expected_notify)
-        expect { conversion_host.disable }.to raise_error(StandardError)
+        expect { conversion_host.disable }.to raise_error(StandardError, "There are active migration tasks running on this conversion host")
       end
 
       it "tags the associated resource as expected" do
@@ -117,12 +117,20 @@ RSpec.describe ConversionHost, :v2v do
     context ".enable_queue" do
       let(:op) { 'enable' }
 
+      it "raises if resource has no hostname nor IP address" do
+        allow(vm).to receive(:hostname).and_return(nil)
+        allow(vm).to receive(:ipaddresses).and_return([])
+        expect { described_class.enable_queue(:resource => vm) }.to raise_error("Vm '#{vm.name}' doesn't have a hostname or IP address in inventory")
+      end
+
       it "raises an error if the resource is already configured as a conversion host" do
+        allow(vm).to receive(:ipaddresses).and_return(['10.0.0.1'])
         FactoryBot.create(:conversion_host, :resource => vm)
         expect { described_class.enable_queue(:resource => vm) }.to raise_error("the resource '#{vm.name}' is already configured as a conversion host")
       end
 
       it "to queue with a task" do
+        allow(vm).to receive(:ipaddresses).and_return(['10.0.0.1'])
         task_id = described_class.enable_queue(params)
         expected_context_data = {:request_params => params.except(:resource)}
 
@@ -138,6 +146,7 @@ RSpec.describe ConversionHost, :v2v do
       end
 
       it "rejects ssh key information as context data" do
+        allow(vm).to receive(:ipaddresses).and_return(['10.0.0.1'])
         task_id = described_class.enable_queue(params.merge(:conversion_host_ssh_private_key => 'xxx', :vmware_ssh_private_key => 'yyy'))
         expected_context_data = {:request_params => params.except(:resource)}
 
