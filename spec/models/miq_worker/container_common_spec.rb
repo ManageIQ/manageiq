@@ -19,7 +19,6 @@ RSpec.describe MiqWorker::ContainerCommon do
           :template => {
             :metadata => {:name => "test", :labels => {:name => "test", :app => "manageiq"}},
             :spec     => {
-              :serviceAccountName => "miq-anyuid",
               :containers         => [{
                 :name => "test",
                 :env  => []
