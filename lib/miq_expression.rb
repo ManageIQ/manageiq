@@ -1475,7 +1475,7 @@ class MiqExpression
     #    Typically there will be no extra part (A5) of the join query, and this will return nil
     # b) Also Convert binds to sql values in the join clause (A5)
     binds = ActiveRecord.version.to_s >= "5.2" ? [] : query_relation.bound_attributes
-    join_query = QueryHelper.accept(join_query, primary_attribute.eq(secondary_attribute), binds)
+    join_query = RemoveEqualityVisitor.accept(join_query, primary_attribute.eq(secondary_attribute), binds)
 
     # If there is a join clause (A5), add it to the query producing B7
     query.where(join_query) if join_query
