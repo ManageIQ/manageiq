@@ -24,6 +24,10 @@ module MiqEnvironment
       @supports_nohup = is_appliance? && supports_command?('nohup')
     end
 
+    def self.is_production_build?
+      is_appliance? || is_podified? || is_container?
+    end
+
     def self.is_container?
       return @is_container unless @is_container.nil?
       @is_container = ENV["CONTAINER"] == "true"
@@ -36,7 +40,7 @@ module MiqEnvironment
 
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
-      @is_appliance = is_linux? && File.exist?('/var/www/miq/vmdb')
+      @is_appliance = ENV["APPLIANCE"] == "true"
     end
 
     # Return whether or not the current ManageIQ environment is a production
