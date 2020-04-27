@@ -104,6 +104,62 @@ RSpec.describe InfraConversionJob, :v2v do
     end
   end
 
+  context '.abort_conversion' do
+    it 'updates task progress and signals :abort_virtv2v' do
+      job.state = 'waiting_for_ip_address'
+      Timecop.freeze(2019, 2, 6) do
+        progress = {
+          :current_state       => 'waiting_for_ip_address',
+          :current_description => 'Waiting for IP address',
+          :percent             => 3.5,
+          :states              => {
+            :waiting_for_ip_address     => {
+              :description => 'Waiting for VM IP address',
+              :state       => 'active',
+              :status      => 'Ok',
+              :started_on  => Time.now.utc - 10.minutes,
+              :updated_on  => Time.now.utc - 5.minutes,
+              :percent     => 10.0
+            }
+          },
+          :status              => 'ok'
+        }
+        task.update_options(:progress => progress)
+        expect(job).to receive(:queue_signal).once.ordered.with(:abort_virtv2v)
+        job.abort_conversion('fake error', 'error')
+        expect(task.reload.options[:progress]).to eq(
+          :current_state       => 'waiting_for_ip_address',
+          :current_description => 'Migration failed: fake error. Cancelling',
+          :percent             => 3.5,
+          :states              => {
+            :waiting_for_ip_address     => {
+              :description => 'Waiting for VM IP address',
+              :state       => 'active',
+              :status      => 'Ok',
+              :started_on  => Time.now.utc - 10.minutes,
+              :updated_on  => Time.now.utc - 5.minutes,
+              :percent     => 10.0
+            }
+          },
+          :status              => 'error'
+        )
+      end
+    end
+
+    it 'initiate waiting_to_start state, updates task progress and signals :abort_virtv2v' do
+      job.state = 'waiting_to_start'
+      expect(job).to receive(:queue_signal).once.ordered.with(:abort_virtv2v)
+      job.abort_conversion('fake error', 'ok')
+      expect(job.migration_task.reload.options[:progress]).to eq(
+        :current_state       => 'waiting_to_start',
+        :current_description => 'Migration failed: fake error. Cancelling',
+        :percent             => 0.0,
+        :states              => {:waiting_to_start => {}},
+        :status              => 'ok'
+      )
+    end
+  end
+
   context 'state hash methods' do
     before do
       job.state = 'running_migration_playbook'
@@ -347,6 +403,61 @@ RSpec.describe InfraConversionJob, :v2v do
                   :updated_on  => Time.now.utc
                 }
               }
+            )
+          end
+        end
+
+        it 'doesn\'t update the task progress hash if progress[:status] is "error"' do
+          Timecop.freeze(2019, 2, 6) do
+            progress = {
+              :current_state       => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook failed: fake error',
+              :percent             => 3.5,
+              :states              => {
+                :waiting_for_ip_address     => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'finished',
+                  :status      => 'Error',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 10.0,
+                  :updated_on  => Time.now.utc - 30.seconds
+                }
+              },
+              :status              => 'error'
+            }
+            task.update_options(:progress => progress)
+            job.update_migration_task_progress(:on_retry, :percent => 30)
+            expect(task.reload.options[:progress]).to eq(
+              :current_state       => 'running_migration_playbook',
+              :current_description => 'Running pre-migration playbook failed: fake error',
+              :percent             => 3.5,
+              :states              => {
+                :waiting_for_ip_address     => {
+                  :description => 'Waiting for VM IP address',
+                  :state       => 'finished',
+                  :status      => 'Ok',
+                  :started_on  => Time.now.utc - 10.minutes,
+                  :updated_on  => Time.now.utc - 5.minutes,
+                  :percent     => 100.0
+                },
+                :running_migration_playbook => {
+                  :description => 'Running pre-migration playbook',
+                  :state       => 'finished',
+                  :status      => 'Error',
+                  :started_on  => Time.now.utc - 1.minute,
+                  :percent     => 10.0,
+                  :updated_on  => Time.now.utc - 30.seconds
+                }
+              },
+              :status              => 'error'
             )
           end
         end
