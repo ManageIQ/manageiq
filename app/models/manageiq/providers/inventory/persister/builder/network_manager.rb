@@ -37,6 +37,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def network_services
+          add_common_default_values
+        end
+
+        def network_service_entries
+          add_common_default_values
+        end
+
         def floating_ips
           add_common_default_values
         end
@@ -54,6 +62,14 @@ module ManageIQ::Providers
         end
 
         def security_groups
+          add_common_default_values
+        end
+
+        def security_policies
+          add_common_default_values
+        end
+
+        def security_policy_rules
           add_common_default_values
         end
 

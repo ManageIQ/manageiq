@@ -13,12 +13,16 @@ module ManageIQ::Providers
     # cloud_subnets are defined on base class, because of virtual_total performance
     has_many :floating_ips,                       :foreign_key => :ems_id, :dependent => :destroy
     has_many :security_groups,                    :foreign_key => :ems_id, :dependent => :destroy
+    has_many :security_policies,                  :foreign_key => :ems_id, :dependent => :destroy
+    has_many :security_policy_rules,              :through => :security_policies
     has_many :firewall_rules,                     :through => :security_groups
     has_many :cloud_networks,                     :foreign_key => :ems_id, :dependent => :destroy
     has_many :network_ports,                      :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_subnet_network_ports,         :through => :network_ports
     has_many :network_routers,                    :foreign_key => :ems_id, :dependent => :destroy
     has_many :network_groups,                     :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_services,                   :foreign_key => :ems_id, :dependent => :destroy
+    has_many :network_service_entries,            :through => :network_services
     has_many :load_balancers,                     :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_pools,                :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_pool_member_pools,    :through => :load_balancer_pools

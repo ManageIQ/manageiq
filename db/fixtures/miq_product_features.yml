@@ -3860,6 +3860,96 @@
       :feature_type: admin
       :identifier: security_group_delete
 
+# Security Policy
+- :name: Security Policy
+  :description: Everything under Security Policies
+  :feature_type: node
+  :identifier: security_policy
+  :children:
+  - :name: View
+    :description: View Security Policies
+    :feature_type: view
+    :identifier: security_policy_view
+    :children:
+    - :name: List
+      :description: Display Lists of Security Policies
+      :feature_type: view
+      :identifier: security_policy_show_list
+    - :name: Show
+      :description: Display Individual Security Policies
+      :feature_type: view
+      :identifier: security_policy_show
+  - :name: Operate
+    :description: Perform Operations on Security Policies
+    :feature_type: control
+    :identifier: security_policy_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Security Policy
+      :feature_type: control
+      :identifier: security_policy_tag
+  - :name: Modify
+    :description: Modify Security Policies
+    :feature_type: admin
+    :identifier: security_policy_admin
+    :children:
+    - :name: Add
+      :description: Add a Security Policy
+      :feature_type: admin
+      :identifier: security_policy_new
+    - :name: Edit
+      :description: Edit a Security Policy
+      :feature_type: admin
+      :identifier: security_policy_edit
+    - :name: Remove
+      :description: Remove Security Policies
+      :feature_type: admin
+      :identifier: security_policy_delete
+  - :name: Security Policy Rule
+    :description: Everything under Security Policy Rules
+    :feature_type: node
+    :identifier: security_policy_rule
+    :children:
+    - :name: View
+      :description: View Security Policy Rules
+      :feature_type: view
+      :identifier: security_policy_rule_view
+      :children:
+      - :name: List
+        :description: Display Lists of Security Policy Rules
+        :feature_type: view
+        :identifier: security_policy_rule_show_list
+      - :name: Show
+        :description: Display Individual Security Policy Rules
+        :feature_type: view
+        :identifier: security_policy_rule_show
+    - :name: Operate
+      :description: Perform Operations on Security Policy Rules
+      :feature_type: control
+      :identifier: security_policy_rule_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Security Policy Rule
+        :feature_type: control
+        :identifier: security_policy_rule_tag
+    - :name: Modify
+      :description: Modify Security Policy Rules
+      :feature_type: admin
+      :identifier: security_policy_rule_admin
+      :children:
+      - :name: Add
+        :description: Add a Security Policy Rule
+        :feature_type: admin
+        :identifier: security_policy_rule_new
+      - :name: Edit
+        :description: Edit a Security Policy Rule
+        :feature_type: admin
+        :identifier: security_policy_rule_edit
+      - :name: Remove
+        :description: Remove Security Policy Rules
+        :feature_type: admin
+        :identifier: security_policy_rule_delete
+    
 # Floating IP
 - :name: Floating IPs
   :description: Everything under Floating IPs
@@ -4091,6 +4181,96 @@
       :description: Remove Interface from Router
       :feature_type: admin
       :identifier: network_router_remove_interface
+
+# Network Service
+- :name: Network Service
+  :description: Everything under Network Services
+  :feature_type: node
+  :identifier: network_service
+  :children:
+  - :name: View
+    :description: View Network Services
+    :feature_type: view
+    :identifier: network_service_view
+    :children:
+    - :name: List
+      :description: Display Lists of Network Services
+      :feature_type: view
+      :identifier: network_service_show_list
+    - :name: Show
+      :description: Display Individual Network Services
+      :feature_type: view
+      :identifier: network_service_show
+  - :name: Operate
+    :description: Perform Operations on Network Services
+    :feature_type: control
+    :identifier: network_service_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Network Service
+      :feature_type: control
+      :identifier: network_service_tag
+  - :name: Modify
+    :description: Modify Network Services
+    :feature_type: admin
+    :identifier: network_service_admin
+    :children:
+    - :name: Add
+      :description: Add a Network Service
+      :feature_type: admin
+      :identifier: network_service_new
+    - :name: Edit
+      :description: Edit a Network Service
+      :feature_type: admin
+      :identifier: network_service_edit
+    - :name: Remove
+      :description: Remove a Network Service
+      :feature_type: admin
+      :identifier: network_service_delete
+  - :name: Network Service Entry
+    :description: Everything under Network Service Entries
+    :feature_type: node
+    :identifier: network_service_entry
+    :children:
+    - :name: View
+      :description: View Network Service Entries
+      :feature_type: view
+      :identifier: network_service_entry_view
+      :children:
+      - :name: List
+        :description: Display Lists of Network Service Entries
+        :feature_type: view
+        :identifier: network_service_entry_show_list
+      - :name: Show
+        :description: Display Individual Network Service Entries
+        :feature_type: view
+        :identifier: network_service_entry_show
+    - :name: Operate
+      :description: Perform Operations on Network Service Entries
+      :feature_type: control
+      :identifier: network_service_entry_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Network Service Entry
+        :feature_type: control
+        :identifier: network_service_entry_tag
+    - :name: Modify
+      :description: Modify Network Service Entries
+      :feature_type: admin
+      :identifier: network_service_entry_admin
+      :children:
+      - :name: Add
+        :description: Add a Network Service Entry
+        :feature_type: admin
+        :identifier: network_service_entry_new
+      - :name: Edit
+        :description: Edit a Network Service Entry
+        :feature_type: admin
+        :identifier: network_service_entry_edit
+      - :name: Remove
+        :description: Remove Network Service Entry
+        :feature_type: admin
+        :identifier: network_service_entry_delete
 
 # ContainerGroup
 - :name: Pods
