@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 135 ending 2020-04-27
+
+### Added
+
+* Don't run worker pods as root [(#20095)](https://github.com/ManageIQ/manageiq/pull/20095)
+
+### Fixed
+
+* Handle user create race condition [(#20097)](https://github.com/ManageIQ/manageiq/pull/20097)
+* Use CONTAINER IMAGE TAG for worker deployment tag [(#20094)](https://github.com/ManageIQ/manageiq/pull/20094)
+* Fixed cockpit process starting [(#20077)](https://github.com/ManageIQ/manageiq/pull/20077)
+* Add an owner reference to the orchestrator pod for all created objects [(#20070)](https://github.com/ManageIQ/manageiq/pull/20070)
+
 # Unreleased as of Sprint 134 ending 2020-04-13
 
 ### Fixed
