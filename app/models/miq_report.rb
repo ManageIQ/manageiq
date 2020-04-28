@@ -50,7 +50,7 @@ class MiqReport < ApplicationRecord
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
 
-  attr_accessor_that_yamls :reserved # For legacy imports
+  attr_accessor_that_yamls :reserved, :skip_references # For legacy imports
 
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
