@@ -490,7 +490,9 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with has_many field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("\"vms\".\"id\" IN (SELECT DISTINCT \"guest_applications\".\"vm_or_template_id\" FROM \"guest_applications\" WHERE \"guest_applications\".\"name\" = 'foo')")
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON "\
+                 "\"guest_applications\".\"vm_or_template_id\" = \"vms\".\"id\" WHERE \"guest_applications\".\"name\" = 'foo')"
+      expect(sql).to eq(expected)
     end
 
     it "can't generate the SQL for a CONTAINS expression with association.association-field" do
@@ -530,8 +532,8 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with field containing a scope" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
-      expected = "\"vms\".\"id\" IN (SELECT DISTINCT \"accounts\".\"vm_or_template_id\" FROM \"accounts\" "\
-                 "WHERE \"accounts\".\"name\" = 'foo' AND \"accounts\".\"accttype\" = 'user')"
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"accounts\" ON \"accounts\".\"vm_or_template_id\" = "\
+                 "\"vms\".\"id\" AND \"accounts\".\"accttype\" = 'user' WHERE \"accounts\".\"name\" = 'foo')"
       expect(sql).to eq(expected)
     end
 
