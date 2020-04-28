@@ -2622,6 +2622,7 @@ RSpec.describe Rbac::Filterer do
   it ".apply_rbac_through_association?" do
     expect(described_class.new.send(:apply_rbac_through_association?, HostMetric)).to be_truthy
     expect(described_class.new.send(:apply_rbac_through_association?, Vm)).not_to be
+    expect(described_class.new.send(:apply_rbac_through_association?, VimPerformanceTag)).not_to be
   end
 
   describe "find_targets_with_direct_rbac" do

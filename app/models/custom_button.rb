@@ -3,7 +3,7 @@ class CustomButton < ApplicationRecord
 
   scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
     order = sanitize_sql_array(["array_position(ARRAY[?]::#{column_type}[], #{table_name}.#{column}::#{column_type})", ids])
-    order(order)
+    order(Arel.sql(order))
   }
 
   serialize :options, Hash

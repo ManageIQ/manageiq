@@ -129,21 +129,13 @@ module ManageIQ
         persister
       end
 
-      def parse_legacy_inventory(ems)
-        ems.class::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
-      end
-
       # Saves the inventory to the DB
       #
       # @param ems [ManageIQ::Providers::BaseManager]
       # @param target [ManageIQ::Providers::BaseManager or InventoryRefresh::Target or InventoryRefresh::TargetCollection]
       # @param parsed [Array<Hash> or ManageIQ::Providers::Inventory::Persister]
-      def save_inventory(ems, target, parsed_hashes_or_persister)
-        if parsed_hashes_or_persister.kind_of?(ManageIQ::Providers::Inventory::Persister)
-          parsed_hashes_or_persister.persist!
-        else
-          EmsRefresh.save_ems_inventory(ems, parsed_hashes_or_persister, target)
-        end
+      def save_inventory(ems, _target, persister)
+        InventoryRefresh::SaveInventory.save_inventory(ems, persister.inventory_collections)
       end
 
       def post_refresh_ems_cleanup(_ems, _targets)

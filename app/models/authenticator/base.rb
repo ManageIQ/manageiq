@@ -137,7 +137,18 @@ module Authenticator
           end
 
           user.lastlogon = Time.now.utc
-          user.save!
+          if user.new_record?
+            User.with_lock do
+              user.save!
+            rescue ActiveRecord::RecordInvalid # Try update when catching create race condition.
+              userid, user = find_or_initialize_user(identity, username)
+              update_user_attributes(user, userid, identity)
+              user.miq_groups = matching_groups
+              user.save!
+            end
+          else
+            user.save!
+          end
 
           _log.info("Authorized User: [#{user.userid}]")
           task.userid = user.userid

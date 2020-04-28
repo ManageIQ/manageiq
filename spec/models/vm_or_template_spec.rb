@@ -126,6 +126,88 @@ RSpec.describe VmOrTemplate do
     end
   end
 
+  context ".from_cloud_managers" do
+    context "with cloud and infra vms" do
+      let!(:cloud_vm) { FactoryBot.create(:vm_cloud, :ext_management_system => FactoryBot.create(:ems_cloud)) }
+      let!(:infra_vm) { FactoryBot.create(:vm_infra, :ext_management_system => FactoryBot.create(:ems_infra)) }
+
+      it "returns a cloud vm" do
+        expect(described_class.from_cloud_managers).to include(cloud_vm)
+      end
+
+      it "doesn't return an infra vm" do
+        expect(described_class.from_cloud_managers).not_to include(infra_vm)
+      end
+    end
+
+    context "with archived vms" do
+      let!(:archived_vm) { FactoryBot.create(:vm_cloud, :ext_management_system => nil) }
+
+      it "doesn't return an archived vm" do
+        expect(described_class.from_cloud_managers).not_to include(archived_vm)
+      end
+    end
+  end
+
+  context ".from_infra_managers" do
+    context "with cloud and infra vms" do
+      let!(:cloud_vm) { FactoryBot.create(:vm_cloud, :ext_management_system => FactoryBot.create(:ems_cloud)) }
+      let!(:infra_vm) { FactoryBot.create(:vm_infra, :ext_management_system => FactoryBot.create(:ems_infra)) }
+
+      it "returns an infra vm" do
+        expect(described_class.from_infra_managers).to include(infra_vm)
+      end
+
+      it "doesn't return a cloud vm" do
+        expect(described_class.from_infra_managers).not_to include(cloud_vm)
+      end
+    end
+
+    context "with archived vms" do
+      let!(:archived_vm) { FactoryBot.create(:vm_infra, :ext_management_system => nil) }
+
+      it "doesn't return an archived vm" do
+        expect(described_class.from_infra_managers).not_to include(archived_vm)
+      end
+    end
+  end
+
+  context "#from_cloud_manager?" do
+    let(:cloud_vm)    { FactoryBot.create(:vm_cloud, :ext_management_system => FactoryBot.create(:ems_cloud)) }
+    let(:infra_vm)    { FactoryBot.create(:vm_infra, :ext_management_system => FactoryBot.create(:ems_infra)) }
+    let(:archived_vm) { FactoryBot.create(:vm_infra, :ext_management_system => nil) }
+
+    it "returns true for a cloud vm" do
+      expect(cloud_vm.from_cloud_manager?).to be_truthy
+    end
+
+    it "returns false for an infra vm" do
+      expect(infra_vm.from_cloud_manager?).to be_falsey
+    end
+
+    it "returns false for an archived vm" do
+      expect(archived_vm.from_cloud_manager?).to be_falsey
+    end
+  end
+
+  context "#from_infra_manager?" do
+    let(:cloud_vm)    { FactoryBot.create(:vm_cloud, :ext_management_system => FactoryBot.create(:ems_cloud)) }
+    let(:infra_vm)    { FactoryBot.create(:vm_infra, :ext_management_system => FactoryBot.create(:ems_infra)) }
+    let(:archived_vm) { FactoryBot.create(:vm_infra, :ext_management_system => nil) }
+
+    it "returns false for a cloud vm" do
+      expect(cloud_vm.from_infra_manager?).to be_falsey
+    end
+
+    it "returns true for an infra vm" do
+      expect(infra_vm.from_infra_manager?).to be_truthy
+    end
+
+    it "returns false for an archived vm" do
+      expect(archived_vm.from_infra_manager?).to be_falsey
+    end
+  end
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before do

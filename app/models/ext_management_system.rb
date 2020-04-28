@@ -17,22 +17,17 @@ class ExtManagementSystem < ApplicationRecord
     supported_subclasses.collect(&:ems_type)
   end
 
-  def self.leaf_subclasses
-    descendants.select { |d| d.subclasses.empty? }
+  def self.supported_subclasses
+    leaf_subclasses.select(&:permitted?)
   end
 
-  def self.supported_subclasses
-    subclasses.flat_map do |s|
-      s.subclasses.empty? ? s : s.supported_subclasses
-    end
+  def self.permitted?
+    Vmdb::PermissionStores.instance.supported_ems_type?(ems_type)
   end
+  delegate :permitted?, :to => :class
 
   def self.supported_types_and_descriptions_hash
-    supported_subclasses.each_with_object({}) do |klass, hash|
-      if Vmdb::PermissionStores.instance.supported_ems_type?(klass.ems_type)
-        hash[klass.ems_type] = klass.description
-      end
-    end
+    supported_subclasses.each_with_object({}) { |klass, hash| hash[klass.ems_type] = klass.description }
   end
 
   def self.api_allowed_attributes
@@ -40,11 +35,19 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_types_for_create
-    leaf_subclasses.select(&:supported_for_create?)
+    supported_subclasses.select(&:supported_for_create?)
+  end
+
+  def self.supported_types_for_catalog
+    supported_subclasses.select(&:supported_for_catalog?)
   end
 
   def self.supported_for_create?
     !reflections.include?("parent_manager")
+  end
+
+  def self.supported_for_catalog?
+    catalog_types.present?
   end
 
   def self.provider_create_params
@@ -540,6 +543,9 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  # Queue an EMS refresh using +opts+. Credentials must exist, and the
+  # authentication status must be ok, otherwise an error is raised.
+  #
   def refresh_ems(opts = {})
     if missing_credentials?
       raise _("no Provider credentials defined")
@@ -548,6 +554,18 @@ class ExtManagementSystem < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self, nil, opts)
+  end
+
+  alias queue_refresh refresh_ems
+
+  # Execute an EMS refresh immediately. Credentials must exist, and the
+  # authentication status must be ok, otherwise an error is raised.
+  #
+  def refresh
+    raise _("no Provider credentials defined") if missing_credentials?
+    raise _("Provider failed last authentication check") unless authentication_status_ok?
+
+    EmsRefresh.refresh(self)
   end
 
   def self.ems_infra_discovery_types

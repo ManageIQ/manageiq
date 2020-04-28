@@ -1238,6 +1238,17 @@ RSpec.describe MiqReport do
         expect(row[label_report_column]).to eq(label_value)
       end
     end
+
+    context "more columns with default formatters" do
+      let(:report_columns)      { %w[start_date display_range vm_name cpu_used_cost fixed_compute_1_rate memory_used_metric cpu_used_metric] }
+      let(:expected_formatters) { [:datetime, nil, nil, :currency_precision_2, nil, :megabytes_human_precision_2, :mhz_precision_2] }
+      let(:report) { FactoryBot.create(:miq_report, :db => "ChargebackVm", :cols => report_columns, :col_order => report_columns) }
+
+      it "calculates default formatters" do
+        expect(report.col_format_with_defaults).to eq(expected_formatters)
+        expect(report.col_formats).to be_nil
+      end
+    end
   end
 
   describe "_async_generate_table" do

@@ -69,13 +69,13 @@ class DialogImportService
 
   def build_dialog_tabs(dialog, export_version = CURRENT_DIALOG_VERSION)
     dialog["dialog_tabs"].collect do |dialog_tab|
-      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab, export_version)))
+      DialogTab.create!(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab, export_version)))
     end
   end
 
   def build_dialog_groups(dialog_tab, export_version = CURRENT_DIALOG_VERSION)
     dialog_tab["dialog_groups"].collect do |dialog_group|
-      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group, export_version)))
+      DialogGroup.create!(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group, export_version)))
     end
   end
 
@@ -89,7 +89,7 @@ class DialogImportService
 
   def build_resource_actions(dialog)
     (dialog['resource_actions'] || []).collect do |resource_action|
-      ResourceAction.create(resource_action.merge('dialog_id' => dialog['id']))
+      ResourceAction.create!(resource_action.merge('dialog_id' => dialog['id']))
     end
   end
 
@@ -99,12 +99,14 @@ class DialogImportService
   end
 
   def import(dialog)
-    @dialog_import_validator.determine_dialog_validity(dialog)
-    new_dialog = Dialog.create(dialog.except('dialog_tabs', 'export_version'))
-    association_list = build_association_list(dialog)
-    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
-    build_associations(new_dialog, association_list)
-    new_dialog
+    ActiveRecord::Base.transaction do
+      @dialog_import_validator.determine_dialog_validity(dialog)
+      new_dialog = Dialog.create(dialog.except('dialog_tabs', 'export_version'))
+      association_list = build_association_list(dialog)
+      new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
+      build_associations(new_dialog, association_list)
+      new_dialog
+    end
   end
 
   def build_associations(dialog, association_list)
@@ -113,7 +115,7 @@ class DialogImportService
       association.each_value do |value|
         value.each do |responder|
           next if fields.select { |field| field.name == responder }.empty?
-          DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
+          DialogFieldAssociation.create!(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
                                         :respond_id => fields.find { |field| field.name == responder }.id)
         end
       end
@@ -147,7 +149,7 @@ class DialogImportService
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
       new_associations = build_association_list(dialog)
-      new_or_existing_dialog.update(
+      new_or_existing_dialog.update!(
         dialog.except('export_version').merge(
           "dialog_tabs"      => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION),
           "resource_actions" => build_resource_actions(dialog)
