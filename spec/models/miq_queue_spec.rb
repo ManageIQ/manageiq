@@ -986,4 +986,89 @@ RSpec.describe MiqQueue do
       )
     end
   end
+
+  describe ".messaging_client_options" do
+    context "with ENV" do
+      let(:env_vars) { ENV.to_h.merge("MESSAGING_HOSTNAME" => "server.example.com", "MESSAGING_PORT" => "9092", "MESSAGING_USERNAME" => "admin") }
+
+      context "prefers settings from ENV when they exist" do
+        it "with clear text password" do
+          stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => "password"))
+
+          expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
+
+          expect(MiqQueue.send(:messaging_client_options)).to eq(
+            :encoding => "json",
+            :host     => "server.example.com",
+            :password => "password",
+            :port     => 9092,
+            :protocol => nil,
+            :username => "admin"
+          )
+        end
+
+        it "with encrypted password" do
+          stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => MiqPassword.encrypt("password")))
+
+          expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
+
+          expect(ENV["MESSAGING_PASSWORD"]).to be_encrypted
+          expect(MiqQueue.send(:messaging_client_options)).to eq(
+            :encoding => "json",
+            :host     => "server.example.com",
+            :password => "password",
+            :port     => 9092,
+            :protocol => nil,
+            :username => "admin"
+          )
+        end
+      end
+
+      it "prefers settings from file if any ENV vars are missing" do
+        stub_const("ENV", env_vars) # No password
+
+        allow(YAML).to receive(:load_file).and_call_original
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => "password"})
+
+        expect(MiqQueue.send(:messaging_client_options)).to eq(
+          :encoding => "json",
+          :host     => "kafka.example.com",
+          :password => "password",
+          :port     => 9092,
+          :protocol => nil,
+          :username => "user"
+        )
+      end
+    end
+
+    context "prefers settings from file when ENV vars are missing" do
+      it "with clear text password" do
+        allow(YAML).to receive(:load_file).and_call_original
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => "password"})
+
+        expect(MiqQueue.send(:messaging_client_options)).to eq(
+          :encoding => "json",
+          :host     => "kafka.example.com",
+          :password => "password",
+          :port     => 9092,
+          :protocol => nil,
+          :username => "user"
+        )
+      end
+
+      it "with encrypted password" do
+        allow(YAML).to receive(:load_file).and_call_original
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => MiqPassword.encrypt("password")})
+
+        expect(MiqQueue.send(:messaging_client_options)).to eq(
+          :encoding => "json",
+          :host     => "kafka.example.com",
+          :password => "password",
+          :port     => 9092,
+          :protocol => nil,
+          :username => "user"
+        )
+      end
+    end
+  end
 end

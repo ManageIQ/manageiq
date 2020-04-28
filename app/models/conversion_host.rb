@@ -78,9 +78,9 @@ class ConversionHost < ApplicationRecord
       Net::SSH.start(host, auth.userid, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   rescue Net::SSH::AuthenticationFailed => err
-    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
+    raise err, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
   rescue Net::SSH::HostKeyMismatch => err
-    raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
+    raise err, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
   rescue Exception => err
     raise _("Unknown error - %{error_message}") % {:error_message => err.message}
   else
@@ -155,8 +155,8 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Integer] length of data written to file
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
   def apply_task_limits(task_id, limits = {})
@@ -165,7 +165,7 @@ class ConversionHost < ApplicationRecord
       command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-limits.json", "/var/lib/uci/#{task_id}/limits.json"])
       ssu.shell_exec(command, nil, nil, nil)
     end
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
@@ -180,8 +180,8 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Integer] length of data written to conversion options file
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
   def prepare_conversion(task_id, conversion_options)
@@ -197,7 +197,7 @@ class ConversionHost < ApplicationRecord
       command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-input.json", "/var/lib/uci/#{task_id}/input.json"])
       ssu.shell_exec(command, nil, nil, nil)
     end
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON for task '#{task_id}' from options '#{filtered_options}' with [#{err.class}: #{err}]"
@@ -210,14 +210,14 @@ class ConversionHost < ApplicationRecord
   #
   # @return [Boolean] true if the file can be retrieved and parsed, false otherwise
   #
-  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
-  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
+  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::ParserError] if file cannot be parsed as JSON
   def luks_keys_vault_valid?
     luks_keys_vault_json = connect_ssh { |ssu| ssu.get_file("/root/.v2v_luks_keys_vault.json", nil) }
     JSON.parse(luks_keys_vault_json)
     true
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and retrieve LUKS keys vault from file '/root/.v2v_luks_keys_vault.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '/root/.v2v_luks_keys_vault.json': #{json_state}"
@@ -266,7 +266,7 @@ class ConversionHost < ApplicationRecord
     filtered_options = filter_options(conversion_options)
     prepare_conversion(task_id, conversion_options)
     connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id, conversion_options), nil, nil, nil) }
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
   rescue => err
     raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
@@ -313,7 +313,7 @@ class ConversionHost < ApplicationRecord
   def get_conversion_state(task_id)
     json_state = connect_ssh { |ssu| ssu.get_file("/var/lib/uci/#{task_id}/state.json", nil) }
     JSON.parse(json_state)
-  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and retrieve conversion state data from file '/var/lib/uci/#{task_id}/state.json' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '/var/lib/uci/#{task_id}/state.json': #{json_state}"
@@ -408,12 +408,12 @@ class ConversionHost < ApplicationRecord
     options.clone.tap { |h| h.each { |k, _v| h[k] = "__FILTERED__" if ignore.any? { |i| k.to_s.end_with?(i) } } }
   end
 
-  # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
+  # Connect to the conversion host using the ManageIQ::SSH::Util wrapper using the authentication
   # parameters appropriate for that type of resource.
   #
   def connect_ssh
-    require 'MiqSshUtil'
-    MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
+    require 'manageiq-ssh-util'
+    ManageIQ::SSH::Util.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
       yield(ssu)
     end
   rescue Exception => e

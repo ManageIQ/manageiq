@@ -31,7 +31,7 @@ gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be require
 gem "ancestry",                       "~>3.0.7",       :require => false
 gem "aws-sdk-s3",                     "~>1.0",         :require => false # For FileDepotS3
 gem "bcrypt",                         "~> 3.1.10",     :require => false
-gem "bundler",                        ">=1.15",        :require => false
+gem "bundler",                        "~> 2.1.4",      :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>2.2", ">=2.2.1", :require => false
@@ -53,6 +53,7 @@ gem "manageiq-loggers",               "~>0.5.0",       :require => false
 gem "manageiq-messaging",             "~>0.1.4",       :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
 gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
+gem "manageiq-ssh-util",              "~>0.1.0",       :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
 gem "money",                          "~>6.13.5",      :require => false
@@ -138,7 +139,7 @@ group :redfish, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.26.0",      :require => false
+  gem "qpid_proton",                    "~>0.30.0",      :require => false
 end
 
 group :systemd, :optional => true do

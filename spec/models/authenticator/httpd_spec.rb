@@ -272,6 +272,18 @@ RSpec.describe Authenticator::Httpd do
                       'X-Remote-User-Email'     => 'Sally@example.com')
       end
 
+      context "with a race condition on create user" do
+        before do
+          authenticate
+        end
+
+        it "update the exiting user" do
+          allow(User).to receive(:lookup_by_userid).and_return(nil)
+          allow(User).to receive(:in_my_region).and_return(User.none, User.all)
+          expect { authenticate }.not_to(change { User.where(:userid => 'sally@example.com').count }.from(1))
+        end
+      end
+
       context "when user record with userid in upn format already exists" do
         let!(:sally_username) { FactoryBot.create(:user, :userid => 'sAlly') }
         let!(:sally_dn) { FactoryBot.create(:user, :userid => dn) }

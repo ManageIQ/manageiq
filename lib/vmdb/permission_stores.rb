@@ -1,34 +1,33 @@
+require "yaml"
+
 module Vmdb
-  module PermissionStores
-    class Configuration
-      attr_accessor :backend
-      attr_accessor :options
-
-      def initialize
-        @options = {}
-      end
-
-      def create
-        PermissionStores.create(self)
-      end
-
-      def load
-        require "vmdb/permission_stores/#{backend}"
-      end
+  class PermissionStores
+    def self.instance
+      @instance ||= new(blacklist)
     end
 
-    class << self
-      attr_accessor :configuration, :instance
+    def self.blacklist
+      permission_files.flat_map { |file| YAML.load_file(file) }
     end
 
-    def self.configure
-      @configuration = Configuration.new
-      yield @configuration
+    private_class_method def self.permission_files
+      Vmdb::Plugins.to_a.unshift(Rails)
+        .map { |source| source.root.join("config", "permissions.yml") }
+        .select(&:exist?)
     end
 
-    def self.initialize!
-      @configuration.load
-      @instance = @configuration.create
+    attr_reader :blacklist
+
+    def initialize(blacklist)
+      @blacklist = blacklist
+    end
+
+    def can?(permission)
+      blacklist.exclude?(permission.to_s)
+    end
+
+    def supported_ems_type?(type)
+      can?("ems-type:#{type}")
     end
   end
 end

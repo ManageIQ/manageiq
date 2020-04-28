@@ -171,7 +171,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def self.ordered_by_desc
-    order("lower(description) ASC")
+    order(Arel.sql("lower(description) ASC"))
   end
 
   def self.profiles_for_user(user_id, region_id)

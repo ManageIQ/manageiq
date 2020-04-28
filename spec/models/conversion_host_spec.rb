@@ -488,7 +488,7 @@ RSpec.describe ConversionHost, :v2v do
       authentication = FactoryBot.create(:authentication_ssh_keypair)
       conversion_host_vm.authentications << authentication
       allow(Net::SSH).to receive(:start).and_raise(Net::SSH::AuthenticationFailed.new)
-      expect { conversion_host_vm.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError)
+      expect { conversion_host_vm.verify_credentials }.to raise_error(Net::SSH::AuthenticationFailed, /Incorrect credentials/)
     end
 
     it "works if there are multiple associated validations" do
@@ -520,7 +520,7 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     it "works as expected if the connection is unsuccessful" do
-      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      allow(conversion_host).to receive(:connect_ssh).and_raise(Net::SSH::AuthenticationFailed)
       expected_message = "Failed to connect and prepare conversion for task '#{task.id}'"
       expect { conversion_host.prepare_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
     end
@@ -581,7 +581,7 @@ RSpec.describe ConversionHost, :v2v do
     let(:filtered_options) { conversion_options.clone.update(:ssh_key => '__FILTERED__', :password => '__FILTERED__') }
 
     it "works as expected if the connection is unsuccessful" do
-      allow(conversion_host).to receive(:prepare_conversion).and_raise(MiqException::MiqInvalidCredentialsError)
+      allow(conversion_host).to receive(:prepare_conversion).and_raise(Net::SSH::AuthenticationFailed)
       expected_message = "Failed to connect and run conversion using options #{filtered_options}"
       expect { conversion_host.run_conversion(task.id, conversion_options) }.to raise_error(/#{expected_message}/)
     end
@@ -610,7 +610,7 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     it "works as expected if the connection is unsuccessful" do
-      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      allow(conversion_host).to receive(:connect_ssh).and_raise(Net::SSH::AuthenticationFailed)
       expected_message = "Failed to connect and retrieve conversion state data from file '\/var\/lib\/uci\/#{task.id}\/state.json'"
       expect { conversion_host.get_conversion_state(task.id) }.to raise_error(/#{expected_message}/)
     end
@@ -640,7 +640,7 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     it "works as expected if the connection is unsuccessful" do
-      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      allow(conversion_host).to receive(:connect_ssh).and_raise(Net::SSH::AuthenticationFailed)
       expected_message = "Failed to connect and apply limits for task '#{task.id}'"
       expect { conversion_host.apply_task_limits(task.id, limits) }.to raise_error(/#{expected_message}/)
     end

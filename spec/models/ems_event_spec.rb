@@ -120,28 +120,48 @@ RSpec.describe EmsEvent do
         }
       end
 
-      context "queue_type: artemis" do
-        before { stub_settings_merge(:prototype => {:queue_type => 'artemis'}) }
+      context "messaging_type: artemis" do
+        before { stub_settings_merge(:prototype => {:messaging_type => 'artemis'}) }
 
         it "Adds event to Artemis queue" do
-          queue_client = double("ManageIQ::Messaging")
+          messaging_client = double("ManageIQ::Messaging")
 
           expected_queue_payload = {
-            :service => "events",
+            :service => "manageiq.ems-events",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
             :payload => event_hash,
           }
 
-          expect(queue_client).to receive(:publish_topic).with(expected_queue_payload)
-          expect(MiqQueue).to receive(:artemis_client).with('event_handler').and_return(queue_client)
+          expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
 
           described_class.add_queue('add', ems.id, event_hash)
         end
       end
 
-      context "queue_type: miq_queue" do
-        before { stub_settings_merge(:prototype => {:queue_type => 'miq_queue'}) }
+      context "messaging_type: kafka" do
+        before { stub_settings_merge(:prototype => {:messaging_type => 'kafka'}) }
+
+        it "Adds event to Kafka topic" do
+          messaging_client = double("ManageIQ::Messaging")
+
+          expected_queue_payload = {
+            :service => "manageiq.ems-events",
+            :sender  => ems.id,
+            :event   => event_hash[:event_type],
+            :payload => event_hash,
+          }
+
+          expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
+          expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
+
+          described_class.add_queue('add', ems.id, event_hash)
+        end
+      end
+
+      context "messaging_type: miq_queue" do
+        before { stub_settings_merge(:prototype => {:messaging_type => 'miq_queue'}) }
 
         it "Adds event to MiqQueue" do
           expected_queue_payload = {

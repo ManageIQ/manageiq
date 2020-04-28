@@ -10,7 +10,7 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
   end
 
   def prepare_volumes
-    if options[:volumes]
+    if options[:volumes].present?
       phase_context[:requested_volumes] = create_requested_volumes(options[:volumes])
       signal :poll_volumes_complete
     else

@@ -39,6 +39,7 @@ RSpec.describe MiqAeClass do
 
   before do
     @user = FactoryBot.create(:user_with_group)
+    @ns = FactoryBot.create(:miq_ae_namespace, :name => "TEST", :parent => FactoryBot.create(:miq_ae_domain))
   end
 
   it "should not create class without namespace" do
@@ -46,20 +47,20 @@ RSpec.describe MiqAeClass do
   end
 
   it "should not create class without name" do
-    expect { MiqAeClass.new(:namespace => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:namespace_id => @ns.id).save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "should set the updated_by field on save" do
-    c1 = MiqAeClass.create(:namespace => "TEST", :name => "oleg")
+    c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "oleg")
     expect(c1.updated_by).to eq('system')
   end
 
   it "should not create classes with the same name in the same namespace" do
-    c1 = MiqAeClass.new(:namespace => "TEST", :name => "oleg")
+    c1 = MiqAeClass.new(:namespace_id => @ns.id, :name => "oleg")
     expect(c1).not_to be_nil
     expect(c1.save!).to be_truthy
-    expect { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
-    c2 = MiqAeClass.new(:namespace => "PROD", :name => "oleg")
+    expect { MiqAeClass.new(:namespace_id => @ns.id, :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
+    c2 = MiqAeClass.new(:namespace_id => FactoryBot.create(:miq_ae_namespace).id, :name => "oleg")
     expect(c2).not_to be_nil
     expect(c2.save!).to be_truthy
   end
@@ -177,13 +178,13 @@ RSpec.describe MiqAeClass do
 
   context "#copy" do
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent => nil, :priority => 1)
+      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
       @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
-      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
     end
 
     it "copies classes under specified namespace" do

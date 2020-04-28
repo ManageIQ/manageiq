@@ -10,7 +10,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager < ManageIQ::Providers::Auto
     false
   end
 
-  def supported_catalog_types
-    %w(generic_ansible_playbook)
+  def self.catalog_types
+    {"generic_ansible_playbook" => N_("Ansible Playbook")}
   end
 end

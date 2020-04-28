@@ -13,17 +13,18 @@ opts = Optimist.options(ARGV) do
          "Example (Float):   #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float" \
          "Example (Array):   #{__FILE__} -s 1 -p ntp/server -v 0.pool.ntp.org,1.pool.ntp.org -t array"
 
-  opt :dry_run,  "Dry Run",                                  :short => "d"
-  opt :serverid, "Server Id",                                :short => "s", :type => :integer, :required => true
-  opt :path,     "Path within advanced settings hash",       :short => "p", :type => :string,  :required => true
-  opt :value,    "New Value for setting",                    :short => "v", :type => :string,  :required => true
-  opt :force,    "Force change value regardless of type",    :short => "f", :type => :boolean, :default  => false
-  opt :type,     "Type of value provided, #{TYPES.inspect}", :short => "t", :type => :string,  :default  => "string"
+  opt :dry_run,         "Dry Run",                                  :short => "d"
+  opt :serverid,        "Server Id",                                :short => "s", :type => :integer, :required => false
+  opt :path,            "Path within advanced settings hash",       :short => "p", :type => :string,  :required => true
+  opt :value,           "New Value for setting",                    :short => "v", :type => :string,  :required => true
+  opt :force,           "Force change value regardless of type",    :short => "f", :type => :boolean, :default  => false
+  opt :type,            "Type of value provided, #{TYPES.inspect}", :short => "t", :type => :string,  :default  => "string"
+  opt :all_servers,     "Set setting once for all servers",         :short => "a", :type => :boolean, :default  => false
 end
 
 puts opts.inspect
 
-Optimist.die :serverid, "is required" unless opts[:serverid_given]
+Optimist.die :serverid, "is required" unless opts[:serverid_given] || opts[:all_servers]
 Optimist.die :path,     "is required" unless opts[:path_given]
 Optimist.die :value,    "is required" unless opts[:value_given]
 Optimist.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
@@ -64,43 +65,45 @@ def types_valid?(old_val, new_val)
   end
 end
 
-server = MiqServer.where(:id => opts[:serverid]).take
-unless server
+server_list = opts[:all_servers] ? MiqServer.all : MiqServer.where(:id => opts[:serverid])
+if server_list.empty?
   puts "Unable to find server with id [#{opts[:serverid]}]"
   exit 1
 end
 
-settings = server.settings
+server_list.each do |server|
+  settings = server.settings
+  server_id = server.id
+  path = settings
+  keys = opts[:path].split("/")
+  key = keys.pop.to_sym
+  keys.each { |p| path = path[p.to_sym] }
 
-path = settings
-keys = opts[:path].split("/")
-key = keys.pop.to_sym
-keys.each { |p| path = path[p.to_sym] }
+  # allow user to escape if the new value's class is not the same as the original,
+  # such as setting a String where it was previously an Integer
+  if opts[:force]
+    puts "Change [#{opts[:path]}], old class: [#{path[key].class}], new class: [#{newval.class}]"
+  elsif path[key] && !types_valid?(path[key], newval)
+    STDERR.puts "The new value's class #{newval.class} does not match the prior one's #{path[key].class}. Use -t to specify the type for the provided value. Use -f to force changing this value. Note, -f may break things! See -h for examples."
+    exit 1
+  end
 
-# allow user to escape if the new value's class is not the same as the original,
-# such as setting a String where it was previously an Integer
-if opts[:force]
-  puts "Change [#{opts[:path]}], old class: [#{path[key].class}], new class: [#{newval.class}]"
-elsif path[key] && !types_valid?(path[key], newval)
-  STDERR.puts "The new value's class #{newval.class} does not match the prior one's #{path[key].class}. Use -t to specify the type for the provided value. Use -f to force changing this value. Note, -f may break things! See -h for examples."
-  exit 1
-end
+  puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{newval}]"
+  path[key] = newval
 
-puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{newval}]"
-path[key] = newval
+  valid, errors = Vmdb::Settings.validate(settings)
+  unless valid
+    puts "ERROR: Configuration is invalid:"
+    errors.each { |k, v| puts "\t#{k}: #{v}" }
+    exit 1
+  end
 
-valid, errors = Vmdb::Settings.validate(settings)
-unless valid
-  puts "ERROR: Configuration is invalid:"
-  errors.each { |k, v| puts "\t#{k}: #{v}" }
-  exit 1
-end
-
-if opts[:dry_run]
-  puts "Dry run, no updates have been made"
-else
-  server.add_settings_for_resource(settings)
-  server.save!
-
-  puts "Done"
+  if opts[:dry_run]
+    puts "Dry run, no updates to server #{server_id} have been made"
+  else
+    puts " - replicating to server id=#{server_id}..."
+    server.add_settings_for_resource(settings)
+    server.save!
+    puts "Done"
+  end
 end

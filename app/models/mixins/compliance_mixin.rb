@@ -31,4 +31,10 @@ module ComplianceMixin
   def scan_and_check_compliance_queue
     Compliance.scan_and_check_compliance_queue(self)
   end
+
+  def compliance_policies
+    target_class = self.class.base_model.name.downcase
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "#{target_class}_compliance_check")
+    plist
+  end
 end

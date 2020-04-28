@@ -28,9 +28,10 @@ module ManageIQ
 
     def self.ensure_config_files
       config_files = {
-        "certs/v2_key.dev"        => "certs/v2_key",
-        "config/cable.yml.sample" => "config/cable.yml",
-        "config/database.pg.yml"  => "config/database.yml",
+        "certs/v2_key.dev"           => "certs/v2_key",
+        "config/cable.yml.sample"    => "config/cable.yml",
+        "config/database.pg.yml"     => "config/database.yml",
+        "config/messaging.kafka.yml" => "config/messaging.yml",
       }
 
       config_files.each do |source, dest|
@@ -44,8 +45,7 @@ module ManageIQ
       Dir.mkdir(logdir) unless Dir.exist?(logdir)
     end
 
-    def self.while_updating_ui
-      # Run update:ui in a thread and continue to do the non-js stuff
+    def self.update_ui_thread
       puts "\n== Updating UI assets (in parallel) =="
 
       ui_thread = Thread.new do
@@ -54,9 +54,13 @@ module ManageIQ
       end
 
       ui_thread.abort_on_exception = true
+      ui_thread
+    end
 
+    def self.while_updating_ui
+      # Run update:ui in a thread and continue to do the non-js stuff
+      ui_thread = update_ui_thread
       yield
-
       ui_thread.join
     end
 

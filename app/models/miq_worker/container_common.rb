@@ -34,7 +34,7 @@ class MiqWorker
     end
 
     def container_image_tag
-      "latest"
+      ENV["CONTAINER_IMAGE_TAG"] || "latest"
     end
 
     def deployment_prefix

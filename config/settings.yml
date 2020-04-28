@@ -89,6 +89,9 @@
     :purge_schedule: "50 * * * *"
     :purge_window_size: 10000
     :queue_timeout: 20.minutes
+:docs:
+  :product_support_website: http://www.manageiq.org
+  :product_support_website_text: ManageIQ.org
 :drift_states:
   :history:
     :keep_drift_states: 6.months
@@ -929,12 +932,7 @@
   :run_automate_methods_on_service_api_submit: false
   :allow_api_service_ordering: true
 :prototype:
-  :queue_type: miq_queue
-  :artemis:
-    :queue_hostname: localhost
-    :queue_port: 61616
-    :queue_username: admin
-    :queue_password: smartvm
+  :messaging_type: miq_queue
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes

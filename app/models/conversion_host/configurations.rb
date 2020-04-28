@@ -54,6 +54,7 @@ module ConversionHost::Configurations
       params = params.symbolize_keys
       resource = params.delete(:resource)
 
+      raise "#{resource.class.name.demodulize} '#{resource.name}' doesn't have a hostname or IP address in inventory" if resource.hostname.nil? && resource.ipaddresses.empty?
       raise "the resource '#{resource.name}' is already configured as a conversion host" if ConversionHost.exists?(:resource => resource)
 
       params[:resource_id] = resource.id
@@ -113,12 +114,13 @@ module ConversionHost::Configurations
 
   def disable(_params = nil, _auth_user = nil)
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
-    _log.debug("Disabling a conversion_host #{resource_info}")
+    raise "There are active migration tasks running on this conversion host" if active_tasks.present?
 
+    _log.debug("Disabling a conversion_host #{resource_info}")
     disable_conversion_host_role
     destroy!
   rescue StandardError => error
-    raise
+    raise error
   ensure
     self.class.notify_configuration_result('disable', error.nil?, resource_info)
   end

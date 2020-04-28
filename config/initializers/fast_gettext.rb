@@ -4,8 +4,12 @@
 # temporarily force it off while we load stuff.
 old_debug, $DEBUG = $DEBUG, nil
 begin
-  # consistently sort en_foo.yml *after* en.yml; to_s because pathnames
-  I18n.load_path += Dir[Rails.root.join('locale', '*.yml')].sort_by(&:to_s)
+  load_paths = Vmdb::Plugins.to_a.unshift(Rails).flat_map do |engine|
+    Dir.glob(engine.root.join('locale', '*.yml'))
+  end
+  load_paths.sort_by! { |p| File.basename(p) } # consistently sort en_foo.yml *after* en.yml
+  I18n.load_path += load_paths
+
   Vmdb::FastGettextHelper.register_locales
   Vmdb::FastGettextHelper.register_human_localenames
   gettext_options = %w(--sort-by-msgid --location --no-wrap)
