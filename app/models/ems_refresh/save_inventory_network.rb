@@ -1,14 +1,10 @@
 #
 # Calling order for EmsCloud
 # - ems
-#   - network_services
-#     - network_service_entries
 #   - cloud_networks
 #     - cloud_subnets
 #   - security_groups
 #     - firewall_rules
-#   - security_policies
-#     - security_policy_rules
 #   - load_balancers
 #   - network_ports
 #   - floating_ips
@@ -40,12 +36,10 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     child_keys = [
-      :network_services,
       :cloud_networks,
       :cloud_subnets,
       :network_groups,
       :security_groups,
-      :security_policies,
       :network_routers,
       :load_balancers,
       :network_ports,
@@ -153,91 +147,6 @@ module EmsRefresh::SaveInventoryNetwork
     end
   end
 
-  def save_security_policies_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.security_policies.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.security_policies,
-      hashes,
-      deletes,
-      [:ems_ref],
-      :security_policy_rules)
-    store_ids_for_new_records(ems.security_policies, hashes, :ems_ref)
-  end
-
-  def save_security_policy_rules_inventory(security_policy, hashes)
-    deletes = security_policies.security_policy_rules.reload.dup
-
-    hashes.each do |h|
-      h[:security_policy_rule_id] = h.fetch_path(:security_policy_rule, :id)
-    end
-
-    save_inventory_multi(security_policies.security_policy_rules,
-                         hashes,
-                         deletes,
-                         [:security_policy],
-                         [
-                           :security_policy_rule_source_security_groups,
-                           :security_policy_rule_destination_security_groups,
-                           :security_policy_rule_network_services
-                         ])
-    store_ids_for_new_records(security_policies.security_policy_rules, hashes, :security_policy)                         
-  end
-
-  def save_security_policy_rule_source_security_groups_inventory(security_policy_rule, hashes)
-    deletes = security_policy_rule.security_policy_rule_source_security_groups.reload.dup
-
-    hashes.each do |h|
-      h[:security_policy_rule_id] = h.fetch_path(:security_policy_rule, :id)
-      h[:security_group_id] = h.fetch_path(:security_group, :id)
-    end
-
-    save_inventory_multi(security_policy_rule.security_policy_rule_source_security_groups,
-                         hashes,
-                         deletes,
-                         [:security_policy_rule_id, :security_group_id],
-                         nil,
-                         [:security_policy_rule, :security_group])
-  end
-
-  def save_security_policy_rule_destination_security_groups_inventory(security_policy_rule, hashes)
-    deletes = security_policy_rule.security_policy_rule_destination_security_groups.reload.dup
-
-    hashes.each do |h|
-      h[:security_policy_rule_id] = h.fetch_path(:security_policy_rule, :id)
-      h[:security_group_id] = h.fetch_path(:security_group, :id)
-    end
-
-    save_inventory_multi(security_policy_rule.security_policy_rule_destination_security_groups,
-                         hashes,
-                         deletes,
-                         [:security_policy_rule_id, :security_group_id],
-                         nil,
-                         [:security_policy_rule, :network_service])
-  end
-
-  def save_security_policy_rule_network_services_inventory(security_policy_rule, hashes)
-    deletes = security_policy_rule.security_policy_rule_network_services.reload.dup
-
-    hashes.each do |h|
-      h[:security_policy_rule_id] = h.fetch_path(:security_policy_rule, :id)
-      h[:network_service_id] = h.fetch_path(:network_service, :id)
-    end
-
-    save_inventory_multi(security_policy_rule.security_policy_rule_network_services,
-                         hashes,
-                         deletes,
-                         [:security_policy_rule_id, :network_service_id],
-                         nil,
-                         [:security_policy_rule, :network_service])
-  end
-
   def save_floating_ips_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
@@ -302,41 +211,6 @@ module EmsRefresh::SaveInventoryNetwork
                          nil,
                          [:cloud_network, :network_group])
     store_ids_for_new_records(ems.network_routers, hashes, :ems_ref)
-  end
-
-  def save_network_services_inventory(ems, hashes, target = nil)
-    target = ems if target.nil?
-
-    ems.network_services.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(ems.network_services,
-      hashes,
-      deletes,
-      [:ems_ref],
-      :network_service_entries,
-      [:network_service])
-    store_ids_for_new_records(ems.network_services, hashes, :ems_ref)
-  end
-
-  def save_network_service_entries_inventory(network_service, hashes)
-    deletes = network_services.network_service_entries.reload.dup
-
-    hashes.each do |h|
-      h[:network_service_entry_id] = h.fetch_path(:network_service_entry, :id)
-    end
-
-    save_inventory_multi(network_service.network_service_entries,
-                         hashes,
-                         deletes,
-                         [:network_service_entry_id],
-                         nil,
-                         [:network_service_entry])
-    store_ids_for_new_records(network_services.network_service_entries, hashes, :ems_ref)                         
   end
 
   def save_load_balancers_inventory(ems, hashes, target = nil)
