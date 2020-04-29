@@ -56,7 +56,6 @@ class CloudNetwork < ApplicationRecord
   end
 
   def update_cloud_network_queue(userid, options = {})
-    $nsxt_log.info("update_cloud_network_queue")
     task_opts = {
       :action => "updating Cloud Network for user #{userid}",
       :userid => userid

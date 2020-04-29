@@ -32,7 +32,6 @@ class SecurityPolicyRule < ApplicationRecord
   end
 
   def update_security_policy_rule_queue(userid, options = {})
-    $nsxt_log.info("edit_security_policy_rule_queue")
     task_opts = {
       :action => "updating Security Policy Rule for user #{userid}",
       :userid => userid
