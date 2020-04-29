@@ -1734,13 +1734,6 @@ class Host < ApplicationRecord
 
   # Host Discovery Types and Platforms
 
-  def self.host_discovery_types
-    # TODO: This feature has been removed, once the UI no longer calls this
-    # method we can delete it
-    []
-  end
-  Vmdb::Deprecation.deprecate_methods(self, :host_discovery_types)
-
   def self.host_create_os_types
     # TODO: This feature has been removed, once the UI no longer calls this
     # method we can delete it
