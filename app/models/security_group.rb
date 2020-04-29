@@ -71,7 +71,7 @@ class SecurityGroup < ApplicationRecord
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'delete_security_group',
-      :instance_id => id,=begin  =end
+      :instance_id => id,
       :priority    => MiqQueue::NORMAL_PRIORITY,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
