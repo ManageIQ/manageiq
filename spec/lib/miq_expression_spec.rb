@@ -488,13 +488,30 @@ RSpec.describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" IS NOT NULL AND \"vms\".\"name\" != ''")
     end
 
-    it "generates the SQL for a CONTAINS expression with field" do
+    it "generates the SQL for a CONTAINS expression with has_many field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("\"vms\".\"id\" IN (SELECT DISTINCT \"guest_applications\".\"vm_or_template_id\" FROM \"guest_applications\" WHERE \"guest_applications\".\"name\" = 'foo')")
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON "\
+                 "\"guest_applications\".\"vm_or_template_id\" = \"vms\".\"id\" WHERE \"guest_applications\".\"name\" = 'foo')"
+      expect(sql).to eq(expected)
     end
 
     it "can't generate the SQL for a CONTAINS expression with association.association-field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications.host-name", "value" => "foo"}).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "can't generate the SQL for a CONTAINS expression with belongs_to field" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.host-name", "value" => "foo"}).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "can't generate the SQL for multi level contains with a scope" do
+      sql, _ = MiqExpression.new("CONTAINS" => {"field" => "ExtManagementSystem.clustered_hosts.operating_system-name", "value" => "RHEL"}).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "can't generate the SQL for field belongs to 'has_and_belongs_to_many' association" do
+      sql, _ = MiqExpression.new("CONTAINS" => {"field" => "ManageIQ::Providers::InfraManager::Vm.storages-name", "value" => "abc"}).to_sql
       expect(sql).to be_nil
     end
 
@@ -504,15 +521,25 @@ RSpec.describe MiqExpression do
     end
 
     it "can't generate the SQL for a CONTAINS expression with [association.virtualassociation]" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.evm_owner.active_vms-name", "value" => "foo"}).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "can't generate the SQL for a CONTAINS expression with invalid associations" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users.active_vms-name", "value" => "foo"}).to_sql
       expect(sql).to be_nil
     end
 
     it "generates the SQL for a CONTAINS expression with field containing a scope" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
-      expected = "\"vms\".\"id\" IN (SELECT DISTINCT \"accounts\".\"vm_or_template_id\" FROM \"accounts\" "\
-                 "WHERE \"accounts\".\"name\" = 'foo' AND \"accounts\".\"accttype\" = 'user')"
+      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"accounts\" ON \"accounts\".\"vm_or_template_id\" = "\
+                 "\"vms\".\"id\" AND \"accounts\".\"accttype\" = 'user' WHERE \"accounts\".\"name\" = 'foo')"
       expect(sql).to eq(expected)
+    end
+
+    it "can't generate the SQL for a CONTAINS in the main table" do
+      sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to be_nil
     end
 
     it "generates the SQL for a CONTAINS expression with tag" do
