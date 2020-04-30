@@ -71,5 +71,36 @@ RSpec.describe MiqReportResult::ResultSetOperations do
         expect { subject }.to raise_error(ArgumentError, "Value for column type (filter_column_2 parameter) is missing, please specify filter_string_2 parameter")
       end
     end
+
+    context 'ChargebackVm' do
+      let(:result_set_options) { result_set_options_base }
+
+      let(:expected_result_set) do
+        [{'start_date' => '11/01/18 00:00:00 +00:00', 'date_range' => 'Nov 2018', 'storage_allocated_cost' => '$494.00'},
+         {'start_date' => '11/02/18 00:00:00 +00:00', 'date_range' => 'Nov 2018', 'storage_allocated_cost' => '$301.00'}]
+      end
+
+      let(:result_set) do
+        [{'start_date' => Date.parse('2018-11-01 00:00:00 UTC'), 'date_range' => 'Nov 2018', 'storage_allocated_cost' => 494.0},
+         {'start_date' => Date.parse('2018-11-02 00:00:00 UTC'), 'date_range' => 'Nov 2018', 'storage_allocated_cost' => 301.0}]
+      end
+
+      let(:columns)   { %w[start_date date_range storage_allocated_cost vm_name] }
+      let(:col_order) { %w[date_range storage_allocated_cost] }
+      let(:sort_by)   { %w[vm_name start_date] }
+
+      let!(:report) do
+        FactoryBot.create(:miq_report_chargeback, :miq_group          => user.current_group,
+                                                  :miq_report_results => [report_result],
+                                                  :cols               => columns,
+                                                  :col_formats        => col_formats,
+                                                  :col_order          => col_order,
+                                                  :sortby             => sort_by)
+      end
+
+      it 'returns default chargeback columns' do
+        expect(subject[:result_set]).to match_array(expected_result_set)
+      end
+    end
   end
 end

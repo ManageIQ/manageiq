@@ -41,10 +41,10 @@ module MiqReportResult::ResultSetOperations
       if result_set.present? && report
         if filtering_enabled?(options)
           result_set, count_of_full_result_set = report.filter_result_set(result_set, filter_options(options))
-          allowed_columns_to_format = report.col_order - filter_options(options).keys
+          allowed_columns_to_format = report.cols_for_report - filter_options(options).keys
         end
 
-        result_set.map! { |x| x.slice(*report.col_order) }
+        result_set.map! { |x| x.slice(*report.cols_for_report) }
         result_set = result_set.tabular_sort(sorting_columns, options[:sort_order])
         result_set = apply_limit_and_offset(result_set, options)
       end
