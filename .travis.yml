@@ -1,4 +1,7 @@
-dist: xenial
+dist: bionic
+arch:
+- amd64
+- ppc64le
 language: ruby
 rvm:
 - 2.5.7
@@ -17,8 +20,8 @@ env:
   - TEST_SUITE=brakeman
 matrix:
   fast_finish: true
-addons:
-  postgresql: '10'
+services:
+- postgresql
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
