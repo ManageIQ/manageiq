@@ -76,7 +76,7 @@ class CloudNetwork < ApplicationRecord
     raw_update_cloud_network(options)
   end
 
-  def raw_update_cloud_network(options = {})
+  def raw_update_cloud_network(_options = {})
     raise NotImplementedError, _("raw_update_cloud_network must be implemented in a subclass")
   end
 
@@ -101,7 +101,7 @@ class CloudNetwork < ApplicationRecord
     raw_delete_cloud_network(options)
   end
 
-  def raw_delete_cloud_network(options)
+  def raw_delete_cloud_network(_options)
     raise NotImplementedError, _("raw_delete_cloud_network must be implemented in a subclass")
   end
 

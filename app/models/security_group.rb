@@ -59,7 +59,7 @@ class SecurityGroup < ApplicationRecord
     raw_update_security_group(options)
   end
 
-  def raw_update_security_group(options = {})
+  def raw_update_security_group(_options = {})
     raise NotImplementedError, _("raw_update_security_group must be implemented in a subclass")
   end
 
@@ -84,7 +84,7 @@ class SecurityGroup < ApplicationRecord
     raw_delete_security_group(options)
   end
 
-  def raw_delete_security_group(options)
+  def raw_delete_security_group(_options)
     raise NotImplementedError, _("raw_delete_security_group must be implemented in a subclass")
   end
 end

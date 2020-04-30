@@ -22,10 +22,10 @@ class SecurityPolicyRule < ApplicationRecord
   has_many :security_policy_rule_network_services, :dependent => :destroy
   has_many :network_services, :through => :security_policy_rule_network_services
 
-  virtual_total :source_security_groups_count, :source_security_groups  
-  virtual_total :destination_security_groups_count, :destination_security_groups  
+  virtual_total :source_security_groups_count, :source_security_groups
+  virtual_total :destination_security_groups_count, :destination_security_groups
   virtual_total :network_services_count, :network_services
-  
+
   def self.class_by_ems(ext_management_system)
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::SecurityPolicyRule
@@ -52,7 +52,7 @@ class SecurityPolicyRule < ApplicationRecord
     raw_update_security_policy_rule(options)
   end
 
-  def raw_update_security_policy_rule(options = {})
+  def raw_update_security_policy_rule(_options = {})
     raise NotImplementedError, _("raw_update_security_policy_rule must be implemented in a subclass")
   end
 
@@ -77,7 +77,7 @@ class SecurityPolicyRule < ApplicationRecord
     raw_delete_security_policy_rule(options)
   end
 
-  def raw_delete_security_policy_rule(options)
+  def raw_delete_security_policy_rule(_options)
     raise NotImplementedError, _("raw_delete_security_policy_rule must be implemented in a subclass")
   end
 end

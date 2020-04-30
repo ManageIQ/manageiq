@@ -41,7 +41,7 @@ class SecurityPolicy < ApplicationRecord
     raw_update_security_policy(options)
   end
 
-  def raw_update_security_policy(options = {})
+  def raw_update_security_policy(_options = {})
     raise NotImplementedError, _("raw_update_security_policy must be implemented in a subclass")
   end
 
@@ -66,7 +66,7 @@ class SecurityPolicy < ApplicationRecord
     raw_delete_security_policy(options)
   end
 
-  def raw_delete_security_policy(options)
+  def raw_delete_security_policy(_options)
     raise NotImplementedError, _("raw_delete_security_policy must be implemented in a subclass")
   end
 end

@@ -7,11 +7,11 @@ class NetworkService < ApplicationRecord
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
-  belongs_to :cloud_tenant  
+  belongs_to :cloud_tenant
   belongs_to :orchestration_stack
 
   has_many :network_service_entries, :foreign_key => :network_service_id, :dependent => :destroy
-  alias entries network_service_entries 
+  alias entries network_service_entries
 
   has_many :security_policy_rule_network_services, :dependent => :destroy
   has_many :security_policy_rules, :through => :security_policy_rule_network_services
