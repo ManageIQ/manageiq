@@ -10,10 +10,12 @@ class CloudTenant < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_one    :source_tenant, :as => :source, :class_name => 'Tenant'
   has_many   :security_groups
+  has_many   :security_policies
   has_many   :cloud_networks
   has_many   :cloud_subnets
   has_many   :network_ports
   has_many   :network_routers
+  has_many   :network_services
   has_many   :vms, -> { active }
   has_many   :vms_and_templates
   has_many   :miq_templates

@@ -55,6 +55,56 @@ class CloudNetwork < ApplicationRecord
     ["((tenants.id IN (?) OR cloud_networks.shared IS TRUE OR cloud_networks.external_facing IS TRUE) AND ext_management_systems.tenant_mapping_enabled IS TRUE) OR ext_management_systems.tenant_mapping_enabled IS FALSE OR ext_management_systems.tenant_mapping_enabled IS NULL", tenant_ids]
   end
 
+  def update_cloud_network_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Cloud Network for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_cloud_network',
+      :instance_id => id,
+      :priority    => MiqQueue::NORMAL_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_cloud_network(options = {})
+    raw_update_cloud_network(options)
+  end
+
+  def raw_update_cloud_network(_options = {})
+    raise NotImplementedError, _("raw_update_cloud_network must be implemented in a subclass")
+  end
+
+  def delete_cloud_network_queue(userid, options = {})
+    task_opts = {
+      :action => "deleting Cloud Network for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_cloud_network',
+      :instance_id => id,
+      :priority    => MiqQueue::NORMAL_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def delete_cloud_network(options)
+    raw_delete_cloud_network(options)
+  end
+
+  def raw_delete_cloud_network(_options)
+    raise NotImplementedError, _("raw_delete_cloud_network must be implemented in a subclass")
+  end
+
   private
 
   def extra_attributes_save(key, value)

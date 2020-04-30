@@ -9,10 +9,12 @@ module HasNetworkManagerMixin
 
     delegate :floating_ips,
              :security_groups,
+             :security_policies,
              :cloud_networks,
              :cloud_subnets,
              :network_ports,
              :network_routers,
+             :network_services,
              :public_networks,
              :private_networks,
              :all_cloud_networks,
