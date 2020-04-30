@@ -168,7 +168,7 @@ RSpec.describe MiqEvent do
         MiqEvent.first.process_evm_event
       end
 
-      it"will pass EmsEvent to policy if set" do
+      it "will pass EmsEvent to policy if set" do
         event = 'vm_clone_start'
         vm = FactoryBot.create(:vm_vmware)
         ems_event = FactoryBot.create(
