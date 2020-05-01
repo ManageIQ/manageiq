@@ -28,10 +28,18 @@ module Vmdb
       register_models
     end
 
-    def versions
+    def details
       each_with_object({}) do |engine, hash|
-        hash[engine] = version(engine)
+        hash[engine] = {
+          :name    => engine.name,
+          :version => version(engine),
+          :path    => engine.root.to_s
+        }
       end
+    end
+
+    def versions
+      details.transform_values { |v| v[:version] }
     end
 
     def ansible_content
