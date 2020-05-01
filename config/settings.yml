@@ -871,6 +871,7 @@
   :level_cn_monitoring: info
   :level_fog: info
   :level_mw: info
+  :level_nsxt: info
   :level_nuage: info
   :level_policy: info
   :level_scvmm: info
