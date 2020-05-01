@@ -62,6 +62,17 @@ RSpec.describe Vmdb::Plugins do
     )
   end
 
+  it ".details" do
+    details = described_class.details
+
+    expect(details).to be_kind_of(Hash)
+    expect(details.keys).to match_array described_class.all
+
+    detail = details.values.first
+    expect(detail).to be_kind_of(Hash)
+    expect(detail.keys).to match_array([:name, :version, :path])
+  end
+
   it ".versions" do
     versions = described_class.versions
 
