@@ -9,7 +9,7 @@ module ManageIQ
                  :desc => "Create plugin at given path"
 
     def self.namespace
-      # Thor has it's own version of snake_case, which doesn't account for acronyms
+      # Thor has its own version of snake_case, which doesn't account for acronyms
       name.underscore.tr("/", ":").sub(/_generator$/, "")
     end
 
