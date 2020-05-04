@@ -16,6 +16,7 @@ module ManageIQ::Providers
     has_many :containers, -> { active }, :foreign_key => :ems_id
     has_many :container_projects, -> { active }, :foreign_key => :ems_id
     has_many :container_quotas, -> { active }, :foreign_key => :ems_id
+    has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_limits, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_images, -> { active }, :foreign_key => :ems_id, :dependent => :destroy
@@ -34,7 +35,6 @@ module ManageIQ::Providers
     has_many :container_env_vars, :through => :containers
     has_many :security_contexts, :through => :containers
     has_many :container_service_port_configs, :through => :container_services
-    has_many :container_routes, :through => :container_services
     has_many :container_quota_scopes, :through => :container_quotas
     has_many :container_quota_items, :through => :container_quotas
     has_many :container_limit_items, :through => :container_limits

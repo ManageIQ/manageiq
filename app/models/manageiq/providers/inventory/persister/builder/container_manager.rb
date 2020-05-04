@@ -179,8 +179,7 @@ module ManageIQ::Providers
 
         def container_routes
           add_properties(
-            :attributes_blacklist         => %i(namespace),
-            :parent_inventory_collections => %i(container_services)
+            :attributes_blacklist => %i(namespace)
           )
           add_common_default_values
         end
