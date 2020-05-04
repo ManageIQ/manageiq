@@ -333,7 +333,7 @@ RSpec.describe EvmApplication do
 
   describe ".deployment_status" do
     it "returns new_deployment if the database is not migrated" do
-      expect(ActiveRecord::Migrator).to receive(:current_version).and_return(0)
+      expect(ActiveRecord::MigrationContext).to receive(:new).and_return(double(:current_version => 0))
       expect(described_class.deployment_status).to eq("new_deployment")
     end
 
@@ -343,7 +343,7 @@ RSpec.describe EvmApplication do
 
     it "returns upgrade if we need to migrate the database" do
       EvmSpecHelper.local_miq_server
-      expect(ActiveRecord::Migrator).to receive(:needs_migration?).and_return(true)
+      expect(ActiveRecord::MigrationContext).to receive(:new).and_return(double(:current_version => 20190712135032, :needs_migration? => true))
       expect(described_class.deployment_status).to eq("upgrade")
     end
 

@@ -1411,12 +1411,7 @@ class MiqExpression
                                .where(limiter_query)
 
     conn = main_model.connection
-    sql  = if ActiveRecord.version.to_s >= "5.2"
-             conn.unprepared_statement { conn.to_sql(relation_query.arel) }
-           else
-             conn.unprepared_statement { conn.to_sql(relation_query.arel, relation_query.bound_attributes) }
-           end
-
+    sql  = conn.unprepared_statement { conn.to_sql(relation_query.arel) }
     Arel::Nodes::In.new(primary_attribute, Arel::Nodes::SqlLiteral.new(sql))
   end
 
