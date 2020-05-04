@@ -202,9 +202,10 @@ class EvmApplication
   end
 
   def self.deployment_status
-    return "new_deployment" if ActiveRecord::Migrator.current_version.zero?
+    context = ActiveRecord::MigrationContext.new('db/migrate')
+    return "new_deployment" if context.current_version.zero?
     return "new_replica"    if MiqServer.my_server.nil?
-    return "upgrade"        if ActiveRecord::Migrator.needs_migration?
+    return "upgrade"        if context.needs_migration?
     "redeployment"
   end
 
