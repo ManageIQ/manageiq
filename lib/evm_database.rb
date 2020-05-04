@@ -133,7 +133,7 @@ class EvmDatabase
   private_class_method :seed_classes
 
   def self.host
-    ActiveRecord::Base.configurations.fetch_path(ENV['RAILS_ENV'], 'host')
+    (ActiveRecord::Base.configurations[ENV['RAILS_ENV']] || {})['host']
   end
 
   def self.local?
