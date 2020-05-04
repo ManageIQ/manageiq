@@ -24,57 +24,80 @@ module MiqReport::Formatting
     [function_name, options]
   end
 
-  def format(col, value, options = {})
-    if db.to_s == "VimPerformanceTrend"
-      if col == "limit_col_value"
-        col = db_options[:limit_col] || col
-      elsif col.to_s.ends_with?("_value")
-        col = db_options[:trend_col] || col
-      end
-    elsif db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-      if col == "cpu_used_metric" || col == "cpu_metric"
-        options[:format] = :cores
-      end
-    end
-
-    # TODO: remove this and update storing column format to instance of report in UI (this requires migration)
-    options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
-    col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
-
-    format = options.delete(:format)
-    return "" if value.nil?
-    return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
-
-    # Format name passed in as a symbol or string
-    format = MiqReport::Formats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
-
-    # Look in this report object for column format
-    self.col_formats ||= []
-    if format.nil?
-      idx = col.kind_of?(String) ? col_order.index(col) : col
-      if idx
-        col = col_order[idx]
-        format = MiqReport::Formats.details(self.col_formats[idx])
-      end
-    end
-
-    # Use default format for column stil nil
-    if format.nil? || format == :_default_
-      format = format_from_miq_expression(col, value)
-    else
-      format = format.deep_clone # Make sure we don't taint the original
-    end
-
-    options[:column] = col
-
-    # Chargeback Reports: Add the selected currency in the assigned rate to options
+  def formatter_by(column)
+    formatter = nil
     if Chargeback.db_is_chargeback?(db)
-      @rates_cache ||= Chargeback::RatesCache.new
-      options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
+      if db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
+        if %w[cpu_used_metric cpu_metric].include?(column)
+          formatter = :cores
+        end
+      end
+
+      formatter = :_none_ if Chargeback.rate_column?(column.to_s)
     end
 
-    format.merge!(options) if format # Merge additional options that were passed in as overrides
-    value = apply_format_function(value, format) if format && !format[:function].nil?
+    formatter
+  end
+
+  def format_options_by(column)
+    format_options = {:column => column_to_format(column)}
+
+    formatter = formatter_by(column)
+    format_options[:format] = formatter if formatter
+
+    if Chargeback.db_is_chargeback?(db)
+      # Chargeback Reports: Add the selected currency in the assigned rate to options
+      @rates_cache ||= Chargeback::RatesCache.new
+      format_options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
+    end
+
+    format_options
+  end
+
+  def column_to_format(column)
+    if is_numeric?(column)
+      col_order[column]
+    elsif db.to_s == "VimPerformanceTrend"
+      if col == "limit_col_value"
+        db_options[:limit_col]
+      elsif col.to_s.ends_with?("_value")
+        db_options[:trend_col]
+      end
+    elsif Chargeback.db_is_chargeback?(db)
+      Chargeback.default_column_for_format(column.to_s)
+    end || column
+  end
+
+  def format_attributes_for(column_formatter, col, value)
+    format_attributes = if column_formatter == :_default_
+                          format_from_miq_expression(col, value)
+                        elsif column_formatter.kind_of?(Symbol) || column_formatter.kind_of?(String)
+                          MiqReport::Formats.details(column_formatter)
+                        elsif column_formatter
+                          column_formatter.deep_clone # Make sure we don't taint the original
+                        elsif column_formatter.nil?
+                          # Look in this report object for column format
+                          self.col_formats ||= []
+                          idx = col_order.index(col)
+                          MiqReport::Formats.details(self.col_formats[idx])
+                        end
+
+    format_attributes || format_from_miq_expression(col, value)
+  end
+
+  def format(col, value, options = {})
+    return "" if value.nil?
+
+    options = options.merge(format_options_by(col))
+
+    column_formatter = options.delete(:format)
+    return String.new(value.to_s) if column_formatter == :_none_ # Raw value was requested, do not attempt to format
+
+    default_format_attributes = format_attributes_for(column_formatter, col, value)
+
+    if default_format_attributes && default_format_attributes.merge!(options)[:function]
+      value = apply_format_function(value, default_format_attributes.deep_clone)
+    end
 
     String.new(value.to_s) # Generate value as a string in case it is a SafeBuffer
   end
