@@ -21,7 +21,7 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-gem "manageiq-schema",         :git => "https://github.com/jrafanie/manageiq-schema.git",         :branch => "try_rails_5_2"
+manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
 gem "activerecord-virtual_attributes", "~>1.6.0"
