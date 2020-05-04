@@ -56,6 +56,24 @@ RSpec.describe Authenticator::Database do
       it "updates lastlogon" do
         expect { authenticate }.to(change { alice.reload.lastlogon })
       end
+
+      it "resets failed login attempts" do
+        alice.update(:failed_login_attempts => 1)
+        authenticate
+        expect(alice.reload.failed_login_attempts).to eq(0)
+      end
+
+      context "with too many failed login attempts" do
+        before do
+          EvmSpecHelper.create_guid_miq_server_zone
+          alice.update(:failed_login_attempts => 4)
+          allow(alice).to receive(:unlock_queue)
+        end
+
+        it 'fails' do
+          expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Your account has been locked due to too many failed login attempts, please contact the administrator.")
+        end
+      end
     end
 
     context "with bad password" do
@@ -66,7 +84,13 @@ RSpec.describe Authenticator::Database do
       end
 
       it "fails" do
-        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "The username or password you entered is incorrect.")
+      end
+
+      it "increases the number of failed logins" do
+        count = alice.failed_login_attempts
+        authenticate rescue nil
+        expect(alice.reload.failed_login_attempts).to eq(count + 1)
       end
 
       it "records one failing audit entry" do
@@ -81,7 +105,7 @@ RSpec.describe Authenticator::Database do
 
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
-        expect($log).to receive(:warn).with(/Authentication failed$/)
+        expect($log).to receive(:warn).with(/The username or password you entered is incorrect.$/)
         authenticate rescue nil
       end
 
@@ -113,7 +137,7 @@ RSpec.describe Authenticator::Database do
 
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
-        expect($log).to receive(:warn).with(/Authentication failed$/)
+        expect($log).to receive(:warn).with(/The username or password you entered is incorrect.$/)
         authenticate rescue nil
       end
     end

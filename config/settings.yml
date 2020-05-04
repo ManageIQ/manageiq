@@ -11,6 +11,8 @@
   :ldaphost:
   :ldapport: '389'
   :mode: database
+  :max_failed_login_attempts: 3
+  :locked_account_timeout: 2.minutes
   :search_timeout: 30
   :user_suffix:
   :user_type: userprincipalname

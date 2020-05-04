@@ -44,7 +44,6 @@ module Authenticator
       options = options.dup
       options[:require_user] ||= false
       options[:authorize_only] ||= false
-      fail_message = _("Authentication failed")
 
       user_or_taskid = nil
 
@@ -52,7 +51,10 @@ module Authenticator
         username = normalize_username(username)
         audit = {:event => audit_event, :userid => username}
 
-        authenticated = options[:authorize_only] || _authenticate(username, password, request)
+        # The fail_message might or might not come from the _authenticate method
+        authenticated, fail_message = options[:authorize_only] || _authenticate(username, password, request)
+        fail_message ||= _("Authentication failed") # Fall back to the default fail_message
+
         if authenticated
           audit_success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
 
