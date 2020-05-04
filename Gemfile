@@ -66,8 +66,8 @@ gem "pg",                                              :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "psych",                          "~>3.1",         :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.2.4", ">=5.2.4.4"
-gem "rails-i18n",                     "~>5.x"
+gem "rails",                          "~>6.0.0"
+gem "rails-i18n",                     "~>6.x"
 gem "rake",                           ">=12.3.3",      :require => false
 gem "rest-client",                    "~>2.1.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
@@ -242,7 +242,7 @@ end
 
 group :web_server, :manageiq_default do
   gem "puma",                           "~>4.2"
-  gem "responders",                     "~>2.0"
+  gem "responders",                     "~>3.0"
   gem "ruby-dbus" # For external auth
   gem "secure_headers",                 "~>3.9"
 end
