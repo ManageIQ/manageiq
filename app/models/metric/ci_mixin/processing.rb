@@ -207,6 +207,7 @@ module Metric::CiMixin::Processing
       resource = metric.delete(:resource)
 
       metric[:parent_ems_type] = resource.ext_management_system&.class&.ems_type
+      metric[:parent_ems_uid]  = resource.ext_management_system&.uid_ems
 
       metric[:resource_type] = resource.class.base_class.name
       metric[:resource_id]   = resource.id
