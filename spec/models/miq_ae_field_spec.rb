@@ -42,7 +42,7 @@ RSpec.describe MiqAeField do
   context "legacy tests" do
     before do
       @ns = FactoryBot.create(:miq_ae_namespace, :name => "TEST", :parent => FactoryBot.create(:miq_ae_domain))
-      @c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "fields_test", :domain_id => @ns.domain_id)
+      @c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "fields_test")
       @user = FactoryBot.create(:user_with_group)
     end
 
@@ -169,7 +169,7 @@ RSpec.describe MiqAeField do
     it "should return editable as false if the parent namespace/class is not editable" do
       d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => User.current_tenant)
       n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :domain => d1, :name => "foo")
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       f1 = FactoryBot.create(:miq_ae_field, :class_id => c1.id, :name => "foo_field")
       expect(f1.editable?(@user)).to be_falsey
     end
@@ -177,7 +177,7 @@ RSpec.describe MiqAeField do
     it "should return editable as true if the parent namespace/class is editable" do
       d1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
       n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :domain => d1, :name => "foo")
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       f1 = FactoryBot.create(:miq_ae_field, :class_id => c1.id, :name => "foo_field")
       expect(f1.editable?(@user)).to be_truthy
     end

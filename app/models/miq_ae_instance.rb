@@ -9,7 +9,7 @@ class MiqAeInstance < ApplicationRecord
 
   before_validation :set_relative_path
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
-  validates_presence_of   :name
+  validates               :name, :domain_id, :class_id, :presence => true
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ . - characters")
 
@@ -168,8 +168,8 @@ class MiqAeInstance < ApplicationRecord
   end
 
   def set_relative_path
-    self.domain_id ||= ae_class.domain_id
-    self.relative_path = "#{ae_class.relative_path}/#{name}" if name_changed? || relative_path_changed?
+    self.domain_id ||= ae_class&.domain_id
+    self.relative_path = "#{ae_class.relative_path}/#{name}" if (name_changed? || relative_path_changed?) && ae_class
   end
 
   private

@@ -13,7 +13,7 @@ class MiqAeMethod < ApplicationRecord
   has_many   :inputs,   -> { order(:priority) }, :class_name => "MiqAeField", :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
-  validates_presence_of   :name, :scope
+  validates               :name, :scope, :domain_id, :class_id, :presence => true
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
   validates_format_of     :name, :with    => /\A[\w]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ characters")
@@ -149,7 +149,7 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def set_relative_path
-    self.domain_id ||= ae_class.domain_id
-    self.relative_path = "#{ae_class.relative_path}/#{name}" if name_changed? || relative_path_changed?
+    self.domain_id ||= ae_class&.domain_id
+    self.relative_path = "#{ae_class.relative_path}/#{name}" if (name_changed? || relative_path_changed?) && ae_class
   end
 end

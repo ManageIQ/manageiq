@@ -3,7 +3,7 @@ RSpec.describe MiqAeInstance do
     before do
       @user = FactoryBot.create(:user_with_group)
       @ns = FactoryBot.create(:miq_ae_namespace, :name => "TEST", :parent => FactoryBot.create(:miq_ae_domain))
-      @c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "instance_test", :domain_id => @ns.domain_id)
+      @c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "instance_test")
       @fname1 = "field1"
       @f1 = @c1.ae_fields.create(:name => @fname1)
     end
@@ -81,7 +81,7 @@ RSpec.describe MiqAeInstance do
       expect(i1.get_field_value(@f1)).to eq(value2)
 
       # Set/Get a value of a field from a different class
-      c2 = MiqAeClass.create(:namespace => @ns.name, :name => "instance_test2", :domain => @ns.domain)
+      c2 = MiqAeClass.create(:namespace => @ns.name, :name => "instance_test2")
       fname2 = "field2"
       f2 = c2.ae_fields.create(:name => fname2)
 
@@ -151,7 +151,7 @@ RSpec.describe MiqAeInstance do
     it "should return editable as false if the parent namespace/class is not editable" do
       d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => User.current_tenant)
       n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => d1)
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_falsey
     end
@@ -160,7 +160,7 @@ RSpec.describe MiqAeInstance do
       User.current_user = @user
       d1 = FactoryBot.create(:miq_ae_domain, :tenant => User.current_tenant)
       n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => d1)
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
       i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_truthy
     end
@@ -207,7 +207,7 @@ RSpec.describe MiqAeInstance do
     before do
       @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :priority => 1)
       @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
-      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id, :domain => @d1)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @i1 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
       @i2 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
 
@@ -253,8 +253,8 @@ RSpec.describe MiqAeInstance do
 
   it "#domain" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1')
-    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'n1', :domain => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => d1)
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'n1', :parent => d1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
     expect(i1.domain.name).to eql('dom1')
   end
@@ -265,8 +265,8 @@ RSpec.describe MiqAeInstance do
     let(:d2) { FactoryBot.create(:miq_ae_domain, :name => 'dom2', :priority => 2) }
     let(:n1) { FactoryBot.create(:miq_ae_namespace, :parent => d1, :name => "namespace") }
     let(:n2) { FactoryBot.create(:miq_ae_namespace, :parent => d2, :name => "namespace") }
-    let(:c1) { FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "class", :domain => d1) }
-    let(:c2) { FactoryBot.create(:miq_ae_class, :namespace_id => n2.id, :name => "class", :domain => d2) }
+    let(:c1) { FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "class") }
+    let(:c2) { FactoryBot.create(:miq_ae_class, :namespace_id => n2.id, :name => "class") }
     let!(:i1) { FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "instance") }
     let!(:i2) { FactoryBot.create(:miq_ae_instance, :class_id => c2.id, :name => "instance") }
 

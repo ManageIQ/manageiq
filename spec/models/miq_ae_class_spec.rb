@@ -52,17 +52,17 @@ RSpec.describe MiqAeClass do
   end
 
   it "should set the updated_by field on save" do
-    c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "oleg", :domain => @ns.domain)
+    c1 = MiqAeClass.create(:namespace_id => @ns.id, :name => "oleg")
     expect(c1.updated_by).to eq('system')
   end
 
   it "should not create classes with the same name in the same namespace" do
-    c1 = MiqAeClass.new(:namespace_id => @ns.id, :name => "oleg", :domain => @ns.domain)
+    c1 = MiqAeClass.new(:namespace_id => @ns.id, :name => "oleg")
     expect(c1).not_to be_nil
     expect(c1.save!).to be_truthy
-    expect { MiqAeClass.new(:namespace_id => @ns.id, :name => "OLEG", :domain => @ns.domain).save! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { MiqAeClass.new(:namespace_id => @ns.id, :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
     n2 = FactoryBot.create(:miq_ae_namespace, :parent => FactoryBot.create(:miq_ae_domain))
-    c2 = MiqAeClass.new(:namespace_id => n2.id, :domain => n2.domain, :name => "oleg")
+    c2 = MiqAeClass.new(:namespace_id => n2.id, :name => "oleg")
     expect(c2).not_to be_nil
     expect(c2.save!).to be_truthy
   end
@@ -70,14 +70,14 @@ RSpec.describe MiqAeClass do
   it "should return editable as false if the parent namespace is not editable" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :domain => d1, :name => "foo")
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_falsey
   end
 
   it "should return editable as true if the parent namespace is editable" do
     d1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
     n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :domain => d1, :name => "foo")
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_truthy
   end
 
@@ -184,8 +184,8 @@ RSpec.describe MiqAeClass do
     before do
       @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :parent => nil, :priority => 1)
       @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
-      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id, :domain => @d1)
-      @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id, :domain => @d1)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
+      @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
       @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
       @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => @d2)
@@ -292,8 +292,7 @@ RSpec.describe MiqAeClass do
   end
 
   it "#domain" do
-    d1 = FactoryBot.create(:miq_ae_system_domain, :name => "TEST")
-    c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg", :domain => d1)
+    c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
     expect(c1.domain.name).to eql('TEST')
   end
 
@@ -301,7 +300,7 @@ RSpec.describe MiqAeClass do
     before do
       d1 = FactoryBot.create(:miq_ae_system_domain, :priority => 10)
       n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
-      @c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :domain => d1, :name => "foo")
+      @c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     end
 
     it "class with only state field" do

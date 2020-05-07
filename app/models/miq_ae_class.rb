@@ -11,7 +11,7 @@ class MiqAeClass < ApplicationRecord
   has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
                             :dependent => :destroy, :inverse_of => :ae_class
 
-  validates_presence_of   :name, :namespace_id, :domain_id
+  validates :name, :namespace_id, :domain_id, :presence => true
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ . - characters")
@@ -180,11 +180,9 @@ class MiqAeClass < ApplicationRecord
   end
 
   def set_relative_path
-    return if ae_namespace.blank?
-
-    self.domain_id ||= domain&.id || ae_namespace.domain_id
-    self.domain_id ||= ae_namespace.id if ae_namespace.root?
-    self.relative_path = [ae_namespace.relative_path, name].compact.join("/") if name_changed? || relative_path.nil?
+    self.domain_id ||= domain&.id || ae_namespace&.domain_id
+    self.domain_id ||= ae_namespace.id if ae_namespace&.root?
+    self.relative_path = [ae_namespace.relative_path, name].compact.join("/") if (name_changed? || relative_path.nil?) && ae_namespace
   end
 
   def set_children_relative_path

@@ -2,7 +2,7 @@ RSpec.describe MiqAeMethod do
   let(:user) { FactoryBot.create(:user_with_group) }
   it "should return editable as false if the parent namespace/class is not editable" do
     n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => n1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
@@ -14,7 +14,7 @@ RSpec.describe MiqAeMethod do
 
   it "should return editable as true if the parent namespace/class is editable" do
     n1 = FactoryBot.create(:miq_ae_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => n1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
@@ -26,7 +26,7 @@ RSpec.describe MiqAeMethod do
 
   it "should lookup method" do
     n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => n1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     f1 = FactoryBot.create(:miq_ae_method,
                            :class_id => c1.id,
                            :name     => "foo_method",
@@ -45,7 +45,7 @@ RSpec.describe MiqAeMethod do
     let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
     before do
       @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :parent => nil, :priority => 1)
-      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id, :domain => @d1)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
       @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => d2)
     end
 
@@ -118,7 +118,7 @@ RSpec.describe MiqAeMethod do
   it "#domain" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
     n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => d1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
@@ -131,7 +131,7 @@ RSpec.describe MiqAeMethod do
   it "#to_export_yaml" do
     d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
     n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
-    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo", :domain => d1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",

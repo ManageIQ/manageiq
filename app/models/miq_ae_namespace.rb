@@ -11,6 +11,7 @@ class MiqAeNamespace < ApplicationRecord
                          /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
                          /^last_import_on/, /^source/, /^top_level_namespace/].freeze
 
+  belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   has_many :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) }, :class_name => "MiqAeClass",
            :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => :ae_namespace
 
@@ -25,7 +26,6 @@ class MiqAeNamespace < ApplicationRecord
 
   before_validation :set_relative_path
   after_save :set_children_relative_path
-  belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
 
   def parent
     parent_id == domain_id ? domain : super
