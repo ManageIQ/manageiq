@@ -331,6 +331,7 @@ class ConversionHost < ApplicationRecord
 
   def check_conversion_host_role(miq_task_id = nil)
     return if resource.nil? || resource.ext_management_system.nil?
+
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
@@ -346,6 +347,7 @@ class ConversionHost < ApplicationRecord
     return if resource.nil? || resource.ext_management_system.nil?
     raise "vmware_vddk_package_url is mandatory if transformation method is vddk" if vddk_transport_supported && vmware_vddk_package_url.nil?
     raise "vmware_ssh_private_key is mandatory if transformation_method is ssh" if ssh_transport_supported && vmware_ssh_private_key.nil?
+
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
@@ -361,6 +363,7 @@ class ConversionHost < ApplicationRecord
 
   def disable_conversion_host_role(miq_task_id = nil)
     return if resource.nil? || resource.ext_management_system.nil?
+
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
