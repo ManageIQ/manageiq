@@ -185,6 +185,18 @@ RSpec.describe ConversionHost, :v2v do
       let(:package_url) { 'http://file.example.com/vddk-stable.tar.gz' }
       let(:enable_playbook) { '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml' }
 
+      it "check_conversion_host_role doesn't call ansible_playbook if resource is absent" do
+        allow(conversion_host).to receive(:resource).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.check_conversion_host_role(1)
+      end
+
+      it "check_conversion_host_role doesn't call ansible_playbook if resource is archived" do
+        allow(conversion_host.resource).to receive(:ext_management_system).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.check_conversion_host_role(1)
+      end
+
       it "check_conversion_host_role calls ansible_playbook with extra_vars" do
         check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
         check_extra_vars = {
@@ -193,6 +205,18 @@ RSpec.describe ConversionHost, :v2v do
         }
         expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, 1)
         conversion_host.check_conversion_host_role(1)
+      end
+
+      it "disable_conversion_host_role doesn't call ansible_playbook if resource is absent" do
+        allow(conversion_host).to receive(:resource).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.disable_conversion_host_role(1)
+      end
+
+      it "disable_conversion_host_role doesn't call ansible_playbook if resource is archived" do
+        allow(conversion_host.resource).to receive(:ext_management_system).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.disable_conversion_host_role(1)
       end
 
       it "disable_conversion_host_role calls ansible_playbook with extra_vars" do
@@ -206,6 +230,18 @@ RSpec.describe ConversionHost, :v2v do
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars, 1)
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, 1)
         conversion_host.disable_conversion_host_role(1)
+      end
+
+      it "enable_conversion_host_role doesn't call ansible_playbook if resource is absent" do
+        allow(conversion_host).to receive(:resource).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.enable_conversion_host_role(1)
+      end
+
+      it "enable_conversion_host_role doesn't call ansible_playbook if resource is archived" do
+        allow(conversion_host.resource).to receive(:ext_management_system).and_return(nil)
+        expect(conversion_host).not_to receive(:ansible_playbook)
+        conversion_host.enable_conversion_host_role(1)
       end
 
       it "enable_conversion_host_role raises if vmware_vddk_package_url is nil" do
