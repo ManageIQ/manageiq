@@ -77,9 +77,7 @@ module AssignmentMixin
           next
         end
       end
-      name = AssignmentMixin.escape(obj.name)
-      value = AssignmentMixin.escape(obj.value)
-      tag = "#{klass.underscore}/label/managed/#{name}/#{value}"
+      tag = build_label_tag_path(obj, klass)
       tag_add(tag, :ns => namespace)
     end
     reload
@@ -229,6 +227,12 @@ module AssignmentMixin
   end # module ClassMethods
 
   private
+
+  def build_label_tag_path(obj, klass)
+    name = AssignmentMixin.escape(obj.name)
+    value = AssignmentMixin.escape(obj.value)
+    "#{klass.underscore}/label/managed/#{name}/#{value}"
+  end
 
   def build_object_tag_path(obj, klass = nil)
     if obj.kind_of?(ActiveRecord::Base) # obj is a CI
