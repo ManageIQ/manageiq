@@ -83,6 +83,16 @@ module AssignmentMixin
     reload
   end
 
+  def unassign_labels(objects, klass)
+    objects.to_miq_a.each do |obj|
+      tag = build_label_tag_path(obj, klass)
+      next if tag.nil?
+
+      tag_remove(tag, :ns => namespace)
+    end
+    reload
+  end
+
   def get_assigned_tos
     # Returns: {:objects => [obj, obj, ...], :tags => [[Classification.entry_object, klass], ...]}
     result = {:objects => [], :tags => [], :labels => []}

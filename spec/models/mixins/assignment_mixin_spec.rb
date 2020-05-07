@@ -2,6 +2,26 @@ RSpec.describe AssignmentMixin do
   # too ingrained in AR - has many, acts_as_miq_taggable, ...
   let(:test_class) { MiqAlertSet }
 
+  describe "#unassign_rate_assignments" do
+    let(:chargeback_rate) { FactoryBot.create(:chargeback_rate, :rate_type => 'Compute') }
+
+    let(:label_1) { FactoryBot.create(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels') }
+    let(:label_2) { FactoryBot.create(:custom_attribute, :name => "version/1.2/_label-2", :value => "test/1.0.0  rc_3", :section => 'docker_labels') }
+
+    let(:rate_assignment_2) { {:cb_rate => chargeback_rate, :label => [label_1, "container_image"]} }
+    let(:rate_assignment_1) { {:cb_rate => chargeback_rate, :label => [label_2, "container_image"]} }
+
+    it "unassigns labels from chargeback assignments" do
+      ChargebackRate.set_assignments(:compute, [rate_assignment_1, rate_assignment_2])
+
+      expect(chargeback_rate.assigned_to.map { |x| x[:label][0].id }).to match_array([label_1.id, label_2.id])
+
+      ChargebackRate.unassign_rate_assignments(:compute, [rate_assignment_1])
+
+      expect(chargeback_rate.assigned_to.map { |x| x[:label][0].id }).to match_array([label_1.id])
+    end
+  end
+
   describe '#get_assigned_for_target' do
     context 'searching for ChargebackRate' do
       let(:test_class) { ChargebackRate }
