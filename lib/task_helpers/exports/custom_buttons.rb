@@ -3,11 +3,15 @@ module TaskHelpers
     class CustomButtons
       class ExportArInstances
         EXCLUDE_ATTRS = %w(id created_on updated_on created_at updated_at dialog_id resource_id).freeze
+
         def self.export_object(obj, hash)
           class_name = obj.class.name.underscore
 
           $log.info("Exporting #{obj.class.name}: #{obj.try('name')} (ID: #{obj&.id})")
-          (hash[class_name] ||= []) << item = { 'attributes' => build_attr_list(obj.try(:attributes)) }
+          attrs = build_attr_list(obj.attributes)
+          # handle dialog label
+          attrs["dialog_label"] = obj.dialog&.label if obj.respond_to?(:dialog)
+          (hash[class_name] ||= []) << item = {'attributes' => attrs}
           create_association_list(obj, item)
           descendant_list(obj, item)
         end
@@ -18,8 +22,9 @@ module TaskHelpers
 
         def self.create_association_list(obj, item)
           associations = obj.class.try(:reflections)
+
           if associations
-            associations = associations.collect { |model, assoc| { model => assoc.class.to_s.demodulize } }.select { |as| as.values.first != "BelongsToReflection" && as.keys.first != "all_relationships" }
+            associations = associations.collect { |model, assoc| {model => assoc.class.to_s.demodulize} }.select { |as| as.values.first != "BelongsToReflection" && as.keys.first != "all_relationships" }
             associations.each do |assoc|
               assoc.each do |a|
                 next if obj.try(a.first.to_sym).blank?
@@ -36,7 +41,7 @@ module TaskHelpers
 
       def export(options = {})
         parent_id_list = []
-        objects = CustomButton.where.not(:applies_to_class => %w(ServiceTemplate GenericObject))
+        objects = CustomButton.in_region(MiqRegion.my_region_number).order(:id).where.not(:applies_to_class => %w[ServiceTemplate GenericObject])
 
         export = objects.each_with_object({}) do |obj, export_hash|
           if obj.try(:parent).present?

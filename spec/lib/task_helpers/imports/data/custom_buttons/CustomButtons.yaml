@@ -57,6 +57,7 @@ custom_button_set:
               request: test1
             configuration_template_id:
             configuration_template_type:
+            dialog_label: dialog 2
     - attributes:
         guid: 3f50d617-851e-451f-95ae-a17fc548cb11
         description: button 2
@@ -92,6 +93,7 @@ custom_button_set:
               request: test2
             configuration_template_id:
             configuration_template_type:
+            dialog_label:
     - attributes:
         guid: d3cd608a-f476-48b7-aa25-a930ec046e00
         description: multiselect
@@ -132,3 +134,4 @@ custom_button_set:
               request: multiselect
             configuration_template_id:
             configuration_template_type:
+            dialog_label:

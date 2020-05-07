@@ -3,12 +3,13 @@ module TaskHelpers
     class CustomButtons
       def import(options)
         return unless options[:source]
+
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
         Dir.glob(glob) do |filename|
           $log.info("Importing Custom Buttons from: #{filename}")
 
           begin
-            import_custom_buttons(filename)
+            import_custom_buttons(filename, options[:connect_dialog_by_name])
           rescue StandardError
             raise StandardError, "Error importing #{filename} at #{$@}"
           end
@@ -18,11 +19,12 @@ module TaskHelpers
       private
 
       class ImportArInstances
-        def self.import(obj_hash)
-          new.import(obj_hash)
+        def self.import(obj_hash, connect_dialog_by_name)
+          new.import(obj_hash, connect_dialog_by_name)
         end
 
-        def import(obj_hash)
+        def import(obj_hash, connect_dialog_by_name)
+          @connect_dialog = connect_dialog_by_name
           ActiveRecord::Base.transaction { obj_hash.each { |obj_def| create_object(*obj_def) } }
         end
 
@@ -52,10 +54,16 @@ module TaskHelpers
         end
 
         def add_associations(obj, new_obj)
-          if obj['associations'].present?
-            obj['associations'].each do |assoc|
-              new_obj.send("#{assoc.first}=", create_object(*assoc).first)
+          return if obj['associations'].blank?
+
+          obj['associations'].each do |assoc|
+            # may contain dialog_label,delete it, then find and connect dialog (optionally)
+            dialog_label = assoc.last.first['attributes'].delete('dialog_label')
+            resource_action = create_object(*assoc).first
+            if @connect_dialog
+              resource_action.dialog = Dialog.in_region(MiqRegion.my_region_number).find_by(:label => dialog_label) if dialog_label
             end
+            new_obj.send("#{assoc.first}=", resource_action)
           end
         end
 
@@ -74,9 +82,9 @@ module TaskHelpers
         end
       end
 
-      def import_custom_buttons(filename)
+      def import_custom_buttons(filename, connect_dialog_by_name)
         custom_buttons = YAML.load_file(filename)
-        ImportArInstances.import(custom_buttons)
+        ImportArInstances.import(custom_buttons, connect_dialog_by_name)
       end
     end
   end
