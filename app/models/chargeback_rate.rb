@@ -26,6 +26,8 @@ class ChargebackRate < ApplicationRecord
 
   scope :with_rate_type, ->(rate_type) { where(:rate_type => rate_type) }
 
+  virtual_column :assigned_to, :type => :string_set
+
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
   DATASTORE_MAPPING   = {'CloudVolume' => 'Storage'}.freeze
 
@@ -139,6 +141,16 @@ class ChargebackRate < ApplicationRecord
     super || description == 'Default Container Image Rate'
   end
 
+  def assigned_to
+    result = []
+
+    tos = get_assigned_tos
+    tos[:tags].each { |tag| result << {:tag => tag} }
+    tos[:objects].each { |object| result << {:object => object} }
+    tos[:labels].each { |label| result << {:label => label} }
+
+    result
+  end
   ###########################################################
 
   private
