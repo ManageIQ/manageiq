@@ -76,12 +76,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       :tags     => [:vmdb_appliance_log_config, schedule_category]
     ) { enqueue(:vmdb_appliance_log_config) }
 
-    # Schedule - Log current database statistics and bloat
-    scheduler.schedule_every(
-      worker_settings[:log_database_statistics_interval],
-      :tags     => [:log_all_database_statistics, schedule_category]
-    ) { enqueue(:vmdb_database_log_all_database_statistics) }
-
     # Schedule - Update Server Statistics
     scheduler.schedule_every(
       worker_settings[:server_stats_interval],
@@ -259,27 +253,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
     return unless schedule_enabled?(:database_operations)
     scheduler = scheduler_for(:database_operations)
-
-    sched = ::Settings.database.metrics_collection.collection_schedule
-    _log.info("database_metrics_collection_schedule: #{sched}")
-    scheduler.schedule_cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_collection_schedule],
-    ) { enqueue(:vmdb_database_capture_metrics_timer) }
-
-    sched = ::Settings.database.metrics_collection.daily_rollup_schedule
-    _log.info("database_metrics_daily_rollup_schedule: #{sched}")
-    scheduler.schedule_cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
-    ) { enqueue(:vmdb_database_rollup_metrics_timer) }
-
-    sched = ::Settings.database.metrics_history.purge_schedule
-    _log.info("database_metrics_purge_schedule: #{sched}")
-    scheduler.schedule_cron(
-      sched,
-      :tags => [:database_operations, :database_metrics_purge_schedule],
-    ) { enqueue(:metric_purge_all_timer) }
 
     sched = ::Settings.database.maintenance.reindex_schedule
     _log.info("database_maintenance_reindex_schedule: #{sched}")

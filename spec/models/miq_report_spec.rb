@@ -344,38 +344,6 @@ RSpec.describe MiqReport do
     expect(reports).to eq(rep_ok.name => rep_ok.id)
   end
 
-  it "paged_view_search on vmdb_* tables" do
-    # Create EVM tables/indexes and hourly metric data...
-    table = FactoryBot.create(:vmdb_table_evm, :name => "accounts")
-    index = FactoryBot.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
-    FactoryBot.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
-
-    report_args = {
-      "db"          => "VmdbIndex",
-      "cols"        => ["name"],
-      "include"     => {"vmdb_table" => {"columns" => ["type"]}, "latest_hourly_metric" => {"columns" => ["rows", "size", "wasted_bytes", "percent_bloat"]}},
-      "col_order"   => ["name", "latest_hourly_metric.rows", "latest_hourly_metric.size", "latest_hourly_metric.wasted_bytes", "latest_hourly_metric.percent_bloat"],
-      "col_formats" => [nil, nil, :bytes_human, :bytes_human, nil],
-    }
-
-    report = MiqReport.new(report_args)
-
-    search_expression = MiqExpression.new("and" => [{"=" => {"value" => "VmdbTableEvm", "field" => "VmdbIndex.vmdb_table-type"}}])
-
-    results, = report.paged_view_search(:filter => search_expression)
-    expect(results.data.collect(&:data)).to eq(
-      [{
-        "name"                               => "accounts_pkey",
-        "vmdb_table.type"                    => "VmdbTableEvm",
-        "latest_hourly_metric.rows"          => 102,
-        "latest_hourly_metric.size"          => 102,
-        "latest_hourly_metric.wasted_bytes"  => 102.0,
-        "latest_hourly_metric.percent_bloat" => 102.0,
-        "id"                                 => index.id
-      }]
-    )
-  end
-
   context "#paged_view_search" do
     it "filters vms in folders" do
       host = FactoryBot.create(:host)

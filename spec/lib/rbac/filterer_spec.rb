@@ -2304,27 +2304,6 @@ RSpec.describe Rbac::Filterer do
       end
     end
 
-    context "database configuration" do
-      it "expect all database setting values returned" do
-        results = described_class.search(:class               => "VmdbDatabaseSetting",
-                              :userid              => "admin",
-                              :parent              => nil,
-                              :parent_method       => nil,
-                              :targets_hash        => true,
-                              :association         => nil,
-                              :filter              => nil,
-                              :sub_filter          => nil,
-                              :where_clause        => nil,
-                              :named_scope         => nil,
-                              :display_filter_hash => nil,
-                              :conditions          => nil,
-                              :include_for_find    => {:description => {}}
-                             ).first
-
-        expect(results.length).to eq(VmdbDatabaseSetting.all.length)
-      end
-    end
-
     describe "with inline view" do
       let!(:tagged_group) { FactoryBot.create(:miq_group, :tenant => default_tenant) }
       let!(:user)         { FactoryBot.create(:user, :miq_groups => [tagged_group]) }

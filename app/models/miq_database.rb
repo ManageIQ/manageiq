@@ -9,8 +9,6 @@ class MiqDatabase < ApplicationRecord
   include AuthenticationMixin
   include PasswordMixin
 
-  virtual_has_many  :vmdb_tables
-
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 
@@ -71,11 +69,6 @@ class MiqDatabase < ApplicationRecord
 
   def self.adapter
     @adapter ||= ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter]
-  end
-
-  # virtual has_many
-  def vmdb_tables
-    VmdbTable.all
   end
 
   def verify_credentials(auth_type = nil, _options = {})

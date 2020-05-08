@@ -228,8 +228,6 @@ RSpec.describe MiqScheduleWorker::Runner do
             allow(MiqRegion).to receive(:my_region).and_return(@region)
             @schedule_worker.instance_variable_set(:@active_roles, ["database_operations"])
 
-            @metrics_collection = {:collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *"}
-            @metrics_history    = {:purge_schedule => "50 * * * *"}
             @database_maintenance = {
               :reindex_schedule => "1 * * * *",
               :reindex_tables   => %w(Metric MiqQueue MiqWorker),
@@ -241,8 +239,6 @@ RSpec.describe MiqScheduleWorker::Runner do
             }
             database_config = {
               :maintenance        => @database_maintenance,
-              :metrics_collection => @metrics_collection,
-              :metrics_history    => @metrics_history,
             }
             stub_settings(:database => database_config)
             purging_intervals = {
@@ -261,30 +257,11 @@ RSpec.describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(7)
+              expect(scheduled_jobs.size).to be(4)
 
               scheduled_jobs.each do |job|
                 while_calling_job(job) do
                   case job.tags
-                  when %w(database_operations database_metrics_collection_schedule)
-                    expect(job.original).to eq(@metrics_collection[:collection_schedule])
-                    expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
-                                             :method_name => "capture_metrics_timer").first
-                    expect(message).to have_attributes(:role => "database_owner", :zone => nil)
-                  when %w(database_operations database_metrics_daily_rollup_schedule)
-                    expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
-                    expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
-                                             :method_name => "rollup_metrics_timer").first
-                    expect(message).to have_attributes(:role => "database_owner", :zone => nil)
-                  when %w(database_operations database_metrics_purge_schedule)
-                    expect(job.original).to eq(@metrics_history[:purge_schedule])
-                    expect(MiqQueue.count).to eq(2)
-                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
-                      message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
-                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
-                    end
                   when %w(database_operations database_maintenance_reindex_schedule)
                     expect(job.original).to eq(@database_maintenance[:reindex_schedule])
                     expect(MiqQueue.count).to eq(3)
@@ -326,31 +303,14 @@ RSpec.describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(7)
+              expect(scheduled_jobs.size).to be(4)
 
               scheduled_jobs.each do |job|
                 while_calling_job(job) do
                   case job.tags
-                  when %w(database_operations database_metrics_collection_schedule)
-                    expect(job.original).to eq(@metrics_collection[:collection_schedule])
-                    expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
-                                             :method_name => "capture_metrics_timer").first
-                    expect(message).to have_attributes(:role => "database_operations", :zone => nil)
-                  when %w(database_operations database_metrics_daily_rollup_schedule)
-                    expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
-                    expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
-                                             :method_name => "rollup_metrics_timer").first
-                    expect(message).to have_attributes(:role => "database_operations", :zone => nil)
-                  when %w(database_operations database_metrics_purge_schedule)
+                  when %w(database_operations)
                     expect(job.original).to eq(@metrics_history[:purge_schedule])
                     expect(MiqQueue.count).to eq(2)
-
-                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
-                      message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
-                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
-                    end
                   when %w(database_operations database_maintenance_reindex_schedule)
                     expect(job.original).to eq(@database_maintenance[:reindex_schedule])
                     expect(MiqQueue.count).to eq(3)
@@ -408,7 +368,6 @@ RSpec.describe MiqScheduleWorker::Runner do
 
                 first_in_expectations = {
                   :vmdb_appliance_log_config   => 5,
-                  :log_all_database_statistics => 5,
                   :status_update               => 5,
                   :log_status                  => 5,
                   :log_statistics              => 1

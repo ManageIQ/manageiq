@@ -945,8 +945,6 @@ en:
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
       VmCloud:                  Instance
-      VmdbIndex:                Index
-      VmdbTable:                VMDB Table
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
       WindowsImage:             Windows Image

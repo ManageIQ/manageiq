@@ -3318,28 +3318,6 @@
           :feature_type: control
           :hidden: true
           :identifier: zone_promote_server
-  - :name: Database
-    :description: Database Accordion
-    :feature_type: node
-    :identifier: ops_db
-    :children:
-    - :name: Database
-      :description: Database
-      :feature_type: node
-      :hidden: true
-      :identifier: ops_db_vmdb
-      :children:
-      - :name: View
-        :description: View Settings
-        :feature_type: view
-        :identifier: ops_db_vmdb_view
-        :hidden: true
-        :children:
-        - :name: Reload
-          :description: Reload Display
-          :feature_type: view
-          :hidden: true
-          :identifier: db_refresh
 
 # Documentation
 - :name: Documentation
