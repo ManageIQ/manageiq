@@ -62,6 +62,7 @@ RSpec.describe InfraConversionThrottler, :v2v do
     it 'will abort conversion job if task fails preflight check' do
       allow(task_waiting).to receive(:preflight_check).and_return(:status => 'Error', :message => 'Fake error message')
       expect(job_waiting).to receive(:abort_conversion).with("Fake error message", 'error')
+      expect(described_class._log).to receive(:error).with("Preflight check for #{task_waiting.source.name} has failed: Fake error message. Discarding.")
       described_class.start_conversions
     end
 
