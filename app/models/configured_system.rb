@@ -46,6 +46,7 @@ class ConfiguredSystem < ApplicationRecord
   scope :with_manager,                  ->(manager_id) { where(:manager_id => manager_id) }
   scope :with_configuration_profile_id, ->(profile_id) { where(:configuration_profile_id => profile_id) }
   scope :without_configuration_profile_id,          -> { where(:configuration_profile_id => nil) }
+  scope :under_configuration_managers, -> { where(:manager => ManageIQ::Providers::ConfigurationManager.all) }
 
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
