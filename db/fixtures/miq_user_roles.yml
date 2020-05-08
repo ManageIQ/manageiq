@@ -36,6 +36,9 @@
   - container_dashboard
   - ems_container
   - configuration_job
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - container_project
   - container_route
   - container_service
@@ -75,7 +78,6 @@
   - physical_storage
   - physical_infra_topology
   - policy_import_export
-  - provider_foreman_explorer
   - pxe
   - resource_pool
   - rss
@@ -288,6 +290,9 @@
   - about
   - all_vm_rules
   - automation_manager
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - dashboard
   - ems_physical_infra
   - event_streams
@@ -316,7 +321,6 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage_view
-  - provider_foreman_explorer
   - vm_clone
   - vm_compare
   - vm_cloud_explorer
@@ -362,6 +366,9 @@
   - embedded_automation_manager
   - chargeback
   - chargeback_reports
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - dashboard
   - ems_cluster_compare
   - ems_cluster_drift
@@ -432,7 +439,6 @@
   - resource_pool_tag
   - rss
   - service_view
-  - provider_foreman_explorer
   - storage_delete
   - storage_scan
   - storage_show
@@ -885,6 +891,9 @@
   - embedded_automation_manager
   - ems_physical_infra_console
   - catalog_items_view
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - miq_task_my_ui
   - miq_template_clone
   - miq_template_drift
@@ -900,7 +909,6 @@
   - my_settings_visuals
   - miq_request_admin
   - miq_request_view
-  - provider_foreman_explorer
   - service_edit
   - service_delete
   - service_reconfigure
@@ -942,6 +950,9 @@
   - about
   - all_vm_rules
   - automation_manager
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - embedded_automation_manager
   - miq_task_my_ui
   - miq_request_admin
@@ -958,7 +969,6 @@
   - miq_template_timeline
   - my_settings_default_views
   - my_settings_visuals
-  - provider_foreman_explorer
   - vm_check_compliance
   - vm_clone
   - vm_cloud_explorer
@@ -1017,6 +1027,9 @@
   - chargeback
   - catalog
   - cloud_tenant
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - control_explorer
   - dashboard
   - storage
@@ -1043,7 +1056,6 @@
   - miq_template
   - orchestration_stack
   - policy_import_export
-  - provider_foreman_explorer
   - pxe
   - rbac_group
   - rbac_role_view
@@ -1075,6 +1087,9 @@
   - chargeback
   - catalog
   - cloud_tenant
+  - ems_configuration
+  - configuration_profile
+  - configured_system
   - control_explorer
   - dashboard
   - storage
@@ -1098,7 +1113,6 @@
   - miq_template
   - orchestration_stack
   - policy_import_export
-  - provider_foreman_explorer
   - pxe
   - rbac_tenant_view
   - rbac_tenant_manage_quotas
@@ -1292,7 +1306,7 @@
   - physical_server_view
   - physical_storage_view
   - policy_log
-  - provider_foreman_view
+  - ems_configuration_view
   - pxe_image_type_view
   - pxe_server_view
   - rbac_group_view
