@@ -73,6 +73,7 @@ class ContainerProject < ApplicationRecord
 
   # required by aggregate_hardware
   alias all_computer_system_ids computer_system_ids
+  alias all_computer_systems    computer_systems
 
   def aggregate_memory(targets = nil)
     aggregate_hardware(:computer_systems, :memory_mb, targets)

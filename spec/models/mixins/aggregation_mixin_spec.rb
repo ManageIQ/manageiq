@@ -112,6 +112,13 @@ RSpec.describe AggregationMixin do
     end
   end
 
+  describe "aggregate_hardware" do
+    it "calculates from hosts" do
+      cluster = cluster_2_1_host(hardware_args)
+      expect(cluster.aggregate_hardware("host", :aggregate_cpu_speed)).to eq(cpu_speed * 2)
+    end
+  end
+
   private
 
   def cluster_2_1_host(hardware_args)
