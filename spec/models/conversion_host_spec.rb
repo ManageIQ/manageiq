@@ -1,4 +1,4 @@
-require "MiqSshUtil"
+require 'manageiq-ssh-util'
 
 RSpec.describe ConversionHost, :v2v do
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
