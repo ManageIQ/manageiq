@@ -65,6 +65,16 @@ class ChargebackRate < ApplicationRecord
     result
   end
 
+  def self.unassign_rate_assignments(type, cb_rates)
+    validate_rate_type(type)
+
+    cb_rates.each do |rate|
+      rate[:cb_rate].unassign_objects(rate[:object]) if rate.key?(:object)
+      rate[:cb_rate].unassign_tags(*rate[:tag])      if rate.key?(:tag)
+      rate[:cb_rate].unassign_labels(*rate[:label])  if rate.key?(:label)
+    end
+  end
+
   def self.set_assignments(type, cb_rates)
     validate_rate_type(type)
     ChargebackRate.where(:rate_type => type.to_s.capitalize).each(&:remove_all_assigned_tos)
