@@ -56,6 +56,15 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def self.create_from_params(params, endpoints, authentications)
+    new(params).tap do |ems|
+      endpoints.each { |endpoint| ems.assign_nested_endpoint(endpoint) }
+      authentications.each { |authentication| ems.assign_nested_authentication(authentication) }
+
+      ems.save!
+    end
+  end
+
   belongs_to :provider
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
@@ -130,6 +139,22 @@ class ExtManagementSystem < ApplicationRecord
 
   supports :refresh_ems
   supports_not :assume_role
+
+  def edit_with_params(params, endpoints, authentications)
+    tap do |ems|
+      transaction do
+        # Remove endpoints/attributes that are not arriving in the arguments above
+        ems.endpoints.where.not(:role => nil).where.not(:role => endpoints.map { |ep| ep['role'] }).delete_all
+        ems.authentications.where.not(:authtype => nil).where.not(:authtype => authentications.map { |au| au['authtype'] }).delete_all
+
+        ems.assign_attributes(params)
+        ems.endpoints = endpoints.map(&method(:assign_nested_endpoint))
+        ems.authentications = authentications.map(&method(:assign_nested_authentication))
+
+        ems.save!
+      end
+    end
+  end
 
   def hostname_uniqueness_valid?
     return unless hostname_required?
