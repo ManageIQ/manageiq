@@ -2,7 +2,8 @@ RSpec.describe MiqAeClass do
   include Spec::Support::AutomationHelper
 
   describe "name attribute validation" do
-    subject { described_class.new }
+    let(:ns) { FactoryBot.create(:miq_ae_namespace) }
+    subject { described_class.new(:ae_namespace => ns) }
 
     example "with no name" do
       subject.name = nil
@@ -60,19 +61,22 @@ RSpec.describe MiqAeClass do
     expect(c1).not_to be_nil
     expect(c1.save!).to be_truthy
     expect { MiqAeClass.new(:namespace_id => @ns.id, :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
-    c2 = MiqAeClass.new(:namespace_id => FactoryBot.create(:miq_ae_namespace).id, :name => "oleg")
+    n2 = FactoryBot.create(:miq_ae_namespace, :parent => FactoryBot.create(:miq_ae_domain))
+    c2 = MiqAeClass.new(:namespace_id => n2.id, :name => "oleg")
     expect(c2).not_to be_nil
     expect(c2.save!).to be_truthy
   end
 
   it "should return editable as false if the parent namespace is not editable" do
-    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+    d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_falsey
   end
 
   it "should return editable as true if the parent namespace is editable" do
-    n1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
+    d1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_truthy
   end
@@ -178,7 +182,7 @@ RSpec.describe MiqAeClass do
 
   context "#copy" do
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :parent_id => nil, :priority => 1)
       @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
@@ -294,7 +298,8 @@ RSpec.describe MiqAeClass do
 
   context "state_machine_class tests" do
     before do
-      n1 = FactoryBot.create(:miq_ae_system_domain, :name => 'ns1', :priority => 10)
+      d1 = FactoryBot.create(:miq_ae_system_domain, :priority => 10)
+      n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => d1)
       @c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     end
 
@@ -334,9 +339,11 @@ RSpec.describe MiqAeClass do
       create_state_ae_model(:name => 'FRED', :ae_class => 'CLASS1', :ae_namespace  => 'A/B/C')
       create_state_ae_model(:name => 'FREDDY', :ae_class => 'CLASS2', :ae_namespace  => 'C/D/E')
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
-      ns_fqnames = %w(FRED FRED/A FRED/A/B FRED/A/B/C FREDDY FREDDY/C FREDDY/C/D FREDDY/C/D/E)
+      domain_fqnames = %w[FRED FREDDY]
+      ns_fqnames = %w[FRED/A FRED/A/B FRED/A/B/C FREDDY/C FREDDY/C/D FREDDY/C/D/E]
       class_fqnames = %w(/FRED/A/B/C/CLASS1 /FREDDY/C/D/E/CLASS2)
-      ids = ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
+      ids = domain_fqnames.collect { |ns| "MiqAeDomain::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
+      ids += ns_fqnames.collect { |ns| "MiqAeNamespace::#{MiqAeNamespace.lookup_by_fqname(ns, false).id}" }
       ids += class_fqnames.collect { |cls| "MiqAeClass::#{MiqAeClass.lookup_by_fqname(cls).id}" }
       expect(MiqAeClass.waypoint_ids_for_state_machines).to match_array(ids)
     end

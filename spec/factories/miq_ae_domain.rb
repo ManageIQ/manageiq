@@ -26,7 +26,7 @@ FactoryBot.define do
     git_repository { FactoryBot.create(:git_repository) }
   end
 
-  factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
+  factory :miq_ae_domain, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
     enabled { true }

@@ -81,7 +81,7 @@ RSpec.describe MiqAeInstance do
       expect(i1.get_field_value(@f1)).to eq(value2)
 
       # Set/Get a value of a field from a different class
-      c2 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test2")
+      c2 = MiqAeClass.create(:namespace => @ns.name, :name => "instance_test2")
       fname2 = "field2"
       f2 = c2.ae_fields.create(:name => fname2)
 
@@ -205,7 +205,7 @@ RSpec.describe MiqAeInstance do
 
   context "#copy" do
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :priority => 1)
+      @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :priority => 1)
       @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
       @i1 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
@@ -252,7 +252,8 @@ RSpec.describe MiqAeInstance do
   end
 
   it "#domain" do
-    n1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1')
+    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1')
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'n1', :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
     expect(i1.domain.name).to eql('dom1')
