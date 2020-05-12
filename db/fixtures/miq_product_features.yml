@@ -1761,14 +1761,6 @@
     :description: Assignments Accordion
     :feature_type: node
     :identifier: chargeback_assignments
-  - :name: Currencies
-    :description: Chargeback Rate currencies Accordion
-    :feature_type: node
-    :identifier: currency
-  - :name: Measures
-    :description: Chargeback Rate measures Accordion
-    :feature_type: node
-    :identifier: measure
 
 # Timelines
 - :name: Timelines
@@ -6549,6 +6541,14 @@
       :description: View Service Parameters Sets
       :feature_type: view
       :identifier: service_parameters_sets_view
+  - :name: Chargeback Currencies
+    :description: Chargeback Rate currencies Accordion
+    :feature_type: node
+    :identifier: currency
+  - :name: Chargeback Measures
+    :description: Chargeback Rate measures Accordion
+    :feature_type: node
+    :identifier: measure    
 
 # SUI
 - :name: Service UI
