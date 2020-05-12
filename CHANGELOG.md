@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 136 ending 2020-05-11
+
+### Added
+
+* Move API OpenID-Connect support to Apache configuration [(#20131)](https://github.com/ManageIQ/manageiq/pull/20131)
+* Implemented account lockout policy backend [(#20087)](https://github.com/ManageIQ/manageiq/pull/20087)
+
+### Fixed
+
+* Fix sql injection brakeman warning in the aggregation mixin query [(#20132)](https://github.com/ManageIQ/manageiq/pull/20132)
+* Fix brakeman warning about possible command injection [(#20130)](https://github.com/ManageIQ/manageiq/pull/20130)
+* MiqReport: add skip_references attribute back [(#20109)](https://github.com/ManageIQ/manageiq/pull/20109)
+
 # Unreleased as of Sprint 135 ending 2020-04-27
 
 ### Added
