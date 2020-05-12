@@ -28,6 +28,7 @@ plugins:
   rubocop:
     enabled: true
     config: ".rubocop_cc.yml"
+    channel: 'rubocop-0-69'
 exclude_patterns:
 - node_modules/
 - spec/
