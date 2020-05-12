@@ -6,12 +6,14 @@ class MiqAeMethod < ApplicationRecord
   default_value_for(:embedded_methods) { [] }
   validates :embedded_methods, :exclusion => { :in => [nil] }
   serialize :options, Hash
+  before_validation :set_relative_path
 
+  belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
   has_many   :inputs,   -> { order(:priority) }, :class_name => "MiqAeField", :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
-  validates_presence_of   :name, :scope
+  validates               :name, :scope, :domain_id, :class_id, :presence => true
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
   validates_format_of     :name, :with    => /\A[\w]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ characters")
@@ -47,10 +49,13 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def fqname
-    "#{ae_class.fqname}/#{name}"
+    ["", domain&.name, relative_path].compact.join("/")
   end
 
-  delegate :domain, :to => :ae_class
+  # my method's fqname is /domain/namespace1/namespace2/class/method
+  def namespace
+    fqname.split("/")[0..-3].join("/")
+  end
 
   def self.default_method_text
     <<-DEFAULT_METHOD_TEXT
@@ -135,5 +140,16 @@ class MiqAeMethod < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Automate Method', 'Automate Methods', number)
+  end
+
+  def self.find_best_match_by(user, relative_path)
+    domain_ids = user.current_tenant.enabled_domains.collect(&:id)
+    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids}).order("miq_ae_namespaces.priority DESC")
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+  end
+
+  def set_relative_path
+    self.domain_id ||= ae_class&.domain_id
+    self.relative_path = "#{ae_class.relative_path}/#{name}" if (name_changed? || relative_path_changed?) && ae_class
   end
 end

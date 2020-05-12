@@ -44,7 +44,7 @@ RSpec.describe MiqAeMethod do
     let(:m1) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
     let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
     before do
-      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent => nil, :priority => 1)
+      @d1 = FactoryBot.create(:miq_ae_domain, :name => "domain1", :parent => nil, :priority => 1)
       @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
       @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent => d2)
     end
