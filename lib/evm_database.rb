@@ -16,7 +16,6 @@ class EvmDatabase
     MiqGroup
     User
     MiqReport
-    VmdbDatabase
   ].freeze
 
   # An ordered list of classes that will complete the seeding, but occuring

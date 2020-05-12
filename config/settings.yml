@@ -82,15 +82,6 @@
     - Tagging
     - VimPerformanceState
     - Vm
-  :metrics_collection:
-    :collection_schedule: "1 * * * *"
-    :daily_rollup_schedule: "23 0 * * *"
-  :metrics_history:
-    :keep_daily_metrics: 6.months
-    :keep_hourly_metrics: 6.months
-    :purge_schedule: "50 * * * *"
-    :purge_window_size: 10000
-    :queue_timeout: 20.minutes
 :docs:
   :product_support_website: http://www.manageiq.org
   :product_support_website_text: ManageIQ.org
@@ -1062,7 +1053,6 @@
       :image: manageiq/v2v-conversion-host:latest
 :ui:
   :mark_translated_strings: false
-  :display_ops_database: false
   :url:
 :vim_performance_states:
   :history:
@@ -1190,7 +1180,6 @@
       :job_proxy_dispatcher_stale_message_timeout: 2.minutes
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
-      :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
       :nice_delta: 3
       :notifications_purge_interval: 1.day

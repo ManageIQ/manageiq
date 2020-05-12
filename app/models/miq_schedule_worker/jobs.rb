@@ -3,10 +3,6 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "Vmdb::Appliance", :method_name => "log_config", :server_guid => MiqServer.my_guid)
   end
 
-  def vmdb_database_log_all_database_statistics
-    queue_work(:class_name  => "VmdbDatabase", :method_name => "log_all_database_statistics", :server_guid => MiqServer.my_guid)
-  end
-
   def miq_server_status_update
     queue_work(:class_name  => "MiqServer", :method_name => "status_update", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
@@ -140,22 +136,6 @@ class MiqScheduleWorker::Jobs
 
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
     MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
-  end
-
-  def vmdb_database_capture_metrics_timer
-    role = MiqRegion.my_region.role_active?("database_owner") ? "database_owner" : "database_operations"
-    queue_work(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer", :role => role, :zone => nil)
-  end
-
-  def vmdb_database_rollup_metrics_timer
-    role = MiqRegion.my_region.role_active?("database_owner") ? "database_owner" : "database_operations"
-    queue_work(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer", :role => role, :zone => nil)
-  end
-
-  def metric_purge_all_timer
-    ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
-      queue_work(:class_name  => class_name, :method_name => "purge_all_timer", :role => "database_operations", :zone => nil)
-    end
   end
 
   def database_maintenance_reindex_timer

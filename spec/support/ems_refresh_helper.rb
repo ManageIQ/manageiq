@@ -3,7 +3,7 @@ module Spec
     module EmsRefreshHelper
       def serialize_inventory
         # These models don't have tables behind them
-        skip_models = [MiqRegionRemote, VmdbDatabaseConnection, VmdbDatabaseLock, VmdbDatabaseSetting]
+        skip_models = [MiqRegionRemote, VmdbDatabaseConnection, VmdbDatabaseLock]
         models = ApplicationRecord.subclasses - skip_models
 
         # Skip attributes that always change between refreshes
