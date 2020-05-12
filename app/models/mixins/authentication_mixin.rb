@@ -169,6 +169,7 @@ module AuthenticationMixin
 
       # Update or create
       if cred.nil?
+        # FIXME: after we completely move to DDF and revise the REST API for providers, this will probably be something to delete
         if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
@@ -386,6 +387,19 @@ module AuthenticationMixin
     raise NotImplementedError, _("must be implemented in subclass.")
   end
 
+  def assign_nested_endpoint(attributes)
+    record = endpoints.where(:role => attributes['role']).first_or_initialize
+    record.assign_attributes(attributes)
+    record # `assign_attributes` always returns `nil`
+  end
+
+  def assign_nested_authentication(attributes)
+    record = authentications.where(:authtype => attributes['authtype']).first_or_initialize
+    klass = authentication_class(attributes)
+    record.assign_attributes(attributes.merge(:type => klass.to_s, :name => "#{self.class.name} #{name}"))
+    record # `assign_attributes` always returns `nil`
+  end
+
   private
 
   def authentication_check_no_validation(type, options)
@@ -449,5 +463,9 @@ module AuthenticationMixin
     return true unless current_password.blank? || new_password.blank?
 
     raise MiqException::Error, _("Please, fill the current_password and new_password fields.")
+  end
+
+  def authentication_class(attributes)
+    attributes.symbolize_keys[:auth_key] ? AuthToken : AuthUseridPassword
   end
 end
