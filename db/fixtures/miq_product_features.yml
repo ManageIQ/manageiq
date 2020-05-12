@@ -1737,26 +1737,44 @@
       :hidden: true
       :identifier: chargeback_report_only
   - :name: Rates
-    :description: Rates Accordion
+    :description: Everything under Rates
     :feature_type: node
     :identifier: chargeback_rates
     :children:
-    - :name: Add
-      :description: Add a Chargeback Rate
+    - :name: View
+      :description: View Chargeback Rates
+      :feature_type: view
+      :identifier: chargeback_rates_view
+      :children:
+      - :name: List
+        :description: Display Lists of Chargeback Rates
+        :feature_type: view
+        :identifier: chargeback_rates_show_list
+      - :name: Show
+        :description: Display Individual Chargeback Rates
+        :feature_type: view
+        :identifier: chargeback_rates_show
+    - :name: Modify
+      :description: Modify Chargeback Rates
       :feature_type: admin
-      :identifier: chargeback_rates_new
-    - :name: Copy
-      :description: Copy a Chargeback Rate
-      :feature_type: admin
-      :identifier: chargeback_rates_copy
-    - :name: Delete
-      :description: Delete a Chargeback Rate
-      :feature_type: admin
-      :identifier: chargeback_rates_delete
-    - :name: Edit
-      :description: Edit a Chargeback Rate
-      :feature_type: admin
-      :identifier: chargeback_rates_edit
+      :identifier: chargeback_rates_admin
+      :children:
+      - :name: Add
+        :description: Add a Chargeback Rate
+        :feature_type: admin
+        :identifier: chargeback_rates_new
+      - :name: Copy
+        :description: Copy a Chargeback Rate
+        :feature_type: admin
+        :identifier: chargeback_rates_copy
+      - :name: Delete
+        :description: Delete a Chargeback Rate
+        :feature_type: admin
+        :identifier: chargeback_rates_delete
+      - :name: Edit
+        :description: Edit a Chargeback Rate
+        :feature_type: admin
+        :identifier: chargeback_rates_edit
   - :name: Assignments
     :description: Assignments Accordion
     :feature_type: node
@@ -3941,7 +3959,7 @@
         :description: Remove Security Policy Rules
         :feature_type: admin
         :identifier: security_policy_rule_delete
- 
+
 # Floating IP
 - :name: Floating IPs
   :description: Everything under Floating IPs
