@@ -292,7 +292,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
   end
 
-  def kill_virtv2v(signal = 'TERM')
+  def kill_virtv2v
     get_conversion_state
 
     unless virtv2v_running?
@@ -301,7 +301,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
 
     _log.info("Killing conversion pod for task '#{id}'.")
-    conversion_host.kill_virtv2v(id, signal)
+    conversion_host.kill_virtv2v(id)
   rescue => err
     _log.error("Couldn't kill conversion pod for task '#{id}': #{err.message}")
     update_options(:virtv2v_finished_on => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'))

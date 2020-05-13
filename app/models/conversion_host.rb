@@ -283,7 +283,7 @@ class ConversionHost < ApplicationRecord
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
   # if no signal is specified.
   #
-  def kill_virtv2v(task_id, signal = 'TERM')
+  def kill_virtv2v(task_id, signal)
     command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :s, signal, "virt-v2v"])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true

@@ -232,13 +232,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
 
       it "returns false if if kill command failed" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id, 'KILL').and_return(false)
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(false)
+        expect(task.kill_virtv2v).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id, 'KILL').and_return(true)
-        expect(task.kill_virtv2v('KILL')).to eq(true)
+        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(true)
+        expect(task.kill_virtv2v).to eq(true)
       end
 
       it "considers virt-v2v finished or returns false if an exception occurs" do
