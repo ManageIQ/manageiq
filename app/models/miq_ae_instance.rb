@@ -149,8 +149,9 @@ class MiqAeInstance < ApplicationRecord
   end
 
   def self.find_best_match_by(user, relative_path)
-    domain_ids = user.current_tenant.enabled_domains.collect(&:id)
-    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids}).order("miq_ae_namespaces.priority DESC")
+    domain_ids = user.current_tenant.enabled_domains
+    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
+                  .order("miq_ae_namespaces.priority DESC")
                   .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
   end
 
@@ -167,12 +168,12 @@ class MiqAeInstance < ApplicationRecord
     MiqAeDatastore.get_sorted_matching_objects(user, ::MiqAeInstance, ns, klass, instance, enabled)
   end
 
+  private
+
   def set_relative_path
     self.domain_id ||= ae_class&.domain_id
     self.relative_path = "#{ae_class.relative_path}/#{name}" if (name_changed? || relative_path_changed?) && ae_class
   end
-
-  private
 
   def validate_field(field)
     if field.kind_of?(MiqAeField)

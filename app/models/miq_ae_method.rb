@@ -143,10 +143,13 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.find_best_match_by(user, relative_path)
-    domain_ids = user.current_tenant.enabled_domains.collect(&:id)
-    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids}).order("miq_ae_namespaces.priority DESC")
+    domain_ids = user.current_tenant.enabled_domains
+    joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
+                  .order("miq_ae_namespaces.priority DESC")
                   .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
   end
+
+  private
 
   def set_relative_path
     self.domain_id ||= ae_class&.domain_id
