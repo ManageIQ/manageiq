@@ -144,18 +144,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     network.ems_ref
   end
 
-  def conversion_host_resource_ref(resource)
-    send("conversion_host_resource_ref_#{destination_ems.emstype}", resource)
-  end
-
-  def conversion_host_resource_ref_rhevm(resource)
-    resource.ems_ref.split('/').last
-  end
-
-  def conversion_host_resource_ref_openstack(resource)
-    resource.ems_ref
-  end
-
   def destination_flavor
     Flavor.find_by(:id => vm_resource.options["osp_flavor_id"])
   end
@@ -270,17 +258,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
-      updates[:virtv2v_status] = virtv2v_state['status'] == 'Paused' ? 'paused' : 'active'
-      if warm_migration?
-        updated_disks = virtv2v_state['disks']
-      else
-        updated_disks.each do |disk|
-          matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
-          raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
-          raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1
-
-          disk[:percent] = matching_disks.first['progress']
-        end
+      updates[:virtv2v_status] = 'active'
+      updated_disks.each do |disk|
+        matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
+        raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
+        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1
+        disk[:percent] = matching_disks.first['progress']
       end
     else
       updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
@@ -301,12 +284,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   ensure
     _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
     update_options(updates)
-  end
-
-  def pause_disks_precopy
-    unless conversion_host.create_pause_disks_precopy_file(id)
-      raise _("Couldn't create disks precopy pause file for #{source.name} on #{conversion_host.name}")
-    end
   end
 
   def cutover
@@ -383,7 +360,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     {
       :vm_name              => source.name,
       :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
+      :conversion_host_uuid => conversion_host.resource.ems_ref,
       :transport_method     => 'vddk',
       :vmware_fingerprint   => source.host.thumbprint_sha1,
       :vmware_uri           => URI::Generic.build(
@@ -409,7 +386,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
       :vm_uuid              => source.uid_ems,
-      :conversion_host_uuid => conversion_host_resource_ref(conversion_host.resource),
+      :conversion_host_uuid => conversion_host.resource.ems_ref,
       :transport_method     => 'ssh',
       :daemonize            => false
     }

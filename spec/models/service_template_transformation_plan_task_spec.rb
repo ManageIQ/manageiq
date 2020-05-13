@@ -449,8 +449,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           task_1.get_conversion_state
           expect(task_1.options[:virtv2v_disks]).to eq(
             [
-              {"path" => src_disk_1.filename, "progress" => 100},
-              {"path" => src_disk_2.filename, "progress" => 50}
+              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 100, :weight => 50 },
+              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 50, :weight => 50 }
             ]
           )
           expect(task_1.options[:virtv2v_status]).to eq('active')
