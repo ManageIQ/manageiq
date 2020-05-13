@@ -300,7 +300,7 @@ class ConversionHost < ApplicationRecord
   # if no signal is specified.
   #
   def kill_virtv2v(task_id, signal = 'TERM')
-    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :signal, signal, "virt-v2v"])
+    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :s, signal, "virt-v2v"])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
