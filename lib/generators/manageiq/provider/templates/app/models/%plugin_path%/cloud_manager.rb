@@ -5,6 +5,103 @@ class <%= class_name %>::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :RefreshWorker
   require_nested :Vm
 
+  # Form schema for creating/editing a provider, it should follow the DDF specification
+  # For more information check the DDF documentation at: https://data-driven-forms.org
+  #
+  # If for some reason some fields should not be included in the submitted data, there's
+  # a `skipSubmit` flag. This is useful for components that provide local-only behavior,
+  # like the validate-provider-credentials or protocol-selector.
+  #
+  # There's validation built on top on these fields in the API, so if some field isn't
+  # specified here, the API endpoint won't allow the request to go through.
+  # Make sure you don't dot-prefix match any field with any other field, because it can
+  # confuse the validation. For example you should not have `x` and `x.y` fields at the
+  # same time.
+  def self.params_for_create
+    @params_for_create ||= {
+      :fields => [
+        {
+          :component => "text-field",
+          :name      => "provider_region",
+          :label     => _("Provider Region"),
+        },
+        {
+          :component => 'sub-form',
+          :name      => 'endpoints-subform',
+          :title     => _('Endpoints'),
+          :fields    => [
+            {
+              :component              => 'validate-provider-credentials',
+              :name                   => 'authentications.default.valid',
+              :skipSubmit             => true,
+              :validationDependencies => %w[type provider_region],
+              :fields                 => [
+                {
+                  :component  => "select-field",
+                  :name       => "endpoints.default.security_protocol",
+                  :label      => _("Security Protocol"),
+                  :isRequired => true,
+                  :validate   => [{:type => "required-validator"}],
+                  :options    => [
+                    {
+                      :label => _("SSL without validation"),
+                      :value => "ssl-no-validation"
+                    },
+                    {
+                      :label => _("SSL"),
+                      :value => "ssl-with-validation"
+                    },
+                    {
+                      :label => _("Non-SSL"),
+                      :value => "non-ssl"
+                    }
+                  ]
+                },
+                {
+                  :component  => "text-field",
+                  :name       => "endpoints.default.hostname",
+                  :label      => _("Hostname (or IPv4 or IPv6 address)"),
+                  :isRequired => true,
+                  :validate   => [{:type => "required-validator"}],
+                },
+                {
+                  :component    => "text-field",
+                  :name         => "endpoints.default.port",
+                  :label        => _("API Port"),
+                  :type         => "number",
+                  :initialValue => 12345,
+                  :isRequired   => true,
+                  :validate     => [{:type => "required-validator"}],
+                },
+                {
+                  :component  => "text-field",
+                  :name       => "authentications.default.userid",
+                  :label      => "Username",
+                  :isRequired => true,
+                  :validate   => [{:type => "required-validator"}],
+                },
+                {
+                  :component  => "password-field",
+                  :name       => "authentications.default.password",
+                  :label      => "Password",
+                  :type       => "password",
+                  :isRequired => true,
+                  :validate   => [{:type => "required-validator"}],
+                },
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
+
+  def self.verify_credentials(args)
+    # Verify the credentials without having an actual record created.
+    # This method is being called from the UI upon validation when adding/editing a provider via DDF
+    # Ideally it should pass the args with some kind of mapping to the connect method
+  end
+
   def verify_credentials(auth_type = nil, options = {})
     begin
       connect
