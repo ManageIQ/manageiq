@@ -1461,6 +1461,7 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
           expect(job.migration_task).to receive(:run_conversion)
+          expect(job.migration_task).to receive(:cutover)
           expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:transform_vm)
         end
@@ -1471,7 +1472,6 @@ RSpec.describe InfraConversionJob, :v2v do
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job.migration_task).to receive(:unpause_disks_precopy)
           expect(job.migration_task).to receive(:cutover)
           expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:transform_vm)

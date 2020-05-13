@@ -309,12 +309,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
   end
 
-  def unpause_disks_precopy
-    unless conversion_host.delete_pause_disks_precopy_file(id)
-      raise _("Couldn't delete disks precopy pause file for #{source.name} on #{conversion_host.name}")
-    end
-  end
-
   def cutover
     unless conversion_host.create_cutover_file(id)
       raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")

@@ -280,14 +280,6 @@ class ConversionHost < ApplicationRecord
     false
   end
 
-  def delete_pause_disks_precopy_file(task_id)
-    command = AwesomeSpawn.build_command_line("rm", {:f =>["/var/lib/uci/#{task_id}/pause_operations"]})
-    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
-    true
-  rescue
-    false
-  end
-
   def create_cutover_file(task_id)
     command = AwesomeSpawn.build_command_line("touch", ["/var/lib/uci/#{task_id}/cutover"])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
