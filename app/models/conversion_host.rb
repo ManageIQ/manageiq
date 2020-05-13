@@ -246,8 +246,8 @@ class ConversionHost < ApplicationRecord
       [:volume,  "/var/tmp:/var/tmp"],
       [:volume,  "/var/lib/uci/#{task_id}:/var/lib/uci"],
       [:volume,  "/var/log/uci/#{task_id}:/var/log/uci"],
+      [:volume,  "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"]
     ]
-    params << [:volume, "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"] unless conversion_options[:transport_method] == 'ssh'
     params << [:volume, "/root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"] if conversion_options[:transport_method] == 'ssh'
     params << [:volume, "/root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"] if luks_keys_vault_valid?
     params << uci_image

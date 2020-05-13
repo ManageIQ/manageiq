@@ -602,6 +602,7 @@ RSpec.describe ConversionHost, :v2v do
         " --volume /var/tmp:/var/tmp"\
         " --volume /var/lib/uci/#{task.id}:/var/lib/uci"\
         " --volume /var/log/uci/#{task.id}:/var/log/uci"\
+        " --volume /opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"\
         " --volume /root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"\
         " --volume /root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"\
         " manageiq/v2v-conversion-host:latest"
