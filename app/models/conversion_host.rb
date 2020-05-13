@@ -461,7 +461,7 @@ class ConversionHost < ApplicationRecord
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: %{auth_type}") % {:auth_type => auth.authtype}
     end
 
-    extra_vars.each { |k, v| params << {:extra_vars= => "#{k}='#{v}'"} }
+    params << {:extra_vars => "'#{extra_vars.to_json}'"}
 
     command = AwesomeSpawn.build_command_line("ansible-playbook", params)
     result = AwesomeSpawn.run(command)
