@@ -371,7 +371,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :query    => { :no_verify => 1 }.to_query
       ).to_s,
       :vmware_password      => source.host.authentication_password,
-      :two_phase            => warm_migration?,
+      :two_phase            => true,
       :warm                 => warm_migration?,
       :daemonize            => false
     }
