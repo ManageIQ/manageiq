@@ -425,7 +425,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
       :vmware_password      => source.host.authentication_password,
-      :ssh_key_file         => '/var/lib/uci/ssh_private_key',
       :two_phase            => two_phase?,
       :warm                 => false,
       :daemonize            => false

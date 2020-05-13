@@ -661,7 +661,6 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri           => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vmware_password      => 'esx_passwd',
-              :ssh_key_file         => '/var/lib/uci/ssh_private_key',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -686,7 +685,6 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri           => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vmware_password      => 'esx_passwd',
-              :ssh_key_file         => '/var/lib/uci/ssh_private_key',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -835,7 +833,6 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri                 => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vmware_password            => 'esx_passwd',
-              :ssh_key_file               => '/var/lib/uci/ssh_private_key',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
                   :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
