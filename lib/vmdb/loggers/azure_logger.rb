@@ -1,5 +1,5 @@
 module Vmdb::Loggers
-  class AzureLogger < VMDBLogger
+  class AzureLogger < ManageIQ::Loggers::Base
     def initialize(*loggers)
       super
 
@@ -14,7 +14,7 @@ module Vmdb::Loggers
       msg.size
     end
 
-    class Formatter < VMDBLogger::Formatter
+    class Formatter < ManageIQ::Loggers::Base::Formatter
       def call(severity, datetime, progname, msg)
         msg = msg.sub(/Bearer(.*?)\"/, 'Bearer [FILTERED] "')
         msg = msg.sub(/SharedKey(.*?)\"/, 'SharedKey [FILTERED] "')

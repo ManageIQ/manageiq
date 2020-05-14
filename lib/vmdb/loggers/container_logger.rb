@@ -1,5 +1,5 @@
 module Vmdb::Loggers
-  class ContainerLogger < VMDBLogger
+  class ContainerLogger < ManageIQ::Loggers::Base
     include Instrument
 
     def initialize(logdev = STDOUT, *args)
@@ -16,7 +16,7 @@ module Vmdb::Loggers
       "STDOUT"
     end
 
-    class Formatter < VMDBLogger::Formatter
+    class Formatter < ManageIQ::Loggers::Base::Formatter
       SEVERITY_MAP = {
         "DEBUG"   => "debug",
         "INFO"    => "info",

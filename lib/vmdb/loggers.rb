@@ -1,7 +1,6 @@
 require 'manageiq'
 require 'manageiq-loggers'
 require 'miq_environment'
-require 'util/vmdb-logger'
 
 module Vmdb
   def self.logger
@@ -79,7 +78,7 @@ module Vmdb
     end
     private_class_method :create_loggers
 
-    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
+    def self.create_multicast_logger(log_file_path, logger_class = ManageIQ::Loggers::Base)
       logger_class.new(log_file_path).tap do |logger|
         logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
         logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
@@ -111,7 +110,7 @@ module Vmdb
     def self.apply_config_value(config, logger, key)
       old_level      = logger.level
       new_level_name = (config[key] || "INFO").to_s.upcase
-      new_level      = VMDBLogger.const_get(new_level_name)
+      new_level      = ManageIQ::Loggers::Base.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
         logger.level = new_level

@@ -1,5 +1,5 @@
 module Vmdb::Loggers
-  class AuditLogger < VMDBLogger
+  class AuditLogger < ManageIQ::Loggers::Base
     def success(msg)
       info("Success") { msg }
       $log.info("<AuditSuccess> #{msg}") if $log
