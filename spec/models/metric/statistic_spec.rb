@@ -39,7 +39,7 @@ RSpec.describe Metric::Statistic do
       expect(derived_columns[:stat_container_group_delete_rate]).to eq(2)
     end
 
-    it "count new registred container images in a provider" do
+    it "count new registered container images in a provider" do
       ems_openshift.container_images << [c9, c10, c11, c12]
       derived_columns = described_class.calculate_stat_columns(ems_openshift, hour)
 
