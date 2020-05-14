@@ -4,8 +4,8 @@ $log.logdev = STDERR if ENV['LOG_TO_CONSOLE']
 
 # Set env var LOGLEVEL if you want custom log level during a local test
 # e.g. LOG_LEVEL=debug ruby spec/models/vm.rb
-env_level = VMDBLogger.const_get(ENV['LOG_LEVEL'].to_s.upcase) rescue nil if ENV['LOG_LEVEL']
-env_level ||= VMDBLogger::INFO
+env_level = ManageIQ::Loggers::Base.const_get(ENV['LOG_LEVEL'].to_s.upcase) rescue nil if ENV['LOG_LEVEL']
+env_level ||= ManageIQ::Loggers::Base::INFO
 $log.level = env_level
 Rails.logger.level = env_level
 
