@@ -41,10 +41,8 @@ module AggregationMixin
     def aggregate_hardware(from, field, targets = nil)
       from      = from.to_s.singularize
       select    = field == :aggregate_cpu_speed ? "cpu_total_cores, cpu_speed" : field
-      targets ||= send("all_#{from}_ids")
-      targets   = targets.collect(&:id) unless targets.first.kind_of?(Integer)
-      hdws      = Hardware.where("#{from}_id".to_sym => targets).select(select)
-
+      targets ||= send("all_#{from.pluralize}")
+      hdws      = Hardware.where(from.singularize => targets).select(select)
       hdws.inject(0) { |t, hdw| t + hdw.send(field).to_i }
     end
 
