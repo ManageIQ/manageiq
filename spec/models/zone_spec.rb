@@ -1,4 +1,6 @@
 RSpec.describe Zone do
+  include_examples "AggregationMixin", "ext_management_systems"
+
   context ".seed" do
     before { MiqRegion.seed }
     include_examples ".seed called multiple times", 2

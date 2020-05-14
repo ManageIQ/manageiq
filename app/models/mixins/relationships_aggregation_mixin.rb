@@ -8,8 +8,6 @@ module RelationshipsAggregationMixin
     virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :all_relationships
     virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :all_relationships
-
-    include AggregationMixin::Methods
   end
 
   # Default implementations which can be overridden with something more optimized

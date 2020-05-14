@@ -27,6 +27,8 @@ class Zone < ApplicationRecord
   has_many :container_groups,      :through => :container_managers
   has_many :container_replicators, :through => :container_managers
   has_many :containers,            :through => :container_managers
+  has_many :host_hardwares, :class_name => 'Hardware', :through => :hosts, :source => :hardware
+  has_many :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
   before_destroy :remove_servers_if_podified

@@ -39,6 +39,7 @@ module ManageIQ::Providers
     has_many :container_quota_items, :through => :container_quotas
     has_many :container_limit_items, :through => :container_limits
     has_many :container_template_parameters, :through => :container_templates
+    has_many :computer_system_hardwares, :class_name => 'Hardware', :through => :computer_systems, :source => :hardware
 
     # Archived and active entities to destroy when the container manager is deleted
     has_many :all_containers, :foreign_key => :ems_id, :dependent => :destroy, :class_name => "Container"
@@ -65,18 +66,6 @@ module ManageIQ::Providers
     # TODO: move this to supports_feature_mixin
     def supports_metrics?
       true
-    end
-
-    # required by aggregate_hardware
-    alias :all_computer_systems :computer_systems
-    alias :all_computer_system_ids :computer_system_ids
-
-    def aggregate_cpu_total_cores(targets = nil)
-      aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
-    end
-
-    def aggregate_memory(targets = nil)
-      aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
 
     class << model_name

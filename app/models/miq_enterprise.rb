@@ -17,8 +17,6 @@ class MiqEnterprise < ApplicationRecord
   acts_as_miq_taggable
 
   include SupportsFeatureMixin
-  include AggregationMixin
-
   include MiqPolicyMixin
   include Metric::CiMixin
 
