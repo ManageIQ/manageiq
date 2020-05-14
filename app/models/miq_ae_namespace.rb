@@ -34,9 +34,7 @@ class MiqAeNamespace < ApplicationRecord
   def self.lookup_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname = fqname[1..-1] if fqname[0] == '/'
-    dname, *partial = fqname.downcase.split('/')
-
+    dname, *partial = split_fqname(fqname)
     domain_query = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname)).where(:domain_id => nil)
     return domain_query.first if partial.empty?
 
@@ -47,6 +45,11 @@ class MiqAeNamespace < ApplicationRecord
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
+
+  def self.split_fqname(fqname)
+    fqname = fqname[1..-1] if fqname[0] == '/'
+    fqname.downcase.split('/')
+  end
 
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
@@ -128,6 +131,8 @@ class MiqAeNamespace < ApplicationRecord
   def self.display_name(number = 1)
     n_('Automate Namespace', 'Automate Namespaces', number)
   end
+
+  private
 
   def set_relative_path
     return if root?
