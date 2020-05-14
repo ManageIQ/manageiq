@@ -133,7 +133,8 @@ RSpec.describe Vmdb::Loggers do
       $nuage_log, $policy_log, $rhevm_log, $scvmm_log, $vcloud_log, $vim_log,
       $remote_console_log
     ].each do |logger|
-      context "for the #{File.basename(logger.filename)}" do
+      filename = logger.logdev.try(:filename)
+      context "for the #{File.basename(filename)}" do
         include_examples "has basic logging functionality", logger.dup
       end
     end
