@@ -112,7 +112,12 @@ module Vmdb
       new_level_name = (config[key] || "INFO").to_s.upcase
       new_level      = ManageIQ::Loggers::Base.const_get(new_level_name)
       if old_level != new_level
-        $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.logdev.filename)} has been changed to [#{new_level_name}]")
+        filename = logger.logdev.try(:filename)
+        if filename
+          $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(filename)} has been changed to [#{new_level_name}]")
+        else
+          $log.info("MIQ(#{name}.apply_config) Log level has been changed to [#{new_level_name}]")
+        end
         logger.level = new_level
       end
     end
