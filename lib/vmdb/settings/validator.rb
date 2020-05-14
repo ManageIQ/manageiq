@@ -73,9 +73,9 @@ module Vmdb
           next unless key.to_s.start_with?("level")
 
           level = value.to_s.upcase.to_sym
-          unless VMDBLogger::Severity.constants.include?(level)
+          unless ManageIQ::Loggers::Base::Severity.constants.include?(level)
             valid = false
-            errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{VMDBLogger::Severity.constants.join(", ")}"]
+            errors << [key, "#{key}, \"#{level}\", is invalid. Should be one of: #{ManageIQ::Loggers::Base::Severity.constants.join(", ")}"]
           end
         end
 
