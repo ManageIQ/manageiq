@@ -71,12 +71,12 @@ module Vmdb
       check_automate_disk_version_against_db(fh)
 
       fh.info("VMDB settings:")
-      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
+      ManageIQ::Loggers::Base.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
       fh.info("VMDB settings END")
       fh.info("---")
 
       fh.info("DATABASE settings:")
-      VMDBLogger.log_hashes(fh, ActiveRecord::Base.connection_config)
+      ManageIQ::Loggers::Base.log_hashes(fh, ActiveRecord::Base.connection_config)
       fh.info("DATABASE settings END")
       fh.info("---")
     end
@@ -90,7 +90,7 @@ module Vmdb
       startup_fname = File.join(Rails.root, "log/last_startup.txt")
       FileUtils.rm_f(startup_fname) if File.exist?(startup_fname)
       begin
-        startup = VMDBLogger.new(startup_fname)
+        startup = ManageIQ::Loggers::Base.new(startup_fname)
         log_config(:logger => startup, :startup => true)
         startup.info("Server GUID: #{MiqServer.my_guid}")
         startup.info("Server Zone: #{MiqServer.my_zone}")
