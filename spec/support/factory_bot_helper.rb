@@ -24,8 +24,11 @@ FactoryGirl = FactoryBot # Alias until all associated repositories are updated
 FactoryBot.definition_file_paths << 'spec/manageiq/spec/factories'
 
 # Also, add factories from provider gems until miq codebase does not use any provider specific factories anymore
-Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers") }.each do |engine|
-  FactoryBot.definition_file_paths << File.join(engine.root, 'spec', 'factories')
+# TODO: remove provider gem factories
+# TODO: remote automate gem factories (after gone, use Vmdb::Plugins.provider_plugins.each )
+Vmdb::Plugins.each do |engine|
+  factory_dir = File.join(engine.root, 'spec', 'factories')
+  FactoryBot.definition_file_paths << factory_dir if File.exist?(factory_dir)
 end
 
 FactoryBot.find_definitions
