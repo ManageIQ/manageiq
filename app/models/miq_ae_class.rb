@@ -179,6 +179,8 @@ class MiqAeClass < ApplicationRecord
     n_('Automate Class', 'Automate Classes', number)
   end
 
+  private
+
   def set_relative_path
     self.domain_id ||= domain&.id || ae_namespace&.domain_id
     self.domain_id ||= ae_namespace.id if ae_namespace&.root?
@@ -191,8 +193,6 @@ class MiqAeClass < ApplicationRecord
     ae_instances.each { |instance| instance.update!(:ae_class => self, :relative_path => nil) }
     ae_methods.each { |method| method.update!(:ae_class => self, :relative_path => nil) }
   end
-
-  private
 
   def self.sub_namespaces(ns_obj, ids)
     loop do
