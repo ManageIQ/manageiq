@@ -80,7 +80,7 @@ class MiqAeInstance < ApplicationRecord
 
     query = where(arel_table[:relative_path].lower.matches(str.downcase, nil, true)) # This uses 'like'.
 
-    domain_id = query.joins(:domain).order("miq_ae_namespaces.priority DESC").limit(1).pluck(:domain_id)
+    domain_id = query.joins(:domain).order("miq_ae_namespaces.priority DESC").limit(1).pluck(:domain_id) ### fix?
     query.where(:domain_id => domain_id)
   end
 
@@ -145,11 +145,10 @@ class MiqAeInstance < ApplicationRecord
     n_('Automate Instance', 'Automate Instances', number)
   end
 
-  def self.find_best_match_by(user, relative_path)
-    domain_ids = user.current_tenant.enabled_domains
+  def self.find_best_match_by(domain_ids, relative_path)
     joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
                   .order("miq_ae_namespaces.priority DESC")
-                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase, nil, true))
   end
 
   def self.get_homonymic_across_domains(user, fqname, enabled = nil, prefix: true)
