@@ -22,20 +22,18 @@ class MiqAeClass < ApplicationRecord
   virtual_attribute :fqname, :string
 
   def self.lookup_by_fqname(fqname, _args = {})
-    fqname = fqname[1..-1] if fqname[0] == '/'
-    dname, *partial = fqname.downcase.split('/')
-    domain_id = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname)).where(:domain_id => nil).select(:id)
-    where(arel_table[:relative_path].lower.eq(partial.join("/"))).find_by(:domain_id => domain_id)
+    return if fqname.blank?
+
+    dname, *partial = split_fqname(fqname)
+    domain_id = MiqAeDomain.name_to_id(dname)
+    find_by(:lower_relative_path => partial.join("/").downcase, :domain_id => domain_id)
   end
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
 
   def self.lookup_by_namespace_and_name(name_space, name, _args = {})
-    name_space = MiqAeNamespace.lookup_by_fqname(name_space)
-    return nil if name_space.nil?
-
-    where(:namespace_id => name_space.id).find_by(arel_table[:name].lower.eq(name.downcase))
+    lookup_by_fqname(name_space + "/" + name)
   end
 
   singleton_class.send(:alias_method, :find_by_namespace_and_name, :lookup_by_namespace_and_name)

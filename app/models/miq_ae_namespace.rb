@@ -36,12 +36,11 @@ class MiqAeNamespace < ApplicationRecord
     return nil if fqname.blank?
 
     dname, *partial = split_fqname(fqname)
-    domain_query = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname)).where(:domain_id => nil)
-    return domain_query.first if partial.empty?
+    domain_id = MiqAeDomain.name_to_id(dname)
+    return MiqAeDomain.unscoped.find_by(:id => domain_id) if partial.empty?
 
     query = include_classes ? includes(:ae_classes) : all
-    query = query.where(arel_table[:relative_path].lower.eq(partial.join("/")))
-    query.find_by(:domain_id => domain_query.select(:id))
+    query.find_by(:domain_id => domain_id, :lower_relative_path => partial.join("/").downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
@@ -50,11 +49,10 @@ class MiqAeNamespace < ApplicationRecord
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname = fqname[1..-1] if fqname[0] == '/'
     found = lookup_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
-    parts = fqname.split('/')
+    parts = split_fqname(fqname)
     new_parts = [parts.pop]
     loop do
       break if parts.empty?
