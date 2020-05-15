@@ -1,5 +1,4 @@
 require 'ostruct'
-require 'MiqSockUtil'
 require 'xml/xml_utils'
 require 'cgi'               # Used for URL encoding/decoding
 require 'metadata/linux/LinuxUsers'
@@ -470,11 +469,6 @@ class Host < ApplicationRecord
     else
       _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
     end
-  end
-
-  def resolve_hostname!
-    addr = MiqSockUtil.resolve_hostname(hostname)
-    update!(:ipaddress => addr) unless addr.nil?
   end
 
   # Scan for VMs in a path defined in a repository
