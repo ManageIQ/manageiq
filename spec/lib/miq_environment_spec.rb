@@ -32,28 +32,88 @@ RSpec.describe MiqEnvironment do
       end
 
       context ".is_production?" do
-        it "should return true if Rails undefined" do
+        it "when Rails is not defined" do
           hide_const('Rails')
           expect { Rails }.to raise_error(NameError)
-          expect(MiqEnvironment::Command.is_production?).to be_truthy
+          assert_same_result_every_time(:is_production?, true)
         end
 
-        it "will return true if linux and /var/www/miq/vmdb exists and cache the result" do
-          expect(MiqEnvironment::Command).to receive(:is_linux?).once.and_return(true)
-          expect(File).to receive(:exist?).once.and_return(true)
-          assert_same_result_every_time(:is_appliance?, true)
+        it "when Rails is production" do
+          expect(Rails.env).to receive(:production?).twice.and_return(true)
+          assert_same_result_every_time(:is_production?, true)
+        end
+
+        it "when Rails is not production" do
+          assert_same_result_every_time(:is_production?, false)
         end
       end
 
-      describe ".is_container?" do
-        it "returns false if the environment variable is not set" do
-          assert_same_result_every_time(:is_container?, false)
+      context "production build questions" do
+        def container_conditions
+          stub_const("ENV", ENV.to_h.merge("CONTAINER" => "true"))
         end
 
-        it "returns true if the environment variable is set" do
-          ENV["CONTAINER"] = "true"
-          assert_same_result_every_time(:is_container?, true)
-          ENV.delete("CONTAINER")
+        def podified_conditions
+          expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+          container_conditions
+        end
+
+        def appliance_conditions
+          stub_const("ENV", ENV.to_h.merge("APPLIANCE" => "true"))
+        end
+
+        describe ".is_container?" do
+          it "when the conditions are not met" do
+            assert_same_result_every_time(:is_container?, false)
+          end
+
+          it "when the conditions are met" do
+            container_conditions
+            assert_same_result_every_time(:is_container?, true)
+          end
+        end
+
+        describe ".is_podified?" do
+          it "when the conditions are not met" do
+            assert_same_result_every_time(:is_podified?, false)
+          end
+
+          it "when the conditions are met" do
+            podified_conditions
+            assert_same_result_every_time(:is_podified?, true)
+          end
+        end
+
+        describe ".is_appliance?" do
+          it "when the conditions are not met" do
+            assert_same_result_every_time(:is_appliance?, false)
+          end
+
+          it "when the conditions are met" do
+            appliance_conditions
+            assert_same_result_every_time(:is_appliance?, true)
+          end
+        end
+
+        describe ".is_production_build?" do
+          it "when the conditions are not met" do
+            assert_same_result_every_time(:is_production_build?, false)
+          end
+
+          it "when the appliance conditions are met" do
+            appliance_conditions
+            assert_same_result_every_time(:is_production_build?, true)
+          end
+
+          it "when the container conditions are met" do
+            container_conditions
+            assert_same_result_every_time(:is_production_build?, true)
+          end
+
+          it "when the podified conditions are met" do
+            podified_conditions
+            assert_same_result_every_time(:is_production_build?, true)
+          end
         end
       end
     end
