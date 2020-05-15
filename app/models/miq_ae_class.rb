@@ -1,6 +1,7 @@
 class MiqAeClass < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   belongs_to :ae_namespace, :class_name => "MiqAeNamespace", :foreign_key => :namespace_id
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
@@ -94,9 +95,6 @@ class MiqAeClass < ApplicationRecord
     end
   end
 
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
-  end
 
   # my class's fqname is /domain/namespace1/namespace2/class
   def namespace

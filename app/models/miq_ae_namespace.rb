@@ -5,6 +5,7 @@ class MiqAeNamespace < ApplicationRecord
   has_ancestry
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   EXPORT_EXCLUDE_KEYS = [/^id$/, /_id$/, /^created_on/, /^updated_on/,
                          /^updated_by/, /^reserved$/, /^commit_message/,
@@ -45,11 +46,6 @@ class MiqAeNamespace < ApplicationRecord
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
-
-  def self.split_fqname(fqname)
-    fqname = fqname[1..-1] if fqname[0] == '/'
-    fqname.downcase.split('/')
-  end
 
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
@@ -102,12 +98,6 @@ class MiqAeNamespace < ApplicationRecord
     roots
   end
 
-  def fqname
-    return "/#{name}" if domain_id.blank?
-
-    ["", domain&.name, relative_path].compact.join("/")
-  end
-
   def editable?(user = User.current_user)
     raise ArgumentError, "User not provided to editable?" unless user
     return false if domain? && user.current_tenant.id != tenant_id
@@ -118,10 +108,6 @@ class MiqAeNamespace < ApplicationRecord
   def ns_fqname
     return nil if fqname == domain_name
     fqname.sub(domain_name.to_s, '')
-  end
-
-  def domain_name
-    domain&.name
   end
 
   def domain?

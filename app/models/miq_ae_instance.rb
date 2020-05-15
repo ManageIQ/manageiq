@@ -1,6 +1,7 @@
 class MiqAeInstance < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => "MiqAeClass", :foreign_key => :class_id
@@ -62,10 +63,6 @@ class MiqAeInstance < ApplicationRecord
       result[f.name] = get_field_value(f, false)
     end
     result
-  end
-
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
   end
 
   # my instance's fqname is /domain/namespace1/namespace2/class/instance
