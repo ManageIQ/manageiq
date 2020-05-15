@@ -13,7 +13,7 @@ class MiqAeNamespace < ApplicationRecord
                          /^last_import_on/, /^source/, /^top_level_namespace/].freeze
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
-  has_many :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) }, :class_name => "MiqAeClass",
+  has_many :ae_classes, :class_name => "MiqAeClass",
            :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => :ae_namespace
 
   validates :name,

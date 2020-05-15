@@ -47,7 +47,7 @@ class MiqAeClass < ApplicationRecord
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_namespace_id_and_name => :lookup_by_namespace_id_and_name)
 
   def self.lookup_by_name(name)
-    where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields]).first
+    find_by(:lower_name => name.downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
