@@ -130,7 +130,10 @@ RSpec.describe EmsEvent do
             :service => "manageiq.ems-events",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
-            :payload => event_hash,
+            :payload => event_hash.merge(
+              :ems_type => ems.class.ems_type,
+              :ems_uid  => ems.uid_ems
+            )
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
@@ -150,7 +153,10 @@ RSpec.describe EmsEvent do
             :service => "manageiq.ems-events",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
-            :payload => event_hash,
+            :payload => event_hash.merge(
+              :ems_type => ems.class.ems_type,
+              :ems_uid  => ems.uid_ems
+            )
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
