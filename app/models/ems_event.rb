@@ -25,14 +25,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    unless MiqQueue.messaging_type == "miq_queue"
-      MiqQueue.messaging_client('event_handler')&.publish_topic(
-        :service => "manageiq.ems-events",
-        :sender  => ems_id,
-        :event   => event[:event_type],
-        :payload => event
-      )
-    end
+    publish_event(ems_id, event)
 
     MiqQueue.submit_job(
       :service     => "event",
@@ -257,6 +250,23 @@ class EmsEvent < EventStream
   end
 
   private_class_method :create_completed_event
+
+  def self.publish_event(ems_id, event)
+    return if MiqQueue.messaging_type == "miq_queue"
+
+    ems = ExtManagementSystem.find(ems_id)
+    event[:ems_uid]  = ems&.uid_ems
+    event[:ems_type] = ems&.class&.ems_type
+
+    MiqQueue.messaging_client('event_handler')&.publish_topic(
+      :service => "manageiq.ems-events",
+      :sender  => ems_id,
+      :event   => event[:event_type],
+      :payload => event
+    )
+  end
+
+  private_class_method :publish_event
 
   def get_refresh_target(target_type)
     m = "#{target_type}_refresh_target"
