@@ -103,8 +103,8 @@ RSpec.describe InfraConversionThrottler, :v2v do
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :cpu_limit => '50') }
 
     before do
-      allow(described_class).to receive(:running_conversion_jobs).and_return(conversion_host => [job_running_1, job_running_2])
-      allow(conversion_host).to receive(:active_tasks).and_return([1, 2])
+      allow(described_class).to receive(:running_conversion_jobs).and_return(conversion_host => [job_running_1], nil => [job_running_2])
+      allow(conversion_host).to receive(:active_tasks).and_return([task_running_1, task_running_2])
       allow(job_running_1).to receive(:migration_task).and_return(task_running_1)
       allow(job_running_2).to receive(:migration_task).and_return(task_running_2)
     end
@@ -117,15 +117,21 @@ RSpec.describe InfraConversionThrottler, :v2v do
     it 'calls apply_task_limits with limits hash when virt-v2v-wrapper has started' do
       path = '/tmp/fake_throttling_file'
       limits = {
-        :cpu     => '25',
+        :cpu     => '50',
         :network => 'unlimited'
       }
-      task_running_1.options[:virtv2v_wrapper] = { 'throttling_file' => path }
-      task_running_2.options[:virtv2v_wrapper] = { 'throttling_file' => path }
-      expect(conversion_host).to receive(:apply_task_limits).twice.with(path, limits)
+      task_running_1.update_options(
+        :virtv2v_started_on => Time.now.utc,
+        :virtv2v_wrapper    => {'throttling_file' => path}
+      )
+      task_running_2.update_options(
+        :virtv2v_started_on => Time.now.utc,
+        :virtv2v_wrapper    => {'throttling_file' => path}
+      )
+      expect(conversion_host).to receive(:apply_task_limits).with(path, limits)
       described_class.apply_limits
-      expect(task_running_1.reload.options[:virtv2v_limits]).to eq(limits)
-      expect(task_running_2.reload.options[:virtv2v_limits]).to eq(limits)
+      expect(job_running_1.migration_task.reload.options[:virtv2v_limits]).to eq(limits)
+      expect(job_running_2.migration_task.reload.options[:virtv2v_limits]).to be_nil
     end
 
     it 'does not call apply_task_limits when limits have not changed' do

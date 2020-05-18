@@ -221,8 +221,12 @@ class InfraConversionJob < Job
     state_hash
   end
 
+  def task_progress
+    migration_task.options[:progress] || {:current_state => state, :status => "ok", :percent => 0.0, :states => {}}
+  end
+
   def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || {:current_state => state, :status => "ok", :percent => 0.0, :states => {}}
+    progress = task_progress
     return if progress[:status] == "error"
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
@@ -249,7 +253,7 @@ class InfraConversionJob < Job
   def abort_conversion(message, status)
     _log.error("Aborting conversion: #{message}")
     migration_task.canceling
-    progress = migration_task.options[:progress]
+    progress = task_progress
     progress[:current_description] = "Migration failed: #{message}. Cancelling"
     progress[:status] = status
     progress[:states][state.to_sym] = {} if state == 'waiting_to_start'
