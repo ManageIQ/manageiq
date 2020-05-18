@@ -54,13 +54,14 @@ class InfraConversionThrottler
     end
   end
 
+  # @return [Hash] the list of jobs in state 'waiting_to_start', grouped by destination EMS
   def self.pending_conversion_jobs
     pending = InfraConversionJob.where(:state => 'waiting_to_start')
     _log.info("Pending InfraConversionJob: #{pending.count}")
     pending.group_by { |job| job.migration_task.destination_ems }
   end
 
-  # @return [Hash] the list of jobs in state 'running', grouped by conversion host
+  # @return [Hash] the list of jobs not in state 'waiting_to_start' or 'finished', grouped by conversion host
   def self.running_conversion_jobs
     running = InfraConversionJob.where.not(:state => ['waiting_to_start', 'finished'])
     _log.info("Running InfraConversionJob: #{running.count}")
@@ -80,6 +81,12 @@ class InfraConversionThrottler
   # Applying the limits is done via the conversion_host which handles the writing.
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
+      if ch.nil?
+        bad_tasks = jobs.map { |j| j.migration_task&.source&.name }.compact.join(', ')
+        _log.error("The following migrating VMs don't have a conversion host: #{bad_tasks}.")
+        next
+      end
+
       number_of_jobs = jobs.size
 
       cpu_limit = ch.cpu_limit || Settings.transformation.limits.cpu_limit_per_host
