@@ -1,10 +1,9 @@
----
 version: '2'
 prepare:
   fetch:
-  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
+  - url: https://raw.githubusercontent.com/ManageIQ/manageiq-style/master/.rubocop_base.yml
     path: ".rubocop_base.yml"
-  - url: https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_cc_base.yml
+  - url: https://raw.githubusercontent.com/ManageIQ/manageiq-style/master/.rubocop_cc_base.yml
     path: ".rubocop_cc_base.yml"
 checks:
   argument-count:
@@ -28,7 +27,7 @@ plugins:
   rubocop:
     enabled: true
     config: ".rubocop_cc.yml"
-    channel: 'rubocop-0-69'
+    channel: rubocop-0-82
 exclude_patterns:
 - config/dictionary_strings.rb
 - config/model_attributes.rb
