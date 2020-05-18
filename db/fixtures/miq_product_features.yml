@@ -4628,107 +4628,94 @@
     :feature_type: view
     :identifier: physical_infra_overview_view
 
-# Foreman
-- :name: Configuration Management
-  :description: Everything under Configuration Management
+# Configuration Managers
+- :name: Configuration Managers
+  :description: Everything under Configuration Manager Providers
   :feature_type: node
-  :identifier: provider_foreman_explorer
+  :identifier: ems_configuration
   :children:
-  - :name: Providers
-    :description: Everything under Providers accordion
-    :feature_type: node
-    :identifier: providers_accord
+  - :name: View
+    :description: View Configuration Manager Providers
+    :feature_type: view
+    :identifier: ems_configuration_view
     :children:
-    - :name: View
-      :description: View Providers, Configuration Profiles, Configured Systems
+    - :name: List
+      :description: Display Lists of Configuration Manager Providers
       :feature_type: view
-      :identifier: provider_foreman_view
-    - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+      :identifier: ems_configuration_show_list
+    - :name: Show
+      :description: Display Individual Configuration Manager Provider
+      :feature_type: view
+      :identifier: ems_configuration_show
+  - :name: Operate
+    :description: Perform Operations on Configuration Manager Providers and Configured Systems
+    :feature_type: control
+    :identifier: ems_configuration_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Configuration Manager Provider
       :feature_type: control
-      :identifier: provider_foreman_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Foreman Provider
-        :feature_type: control
-        :identifier: configuration_manager_provider_tag
-      - :name: Provision Configured Systems
-        :description: Provision Configured Systems
-        :feature_type: control
-        :identifier: provider_foreman_configured_system_provision
-      - :name: Refresh Providers
-        :description: Refresh relationships for all items related of Provider
-        :feature_type: control
-        :identifier: provider_foreman_refresh_provider
-    - :name: Modify
-      :description: Modify Providers
+      :identifier: ems_configuration_tag
+    - :name: Refresh Configuration Manager Providers
+      :description: Refresh relationships for all items related to Configuration Manager Provider
+      :feature_type: control
+      :identifier: ems_configuration_refresh_provider
+  - :name: Modify
+    :description: Modify Configuration Manager Providers
+    :feature_type: admin
+    :identifier: ems_configuration_admin
+    :children:
+    - :name: Remove Configuration Manager Providers
+      :description: Remove Configuration Manager Provider
       :feature_type: admin
-      :identifier: provider_admin
+      :identifier: configuration_manager_admin
       :children:
-      - :name: Remove Providers
-        :description: Remove Provier
+      - :name: Remove Configuration Manager Providers
+        :description: Remove Configuration Manager Provider
         :feature_type: admin
-        :identifier: provider_foreman_delete_provider
-      - :name: Edit Provider
-        :description: Edit a Provider
+        :identifier: configuration_manager_delete_provider
+      - :name: Edit Configuration Manager Provider
+        :description: Edit a Configuration Manager Provider
         :feature_type: admin
-        :identifier: provider_foreman_edit_provider
+        :identifier: configuration_manager_edit_provider
       - :name: Pause
-        :description: Pause a Provider
+        :description: Pause a Configuration Manager Provider
         :feature_type: admin
-        :identifier: provider_foreman_pause
+        :identifier: configuration_manager_pause
       - :name: Resume
-        :description: Resume a Provider
+        :description: Resume a Configuration Manager Provider
         :feature_type: admin
-        :identifier: provider_foreman_resume
-      - :name: Add Provider
-        :description: Add a Provider
+        :identifier: configuration_manager_resume
+      - :name: Add Configuration Manager Provider
+        :description: Add a Configuration Manager Provider
         :feature_type: admin
-        :identifier: provider_foreman_add_provider
+        :identifier: configuration_manager_add_provider
   - :name: Configured Systems
-    :description: Everything under Configured Systems accordion
+    :description: Everything under Configured Systems
     :feature_type: node
-    :identifier: configured_systems_filter_accord
+    :identifier: configured_system
     :children:
     - :name: View
       :description: View Configured Systems
       :feature_type: view
-      :identifier: configured_systems_filter_accord_view
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
-      :feature_type: control
-      :identifier: configuredsystem_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Configured Systems Tags
-        :feature_type: control
-        :identifier: configured_system_tag
-      - :name: Provision Configured Systems
-        :description: Provision Configured Systems
-        :feature_type: control
-        :identifier: configured_system_provision
-  - :name: Ansible Tower Job Templates
-    :description: Everything under Ansible Tower Job Templates accordion
-    :feature_type: node
-    :identifier: configuration_scripts_accord
-    :children:
-    - :name: View
-      :description: View Ansible Tower Job Templates
+      :identifier: configured_system_show_list
+    - :name: Show
+      :description: Display Individual Configured System
       :feature_type: view
-      :identifier: configuration_script_view
-    - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+      :identifier: configured_system_show
+  - :name: Operate
+    :description: Perform Operations on Configured Systems
+    :feature_type: control
+    :identifier: configured_system_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Configured Systems Tags
       :feature_type: control
-      :identifier: configuration_script_control
-      :children:
-      - :name: Create Service Dialog
-        :description: Create Service Dialog
-        :feature_type: admin
-        :identifier: configscript_service_dialog
-      - :name: Edit Tags
-        :description: Edit Job Templates Tags
-        :feature_type: control
-        :identifier: configuration_script_tag
+      :identifier: configured_system_tag
+    - :name: Provision Configured Systems
+      :description: Provision Configured Systems
+      :feature_type: control
+      :identifier: configured_system_provision
 
 # Embedded Automation Manager
 - :name: Embedded Automation Manager
@@ -4894,8 +4881,8 @@
     :feature_type: node
     :identifier: automation_manager_configured_system
     :children:
-    - :name: View
-      :description: View Configured Systems
+    - :name: List
+      :description: Display Lists of Configured Systems
       :feature_type: view
       :identifier: automation_manager_configured_system_view
     - :name: Operate
@@ -4907,17 +4894,17 @@
         :description: Edit Configured Systems Tags
         :feature_type: control
         :identifier: automation_manager_configured_system_tag
-  - :name: Automation Scripts
-    :description: Everything under Automation Scripts accordion
+  - :name: Templates
+    :description: Everything under Templates accordion
     :feature_type: node
     :identifier: automation_manager_configuration_scripts_accord
     :children:
     - :name: View
-      :description: View Automation Scripts
+      :description: View Templates
       :feature_type: view
       :identifier: automation_manager_configuration_script_view
     - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+      :description: Perform Operations on Templates
       :feature_type: control
       :identifier: automation_manager_configuration_script_control
       :children:
@@ -6305,19 +6292,6 @@
   :feature_type: node
   :identifier: api_exclusive
   :children:
-  - :name: Configured Systems
-    :description: Everything under Configured Systems
-    :feature_type: node
-    :identifier: configured_systems
-    :children:
-    - :name: View
-      :description: View Configured Systems
-      :feature_type: view
-      :identifier: configured_system_view
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
-      :feature_type: control
-      :identifier: configured_system_control
   # Pictures
   - :name: Pictures
     :description: Everything under Pictures
