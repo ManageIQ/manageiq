@@ -14,10 +14,20 @@
   :url: /utilization
   :rbac_feature_name: utilization
   :startup: true
-- :name: chargeback
-  :description: Overview / Chargeback
-  :url: /chargeback/explorer
-  :rbac_feature_name: chargeback
+- :name: chargeback_reports
+  :description: Overview / Chargeback / Reports
+  :url: /chargeback_reports/explorer
+  :rbac_feature_name: chargeback_reports
+  :startup: true
+- :name: chargeback_rates
+  :description: Overview / Chargeback / Rates
+  :url: /chargeback_rates/show_list
+  :rbac_feature_name: chargeback_rates_show_list
+  :startup: true
+- :name: chargeback_assignments
+  :description: Overview / Chargeback / Assignments
+  :url: /chargeback_assignments/explorer
+  :rbac_feature_name: chargeback_assignments
   :startup: true
 - :name: services
   :description: Services / My Services
