@@ -8,6 +8,7 @@ module ComplianceMixin
              :as         => :resource,
              :inverse_of => :resource,
              :class_name => "Compliance"
+    virtual_has_many :last_compliance_conditions, :uses => { :last_compliance => :condition }
 
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",
@@ -18,6 +19,8 @@ module ComplianceMixin
                      :allow_nil => true,
                      :type      => :datetime,
                      :prefix    => true
+
+    virtual_column :last_compliance_condition_expressions, :type => :string_set, :uses => { :last_compliance => :condition }
   end
 
   def check_compliance
@@ -36,5 +39,15 @@ module ComplianceMixin
     target_class = self.class.base_model.name.downcase
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "#{target_class}_compliance_check")
     plist
+  end
+
+  def last_compliance_conditions
+    return [] unless last_compliance
+
+    last_compliance.compliance_details.map(&:condition)
+  end
+
+  def last_compliance_condition_expressions
+    last_compliance_conditions.map {|c| c.expression.to_human}
   end
 end
