@@ -47,4 +47,46 @@ RSpec.describe ComplianceMixin do
       end
     end
   end
+
+  describe "#last_compliance_conditions" do
+    context "with no compliances" do
+      it "returns an empty list" do
+        expect(host.last_compliance_conditions).to be_empty
+      end
+    end
+
+    context "with compliances" do
+      let(:last_compliance) { FactoryBot.create(:compliance, :with_details_and_conditions, :resource => host, :timestamp => Time.now, :compliant => false) }
+
+      before do
+        compliances
+        last_compliance
+      end
+
+      it "returns an array of condition objects" do
+        expect(host.last_compliance_conditions.length).to eq(2)
+      end
+    end
+  end
+
+  describe "#last_compliance_condition_expressions" do
+    context "with no compliances" do
+      it "returns an empty list" do
+        expect(host.last_compliance_condition_expressions).to be_empty
+      end
+    end
+
+    context "with compliances" do
+      let(:last_compliance) { FactoryBot.create(:compliance, :with_details_and_conditions, :resource => host, :timestamp => Time.now, :compliant => false) }
+
+      before do
+        compliances
+        last_compliance
+      end
+
+      it "returns an array of condition expressions" do
+        expect(host.last_compliance_condition_expressions).to eq(["VM and Instance : Number of CPUs >= 2", "VM and Instance : Number of CPUs >= 2"])
+      end
+    end
+  end
 end
