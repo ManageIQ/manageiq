@@ -47,12 +47,12 @@ module Vmdb
     def self.create_loggers
       path_dir = ManageIQ.root.join("log")
 
-      $audit_log          = AuditLogger.new(path_dir.join("audit.log"))
       $container_log      = ContainerLogger.new
       # TODO: The journald logger can occasionally segfault the worker process
       # $journald_log       = create_journald_logger
       $log                = create_multicast_logger(path_dir.join("evm.log"))
       $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
+      $audit_log          = create_multicast_logger(path_dir.join("audit.log"), AuditLogger)
       $api_log            = create_multicast_logger(path_dir.join("api.log"))
       $ansible_tower_log  = create_multicast_logger(path_dir.join("ansible_tower.log"))
       $miq_ae_logger      = create_multicast_logger(path_dir.join("automation.log"))
