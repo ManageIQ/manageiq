@@ -16,8 +16,8 @@
   :startup: true
 - :name: chargeback_reports
   :description: Overview / Chargeback / Reports
-  :url: /chargeback_reports/explorer
-  :rbac_feature_name: chargeback_reports
+  :url: /chargeback_report/show_list
+  :rbac_feature_name: chargeback_reports_show_list
   :startup: true
 - :name: chargeback_rates
   :description: Overview / Chargeback / Rates
