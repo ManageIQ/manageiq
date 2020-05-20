@@ -21,6 +21,7 @@ class MiqWorker
       container[:image] = container_image
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
       container[:env] << {:name => "BUNDLER_GROUPS", :value => self.class.bundler_groups.join(",")}
+      container[:resources] = resource_constraints
     end
 
     def scale_deployment
@@ -38,6 +39,15 @@ class MiqWorker
 
     def default_image
       "#{container_image_namespace}/#{container_image_name}:#{container_image_tag}"
+    end
+
+    def resource_constraints
+      mem_threshold = worker_settings[:memory_threshold]
+      {
+        :limits => {
+          :memory => "#{mem_threshold / 1.megabyte}Mi",
+        }
+      }
     end
 
     def container_image_namespace
