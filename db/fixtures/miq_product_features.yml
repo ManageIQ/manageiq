@@ -1712,30 +1712,43 @@
   :identifier: chargeback
   :children:
   - :name: Reports
-    :description: Reports Accordion
+    :description: Everything under Reports
     :feature_type: node
     :identifier: chargeback_reports
     :children:
-    - :name: Download CSV Format
-      :description: Download Report in CSV Format
-      :feature_type: admin
-      :hidden: true
-      :identifier: chargeback_download_csv
-    - :name: Download PDF Format
-      :description: Download Report in PDF Format
-      :feature_type: admin
-      :hidden: true
-      :identifier: chargeback_download_pdf
-    - :name: Download Text Format
-      :description: Download Report in Text Format
-      :feature_type: admin
-      :hidden: true
-      :identifier: chargeback_download_text
-    - :name: Show Full Screen Report
-      :description: Show Full Screen Report
-      :feature_type: admin
-      :hidden: true
-      :identifier: chargeback_report_only
+    - :name: View
+      :description: View Reports
+      :feature_type: node
+      :identifier: chargeback_reports_view
+      :children:
+      - :name: List
+        :description: Display Lists of Chargeback Saved Reports
+        :feature_type: view
+        :identifier: chargeback_reports_show_list
+      - :name: Show
+        :description: Display Individual Chargeback Saved Report
+        :feature_type: view
+        :identifier: chargeback_reports_show
+      - :name: Download CSV Format
+        :description: Download Report in CSV Format
+        :feature_type: view
+        :hidden: true
+        :identifier: chargeback_reports_download_csv
+      - :name: Download PDF Format
+        :description: Download Report in PDF Format
+        :feature_type: view
+        :hidden: true
+        :identifier: chargeback_reports_download_pdf
+      - :name: Download Text Format
+        :description: Download Report in Text Format
+        :feature_type: view
+        :hidden: true
+        :identifier: chargeback_reports_download_text
+      - :name: Show Full Screen Report
+        :description: Show Full Screen Report
+        :feature_type: view
+        :hidden: true
+        :identifier: chargeback_reports_report_only
   - :name: Rates
     :description: Everything under Rates
     :feature_type: node
@@ -6544,7 +6557,7 @@
   - :name: Chargeback Measures
     :description: Chargeback Rate measures Accordion
     :feature_type: node
-    :identifier: measure    
+    :identifier: measure
 
 # SUI
 - :name: Service UI
