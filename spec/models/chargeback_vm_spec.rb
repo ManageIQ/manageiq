@@ -454,7 +454,7 @@ RSpec.describe ChargebackVm do
           :interval_size                => 12,
           :end_interval_offset          => 1,
           :tenant_id                    => tenant_1.id,
-          :method_for_allocated_metrics => :max,
+          :method_for_allocated_metrics => 'max',
           :include_metrics              => true,
           :groupby                      => "tenant",
         }

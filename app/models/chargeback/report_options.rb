@@ -42,7 +42,7 @@ class Chargeback
     ALLOCATED_METHODS_WHITELIST = %i(max avg current_value).freeze
 
     def method_for_allocated_metrics
-      method = self[:method_for_allocated_metrics] || :max
+      method = (self[:method_for_allocated_metrics] || :max).to_sym
 
       unless ALLOCATED_METHODS_WHITELIST.include?(method)
         raise "Invalid method for allocated calculations #{method}"
