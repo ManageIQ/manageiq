@@ -337,14 +337,8 @@ class MiqExpression
     when "contains"
       if exp[operator].keys.include?("tag") && exp[operator]["tag"].split(".").length == 2 # Only support for tags of the main model
         return true
-      elsif exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 2
-        db, field = exp[operator]["field"].split(".")
-        assoc, _column = field.split("-")
-        ref = db.constantize.reflect_on_association(assoc.to_sym)
-        return false unless ref
-        return false unless ref.macro == :has_many || ref.macro == :has_one
-        return false if ref.options && ref.options.key?(:as)
-        return field_in_sql?(exp[operator]["field"])
+      elsif exp[operator].key?("field")
+        Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
       else
         return false
       end

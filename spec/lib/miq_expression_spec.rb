@@ -495,24 +495,34 @@ RSpec.describe MiqExpression do
       expect(sql).to eq(expected)
     end
 
-    it "can't generate the SQL for a CONTAINS expression with association.association-field" do
+    it "generates the SQL for a CONTAINS expression with association.association-field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications.host-name", "value" => "foo"}).to_sql
-      expect(sql).to be_nil
+      rslt = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"guest_applications\" ON \"guest_applications\".\"vm_or_template_id\" = \"vms\".\"id\" INNER JOIN \"hosts\" ON \"hosts\".\"id\" = \"guest_applications\".\"host_id\" WHERE \"hosts\".\"name\" = 'foo')"
+      expect(sql).to eq(rslt)
     end
 
-    it "can't generate the SQL for a CONTAINS expression with belongs_to field" do
+    it "generates the SQL for a CONTAINS expression with belongs_to field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.host-name", "value" => "foo"}).to_sql
-      expect(sql).to be_nil
+      rslt = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"hosts\" ON \"hosts\".\"id\" = \"vms\".\"host_id\" WHERE \"hosts\".\"name\" = 'foo')"
+      expect(sql).to eq(rslt)
     end
 
-    it "can't generate the SQL for multi level contains with a scope" do
+    it "generates the SQL for multi level contains with a scope" do
       sql, _ = MiqExpression.new("CONTAINS" => {"field" => "ExtManagementSystem.clustered_hosts.operating_system-name", "value" => "RHEL"}).to_sql
-      expect(sql).to be_nil
+      rslt = "\"ext_management_systems\".\"id\" IN (SELECT \"ext_management_systems\".\"id\" FROM \"ext_management_systems\" " \
+             "INNER JOIN \"hosts\" ON \"hosts\".\"ems_id\" = \"ext_management_systems\".\"id\" AND \"hosts\".\"ems_cluster_id\" IS NOT NULL " \
+             "INNER JOIN \"operating_systems\" ON \"operating_systems\".\"host_id\" = \"hosts\".\"id\" " \
+             "WHERE \"operating_systems\".\"name\" = 'RHEL')"
+      expect(sql).to eq(rslt)
     end
 
-    it "can't generate the SQL for field belongs to 'has_and_belongs_to_many' association" do
+    it "generates the SQL for field belongs to 'has_and_belongs_to_many' association" do
       sql, _ = MiqExpression.new("CONTAINS" => {"field" => "ManageIQ::Providers::InfraManager::Vm.storages-name", "value" => "abc"}).to_sql
-      expect(sql).to be_nil
+      rslt = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" " \
+             "INNER JOIN \"storages_vms_and_templates\" ON \"storages_vms_and_templates\".\"vm_or_template_id\" = \"vms\".\"id\" " \
+             "INNER JOIN \"storages\" ON \"storages\".\"id\" = \"storages_vms_and_templates\".\"storage_id\" " \
+             "WHERE \"storages\".\"name\" = 'abc')"
+      expect(sql).to eq(rslt)
     end
 
     it "can't generate the SQL for a CONTAINS expression virtualassociation" do
@@ -537,9 +547,9 @@ RSpec.describe MiqExpression do
       expect(sql).to eq(expected)
     end
 
-    it "can't generate the SQL for a CONTAINS in the main table" do
+    it "generates the SQL for a CONTAINS in the main table" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm-name", "value" => "foo"}).to_sql
-      expect(sql).to be_nil
+      expect(sql).to eq("\"vms\".\"name\" = 'foo'")
     end
 
     it "generates the SQL for a CONTAINS expression with tag" do
@@ -2979,12 +2989,6 @@ RSpec.describe MiqExpression do
 
         it "returns false if field belongs to virtual_has_many association" do
           field = "ManageIQ::Providers::InfraManager::Vm.processes-type"
-          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
-          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
-        end
-
-        it "returns false if field belongs to 'has_and_belongs_to_many' association" do
-          field = "ManageIQ::Providers::InfraManager::Vm.storages-name"
           expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
