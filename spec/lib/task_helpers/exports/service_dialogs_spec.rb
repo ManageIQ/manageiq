@@ -10,7 +10,8 @@ RSpec.describe TaskHelpers::Exports::ServiceDialogs do
       "description" => description1,
       "buttons"     => buttons,
       "label"       => label1,
-      "dialog_tabs" => []
+      "dialog_tabs" => [],
+      "system"      => false
     }]
   end
 
@@ -20,6 +21,7 @@ RSpec.describe TaskHelpers::Exports::ServiceDialogs do
       "buttons"     => buttons,
       "label"       => label2,
       "dialog_tabs" => [],
+      "system"      => false
     }]
   end
 
