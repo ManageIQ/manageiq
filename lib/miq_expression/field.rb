@@ -64,30 +64,6 @@ class MiqExpression::Field < MiqExpression::Target
     (associations + [column]).join('.')
   end
 
-  # this should only be accessed in MiqExpression
-  # please avoid using it
-  def arel_table
-    if associations.none?
-      model.arel_table
-    else
-      # if the target attribute is in the same table as the model (the base table),
-      # alias the table to avoid conflicting table from clauses
-      # seems AR should do this for us...
-      ref = reflections.last
-      if ref.klass.table_name == model.table_name
-        ref.klass.arel_table.alias(ref.alias_candidate(model.table_name))
-      else
-        ref.klass.arel_table
-      end
-    end
-  end
-
-  # this should only be accessed in MiqExpression
-  # please avoid using it
-  def arel_attribute
-    target.arel_attribute(column, arel_table) if target
-  end
-
   private
 
   def custom_attribute_column_name
