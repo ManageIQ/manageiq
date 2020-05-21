@@ -8,7 +8,7 @@ module ComplianceMixin
              :as         => :resource,
              :inverse_of => :resource,
              :class_name => "Compliance"
-    virtual_has_many :last_compliance_conditions, :uses => { :last_compliance => :condition }
+    virtual_has_many :last_compliance_conditions, :uses => { :last_compliance => {:compliance_details => :condition }}
 
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",
@@ -20,7 +20,7 @@ module ComplianceMixin
                      :type      => :datetime,
                      :prefix    => true
 
-    virtual_column :last_compliance_condition_expressions, :type => :string_set, :uses => { :last_compliance => :condition }
+    virtual_column :last_compliance_condition_expressions, :type => :string_set, :uses => { :last_compliance => {:compliance_details => :condition }}
   end
 
   def check_compliance
