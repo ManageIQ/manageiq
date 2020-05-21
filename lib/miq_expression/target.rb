@@ -59,6 +59,8 @@ class MiqExpression::Target
 
   def reflection_supported_by_sql?
     model&.follow_associations(associations).present?
+  rescue ArgumentError
+    false
   end
 
   # AR or virtual reflections

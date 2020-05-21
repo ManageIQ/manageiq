@@ -28,10 +28,16 @@ class MiqExpression::Field < MiqExpression::Target
   def valid?
     (target < ApplicationRecord) &&
       (target.column_names.include?(column) || virtual_attribute? || custom_attribute_column?)
+  rescue ArgumentError
+    # the association chain is not legal, so no, it not valid
+    false
   end
 
   def attribute_supported_by_sql?
     !custom_attribute_column? && target.attribute_supported_by_sql?(column) && reflection_supported_by_sql?
+  rescue ArgumentError
+    # the association chain is not legal, so no, it is not supported by sql
+    false
   end
 
   def custom_attribute_column?
@@ -64,8 +70,9 @@ class MiqExpression::Field < MiqExpression::Target
     if associations.none?
       model.arel_table
     else
-      # if we are pointing to a table that already in the query, need to alias it
-      # seems we should be able to ask AR to do this for us...
+      # if the target attribute is in the same table as the model (the base table),
+      # alias the table to avoid conflicting table from clauses
+      # seems AR should do this for us...
       ref = reflections.last
       if ref.klass.table_name == model.table_name
         ref.klass.arel_table.alias(ref.alias_candidate(model.table_name))

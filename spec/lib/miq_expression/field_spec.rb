@@ -142,6 +142,11 @@ RSpec.describe MiqExpression::Field do
       field = described_class.new(Vm, [], "destroy")
       expect(field).not_to be_valid
     end
+
+    it "returns false for non-valid associations" do
+      field = described_class.new(Vm, %w[bogus association], "foo")
+      expect(field).not_to be_valid
+    end
   end
 
   describe "#reflections" do
@@ -299,6 +304,10 @@ RSpec.describe MiqExpression::Field do
 
     it "detects if column is supported by sql through virtual association" do
       expect(MiqExpression::Field.parse("Vm.service-name").attribute_supported_by_sql?).to be_falsey
+    end
+
+    it "returns false if the associations are bogus" do
+      expect(MiqExpression::Field.parse("Vm.bogus.service-name").attribute_supported_by_sql?).to be_falsey
     end
   end
 
