@@ -25,6 +25,7 @@ RSpec.describe DialogSerializer do
         "description"    => description,
         "buttons"        => buttons,
         "label"          => label,
+        "system"         => false,
         "dialog_tabs"    => %w[serialized_dialog1 serialized_dialog2],
         "export_version" => DialogImportService::CURRENT_DIALOG_VERSION,
       }
