@@ -560,6 +560,16 @@ RSpec.describe MiqExpression do
       expect(sql).to eq("\"vms\".\"id\" IN (#{vm.id})")
     end
 
+    it "generates the SQL for a CONTAINS expression with multi tier tag" do
+      tag = FactoryBot.create(:tag, :name => "/managed/operations/analysis_failed")
+      host = FactoryBot.create(:host_vmware, :tags => [tag])
+      exp = {"CONTAINS" => {"tag" => "VmInfra.host.managed-operations", "value" => "analysis_failed"}}
+      rslt = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"hosts\" ON \"hosts\".\"id\" = \"vms\".\"host_id\" WHERE \"hosts\".\"id\" IN (#{host.id}))"
+
+      sql, * = MiqExpression.new(exp).to_sql
+      expect(sql).to eq(rslt)
+    end
+
     it "returns nil for a Registry expression" do
       exp = {"=" => {"regkey" => "test", "regval" => "value", "value" => "data"}}
       sql, * = MiqExpression.new(exp).to_sql
@@ -2973,15 +2983,21 @@ RSpec.describe MiqExpression do
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(true)
         end
 
-        it "returns false for tag of associated model" do
+        it "returns true for tag of associated model" do
           field = "Vm.ext_management_system.managed-openshiftroles"
+          expression = {"CONTAINS" => {"tag" => field, "value" => "node"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(true)
+        end
+
+        it "returns false for tag of virtual associated model" do
+          field = "Vm.processes.managed-openshiftroles"
           expression = {"CONTAINS" => {"tag" => field, "value" => "node"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
         end
       end
 
       context "operation with 'field'" do
-        it "returns false if format of field is model.association..association-field" do
+        it "returns false if format of field is model.association.association-field" do
           field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
           expression = {"CONTAINS" => {"field" => field, "value" => "true"}}
           expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)

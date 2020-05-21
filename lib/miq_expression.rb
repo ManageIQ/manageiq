@@ -335,8 +335,8 @@ class MiqExpression
     operator = exp.keys.first
     case operator.downcase
     when "contains"
-      if exp[operator].keys.include?("tag") && exp[operator]["tag"].split(".").length == 2 # Only support for tags of the main model
-        return true
+      if exp[operator].key?("tag")
+        Tag.parse(exp[operator]["tag"]).reflection_supported_by_sql?
       elsif exp[operator].key?("field")
         Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
       else
@@ -1367,8 +1367,8 @@ class MiqExpression
       # Only support for tags of the main model
       if exp[operator].key?("tag")
         tag = Tag.parse(exp[operator]["tag"])
-        ids = tag.model.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
-        tag.model.arel_attribute(:id).in(ids)
+        ids = tag.target.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
+        subquery_for_contains(tag, tag.arel_attribute.in(ids))
       else
         subquery_for_contains(field, arel_attribute.eq(parsed_value))
       end
