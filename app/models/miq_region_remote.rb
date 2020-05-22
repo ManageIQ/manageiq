@@ -45,7 +45,7 @@ class MiqRegionRemote < ApplicationRecord
     log_header = "Region: [#{region}] with guid: [#{guid}]:"
 
     with_remote_connection(host, port, username, password, database, adapter) do |conn|
-      cond = sanitize_conditions(["region = ?", region])
+      cond = sanitize_sql_for_conditions(["region = ?", region])
       reg = conn.select_one("SELECT * FROM miq_regions WHERE #{cond}")
 
       if reg.nil?
