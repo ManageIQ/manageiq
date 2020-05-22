@@ -20,12 +20,12 @@ module ComplianceMixin
                      :prefix    => true
   end
 
-  def check_compliance
-    Compliance.check_compliance(self)
+  def check_compliance(inputs = {})
+    Compliance.check_compliance(self, inputs)
   end
 
-  def check_compliance_queue
-    Compliance.check_compliance_queue(self)
+  def check_compliance_queue(inputs = {})
+    Compliance.check_compliance_queue(self, inputs)
   end
 
   def scan_and_check_compliance_queue

@@ -154,6 +154,8 @@ class MiqPolicy < ApplicationRecord
   def self.enforce_policy(target, event, inputs = {})
     return unless target.respond_to?(:get_policies)
 
+    only_this_profile = inputs.delete(:only_this_profile)
+
     result = {:result => true, :details => []}
 
     erec = find_event_def(event)
@@ -167,6 +169,11 @@ class MiqPolicy < ApplicationRecord
     mode = event.ends_with?("compliance_check") ? "compliance" : "control"
 
     profiles, plist = get_policies_for_target(target, mode, erec, inputs)
+    if only_this_profile && profiles.include?(only_this_profile)
+      logger.info("MIQ(policy-enforce_policy): Limiting enforcement to Profile: [#{only_this_profile.name}]")
+      profiles = [only_this_profile]
+      plist = only_this_profile.get_policies
+    end
     return result if plist.blank?
 
     succeeded, failed = evaluate_conditions(plist, target, mode, inputs, result)
