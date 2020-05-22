@@ -35,6 +35,10 @@ module Authenticator
       false
     end
 
+    def user_authorizable_with_system_token?
+      false
+    end
+
     def authorize_user(userid)
       return unless user_authorizable_without_authentication?
       authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})

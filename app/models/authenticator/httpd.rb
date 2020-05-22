@@ -25,6 +25,10 @@ module Authenticator
       true
     end
 
+    def user_authorizable_with_system_token?
+      ext_auth_is_oidc? || ext_auth_is_saml?
+    end
+
     def _authenticate(_username, _password, request)
       request.present? &&
         request.headers['X-REMOTE-USER'].present?
@@ -156,6 +160,16 @@ module Authenticator
       require_dependency "httpd_dbus_api"
 
       HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
+    end
+
+    def ext_auth_is_oidc?
+      auth_config = Settings.authentication
+      auth_config.mode == "httpd" && auth_config.oidc_enabled && auth_config.provider_type == "oidc"
+    end
+
+    def ext_auth_is_saml?
+      auth_config = Settings.authentication
+      auth_config.mode == "httpd" && auth_config.saml_enabled && auth_config.provider_type == "saml"
     end
   end
 end
