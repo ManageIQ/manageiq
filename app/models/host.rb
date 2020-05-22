@@ -86,6 +86,8 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
+  has_many :host_hardwares, :class_name => 'Hardware', :source => :hardware, :dependent => :nullify
+  has_many :vm_hardwares,   :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
   has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   # Physical server reference
@@ -93,9 +95,9 @@ class Host < ApplicationRecord
 
   serialize :settings, Hash
 
-  deprecate_attribute :address, :hostname
-  alias_attribute     :state,   :power_state
-  alias_attribute     :to_s,    :name
+  deprecate_attribute :address,  :hostname
+  alias_attribute     :state,    :power_state
+  alias_attribute     :to_s,     :name
 
   include ProviderObjectMixin
   include EventMixin
@@ -170,6 +172,7 @@ class Host < ApplicationRecord
   include AsyncDeleteMixin
   include ComplianceMixin
   include AvailabilityMixin
+  include AggregationMixin
 
   before_create :make_smart
   after_save    :process_events

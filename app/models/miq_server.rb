@@ -491,7 +491,7 @@ class MiqServer < ApplicationRecord
     {
       :vms                     => Vm.active.count,
       :hosts                   => Host.active.count,
-      :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.active),
+      :aggregate_physical_cpus => Host.active.in_my_region.sum(:aggregate_physical_cpus),
     }
   end
 
@@ -499,7 +499,7 @@ class MiqServer < ApplicationRecord
     {
       :vms                     => Vm.not_active.count,
       :hosts                   => Host.archived.count,
-      :aggregate_physical_cpus => MiqRegion.my_region.aggregate_physical_cpus(Host.archived),
+      :aggregate_physical_cpus => Host.archived.in_my_region.sum(:aggregate_physical_cpus),
     }
   end
 

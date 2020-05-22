@@ -1,4 +1,5 @@
 RSpec.describe EmsCluster do
+  include_examples "AggregationMixin"
   context("VMware") do
     before do
       @cluster = FactoryBot.create(:ems_cluster)
@@ -37,16 +38,10 @@ RSpec.describe EmsCluster do
     it('#direct_miq_template_ids')    { expect(@cluster.direct_miq_template_ids).to    match_array [@template1.id, @template2.id] }
     it('#total_direct_miq_templates') { expect(@cluster.total_direct_miq_templates).to eq(2) }
 
-    it('#all_vms_and_templates')   { expect(@cluster.all_vms_and_templates).to   match_array [@vm1, @vm2, @template1, @template2] }
-    it('#all_vm_or_template_ids')  { expect(@cluster.all_vm_or_template_ids).to  match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
     it('#total_vms_and_templates') { expect(@cluster.total_vms_and_templates).to eq(4) }
 
-    it('#all_vms')    { expect(@cluster.all_vms).to    match_array [@vm1, @vm2] }
-    it('#all_vm_ids') { expect(@cluster.all_vm_ids).to match_array [@vm1.id, @vm2.id] }
     it('#total_vms')  { expect(@cluster.total_vms).to eq(2) }
 
-    it('#all_miq_templates')    { expect(@cluster.all_miq_templates).to    match_array [@template1, @template2] }
-    it('#all_miq_template_ids') { expect(@cluster.all_miq_template_ids).to match_array [@template1.id, @template2.id] }
     it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
 
     it('ResourcePool#v_direct_vms') { expect(@rp1.v_direct_vms).to eq(1) }
@@ -55,7 +50,6 @@ RSpec.describe EmsCluster do
     it('ResourcePool#v_direct_miq_templates') { expect(@rp1.v_direct_vms).to eq(1) }
     it('ResourcePool#v_total_miq_templates')  { expect(@rp1.v_total_vms).to eq(2) }
     it('#hosts') { expect(@cluster.hosts).to match_array [@host1, @host2] }
-    it('#all_hosts') { expect(@cluster.all_hosts).to match_array [@host1, @host2] }
     it('#total_hosts') { expect(@cluster.total_hosts).to eq(2) }
   end
 
@@ -98,44 +92,63 @@ RSpec.describe EmsCluster do
     it('#direct_miq_template_ids')    { expect(@cluster.direct_miq_template_ids).to    match_array [@template1.id, @template2.id] }
     it('#total_direct_miq_templates') { expect(@cluster.total_direct_miq_templates).to eq(2) }
 
-    it('#all_vms_and_templates')   { expect(@cluster.all_vms_and_templates).to   match_array [@vm1, @vm2, @template1, @template2] }
-    it('#all_vm_or_template_ids')  { expect(@cluster.all_vm_or_template_ids).to  match_array [@vm1.id, @vm2.id, @template1.id, @template2.id] }
     it('#total_vms_and_templates') { expect(@cluster.total_vms_and_templates).to eq(4) }
 
-    it('#all_vms')    { expect(@cluster.all_vms).to    match_array [@vm1, @vm2] }
-    it('#all_vm_ids') { expect(@cluster.all_vm_ids).to match_array [@vm1.id, @vm2.id] }
     it('#total_vms')  { expect(@cluster.total_vms).to eq(2) }
 
-    it('#all_miq_templates')    { expect(@cluster.all_miq_templates).to    match_array [@template1, @template2] }
-    it('#all_miq_template_ids') { expect(@cluster.all_miq_template_ids).to match_array [@template1.id, @template2.id] }
     it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
     it('#hosts')                { expect(@cluster.hosts).to match_array [@host1, @host2] }
-    it('#all_hosts')            { expect(@cluster.all_hosts).to match_array [@host1, @host2] }
     it('#total_hosts')          { expect(@cluster.total_hosts).to eq(2) }
   end
 
-  it "#save_drift_state" do
-    # TODO: Beef up with more data
-    cluster = FactoryBot.create(:ems_cluster)
-    cluster.save_drift_state
+  context("#save_drift_state") do
+    it "without aggregate data" do
+      # TODO: Beef up with more data
+      cluster = FactoryBot.create(:ems_cluster)
+      cluster.save_drift_state
 
-    expect(cluster.drift_states.size).to eq(1)
-    expect(DriftState.count).to eq(1)
+      expect(cluster.drift_states.size).to eq(1)
+      expect(DriftState.count).to eq(1)
 
-    expect(cluster.drift_states.first.data).to eq({
-      :aggregate_cpu_speed       => 0,
-      :aggregate_cpu_total_cores => 0,
-      :aggregate_memory          => 0,
-      :aggregate_physical_cpus   => 0,
-      :aggregate_vm_cpus         => 0,
-      :aggregate_vm_memory       => 0,
-      :class                     => "EmsCluster",
-      :id                        => cluster.id,
-      :name                      => cluster.name,
-      :vms                       => [],
-      :miq_templates             => [],
-      :hosts                     => [],
-    })
+      expect(cluster.drift_states.first.data).to eq(
+        :class         => "EmsCluster",
+        :id            => cluster.id,
+        :name          => cluster.name,
+        :vms           => [],
+        :miq_templates => [],
+        :hosts         => []
+      )
+    end
+
+    it "with aggregate data" do
+      cluster = FactoryBot.create(:ems_cluster)
+      host = FactoryBot.create(:host,
+                               :ems_cluster           => cluster,
+                               :ext_management_system => FactoryBot.create(:ext_management_system),
+                               :hardware              => FactoryBot.build(:hardware,
+                                                                          :cpu_total_cores => 4,
+                                                                          :cpu_speed       => 1000,
+                                                                          :memory_mb       => 2_048))
+
+      vm = FactoryBot.create(:vm_redhat, :host => host, :ems_cluster => cluster)
+
+      cluster.save_drift_state
+
+      expect(cluster.drift_states.size).to eq(1)
+      expect(DriftState.count).to eq(1)
+      expect(cluster.drift_states.first.data).to eq(
+        :aggregate_cpu_speed       => 4000,
+        :aggregate_cpu_total_cores => 4,
+        :aggregate_memory          => 2048,
+        :aggregate_physical_cpus   => 1,
+        :class                     => "EmsCluster",
+        :id                        => cluster.id,
+        :name                      => cluster.name,
+        :vms                       => [{:class => "ManageIQ::Providers::Redhat::InfraManager::Vm", :id => vm.id}],
+        :miq_templates             => [],
+        :hosts                     => [{:class => "Host", :id => host.id}]
+      )
+    end
   end
 
   context("#perf_capture_enabled_host_ids=") do

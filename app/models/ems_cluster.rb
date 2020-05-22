@@ -20,6 +20,10 @@ class EmsCluster < ApplicationRecord
   has_many    :policy_events, -> { order("timestamp") }
   has_many    :miq_events,         :as => :target,   :dependent => :destroy
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
+  has_many    :host_hardwares, :class_name => 'Hardware', :through => :hosts, :source => :hardware
+  has_many    :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
+  has_many    :storages, -> { distinct }, :through => :hosts
+  has_many    :lans, -> { distinct }, :through => :hosts
 
   has_many :switches, -> { distinct }, :through => :hosts
 
@@ -51,7 +55,6 @@ class EmsCluster < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   include AggregationMixin
-
   include Metric::CiMixin
   include MiqPolicyMixin
   include AsyncDeleteMixin
@@ -106,9 +109,6 @@ class EmsCluster < ApplicationRecord
   #
   # Relationship methods
   #
-
-  alias_method :storages,               :all_storages
-  alias_method :datastores,             :all_storages    # Used by web-services to return datastores as the property name
 
   # Direct Vm relationship methods
   def direct_vm_rels

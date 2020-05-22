@@ -206,6 +206,8 @@ class ExtManagementSystem < ApplicationRecord
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
+  has_many :host_hardwares, :class_name => 'Hardware', :through => :hosts, :source => :hardware
+  has_many :vm_hardwares, :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
   include AggregationMixin
 
   include AuthenticationMixin

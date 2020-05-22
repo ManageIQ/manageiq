@@ -24,7 +24,6 @@ class MiqRegion < ApplicationRecord
   acts_as_miq_taggable
   include UuidMixin
   include NamingSequenceMixin
-  include AggregationMixin
   include ConfigurationManagementMixin
 
   include MiqPolicyMixin

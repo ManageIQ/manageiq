@@ -1,4 +1,5 @@
 RSpec.describe ExtManagementSystem do
+  include_examples "AggregationMixin"
   describe ".with_tenant" do
     # tenant_root
     #   \___ tenant_eye_bee_em (service_template_eye_bee_em)

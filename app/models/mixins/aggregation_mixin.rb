@@ -1,23 +1,12 @@
 module AggregationMixin
   extend ActiveSupport::Concern
   included do
-    virtual_column :aggregate_cpu_speed,       :type => :integer, :uses => :hosts
-    virtual_column :aggregate_cpu_total_cores, :type => :integer, :uses => :hosts
-    virtual_column :aggregate_physical_cpus,   :type => :integer, :uses => :hosts
-    virtual_column :aggregate_memory,          :type => :integer, :uses => :hosts
-    virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :vms_and_templates
-    virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :vms_and_templates
-    virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :hosts
-
-    alias_method :all_hosts,              :hosts
-    alias_method :all_host_ids,           :host_ids
-    alias_method :all_vms_and_templates,  :vms_and_templates
-    alias_method :all_vm_or_template_ids, :vm_or_template_ids
-    alias_method :all_vms,                :vms
-    alias_method :all_vm_ids,             :vm_ids
-    alias_method :all_miq_templates,      :miq_templates
-    alias_method :all_miq_template_ids,   :miq_template_ids
-
-    include AggregationMixin::Methods
+    virtual_aggregate :aggregate_cpu_speed,       :host_hardwares, :sum, :aggregate_cpu_speed
+    virtual_aggregate :aggregate_cpu_total_cores, :host_hardwares, :sum, :cpu_total_cores
+    virtual_aggregate :aggregate_disk_capacity,   :host_hardwares, :sum, :disk_capacity
+    virtual_aggregate :aggregate_memory,          :host_hardwares, :sum, :memory_mb
+    virtual_aggregate :aggregate_physical_cpus,   :host_hardwares, :sum, :cpu_sockets
+    virtual_aggregate :aggregate_vm_cpus,         :vm_hardwares,   :sum, :cpu_sockets
+    virtual_aggregate :aggregate_vm_memory,       :vm_hardwares,   :sum, :memory_mb
   end
 end

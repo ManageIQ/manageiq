@@ -44,7 +44,6 @@ class ContainerProject < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
-  include AggregationMixin::Methods
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
 
@@ -71,20 +70,16 @@ class ContainerProject < ApplicationRecord
     []
   end
 
-  # required by aggregate_hardware
-  alias all_computer_system_ids computer_system_ids
-  alias all_computer_systems    computer_systems
-
   def aggregate_memory(targets = nil)
-    aggregate_hardware(:computer_systems, :memory_mb, targets)
+    Hardware.where(:computer_system => computer_systems).sum(:memory_mb)
   end
 
   def aggregate_cpu_speed(targets = nil)
-    aggregate_hardware(:computer_systems, :cpu_speed, targets)
+    Hardware.where(:computer_system => computer_systems).sum(:cpu_speed)
   end
 
   def aggregate_cpu_total_cores(targets = nil)
-    aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
+    Hardware.where(:computer_system => computer_systems).sum(:cpu_total_cores)
   end
 
   def disconnect_inv
