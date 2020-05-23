@@ -97,13 +97,14 @@ class InfraConversionThrottler
       jobs.each do |job|
         migration_task = job.migration_task
         next unless migration_task.virtv2v_running?
+        next unless migration_task.options.fetch_path(:virtv2v_wrapper, 'throttling_file')
 
         limits = {
           :cpu     => cpu_limit,
           :network => network_limit
         }
         unless migration_task.options[:virtv2v_limits] == limits
-          ch.apply_task_limits(migration_task.id, limits)
+          ch.apply_task_limits(migration_task.options.fetch_path(:virtv2v_wrapper, 'throttling_file'), limits)
           migration_task.update_options(:virtv2v_limits => limits)
         end
       end

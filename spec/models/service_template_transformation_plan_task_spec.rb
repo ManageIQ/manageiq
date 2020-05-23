@@ -231,14 +231,20 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         expect(task.kill_virtv2v).to eq(false)
       end
 
-      it "returns false if if kill command failed" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(false)
+      it "returns false if virtv2v_pid is absent" do
+        task.options[:virtv2v_pid] = nil
+        expect(conversion_host).not_to receive(:kill_virtv2v)
         expect(task.kill_virtv2v).to eq(false)
       end
 
+      it "returns false if if kill command failed" do
+        expect(conversion_host).to receive(:kill_virtv2v).with('1234', 'KILL').and_return(false)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
       it "returns true if if kill command succeeded" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id).and_return(true)
-        expect(task.kill_virtv2v).to eq(true)
+        expect(conversion_host).to receive(:kill_virtv2v).with('1234', 'KILL').and_return(true)
+        expect(task.kill_virtv2v('KILL')).to eq(true)
       end
 
       it "considers virt-v2v finished or returns false if an exception occurs" do
@@ -319,17 +325,19 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:time_now) { Time.now.utc }
       before do
         allow(Time).to receive(:now).and_return(time_now)
-        allow(conversion_host).to receive(:run_conversion).with(task_1.id, task_1.conversion_options)
+        allow(conversion_host).to receive(:run_conversion).with(task_1.conversion_options).and_return(
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
+        )
       end
 
       it "collects the wrapper state hash" do
         task_1.run_conversion
         expect(task_1.options[:virtv2v_wrapper]).to eq(
-          "state_file"      => "/var/lib/uci/#{task_1.id}/state.json",
-          "throttling_file" => "/var/lib/uci/#{task_1.id}/limits.json",
-          "cutover_file"    => "/var/lib/uci/#{task_1.id}/cutover",
-          "v2v_log"         => "/var/log/uci/#{task_1.id}/virt-v2v.log",
-          "wrapper_log"     => "/var/log/uci/#{task_1.id}/virt-v2v-wrapper.log"
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
         )
         expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
         expect(task_1.options[:virtv2v_status]).to eq('active')
@@ -401,20 +409,20 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "rescues when conversion_host.get_conversion_state fails less than 5 times" do
           task_1.update_options(:get_conversion_state_failures => 2)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_raise("Fake error")
           task_1.get_conversion_state
           expect(task_1.options[:get_conversion_state_failures]).to eq(3)
         end
 
         it "rescues when conversion_host.get_conversion_state fails more than 5 times" do
           task_1.update_options(:get_conversion_state_failures => 5)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_raise("Fake error")
           expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 5 times in a row")
           expect(task_1.options[:get_conversion_state_failures]).to eq(6)
         end
 
         it "updates progress when conversion is failed" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "failed"       => true,
             "finished"     => true,
             "started"      => true,
@@ -437,7 +445,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         end
 
         it "updates disks progress" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "started"    => true,
             "disks"      => [
               { "path" => src_disk_1.filename, "progress" => 100.0 },
@@ -457,7 +465,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         end
 
         it "sets disks progress to 100% when conversion is finished and successful" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -483,7 +491,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "sets disks progress to 100% when conversion is finished and successful unless canceling" do
           task_1.canceling
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -614,8 +622,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :install_drivers      => true,
               :insecure_connection  => true,
               :two_phase            => true,
-              :warm                 => true,
-              :daemonize            => false
+              :warm                 => true
             )
           end
 
@@ -638,8 +645,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :install_drivers      => true,
               :insecure_connection  => true,
               :two_phase            => true,
-              :warm                 => true,
-              :daemonize            => false
+              :warm                 => true
             )
           end
 
@@ -665,8 +671,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks         => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
-              :insecure_connection  => true,
-              :daemonize            => false
+              :insecure_connection  => true
             )
           end
 
@@ -684,8 +689,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks         => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
-              :insecure_connection  => true,
-              :daemonize            => false
+              :insecure_connection  => true
             )
           end
         end
@@ -802,8 +806,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings           => task_1.network_mappings,
               :two_phase                  => true,
-              :warm                       => true,
-              :daemonize                  => false
+              :warm                       => true
             )
           end
         end
@@ -839,8 +842,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :osp_flavor_id              => openstack_flavor.ems_ref,
               :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
-              :network_mappings           => task_1.network_mappings,
-              :daemonize                  => false
+              :network_mappings           => task_1.network_mappings
             )
           end
         end

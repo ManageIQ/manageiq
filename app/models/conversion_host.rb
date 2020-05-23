@@ -159,50 +159,14 @@ class ConversionHost < ApplicationRecord
   # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
   # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
   # @raise [StandardError] if any other problem happens
-  def apply_task_limits(task_id, limits = {})
-    connect_ssh do |ssu|
-      ssu.put_file("/tmp/#{task_id}-limits.json", limits.to_json)
-      command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-limits.json", "/var/lib/uci/#{task_id}/limits.json"])
-      ssu.shell_exec(command, nil, nil, nil)
-    end
+  def apply_task_limits(path, limits = {})
+    connect_ssh { |ssu| ssu.put_file(path, limits.to_json) }
   rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
-    raise "Failed to connect and apply limits for task '#{task_id}' with [#{err.class}: #{err}]"
+    raise "Failed to connect and apply limits in file '#{path}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
   rescue => err
-    raise "Could not apply the limits for task '#{task_id}' on '#{resource.name}' with [#{err.class}: #{err}]"
-  end
-
-  # Prepare the conversion assets for a specific task.
-  #
-  # @param [Integer] id of the task that needs the preparation
-  # @param [Hash] conversion options to write on the conversion host
-  #
-  # @return [Integer] length of data written to conversion options file
-  #
-  # @raise [Net::SSH::AuthenticationFailed] if conversion host credentials are invalid
-  # @raise [Net::SSH::HostKeyMismatch] if conversion host key has changed
-  # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
-  # @raise [StandardError] if any other problem happens
-  def prepare_conversion(task_id, conversion_options)
-    filtered_options = filter_options(conversion_options)
-
-    connect_ssh do |ssu|
-      # Prepare the conversion folders
-      command = AwesomeSpawn.build_command_line("mkdir", [:p, "/var/lib/uci/#{task_id}", "/var/log/uci/#{task_id}"])
-      ssu.shell_exec(command, nil, nil, nil)
-
-      # Write the conversion options file
-      ssu.put_file("/tmp/#{task_id}-input.json", conversion_options.to_json)
-      command = AwesomeSpawn.build_command_line("mv", ["/tmp/#{task_id}-input.json", "/var/lib/uci/#{task_id}/input.json"])
-      ssu.shell_exec(command, nil, nil, nil)
-    end
-  rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
-    raise "Failed to connect and prepare conversion for task '#{task_id}' with [#{err.class}: #{err}]"
-  rescue JSON::GeneratorError => err
-    raise "Could not generate JSON for task '#{task_id}' from options '#{filtered_options}' with [#{err.class}: #{err}]"
-  rescue => err
-    raise "Preparation of conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
+    raise "Could not apply the limits in file '#{path}' on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
   # Checks that LUKS keys vault exists and is valid JSON
@@ -225,36 +189,6 @@ class ConversionHost < ApplicationRecord
     false
   end
 
-  # Build the podman command to execute conversion
-  #
-  # @param [Integer] id of the task that conversion applies to
-  #
-  # @return [String] podman command to be executed on conversion host
-  def build_podman_command(task_id, conversion_options)
-    uci_settings = Settings.transformation.uci.container
-    uci_image = uci_settings.image
-    uci_image = "#{uci_settings.registry}/#{image}" if uci_settings.registry.present?
-
-    params = [
-      "run",
-      :detach,
-      :privileged,
-      [:name,    "conversion-#{task_id}"],
-      [:network, "host"],
-      [:volume,  "/dev:/dev"],
-      [:volume,  "/etc/pki/ca-trust:/etc/pki/ca-trust"],
-      [:volume,  "/var/tmp:/var/tmp"],
-      [:volume,  "/var/lib/uci/#{task_id}:/var/lib/uci"],
-      [:volume,  "/var/log/uci/#{task_id}:/var/log/uci"],
-      [:volume,  "/opt/vmware-vix-disklib-distrib:/opt/vmware-vix-disklib-distrib"]
-    ]
-    params << [:volume, "/root/.ssh/id_rsa:/var/lib/uci/ssh_private_key"] if conversion_options[:transport_method] == 'ssh'
-    params << [:volume, "/root/.v2v_luks_keys_vault.json:/var/lib/uci/luks_keys_vault.json"] if luks_keys_vault_valid?
-    params << uci_image
-
-    AwesomeSpawn.build_command_line("/usr/bin/podman", params)
-  end
-
   # Run the virt-v2v-wrapper script on the remote host and return a hash
   # result from the parsed JSON output.
   #
@@ -262,18 +196,21 @@ class ConversionHost < ApplicationRecord
   # that information from showing up in the UI or logs.
   #
   # @param [Integer] id of the task that conversion applies to
-  def run_conversion(task_id, conversion_options)
+  def run_conversion(conversion_options)
     filtered_options = filter_options(conversion_options)
-    prepare_conversion(task_id, conversion_options)
-    connect_ssh { |ssu| ssu.shell_exec(build_podman_command(task_id, conversion_options), nil, nil, nil) }
+    command = AwesomeSpawn.build_command_line("/usr/bin/virt-v2v-wrapper")
+    result = connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, conversion_options.to_json) }
+    JSON.parse(result)
   rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
+  rescue JSON::ParserError
+    raise "Could not parse result data after running virt-v2v-wrapper using options: #{filtered_options}. Result was: #{result}"
   rescue => err
-    raise "Starting conversion for task '#{task_id}' failed on '#{resource.name}' with [#{err.class}: #{err}]"
+    raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
-  def create_cutover_file(task_id)
-    command = AwesomeSpawn.build_command_line("touch", ["/var/lib/uci/#{task_id}/cutover"])
+  def create_cutover_file(path)
+    command = AwesomeSpawn.build_command_line("touch", [path])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
@@ -283,8 +220,8 @@ class ConversionHost < ApplicationRecord
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
   # if no signal is specified.
   #
-  def kill_virtv2v(task_id, signal)
-    command = AwesomeSpawn.build_command_line("/usr/bin/podman", ["exec", "conversion-#{task_id}", "/usr/bin/killall", :s, signal, "virt-v2v"])
+  def kill_virtv2v(pid, signal = 'TERM')
+    command = AwesomeSpawn.build_command_line("/bin/kill", [:s, signal, pid])
     connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue
@@ -294,15 +231,15 @@ class ConversionHost < ApplicationRecord
   # Retrieve the conversion state information from a remote file as a stream.
   # Then parse and return the stream data as a hash using JSON.parse.
   #
-  def get_conversion_state(task_id)
-    json_state = connect_ssh { |ssu| ssu.get_file("/var/lib/uci/#{task_id}/state.json", nil) }
+  def get_conversion_state(path)
+    json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
   rescue Net::SSH::AuthenticationFailed, Net::SSH::HostKeyMismatch => err
-    raise "Failed to connect and retrieve conversion state data from file '/var/lib/uci/#{task_id}/state.json' with [#{err.class}: #{err}]"
+    raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}]"
   rescue JSON::ParserError
-    raise "Could not parse conversion state data from file '/var/lib/uci/#{task_id}/state.json': #{json_state}"
+    raise "Could not parse conversion state data from file '#{path}': #{json_state}"
   rescue => err
-    raise "Error retrieving and parsing conversion state file '/var/lib/uci/#{task_id}/state.json' from '#{resource.name}' with [#{err.class}: #{err}"
+    raise "Error retrieving and parsing conversion state file '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   # Get and return the contents of the remote conversion log at +path+.

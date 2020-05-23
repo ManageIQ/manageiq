@@ -237,14 +237,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def run_conversion
     start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
     updates = {}
-    conversion_host.run_conversion(id, conversion_options)
-    updates[:virtv2v_wrapper] = {
-      "state_file"      => "/var/lib/uci/#{id}/state.json",
-      "throttling_file" => "/var/lib/uci/#{id}/limits.json",
-      "cutover_file"    => "/var/lib/uci/#{id}/cutover",
-      "v2v_log"         => "/var/log/uci/#{id}/virt-v2v.log",
-      "wrapper_log"     => "/var/log/uci/#{id}/virt-v2v-wrapper.log"
-    }
+    updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
     updates[:virtv2v_started_on] = start_timestamp
     updates[:virtv2v_status] = 'active'
     _log.info("InfraConversionJob run_conversion to update_options: #{updates}")
@@ -253,7 +246,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def get_conversion_state
     updates = {}
-    virtv2v_state = conversion_host.get_conversion_state(id)
+    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
     updated_disks = virtv2v_disks
     updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
@@ -287,12 +280,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cutover
-    unless conversion_host.create_cutover_file(id)
-      raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+    if options[:virtv2v_wrapper]['cutover_file'].present?
+      unless conversion_host.create_cutover_file(options[:virtv2v_wrapper]['cutover_file'])
+        raise _("Couldn't create cutover file for #{source.name} on #{conversion_host.name}")
+      end
     end
   end
 
-  def kill_virtv2v
+  def kill_virtv2v(signal = 'TERM')
     get_conversion_state
 
     unless virtv2v_running?
@@ -300,10 +295,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       return false
     end
 
-    _log.info("Killing conversion pod for task '#{id}'.")
-    conversion_host.kill_virtv2v(id)
+    unless options[:virtv2v_pid]
+      _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
+      return false
+    end
+
+    _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
+    conversion_host.kill_virtv2v(options[:virtv2v_pid], signal)
   rescue => err
-    _log.error("Couldn't kill conversion pod for task '#{id}': #{err.message}")
+    _log.error("Couldn't kill virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal: #{err.message}")
     update_options(:virtv2v_finished_on => Time.now.utc.strftime('%Y-%m-%d %H:%M:%S'))
     false
   end
@@ -372,8 +372,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       ).to_s,
       :vmware_password      => source.host.authentication_password,
       :two_phase            => true,
-      :warm                 => warm_migration?,
-      :daemonize            => false
+      :warm                 => warm_migration?
     }
   end
 
@@ -387,8 +386,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       ).to_s,
       :vm_uuid              => source.uid_ems,
       :conversion_host_uuid => conversion_host.resource.ems_ref,
-      :transport_method     => 'ssh',
-      :daemonize            => false
+      :transport_method     => 'ssh'
     }
   end
 
