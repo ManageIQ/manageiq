@@ -20,29 +20,14 @@ RSpec.describe JobProxyDispatcher do
 
   describe '.waiting?' do
     let(:vm_scan_job) { VmScan.create_job }
-    let(:infra_conversion_job) { InfraConversionJob.create_job }
 
-    it 'returns true if VmScan state is waiting to start and InfraConversionJob state is finished' do
+    it 'returns true if VmScan state is waiting to start' do
       vm_scan_job.update!(:state => 'waiting_to_start')
-      infra_conversion_job.update!(:state => 'finished')
       expect(JobProxyDispatcher.waiting?).to be_truthy
     end
 
-    it 'returns true if VmScan state is fake_state and InfraConversionJob state is waiting_to_start' do
+    it 'returns false if VmScan state is fake_state' do
       vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'waiting_to_start')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
-    end
-
-    it 'returns true if VmScan state is fake_state and InfraConversionJob state is restoring_vm_attributes' do
-      vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
-    end
-
-    it 'returns false if VmScan state is fake_state and no InfraConversionJob state is finished' do
-      vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'restoring_vm_attributes')
       expect(JobProxyDispatcher.waiting?).to be_truthy
     end
   end

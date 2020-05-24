@@ -87,14 +87,6 @@ class JobProxyDispatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job
   end
 
-  def dispatch_v2v_migrations
-    InfraConversionThrottler.start_conversions
-  end
-
-  def apply_v2v_limits
-    InfraConversionThrottler.apply_limits
-  end
-
   def dispatch_container_scan_jobs
     jobs_by_ems, = Benchmark.realtime_block(:pending_container_jobs) { pending_container_jobs }
     Benchmark.current_realtime[:container_jobs_to_dispatch_count] = jobs_by_ems.values.reduce(0) { |m, o| m + o.length }
@@ -189,7 +181,7 @@ class JobProxyDispatcher
   end
 
   def self.waiting?
-    Job.where(:state => "waiting_to_start").or(Job.where(:type => "InfraConversionJob").where.not(:state => ["finished", "waiting_to_start"]))
+    Job.where(:state => "waiting_to_start")
   end
 
   def pending_jobs(job_class = VmScan)

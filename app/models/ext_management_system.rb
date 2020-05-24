@@ -118,9 +118,6 @@ class ExtManagementSystem < ApplicationRecord
   has_many :service_offerings, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :service_parameters_sets, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_many :host_conversion_hosts, :through => :hosts, :source => :conversion_host
-  has_many :vm_conversion_hosts, :through => :vms, :source => :conversion_host
-
   has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
@@ -794,10 +791,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def memory_reserve
     get_reserve(:memory_reserve)
-  end
-
-  def conversion_hosts
-    host_conversion_hosts + vm_conversion_hosts
   end
 
   #
