@@ -43,14 +43,6 @@ FactoryBot.define do
     request_type { 'clone_to_service' }
   end
 
-  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask' do
-    request_type { 'transformation_plan' }
-    after(:build) do |task|
-      infra_conversion_job = FactoryBot.create(:infra_conversion_job)
-      task.options[:infra_conversion_job_id] = infra_conversion_job.id
-    end
-  end
-
   # Retire Tasks
   factory :service_retire_task,             :parent => :miq_retire_task, :class => "ServiceRetireTask" do
     state        { 'pending' }

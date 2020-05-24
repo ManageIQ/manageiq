@@ -1,7 +1,7 @@
 class InfraConversionJob
   class Dispatcher < Job::Dispatcher
     def self.waiting?
-      job_class.where.not(:state => "finished").any?
+      job_class.where(:state => "waiting_to_start").any?
     end
 
     def dispatch
@@ -11,14 +11,6 @@ class InfraConversionJob
       end
 
       _log.info("Complete - Timings: #{total_time.inspect}")
-    end
-
-    def dispatch_v2v_migrations
-      InfraConversionThrottler.start_conversions
-    end
-
-    def apply_v2v_limits
-      InfraConversionThrottler.apply_limits
     end
   end
 end
