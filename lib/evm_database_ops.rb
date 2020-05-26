@@ -221,7 +221,7 @@ class EvmDatabaseOps
   end
 
   def self.database_connections(database = nil, type = :all)
-    database ||= Rails.configuration.database_configuration[Rails.env]["database"]
+    database ||= ActiveRecord::Base.configurations[Rails.env]["database"]
     conn = ActiveRecord::Base.connection
     conn.client_connections.count { |c| c["database"] == database }
   end
