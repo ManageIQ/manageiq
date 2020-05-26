@@ -99,10 +99,14 @@ class Classification < ApplicationRecord
 
   def self.classify(obj, category_name, entry_name, is_request = true)
     cat = Classification.lookup_by_name(category_name, obj.region_id)
-    unless cat.nil?
-      ent = cat.find_entry_by_name(entry_name, obj.region_id)
-      ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
-    end
+    raise "Tag category '#{category_name}' not found in region #{obj.region_id}" if cat.nil?
+
+    ent = cat.find_entry_by_name(entry_name, obj.region_id)
+    raise "Tag name '#{entry_name}' not found  in region #{obj.region_id}" if ent.nil?
+
+    raise "Object already tagged with ':ns' set to 'none'" if obj.is_tagged_with?(ent.to_tag, :ns => "none")
+
+    ent.assign_entry_to(obj, is_request)
   end
 
   def self.unclassify(obj, category_name, entry_name, is_request = true)

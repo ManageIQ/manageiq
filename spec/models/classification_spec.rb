@@ -61,6 +61,39 @@ RSpec.describe Classification do
       FactoryBot.create(:classification_tag,      :name => "multi_entry_2", :parent => parent)
     end
 
+    describe ".classify" do
+      let(:entry) { "test_entry" }
+      let(:category) { "test_category" }
+      before { @vm = FactoryBot.create(:vm) }
+
+      it "raise error if tag category not found" do
+        category = "Hello, World"
+        expect { Classification.classify(@vm, category, entry) }.to raise_error(
+          RuntimeError, "Tag category '#{category}' not found in region #{@vm.region_id}"
+        )
+      end
+
+      it "raise error if tag entry not found" do
+        entry = "Hello, World"
+        expect { Classification.classify(@vm, category, entry) }.to raise_error(
+          RuntimeError, "Tag name '#{entry}' not found  in region #{@vm.region_id}"
+        )
+      end
+
+      it "raise error if object already tagged with tag namespace set to 'none'" do
+        allow(@vm).to receive(:is_tagged_with?)
+        allow(@vm).to receive(:is_tagged_with?).with("/managed/test_category/test_entry", :ns => "none").and_return(true)
+        expect { Classification.classify(@vm, category, entry) }.to raise_error(
+          RuntimeError, "Object already tagged with ':ns' set to 'none'"
+        )
+      end
+
+      it "assign tag entry to object if tag category and tag name exist" do
+        Classification.classify(@vm, category, entry)
+        expect(@vm.tags.first.name).to eq("/managed/test_category/test_entry")
+      end
+    end
+
     context "#destroy" do
       it "a category deletes all entries" do
         cat = Classification.lookup_by_name("test_category")
