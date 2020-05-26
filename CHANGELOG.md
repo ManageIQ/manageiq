@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint ending 2020-05025
+
+### Added
+
+* Add ems uid and ems type to event payload [(#20179)](https://github.com/ManageIQ/manageiq/pull/20179)
+
 # Unreleased as of Sprint 136 ending 2020-05-11
 
 ### Added
