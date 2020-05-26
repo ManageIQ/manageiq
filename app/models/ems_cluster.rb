@@ -190,13 +190,13 @@ class EmsCluster < ApplicationRecord
     cond = ["ems_cluster_id = ?"]
     cond_params = [id]
 
-    ids = all_host_ids
+    ids = host_ids
     unless ids.empty?
       cond << "host_id IN (?) OR dest_host_id IN (?)"
       cond_params += [ids, ids]
     end
 
-    ids = all_vm_or_template_ids
+    ids = vm_or_template_ids
     unless ids.empty?
       cond << "vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)"
       cond_params += [ids, ids]
