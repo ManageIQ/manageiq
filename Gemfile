@@ -65,6 +65,7 @@ gem "optimist",                       "~>3.0",         :require => false
 gem "pg",                                              :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
+gem "rack",                           "~>2.0.9",       :require => false # Indirect dependency, minimum set for CVE-2019-16782
 gem "rails",                          "~>5.1.7"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=11.0",        :require => false
