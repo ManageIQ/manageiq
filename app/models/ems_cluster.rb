@@ -59,6 +59,9 @@ class EmsCluster < ApplicationRecord
   include MiqPolicyMixin
   include AsyncDeleteMixin
 
+  alias all_vm_or_template_ids vm_or_template_ids
+  alias all_host_ids           host_ids
+
   #
   # Provider Object methods - to be overwritten by Provider authors
   #
