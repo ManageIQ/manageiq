@@ -250,4 +250,45 @@ RSpec.describe EmsCluster do
       end
     end
   end
+
+  describe "#event_where_clause" do
+    let(:cluster) { FactoryBot.create(:ems_cluster) }
+    # just doing one to avoid db random ordering
+    let(:vms) { FactoryBot.create_list(:vm, 1, :ems_cluster => cluster)}
+    let(:hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => cluster)}
+    it "handles empty cluster" do
+      expect(cluster.event_where_clause).to eq(["ems_cluster_id = ?", cluster.id])
+    end
+
+    it "handles vms" do
+      vms # pre-load vms
+      result = cluster.event_where_clause
+      expected = [
+        "ems_cluster_id = ? OR vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)",
+        cluster.id, vms.map(&:id), vms.map(&:id)
+      ]
+      expect(result).to eq(expected)
+    end
+
+    it "handles hosts" do
+      hosts # pre-load vms
+      result = cluster.event_where_clause
+      expected = [
+        "ems_cluster_id = ? OR host_id IN (?) OR dest_host_id IN (?)",
+        cluster.id, hosts.map(&:id), hosts.map(&:id)
+      ]
+      expect(result).to eq(expected)
+    end
+
+    it "handles both" do
+      vms # pre-load vms, hosts
+      hosts
+      result = cluster.event_where_clause
+      expected = [
+        "ems_cluster_id = ? OR host_id IN (?) OR dest_host_id IN (?) OR vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)",
+        cluster.id, hosts.map(&:id), hosts.map(&:id), vms.map(&:id), vms.map(&:id)
+      ]
+      expect(result).to eq(expected)
+    end
+  end
 end
