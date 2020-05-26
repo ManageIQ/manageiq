@@ -16,7 +16,7 @@ RSpec.describe MiqRegionRemote do
     it "removes the temporary connection pool" do
       original = described_class.connection.raw_connection.conninfo_hash[:dbname]
 
-      config = Rails.configuration.database_configuration[Rails.env]
+      config = ActiveRecord::Base.configurations[Rails.env]
       params = config.values_at("host", "port", "username", "password", "database", "adapter")
       params[0] ||= "localhost"
       params[4]   = "template1"

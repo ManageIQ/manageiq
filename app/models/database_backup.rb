@@ -93,7 +93,7 @@ class DatabaseBackup < ApplicationRecord
   private
 
   def current_db_opts
-    current = Rails.configuration.database_configuration[Rails.env]
+    current = ActiveRecord::Base.configurations[Rails.env]
     {
       :hostname => current["host"],
       :dbname   => current["database"],
