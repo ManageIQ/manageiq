@@ -40,7 +40,7 @@ class MiqAeClass < ApplicationRecord
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_namespace_and_name => :lookup_by_namespace_and_name)
 
   def self.lookup_by_namespace_id_and_name(ns_id, name)
-    where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
+    where(:namespace_id => ns_id).find_by(:lower_name => name.downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_namespace_id_and_name, :lookup_by_namespace_id_and_name)
