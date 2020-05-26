@@ -15,7 +15,7 @@ class MiqAeInstance < ApplicationRecord
                                  :message => N_("may contain only alphanumeric and _ . - characters")
 
   def self.lookup_by_name(name)
-    where("lower(name) = ?", name.downcase).first
+    find_by(:lower_name => name.downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
