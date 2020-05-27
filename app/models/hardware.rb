@@ -54,10 +54,9 @@ class Hardware < ApplicationRecord
   def ram_size_in_bytes
     memory_mb.to_i * 1.megabyte
   end
-  # resulting sql: "(CAST("hardwares"."memory_mb" AS bigint) * 1048576)"
+
   virtual_attribute :ram_size_in_bytes, :integer, :arel => (lambda do |t|
-    t.grouping(Arel::Nodes::Multiplication.new(Arel::Nodes::NamedFunction.new("CAST", [t[:memory_mb].as("bigint")]),
-                                               1.megabyte))
+    t.grouping(Arel::Nodes::Multiplication.new([t[:memory_mb]], 1.megabyte))
   end)
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
@@ -84,7 +83,6 @@ class Hardware < ApplicationRecord
       deletes[:disk] = parent.hardware.disks.select(:id, :device_type, :location)
                      .collect { |rec| [rec.id, [rec.device_type, rec.location]] }
     end
-
 
     xmlNode.root.each_recursive do |e|
       begin
@@ -117,6 +115,7 @@ class Hardware < ApplicationRecord
 
   def v_pct_free_disk_space
     return nil if disk_free_space.nil? || disk_capacity.nil? || disk_capacity.zero?
+
     (disk_free_space.to_f / disk_capacity * 100).round(2)
   end
   # resulting sql: "(cast(disk_free_space as float) / (disk_capacity * 100))"
@@ -146,30 +145,16 @@ class Hardware < ApplicationRecord
     end
   end
 
-  # added casts because we were overflowing integers
-  # resulting sql:
-  # (
-  #   (COALESCE(
-  #     ((SELECT SUM("disks"."size")
-  #       FROM "disks"
-  #       WHERE "hardwares"."id" = "disks"."hardware_id")),
-  #     0
-  #   )) + (COALESCE(
-  #     (CAST("hardwares"."memory_mb" AS bigint)),
-  #     0
-  #   )) * 1048576
-  # )
   virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
     t.grouping(
       t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_attribute(:allocated_disk_storage), 0])) +
-      t.grouping(Arel::Nodes::NamedFunction.new(
-                   'COALESCE', [t.grouping(Arel::Nodes::NamedFunction.new('CAST', [t[:memory_mb].as("bigint")])), 0]
-      )) * 1.megabyte
+      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [t[:memory_mb], 0])) * 1.megabyte
     )
   end)
 
   def connect_lans(lans)
     return if lans.blank?
+
     nics.each do |n|
       # TODO: Use a different field here
       #   model is temporarily being used here to transfer the name of the
@@ -192,6 +177,7 @@ class Hardware < ApplicationRecord
     # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element do |e|
       next if e.attributes['present'].to_s.downcase == "false"
+
       da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
       # Loop over the device mapping table and add attributes
       @@dh.each_pair { |k, v|  da.merge!(v => e.attributes[k]) if e.attributes[k] }

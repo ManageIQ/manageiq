@@ -222,7 +222,7 @@ RSpec.describe Hardware do
   end
 
   # this is disks + ram_size_in_bytes
-  # so we end up with 4 different senarios
+  # so we end up with 4 different scenarios
   describe "#provisioned_storage" do
     let(:hardware) { FactoryBot.create(:hardware) }
 
