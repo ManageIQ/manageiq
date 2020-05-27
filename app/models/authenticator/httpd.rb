@@ -132,7 +132,7 @@ module Authenticator
     end
 
     def user_details_from_system_token(username, user_metadata)
-      return if username != user_metadata[:userid]
+      return [{}, []] if username != user_metadata[:userid]
 
       user_attrs = {:username  => user_metadata[:userid],
                     :fullname  => user_metadata[:name],
