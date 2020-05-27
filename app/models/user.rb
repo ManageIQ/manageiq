@@ -365,7 +365,7 @@ class User < ApplicationRecord
   def self.metadata_for_system_token(userid)
     return unless authenticator(userid).user_authorizable_with_system_token?
 
-    user = in_my_region.find_by_userid(userid)
+    user = in_my_region.find_by(:userid => userid)
     return if user.blank?
 
     {
