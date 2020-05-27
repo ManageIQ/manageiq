@@ -222,6 +222,13 @@ class User < ApplicationRecord
     authenticator(userid).authorize_user(userid)
   end
 
+  def self.authorize_user_with_system_token(userid, user_metadata = {})
+    auth = authenticator(userid)
+    return authorize_user(userid) if user_metadata.blank? || auth.user_authorizable_with_system_token? == false
+
+    auth.authorize_user_with_system_token(userid, user_metadata)
+  end
+
   def logoff
     self.lastlogoff = Time.now.utc
     save
@@ -369,20 +376,6 @@ class User < ApplicationRecord
       :last_name   => user.last_name,
       :group_names => user.miq_groups.try(:collect, &:description)
     }
-  end
-
-  def self.create_from_system_token(userid, user_metadata)
-    return if user_metadata.blank? || userid != user_metadata[:userid]
-    return unless authenticator(userid).user_authorizable_with_system_token?
-
-    user = in_my_region.find_by_userid(userid) || new(:userid => userid)
-    user.attributes = user_metadata.slice(:name, :email, :first_name, :last_name)
-    if user_metadata[:group_names].present?
-      user_groups = MiqGroup.in_my_region.where(:description => user_metadata[:group_names])
-      user.miq_groups = user_groups if user_groups
-    end
-    user.save
-    user
   end
 
   def self.seed

@@ -44,6 +44,12 @@ module Authenticator
       authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})
     end
 
+    def authorize_user_with_system_token(userid, user_metadata = {})
+      return unless user_authorizable_without_authentication? && user_authorizable_with_system_token?
+
+      authenticate(userid, "", {}, {:require_user => true, :authorize_only => true, :authorize_with_system_token => user_metadata})
+    end
+
     def authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false
