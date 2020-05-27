@@ -74,7 +74,7 @@ class Compliance < ApplicationRecord
     end
     check_event = "#{target_class}_compliance_check"
     _log.info("Checking compliance...")
-    results = MiqPolicy.enforce_policy(target, check_event)
+    results = MiqPolicy.enforce_policy(target, check_event, inputs)
 
     if results[:details].empty?
       _log.info("No compliance policies were assigned or in scope, compliance status will not be set")

@@ -198,10 +198,18 @@ RSpec.describe MiqPolicy do
     end
 
     describe ".get_policies_for_target" do
+      before { allow(target).to receive(:get_policies).and_return(profiles) }
+
       it 'gets profiles and policies for a target' do
-        allow(target).to receive(:get_policies).and_return(profiles)
         prof_list, pol_list = described_class.get_policies_for_target(target, 'control', events[0].name)
         expect(prof_list.size).to eq(2)
+        expect(pol_list.size).to  eq(1)
+        expect(pol_list[0]).to    eq(policies[0])
+      end
+
+      it 'gets policies only from this profile' do
+        prof_list, pol_list = described_class.get_policies_for_target(target, 'control', events[0].name, :only_this_profile => profiles[0])
+        expect(prof_list.size).to eq(1)
         expect(pol_list.size).to  eq(1)
         expect(pol_list[0]).to    eq(policies[0])
       end

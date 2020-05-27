@@ -20,8 +20,8 @@ module ComplianceMixin
                      :prefix    => true
   end
 
-  def check_compliance
-    Compliance.check_compliance(self)
+  def check_compliance(inputs = {})
+    Compliance.check_compliance(self, inputs)
   end
 
   def check_compliance_queue

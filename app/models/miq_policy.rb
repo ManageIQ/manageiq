@@ -371,12 +371,20 @@ class MiqPolicy < ApplicationRecord
     [first_event, last_event].compact
   end
 
+  #
+  # Only check the policies in the profile if :only_this_profile is specified. Built-in policies are skipped.
+  #
   def self.get_policies_for_target(target, mode, event, inputs = {})
     event = find_event_def(event) if event.kind_of?(String)
 
-    # collect policies expand profiles (sets)
-    profiles, plist = get_expanded_profiles_and_policies(target)
-    plist = built_in_policies.concat(plist).uniq
+    if inputs[:only_this_profile].present?
+      profiles = %w[inputs[:only_this_profile]]
+      plist = inputs[:only_this_profile].get_policies
+    else
+      # collect policies expand profiles (sets)
+      profiles, plist = get_expanded_profiles_and_policies(target)
+      plist = built_in_policies.concat(plist).uniq
+    end
 
     towhat = target.class.base_model.name
     towhat = "Vm" if towhat.downcase.match("template")
