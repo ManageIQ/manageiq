@@ -223,10 +223,9 @@ class User < ApplicationRecord
   end
 
   def self.authorize_user_with_system_token(userid, user_metadata = {})
-    auth = authenticator(userid)
-    return authorize_user(userid) if user_metadata.blank? || auth.user_authorizable_with_system_token? == false
+    return if userid.blank? || user_metadata.blank? || admin?(userid)
 
-    auth.authorize_user_with_system_token(userid, user_metadata)
+    authenticator(userid).authorize_user_with_system_token(userid, user_metadata)
   end
 
   def logoff
