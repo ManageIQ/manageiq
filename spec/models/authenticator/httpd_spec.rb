@@ -46,6 +46,44 @@ RSpec.describe Authenticator::Httpd do
     end
   end
 
+  describe '.user_authorizable_with_system_token?' do
+    let(:auth_oidc_settings) do
+      {
+        :mode          => "httpd",
+        :httpd_role    => true,
+        :oidc_enabled  => true,
+        :saml_enabled  => false,
+        :provider_type => "oidc"
+      }
+    end
+
+    let(:auth_saml_settings) do
+      {
+        :mode          => "httpd",
+        :httpd_role    => true,
+        :oidc_enabled  => false,
+        :saml_enabled  => true,
+        :provider_type => "saml"
+      }
+    end
+
+    it "is false" do
+      expect(subject.user_authorizable_with_system_token?).to be_falsey
+    end
+
+    it "is true for OIDC" do
+      stub_settings_merge(:authentication => auth_oidc_settings)
+
+      expect(subject.user_authorizable_with_system_token?).to be_truthy
+    end
+
+    it "is true for SAML" do
+      stub_settings_merge(:authentication => auth_saml_settings)
+
+      expect(subject.user_authorizable_with_system_token?).to be_truthy
+    end
+  end
+
   describe '#lookup_by_identity' do
     let(:dn) { 'cn=towmater,ou=people,ou=prod,dc=example,dc=com' }
     let!(:towmater_dn) { FactoryBot.create(:user, :userid => dn) }

@@ -618,6 +618,87 @@ RSpec.describe User do
     end
   end
 
+  describe ".authorize_user_with_system_token" do
+    context "for all authentication modes" do
+      it "returns nil with blank userid" do
+        expect(User.authorize_user_with_system_token("")).to be_nil
+      end
+
+      it "returns nil with blank user_metadata" do
+        expect(User.authorize_user_with_system_token("jdoe", {})).to be_nil
+      end
+
+      it "returns nil with admin userid" do
+        expect(User.authorize_user_with_system_token("admin", {:userid => "admin"})).to be_nil
+      end
+
+      it "returns nil with valid request" do
+        expect(User.authorize_user_with_system_token("jdoe@acme.com", {:userid => "jdoe@acme.com"})).to be_nil
+      end
+
+      it "returns nil with valid invalid request" do
+        expect(User.authorize_user_with_system_token("bob@acme.com", {:userid => "jdoe@acme.com"})).to be_nil
+      end
+    end
+
+    context "for OIDC" do
+      let(:user_group_details) { {:description => "super_admin", :features => "everything"} }
+
+      let(:user_metadata) do
+        {
+          :userid      => "jdoe@acme.com",
+          :name        => "John Doe",
+          :first_name  => "John",
+          :last_name   => "Doe",
+          :email       => "jdoe@acme.com",
+          :group_names => [user_group_details[:description]]
+        }
+      end
+
+      before do
+        @auth_oidc_config = {
+          :mode          => "httpd",
+          :httpd_role    => true,
+          :oidc_enabled  => true,
+          :saml_enabled  => false,
+          :provider_type => "oidc"
+        }
+        stub_settings_merge(:authentication => @auth_oidc_config)
+
+        FactoryBot.create(:miq_group, user_group_details)
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "returns nil with an invalid request for OIDC" do
+        expect(User.authorize_user_with_system_token("invalid_userid", user_metadata)).to be_nil
+      end
+
+      it "successfully authorizes new user with a valid request for OIDC" do
+        user_obj = User.authorize_user_with_system_token(user_metadata[:userid], user_metadata)
+
+        expect(user_obj).to_not be_nil
+        expect(user_obj.miq_groups.collect(&:description)).to eq(user_metadata[:group_names])
+        expect(user_metadata).to include(user_obj.attributes.symbolize_keys.slice(:userid, :name, :first_name, :last_name, :email))
+      end
+
+      it "successfully authorizes existing user with a valid request for OIDC" do
+        current_user = User.create(:userid     => "jdoe@acme.com",
+                                   :name       => "Current John Doe",
+                                   :first_name => "Current John",
+                                   :last_name  => "Current Doe",
+                                   :email      => "currentjdoe@acme.com")
+        current_user.miq_groups = [FactoryBot.create(:miq_group, :description => "user_group", :features => "read")]
+
+        user_obj = User.authorize_user_with_system_token(user_metadata[:userid], user_metadata)
+
+        expect(user_obj).to_not be_nil
+        expect(user_obj.id).to eq(current_user.id)
+        expect(user_obj.miq_groups.collect(&:description)).to eq(user_metadata[:group_names])
+        expect(user_metadata).to include(user_obj.attributes.symbolize_keys.slice(:userid, :name, :first_name, :last_name, :email))
+      end
+    end
+  end
+
   describe ".with_same_userid" do
     # this is testing the select does not break and in general, the scope works
     it "properly handles select clause" do
