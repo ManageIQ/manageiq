@@ -288,7 +288,7 @@ RSpec.describe GenericObject do
       expect(go.vms.count).to eq(1)
     end
 
-    it 'does not add object from differnt class' do
+    it 'does not add object from different class' do
       go.add_to_property_association("vms", FactoryBot.create(:host))
       expect(go.vms.count).to eq(0)
     end
@@ -316,7 +316,7 @@ RSpec.describe GenericObject do
       expect(result).to be_nil
     end
 
-    it 'does not delete object from differnt class' do
+    it 'does not delete object from different class' do
       result = go.delete_from_property_association(:vms, [FactoryBot.create(:host)])
       expect(go.vms).to match_array([vm1])
       expect(result).to be_nil
