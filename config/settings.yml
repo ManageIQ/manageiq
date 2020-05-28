@@ -1047,10 +1047,6 @@
     :max_concurrent_tasks_per_conversion_host: 10
     :cpu_limit_per_host: unlimited
     :network_limit_per_host: unlimited
-  :uci:
-    :container:
-      :registry:
-      :image: manageiq/v2v-conversion-host:latest
 :ui:
   :mark_translated_strings: false
   :url:

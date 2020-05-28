@@ -231,13 +231,19 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         expect(task.kill_virtv2v).to eq(false)
       end
 
+      it "returns false if virtv2v_pid is absent" do
+        task.options[:virtv2v_pid] = nil
+        expect(conversion_host).not_to receive(:kill_virtv2v)
+        expect(task.kill_virtv2v).to eq(false)
+      end
+
       it "returns false if if kill command failed" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id, 'KILL').and_return(false)
+        expect(conversion_host).to receive(:kill_virtv2v).with('1234', 'KILL').and_return(false)
         expect(task.kill_virtv2v('KILL')).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
-        allow(conversion_host).to receive(:kill_virtv2v).with(task.id, 'KILL').and_return(true)
+        expect(conversion_host).to receive(:kill_virtv2v).with('1234', 'KILL').and_return(true)
         expect(task.kill_virtv2v('KILL')).to eq(true)
       end
 
@@ -319,17 +325,19 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:time_now) { Time.now.utc }
       before do
         allow(Time).to receive(:now).and_return(time_now)
-        allow(conversion_host).to receive(:run_conversion).with(task_1.id, task_1.conversion_options)
+        allow(conversion_host).to receive(:run_conversion).with(task_1.conversion_options).and_return(
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
+        )
       end
 
       it "collects the wrapper state hash" do
         task_1.run_conversion
         expect(task_1.options[:virtv2v_wrapper]).to eq(
-          "state_file"      => "/var/lib/uci/#{task_1.id}/state.json",
-          "throttling_file" => "/var/lib/uci/#{task_1.id}/limits.json",
-          "cutover_file"    => "/var/lib/uci/#{task_1.id}/cutover",
-          "v2v_log"         => "/var/log/uci/#{task_1.id}/virt-v2v.log",
-          "wrapper_log"     => "/var/log/uci/#{task_1.id}/virt-v2v-wrapper.log"
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
         )
         expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
         expect(task_1.options[:virtv2v_status]).to eq('active')
@@ -399,22 +407,22 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           )
         end
 
-        it "rescues when conversion_host.get_conversion_state fails less than 20 times" do
+        it "rescues when conversion_host.get_conversion_state fails less than 5 times" do
           task_1.update_options(:get_conversion_state_failures => 2)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_raise("Fake error")
           task_1.get_conversion_state
           expect(task_1.options[:get_conversion_state_failures]).to eq(3)
         end
 
-        it "rescues when conversion_host.get_conversion_state fails more than 20 times" do
-          task_1.update_options(:get_conversion_state_failures => 20)
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_raise("Fake error")
-          expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 20 times in a row")
-          expect(task_1.options[:get_conversion_state_failures]).to eq(21)
+        it "rescues when conversion_host.get_conversion_state fails more than 5 times" do
+          task_1.update_options(:get_conversion_state_failures => 5)
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_raise("Fake error")
+          expect { task_1.get_conversion_state }.to raise_error("Failed to get conversion state 5 times in a row")
+          expect(task_1.options[:get_conversion_state_failures]).to eq(6)
         end
 
         it "updates progress when conversion is failed" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "failed"       => true,
             "finished"     => true,
             "started"      => true,
@@ -437,7 +445,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         end
 
         it "updates disks progress" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "started"    => true,
             "disks"      => [
               { "path" => src_disk_1.filename, "progress" => 100.0 },
@@ -449,15 +457,15 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           task_1.get_conversion_state
           expect(task_1.options[:virtv2v_disks]).to eq(
             [
-              {"path" => src_disk_1.filename, "progress" => 100},
-              {"path" => src_disk_2.filename, "progress" => 50}
+              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 100, :weight => 50 },
+              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 50, :weight => 50 }
             ]
           )
           expect(task_1.options[:virtv2v_status]).to eq('active')
         end
 
         it "sets disks progress to 100% when conversion is finished and successful" do
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -483,7 +491,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "sets disks progress to 100% when conversion is finished and successful unless canceling" do
           task_1.canceling
-          allow(conversion_host).to receive(:get_conversion_state).with(task_1.id).and_return(
+          allow(conversion_host).to receive(:get_conversion_state).with('fake_state').and_return(
             "finished"    => true,
             "started"     => true,
             "disks"       => [
@@ -614,8 +622,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :install_drivers      => true,
               :insecure_connection  => true,
               :two_phase            => true,
-              :warm                 => true,
-              :daemonize            => false
+              :warm                 => true
             )
           end
 
@@ -638,8 +645,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :install_drivers      => true,
               :insecure_connection  => true,
               :two_phase            => true,
-              :warm                 => true,
-              :daemonize            => false
+              :warm                 => true
             )
           end
 
@@ -654,14 +660,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name              => src_vm_1.name,
+              :vm_name              => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
-              :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
-              :vmware_uri           => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vmware_password      => 'esx_passwd',
-              :ssh_key_file         => '/var/lib/uci/ssh_private_key',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -669,24 +671,17 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks         => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
-              :insecure_connection  => true,
-              :two_phase            => true,
-              :warm                 => false,
-              :daemonize            => false
+              :insecure_connection  => true
             )
           end
 
           it "generates conversion options hash with host custom IP address" do
             src_host.miq_custom_set('TransformationIPAddress', '192.168.254.1')
             expect(task_1.conversion_options).to eq(
-              :vm_name              => src_vm_1.name,
+              :vm_name              => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vm_uuid              => src_vm_1.uid_ems,
               :conversion_host_uuid => conversion_host.resource.ems_ref,
               :transport_method     => 'ssh',
-              :vmware_fingerprint   => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
-              :vmware_uri           => "ssh://root@192.168.254.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vmware_password      => 'esx_passwd',
-              :ssh_key_file         => '/var/lib/uci/ssh_private_key',
               :rhv_url              => "https://#{redhat_ems.hostname}/ovirt-engine/api",
               :rhv_cluster          => redhat_cluster.name,
               :rhv_storage          => redhat_storages.first.name,
@@ -694,10 +689,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks         => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings     => task_1.network_mappings,
               :install_drivers      => true,
-              :insecure_connection  => true,
-              :two_phase            => true,
-              :warm                 => false,
-              :daemonize            => false
+              :insecure_connection  => true
             )
           end
         end
@@ -814,8 +806,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings           => task_1.network_mappings,
               :two_phase                  => true,
-              :warm                       => true,
-              :daemonize                  => false
+              :warm                       => true
             )
           end
         end
@@ -828,14 +819,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name                    => src_vm_1.name,
+              :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :vm_uuid                    => src_vm_1.uid_ems,
               :conversion_host_uuid       => conversion_host.ems_ref,
               :transport_method           => 'ssh',
-              :vmware_fingerprint         => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
-              :vmware_uri                 => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
-              :vmware_password            => 'esx_passwd',
-              :ssh_key_file               => '/var/lib/uci/ssh_private_key',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
                   :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
@@ -855,10 +842,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :osp_flavor_id              => openstack_flavor.ems_ref,
               :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
-              :network_mappings           => task_1.network_mappings,
-              :two_phase                  => true,
-              :warm                       => false,
-              :daemonize                  => false
+              :network_mappings           => task_1.network_mappings
             )
           end
         end

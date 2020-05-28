@@ -120,12 +120,18 @@ RSpec.describe InfraConversionThrottler, :v2v do
       }
       task_running_1.update_options(
         :virtv2v_started_on => Time.now.utc,
-        :virtv2v_wrapper    => {'state_file' => "/var/lib/uci/#{task_running_1.id}/state.json"}
+        :virtv2v_wrapper    => {
+          'state_file'      => "/tmp/state_1.json",
+          'throttling_file' => '/tmp/throttling_1.json'
+        }
       )
-      task_running_2.options[:virtv2v_started_on] = Time.now.utc
-      task_running_2.options[:virtv2v_wrapper] = {'state_file' => "/var/lib/uci/#{task_running_2.id}/state.json"}
-      expect(conversion_host).to receive(:apply_task_limits).with(task_running_1.id, limits)
-      expect(conversion_host).not_to receive(:apply_task_limits).with(task_running_2.id, limits)
+      task_running_2.update_options(
+        :virtv2v_started_on => Time.now.utc,
+        :virtv2v_wrapper    => {
+          'state_file'      => "/tmp/state_2.json"
+        }
+      )
+      expect(conversion_host).to receive(:apply_task_limits).with('/tmp/throttling_1.json', limits)
       described_class.apply_limits
       expect(task_running_1.reload.options[:virtv2v_limits]).to eq(limits)
       expect(task_running_2.reload.options[:virtv2v_limits]).to be_nil
