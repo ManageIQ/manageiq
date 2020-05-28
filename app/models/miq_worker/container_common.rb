@@ -11,6 +11,11 @@ class MiqWorker
       end
 
       container = definition[:spec][:template][:spec][:containers].first
+
+      if container_image_tag.include?("latest")
+        container[:imagePullPolicy] = "Always"
+      end
+
       container[:image] = "#{container_image_namespace}/#{container_image_name}:#{container_image_tag}"
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
       container[:env] << {:name => "BUNDLER_GROUPS", :value => self.class.bundler_groups.join(",")}
