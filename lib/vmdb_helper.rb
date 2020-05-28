@@ -23,7 +23,7 @@ $:.push("#{File.dirname(__FILE__)}/patches")
 require 'rest_client_patch'
 require 'ruport_patch'
 
-APPLIANCE_DATA_VOL = File.directory?("/var/www/miq/vmdb") ? "/var/lib/data" : Rails.root.join("tmp")
+APPLIANCE_DATA_VOL = File.directory?("/var/www/miq/vmdb") && !MiqEnvironment::Command.is_container? ? "/var/lib/data" : Rails.root.join("tmp")
 MIQ_TEMP           = File.join(APPLIANCE_DATA_VOL, "miq_temp")
 FileUtils.mkdir_p(MIQ_TEMP)
 
