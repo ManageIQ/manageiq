@@ -1117,7 +1117,6 @@
         :poll: 10.seconds
     :queue_worker_base:
       :defaults:
-        :cpu_usage_threshold: 100.percent
         :dequeue_method: :drb
         :memory_threshold: 500.megabytes
         :poll_method: :normal
@@ -1151,7 +1150,6 @@
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
       :event_handler:
-        :cpu_usage_threshold: 0.percent
         :nice_delta: 7
       :generic_worker:
         :count: 2
