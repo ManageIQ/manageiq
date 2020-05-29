@@ -139,12 +139,6 @@ module VmOrTemplate::Operations
             end
       unsupported_reason_add(:control, msg) if msg
     end
-
-    supports :terminate do
-      msg = unsupported_reason(:control) unless supports_control?
-      msg ||= _("Provider doesn't support vm_destroy") unless ext_management_system.respond_to?(:vm_destroy)
-      unsupported_reason_add(:terminate, msg) if msg
-    end
   end
 
   def validate_vm_control_powered_on

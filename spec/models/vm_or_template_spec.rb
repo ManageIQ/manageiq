@@ -658,35 +658,49 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  context "#supports_terminate?" do
-    let(:ems_does_vm_destroy) { FactoryBot.create(:ems_vmware) }
-    let(:ems_doesnot_vm_destroy) { FactoryBot.create(:ems_storage) }
+  context "#supports_control?" do
+    let(:retired_vm) { FactoryBot.create(:vm, :retired => true, :ext_management_system => ems, :host => host) }
+    let(:template) { FactoryBot.create(:miq_template) }
+    let(:terminated_vm) { FactoryBot.create(:vm_amazon, :raw_power_state => "terminated") }
+    let(:vm_no_host) { FactoryBot.create(:vm, :ext_management_system => ems) }
+    let(:disconnected_vm) { FactoryBot.create(:vm, :host => host, :ext_management_system => ems, :connection_state => "disconnected") }
+    let(:archived_vm) { FactoryBot.create(:vm, :host => host) }
+    let(:vm) { FactoryBot.create(:vm, :ext_management_system => ems, :host => host) }
+    let(:ems) { FactoryBot.create(:ems_infra) }
     let(:host) { FactoryBot.create(:host) }
 
-    it "returns true for a VM not terminated" do
-      vm = FactoryBot.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
-      allow(vm).to receive_messages(:terminated? => false)
-      expect(vm.supports_terminate?).to eq(true)
+    it "returns false for a retired vm" do
+      expect(retired_vm.supports_control?).to be_falsey
+      expect(retired_vm.unsupported_reason(:control)).to eq("The VM is retired")
+    end
+
+    it "returns false for a template" do
+      expect(template.supports_control?).to be_falsey
+      expect(template.unsupported_reason(:control)).to eq("The VM is a template")
     end
 
     it "returns false for a terminated VM" do
-      vm = FactoryBot.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
-      allow(vm).to receive_messages(:terminated? => true)
-      expect(vm.supports_terminate?).to eq(false)
-      expect(vm.unsupported_reason(:terminate)).to eq("The VM is terminated")
+      expect(terminated_vm.supports_control?).to eq(false)
+      expect(terminated_vm.unsupported_reason(:control)).to eq("The VM is terminated")
     end
 
-    it "returns false for a provider doesn't support vm_destroy" do
-      vm = FactoryBot.create(:vm, :host => host, :ext_management_system => ems_doesnot_vm_destroy)
-      allow(vm).to receive_messages(:terminated? => false)
-      expect(vm.supports_terminate?).to eq(false)
-      expect(vm.unsupported_reason(:terminate)).to eq("Provider doesn't support vm_destroy")
+    it "returns false for a vm without a host" do
+      expect(vm_no_host.supports_control?).to be_falsey
+      expect(vm_no_host.unsupported_reason(:control)).to eq("The VM is not connected to a Host")
     end
 
-    it "returns false for a WMware VM" do
-      vm = FactoryBot.create(:vm, :host => host, :ext_management_system => ems_does_vm_destroy)
-      allow(vm).to receive_messages(:terminated? => false)
-      expect(vm.supports_terminate?).to eq(true)
+    it "returns false for a disconnected vm" do
+      expect(disconnected_vm.supports_control?).to be_falsey
+      expect(disconnected_vm.unsupported_reason(:control)).to eq("The VM does not have a valid connection state")
+    end
+
+    it "returns false for an archived vm" do
+      expect(archived_vm.supports_control?).to be_falsey
+      expect(archived_vm.unsupported_reason(:control)).to eq("The VM is not connected to an active Provider")
+    end
+
+    it "returns true for a valid vm" do
+      expect(vm.supports_control?).to be_truthy
     end
   end
 
