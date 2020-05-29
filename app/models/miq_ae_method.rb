@@ -129,7 +129,7 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.lookup_by_class_id_and_name(class_id, name)
-    ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
+    ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name.downcase, nil, true)
     ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
   end
 
@@ -144,7 +144,7 @@ class MiqAeMethod < ApplicationRecord
     domain_ids = user.current_tenant.enabled_domains
     joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
                   .order("miq_ae_namespaces.priority DESC")
-                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase, nil, true))
   end
 
   private
