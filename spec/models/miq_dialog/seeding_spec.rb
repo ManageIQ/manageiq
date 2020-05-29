@@ -76,9 +76,12 @@ RSpec.describe MiqDialog do
       )
     end
 
-    it "will include files from plugins" do
+    it "will include files from a plugin" do
+      plugin = Vmdb::Plugins.detect { |p| p.root.join("content/miq_dialogs").exist? }
+      skip "no plugin with content exists" unless plugin
+
       expect(described_class.send(:seed_files)).to include(
-        a_string_matching(%r{#{Bundler.install_path}/.+/content/miq_dialogs/})
+        a_string_starting_with(plugin.root.join("content/miq_dialogs").to_s)
       )
     end
   end
