@@ -100,15 +100,15 @@ class GitRepository < ApplicationRecord
   # has been saved, since there is no way store (clone, fetch, pull, etc.) the
   # git data to disk if there isn't a `id`.
   #
-  # Only a single `@git_lock` can be aquired per-process, and do avoid
-  # deadlocks, his method is just a passthrough if `@git_lock` has already been
-  # defined (another method has already started a `git_transaction`.
+  # Only a single `@git_lock` can be acquired per-process, and do avoid
+  # deadlocks, this method is just a passthrough if `@git_lock` has already been
+  # defined (another method has already started a `git_transaction`.)
   #
   # This means that you can surround a couple of actions with this method, and
   # the lock will only be enforced on the top level.
   #
   # NOTE: However, it is worth noting that if two threads in the same process
-  # try to share the same instance while using `git_transation` is not thread
+  # try to share the same instance while using `git_transaction` is not thread
   # safe, so avoid sharing `GitRepository` objects across multiple threads
   # (chances are you won't run into this scenario, but commenting just in case)
   #
