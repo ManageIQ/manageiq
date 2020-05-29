@@ -636,7 +636,7 @@ RSpec.describe User do
         expect(User.authorize_user_with_system_token("jdoe@acme.com", :userid => "jdoe@acme.com")).to be_nil
       end
 
-      it "returns nil with valid invalid request" do
+      it "returns nil with an invalid request" do
         expect(User.authorize_user_with_system_token("bob@acme.com", :userid => "jdoe@acme.com")).to be_nil
       end
     end
