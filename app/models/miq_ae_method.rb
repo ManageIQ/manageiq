@@ -3,6 +3,8 @@ require 'manageiq/automation_engine/syntax_checker'
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
+
   default_value_for(:embedded_methods) { [] }
   validates :embedded_methods, :exclusion => { :in => [nil] }
   serialize :options, Hash
@@ -46,10 +48,6 @@ class MiqAeMethod < ApplicationRecord
     result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
     [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
-  end
-
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
   end
 
   # my method's fqname is /domain/namespace1/namespace2/class/method

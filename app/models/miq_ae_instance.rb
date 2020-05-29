@@ -1,6 +1,7 @@
 class MiqAeInstance < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => "MiqAeClass", :foreign_key => :class_id
@@ -14,7 +15,7 @@ class MiqAeInstance < ApplicationRecord
                                  :message => N_("may contain only alphanumeric and _ . - characters")
 
   def self.lookup_by_name(name)
-    where("lower(name) = ?", name.downcase).first
+    find_by(:lower_name => name.downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
@@ -62,10 +63,6 @@ class MiqAeInstance < ApplicationRecord
       result[f.name] = get_field_value(f, false)
     end
     result
-  end
-
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
   end
 
   # my instance's fqname is /domain/namespace1/namespace2/class/instance
@@ -152,7 +149,7 @@ class MiqAeInstance < ApplicationRecord
     domain_ids = user.current_tenant.enabled_domains
     joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
                   .order("miq_ae_namespaces.priority DESC")
-                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase, nil, true))
   end
 
   def self.get_homonymic_across_domains(user, fqname, enabled = nil, prefix: true)
