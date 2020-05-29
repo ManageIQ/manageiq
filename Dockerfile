@@ -12,7 +12,8 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
     dnf clean all
 
 ## Copy/link the appliance files again so that we get ssl
-RUN ${APPLIANCE_ROOT}/setup && \
+RUN source /etc/default/evm && \
+    $APPLIANCE_SOURCE_DIRECTORY/setup && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
