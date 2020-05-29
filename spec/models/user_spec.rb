@@ -629,15 +629,15 @@ RSpec.describe User do
       end
 
       it "returns nil with admin userid" do
-        expect(User.authorize_user_with_system_token("admin", {:userid => "admin"})).to be_nil
+        expect(User.authorize_user_with_system_token("admin", :userid => "admin")).to be_nil
       end
 
       it "returns nil with valid request" do
-        expect(User.authorize_user_with_system_token("jdoe@acme.com", {:userid => "jdoe@acme.com"})).to be_nil
+        expect(User.authorize_user_with_system_token("jdoe@acme.com", :userid => "jdoe@acme.com")).to be_nil
       end
 
       it "returns nil with valid invalid request" do
-        expect(User.authorize_user_with_system_token("bob@acme.com", {:userid => "jdoe@acme.com"})).to be_nil
+        expect(User.authorize_user_with_system_token("bob@acme.com", :userid => "jdoe@acme.com")).to be_nil
       end
     end
 
