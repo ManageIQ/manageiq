@@ -64,7 +64,7 @@ class MiqAeNamespace < ApplicationRecord
     end
 
     new_parts.each do |p|
-      found = found ? create(:name => p, :parent => found) : create(:name => p)
+      found = found ? create(:name => p, :parent => found) : MiqAeDomain.create(:name => p)
     end
 
     found
