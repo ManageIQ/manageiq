@@ -257,9 +257,10 @@ class MiqRegion < ApplicationRecord
 
   def api_system_auth_token(userid)
     token_hash = {
-      :server_guid => remote_ws_miq_server.guid,
-      :userid      => userid,
-      :timestamp   => Time.now.utc
+      :server_guid   => remote_ws_miq_server.guid,
+      :userid        => userid,
+      :timestamp     => Time.now.utc,
+      :user_metadata => User.metadata_for_system_token(userid)
     }
     ManageIQ::Password.encrypt(token_hash.to_yaml)
   end
