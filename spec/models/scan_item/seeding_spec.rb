@@ -78,9 +78,11 @@ RSpec.describe ScanItem do
     end
 
     it "will include files from plugins" do
-      skip "Until a plugin brings a scan item"
+      plugin = Vmdb::Plugins.detect { |p| p.root.join("content/scan_items").exist? }
+      skip "no plugin with content exists" unless plugin
+
       expect(described_class.send(:seed_files)).to include(
-        a_string_matching(%r{#{Bundler.install_path}/.+/content/scan_items/})
+        a_string_starting_with(plugin.root.join("content/scan_items").to_s)
       )
     end
   end
