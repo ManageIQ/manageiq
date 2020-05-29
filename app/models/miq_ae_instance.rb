@@ -1,6 +1,7 @@
 class MiqAeInstance < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
   belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => "MiqAeClass", :foreign_key => :class_id
@@ -14,7 +15,7 @@ class MiqAeInstance < ApplicationRecord
                                  :message => N_("may contain only alphanumeric and _ . - characters")
 
   def self.lookup_by_name(name)
-    where("lower(name) = ?", name.downcase).first
+    find_by(:lower_name => name.downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
@@ -64,10 +65,6 @@ class MiqAeInstance < ApplicationRecord
     result
   end
 
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
-  end
-
   # my instance's fqname is /domain/namespace1/namespace2/class/instance
   def namespace
     fqname.split("/")[0..-3].join("/")
@@ -83,7 +80,7 @@ class MiqAeInstance < ApplicationRecord
 
     query = where(arel_table[:relative_path].lower.matches(str.downcase, nil, true)) # This uses 'like'.
 
-    domain_id = query.joins(:domain).order("miq_ae_namespaces.priority DESC").limit(1).pluck(:domain_id)
+    domain_id = query.joins(:domain).order("miq_ae_namespaces.priority DESC").limit(1).pluck(:domain_id) ### fix?
     query.where(:domain_id => domain_id)
   end
 
@@ -148,11 +145,10 @@ class MiqAeInstance < ApplicationRecord
     n_('Automate Instance', 'Automate Instances', number)
   end
 
-  def self.find_best_match_by(user, relative_path)
-    domain_ids = user.current_tenant.enabled_domains
+  def self.find_best_match_by(domain_ids, relative_path)
     joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
                   .order("miq_ae_namespaces.priority DESC")
-                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase, nil, true))
   end
 
   def self.get_homonymic_across_domains(user, fqname, enabled = nil, prefix: true)
