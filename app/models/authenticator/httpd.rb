@@ -7,7 +7,11 @@ module Authenticator
     def authorize_queue(username, request, options, *_args)
       user_attrs, membership_list =
         if options[:authorize_only]
-          user_details_from_external_directory(username)
+          if options[:authorize_with_system_token].present?
+            user_details_from_system_token(username, options[:authorize_with_system_token])
+          else
+            user_details_from_external_directory(username)
+          end
         else
           user_details_from_headers(username, request)
         end
@@ -23,6 +27,10 @@ module Authenticator
 
     def user_authorizable_without_authentication?
       true
+    end
+
+    def user_authorizable_with_system_token?
+      ext_auth_is_oidc? || ext_auth_is_saml?
     end
 
     def _authenticate(_username, _password, request)
@@ -123,6 +131,18 @@ module Authenticator
       [user_attrs, (CGI.unescape(request.headers['X-REMOTE-USER-GROUPS'] || '')).split(/[;:,]/)]
     end
 
+    def user_details_from_system_token(username, user_metadata)
+      return [{}, []] if username != user_metadata[:userid]
+
+      user_attrs = {:username  => user_metadata[:userid],
+                    :fullname  => user_metadata[:name],
+                    :firstname => user_metadata[:first_name],
+                    :lastname  => user_metadata[:last_name],
+                    :email     => user_metadata[:email],
+                    :domain    => nil}
+      [user_attrs, Array(user_metadata[:group_names])]
+    end
+
     def user_attrs_from_external_directory(username)
       if MiqEnvironment::Command.is_podified?
         user_attrs_from_external_directory_via_dbus_api_service(username)
@@ -156,6 +176,16 @@ module Authenticator
       require_dependency "httpd_dbus_api"
 
       HttpdDBusApi.new.user_attrs(username, ATTRS_NEEDED)
+    end
+
+    def ext_auth_is_oidc?
+      auth_config = Settings.authentication
+      auth_config.mode == "httpd" && auth_config.oidc_enabled && auth_config.provider_type == "oidc"
+    end
+
+    def ext_auth_is_saml?
+      auth_config = Settings.authentication
+      auth_config.mode == "httpd" && auth_config.saml_enabled && auth_config.provider_type == "saml"
     end
   end
 end

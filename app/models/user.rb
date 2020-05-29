@@ -222,6 +222,12 @@ class User < ApplicationRecord
     authenticator(userid).authorize_user(userid)
   end
 
+  def self.authorize_user_with_system_token(userid, user_metadata = {})
+    return if userid.blank? || user_metadata.blank? || admin?(userid)
+
+    authenticator(userid).authorize_user_with_system_token(userid, user_metadata)
+  end
+
   def logoff
     self.lastlogoff = Time.now.utc
     save
@@ -353,6 +359,22 @@ class User < ApplicationRecord
     elsif !db_user.current_group.miq_user_role
       "Role"
     end
+  end
+
+  def self.metadata_for_system_token(userid)
+    return unless authenticator(userid).user_authorizable_with_system_token?
+
+    user = in_my_region.find_by(:userid => userid)
+    return if user.blank?
+
+    {
+      :userid      => user.userid,
+      :name        => user.name,
+      :email       => user.email,
+      :first_name  => user.first_name,
+      :last_name   => user.last_name,
+      :group_names => user.miq_groups.try(:collect, &:description)
+    }
   end
 
   def self.seed
