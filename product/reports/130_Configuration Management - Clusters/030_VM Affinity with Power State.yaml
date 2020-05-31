@@ -1,7 +1,7 @@
 ---
 dims:
 created_on: 2008-08-14 18:26:33.010692 Z
-title: "Cluster tp VMs Affinity with Power State"
+title: "Cluster VMs Affinity with Power State"
 conditions:
 updated_on: 2008-08-14 18:26:33.010692 Z
 order: Ascending
