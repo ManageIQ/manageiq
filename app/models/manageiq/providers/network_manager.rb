@@ -72,6 +72,10 @@ module ManageIQ::Providers
                      :allow_nil => true,
                      :default   => []
 
+    def self.display_name(number = 1)
+      n_('Network Manager', 'Network Managers', number)
+    end
+
     def self.supported_types_and_descriptions_hash
       supported_subclasses.select(&:supports_ems_network_new?).each_with_object({}) do |klass, hash|
         hash[klass.ems_type] = klass.description
@@ -86,9 +90,5 @@ module ManageIQ::Providers
       name.gsub!(" #{self::PROVIDER_NAME}", "")
       includes(:parent_manager).find_by(:parent_managers_ext_management_systems => {:name => name})
     end
-  end
-
-  def self.display_name(number = 1)
-    n_('Network Manager', 'Network Managers', number)
   end
 end
