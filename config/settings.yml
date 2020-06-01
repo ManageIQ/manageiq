@@ -1079,6 +1079,7 @@
   :worker_base:
     :defaults:
       :count: 1
+      :cpu_threshold: 500
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes

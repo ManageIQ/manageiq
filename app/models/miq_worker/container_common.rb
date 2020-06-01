@@ -43,9 +43,11 @@ class MiqWorker
 
     def resource_constraints
       mem_threshold = worker_settings[:memory_threshold]
+      cpu_threshold = worker_settings[:cpu_threshold]
       {
         :limits => {
           :memory => "#{mem_threshold / 1.megabyte}Mi",
+          :cpu    => "#{cpu_threshold}m"
         }
       }
     end
