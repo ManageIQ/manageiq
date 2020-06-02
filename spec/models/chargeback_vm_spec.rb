@@ -24,6 +24,7 @@ RSpec.describe ChargebackVm do
 
   let(:hourly_variable_tier_rate)       { {:variable_rate => hourly_rate.to_s} }
   let(:count_hourly_variable_tier_rate) { {:variable_rate => count_hourly_rate.to_s} }
+  let(:fixed_compute_tier_rate)         { {:fixed_rate => hourly_rate.to_s} }
 
   let(:detail_params) do
     {
@@ -35,7 +36,7 @@ RSpec.describe ChargebackVm do
       :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate]},
       :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate]},
-      :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers => [fixed_compute_tier_rate]}
     }
   end
 
@@ -183,8 +184,8 @@ RSpec.describe ChargebackVm do
         end
 
         it 'shows rates' do
-          expect(subject.storage_allocated_sdd_rate).to eq("0.0/1.0")
-          expect(subject.storage_allocated_hdd_rate).to eq("0.0/1.0")
+          expect(subject.storage_allocated_sdd_rate).to eq("€1.00 / Hourly / GiB")
+          expect(subject.storage_allocated_hdd_rate).to eq("€1.00 / Hourly / GiB")
         end
 
         it "doesn't return removed cloud volume types fields" do
@@ -740,15 +741,15 @@ RSpec.describe ChargebackVm do
         let(:hourly_variable_tier_rate) { {:fixed_rate => 100, :variable_rate => hourly_rate.to_s} }
 
         it 'shows rates' do
-          expect(subject.cpu_allocated_rate).to eq("0.0/1.0")
-          expect(subject.cpu_used_rate).to eq("100.0/0.01")
-          expect(subject.disk_io_used_rate).to eq("100.0/0.01")
-          expect(subject.fixed_compute_1_rate).to eq("100.0/0.01")
-          expect(subject.memory_allocated_rate).to eq("100.0/0.01")
-          expect(subject.memory_used_rate).to eq("100.0/0.01")
-          expect(subject.net_io_used_rate).to eq("100.0/0.01")
-          expect(subject.storage_allocated_rate).to eq("0.0/1.0")
-          expect(subject.storage_used_rate).to eq("0.0/1.0")
+          expect(subject.cpu_allocated_rate).to eq("€1.00 / Hourly / Cpu")
+          expect(subject.cpu_used_rate).to eq("€100.00 / Hourly + €0.01 / Hourly / MHz")
+          expect(subject.disk_io_used_rate).to eq("€100.00 / Hourly + €0.01 / Hourly / Mbps")
+          expect(subject.fixed_compute_1_rate).to eq("€0.01 / Hourly")
+          expect(subject.memory_allocated_rate).to eq("€100.00 / Hourly + €0.01 / Hourly / MiB")
+          expect(subject.memory_used_rate).to eq("€100.00 / Hourly + €0.01 / Hourly / MiB")
+          expect(subject.net_io_used_rate).to eq("€100.00 / Hourly + €0.01 / Hourly / Mbps")
+          expect(subject.storage_allocated_rate).to eq("€1.00 / Hourly / GiB")
+          expect(subject.storage_used_rate).to eq("€1.00 / Hourly / GiB")
         end
       end
 

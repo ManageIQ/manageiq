@@ -84,12 +84,23 @@ class ChargebackRateDetail < ApplicationRecord
     sub_metric.present? ? sub_metric.capitalize : 'All'
   end
 
+  def format_rate(rate, suffix = "")
+    MiqReport.new.format_currency_with_delimiter(rate, :unit => detail_currency.symbol) + " / " + PER_TIME_TYPES[per_time] + suffix
+  end
+
+  def format_unit(rate_unit)
+    unit = showback_unit(rate_unit)
+    unit.presence || Dictionary.gettext(per_unit, :notfound => :titleize)
+  end
+
   def rate_values(consumption, options)
     fixed_rate, variable_rate = find_rate(chargeable_field.measure(consumption, options, sub_metric))
-    hourly_fixed_rate         = hourly(fixed_rate, consumption)
-    hourly_variable_rate      = hourly(variable_rate, consumption)
 
-    "#{hourly_fixed_rate}/#{hourly_variable_rate}"
+    rates = []
+    rates.push(format_rate(fixed_rate)) if fixed_rate > 0.0
+    rates.push(format_rate(variable_rate, " / #{format_unit(per_unit)}")) if variable_rate > 0.0
+
+    rates.join(" + ")
   end
 
   def charge(consumption, options)
