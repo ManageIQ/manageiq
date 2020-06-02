@@ -1,9 +1,11 @@
 RSpec.describe MiqReport::Formatters::Csv do
   describe "#to_csv" do
     let(:col_options) { nil }
+    let(:name_1)      { "vmware" }
+    let(:name_2)      { "vmware1" }
     let(:table_data) do
-      [{"id" => 5, "name" => "vmware", "base_name" => "XXX", "file_version" => "11", "size" => "33", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil},
-       {"id" => 1, "name" => "vmware1", "base_name" => "YYY", "file_version" => "22", "size" => "44", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil}]
+      [{"id" => 5, "name" => name_1, "base_name" => "XXX", "file_version" => "11", "size" => "33", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil},
+       {"id" => 1, "name" => name_2, "base_name" => "YYY", "file_version" => "22", "size" => "44", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil}]
     end
 
     let(:miq_report_filesystem) do
