@@ -3,6 +3,8 @@ RSpec.describe MiqReport::Formatters::Csv do
     let(:col_options) { nil }
     let(:name_1)      { "vmware" }
     let(:name_2)      { "vmware1" }
+    let(:csv_name_1)  { "vmware" }
+    let(:csv_name_2)  { "vmware1" }
     let(:table_data) do
       [{"id" => 5, "name" => name_1, "base_name" => "XXX", "file_version" => "11", "size" => "33", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil},
        {"id" => 1, "name" => name_2, "base_name" => "YYY", "file_version" => "22", "size" => "44", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil}]
@@ -19,8 +21,8 @@ RSpec.describe MiqReport::Formatters::Csv do
     let(:csv_output) do
       <<~CSV
         "Name","File Name","File Version","Size","Contents Available","Permissions","Collected On","Last Modified"
-        vmware,XXX,11,33,true,,,
-        vmware1,YYY,22,44,true,,,
+        #{csv_name_1},XXX,11,33,true,,,
+        #{csv_name_2},YYY,22,44,true,,,
       CSV
     end
 
