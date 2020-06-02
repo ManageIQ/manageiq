@@ -13,6 +13,7 @@ GlobalVars:
   - $container_log
   - $datawarehouse_log
   - $fog_log
+  - $gce_log
   - $kube_log
   - $lenovo_log
   - $log
