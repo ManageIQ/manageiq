@@ -330,14 +330,14 @@ RSpec.describe Metric::CiMixin::Rollup do
             expect(perfs[0].sys_uptime_absolute_latest).to eq(3.0) # pulled from Host realtime
             expect(perfs[0].derived_cpu_available).to eq(19_152)
 
-            expect(perfs[2].cpu_usage_rate_average).to eq(12.0)     # pulled from Host realtime
-            expect(perfs[2].cpu_usagemhz_rate_average).to eq(24.0)  # pulled from Host realtime
-            expect(perfs[2].sys_uptime_absolute_latest).to eq(16.0) # pulled from Host realtime
+            expect(perfs[2].cpu_usage_rate_average).to be_within(0.001).of(12.0)     # pulled from Host realtime
+            expect(perfs[2].cpu_usagemhz_rate_average).to be_within(0.001).of(24.0)  # pulled from Host realtime
+            expect(perfs[2].sys_uptime_absolute_latest).to be_within(0.001).of(16.0) # pulled from Host realtime
             expect(perfs[2].derived_cpu_available).to eq(19_152)
 
-            expect(perfs[3].cpu_usage_rate_average).to eq(24.0)     # pulled from Host realtime
-            expect(perfs[3].cpu_usagemhz_rate_average).to eq(48.0)  # pulled from Host realtime
-            expect(perfs[3].sys_uptime_absolute_latest).to eq(32.0) # pulled from Host realtime
+            expect(perfs[3].cpu_usage_rate_average).to be_within(0.001).of(24.0)     # pulled from Host realtime
+            expect(perfs[3].cpu_usagemhz_rate_average).to be_within(0.001).of(48.0)  # pulled from Host realtime
+            expect(perfs[3].sys_uptime_absolute_latest).to be_within(0.001).of(32.0) # pulled from Host realtime
             expect(perfs[3].derived_cpu_available).to eq(19_152)
           end
         end
