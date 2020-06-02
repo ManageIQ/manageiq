@@ -47,5 +47,38 @@ RSpec.describe MiqReport::Formatters::Csv do
         expect(miq_report_filesystem.to_csv).to eq(csv_output)
       end
     end
+
+    context "with spreadsheet formulas injected in the contents" do
+      SPREADSHEET_FORMULA_VALUE_PREFIXES = %w[= + - @]
+
+      SPREADSHEET_FORMULA_VALUE_PREFIXES.each do |prefix|
+        context "first column starts with '#{prefix}' with '!' present" do
+          let(:name_1)     { "#{prefix}cmd|' /C notepad'!'B1'"  }
+          let(:csv_name_1) { "'#{prefix}cmd|' /C notepad'!'B1'" }
+
+          it "escapes the column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
+
+        context "first column starts with '#{prefix}' with '(' present" do
+          let(:name_1)     { %Q{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")}  }
+          let(:csv_name_1) { %Q{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
+
+          it "escapes the column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
+
+        context "first column starts with '#{prefix}' without '!' or '(' present" do
+          let(:name_1)     { "#{prefix}B1"  }
+          let(:csv_name_1) { "#{prefix}B1" }
+
+          it "does not escape column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
+      end
+    end
   end
 end
