@@ -42,14 +42,15 @@ class MiqWorker
     end
 
     def resource_constraints
-      mem_threshold = worker_settings[:memory_threshold]
-      cpu_threshold = worker_settings[:cpu_threshold]
-      {
-        :limits => {
-          :memory => "#{mem_threshold / 1.megabyte}Mi",
-          :cpu    => "#{cpu_threshold}m"
-        }
-      }
+      mem_threshold = self.class.worker_settings[:memory_threshold]
+      cpu_threshold = self.class.worker_settings[:cpu_threshold]
+
+      return {} if mem_threshold.nil? && cpu_threshold.nil?
+
+      {:limits => {}}.tap do |h|
+        h[:limits][:memory] = "#{mem_threshold / 1.megabyte}Mi" if mem_threshold
+        h[:limits][:cpu]    = "#{cpu_threshold}m" if cpu_threshold
+      end
     end
 
     def container_image_namespace
