@@ -45,10 +45,5 @@ module BelongsToParentManagerMixin
     def name
       "#{parent_manager.try(:name)} #{PROVIDER_NAME}"
     end
-
-    def self.find_object_for_belongs_to_filter(name)
-      name.gsub!(" #{self::PROVIDER_NAME}", "")
-      includes(:parent_manager).find_by(:parent_managers_ext_management_systems => {:name => name})
-    end
   end
 end

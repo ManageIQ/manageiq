@@ -34,5 +34,10 @@ module ManageIQ::Providers
     def self.display_name(number = 1)
       n_('Network Manager', 'Network Managers', number)
     end
+
+    def self.find_object_for_belongs_to_filter(name)
+      ems = self.find_by(:name => name)
+      ems&.parent_manager_id&.present? ? self.find(ems.parent_manager_id) : ems
+    end
   end
 end
