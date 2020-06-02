@@ -15,7 +15,11 @@ RSpec.describe MiqReport::Formatters::Csv do
     end
 
     let(:csv_output) do
-      "\"Name\",\"File Name\",\"File Version\",\"Size\",\"Contents Available\",\"Permissions\",\"Collected On\",\"Last Modified\"\nvmware,XXX,11,33,true,,,\nvmware1,YYY,22,44,true,,,\n"
+      <<~CSV
+        "Name","File Name","File Version","Size","Contents Available","Permissions","Collected On","Last Modified"
+        vmware,XXX,11,33,true,,,
+        vmware1,YYY,22,44,true,,,
+      CSV
     end
 
     it "generates csv report" do
@@ -28,7 +32,11 @@ RSpec.describe MiqReport::Formatters::Csv do
       end
 
       let(:csv_output) do
-        "\"File Name\",\"Size\",\"Contents Available\",\"Permissions\",\"Collected On\",\"Last Modified\"\nXXX,33,true,,,\nYYY,44,true,,,\n"
+        <<~CSV
+          "File Name","Size","Contents Available","Permissions","Collected On","Last Modified"
+          XXX,33,true,,,
+          YYY,44,true,,,
+        CSV
       end
 
       it "hides columns in csv report" do
