@@ -93,9 +93,7 @@ FactoryBot.define do
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
           :class   => "ManageIQ::Providers::Openstack::NetworkManager",
-          :parent  => :ext_management_system do
-    parent_manager { FactoryBot.create(:ext_management_system) }
-  end
+          :parent  => :ext_management_system
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
@@ -239,7 +237,7 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/vmware/network_manager"],
           :class   => "ManageIQ::Providers::Vmware::NetworkManager",
           :parent  => :ems_cloud do
-    parent_manager { FactoryBot.create(:ext_management_system) }
+    parent_manager { FactoryBot.create(:ems_vmware_cloud) }
   end
 
   # Leaf classes for ems_cloud
@@ -256,6 +254,7 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Amazon::NetworkManager",
           :parent  => :ems_network do
     provider_region { "us-east-1" }
+    parent_manager { FactoryBot.create(:ems_amazon) }
   end
 
   factory :ems_amazon_with_authentication,
@@ -282,6 +281,7 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Azure::NetworkManager",
           :parent  => :ems_network do
     provider_region { "eastus" }
+    parent_manager { FactoryBot.create(:ems_azure) }
   end
 
   factory :ems_azure_with_authentication,
@@ -304,7 +304,9 @@ FactoryBot.define do
   factory :ems_openstack_network,
           :aliases => ["manageiq/providers/openstack/network_manager"],
           :class   => "ManageIQ::Providers::Openstack::NetworkManager",
-          :parent  => :ems_network
+          :parent  => :ems_network do
+    parent_manager { FactoryBot.create(:ems_openstack) }
+  end
 
   factory :ems_nuage_network,
           :aliases => ["manageiq/providers/nuage/network_manager"],
@@ -324,7 +326,9 @@ FactoryBot.define do
   factory :ems_google_network,
           :aliases => ["manageiq/providers/google/network_manager"],
           :class   => "ManageIQ::Providers::Google::NetworkManager",
-          :parent  => :ems_network
+          :parent  => :ems_network do
+    parent_manager { FactoryBot.create(:ems_google) }
+  end
 
   # Leaf classes for ems_container
 
