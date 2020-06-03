@@ -45,7 +45,7 @@ class MiqWorker
       mem_threshold = self.class.worker_settings[:memory_threshold]
       cpu_threshold = self.class.worker_settings[:cpu_threshold]
 
-      return {} if mem_threshold.nil? && cpu_threshold.nil?
+      return {} if !Settings.server.worker_monitor.enforce_resource_constraints || (mem_threshold.nil? && cpu_threshold.nil?)
 
       {:limits => {}}.tap do |h|
         h[:limits][:memory] = "#{mem_threshold / 1.megabyte}Mi" if mem_threshold

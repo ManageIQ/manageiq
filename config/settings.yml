@@ -988,6 +988,7 @@
   :worker_messaging_frequency: 5.seconds
   :worker_monitor_frequency: 15.seconds
   :worker_monitor:
+    :enforce_resource_constraints: false
     :kill_algorithm:
       :name: :used_swap_percent_gt_value
       :value: 80
