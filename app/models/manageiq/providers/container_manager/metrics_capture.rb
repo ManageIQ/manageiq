@@ -11,7 +11,7 @@ class ManageIQ::Providers::ContainerManager::MetricsCapture < ManageIQ::Provider
 
   def with_archived(scope)
     # We will look also for freshly archived entities, if the entity was short-lived or even sub-hour
-    archived_from = targets_archived_from
+    archived_from = Metric::Targets.targets_archived_from
     scope.where(:deleted_on => nil).or(scope.where(:deleted_on => (archived_from..Time.now.utc)))
   end
 end
