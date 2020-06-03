@@ -863,6 +863,7 @@
   :level_azure_stack: info
   :level_cn_monitoring: info
   :level_fog: info
+  :level_gce: info
   :level_mw: info
   :level_nsxt: info
   :level_nuage: info
