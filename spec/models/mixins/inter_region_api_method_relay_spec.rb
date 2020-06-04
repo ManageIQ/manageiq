@@ -208,6 +208,7 @@ RSpec.describe InterRegionApiMethodRelay do
 
     describe ".exec_api_call" do
       let(:region)             { 0 }
+      let(:userid)             { nil }
       let(:action)             { :the_action }
       let(:api_connection)     { double("ManageIQ::API::Client Connection") }
       let(:api_collection)     { double("ManageIQ::API::Client Collection", :name => collection_name) }
@@ -216,7 +217,7 @@ RSpec.describe InterRegionApiMethodRelay do
       let(:api_resource)       { ManageIQ::API::Client::Resource.subclass("test_resource").new(api_collection, {}) }
 
       before do
-        expect(described_class).to receive(:api_client_connection_for_region).with(region).and_return(api_connection)
+        expect(described_class).to receive(:api_client_connection_for_region).with(region, userid).and_return(api_connection)
         expect(api_connection).to receive(collection_name).and_return(api_collection)
       end
 

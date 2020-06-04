@@ -70,7 +70,6 @@ module InterRegionApiMethodRelay
 
   def self.exec_api_call(region, collection_name, action, api_args = nil, id = nil)
     require 'manageiq-api-client'
-    _log.info("Executing InterRegion api call for region #{region} with arguments: #{api_args}")
     api_args ||= {}
     user_name =  api_args[:requester]&.fetch("user_name")
     user_name = User.current_user&.userid if user_name.blank?
