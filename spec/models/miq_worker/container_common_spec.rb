@@ -144,7 +144,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       end
 
       it "returns the correct hash when both values are set" do
-        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold => 500)
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold_percent => 50)
         constraints = {
           :limits => {
             :memory => "500Mi",
@@ -165,10 +165,10 @@ RSpec.describe MiqWorker::ContainerCommon do
       end
 
       it "returns only cpu when cpu is set" do
-        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:cpu_threshold => 500)
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:cpu_threshold_percent => 80)
         constraints = {
           :limits => {
-            :cpu => "500m"
+            :cpu => "800m"
           }
         }
         expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
@@ -179,7 +179,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       before { stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => false}}) }
 
       it "always returns an empty hash" do
-        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold => 500)
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold => 50)
         expect(MiqGenericWorker.new.resource_constraints).to eq({})
       end
     end
