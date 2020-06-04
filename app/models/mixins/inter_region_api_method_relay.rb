@@ -71,7 +71,9 @@ module InterRegionApiMethodRelay
   def self.exec_api_call(region, collection_name, action, api_args = nil, id = nil)
     require 'manageiq-api-client'
     api_args ||= {}
-    collection = api_client_connection_for_region(region).public_send(collection_name)
+    user_name =  api_args[:requester]&.fetch("user_name")
+    user_name = User.current_user&.userid if user_name.blank?
+    collection = api_client_connection_for_region(region, user_name).public_send(collection_name)
     collection_or_instance = id ? collection.find(id) : collection
     result = collection_or_instance.public_send(action, api_args)
     case result
