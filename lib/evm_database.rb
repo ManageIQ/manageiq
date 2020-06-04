@@ -29,8 +29,8 @@ class EvmDatabase
     MiqPolicySet
     ChargebackRateDetailMeasure
     ChargeableField
-    ChargebackRate
     Currency
+    ChargebackRate
 
     BlacklistedEvent
     Classification
