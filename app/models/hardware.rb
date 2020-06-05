@@ -210,14 +210,6 @@ class Hardware < ApplicationRecord
     self.memory_mb = xmlNode.attributes["memsize"]
   end
 
-  def m_bios(_parent, xmlNode, _deletes)
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["bios"])
-    self.bios = new_bios.nil? ? xmlNode.attributes["bios"] : new_bios
-
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["location"])
-    self.bios_location = new_bios.nil? ? xmlNode.attributes["location"] : new_bios
-  end
-
   def m_vm(parent, xmlNode, _deletes)
     xmlNode.each_element do |e|
       self.guest_os = e.attributes["guestos"] if e.name == "guestos"
