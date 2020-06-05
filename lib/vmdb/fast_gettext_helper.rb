@@ -1,4 +1,5 @@
 require 'vmdb/gettext/domains'
+require 'vmdb/plugins'
 
 module Vmdb
   module FastGettextHelper
@@ -30,10 +31,10 @@ module Vmdb
       # - it
       # - nl
       #
-      @supported_locales ||= supported_locales_files.flat_map { |file| YAML.load_file(file) }
+      @supported_locales ||= supported_locale_files.flat_map { |file| YAML.load_file(file) }
     end
 
-    private_class_method def self.supported_locales_files
+    private_class_method def self.supported_locale_files
       Vmdb::Plugins.to_a.unshift(Rails)
         .map { |source| source.root.join("config", "supported_locales.yml") }
         .select(&:exist?)
