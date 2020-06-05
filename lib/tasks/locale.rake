@@ -102,9 +102,8 @@ namespace :locale do
   end
 
   desc "Extract human locale names from translation catalogs and store them in a yaml file"
-  task :extract_locale_names do
+  task :extract_locale_names => :environment do
     require 'yaml/store'
-    require Rails.root.join("lib/vmdb/fast_gettext_helper")
 
     Vmdb::FastGettextHelper.register_locales
 
