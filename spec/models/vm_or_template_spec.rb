@@ -102,6 +102,20 @@ RSpec.describe VmOrTemplate do
     end
   end
 
+  describe "save_genealogy_information" do
+    let(:vm) { FactoryBot.create(:vm_vmware) }
+    let(:parent) { FactoryBot.create(:vm_vmware) }
+
+    it "sets parent" do
+      vm.genealogy_parent = parent
+      vm.save!
+
+      reloaded_vm = Vm.find(vm.id)
+      expect(reloaded_vm.parent).to eq(parent)
+      expect(reloaded_vm.genealogy_parent).to eq(parent)
+    end
+  end
+
   describe ".miq_expression_includes_any_ipaddresses_arel" do
     subject              { FactoryBot.create(:vm) }
     let(:no_hardware_vm) { FactoryBot.create(:vm) }
