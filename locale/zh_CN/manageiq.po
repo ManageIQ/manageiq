@@ -75385,7 +75385,7 @@ msgstr "无效的图表定义"
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "locale_name"
+msgstr "简体中文"
 
 #: ./dist/js/ui-components.js:1
 msgid "Check Box"

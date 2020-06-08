@@ -75385,7 +75385,7 @@ msgstr "차트 정의가 올바르지 않습니다."
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "locale_name"
+msgstr "한국어"
 
 #: ./dist/js/ui-components.js:1
 msgid "Check Box"

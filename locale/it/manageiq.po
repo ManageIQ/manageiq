@@ -75629,7 +75629,7 @@ msgstr "Definizione grafico non valida"
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "locale_name"
+msgstr "Italiano"
 
 #: ./dist/js/ui-components.js:1
 msgid "Check Box"
