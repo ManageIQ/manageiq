@@ -2287,7 +2287,7 @@ msgstr "Nenhum dos %{labels} selecionados está na região atual"
 
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
-msgstr "O {n, plural, one {%'{'label'}' não está na região atual e será ignorado} other {%'{'label'}' não estão na região atual e serão ignorados }}"
+msgstr "O {n, plural, one {'%{label}' não está na região atual e será ignorado} other {'%{label}' não estão na região atual e serão ignorados }}"
 
 #: ../app/controllers/application_controller.rb:1585
 msgid "These VMs can not be migrated together."
@@ -2823,7 +2823,7 @@ msgstr "Armazenamento de dados"
 #: ../app/controllers/application_controller/ci_processing.rb:750
 msgid "Delete initiated for Datastore from the %{product} Database"
 msgid_plural "Delete initiated for Datastores from the %{product} Database"
-msgstr[0] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados% {product}"
+msgstr[0] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados %{product}"
 msgstr[1] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados %{product}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:762
@@ -4878,7 +4878,7 @@ msgstr[1] "\"%{name}\": em uso pelos relatórios %{rep_count}, não podem ser ex
 
 #: ../app/controllers/configuration_controller.rb:337
 msgid "Adding copy of '%{description}'"
-msgstr "Incluindo a cópia do {description}'"
+msgstr "Incluindo a cópia do %{description}'"
 
 #: ../app/controllers/configuration_controller.rb:351
 msgid "Edit of Time Profile \"%{name}\" was cancelled by the user"
@@ -5225,7 +5225,7 @@ msgstr "Não é possível iniciar o aumento da capacidade: %{message}"
 
 #: ../app/controllers/ems_infra_controller.rb:247
 msgid " Scaling down to %{a} compute nodes"
-msgstr " Reduzindo a capacidade para os nós de cálculo do {a}"
+msgstr " Reduzindo a capacidade para os nós de cálculo do %{a}"
 
 #: ../app/controllers/ems_infra_controller.rb:255
 msgid "Unable to initiate scale down: %{message}"
@@ -28168,7 +28168,7 @@ msgstr "A sub-rede não está conectada a um ativo %{table}"
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb:13
 msgid "The subnet has an active %{table}"
-msgstr "A sub-rede tem um% {table} ativo"
+msgstr "A sub-rede tem um %{table} ativo"
 
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:9
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:17

@@ -2633,7 +2633,7 @@ msgstr "在 '%{task}' 期間發生錯誤：%{error_message}"
 #: ../app/controllers/application_controller/ci_processing.rb:300
 msgid "%{task} initiated for %{number} %{model} from the %{product} Database"
 msgid_plural "%{task} initiated for %{number} %{models} from the %{product} Database"
-msgstr[0] "已從 %{product} Database 起始 %{number} %{models} 的 {task}"
+msgstr[0] "已從 %{product} Database 起始 %{number} %{models} 的 %{task}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:320
 msgid "No providers were selected for %{task}"

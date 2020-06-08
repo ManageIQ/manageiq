@@ -36705,7 +36705,7 @@ msgstr "참고: Red Hat OpenStack 또는 Amazon EC2와 같은 클라우드 제�
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:27
 msgid "No %{clusters} found in the current region."
-msgstr "현재 지역에서 {clusters}을(를) 찾을 수 없습니다."
+msgstr "현재 지역에서 %{clusters}을(를) 찾을 수 없습니다."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:30
 msgid "Enable Collection by %{clusters}"
@@ -71490,12 +71490,12 @@ msgstr "서버 %{name} 메모리 사용 %{memory_usage}이(가) %{memory_thresho
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3499
 msgid "The role %{role_name} has been activated on server %{server_name}"
-msgstr "%{role_name} 역할이 서버 {server_name}에서 활성화되었습니다."
+msgstr "%{role_name} 역할이 서버 %{server_name}에서 활성화되었습니다."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3501
 msgid "The role %{role_name} has started activation on server %{server_name}"
-msgstr "%{role_name} 역할이 서버 {server_name}에서 활성화를 시작했습니다."
+msgstr "%{role_name} 역할이 서버 %{server_name}에서 활성화를 시작했습니다."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3503

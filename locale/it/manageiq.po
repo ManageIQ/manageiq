@@ -7740,7 +7740,7 @@ msgstr "La riconfigurazione non si applica perché è stata selezionata almeno u
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:98
 msgid "Between %{min} and %{max}"
-msgstr "Tra %{min} e% {max}"
+msgstr "Tra %{min} e %{max}"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:373
 msgid "VM Reconfigure Request was cancelled by the user"

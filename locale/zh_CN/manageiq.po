@@ -5507,7 +5507,7 @@ msgstr "编辑主机聚集“%{name}”失败：任务启动失败"
 
 #: ../app/controllers/host_aggregate_controller.rb:128
 msgid "Update aggregate not supported by Host Aggregate \"%{name}\""
-msgstr "主机聚集“{name}”不支持更新聚集"
+msgstr "主机聚集“%{name}”不支持更新聚集"
 
 #: ../app/controllers/host_aggregate_controller.rb:143
 msgid "Host Aggregate \"%{name}\" updated"
@@ -29090,7 +29090,7 @@ msgstr "于 %{start_time} 上运行 %{interval}"
 
 #: ../app/models/miq_schedule.rb:168
 msgid "Run %{interval} starting on %{start_time}"
-msgstr "运行 %{interval}，从 {start_time} 开始"
+msgstr "运行 %{interval}，从 %{start_time} 开始"
 
 #: ../app/models/miq_schedule.rb:173
 msgid "minutes"
@@ -32760,7 +32760,7 @@ msgstr "以前"
 
 #: ../app/views/layouts/_paging_bar.html.haml:31
 msgid "%{start_number} of %{total_items}"
-msgstr "第 %{start_number} 个（共 {total_items} 个）"
+msgstr "第 %{start_number} 个（共 %{total_items} 个）"
 
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35

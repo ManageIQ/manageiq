@@ -36231,7 +36231,7 @@ msgstr "<Haga clic en esta fila para crear una nueva entrada>"
 
 #: ../app/views/ops/_classification_entry.html.haml:55
 msgid "Deleting the '%{entry_name}' entry will also unassign it from all items, are you sure?"
-msgstr "La supresión de la entrada {entry_name}' también cancelará su asignación a todos los elementos. ¿Está seguro?"
+msgstr "La supresión de la entrada %{entry_name}' también cancelará su asignación a todos los elementos. ¿Está seguro?"
 
 #. TRANSLATORS: file: product/views/VmdbIndex.yaml
 #. TRANSLATORS: file: product/views/VmdbTableEvm.yaml
@@ -71874,7 +71874,7 @@ msgstr "La creación de la instantánea %{snapshot_name} del volumen %{volume_na
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3555
 msgid "Creating Snapshot %{snapshot_name} of Volume %{volume_name} failed: %{error_message}"
-msgstr "La creación de la instantánea %{snapshot_name} del volumen %{volume_name} ha fallado: {error_message}"
+msgstr "La creación de la instantánea %{snapshot_name} del volumen %{volume_name} ha fallado: %{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3557
@@ -71884,7 +71884,7 @@ msgstr "La supresión de la instantánea %{subject} del volumen %{volume_name} h
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3559
 msgid "Deleting Snapshot %{subject} of Volume %{volume_name} failed: %{error_message}"
-msgstr "La supresión de la instantánea %{subject} del volumen %{volume_name} ha fallado: {error_message}"
+msgstr "La supresión de la instantánea %{subject} del volumen %{volume_name} ha fallado: %{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3561
