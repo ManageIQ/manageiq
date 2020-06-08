@@ -8,7 +8,7 @@ module Vmdb
       FastGettext.class.class_eval { attr_accessor :human_available_locales }
       FastGettext.human_available_locales = []
       FastGettext.available_locales.each do |locale|
-        FastGettext.human_available_locales << [human_locale_names[locale], locale]
+        FastGettext.human_available_locales << [human_locale_names[locale] || "locale_name", locale]
       end
       FastGettext.human_available_locales.sort! { |a, b| a[0] <=> b[0] }
     end
