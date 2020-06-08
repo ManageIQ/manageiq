@@ -10,10 +10,31 @@ shared_examples :placeholders do |dir|
       false_negatives[po_file.to_s] = []
       next if locale == 'en' # There's no need to test english .po
 
+      #########################################################
+      # Looks like the following in the .po file
+      # de:    "Plural-Forms: nplurals=2; plural=n != 1;\n"
+      # en:    "Plural-Forms: nplurals=2; plural=n != 1;\n"
+      # es:    "Plural-Forms: nplurals=2; plural=n != 1;\n"
+      # fr:    "Plural-Forms: nplurals=2; plural=n>1;\n"
+      # it:    "Plural-Forms: nplurals=2; plural=n != 1;\n"
+      # ja:    "Plural-Forms: nplurals=1; plural=0;\n"
+      # ko:    "Plural-Forms: nplurals=1; plural=0;\n"
+      # pt_BR: "Plural-Forms: nplurals=2; plural=n>1;\n"
+      # zh_CN: "Plural-Forms: nplurals=1; plural=0;\n"
+      # zh_TW: "Plural-Forms: nplurals=1; plural=0;\n"
+      #
+      # For languages that do not support pluralizations,
+      #  nplurals = 1
+      #
+      # So, calling the pluralisation_rule on a number > 1
+      #  can tell us if pluralisation is supported or not
+      #########################################################
+      plural_unsupported = (po.pluralisation_rule.call(3) == 0)
+
       po.data.each do |original, translation|
         next if translation.nil? || !original.include?("%{") # Skip if string is not translated or original does not contain %{}
 
-        if %w[ja zh_CN].include?(locale) && original.include?("\u0000") # Chinese and Japanese translations do not have plural forms
+        if plural_unsupported && original.include?("\u0000") # For languages that do not support pluralisation
           if translation.include?("\u0000") # there should be only one translated form
             incorrect_plurals << translation
             next
