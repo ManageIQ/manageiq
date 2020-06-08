@@ -1,12 +1,11 @@
 describe :locale_name do
   it "all languages have properly set locale_name" do
     Vmdb::FastGettextHelper.find_available_locales.each do |lang|
-      FastGettext.locale = lang
-      locale_name = _('locale_name')
-      expect(locale_name).not_to eq('locale_name')
+      FastGettext.with_locale(lang) do
+        locale_name = _('locale_name')
+        expect(locale_name).not_to eq('locale_name')
+      end
     end
-
-    FastGettext.locale = 'en' # set the locale for runnin specs back to English
   end
 
   it "all entries in human_locale_names.yml are valid" do
