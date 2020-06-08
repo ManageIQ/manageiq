@@ -5,7 +5,7 @@ shared_examples :placeholders do |dir|
     incorrect_plurals = []
 
     Pathname.glob(File.join(dir, "**", "*.po")).each do |po_file|
-      po = FastGettext::PoFile.new(po_file)
+      po = FastGettext::PoFile.new(po_file, :report_warning => false)
       locale = po_file.dirname.basename.to_s
       false_negatives[po_file.to_s] = []
       next if locale == 'en' # There's no need to test english .po
