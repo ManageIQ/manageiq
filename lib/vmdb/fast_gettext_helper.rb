@@ -53,7 +53,9 @@ module Vmdb
       Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path, :po) # Default ManageIQ domain
       Vmdb::Gettext::Domains.initialize_chain_repo
 
-      FastGettext.default_available_locales = find_available_locales
+      available_locales = find_available_locales
+      FastGettext.default_available_locales = available_locales
+      FastGettext.default_locale = 'en' if available_locales.include?('en')
 
       # temporary hack to fix a problem with locales including "_"
       fix_i18n_available_locales
