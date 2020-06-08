@@ -1,13 +1,8 @@
-# English translations for manageiq package.
-# Template file for strings which can be localized in the ManageIQ Application.
-# This file is distributed under the same license as the Manageiq package.
+# Spanish translations for the ManageIQ Application.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: manageiq master\n"
-"PO-Revision-Date: 2014-10-20 17:32+0200\n"
-"Last-Translator: Jozef Zigmund <jzigmund@redhat.com>\n"
-"Language-Team: English\n"
+"Project-Id-Version: manageiq jansa\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
