@@ -1,0 +1,13 @@
+de:
+  product:
+    name: ManageIQ
+    name_full: ManageIQ
+    copyright: "Copyright (c) 2020 ManageIQ. Sponsored by Red Hat Inc."
+
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"

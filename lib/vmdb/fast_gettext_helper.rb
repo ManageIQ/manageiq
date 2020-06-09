@@ -8,7 +8,7 @@ module Vmdb
       FastGettext.class.class_eval { attr_accessor :human_available_locales }
       FastGettext.human_available_locales = []
       FastGettext.available_locales.each do |locale|
-        FastGettext.human_available_locales << [human_locale_names[locale], locale]
+        FastGettext.human_available_locales << [human_locale_names[locale] || "locale_name", locale]
       end
       FastGettext.human_available_locales.sort! { |a, b| a[0] <=> b[0] }
     end
@@ -53,7 +53,9 @@ module Vmdb
       Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path, :po) # Default ManageIQ domain
       Vmdb::Gettext::Domains.initialize_chain_repo
 
-      FastGettext.default_available_locales = find_available_locales
+      available_locales = find_available_locales
+      FastGettext.default_available_locales = available_locales
+      FastGettext.default_locale = 'en' if available_locales.include?('en')
 
       # temporary hack to fix a problem with locales including "_"
       fix_i18n_available_locales
