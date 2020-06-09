@@ -4,7 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-# Unreleased as of Sprint ending 2020-05025
+# Unreleased as of Sprint 138 ending 2020-06-10
+
+### Added
+
+* Bump the worker liveness check timeout to avoid false failures [(#20236)](https://github.com/ManageIQ/manageiq/pull/20236)
+* Improve formatting for rate columns in chargeback reports [(#20228)](https://github.com/ManageIQ/manageiq/pull/20228)
+* Set imagePullPolicy [(#20220)](https://github.com/ManageIQ/manageiq/pull/20220)
+
+### Fixed
+
+* Fix VM retirement initiated from the global region [(#20244)](https://github.com/ManageIQ/manageiq/pull/20244)
+* Fixed a typo in the report title [(#20227)](https://github.com/ManageIQ/manageiq/pull/20227)
+* Don't create data directory outside the source tree in containers [(#20224)](https://github.com/ManageIQ/manageiq/pull/20224)
+
+# Unreleased as of Sprint 137 ending 2020-05-25
 
 ### Added
 
