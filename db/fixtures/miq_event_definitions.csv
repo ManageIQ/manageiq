@@ -228,11 +228,16 @@ containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compl
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
 
 containerproject_created,Container Project Discovered,Default,container_operations
+containerproject_compliance_check,Container Project Compliance Check,Default,compliance
+containerproject_compliance_passed,Container Project Compliance Passed,Default,compliance
+containerproject_compliance_failed,Container Project Compliance Failed,Default,compliance
 
 #
 # Physical Server Operations
 #
 physicalserver_compliance_check,Physical Server Compliance Check,Default,compliance
+physicalserver_compliance_passed,Physical Server Compliance Passed,Default,compliance
+physicalserver_compliance_failed,Physical Server Compliance Failed,Default,compliance
 physical_server_shutdown,Physical Server Shutdown,Default,physical_server_operations
 physical_server_start,Physical Server Start,Default,physical_server_operations
 physical_server_reset,Physical Server Reset,Default,physical_server_operations
