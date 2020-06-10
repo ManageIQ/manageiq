@@ -1,9 +1,13 @@
 describe MiqReport::Formatters::Csv do
   describe "#to_csv" do
     let(:col_options) { nil }
+    let(:name_1)      { "vmware" }
+    let(:name_2)      { "vmware1" }
+    let(:csv_name_1)  { "vmware" }
+    let(:csv_name_2)  { "vmware1" }
     let(:table_data) do
-      [{"id" => 5, "name" => "vmware", "base_name" => "XXX", "file_version" => "11", "size" => "33", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil},
-       {"id" => 1, "name" => "vmware1", "base_name" => "YYY", "file_version" => "22", "size" => "44", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil}]
+      [{"id" => 5, "name" => name_1, "base_name" => "XXX", "file_version" => "11", "size" => "33", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil},
+       {"id" => 1, "name" => name_2, "base_name" => "YYY", "file_version" => "22", "size" => "44", "contents_available" => true, "permissions" => nil, "updated_on" => nil, "mtime" => nil}]
     end
 
     let(:miq_report_filesystem) do
@@ -15,7 +19,11 @@ describe MiqReport::Formatters::Csv do
     end
 
     let(:csv_output) do
-      "\"Name\",\"File Name\",\"File Version\",\"Size\",\"Contents Available\",\"Permissions\",\"Collected On\",\"Last Modified\"\nvmware,XXX,11,33,true,,,\nvmware1,YYY,22,44,true,,,\n"
+      <<~CSV
+        "Name","File Name","File Version","Size","Contents Available","Permissions","Collected On","Last Modified"
+        #{csv_name_1},XXX,11,33,true,,,
+        #{csv_name_2},YYY,22,44,true,,,
+      CSV
     end
 
     it "generates csv report" do
@@ -28,11 +36,48 @@ describe MiqReport::Formatters::Csv do
       end
 
       let(:csv_output) do
-        "\"File Name\",\"Size\",\"Contents Available\",\"Permissions\",\"Collected On\",\"Last Modified\"\nXXX,33,true,,,\nYYY,44,true,,,\n"
+        <<~CSV
+          "File Name","Size","Contents Available","Permissions","Collected On","Last Modified"
+          XXX,33,true,,,
+          YYY,44,true,,,
+        CSV
       end
 
       it "hides columns in csv report" do
         expect(miq_report_filesystem.to_csv).to eq(csv_output)
+      end
+    end
+
+    context "with spreadsheet formulas injected in the contents" do
+      SPREADSHEET_FORMULA_VALUE_PREFIXES = %w[= + - @]
+
+      SPREADSHEET_FORMULA_VALUE_PREFIXES.each do |prefix|
+        context "first column starts with '#{prefix}' with '!' present" do
+          let(:name_1)     { "#{prefix}cmd|' /C notepad'!'B1'"  }
+          let(:csv_name_1) { "'#{prefix}cmd|' /C notepad'!'B1'" }
+
+          it "escapes the column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
+
+        context "first column starts with '#{prefix}' with '(' present" do
+          let(:name_1)     { %Q{#{prefix}HYPERLINK("example.com/vm/B1","Link to B1")}  }
+          let(:csv_name_1) { %Q{"'#{prefix}HYPERLINK(""example.com/vm/B1"",""Link to B1"")"} }
+
+          it "escapes the column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
+
+        context "first column starts with '#{prefix}' without '!' or '(' present" do
+          let(:name_1)     { "#{prefix}B1"  }
+          let(:csv_name_1) { "#{prefix}B1" }
+
+          it "does not escape column data" do
+            expect(miq_report_filesystem.to_csv).to eq(csv_output)
+          end
+        end
       end
     end
   end
