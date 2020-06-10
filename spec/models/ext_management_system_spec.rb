@@ -70,6 +70,7 @@ RSpec.describe ExtManagementSystem do
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
       "lenovo_ph_infra"             => "Lenovo XClarity",
+      "nsxt_network"                => "VMware NSX-T Network Manager",
       "nuage_network"               => "Nuage Network Manager",
       "redfish_ph_infra"            => "Redfish",
       "redhat_network"              => "Redhat Network",
