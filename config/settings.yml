@@ -1141,7 +1141,6 @@
         :ems_refresh_worker_google_network: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
-        :ems_refresh_worker_nsxt_network: {}
       :event_handler:
         :cpu_usage_threshold: 0.percent
         :nice_delta: 7
