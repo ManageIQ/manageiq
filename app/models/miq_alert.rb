@@ -408,76 +408,76 @@ class MiqAlert < ApplicationRecord
 
   def self.automate_expressions
     @automate_expressions ||= [
-      {:name => "nothing", :description => _(" Nothing"), :db => BASE_TABLES, :options => []},
-      {:name => "ems_alarm", :description => _("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}',
+      {:name => "nothing", :description => N_(" Nothing"), :db => BASE_TABLES, :options => []},
+      {:name => "ems_alarm", :description => N_("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}',
         :options => [
-          {:name => :ems_id, :description => _("Management System")},
-          {:name => :ems_alarm_mor, :description => _("Alarm")}
+          {:name => :ems_id, :description => N_("Management System")},
+          {:name => :ems_alarm_mor, :description => N_("Alarm")}
         ]},
-      {:name => "event_threshold", :description => _("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types]}',
+      {:name => "event_threshold", :description => N_("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types]}',
         :options => [
-          {:name => :event_types, :description => _("Event to Check"), :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
-          {:name => :time_threshold, :description => _("How Far Back to Check"), :required => true},
-          {:name => :freq_threshold, :description => _("Event Count Threshold"), :required => true, :numeric => true}
+          {:name => :event_types, :description => N_("Event to Check"), :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
+          {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
+          {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "event_log_threshold", :description => _("Event Log Threshold"), :db => ["Vm"], :responds_to_events  => "vm_scan_complete",
+      {:name => "event_log_threshold", :description => N_("Event Log Threshold"), :db => ["Vm"], :responds_to_events  => "vm_scan_complete",
         :options => [
-          {:name => :event_log_message_filter_type, :description => _("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
-          {:name => :event_log_message_filter_value, :description => _("Message Filter"), :required => true},
-          {:name => :event_log_name, :description => _("Event Log Name")},
-          {:name => :event_log_level, :description => _("Event Level")},
-          {:name => :event_log_event_id, :description => _("Event Id")},
-          {:name => :event_log_source, :description => _("Event Source")},
-          {:name => :time_threshold, :description => _("How Far Back to Check"), :required => true},
-          {:name => :freq_threshold, :description => _("Event Count Threshold"), :required => true, :numeric => true}
+          {:name => :event_log_message_filter_type, :description => N_("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
+          {:name => :event_log_message_filter_value, :description => N_("Message Filter"), :required => true},
+          {:name => :event_log_name, :description => N_("Event Log Name")},
+          {:name => :event_log_level, :description => N_("Event Level")},
+          {:name => :event_log_event_id, :description => N_("Event Id")},
+          {:name => :event_log_source, :description => N_("Event Source")},
+          {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
+          {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "hostd_log_threshold", :description => _("Hostd Log Threshold"), :db => ["Host"], :responds_to_events => "host_scan_complete",
+      {:name => "hostd_log_threshold", :description => N_("Hostd Log Threshold"), :db => ["Host"], :responds_to_events => "host_scan_complete",
         :options => [
-          {:name => :event_log_message_filter_type, :description => _("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
-          {:name => :event_log_message_filter_value, :description => _("Message Filter"), :required => true},
-          {:name => :event_log_level, :description => _("Message Level")},
-          {:name => :event_log_source, :description => _("Message Source")},
-          {:name => :time_threshold, :description => _("How Far Back to Check"), :required => true},
-          {:name => :freq_threshold, :description => _("Event Count Threshold"), :required => true, :numeric => true}
+          {:name => :event_log_message_filter_type, :description => N_("Message Filter Type"), :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
+          {:name => :event_log_message_filter_value, :description => N_("Message Filter"), :required => true},
+          {:name => :event_log_level, :description => N_("Message Level")},
+          {:name => :event_log_source, :description => N_("Message Source")},
+          {:name => :time_threshold, :description => N_("How Far Back to Check"), :required => true},
+          {:name => :freq_threshold, :description => N_("Event Count Threshold"), :required => true, :numeric => true}
         ]},
-      {:name => "realtime_performance", :description => _("Real Time Performance"), :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
+      {:name => "realtime_performance", :description => N_("Real Time Performance"), :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
         :options => [
-          {:name => :perf_column, :description => _("Performance Field"), :values => rt_perf_model_details(dbs)},
-          {:name => :operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
-          {:name => :value_threshold, :description => _("Value Threshold"), :required => true},
-          {:name => :trend_direction, :description => _("And is Trending"), :required => true, :values => {"none" => " Don't Care", "up" => "Up", "up_more_than" => "Up More Than", "down" => "Down", "down_more_than" => "Down More Than", "not_up" => "Not Up", "not_down" => "Not Down"}},
-          {:name => :trend_steepness, :description => _("Per Minute"), :required => false},
-          {:name => :rt_time_threshold, :description => _("Field Meets Criteria for"), :required => true},
-          {:name => :debug_trace, :description => _("Debug Tracing"), :required => true, :values => ["false", "true"]},
+          {:name => :perf_column, :description => N_("Performance Field"), :values => rt_perf_model_details(dbs)},
+          {:name => :operator, :description => N_("Operator"), :values => [">", ">=", "<", "<=", "="]},
+          {:name => :value_threshold, :description => N_("Value Threshold"), :required => true},
+          {:name => :trend_direction, :description => N_("And is Trending"), :required => true, :values => {"none" => " Don't Care", "up" => "Up", "up_more_than" => "Up More Than", "down" => "Down", "down_more_than" => "Down More Than", "not_up" => "Not Up", "not_down" => "Not Down"}},
+          {:name => :trend_steepness, :description => N_("Per Minute"), :required => false},
+          {:name => :rt_time_threshold, :description => N_("Field Meets Criteria for"), :required => true},
+          {:name => :debug_trace, :description => N_("Debug Tracing"), :required => true, :values => ["false", "true"]},
         ]},
-      {:name => "operating_range_exceptions", :description => _("Normal Operating Range"), :db => (dbs = ["Vm"]), :responds_to_events => "vm_perf_complete",
+      {:name => "operating_range_exceptions", :description => N_("Normal Operating Range"), :db => (dbs = ["Vm"]), :responds_to_events => "vm_perf_complete",
         :options => [
-          {:name => :perf_column, :description => _("Performance Field"), :values => operating_range_perf_model_details(dbs)},
-          {:name => :operator, :description => _("Operator"), :values => ["Exceeded", "Fell Below"]},
-          {:name => :rt_time_threshold, :description => _("Field Meets Criteria for"), :required => true}
+          {:name => :perf_column, :description => N_("Performance Field"), :values => operating_range_perf_model_details(dbs)},
+          {:name => :operator, :description => N_("Operator"), :values => ["Exceeded", "Fell Below"]},
+          {:name => :rt_time_threshold, :description => N_("Field Meets Criteria for"), :required => true}
         ]},
-      {:name => "hourly_performance", :description => _("Hourly Performance"), :db => (dbs = ["EmsCluster"]), :responds_to_events => "_hourly_timer_",
+      {:name => "hourly_performance", :description => N_("Hourly Performance"), :db => (dbs = ["EmsCluster"]), :responds_to_events => "_hourly_timer_",
         :options => [
-          {:name => :perf_column, :description => _("Performance Field"), :values => hourly_perf_model_details(dbs)},
-          {:name => :operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
-          {:name => :value_threshold, :description => _("Value Threshold"), :required => true},
-          {:name => :trend_direction, :description => _("And is Trending"), :required => true, :values => {"none" => " Don't Care", "up" => "Up", "down" => "Down", "not_up" => "Not Up", "not_down" => "Not Down"}},
-          {:name => :hourly_time_threshold, :description => _("Field Meets Criteria for"), :required => true},
-          {:name => :debug_trace, :description => _("Debug Tracing"), :required => true, :values => ["false", "true"]},
+          {:name => :perf_column, :description => N_("Performance Field"), :values => hourly_perf_model_details(dbs)},
+          {:name => :operator, :description => N_("Operator"), :values => [">", ">=", "<", "<=", "="]},
+          {:name => :value_threshold, :description => N_("Value Threshold"), :required => true},
+          {:name => :trend_direction, :description => N_("And is Trending"), :required => true, :values => {"none" => " Don't Care", "up" => "Up", "down" => "Down", "not_up" => "Not Up", "not_down" => "Not Down"}},
+          {:name => :hourly_time_threshold, :description => N_("Field Meets Criteria for"), :required => true},
+          {:name => :debug_trace, :description => N_("Debug Tracing"), :required => true, :values => ["false", "true"]},
         ]},
-      {:name => "reconfigured_hardware_value", :description => _("Hardware Reconfigured"), :db => ["Vm"], :responds_to_events => "vm_reconfigure",
+      {:name => "reconfigured_hardware_value", :description => N_("Hardware Reconfigured"), :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
-          {:name => :hdw_attr, :description => _("Hardware Attribute"), :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :cpu_total_cores => Dictionary.gettext("cpu_total_cores", :type => "column")}},
-          {:name => :operator, :description => _("Operator"), :values => ["Increased", "Decreased"]}
+          {:name => :hdw_attr, :description => N_("Hardware Attribute"), :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :cpu_total_cores => Dictionary.gettext("cpu_total_cores", :type => "column")}},
+          {:name => :operator, :description => N_("Operator"), :values => ["Increased", "Decreased"]}
         ]},
-      {:name => "changed_vm_value", :description => _("VM Value changed"), :db => ["Vm"], :responds_to_events => "vm_reconfigure",
+      {:name => "changed_vm_value", :description => N_("VM Value changed"), :db => ["Vm"], :responds_to_events => "vm_reconfigure",
         :options => [
-          {:name => :hdw_attr, :description => _("VM Attribute"), :values => {
+          {:name => :hdw_attr, :description => N_("VM Attribute"), :values => {
             :cpu_affinity => Dictionary.gettext("cpu_affinity", :type => "column")
           }},
-          {:name => :operator, :description => _("Operator"), :values => ["Changed"]}
+          {:name => :operator, :description => N_("Operator"), :values => ["Changed"]}
         ]},
-      {:name => "dwh_generic", :description => _("External Prometheus Alerts"), :db => ["ContainerNode", "ExtManagementSystem"], :responds_to_events => "datawarehouse_alert",
+      {:name => "dwh_generic", :description => N_("External Prometheus Alerts"), :db => ["ContainerNode", "ExtManagementSystem"], :responds_to_events => "datawarehouse_alert",
         :options => [], :always_evaluate => true}
     ]
   end
