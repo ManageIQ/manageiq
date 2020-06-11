@@ -5,6 +5,7 @@ class MiqAeNamespace < ApplicationRecord
   has_ancestry
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
 
   EXPORT_EXCLUDE_KEYS = [/^id$/, /_id$/, /^created_on/, /^updated_on/,
                          /^updated_by/, /^reserved$/, /^commit_message/,
@@ -12,7 +13,7 @@ class MiqAeNamespace < ApplicationRecord
                          /^last_import_on/, /^source/, /^top_level_namespace/].freeze
 
   belongs_to :domain, :class_name => "MiqAeDomain", :inverse_of => false
-  has_many :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) }, :class_name => "MiqAeClass",
+  has_many :ae_classes, :class_name => "MiqAeClass",
            :foreign_key => :namespace_id, :dependent => :destroy, :inverse_of => :ae_namespace
 
   validates :name,
@@ -35,30 +36,24 @@ class MiqAeNamespace < ApplicationRecord
     return nil if fqname.blank?
 
     dname, *partial = split_fqname(fqname)
-    domain_query = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname)).where(:domain_id => nil)
+    domain_query = MiqAeDomain.unscoped.where(MiqAeDomain.arel_table[:name].lower.eq(dname.downcase)).where(:domain_id => nil)
     return domain_query.first if partial.empty?
 
+    domain_id = domain_query.select(:id)
     query = include_classes ? includes(:ae_classes) : all
-    query = query.where(arel_table[:relative_path].lower.eq(partial.join("/")))
-    query.find_by(:domain_id => domain_query.select(:id))
+    query.find_by(:domain_id => domain_id, :lower_relative_path => partial.join("/").downcase)
   end
 
   singleton_class.send(:alias_method, :find_by_fqname, :lookup_by_fqname)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_fqname => :lookup_by_fqname)
 
-  def self.split_fqname(fqname)
-    fqname = fqname[1..-1] if fqname[0] == '/'
-    fqname.downcase.split('/')
-  end
-
   def self.find_or_create_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?
 
-    fqname = fqname[1..-1] if fqname[0] == '/'
     found = lookup_by_fqname(fqname, include_classes)
     return found unless found.nil?
 
-    parts = fqname.split('/')
+    parts = split_fqname(fqname)
     new_parts = [parts.pop]
     loop do
       break if parts.empty?
@@ -69,7 +64,7 @@ class MiqAeNamespace < ApplicationRecord
     end
 
     new_parts.each do |p|
-      found = found ? create(:name => p, :parent => found) : create(:name => p)
+      found = found ? create(:name => p, :parent => found) : MiqAeDomain.create(:name => p)
     end
 
     found
@@ -102,12 +97,6 @@ class MiqAeNamespace < ApplicationRecord
     roots
   end
 
-  def fqname
-    return "/#{name}" if domain_id.blank?
-
-    ["", domain&.name, relative_path].compact.join("/")
-  end
-
   def editable?(user = User.current_user)
     raise ArgumentError, "User not provided to editable?" unless user
     return false if domain? && user.current_tenant.id != tenant_id
@@ -118,10 +107,6 @@ class MiqAeNamespace < ApplicationRecord
   def ns_fqname
     return nil if fqname == domain_name
     fqname.sub(domain_name.to_s, '')
-  end
-
-  def domain_name
-    domain&.name
   end
 
   def domain?

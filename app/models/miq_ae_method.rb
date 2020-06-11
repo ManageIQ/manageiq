@@ -3,6 +3,8 @@ require 'manageiq/automation_engine/syntax_checker'
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
+  include RelativePathMixin
+
   default_value_for(:embedded_methods) { [] }
   validates :embedded_methods, :exclusion => { :in => [nil] }
   serialize :options, Hash
@@ -46,10 +48,6 @@ class MiqAeMethod < ApplicationRecord
     result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
     [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
-  end
-
-  def fqname
-    ["", domain&.name, relative_path].compact.join("/")
   end
 
   # my method's fqname is /domain/namespace1/namespace2/class/method
@@ -131,7 +129,7 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def self.lookup_by_class_id_and_name(class_id, name)
-    ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
+    ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name.downcase, nil, true)
     ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
   end
 
@@ -146,7 +144,7 @@ class MiqAeMethod < ApplicationRecord
     domain_ids = user.current_tenant.enabled_domains
     joins(:domain).where(:miq_ae_namespaces => {:id => domain_ids})
                   .order("miq_ae_namespaces.priority DESC")
-                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase))
+                  .find_by(arel_table[:relative_path].lower.matches(relative_path.downcase, nil, true))
   end
 
   private
