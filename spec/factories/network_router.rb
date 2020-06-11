@@ -12,4 +12,7 @@ FactoryBot.define do
                                  :parent => :network_router
   factory :network_router_google, :class  => "ManageIQ::Providers::Google::NetworkManager::NetworkRouter",
                                   :parent => :network_router
+  factory :network_router_nsxt,
+          :class  => "ManageIQ::Providers::Nsxt::NetworkManager::NetworkRouter",
+          :parent => :network_router
 end

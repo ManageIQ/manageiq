@@ -24,4 +24,7 @@ FactoryBot.define do
   factory :cloud_network_vmware_vapp,
           :class  => "ManageIQ::Providers::Vmware::NetworkManager::CloudNetwork::VappNet",
           :parent => :cloud_network
+  factory :cloud_network_nsxt,
+          :class  => "ManageIQ::Providers::Nsxt::NetworkManager::CloudNetwork",
+          :parent => :cloud_network
 end

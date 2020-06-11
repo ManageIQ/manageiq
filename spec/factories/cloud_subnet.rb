@@ -12,4 +12,7 @@ FactoryBot.define do
                                :parent => :cloud_subnet
   factory :cloud_subnet_google, :class  => "ManageIQ::Providers::Google::NetworkManager::CloudSubnet",
                                 :parent => :cloud_subnet
+  factory :cloud_subnet_nsxt,
+          :class  => "ManageIQ::Providers::Nsxt::NetworkManager::CloudSubnet",
+          :parent => :cloud_subnet
 end

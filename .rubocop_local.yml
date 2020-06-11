@@ -26,6 +26,7 @@ GlobalVars:
   - $vim_log
   - $remote_console_log
   - $nuage_log
+  - $nsxt_log
   - $redfish_log
 Rails/Exit:
   Exclude:

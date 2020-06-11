@@ -311,6 +311,12 @@ FactoryBot.define do
           :class   => "ManageIQ::Providers::Nuage::NetworkManager",
           :parent  => :ems_network
 
+
+  factory :ems_nsxt_network,
+          :aliases => ["manageiq/providers/nsxt/network_manager"],
+          :class   => "ManageIQ::Providers::Nsxt::NetworkManager",
+          :parent  => :ems_network
+
   factory :ems_google,
           :aliases => ["manageiq/providers/google/cloud_manager"],
           :class   => "ManageIQ::Providers::Google::CloudManager",
