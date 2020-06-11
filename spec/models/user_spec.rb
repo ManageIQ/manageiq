@@ -269,6 +269,11 @@ RSpec.describe User do
         expect(@user.valid?).to be_truthy
       end
 
+      it "when assigning to a group not under the user" do
+        @user.current_group = @group3
+        expect(@user.valid?).to be_falsey
+      end
+
       it "when not belongs to miq_groups" do
         @user.miq_groups = [@group2, @group3]
         expect(@user.current_group).to eq(@group2)
