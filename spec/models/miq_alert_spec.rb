@@ -435,7 +435,7 @@ RSpec.describe MiqAlert do
       expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
-    it "doesnt detects with a shared tag assigned to a Vm's ems" do
+    it "does not detect with a shared tag assigned to a Vm's ems" do
       ems = FactoryBot.create(:ems_vmware)
       vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
       ems.tag_add(tag.name, :ns => "")
