@@ -16,7 +16,7 @@ module MiqEnvironment
 
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
-      @supports_systemd = is_appliance? && supports_command?('systemctl')
+      @supports_systemd = is_appliance? && !is_container? && supports_command?('systemctl')
     end
 
     def self.supports_nohup_and_backgrounding?

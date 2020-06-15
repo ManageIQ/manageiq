@@ -115,6 +115,19 @@ RSpec.describe MiqEnvironment do
             assert_same_result_every_time(:is_production_build?, true)
           end
         end
+
+        context ".supports_systemd?" do
+          it "returns false when container conditions are met" do
+            container_conditions
+            assert_same_result_every_time(:supports_systemd?, false)
+          end
+
+          it "returns true when appliance conditions are met" do
+            appliance_conditions
+            expect(MiqEnvironment::Command).to receive(:supports_command?).with("systemctl").and_return(true)
+            assert_same_result_every_time(:supports_systemd?, true)
+          end
+        end
       end
     end
   end
