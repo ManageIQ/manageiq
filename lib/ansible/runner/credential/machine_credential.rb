@@ -7,8 +7,10 @@ module Ansible
 
       def command_line
         {:user => auth.userid}.delete_blanks.merge(become_args).tap do |args|
-          # Add `--ask-pass` flag to ansible_playbook if we have a password to provide
+          # Add `--ask-pass` or `--ask-become-pass` flags to ansible_playbook
+          # if we have a password to provide
           args[:ask_pass] = nil if auth.password.present?
+          args[:ask_become_pass] = nil if auth.become_password.present?
         end
       end
 
