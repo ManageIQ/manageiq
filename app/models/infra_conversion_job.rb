@@ -351,7 +351,7 @@ class InfraConversionJob < Job
           if context["retries_#{state}".to_sym] % 10 == 0
             target = InventoryRefresh::Target.new(
               :association => :vms,
-              :manager_ref => {:id => target_vm.id},
+              :manager_ref => {:ems_ref => target_vm.ems_ref},
               :manager     => target_vm.ext_management_system
             )
             EmsRefresh.queue_refresh(target)

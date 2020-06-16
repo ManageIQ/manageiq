@@ -1159,7 +1159,7 @@ RSpec.describe InfraConversionJob, :v2v do
         allow(InventoryRefresh::Target).to receive(:new).with(
           :association => :vms,
           :manager     => ems_vmware,
-          :manager_ref => {:id => vm_vmware.id}
+          :manager_ref => {:ems_ref => vm_vmware.ems_ref}
         ).and_return(target)
         expect(EmsRefresh).to receive(:queue_refresh).with(target)
         expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
