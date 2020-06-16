@@ -22,7 +22,6 @@ FactoryBot.define do
   factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm)       { cloud { true } }
   factory(:vm_infra,       :class => "VmInfra",       :parent => :vm)
   factory(:vm_server,      :class => "VmServer",      :parent => :vm)
-  factory(:vm_xen,         :class => "VmXen",         :parent => :vm_infra)
   factory(:template_cloud, :class => "TemplateCloud", :parent => :template) { cloud { true } }
   factory(:template_infra, :class => "TemplateInfra", :parent => :template)
 
@@ -69,8 +68,6 @@ FactoryBot.define do
           :parent => :template_cloud do
     vendor { "vmware" }
   end
-
-  factory(:template_xen, :class => "TemplateXen", :parent => :template_infra)
 
   factory :vm_amazon, :class => "ManageIQ::Providers::Amazon::CloudManager::Vm", :parent => :vm_cloud do
     location { |x| "#{x.name}.us-west-1.compute.amazonaws.com" }
