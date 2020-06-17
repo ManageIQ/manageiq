@@ -5,7 +5,10 @@ RSpec.describe TaskHelpers::Imports::CustomButtons do
   let(:custom_button_set_name)        { 'group1|Vm|' }
   let(:custom_button_set_description) { 'group1' }
   let(:resource_action_ae_namespace)  { 'SYSTEM' }
-  let(:options)                       { {:source => source} }
+  let(:connect_dialog_by_name) { true }
+  let(:options) { {:source => source, :connect_dialog_by_name => connect_dialog_by_name} }
+  let!(:test_dialog) { FactoryBot.create(:dialog, :label => 'dialog') }
+  let!(:test_dialog_2) { FactoryBot.create(:dialog, :label => 'dialog 2') }
 
   describe "#import" do
     describe "when the source is a directory" do
@@ -27,11 +30,10 @@ RSpec.describe TaskHelpers::Imports::CustomButtons do
 
       context "yaml import failure" do
         it 'should raise' do
-          file = Tempfile.new('foo.yaml', data_dir)
-          file.write("bad yaml here")
-          TaskHelpers::Imports::CustomButtons.new.import(options)
-          assert_raises_import_error
-          assert_imports_only_custom_button_set_one
+          Tempfile.create(%w[foo .yaml], data_dir) do |file|
+            file.write("bad yaml here")
+            assert_raises_import_error
+          end
         end
       end
     end
@@ -41,29 +43,50 @@ RSpec.describe TaskHelpers::Imports::CustomButtons do
 
       context "without existing buttons" do
         context "only imports good yaml" do
-          it 'imports a specified file' do
-            TaskHelpers::Imports::CustomButtons.new.import(options)
-            assert_test_custom_button_set_present
-            assert_imports_only_custom_button_set_one
+          context "connect dialog flag is set" do
+            it 'imports a specified file' do
+              TaskHelpers::Imports::CustomButtons.new.import(options)
+              assert_test_custom_button_set_present
+              assert_imports_only_custom_button_set_one
+              assert_dialog_is_set(true)
+            end
+          end
+          context "connect dialog flag not set" do
+            let(:connect_dialog_by_name) { false }
+            it 'imports a specified file' do
+              TaskHelpers::Imports::CustomButtons.new.import(options)
+              assert_test_custom_button_set_present
+              assert_imports_only_custom_button_set_one
+              assert_dialog_is_set(false)
+            end
           end
         end
+      end
 
-        context "doesn't import bad yaml" do
-          let(:source) { "#{data_dir}/#{bad_custom_button_file}" }
-          it 'does not imports a specified file' do
-            TaskHelpers::Imports::CustomButtons.new.import(options)
-            assert_imports_no_custom_buttons
-          end
+      context "doesn't import bad yaml" do
+        let(:source) { "#{data_dir}/#{bad_custom_button_file}" }
+        it 'does not imports a specified file' do
+          TaskHelpers::Imports::CustomButtons.new.import(options)
+          assert_imports_no_custom_buttons
         end
       end
 
       context "with existing identical buttons" do
         it 'should not import anything' do
           TaskHelpers::Imports::CustomButtons.new.import(options)
-          assert_raises_import_error
           assert_imports_only_custom_button_set_one
         end
       end
+    end
+  end
+
+  def assert_dialog_is_set(connect)
+    btn1 = CustomButton.find_by(:name => 'button 1')
+    expect(btn1).to be_an(CustomButton)
+    if connect
+      expect(btn1.resource_action.dialog.id).to eq(test_dialog_2.id)
+    else
+      expect(btn1.resource_action.dialog).to be_nil
     end
   end
 

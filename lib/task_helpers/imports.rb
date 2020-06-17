@@ -5,6 +5,7 @@ module TaskHelpers
       options = Optimist.options(EvmRakeHelper.extract_command_options) do
         opt :source, 'Directory or file to import from', :type => :string, :required => true
         opt :overwrite, 'Overwrite existing object', :type => :boolean, :default => true
+        opt :connect_dialog_by_name, 'for custom buttons: in case dialog with exported name exist, connect it'
       end
 
       error = validate_source(options[:source])
