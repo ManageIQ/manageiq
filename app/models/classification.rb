@@ -98,11 +98,16 @@ class Classification < ApplicationRecord
   # rubocop:disable Style/NumericPredicate
 
   def self.classify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.lookup_by_name(category_name, obj.region_id)
-    unless cat.nil?
-      ent = cat.find_entry_by_name(entry_name, obj.region_id)
-      ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
-    end
+    cat = Classification.find_by_name(category_name, obj.region_id)
+    return " - FAILED. Tag category '#{category_name}' not found in region #{obj.region_id}" if cat.nil?
+
+    ent = cat.find_entry_by_name(entry_name, obj.region_id)
+    return " - FAILED. Tag name '#{entry_name}' not found  in region #{obj.region_id}" if ent.nil?
+
+    return " - FAILED. Object already tagged with tag namespace set to 'none'" if obj.is_tagged_with?(ent.to_tag, :ns => "none")
+
+    ent.assign_entry_to(obj, is_request)
+    " - SUCCESS."
   end
 
   def self.unclassify(obj, category_name, entry_name, is_request = true)
