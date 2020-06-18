@@ -1103,9 +1103,11 @@ RSpec.describe InfraConversionJob, :v2v do
     end
 
     context '#wait_for_ip_address' do
+      let(:target) { double(InventoryRefresh::TargetCollection) }
+
       before do
         task.update_options(:migration_phase => 'pre', :source_vm_ipaddresses => ['10.0.0.1'])
-        job.state = 'started'
+        job.state = 'waiting_for_ip_address'
       end
 
       it 'abort_conversion when waiting_on_ip_address times out' do
@@ -1139,10 +1141,26 @@ RSpec.describe InfraConversionJob, :v2v do
         job.signal(:wait_for_ip_address)
       end
 
-      it 'retries if VM is powered on and does not have an IP address' do
+      it 'retries without refresh if VM is powered on, does not have an IP address and number of retries is not a multiple of 10' do
         vm_vmware.update!(:raw_power_state => 'poweredOn')
+        job.context[:retries_waiting_for_ip_address] = 14
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
+        expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
+        job.signal(:wait_for_ip_address)
+      end
+
+      it 'retries with refresh if VM is powered on, does not have an IP address and number of retries is a multiple of 10' do
+        vm_vmware.update!(:raw_power_state => 'poweredOn')
+        job.context[:retries_waiting_for_ip_address] = 19
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
+        allow(InventoryRefresh::Target).to receive(:new).with(
+          :association => :vms,
+          :manager     => ems_vmware,
+          :manager_ref => {:ems_ref => vm_vmware.ems_ref}
+        ).and_return(target)
+        expect(EmsRefresh).to receive(:queue_refresh).with(target)
         expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
         job.signal(:wait_for_ip_address)
       end
