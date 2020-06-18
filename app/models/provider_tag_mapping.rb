@@ -59,6 +59,8 @@ class ProviderTagMapping < ApplicationRecord
   end
 
   def validate_tag_prefix
+    return if labeled_resource_type == "_all_entities_"
+
     unless TAG_PREFIXES.any? { |prefix| tag.name.start_with?(prefix) }
       errors.add(:tag_id, "tag category name #{tag.name} doesn't start with any of #{TAG_PREFIXES}")
     end

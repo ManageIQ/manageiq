@@ -67,8 +67,8 @@ class ProviderTagMapping
     end
 
     def map_name_type_value(name, type, value)
-      specific_value = @mappings[[name, type, value]] || []
-      any_value      = @mappings[[name, type, nil]]   || []
+      specific_value = @mappings[[name, type, value]] ||  @mappings[[name, "_all_entities_", value]] || []
+      any_value      = @mappings[[name, type, nil]]   ||  @mappings[[name, "_all_entities_", nil]]   || []
       if !specific_value.empty?
         specific_value.map { |tag_id| emit_specific_reference(tag_id) }
       else
