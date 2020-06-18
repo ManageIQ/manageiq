@@ -48,6 +48,13 @@ class MiqExpression::Tag < MiqExpression::Target
     "#{@base_namespace}.#{column}"
   end
 
+  # this should only be accessed in MiqExpression
+  # please avoid using it
+  # for tags, the tag tables are joined to the table's id
+  def arel_attribute
+    target&.arel_attribute("id", arel_table)
+  end
+
   private
 
   def tag_path
