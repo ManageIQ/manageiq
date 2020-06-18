@@ -348,6 +348,14 @@ class InfraConversionJob < Job
         # If no playbook is expected to run, we don't need to wait for the IP address.
         service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
         if target_vm.ipaddresses.empty? && service_template.present?
+          if context["retries_#{state}".to_sym] % 10 == 0
+            target = InventoryRefresh::Target.new(
+              :association => :vms,
+              :manager_ref => {:ems_ref => target_vm.ems_ref},
+              :manager     => target_vm.ext_management_system
+            )
+            EmsRefresh.queue_refresh(target)
+          end
           update_migration_task_progress(:on_retry)
           return queue_signal(:wait_for_ip_address)
         end
