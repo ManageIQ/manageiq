@@ -39,8 +39,7 @@ ServiceOrchestration.all.each do |service|
           if opts[:dry_run]
             puts "  **** This is a dry-run, nothing updated, skipping. ****"
           else
-            # Create linking object directly
-            ServiceResource.create!(service: service, resource: matching_stack)
+            service.add_resource!(matching_stack)
             reconnected += 1
           end
         else
