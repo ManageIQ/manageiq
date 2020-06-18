@@ -32,10 +32,11 @@ RSpec.describe Ansible::Runner::MachineCredential do
     describe "#command_line" do
       it "is correct with all attributes" do
         expected = {
-          :ask_pass      => nil,
-          :become_user   => "root",
-          :become_method => "su",
-          :user          => "manageiq"
+          :ask_pass        => nil,
+          :ask_become_pass => nil,
+          :become_user     => "root",
+          :become_method   => "su",
+          :user            => "manageiq"
         }
         expect(cred.command_line).to eq(expected)
       end
@@ -44,9 +45,22 @@ RSpec.describe Ansible::Runner::MachineCredential do
         auth.update!(:userid => nil)
 
         expected = {
+          :ask_pass        => nil,
+          :ask_become_pass => nil,
+          :become_user     => "root",
+          :become_method   => "su"
+        }
+        expect(cred.command_line).to eq(expected)
+      end
+
+      it "doesn't set :ask_become_pass if become_password is blank" do
+        auth.update!(:become_password => "")
+
+        expected = {
           :ask_pass      => nil,
           :become_user   => "root",
-          :become_method => "su"
+          :become_method => "su",
+          :user          => "manageiq"
         }
         expect(cred.command_line).to eq(expected)
       end
