@@ -86,7 +86,7 @@ describe Ansible::Runner do
         _method, dir, _json, _args = options[:params]
         cmdline = File.read(File.join(dir, "env", "cmdline"))
 
-        expect(cmdline).to eq("--become --ask-become-pass")
+        expect(cmdline).to eq("--become")
       end.and_return(result)
 
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)

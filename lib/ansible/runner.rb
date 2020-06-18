@@ -202,7 +202,6 @@ module Ansible
         command_line_hash = tags.present? ? {:tags => tags} : {}
         if become_enabled
           command_line_hash[:become] = nil
-          command_line_hash[:ask_become_pass] = nil
         end
         command_line_hash.merge!(cred_command_line)
 
