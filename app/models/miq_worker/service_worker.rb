@@ -52,5 +52,9 @@ class MiqWorker
     def container_image_name
       "manageiq-webserver-worker"
     end
+
+    def container_image
+      ENV["WEBSERVER_WORKER_IMAGE"] || default_image
+    end
   end
 end
