@@ -30,7 +30,7 @@ module EvmSpecHelper
 
   # Clear all EVM caches
   def self.clear_caches
-    settings_digest = Digest::MD5.hexdigest(::Settings.to_json)
+    settings_backup
     yield if block_given?
   ensure
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
@@ -46,7 +46,37 @@ module EvmSpecHelper
     # Clear the thread local variable to prevent test contamination
     User.current_user = nil if defined?(User) && User.respond_to?(:current_user=)
 
-    ::Settings.reload! if Digest::MD5.hexdigest(::Settings.to_json) != settings_digest
+    settings_restore if settings_changed?
+  end
+
+  private_class_method def self.settings_backup
+    @settings_backup ||= settings_dump
+  end
+
+  private_class_method def self.settings_restore
+    Vmdb::Settings.reset_settings_constant(settings_load(@settings_backup))
+  end
+
+  private_class_method def self.settings_dump
+    Marshal.dump(::Settings).tap do |dump|
+      # Marshal dump of Settings loses the config_sources, so we need to backup manually
+      dump.instance_variable_set(:@config_sources, ::Settings.instance_variable_get(:@config_sources).dup)
+    end
+  end
+
+  private_class_method def self.settings_load(dump)
+    Marshal.load(dump).tap do |settings|
+      # Marshal dump of Settings loses the config_sources, so we need to restore manually
+      settings.instance_variable_set(:@config_sources, dump.instance_variable_get(:@config_sources).dup)
+    end
+  end
+
+  private_class_method def self.settings_changed?
+    current = settings_dump
+
+    # Marshal dump of Settings loses the config_sources, so we need to compare manually
+    current != @settings_backup ||
+      current.instance_variable_get(:@config_sources) != @settings_backup.instance_variable_get(:@config_sources)
   end
 
   def self.clear_instance_variables(instance)
