@@ -92,4 +92,45 @@ RSpec.describe MiqWorker::ContainerCommon do
       worker.scale_deployment
     end
   end
+
+  describe "#container_image" do
+    let(:generic_worker) { MiqGenericWorker.new }
+    let(:ui_worker)      { MiqUiWorker.new }
+    let(:api_worker)     { MiqWebServiceWorker.new }
+
+    it "uses the BASE_WORKER_IMAGE value for a generic worker" do
+      image_ref = "registry.example.com/manageiq/manageiq-test@sha256:2997e41a1195df90d8daf9714b619c9ae0c053f3d79e39bd8ed2d18b3c8da52a"
+      stub_const("ENV", ENV.to_h.merge("BASE_WORKER_IMAGE" => image_ref))
+      expect(generic_worker.container_image).to eq(image_ref)
+    end
+
+    it "uses the UI_WORKER_IMAGE value for a UI worker" do
+      image_ref = "registry.example.com/manageiq/manageiq-ui-test@sha256:2997e41a1195df90d8daf9714b619c9ae0c053f3d79e39bd8ed2d18b3c8da52a"
+      stub_const("ENV", ENV.to_h.merge("UI_WORKER_IMAGE" => image_ref))
+      expect(ui_worker.container_image).to eq(image_ref)
+    end
+
+    it "uses the WEBSERVER_WORKER_IMAGE value for an API worker" do
+      image_ref = "registry.example.com/manageiq/manageiq-web-test@sha256:2997e41a1195df90d8daf9714b619c9ae0c053f3d79e39bd8ed2d18b3c8da52a"
+      stub_const("ENV", ENV.to_h.merge("WEBSERVER_WORKER_IMAGE" => image_ref))
+      expect(api_worker.container_image).to eq(image_ref)
+    end
+
+    context "when CONTAINER_IMAGE_NAMESPACE is set" do
+      before { stub_const("ENV", ENV.to_h.merge("CONTAINER_IMAGE_NAMESPACE" => "registry.example.com/manageiq")) }
+
+      it "uses the correct default value" do
+        expect(generic_worker.container_image).to eq("registry.example.com/manageiq/manageiq-base-worker:latest")
+        expect(ui_worker.container_image).to eq("registry.example.com/manageiq/manageiq-ui-worker:latest")
+        expect(api_worker.container_image).to eq("registry.example.com/manageiq/manageiq-webserver-worker:latest")
+      end
+
+      it "allows tag overrides" do
+        stub_const("ENV", ENV.to_h.merge("CONTAINER_IMAGE_TAG" => "jansa-1"))
+        expect(generic_worker.container_image).to eq("registry.example.com/manageiq/manageiq-base-worker:jansa-1")
+        expect(ui_worker.container_image).to eq("registry.example.com/manageiq/manageiq-ui-worker:jansa-1")
+        expect(api_worker.container_image).to eq("registry.example.com/manageiq/manageiq-webserver-worker:jansa-1")
+      end
+    end
+  end
 end

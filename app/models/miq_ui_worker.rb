@@ -41,4 +41,8 @@ class MiqUiWorker < MiqWorker
   def container_image_name
     "manageiq-ui-worker"
   end
+
+  def container_image
+    ENV["UI_WORKER_IMAGE"] || default_image
+  end
 end

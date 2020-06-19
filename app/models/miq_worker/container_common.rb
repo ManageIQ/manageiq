@@ -18,7 +18,7 @@ class MiqWorker
         container[:imagePullPolicy] = "IfNotPresent"
       end
 
-      container[:image] = "#{container_image_namespace}/#{container_image_name}:#{container_image_tag}"
+      container[:image] = container_image
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
       container[:env] << {:name => "BUNDLER_GROUPS", :value => self.class.bundler_groups.join(",")}
     end
@@ -30,6 +30,14 @@ class MiqWorker
 
     def zone_selector
       {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone-#{MiqServer.my_zone}" => "true"}
+    end
+
+    def container_image
+      ENV["BASE_WORKER_IMAGE"] || default_image
+    end
+
+    def default_image
+      "#{container_image_namespace}/#{container_image_name}:#{container_image_tag}"
     end
 
     def container_image_namespace
