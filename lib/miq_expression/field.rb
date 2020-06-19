@@ -5,7 +5,7 @@ class MiqExpression::Field < MiqExpression::Target
 \.?(?<associations>[a-z][0-9a-z_\.]+)?
 -
 (?:
-  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z]+[:_\-.\/[:alnum:]]*)|
+  (?<virtual_custom_column>#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}[a-z0-9A-Z]+[:_\-.\/[:alnum:]]*)|
   (?<column>[a-z]+(_[[:alnum:]]+)*)
 )
 /x
@@ -13,6 +13,7 @@ class MiqExpression::Field < MiqExpression::Target
   def self.parse(field)
     parsed_params = parse_params(field) || return
     return unless parsed_params[:model_name]
+
     new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column] ||
         parsed_params[:virtual_custom_column])
   end
