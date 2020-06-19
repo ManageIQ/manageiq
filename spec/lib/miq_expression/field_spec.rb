@@ -32,6 +32,16 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.parse(field).column).to eq("name")
     end
 
+    it "can parse the virtual custom attribute" do
+      field = "ChargebackVm-virtual_custom_attribute_Application"
+      expect(described_class.parse(field).column).to eq("virtual_custom_attribute_Application")
+    end
+
+    it "can parse the virtual custom attribute which represents label" do
+      field = "ChargebackVm-virtual_custom_attribute_Application:SECTION:labels"
+      expect(described_class.parse(field).column).to eq("virtual_custom_attribute_Application:SECTION:labels")
+    end
+
     it "can parse the column name with associations present" do
       field = "Vm.host-name"
       expect(described_class.parse(field).column).to eq("name")
