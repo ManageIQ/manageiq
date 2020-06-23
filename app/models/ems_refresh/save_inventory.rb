@@ -164,8 +164,7 @@ module EmsRefresh::SaveInventory
       hashes.each do |h|
         parent = vms[h.fetch_path(:parent_vm, :id)]
         child = vms[h[:id]]
-
-        child.with_relationship_type('genealogy') { child.parent = parent } if parent && child
+        child.update!(:genealogy_parent => parent) if parent && child
       end
     end
 
