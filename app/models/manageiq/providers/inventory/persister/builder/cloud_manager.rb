@@ -99,10 +99,8 @@ module ManageIQ::Providers
           ActiveRecord::Base.transaction do
             # associate parent templates to child instances
             parent_miq_templates = miq_templates_inventory_collection.model_class
-                                                                     .select([:id])
                                                                      .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
             vms_inventory_collection.model_class
-                                    .select([:id])
                                     .where(:id => vms_genealogy_parents.keys).find_each do |vm|
               parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
               vm.with_relationship_type('genealogy') { vm.parent = parent }
@@ -112,10 +110,8 @@ module ManageIQ::Providers
           ActiveRecord::Base.transaction do
             # associate parent instances to child templates
             parent_vms = vms_inventory_collection.model_class
-                                                 .select([:id])
                                                  .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
             miq_templates_inventory_collection.model_class
-                                              .select([:id])
                                               .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
               parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
               miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
