@@ -575,10 +575,10 @@ RSpec.describe Vmdb::Settings do
       before do
         Zone.seed
         @region_global = MiqRegion.first
-        @region_remote = FactoryBot.create(:miq_region, :id => MiqRegion.id_in_region(1, @region_global.region + 1))
-        @zone_remote   = FactoryBot.create(:zone, :id => Zone.id_in_region(2, @region_remote.region))
-        @server_remote = FactoryBot.create(:miq_server, :zone => @zone_remote, :id => MiqServer.id_in_region(1, @region_remote.region))
-        SettingsChange.create!(:id            => SettingsChange.id_in_region(1, @region_global.region),
+        @region_remote = FactoryBot.create(:miq_region, :id => ApplicationRecord.id_in_region(1, @region_global.region + 1))
+        @zone_remote   = FactoryBot.create(:zone, :id => ApplicationRecord.id_in_region(2, @region_remote.region))
+        @server_remote = FactoryBot.create(:miq_server, :zone => @zone_remote, :id => ApplicationRecord.id_in_region(1, @region_remote.region))
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_global.region),
                                :resource_id   => @region_global.id,
                                :resource_type => "MiqRegion",
                                :key           => "/#{key}",
@@ -589,8 +589,8 @@ RSpec.describe Vmdb::Settings do
         SettingsChange.delete_all
       end
 
-      it "applies settings from remote sever if there are specifyied" do
-        SettingsChange.create!(:id            => SettingsChange.id_in_region(1, @region_remote.region),
+      it "applies settings from remote sever if there are specified" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
                                :resource_id   => @server_remote.id,
                                :resource_type => "MiqServer",
                                :key           => "/#{key}",
@@ -598,8 +598,8 @@ RSpec.describe Vmdb::Settings do
         expect(Vmdb::Settings.for_resource(@server_remote)[key]).to eq(value_server_remote)
       end
 
-      it "applies settings from remote region if settings on remote server not specifyied" do
-        SettingsChange.create!(:id            => SettingsChange.id_in_region(1, @region_remote.region),
+      it "applies settings from remote region if settings on remote server not specified" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
                                :resource_id   => @region_remote.id,
                                :resource_type => "MiqRegion",
                                :key           => "/#{key}",
