@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 139 ending 2020-06-22
+
+### Added
+
+* Create env vars to override the full worker image ref [(#20297)](https://github.com/ManageIQ/manageiq/pull/20297)
+* MiqExpression#contains improvement [(#20199)](https://github.com/ManageIQ/manageiq/pull/20199)
+
+### Fixed
+
+* Don't rely on the default value for ImagePullPolicy [(#20279)](https://github.com/ManageIQ/manageiq/pull/20279)
+* Conditionally add the messaging environment vars to worker containers [(#20268)](https://github.com/ManageIQ/manageiq/pull/20268)
+* Explicitly disable systemd support in podified env [(#20277)](https://github.com/ManageIQ/manageiq/pull/20277)
+* Add missing compliance events for container project and physical server. [(#20267)](https://github.com/ManageIQ/manageiq/pull/20267)
+
 # Unreleased as of Sprint 138 ending 2020-06-10
 
 ### Added
