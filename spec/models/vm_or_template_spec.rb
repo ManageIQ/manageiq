@@ -106,7 +106,15 @@ RSpec.describe VmOrTemplate do
     let(:vm) { FactoryBot.create(:vm_vmware) }
     let(:parent) { FactoryBot.create(:vm_vmware) }
 
-    it "sets parent" do
+    it "sets parent via update!" do
+      vm.update!(:genealogy_parent => parent)
+
+      reloaded_vm = Vm.find(vm.id)
+      expect(reloaded_vm.parent).to eq(parent)
+      expect(reloaded_vm.genealogy_parent).to eq(parent)
+    end
+
+    it "sets parent via =" do
       vm.genealogy_parent = parent
       vm.save!
 
