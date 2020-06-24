@@ -892,12 +892,6 @@ class VmOrTemplate < ApplicationRecord
     true
   end
 
-  def set_genealogy_parent(parent)
-    with_relationship_type('genealogy') do
-      self.parent = parent
-    end
-  end
-
   def add_genealogy_child(child)
     with_relationship_type('genealogy') do
       set_child(child)
