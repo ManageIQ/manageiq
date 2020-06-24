@@ -73,7 +73,7 @@ module MiqFilter
       raise _("Folder Root is not a Provider")
     end
 
-    tag = obj.ancestry(
+    tag = obj.relationship_ancestry(
       :field_delimiter  => '|',
       :record_delimiter => '/',
       :include_self     => true,

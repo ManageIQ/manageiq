@@ -465,7 +465,7 @@ module RelationshipMixin
   # Returns a String form of the ancestor class/id pairs of the record
   #   Accepts the usual options, plus the options for Relationship.stringify_*,
   #   as well as :include_self which defaults to false.
-  def ancestry(*args)
+  def relationship_ancestry(*args)
     stringify_options = args.extract_options!
     options = stringify_options.slice!(:field_delimiter, :record_delimiter, :exclude_class, :field_method, :include_self)
 
