@@ -394,6 +394,21 @@ class MiqWorker < ApplicationRecord
     destroy
   end
 
+  # kill needs be done by the worker's orchestrator pod / server process
+  # TODO: Note, stop is async through the queue, while kill is sync.  Should kill be async too?
+  # Also, this looks a lot like MiqServer#stop_worker_queue except stop_worker is called on the server row whereas
+  # we're calling kill on the worker row.
+  def kill_async
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'kill',
+      :queue_name  => 'miq_server',
+      :server_guid => miq_server.guid,
+      :zone        => miq_server.my_zone
+    )
+  end
+
   def kill_process
     if containerized_worker?
       delete_container_objects

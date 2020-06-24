@@ -635,8 +635,15 @@ RSpec.describe ExtManagementSystem do
 
     it "destroys an ems with active workers" do
       ems = FactoryBot.create(:ext_management_system)
-      worker = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
+      worker = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => EvmSpecHelper.local_miq_server)
+
       ems.destroy
+
+      # Simulate another process delivering the worker kill message
+      queue_message = MiqQueue.order(:id).first
+      status, message, result = queue_message.deliver
+      queue_message.delivered(status, message, result)
+
       expect(ExtManagementSystem.count).to eq(0)
       expect(worker.class.exists?(worker.id)).to eq(false)
     end
@@ -688,8 +695,8 @@ RSpec.describe ExtManagementSystem do
       ems.destroy_queue
 
       expect(MiqQueue.count).to eq(1)
-
-      deliver_queue_message
+      deliver_queue_message #  ems destroy message
+      deliver_queue_message #  worker kill message
 
       expect(MiqQueue.count).to eq(0)
       expect(ExtManagementSystem.count).to eq(0)
