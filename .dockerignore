@@ -1,1 +1,10 @@
 .git
+/data/*
+/public/assets
+/public/doc
+/public/packs
+/public/pictures
+/public/ui
+/public/upload
+/public/webmks
+/tmp/*
