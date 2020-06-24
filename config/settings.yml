@@ -93,7 +93,6 @@
     :reindex_tables:
     - Metric
     - MiqQueue
-    - MiqWorker
     :vacuum_schedule: "0 2 * * 6"
     :vacuum_tables:
     - BinaryBlob
