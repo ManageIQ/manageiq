@@ -392,6 +392,33 @@ RSpec.describe MiqWorker do
       end
     end
 
+    describe "#kill_async" do
+      let!(:remote_server) { EvmSpecHelper.remote_guid_miq_server_zone[1] }
+      let!(:local_server)  { EvmSpecHelper.local_guid_miq_server_zone[1] }
+
+      it "queues local worker to local server" do
+        worker = FactoryBot.create(:miq_worker, :miq_server => local_server)
+        worker.kill_async
+        msg = MiqQueue.where(:method_name => 'kill', :class_name => worker.class.name).first
+        expect(msg).to have_attributes(
+          :queue_name  => 'miq_server',
+          :server_guid => local_server.guid,
+          :zone        => local_server.my_zone
+        )
+      end
+
+      it "queues remote worker to remote server" do
+        worker = FactoryBot.create(:miq_worker, :miq_server => remote_server)
+        worker.kill_async
+        msg = MiqQueue.where(:method_name => 'kill', :class_name => worker.class.name).first
+        expect(msg).to have_attributes(
+          :queue_name  => 'miq_server',
+          :server_guid => remote_server.guid,
+          :zone        => remote_server.my_zone
+        )
+      end
+    end
+
     describe "#stopping_for_too_long?" do
       subject { @worker.stopping_for_too_long? }
 

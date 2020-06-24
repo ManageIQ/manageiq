@@ -622,11 +622,33 @@ class ExtManagementSystem < ApplicationRecord
     task.id
   end
 
+  def ems_workers
+    MiqWorker.find_alive.where(:queue_name => queue_name)
+  end
+
+  def wait_for_ems_workers_removal
+    return if Rails.env.test?
+
+    quiesce_loop_timeout = ::Settings.server.worker_monitor.quiesce_loop_timeout || 5.minutes
+    worker_monitor_poll  = (::Settings.server.worker_monitor.poll || 1.second).to_i_with_method
+    kill_ems_workers_started_on = Time.now.utc
+
+    loop do
+      # killed workers will have their row removed, so we wait for this
+      break unless ems_workers.exists?
+      break if (Time.now.utc - kill_ems_workers_started_on) > quiesce_loop_timeout
+
+      sleep worker_monitor_poll
+    end
+  end
+
   def destroy(task_id = nil)
     disable!(:validate => false) if enabled?
 
-    # kill workers
-    MiqWorker.find_alive.where(:queue_name => queue_name).each(&:kill)
+    # Async kill each ems worker and wait until their row is removed before we delete
+    # the ems/managers to ensure a worker doesn't recreate the ems/manager.
+    ems_workers.each(&:kill_async)
+    wait_for_ems_workers_removal
 
     _log.info("Destroying #{child_managers.count} child_managers")
     child_managers.destroy_all
