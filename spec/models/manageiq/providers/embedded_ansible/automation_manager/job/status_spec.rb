@@ -31,18 +31,6 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Sta
     expect(status.normalized_status).to eq(['failed', 'Stack creation failed'])
   end
 
-  # TODO:  remove or implement?  Is canceling something we can handle?
-  #
-  # it 'parses Canceled' do
-  #   status = described_class.new('Canceled', nil)
-  #   expect(status.completed?).to   be_truthy
-  #   expect(status.succeeded?).to   be_falsey
-  #   expect(status.canceled?).to    be_truthy
-  #   expect(status.deleted?).to     be_falsey
-  #   expect(status.rolled_back?).to be_falsey
-  #   expect(status.normalized_status).to eq(['create_canceled', 'Job launching was canceled'])
-  # end
-
   it 'parses transient status' do
     miq_task.state  = MiqTask::STATE_ACTIVE
     miq_task.status = MiqTask::STATUS_UNKNOWN
