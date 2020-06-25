@@ -585,10 +585,6 @@ RSpec.describe Vmdb::Settings do
                                :value         => "value from global region")
       end
 
-      after do
-        SettingsChange.delete_all
-      end
-
       it "applies settings from remote sever if there are specified" do
         SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
                                :resource_id   => @server_remote.id,
