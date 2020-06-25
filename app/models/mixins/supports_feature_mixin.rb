@@ -150,6 +150,7 @@ module SupportsFeatureMixin
     :change_password                     => 'Change Password',
     :volume_availability_zones           => 'Volume Availability Zones',
     :assume_role                         => 'Assume Role',
+    :instantiate                         => 'Instantiate',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
