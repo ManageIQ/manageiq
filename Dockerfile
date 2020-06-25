@@ -24,5 +24,5 @@ EXPOSE 443
 
 LABEL name="manageiq"
 
-VOLUME [ "/var/lib/pgsql/data" ]
-VOLUME [ ${APP_ROOT} ]
+VOLUME "/var/lib/pgsql/data"
+VOLUME ${APP_ROOT}
