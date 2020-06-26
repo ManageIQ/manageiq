@@ -24,6 +24,10 @@ development:
   database: vmdb_development
   min_messages: notice
 
+integration:
+  <<: *base
+  database: vmdb_integration
+
 production:
   <<: *base
   database: vmdb_production
