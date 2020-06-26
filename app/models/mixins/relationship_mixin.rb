@@ -168,7 +168,7 @@ module RelationshipMixin
   end
 
   # Returns the relationship of the root of the tree the record is in
-  def root_rel(*_args)
+  def root_rel
     rel = relationship.try!(:root)
     # micro-optimization: if the relationship is us, "load" the resource
     rel.resource = self if rel && rel.resource_id == id && rel.resource_type == self.class.base_class.name.to_s
@@ -186,7 +186,7 @@ module RelationshipMixin
   end
 
   # Returns true if the record is a root node, false otherwise
-  def is_root?(*_args)
+  def is_root?
     rel = relationship # TODO: Handle a node that is a root and a node at the same time
     rel.nil? ? true : rel.is_root?
   end
@@ -273,12 +273,12 @@ module RelationshipMixin
   end
 
   # Returns true if the record has any children, false otherwise
-  def has_children?(*_args)
+  def has_children?
     relationships.any?(&:has_children?)
   end
 
   # Returns true if the record has no children, false otherwise
-  def is_childless?(*_args)
+  def is_childless?
     relationships.all?(&:is_childless?)
   end
 
@@ -305,12 +305,12 @@ module RelationshipMixin
   end
 
   # Returns true if the record's parent has more than one child
-  def has_siblings?(*_args)
+  def has_siblings?
     relationships.any?(&:has_siblings?)
   end
 
   # Returns true if the record is the only child of its parent
-  def is_only_child?(*_args)
+  def is_only_child?
     relationships.all?(&:is_only_child?)
   end
 
@@ -418,7 +418,7 @@ module RelationshipMixin
   end
 
   # Return the depth of the node, root nodes are at depth 0
-  def depth(*_args)
+  def depth
     rel = relationship(:raise_on_multiple => true) # TODO: Handle multiple nodes with a way to detect which node you want
     rel.nil? ? 0 : rel.depth
   end
