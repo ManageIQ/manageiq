@@ -8,6 +8,7 @@
   :get_direct_groups: true
   :group_memberships_max_depth: 2
   :group_attribute: memberof
+  :debug: false
   :ldaphost:
   :ldapport: '389'
   :mode: database

@@ -52,6 +52,8 @@ module Authenticator
     end
 
     def authenticate(username, password, request = nil, options = {})
+      log_auth_debug("authenticate(username=#{username}, options=#{options})")
+
       options = options.dup
       options[:require_user] ||= false
       options[:authorize_only] ||= false
@@ -323,6 +325,14 @@ module Authenticator
 
     def normalize_username(username)
       username.downcase
+    end
+
+    def debug_auth?
+      !!Settings.authentication.debug
+    end
+
+    def log_auth_debug(msgs)
+      Array(msgs).each { |msg| _log.info(msg) } if debug_auth?
     end
 
     private def audit_success(options)
