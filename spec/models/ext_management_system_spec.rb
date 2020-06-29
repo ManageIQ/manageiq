@@ -678,6 +678,15 @@ RSpec.describe ExtManagementSystem do
       expect(ExtManagementSystem.count).to eq(0)
       expect(worker.class.exists?(worker.id)).to eq(false)
     end
+
+    it "destroys a parent provider if present" do
+      provider = FactoryBot.create(:provider)
+      ems      = FactoryBot.create(:ext_management_system, :provider => provider)
+
+      ems.destroy
+
+      expect(Provider.count).to be_zero
+    end
   end
 
   context ".destroy_queue" do

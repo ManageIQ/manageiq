@@ -65,7 +65,10 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  belongs_to :provider
+  # Typically belongs_to wouldn't dependent destroy but currently all management of
+  # Providers is done via the Manager, so when we delete the Manager we have to
+  # dependent delete the provider.
+  belongs_to :provider, :dependent => :destroy
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
   belongs_to :tenant
