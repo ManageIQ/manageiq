@@ -474,7 +474,7 @@ class MiqServer < ApplicationRecord
   end
 
   def miq_region
-    ::MiqRegion.my_region
+    MiqRegion.find_by(:region => region_id)
   end
 
   def self.display_name(number = 1)
