@@ -482,6 +482,23 @@ describe MiqServer do
     end
   end
 
+  describe "#miq_region" do
+    before do
+      Zone.seed
+      @region1 = MiqRegion.first.region
+      @region2 = FactoryBot.create(:miq_region, :id => MiqRegion.id_in_region(1, @region1 + 1)).region
+      zone = FactoryBot.create(:zone, :id => Zone.id_in_region(2, @region2))
+
+      @server1 = FactoryBot.create(:miq_server)
+      @server2 = FactoryBot.create(:miq_server, :zone => zone, :id => MiqServer.id_in_region(1, @region2))
+    end
+
+    it "returns region this server belongs to" do
+      expect(@server1.miq_region.region).to eq(@region1)
+      expect(@server2.miq_region.region).to eq(@region2)
+    end
+  end
+
   context ".audit_managed_resources" do
     let(:ems) { FactoryBot.create(:ems_infra) }
     let!(:active_vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems) }

@@ -578,6 +578,81 @@ describe Vmdb::Settings do
       settings = Vmdb::Settings.for_resource(MiqServer.new(:zone => server.zone))
       expect(settings.api.token_ttl).to eq "4.hour"
     end
+
+    context "on global region" do
+      let(:key)                 { "yuri" }
+      let(:value_region_remote) { "region_remote" }
+      let(:value_server_remote) { "server_remote" }
+      let(:value_zone_remote)   { "zone_remote" }
+
+      before do
+        Zone.seed
+        @region_global = MiqRegion.first
+        @region_remote = FactoryBot.create(:miq_region, :id => ApplicationRecord.id_in_region(1, @region_global.region + 1))
+        @zone_remote   = FactoryBot.create(:zone, :id => ApplicationRecord.id_in_region(2, @region_remote.region))
+        @server_remote = FactoryBot.create(:miq_server, :zone => @zone_remote, :id => ApplicationRecord.id_in_region(1, @region_remote.region))
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_global.region),
+                               :resource_id   => @region_global.id,
+                               :resource_type => "MiqRegion",
+                               :key           => "/#{key}",
+                               :value         => "value from global region")
+        zone_global = FactoryBot.create(:zone, :id => ApplicationRecord.id_in_region(1, @region_global.region))
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(2, @region_global.region),
+                               :resource_id   => zone_global.id,
+                               :resource_type => "Zone",
+                               :key           => "/#{key}",
+                               :value         => "value from global zone")
+      end
+
+      it "applies settings from remote sever if there are specified" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
+                               :resource_id   => @server_remote.id,
+                               :resource_type => "MiqServer",
+                               :key           => "/#{key}",
+                               :value         => value_server_remote)
+        expect(Vmdb::Settings.for_resource(@server_remote)[key]).to eq(value_server_remote)
+      end
+
+      it "applies settings from remote region if settings on remote server not specified" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
+                               :resource_id   => @region_remote.id,
+                               :resource_type => "MiqRegion",
+                               :key           => "/#{key}",
+                               :value         => value_region_remote)
+        expect(Vmdb::Settings.for_resource(@server_remote)[key]).to eq(value_region_remote)
+      end
+
+      it "applies settings from remote zone if settings on remote server not specified" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
+                               :resource_id   => @zone_remote.id,
+                               :resource_type => "Zone",
+                               :key           => "/#{key}",
+                               :value         => value_zone_remote)
+        expect(Vmdb::Settings.for_resource(@server_remote)[key]).to eq(value_zone_remote)
+      end
+
+      it "loads settings from correct level of hirerarchy" do
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(1, @region_remote.region),
+                               :resource_id   => @region_remote.id,
+                               :resource_type => "MiqRegion",
+                               :key           => "/#{key}",
+                               :value         => value_region_remote)
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(2, @region_remote.region),
+                               :resource_id   => @zone_remote.id,
+                               :resource_type => "Zone",
+                               :key           => "/#{key}",
+                               :value         => value_zone_remote)
+        SettingsChange.create!(:id            => ApplicationRecord.id_in_region(3, @region_remote.region),
+                               :resource_id   => @server_remote.id,
+                               :resource_type => "MiqServer",
+                               :key           => "/#{key}",
+                               :value         => value_server_remote)
+
+        expect(Vmdb::Settings.for_resource(@server_remote)[key]).to eq(value_server_remote)
+        expect(Vmdb::Settings.for_resource(@zone_remote)[key]).to eq(value_zone_remote)
+        expect(Vmdb::Settings.for_resource(@region_remote)[key]).to eq(value_region_remote)
+      end
+    end
   end
 
   describe ".for_resource_yaml" do
