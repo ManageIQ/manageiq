@@ -1,6 +1,7 @@
 class ContainerTemplate < ApplicationRecord
   include CustomAttributeMixin
   include CustomActionsMixin
+  include SupportsFeatureMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
