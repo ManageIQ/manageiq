@@ -257,7 +257,6 @@ unless ENV["APPLIANCE"]
     gem "capybara",          "~>2.5.0",  :require => false
     gem "coveralls",         "~>0.8.23", :require => false
     gem "db-query-matchers", "~>0.10.0"
-    gem "factory_bot",       "~>5.1",    :require => false
 
     # TODO: faker is used for url generation in git repository factory and the lenovo
     # provider, via a xclarity_client dependency
@@ -267,8 +266,9 @@ unless ENV["APPLIANCE"]
     gem "webmock",           "~>3.7",    :require => false
   end
 
-  group :development, :test do
+  group :development, :test, :integration do
+    gem "factory_bot",      "~>5.1",    :require => false
     gem "parallel_tests"
-    gem "rspec-rails", "~>3.9.0"
+    gem "rspec-rails",      "~>3.9.0"
   end
 end
