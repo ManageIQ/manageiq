@@ -82,8 +82,18 @@
     - VimPerformanceState
     - Vm
 :docs:
-  :product_support_website: http://www.manageiq.org
+  :product_documentation_website: https://www.manageiq.org/docs/
+  :product_documentation_direct_link: true
+  :product_support_website: https://www.manageiq.org
   :product_support_website_text: ManageIQ.org
+  :ansible_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#adding-an-ansible-tower-provider
+  :cloud_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#cloud_providers
+  :configuration_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#configuration_management_providers
+  :container_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#containers-providers
+  :infra_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#infrastructure_providers
+  :network_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#network_providers
+  :physical_infra_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#infrastructure_providers
+
 :drift_states:
   :history:
     :keep_drift_states: 6.months
