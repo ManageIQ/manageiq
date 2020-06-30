@@ -68,7 +68,7 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  belongs_to :provider
+  belongs_to :provider, :autosave => true
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
   belongs_to :tenant
