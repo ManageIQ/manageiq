@@ -131,18 +131,13 @@ module Authenticator
 
     def user_details_from_headers(username, request)
       if debug_auth?
-        log_auth_debug(
-          [
-            "External-Auth User Headers:",
-            "  X-REMOTE-USER           = #{username}",
-            "  X-REMOTE-USER-FIRSTNAME = #{request.headers['X-REMOTE-USER-FIRSTNAME']}",
-            "  X-REMOTE-USER-LASTNAME  = #{request.headers['X-REMOTE-USER-LASTNAME']}",
-            "  X-REMOTE-USER-FULLNAME  = #{request.headers['X-REMOTE-USER-FULLNAME']}",
-            "  X-REMOTE-USER-EMAIL     = #{request.headers['X-REMOTE-USER-EMAIL']}",
-            "  X-REMOTE-USER-DOMAIN    = #{request.headers['X-REMOTE-USER-DOMAIN']}",
-            "  X-REMOTE-USER-GROUPS    = #{CGI.unescape(request.headers['X-REMOTE-USER-GROUPS'])}"
-          ]
-        )
+        log_auth_debug("user_details_from_headers(username=#{username})")
+
+        remote_user_headers = %w[X-REMOTE-USER X-REMOTE-USER-FIRSTNAME X-REMOTE-USER-LASTNAME X-REMOTE-USER-FULLNAME X-REMOTE-USER-EMAIL X-REMOTE-USER-DOMAIN X-REMOTE-USER-GROUPS]
+        logged_headers = remote_user_headers.map { |rh| "  %-24{key} = \"%{val}\"" % {:key => rh, :val => request.headers[rh]} }
+
+        log_auth_debug("External-Auth remote user request.headers:")
+        log_auth_debug(logged_headers)
       end
       user_attrs = {:username  => username,
                     :fullname  => request.headers['X-REMOTE-USER-FULLNAME'],
