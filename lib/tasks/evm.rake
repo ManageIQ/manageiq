@@ -4,16 +4,20 @@ require 'evm_rake_helper'
 
 namespace :evm do
   namespace :foreman do
-    task :start => [:environment, 'db:seed'] do
+    task :seed => [:environment, 'db:seed'] do
       server = MiqServer.my_server
 
       # Assign and activate the default roles
       server.ensure_default_roles
       server.activate_roles(server.server_role_names)
+    end
 
+    task :setup => [:environment] do
       # Mark the server as started
-      server.update(:status => "started")
+      MiqServer.my_server(true).starting_server_record
+    end
 
+    task :start => [:seed, :setup] do
       # start the workers using foreman
       exec("foreman start --port=3000")
     end
