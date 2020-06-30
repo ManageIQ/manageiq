@@ -108,10 +108,11 @@ namespace :evm do
   task :compile_assets => 'evm:assets:compile'
   namespace :assets do
     desc "Compile assets (clobber and precompile)"
-    task :compile do
+    task :compile do |rake_task|
+      app_prefix = rake_task.name.chomp('evm:assets:compile')
       EvmRakeHelper.with_dummy_database_url_configuration do
-        Rake::Task["assets:clobber"].invoke
-        Rake::Task["assets:precompile"].invoke
+        Rake::Task["#{app_prefix}assets:clobber"].invoke
+        Rake::Task["#{app_prefix}assets:precompile"].invoke
       end
     end
   end
