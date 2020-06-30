@@ -153,6 +153,16 @@ RSpec.describe MiqProvisionRequestTemplate do
     end
   end
 
+  describe "post_create" do
+    it 'sets description' do
+      expect(MiqAeEngine).not_to receive(:resolve_automation_object)
+
+      provision_request_template.post_create(true)
+
+      expect(provision_request_template.description).to eq("Miq Provision Request Template for #{provision_request_template.source.name}")
+    end
+  end
+
   it 'exists after source template is deleted' do
     provision_request_template
     template.destroy
