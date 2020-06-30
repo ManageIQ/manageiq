@@ -12,7 +12,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
   #   A string of the one of the ManageIQ providers. The case of this
   #   string is ignored.
   #
-  # @return [String] A scoped provider constant name.
+  # @return [Constant] A scoped provider constant name.
   #
   def self.class_for_platform(platform)
     classy = platform.classify
