@@ -12,7 +12,7 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "jansa"
 
 # Modified gems for gems-pending.  Setting sources here since they are git references
-gem "handsoap", "=0.2.5.5", :require => false, :source => "http://rubygems.manageiq.org"
+gem "handsoap", "=0.2.5.5", :require => false, :source => "https://rubygems.manageiq.org"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
@@ -79,8 +79,8 @@ gem "sys-filesystem",                 "~>1.3.1"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
-gem "rugged",                         "=0.28.2.2", :source => "http://rubygems.manageiq.org", :require => false
-gem "ruport",                         "=1.7.0.3",  :source => "http://rubygems.manageiq.org"
+gem "rugged",                         "=0.28.2.2", :source => "https://rubygems.manageiq.org", :require => false
+gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
@@ -214,7 +214,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "jquery-rjs",                     "=0.1.1.1", :source => "http://rubygems.manageiq.org"
+  gem "jquery-rjs",                     "=0.1.1.1", :source => "https://rubygems.manageiq.org"
 end
 
 group :v2v, :ui_dependencies do
