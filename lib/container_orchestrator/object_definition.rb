@@ -97,8 +97,9 @@ class ContainerOrchestrator
     def liveness_probe
       {
         :exec                => {:command => ["/usr/local/bin/manageiq_liveness_check"]},
-        :initialDelaySeconds => 120,
-        :timeoutSeconds      => 5
+        :initialDelaySeconds => 240,
+        :timeoutSeconds      => 10,
+        :periodSeconds       => 15
       }
     end
 
