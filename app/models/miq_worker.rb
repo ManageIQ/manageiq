@@ -316,7 +316,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.systemd_worker?
-    MiqEnvironment::Command.supports_systemd? && supports_systemd?
+    ENV['MIQ_SYSTEMD_WORKERS'] && MiqEnvironment::Command.supports_systemd? && supports_systemd?
   end
 
   def systemd_worker?
@@ -324,7 +324,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner
-    if ENV['MIQ_SYSTEMD_WORKERS'] && systemd_worker?
+    if systemd_worker?
       start_systemd_worker
     elsif containerized_worker?
       start_runner_via_container
