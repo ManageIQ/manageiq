@@ -9434,7 +9434,7 @@ msgstr "VM のコンプライアンス・チェック"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:642
 msgid "Host Compliance Check"
-msgstr "ホスト・コンプライアンス・チェック"
+msgstr "ホストのコンプライアンス・チェック"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:645
 msgid "Container Image Compliance Check"
@@ -9718,7 +9718,7 @@ msgstr "レポート名"
 #: ../app/controllers/optimization_controller.rb:117
 #: ../app/controllers/optimization_controller.rb:146
 msgid "Last Run at"
-msgstr "最終実行時間"
+msgstr "前回の実行時刻"
 
 #: ../app/controllers/optimization_controller.rb:118
 msgid "Report runs"
@@ -12181,7 +12181,7 @@ msgstr "認証タイプ"
 #: ../app/views/vm_common/_snapshots_desc.html.haml:26
 #: ../config/yaml_strings.rb:505
 msgid "Created On"
-msgstr "作成日"
+msgstr "作成"
 
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #. TRANSLATORS: file: product/views/ConfigurationScript.yaml
@@ -12208,7 +12208,7 @@ msgstr "作成日"
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml:9
 #: ../app/views/report/_report_info.html.haml:49 ../config/yaml_strings.rb:520
 msgid "Updated On"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb:58
 msgid "Show all Repositories"
@@ -14025,11 +14025,11 @@ msgstr "選択したクラウド・ボリュームのスナップショットの
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:52
 msgid "Attach selected Cloud Volume to an Instance"
-msgstr "インスタンスへの選択したクラウド・ボリュームの割り当て"
+msgstr "選択したクラウド・ボリュームのインスタンスへの割り当て"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:62
 msgid "Detach selected Cloud Volume from an Instance"
-msgstr "インスタンスからの選択したクラウド・ボリュームの割り当て解除"
+msgstr "選択したクラウド・ボリュームのインスタンスからの割り当て解除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:72
 msgid "Edit selected Cloud Volume"
@@ -19282,12 +19282,12 @@ msgstr "すべてのクラウド・ボリュームを表示"
 #: ../app/helpers/catalog_helper/textual_summary.rb:19
 #: ../app/helpers/textual_summary_helper.rb:93
 msgid "%{name} Tags"
-msgstr "%{name}のタグ"
+msgstr "%{name} タグ"
 
 #: ../app/helpers/catalog_helper/textual_summary.rb:23
 #: ../app/helpers/textual_summary_helper.rb:98
 msgid "No %{label} have been assigned"
-msgstr "%{label}が割り当てられていません"
+msgstr "%{label} が割り当てられていません"
 
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #: ../app/helpers/chargeback_helper.rb:5
@@ -20560,7 +20560,7 @@ msgstr "モデル"
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb:17
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:9
 msgid "Last Refresh"
-msgstr "最終更新"
+msgstr "前回の更新"
 
 #. TRANSLATORS: file: product/views/Account-users.yaml
 #. TRANSLATORS: file: product/views/FirewallRule.yaml
@@ -21577,7 +21577,7 @@ msgstr "カスタマイズ・ディレクトリー"
 #: ../app/helpers/pxe_helper/textual_summary.rb:132
 #: ../config/yaml_strings.rb:1316
 msgid "Last Refreshed On"
-msgstr "最終更新日時"
+msgstr "前回の更新"
 
 #: ../app/helpers/pxe_helper/textual_summary.rb:40
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:43
@@ -22503,7 +22503,7 @@ msgstr "  - %{last_refresh_date} 前"
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:18
 #: ../config/yaml_strings.rb:344
 msgid "Last Refresh Date"
-msgstr "最終更新日"
+msgstr "前回の更新日時"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:14
 msgid "Connect to this VM in its Region"
@@ -22662,11 +22662,11 @@ msgstr "この VM のコンプライアンス履歴の表示 (最後の 10 件�
 
 #: ../app/helpers/textual_mixins/vm_common.rb:246
 msgid "Last Boot Time"
-msgstr "最後の起動時間"
+msgstr "前回の起動時間"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:252
 msgid "State Changed On"
-msgstr "状態の変更日"
+msgstr "状態の変更"
 
 #: ../app/helpers/textual_summary_helper.rb:137
 msgid "Show %{label} '%{value}'"
@@ -28287,7 +28287,7 @@ msgstr "親タグの継承"
 
 #: ../app/models/miq_action.rb:23
 msgid "Delete Snapshots by Age"
-msgstr "スナップショットの削除 (年数別)"
+msgstr "スナップショットの削除 (期間別)"
 
 #: ../app/models/miq_action.rb:24
 msgid "Run Ansible Playbook"
@@ -30435,7 +30435,7 @@ msgstr "vApp テンプレート"
 #: ../app/presenters/tree_builder_policy.rb:12
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Host Compliance Policies"
-msgstr "ホスト・コンプライアンス・ポリシー"
+msgstr "ホストのコンプライアンス・ポリシー"
 
 #: ../app/presenters/tree_builder_policy.rb:13
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
@@ -30445,7 +30445,7 @@ msgstr "VM のコンプライアンス・ポリシー"
 #: ../app/presenters/tree_builder_policy.rb:14
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Replicator Compliance Policies"
-msgstr "レプリケーター・コンプライアンス・ポリシー"
+msgstr "レプリケーターのコンプライアンス・ポリシー"
 
 #: ../app/presenters/tree_builder_policy.rb:15
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
@@ -30479,7 +30479,7 @@ msgstr "物理サーバーのコンプライアンス・ポリシー"
 #: ../app/presenters/tree_builder_policy.rb:21
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Host Control Policies"
-msgstr "ホスト・コントロール・ポリシー"
+msgstr "ホストのコントロール・ポリシー"
 
 #: ../app/presenters/tree_builder_policy.rb:22
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
@@ -30832,7 +30832,7 @@ msgstr "ズームイン"
 #: ../app/services/cloud_tenant_dashboard_service.rb:58
 #: ../app/services/ems_cloud_dashboard_service.rb:3
 msgid "Recent Images"
-msgstr "最近の画像"
+msgstr "最近のイメージ"
 
 #: ../app/services/cloud_tenant_dashboard_service.rb:62
 #: ../app/services/ems_cloud_dashboard_service.rb:7
@@ -30962,7 +30962,7 @@ msgstr "資格情報タイプ"
 
 #: ../app/views/ansible_repository/_output.html.haml:2
 msgid "No output for the last refresh."
-msgstr "最終更新の出力がありません。"
+msgstr "前回の更新の出力がありません。"
 
 #: ../app/views/ansible_repository/_repository_form.html.haml:50
 msgid "URL must include a protocol (http:// or https://) or be a valid SSH path (user@server:path or ssh://user@address:port/path)"
@@ -36359,7 +36359,7 @@ msgstr "製品機能 (読み取り専用)"
 
 #: ../app/views/ops/_rbac_tag_box.html.haml:10
 msgid "No %{tenant_name} Tags have been assigned"
-msgstr "%{tenant_name}タグが割り当てられていません"
+msgstr "%{tenant_name} タグが割り当てられていません"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:5
 msgid "%{type} Information"
@@ -36467,7 +36467,7 @@ msgstr "オブジェクト選択"
 #: ../app/views/report/_show_schedule.html.haml:38
 #: ../app/views/report/_widget_show.html.haml:127 ../config/yaml_strings.rb:401
 msgid "Run At"
-msgstr "実行時間"
+msgstr "実行時刻"
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/views/ops/_schedule_show.html.haml:101
@@ -36475,7 +36475,7 @@ msgstr "実行時間"
 #: ../app/views/report/_show_schedule.html.haml:42
 #: ../app/views/report/_widget_show.html.haml:41 ../config/yaml_strings.rb:1333
 msgid "Last Run Time"
-msgstr "最終実行時間"
+msgstr "前回の実行時刻"
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/views/ops/_schedule_show.html.haml:107
@@ -36484,7 +36484,7 @@ msgstr "最終実行時間"
 #: ../app/views/report/_widget_show.html.haml:131
 #: ../config/yaml_strings.rb:1335
 msgid "Next Run Time"
-msgstr "次回の実行時間"
+msgstr "次回の実行時刻"
 
 #: ../app/views/ops/_selected.html.haml:5
 msgid "Selected Item"
@@ -37594,7 +37594,7 @@ msgstr "計算"
 
 #: ../app/views/report/_form_consolidate.html.haml:78
 msgid "Leave all options unchecked to show the original column value from the first record in the group."
-msgstr "グループ内の最初のレコードにある元の列値を表示するには、すべてのオプションのチェックを外したままにします。"
+msgstr "グループ内の最初のレコードにある元の列値を表示するには、すべてのオプションのチェックを外したままにしてください。"
 
 #: ../app/views/report/_form_filter.html.haml:12
 msgid "Primary (Record) Filter - Filters the %{model} table records"
@@ -38159,7 +38159,7 @@ msgstr "無効にされたボタン・テキスト"
 
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml:32
 msgid "Enablement and Visibility expressions can only be configured for buttons with \"Display for\" (previous tab) set to \"Single\""
-msgstr "有効化および視認性の式は、\"Display for\" (前のタブ) を \"Single\" に構成したボタンでのみ構成可能です。"
+msgstr "有効化および視認性の式は、「表示」(前のタブ) を「単一」に構成したボタンでのみ構成可能です。"
 
 #: ../app/views/shared/buttons/_ab_form.html.haml:7
 msgid "Paste object details for use in a Button."
@@ -38201,7 +38201,7 @@ msgstr "<なし>"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:74
 msgid "Only available when \"Display for\" is set to \"Single\""
-msgstr "\"Display for\" が \"Single\" に設定されている場合のみ、利用可能です"
+msgstr "「表示」が「単一」に設定されている場合のみ、利用可能です"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:77
 #: ../app/views/shared/buttons/_ab_show.html.haml:51
@@ -38210,7 +38210,7 @@ msgstr "URL を開く"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:82
 msgid "Only available for VM, Provider, Service, User, Group, Tenant, Cloud Tenant and Generic Object with \"Display for\" set to \"Single\""
-msgstr "\"Display for\" が \"Single\" に設定されている VM、プロバイダー、サービス、ユーザー、グループ、テナント、クラウド・テナントおよび汎用オブジェクトのみで利用可能です"
+msgstr "「表示」が「単一」に設定されている VM、プロバイダー、サービス、ユーザー、グループ、テナント、クラウド・テナントおよび汎用オブジェクトのみで利用可能です"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:85
 #: ../app/views/shared/buttons/_ab_show.html.haml:56
@@ -38230,7 +38230,7 @@ msgstr "単一エンティティー"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:91
 msgid "Expressions (next tab) can only be configured for buttons with \"Display for\" set to \"Single\""
-msgstr "式 (次のタブ) は、\"Display for\" を \"Single\" に構成したボタンでのみ構成可能です。"
+msgstr "式 (次のタブ) は、「表示」を「単一」に構成したボタンでのみ構成可能です。"
 
 #: ../app/views/shared/buttons/_ab_show.html.haml:15
 msgid "Ansible Playbook"
@@ -39094,7 +39094,7 @@ msgstr "推奨"
 #: ../app/views/vm_common/_right_size.html.haml:152
 #: ../app/views/vm_common/_right_size.html.haml:186
 msgid "% Savings"
-msgstr "% 節約"
+msgstr "節約量 (%)"
 
 #: ../app/views/vm_common/_right_size.html.haml:118
 #: ../app/views/vm_common/_right_size.html.haml:153
@@ -41083,7 +41083,7 @@ msgstr "CPU - 節約量の保守的な推奨 (%) "
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/070_Newest VMs.yaml
 #: ../config/dictionary_strings.rb:876 ../config/yaml_strings.rb:5843
 msgid "Created on Time"
-msgstr "作成日"
+msgstr "作成"
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_mem_recommended_change
 #: ../config/dictionary_strings.rb:878
@@ -43466,7 +43466,7 @@ msgstr "詳細設定"
 
 #: ../config/model_attributes.rb:18
 msgid "AdvancedSetting|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:19
 msgid "AdvancedSetting|Default value"
@@ -43514,7 +43514,7 @@ msgstr "リソース・タイプ"
 
 #: ../config/model_attributes.rb:30
 msgid "AdvancedSetting|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:31
 msgid "AdvancedSetting|Value"
@@ -43630,7 +43630,7 @@ msgstr "イベントの監査"
 
 #: ../config/model_attributes.rb:59
 msgid "AuditEvent|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:60
 msgid "AuditEvent|Event"
@@ -43702,7 +43702,7 @@ msgstr "チャレンジ"
 
 #: ../config/model_attributes.rb:78
 msgid "Authentication|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:79
 msgid "Authentication|Credentials changed on"
@@ -43890,7 +43890,7 @@ msgstr "ステータス詳細"
 
 #: ../config/model_attributes.rb:125
 msgid "Authentication|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:126
 msgid "Authentication|Userid"
@@ -44186,7 +44186,7 @@ msgstr "コンテキスト・データ"
 
 #: ../config/model_attributes.rb:199
 msgid "BottleneckEvent|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:200
 msgid "BottleneckEvent|Event type"
@@ -44343,7 +44343,7 @@ msgstr "チャージバック・レート"
 
 #: ../config/model_attributes.rb:238
 msgid "ChargebackRate|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:239
 msgid "ChargebackRate|Default"
@@ -44375,7 +44375,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:246
 msgid "ChargebackRate|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:247
 msgid "Chargeback rate detail"
@@ -44383,7 +44383,7 @@ msgstr "チャージバック・レートの詳細"
 
 #: ../config/model_attributes.rb:248
 msgid "ChargebackRateDetail|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:249
 msgid "ChargebackRateDetail|Description"
@@ -44435,7 +44435,7 @@ msgstr "サブメトリック"
 
 #: ../config/model_attributes.rb:261
 msgid "ChargebackRateDetail|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:262
 msgid "Chargeback rate detail currency"
@@ -45311,7 +45311,7 @@ msgstr "タイム・スタンプ"
 
 #: ../config/model_attributes.rb:482
 msgid "Compliance|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:483
 msgid "Compliance detail"
@@ -45327,7 +45327,7 @@ msgstr "条件結果"
 
 #: ../config/model_attributes.rb:486
 msgid "ComplianceDetail|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:487
 msgid "ComplianceDetail|Href slug"
@@ -45355,7 +45355,7 @@ msgstr "リソース名"
 
 #: ../config/model_attributes.rb:493
 msgid "ComplianceDetail|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:494
 msgid "Computer system"
@@ -45383,7 +45383,7 @@ msgstr "式に適用"
 
 #: ../config/model_attributes.rb:501
 msgid "Condition|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:502
 msgid "Condition|Description"
@@ -45435,7 +45435,7 @@ msgstr "対象"
 
 #: ../config/model_attributes.rb:514
 msgid "Condition|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:515
 msgid "Condition set"
@@ -45443,7 +45443,7 @@ msgstr "条件セット"
 
 #: ../config/model_attributes.rb:516
 msgid "ConditionSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:517
 msgid "ConditionSet|Description"
@@ -45491,7 +45491,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:528
 msgid "ConditionSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:529
 msgid "ConditionSet|Userid"
@@ -45687,7 +45687,7 @@ msgstr "最新更新時のエラー"
 
 #: ../config/model_attributes.rb:577
 msgid "ConfigurationScriptSource|Last updated on"
-msgstr "最新更新時"
+msgstr "前回の更新"
 
 #: ../config/model_attributes.rb:578
 msgid "ConfigurationScriptSource|Manager ref"
@@ -46115,7 +46115,7 @@ msgstr "完了期限 (秒数)"
 
 #: ../config/model_attributes.rb:685
 msgid "ContainerBuild|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:686
 msgid "ContainerBuild|Custom 1"
@@ -46155,7 +46155,7 @@ msgstr "カスタム 9"
 
 #: ../config/model_attributes.rb:695
 msgid "ContainerBuild|Ems created on"
-msgstr "EMS 作成日"
+msgstr "EMS 作成"
 
 #: ../config/model_attributes.rb:696
 msgid "ContainerBuild|Ems ref"
@@ -46223,7 +46223,7 @@ msgstr "完了タイム・スタンプ"
 
 #: ../config/model_attributes.rb:712
 msgid "ContainerBuildPod|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:713
 msgid "ContainerBuildPod|Custom 1"
@@ -46267,7 +46267,7 @@ msgstr "期間"
 
 #: ../config/model_attributes.rb:723
 msgid "ContainerBuildPod|Ems created on"
-msgstr "EMS 作成日"
+msgstr "EMS 作成"
 
 #: ../config/model_attributes.rb:724
 msgid "ContainerBuildPod|Ems ref"
@@ -46419,7 +46419,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均 (低)"
 
 #: ../config/model_attributes.rb:761
 msgid "ContainerGroup|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:762
 msgid "ContainerGroup|Custom 1"
@@ -46479,7 +46479,7 @@ msgstr "DNS ポリシー"
 
 #: ../config/model_attributes.rb:776
 msgid "ContainerGroup|Ems created on"
-msgstr "EMS 作成日"
+msgstr "EMS 作成"
 
 #: ../config/model_attributes.rb:777
 msgid "ContainerGroup|Ems ref"
@@ -46639,7 +46639,7 @@ msgstr "コマンド"
 
 #: ../config/model_attributes.rb:816
 msgid "ContainerImage|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:817
 msgid "ContainerImage|Custom 1"
@@ -46823,11 +46823,11 @@ msgstr "コンテナーの制限"
 
 #: ../config/model_attributes.rb:862
 msgid "ContainerLimit|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:863
 msgid "ContainerLimit|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:864
 msgid "ContainerLimit|Ems ref"
@@ -46931,7 +46931,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均 (低) "
 
 #: ../config/model_attributes.rb:889
 msgid "ContainerNode|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:890
 msgid "ContainerNode|Custom 1"
@@ -46987,7 +46987,7 @@ msgstr "一定期間の使用中派生メモリー (低)"
 
 #: ../config/model_attributes.rb:903
 msgid "ContainerNode|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:904
 msgid "ContainerNode|Ems ref"
@@ -47195,7 +47195,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均 (低)"
 
 #: ../config/model_attributes.rb:955
 msgid "ContainerProject|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:956
 msgid "ContainerProject|Custom 1"
@@ -47255,7 +47255,7 @@ msgstr "表示名"
 
 #: ../config/model_attributes.rb:970
 msgid "ContainerProject|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:971
 msgid "ContainerProject|Ems ref"
@@ -47367,7 +47367,7 @@ msgstr "コンテナーのクォータ"
 
 #: ../config/model_attributes.rb:998
 msgid "ContainerQuota|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:999
 msgid "ContainerQuota|Deleted on"
@@ -47375,7 +47375,7 @@ msgstr "削除日"
 
 #: ../config/model_attributes.rb:1000
 msgid "ContainerQuota|Ems created on"
-msgstr "EMS 作成日"
+msgstr "EMS 作成"
 
 #: ../config/model_attributes.rb:1001
 msgid "ContainerQuota|Ems ref"
@@ -47503,7 +47503,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均 (低)"
 
 #: ../config/model_attributes.rb:1032
 msgid "ContainerReplicator|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1033
 msgid "ContainerReplicator|Current replicas"
@@ -47559,7 +47559,7 @@ msgstr "一定期間の使用中派生メモリー (低)"
 
 #: ../config/model_attributes.rb:1046
 msgid "ContainerReplicator|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1047
 msgid "ContainerReplicator|Ems ref"
@@ -47663,7 +47663,7 @@ msgstr "コンテナー・ルート"
 
 #: ../config/model_attributes.rb:1072
 msgid "ContainerRoute|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1073
 msgid "ContainerRoute|Custom 1"
@@ -47703,7 +47703,7 @@ msgstr "カスタム 9"
 
 #: ../config/model_attributes.rb:1082
 msgid "ContainerRoute|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1083
 msgid "ContainerRoute|Ems ref"
@@ -47771,7 +47771,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:1099
 msgid "ContainerService|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1100
 msgid "ContainerService|Custom 1"
@@ -47823,7 +47823,7 @@ msgstr "一定期間の使用中派生メモリー (低)"
 
 #: ../config/model_attributes.rb:1112
 msgid "ContainerService|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1113
 msgid "ContainerService|Ems ref"
@@ -48003,7 +48003,7 @@ msgstr "カスタム 9"
 
 #: ../config/model_attributes.rb:1157
 msgid "ContainerTemplate|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1158
 msgid "ContainerTemplate|Ems ref"
@@ -48087,7 +48087,7 @@ msgstr "表示名"
 
 #: ../config/model_attributes.rb:1178
 msgid "ContainerTemplateParameter|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1179
 msgid "ContainerTemplateParameter|From"
@@ -48159,7 +48159,7 @@ msgstr "共通シークレット"
 
 #: ../config/model_attributes.rb:1196
 msgid "ContainerVolume|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1197
 msgid "ContainerVolume|Empty dir medium type"
@@ -48167,7 +48167,7 @@ msgstr "空のディレクトリー・メディアのタイプ"
 
 #: ../config/model_attributes.rb:1198
 msgid "ContainerVolume|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:1199
 msgid "ContainerVolume|Ems ref"
@@ -48395,7 +48395,7 @@ msgstr "クラスに適用"
 
 #: ../config/model_attributes.rb:1255
 msgid "CustomButton|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1256
 msgid "CustomButton|Description"
@@ -48435,7 +48435,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:1265
 msgid "CustomButton|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1266
 msgid "CustomButton|Uri attributes"
@@ -48463,7 +48463,7 @@ msgstr "カスタム・ボタン・セット"
 
 #: ../config/model_attributes.rb:1272
 msgid "CustomButtonSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1273
 msgid "CustomButtonSet|Description"
@@ -48511,7 +48511,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:1284
 msgid "CustomButtonSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1285
 msgid "CustomButtonSet|Userid"
@@ -48899,7 +48899,7 @@ msgstr "コントローラー・タイプ"
 
 #: ../config/model_attributes.rb:1383
 msgid "Disk|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1384
 msgid "Disk|Device name"
@@ -48975,7 +48975,7 @@ msgstr "未割り振りスペースの割合"
 
 #: ../config/model_attributes.rb:1402
 msgid "Disk|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1403
 msgid "Disk|Used disk storage"
@@ -49071,7 +49071,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:1426
 msgid "EmsCluster|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1427
 msgid "EmsCluster|Derived memory used avg over time period"
@@ -49247,7 +49247,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:1470
 msgid "EmsCluster|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1471
 msgid "EmsCluster|V cpu vr ratio"
@@ -49339,7 +49339,7 @@ msgstr "集計 VM メモリー"
 
 #: ../config/model_attributes.rb:1493
 msgid "EmsFolder|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1494
 msgid "EmsFolder|Ems ref"
@@ -49375,7 +49375,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:1502
 msgid "EmsFolder|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1503
 msgid "Ems license"
@@ -49581,7 +49581,7 @@ msgstr "コンテナーのレプリケーター名"
 
 #: ../config/model_attributes.rb:1553
 msgid "EventStream|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1554
 msgid "EventStream|Dest ems cluster name"
@@ -49769,7 +49769,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:1600
 msgid "ExtManagementSystem|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1601
 msgid "ExtManagementSystem|Custom 1"
@@ -49881,15 +49881,15 @@ msgstr "最終メトリック更新日"
 
 #: ../config/model_attributes.rb:1628
 msgid "ExtManagementSystem|Last refresh date"
-msgstr "最終更新日"
+msgstr "前回の更新日時"
 
 #: ../config/model_attributes.rb:1629
 msgid "ExtManagementSystem|Last refresh error"
-msgstr "最終更新エラー"
+msgstr "前回の更新エラー"
 
 #: ../config/model_attributes.rb:1630
 msgid "ExtManagementSystem|Last refresh status"
-msgstr "最終更新ステータス"
+msgstr "前回の更新ステータス"
 
 #: ../config/model_attributes.rb:1631
 msgid "ExtManagementSystem|Max cpu usage rate average avg over time period"
@@ -50089,7 +50089,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:1680
 msgid "ExtManagementSystem|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1681
 msgid "ExtManagementSystem|Zone name"
@@ -50189,7 +50189,7 @@ msgstr "利用可能なコンテンツ"
 
 #: ../config/model_attributes.rb:1706
 msgid "Filesystem|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1707
 msgid "Filesystem|Ctime"
@@ -50261,7 +50261,7 @@ msgstr "サイズ"
 
 #: ../config/model_attributes.rb:1724
 msgid "Filesystem|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1725
 msgid "Firewall rule"
@@ -50269,7 +50269,7 @@ msgstr "ファイアウォールのルール"
 
 #: ../config/model_attributes.rb:1726
 msgid "FirewallRule|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1727
 msgid "FirewallRule|Direction"
@@ -50337,7 +50337,7 @@ msgstr "ソース IP 範囲"
 
 #: ../config/model_attributes.rb:1743
 msgid "FirewallRule|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:1745
 msgid "Firmware|Build"
@@ -50429,11 +50429,11 @@ msgstr "href スラグ"
 
 #: ../config/model_attributes.rb:1767
 msgid "FirmwareRegistry|Last refresh error"
-msgstr "最終更新エラー"
+msgstr "前回の更新エラー"
 
 #: ../config/model_attributes.rb:1768
 msgid "FirmwareRegistry|Last refresh on"
-msgstr "最終更新日"
+msgstr "前回の更新"
 
 #: ../config/model_attributes.rb:1769
 msgid "FirmwareRegistry|Name"
@@ -50705,7 +50705,7 @@ msgstr "href スラグ"
 
 #: ../config/model_attributes.rb:1837
 msgid "GitRepository|Last refresh on"
-msgstr "最終更新日"
+msgstr "前回の更新"
 
 #: ../config/model_attributes.rb:1838
 msgid "GitRepository|Name"
@@ -51165,7 +51165,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:1954
 msgid "Host|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:1955
 msgid "Host|Custom 1"
@@ -51473,7 +51473,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:2031
 msgid "Host|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2032
 msgid "Host|User assigned os"
@@ -51761,7 +51761,7 @@ msgstr "href スラグ"
 
 #: ../config/model_attributes.rb:2103
 msgid "IsoDatastore|Last refresh on"
-msgstr "最終更新日"
+msgstr "前回の更新"
 
 #: ../config/model_attributes.rb:2104
 msgid "IsoDatastore|Name"
@@ -51805,7 +51805,7 @@ msgstr "コンテキスト"
 
 #: ../config/model_attributes.rb:2115
 msgid "Job|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2116
 msgid "Job|Dispatch status"
@@ -51861,7 +51861,7 @@ msgstr "ターゲット・クラス"
 
 #: ../config/model_attributes.rb:2129
 msgid "Job|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2130
 msgid "Job|Userid"
@@ -51894,7 +51894,7 @@ msgstr "計算された MAC 変更"
 
 #: ../config/model_attributes.rb:2137
 msgid "Lan|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2138
 msgid "Lan|Ems ref"
@@ -51934,7 +51934,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:2147
 msgid "Lan|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2148
 msgid "Lifecycle event"
@@ -51946,7 +51946,7 @@ msgstr "作成者"
 
 #: ../config/model_attributes.rb:2150
 msgid "LifecycleEvent|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2151
 msgid "LifecycleEvent|Event"
@@ -52278,7 +52278,7 @@ msgstr "ログ・ファイル"
 
 #: ../config/model_attributes.rb:2233
 msgid "LogFile|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2234
 msgid "LogFile|Description"
@@ -52330,7 +52330,7 @@ msgstr "状態"
 
 #: ../config/model_attributes.rb:2246
 msgid "LogFile|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2248
 msgid "Metric|Assoc ids"
@@ -52370,7 +52370,7 @@ msgstr "CPU 待機デルタ総計"
 
 #: ../config/model_attributes.rb:2257
 msgid "Metric|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2258
 msgid "Metric|Derived cpu available"
@@ -52794,7 +52794,7 @@ msgstr "CPU 待機デルタ総計"
 
 #: ../config/model_attributes.rb:2363
 msgid "MetricRollup|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2364
 msgid "MetricRollup|Derived cpu available"
@@ -53654,7 +53654,7 @@ msgstr "Href スラッグ"
 
 #: ../config/model_attributes.rb:2578
 msgid "MiddlewareDiagnosticReport|Queued at"
-msgstr "キューへの登録時間"
+msgstr "キューへの登録時刻"
 
 #: ../config/model_attributes.rb:2579
 msgid "MiddlewareDiagnosticReport|Region description"
@@ -53866,7 +53866,7 @@ msgstr "アクション・タイプの説明"
 
 #: ../config/model_attributes.rb:2631
 msgid "MiqAction|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2632
 msgid "MiqAction|Description"
@@ -53898,7 +53898,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:2639
 msgid "MiqAction|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2640
 msgid "MiqAction|V synchronicity"
@@ -53910,7 +53910,7 @@ msgstr "MIQ アクション・セット"
 
 #: ../config/model_attributes.rb:2642
 msgid "MiqActionSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2643
 msgid "MiqActionSet|Description"
@@ -53958,7 +53958,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:2654
 msgid "MiqActionSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2655
 msgid "MiqActionSet|Userid"
@@ -53970,7 +53970,7 @@ msgstr "MIQ ae クラス"
 
 #: ../config/model_attributes.rb:2657
 msgid "MiqAeClass|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2658
 msgid "MiqAeClass|Description"
@@ -54014,7 +54014,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2668
 msgid "MiqAeClass|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2669
 msgid "MiqAeClass|Visibility"
@@ -54038,7 +54038,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:2674
 msgid "MiqAeField|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2675
 msgid "MiqAeField|Datatype"
@@ -54118,7 +54118,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2694
 msgid "MiqAeField|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2695
 msgid "MiqAeField|Visibility"
@@ -54130,7 +54130,7 @@ msgstr "MIQ ae インスタンス"
 
 #: ../config/model_attributes.rb:2697
 msgid "MiqAeInstance|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2698
 msgid "MiqAeInstance|Description"
@@ -54166,7 +54166,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2706
 msgid "MiqAeInstance|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2707
 msgid "Miq ae method"
@@ -54174,7 +54174,7 @@ msgstr "MIQ ae メソッド"
 
 #: ../config/model_attributes.rb:2708
 msgid "MiqAeMethod|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2709
 msgid "MiqAeMethod|Data"
@@ -54230,7 +54230,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2722
 msgid "MiqAeMethod|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2723
 msgid "Miq ae namespace"
@@ -54250,7 +54250,7 @@ msgstr "コミット時間"
 
 #: ../config/model_attributes.rb:2727
 msgid "MiqAeNamespace|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2728
 msgid "MiqAeNamespace|Description"
@@ -54310,7 +54310,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2742
 msgid "MiqAeNamespace|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2743
 msgid "Miq ae value"
@@ -54326,7 +54326,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:2746
 msgid "MiqAeValue|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2747
 msgid "MiqAeValue|Display name"
@@ -54370,7 +54370,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2757
 msgid "MiqAeValue|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2758
 msgid "MiqAeValue|Value"
@@ -54382,7 +54382,7 @@ msgstr "Miq ae ワークスペース"
 
 #: ../config/model_attributes.rb:2760
 msgid "MiqAeWorkspace|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2761
 msgid "MiqAeWorkspace|Guid"
@@ -54406,7 +54406,7 @@ msgstr "設定者"
 
 #: ../config/model_attributes.rb:2766
 msgid "MiqAeWorkspace|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2767
 msgid "MiqAeWorkspace|Uri"
@@ -54426,7 +54426,7 @@ msgstr "ベース"
 
 #: ../config/model_attributes.rb:2771
 msgid "MiqAlert|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2772
 msgid "MiqAlert|Db"
@@ -54502,7 +54502,7 @@ msgstr "重大度"
 
 #: ../config/model_attributes.rb:2790
 msgid "MiqAlert|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2791
 msgid "Miq alert set"
@@ -54510,7 +54510,7 @@ msgstr "MIQ アラート・セット"
 
 #: ../config/model_attributes.rb:2792
 msgid "MiqAlertSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2793
 msgid "MiqAlertSet|Description"
@@ -54558,7 +54558,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:2804
 msgid "MiqAlertSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2805
 msgid "MiqAlertSet|Userid"
@@ -54662,7 +54662,7 @@ msgstr "承認者タイプ"
 
 #: ../config/model_attributes.rb:2830
 msgid "MiqApproval|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2831
 msgid "MiqApproval|Description"
@@ -54698,7 +54698,7 @@ msgstr "状態"
 
 #: ../config/model_attributes.rb:2839
 msgid "MiqApproval|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2840
 msgid "Miq database"
@@ -54862,7 +54862,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:2880
 msgid "MiqEnterprise|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2881
 msgid "MiqEnterprise|Derived memory used avg over time period"
@@ -54962,7 +54962,7 @@ msgstr "設定"
 
 #: ../config/model_attributes.rb:2905
 msgid "MiqEnterprise|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2906
 msgid "Miq event definition"
@@ -54970,7 +54970,7 @@ msgstr "MIQ イベント定義"
 
 #: ../config/model_attributes.rb:2907
 msgid "MiqEventDefinition|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2908
 msgid "MiqEventDefinition|Default"
@@ -55014,7 +55014,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:2918
 msgid "MiqEventDefinition|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2919
 msgid "Miq event definition set"
@@ -55022,7 +55022,7 @@ msgstr "MIQ イベント定義セット"
 
 #: ../config/model_attributes.rb:2920
 msgid "MiqEventDefinitionSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2921
 msgid "MiqEventDefinitionSet|Description"
@@ -55070,7 +55070,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:2932
 msgid "MiqEventDefinitionSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2933
 msgid "MiqEventDefinitionSet|Userid"
@@ -55094,7 +55094,7 @@ msgstr "割り振り vCPU"
 
 #: ../config/model_attributes.rb:2938
 msgid "MiqGroup|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2939
 msgid "MiqGroup|Custom 1"
@@ -55174,7 +55174,7 @@ msgstr "設定"
 
 #: ../config/model_attributes.rb:2958
 msgid "MiqGroup|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2959
 msgid "MiqGroup|User count"
@@ -55194,7 +55194,7 @@ msgstr "作成者"
 
 #: ../config/model_attributes.rb:2963
 msgid "MiqPolicy|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2964
 msgid "MiqPolicy|Description"
@@ -55246,7 +55246,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2976
 msgid "MiqPolicy|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2977
 msgid "Miq policy content"
@@ -55254,7 +55254,7 @@ msgstr "MIQ ポリシー・コンテンツ"
 
 #: ../config/model_attributes.rb:2978
 msgid "MiqPolicyContent|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2979
 msgid "MiqPolicyContent|Failure sequence"
@@ -55290,7 +55290,7 @@ msgstr "成功の同期"
 
 #: ../config/model_attributes.rb:2987
 msgid "MiqPolicyContent|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:2988
 msgid "Miq policy set"
@@ -55298,7 +55298,7 @@ msgstr "MIQ ポリシー・セット"
 
 #: ../config/model_attributes.rb:2989
 msgid "MiqPolicySet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:2990
 msgid "MiqPolicySet|Description"
@@ -55346,7 +55346,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:3001
 msgid "MiqPolicySet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3002
 msgid "MiqPolicySet|Userid"
@@ -55426,7 +55426,7 @@ msgstr "クラス名"
 
 #: ../config/model_attributes.rb:3021
 msgid "MiqQueue|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3022
 msgid "MiqQueue|Deliver on"
@@ -55498,7 +55498,7 @@ msgstr "トラッキング・ラベル"
 
 #: ../config/model_attributes.rb:3039
 msgid "MiqQueue|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3040
 msgid "MiqQueue|Zone"
@@ -55694,7 +55694,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:3088
 msgid "MiqReport|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3089
 msgid "MiqReport|Db"
@@ -55806,7 +55806,7 @@ msgstr "タイム・ゾーン"
 
 #: ../config/model_attributes.rb:3116
 msgid "MiqReport|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3117
 msgid "MiqReport|Where clause"
@@ -55818,7 +55818,7 @@ msgstr "MIQ レポート結果"
 
 #: ../config/model_attributes.rb:3119
 msgid "MiqReportResult|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3120
 msgid "MiqReportResult|Db"
@@ -55918,7 +55918,7 @@ msgstr "キャンセル・ステータス"
 
 #: ../config/model_attributes.rb:3144
 msgid "MiqRequest|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3145
 msgid "MiqRequest|Description"
@@ -56002,7 +56002,7 @@ msgstr "ステータス"
 
 #: ../config/model_attributes.rb:3165
 msgid "MiqRequest|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3166
 msgid "MiqRequest|Userid"
@@ -56034,7 +56034,7 @@ msgstr "キャンセル・ステータス"
 
 #: ../config/model_attributes.rb:3173
 msgid "MiqRequestTask|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3174
 msgid "MiqRequestTask|Description"
@@ -56090,7 +56090,7 @@ msgstr "ステータス"
 
 #: ../config/model_attributes.rb:3187
 msgid "MiqRequestTask|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3188
 msgid "MiqRequestTask|Userid"
@@ -56106,7 +56106,7 @@ msgstr "アドホック"
 
 #: ../config/model_attributes.rb:3191
 msgid "MiqSchedule|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3192
 msgid "MiqSchedule|Description"
@@ -56154,7 +56154,7 @@ msgstr "リソース・タイプ"
 
 #: ../config/model_attributes.rb:3203
 msgid "MiqSchedule|Run at"
-msgstr "実行時間"
+msgstr "実行時刻"
 
 #: ../config/model_attributes.rb:3204
 msgid "MiqSchedule|Sched action"
@@ -56534,7 +56534,7 @@ msgstr "コンテキスト・データ"
 
 #: ../config/model_attributes.rb:3298
 msgid "MiqTask|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3299
 msgid "MiqTask|Href slug"
@@ -56586,7 +56586,7 @@ msgstr "ステータス"
 
 #: ../config/model_attributes.rb:3311
 msgid "MiqTask|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3312
 msgid "MiqTask|Userid"
@@ -56670,7 +56670,7 @@ msgstr "オプション"
 
 #: ../config/model_attributes.rb:3332
 msgid "MiqWidget|Queued at"
-msgstr "キューへの登録時間"
+msgstr "キューへの登録時刻"
 
 #: ../config/model_attributes.rb:3333
 msgid "MiqWidget|Read only"
@@ -56734,7 +56734,7 @@ msgstr "MIQ ウィジェット・セット"
 
 #: ../config/model_attributes.rb:3348
 msgid "MiqWidgetSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3349
 msgid "MiqWidgetSet|Description"
@@ -56782,7 +56782,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:3360
 msgid "MiqWidgetSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3361
 msgid "MiqWidgetSet|Userid"
@@ -57763,7 +57763,7 @@ msgstr "CPU 時間"
 
 #: ../config/model_attributes.rb:3606
 msgid "OsProcess|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3607
 msgid "OsProcess|Href slug"
@@ -57807,7 +57807,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:3617
 msgid "OsProcess|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3619
 msgid "Partition|Aligned"
@@ -57819,7 +57819,7 @@ msgstr "コントローラー"
 
 #: ../config/model_attributes.rb:3621
 msgid "Partition|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3622
 msgid "Partition|Free space"
@@ -57863,7 +57863,7 @@ msgstr "UID"
 
 #: ../config/model_attributes.rb:3632
 msgid "Partition|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3633
 msgid "Partition|Used space"
@@ -57879,7 +57879,7 @@ msgstr "ボリューム・グループ"
 
 #: ../config/model_attributes.rb:3637
 msgid "Patch|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3638
 msgid "Patch|Description"
@@ -57919,7 +57919,7 @@ msgstr "サービス・パック"
 
 #: ../config/model_attributes.rb:3647
 msgid "Patch|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3648
 msgid "Patch|V install date"
@@ -57947,7 +57947,7 @@ msgstr "必要なアクセス・モード"
 
 #: ../config/model_attributes.rb:3654
 msgid "PersistentVolumeClaim|Ems created on"
-msgstr "EMS  作成日"
+msgstr "EMS  作成"
 
 #: ../config/model_attributes.rb:3655
 msgid "PersistentVolumeClaim|Ems ref"
@@ -58592,7 +58592,7 @@ msgstr "href スラグ"
 
 #: ../config/model_attributes.rb:3816
 msgid "PxeServer|Last refresh on"
-msgstr "最終更新日"
+msgstr "前回の更新"
 
 #: ../config/model_attributes.rb:3817
 msgid "PxeServer|Name"
@@ -58632,7 +58632,7 @@ msgstr "レジストリー項目"
 
 #: ../config/model_attributes.rb:3826
 msgid "RegistryItem|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3827
 msgid "RegistryItem|Data"
@@ -58660,7 +58660,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:3833
 msgid "RegistryItem|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3834
 msgid "RegistryItem|Value name"
@@ -58833,7 +58833,7 @@ msgstr "CPU 共有レベル"
 
 #: ../config/model_attributes.rb:3876
 msgid "ResourcePool|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3877
 msgid "ResourcePool|Ems ref"
@@ -58889,7 +58889,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:3890
 msgid "ResourcePool|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3891
 msgid "ResourcePool|V direct miq templates"
@@ -58937,7 +58937,7 @@ msgstr "スキャン履歴"
 
 #: ../config/model_attributes.rb:3902
 msgid "ScanHistory|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3903
 msgid "ScanHistory|Finished on"
@@ -58973,7 +58973,7 @@ msgstr "ステータス・コード"
 
 #: ../config/model_attributes.rb:3911
 msgid "ScanHistory|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3912
 msgid "Scan item"
@@ -58981,7 +58981,7 @@ msgstr "スキャン項目"
 
 #: ../config/model_attributes.rb:3913
 msgid "ScanItem|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3914
 msgid "ScanItem|Definition"
@@ -59033,7 +59033,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:3926
 msgid "ScanItem|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3927
 msgid "Scan item set"
@@ -59041,7 +59041,7 @@ msgstr "スキャン項目セット"
 
 #: ../config/model_attributes.rb:3928
 msgid "ScanItemSet|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3929
 msgid "ScanItemSet|Description"
@@ -59089,7 +59089,7 @@ msgstr "タイプの設定"
 
 #: ../config/model_attributes.rb:3940
 msgid "ScanItemSet|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3941
 msgid "ScanItemSet|Userid"
@@ -59201,7 +59201,7 @@ msgstr "サーバー・ロール"
 
 #: ../config/model_attributes.rb:3968
 msgid "ServerRole|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:3969
 msgid "ServerRole|Description"
@@ -59237,7 +59237,7 @@ msgstr "ロール・スコープ"
 
 #: ../config/model_attributes.rb:3977
 msgid "ServerRole|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:3979
 msgid "Service|Aggregate all vm cpus"
@@ -59954,7 +59954,7 @@ msgstr "作成時"
 
 #: ../config/model_attributes.rb:4159
 msgid "Snapshot|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4160
 msgid "Snapshot|Current"
@@ -60014,7 +60014,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:4174
 msgid "Snapshot|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4176
 msgid "Storage|Count of vmdk disk files"
@@ -60046,7 +60046,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:4183
 msgid "Storage|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4184
 msgid "Storage|Debris size"
@@ -60226,7 +60226,7 @@ msgstr "非コミット"
 
 #: ../config/model_attributes.rb:4228
 msgid "Storage|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4229
 msgid "Storage|V debris percent of used"
@@ -60418,7 +60418,7 @@ msgstr "無作為検出の許可"
 
 #: ../config/model_attributes.rb:4278
 msgid "Switch|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4279
 msgid "Switch|Forged transmits"
@@ -60474,7 +60474,7 @@ msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:4292
 msgid "Switch|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4293
 msgid "System console"
@@ -60806,7 +60806,7 @@ msgstr "タイム・プロファイル"
 
 #: ../config/model_attributes.rb:4378
 msgid "TimeProfile|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4379
 msgid "TimeProfile|Description"
@@ -60842,7 +60842,7 @@ msgstr "日次メトリックのロールアップ"
 
 #: ../config/model_attributes.rb:4387
 msgid "TimeProfile|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4388
 msgid "Transformation mapping"
@@ -60922,7 +60922,7 @@ msgstr "割り振り vCPU"
 
 #: ../config/model_attributes.rb:4408
 msgid "User|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4409
 msgid "User|Custom 1"
@@ -61026,7 +61026,7 @@ msgstr "設定"
 
 #: ../config/model_attributes.rb:4434
 msgid "User|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4435
 msgid "User|Userid"
@@ -61250,7 +61250,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (最大)"
 
 #: ../config/model_attributes.rb:4490
 msgid "VmOrTemplate|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4491
 msgid "VmOrTemplate|Custom 1"
@@ -61550,7 +61550,7 @@ msgstr "EMS  クラスター名"
 
 #: ../config/model_attributes.rb:4565
 msgid "VmOrTemplate|Ems created on"
-msgstr "EMS 作成日"
+msgstr "EMS 作成"
 
 #: ../config/model_attributes.rb:4566
 msgid "VmOrTemplate|Ems ref"
@@ -61966,7 +61966,7 @@ msgstr "スタンバイ・アクション"
 
 #: ../config/model_attributes.rb:4669
 msgid "VmOrTemplate|State changed on"
-msgstr "状態の変更日"
+msgstr "状態の変更"
 
 #: ../config/model_attributes.rb:4670
 msgid "VmOrTemplate|Storage name"
@@ -61994,7 +61994,7 @@ msgstr "非コミット・ストレージ"
 
 #: ../config/model_attributes.rb:4676
 msgid "VmOrTemplate|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4677
 msgid "VmOrTemplate|Used disk storage"
@@ -62406,7 +62406,7 @@ msgstr "リージョン番号"
 
 #: ../config/model_attributes.rb:4780
 msgid "Volume|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4781
 msgid "Volume|Filesystem"
@@ -62450,7 +62450,7 @@ msgstr "UID"
 
 #: ../config/model_attributes.rb:4791
 msgid "Volume|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4792
 msgid "Volume|Used space"
@@ -62554,7 +62554,7 @@ msgstr "一定期間の CPU 使用率 (mhz) 平均  (低)"
 
 #: ../config/model_attributes.rb:4818
 msgid "Zone|Created on"
-msgstr "作成日"
+msgstr "作成"
 
 #: ../config/model_attributes.rb:4819
 msgid "Zone|Derived memory used avg over time period"
@@ -62654,7 +62654,7 @@ msgstr "設定"
 
 #: ../config/model_attributes.rb:4843
 msgid "Zone|Updated on"
-msgstr "更新日"
+msgstr "更新"
 
 #: ../config/model_attributes.rb:4844
 msgid "Zone|Visible"
@@ -63502,7 +63502,7 @@ msgstr "ホスト・アグリゲートの削除"
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #: ../config/yaml_strings.rb:396
 msgid "Queued At"
-msgstr "キューへの登録時間"
+msgstr "キューへの登録時刻"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:398
@@ -67405,7 +67405,7 @@ msgstr "PXE サーバー下のすべて"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScriptSource.yaml
 #: ../config/yaml_strings.rb:1744
 msgid "Last refresh on"
-msgstr "最終更新日"
+msgstr "前回の更新"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1746
@@ -75412,7 +75412,7 @@ msgstr "TagControl フィールドのカテゴリーを設定する必要があ�
 
 #: ./dist/js/ui-components.js:1
 msgid "Datepicker"
-msgstr "Datepicker"
+msgstr "日付ピッカー"
 
 #: ./dist/js/ui-components.js:1
 msgid "Dialog field needs to have a label"
@@ -75500,7 +75500,7 @@ msgstr "2"
 
 #: ./src/dialog-editor/components/box/box.html:31
 msgid "Drag items here to add to the dialog. At least one item is required before saving"
-msgstr "ダイアログに追加するには、項目をここにドラッグします。保存する前に、1 つ以上の項目をドラッグする必要があります"
+msgstr "項目をここにドラッグしてダイアログに追加できます。保存するには 1 つ以上の項目が必要です。"
 
 #: ./src/dialog-editor/components/box/box.html:50
 msgid "Start with adding a section"
@@ -75837,7 +75837,7 @@ msgstr "送信"
 #: src/rbac-forms/rbacUserForm.jsx:113
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:60
 msgid "Cancel"
-msgstr "取り消し"
+msgstr "キャンセル"
 
 #: src/amazon-security-form-group/security-group.jsx:11
 msgid "Not a valid network mask"

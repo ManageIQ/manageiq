@@ -562,7 +562,7 @@ msgstr "用户取消了移除安全组。"
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-remove-security-group.js:44
 msgid "%s has been successfully removed."
-msgstr "已成功除去 %s。"
+msgstr "已成功移除 %s。"
 
 #: ../app/assets/javascripts/controllers/alerts/alerts_list_controller.js:34
 #: ../app/assets/javascripts/controllers/alerts/alerts_most_recent_controller.js:33
@@ -698,7 +698,7 @@ msgstr "无法添加存储库"
 #:
 #: ../app/assets/javascripts/controllers/ansible_repository/repository_form_controller.js:95
 msgid "Add of Repository \"%s\" was successfully initiated."
-msgstr "已成功启动添加存储库“%s”。"
+msgstr "启动添加存储库“%s”的操作成功。"
 
 #:
 #: ../app/assets/javascripts/controllers/ansible_repository/repository_form_controller.js:100
@@ -708,7 +708,7 @@ msgstr "无法编辑存储库"
 #:
 #: ../app/assets/javascripts/controllers/ansible_repository/repository_form_controller.js:102
 msgid "Edit of Repository \"%s\" was successfully initiated."
-msgstr "已成功启动存储库“%s”的编辑。"
+msgstr "启动编辑存储库“%s”的操作成功。"
 
 #:
 #: ../app/assets/javascripts/controllers/ansible_repository/repository_form_controller.js:125
@@ -1339,7 +1339,7 @@ msgstr "服务器数据"
 
 #: ../app/assets/javascripts/controllers/header/header_controller.js:48
 msgid "%{count} unread notifications"
-msgstr "%{count} 条未读通知"
+msgstr "%{count} 未读通知"
 
 #:
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-config-factory.js:49
@@ -1566,7 +1566,7 @@ msgstr "排序方式"
 
 #: ../app/assets/javascripts/controllers/report_data_controller.js:397
 msgid "%d - %d of %d"
-msgstr "%d - %d 的 %d"
+msgstr "%d - %d（共 %d）"
 
 #:
 #: ../app/assets/javascripts/controllers/schedule/schedule_form_controller.js:184
@@ -2035,7 +2035,7 @@ msgstr "编辑凭证“%{name}”"
 
 #: ../app/controllers/ansible_credential_controller.rb:77
 msgid "Deletion of Credential \"%{name}\" was successfully initiated."
-msgstr "已成功启动删除凭证“%{name}”。"
+msgstr "启动删除凭证“%{name}”的操作成功。"
 
 #: ../app/controllers/ansible_credential_controller.rb:79
 msgid "Unable to delete Credential \"%{name}\": %{details}"
@@ -2105,7 +2105,7 @@ msgstr "存储库"
 
 #: ../app/controllers/ansible_repository_controller.rb:76
 msgid "Delete of Repository \"%{name}\" was successfully initiated."
-msgstr "已成功启动删除存储库“%{name}”。"
+msgstr "启动删除存储库“%{name}”的操作成功。"
 
 #: ../app/controllers/ansible_repository_controller.rb:78
 msgid "Unable to delete Repository \"%{name}\": %{details}"
@@ -2145,7 +2145,7 @@ msgstr "Playbook"
 
 #: ../app/controllers/ansible_repository_controller.rb:122
 msgid "Refresh of Repository \"%{name}\" was successfully initiated."
-msgstr "已成功启动刷新存储库“%{name}”。"
+msgstr "启动刷新存储库“%{name}”的操作成功。"
 
 #: ../app/controllers/ansible_repository_controller.rb:124
 msgid "Unable to refresh Repository \"%{name}\": %{details}"
@@ -2272,11 +2272,11 @@ msgstr[0] "从 %{product} 数据库删除保存的报告期间出错"
 
 #: ../app/controllers/application_controller.rb:1118
 msgid "The selected %{label} is not in the current region"
-msgstr "所选的 %{label} 不在当前区域内"
+msgstr "选定的 %{label} 不在当前区域内"
 
 #: ../app/controllers/application_controller.rb:1120
 msgid "All selected %{labels} are not in the current region"
-msgstr "所有选择的 %{labels} 都不在当前区域内"
+msgstr "所有选定的 %{labels} 都不在当前区域内"
 
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
@@ -2293,12 +2293,12 @@ msgstr "未授权对象或操作"
 
 #: ../app/controllers/application_controller.rb:2009
 msgid "%{task} does not apply to at least one of the selected %{model}"
-msgstr "%{task} 不适用于至少一个选中的 %{model}"
+msgstr "%{task} 不适用于至少一个选定的 %{model}"
 
 #: ../app/controllers/application_controller.rb:2013
 #: ../app/controllers/application_controller/ci_processing.rb:242
 msgid "%{task} does not apply to at least one of the selected items"
-msgstr "%{task} 不适用于至少一个选中的项"
+msgstr "%{task} 不适用于至少一个选定的项"
 
 #: ../app/controllers/application_controller/advanced_search.rb:48
 msgid "Search Name is required"
@@ -2306,7 +2306,7 @@ msgstr "搜索名称是必需的"
 
 #: ../app/controllers/application_controller/advanced_search.rb:54
 msgid "%{model} search \"%{name}\" was saved"
-msgstr "%{model} 搜索“%{name}”已保存"
+msgstr "已保存 %{model} 搜索“%{name}”"
 
 #: ../app/controllers/application_controller/advanced_search.rb:93
 msgid "%{model} search \"%{name}\" was successfully loaded"
@@ -2358,7 +2358,7 @@ msgstr "没有选择按钮组！"
 
 #: ../app/controllers/application_controller/buttons.rb:163
 msgid "Button \"%{name}\": Delete successful"
-msgstr "按钮“%{name}”：成功删除"
+msgstr "按钮“%{name}”：删除成功"
 
 #: ../app/controllers/application_controller/buttons.rb:224
 msgid "'Unassigned Button Group' can not be deleted"
@@ -2366,7 +2366,7 @@ msgstr "“未分配的按钮组”不能删除"
 
 #: ../app/controllers/application_controller/buttons.rb:239
 msgid "Button Group \"%{name}\": Delete successful"
-msgstr "按钮组“%{name}”：成功删除"
+msgstr "按钮组“%{name}”：删除成功"
 
 #: ../app/controllers/application_controller/buttons.rb:283
 msgid "No url was returned from automate."
@@ -2391,7 +2391,7 @@ msgstr "“%{task_description}”已启动"
 
 #: ../app/controllers/application_controller/buttons.rb:378
 msgid "Edit of Button Group \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对按钮组“%{name}”的编辑"
+msgstr "用户已取消针对按钮组“%{name}”的编辑"
 
 #: ../app/controllers/application_controller/buttons.rb:380
 msgid "Add of new Button Group was cancelled by the user"
@@ -2442,7 +2442,7 @@ msgstr "“添加”期间出错：%{field_name} %{error_message}"
 
 #: ../app/controllers/application_controller/buttons.rb:502
 msgid "Edit of Custom Button \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对定制按钮“%{name}”的编辑"
+msgstr "用户已取消针对定制按钮“%{name}”的编辑"
 
 #: ../app/controllers/application_controller/buttons.rb:504
 msgid "Add of new Custom Button was cancelled by the user"
@@ -2478,7 +2478,7 @@ msgstr "添加新的按钮组"
 
 #: ../app/controllers/application_controller/buttons.rb:689
 msgid "Editing Button Group \"%{name}\""
-msgstr "编辑按钮组“%{name}”"
+msgstr "正在编辑按钮组“%{name}”"
 
 #: ../app/controllers/application_controller/buttons.rb:713
 msgid "Adding a new Button"
@@ -2486,7 +2486,7 @@ msgstr "添加新的按钮"
 
 #: ../app/controllers/application_controller/buttons.rb:715
 msgid "Editing Button \"%{name}\""
-msgstr "编辑按钮“%{name}”"
+msgstr "正在编辑按钮“%{name}”"
 
 #: ../app/controllers/application_controller/buttons.rb:789
 msgid "No fields were selected to move top"
@@ -2604,7 +2604,7 @@ msgstr "%{model}“%{name}”：“%{task}”期间出错：%{error_msg}"
 #: ../app/controllers/application_controller/ci_processing.rb:133
 #: ../app/controllers/mixins/ems_common/core.rb:51
 msgid "%{model} \"%{name}\": %{task} successfully initiated"
-msgstr "%{model}“%{name}”：%{task} 已成功启动"
+msgstr "%{model}“%{name}”：启动 %{task} 成功"
 
 #: ../app/controllers/application_controller/ci_processing.rb:164
 #: ../app/controllers/application_controller/ci_processing.rb:172
@@ -2771,7 +2771,7 @@ msgstr "集群/部署角色“%{name}”：“%{task}”期间出错：%{error_m
 
 #: ../app/controllers/application_controller/ci_processing.rb:561
 msgid "Cluster / Deployment Role: %{task} successfully initiated"
-msgstr "集群 / 部署角色：%{task} 成功启动"
+msgstr "集群/部署角色：启动 %{task} 成功"
 
 #: ../app/controllers/application_controller/ci_processing.rb:586
 msgid "Resource Pool \"%{name}\": Error during '%{task}': %{error_message}"
@@ -2779,11 +2779,11 @@ msgstr "资源池“%{name}”：“%{task}”期间出错：%{error_message}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:591
 msgid "Resource Pool \"%{name}\": %{task} successfully initiated"
-msgstr "资源池“%{name}”：%{task} 已成功启动"
+msgstr "资源池“%{name}”：启动 %{task} 成功"
 
 #: ../app/controllers/application_controller/ci_processing.rb:614
 msgid "%{action_name} action does not apply to selected items"
-msgstr "%{action_name} 操作不适用于选中的项"
+msgstr "%{action_name} 操作不适用于选定的项"
 
 #. TRANSLATORS: file: product/views/InstanceOrImage.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
@@ -2823,7 +2823,7 @@ msgstr "数据存储区“%{name}”：“%{task}”期间出错：%{error_messa
 
 #: ../app/controllers/application_controller/ci_processing.rb:768
 msgid "\"%{record}\": Refresh successfully initiated"
-msgstr "“%{record}”：已成功启动刷新"
+msgstr "“%{record}”：启动刷新成功"
 
 #: ../app/controllers/application_controller/ci_processing.rb:780
 msgid "SmartState Analysis"
@@ -2851,11 +2851,11 @@ msgstr[0] "已启动从 %{product} 数据库中删除 %{count} 个 %{models}"
 #: ../app/controllers/application_controller/ci_processing.rb:852
 #: ../app/controllers/mixins/ems_common.rb:632
 msgid "The selected %{record} was deleted"
-msgstr "所选的 %{record} 已被删除"
+msgstr "选定的 %{record} 已删除"
 
 #: ../app/controllers/application_controller/ci_processing.rb:873
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
-msgstr "已成功启动删除风格“%{name}”。"
+msgstr "启动删除风格“%{name}”的操作成功。"
 
 #: ../app/controllers/application_controller/ci_processing.rb:875
 msgid "Unable to delete Flavor \"%{name}\": %{details}"
@@ -2864,7 +2864,7 @@ msgstr "无法删除风格“%{name}”：%{details}"
 #: ../app/controllers/application_controller/compare.rb:39
 #: ../app/controllers/application_controller/compare.rb:111
 msgid "Compare %{name}"
-msgstr "比较 %{name}"
+msgstr "比较%{name}"
 
 #: ../app/controllers/application_controller/compare.rb:381
 #: ../app/controllers/application_controller/compare.rb:403
@@ -2921,11 +2921,11 @@ msgstr "虚拟机模板"
 
 #: ../app/controllers/application_controller/compare.rb:738
 msgid "At least 2 %{model} must be selected for Compare"
-msgstr "必须为比较选择至少 2 个 %{model}"
+msgstr "必须至少选择 2 个 %{model} 才能进行比较"
 
 #: ../app/controllers/application_controller/compare.rb:744
 msgid "No more than 32 %{model} can be selected for Compare"
-msgstr "可为比较选择不多于 32 个 %{model} "
+msgstr "不得选择超过 32 个 %{model} 来进行比较"
 
 #: ../app/controllers/application_controller/compare.rb:785
 msgid "At least 2 Analyses must be selected for Drift"
@@ -2982,12 +2982,12 @@ msgstr "未找到值"
 #: ../app/controllers/application_controller/compare.rb:1296
 #: ../app/views/shared/_compare_header_expanded.html.haml:2
 msgid "%{name} is the base"
-msgstr "%{name} 是基础"
+msgstr "%{name} 是基准"
 
 #: ../app/controllers/application_controller/compare.rb:1300
 #: ../app/views/shared/_compare_header_expanded.html.haml:7
 msgid "Make %{name} the base"
-msgstr "使 %{name} 作为基础"
+msgstr "将 %{name} 设为基准"
 
 #: ../app/controllers/application_controller/compare.rb:1331
 msgid "Remove this %{title} from the comparison"
@@ -3017,7 +3017,7 @@ msgstr "“供应”期间出错：%{error_message}"
 
 #: ../app/controllers/application_controller/dialog_runner.rb:80
 msgid "%{button_name} Button not yet implemented"
-msgstr "尚未实施 %{button_name} 按钮"
+msgstr "%{button_name} 按钮尚未实现"
 
 #: ../app/controllers/application_controller/explorer.rb:103
 #: ../app/controllers/application_controller/explorer.rb:207
@@ -3026,7 +3026,7 @@ msgstr "无效的按钮操作"
 
 #: ../app/controllers/application_controller/explorer.rb:161
 msgid "Button not yet implemented %{model}:%{action}"
-msgstr "尚未实施按钮 %{model}：%{action}"
+msgstr "按钮尚未实现 %{model}:%{action}"
 
 #: ../app/controllers/application_controller/explorer.rb:259
 #: ../app/controllers/application_controller/tags.rb:95
@@ -3036,7 +3036,7 @@ msgstr "用户取消了标签编辑"
 
 #: ../app/controllers/application_controller/explorer.rb:277
 msgid "No Class found for explorer tree node id '%{number}'"
-msgstr "没有找到资源管理器树节点标识“%{number}”的类"
+msgstr "找不到浏览器树节点标识“%{number}”的类"
 
 #: ../app/controllers/application_controller/explorer.rb:285
 msgid "Last selected %{record_name} no longer exists"
@@ -3044,7 +3044,7 @@ msgstr "最后选择的 %{record_name} 已不存在"
 
 #: ../app/controllers/application_controller/feature.rb:25
 msgid "No TreeBuilder found for feature '%{name}'"
-msgstr "没有找到功能“%{name}”的 TreeBuilder"
+msgstr "找不到功能“%{name}”的 TreeBuilder"
 
 #: ../app/controllers/application_controller/filter.rb:34
 #: ../app/controllers/configuration_controller.rb:46
@@ -3054,7 +3054,7 @@ msgstr "没有找到功能“%{name}”的 TreeBuilder"
 #: ../app/controllers/miq_request_controller.rb:33
 #: ../app/controllers/vm_common.rb:45 ../app/helpers/application_helper.rb:651
 msgid "Button not yet implemented"
-msgstr "按钮还未实施"
+msgstr "按钮尚未实现"
 
 #: ../app/controllers/application_controller/filter.rb:95
 msgid "There is an error in the selected expression element, perhaps it was imported or edited manually."
@@ -3062,7 +3062,7 @@ msgstr "选择的表达式元素里有一个错误，它可能是手动导入或
 
 #: ../app/controllers/application_controller/filter.rb:96
 msgid "This element should be removed and recreated or you can report the error to your %{product} administrator."
-msgstr "这个元素应该被移除并重新创建，或者您可以将这个错误报告给 %{product} 管理员。"
+msgstr "这个元素应移除并重新创建，或者您可以将这个错误报告给 %{product} 管理员。"
 
 #: ../app/controllers/application_controller/filter.rb:97
 msgid "Error details: %{message}"
@@ -3078,15 +3078,15 @@ msgstr "所选过滤器不能设为缺省过滤器，因为它需要用户输入
 
 #: ../app/controllers/application_controller/filter.rb:415
 msgid " - Filtered by \"%{text}\""
-msgstr " - 根据“%{text}”过滤"
+msgstr " - 按“%{text}”过滤"
 
 #: ../app/controllers/application_controller/filter.rb:417
 msgid " - Filtered by \"%{text}\" report"
-msgstr " - 根据“%{text}”报告过滤"
+msgstr " - 按“%{text}”报告过滤"
 
 #: ../app/controllers/application_controller/filter.rb:422
 msgid " - Filtered by custom search"
-msgstr " - 根据定制搜索过滤"
+msgstr " - 按定制搜索过滤"
 
 #: ../app/controllers/application_controller/filter.rb:533
 msgid "A field must be chosen to commit this expression element"
@@ -3148,15 +3148,15 @@ msgstr "全部"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:80
 msgid "Add of new %{type} Request was cancelled by the user"
-msgstr "用户取消了添加新的 %{type} 请求"
+msgstr "用户已取消添加新 %{type} 请求的操作"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:203
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
-msgstr "用户已取消 %{model} 请求“%{name}”的编辑"
+msgstr "用户已取消针对 %{model} 请求“%{name}”的编辑"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:206
 msgid "Provision %{type} Request was cancelled by the user"
-msgstr "用户已取消供应 %{type} 请求"
+msgstr "用户已取消供应 %{type} 请求的操作"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:233
 msgid "Publish Virtual Machine"
@@ -3253,7 +3253,7 @@ msgstr "存储集群"
 #: ../app/controllers/application_controller/miq_request_methods.rb:408
 #: ../app/views/miq_policy/_policy_details.html.haml:49
 msgid "Last Updated"
-msgstr "最近更新的"
+msgstr "上次更新"
 
 #. TRANSLATORS: file: product/views/Host-hosts.yaml
 #. TRANSLATORS: file: product/views/Host.yaml
@@ -3390,11 +3390,11 @@ msgstr "主机"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:626
 msgid "%{typ} Request was Submitted, you will be notified when your %{title} are ready"
-msgstr "已提交 %{typ} 请求，在 %{title} 准备就绪时将通知您"
+msgstr "已提交 %{typ} 请求，当 %{title} 准备就绪时，您会收到通知"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:628
 msgid "%{typ} Request was re-submitted, you will be notified when your %{title} are ready"
-msgstr "已重新提交 %{typ} 请求，在 %{title} 准备就绪时将通知您"
+msgstr "已重新提交 %{typ} 请求，当 %{title} 准备就绪时，您会收到通知"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:790
 #: ../app/controllers/application_controller/miq_request_methods.rb:985
@@ -3438,7 +3438,7 @@ msgstr "图表菜单选择还没有实现"
 
 #: ../app/controllers/application_controller/performance.rb:285
 msgid "No %{tag} %{model} were running %{time}"
-msgstr "没有 %{tag} %{model} 在运行 %{time}"
+msgstr "在 %{time}，没有任何正在运行的 %{tag} %{model}"
 
 #: ../app/controllers/application_controller/performance.rb:289
 msgid "%{model} (%{tag} %{time})"
@@ -3446,7 +3446,7 @@ msgstr "%{model} (%{tag} %{time})"
 
 #: ../app/controllers/application_controller/performance.rb:292
 msgid "%{model} (%{tag} running %{time})"
-msgstr "%{model}（%{tag} 正在运行 %{time}）"
+msgstr "%{model}（在 %{time}，%{tag} 正在运行）"
 
 #: ../app/controllers/application_controller/performance.rb:308
 msgid "running"
@@ -3458,7 +3458,7 @@ msgstr "已停止"
 
 #: ../app/controllers/application_controller/performance.rb:310
 msgid "No %{model} were %{state} %{time}"
-msgstr "没有 %{model} %{state} %{time}"
+msgstr "在 %{time}，没有任何 %{model} 处于 %{state} 状态"
 
 #: ../app/controllers/application_controller/performance.rb:339
 #: ../app/controllers/application_controller/performance.rb:379
@@ -3468,15 +3468,15 @@ msgstr "这个集群没有可用的事件"
 #: ../app/controllers/application_controller/performance.rb:341
 #: ../app/controllers/application_controller/performance.rb:381
 msgid "No events available for this %{model}"
-msgstr "没有事件可用于此 %{model}"
+msgstr "此 %{model} 没有可用的事件"
 
 #: ../app/controllers/application_controller/performance.rb:519
 msgid "No %{tag} %{model}  were running %{time}"
-msgstr "没有 %{tag}  %{model} 在运行 %{time}"
+msgstr "在 %{time}，没有任何正在运行的 %{tag} %{model}"
 
 #: ../app/controllers/application_controller/performance.rb:537
 msgid "No %{model} were running %{time}"
-msgstr "没有 %{model} 在运行 %{time}"
+msgstr "在 %{time}，没有任何正在运行的 %{model}"
 
 #: ../app/controllers/application_controller/performance.rb:551
 msgid "on %{date} at %{time}"
@@ -3540,11 +3540,11 @@ msgstr "报告生成已返回：状态 [%{status}] 消息 [%{message}]"
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:12
 msgid "Sysprep \"%{params}\" upload was successful"
-msgstr "Sysprep“%{params}”已成功上传"
+msgstr "上传 Sysprep“%{params}”成功"
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:16
 msgid "Error during Sysprep \"%{params}\" file upload: %{message}"
-msgstr "Sysprep“%{params}”文件上载期间出错：%{message}"
+msgstr "Sysprep“%{params}”文件上传期间出错：%{message}"
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:21
 msgid "Use the Choose file button to locate an Upload file"
@@ -3624,7 +3624,7 @@ msgstr "没有选择要删除的密钥对"
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:178
 msgid "Couldn't initiate deletion of Key Pair \"%{name}\": %{details}"
-msgstr "无法启动密钥对“%{name}”的删除：%{details}"
+msgstr "无法启动删除密钥对“%{name}”的操作：%{details}"
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:192
 msgid "The selected Key Pair was deleted"
@@ -3774,7 +3774,7 @@ msgstr "已在库存组“%{name}”下配置系统"
 
 #: ../app/controllers/automation_manager_controller.rb:446
 msgid "Adding a new Service Dialog from \"%{name}\""
-msgstr "从“%{name}”添加新的服务对话框"
+msgstr "正在从“%{name}”添加新的服务对话框"
 
 #: ../app/controllers/automation_manager_controller.rb:454
 #: ../app/controllers/configuration_job_controller.rb:66
@@ -3826,7 +3826,7 @@ msgstr "服务目录项的副本已成功保存"
 
 #: ../app/controllers/catalog_controller.rb:149
 msgid "Edit of Service Catalog Item \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对服务目录项“%{name}”的编辑"
+msgstr "用户已取消针对服务目录项“%{name}”的编辑"
 
 #: ../app/controllers/catalog_controller.rb:152
 msgid "Add of new Service Catalog Item was cancelled by the user"
@@ -3843,7 +3843,7 @@ msgstr "添加新的服务目录项"
 
 #: ../app/controllers/catalog_controller.rb:353
 msgid "Edit of Catalog Bundle \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对目录组合“%{name}”的编辑"
+msgstr "用户已取消针对目录组合“%{name}”的编辑"
 
 #: ../app/controllers/catalog_controller.rb:356
 msgid "Add of new Catalog Bundle was cancelled by the user"
@@ -3876,7 +3876,7 @@ msgstr "定制镜像必须是 .png 或 .jpg 文件"
 
 #: ../app/controllers/catalog_controller.rb:464
 msgid "Custom Image file \"%{name}\" successfully uploaded"
-msgstr "定制镜像文件“%{name}”已成功上传"
+msgstr "上传定制图像文件“%{name}”成功"
 
 #: ../app/controllers/catalog_controller.rb:468
 msgid "Use the Choose file button to locate a .png or .jpg image file"
@@ -3884,7 +3884,7 @@ msgstr "使用“选择文件”按钮指定 .png 或 .jpg 图像文件"
 
 #: ../app/controllers/catalog_controller.rb:592
 msgid "Order Service \"%{name}\""
-msgstr "其他服务“%{name}”"
+msgstr "订购服务“%{name}”"
 
 #: ../app/controllers/catalog_controller.rb:613
 msgid "No Ordering Dialog is available"
@@ -3892,7 +3892,7 @@ msgstr "没有可用的订购对话框"
 
 #: ../app/controllers/catalog_controller.rb:628
 msgid "Edit of Catalog \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对目录“%{name}”的编辑"
+msgstr "用户已取消针对目录“%{name}”的编辑"
 
 #: ../app/controllers/catalog_controller.rb:630
 msgid "Add of new Catalog was cancelled by the user"
@@ -3904,23 +3904,23 @@ msgstr "已保存目录"
 
 #: ../app/controllers/catalog_controller.rb:666
 msgid "Orchestration template \"%{name}\" is read-only and cannot be edited."
-msgstr "编排模板“%{name}”是只读的，不能被编辑。"
+msgstr "编排模板“%{name}”是只读的，不可编辑。"
 
 #: ../app/controllers/catalog_controller.rb:672
 msgid "Editing %{record_name}"
-msgstr "编辑 %{record_name}"
+msgstr "正在编辑 %{record_name}"
 
 #: ../app/controllers/catalog_controller.rb:678
 msgid "Copying %{record_name}"
-msgstr "复制 %{record_name}"
+msgstr "正在复制 %{record_name}"
 
 #: ../app/controllers/catalog_controller.rb:679
 msgid "Copy of %{name}"
-msgstr "%{name} 的副本"
+msgstr "复制 %{name}"
 
 #: ../app/controllers/catalog_controller.rb:688
 msgid "Orchestration template \"%{name}\" is read-only and cannot be deleted."
-msgstr "编排模板“%{name}”是只读的，不能删除。"
+msgstr "编排模板“%{name}”是只读的，不可删除。"
 
 #: ../app/controllers/catalog_controller.rb:695
 msgid "Error during 'Orchestration Template Deletion': %{error_message}"
@@ -3928,7 +3928,7 @@ msgstr "“编排模板删除”期间出错：%{error_message}"
 
 #: ../app/controllers/catalog_controller.rb:698
 msgid "Orchestration Template \"%{name}\" was deleted."
-msgstr "编排模板“%{name}”已删除。"
+msgstr "已删除编排模板“%{name}”。"
 
 #: ../app/controllers/catalog_controller.rb:712
 msgid "Adding a new Orchestration Template"
@@ -3936,7 +3936,7 @@ msgstr "添加新的编排模板"
 
 #: ../app/controllers/catalog_controller.rb:720
 msgid "Adding a new Service Dialog from Orchestration Template \"%{name}\""
-msgstr "从编排模板“%{name}”添加新的服务对话框"
+msgstr "正在从编排模板“%{name}”添加新的服务对话框"
 
 #: ../app/controllers/catalog_controller.rb:792
 msgid "Before Playbook runs"
@@ -4023,7 +4023,7 @@ msgstr "订购这个服务"
 
 #: ../app/controllers/catalog_controller.rb:988
 msgid "Editing Catalog \"%{name}\""
-msgstr "编辑目录“%{name}”"
+msgstr "正在编辑目录“%{name}”"
 
 #: ../app/controllers/catalog_controller.rb:990
 msgid "Adding a new Catalog"
@@ -4044,7 +4044,7 @@ msgstr "价格/月"
 
 #: ../app/controllers/catalog_controller.rb:1144
 msgid "Editing Service Catalog Item \"%{name}\""
-msgstr "编辑服务目录项“%{name}”"
+msgstr "正在编辑服务目录项“%{name}”"
 
 #: ../app/controllers/catalog_controller.rb:1197
 msgid "Adding a new Catalog Bundle"
@@ -4052,13 +4052,13 @@ msgstr "添加新的目录组合"
 
 #: ../app/controllers/catalog_controller.rb:1199
 msgid "Editing Catalog Bundle \"%{name}\""
-msgstr "编辑目录组合“%{name}”"
+msgstr "正在编辑目录组合“%{name}”"
 
 #: ../app/controllers/catalog_controller.rb:1281
 #: ../app/views/catalog/_sandt_tree_show.html.haml:54
 #: ../app/views/catalog/_svccat_tree_show.html.haml:40
 msgid "Price / Month (in %{currency})"
-msgstr "价格/月（%{currency} 中）"
+msgstr "价格 / 月 (%{currency})"
 
 #: ../app/controllers/catalog_controller.rb:1564
 #: ../app/controllers/catalog_controller.rb:1579
@@ -4066,7 +4066,7 @@ msgstr "价格/月（%{currency} 中）"
 #: ../app/controllers/miq_policy_controller.rb:518
 #: ../app/controllers/vm_common.rb:1027
 msgid "All %{models}"
-msgstr "所有 %{models}"
+msgstr "所有的 %{models}"
 
 #: ../app/controllers/catalog_controller.rb:1594
 msgid "Services in Catalog \"Unassigned\""
@@ -4098,7 +4098,7 @@ msgstr "价格必须是一个数值"
 
 #: ../app/controllers/catalog_controller.rb:2023
 msgid "Editing %{model} Tags for \"%{name}\""
-msgstr "编辑“%{name}”的 %{model} 标记"
+msgstr "编辑“%{name}”的 %{model} 标签"
 
 #: ../app/controllers/chargeback_controller.rb:53
 #: ../app/controllers/chargeback_controller.rb:391
@@ -4117,7 +4117,7 @@ msgstr "所有已保存的计费报告"
 
 #: ../app/controllers/chargeback_controller.rb:100
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对计费率“%{name}”的编辑"
+msgstr "用户已取消针对计费率“%{name}”的编辑"
 
 #: ../app/controllers/chargeback_controller.rb:102
 msgid "Add of new Chargeback Rate was cancelled by the user"
@@ -4261,7 +4261,7 @@ msgstr "无法创建云网络“%{name}”：%{details}"
 
 #: ../app/controllers/cloud_network_controller.rb:104
 msgid "Couldn't initiate deletion of Network \"%{name}\": %{details}"
-msgstr "无法启动网络“%{name}”的删除：%{details}"
+msgstr "无法启动删除网络“%{name}”的操作：%{details}"
 
 #: ../app/controllers/cloud_network_controller.rb:121
 msgid "The selected Cloud Network was deleted"
@@ -4277,7 +4277,7 @@ msgstr "添加新的云网络"
 
 #: ../app/controllers/cloud_network_controller.rb:155
 msgid "Edit of Cloud Network \"%{name}\" was cancelled by the user"
-msgstr "用户已取消编辑云网络“%{name}”"
+msgstr "用户已取消针对云网络“%{name}”的编辑"
 
 #: ../app/controllers/cloud_network_controller.rb:161
 msgid "Cloud Network update failed: Task start failed"
@@ -4285,7 +4285,7 @@ msgstr "云网络更新失败：任务启动失败"
 
 #: ../app/controllers/cloud_network_controller.rb:169
 msgid "Couldn't initiate update of Network \"%{name}\": %{details}"
-msgstr "无法启动网络“%{name}”的更新：%{details}"
+msgstr "无法启动更新网络“%{name}”的操作：%{details}"
 
 #: ../app/controllers/cloud_network_controller.rb:182
 msgid "Cloud Network \"%{name}\" updated"
@@ -4421,7 +4421,7 @@ msgstr "编辑子网“%{name}”"
 
 #: ../app/controllers/cloud_subnet_controller.rb:163
 msgid "Edit of Subnet \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对子网“%{name}”的编辑"
+msgstr "用户已取消针对子网“%{name}”的编辑"
 
 #: ../app/controllers/cloud_subnet_controller.rb:175
 msgid "Cloud Subnet update failed: Task start failed"
@@ -4429,7 +4429,7 @@ msgstr "云子网更新失败：任务启动失败"
 
 #: ../app/controllers/cloud_subnet_controller.rb:188
 msgid "Couldn't initiate update of Cloud Subnet \"%{name}\": %{details}"
-msgstr "无法启动云子网“%{name}”的更新：%{details}"
+msgstr "无法启动更新云子网“%{name}”的操作：%{details}"
 
 #: ../app/controllers/cloud_subnet_controller.rb:201
 msgid "Cloud Subnet \"%{name}\" updated"
@@ -4470,7 +4470,7 @@ msgstr "子网"
 #: ../app/controllers/cloud_tenant_controller.rb:36
 #: ../app/controllers/cloud_volume_controller.rb:29
 msgid "Cloud Volume \"%{volume_name}\" is not attached to any Instances"
-msgstr "云卷“%{volume_name}”没有附加至任何实例"
+msgstr "云卷“%{volume_name}”未附加至任何实例"
 
 #: ../app/controllers/cloud_tenant_controller.rb:70
 msgid "Add New Cloud Tenant"
@@ -4499,7 +4499,7 @@ msgstr "编辑云租户“%{name}”"
 
 #: ../app/controllers/cloud_tenant_controller.rb:136
 msgid "Edit of Cloud Tenant \"%{name}\" was cancelled by the user"
-msgstr "用户已取消编辑云租户“%{name}”"
+msgstr "用户已取消针对云租户“%{name}”的编辑"
 
 #: ../app/controllers/cloud_tenant_controller.rb:158
 msgid "Cloud Tenant \"%{name}\" updated"
@@ -4511,7 +4511,7 @@ msgstr "无法更新云租户“%{name}”：%{details}"
 
 #: ../app/controllers/cloud_tenant_controller.rb:188
 msgid "Cloud Tenant \"%{name}\" cannot be removed because it is attached to one or more Instances"
-msgstr "无法移除云租户“%{name}”，因为它已连接到一个或多个实例"
+msgstr "无法移除云租户“%{name}”，因为它已附加至一个或多个实例"
 
 #: ../app/controllers/cloud_tenant_controller.rb:249
 msgid "Delete initiated for %{number} Cloud Tenant."
@@ -4553,7 +4553,7 @@ msgstr "复原云卷备份“%{name}”"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:42
 msgid "Restore to Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了恢复到云卷“%{name}”"
+msgstr "用户已取消复原到云卷“%{name}”的操作"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:53
 msgid "Cloud volume restore failed: Task start failed"
@@ -4569,7 +4569,7 @@ msgstr "无法复原云卷“%{name}”：%{details}"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:96
 msgid "Delete of Backup \"%{name}\" was successfully initiated."
-msgstr "已成功启动删除备份“%{name}”。"
+msgstr "启动删除备份“%{name}”的操作成功。"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:98
 msgid "Unable to delete Backup \"%{name}\": %{details}"
@@ -4599,26 +4599,26 @@ msgstr "拆离云卷“%{name}”"
 
 #: ../app/controllers/cloud_volume_controller.rb:82
 msgid "Attaching Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了附加云卷“%{name}”"
+msgstr "用户已取消附加云卷“%{name}”的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:94
 #: ../app/controllers/vm_cloud_controller.rb:68
 msgid "Attaching Cloud volume failed: Task start failed"
-msgstr "连接云卷失败：任务启动失败"
+msgstr "附加云卷失败：任务启动失败"
 
 #: ../app/controllers/cloud_volume_controller.rb:112
 #: ../app/controllers/vm_cloud_controller.rb:86
 msgid "Attaching Cloud Volume \"%{volume_name}\" to %{vm_name} finished"
-msgstr "将云卷“%{volume_name}”连接到 %{vm_name} 已完成"
+msgstr "将云卷“%{volume_name}”附加到 %{vm_name} 完成"
 
 #: ../app/controllers/cloud_volume_controller.rb:117
 #: ../app/controllers/vm_cloud_controller.rb:91
 msgid "Unable to attach Cloud Volume \"%{volume_name}\" to %{vm_name}: %{details}"
-msgstr "无法将云卷“%{volume_name}”连接到 %{vm_name}：%{details}"
+msgstr "无法将云卷“%{volume_name}”附加至 %{vm_name}：%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:136
 msgid "Detaching Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了分离云卷“%{name}”"
+msgstr "用户已取消拆离云卷“%{name}”的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:149
 #: ../app/controllers/vm_cloud_controller.rb:121
@@ -4662,7 +4662,7 @@ msgstr "编辑云卷“%{name}”"
 
 #: ../app/controllers/cloud_volume_controller.rb:280
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对云卷“%{name}”的编辑"
+msgstr "用户已取消针对云卷“%{name}”的编辑"
 
 #: ../app/controllers/cloud_volume_controller.rb:291
 msgid "Cloud Volume update failed: Task start failed"
@@ -4682,11 +4682,11 @@ msgstr "云卷不再存在。"
 
 #: ../app/controllers/cloud_volume_controller.rb:342
 msgid "Cloud Volume \"%{name}\" cannot be removed because it is attached to one or more Instances"
-msgstr "无法移除云卷“%{name}”，因为它已连接到一个或多个实例"
+msgstr "无法移除云卷“%{name}”，因为它已附加至一个或多个实例"
 
 #: ../app/controllers/cloud_volume_controller.rb:349
 msgid "Couldn't initiate deletion of Cloud Volume \"%{name}\": %{details}"
-msgstr "无法启动云卷“%{name}”的删除：%{details}"
+msgstr "无法启动删除云卷“%{name}”的操作：%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:375
 msgid "Create Backup for Cloud Volume \"%{name}\""
@@ -4694,11 +4694,11 @@ msgstr "创建云卷“%{name}”的备份"
 
 #: ../app/controllers/cloud_volume_controller.rb:386
 msgid "Backup of Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户已取消备份云卷“%{name}”"
+msgstr "用户已取消备份云卷“%{name}”的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:400
 msgid "Cloud volume backup creation failed: Task start failed: ID [%{id}]"
-msgstr "云卷备份创建失败：任务启动失败：标识 [%{id}]"
+msgstr "创建云卷备份失败：任务启动失败：标识 [%{id}]"
 
 #: ../app/controllers/cloud_volume_controller.rb:415
 msgid "Backup for Cloud Volume \"%{name}\" created"
@@ -4710,19 +4710,19 @@ msgstr "无法创建云卷“%{name}”的备份：%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:438
 msgid "Restore Cloud Volume \"%{name}\" from a Backup"
-msgstr "从备份恢复云卷“%{name}”"
+msgstr "从备份复原云卷“%{name}”"
 
 #: ../app/controllers/cloud_volume_controller.rb:449
 msgid "Restore of Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了恢复云卷“%{name}”"
+msgstr "用户已取消复原云卷“%{name}”的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:456
 msgid "Cloud volume restore failed: Task start failed: ID [%{id}]"
-msgstr "云卷复原失败：任务启动失败：标识 [%{id}]"
+msgstr "复原云卷失败：任务启动失败：标识 [%{id}]"
 
 #: ../app/controllers/cloud_volume_controller.rb:474
 msgid "Restoring Cloud Volume \"%{name}\" from backup"
-msgstr "正在从备份恢复云卷“%{name}”"
+msgstr "正在从备份复原云卷“%{name}”"
 
 #: ../app/controllers/cloud_volume_controller.rb:476
 msgid "Unable to restore Cloud Volume \"%{name}\" from backup: %{details}"
@@ -4734,11 +4734,11 @@ msgstr "创建云卷“%{name}”的快照"
 
 #: ../app/controllers/cloud_volume_controller.rb:505
 msgid "Snapshot of Cloud Volume \"%{name}\" was cancelled by the user"
-msgstr "用户取消了云卷 %{name} 的快照"
+msgstr "用户已取消创建云卷“%{name}”快照的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:513
 msgid "Cloud volume snapshot creation failed: Task start failed: ID [%{id}]"
-msgstr "云卷快照创建失败：任务启动失败：标识 [%{id}]"
+msgstr "创建云卷快照失败：任务启动失败：标识 [%{id}]"
 
 #: ../app/controllers/cloud_volume_controller.rb:530
 msgid "Snapshot for Cloud Volume \"%{name}\" created"
@@ -4799,7 +4799,7 @@ msgstr "我的设置"
 #: ../app/controllers/configuration_controller.rb:150
 #: ../app/controllers/configuration_controller.rb:163
 msgid "User Interface settings saved for User %{name}"
-msgstr "已为用户 %{name} 保存用户界面设置"
+msgstr "已保存用户 %{name} 的用户界面设置"
 
 #: ../app/controllers/configuration_controller.rb:152
 #: ../app/controllers/configuration_controller.rb:165
@@ -4864,7 +4864,7 @@ msgstr "正在添加“%{description}”的副本"
 
 #: ../app/controllers/configuration_controller.rb:351
 msgid "Edit of Time Profile \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对时间概要文件“%{name}”的编辑"
+msgstr "用户已取消针对时间概要文件“%{name}”的编辑"
 
 #: ../app/controllers/configuration_controller.rb:377
 msgid "TimeProfile \"%{name}\": Error during 'save': %{error_message}"
@@ -4983,7 +4983,7 @@ msgstr "添加此报告窗口窗口小部件"
 
 #: ../app/controllers/dashboard_controller.rb:415
 msgid "The widget \"%{widget_name}\" is already part of the edited dashboard"
-msgstr "窗口小部件“%{widget_name}”已经是被修改的仪表板的一部分"
+msgstr "窗口小部件“%{widget_name}”已经是所编辑的仪表板的一部分"
 
 #: ../app/controllers/dashboard_controller.rb:441
 msgid "Session was timed out due to inactivity. Please log in again."
@@ -5000,7 +5000,7 @@ msgstr "按浏览器的“返回”按钮或单击选项卡以继续"
 
 #: ../app/controllers/dashboard_controller.rb:670
 msgid "%{name} dashboard for user %{id} in group id %{current_group_id}"
-msgstr "组标识 %{current_group_id} 中用户 %{id} 的 %{name} 仪表板"
+msgstr "标识为 %{current_group_id} 的组中用户 %{id} 的 %{name} 仪表板"
 
 #: ../app/controllers/dashboard_controller.rb:726
 #: ../app/controllers/mixins/more_show_actions.rb:10
@@ -5354,7 +5354,7 @@ msgstr "添加新的浮动 IP"
 
 #: ../app/controllers/floating_ip_controller.rb:134
 msgid "Edit of Floating IP \"%{address}\" was cancelled by the user"
-msgstr "用户取消对浮动 IP“%{address}”的编辑"
+msgstr "用户已取消针对浮动 IP“%{address}”的编辑"
 
 #: ../app/controllers/floating_ip_controller.rb:143
 msgid "Floating IP update failed: Task start failed"
@@ -5494,7 +5494,7 @@ msgstr "编辑主机聚集“%{name}”"
 
 #: ../app/controllers/host_aggregate_controller.rb:105
 msgid "Edit of Host Aggregate \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对主机聚集“%{name}”的编辑"
+msgstr "用户已取消针对主机聚集“%{name}”的编辑"
 
 #: ../app/controllers/host_aggregate_controller.rb:116
 msgid "Edit of Host Aggregate \"%{name}\" failed: Task start failed"
@@ -5540,7 +5540,7 @@ msgstr "向主机聚集“%{name}”添加主机"
 
 #: ../app/controllers/host_aggregate_controller.rb:235
 msgid "Add Host to Host Aggregate \"%{name}\" was cancelled by the user"
-msgstr "用户取消了在主机聚集“%{name}”中添加主机"
+msgstr "用户已取消在主机聚集“%{name}”中添加主机的操作"
 
 #: ../app/controllers/host_aggregate_controller.rb:247
 msgid "Add Host to Host Aggregate \"%{name}\" failed: Task start failed"
@@ -5564,7 +5564,7 @@ msgstr "从主机聚集“%{name}”移除主机"
 
 #: ../app/controllers/host_aggregate_controller.rb:328
 msgid "Remove Host from Host Aggregate \"%{name}\" was cancelled by the user"
-msgstr "用户取消了从主机聚集“%{name}”移除主机"
+msgstr "用户已取消从主机聚集“%{name}”中移除主机的操作"
 
 #: ../app/controllers/host_aggregate_controller.rb:340
 msgid "Remove Host to Host Aggregate \"%{name}\" failed: Task start failed"
@@ -5576,7 +5576,7 @@ msgstr "主机聚集“%{name}”不支持移除主机"
 
 #: ../app/controllers/host_aggregate_controller.rb:370
 msgid "Host \"%{hostname}\" removed from Host Aggregate \"%{name}\""
-msgstr "已从主机聚集“%{name}”移除主机“%{hostname}”"
+msgstr "已从主机聚集“%{name}”中移除主机“%{hostname}”"
 
 #: ../app/controllers/host_aggregate_controller.rb:428
 msgid "Delete initiated for %{number} Host Aggregate."
@@ -5680,7 +5680,7 @@ msgstr "用户取消了对所选主机 / 节点的凭证的编辑"
 
 #: ../app/controllers/host_controller.rb:169
 msgid "Edit of Host / Node \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对主机/节点“%{name}”的编辑"
+msgstr "用户已取消针对主机/节点“%{name}”的编辑"
 
 #: ../app/controllers/host_controller.rb:180
 msgid "Host / Node \"%{name}\" was saved"
@@ -5732,7 +5732,7 @@ msgstr "所有交换机"
 
 #: ../app/controllers/infra_networking_controller.rb:365
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
-msgstr "交换机“%{name}”的%{action}“%{item_name}”"
+msgstr "交换机“%{name}”的 %{action}“%{item_name}”"
 
 #: ../app/controllers/infra_networking_controller.rb:372
 msgid "\"%{action}\" for Switch \"%{name}\""
@@ -5801,7 +5801,7 @@ msgstr "%{name} 域：当前版本 - %{version}，可用版本 - %{available_ver
 #: ../app/controllers/miq_ae_class_controller.rb:509
 #: ../app/controllers/miq_ae_class_controller.rb:760
 msgid "Editing Automate Method \"%{name}\""
-msgstr "编辑自动化方法“%{name}”"
+msgstr "正在编辑自动化方法“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:548
 msgid "Adding a new Automate Instance"
@@ -5809,11 +5809,11 @@ msgstr "添加新的自动化实例"
 
 #: ../app/controllers/miq_ae_class_controller.rb:550
 msgid "Editing Automate Instance \"%{name}\""
-msgstr "编辑自动化实例“%{name}”"
+msgstr "正在编辑自动化实例“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:570
 msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对自动化实例“%{name}”的编辑"
+msgstr "用户已取消针对自动化实例“%{name}”的编辑"
 
 #: ../app/controllers/miq_ae_class_controller.rb:591
 #: ../app/controllers/miq_ae_class_controller.rb:1060
@@ -5847,7 +5847,7 @@ msgstr "添加新的 Automate 类"
 
 #: ../app/controllers/miq_ae_class_controller.rb:675
 msgid "Editing Automate Class \"%{name}\""
-msgstr "编辑自动化类“%{name}”"
+msgstr "正在编辑自动化类“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:710
 msgid "Adding a new Class Schema"
@@ -5855,7 +5855,7 @@ msgstr "添加新的类模式"
 
 #: ../app/controllers/miq_ae_class_controller.rb:712
 msgid "Editing Class Schema \"%{name}\""
-msgstr "编辑类模式“%{name}”"
+msgstr "正在编辑类模式“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:758
 msgid "Adding a new Automate Method"
@@ -5871,7 +5871,7 @@ msgstr "第 %{line_num} 行出错：%{err_txt}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1049
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对自动化类“%{name}”的编辑"
+msgstr "用户已取消针对自动化类“%{name}”的编辑"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1065
 msgid "Automate Class \"%{name}\" was saved"
@@ -5879,7 +5879,7 @@ msgstr "已保存自动化类“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1091
 msgid "Edit of schema for Automate Class \"%{name}\" was cancelled by the user"
-msgstr "用户已取消编辑自动化类“%{name}”的模式"
+msgstr "用户已取消针对自动化类“%{name}”的模式的编辑"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1108
 msgid "Schema for Automate Class \"%{name}\" was saved"
@@ -5896,12 +5896,12 @@ msgstr "“保存”期间出错：%{message}"
 #: ../app/controllers/ops_controller/ops_rbac.rb:686
 #: ../app/controllers/vm_common.rb:735
 msgid "%{model} \"%{name}\" was saved"
-msgstr "%{model}“%{name}”已保存"
+msgstr "已保存 %{model}“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1151
 #: ../app/controllers/miq_ae_class_controller.rb:1204
 msgid "Edit of Automate Method \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对自动化方法“%{name}”的编辑"
+msgstr "用户已取消针对自动化方法“%{name}”的编辑"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1153
 msgid "Add of Automate Method was cancelled by the user"
@@ -5931,7 +5931,7 @@ msgstr "已添加自动化方法“%{name}”"
 #: ../app/controllers/miq_ae_class_controller.rb:1360
 #: ../app/controllers/mixins/manager_controller_mixin.rb:53
 msgid "%{model} \"%{name}\" was added"
-msgstr "%{model}“%{name}”已添加"
+msgstr "已添加 %{model}“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1507
 #: ../app/views/miq_ae_class/_instance_fields.html.haml:2
@@ -5981,11 +5981,11 @@ msgstr "“%{record} 复制”期间出错：%{error_message}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1872
 msgid "Copy selected %{record} was saved"
-msgstr "复制选择的 %{record} 已被保存"
+msgstr "复制选定的 %{record} 已保存"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1896
 msgid "Copy %{record} was cancelled by the user"
-msgstr "复制 %{record} 被用户取消"
+msgstr "用户已取消复制 %{record} 的操作"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1914
 msgid "Copy %{model}"
@@ -6001,7 +6001,7 @@ msgstr "无法删除“%{field}”自动化域"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2206
 msgid "%{field} is required"
-msgstr "%{field} 是必填项"
+msgstr "%{field} 为必需"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2438
 msgid "Edit of Class Schema Sequence '%{name}'"
@@ -6030,14 +6030,14 @@ msgstr "无法编辑只读自动化域“%{name}”"
 #: ../app/controllers/miq_ae_class_controller.rb:2570
 #: ../app/controllers/miq_ae_customization_controller.rb:369
 msgid "Adding a new %{model}"
-msgstr "添加新的 %{model}"
+msgstr "添加新的%{model}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2572
 #: ../app/controllers/miq_ae_customization_controller.rb:366
 #: ../app/controllers/ops_controller.rb:631
 #: ../app/controllers/ops_controller.rb:697
 msgid "Editing %{model} \"%{name}\""
-msgstr "编辑“%{name}”的 %{model}"
+msgstr "正在编辑 %{model}“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2593
 #: ../app/views/report/_db_form.html.haml:33
@@ -6178,11 +6178,11 @@ msgstr "添加新对话框"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:412
 msgid "Copying Dialog \"%{name}\""
-msgstr "复制对话框“%{name}”"
+msgstr "正在复制对话框“%{name}”"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:414
 msgid "Editing Dialog \"%{name}\""
-msgstr "编辑对话框“%{name}”"
+msgstr "正在编辑对话框“%{name}”"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:424
 msgid "Button Group Hover Text is required"
@@ -6253,7 +6253,7 @@ msgstr "用户取消了添加新对话框"
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:222
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
-msgstr "用户取消了编辑对话框“%{name}”"
+msgstr "用户已取消针对对话框“%{name}”的编辑"
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:233
 msgid "Dialog Type must be selected"
@@ -6340,7 +6340,7 @@ msgstr "错误：数据存储导入失败"
 #: ../app/controllers/miq_ae_tools_controller.rb:161
 #: ../app/controllers/miq_ae_tools_controller.rb:278
 msgid "Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}\nClasses updated/added: %{class_stats}\nInstances updated/added: %{instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr "数据存储导入已成功。\n更新/添加的名称空间：%{namespace_stats}\n更新/添加的类：%{class_stats}\n更新/添加的实例：%{instance_stats}\n更新/添加的方法：%{method_stats}"
+msgstr "数据存储导入已成功。\n已更新/添加的名称空间数：%{namespace_stats}\n已更新/添加的类数：%{class_stats}\n已更新/添加的实例数：%{instance_stats}\n已更新/添加的方法数：%{method_stats}"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:168
 msgid "Error: Selected domain is locked"
@@ -6406,7 +6406,7 @@ msgstr "必须选择启动类"
 #: ../app/controllers/miq_ae_tools_controller.rb:411
 #: ../app/controllers/miq_ae_tools_controller.rb:412
 msgid "%{val} missing for %{field}"
-msgstr "%{field} 缺少 %{val}"
+msgstr "%{field} 缺失 %{val}"
 
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
 #: ../app/controllers/miq_policy_controller.rb:22
@@ -6454,7 +6454,7 @@ msgstr "策略概要文件不再存在"
 
 #: ../app/controllers/miq_policy_controller.rb:381
 msgid "All %{items}"
-msgstr "所有 %{items}"
+msgstr "所有的 %{items}"
 
 #: ../app/controllers/miq_policy_controller.rb:487
 msgid "unknown tree in replace_trees: %{name}"
@@ -6489,7 +6489,7 @@ msgstr "添加新的策略概要文件"
 
 #: ../app/controllers/miq_policy_controller.rb:526
 msgid "Editing Policy Profile \"%{name}\""
-msgstr "编辑策略概要文件“%{name}”"
+msgstr "正在编辑策略概要文件“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:526
 #: ../app/controllers/miq_policy_controller/policy_profiles.rb:153
@@ -6499,12 +6499,12 @@ msgstr "策略概要文件“%{name}”"
 #: ../app/controllers/miq_policy_controller.rb:535
 #: ../app/controllers/miq_policy_controller.rb:905
 msgid "All %{typ} Policies"
-msgstr "所有 %{typ} 策略"
+msgstr "所有的 %{typ} 策略"
 
 #: ../app/controllers/miq_policy_controller.rb:538
 #: ../app/controllers/miq_policy_controller.rb:912
 msgid "All %{typ} Conditions"
-msgstr "所有 %{typ} 条件"
+msgstr "所有的 %{typ} 条件"
 
 #: ../app/controllers/miq_policy_controller.rb:543
 #: ../app/controllers/miq_policy_controller.rb:894
@@ -6528,15 +6528,15 @@ msgstr "%{typ} 策略"
 #: ../app/controllers/miq_policy_controller.rb:551
 #: ../app/controllers/miq_policy_controller.rb:918
 msgid "All %{typ} Alert Profiles"
-msgstr "所有 %{typ} 警报概要文件"
+msgstr "所有的 %{typ} 警报概要文件"
 
 #: ../app/controllers/miq_policy_controller.rb:561
 msgid "Adding a new %{model_name} %{mode} Policy"
-msgstr "添加新的 %{model_name} %{mode} 策略"
+msgstr "添加新的%{model_name}%{mode}策略"
 
 #: ../app/controllers/miq_policy_controller.rb:564
 msgid "Adding a new %{model_name} Policy"
-msgstr "添加新的 %{model_name} 策略"
+msgstr "添加新的%{model_name}策略"
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "%{model} Policy \"%{name}\""
@@ -6544,7 +6544,7 @@ msgstr "%{model} 策略“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "Editing %{model} Policy \"%{name}\""
-msgstr "编辑 %{model} 策略“%{name}”"
+msgstr "正在编辑 %{model} 策略“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:571
 msgid " Condition Assignments"
@@ -6560,7 +6560,7 @@ msgstr "添加新条件"
 
 #: ../app/controllers/miq_policy_controller.rb:591
 msgid "Editing %{model} Condition \"%{name}\""
-msgstr "编辑 %{model} 条件“%{name}”"
+msgstr "正在编辑 %{model} 条件“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:595
 msgid "%{model} Condition \"%{name}\""
@@ -6568,7 +6568,7 @@ msgstr "%{model} 条件“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:602
 msgid "Editing Event \"%{name}\""
-msgstr "编辑事件“%{name}”"
+msgstr "正在编辑事件“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:602
 #: ../app/controllers/miq_policy_controller/events.rb:122
@@ -6586,7 +6586,7 @@ msgstr "操作“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:608
 msgid "Editing Action \"%{name}\""
-msgstr "编辑操作“%{name}”"
+msgstr "正在编辑操作“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:614
 msgid "Adding a new Alert Profile"
@@ -6594,7 +6594,7 @@ msgstr "添加新的警报概要文件"
 
 #: ../app/controllers/miq_policy_controller.rb:616
 msgid "Editing %{model} Alert Profile \"%{name}\""
-msgstr "编辑 %{model} 警报概要文件“%{name}”"
+msgstr "正在编辑 %{model} 警报概要文件“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:619
 #: ../app/controllers/miq_policy_controller/alert_profiles.rb:323
@@ -6607,7 +6607,7 @@ msgstr "添加新警报"
 
 #: ../app/controllers/miq_policy_controller.rb:626
 msgid "Editing assignments for Alert \"%{name}\""
-msgstr "编辑警报“%{name}”的分配"
+msgstr "正在编辑警报“%{name}”的分配"
 
 #: ../app/controllers/miq_policy_controller.rb:628
 msgid "Assignments for Alert \"%{name}\""
@@ -6615,7 +6615,7 @@ msgstr "警报“%{name}”的分配"
 
 #: ../app/controllers/miq_policy_controller.rb:630
 msgid "Editing Alert \"%{name}\""
-msgstr "编辑警报“%{name}”"
+msgstr "正在编辑警报“%{name}”"
 
 #: ../app/controllers/miq_policy_controller.rb:632
 #: ../app/controllers/miq_policy_controller/alerts.rb:687
@@ -6680,21 +6680,21 @@ msgstr "陷阱对象标识是必需的"
 #: ../app/controllers/miq_policy_controller.rb:1001
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:351
 msgid "Value missing for %{field}"
-msgstr "%{field} 缺少值"
+msgstr "%{field} 缺失值"
 
 #: ../app/controllers/miq_policy_controller.rb:998
 #: ../app/controllers/miq_policy_controller.rb:1003
 #: ../app/controllers/miq_policy_controller.rb:1007
 msgid "Object ID missing for %{field}"
-msgstr "%{field} 缺少对象标识"
+msgstr "%{field} 缺失对象标识"
 
 #: ../app/controllers/miq_policy_controller.rb:1000
 msgid "Type missing for %{field}"
-msgstr "%{field} 缺少类型"
+msgstr "%{field} 丢失类型"
 
 #: ../app/controllers/miq_policy_controller.rb:1005
 msgid "Object ID and Values missing for %{field}"
-msgstr "%{field} 缺少对象标识和值"
+msgstr "%{field} 缺失对象标识和值"
 
 #: ../app/controllers/miq_policy_controller.rb:1137
 #: ../app/helpers/application_helper/title.rb:102
@@ -6708,7 +6708,7 @@ msgstr "用户取消了添加新警报概要文件"
 
 #: ../app/controllers/miq_policy_controller/alert_profiles.rb:14
 msgid "Edit of Alert Profile \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对警报概要文件“%{name}”的编辑"
+msgstr "用户已取消针对警报概要文件“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/alert_profiles.rb:31
 msgid "Alert Profile must contain at least one Alert"
@@ -6766,7 +6766,7 @@ msgstr "用户取消了添加新警报"
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:16
 msgid "Edit of Alert \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对警报“%{name}”的编辑"
+msgstr "用户已取消针对警报“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:37
 msgid "Alert \"%{name}\" was added"
@@ -6951,11 +6951,11 @@ msgstr "<没有配置事件>"
 
 #: ../app/controllers/miq_policy_controller/conditions.rb:11
 msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
-msgstr "用户已取消 %{model} 条件“%{name}”的编辑"
+msgstr "用户已取消针对 %{model} 条件“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/conditions.rb:13
 msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "用户取消了添加新的 %{model} 条件。"
+msgstr "用户已取消添加新 %{model} 条件的操作"
 
 #: ../app/controllers/miq_policy_controller/conditions.rb:22
 #: ../app/controllers/miq_policy_controller/conditions.rb:237
@@ -6997,7 +6997,7 @@ msgstr "必须选择一个操作才能保存此策略事件"
 
 #: ../app/controllers/miq_policy_controller/events.rb:43
 msgid "Actions for Policy Event \"%{events}\" were saved"
-msgstr "策略事件“%{events}”的操作被保存"
+msgstr "已保存策略事件“%{events}”的操作"
 
 #: ../app/controllers/miq_policy_controller/events.rb:114
 #: ../app/presenters/tree_builder_event.rb:11
@@ -7006,7 +7006,7 @@ msgstr "所有事件"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:11
 msgid "Edit of Action \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对操作“%{name}”的编辑"
+msgstr "用户已取消针对操作“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:13
 msgid "Add of new Action was cancelled by the user"
@@ -7057,7 +7057,7 @@ msgstr "属性名是必需的"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:350
 msgid "Attribute missing for %{field}"
-msgstr "%{field} 缺少属性"
+msgstr "%{field} 缺失属性"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:354
 msgid "At least one Alert must be selected"
@@ -7085,7 +7085,7 @@ msgstr "必须至少选择一个标签"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:9
 msgid "Edit of Policy \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对策略“%{name}”的编辑"
+msgstr "用户已取消针对策略“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:11
 msgid "Add of new Policy was cancelled by the user"
@@ -7128,7 +7128,7 @@ msgstr "用户取消了添加新策略概要文件"
 
 #: ../app/controllers/miq_policy_controller/policy_profiles.rb:12
 msgid "Edit of Policy Profile \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对策略概要文件“%{name}”的编辑"
+msgstr "用户已取消针对策略概要文件“%{name}”的编辑"
 
 #: ../app/controllers/miq_policy_controller/policy_profiles.rb:35
 msgid "Policy Profile must contain at least one Policy"
@@ -7212,7 +7212,7 @@ msgstr "请求拒绝"
 
 #: ../app/controllers/miq_request_controller.rb:180
 msgid "Copy of %{description}"
-msgstr "%{description} 的副本"
+msgstr "复制 %{description}"
 
 #: ../app/controllers/miq_request_controller.rb:182
 msgid "Copy of %{typ} Request"
@@ -7393,7 +7393,7 @@ msgstr "必须为发现至少选择一个项目"
 
 #: ../app/controllers/mixins/actions/host_actions/discover.rb:86
 msgid "%{title} Discovery returned: %{error_message}"
-msgstr "%{title} 发现返回：%{error_message}"
+msgstr "%{title} 发现已返回：%{error_message}"
 
 #: ../app/controllers/mixins/actions/host_actions/discover.rb:91
 msgid "%{model}: Discovery successfully initiated"
@@ -7442,12 +7442,12 @@ msgstr[0] "已启动从 %{product} 数据库%{task} %{count} 个主机"
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:72
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:78
 msgid "\"%{task}\": not supported for %{hostname}"
-msgstr "“%{task}”：%{hostname} 不支持"
+msgstr "%{hostname} 不支持“%{task}”"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:91
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:96
 msgid "\"%{record}\": Scheduling is %{status} now."
-msgstr "“%{record}”：现在调度为 %{status}。"
+msgstr "“%{record}”：调度现处于 %{status} 状态。"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:98
 msgid "\"%{record}\": %{task} invalid"
@@ -7455,16 +7455,16 @@ msgstr "“%{record}”：%{task} 无效"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:110
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", \"enroll\", or \"inspectfail\""
-msgstr "“%{task}”：不适用于 %{hostname}。%{hostname}的供应状态必须为“available”、“adoptfail”、“cleanfail”、“enroll”或“inspectfail”"
+msgstr "“%{task}”：不可用于 %{hostname}。%{hostname} 的供应状态必须为“available”、“adoptfail”、“cleanfail”、“enroll”或“inspectfail”"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:121
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:132
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state needs to be in \"manageable\""
-msgstr "“%{task}”：不适用于 %{hostname}。%{hostname}的供应状态需要为“manageable”"
+msgstr "“%{task}”：不可用于 %{hostname}。%{hostname} 的供应状态必须为“manageable”"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:143
 msgid "\"%{task}\": not available for %{hostname}"
-msgstr "“%{task}”：不适用于 %{hostname}"
+msgstr "“%{task}”：不可用于 %{hostname}"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:171
 #: ../app/controllers/mixins/ems_common.rb:329
@@ -7581,11 +7581,11 @@ msgstr "将浮动 IP 与实例“%{name}”相关联"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:77
 msgid "Association of Floating IP with Instance \"%{name}\" was cancelled by the user"
-msgstr "用户取消了关联浮动 IP 和实例“%{name}”"
+msgstr "用户已取消将浮动 IP 与实例“%{name}”关联的操作"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:86
 msgid "Associating Floating IP %{address} with Instance \"%{name}\""
-msgstr "将浮动 IP %{address} 与实例“%{name}”相关联"
+msgstr "正在将浮动 IP %{address} 与实例“%{name}”关联"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:91
 msgid "Unable to associate Floating IP %{address} with Instance \"%{name}\": %{details}"
@@ -7606,7 +7606,7 @@ msgstr "用户取消了解除浮动 IP 和实例“%{name}”的关联"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:92
 msgid "Disassociating Floating IP %{address} from Instance \"%{name}\""
-msgstr "解除浮动 IP %{address} 与实例“%{name}”的关联"
+msgstr "正在将浮动 IP %{address} 与实例“%{name}”解除关联"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:97
 msgid "Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{details}"
@@ -7650,11 +7650,11 @@ msgstr "实例“%{name}”的实时迁移已排队"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb:78
 msgid "Unable to live migrate Instance \"%{name}\": %{details}"
-msgstr "无法实时迁移实例“%{name}”：%{details}"
+msgstr "无法即时迁移实例“%{name}”：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:28
 msgid "One or more %{model} must be selected to Set Ownership"
-msgstr "必须为“设置所有权”选择一个或多个 %{model} "
+msgstr "必须为“设置所有权”选择一个或多个 %{model}"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:40
 msgid "None of the selected items allow ownership changes"
@@ -7716,7 +7716,7 @@ msgstr "因为选择了至少一个不可重新配置的虚拟机，重新配置
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:98
 msgid "Between %{min} and %{max}"
-msgstr "介于 %{min} 和 %{max} 之间"
+msgstr "介于 %{min} 与 %{max} 之间"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:373
 msgid "VM Reconfigure Request was cancelled by the user"
@@ -7752,7 +7752,7 @@ msgstr "无法重命名虚拟机“%{name}”：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/rename.rb:107
 msgid "Rename of VM \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对虚拟机“%{name}”的重命名"
+msgstr "用户已取消将虚拟机“%{name}”重命名的操作"
 
 #: ../app/controllers/mixins/actions/vm_actions/rename.rb:124
 msgid "VM rename: Task start failed"
@@ -7770,7 +7770,7 @@ msgstr "重新配置实例“%{name}”"
 
 #: ../app/controllers/mixins/actions/vm_actions/resize.rb:69
 msgid "Reconfigure of Instance \"%{name}\" was cancelled by the user"
-msgstr "用户取消了重新配置实例“%{name}”"
+msgstr "用户已取消重新配置实例“%{name}”的操作"
 
 #: ../app/controllers/mixins/actions/vm_actions/resize.rb:76
 msgid "unknown"
@@ -7885,7 +7885,7 @@ msgstr "%{model}“%{name}”：“检查合规性”期间出错：%{error}"
 #: ../app/controllers/mixins/containers_common_mixin.rb:151
 #: ../app/controllers/mixins/ems_common.rb:509
 msgid "\"%{record}\": Compliance check successfully initiated"
-msgstr "“%{record}”：已成功启动合规性检查"
+msgstr "“%{record}”：启动合规性检查成功"
 
 #: ../app/controllers/mixins/containers_external_logging_support_mixin.rb:22
 msgid "Cannot access '%{hostname}. Make sure that the logging route is accessible"
@@ -7925,11 +7925,11 @@ msgstr "管理的主机"
 
 #: ../app/controllers/mixins/ems_common.rb:143
 msgid "Add New %{table}"
-msgstr "添加新的 %{table}"
+msgstr "添加新的%{table}"
 
 #: ../app/controllers/mixins/ems_common.rb:157
 msgid "Edit of %{object_type} %{object_name} is not supported."
-msgstr "不支持对 %{object_type} %{object_name} 实施编辑。"
+msgstr "不支持编辑 %{object_type} %{object_name}。"
 
 #: ../app/controllers/mixins/ems_common.rb:166
 msgid "Edit %{object_type} '%{object_name}'"
@@ -7945,11 +7945,11 @@ msgstr "重新检查此 %{controller_name} 的认证状态失败：%{details}"
 
 #: ../app/controllers/mixins/ems_common.rb:388
 msgid "Re-checking Authentication status for the selected %{controller_name} %{name} was not successful: %{details}"
-msgstr "重新检查选中的 %{controller_name} %{name}的认证状态失败：%{details}"
+msgstr "重新检查选定的 %{controller_name} %{name} 的认证状态失败：%{details}"
 
 #: ../app/controllers/mixins/ems_common.rb:394
 msgid "Authentication status will be saved and workers will be restarted for the selected %{controller_name}"
-msgstr "将保存认证状态并且将针对选中的 %{controller_name}重新启动工作程序"
+msgstr "将保存认证状态并且将针对选定的 %{controller_name} 重新启动工作程序"
 
 #: ../app/controllers/mixins/ems_common.rb:534
 msgid "Basic (SSL)"
@@ -7994,7 +7994,7 @@ msgstr "%{record} 不再存在"
 #: ../app/controllers/mixins/ems_common/angular.rb:27
 #: ../app/controllers/vm_common.rb:697
 msgid "Edit of %{model} \"%{name}\" was cancelled by the user"
-msgstr "用户已取消 %{model}“%{name}”的编辑"
+msgstr "用户已取消针对 %{model}“%{name}”的编辑"
 
 #: ../app/controllers/mixins/ems_common/angular.rb:63
 msgid "Edit %{table} '%{name}'"
@@ -8011,11 +8011,11 @@ msgstr "凭证验证未成功：%{details}"
 
 #: ../app/controllers/mixins/ems_common/angular.rb:222
 msgid "Add New %{tables}"
-msgstr "添加新的 %{tables}"
+msgstr "添加新的%{tables}"
 
 #: ../app/controllers/mixins/ems_common/angular.rb:230
 msgid "Add of %{model} was cancelled by the user"
-msgstr "用户取消了添加 %{model}"
+msgstr "用户已取消添加 %{model} 的操作"
 
 #: ../app/controllers/mixins/ems_common/core.rb:44
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
@@ -8028,7 +8028,7 @@ msgstr[0] "已启动 %{count} 个 %{models} 的%{action_name}"
 
 #: ../app/controllers/mixins/ems_common/metrics.rb:42
 msgid "No %{model} were selected for %{action_name}"
-msgstr "没有为 %{action_name} 选择 %{model}"
+msgstr "没有选择要%{action_name}的 %{model}"
 
 #: ../app/controllers/mixins/ems_common/pause_resume.rb:13
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
@@ -8115,11 +8115,11 @@ msgstr "定制按钮事件"
 
 #: ../app/controllers/mixins/generic_show_mixin.rb:176
 msgid "%{name} (All %{title})"
-msgstr "%{name}（所有 %{title}）"
+msgstr "%{name}（所有的 %{title}）"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:56
 msgid "%{model} \"%{name}\" was updated"
-msgstr "%{model}“%{name}”已更新"
+msgstr "已更新 %{model}“%{name}”"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:72
 msgid "Add of Provider was cancelled by the user"
@@ -8140,11 +8140,11 @@ msgstr[0] "已启动 %{count} 个供应商的删除"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:341
 msgid "All %{title} Providers"
-msgstr "所有 %{title} 供应商"
+msgstr "所有的 %{title} 供应商"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:349
 msgid "All %{title} Configured Systems"
-msgstr "所有 %{title} 已配置的系统"
+msgstr "所有已配置的 %{title} 系统"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:370
 msgid "All Ansible Tower Job Templates"
@@ -8219,7 +8219,7 @@ msgstr "编辑路由器“%{name}”"
 
 #: ../app/controllers/network_router_controller.rb:154
 msgid "Edit of Router \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对路由器“%{name}”的编辑"
+msgstr "用户已取消针对路由器“%{name}”的编辑"
 
 #: ../app/controllers/network_router_controller.rb:165
 msgid "Router update failed: Task start failed"
@@ -8255,7 +8255,7 @@ msgstr "路由器“%{name}”不支持添加接口"
 
 #: ../app/controllers/network_router_controller.rb:267
 msgid "Subnet \"%{subnetname}\" added to Router \"%{name}\""
-msgstr "子网“%{subnetname}”已添加到路由器“%{name}”"
+msgstr "子网“%{subnetname}”已添加至路由器“%{name}”"
 
 #: ../app/controllers/network_router_controller.rb:272
 msgid "Unable to add Subnet \"%{name}\": %{details}"
@@ -8283,7 +8283,7 @@ msgstr "路由器“%{name}”不支持移除接口"
 
 #: ../app/controllers/network_router_controller.rb:360
 msgid "Subnet \"%{subnetname}\" removed from Router \"%{name}\""
-msgstr "已从路由器“%{name}”移除子网“%{subnetname}”"
+msgstr "子网“%{subnetname}”已从路由器“%{name}”中移除"
 
 #: ../app/controllers/network_router_controller.rb:365
 msgid "Unable to remove Subnet \"%{name}\": %{details}"
@@ -8384,7 +8384,7 @@ msgstr "添加新区域"
 
 #: ../app/controllers/ops_controller.rb:622
 msgid "Editing Zone \"%{name}\""
-msgstr "编辑区域“%{name}”"
+msgstr "正在编辑区域“%{name}”"
 
 #: ../app/controllers/ops_controller.rb:622
 msgid "Zone \"%{name}\""
@@ -8412,7 +8412,7 @@ msgstr "分析概要文件“%{name}”"
 
 #: ../app/controllers/ops_controller.rb:647
 msgid "Editing Analysis Profile \"%{name}\""
-msgstr "编辑分析概要文件“%{name}”"
+msgstr "正在编辑分析概要文件“%{name}”"
 
 #: ../app/controllers/ops_controller.rb:656
 #: ../app/controllers/report_controller.rb:698
@@ -8424,7 +8424,7 @@ msgstr "添加新调度"
 #: ../app/controllers/report_controller.rb:698
 #: ../app/controllers/report_controller.rb:710
 msgid "Editing Schedule \"%{name}\""
-msgstr "编辑调度“%{name}”"
+msgstr "正在编辑调度“%{name}”"
 
 #: ../app/controllers/ops_controller.rb:658
 #: ../app/controllers/report_controller/schedules.rb:470
@@ -8433,7 +8433,7 @@ msgstr "调度“%{name}”"
 
 #: ../app/controllers/ops_controller.rb:693
 msgid "Adding a new %{tenant}"
-msgstr "添加新的 %{tenant}"
+msgstr "添加新的%{tenant}"
 
 #: ../app/controllers/ops_controller.rb:707
 msgid "Manage quotas for %{model} \"%{name}\""
@@ -8682,7 +8682,7 @@ msgstr "“设备重新启动”期间出错：%{message}"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:36
 msgid "%{product} Appliance restart initiated successfully"
-msgstr "已成功启动 %{product} 设备重启"
+msgstr "启动 %{product} 设备重启成功"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:54
 msgid "Error during 'workers restart': %{message}"
@@ -8690,7 +8690,7 @@ msgstr "“工作程序重新启动”期间出错：%{message}"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:62
 msgid "'%{type}' Worker restart initiated successfully"
-msgstr "已成功启动“%{type}”工作程序重启"
+msgstr "启动“%{type}”工作程序重启成功"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:88
 msgid "Edit Log Depot settings was cancelled by the user"
@@ -8772,7 +8772,7 @@ msgstr "日志收集错误返回：%{error_message}"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:515
 msgid "Log collection for %{product} %{object_type} %{name} has been initiated"
-msgstr "已开始 %{product} %{object_type} %{name} 日志收集"
+msgstr "%{product} %{object_type} %{name} 日志收集已启动"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:554
 msgid "Start is not allowed for the selected item"
@@ -8814,12 +8814,12 @@ msgstr "所选的项目不允许设置优先级"
 #: ../app/controllers/ops_controller/diagnostics.rb:632
 #: ../app/controllers/ops_controller/diagnostics.rb:656
 msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr "对于角色“%{role_description}”，%{product} 服务器“%{name}”设置为 %{priority}"
+msgstr "%{product} 服务器“%{name}”设置为角色“%{role_description}”的 %{priority}"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:728
 #: ../app/controllers/ops_controller/diagnostics.rb:819
 msgid "Diagnostics %{model} \"%{name}\" (current)"
-msgstr "诊断 %{model}“%{name}”(当前)"
+msgstr "诊断 %{model}“%{name}”（当前）"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:732
 #: ../app/controllers/ops_controller/diagnostics.rb:823
@@ -8916,15 +8916,15 @@ msgstr "无法复制缺省 EVM 用户“%{name}”"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:560
 msgid "Editing %{model} for \"%{name}\""
-msgstr "编辑“%{name}”的 %{model}"
+msgstr "正在编辑“%{name}”的 %{model}"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:593
 msgid "Edit of %{name} was cancelled by the user"
-msgstr "用户取消了对 %{name} 的编辑"
+msgstr "用户已取消针对 %{name} 的编辑"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:595
 msgid "Add of new %{name} was cancelled by the user"
-msgstr "用户取消了添加新的 %{name}"
+msgstr "用户已取消添加新 %{name} 的操作"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:611
 #: ../app/views/report/_report_info.html.haml:45
@@ -8974,7 +8974,7 @@ msgstr "访问控制区域“%{name}”"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1001
 msgid "Editing User \"%{name}\""
-msgstr "编辑用户“%{name}”"
+msgstr "正在编辑用户“%{name}”"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1003
 msgid "Adding a new User"
@@ -8994,7 +8994,7 @@ msgstr "选择一个项目/租户"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1193
 msgid "Editing Group \"%{name}\""
-msgstr "编辑组“%{name}”"
+msgstr "正在编辑组“%{name}”"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1195
 msgid "Adding a new Group"
@@ -9002,7 +9002,7 @@ msgstr "添加新的组"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1288
 msgid "Editing Role \"%{name}\""
-msgstr "编辑角色“%{name}”"
+msgstr "正在编辑角色“%{name}”"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1290
 msgid "Adding a new Role"
@@ -9069,7 +9069,7 @@ msgstr "虚拟机配置"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:225
 msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对分析概要文件“%{name}”的编辑"
+msgstr "用户已取消针对分析概要文件“%{name}”的编辑"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:227
 msgid "Add of new Analysis Profile was cancelled by the user"
@@ -9248,7 +9248,7 @@ msgstr "用户取消了添加新容器标签标记映射"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:52
 msgid "Edit of Container Label Tag Mapping \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对容器标签标记映射“%{name}”的编辑"
+msgstr "用户已取消针对容器标签标记映射“%{name}”的编辑"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:62
 msgid "Label is required"
@@ -9264,7 +9264,7 @@ msgstr "<全部>"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:181
 msgid "Mapping for %{entity}, Label \"%{label}\" already exists"
-msgstr "%{entity}、标签“%{label}”的映射已存在"
+msgstr "%{entity} 与标签“%{label}”的映射已存在"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:201
 msgid "Container Label Tag Mapping \"%{name}\" was added"
@@ -9328,7 +9328,7 @@ msgstr "机构"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:228
 msgid "%{name} is required"
-msgstr "%{name} 是必填项"
+msgstr "%{name} 为必需"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:296
 msgid "No Server was selected"
@@ -9364,7 +9364,7 @@ msgstr "用户取消了添加新调度"
 #: ../app/controllers/ops_controller/settings/schedules.rb:64
 #: ../app/controllers/report_controller/schedules.rb:198
 msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对调度“%{name}”的编辑"
+msgstr "用户已取消针对调度“%{name}”的编辑"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:90
 msgid "Error when adding a new schedule: %{message}"
@@ -9592,7 +9592,7 @@ msgstr "用户取消了添加新类别"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:44
 msgid "Edit of Category \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对类别“%{name}”的编辑"
+msgstr "用户已取消针对类别“%{name}”的编辑"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:61
 msgid "Long Description is required"
@@ -9644,7 +9644,7 @@ msgstr "定制的网站图标"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:31
 msgid "%{image} \"%{name}\" uploaded"
-msgstr "%{image}“%{name}”已上载"
+msgstr "%{image}“%{name}”已上传"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:34
 msgid "Use the Choose file button to locate .%{image_type} image file"
@@ -9674,7 +9674,7 @@ msgstr "按“应用”按钮将良好记录导入 %{product} 数据库"
 
 #: ../app/controllers/ops_controller/settings/zones.rb:10
 msgid "Edit of Zone \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对区域“%{name}”的编辑"
+msgstr "用户已取消针对区域“%{name}”的编辑"
 
 #: ../app/controllers/ops_controller/settings/zones.rb:12
 msgid "Add of new Zone was cancelled by the user"
@@ -9943,7 +9943,7 @@ msgstr[0] "所选已配置系统没有通用配置文件可供使用"
 
 #: ../app/controllers/provider_foreman_controller.rb:287
 msgid "Configuration Profiles under %{record_model} Provider \"%{name}\""
-msgstr "%{record_model} 提供商“%{name}”下的配置概要文件"
+msgstr "%{record_model} 供应商“%{name}”下的配置概要文件"
 
 #: ../app/controllers/provider_foreman_controller.rb:326
 msgid "All Configuration Management Providers"
@@ -10005,7 +10005,7 @@ msgstr "添加新的 PXE 服务器"
 
 #: ../app/controllers/pxe_controller.rb:142
 msgid "Editing PXE Server \"%{name}\""
-msgstr "编辑 PXE 服务器“%{name}”"
+msgstr "正在编辑 PXE 服务器“%{name}”"
 
 #: ../app/controllers/pxe_controller.rb:144
 #: ../app/controllers/pxe_controller/pxe_servers.rb:271
@@ -10043,7 +10043,7 @@ msgstr "添加新的定制模板"
 
 #: ../app/controllers/pxe_controller.rb:174
 msgid "Editing Customization Template \"%{name}\""
-msgstr "编辑定制模板“%{name}”"
+msgstr "正在编辑定制模板“%{name}”"
 
 #: ../app/controllers/pxe_controller.rb:176
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:241
@@ -10094,7 +10094,7 @@ msgstr "ISO 数据存储区不再存在"
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:150
 msgid "Edit of ISO Image \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对 ISO 镜像“%{name}”的编辑"
+msgstr "用户已取消针对 ISO 镜像“%{name}”的编辑"
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:159
 msgid "ISO Image \"%{name}\" was saved"
@@ -10106,7 +10106,7 @@ msgstr "ISO 数据存储区“%{name}”"
 
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:94
 msgid "Edit of Customization Template \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对定制模板“%{name}”的编辑"
+msgstr "用户已取消针对定制模板“%{name}”的编辑"
 
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:96
 msgid "Add of new Customization Template was cancelled by the user"
@@ -10149,7 +10149,7 @@ msgstr "系统镜像类型“%{name}”的定制模板"
 
 #: ../app/controllers/pxe_controller/pxe_image_types.rb:19
 msgid "Edit of System Image Type \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对系统镜像类型“%{name}”的编辑"
+msgstr "用户已取消针对系统镜像类型“%{name}”的编辑"
 
 #: ../app/controllers/pxe_controller/pxe_image_types.rb:21
 msgid "Add of new System Image Type was cancelled by the user"
@@ -10178,7 +10178,7 @@ msgstr "PXE 服务器不再存在"
 
 #: ../app/controllers/pxe_controller/pxe_servers.rb:91
 msgid "Edit of PXE Image \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对 PXE 镜像“%{name}”的编辑"
+msgstr "用户已取消针对 PXE 镜像“%{name}”的编辑"
 
 #: ../app/controllers/pxe_controller/pxe_servers.rb:100
 msgid "PXE Image \"%{name}\" was saved"
@@ -10186,11 +10186,11 @@ msgstr "已保存 PXE 镜像“%{name}”"
 
 #: ../app/controllers/pxe_controller/pxe_servers.rb:142
 msgid "Edit of Windows Image \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对 Windows 镜像“%{name}”的编辑"
+msgstr "用户已取消针对 Windows 镜像“%{name}”的编辑"
 
 #: ../app/controllers/pxe_controller/pxe_servers.rb:151
 msgid "Windows Image \"%{name}\" was saved"
-msgstr "Windows 镜像“%{name}”已保存"
+msgstr "已保存 Windows 镜像“%{name}”"
 
 #: ../app/controllers/report_controller.rb:71
 msgid "Import file cannot be empty"
@@ -10218,7 +10218,7 @@ msgstr[0] "已成功导入 %{number} 个窗口小部件"
 
 #: ../app/controllers/report_controller.rb:260
 msgid "Error: Widget import file upload expired"
-msgstr "错误：窗口小部件导入文件上载过期"
+msgstr "错误：窗口小部件导入文件上传过期"
 
 #: ../app/controllers/report_controller.rb:264
 msgid "Widget import cancelled"
@@ -10269,11 +10269,11 @@ msgstr "添加新的仪表板"
 
 #: ../app/controllers/report_controller.rb:686
 msgid "Editing Dashboard \"%{name}\""
-msgstr "编辑仪表板“%{name}”"
+msgstr "正在编辑仪表板“%{name}”"
 
 #: ../app/controllers/report_controller.rb:702
 msgid "Editing Report \"%{name}\""
-msgstr "编辑报告“%{name}”"
+msgstr "正在编辑报告“%{name}”"
 
 #: ../app/controllers/report_controller.rb:723
 msgid "Adding a new Widget"
@@ -10281,7 +10281,7 @@ msgstr "添加新的窗口小部件"
 
 #: ../app/controllers/report_controller.rb:723
 msgid "Editing Widget \"%{title}\""
-msgstr "编辑窗口小部件“%{title}”"
+msgstr "正在编辑窗口小部件“%{title}”"
 
 #: ../app/controllers/report_controller.rb:732
 #: ../app/views/report/_menu_form1.html.haml:5
@@ -10364,7 +10364,7 @@ msgstr "丢弃文件夹管理的修改"
 #: ../app/controllers/report_controller.rb:832
 #: ../app/controllers/report_controller/menus.rb:630
 msgid "Editing EVM Group \"%{name}\""
-msgstr "编辑 EVM 组“%{name}”"
+msgstr "正在编辑 EVM 组“%{name}”"
 
 #: ../app/controllers/report_controller/dashboards.rb:9
 msgid "Edit of Dashboard Sequence was cancelled by the user"
@@ -10392,7 +10392,7 @@ msgstr "用户取消了添加新的仪表板"
 
 #: ../app/controllers/report_controller/dashboards.rb:116
 msgid "Edit of Dashboard \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对仪表板“%{name}”的编辑"
+msgstr "用户已取消针对仪表板“%{name}”的编辑"
 
 #: ../app/controllers/report_controller/dashboards.rb:134
 msgid "Dashboard \"%{name}\" was saved"
@@ -10447,7 +10447,7 @@ msgstr "文件夹名称“%{value}”已在使用中"
 
 #: ../app/controllers/report_controller/menus.rb:192
 msgid "Edit of Report Menu for role \"%{role}\" was cancelled by the user"
-msgstr "用户取消了对角色“%{role}”的报告菜单的编辑"
+msgstr "用户已取消针对角色“%{role}”的报告菜单的编辑"
 
 #: ../app/controllers/report_controller/menus.rb:214
 msgid "Report Menu set to default"
@@ -10502,7 +10502,7 @@ msgstr "平均值"
 
 #: ../app/controllers/report_controller/reports/editor.rb:53
 msgid "Edit of Report \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对报告“%{name}”的编辑"
+msgstr "用户已取消针对报告“%{name}”的编辑"
 
 #: ../app/controllers/report_controller/reports/editor.rb:55
 msgid "Add of new Report was cancelled by the user"
@@ -10753,7 +10753,7 @@ msgstr "必须至少配置一个“收件人”电子邮件地址"
 
 #: ../app/controllers/report_controller/widgets.rb:5
 msgid "Report Widget \"%{name}\""
-msgstr "报告窗口小部件“%{name}”"
+msgstr "报表窗口小部件“%{name}”"
 
 #: ../app/controllers/report_controller/widgets.rb:5
 msgid "Report Widgets"
@@ -10781,7 +10781,7 @@ msgstr "用户取消了添加新窗口小部件"
 
 #: ../app/controllers/report_controller/widgets.rb:61
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
-msgstr "用户取消了对窗口小部件“%{title}”的编辑"
+msgstr "用户已取消针对窗口小部件“%{title}”的编辑"
 
 #: ../app/controllers/report_controller/widgets.rb:75
 msgid "Widget \"%{title}\" was saved"
@@ -10887,7 +10887,7 @@ msgstr "添加新的安全组"
 
 #: ../app/controllers/security_group_controller.rb:164
 msgid "Edit of Security Group \"%{name}\" was cancelled by the user"
-msgstr "用户已取消编辑安全组“%{name}”"
+msgstr "用户已取消针对安全组“%{name}”的编辑"
 
 #: ../app/controllers/security_group_controller.rb:195
 msgid "Couldn't initiate update of Security Group \"%{name}\": %{details}"
@@ -10934,7 +10934,7 @@ msgstr "我的服务"
 
 #: ../app/controllers/service_controller.rb:138
 msgid "Edit of Service \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对服务“%{name}”的编辑"
+msgstr "用户已取消针对服务“%{name}”的编辑"
 
 #: ../app/controllers/service_controller.rb:147
 msgid "Error during 'Service Edit': %{message}"
@@ -10985,7 +10985,7 @@ msgstr "设置/移除服务的退订日期"
 
 #: ../app/controllers/service_controller.rb:393
 msgid "Editing Service \"%{name}\""
-msgstr "编辑服务“%{name}”"
+msgstr "正在编辑服务“%{name}”"
 
 #: ../app/controllers/service_controller.rb:397
 msgid "Edit Tags for Service"
@@ -11127,11 +11127,11 @@ msgstr "企业"
 
 #: ../app/controllers/utilization_controller.rb:138
 msgid "%{model} \"%{name}\" Utilization Trend Summary"
-msgstr "%{model}“%{name}”利用率趋势汇总"
+msgstr "%{model}“%{name}”利用率趋势摘要"
 
 #: ../app/controllers/utilization_controller.rb:143
 msgid " - Filtered by %{filter}"
-msgstr " - 根据 %{filter} 过滤"
+msgstr " - 按 %{filter} 过滤"
 
 #: ../app/controllers/utilization_controller.rb:242
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:22
@@ -11174,7 +11174,7 @@ msgstr "用户取消了附加云卷到实例“%{instance_name}”"
 
 #: ../app/controllers/vm_cloud_controller.rb:111
 msgid "Detaching a Cloud Volume from Instance \"%{instance_name}\" was cancelled by the user"
-msgstr "用户取消了从实例“%{instance_name}”分离云卷"
+msgstr "用户取消了从实例“%{instance_name}”拆离云卷"
 
 #: ../app/controllers/vm_cloud_controller.rb:182
 #: ../app/presenters/tree_builder_instances.rb:12
@@ -11289,7 +11289,7 @@ msgstr " （最新合规性检查）"
 
 #: ../app/controllers/vm_common.rb:235
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr " （合规性历史记录 - 前%{number}个检查）"
+msgstr " （合规性历史记录 - 前 %{number} 个检查）"
 
 #: ../app/controllers/vm_common.rb:247
 msgid "%{name} (Disks)"
@@ -11362,7 +11362,7 @@ msgstr "快照 VM“%{name}”"
 
 #: ../app/controllers/vm_common.rb:379
 msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name} 是必填项"
+msgstr "%{missing_field_name} 为必需"
 
 #: ../app/controllers/vm_common.rb:382
 msgid "Snapshot VM '%{name}'"
@@ -11430,7 +11430,7 @@ msgstr "编辑 VM“%{name}”"
 
 #: ../app/controllers/vm_common.rb:701
 msgid "Edit of VM and Instance \"%{name}\" was cancelled by the user"
-msgstr "用户取消了对虚拟机和实例“%{name}”的编辑"
+msgstr "用户已取消针对 VM 和实例“%{name}”的编辑"
 
 #: ../app/controllers/vm_common.rb:706
 msgid "Parent VM can not be one of the child VMs"
@@ -11667,7 +11667,7 @@ msgstr "从 %{model}“%{name}”拆离云卷"
 
 #: ../app/controllers/vm_common.rb:1374
 msgid "Compare %{vm_or_template}"
-msgstr "比较 %{vm_or_template}"
+msgstr "比较%{vm_or_template}"
 
 #: ../app/controllers/vm_common.rb:1376
 msgid "Drift for %{vm_or_template} \"%{name}\""
@@ -11675,27 +11675,27 @@ msgstr "%{vm_or_template}“%{name}”的偏移"
 
 #: ../app/controllers/vm_common.rb:1381
 msgid "Live Migrating %{models}"
-msgstr "实时迁移 %{models}"
+msgstr "即时迁移 %{models}"
 
 #: ../app/controllers/vm_common.rb:1385
 msgid "Evacuating %{models}"
-msgstr "撤除 %{models}"
+msgstr "正在撤除 %{models}"
 
 #: ../app/controllers/vm_common.rb:1389
 msgid "Associating Floating IP with %{model} \"%{name}\""
-msgstr "将浮动 IP 与 %{model}“%{name}”关联"
+msgstr "正在将浮动 IP 与 %{model}“%{name}”关联"
 
 #: ../app/controllers/vm_common.rb:1395
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "从 %{model}“%{name}”解除关联浮动 IP"
+msgstr "正在解除浮动 IP 与 %{model}“%{name}”的关联"
 
 #: ../app/controllers/vm_common.rb:1401
 msgid "Add Security Group to %{model} \"%{name}\""
-msgstr "将安全组添加到 %{model}“%{name}”"
+msgstr "将安全组添加至 %{model}“%{name}”"
 
 #: ../app/controllers/vm_common.rb:1407
 msgid "Remove Security Group from %{model} \"%{name}\""
-msgstr "从 %{model}“%{name}”移除安全组"
+msgstr "从 %{model}“%{name}”中移除安全组"
 
 #: ../app/controllers/vm_common.rb:1413
 msgid "Clone %{vm_or_template}"
@@ -11711,7 +11711,7 @@ msgstr "发布 %{vm_or_template}"
 
 #: ../app/controllers/vm_common.rb:1425
 msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr "编辑“%{name}”的 %{vm_or_template}"
+msgstr "正在编辑 %{vm_or_template}“%{name}”"
 
 #: ../app/controllers/vm_common.rb:1429
 msgid "Chargeback preview for \"%{vm_name}\""
@@ -11739,7 +11739,7 @@ msgstr "设置 %{vms_or_templates} 的所有权"
 
 #: ../app/controllers/vm_common.rb:1459
 msgid "Capacity & Utilization data for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template}“%{name}”的容量和利用率数据"
+msgstr "%{vm_or_template}“%{name}”的容量与利用率数据"
 
 #: ../app/controllers/vm_common.rb:1471
 msgid "%{vm_or_template} Policy Assignment"
@@ -12144,7 +12144,7 @@ msgstr "凭证选项"
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb:42
 msgid "Authentication Type"
-msgstr "验证类型"
+msgstr "认证类型"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ConfigurationScript.yaml
@@ -12181,7 +12181,7 @@ msgstr "验证类型"
 #: ../app/views/vm_common/_snapshots_desc.html.haml:26
 #: ../config/yaml_strings.rb:505
 msgid "Created On"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #. TRANSLATORS: file: product/views/ConfigurationScript.yaml
@@ -12208,7 +12208,7 @@ msgstr "创建日期"
 #: ../app/views/orchestration_stack/_stack_orchestration_template.html.haml:9
 #: ../app/views/report/_report_info.html.haml:49 ../config/yaml_strings.rb:520
 msgid "Updated On"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb:58
 msgid "Show all Repositories"
@@ -12484,7 +12484,7 @@ msgstr "这个实例没有可用的浮动 IP。"
 
 #: ../app/helpers/application_helper/button/instance_attach.rb:9
 msgid "There are no Cloud Volumes available to attach to this Instance."
-msgstr "没有云卷可以连接此实例。"
+msgstr "没有云卷可以附加至此实例。"
 
 #: ../app/helpers/application_helper/button/instance_check_compare.rb:7
 msgid "No Compliance Policies assigned to this virtual machine"
@@ -12492,7 +12492,7 @@ msgstr "没有合规性策略分配到该虚拟机"
 
 #: ../app/helpers/application_helper/button/instance_detach.rb:9
 msgid "This Instance has no attached Cloud Volumes."
-msgstr "这个实例没有连接云卷。"
+msgstr "这个实例没有已附加的云卷。"
 
 #:
 #: ../app/helpers/application_helper/button/instance_disassociate_floating_ip.rb:10
@@ -12702,7 +12702,7 @@ msgstr "该角色仅能在该区域等级被管理"
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:8
 msgid "Activate the %{server_role_description} Role on another Server to \\\nsuspend it on %{server_name} [%{server_id}]"
-msgstr "在另一台服务器上激活 %{server_role_description}角色以在 %{server_name} [%{server_id}]上暂挂该角色"
+msgstr "在另一台服务器上激活 %{server_role_description}角色以在 %{server_name} [%{server_id}] 上暂挂该角色"
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:14
 msgid "Only active Roles on active Servers can be suspended"
@@ -12772,7 +12772,7 @@ msgstr "VM VMRC 控制台错误：%{error}"
 
 #: ../app/helpers/application_helper/button/volume_detach.rb:6
 msgid "Cloud Volume \"%{name}\" is not attached to any Instances"
-msgstr "云卷“%{name}”没有附加至任何实例"
+msgstr "云卷“%{name}”未附加至任何实例"
 
 #: ../app/helpers/application_helper/button/widget_generate_content.rb:14
 msgid "This Widget content generation is already running or queued up"
@@ -13977,7 +13977,7 @@ msgstr "附加该云卷到实例"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:52
 msgid "Detach this Cloud Volume from an Instance"
-msgstr "从实例分离该云卷"
+msgstr "从实例拆离该云卷"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:61
 msgid "Edit this Cloud Volume"
@@ -14029,7 +14029,7 @@ msgstr "附加所选的云卷到实例"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:62
 msgid "Detach selected Cloud Volume from an Instance"
-msgstr "从实例分离所选的云卷"
+msgstr "从实例拆离所选的云卷"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:72
 msgid "Edit selected Cloud Volume"
@@ -14119,7 +14119,7 @@ msgstr "删除该条件 %{condition_type} "
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:43
 msgid "Are you sure you want to delete this %{condition_type} Condition?"
-msgstr "确认是否想要删除该 %{condition_type} 条件?"
+msgstr "确认是否想要删除该 %{condition_type} 条件？"
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:48
 msgid "Remove this Condition from Policy [%{condition_policy_description}]"
@@ -16605,7 +16605,7 @@ msgstr "您确定要删除这个组吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:37
 msgid "Edit '%{customer_name}' Tags for this Group"
-msgstr "为这个组编辑 '%{customer_name}' 标记"
+msgstr "编辑这个组的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:12
 msgid "Add a new Group"
@@ -16637,11 +16637,11 @@ msgstr "编辑 LDAP 查找的用户组序列"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:57
 msgid "Edit '%{customer_name}' Tags for the selected Groups"
-msgstr "为所选组编辑 '%{customer_name}' 标签"
+msgstr "编辑选定组的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:13
 msgid "Add a New %{model} %{mode} Policy"
-msgstr "添加新的 %{model} %{mode} 策略"
+msgstr "添加新的%{model} %{mode}策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:12
 msgid "Edit Basic Info, Scope, and Notes"
@@ -16657,7 +16657,7 @@ msgstr "复制该 %{policy_type} 策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:29
 msgid "Are you sure you want to create Policy [%{new_policy_description}] from this Policy?"
-msgstr "确认是否想要从该策略创建策略 [%{new_policy_description}] ?"
+msgstr "确认是否想要从该策略创建策略 [%{new_policy_description}]？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:40
 msgid "Delete this %{policy_type} Policy"
@@ -16665,7 +16665,7 @@ msgstr "删除该 %{policy_type} 策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:46
 msgid "Are you sure you want to delete this %{policy_type} Policy?"
-msgstr "确认是否想要删除该 %{policy_type} 策略?"
+msgstr "确认是否想要删除该 %{policy_type} 策略？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:51
 msgid "Create a new Condition assigned to this Policy"
@@ -17958,7 +17958,7 @@ msgstr "为所选数据存储编辑标签"
 #: ../app/helpers/application_helper/toolbar/summary_center.rb:7
 #: ../app/helpers/application_helper/toolbar/summary_center_restful.rb:7
 msgid "Show %{object_name} Summary"
-msgstr "显示 %{object_name} 总结"
+msgstr "显示 %{object_name} 摘要"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:15
 msgid "Delete Tasks"
@@ -18101,7 +18101,7 @@ msgstr "您确定要删除这一项以及它的子项吗？"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:58
 msgid "Edit '%{customer_name}' Tags for this Tenant"
-msgstr "为这个租户编辑 '%{customer_name}' 标签"
+msgstr "编辑这个租户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:13
 msgid "Edit the selected item"
@@ -18129,7 +18129,7 @@ msgstr "为选择的项管理配额"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:53
 msgid "Edit '%{customer_name}' Tags for the selected Tenant"
-msgstr "为所选租户编辑 '%{customer_name}' 标签"
+msgstr "编辑选定租户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:12
 msgid "Add a new Time Profile"
@@ -18189,7 +18189,7 @@ msgstr "您确定要删除这个用户吗？"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:42
 msgid "Edit '%{customer_name}' Tags for this User"
-msgstr "为这个用户编辑 '%{customer_name}' 标记"
+msgstr "编辑这个用户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:12
 msgid "Edit this Role"
@@ -18273,7 +18273,7 @@ msgstr "删除所有选择的用户？"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:58
 msgid "Edit '%{customer_name}' Tags for the selected Users"
-msgstr "为所选用户编辑 '%{customer_name}' 标签"
+msgstr "编辑选定用户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:73
 msgid "Reconfigure selected Instance"
@@ -18503,7 +18503,7 @@ msgstr "以 PDF 格式打印或导出这些项目"
 #: ../app/helpers/compliance_summary_helper.rb:34
 #: ../app/views/shared/views/_alerts_list.html.haml:75
 msgid "History"
-msgstr "历史"
+msgstr "历史记录"
 
 #: ../app/helpers/application_helper/toolbar/x_history.rb:13
 msgid "Go to this item"
@@ -18874,7 +18874,7 @@ msgstr "附加云卷到该实例"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:58
 msgid "Detach a Cloud Volume from this Instance"
-msgstr "从该实例分离云卷"
+msgstr "从该实例拆离云卷"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
@@ -19282,7 +19282,7 @@ msgstr "显示所有云卷"
 #: ../app/helpers/catalog_helper/textual_summary.rb:19
 #: ../app/helpers/textual_summary_helper.rb:93
 msgid "%{name} Tags"
-msgstr "%{name} 标签"
+msgstr "%{name} 个标记"
 
 #: ../app/helpers/catalog_helper/textual_summary.rb:23
 #: ../app/helpers/textual_summary_helper.rb:98
@@ -20141,7 +20141,7 @@ msgstr "门户 IP"
 
 #: ../app/helpers/container_service_helper/textual_summary.rb:59
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
-msgstr "%{protocol} 端口 %{port} 到目标端口中的 pod：'%{target_port}'"
+msgstr "%{protocol} 端口 %{port} 到目标端口中的 Pod：“%{target_port}”"
 
 #: ../app/helpers/container_summary_helper.rb:73
 #: ../app/helpers/vm_helper/textual_summary.rb:97
@@ -20270,7 +20270,7 @@ msgstr "显示拓扑"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:10
 msgid "Totals for %{hosts}"
-msgstr "%{hosts} 总计"
+msgstr "%{hosts} 的总计"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:19
 msgid "Totals for VMs"
@@ -20287,7 +20287,7 @@ msgstr "显示正在运行 %{name} 的主机的列表"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:59
 #: ../app/helpers/host_helper/textual_summary.rb:96
 msgid "Running (%{number})"
-msgstr "运行 (%{number})"
+msgstr "正在运行 (%{number})"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:70
 msgid "Show list of hosts with failed %{name}"
@@ -20296,7 +20296,7 @@ msgstr "显示失败的 %{name} 的主机的列表"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:71
 #: ../app/helpers/host_helper/textual_summary.rb:101
 msgid "Failed (%{number})"
-msgstr "失败的 (%{number})"
+msgstr "失败 (%{number})"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:82
 msgid "Show list of hosts with %{name}"
@@ -20305,7 +20305,7 @@ msgstr "显示包含 %{name} 的主机的列表"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:83
 #: ../app/helpers/host_helper/textual_summary.rb:106
 msgid "All (%{number})"
-msgstr "所有 (%{number})"
+msgstr "全部 (%{number})"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:101
 msgid "Total CPU Resources"
@@ -20326,7 +20326,7 @@ msgstr "CPU 总数"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:113
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:62
 msgid "Total %{title} CPU Cores"
-msgstr "总共的 %{title} CPU 核心"
+msgstr "%{title} CPU 核心总计"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:118
 msgid "Total Configured Memory"
@@ -20432,7 +20432,7 @@ msgstr "kubevirt"
 #: ../app/helpers/ems_container_helper/textual_summary.rb:122
 #: ../app/helpers/ems_container_helper/textual_summary.rb:128
 msgid "%{name} Host Name"
-msgstr "%{name} 主机名称"
+msgstr "%{name} 主机名"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:123
 #: ../app/helpers/ems_container_helper/textual_summary.rb:129
@@ -20471,23 +20471,23 @@ msgstr "控制器主机的数量"
 
 #: ../app/helpers/ems_infra_helper.rb:21
 msgid "Number of %{host_type} Hosts"
-msgstr "%{host_type} 主机的数量"
+msgstr "%{host_type} 主机数量"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:61
 msgid "Aggregate %{title} CPU Resources"
-msgstr "总的 %{title} CPU 资源"
+msgstr "汇总 %{title} CPU 资源"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:66
 msgid "Aggregate %{title} Memory"
-msgstr "总计 %{title} 内存"
+msgstr "汇总 %{title} 内存"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:71
 msgid "Aggregate %{title} CPUs"
-msgstr "总的 %{title} CPU"
+msgstr "汇总 %{title} CPU"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:75
 msgid "Aggregate %{title} CPU Cores"
-msgstr "总的 %{title} CPU 核心"
+msgstr "汇总 %{title} CPU 核心"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:138
 msgid "States of Root Orchestration Stacks"
@@ -20560,7 +20560,7 @@ msgstr "型号"
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb:17
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:9
 msgid "Last Refresh"
-msgstr "最后刷新"
+msgstr "上次刷新"
 
 #. TRANSLATORS: file: product/views/Account-users.yaml
 #. TRANSLATORS: file: product/views/FirewallRule.yaml
@@ -20975,7 +20975,7 @@ msgstr "%{domain_name}（相同的域）"
 
 #: ../app/helpers/miq_ae_class_helper.rb:29
 msgid "%{domain_name} (Disabled)"
-msgstr "%{domain_name}（已禁用）"
+msgstr "%{domain_name} （已禁用）"
 
 #: ../app/helpers/miq_ae_class_helper.rb:135
 msgid "Built-in"
@@ -21183,11 +21183,11 @@ msgstr "数据磁盘"
 
 #: ../app/helpers/ops_helper/textual_summary.rb:79
 msgid "Last Start Time"
-msgstr "最后的开始时间"
+msgstr "上次开始时间"
 
 #: ../app/helpers/ops_helper/textual_summary.rb:84
 msgid "Last Collection"
-msgstr "最后的收集时间"
+msgstr "上次收集时间"
 
 #: ../app/helpers/ops_helper/textual_summary.rb:89
 msgid "Total Space on Volume"
@@ -21577,7 +21577,7 @@ msgstr "定制目录"
 #: ../app/helpers/pxe_helper/textual_summary.rb:132
 #: ../config/yaml_strings.rb:1316
 msgid "Last Refreshed On"
-msgstr "最后刷新时间"
+msgstr "上次刷新时间"
 
 #: ../app/helpers/pxe_helper/textual_summary.rb:40
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:43
@@ -21746,7 +21746,7 @@ msgstr "定制"
 
 #: ../app/helpers/report_helper.rb:142
 msgid "%{tenant_name} (All Groups)"
-msgstr "%{tenant_name} （所有组）"
+msgstr "%{tenant_name}（所有组）"
 
 #: ../app/helpers/report_helper.rb:144
 msgid "%{tenant_name} (Group): %{group_description}"
@@ -21886,15 +21886,15 @@ msgstr "vApp"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:47
 msgid "Total %{title} CPU Resources"
-msgstr "总共的 %{title} CPU 资源"
+msgstr "%{title} CPU 资源总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:52
 msgid "Total %{title} Memory"
-msgstr "总共的 %{title} 内存"
+msgstr "%{title} 内存总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:57
 msgid "Total %{title} CPUs"
-msgstr "总共的 %{title} CPU"
+msgstr "%{title} CPU 总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:67
 msgid "Total Configured VM Memory"
@@ -21910,19 +21910,19 @@ msgstr "父数据中心"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:80
 msgid "Parent '%{title}'"
-msgstr "父 '%{title}'"
+msgstr "父级“%{title}”"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:84
 msgid "Show Parent %{title} %{name}"
-msgstr "显示父 %{title} %{name}"
+msgstr "显示父级 %{title} %{name}"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:92
 msgid "Parent %{title}"
-msgstr "父 %{title}"
+msgstr "父级 %{title}"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:96
 msgid "Show Parent %{title} '%{name}'"
-msgstr "显示父 %{title} '%{name}'"
+msgstr "显示父级 %{title}“%{name}”"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:106
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:34
@@ -22273,7 +22273,7 @@ msgstr "显示这个虚拟机上的高级设置"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:5
 msgid "%{time} Ago"
-msgstr "%{time} 之前"
+msgstr "%{time} 以前"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:13
 msgid "%{status} - %{time}"
@@ -22281,7 +22281,7 @@ msgstr "%{status} - %{time}"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:19
 msgid "Updated - %{time}"
-msgstr "更新于 - %{time}"
+msgstr "已更新 - %{time}"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:23
 msgid "Updated - %{update_time}, Last valid connection - %{valid_time}"
@@ -22360,7 +22360,7 @@ msgstr "软盘 %{name} %{location} %{connection}"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:82
 msgid "CD-ROM (%{name} %{location}), %{connection}"
-msgstr "CD-ROM（%{name} %{location}），%{connection}"
+msgstr "CD-ROM (%{name} %{location})，%{connection}"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:92
 msgid "Network:"
@@ -22495,7 +22495,7 @@ msgstr "电源状态"
 
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:6
 msgid " - %{last_refresh_date} Ago"
-msgstr " - %{last_refresh_date} 之前"
+msgstr " - %{last_refresh_date} 以前"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
@@ -22503,7 +22503,7 @@ msgstr " - %{last_refresh_date} 之前"
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:18
 #: ../config/yaml_strings.rb:344
 msgid "Last Refresh Date"
-msgstr "最后的刷新日期"
+msgstr "上次刷新日期"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:14
 msgid "Connect to this VM in its Region"
@@ -22630,7 +22630,7 @@ msgstr "启用"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:193
 msgid "From %{time} Ago"
-msgstr "从 %{time} 前开始"
+msgstr "从 %{time} 以前"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:194
 msgid "Show Running Processes on this VM"
@@ -22662,7 +22662,7 @@ msgstr "显示这个虚拟机的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:246
 msgid "Last Boot Time"
-msgstr "最后的引导时间"
+msgstr "上次引导时间"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:252
 msgid "State Changed On"
@@ -22670,7 +22670,7 @@ msgstr "状态更改时间"
 
 #: ../app/helpers/textual_summary_helper.rb:137
 msgid "Show %{label} '%{value}'"
-msgstr "显示 %{label} '%{value}'"
+msgstr "显示 %{label}“%{value}”"
 
 #: ../app/helpers/textual_summary_helper.rb:208
 msgid "Default Authentication"
@@ -22711,7 +22711,7 @@ msgstr "<未知的>"
 
 #: ../app/helpers/textual_summary_helper.rb:224
 msgid "%{label} Credentials"
-msgstr "%{label} 凭据"
+msgstr "%{label} 凭证"
 
 #: ../app/helpers/view_helper.rb:16
 msgid "A0 - 841mm x 1189mm"
@@ -23043,11 +23043,11 @@ msgstr "多个区域"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:84
 msgid "Datastore Allocation Summary"
-msgstr "数据存储区分配总结"
+msgstr "数据存储区分配摘要"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:91
 msgid "Datastore Actual Usage Summary"
-msgstr "数据存储区实际使用总结"
+msgstr "数据存储区实际使用摘要"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:102
 msgid "Normal Operating Ranges (over 30 days)"
@@ -23080,7 +23080,7 @@ msgstr[0] "%{cpu} 个 CPU"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:169
 msgid "Parent %{title} Platform"
-msgstr "父 %{title} 平台"
+msgstr "父级 %{title} 平台"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:178
 msgid "CPU Affinity"
@@ -23096,7 +23096,7 @@ msgstr "发现时间"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:191
 msgid "Last Analyzed"
-msgstr "最后分析时间"
+msgstr "上次分析时间"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:210
 msgid "Provisioned On"
@@ -23138,7 +23138,7 @@ msgstr "显示这个镜像的父镜像"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:336
 msgid "Show this VM's Orchestration Stack '%{name}'"
-msgstr "显示此虚拟机的编排堆栈 '%{name}'"
+msgstr "显示此虚拟机的编排堆栈“%{name}”"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:370
 msgid "Show all Floating IPs"
@@ -23229,7 +23229,7 @@ msgstr "CPU 使用率"
 #: ../app/views/vm_common/_right_size.html.haml:87
 #: ../config/yaml_strings.rb:1393
 msgid "Memory Usage"
-msgstr "内存使用"
+msgstr "内存使用率"
 
 #: ../app/javascript/angular/dashboard/widget-chart.js:13
 msgid "No chart data found."
@@ -24246,7 +24246,7 @@ msgstr "可能需要一分钟时间。"
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/PlanWizard.js:27
 #: ../app/javascript/react/screens/App/common/ModalWizard/ModalWizardBody.js:125
 msgid "General"
-msgstr "通用的"
+msgstr "常规"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/MappingWizardBody.js:38
@@ -26160,7 +26160,7 @@ msgstr "普通的"
 
 #: ../app/models/account.rb:96
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
-msgstr "对类型为“%{type}”的账户不能调用“%{caller}”"
+msgstr "对类型为“%{type}”的帐户不能调用“%{caller}”"
 
 #: ../app/models/asset_tag_import.rb:25 ../app/models/asset_tag_import.rb:26
 msgid "%{name} not supported for upload!"
@@ -26181,7 +26181,7 @@ msgstr "用户被验证但没有在 EVM 中定义，请联系您的 EVM 管理�
 
 #: ../app/models/authenticator/base.rb:260
 msgid "Unable to find task with id: [%{task_id}]"
-msgstr "无法找到 id 为 [%{task_id}] 的任务"
+msgstr "无法找到标识为 [%{task_id}] 的任务"
 
 #: ../app/models/authenticator/httpd.rb:148
 msgid "Unable to get attributes for external user %{user_name} - %{error}"
@@ -26193,7 +26193,7 @@ msgstr "无法自动创建用户，因为 LDAP 搜索未向用户 [%{name}] 返�
 
 #: ../app/models/authenticator/ldap.rb:141
 msgid "Required key not specified: [%{key}]"
-msgstr "没有指定需要的密钥: [%{key}]"
+msgstr "没有指定需要的密钥：[%{key}]"
 
 #: ../app/models/automation_request.rb:49
 msgid "unknown zone %{zone_name}"
@@ -26201,19 +26201,19 @@ msgstr "未知区域 %{zone_name}"
 
 #: ../app/models/binary_blob.rb:17 ../app/models/binary_blob.rb:64
 msgid "size of %{name} id [%{number}] is incorrect"
-msgstr "%{name} id [%{number}] 的大小不正确"
+msgstr "%{name} 标识 [%{number}] 的大小不正确"
 
 #: ../app/models/binary_blob.rb:20 ../app/models/binary_blob.rb:67
 msgid "md5 of %{name} id [%{number}] is incorrect"
-msgstr "md5 %{name} id [%{number}] 不正确"
+msgstr "%{name} 标识 [%{number}] 的 MD5 不正确"
 
 #: ../app/models/bottleneck_event.rb:44
 msgid "'%{name}', calculation not supported"
-msgstr "'%{name}' 计算不被支持"
+msgstr "“%{name}”计算不受支持"
 
 #: ../app/models/chargeback.rb:114 ../app/models/chargeback.rb:117
 msgid "<Empty>"
-msgstr "<Empty>"
+msgstr "<空>"
 
 #: ../app/models/chargeback/report_options.rb:73
 msgid "Option 'interval_size' is required"
@@ -26223,7 +26223,7 @@ msgstr "需要选项 'interval_size'"
 #: ../app/models/chargeback/report_options.rb:105
 #: ../app/models/chargeback/report_options.rb:123
 msgid "interval '%{interval}' is not supported"
-msgstr "不支持间隔 '%{interval}'"
+msgstr "不支持间隔“%{interval}”"
 
 #: ../app/models/chargeback_container_image.rb:50
 msgid "Unknown Project"
@@ -26262,7 +26262,7 @@ msgstr "必须从 0 开始，并且在起始和结束值间不能有空隙。"
 
 #: ../app/models/chargeback_vm.rb:168
 msgid "Unable to find user '%{name}'"
-msgstr "无法找到用户 '%{name}'"
+msgstr "无法找到用户“%{name}”"
 
 #: ../app/models/chargeback_vm.rb:199
 msgid "Unable to find strategy for VM selection"
@@ -26275,15 +26275,15 @@ msgstr[0] "虚拟机费率"
 
 #: ../app/models/classification.rb:118 ../app/models/classification.rb:128
 msgid "Tag %{tag} is not a category entry"
-msgstr "标签 %{tag} 不是一个目录条目"
+msgstr "标记 %{tag} 不是一个目录条目"
 
 #: ../app/models/classification.rb:148
 msgid "Classification add id: [%{id}] is not an entry"
-msgstr "分类添加 id：[%{id}] 不是一个项"
+msgstr "分类添加标识：[%{id}] 不是一个项"
 
 #: ../app/models/classification.rb:151
 msgid "Classification delete id: [%{id}] is not an entry"
-msgstr "分类删除 id：[%{id}] 不是一个项"
+msgstr "分类删除标识：[%{id}] 不是一个项"
 
 #: ../app/models/classification.rb:183
 msgid "Failures occurred during bulk reassignment."
@@ -26291,15 +26291,15 @@ msgstr "批量重分配时失败"
 
 #: ../app/models/classification.rb:186
 msgid "  Unable to remove the following tags from %{class_name} %{id}: %{names}."
-msgstr "  无法从 %{class_name} %{id} 移除以下标签：%{names}。"
+msgstr "  无法从 %{class_name} %{id} 移除以下标记：%{names}。"
 
 #: ../app/models/classification.rb:191
 msgid "  Unable to add the following tags to %{class_name} %{id}: %{names}."
-msgstr "  无法将以下标签添加到 %{class_name} %{id}：%{names}。"
+msgstr "  无法将以下标记添加到 %{class_name} %{id}：%{names}。"
 
 #: ../app/models/classification.rb:223 ../app/models/classification.rb:289
 msgid "Class '%{name}' is not eligible for classification"
-msgstr "类 '%{name}' 不能进行分类"
+msgstr "类“%{name}”不能进行分类"
 
 #: ../app/models/classification.rb:266
 msgid "entries can only be added to classifications"
@@ -26311,7 +26311,7 @@ msgstr "方法只对一个项有效"
 
 #: ../app/models/classification.rb:280
 msgid "Class '%{type}' is not eligible for classification"
-msgstr "类 '%{type}' 不能进行分类"
+msgstr "类“%{type}”不能进行分类"
 
 #: ../app/models/classification.rb:398
 msgid "No Classification to Import"
@@ -26398,7 +26398,7 @@ msgstr "附加卷操作"
 
 #: ../app/models/cloud_volume/operations.rb:53
 msgid "Detach Volume Operation"
-msgstr "分离卷操作"
+msgstr "拆离卷操作"
 
 #: ../app/models/cloud_volume/operations.rb:74
 msgid "The volume can't be attached, status has to be 'available'"
@@ -26406,7 +26406,7 @@ msgstr "无法附加卷，状态必须是“可用”。"
 
 #: ../app/models/cloud_volume/operations.rb:81
 msgid "The volume can't be detached, status has to be 'in-use'"
-msgstr "无法分离卷，状态必须是“正在使用”。"
+msgstr "无法拆离卷，状态必须是“正在使用”。"
 
 #: ../app/models/cloud_volume/operations.rb:89
 msgid "The Volume is not connected to an active Provider"
@@ -26426,7 +26426,7 @@ msgstr "必须在子类中实现 raw_delete_snapshot"
 
 #: ../app/models/compliance.rb:37 ../app/models/compliance.rb:64
 msgid "Unable to find object with class: [%{class_name}], Id: [%{number}]"
-msgstr "无法找到类为 [%{class_name}], Id 为 [%{number}] 的对象"
+msgstr "无法找到类为 [%{class_name}] 标识为 [%{number}] 的对象"
 
 #: ../app/models/compliance.rb:43
 msgid "Scan and Compliance check not supported for %{class_name} objects"
@@ -26448,11 +26448,11 @@ msgstr[0] "合规历史"
 
 #: ../app/models/condition.rb:47
 msgid "condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\""
-msgstr "条件“%{name}”，包括值“%{value}”，是无效的。应该是“任何、全部或无”之一"
+msgstr "条件“%{name}”（包括值“%{value}”）无效。应该是“任何、全部或无”之一"
 
 #: ../app/models/condition.rb:182
 msgid "Illegal operator, '%{operator}'"
-msgstr "非法操作符，“%{operator}”"
+msgstr "非法操作符“%{operator}”"
 
 #: ../app/models/container_env_var.rb:4
 msgid "Container Environment Variable"
@@ -26510,7 +26510,7 @@ msgstr "实例没有 id"
 
 #: ../app/models/custom_button.rb:227
 msgid "Unable to find user '%{user}'"
-msgstr "无法找到用户 '%{user}'"
+msgstr "无法找到用户“%{user}”"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButton
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button
@@ -26598,7 +26598,7 @@ msgstr "选项卡 %{tab_label} 必须有至少一个框"
 
 #: ../app/models/dialog_tab.rb:28
 msgid "Tab %{tab_label} / %{error_message}"
-msgstr "表 %{tab_label} / %{error_message}"
+msgstr "选项卡 %{tab_label} / %{error_message}"
 
 #: ../app/models/ems_cluster.rb:239
 msgid "Unknown resource %{name}"
@@ -26664,7 +26664,7 @@ msgstr[0] "性能 - 供应商"
 
 #: ../app/models/file_depot_ftp.rb:24
 msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
-msgstr "错误 '%{message}', 写入 FTP: [%{uri}], 用户名: [%{id}]"
+msgstr "错误“%{message}”，写入 FTP：[%{uri}]，用户名：[%{id}]"
 
 #: ../app/models/file_depot_ftp.rb:48
 msgid "Depot Settings validation failed"
@@ -26715,7 +26715,7 @@ msgstr "%{name}（%{num_cpus} 个 CPU，%{memory_gigabytes} GB RAM，%{root_disk
 
 #: ../app/models/flavor.rb:29
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)"
-msgstr "%{name}（%{num_cpus} 个 CPU，%{memory_gigabytes} GB RAM, 未知大小的 Root 盘）"
+msgstr "%{name}（%{num_cpus} 个 CPU，%{memory_gigabytes} GB RAM，未知大小的 Root 盘）"
 
 #: ../app/models/flavor.rb:31
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)"
@@ -26823,7 +26823,7 @@ msgstr "主机没有 EMS, 无法获得主机得统计数据"
 
 #: ../app/models/host.rb:1671
 msgid "Function %{function} is invalid, should be one of :min, :max, :avg or nil"
-msgstr "功能 %{function} 无效，应该是以下之一 :min, :max, :avg or nil"
+msgstr "功能 %{function} 无效，应该是 :min、:max、:avg 或 nil 中的一项"
 
 #. TRANSLATORS: en.yml key: dictionary.model.HostPerformance
 #: ../app/models/host_performance.rb:8 ../config/dictionary_strings.rb:1488
@@ -26852,7 +26852,7 @@ msgstr[0] "ISO 镜像"
 
 #: ../app/models/job/state_machine.rb:36
 msgid "%{signal} is not permitted at state %{state}"
-msgstr "状态 %{state} 不允许 %{signal}"
+msgstr "在 %{state} 状态下不允许 %{signal}"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
@@ -26884,19 +26884,19 @@ msgstr "日志库设置未配置"
 
 #: ../app/models/log_file.rb:239
 msgid "started? not implemented for %{server_name}"
-msgstr "已启动？未针对 %{server_name} 实施"
+msgstr "已启动？未针对 %{server_name} 实现"
 
 #: ../app/models/log_file.rb:244
 msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr "因为 [%{resource} %{server_name}] 没有启动，日志请求失败"
+msgstr "因为 [%{resource} %{server_name}] 未启动，日志请求失败"
 
 #: ../app/models/log_file.rb:248
 msgid "Log request failed since [%{resource}] is not started"
-msgstr "因为 [%{resource}] 没有启动，日志请求失败"
+msgstr "因为 [%{resource}] 未启动，日志请求失败"
 
 #: ../app/models/log_file.rb:261
 msgid "_post_my_logs not implemented for %{server_name}"
-msgstr "未针对 %{server_name} 实施 _post_my_logs"
+msgstr "未针对 %{server_name} 实现 _post_my_logs"
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager/vm.rb:83
 #: ../app/models/manageiq/providers/amazon/manager_mixin.rb:65
@@ -26956,7 +26956,7 @@ msgstr[0] "凭证 (Google)"
 #, fuzzy
 msgid "Credential (Machine)"
 msgid_plural "Credentials (Machine)"
-msgstr[0] "凭证凭证（机器）"
+msgstr[0] "凭证（机器）"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/network_credential.rb:5
@@ -27319,7 +27319,7 @@ msgstr[0] "风格 (Microsoft Azure)"
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:66
 msgid "%{name} does not exist on %{management}"
-msgstr "%{management} 上不存在 %{name}"
+msgstr "%{name} 在 %{management} 上不存在"
 
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:74
@@ -28228,7 +28228,7 @@ msgstr "开始时间必须早于结束时间"
 #: ../app/models/metric/ci_mixin/capture.rb:130
 #: ../app/models/metric/ci_mixin/processing.rb:4 ../app/models/storage.rb:694
 msgid "invalid interval_name '%{name}'"
-msgstr "无效的 interval_name '%{name}'"
+msgstr "无效的 interval_name“%{name}”"
 
 #: ../app/models/metric/ci_mixin/capture.rb:132
 msgid "end_time cannot be specified if start_time is nil"
@@ -28307,7 +28307,7 @@ msgstr "操作脚本退出：rc=%{rc_value}，错误 = %{error_text}"
 
 #: ../app/models/miq_action.rb:816
 msgid "unable to find vCenter with id [%{id}]"
-msgstr "无法找到 id 为 [%{id}] 的 vCenter"
+msgstr "无法找到标识为 [%{id}] 的 vCenter"
 
 #: ../app/models/miq_action.rb:830
 msgid "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: [%{description}]"
@@ -28351,7 +28351,7 @@ msgstr[0] "自动化工作区"
 
 #: ../app/models/miq_ae_yaml_import.rb:242
 msgid "Error: Playbook method '%{method_name}' contains below listed error(s):"
-msgstr "错误： Playbook 方法 '%{method_name}' 包含下方列出的错误："
+msgstr "错误：Playbook 方法“%{method_name}”包含下方列出的错误："
 
 #: ../app/models/miq_ae_yaml_import.rb:277
 msgid "Repository '%{repository_name}' not found in database. Please try and import this repo into this appliance and retry the import. If the repository has been deleted this import will never succeed."
@@ -28359,11 +28359,11 @@ msgstr "在数据库中找不到存储库“%{repository_name}”。请尝试并
 
 #: ../app/models/miq_ae_yaml_import.rb:281
 msgid "Playbook '%{playbook_name}' not found in repository '%{repository_name}', you  can refresh the repo or change the branch or tag and retry the import, if the playbook doesn't exist in the repo this import will never succeed, you can try importing by skiping this playbook using --skip_playbook pb1, pb2."
-msgstr "未在存储库 '%{repository_name}' 中找到 Playbook '%{playbook_name}'，您可以刷新存储库或更改分支或标签，然后重新尝试导入，如果存储库中不包含 playbook，此导入绝不会成功。您可以使用 --skip_playbook pb1, pb2 跳过这个 playbook，尝试进行导入。"
+msgstr "未在存储库“%{repository_name}”中找到 Playbook“%{playbook_name}”，您可以刷新存储库或更改分支或标签，然后重新尝试导入，如果存储库中不包含 Playbook，此导入绝不会成功。您可以使用 --skip_playbook pb1, pb2 跳过这个 Playbook，尝试进行导入。"
 
 #: ../app/models/miq_ae_yaml_import.rb:286
 msgid "Credential '%{credential_name}' doesn't exist in the appliance, please add this credential and retry the import."
-msgstr "凭证 '%{credential_name}' 在设备中不存在，请添加此凭证，然后重新尝试导入。"
+msgstr "凭证“%{credential_name}”在设备中不存在，请添加此凭证，然后重新尝试导入。"
 
 #: ../app/models/miq_ae_yaml_import.rb:289
 msgid "Vault Credential '%{vault_credential_name}' doesn't exist in the appliance please add this credential and retry the import."
@@ -28371,7 +28371,7 @@ msgstr "保险库文件凭证“%{vault_credential_name}”在设备中不存在
 
 #: ../app/models/miq_ae_yaml_import.rb:292
 msgid "Cloud Credential '%{cloud_credential_name}' doesn't exist in the appliance please add this credential and retry the import."
-msgstr "云凭证 '%{cloud_credential_name}' 在设备中不存在，请添加此凭证，然后重新尝试导入。"
+msgstr "云凭证“%{cloud_credential_name}”在设备中不存在，请添加此凭证，然后重新尝试导入。"
 
 #: ../app/models/miq_alert.rb:411
 msgid " Nothing"
@@ -28597,7 +28597,7 @@ msgstr "文件夹的根不是一个供应商"
 
 #: ../app/models/miq_group.rb:93
 msgid "Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'"
-msgstr "无法为组 '%{group_name}' 找到用户 user_role 'EvmRole-%{role_name}'"
+msgstr "无法为组“%{group_name}”找到用户 user_role“EvmRole-%{role_name}”"
 
 #: ../app/models/miq_group.rb:133
 msgid "Bind failed for user %{user_name}"
@@ -28656,11 +28656,11 @@ msgstr "发布"
 
 #: ../app/models/miq_provision.rb:95
 msgid "%{title} from [%{name}] to [%{vm_name}]"
-msgstr "从 [%{name}] 到 [%{vm_name}] 的 %{title}"
+msgstr "%{title} 从 [%{name}] 到 [%{vm_name}]"
 
 #: ../app/models/miq_provision/options_helper.rb:31
 msgid "Unable to find source Template/Vm with id [%{number}]"
-msgstr "无法找到 id 为 [%{number}] 的源模板/虚拟机"
+msgstr "无法找到标识为 [%{number}] 的源模板/虚拟机"
 
 #: ../app/models/miq_provision/options_helper.rb:36
 msgid "%{class_name} [%{name}] is not attached to a Management System"
@@ -28688,7 +28688,7 @@ msgstr "虚拟机启动失败"
 
 #: ../app/models/miq_provision_configured_system_request.rb:47
 msgid "%{table} install on [%{name}]"
-msgstr "[%{name}] 上的 %{table} 安装"
+msgstr "%{table} 安装在 [%{name}] 上"
 
 #: ../app/models/miq_provision_request_template.rb:30
 msgid "Provision Request Templates do not support the execute method."
@@ -28710,12 +28710,12 @@ msgstr " 使用在供应时处于活动状态的快照"
 #: ../app/models/miq_provision_virt_workflow.rb:746
 #: ../app/models/miq_provision_virt_workflow.rb:953
 msgid "Source template [%{name}] was not found"
-msgstr "未找到源模板 [%{name}]"
+msgstr "找不到源模板 [%{name}]"
 
 #: ../app/models/miq_provision_virt_workflow.rb:766
 #: ../app/models/miq_request_workflow.rb:1468
 msgid "Provision failed for the following reasons:\n%{errors}"
-msgstr "由于以下原因，供应失败：\n%{errors}"
+msgstr "由于以下原因，供应失败：%{errors}"
 
 #: ../app/models/miq_provision_virt_workflow.rb:797
 msgid "Multiple source template were found from input data:<%{data}>"
@@ -28727,7 +28727,7 @@ msgstr "未从输入数据 <%{data}> 找到源模板"
 
 #: ../app/models/miq_provision_virt_workflow.rb:1113
 msgid "Unable to find Host with Id: [%{id}]"
-msgstr "无法找到 Id 为 [%{id}] 的主机"
+msgstr "无法找到标识为 [%{id}] 的主机"
 
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:5
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:11
@@ -28737,7 +28737,7 @@ msgstr "无法找到 Id 为 [%{id}] 的主机"
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:51
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:58
 msgid "%{description} is required"
-msgstr "%{description} 是必填项"
+msgstr "%{description} 为必需"
 
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:23
 msgid "%{description} Reservation is larger than VM Memory"
@@ -28753,11 +28753,11 @@ msgstr "dir 必须是 %{directory} 之一"
 
 #: ../app/models/miq_queue.rb:284
 msgid "%{log_message} \"%{error}\" attempting to get next message"
-msgstr "%{log_message}“%{error}”尝试获取下一条信息"
+msgstr "%{log_message}“%{error}”正在尝试获取下一条消息"
 
 #: ../app/models/miq_queue.rb:397
 msgid "%{log_message} \"%{error}\" attempting merge next message"
-msgstr "%{log_message}“%{error}”尝试合并下一条信息"
+msgstr "%{log_message}“%{error}”正在尝试合并下一条消息"
 
 #: ../app/models/miq_queue.rb:427
 msgid "class_name cannot be nil"
@@ -28765,7 +28765,7 @@ msgstr "class_name 不能为空"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:68
 msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "%{log}“%{error}”尝试获取下一条信息"
+msgstr "%{log}“%{error}”正在尝试获取下一条消息"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:141
 msgid "%{log} Message <%{message}> is of unknown type <%{type}>"
@@ -28826,7 +28826,7 @@ msgstr "%{attribute} 不是 %{name} 的有效属性"
 
 #: ../app/models/miq_report/formatting.rb:90
 msgid "Unknown format function '%{name}'"
-msgstr "未知的格式功能 '%{name}'"
+msgstr "未知的格式功能“%{name}”"
 
 #: ../app/models/miq_report/generator.rb:16
 msgid "Quarter"
@@ -28858,11 +28858,11 @@ msgstr "一年中的月份"
 
 #: ../app/models/miq_report/generator.rb:222
 msgid "Unsupported report type '%{type}'"
-msgstr "不支持的报告类型 '%{type}'"
+msgstr "不支持的报告类型“%{type}”"
 
 #: ../app/models/miq_report/generator.rb:441
 msgid "No %{class_name} object provided"
-msgstr "没有提供 %{class_name} 对象"
+msgstr "未提供 %{class_name} 对象"
 
 #: ../app/models/miq_report/generator.rb:444
 msgid "DB option :report must be a %{class_name} object"
@@ -28876,11 +28876,11 @@ msgstr "报告为空"
 #: ../app/models/miq_report/generator.rb:497
 #: ../app/models/miq_report/generator.rb:500
 msgid "Column '%{name} does not exist in data"
-msgstr "数据中不存在 '%{name} 列"
+msgstr "数据中不存在 %{name} 列"
 
 #: ../app/models/miq_report/generator.rb:506
 msgid "Column function '%{name}' not supported"
-msgstr "列功能 '%{name}' 不被支持"
+msgstr "列功能“%{name}”不受支持"
 
 #: ../app/models/miq_report/generator.rb:832
 msgid "Expected scheduled time 'at' to be 'numeric', received '%{type}'"
@@ -28888,7 +28888,7 @@ msgstr "期望的调度时间是“数字”，但接收到的是“%{type}”�
 
 #: ../app/models/miq_report/generator/async.rb:27
 msgid "Unable to generate report if a task with id [%{number}] is not found!"
-msgstr "如果没有找到 id 为 [%{number}] 的任务，将无法产生报告!"
+msgstr "如果没有找到标识为 [%{number}] 的任务，将无法产生报告！"
 
 #: ../app/models/miq_report/generator/async.rb:35
 msgid "Generation of report [%{name}] complete"
@@ -28952,7 +28952,7 @@ msgstr "报告日期：%{report_date}"
 
 #: ../app/models/miq_report_result.rb:229
 msgid "Page %{page_number} of %{total_pages}"
-msgstr "第 %{page_number} 页（共 %{total_pages} 页）"
+msgstr "第 %{page_number} 页，共 %{total_pages} 页"
 
 #: ../app/models/miq_report_result.rb:241
 #: ../app/models/miq_report_result.rb:303
@@ -29081,11 +29081,11 @@ msgstr[0] "退订任务"
 
 #: ../app/models/miq_schedule.rb:165
 msgid "Run %{interval} on %{start_time}"
-msgstr "于 %{start_time} 上运行 %{interval}"
+msgstr "运行 %{interval} 于 %{start_time}"
 
 #: ../app/models/miq_schedule.rb:168
 msgid "Run %{interval} starting on %{start_time}"
-msgstr "运行 %{interval}，从 %{start_time} 开始"
+msgstr "运行 %{interval} 开始于 %{start_time}"
 
 #: ../app/models/miq_schedule.rb:173
 msgid "minutes"
@@ -29109,7 +29109,7 @@ msgstr "月"
 
 #: ../app/models/miq_schedule.rb:183
 msgid "Run %{interval} every %{value} %{unit} starting on %{start_time}"
-msgstr "每隔 %{value} %{unit} 运行 %{interval}，开始于 %{start_time}"
+msgstr "每 %{value} %{unit} 运行一次 %{interval}，开始于 %{start_time}"
 
 #: ../app/models/miq_schedule.rb:276
 msgid "No userid provided!"
@@ -29163,7 +29163,7 @@ msgstr "日志库设置未配置"
 
 #: ../app/models/miq_server/worker_management/monitor/system_limits.rb:127
 msgid "Default algorithm [%{default}] not found!"
-msgstr "缺省算法 [%{default}] 没有找到!"
+msgstr "找不到缺省算法 [%{default}]！"
 
 #: ../app/models/miq_shortcut.rb:60
 msgid "Shortcut"
@@ -29258,7 +29258,7 @@ msgstr "无法找到名为 %{name} 的 %{class}"
 
 #: ../app/models/miq_widget.rb:515
 msgid "Unsupported interval '%{interval}'"
-msgstr "不支持的间隔 '%{interval}'"
+msgstr "不支持的间隔“%{interval}”"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
 #: ../app/models/miq_widget.rb:589 ../config/dictionary_strings.rb:2136
@@ -29273,7 +29273,7 @@ msgstr "必须用选项散列调用 .new。"
 
 #: ../app/models/miq_widget/content_generator.rb:50
 msgid "MiqGroup %{description} was not found"
-msgstr "未找到 MiqGroup %{description} "
+msgstr "找不到 MiqGroup %{description}"
 
 #: ../app/models/miq_widget/import_export.rb:6
 msgid "No Widget to Import"
@@ -29360,7 +29360,7 @@ msgstr "连接设置验证失败，发生错误：%{error}"
 #: ../app/models/mixins/miq_policy_mixin.rb:121
 #: ../app/models/mixins/miq_policy_mixin.rb:146
 msgid "No event found for [%{event}]"
-msgstr "没有找到 [%{event}] 事件"
+msgstr "找不到 [%{event}] 事件"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:77
 msgid "Provision workflow does not contain the expected method <%{method}>"
@@ -29372,7 +29372,7 @@ msgstr "未提供源虚拟机"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:167
 msgid "Unable to find VM with Id: [%{vm_id}]"
-msgstr "无法找到 Id 为 [%{vm_id}] 的虚拟机"
+msgstr "无法找到标识为 [%{vm_id}] 的虚拟机"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:202
 msgid "Customization Specification [%{name}] does not exist."
@@ -29396,7 +29396,7 @@ msgstr "%{class_name} 不是 %{name} 的子类"
 
 #: ../app/models/mixins/ownership_mixin.rb:65
 msgid "Unknown option, '%{name}'"
-msgstr "未知选项, '%{name}'"
+msgstr "未知选项“%{name}”"
 
 #: ../app/models/mixins/process_tasks_mixin.rb:10
 msgid "No ids given to process_tasks"
@@ -29404,11 +29404,11 @@ msgstr "没有为 process_tasks 赋予 ID"
 
 #: ../app/models/mixins/process_tasks_mixin.rb:228
 msgid "Unknown task, %{task}"
-msgstr "未知任务，%{task}"
+msgstr "未知任务 %{task}"
 
 #: ../app/models/mixins/provider_object_mixin.rb:23
 msgid "not implemented in %{class_name}"
-msgstr "未在 %{class_name} 中实施"
+msgstr "未在 %{class_name} 中实现"
 
 #: ../app/models/mixins/provider_object_mixin.rb:30
 msgid "no connection source available"
@@ -29430,11 +29430,11 @@ msgstr "指定的日期无效：%{date}"
 
 #: ../app/models/mixins/retirement_mixin.rb:167
 msgid "%{name} already retired"
-msgstr "%{name} 已停用"
+msgstr "%{name} 已退订"
 
 #: ../app/models/mixins/scanning_mixin.rb:44
 msgid "Unable to process data for job with id <%{number}>. Job not found."
-msgstr "无法为标识为 <%{number}> 的作业处理数据。作业没有找到。"
+msgstr "无法为标识为 <%{number}> 的作业处理数据。作业找不到。"
 
 #: ../app/models/mixins/scanning_mixin.rb:308
 msgid "No synchronize category specified"
@@ -29495,11 +29495,11 @@ msgstr "正在使用"
 #: ../app/models/physical_server/operations/config_pattern.rb:4
 #: ../app/models/physical_server/operations/led.rb:18
 msgid "A Server %{server} <%{name}> with Id: <%{id}> is not associated with a provider."
-msgstr "服务器 %{server} <%{name}>（Id: <%{id}>）没有和供应商相关联。"
+msgstr "服务器 %{server} <%{name}>（标识：<%{id}>）没有和供应商相关联。"
 
 #: ../app/models/physical_server/operations/power.rb:34
 msgid " A Server %{server} <%{name}> with Id: <%{id}> is not associated with a provider."
-msgstr " 服务器 %{server} <%{name}>（Id: <%{id}>）没有和供应商相关联。"
+msgstr " 服务器 %{server} <%{name}>（标识：<%{id}>）没有和供应商相关联。"
 
 #: ../app/models/physical_server_firmware_update_task.rb:28
 msgid "Firmware Update Task"
@@ -29662,7 +29662,7 @@ msgstr "此数据存储没有具有有效凭证的 EMS"
 
 #: ../app/models/storage.rb:368
 msgid "Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]"
-msgstr "类型为 [%{store_type}] 的数据存储，标识为 [%{id}] 的 [%{name}] 不支持这个操作"
+msgstr "类型为 [%{store_type}] 的数据存储区，标识为 [%{id}] 的 [%{name}] 不支持这个操作"
 
 #: ../app/models/storage.rb:375
 msgid "Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id}]"
@@ -29858,7 +29858,7 @@ msgstr "标识为 <%{id}> 的虚拟机/模板 <%{name}> 没有和供应商相关
 
 #: ../app/models/vm_or_template.rb:350
 msgid "VM/Template <%{name}> with Id: <%{id}>: Provider authentication failed."
-msgstr "标识为 <%{id}> 的虚拟机/模板 <%{name}> : 供应商验证失败"
+msgstr "标识为 <%{id}> 的虚拟机/模板 <%{name}>：供应商验证失败"
 
 #: ../app/models/vm_or_template.rb:387
 msgid "vm does not belong to any host"
@@ -29895,7 +29895,7 @@ msgstr ":要求的属性"
 
 #: ../app/models/vm_or_template.rb:1535
 msgid "operator '%{operator}' is not supported"
-msgstr "操作符 '%{operator}' 不被支持"
+msgstr "操作符“%{operator}”不受支持"
 
 #: ../app/models/vm_or_template.rb:1715 ../app/models/vm_or_template.rb:1734
 msgid "Unsupported property type [%{property}]"
@@ -30048,7 +30048,7 @@ msgstr "为主机 <%{name}> 指定的资源池 <%{pool_name}> 是无效的，无
 
 #: ../app/models/vm_or_template/operations/relocation.rb:51
 msgid "The VM '%{name}' can not be migrated to the same host it is already running on."
-msgstr "虚拟机 '%{name}' 不能迁移至其已经在上面运行的同一主机。"
+msgstr "虚拟机“%{name}”不能迁移至其已经在上面运行的同一主机。"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:64
 msgid "VM has no EMS, unable to relocate VM"
@@ -30076,11 +30076,11 @@ msgstr "没有指定文件夹，无法将虚拟机移动到新文件夹中"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:103
 msgid "The VM '%{name}' is already running on the same folder as the destination."
-msgstr "虚拟机 '%{name}' 已在作为目的地的同一文件夹上运行。"
+msgstr "虚拟机“%{name}”已在作为目的地的同一文件夹上运行。"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:132
 msgid "Host with ID=%{host_id} was not found"
-msgstr "ID=%{host_id} 的主机没有找到"
+msgstr "找不到标识为 %{host_id} 的主机"
 
 #: ../app/models/vm_or_template/operations/snapshot.rb:8
 msgid "At least one snapshot has to be active to create a new snapshot for this VM"
@@ -30161,7 +30161,7 @@ msgstr "无法删除维护区"
 
 #: ../app/models/zone.rb:246
 msgid "zone name '%{name}' is used by a server"
-msgstr "区域名“%{name}”被一个服务器使用"
+msgstr "区域名“%{name}”已由服务器使用"
 
 #: ../app/presenters/menu/default_menu.rb:43
 msgid "Consumption"
@@ -30232,7 +30232,7 @@ msgstr "<孤立的>"
 
 #: ../app/presenters/tree_builder_archived.rb:9
 msgid "Orphaned %{model}"
-msgstr "孤线程 %{model}"
+msgstr "孤立的 %{model}"
 
 #: ../app/presenters/tree_builder_automation_manager_configured_systems.rb:19
 msgid "Ansible Tower Configured Systems"
@@ -30335,7 +30335,7 @@ msgstr "我的个人过滤器"
 #: ../app/presenters/tree_builder_genealogy.rb:46
 #: ../app/presenters/tree_node/vm_or_template.rb:9
 msgid "VM: %{name} (Click to view)"
-msgstr "虚拟机: %{name} (点击查看)"
+msgstr "虚拟机：%{name}（点击查看）"
 
 #: ../app/presenters/tree_builder_generic_object_definition.rb:10
 msgid "All Generic Object Classes"
@@ -30375,7 +30375,7 @@ msgstr "顶级"
 #: ../app/presenters/tree_builder_ops_rbac.rb:12
 #: ../app/presenters/tree_builder_ops_settings.rb:10
 msgid "%{product} Region: %{region_description} [%{region}]"
-msgstr "%{product} 区：%{region_description} [%{region}]"
+msgstr "%{product} 区域：%{region_description} [%{region}]"
 
 #: ../app/presenters/tree_builder_ops_rbac.rb:32
 msgid "Roles"
@@ -30435,46 +30435,46 @@ msgstr "vApp 模板"
 #: ../app/presenters/tree_builder_policy.rb:12
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Host Compliance Policies"
-msgstr "主机遵循策略"
+msgstr "主机合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:13
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Vm Compliance Policies"
-msgstr "Vm 遵循策略"
+msgstr "虚拟机合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:14
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Replicator Compliance Policies"
-msgstr "复制器合规策略"
+msgstr "复制器合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:15
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Pod Compliance Policies"
-msgstr "Pod 合规策略"
+msgstr "Pod 合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:16
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Node Compliance Policies"
-msgstr "容器节点合规策略"
+msgstr "容器节点合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:17
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Image Compliance Policies"
-msgstr "容器镜像合规策略"
+msgstr "容器镜像合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:18
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Project Compliance Policies"
-msgstr "容器项目合规策略"
+msgstr "容器项目合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:19
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Provider Compliance Policies"
-msgstr "供应商合规策略"
+msgstr "供应商合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:20
 msgid "Physical Server Compliance Policies"
-msgstr "物理服务器合规策略"
+msgstr "物理服务器合规性策略"
 
 #: ../app/presenters/tree_builder_policy.rb:21
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
@@ -30484,7 +30484,7 @@ msgstr "主机控制策略"
 #: ../app/presenters/tree_builder_policy.rb:22
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Vm Control Policies"
-msgstr "Vm 控制策略"
+msgstr "虚拟机控制策略"
 
 #: ../app/presenters/tree_builder_policy.rb:23
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
@@ -30601,7 +30601,7 @@ msgstr "菜单"
 #: ../app/presenters/tree_builder_sections.rb:31
 #: ../app/views/ops/_rbac_group_details.html.haml:202
 msgid "%{current_tenant} Tags"
-msgstr "%{current_tenant} 标签"
+msgstr "%{current_tenant} 个标记"
 
 #: ../app/presenters/tree_builder_template_filter.rb:10
 msgid "All of the Templates that I can see"
@@ -30653,11 +30653,11 @@ msgstr " （%{priority} 活动，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:28
 msgid " (%{priority}available, PID=%{number})"
-msgstr " （%{priority}可用，PID=%{number}）"
+msgstr " （%{priority} 可用，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:31
 msgid " (%{priority}unavailable)"
-msgstr " （%{priority}不可用）"
+msgstr " （%{priority} 不可用）"
 
 #: ../app/presenters/tree_node/availability_zone.rb:3
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:18
@@ -30678,7 +30678,7 @@ msgstr "%{type}: %{name}"
 
 #: ../app/presenters/tree_node/configured_system.rb:4
 msgid "Configured System: %{hostname}"
-msgstr "已配置系统：%{hostname}"
+msgstr "已配置的系统：%{hostname}"
 
 #: ../app/presenters/tree_node/custom_button.rb:3
 msgid "Button: %{button_description}"
@@ -30686,7 +30686,7 @@ msgstr "按钮：%{button_description}"
 
 #: ../app/presenters/tree_node/custom_button_set.rb:6
 msgid "%{button_group_name} (Group)"
-msgstr "%{button_group_name} (组)"
+msgstr "%{button_group_name}（组）"
 
 #: ../app/presenters/tree_node/custom_button_set.rb:14
 msgid "Button Group: %{button_group_description}"
@@ -30767,7 +30767,7 @@ msgstr "%{server}：%{server_name} [%{server_id}]（当前）"
 
 #: ../app/presenters/tree_node/server_role.rb:16
 msgid "Role: %{description} (%{status})"
-msgstr "角色: %{description} (%{status})"
+msgstr "角色：%{description} (%{status})"
 
 #: ../app/presenters/tree_node/switch.rb:3
 msgid "Switch: %{name}"
@@ -30783,7 +30783,7 @@ msgstr "移除窗口小部件"
 
 #: ../app/presenters/widget_presenter.rb:30
 msgid "Are you sure you want to remove '%{title}'from the Dashboard?"
-msgstr "您确定要从仪表板里移除 '%{title}' 吗？"
+msgstr "您确定要从仪表板里移除“%{title}”吗？"
 
 #: ../app/presenters/widget_presenter.rb:39
 msgid "Maximize"
@@ -30922,7 +30922,7 @@ msgstr "（请检查您的 %{type} 服务器）"
 
 #: ../app/services/user_validation_service.rb:42
 msgid "Login not allowed, User's %{feature} is missing. Please contact the administrator"
-msgstr "不允许登录，找不到用户 %{feature}。请联系管理员。"
+msgstr "不允许登录，找不到用户 %{feature}。请联系管理员"
 
 #: ../app/services/user_validation_service.rb:57
 msgid "The user's role is not authorized for any access, please contact the administrator!"
@@ -30934,7 +30934,7 @@ msgstr "%{product} 服务器仍在启动，您已被重定向到确定问题的�
 
 #: ../app/services/user_validation_service.rb:85
 msgid "The %{product} Server is still starting. If this message persists, please contact your %{product} administrator."
-msgstr "%{product} 服务器仍在启动。如果这个信息仍存在，请联系您的 %{product} 管理员。"
+msgstr "%{product} 服务器仍在启动。如果这条信息持续存在，请联系您的 %{product} 管理员。"
 
 #: ../app/services/user_validation_service.rb:100
 msgid "Sorry, the username or password you entered is incorrect."
@@ -31321,7 +31321,7 @@ msgstr "移除资源 "
 
 #: ../app/views/catalog/_st_angular_form.html.haml:95
 msgid "Price / Month (in {{vm.catalogItemModel.currency_name}})"
-msgstr "价格 / 月 ({{vm.catalogItemModel.currency_name}})"
+msgstr "价格/月（以 {{vm.catalogItemModel.currency_name}} 计）"
 
 #: ../app/views/catalog/_st_angular_form.html.haml:109
 msgid "Must be a numeric value"
@@ -31401,7 +31401,7 @@ msgstr "标签名称"
 
 #: ../app/views/chargeback/_cb_rate_currency.html.haml:2
 msgid "Rate (in %{currency})"
-msgstr "费率 (%{currency})"
+msgstr "费率（以 %{currency} 计）"
 
 #: ../app/views/chargeback/_cb_rate_edit.html.haml:21
 msgid "Currencies"
@@ -31527,7 +31527,7 @@ msgstr "容器名称"
 #: ../app/views/network_topology/show.html.haml:48
 #: ../app/views/physical_infra_topology/show.html.haml:60
 msgid "Click on the legend to show/hide entities, and double click/right click the entities in the graph to navigate to their summary pages."
-msgstr "点击上面的图标显示/隐藏条目，双击图形中的条目（或点鼠标右键）进入它们的摘要页面。"
+msgstr "单击图标显示/隐藏实体，双击图形中的实体（或点鼠标右键）进入它们的摘要页面。"
 
 #: ../app/views/cloud_volume/_common_new_edit.html.haml:54
 msgid "Volume Name"
@@ -31597,11 +31597,11 @@ msgstr "云卷备份"
 #: ../app/views/cloud_volume/detach.html.haml:10
 #: ../app/views/vm_common/_detach.html.haml:9
 msgid "Detach Volume"
-msgstr "分离卷"
+msgstr "拆离卷"
 
 #: ../app/views/cloud_volume/detach.html.haml:25
 msgid "Detach"
-msgstr "分离"
+msgstr "拆离"
 
 #: ../app/views/cloud_volume/edit.html.haml:10
 msgid "Edit Volume"
@@ -32755,12 +32755,12 @@ msgstr "以前"
 
 #: ../app/views/layouts/_paging_bar.html.haml:31
 msgid "%{start_number} of %{total_items}"
-msgstr "第 %{start_number} 个（共 %{total_items} 个）"
+msgstr "%{start_number} 个（共 %{total_items} 个）"
 
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35
 msgid "%{start_number}-%{end_number} of %{total_items}"
-msgstr "%{start_number}-%{end_number}（共 %{total_items} 个）"
+msgstr "%{start_number} - %{end_number} 的 %{total_items}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:48
 #: ../app/views/layouts/_paging_bar.html.haml:50
@@ -32930,7 +32930,7 @@ msgstr "<select a=\"\" value=\"\" to=\"\" assign=\"\"></select>"
 #: ../app/views/layouts/_tag_edit_items.html.haml:5
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] "正在标记 %{amount} 个 %{objects}"
+msgstr[0] "正在标记 %{amount} 个%{objects}"
 
 #: ../app/views/layouts/_tl_detail.html.haml:13
 msgid "Timeline View"
@@ -33068,7 +33068,7 @@ msgstr "无效输入格式，请输入 GUID"
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:50
 #: ../app/views/static/auth-credentials.html.haml:28
 msgid "Should have privileged access, such as root or administrator."
-msgstr "需要特权访问权限，如根用户或管理员。"
+msgstr "应该具备特权访问权限，如根用户或管理员。"
 
 #:
 #: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml:11
@@ -33279,7 +33279,7 @@ msgstr "用来作为服务帐户来在您的供应商中进行验证"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:174
 msgid "Required. Used to gather Utilization data."
-msgstr "这是必需的设置，用于采集利用率数据。"
+msgstr "必需。用于采集利用率数据。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:180
 msgid "Cancel SmartState Docker password change"
@@ -33321,7 +33321,7 @@ msgstr "用于收集容量和利用率度量。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:284
 msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling. Configure AMQP if eventing is not enabled on Ceilometer."
-msgstr "用来与 OpenStack AMQP 消息总线进行验证来处理事件。如果事件没有在 Ceilometer 中启用，配置 AMQP。"
+msgstr "用于认证到 OpenStack AMQP 消息传递总线来处理事件。如果事件没有在 Ceilometer 中启用，配置 AMQP。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:286
 msgid "Select Ceilometer if eventing is not enabled on AMQP."
@@ -33338,7 +33338,7 @@ msgstr "禁用事件监控。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:296
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
-msgstr "用来与 Nuage AMQP 消息总线进行验证来处理事件。"
+msgstr "用于认证到 Nuage AMQP 消息传递总线来处理事件。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:313
 msgid "Console userid and password fields are needed to perform validation."
@@ -33585,7 +33585,7 @@ msgstr "实例 (%{count})"
 #: ../app/views/layouts/listnav/_physical_storage.html.haml:15
 #: ../app/views/layouts/listnav/_physical_switch.html.haml:15
 msgid "Provider: %{name}"
-msgstr "提供程序：%{name}"
+msgstr "供应商：%{name}"
 
 #: ../app/views/layouts/listnav/_availability_zone.html.haml:15
 msgid "Show this Availability Zone's parent Cloud Provider"
@@ -33972,7 +33972,7 @@ msgstr "显示主机"
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:17
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:26
 msgid "Parent %{title}: %{name}"
-msgstr "父 %{title}：%{name}"
+msgstr "父级 %{title}：%{name}"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:17
 msgid "Show VMs"
@@ -33980,7 +33980,7 @@ msgstr "显示虚拟机"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:26
 msgid "Show Parent %{host}"
-msgstr "显示父 %{host}"
+msgstr "显示父级 %{host}"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:48
 msgid "Show all Resource Pools in this Resource Pool"
@@ -35010,7 +35010,7 @@ msgstr "分配给"
 
 #: ../app/views/miq_policy/_alert_profile_details.html.haml:148
 msgid "%{alert_profiles} with %{type} Tags"
-msgstr "具有 %{type} 标签的 %{alert_profiles}"
+msgstr "具有 %{type} 标记的 %{alert_profiles}"
 
 #: ../app/views/miq_policy/_alert_profile_folders.html.haml:7
 #: ../app/views/miq_policy/_policy_folders.html.haml:36
@@ -35051,7 +35051,7 @@ msgstr "%{object} 条件"
 
 #: ../app/views/miq_policy/_condition_list.html.haml:8
 msgid "No %{model} Conditions are defined."
-msgstr "没有定义%{model} 条件。"
+msgstr "没有定义 %{model} 条件。"
 
 #: ../app/views/miq_policy/_condition_list.html.haml:10
 msgid "No %{model} Conditions are defined that match the entered search string."
@@ -35215,11 +35215,11 @@ msgstr "编辑作用域"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:45
 msgid "By Username %{username} %{created_on}"
-msgstr "按用户名 %{username} %{created_on}"
+msgstr "由用户名 %{username} %{created_on}"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:52
 msgid "By Username %{username} %{updated_on}"
-msgstr "按用户名 %{username} %{updated_on}"
+msgstr "由用户名 %{username} %{updated_on}"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:81
 msgid "No Policy scope defined, the scope of this policy includes all elements."
@@ -35692,7 +35692,7 @@ msgstr "过滤"
 
 #: ../app/views/miq_task/_tasks_options.html.haml:12
 msgid "%{zone} (current)"
-msgstr "%{zone} （当前）"
+msgstr "%{zone}（当前）"
 
 #: ../app/views/miq_task/_tasks_options.html.haml:12
 msgid "All Zones"
@@ -35991,7 +35991,7 @@ msgstr "<点这一行新增一个条目>"
 
 #: ../app/views/ops/_classification_entry.html.haml:55
 msgid "Deleting the '%{entry_name}' entry will also unassign it from all items, are you sure?"
-msgstr "删除 '%{entry_name}' 条目也会从所有项目里取消分配这个条目，您确定吗？"
+msgstr "删除“%{entry_name}”条目也会从所有项目里取消分配这个条目，您确定吗？"
 
 #. TRANSLATORS: file: product/views/VmdbIndex.yaml
 #. TRANSLATORS: file: product/views/VmdbTableEvm.yaml
@@ -36243,7 +36243,7 @@ msgstr "查看用户"
 
 #: ../app/views/ops/_rbac_details_tab.html.haml:29
 msgid "Users (%{users_count})"
-msgstr "用户（%{users_count}）"
+msgstr "用户 (%{users_count})"
 
 #: ../app/views/ops/_rbac_details_tab.html.haml:32
 #: ../app/views/ops/_rbac_details_tab.html.haml:34
@@ -36467,7 +36467,7 @@ msgstr "对象选择"
 #: ../app/views/report/_show_schedule.html.haml:38
 #: ../app/views/report/_widget_show.html.haml:127 ../config/yaml_strings.rb:401
 msgid "Run At"
-msgstr "运行于"
+msgstr "运行时间"
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/views/ops/_schedule_show.html.haml:101
@@ -36680,7 +36680,7 @@ msgstr "点击以编辑这个类别"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:42
 msgid "Category '%{category_name}' cannot be deleted"
-msgstr "无法删除类别 '%{category_name}' "
+msgstr "无法删除类别“%{category_name}”"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:48
 msgid "Are you sure you want to delete category '%{category_name}'?"
@@ -36696,7 +36696,7 @@ msgstr "收集所有 %{clusters}"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:22
 msgid "Note: Collect for All %{clusters} must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2"
-msgstr "注: 必须选中采集所有 %{clusters}，以便以从云供应商采集容量和使用率数据， 例如 Red Hat OpenStack 或 Amazon EC2"
+msgstr "注：必须选中采集所有 %{clusters}，以便以从云供应商（例如 Red Hat OpenStack 或 Amazon EC2）收集容量和使用率数据"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:27
 msgid "No %{clusters} found in the current region."
@@ -36708,7 +36708,7 @@ msgstr "启用由 %{clusters} 执行的收集"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:38
 msgid "VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected."
-msgstr "将只为选择的 %{hosts} 下的虚拟机采集虚拟机数据。当选择了至少一个 %{host} 时，%{cluster} 及其所有 %{hosts} 都将采集数据。"
+msgstr "将仅收集选定 %{hosts} 下的 VM 的 VM 数据。至少选定一个 %{host} 时，就会收集 %{cluster} 及其所有 %{hosts} 的数据。"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:42
 msgid "Note: No %{clusters} available."
@@ -36736,7 +36736,7 @@ msgstr "定制的徽标图像（显示在所有屏幕的右上角）"
 
 #: ../app/views/ops/_settings_custom_logos_tab.html.haml:7
 msgid "No custom logo image has been uploaded yet."
-msgstr "尚未上载定制徽标图像。"
+msgstr "尚未上传定制徽标图像。"
 
 #: ../app/views/ops/_settings_custom_logos_tab.html.haml:19
 msgid "* Requirements: File-type - PNG; Dimensions - 350x70."
@@ -36905,7 +36905,7 @@ msgstr "* 要求：CSV 格式的文件。"
 
 #: ../app/views/ops/_settings_import_tags_tab.html.haml:7
 msgid "Upload %{customer_name} Tag Assignments for VMs"
-msgstr "未虚拟机上传 %{customer_name} Tag 分配"
+msgstr "未虚拟机上传 %{customer_name} 标记分配"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:5
 msgid "Resource Entity"
@@ -37133,11 +37133,11 @@ msgstr "URL (例如：www.mypage.com)"
 
 #: ../app/views/ops/_smartproxy_affinity.html.haml:2
 msgid "Assign Hosts and Datastores to Embedded SmartProxies in Zone: \"%{zone_description}\""
-msgstr "分配主机和数据存储区到区：“%{zone_description}”中内置的 SmartProxies"
+msgstr "分配主机和数据存储区到区：“%{zone_description}”中内置的 SmartProxy"
 
 #: ../app/views/ops/_smartproxy_affinity.html.haml:7
 msgid "No Servers with the SmartProxy role are in Zone: \"%{zone_description}\""
-msgstr "区“%{zone_description}”中没有拥有 SmartProxy 角色的服务器"
+msgstr "区域“%{zone_description}”中没有拥有 SmartProxy 角色的服务器"
 
 #: ../app/views/ops/_tenant_quota_form.html.haml:32
 msgid "Not enforced"
@@ -37169,11 +37169,11 @@ msgstr "%{kind} %{description} 中服务器的区域角色的状态"
 
 #: ../app/views/ops/_zone_tree.html.haml:7
 msgid "Status of Roles for Servers in %{kind} %{description}"
-msgstr "%{kind} %{description} 中服务器角色的状态"
+msgstr "%{kind} %{description} 中服务器的角色状态"
 
 #: ../app/views/ops/_zone_tree.html.haml:10
 msgid "* Primary Server Roles shown as %{bold} text."
-msgstr "* 主服务器角色（Primary Server Role）显示为 %{bold} 文本。"
+msgstr "* 主服务器角色显示为 %{bold} 文本。"
 
 #: ../app/views/ops/_zone_tree.html.haml:10
 msgid "bold"
@@ -37427,7 +37427,7 @@ msgstr "没有为这个组定义仪表板。将显示缺省的仪表板。"
 
 #: ../app/views/report/_db_list.html.haml:49
 msgid "Click to view '%{widgetset_description} (%{widgetset_name})'"
-msgstr "点击以查看 '%{widgetset_description} (%{widgetset_name})'"
+msgstr "点击以查看“%{widgetset_description} (%{widgetset_name})”"
 
 #: ../app/views/report/_db_seq_form.html.haml:4
 msgid "Dashboards:"
@@ -37435,7 +37435,7 @@ msgstr "仪表板："
 
 #: ../app/views/report/_db_widget.html.haml:5
 msgid "Drag/drop Widget \"%{widget_title}\""
-msgstr "拖/放窗口小部件“%{widget_title}”"
+msgstr "拖放窗口小部件“%{widget_title}”"
 
 #: ../app/views/report/_db_widget.html.haml:8
 msgid "View this Widget"
@@ -37594,7 +37594,7 @@ msgstr "计算"
 
 #: ../app/views/report/_form_consolidate.html.haml:78
 msgid "Leave all options unchecked to show the original column value from the first record in the group."
-msgstr "不勾选任何选项以显示组里第一条记录原始的列值"
+msgstr "不勾选任何选项会显示组里第一条记录原始的列值"
 
 #: ../app/views/report/_form_filter.html.haml:12
 msgid "Primary (Record) Filter - Filters the %{model} table records"
@@ -37673,7 +37673,7 @@ msgstr "选择供应商"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:136
 msgid "All %{chargeback_type}"
-msgstr "所有 %{chargeback_type}"
+msgstr "所有的 %{chargeback_type}"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:136
 msgid "Choose %{entity}"
@@ -37709,7 +37709,7 @@ msgstr "%{chargeback_interval} 结束于"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:211
 msgid "%{number} Days Ago"
-msgstr "%{number} 天前"
+msgstr "%{number} 天以前"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:211
 msgid "1 Week Ago"
@@ -38442,7 +38442,7 @@ msgstr "上传文件"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:364
 msgid "Uploaded File '%{filename}'"
-msgstr "上传的文件 '%{filename}'"
+msgstr "上传的文件“%{filename}”"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:397
 msgid "WINS Server"
@@ -38679,7 +38679,7 @@ msgstr "标记为已读"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:33
 msgid "Showing all {{notificationGroup.notifications.length}} items."
-msgstr "显示所有 {{notificationGroup.notifications.length}} 项。"
+msgstr "正在显示全部 {{notificationGroup.notifications.length}} 项。"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:35
 msgid "Show only the first 100"
@@ -38687,7 +38687,7 @@ msgstr "仅显示前 100 位"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:38
 msgid "Showing {{limit.notifications}} items out of {{notificationGroup.notifications.length}} total."
-msgstr "显示 {{limit.notifications}} 项，共 {{notificationGroup.notifications.length}} 项。"
+msgstr "正在显示 {{limit.notifications}} 项（共 {{notificationGroup.notifications.length}} 项）。"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:40
 msgid "Show all (may take a while)"
@@ -38752,11 +38752,11 @@ msgstr "移除安全组"
 
 #: ../app/views/storage/_storage_pod_folders.html.haml:7
 msgid "View '%{name}' Cluster"
-msgstr "查看 '%{name}' 集群"
+msgstr "查看“%{name}”集群"
 
 #: ../app/views/support/show.html.haml:12
 msgid "View the %{title} Guide"
-msgstr "查看 %{title} 向导"
+msgstr "查看 %{title} 指南"
 
 #: ../app/views/support/show.html.haml:23
 msgid "For questions or problem reporting, visit "
@@ -38777,7 +38777,7 @@ msgstr "选择的项目没有可用的性能数据。"
 #: ../app/views/utilization/_utilization_report.html.haml:37
 #: ../app/views/utilization/_utilization_summary.html.haml:36
 msgid "* Information shown is based on available trend data from %{start_time} to %{end_time} in the %{timezone} time zone."
-msgstr "* 显示的信息基于 %{timezone} 时区里 %{start_time} 到 %{end_time} 的可用的趋势数据。"
+msgstr "* 显示的信息基于 %{timezone} 时区里 %{start_time} 到 %{end_time} 的可用趋势数据。"
 
 #: ../app/views/utilization/_utilization_options.html.haml:9
 msgid "Trends for past"
@@ -38995,7 +38995,7 @@ msgstr "输入大小"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:238
 msgid "Disk size between {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} and 2TB required"
-msgstr "磁盘大小需在 {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} 和 2TB 之间"
+msgstr "磁盘大小需在 {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} 与 2TB 之间"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:277
 msgid "Resize"
@@ -39076,7 +39076,7 @@ msgstr "正常的操作范围（最多 30 天的数据）"
 
 #: ../app/views/vm_common/_right_size.html.haml:110
 msgid "Right-Sizing (Conservative - derived from Absolute Maximum)"
-msgstr "适当大小（保守 - 源自绝对最大值）"
+msgstr "适当调整大小（保守 - 源自绝对最大值）"
 
 #: ../app/views/vm_common/_right_size.html.haml:115
 #: ../app/views/vm_common/_right_size.html.haml:150
@@ -39104,11 +39104,11 @@ msgstr "节省量"
 
 #: ../app/views/vm_common/_right_size.html.haml:145
 msgid "Right-Sizing (Moderate - derived from High NORM)"
-msgstr "适当大小（适中 - 源自高 NORM）"
+msgstr "适当调整大小（适中 - 源自高 NORM）"
 
 #: ../app/views/vm_common/_right_size.html.haml:179
 msgid "Right-Sizing (Aggressive - derived from Average NORM)"
-msgstr "适当大小（激进 - 源自平均 NORM）"
+msgstr "适当调整大小（激进 - 源自平均 NORM）"
 
 #: ../app/views/vm_common/_right_size.html.haml:214
 msgid "* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
@@ -39120,7 +39120,7 @@ msgstr "快照信息"
 
 #: ../app/views/vm_common/_snapshots_desc.html.haml:23
 msgid "(%{number} bytes)"
-msgstr "(%{number} 字节)"
+msgstr "（%{number} 字节）"
 
 #: ../app/views/vm_common/_snapshots_desc.html.haml:33
 msgid "%{record_name} has no snapshots"
@@ -43466,7 +43466,7 @@ msgstr "高级设置"
 
 #: ../config/model_attributes.rb:18
 msgid "AdvancedSetting|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:19
 msgid "AdvancedSetting|Default value"
@@ -43514,7 +43514,7 @@ msgstr "资源类型"
 
 #: ../config/model_attributes.rb:30
 msgid "AdvancedSetting|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:31
 msgid "AdvancedSetting|Value"
@@ -43630,7 +43630,7 @@ msgstr "审计事件"
 
 #: ../config/model_attributes.rb:59
 msgid "AuditEvent|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:60
 msgid "AuditEvent|Event"
@@ -43702,7 +43702,7 @@ msgstr "挑战"
 
 #: ../config/model_attributes.rb:78
 msgid "Authentication|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:79
 msgid "Authentication|Credentials changed on"
@@ -43890,7 +43890,7 @@ msgstr "状态细节"
 
 #: ../config/model_attributes.rb:125
 msgid "Authentication|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:126
 msgid "Authentication|Userid"
@@ -44186,7 +44186,7 @@ msgstr "上下文数据"
 
 #: ../config/model_attributes.rb:199
 msgid "BottleneckEvent|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:200
 msgid "BottleneckEvent|Event type"
@@ -44343,7 +44343,7 @@ msgstr "费率"
 
 #: ../config/model_attributes.rb:238
 msgid "ChargebackRate|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:239
 msgid "ChargebackRate|Default"
@@ -44375,7 +44375,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:246
 msgid "ChargebackRate|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:247
 msgid "Chargeback rate detail"
@@ -44383,7 +44383,7 @@ msgstr "计费费率细节"
 
 #: ../config/model_attributes.rb:248
 msgid "ChargebackRateDetail|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:249
 msgid "ChargebackRateDetail|Description"
@@ -45311,7 +45311,7 @@ msgstr "时间戳记"
 
 #: ../config/model_attributes.rb:482
 msgid "Compliance|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:483
 msgid "Compliance detail"
@@ -45327,7 +45327,7 @@ msgstr "条件结果"
 
 #: ../config/model_attributes.rb:486
 msgid "ComplianceDetail|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:487
 msgid "ComplianceDetail|Href slug"
@@ -45355,7 +45355,7 @@ msgstr "资源名称"
 
 #: ../config/model_attributes.rb:493
 msgid "ComplianceDetail|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:494
 msgid "Computer system"
@@ -45383,7 +45383,7 @@ msgstr "应用到表达式"
 
 #: ../config/model_attributes.rb:501
 msgid "Condition|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:502
 msgid "Condition|Description"
@@ -45435,7 +45435,7 @@ msgstr "Towhat"
 
 #: ../config/model_attributes.rb:514
 msgid "Condition|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:515
 msgid "Condition set"
@@ -45443,7 +45443,7 @@ msgstr "条件集"
 
 #: ../config/model_attributes.rb:516
 msgid "ConditionSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:517
 msgid "ConditionSet|Description"
@@ -45491,7 +45491,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:528
 msgid "ConditionSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:529
 msgid "ConditionSet|Userid"
@@ -46639,7 +46639,7 @@ msgstr "命令"
 
 #: ../config/model_attributes.rb:816
 msgid "ContainerImage|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:817
 msgid "ContainerImage|Custom 1"
@@ -48003,7 +48003,7 @@ msgstr "定制 9"
 
 #: ../config/model_attributes.rb:1157
 msgid "ContainerTemplate|Ems created on"
-msgstr "Ems 创建日期"
+msgstr "Ems 创建时间"
 
 #: ../config/model_attributes.rb:1158
 msgid "ContainerTemplate|Ems ref"
@@ -48087,7 +48087,7 @@ msgstr "显示名称"
 
 #: ../config/model_attributes.rb:1178
 msgid "ContainerTemplateParameter|Ems created on"
-msgstr "Ems 创建日期"
+msgstr "Ems 创建时间"
 
 #: ../config/model_attributes.rb:1179
 msgid "ContainerTemplateParameter|From"
@@ -48395,7 +48395,7 @@ msgstr "适用于类"
 
 #: ../config/model_attributes.rb:1255
 msgid "CustomButton|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1256
 msgid "CustomButton|Description"
@@ -48435,7 +48435,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:1265
 msgid "CustomButton|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1266
 msgid "CustomButton|Uri attributes"
@@ -48463,7 +48463,7 @@ msgstr "定制按钮集"
 
 #: ../config/model_attributes.rb:1272
 msgid "CustomButtonSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1273
 msgid "CustomButtonSet|Description"
@@ -48511,7 +48511,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:1284
 msgid "CustomButtonSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1285
 msgid "CustomButtonSet|Userid"
@@ -48899,7 +48899,7 @@ msgstr "控制器类型"
 
 #: ../config/model_attributes.rb:1383
 msgid "Disk|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1384
 msgid "Disk|Device name"
@@ -48975,7 +48975,7 @@ msgstr "未分配的空间百分比"
 
 #: ../config/model_attributes.rb:1402
 msgid "Disk|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1403
 msgid "Disk|Used disk storage"
@@ -49071,7 +49071,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:1426
 msgid "EmsCluster|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1427
 msgid "EmsCluster|Derived memory used avg over time period"
@@ -49247,7 +49247,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:1470
 msgid "EmsCluster|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1471
 msgid "EmsCluster|V cpu vr ratio"
@@ -49339,7 +49339,7 @@ msgstr "虚拟机内存总数"
 
 #: ../config/model_attributes.rb:1493
 msgid "EmsFolder|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1494
 msgid "EmsFolder|Ems ref"
@@ -49375,7 +49375,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:1502
 msgid "EmsFolder|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1503
 msgid "Ems license"
@@ -49581,7 +49581,7 @@ msgstr "容器复制器名称"
 
 #: ../config/model_attributes.rb:1553
 msgid "EventStream|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1554
 msgid "EventStream|Dest ems cluster name"
@@ -49769,7 +49769,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:1600
 msgid "ExtManagementSystem|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1601
 msgid "ExtManagementSystem|Custom 1"
@@ -50089,7 +50089,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:1680
 msgid "ExtManagementSystem|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1681
 msgid "ExtManagementSystem|Zone name"
@@ -50189,7 +50189,7 @@ msgstr "可用的内容"
 
 #: ../config/model_attributes.rb:1706
 msgid "Filesystem|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1707
 msgid "Filesystem|Ctime"
@@ -50261,7 +50261,7 @@ msgstr "大小"
 
 #: ../config/model_attributes.rb:1724
 msgid "Filesystem|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1725
 msgid "Firewall rule"
@@ -50269,7 +50269,7 @@ msgstr "防火墙规则"
 
 #: ../config/model_attributes.rb:1726
 msgid "FirewallRule|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1727
 msgid "FirewallRule|Direction"
@@ -50337,7 +50337,7 @@ msgstr "源 IP 范围"
 
 #: ../config/model_attributes.rb:1743
 msgid "FirewallRule|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:1745
 msgid "Firmware|Build"
@@ -51165,7 +51165,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:1954
 msgid "Host|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:1955
 msgid "Host|Custom 1"
@@ -51473,7 +51473,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:2031
 msgid "Host|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2032
 msgid "Host|User assigned os"
@@ -51737,7 +51737,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:2097
 msgid "Import file upload"
-msgstr "导入文件上载"
+msgstr "导入文件上传"
 
 #: ../config/model_attributes.rb:2098
 msgid "ImportFileUpload|Href slug"
@@ -51805,7 +51805,7 @@ msgstr "上下文"
 
 #: ../config/model_attributes.rb:2115
 msgid "Job|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2116
 msgid "Job|Dispatch status"
@@ -51861,7 +51861,7 @@ msgstr "目标类"
 
 #: ../config/model_attributes.rb:2129
 msgid "Job|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2130
 msgid "Job|Userid"
@@ -51894,7 +51894,7 @@ msgstr "已计算的 mac 更改"
 
 #: ../config/model_attributes.rb:2137
 msgid "Lan|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2138
 msgid "Lan|Ems ref"
@@ -51934,7 +51934,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:2147
 msgid "Lan|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2148
 msgid "Lifecycle event"
@@ -51946,7 +51946,7 @@ msgstr "创建者"
 
 #: ../config/model_attributes.rb:2150
 msgid "LifecycleEvent|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2151
 msgid "LifecycleEvent|Event"
@@ -52278,7 +52278,7 @@ msgstr "日志文件"
 
 #: ../config/model_attributes.rb:2233
 msgid "LogFile|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2234
 msgid "LogFile|Description"
@@ -52330,7 +52330,7 @@ msgstr "状态"
 
 #: ../config/model_attributes.rb:2246
 msgid "LogFile|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2248
 msgid "Metric|Assoc ids"
@@ -52370,7 +52370,7 @@ msgstr "CPU 等待增量总和"
 
 #: ../config/model_attributes.rb:2257
 msgid "Metric|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2258
 msgid "Metric|Derived cpu available"
@@ -52794,7 +52794,7 @@ msgstr "CPU 等待增量总和"
 
 #: ../config/model_attributes.rb:2363
 msgid "MetricRollup|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2364
 msgid "MetricRollup|Derived cpu available"
@@ -53866,7 +53866,7 @@ msgstr "操作类型描述"
 
 #: ../config/model_attributes.rb:2631
 msgid "MiqAction|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2632
 msgid "MiqAction|Description"
@@ -53898,7 +53898,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:2639
 msgid "MiqAction|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2640
 msgid "MiqAction|V synchronicity"
@@ -53910,7 +53910,7 @@ msgstr "Miq 操作集"
 
 #: ../config/model_attributes.rb:2642
 msgid "MiqActionSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2643
 msgid "MiqActionSet|Description"
@@ -53958,7 +53958,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:2654
 msgid "MiqActionSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2655
 msgid "MiqActionSet|Userid"
@@ -54038,7 +54038,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:2674
 msgid "MiqAeField|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2675
 msgid "MiqAeField|Datatype"
@@ -54118,7 +54118,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2694
 msgid "MiqAeField|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2695
 msgid "MiqAeField|Visibility"
@@ -54130,7 +54130,7 @@ msgstr "Miq ae 实例"
 
 #: ../config/model_attributes.rb:2697
 msgid "MiqAeInstance|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2698
 msgid "MiqAeInstance|Description"
@@ -54166,7 +54166,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2706
 msgid "MiqAeInstance|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2707
 msgid "Miq ae method"
@@ -54174,7 +54174,7 @@ msgstr "Miq ae 方法"
 
 #: ../config/model_attributes.rb:2708
 msgid "MiqAeMethod|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2709
 msgid "MiqAeMethod|Data"
@@ -54230,7 +54230,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2722
 msgid "MiqAeMethod|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2723
 msgid "Miq ae namespace"
@@ -54326,7 +54326,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:2746
 msgid "MiqAeValue|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2747
 msgid "MiqAeValue|Display name"
@@ -54370,7 +54370,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2757
 msgid "MiqAeValue|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2758
 msgid "MiqAeValue|Value"
@@ -54382,7 +54382,7 @@ msgstr "Miq ae 工作空间"
 
 #: ../config/model_attributes.rb:2760
 msgid "MiqAeWorkspace|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2761
 msgid "MiqAeWorkspace|Guid"
@@ -54406,7 +54406,7 @@ msgstr "设置者"
 
 #: ../config/model_attributes.rb:2766
 msgid "MiqAeWorkspace|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2767
 msgid "MiqAeWorkspace|Uri"
@@ -54426,7 +54426,7 @@ msgstr "基于"
 
 #: ../config/model_attributes.rb:2771
 msgid "MiqAlert|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2772
 msgid "MiqAlert|Db"
@@ -54502,7 +54502,7 @@ msgstr "严重性"
 
 #: ../config/model_attributes.rb:2790
 msgid "MiqAlert|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2791
 msgid "Miq alert set"
@@ -54510,7 +54510,7 @@ msgstr "Miq 警报集"
 
 #: ../config/model_attributes.rb:2792
 msgid "MiqAlertSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2793
 msgid "MiqAlertSet|Description"
@@ -54558,7 +54558,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:2804
 msgid "MiqAlertSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2805
 msgid "MiqAlertSet|Userid"
@@ -54662,7 +54662,7 @@ msgstr "批准者类型"
 
 #: ../config/model_attributes.rb:2830
 msgid "MiqApproval|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2831
 msgid "MiqApproval|Description"
@@ -54862,7 +54862,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:2880
 msgid "MiqEnterprise|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2881
 msgid "MiqEnterprise|Derived memory used avg over time period"
@@ -54962,7 +54962,7 @@ msgstr "设置"
 
 #: ../config/model_attributes.rb:2905
 msgid "MiqEnterprise|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2906
 msgid "Miq event definition"
@@ -54970,7 +54970,7 @@ msgstr "Miq 事件定义"
 
 #: ../config/model_attributes.rb:2907
 msgid "MiqEventDefinition|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2908
 msgid "MiqEventDefinition|Default"
@@ -55014,7 +55014,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:2918
 msgid "MiqEventDefinition|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2919
 msgid "Miq event definition set"
@@ -55022,7 +55022,7 @@ msgstr "Miq 事件定义集"
 
 #: ../config/model_attributes.rb:2920
 msgid "MiqEventDefinitionSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2921
 msgid "MiqEventDefinitionSet|Description"
@@ -55070,7 +55070,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:2932
 msgid "MiqEventDefinitionSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2933
 msgid "MiqEventDefinitionSet|Userid"
@@ -55094,7 +55094,7 @@ msgstr "分配的 vcpu"
 
 #: ../config/model_attributes.rb:2938
 msgid "MiqGroup|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2939
 msgid "MiqGroup|Custom 1"
@@ -55174,7 +55174,7 @@ msgstr "设置"
 
 #: ../config/model_attributes.rb:2958
 msgid "MiqGroup|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2959
 msgid "MiqGroup|User count"
@@ -55194,7 +55194,7 @@ msgstr "创建者"
 
 #: ../config/model_attributes.rb:2963
 msgid "MiqPolicy|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2964
 msgid "MiqPolicy|Description"
@@ -55246,7 +55246,7 @@ msgstr "更新者"
 
 #: ../config/model_attributes.rb:2976
 msgid "MiqPolicy|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2977
 msgid "Miq policy content"
@@ -55254,7 +55254,7 @@ msgstr "Miq 策略内容"
 
 #: ../config/model_attributes.rb:2978
 msgid "MiqPolicyContent|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2979
 msgid "MiqPolicyContent|Failure sequence"
@@ -55290,7 +55290,7 @@ msgstr "成功同步"
 
 #: ../config/model_attributes.rb:2987
 msgid "MiqPolicyContent|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:2988
 msgid "Miq policy set"
@@ -55298,7 +55298,7 @@ msgstr "Miq 策略集"
 
 #: ../config/model_attributes.rb:2989
 msgid "MiqPolicySet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:2990
 msgid "MiqPolicySet|Description"
@@ -55346,7 +55346,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:3001
 msgid "MiqPolicySet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3002
 msgid "MiqPolicySet|Userid"
@@ -55426,7 +55426,7 @@ msgstr "类名"
 
 #: ../config/model_attributes.rb:3021
 msgid "MiqQueue|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3022
 msgid "MiqQueue|Deliver on"
@@ -55498,7 +55498,7 @@ msgstr "跟踪标签"
 
 #: ../config/model_attributes.rb:3039
 msgid "MiqQueue|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3040
 msgid "MiqQueue|Zone"
@@ -55694,7 +55694,7 @@ msgstr "条件"
 
 #: ../config/model_attributes.rb:3088
 msgid "MiqReport|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3089
 msgid "MiqReport|Db"
@@ -55806,7 +55806,7 @@ msgstr "Tz"
 
 #: ../config/model_attributes.rb:3116
 msgid "MiqReport|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3117
 msgid "MiqReport|Where clause"
@@ -55818,7 +55818,7 @@ msgstr "Miq 报告结果"
 
 #: ../config/model_attributes.rb:3119
 msgid "MiqReportResult|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3120
 msgid "MiqReportResult|Db"
@@ -55918,7 +55918,7 @@ msgstr "取消状态"
 
 #: ../config/model_attributes.rb:3144
 msgid "MiqRequest|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3145
 msgid "MiqRequest|Description"
@@ -56034,7 +56034,7 @@ msgstr "取消状态"
 
 #: ../config/model_attributes.rb:3173
 msgid "MiqRequestTask|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3174
 msgid "MiqRequestTask|Description"
@@ -56090,7 +56090,7 @@ msgstr "状态"
 
 #: ../config/model_attributes.rb:3187
 msgid "MiqRequestTask|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3188
 msgid "MiqRequestTask|Userid"
@@ -56106,7 +56106,7 @@ msgstr "特别"
 
 #: ../config/model_attributes.rb:3191
 msgid "MiqSchedule|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3192
 msgid "MiqSchedule|Description"
@@ -56386,7 +56386,7 @@ msgstr "内存大小"
 
 #: ../config/model_attributes.rb:3261
 msgid "MiqServer|Memory usage"
-msgstr "内存使用量"
+msgstr "内存使用率"
 
 #: ../config/model_attributes.rb:3262
 msgid "MiqServer|Name"
@@ -56534,7 +56534,7 @@ msgstr "上下文数据"
 
 #: ../config/model_attributes.rb:3298
 msgid "MiqTask|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3299
 msgid "MiqTask|Href slug"
@@ -56586,7 +56586,7 @@ msgstr "状态"
 
 #: ../config/model_attributes.rb:3311
 msgid "MiqTask|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3312
 msgid "MiqTask|Userid"
@@ -56734,7 +56734,7 @@ msgstr "Miq 窗口小部件集"
 
 #: ../config/model_attributes.rb:3348
 msgid "MiqWidgetSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3349
 msgid "MiqWidgetSet|Description"
@@ -56782,7 +56782,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:3360
 msgid "MiqWidgetSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3361
 msgid "MiqWidgetSet|Userid"
@@ -56842,7 +56842,7 @@ msgstr "内存大小"
 
 #: ../config/model_attributes.rb:3375
 msgid "MiqWorker|Memory usage"
-msgstr "内存使用量"
+msgstr "内存使用率"
 
 #: ../config/model_attributes.rb:3376
 msgid "MiqWorker|Os priority"
@@ -57763,7 +57763,7 @@ msgstr "CPU 时间"
 
 #: ../config/model_attributes.rb:3606
 msgid "OsProcess|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3607
 msgid "OsProcess|Href slug"
@@ -57775,7 +57775,7 @@ msgstr "内存大小"
 
 #: ../config/model_attributes.rb:3609
 msgid "OsProcess|Memory usage"
-msgstr "内存使用量"
+msgstr "内存使用率"
 
 #: ../config/model_attributes.rb:3610
 msgid "OsProcess|Name"
@@ -57807,7 +57807,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:3617
 msgid "OsProcess|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3619
 msgid "Partition|Aligned"
@@ -57819,7 +57819,7 @@ msgstr "控制器"
 
 #: ../config/model_attributes.rb:3621
 msgid "Partition|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3622
 msgid "Partition|Free space"
@@ -57863,7 +57863,7 @@ msgstr "Uid"
 
 #: ../config/model_attributes.rb:3632
 msgid "Partition|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3633
 msgid "Partition|Used space"
@@ -57879,7 +57879,7 @@ msgstr "卷组"
 
 #: ../config/model_attributes.rb:3637
 msgid "Patch|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3638
 msgid "Patch|Description"
@@ -57919,7 +57919,7 @@ msgstr "服务补丁"
 
 #: ../config/model_attributes.rb:3647
 msgid "Patch|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3648
 msgid "Patch|V install date"
@@ -58632,7 +58632,7 @@ msgstr "注册表项目"
 
 #: ../config/model_attributes.rb:3826
 msgid "RegistryItem|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3827
 msgid "RegistryItem|Data"
@@ -58660,7 +58660,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:3833
 msgid "RegistryItem|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3834
 msgid "RegistryItem|Value name"
@@ -58833,7 +58833,7 @@ msgstr "Cpu 共享级别"
 
 #: ../config/model_attributes.rb:3876
 msgid "ResourcePool|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3877
 msgid "ResourcePool|Ems ref"
@@ -58889,7 +58889,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:3890
 msgid "ResourcePool|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3891
 msgid "ResourcePool|V direct miq templates"
@@ -58937,7 +58937,7 @@ msgstr "扫描历史记录"
 
 #: ../config/model_attributes.rb:3902
 msgid "ScanHistory|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3903
 msgid "ScanHistory|Finished on"
@@ -58973,7 +58973,7 @@ msgstr "状态代码"
 
 #: ../config/model_attributes.rb:3911
 msgid "ScanHistory|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3912
 msgid "Scan item"
@@ -58981,7 +58981,7 @@ msgstr "扫描项"
 
 #: ../config/model_attributes.rb:3913
 msgid "ScanItem|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3914
 msgid "ScanItem|Definition"
@@ -59033,7 +59033,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:3926
 msgid "ScanItem|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3927
 msgid "Scan item set"
@@ -59041,7 +59041,7 @@ msgstr "扫描项集"
 
 #: ../config/model_attributes.rb:3928
 msgid "ScanItemSet|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3929
 msgid "ScanItemSet|Description"
@@ -59089,7 +59089,7 @@ msgstr "设置类型"
 
 #: ../config/model_attributes.rb:3940
 msgid "ScanItemSet|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3941
 msgid "ScanItemSet|Userid"
@@ -59201,7 +59201,7 @@ msgstr "服务器角色"
 
 #: ../config/model_attributes.rb:3968
 msgid "ServerRole|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:3969
 msgid "ServerRole|Description"
@@ -59237,7 +59237,7 @@ msgstr "角色作用域"
 
 #: ../config/model_attributes.rb:3977
 msgid "ServerRole|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:3979
 msgid "Service|Aggregate all vm cpus"
@@ -59954,7 +59954,7 @@ msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4159
 msgid "Snapshot|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4160
 msgid "Snapshot|Current"
@@ -60014,7 +60014,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:4174
 msgid "Snapshot|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4176
 msgid "Storage|Count of vmdk disk files"
@@ -60046,7 +60046,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:4183
 msgid "Storage|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4184
 msgid "Storage|Debris size"
@@ -60226,7 +60226,7 @@ msgstr "未提交"
 
 #: ../config/model_attributes.rb:4228
 msgid "Storage|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4229
 msgid "Storage|V debris percent of used"
@@ -60418,7 +60418,7 @@ msgstr "允许混杂模式"
 
 #: ../config/model_attributes.rb:4278
 msgid "Switch|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4279
 msgid "Switch|Forged transmits"
@@ -60474,7 +60474,7 @@ msgstr "Uid ems"
 
 #: ../config/model_attributes.rb:4292
 msgid "Switch|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4293
 msgid "System console"
@@ -60806,7 +60806,7 @@ msgstr "时间概要文件"
 
 #: ../config/model_attributes.rb:4378
 msgid "TimeProfile|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4379
 msgid "TimeProfile|Description"
@@ -60842,7 +60842,7 @@ msgstr "累积每日度量"
 
 #: ../config/model_attributes.rb:4387
 msgid "TimeProfile|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4388
 msgid "Transformation mapping"
@@ -60922,7 +60922,7 @@ msgstr "分配的 vCPU"
 
 #: ../config/model_attributes.rb:4408
 msgid "User|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4409
 msgid "User|Custom 1"
@@ -61026,7 +61026,7 @@ msgstr "设置"
 
 #: ../config/model_attributes.rb:4434
 msgid "User|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4435
 msgid "User|Userid"
@@ -61250,7 +61250,7 @@ msgstr "时间周期内 CPU 使用率平均最大值 (MHz)"
 
 #: ../config/model_attributes.rb:4490
 msgid "VmOrTemplate|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4491
 msgid "VmOrTemplate|Custom 1"
@@ -61550,7 +61550,7 @@ msgstr "Ems 集群名称"
 
 #: ../config/model_attributes.rb:4565
 msgid "VmOrTemplate|Ems created on"
-msgstr "Ems 创建日期"
+msgstr "Ems 创建时间"
 
 #: ../config/model_attributes.rb:4566
 msgid "VmOrTemplate|Ems ref"
@@ -61994,7 +61994,7 @@ msgstr "未提交的存储"
 
 #: ../config/model_attributes.rb:4676
 msgid "VmOrTemplate|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4677
 msgid "VmOrTemplate|Used disk storage"
@@ -62406,7 +62406,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:4780
 msgid "Volume|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4781
 msgid "Volume|Filesystem"
@@ -62450,7 +62450,7 @@ msgstr "Uid"
 
 #: ../config/model_attributes.rb:4791
 msgid "Volume|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4792
 msgid "Volume|Used space"
@@ -62554,7 +62554,7 @@ msgstr "时间周期内 CPU 使用率平均最低值 (MHz)"
 
 #: ../config/model_attributes.rb:4818
 msgid "Zone|Created on"
-msgstr "创建日期"
+msgstr "创建时间"
 
 #: ../config/model_attributes.rb:4819
 msgid "Zone|Derived memory used avg over time period"
@@ -62654,7 +62654,7 @@ msgstr "设置"
 
 #: ../config/model_attributes.rb:4843
 msgid "Zone|Updated on"
-msgstr "更新日期"
+msgstr "更新时间"
 
 #: ../config/model_attributes.rb:4844
 msgid "Zone|Visible"
@@ -63768,7 +63768,7 @@ msgstr "附加卷"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:514
 msgid "Detach a Volume"
-msgstr "分离卷"
+msgstr "拆离卷"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:516
@@ -69475,7 +69475,7 @@ msgstr "附加卷到实例"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2592
 msgid "Detach Volume from Instance"
-msgstr "从实例分离卷"
+msgstr "从实例拆离卷"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2598
@@ -71480,7 +71480,7 @@ msgstr "%{message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3497
 msgid "The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted."
-msgstr "服务器 %{name} 内存使用量 %{memory_usage} 已超过限制%{memory_threshold}。服务器进程 %{pid} 退出并将重启。"
+msgstr "服务器 %{name} 内存使用量 %{memory_usage} 已超过限制 %{memory_threshold}。服务器进程 %{pid} 退出并将重启。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3499
@@ -71520,7 +71520,7 @@ msgstr "%{tower} 上的操作 %{op_name} %{op_arg} 成功完成。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3513
 msgid "The operation %{op_name} %{op_arg} on %{tower} has failed to complete. Please check the logs for further details."
-msgstr "%{tower} 上的操作 %{op_name} %{op_arg} 未能完成。请检查日志来获取更多详细信息。"
+msgstr "%{tower} 上的操作 %{op_name} %{op_arg} 未能完成。请检查日志以获取更多详细信息。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3515
@@ -71565,7 +71565,7 @@ msgstr "资源 %{op_arg} 的转换主机 %{op_name} 成功完成。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3531
 msgid "Conversion Host %{op_name} of resource %{op_arg} failed. Please check the logs for further details."
-msgstr "资源 %{op_arg} 的转换主机 %{op_name} 失败。请检查日志来获取更多详细信息。"
+msgstr "资源 %{op_arg} 的转换主机 %{op_name} 失败。请检查日志以获取更多详细信息。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3533
@@ -71580,12 +71580,12 @@ msgstr "将卷 %{subject} 附加到实例 %{instance_name} 失败：%{error_mess
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3537
 msgid "Detaching Volume %{subject} from Instance %{instance_name} completed successfully."
-msgstr "从实例 %{instance_name} 分离卷 %{subject} 成功完成。"
+msgstr "从实例 %{instance_name} 拆离卷 %{subject} 成功完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3539
 msgid "Detaching Volume %{subject} from Instance %{instance_name} failed: %{error_message}"
-msgstr "从实例 %{instance_name} 分离卷 %{subject} 失败：%{error_message}"
+msgstr "从实例 %{instance_name} 拆离卷 %{subject} 失败：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3541
@@ -71620,7 +71620,7 @@ msgstr "删除卷 %{subject} 失败：%{error_message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3553
 msgid "Creating Snapshot %{snapshot_name} of Volume %{volume_name} completed successfully."
-msgstr "为卷 %{volume_name} 创建快照 %{snapshot_name} 成功完成。"
+msgstr "创建卷 %{volume_name} 的快照 %{snapshot_name} 成功完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3555
@@ -71660,7 +71660,7 @@ msgstr "预订管理器未能启用存储库 %{repo_name}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3569
 msgid "Killing worker %{name} due to excessive memory usage. %{memory_usage} used memory exceeds limit of %{memory_threshold}."
-msgstr "由于内存使用率过高，正在终止工作程序 %{name}。%{memory_usage}使用的内存超过 %{memory_threshold}的限制。"
+msgstr "由于内存使用率过高，正在终止工作程序 %{name}。使用内存量 %{memory_usage} 超过 %{memory_threshold} 的限制。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3571
@@ -75238,7 +75238,7 @@ msgstr "必须定义用户"
 
 #: ../lib/content_importer.rb:5
 msgid "No %{elements} for %{type} Profile == %{profile}"
-msgstr "%{type} 概要文件无 %{elements} == %{profile}"
+msgstr "没有 %{type} 概要文件 %{profile} 的 %{elements}"
 
 #: ../lib/manageiq/api/engine.rb:35
 msgid "REST API"
@@ -75331,7 +75331,7 @@ msgstr "日期/时间值不能为空"
 
 #: ../lib/miq_expression.rb:1147
 msgid "Value '%{value}' is not valid"
-msgstr "值 '%{value}' 无效"
+msgstr "值“%{value}”无效"
 
 #: ../lib/miq_expression.rb:1151
 msgid "Invalid Date/Time range, %{first_value} comes before %{second_value}"
@@ -75343,7 +75343,7 @@ msgstr "值必须是 true 或 false"
 
 #: ../lib/miq_expression.rb:1164
 msgid "Regular expression '%{value}' is invalid, '%{error_message}'"
-msgstr "正则表达式 '%{value}' 无效, '%{error_message}'"
+msgstr "正则表达式“%{value}”无效，“%{error_message}”"
 
 #: ../lib/miq_expression.rb:1172
 msgid "Value '%{value}' must be in the form of %{format_type}"
@@ -75351,7 +75351,7 @@ msgstr "值“%{value}”的格式必须为 %{format_type}"
 
 #: ../lib/rbac/filterer.rb:756
 msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
-msgstr "没有为类 '%{class_name}' 定义名称作用域 '%{scope_name}'"
+msgstr "没有为类“%{class_name}”定义名称作用域“%{scope_name}”"
 
 #: ../lib/report_formatter/c3.rb:60 ../lib/report_formatter/c3.rb:127
 msgid "No data available."
@@ -75786,7 +75786,7 @@ msgstr "应用"
 
 #: ./src/gtl/components/pagination/paging.html:22
 msgid "of {{pagingCtrl.settings.total}}"
-msgstr "（共 {{pagingCtrl.settings.total}}）"
+msgstr "/{{pagingCtrl.settings.total}}"
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx:80
 msgid "Vpc ID"
@@ -76104,7 +76104,7 @@ msgstr "选择最多 3 列"
 
 #: src/report-editor/consolidation.jsx:34
 msgid "Consolidating records will not show detail records in the report."
-msgstr "合并记录将不会显示报告里的详情"
+msgstr "合并记录将不会显示报告里的详情记录"
 
 #: src/report-editor/consolidation.jsx:34
 msgid "Note:"
