@@ -2282,7 +2282,7 @@ msgstr "Todos os %{labels} selecionados não estão na região atual"
 
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
-msgstr "O {n, plural, one {%'{'label'}' não está na região atual e será ignorado} other {%'{'label'}' não estão na região atual e serão ignorados }}"
+msgstr "O {n, plural, one {'%{label}' não está na região atual e será ignorado} other {'%{label}' não estão na região atual e serão ignorados }}"
 
 #: ../app/controllers/application_controller.rb:1585
 msgid "These VMs can not be migrated together."
@@ -2818,7 +2818,7 @@ msgstr "Armazenamento de dados"
 #: ../app/controllers/application_controller/ci_processing.rb:750
 msgid "Delete initiated for Datastore from the %{product} Database"
 msgid_plural "Delete initiated for Datastores from the %{product} Database"
-msgstr[0] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados% {product}"
+msgstr[0] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados %{product}"
 msgstr[1] "Exclusão iniciada para o armazenamento de dados a partir do banco de dados %{product}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:762
