@@ -75,7 +75,11 @@ cmd_env["DB"]        = @options[:db_name]
 cmd_env["REGION"]    = @options[:region] if @options[:region]
 
 # Interrupt without a stack trace
-trap "INT" do puts; puts "Interrupt..."; exit 1 end
+trap("INT") do
+  puts
+  puts "Interrupt..."
+  exit 1
+end
 
 # :call-seq:
 #   run_cmd(msg="Running command", cmd="command -a -b")
