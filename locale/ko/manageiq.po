@@ -1339,7 +1339,7 @@ msgstr "서버 데이터"
 
 #: ../app/assets/javascripts/controllers/header/header_controller.js:48
 msgid "%{count} unread notifications"
-msgstr "%{count} 알림을 읽지 않음"
+msgstr "%{count} 읽지 않은 알림"
 
 #:
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-config-factory.js:49
@@ -2224,7 +2224,7 @@ msgstr "이 보고서에 대한 레코드를 찾을 수 없음"
 
 #: ../app/controllers/application_controller.rb:720
 msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-msgstr "편집이 중단되었습니다!  %{product}이(가) 브라우저의 이전 단추나 동일한 브라우저의 다중 탭 또는 창에서의 액세스를 지원하지 않습니다.  계속하기 전에 중복 세션을 닫으십시오."
+msgstr "편집이 중단되었습니다! %{product}이(가) 브라우저의 이전 단추나 동일한 브라우저의 다중 탭 또는 창에서의 액세스를 지원하지 않습니다. 계속하기 전에 중복 세션을 닫으십시오."
 
 #: ../app/controllers/application_controller.rb:877
 msgid "View this item"
@@ -2314,7 +2314,7 @@ msgstr "%{model} 검색 \"%{name}\"이(가) 정상적으로 로드되었습니�
 
 #: ../app/controllers/application_controller/advanced_search.rb:104
 msgid "Search \"%{name}\": Error during 'delete': %{error_message}"
-msgstr "검색 \"%{name}\": '삭제' 중에 오류 발생: %{error_message}"
+msgstr "검색 \"%{name}\": '삭제' 중 오류: %{error_message}"
 
 #: ../app/controllers/application_controller/advanced_search.rb:115
 msgid "%{model} search \"%{name}\": Delete successful"
@@ -2383,7 +2383,7 @@ msgstr "%{record} - \"%{button_text}\""
 
 #: ../app/controllers/application_controller/buttons.rb:360
 msgid "Error launching: \"%{task_description}\" %{error_message}"
-msgstr "실행 중에 오류 발생: \"%{task_description}\" %{error_message}"
+msgstr "실행 중 오류: \"%{task_description}\" %{error_message}"
 
 #: ../app/controllers/application_controller/buttons.rb:363
 msgid "\"%{task_description}\" was launched"
@@ -2599,7 +2599,7 @@ msgstr "아래로 이동시킬 필드를 하나만 또는 연속으로 선택하
 
 #: ../app/controllers/application_controller/ci_processing.rb:122
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_msg}"
-msgstr "%{model} \"%{name}\": '%{task}' 중에 오류 발생: %{error_msg}"
+msgstr "%{model} \"%{name}\": '%{task}' 중 오류: %{error_msg}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:133
 #: ../app/controllers/mixins/ems_common/core.rb:51
@@ -2610,7 +2610,7 @@ msgstr "%{model} \"%{name}\": %{task}이(가) 정상적으로 시작되었습니
 #: ../app/controllers/application_controller/ci_processing.rb:172
 #: ../app/controllers/miq_ae_class_controller.rb:2801
 msgid "%{model} \"%{name}\": Error during delete: %{error_msg}"
-msgstr "%{model} \"%{name}\": 삭제 중에 오류 발생: %{error_msg}"
+msgstr "%{model} \"%{name}\": 삭제 중 오류: %{error_msg}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:169
 #: ../app/controllers/miq_ae_class_controller.rb:2799
@@ -2767,15 +2767,15 @@ msgstr "스냅샷으로 되돌리기"
 
 #: ../app/controllers/application_controller/ci_processing.rb:556
 msgid "Cluster / Deployment Role \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr "클러스터 / 배치 역할 \"%{name}\": '%{task}' 중에 오류 발생: %{error_message}"
+msgstr "클러스터/배치 역할 \"%{name}\": '%{task}' 중 오류: %{error_message}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:561
 msgid "Cluster / Deployment Role: %{task} successfully initiated"
-msgstr "클러스터/배치 역할: %{task}이(가) 정상적으로 시작됨"
+msgstr "클러스터/배치 역할: %{task}이(가) 정상적으로 시작되었습니다."
 
 #: ../app/controllers/application_controller/ci_processing.rb:586
 msgid "Resource Pool \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr "리소스 풀 \"%{name}\": '%{task}' 중에 오류 발생: %{error_message}"
+msgstr "리소스 풀 \"%{name}\": '%{task}' 중 오류: %{error_message}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:591
 msgid "Resource Pool \"%{name}\": %{task} successfully initiated"
@@ -2819,7 +2819,7 @@ msgstr[0] "%{product} 데이터베이스에서 데이터 저장소에 대한 삭
 
 #: ../app/controllers/application_controller/ci_processing.rb:762
 msgid "Datastore \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr "데이터 저장소 \"%{name}\": '%{task}' 중에 오류 발생: %{error_message}"
+msgstr "데이터 저장소 \"%{name}\": '%{task}' 중 오류: %{error_message}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:768
 msgid "\"%{record}\": Refresh successfully initiated"
@@ -2982,12 +2982,12 @@ msgstr "값을 찾을 수 없음"
 #: ../app/controllers/application_controller/compare.rb:1296
 #: ../app/views/shared/_compare_header_expanded.html.haml:2
 msgid "%{name} is the base"
-msgstr "%{name}이(가) 베이스임"
+msgstr "%%{name}이(가) 베이스임"
 
 #: ../app/controllers/application_controller/compare.rb:1300
 #: ../app/views/shared/_compare_header_expanded.html.haml:7
 msgid "Make %{name} the base"
-msgstr "%{name}을(를) 베이스로 지정함"
+msgstr "%%{name}을(를) 베이스로 지정함"
 
 #: ../app/controllers/application_controller/compare.rb:1331
 msgid "Remove this %{title} from the comparison"
@@ -3026,7 +3026,7 @@ msgstr "올바르지 않은 단추 조치"
 
 #: ../app/controllers/application_controller/explorer.rb:161
 msgid "Button not yet implemented %{model}:%{action}"
-msgstr "단추가 아직 구현되지 않음 %{model}:%{action}"
+msgstr "단추가 아직 구현되지 않음 %%{model}:%{action}"
 
 #: ../app/controllers/application_controller/explorer.rb:259
 #: ../app/controllers/application_controller/tags.rb:95
@@ -3438,7 +3438,7 @@ msgstr "차트 메뉴 선택사항이 아직 구현되지 않음"
 
 #: ../app/controllers/application_controller/performance.rb:285
 msgid "No %{tag} %{model} were running %{time}"
-msgstr "%{tag} %{model}이(가) 실행되고 있지 않음 %{time}"
+msgstr "%{tag} %{model}이(가) %{time}을(를) 실행 중이지 않음"
 
 #: ../app/controllers/application_controller/performance.rb:289
 msgid "%{model} (%{tag} %{time})"
@@ -3446,7 +3446,7 @@ msgstr "%{model} (%{tag} %{time})"
 
 #: ../app/controllers/application_controller/performance.rb:292
 msgid "%{model} (%{tag} running %{time})"
-msgstr "%{model}(%{tag} 실행 중 %{time})"
+msgstr "%{model}(%{tag}이(가) %{time} 실행 중)"
 
 #: ../app/controllers/application_controller/performance.rb:308
 msgid "running"
@@ -3458,7 +3458,7 @@ msgstr "중지됨"
 
 #: ../app/controllers/application_controller/performance.rb:310
 msgid "No %{model} were %{state} %{time}"
-msgstr "%{model} 없음 %{state} %{time}"
+msgstr "%{model}이(가) %{state} %{time}이(가) 아님"
 
 #: ../app/controllers/application_controller/performance.rb:339
 #: ../app/controllers/application_controller/performance.rb:379
@@ -3472,15 +3472,15 @@ msgstr "이 %{model}에 사용 가능한 이벤트 없음"
 
 #: ../app/controllers/application_controller/performance.rb:519
 msgid "No %{tag} %{model}  were running %{time}"
-msgstr "%{tag} %{model}이(가) 실행되고 있지 않음 %{time}"
+msgstr "%{tag} %{model}이(가) %{time}을(를) 실행 중이지 않음"
 
 #: ../app/controllers/application_controller/performance.rb:537
 msgid "No %{model} were running %{time}"
-msgstr "%{model}이(가) 실행되고 있지 않음 %{time}"
+msgstr "%{model}이(가) %{time}을(를) 실행 중이지 않음"
 
 #: ../app/controllers/application_controller/performance.rb:551
 msgid "on %{date} at %{time}"
-msgstr "%{date}, %{time}에"
+msgstr "%{time}의 %{date}에"
 
 #: ../app/controllers/application_controller/performance.rb:555
 msgid "on %{date}"
@@ -3544,7 +3544,7 @@ msgstr "Sysprep \"%{params}\" 업로드가 정상적으로 완료되었습니다
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:16
 msgid "Error during Sysprep \"%{params}\" file upload: %{message}"
-msgstr "Sysprep \"%{params}\" 파일 업로드 중에 오류 발생: %{message}"
+msgstr "Sysprep \"%{params}\" 파일 업로드 중 오류: %{message}"
 
 #: ../app/controllers/application_controller/sysprep_answer_file.rb:21
 msgid "Use the Choose file button to locate an Upload file"
@@ -3916,7 +3916,7 @@ msgstr "%{record_name} 복사"
 
 #: ../app/controllers/catalog_controller.rb:679
 msgid "Copy of %{name}"
-msgstr "%{name}의 복사"
+msgstr "%{name} 사본"
 
 #: ../app/controllers/catalog_controller.rb:688
 msgid "Orchestration template \"%{name}\" is read-only and cannot be deleted."
@@ -4058,7 +4058,7 @@ msgstr "카탈로그 번들 \"%{name}\" 편집 중"
 #: ../app/views/catalog/_sandt_tree_show.html.haml:54
 #: ../app/views/catalog/_svccat_tree_show.html.haml:40
 msgid "Price / Month (in %{currency})"
-msgstr "가격 / 월(%{currency}의)"
+msgstr "가격/월(%{currency}의)"
 
 #: ../app/controllers/catalog_controller.rb:1564
 #: ../app/controllers/catalog_controller.rb:1579
@@ -4221,7 +4221,7 @@ msgstr "스토리지 비율 지정"
 
 #: ../app/controllers/chargeback_controller.rb:435
 msgid "Saved Chargeback Report \"%{last_run_on}\""
-msgstr "저장된 비용 상환 보고서\"%{last_run_on}\""
+msgstr "저장된 비용 상환 보고서 \"%{last_run_on}\""
 
 #: ../app/controllers/chargeback_controller.rb:437
 msgid "Selected Saved Chargeback Report no longer exists"
@@ -4633,7 +4633,7 @@ msgstr "%{vm_name}에서 클라우드 볼륨 \"%{volume_name}\"을(를) 분리�
 #: ../app/controllers/cloud_volume_controller.rb:172
 #: ../app/controllers/vm_cloud_controller.rb:144
 msgid "Unable to detach Cloud Volume \"%{volume_name}\" from %{vm_name}: %{details}"
-msgstr "%{vm_name}에서 클라우드 볼륨 \"%{volume_name}\"을(를) 분리할 수 없음: %{details}"
+msgstr "클라우드 볼륨 \"%{volume_name}\"을(를) %{vm_name}에서 분리할 수 없음: %{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:194
 #: ../app/controllers/cloud_volume_controller.rb:223
@@ -4860,7 +4860,7 @@ msgstr[0] "\"%{name}\": %{rep_count}개의 보고서에서 사용 중이기 때�
 
 #: ../app/controllers/configuration_controller.rb:337
 msgid "Adding copy of '%{description}'"
-msgstr "'%{description}'의 복사 추가"
+msgstr "'%{description}'의 사본 추가"
 
 #: ../app/controllers/configuration_controller.rb:351
 msgid "Edit of Time Profile \"%{name}\" was cancelled by the user"
@@ -4868,7 +4868,7 @@ msgstr "사용자가 시간 프로파일 \"%{name}\"의 편집을 취소했습�
 
 #: ../app/controllers/configuration_controller.rb:377
 msgid "TimeProfile \"%{name}\": Error during 'save': %{error_message}"
-msgstr "시간 프로파일 \"%{name}\": '저장' 중에 오류 발생: %{error_message}"
+msgstr "시간 프로파일 \"%{name}\": '저장' 중 오류: %{error_message}"
 
 #: ../app/controllers/configuration_controller.rb:380
 msgid "Edit '%{description}'"
@@ -5000,7 +5000,7 @@ msgstr "브라우저의 이전 단추를 누르거나 탭을 클릭하여 계속
 
 #: ../app/controllers/dashboard_controller.rb:670
 msgid "%{name} dashboard for user %{id} in group id %{current_group_id}"
-msgstr "사용자 %{id}에 대한 %{name} 대시보드, 그룹 ID %{current_group_id}"
+msgstr "그룹 ID %{current_group_id}에 있는 사용자 %{id}의 %{name} 대시보드"
 
 #: ../app/controllers/dashboard_controller.rb:726
 #: ../app/controllers/mixins/more_show_actions.rb:10
@@ -5144,7 +5144,7 @@ msgstr "스케일링 축소는 지원되지 않습니다. %{name} %{new_value}�
 
 #: ../app/controllers/ems_infra_controller.rb:97
 msgid " %{name} from %{value} to %{parameters} "
-msgstr " %{name} %{value}에서 %{parameters}(으)로 "
+msgstr " %{value}에서 %{parameters}(으)로 %{name}"
 
 #: ../app/controllers/ems_infra_controller.rb:112
 #: ../app/views/ems_infra/scaledown.html.haml:40
@@ -5723,7 +5723,7 @@ msgstr "스위치"
 #: ../app/controllers/infra_networking_controller.rb:242
 #: ../app/controllers/infra_networking_controller.rb:258
 msgid "Switches for %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\"용 스위치"
+msgstr "%{model} \"%{name}\"의 스위치"
 
 #: ../app/controllers/infra_networking_controller.rb:266
 #: ../app/controllers/infra_networking_controller.rb:274
@@ -5732,11 +5732,11 @@ msgstr "모든 스위치"
 
 #: ../app/controllers/infra_networking_controller.rb:365
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
-msgstr "스위치 \"%{name}\"용 %{action} \"%{item_name}\""
+msgstr "스위치 \"%{name}\"의 %{action} \"%{item_name}\""
 
 #: ../app/controllers/infra_networking_controller.rb:372
 msgid "\"%{action}\" for Switch \"%{name}\""
-msgstr "스위치 \"%{name}\"용 \"%{action}\""
+msgstr "스위치 \"%{name}\"의 \"%{action}\""
 
 #: ../app/controllers/infra_networking_controller.rb:540
 #, fuzzy
@@ -5773,12 +5773,12 @@ msgstr "자동화 인스턴스"
 #: ../app/controllers/miq_ae_class_controller.rb:97
 #: ../app/controllers/miq_ae_class_controller.rb:107
 msgid " by %{user}"
-msgstr " %{user}(으)로"
+msgstr " %{user} 기준"
 
 #: ../app/controllers/miq_ae_class_controller.rb:99
 #: ../app/controllers/miq_ae_class_controller.rb:109
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
-msgstr "%{model} [%{name} - 업데이트됨 %{time}%{update}]"
+msgstr "%{model} [%{name} - %{time}%{update}] 업데이트됨"
 
 #: ../app/controllers/miq_ae_class_controller.rb:106
 #, fuzzy
@@ -5977,7 +5977,7 @@ msgstr "'%{task}' 중 오류: 표현식 요소는 필수입니다."
 
 #: ../app/controllers/miq_ae_class_controller.rb:1866
 msgid "Error during '%{record} copy': %{error_message}"
-msgstr "'%{record} 복사' 중 오류: %{error_message}"
+msgstr "'%{record} 복사' 중 오류: %%{error_message}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1872
 msgid "Copy selected %{record} was saved"
@@ -6030,7 +6030,7 @@ msgstr "읽기 전용 자동화 도메인 \"%{name}\"을(를) 편집할 수 없�
 #: ../app/controllers/miq_ae_class_controller.rb:2570
 #: ../app/controllers/miq_ae_customization_controller.rb:369
 msgid "Adding a new %{model}"
-msgstr "새 %{model} 추가"
+msgstr "새 %{model} 추가 중"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2572
 #: ../app/controllers/miq_ae_customization_controller.rb:366
@@ -6178,7 +6178,7 @@ msgstr "새 대화 상자 추가"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:412
 msgid "Copying Dialog \"%{name}\""
-msgstr "대화 상자\"%{name}\" 복사 중"
+msgstr "대화 상자 \"%{name}\" 복사 중"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:414
 msgid "Editing Dialog \"%{name}\""
@@ -6340,7 +6340,7 @@ msgstr "오류: 데이터 저장소 가져오기에 실패함"
 #: ../app/controllers/miq_ae_tools_controller.rb:161
 #: ../app/controllers/miq_ae_tools_controller.rb:278
 msgid "Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}\nClasses updated/added: %{class_stats}\nInstances updated/added: %{instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr "데이터 저장소 가져오기가 정상적으로 완료되었습니다.\n업데이트/추가된 네임스페이스: %{namespace_stats}\n업데이트/추가된 클래스: %{class_stats}\n업데이트/추가된 인스턴스: %{instance_stats}\n업데이트/추가된 메소드: %{method_stats}"
+msgstr "데이터 저장소 가져오기가 정상적으로 완료되었습니다.\n네임스페이스가 업데이트됨/추가됨: %{namespace_stats}\n클래스가 업데이트됨/추가됨: %{class_stats}\n인스턴스가 업데이트됨/추가됨: %{instance_stats}\n메소드가 업데이트됨/추가됨: %{method_stats}"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:168
 msgid "Error: Selected domain is locked"
@@ -6406,7 +6406,7 @@ msgstr "시작 클래스를 선택해야 합니다."
 #: ../app/controllers/miq_ae_tools_controller.rb:411
 #: ../app/controllers/miq_ae_tools_controller.rb:412
 msgid "%{val} missing for %{field}"
-msgstr "%{val}이(가) %{field}에 대해 누락됨"
+msgstr "%{field}에 대해 %{val} 누락"
 
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
 #: ../app/controllers/miq_policy_controller.rb:22
@@ -6532,11 +6532,11 @@ msgstr "모든 %{typ} 경보 프로파일"
 
 #: ../app/controllers/miq_policy_controller.rb:561
 msgid "Adding a new %{model_name} %{mode} Policy"
-msgstr "새 %{model_name} %{mode} 정책 추가"
+msgstr "새 %{model_name} %{mode} 정책 추가 중"
 
 #: ../app/controllers/miq_policy_controller.rb:564
 msgid "Adding a new %{model_name} Policy"
-msgstr "새 %{model_name} 정책 추가"
+msgstr "새 %{model_name} 정책 추가 중"
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "%{model} Policy \"%{name}\""
@@ -6654,11 +6654,11 @@ msgstr "비동기로 설정할 %{member}이(가) 선택되지 않음"
 
 #: ../app/controllers/miq_policy_controller.rb:932
 msgid "[%{name}] Record added ("
-msgstr "[%{name}] 레코드가 추가되었습니다.  ("
+msgstr "[%{name}] 레코드가 추가되었습니다("
 
 #: ../app/controllers/miq_policy_controller.rb:934
 msgid "[%{name}] Record updated ("
-msgstr "[%{name}] 레코드가 업데이트됨 ("
+msgstr "[%{name}] 레코드가 업데이트됨("
 
 #: ../app/controllers/miq_policy_controller.rb:955
 msgid "%{name}:[%{key}] to [%{new_key}]"
@@ -7212,11 +7212,11 @@ msgstr "요청 거부"
 
 #: ../app/controllers/miq_request_controller.rb:180
 msgid "Copy of %{description}"
-msgstr "%{description}의 복사"
+msgstr "%{description} 사본"
 
 #: ../app/controllers/miq_request_controller.rb:182
 msgid "Copy of %{typ} Request"
-msgstr "%{typ} 요청의 복사"
+msgstr "%{typ} 요청의 사본"
 
 #: ../app/controllers/miq_request_controller.rb:254
 msgid "Error retrieving LDAP info: %{error_message}"
@@ -7254,7 +7254,7 @@ msgstr "선택한 요청이 삭제되었습니다."
 
 #: ../app/controllers/miq_request_controller.rb:508
 msgid "Request \"%{name}\": Error during 'destroy': %{message}"
-msgstr "요청 \"%{name}\": '영구 삭제' 중에 오류 발생: %{message}"
+msgstr "요청 \"%{name}\": '영구 삭제' 중 오류: %{message}"
 
 #: ../app/controllers/miq_request_controller.rb:514
 msgid "Request \"%{name}\": Delete successful"
@@ -7371,7 +7371,7 @@ msgstr[0] "%{product} 데이터베이스에서 %{count}개의 태스크에 대�
 
 #: ../app/controllers/miq_task_controller.rb:411
 msgid "Tasks for %{name}"
-msgstr "%{name}에 대한 태스크"
+msgstr "%{name}의 태스크"
 
 #: ../app/controllers/mixins/actions/host_actions/discover.rb:11
 msgid "%{title} Discovery was cancelled by the user"
@@ -7431,7 +7431,7 @@ msgstr "포트 번호는 1 ~ 65535여야 합니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:13
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
-msgstr "호스트 \"%{name}\": '%{task}' 중에 오류 발생: %{message}"
+msgstr "호스트 \"%{name}\": '%{task}' 중 오류: %{message}"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:27
 msgid "%{task} initiated for %{count} Host from the %{product} Database"
@@ -7442,12 +7442,12 @@ msgstr[0] "%{product} 데이터베이스에서 %{count}개의 호스트에 대�
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:72
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:78
 msgid "\"%{task}\": not supported for %{hostname}"
-msgstr "\"%{task}\": %{hostname}에 대해 지원되지 않습니다."
+msgstr "\"%{task}\": %{hostname}에 지원되지 않습니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:91
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:96
 msgid "\"%{record}\": Scheduling is %{status} now."
-msgstr "\"%{record}\": 스케줄링이 이제 %{status}입니다."
+msgstr "\"%{record}\": 지금 스케줄링이 %{status}입니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:98
 msgid "\"%{record}\": %{task} invalid"
@@ -7455,16 +7455,16 @@ msgstr "\"%{record}\": %{task}이(가) 올바르지 않습니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:110
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", \"enroll\", or \"inspectfail\""
-msgstr "\"%{task}\": %{hostname}에 대해 사용할 수 없습니다. %{hostname}의 프로비저닝 상태가 \"available\", \"adoptfail\", \"cleanfail\", \"enroll\" 또는 \"inspectfail\"이어야 합니다."
+msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다. %{hostname}의 프로비저닝 상태가 \"available\", \"adoptfail\", \"cleanfail\", \"enroll\" 또는 \"inspectfail\"이어야 합니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:121
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:132
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state needs to be in \"manageable\""
-msgstr "\"%{task}\": %{hostname}에 대해 사용할 수 없습니다. %{hostname}의 프로비저닝 상태가 \"manageable\"이어야 합니다."
+msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다. %{hostname}의 프로비저닝 상태가 \"manageable\"이어야 합니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:143
 msgid "\"%{task}\": not available for %{hostname}"
-msgstr "\"%{task}\": %{hostname}에 대해 사용할 수 없습니다."
+msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다. "
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:171
 #: ../app/controllers/mixins/ems_common.rb:329
@@ -7577,7 +7577,7 @@ msgstr "유동 IP를 인스턴스 \"%{name}\"과(와) 연관시킬 수 없음: %
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:37
 msgid "Associate Floating IP with Instance '%{name}'"
-msgstr "유동 IP를 '%{name}' 인스턴스와 연관짓기"
+msgstr "유동 IP를 '%{name}' 인스턴스와 연관"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:77
 msgid "Association of Floating IP with Instance \"%{name}\" was cancelled by the user"
@@ -7606,7 +7606,7 @@ msgstr "사용자가 인스턴스 \"%{name}\"에서 유동 IP의 연관 해제�
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:92
 msgid "Disassociating Floating IP %{address} from Instance \"%{name}\""
-msgstr "인스턴스 \"%{name}\"에서 유동 IP %{address} 연관 해제 중"
+msgstr "인스턴스 \"%{name}\"에서 유동 IP %{address} 연관 해제"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:97
 msgid "Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{details}"
@@ -7716,7 +7716,7 @@ msgstr "하나 이상의 재구성 불가능 VM을 선택했기 때문에 재구
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:98
 msgid "Between %{min} and %{max}"
-msgstr "%{min} 및 %{max} 사이"
+msgstr "%{min} - %{max} 사이"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:373
 msgid "VM Reconfigure Request was cancelled by the user"
@@ -7880,7 +7880,7 @@ msgstr "\"%{record}\": 분석이 정상적으로 시작되었습니다."
 #: ../app/controllers/mixins/containers_common_mixin.rb:145
 #: ../app/controllers/mixins/ems_common.rb:503
 msgid "%{model} \"%{name}\": Error during 'Check Compliance': %{error}"
-msgstr "%{model} \"%{name}\": '규제 준수 검사' 중에 오류 발생: %{error}"
+msgstr "%{model} \"%{name}\": '규제 준수 검사' 중 오류: %{error}"
 
 #: ../app/controllers/mixins/containers_common_mixin.rb:151
 #: ../app/controllers/mixins/ems_common.rb:509
@@ -8019,7 +8019,7 @@ msgstr "사용자가 %{model} 추가를 취소했습니다."
 
 #: ../app/controllers/mixins/ems_common/core.rb:44
 msgid "%{model} \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr "%{model} \"%{name}\": '%{task}' 중에 오류 발생: %{error_message}"
+msgstr "%{model} \"%{name}\": '%{task}' 중 오류: %{error_message}"
 
 #: ../app/controllers/mixins/ems_common/metrics.rb:11
 msgid "%{action_name} initiated for one %{model}"
@@ -8028,7 +8028,7 @@ msgstr[0] "%{count}개의 %{models}에 대한 %{action_name}이(가) 시작되�
 
 #: ../app/controllers/mixins/ems_common/metrics.rb:42
 msgid "No %{model} were selected for %{action_name}"
-msgstr "%{action_name}을(를) 위한 %{model}이(가) 선택되지 않았습니다."
+msgstr "%{action_name}에 대한 %{model}이(가) 선택되지 않았습니다."
 
 #: ../app/controllers/mixins/ems_common/pause_resume.rb:13
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
@@ -8055,11 +8055,11 @@ msgstr "패치"
 
 #: ../app/controllers/mixins/explorer_show.rb:101
 msgid "%{name} (Patches)"
-msgstr "%{name} (패치)"
+msgstr "%{name}(패치)"
 
 #: ../app/controllers/mixins/explorer_show.rb:119
 msgid "%{name} (Groups)"
-msgstr "%{name} (그룹)"
+msgstr "%{name}(그룹)"
 
 #. TRANSLATORS: file: product/views/Account-groups.yaml
 #. TRANSLATORS: file: product/views/Account-users.yaml
@@ -8076,11 +8076,11 @@ msgstr "사용자"
 
 #: ../app/controllers/mixins/explorer_show.rb:137
 msgid "%{name} (Users)"
-msgstr "%{name} (사용자)"
+msgstr "%{name}(사용자)"
 
 #: ../app/controllers/mixins/explorer_show.rb:156
 msgid "%{name} (Hosts)"
-msgstr "%{name} (호스트)"
+msgstr "%{name}(호스트)"
 
 #: ../app/controllers/mixins/find_record.rb:4
 msgid "Invalid input"
@@ -8089,7 +8089,7 @@ msgstr "올바르지 않은 입력"
 #: ../app/controllers/mixins/generic_show_mixin.rb:74
 #: ../app/controllers/mixins/generic_show_mixin.rb:174
 msgid "%{name} (Summary)"
-msgstr "%{name} (요약)"
+msgstr "%{name}(요약)"
 
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/controllers/mixins/generic_show_mixin.rb:146
@@ -8433,7 +8433,7 @@ msgstr "스케줄 \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:693
 msgid "Adding a new %{tenant}"
-msgstr "새 %{tenant} 추가"
+msgstr "새 %{tenant} 추가 중"
 
 #: ../app/controllers/ops_controller.rb:707
 msgid "Manage quotas for %{model} \"%{name}\""
@@ -8814,7 +8814,7 @@ msgstr "선택한 항목에 대해 설정 우선순위가 허용되지 않습니
 #: ../app/controllers/ops_controller/diagnostics.rb:632
 #: ../app/controllers/ops_controller/diagnostics.rb:656
 msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr "%{product} 서버 \"%{name}\"이(가) 역할 \"%{role_description}\"에 대한 %{priority}(으)로 설정되었습니다."
+msgstr "%{product} 서버 \"%{name}\"을(를) 역할 \"%{role_description}\"에 대한 %{priority}(으)로 설정함"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:728
 #: ../app/controllers/ops_controller/diagnostics.rb:819
@@ -9097,7 +9097,7 @@ msgstr "기본 분석 프로파일 \"%{name}\"을(를) 삭제할 수 없습니�
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:483
 msgid "Analysis Profile \"%{name}\": Error during 'update': %{message}"
-msgstr "분석 프로파일 \"%{name}\": '업데이트' 중에 오류 발생: %{message}"
+msgstr "분석 프로파일 \"%{name}\": '업데이트' 중 오류: %{message}"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:545
 msgid "File Entry is required"
@@ -9162,7 +9162,7 @@ msgstr "%{product} 서버 \"%{name}[%{server_id}]\"에 대한 구성 설정이 �
 
 #: ../app/controllers/ops_controller/settings/common.rb:424
 msgid "Authentication settings saved for %{product} Server \"%{name} [%{server_id}]\" in Zone \"%{zone}\""
-msgstr "%{product} 서버 \"%{name}[%{server_id}]\"에 대한 인증 설정이 구역 \"%{zone}\"에 저장되었습니다."
+msgstr "%{product} 서버 \"%{name}[%%{server_id}]\"에 대한 인증 설정이 구역 \"%{zone}\"에 저장되었습니다."
 
 #: ../app/controllers/ops_controller/settings/common.rb:427
 msgid "Configuration settings saved"
@@ -9612,11 +9612,11 @@ msgstr "카테고리 %{description} [%{name}] 레코드가 삭제됨"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:254
 msgid "Category %{description} [%{name}] record created ("
-msgstr "카테고리 %{description} [%{name}] 레코드가 작성됨 ("
+msgstr "카테고리 %{description} [%{name}] 레코드가 작성됨("
 
 #: ../app/controllers/ops_controller/settings/tags.rb:269
 msgid "Category %{description} [%{name}] record updated ("
-msgstr "카테고리 %{description} [%{name}] 레코드가 업데이트됨 ("
+msgstr "카테고리 %{description} [%{name}] 레코드가 업데이트됨("
 
 #: ../app/controllers/ops_controller/settings/tags.rb:275
 msgid "name:[%{session}] to [%{name}]"
@@ -9943,7 +9943,7 @@ msgstr[0] "선택된 구성된 시스템에 대해 사용 가능한 공통 구�
 
 #: ../app/controllers/provider_foreman_controller.rb:287
 msgid "Configuration Profiles under %{record_model} Provider \"%{name}\""
-msgstr "%{record_model} 제공자 \"%{name}\"의 구성 프로파일"
+msgstr "%{record_model} 제공자 \"%{name}\"에 프로파일 구성"
 
 #: ../app/controllers/provider_foreman_controller.rb:326
 msgid "All Configuration Management Providers"
@@ -9961,7 +9961,7 @@ msgstr "미지정 프로파일 그룹"
 
 #: ../app/controllers/provider_foreman_controller.rb:428
 msgid "Configured Systems under %{record_model} \"%{name}\""
-msgstr "%{record_model} \"%{name}\"의 구성된 시스템"
+msgstr "%{record_model} \"%{name}\"에 시스템이 구성되었습니다."
 
 #: ../app/controllers/provider_foreman_controller.rb:432
 msgid "Configured Systems under Unassigned Profiles Group"
@@ -10475,7 +10475,7 @@ msgstr "기본 보고서 \"%{name}\"을(를) 삭제할 수 없습니다."
 
 #: ../app/controllers/report_controller/reports.rb:81
 msgid "Report \"%{name}\": Error during 'miq_report_delete': %{message}"
-msgstr "보고서 \"%{name}\": 'miq_report_delete' 중에 오류 발생: %{message}"
+msgstr "보고서 \"%{name}\": 'miq_report_delete' 중 오류: %{message}"
 
 #: ../app/controllers/report_controller/reports.rb:87
 msgid "Report \"%{name}\": Delete successful"
@@ -10946,7 +10946,7 @@ msgstr "서비스 \"%{name}\"이(가) 저장되었습니다."
 
 #: ../app/controllers/service_controller.rb:168
 msgid "Reconfigure Service \"%{name}\""
-msgstr "서비스 \"%{name}\" 재구성"
+msgstr "서비스 \"%{name}\" 재구성 중"
 
 #: ../app/controllers/service_controller.rb:189
 msgid "%{name} (All Generic Objects)"
@@ -11293,7 +11293,7 @@ msgstr " (규제 준수 히스토리 - 최신 %{number} 검사)"
 
 #: ../app/controllers/vm_common.rb:247
 msgid "%{name} (Disks)"
-msgstr "%{name} (디스크)"
+msgstr "%{name}(디스크)"
 
 #: ../app/controllers/vm_common.rb:276
 msgid "Last selected Snapshot no longer exists"
@@ -11410,7 +11410,7 @@ msgstr "사용자가 서비스에 VM \"%{name}\" 추가를 취소했습니다."
 
 #: ../app/controllers/vm_common.rb:624
 msgid "VM and Instance \"%{name}\" successfully added to Service \"%{to_name}\""
-msgstr "VM 및 인스턴스 \"%{name}\"이(가) 정상적으로 서비스 \"%{to_name}\"에 추가되었습니다."
+msgstr "VM 및 인스턴스 \"%{name}\"이(가) 정상적으로 서비스 \"%%{to_name}\"에 추가되었습니다."
 
 #: ../app/controllers/vm_common.rb:628
 msgid "Error during 'Add VM to service': %{message}"
@@ -11438,7 +11438,7 @@ msgstr "상위 VM은 하위 VM 중 하나가 될 수 없습니다."
 
 #: ../app/controllers/vm_common.rb:731
 msgid "Error during '%{name} update': %{message}"
-msgstr "'%{name} 업데이트' 중 오류: %{message}"
+msgstr "'%{name}' 업데이트 중 오류: %{message}"
 
 #: ../app/controllers/vm_common.rb:797 ../app/controllers/vm_common.rb:799
 msgid " (Analysis History)"
@@ -11663,7 +11663,7 @@ msgstr "%{model} \"%{name}\"에 클라우드 볼륨 접속"
 
 #: ../app/controllers/vm_common.rb:1366
 msgid "Detach Cloud Volume from %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\"에서 클라우드 볼륨 분리"
+msgstr "%{model} \"%{name}\"에서 클라우드 볼륨 접속 해제"
 
 #: ../app/controllers/vm_common.rb:1374
 msgid "Compare %{vm_or_template}"
@@ -11671,23 +11671,23 @@ msgstr "%{vm_or_template} 비교"
 
 #: ../app/controllers/vm_common.rb:1376
 msgid "Drift for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\"에 대한 드리프트"
+msgstr "%{vm_or_template} \"%{name}\"의 드리프트"
 
 #: ../app/controllers/vm_common.rb:1381
 msgid "Live Migrating %{models}"
-msgstr "%{models} 라이브 마이그레이션"
+msgstr "%{models} 라이브 마이그레이션 중"
 
 #: ../app/controllers/vm_common.rb:1385
 msgid "Evacuating %{models}"
-msgstr "%{models} 비우기"
+msgstr "%{models} 비우는 중"
 
 #: ../app/controllers/vm_common.rb:1389
 msgid "Associating Floating IP with %{model} \"%{name}\""
-msgstr "유동 IP를 %{model} \"%{name}\"과(와) 연관"
+msgstr "유동 IP를 %{model} \"%{name}\"과(와) 연관 중"
 
 #: ../app/controllers/vm_common.rb:1395
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\"에서 유동 IP 연관 해제"
+msgstr "유동 IP를 %{model} \"%{name}\"에서 연관 해제 중"
 
 #: ../app/controllers/vm_common.rb:1401
 msgid "Add Security Group to %{model} \"%{name}\""
@@ -11739,7 +11739,7 @@ msgstr "%{vms_or_templates}에 대한 소유권 설정"
 
 #: ../app/controllers/vm_common.rb:1459
 msgid "Capacity & Utilization data for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\"에 대한 용량 및 사용률 데이터"
+msgstr "%{vm_or_template} \"%{name}\"에 대한 용량 & 사용률 데이터"
 
 #: ../app/controllers/vm_common.rb:1471
 msgid "%{vm_or_template} Policy Assignment"
@@ -11751,7 +11751,7 @@ msgstr "%{vm_or_template} 재구성"
 
 #: ../app/controllers/vm_common.rb:1479
 msgid "Renaming VM \"%{name}\""
-msgstr "VM \"%{name}\"의 이름을 바꾸는 중"
+msgstr "VM \"%{name}\" 이름 바꾸는 중"
 
 #: ../app/controllers/vm_common.rb:1483
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
@@ -11763,7 +11763,7 @@ msgstr "%{vm_or_template}의 폐기 날짜 설정/제거"
 
 #: ../app/controllers/vm_common.rb:1491
 msgid "Right Size Recommendation for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\"에 대한 올바른 크기 권장사항"
+msgstr "%{vm_or_template} \"%{name}\"에 대한 적정 크기 권장사항"
 
 #: ../app/controllers/vm_common.rb:1495
 msgid "Edit Tags for %{vm_or_template}"
@@ -11779,11 +11779,11 @@ msgstr "%{virtual_machine} \"%{name}\"의 타임라인"
 
 #: ../app/controllers/vm_common.rb:1520
 msgid "%{action} \"%{item_name}\" for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\"에 대한 %{action} \"%{item_name}\""
+msgstr "%{vm_or_template} \"%{name}\"의 %{action} \"%{item_name}\""
 
 #: ../app/controllers/vm_common.rb:1531
 msgid "\"%{action}\" for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\"에 대한 \"%{action}\""
+msgstr "%{vm_or_template} \"%{name}\"의 \"%{action}\""
 
 #: ../app/controllers/vm_common.rb:1555
 msgid "No VMs were selected to move right"
@@ -12383,7 +12383,7 @@ msgstr "엔티티"
 
 #: ../app/helpers/application_helper/button/container_perf.rb:11
 msgid "No Capacity & Utilization data has been collected for this %{entity}"
-msgstr "이%{entity}의 용량 & 사용률 데이터가 수집되지 않았습니다."
+msgstr "이 %{entity}의 용량 & 사용률 데이터가 수집되지 않았습니다."
 
 #: ../app/helpers/application_helper/button/container_timeline.rb:15
 msgid "No Timeline data has been collected for this %{entity}"
@@ -12407,7 +12407,7 @@ msgstr "순서를 편집하려면 적어도 2개의 대시보드가 있어야 �
 
 #: ../app/helpers/application_helper/button/delete_server.rb:6
 msgid "Server %{server_name} [%{server_id}] can only be deleted if it is stopped or \\\nhas not responded for a while"
-msgstr "잠시 동안 중지되거나 응답하지 않은 경우에만 서버 %{server_name}[%{server_id}]을(를)\n삭제할 수 있습니다."
+msgstr "잠시 동안 중지되거나 응답하지 않은 경우에만 서버 %{server_name} [%{server_id}]을(를)\n삭제할 수 있습니다."
 
 #: ../app/helpers/application_helper/button/embedded_ansible.rb:4
 msgid "Embedded Ansible Role is not enabled."
@@ -12702,7 +12702,7 @@ msgstr "이 역할은 지역 레벨에서만 관리할 수 있습니다."
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:8
 msgid "Activate the %{server_role_description} Role on another Server to \\\nsuspend it on %{server_name} [%{server_id}]"
-msgstr "%{server_name}[%{server_id}]에서 일시중단하려면 \\\n다른 서버에서 %{server_role_description} 역할을 활성화하십시오."
+msgstr "%{server_name} [%{server_id}]에서 일시중단하려면 \\\n다른 서버에서 %{server_role_description} 역할을 활성화하십시오."
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:14
 msgid "Only active Roles on active Servers can be suspended"
@@ -20270,7 +20270,7 @@ msgstr "토폴로지 표시"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:10
 msgid "Totals for %{hosts}"
-msgstr "%{hosts}의 총계"
+msgstr "%{hosts} 총계"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:19
 msgid "Totals for VMs"
@@ -21736,7 +21736,7 @@ msgstr "모든 사용자에게"
 
 #: ../app/helpers/report_helper.rb:29
 msgid "By %{typ}: %{values}"
-msgstr "%{typ}별: %{values}"
+msgstr "%{typ} 기준: %{values}"
 
 #: ../app/helpers/report_helper.rb:128
 #: ../app/javascript/components/workers-form/helpers.jsx:227
@@ -22273,7 +22273,7 @@ msgstr "이 VM의 고급 설정 표시"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:5
 msgid "%{time} Ago"
-msgstr "%{time} 전"
+msgstr "%{time}전"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:13
 msgid "%{status} - %{time}"
@@ -22347,7 +22347,7 @@ msgstr "하드 디스크"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:53
 msgid "Name: %{hd_name}, Location: %{location}, Size: %{size}, Percent Used Provisioned Space: %{prov}, Filename: %{filename}, Mode: %{mode}"
-msgstr "이름: %{hd_name}, 위치: %{location}, 크기: %{size}, 사용한 프로비저닝 공간 퍼센트: %{prov}, 파일 이름: %{filename}, 모드: %{mode}"
+msgstr "이름: %{hd_name}, 위치: %{location}, 크기: %%{size}, 사용한 프로비저닝 공간 퍼센트: %%{prov}, 파일 이름: %%{filename}, 모드: %{mode}"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:68
 #: ../app/helpers/textual_mixins/textual_devices.rb:80
@@ -22495,7 +22495,7 @@ msgstr "전원 상태"
 
 #: ../app/helpers/textual_mixins/textual_refresh_status.rb:6
 msgid " - %{last_refresh_date} Ago"
-msgstr " - %{last_refresh_date} 전"
+msgstr " - %{last_refresh_date}전"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
@@ -22561,7 +22561,7 @@ msgstr "<이 VM에 대한 참고사항이 입력되지 않음>"
 
 #: ../app/helpers/textual_mixins/textual_zone.rb:4
 msgid "%{m_zone} (originally in %{o_zone})"
-msgstr "%{m_zone}(원래는 %{o_zone}에)"
+msgstr "%{m_zone}(원래 %{o_zone})"
 
 #: ../app/helpers/textual_mixins/textual_zone.rb:8
 msgid "Managed by Zone"
@@ -22630,7 +22630,7 @@ msgstr "사용"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:193
 msgid "From %{time} Ago"
-msgstr "%{time} 전부터"
+msgstr "%{time}전부터"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:194
 msgid "Show Running Processes on this VM"
@@ -23878,7 +23878,7 @@ msgstr "서버 선택:"
 
 #: ../app/javascript/components/workers-form/workers-form.jsx:160
 msgid "Configuration settings saved for %s Server \"%s [%s]\" in Zone \"%s\""
-msgstr "%s 서버 \"%s[%s]\"에 대한 구성 설정이 구역 \"%s\"에 저장되었습니다. "
+msgstr "%s 서버 \"%s[%s]\"에 대한 구성 설정이 구역 \"%s\"에 저장되었습니다."
 
 #: ../app/javascript/components/workers-form/workers.schema.js:19
 msgid "Generic Workers"
@@ -26197,7 +26197,7 @@ msgstr "필수 키가 지정되지 않음: [%{key}]"
 
 #: ../app/models/automation_request.rb:49
 msgid "unknown zone %{zone_name}"
-msgstr "알 수 없는 구역 %{zone_name}"
+msgstr "알수 없는 구역 %{zone_name}"
 
 #: ../app/models/binary_blob.rb:17 ../app/models/binary_blob.rb:64
 msgid "size of %{name} id [%{number}] is incorrect"
@@ -26362,7 +26362,7 @@ msgstr "%{message}이(가) %{name}에 사용 가능하지 않습니다."
 #: ../app/models/cloud_subnet/operations.rb:41
 #: ../app/models/cloud_volume/operations.rb:101
 msgid "Validation failed for %{name} operation %{operation}. %{reason}"
-msgstr "%{name} 오퍼레이션 %{operation}에 대한 유효성 검증에 실패했습니다. %{reason}"
+msgstr "%{name} 오퍼레이션 %{operation}에 대한 유효성 검사에 실패했습니다. %{reason} "
 
 #: ../app/models/cloud_tenant.rb:52
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
@@ -26547,7 +26547,7 @@ msgstr "대화 상자 필드 이름이 대화 상자에서 중복되면 안됨: 
 
 #: ../app/models/dialog.rb:72
 msgid "Dialog %{dialog_label} / %{error_message}"
-msgstr "대화 상자 %{dialog_label} / %{error_message}"
+msgstr "대화 상자 %{dialog_label}/%{error_message}"
 
 #: ../app/models/dialog.rb:196
 msgid "Dialog cannot be deleted because it is connected to other components: %{components}"
@@ -26590,7 +26590,7 @@ msgstr "대화 상자 %{box_label}에 하나 이상의 요소가 있어야 합�
 
 #: ../app/models/dialog_group.rb:43
 msgid "Box %{box_label} / %{error_message}"
-msgstr "상자 %{box_label} / %{error_message}"
+msgstr "상자 %{box_label}/%{error_message}"
 
 #: ../app/models/dialog_tab.rb:23
 msgid "Tab %{tab_label} must have at least one Box"
@@ -26598,7 +26598,7 @@ msgstr "탭 %{tab_label}에 하나 이상의 상자가 있어야 합니다."
 
 #: ../app/models/dialog_tab.rb:28
 msgid "Tab %{tab_label} / %{error_message}"
-msgstr "탭 %{tab_label} / %{error_message}"
+msgstr "탭 %{tab_label}/%{error_message}"
 
 #: ../app/models/ems_cluster.rb:239
 msgid "Unknown resource %{name}"
@@ -26707,19 +26707,19 @@ msgstr "펌웨어 대상"
 
 #: ../app/models/flavor.rb:23
 msgid "%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)"
-msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes} GB RAM, 알 수 없는 크기의 루트 디스크)"
+msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes}GB RAM, 알 수 없는 크기의 루트 디스크)"
 
 #: ../app/models/flavor.rb:25
 msgid "%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)"
-msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB 루트 디스크)"
+msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes}GB RAM, %{root_disk_gigabytes}GB 루트 디스크)"
 
 #: ../app/models/flavor.rb:29
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)"
-msgstr "%{name}(%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, 알 수 없는 크기의 루트 디스크)"
+msgstr "%{name}(%{num_cpus} CPU, %{memory_gigabytes}GB RAM, 알 수 없는 크기의 루트 디스크)"
 
 #: ../app/models/flavor.rb:31
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)"
-msgstr "%{name}(%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB 루트 디스크)"
+msgstr "%{name}(%{num_cpus} CPUs, %{memory_gigabytes}GB RAM, %{root_disk_gigabytes}GB 루트 디스크)"
 
 #: ../app/models/flavor.rb:72
 msgid "Create Flavor Operation"
@@ -26852,7 +26852,7 @@ msgstr[0] "ISO 이미지"
 
 #: ../app/models/job/state_machine.rb:36
 msgid "%{signal} is not permitted at state %{state}"
-msgstr "%{signal}이(가) %{state} 상태에서 허용되지 않습니다."
+msgstr "%{state} 상태에서는 %{signal}이(가) 허용되지 않습니다."
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
@@ -27319,7 +27319,7 @@ msgstr[0] "플레이버(Microsoft Azure)"
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:66
 msgid "%{name} does not exist on %{management}"
-msgstr "%{name}이(가) %{management}에 존재하지 않습니다."
+msgstr "%{name}이(가) %{management}에 없습니다."
 
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:74
@@ -28311,7 +28311,7 @@ msgstr "ID [%{id}]의 vCenter를 찾을 수 없음"
 
 #: ../app/models/miq_action.rb:830
 msgid "A user is needed to raise an action to automate. [%{name}] id:[%{id}] action: [%{description}]"
-msgstr "사용자가 자동화 조치를 제기해야 합니다. [%{name}] ID:[%{id}] 조치: [%{description}]"
+msgstr "사용자가 자동화 조치를 제기해야 합니다. [%{name}] id: [%{id}] 조치: [%{description}]"
 
 #: ../app/models/miq_action.rb:944
 msgid "Action is referenced in at least one policy and cannot be deleted"
@@ -28656,7 +28656,7 @@ msgstr "공개"
 
 #: ../app/models/miq_provision.rb:95
 msgid "%{title} from [%{name}] to [%{vm_name}]"
-msgstr "%{title} [%{name}]에서 [%{vm_name}]까지"
+msgstr "[%{name}]에서 [%{vm_name}](으)로 %{title}"
 
 #: ../app/models/miq_provision/options_helper.rb:31
 msgid "Unable to find source Template/Vm with id [%{number}]"
@@ -28668,11 +28668,11 @@ msgstr "%{class_name} [%{name}]이(가) 관리 시스템에 접속되지 않았�
 
 #: ../app/models/miq_provision/options_helper.rb:41
 msgid "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning"
-msgstr "%{class_name} [%{name}]이(가) <%{ems_class_name}에 접속됨: 프로비저닝을 지원하지 않는 %{ems_name}>"
+msgstr "%{class_name} [%{name}]이(가) <%%{ems_class_name}에 접속됨: 프로비저닝을 지원하지 않는 %{ems_name}>"
 
 #: ../app/models/miq_provision/options_helper.rb:49
 msgid "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials"
-msgstr "%{class_name} [%{name}]이(가) <%{ems_class_name}에 접속됨: 인증 정보가 누락된 %{ems_name}>"
+msgstr "%{class_name} [%{name}]이(가) <%%{ems_class_name}에 접속됨: 인증 정보가 누락된 %{ems_name}>"
 
 #: ../app/models/miq_provision/pxe.rb:62 ../app/models/miq_provision/pxe.rb:72
 msgid "MAC Address is nil"
@@ -28753,11 +28753,11 @@ msgstr "dir은 %{directory} 중 하나여야 합니다."
 
 #: ../app/models/miq_queue.rb:284
 msgid "%{log_message} \"%{error}\" attempting to get next message"
-msgstr "%{log_message} \"%{error}\"에서 다음 메시지를 가져오려고 시도하는 중입니다."
+msgstr "%{log_message} \"%{error}\"이(가) 다음 메시지를 가져오려고 시도 중"
 
 #: ../app/models/miq_queue.rb:397
 msgid "%{log_message} \"%{error}\" attempting merge next message"
-msgstr "%{log_message} \"%{error}\"에서 다음 메시지를 병합하려고 시도하는 중입니다."
+msgstr "%{log_message} \"%{error}\"이(가) 다음 메시지를 병합하려고 시도 중"
 
 #: ../app/models/miq_queue.rb:427
 msgid "class_name cannot be nil"
@@ -28765,7 +28765,7 @@ msgstr "class_name이 0이면 안됩니다."
 
 #: ../app/models/miq_queue_worker_base/runner.rb:68
 msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "%{log} \"%{error}\"에서 다음 메시지를 가져오려고 시도하는 중입니다."
+msgstr "%{log} \"%{error}\"이(가) 다음 메시지를 가져오려고 시도 중"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:141
 msgid "%{log} Message <%{message}> is of unknown type <%{type}>"
@@ -29081,11 +29081,11 @@ msgstr[0] "폐기 태스크"
 
 #: ../app/models/miq_schedule.rb:165
 msgid "Run %{interval} on %{start_time}"
-msgstr "%{start_time}에 %{interval} 실행"
+msgstr "%{start_time}에서 %{interval} 실행"
 
 #: ../app/models/miq_schedule.rb:168
 msgid "Run %{interval} starting on %{start_time}"
-msgstr "%{start_time}에 시작하는 %{interval} 실행"
+msgstr "%{start_time}에서 %{interval} 시작 실행"
 
 #: ../app/models/miq_schedule.rb:173
 msgid "minutes"
@@ -29109,7 +29109,7 @@ msgstr "월"
 
 #: ../app/models/miq_schedule.rb:183
 msgid "Run %{interval} every %{value} %{unit} starting on %{start_time}"
-msgstr "%{start_time}에 시작해서 %{value} %{unit}마다 %{interval} 실행"
+msgstr "%{start_time}에서 %{value} %{unit}을(를) 시작할 때마다 %{interval} 실행"
 
 #: ../app/models/miq_schedule.rb:276
 msgid "No userid provided!"
@@ -30322,7 +30322,7 @@ msgstr "모든 구성 관리자 제공자"
 #:
 #: ../app/presenters/tree_builder_configuration_manager_configured_systems.rb:19
 msgid "%{name} Configured Systems"
-msgstr "%{name} 구성 시스템"
+msgstr "%{name} 구성된 시스템"
 
 #: ../app/presenters/tree_builder_filters_mixin.rb:6
 msgid "Global Shared Filters"
@@ -30536,7 +30536,7 @@ msgstr " (비활성)"
 
 #: ../app/presenters/tree_builder_policy_simulation.rb:83
 msgid "Policy%{caption}"
-msgstr "정책%{caption}"
+msgstr "정책 %{caption}"
 
 #: ../app/presenters/tree_builder_policy_simulation.rb:109
 #: ../app/presenters/tree_builder_policy_simulation_results.rb:90
@@ -31321,7 +31321,7 @@ msgstr "리소스 제거"
 
 #: ../app/views/catalog/_st_angular_form.html.haml:95
 msgid "Price / Month (in {{vm.catalogItemModel.currency_name}})"
-msgstr "가격/월({{vm.catalogItemModel.currency_name}}의)"
+msgstr "가격/월({{vm.catalogItemModel.currency_name}})"
 
 #: ../app/views/catalog/_st_angular_form.html.haml:109
 msgid "Must be a numeric value"
@@ -31401,7 +31401,7 @@ msgstr "태그 이름"
 
 #: ../app/views/chargeback/_cb_rate_currency.html.haml:2
 msgid "Rate (in %{currency})"
-msgstr "비율(%{currency}의)"
+msgstr "요율(%{currency})"
 
 #: ../app/views/chargeback/_cb_rate_edit.html.haml:21
 msgid "Currencies"
@@ -32760,7 +32760,7 @@ msgstr "%{start_number} / %{total_items}"
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35
 msgid "%{start_number}-%{end_number} of %{total_items}"
-msgstr "%{total_items}의 %{start_number}-%{end_number}"
+msgstr "%{start_number} - %{end_number} / %{total_items}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:48
 #: ../app/views/layouts/_paging_bar.html.haml:50
@@ -33645,7 +33645,7 @@ msgstr "클라우드 볼륨 스냅샷 (0)"
 
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:32
 msgid "Cloud Volume Snapshots (%{count})"
-msgstr "클라우드 볼륨 스냅샷 (%{count})"
+msgstr "클라우드 볼륨 스냅샷(%{count})"
 
 #: ../app/views/layouts/listnav/_cloud_volume_backup.html.haml:15
 #: ../app/views/layouts/listnav/_cloud_volume_type.html.haml:15
@@ -33955,7 +33955,7 @@ msgstr "팟(Pod) (0)"
 
 #: ../app/views/layouts/listnav/_persistent_volume.html.haml:23
 msgid "Pods (%{count})"
-msgstr "팟(Pod) (%{count})"
+msgstr "팟(Pod)(%{count})"
 
 #: ../app/views/layouts/listnav/_physical_chassis.html.haml:15
 #: ../app/views/layouts/listnav/_physical_rack.html.haml:15
@@ -35010,7 +35010,7 @@ msgstr "지정 대상"
 
 #: ../app/views/miq_policy/_alert_profile_details.html.haml:148
 msgid "%{alert_profiles} with %{type} Tags"
-msgstr "%{type}의 %{alert_profiles} 태그"
+msgstr "%{type} 태그가 있는 %{alert_profiles}"
 
 #: ../app/views/miq_policy/_alert_profile_folders.html.haml:7
 #: ../app/views/miq_policy/_policy_folders.html.haml:36
@@ -35215,11 +35215,11 @@ msgstr "범위 편집"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:45
 msgid "By Username %{username} %{created_on}"
-msgstr "사용자 이름별 %{username} %{created_on}"
+msgstr "사용자 이름 %{username} %{created_on} 기준"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:52
 msgid "By Username %{username} %{updated_on}"
-msgstr "사용자 이름별 %{username} %{updated_on}"
+msgstr "사용자 이름 %{username} %{updated_on} 기준"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:81
 msgid "No Policy scope defined, the scope of this policy includes all elements."
@@ -35339,11 +35339,11 @@ msgstr "입력한 검색 문자열에 일치하는 %{mode} 정책 프로파일�
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By %{clusters}"
-msgstr "%{clusters}(으)로"
+msgstr "%{clusters} 기준"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By %{hosts}"
-msgstr "%{hosts}(으)로"
+msgstr "%{hosts} 기준"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Cloud/Infrastructure Providers"
@@ -36708,7 +36708,7 @@ msgstr "%{clusters}별 콜렉션 사용"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:38
 msgid "VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected."
-msgstr "선택된 %{hosts}의 VM에 대해서만 VM 데이터가 수집됩니다. 하나 이상의 %{host}이(가) 선택되어 있을 때 %{cluster} 및 모든 %{hosts}에 대해 데이터가 수집됩니다."
+msgstr "선택된 %{hosts}의 VM에 대해서만 VM 데이터가 수집됩니다. 하나 이상의 %{host}이(가) 선택되어 있을 때 %%{cluster} 및 모든 %%{hosts}에 대해 데이터가 수집됩니다."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:42
 msgid "Note: No %{clusters} available."
@@ -37705,7 +37705,7 @@ msgstr "비용 상환 간격"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:207
 msgid "%{chargeback_interval} Ending with"
-msgstr "%{chargeback_interval} 종료"
+msgstr "%{chargeback_interval} 다음으로 종료"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:211
 msgid "%{number} Days Ago"
@@ -38679,7 +38679,7 @@ msgstr "읽은 것으로 표시"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:33
 msgid "Showing all {{notificationGroup.notifications.length}} items."
-msgstr "모든 {{notificationGroup.notifications.length}} 항목 표시"
+msgstr "{{notificationGroup.notifications.length}} 항목을 모두 표시합니다."
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:35
 msgid "Show only the first 100"
@@ -38687,7 +38687,7 @@ msgstr "처음 100개만 표시"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:38
 msgid "Showing {{limit.notifications}} items out of {{notificationGroup.notifications.length}} total."
-msgstr "총 {{notificationGroup.notifications.length}}에서 {{limit.notifications}} 항목 표시"
+msgstr "{{limit.notifications}}개/총 {{notificationGroup.notifications.length}}개 항목을 표시합니다."
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:40
 msgid "Show all (may take a while)"
@@ -38995,7 +38995,7 @@ msgstr "크기 입력"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:238
 msgid "Disk size between {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} and 2TB required"
-msgstr "{{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} 및 2TB 사이의 디스크 크기가 필요함"
+msgstr "{{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} - 2TB 사이의 디스크 크기가 필요합니다."
 
 #: ../app/views/vm_common/_reconfigure.html.haml:277
 msgid "Resize"
@@ -71480,7 +71480,7 @@ msgstr "%{message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3497
 msgid "The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted."
-msgstr "서버 %{name} 메모리 사용 %{memory_usage}이(가) %{memory_threshold} 한계를 초과했습니다.  서버 프로세스 %{pid}이(가) 종료되었으며 다시 시작됩니다."
+msgstr "서버 %{name} 메모리 사용 %{memory_usage}이(가) %{memory_threshold} 한계를 초과했습니다. 서버 프로세스 %{pid}이(가) 종료되었으며 다시 시작됩니다."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3499
@@ -75786,7 +75786,7 @@ msgstr "적용"
 
 #: ./src/gtl/components/pagination/paging.html:22
 msgid "of {{pagingCtrl.settings.total}}"
-msgstr "{{pagingCtrl.settings.total}} 중"
+msgstr "/{{pagingCtrl.settings.total}}"
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx:80
 msgid "Vpc ID"

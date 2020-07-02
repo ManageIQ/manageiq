@@ -1339,7 +1339,7 @@ msgstr "Serverdaten"
 
 #: ../app/assets/javascripts/controllers/header/header_controller.js:48
 msgid "%{count} unread notifications"
-msgstr "%{count} ungelesene Benachrichtigungen"
+msgstr "%{count} nicht gelesene Benachrichtigungen"
 
 #:
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-config-factory.js:49
@@ -2039,7 +2039,7 @@ msgstr "Löschen von Berechtigungsnachweis \"%{name}\" wurde erfolgreich eingele
 
 #: ../app/controllers/ansible_credential_controller.rb:79
 msgid "Unable to delete Credential \"%{name}\": %{details}"
-msgstr "Berechtigungsnachweis \"%{name}\": %{details} kann nicht gelöscht werden"
+msgstr "Berechtigungsnachweis \"%{name}\" kann nicht gelöscht werden: %{details}"
 
 #: ../app/controllers/ansible_credential_controller.rb:89
 #: ../app/controllers/ansible_playbook_controller.rb:40
@@ -2109,7 +2109,7 @@ msgstr "Löschen von Repository \"%{name}\" wurde erfolgreich eingeleitet."
 
 #: ../app/controllers/ansible_repository_controller.rb:78
 msgid "Unable to delete Repository \"%{name}\": %{details}"
-msgstr "Repository \"%{name}\": %{details} kann nicht gelöscht werden"
+msgstr "Repository \"%{name}\" kann nicht gelöscht werden: %{details}"
 
 #: ../app/controllers/ansible_repository_controller.rb:90
 msgid "Edit a Repository \"%{name}\""
@@ -2149,7 +2149,7 @@ msgstr "Aktualisieren von Repository \"%{name}\" wurde erfolgreich eingeleitet."
 
 #: ../app/controllers/ansible_repository_controller.rb:124
 msgid "Unable to refresh Repository \"%{name}\": %{details}"
-msgstr "Repository \"%{name}\": %{details} kann nicht aktualisiert werden"
+msgstr "Repository \"%{name}\" kann nicht aktualisiert werden: %{details}"
 
 #: ../app/controllers/ansible_repository_controller.rb:155
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb:55
@@ -2224,7 +2224,7 @@ msgstr "Keine Datensätze für diesen Bericht gefunden"
 
 #: ../app/controllers/application_controller.rb:720
 msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-msgstr "Bearbeitung abgebrochen!  %{product} unterstützt die Schaltfläche 'Zurück' des Browsers oder den Zugriff über mehrere Registerkarten oder Fenster desselben Browsers nicht. Wählen Sie beliebige doppelte Sitzungen aus, bevor Sie fortfahren."
+msgstr "Bearbeitung abgebrochen! %{product} unterstützt die Schaltfläche 'Zurück' des Browsers oder den Zugriff über mehrere Registerkarten oder Fenster desselben Browsers nicht. Wählen Sie beliebige doppelte Sitzungen aus, bevor Sie fortfahren."
 
 #: ../app/controllers/application_controller.rb:877
 msgid "View this item"
@@ -2274,7 +2274,7 @@ msgstr[1] "Fehler beim Löschen von gespeichertem Bericht aus der %{product}-Dat
 
 #: ../app/controllers/application_controller.rb:1118
 msgid "The selected %{label} is not in the current region"
-msgstr "Ausgewählte Bezeichnung %{label} ist nicht in der aktuellen Region"
+msgstr "Die ausgewählte Bezeichnung %{label} ist nicht in der aktuellen Region"
 
 #: ../app/controllers/application_controller.rb:1120
 msgid "All selected %{labels} are not in the current region"
@@ -2309,7 +2309,7 @@ msgstr "Suchname ist erforderlich"
 
 #: ../app/controllers/application_controller/advanced_search.rb:54
 msgid "%{model} search \"%{name}\" was saved"
-msgstr "Suche für %{model} mit dem Namen \"%{name}\" wurde gespeichert"
+msgstr "Die suche für %{model} mit dem Namen \"%{name}\" wurde gespeichert"
 
 #: ../app/controllers/application_controller/advanced_search.rb:93
 msgid "%{model} search \"%{name}\" was successfully loaded"
@@ -2394,7 +2394,7 @@ msgstr "\"%{task_description}\" wurde gestartet"
 
 #: ../app/controllers/application_controller/buttons.rb:378
 msgid "Edit of Button Group \"%{name}\" was cancelled by the user"
-msgstr "Bearbeitung der Schaltflächengruppe \"%{name}\" wurde durch den Benutzer abgebrochen"
+msgstr "Die Bearbeitung der Schaltflächengruppe \"%{name}\" wurde durch den Benutzer abgebrochen"
 
 #: ../app/controllers/application_controller/buttons.rb:380
 msgid "Add of new Button Group was cancelled by the user"
@@ -2428,7 +2428,7 @@ msgstr "Schaltflächensymbol muss ausgewählt werden"
 
 #: ../app/controllers/application_controller/buttons.rb:405
 msgid "Button Group \"%{name}\" was saved"
-msgstr "Schaltflächengruppe \"%{name}\" wurde gespeichert"
+msgstr "Die Schaltflächengruppe \"%{name}\" wurde gespeichert"
 
 #: ../app/controllers/application_controller/buttons.rb:411
 #: ../app/controllers/application_controller/buttons.rb:621
@@ -2437,7 +2437,7 @@ msgstr "Fehler beim Bearbeiten: %{field_name} %{error_message}"
 
 #: ../app/controllers/application_controller/buttons.rb:439
 msgid "Button Group \"%{name}\" was added"
-msgstr "Schaltflächengruppe \"%{name}\" wurde hinzugefügt"
+msgstr "Die Schaltflächengruppe \"%{name}\" wurde hinzugefügt"
 
 #: ../app/controllers/application_controller/buttons.rb:445
 msgid "Error during 'add': %{field_name} %{error_message}"
@@ -4645,7 +4645,7 @@ msgstr "Abhängen von Clouddatenträger \"%{volume_name}\" von %{vm_name} beende
 #: ../app/controllers/cloud_volume_controller.rb:172
 #: ../app/controllers/vm_cloud_controller.rb:144
 msgid "Unable to detach Cloud Volume \"%{volume_name}\" from %{vm_name}: %{details}"
-msgstr "Clouddatenträger \"%{volume_name}\" kann von %{vm_name} nicht abgehängt werden: %{details}"
+msgstr "Clouddatenträger \"%{volume_name}\" kann von %{vm_name}  nicht abgehängt werden: %{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:194
 #: ../app/controllers/cloud_volume_controller.rb:223
@@ -5795,7 +5795,7 @@ msgstr " durch %{user}"
 #: ../app/controllers/miq_ae_class_controller.rb:99
 #: ../app/controllers/miq_ae_class_controller.rb:109
 msgid "%{model} [%{name} - Updated %{time}%{update}]"
-msgstr "%{model} [%{name} - Aktualisiert: %{time}%{update}]"
+msgstr "%{model} [%{name} - Aktualisiert %{time}%{update}]"
 
 #: ../app/controllers/miq_ae_class_controller.rb:106
 #, fuzzy
@@ -6245,7 +6245,7 @@ msgstr "Alle Dialoge"
 
 #: ../app/controllers/miq_ae_customization_controller/dialogs.rb:120
 msgid "Dialog \"%{name}\""
-msgstr "Dialog \"%{name}\""
+msgstr "Kopieren von Dialog \"%{name}\""
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:64
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:85
@@ -20926,7 +20926,7 @@ msgstr "Verfügbarkeitszone für diesen %{title} anzeigen"
 
 #: ../app/helpers/host_helper/textual_summary.rb:339
 msgid "Show Compliance History of this %{title} (Last 10 Checks)"
-msgstr "Konformitätsverlauf für diesen %{title} anzeigen (letzte 10 Prüfungen)"
+msgstr "Konformitätsverlauf für dieses %{title} (letzte 10 Prüfungen)"
 
 #: ../app/helpers/host_helper/textual_summary.rb:347
 #: ../app/helpers/textual_mixins/vm_common.rb:78
@@ -26972,7 +26972,7 @@ msgstr[1] "ISO-Images"
 
 #: ../app/models/job/state_machine.rb:36
 msgid "%{signal} is not permitted at state %{state}"
-msgstr "%{signal} wird nicht zugelassen im Status %{state}"
+msgstr "%{signal} ist nicht zulässig im Status %{state}"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
@@ -27008,7 +27008,7 @@ msgstr "gestartet? Nicht implementiert für %{server_name}"
 
 #: ../app/models/log_file.rb:244
 msgid "Log request failed since [%{resource} %{server_name}] is not started"
-msgstr "Protokollanforderung ist fehlgeschlagen, da [%{resource} %{server_name}] nicht gestartet ist"
+msgstr "Protokollanforderung ist fehlgeschlagen, da [%{resource} %{server_name}] nicht gestartet ist "
 
 #: ../app/models/log_file.rb:248
 msgid "Log request failed since [%{resource}] is not started"
@@ -30946,7 +30946,7 @@ msgstr "Speicheradapter (%{type}): %{name}"
 #: ../app/presenters/tree_node/host.rb:3
 #: ../app/views/layouts/listnav/_physical_server.html.haml:20
 msgid "Host / Node: %{name}"
-msgstr "Host / Knoten: %{name}"
+msgstr "Host/Knoten: %{name}"
 
 #: ../app/presenters/tree_node/lan.rb:3
 msgid "Port Group: %{name}"
@@ -32992,7 +32992,7 @@ msgstr "%{start_number} von %{total_items}"
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35
 msgid "%{start_number}-%{end_number} of %{total_items}"
-msgstr "%{start_number}-%{end_number} von %{total_items}"
+msgstr "%{start_number} - %{end_number} von %{total_items}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:48
 #: ../app/views/layouts/_paging_bar.html.haml:50
@@ -34215,7 +34215,7 @@ msgstr "VMs anzeigen"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:26
 msgid "Show Parent %{host}"
-msgstr "Übergeordneten %{host} anzeigen"
+msgstr "Übergeordnetes %{host} anzeigen"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:48
 msgid "Show all Resource Pools in this Resource Pool"
@@ -36461,7 +36461,7 @@ msgstr "Felder für LDAP-Hostname und Port werden zur Prüfung von LDAP-Einstell
 
 #: ../app/views/ops/_log_viewer.html.haml:3
 msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr "Letzte 1000 Zeilen von Server %{name} [%{id}] in Zone %{zone}"
+msgstr "Letzte 1000 Zeilen aus Server %{name} [%{id}] in Zone %{zone}"
 
 #: ../app/views/ops/_logs_selected.html.haml:10
 msgid "Log Depot URI"
@@ -36594,7 +36594,7 @@ msgstr "Produktfunktionen (schreibgeschützt)"
 
 #: ../app/views/ops/_rbac_tag_box.html.haml:10
 msgid "No %{tenant_name} Tags have been assigned"
-msgstr "Es wurden keine %{tenant_name}-Tags zugewiesen"
+msgstr "Es wurden keine Tags für %{tenant_name} zugewiesen"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:5
 msgid "%{type} Information"
@@ -37941,7 +37941,7 @@ msgstr "Rückerstattungsintervall"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:207
 msgid "%{chargeback_interval} Ending with"
-msgstr "%{chargeback_interval} endet mit "
+msgstr "%{chargeback_interval} endet mit"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:211
 msgid "%{number} Days Ago"
@@ -38929,7 +38929,7 @@ msgstr "Nur die ersten 100 anzeigen"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:38
 msgid "Showing {{limit.notifications}} items out of {{notificationGroup.notifications.length}} total."
-msgstr "Insgesamt {{limit.notifications}} Elemente von {{notificationGroup.notifications.length}} werden angezeigt."
+msgstr "{{limit.notifications}} Elemente von insgesamt {{notificationGroup.notifications.length}} werden angezeigt."
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:40
 msgid "Show all (may take a while)"

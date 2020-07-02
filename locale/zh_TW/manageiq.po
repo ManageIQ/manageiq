@@ -186,7 +186,7 @@ msgstr "已順利刪除 %s：\"%s\""
 #: ../app/views/generic_object_definition/_show_list.html.haml:12
 #, fuzzy
 msgid "Generic Object Class"
-msgstr "同屬物件類別"
+msgstr "一般物件類別"
 
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #:
@@ -542,7 +542,7 @@ msgstr "已要求對 %s \"%s\" 進行密碼變更。"
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:212
 #: ../app/controllers/miq_request_controller.rb:424
 msgid "Last 30 Days"
-msgstr "過去 30 天"
+msgstr "最近 30 天"
 
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-add-security-group.js:51
@@ -803,7 +803,7 @@ msgstr "冷 HDD (SC1)"
 #:
 #: ../app/assets/javascripts/controllers/cloud_volume/cloud_volume_form_controller.js:241
 msgid "Magnetic"
-msgstr "磁"
+msgstr "磁性"
 
 #:
 #: ../app/assets/javascripts/controllers/configuration/time_profile_form_controller.js:24
@@ -929,7 +929,7 @@ msgstr "記憶體使用率"
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:154
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:184
 msgid "Last 24 hours"
-msgstr "前 24 小時"
+msgstr "最近 24 小時"
 
 #:
 #: ../app/assets/javascripts/controllers/container_dashboard/container_project_dashboard_controller.js:64
@@ -1385,7 +1385,7 @@ msgstr "簡式過濾器"
 #:
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-http-factory.js:51
 msgid "Page %d of %d"
-msgstr "第 %d 之 %d 頁"
+msgstr "第 %d 頁（共 %d 頁）"
 
 #:
 #: ../app/assets/javascripts/controllers/live_metrics/util/metrics-utils-factory.js:3
@@ -1431,7 +1431,7 @@ msgstr "KBps"
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:130
 #: ../app/controllers/miq_request_controller.rb:422
 msgid "Last 24 Hours"
-msgstr "過去 24 小時"
+msgstr "最近 24 小時"
 
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:137
 #: ../app/assets/javascripts/controllers/mixins/charts-mixin.js:153
@@ -1566,7 +1566,7 @@ msgstr "排序方式"
 
 #: ../app/assets/javascripts/controllers/report_data_controller.js:397
 msgid "%d - %d of %d"
-msgstr "%d 之 %d - %d"
+msgstr "%d - %d（共 %d）"
 
 #:
 #: ../app/assets/javascripts/controllers/schedule/schedule_form_controller.js:184
@@ -2039,7 +2039,7 @@ msgstr "已順利起始刪除認證 \"%{name}\"。"
 
 #: ../app/controllers/ansible_credential_controller.rb:79
 msgid "Unable to delete Credential \"%{name}\": %{details}"
-msgstr "無法刪除認證 \"%{name}\"：%{details}"
+msgstr "無法刪除認證：\"%{name}\"：%{details}"
 
 #: ../app/controllers/ansible_credential_controller.rb:89
 #: ../app/controllers/ansible_playbook_controller.rb:40
@@ -2109,7 +2109,7 @@ msgstr "已順利起始刪除儲存庫 \"%{name}\"。"
 
 #: ../app/controllers/ansible_repository_controller.rb:78
 msgid "Unable to delete Repository \"%{name}\": %{details}"
-msgstr "無法刪除儲存庫 \"%{name}\"：%{details}"
+msgstr "無法刪除儲存庫：\"%{name}\"：%{details}"
 
 #: ../app/controllers/ansible_repository_controller.rb:90
 msgid "Edit a Repository \"%{name}\""
@@ -2149,7 +2149,7 @@ msgstr "已順利起始重新整理儲存庫 \"%{name}\"。"
 
 #: ../app/controllers/ansible_repository_controller.rb:124
 msgid "Unable to refresh Repository \"%{name}\": %{details}"
-msgstr "無法重新整理儲存庫 \"%{name}\"：%{details}"
+msgstr "無法重新整理儲存庫：\"%{name}\"：%{details}"
 
 #: ../app/controllers/ansible_repository_controller.rb:155
 #: ../app/helpers/ansible_credential_helper/textual_summary.rb:55
@@ -2224,7 +2224,7 @@ msgstr "找不到這份報告的記錄"
 
 #: ../app/controllers/application_controller.rb:720
 msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-msgstr "編輯已中斷！%{product} 不支援瀏覽器的返回按鈕，也不支援從相同瀏覽器的多個標籤或視窗存取。請先關閉任何重複的階段作業，然後再繼續進行。"
+msgstr "編輯已中斷！%{product} 不支援瀏覽器的返回按鈕，也不支援從同一瀏覽器的多個標籤或視窗存取。請先關閉任何重複的階段作業，然後再繼續進行。"
 
 #: ../app/controllers/application_controller.rb:877
 msgid "View this item"
@@ -2604,7 +2604,7 @@ msgstr "%{model} \"%{name}\"：在 '%{task}' 期間發生錯誤：%{error_msg}"
 #: ../app/controllers/application_controller/ci_processing.rb:133
 #: ../app/controllers/mixins/ems_common/core.rb:51
 msgid "%{model} \"%{name}\": %{task} successfully initiated"
-msgstr "已順利起始 %{model} \"%{name}\"：%{task}"
+msgstr "%{model} \"%{name}\"：已順利起始 %{task}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:164
 #: ../app/controllers/application_controller/ci_processing.rb:172
@@ -2632,7 +2632,7 @@ msgstr[0] "已從 %{product} Database 起始 %{number} %{models} 的 %{task}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:320
 msgid "No providers were selected for %{task}"
-msgstr "未選取 %{task} 的提供者"
+msgstr "未針對 %{task} 選取提供者"
 
 #: ../app/controllers/application_controller/ci_processing.rb:343
 msgid "Error during '%{task}': %{message}"
@@ -2667,7 +2667,7 @@ msgstr "分析"
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:8
 #: ../app/views/service/_svcs_show.html.haml:13
 msgid "Retirement"
-msgstr "汰舊"
+msgstr "淘汰"
 
 #: ../app/controllers/application_controller/ci_processing.rb:412
 #: ../app/helpers/application_helper/tasks.rb:8
@@ -2702,7 +2702,7 @@ msgstr "開始"
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:233
 #: ../app/views/catalog/_form_resources_info.html.haml:79
 msgid "Suspend"
-msgstr "暫停"
+msgstr "暫止"
 
 #: ../app/controllers/application_controller/ci_processing.rb:446
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:32
@@ -2779,7 +2779,7 @@ msgstr "資源儲存區 \"%{name}\"：在 '%{task}' 期間發生錯誤：%{error
 
 #: ../app/controllers/application_controller/ci_processing.rb:591
 msgid "Resource Pool \"%{name}\": %{task} successfully initiated"
-msgstr "資源儲存區 \"%{name}\"：已順利起始 %{task}"
+msgstr "資源儲存區 \"%{name}\"：已順利起始 %%{task}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:614
 msgid "%{action_name} action does not apply to selected items"
@@ -2855,11 +2855,11 @@ msgstr "已刪除選取的 %{record}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:873
 msgid "Delete of Flavor \"%{name}\" was successfully initiated."
-msgstr "已順利起始刪除 Flavor \"%{name}\"。"
+msgstr "已順利起始刪除特性 \"%{name}\"。"
 
 #: ../app/controllers/application_controller/ci_processing.rb:875
 msgid "Unable to delete Flavor \"%{name}\": %{details}"
-msgstr "無法刪除特性 \"%{name}\"：%{details}"
+msgstr "無法刪除特性：\"%{name}\"：%{details}"
 
 #: ../app/controllers/application_controller/compare.rb:39
 #: ../app/controllers/application_controller/compare.rb:111
@@ -3148,15 +3148,15 @@ msgstr "ALL"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:80
 msgid "Add of new %{type} Request was cancelled by the user"
-msgstr "使用者已取消新增 %{type} 要求"
+msgstr "使用者取消了新增 %{type} 要求"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:203
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
-msgstr "使用者已取消編輯 %{model} 要求 \"%{name}\""
+msgstr "使用者取消了編輯 %{model} 要求 \"%{name}\""
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:206
 msgid "Provision %{type} Request was cancelled by the user"
-msgstr "使用者已取消供應 %{type} 要求"
+msgstr "使用者取消了供應 %{type} 要求"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:233
 msgid "Publish Virtual Machine"
@@ -3168,7 +3168,7 @@ msgstr "編輯 %{type}"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:237
 msgid "Add %{type}"
-msgstr "新增 %{type}"
+msgstr "新增%{type}"
 
 #. TRANSLATORS: file: product/views/MiddlewareServer.yaml
 #: ../app/controllers/application_controller/miq_request_methods.rb:319
@@ -3263,7 +3263,7 @@ msgstr "前次更新時間"
 #: ../app/controllers/application_controller/miq_request_methods.rb:456
 #: ../config/yaml_strings.rb:884
 msgid "Platform"
-msgstr "Platform"
+msgstr "平台"
 
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
@@ -3323,7 +3323,7 @@ msgstr "VM 總計"
 #: ../app/views/miq_policy/_alert_snmp.html.haml:37
 #: ../config/yaml_strings.rb:890
 msgid "Version"
-msgstr "Version"
+msgstr "版本"
 
 #. TRANSLATORS: file: product/views/Container.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
@@ -3446,7 +3446,7 @@ msgstr "%{model} (%{tag} %{time})"
 
 #: ../app/controllers/application_controller/performance.rb:292
 msgid "%{model} (%{tag} running %{time})"
-msgstr "%{model}（%{tag} 執行中 %{time}）"
+msgstr "%{model}（%{tag} 正在執行 %{time}）"
 
 #: ../app/controllers/application_controller/performance.rb:308
 msgid "running"
@@ -3458,7 +3458,7 @@ msgstr "已停止"
 
 #: ../app/controllers/application_controller/performance.rb:310
 msgid "No %{model} were %{state} %{time}"
-msgstr "沒有 %{model} 為 %{state} %{time}"
+msgstr "沒有 %{model} 正在 %{state} %{time}"
 
 #: ../app/controllers/application_controller/performance.rb:339
 #: ../app/controllers/application_controller/performance.rb:379
@@ -3468,7 +3468,7 @@ msgstr "沒有這個叢集的事件可用"
 #: ../app/controllers/application_controller/performance.rb:341
 #: ../app/controllers/application_controller/performance.rb:381
 msgid "No events available for this %{model}"
-msgstr "沒有這個 %{model} 的事件可用"
+msgstr "沒有適用於這個 %{model} 的事件"
 
 #: ../app/controllers/application_controller/performance.rb:519
 msgid "No %{tag} %{model}  were running %{time}"
@@ -3480,11 +3480,11 @@ msgstr "沒有 %{model} 正在執行 %{time}"
 
 #: ../app/controllers/application_controller/performance.rb:551
 msgid "on %{date} at %{time}"
-msgstr "在 %{date} 上的 %{time}"
+msgstr "在 %{date} 的 %{time}"
 
 #: ../app/controllers/application_controller/performance.rb:555
 msgid "on %{date}"
-msgstr "在 %{date} 上"
+msgstr "在 %{date}"
 
 #: ../app/controllers/application_controller/performance.rb:696
 msgid "%{date_from} to %{date_to}"
@@ -3528,7 +3528,7 @@ msgstr "'%{model}' 原則指派"
 #: ../app/controllers/application_controller/policy_support.rb:220
 #: ../app/controllers/vm_common.rb:1467
 msgid "%{vm_or_template} Policy Simulation"
-msgstr "%{vm_or_template} 原則模擬"
+msgstr "%{vm_or_template}原則模擬"
 
 #: ../app/controllers/application_controller/policy_support.rb:239
 msgid "No Policy Profiles are available"
@@ -3792,7 +3792,7 @@ msgstr "Ansible Tower"
 #: ../app/presenters/menu/default_menu.rb:222
 #: ../app/presenters/menu/default_menu.rb:237
 msgid "Explorer"
-msgstr "瀏覽器(E)"
+msgstr "瀏覽器"
 
 #: ../app/controllers/availability_zone_controller.rb:30
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:132
@@ -3884,7 +3884,7 @@ msgstr "使用「選擇檔案」按鈕來尋找 .png 或 .jpg 映像檔"
 
 #: ../app/controllers/catalog_controller.rb:592
 msgid "Order Service \"%{name}\""
-msgstr "訂單服務 \"%{name}\""
+msgstr "訂購服務 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:613
 msgid "No Ordering Dialog is available"
@@ -3908,7 +3908,7 @@ msgstr "編排範本 \"%{name}\" 是唯讀的，無法編輯。"
 
 #: ../app/controllers/catalog_controller.rb:672
 msgid "Editing %{record_name}"
-msgstr "編輯 %{record_name}"
+msgstr "正在編輯 %{record_name}"
 
 #: ../app/controllers/catalog_controller.rb:678
 msgid "Copying %{record_name}"
@@ -4001,20 +4001,20 @@ msgstr "請先更正無效的「重新配置進入點」，然後再儲存"
 
 #: ../app/controllers/catalog_controller.rb:884
 msgid "Please correct invalid Retirement Entry Point prior to saving"
-msgstr "請先更正無效的「汰舊進入點」，然後再儲存"
+msgstr "請先更正無效的「淘汰進入點」，然後再儲存"
 
 #: ../app/controllers/catalog_controller.rb:932
 msgid "Service Catalog Item \"%{name}\" was added"
-msgstr "已新增服務型錄項目 \"%{name}\\\""
+msgstr "已新增服務型錄項目 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:932
 msgid "Service Catalog Item \"%{name}\" was saved"
-msgstr "已儲存服務型錄項目 \"%{name}\\\""
+msgstr "已儲存服務型錄項目 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:953
 #: ../app/views/catalog/_svccat_tree_show.html.haml:47
 msgid "Order"
-msgstr "排序"
+msgstr "訂購"
 
 #: ../app/controllers/catalog_controller.rb:955
 #: ../app/views/catalog/_svccat_tree_show.html.haml:47
@@ -4023,7 +4023,7 @@ msgstr "訂購此服務"
 
 #: ../app/controllers/catalog_controller.rb:988
 msgid "Editing Catalog \"%{name}\""
-msgstr "編輯型錄 \"%{name}\""
+msgstr "正在編輯型錄 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:990
 msgid "Adding a new Catalog"
@@ -4058,7 +4058,7 @@ msgstr "編輯型錄軟體組 \"%{name}\""
 #: ../app/views/catalog/_sandt_tree_show.html.haml:54
 #: ../app/views/catalog/_svccat_tree_show.html.haml:40
 msgid "Price / Month (in %{currency})"
-msgstr "價格 / 月（在 %{currency} 中）"
+msgstr "價格/月（單位：%{currency}）"
 
 #: ../app/controllers/catalog_controller.rb:1564
 #: ../app/controllers/catalog_controller.rb:1579
@@ -4066,7 +4066,7 @@ msgstr "價格 / 月（在 %{currency} 中）"
 #: ../app/controllers/miq_policy_controller.rb:518
 #: ../app/controllers/vm_common.rb:1027
 msgid "All %{models}"
-msgstr "所有的 %{models}"
+msgstr "所有%{models}"
 
 #: ../app/controllers/catalog_controller.rb:1594
 msgid "Services in Catalog \"Unassigned\""
@@ -4098,7 +4098,7 @@ msgstr "價格必須是數值"
 
 #: ../app/controllers/catalog_controller.rb:2023
 msgid "Editing %{model} Tags for \"%{name}\""
-msgstr "編輯 \"%{name}\" 的 %{model} 標籤"
+msgstr "正在編輯 \"%{name}\" 的 %{model} 標籤"
 
 #: ../app/controllers/chargeback_controller.rb:53
 #: ../app/controllers/chargeback_controller.rb:391
@@ -4113,7 +4113,7 @@ msgstr "所有指派"
 #: ../app/controllers/chargeback_controller.rb:55
 #: ../app/controllers/chargeback_controller.rb:427
 msgid "All Saved Chargeback Reports"
-msgstr "所有已儲存的計費報告"
+msgstr "所有已儲存的退款報告"
 
 #: ../app/controllers/chargeback_controller.rb:100
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
@@ -4149,18 +4149,18 @@ msgstr "%<typ>s 計費費率"
 
 #: ../app/controllers/chargeback_controller.rb:297
 msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "「費率指派」期間發生錯誤：%{error_message}"
+msgstr "「比率指派」期間發生錯誤：%{error_message}"
 
 #: ../app/controllers/chargeback_controller.rb:299
 msgid "Rate Assignments saved"
-msgstr "已儲存的費率指派"
+msgstr "已儲存的比率指派"
 
 #: ../app/controllers/chargeback_controller.rb:307
 #: ../app/controllers/chargeback_controller.rb:974
 #: ../app/helpers/application_helper/title.rb:42
 #: ../app/presenters/menu/default_menu.rb:37
 msgid "Chargeback"
-msgstr "計費"
+msgstr "退款"
 
 #: ../app/controllers/chargeback_controller.rb:317
 #: ../app/controllers/report_controller.rb:24
@@ -4178,7 +4178,7 @@ msgstr "報告"
 #: ../app/controllers/chargeback_controller.rb:322
 #: ../app/presenters/tree_builder_chargeback_rates.rb:6
 msgid "Rates"
-msgstr "費率"
+msgstr "比率"
 
 #: ../app/controllers/chargeback_controller.rb:327
 #: ../app/presenters/tree_builder_chargeback_assignments.rb:6
@@ -4188,7 +4188,7 @@ msgstr "指派"
 
 #: ../app/controllers/chargeback_controller.rb:349
 msgid "Saved Chargeback Report [%{name}]"
-msgstr "已儲存的計費報告 [%{name}]"
+msgstr "已儲存的退款報告 [%{name}]"
 
 #: ../app/controllers/chargeback_controller.rb:351
 #: ../app/controllers/report_controller/saved_reports.rb:48
@@ -4213,15 +4213,15 @@ msgstr "儲存計費費率 \"%{name}\""
 
 #: ../app/controllers/chargeback_controller.rb:412
 msgid "Compute Rate Assignments"
-msgstr "計算費率指派"
+msgstr "計算比率指派"
 
 #: ../app/controllers/chargeback_controller.rb:413
 msgid "Storage Rate Assignments"
-msgstr "儲存費率指派"
+msgstr "儲存比率指派"
 
 #: ../app/controllers/chargeback_controller.rb:435
 msgid "Saved Chargeback Report \"%{last_run_on}\""
-msgstr "儲存的計費報告 \"%{last_run_on}\""
+msgstr "儲存的退款報告 \"%{last_run_on}\""
 
 #: ../app/controllers/chargeback_controller.rb:437
 msgid "Selected Saved Chargeback Report no longer exists"
@@ -4229,11 +4229,11 @@ msgstr "選取的「已儲存的計費費率」已不再存在"
 
 #: ../app/controllers/chargeback_controller.rb:449
 msgid "Saved Chargeback Reports \"%{report_name}\""
-msgstr "儲存的計費報告 \"%{report_name}\""
+msgstr "儲存的退款報告 \"%{report_name}\""
 
 #: ../app/controllers/chargeback_controller.rb:452
 msgid "Selected Chargeback Report no longer exists"
-msgstr "選取的「計費報告」已不再存在"
+msgstr "選取的「退款報告」已不再存在"
 
 #: ../app/controllers/chargeback_controller.rb:479
 msgid "Report \"%{report_name}\""
@@ -4350,7 +4350,7 @@ msgstr "無法建立雲端物件儲存庫儲存器 \"%{name}\"：%{details}"
 #: ../app/presenters/menu/default_menu.rb:147
 #: ../app/views/chargeback/_assignments_list.html.haml:13
 msgid "Storage"
-msgstr "儲存體 (Storage)"
+msgstr "儲存體"
 
 #: ../app/controllers/cloud_object_store_container_controller.rb:139
 #: ../app/controllers/cloud_object_store_object_controller.rb:41
@@ -4573,7 +4573,7 @@ msgstr "已順利起始刪除備份 \"%{name}\"。"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:98
 msgid "Unable to delete Backup \"%{name}\": %{details}"
-msgstr "無法刪除備份 \"%{name}\"：%{details}"
+msgstr "無法刪除備份：\"%{name}\"：%{details}"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:117
 #: ../app/controllers/cloud_volume_controller.rb:622
@@ -4633,7 +4633,7 @@ msgstr "從 %{vm_name} 分離雲端磁區 \"%{volume_name}\" 已完成"
 #: ../app/controllers/cloud_volume_controller.rb:172
 #: ../app/controllers/vm_cloud_controller.rb:144
 msgid "Unable to detach Cloud Volume \"%{volume_name}\" from %{vm_name}: %{details}"
-msgstr "無法從 %{vm_name} 分離雲端磁區 \"%{volume_name}\"：%{details}"
+msgstr "無法將雲端磁區 \"%{volume_name}\" 與 %{vm_name} 分離：%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:194
 #: ../app/controllers/cloud_volume_controller.rb:223
@@ -4746,7 +4746,7 @@ msgstr "已建立雲端磁區 \"%{name}\" 的 Snapshot"
 
 #: ../app/controllers/cloud_volume_controller.rb:534
 msgid "Unable to create snapshot for Cloud Volume \"%{name}\": %{details}"
-msgstr "無法建立雲端磁區 \"%{name}\" 的 Snapshot：%{details}"
+msgstr "無法建立雲端磁區 \"%{name}\" 的 Snapshot：%%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:613
 msgid "Delete initiated for %{number} Cloud Volume."
@@ -4860,7 +4860,7 @@ msgstr[0] "\"%{name}\"：由 %{rep_count} 報告使用中，無法刪除"
 
 #: ../app/controllers/configuration_controller.rb:337
 msgid "Adding copy of '%{description}'"
-msgstr "新增 '%{description}' 副本"
+msgstr "新增「%{description}」副本"
 
 #: ../app/controllers/configuration_controller.rb:351
 msgid "Edit of Time Profile \"%{name}\" was cancelled by the user"
@@ -4918,7 +4918,7 @@ msgstr "工作 (Job)"
 #: ../app/controllers/configuration_job_controller.rb:67
 #: ../app/presenters/menu/default_menu.rb:223
 msgid "Jobs"
-msgstr "工作數"
+msgstr "工作"
 
 #: ../app/controllers/container_build_controller.rb:18
 #: ../app/views/configuration/_ui_2.html.haml:46
@@ -5144,7 +5144,7 @@ msgstr "不支援縮減大小。%{name} %{new_value} 的新值低於現行值 %{
 
 #: ../app/controllers/ems_infra_controller.rb:97
 msgid " %{name} from %{value} to %{parameters} "
-msgstr " %{name} 從 %{value} 至 %{parameters} "
+msgstr " %{name} 從 %{value} 到 %{parameters} "
 
 #: ../app/controllers/ems_infra_controller.rb:112
 #: ../app/views/ems_infra/scaledown.html.haml:40
@@ -5362,7 +5362,7 @@ msgstr "浮動 IP 更新失敗：作業啟動失敗"
 
 #: ../app/controllers/floating_ip_controller.rb:152
 msgid "Couldn't initiate update of Floating IP \"%{address}\": %{details}"
-msgstr "無法起始更新浮動 IP \"%{address}\"：%{details}"
+msgstr "無法起始更新浮動 IP \"%%{address}\"：%{details}"
 
 #: ../app/controllers/floating_ip_controller.rb:166
 msgid "Floating IP \"%{address}\" updated"
@@ -5391,11 +5391,11 @@ msgstr "浮動 IP"
 
 #: ../app/controllers/generic_object_definition_controller.rb:75
 msgid "Add a new Generic Object Definition"
-msgstr "新增同屬物件定義"
+msgstr "新增一般物件定義"
 
 #: ../app/controllers/generic_object_definition_controller.rb:82
 msgid "Edit a Generic Object Definition '%{name}'"
-msgstr "編輯同屬物件定義 '%{name}'"
+msgstr "編輯一般物件定義 '%{name}'"
 
 #: ../app/controllers/generic_object_definition_controller.rb:100
 msgid "Add a new Custom Button Group"
@@ -5419,11 +5419,11 @@ msgstr "編輯自訂按鈕 '%{name}'"
 #: ../app/views/layouts/listnav/_generic_object_definition_show_list_with_treeview.html.haml:2
 #: ../config/yaml_strings.rb:1891
 msgid "Generic Object Classes"
-msgstr "同屬物件類別"
+msgstr "一般物件類別"
 
 #: ../app/controllers/generic_object_definition_controller.rb:198
 msgid "Generic Object Class %{record_name}"
-msgstr "同屬物件類別 %{record_name}"
+msgstr "一般物件類別 %{record_name}"
 
 #: ../app/controllers/generic_object_definition_controller.rb:206
 msgid "Custom Button Set %{record_name}"
@@ -5447,7 +5447,7 @@ msgstr "自動化"
 #: ../app/helpers/service_helper/textual_summary.rb:99
 #: ../app/presenters/menu/default_menu.rb:239 ../config/yaml_strings.rb:1114
 msgid "Generic Objects"
-msgstr "通用物件"
+msgstr "一般物件"
 
 #: ../app/controllers/graphql_explorer_controller.rb:12
 msgid "ManageIQ GraphQL Explorer"
@@ -5732,7 +5732,7 @@ msgstr "所有交換器"
 
 #: ../app/controllers/infra_networking_controller.rb:365
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
-msgstr "交換器 \"%{name}\" 的 %{action} \"%{item_name}\""
+msgstr "%{action} 交換器 \"%{name}\" 的 \"%{item_name}\""
 
 #: ../app/controllers/infra_networking_controller.rb:372
 msgid "\"%{action}\" for Switch \"%{name}\""
@@ -5773,7 +5773,7 @@ msgstr "自動化實例"
 #: ../app/controllers/miq_ae_class_controller.rb:97
 #: ../app/controllers/miq_ae_class_controller.rb:107
 msgid " by %{user}"
-msgstr " 依 %{user}"
+msgstr " 執行者：%{user}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:99
 #: ../app/controllers/miq_ae_class_controller.rb:109
@@ -5896,7 +5896,7 @@ msgstr "在「儲存」期間發生錯誤：%{message}"
 #: ../app/controllers/ops_controller/ops_rbac.rb:686
 #: ../app/controllers/vm_common.rb:735
 msgid "%{model} \"%{name}\" was saved"
-msgstr "已儲存 %{model} \"%{name}\""
+msgstr "%{model} \"%{name}\" 已儲存"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1151
 #: ../app/controllers/miq_ae_class_controller.rb:1204
@@ -5931,7 +5931,7 @@ msgstr "已新增自動化方法 \"%{name}\""
 #: ../app/controllers/miq_ae_class_controller.rb:1360
 #: ../app/controllers/mixins/manager_controller_mixin.rb:53
 msgid "%{model} \"%{name}\" was added"
-msgstr "已新增 %{model} \"%{name}\""
+msgstr "%{model} \"%{name}\" 已新增"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1507
 #: ../app/views/miq_ae_class/_instance_fields.html.haml:2
@@ -6001,7 +6001,7 @@ msgstr "無法刪除 \"%{field}\" 自動化網域"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2206
 msgid "%{field} is required"
-msgstr "%{field} 是必要的"
+msgstr "需要 %{field}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2438
 msgid "Edit of Class Schema Sequence '%{name}'"
@@ -6030,7 +6030,7 @@ msgstr "無法編輯唯讀自動化網域 \"%{name}\""
 #: ../app/controllers/miq_ae_class_controller.rb:2570
 #: ../app/controllers/miq_ae_customization_controller.rb:369
 msgid "Adding a new %{model}"
-msgstr "新增 %{model}"
+msgstr "新增%{model}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2572
 #: ../app/controllers/miq_ae_customization_controller.rb:366
@@ -6055,11 +6055,11 @@ msgstr "未選取要標示為 %{action} 的「自動化網域」"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2600
 msgid "The selected Automate Domain were marked as %{action}"
-msgstr "已將選取的「自動化網域」標示為 %{action}"
+msgstr "已將選取的自動化網域標示為「%{action}」"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2632
 msgid "Refreshing branch/tag for Git-based Domain"
-msgstr "正在重新整理 Git 型網域的分支/標記"
+msgstr "正在重新整理 Git 型網域的分支/標籤"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:41
 #: ../app/controllers/miq_ae_tools_controller.rb:190
@@ -6199,15 +6199,15 @@ msgstr "所有物件類型"
 
 #: ../app/controllers/miq_ae_customization_controller/custom_buttons.rb:26
 msgid "%{typ} Button Groups"
-msgstr "%{typ} 按鈕群組"
+msgstr "%{typ}按鈕群組"
 
 #: ../app/controllers/miq_ae_customization_controller/custom_buttons.rb:44
 msgid "%{typ} Button Group \"Unassigned Buttons\""
-msgstr "%{typ} 按鈕群組「未指派的按鈕」"
+msgstr "%{typ}按鈕群組「未指派的按鈕」"
 
 #: ../app/controllers/miq_ae_customization_controller/custom_buttons.rb:96
 msgid "%{typ} Button Group \"%{name}\""
-msgstr "%{typ} 按鈕群組 \"%{name}\""
+msgstr "%{typ}按鈕群組 \"%{name}\""
 
 #: ../app/controllers/miq_ae_customization_controller/dialogs.rb:84
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:57
@@ -6340,7 +6340,7 @@ msgstr "錯誤：資料儲存庫匯入不成功"
 #: ../app/controllers/miq_ae_tools_controller.rb:161
 #: ../app/controllers/miq_ae_tools_controller.rb:278
 msgid "Datastore import was successful.\nNamespaces updated/added: %{namespace_stats}\nClasses updated/added: %{class_stats}\nInstances updated/added: %{instance_stats}\nMethods updated/added: %{method_stats}"
-msgstr "資料儲存庫匯入成功。\n已更新/新增名稱空間：%{namespace_stats}\n已更新/新增類別：%{class_stats}\n已更新/新增實例：%{instance_stats}\n已更新/新增方法：%{method_stats}"
+msgstr "成功匯入資料儲存庫。已更新/已新增名稱空間：%{namespace_stats}\n已更新/已新增類別：%{class_stats}\n已更新/已新增實例：%{instance_stats}\n已更新/已新增方法：%{method_stats}"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:168
 msgid "Error: Selected domain is locked"
@@ -6406,7 +6406,7 @@ msgstr "必須選取「開始類別」"
 #: ../app/controllers/miq_ae_tools_controller.rb:411
 #: ../app/controllers/miq_ae_tools_controller.rb:412
 msgid "%{val} missing for %{field}"
-msgstr "遺漏 %{field} 的 %{val}"
+msgstr "%{field} 遺漏 %{val}"
 
 #. TRANSLATORS: file: product/views/MiqPolicy.yaml
 #: ../app/controllers/miq_policy_controller.rb:22
@@ -6454,7 +6454,7 @@ msgstr "「原則設定檔」已不再存在"
 
 #: ../app/controllers/miq_policy_controller.rb:381
 msgid "All %{items}"
-msgstr "所有的 %{items}"
+msgstr "所有%{items}"
 
 #: ../app/controllers/miq_policy_controller.rb:487
 msgid "unknown tree in replace_trees: %{name}"
@@ -6504,7 +6504,7 @@ msgstr "所有 %{typ} 原則"
 #: ../app/controllers/miq_policy_controller.rb:538
 #: ../app/controllers/miq_policy_controller.rb:912
 msgid "All %{typ} Conditions"
-msgstr "所有 %{typ} 條件"
+msgstr "所有%{typ}條件"
 
 #: ../app/controllers/miq_policy_controller.rb:543
 #: ../app/controllers/miq_policy_controller.rb:894
@@ -6523,12 +6523,12 @@ msgstr "控制原則"
 #: ../app/controllers/miq_policy_controller.rb:547
 #: ../app/controllers/miq_policy_controller.rb:896
 msgid "%{typ} Policies"
-msgstr "%{typ} 原則"
+msgstr "%{typ}原則"
 
 #: ../app/controllers/miq_policy_controller.rb:551
 #: ../app/controllers/miq_policy_controller.rb:918
 msgid "All %{typ} Alert Profiles"
-msgstr "所有 %{typ} 警示設定檔"
+msgstr "所有%{typ}警示設定檔"
 
 #: ../app/controllers/miq_policy_controller.rb:561
 msgid "Adding a new %{model_name} %{mode} Policy"
@@ -6544,7 +6544,7 @@ msgstr "%{model} 原則 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "Editing %{model} Policy \"%{name}\""
-msgstr "編輯 %{model} 原則 \"%{name}\""
+msgstr "編輯%{model}原則 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:571
 msgid " Condition Assignments"
@@ -6564,7 +6564,7 @@ msgstr "編輯 %{model} 條件 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:595
 msgid "%{model} Condition \"%{name}\""
-msgstr "%{model} 條件 \"%{name}\""
+msgstr "%{model}條件 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:602
 msgid "Editing Event \"%{name}\""
@@ -6594,7 +6594,7 @@ msgstr "新增警示設定檔"
 
 #: ../app/controllers/miq_policy_controller.rb:616
 msgid "Editing %{model} Alert Profile \"%{name}\""
-msgstr "編輯 %{model} 警示設定檔 \"%{name}\""
+msgstr "編輯%{model}警示設定檔 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:619
 #: ../app/controllers/miq_policy_controller/alert_profiles.rb:323
@@ -6662,7 +6662,7 @@ msgstr "已更新 [%{name}] 記錄 ("
 
 #: ../app/controllers/miq_policy_controller.rb:955
 msgid "%{name}:[%{key}] to [%{new_key}]"
-msgstr "%{name}：[%{key}] 至 [%{new_key}]"
+msgstr "%{name}:[%{key}] 至 [%{new_key}]"
 
 #: ../app/controllers/miq_policy_controller.rb:982
 msgid "Host is required"
@@ -6955,7 +6955,7 @@ msgstr "使用者已取消編輯 %{model} 條件 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller/conditions.rb:13
 msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "使用者已取消新增 %{model} 條件"
+msgstr "使用者取消了新增 %{model} 條件"
 
 #: ../app/controllers/miq_policy_controller/conditions.rb:22
 #: ../app/controllers/miq_policy_controller/conditions.rb:237
@@ -7057,7 +7057,7 @@ msgstr "「屬性名稱」是必要的"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:350
 msgid "Attribute missing for %{field}"
-msgstr "遺漏 %{field} 屬性"
+msgstr "%{field} 遺漏屬性"
 
 #: ../app/controllers/miq_policy_controller/miq_actions.rb:354
 msgid "At least one Alert must be selected"
@@ -7184,7 +7184,7 @@ msgstr "拒絕"
 #: ../app/presenters/menu/default_menu.rb:53
 #: ../app/presenters/menu/default_menu.rb:243 ../config/yaml_strings.rb:1162
 msgid "Requests"
-msgstr "要求數"
+msgstr "要求"
 
 #: ../app/controllers/miq_request_controller.rb:107
 msgid "Provisioned VMs [%{description}]"
@@ -7228,7 +7228,7 @@ msgstr "%{name}（不再存在）"
 
 #: ../app/controllers/miq_request_controller.rb:423
 msgid "Last 7 Days"
-msgstr "過去 7 天"
+msgstr "最近 7 天"
 
 #: ../app/controllers/miq_request_controller.rb:432
 #: ../app/helpers/security_group_helper/textual_summary.rb:89
@@ -7328,7 +7328,7 @@ msgstr "已佇列"
 #: ../app/views/report/_widget_form.html.haml:33
 #: ../app/views/report/_widget_show.html.haml:22 ../config/yaml_strings.rb:279
 msgid "Active"
-msgstr "作用中的"
+msgstr "作用中"
 
 #: ../app/controllers/miq_task_controller.rb:62
 #: ../app/helpers/application_helper/title.rb:96
@@ -7393,7 +7393,7 @@ msgstr "必須選取至少 1 個項目進行探索"
 
 #: ../app/controllers/mixins/actions/host_actions/discover.rb:86
 msgid "%{title} Discovery returned: %{error_message}"
-msgstr "已傳回 %{title} 探索：%{error_message}"
+msgstr "傳回 %{title} 探索：%{error_message}"
 
 #: ../app/controllers/mixins/actions/host_actions/discover.rb:91
 msgid "%{model}: Discovery successfully initiated"
@@ -7442,12 +7442,12 @@ msgstr[0] "已起始從 %{product} Database 執行 %{count} 主機的 %{task}"
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:72
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:78
 msgid "\"%{task}\": not supported for %{hostname}"
-msgstr "\"%{task}\"：對於 %{hostname} 不受支援"
+msgstr "\"%{task}\"：不受 %{hostname} 支援"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:91
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:96
 msgid "\"%{record}\": Scheduling is %{status} now."
-msgstr "\"%{record}\"：現在排程為 %{status}。"
+msgstr "\"%{record}\"：排程現在為 %{status}。"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:98
 msgid "\"%{record}\": %{task} invalid"
@@ -7455,12 +7455,12 @@ msgstr "\"%{record}\"：%{task} 無效"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:110
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", \"enroll\", or \"inspectfail\""
-msgstr "\"%{task}\"：不適用於 %{hostname}。%{hostname} 的供應狀態必須處於 \"available\"、\"adoptfail\"、\"cleanfail\"、\"enroll\" 或 \"inspectfail\""
+msgstr "\"%{task}\"：不適用於 %{hostname}. %{hostname} 的供應狀態必須處於 \"available\"、\"adoptfail\"、\"cleanfail\"、\"enroll\" 或 \"inspectfail\""
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:121
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:132
 msgid "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state needs to be in \"manageable\""
-msgstr "\"%{task}\"：不適用於 %{hostname}。%{hostname} 的供應狀態必須處於 \"manageable\""
+msgstr "\"%{task}\"：不適用於 %{hostname}. %{hostname} 的供應狀態必須處於 \"manageable\""
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:143
 msgid "\"%{task}\": not available for %{hostname}"
@@ -7573,44 +7573,44 @@ msgstr "將安全群組新增至 '%{name}'"
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:23
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:98
 msgid "Unable to associate Floating IP with Instance \"%{name}\": %{details}"
-msgstr "無法將浮動 IP 與實例 \"%{name}\" 產生關聯：%{details}"
+msgstr "無法將浮動 IP 與實例 \"%{name}\" 建立關聯：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:37
 msgid "Associate Floating IP with Instance '%{name}'"
-msgstr "將浮動 IP 與實例 '%{name}' 產生關聯"
+msgstr "將浮動 IP 與實例 '%{name}' 建立關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:77
 msgid "Association of Floating IP with Instance \"%{name}\" was cancelled by the user"
-msgstr "使用者已取消將浮動 IP 與實例 \"%{name}\" 產生關聯"
+msgstr "使用者已取消將浮動 IP 與實例 \"%{name}\" 建立關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:86
 msgid "Associating Floating IP %{address} with Instance \"%{name}\""
-msgstr "將浮動 IP %{address} 與實例 \"%{name}\" 產生關聯"
+msgstr "將浮動 IP %{address} 與實例 \"%{name}\" 建立關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:91
 msgid "Unable to associate Floating IP %{address} with Instance \"%{name}\": %{details}"
-msgstr "無法將浮動 IP %{address} 與實例 \"%{name}\" 產生關聯：%{details}"
+msgstr "無法將浮動 IP %{address} 與實例 \"%{name}\" 建立關聯：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:23
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:104
 msgid "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
-msgstr "無法從實例 \"%{name}\" 取消關聯浮動 IP：%{details}"
+msgstr "無法解除浮動 IP 與實例 \"%{name}\" 的關聯：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:37
 msgid "Disssociate Floating IP from Instance '%{name}'"
-msgstr "從實例 '%{name}' 取消關聯浮動 IP"
+msgstr "解除浮動 IP 與實例 '%{name}' 的關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:74
 msgid "Disassociation of Floating IP from Instance \"%{name}\" was cancelled by the user"
-msgstr "使用者已取消從實例 \"%{name}\" 取消關聯浮動 IP"
+msgstr "使用者已解除浮動 IP 與實例 \"%{name}\" 的關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:92
 msgid "Disassociating Floating IP %{address} from Instance \"%{name}\""
-msgstr "從實例 \"%{name}\" 取消關聯浮動 IP %{address}"
+msgstr "解除浮動 IP %{address} 與實例 \"%{name}\" 的關聯"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:97
 msgid "Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{details}"
-msgstr "無法從實例 \"%{name}\" 取消關聯浮動 IP %{address}：%{details}"
+msgstr "無法解除浮動 IP %{address} 與實例 \"%{name}\" 的關聯：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:7
 msgid "Evacuate Instances"
@@ -7626,7 +7626,7 @@ msgstr "實例退出作業失敗。"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:85
 msgid "Queued evacuation of Instance \"%{name}\""
-msgstr "已將實例 \"%{name}\" 退出排入佇列"
+msgstr "已將撤除實例 \"%{name}\" 排入佇列"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:87
 msgid "Unable to evacuate Instance \"%{name}\": %{details}"
@@ -7650,7 +7650,7 @@ msgstr "已將即時移轉實例 \"%{name}\" 排入佇列"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb:78
 msgid "Unable to live migrate Instance \"%{name}\": %{details}"
-msgstr "無法即時移轉實例：\"%{name}\"：%{details}"
+msgstr "無法移轉實例 \"%{name}\"：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:28
 msgid "One or more %{model} must be selected to Set Ownership"
@@ -7794,7 +7794,7 @@ msgstr "淘汰編排堆疊"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:25
 msgid "Set Retirement Date does not apply to selected VM Template"
-msgstr "設定「汰舊日期」不適用於選取的 VM 範本"
+msgstr "設定「淘汰日期」不適用於選取的 VM 範本"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:94
 msgid "Retire %{name}"
@@ -7802,17 +7802,17 @@ msgstr "淘汰 %{name}"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:124
 msgid "Set/remove retirement date was cancelled by the user"
-msgstr "使用者已取消設定/移除汰舊日期"
+msgstr "使用者已取消設定/移除淘汰日期"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:129
 msgid "Retirement date removed"
 msgid_plural "Retirement dates removed"
-msgstr[0] "已移除汰舊日期"
+msgstr[0] "已移除淘汰日期"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:135
 msgid "Retirement date set to %{time}"
 msgid_plural "Retirement dates set to %{time}"
-msgstr[0] "汰舊日期設定為 %{time}"
+msgstr[0] "淘汰日期設定為 %{time}"
 
 #: ../app/controllers/mixins/actions/vm_actions/right_size.rb:11
 msgid "One %{model} must be selected to Right-Size Recommendations"
@@ -7925,11 +7925,11 @@ msgstr "受管理主機"
 
 #: ../app/controllers/mixins/ems_common.rb:143
 msgid "Add New %{table}"
-msgstr "新增 %{table}"
+msgstr "新增%{table}"
 
 #: ../app/controllers/mixins/ems_common.rb:157
 msgid "Edit of %{object_type} %{object_name} is not supported."
-msgstr "不支援編輯 %{object_type} %{object_name} 。"
+msgstr "不支援編輯%{object_type} %{object_name}。"
 
 #: ../app/controllers/mixins/ems_common.rb:166
 msgid "Edit %{object_type} '%{object_name}'"
@@ -8011,7 +8011,7 @@ msgstr "認證驗證不成功：%{details}"
 
 #: ../app/controllers/mixins/ems_common/angular.rb:222
 msgid "Add New %{tables}"
-msgstr "新增 %{tables}"
+msgstr "新增%{tables}"
 
 #: ../app/controllers/mixins/ems_common/angular.rb:230
 msgid "Add of %{model} was cancelled by the user"
@@ -8024,11 +8024,11 @@ msgstr "%{model} \"%{name}\"：在 '%{task}' 期間發生錯誤：%{error_messag
 #: ../app/controllers/mixins/ems_common/metrics.rb:11
 msgid "%{action_name} initiated for one %{model}"
 msgid_plural "%{action_name} initiated for %{count} %{models}"
-msgstr[0] "已對 %{count} %{models} 起始 %{action_name}"
+msgstr[0] "已對 %{count} 個 %{models} 起始%{action_name}"
 
 #: ../app/controllers/mixins/ems_common/metrics.rb:42
 msgid "No %{model} were selected for %{action_name}"
-msgstr "未選取 %{action_name} 的 %{model}"
+msgstr "未選取任何 %{model} 進行 %{action_name}"
 
 #: ../app/controllers/mixins/ems_common/pause_resume.rb:13
 msgid "%{action} initiated for %{count} %{model} from the %{product} Database"
@@ -8119,7 +8119,7 @@ msgstr "%{name}（所有 %{title}）"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:56
 msgid "%{model} \"%{name}\" was updated"
-msgstr "已更新 %{model} \"%{name}\""
+msgstr "%{model} \"%{name}\" 已更新"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:72
 msgid "Add of Provider was cancelled by the user"
@@ -8400,7 +8400,7 @@ msgstr "新增對映"
 
 #: ../app/controllers/ops_controller.rb:639
 msgid "Editing tag mapping from label \"%{name}\""
-msgstr "從標籤 \"%{name}\" 編輯標記對映"
+msgstr "從標籤 \"%{name}\" 編輯標籤對映"
 
 #: ../app/controllers/ops_controller.rb:645
 msgid "Adding a new Analysis Profile"
@@ -8433,11 +8433,11 @@ msgstr "排程 \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:693
 msgid "Adding a new %{tenant}"
-msgstr "新增 %{tenant}"
+msgstr "新增%{tenant}"
 
 #: ../app/controllers/ops_controller.rb:707
 msgid "Manage quotas for %{model} \"%{name}\""
-msgstr "管理 %{model} \"%{name}\" 的配額"
+msgstr "管理 \"%{name}\" 的配額 %{model}"
 
 #: ../app/controllers/ops_controller.rb:833
 #: ../app/controllers/ops_controller.rb:840
@@ -8678,11 +8678,11 @@ msgstr "VMDB 表格 \"%{name}\""
 
 #: ../app/controllers/ops_controller/diagnostics.rb:28
 msgid "Error during 'Appliance restart': %{message}"
-msgstr "在「軟體驅動裝置重新啟動」期間發生錯誤：%{message}"
+msgstr "在「應用裝置重新啟動」期間發生錯誤：%{message}"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:36
 msgid "%{product} Appliance restart initiated successfully"
-msgstr "已順利起始 %{product} 軟體驅動裝置重新啟動"
+msgstr "已順利起始 %{product} 應用裝置重新啟動"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:54
 msgid "Error during 'workers restart': %{message}"
@@ -8784,11 +8784,11 @@ msgstr "已順利起始啟動"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:571
 msgid "Suspend is not allowed for the selected item"
-msgstr "不容許對所選項目進行暫停"
+msgstr "不容許對所選項目進行暫止"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:579
 msgid "Suspend successfully initiated"
-msgstr "已順利起始暫停"
+msgstr "已順利起始暫止"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:589
 msgid "EVM Server no longer exists"
@@ -8814,7 +8814,7 @@ msgstr "不容許對所選項目進行設定優先順序"
 #: ../app/controllers/ops_controller/diagnostics.rb:632
 #: ../app/controllers/ops_controller/diagnostics.rb:656
 msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
-msgstr "%{product} 伺服器 \"%{name}\" 設定為角色 \"%{role_description}\" 的 %{priority}\""
+msgstr "%{product} Server \"%{name}\" 設為 %{priority}（針對角色 \"%{role_description}\"）"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:728
 #: ../app/controllers/ops_controller/diagnostics.rb:819
@@ -8824,7 +8824,7 @@ msgstr "診斷程式 %{model} \"%{name}\"（現行）"
 #: ../app/controllers/ops_controller/diagnostics.rb:732
 #: ../app/controllers/ops_controller/diagnostics.rb:823
 msgid "Diagnostics %{model} \"%{name}\""
-msgstr "診斷程式 %{model} \"%{name}\""
+msgstr "診斷 %{model} \"%{name}\""
 
 #: ../app/controllers/ops_controller/diagnostics.rb:758
 msgid "Diagnostics Region \"%{name}\""
@@ -8916,7 +8916,7 @@ msgstr "無法複製預設 EVM 使用者 \"%{name}\""
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:560
 msgid "Editing %{model} for \"%{name}\""
-msgstr "編輯 \"%{name}\" 的 %{model}"
+msgstr "正在編輯 \"%{name}\" 的 %{model}"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:593
 msgid "Edit of %{name} was cancelled by the user"
@@ -9244,11 +9244,11 @@ msgstr "儲存自訂說明功能表配置不成功。"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:50
 msgid "Add of new Container Label Tag Mapping was cancelled by the user"
-msgstr "使用者已取消新增「儲存器標籤標記對映」"
+msgstr "使用者已取消新增「儲存器標籤標籤對映」"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:52
 msgid "Edit of Container Label Tag Mapping \"%{name}\" was cancelled by the user"
-msgstr "使用者已取消編輯儲存器標籤標記對映 \"%{name}\""
+msgstr "使用者已取消編輯儲存器標籤標籤對映 \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:62
 msgid "Label is required"
@@ -9268,19 +9268,19 @@ msgstr "%{entity}、標籤 \"%{label}\" 的對映已存在"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:201
 msgid "Container Label Tag Mapping \"%{name}\" was added"
-msgstr "已新增標籤標記對映 \"%{name}\""
+msgstr "已新增標籤標籤對映 \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:218
 msgid "Container Label Tag Mapping \"%{name}\" was saved"
-msgstr "已儲存標籤標記對映 \"%{name}\""
+msgstr "已儲存標籤標籤對映 \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:237
 msgid "Container Label Tag Mapping \"%{name}\": Delete successful"
-msgstr "儲存器標籤標記對映 \"%{name}\"：刪除成功"
+msgstr "儲存器標籤標籤對映 \"%{name}\"：刪除成功"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:50
 msgid " Address"
-msgstr " 地址"
+msgstr " 位址"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:55
 msgid "Enter your Red Hat account information"
@@ -9328,7 +9328,7 @@ msgstr "組織"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:228
 msgid "%{name} is required"
-msgstr "%{name} 是必要的"
+msgstr "需要 %{name}"
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:296
 msgid "No Server was selected"
@@ -9612,11 +9612,11 @@ msgstr "已刪除種類 %{description} [%{name}] 記錄"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:254
 msgid "Category %{description} [%{name}] record created ("
-msgstr "已建立種類 %{description} [%{name}] 記錄"
+msgstr "已建立種類 %{description} [%{name}] 記錄 ("
 
 #: ../app/controllers/ops_controller/settings/tags.rb:269
 msgid "Category %{description} [%{name}] record updated ("
-msgstr "已更新種類 %{description} [%{name}] 記錄"
+msgstr "已更新種類 %{description} [%{name}] 記錄 ("
 
 #: ../app/controllers/ops_controller/settings/tags.rb:275
 msgid "name:[%{session}] to [%{name}]"
@@ -9644,7 +9644,7 @@ msgstr "自訂 Favicon"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:31
 msgid "%{image} \"%{name}\" uploaded"
-msgstr "已上傳 %{image} \"%{name}\""
+msgstr "%{image} \"%{name}\" 已上傳"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:34
 msgid "Use the Choose file button to locate .%{image_type} image file"
@@ -9722,7 +9722,7 @@ msgstr "前次執行時間"
 
 #: ../app/controllers/optimization_controller.rb:118
 msgid "Report runs"
-msgstr "報告執行"
+msgstr "報告執行次數"
 
 #. TRANSLATORS: file: product/views/MiqAction.yaml
 #: ../app/controllers/optimization_controller.rb:119
@@ -9943,7 +9943,7 @@ msgstr[0] "沒有共用配置設定檔可供用於選取的已配置系統"
 
 #: ../app/controllers/provider_foreman_controller.rb:287
 msgid "Configuration Profiles under %{record_model} Provider \"%{name}\""
-msgstr "%{record_model} 提供者 \"%{name}\" 下的配置設定檔"
+msgstr "在 %{record_model} 提供者 \"%{name}\" 下的配置設定檔"
 
 #: ../app/controllers/provider_foreman_controller.rb:326
 msgid "All Configuration Management Providers"
@@ -9961,7 +9961,7 @@ msgstr "未指派的設定檔群組"
 
 #: ../app/controllers/provider_foreman_controller.rb:428
 msgid "Configured Systems under %{record_model} \"%{name}\""
-msgstr "%{record_model} \"%{name}\" 下的已配置系統"
+msgstr "已在 %{record_model} \"%{name}\" 下配置系統"
 
 #: ../app/controllers/provider_foreman_controller.rb:432
 msgid "Configured Systems under Unassigned Profiles Group"
@@ -10376,7 +10376,7 @@ msgstr "已儲存儀表板順序"
 
 #: ../app/controllers/report_controller/dashboards.rb:74
 msgid "Copy of \"%{dashboard}\" Dashboard"
-msgstr "複製 \"%{dashboard}\" 儀表板"
+msgstr "\"%{dashboard}\" 儀表板的副本"
 
 #: ../app/controllers/report_controller/dashboards.rb:80
 msgid "Copy of Dashboard was cancelled by the user"
@@ -10606,7 +10606,7 @@ msgstr "必須選取特定的 %{chargeback} 或全部"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1639
 msgid "A Group by Tag must be selected"
-msgstr "必須選取「依標記分組」"
+msgstr "必須選取「依標籤分組」"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1641
 msgid "A Group by Label must be selected"
@@ -10950,7 +10950,7 @@ msgstr "重新配置服務 \"%{name}\""
 
 #: ../app/controllers/service_controller.rb:189
 msgid "%{name} (All Generic Objects)"
-msgstr "%{name}（所有同屬物件）"
+msgstr "%{name}（所有一般物件）"
 
 #: ../app/controllers/service_controller.rb:298
 msgid "No Services were selected for deletion"
@@ -10981,7 +10981,7 @@ msgstr "設定服務的所有權"
 
 #: ../app/controllers/service_controller.rb:385
 msgid "Set/Remove retirement date for Service"
-msgstr "設定/移除服務的汰舊日期"
+msgstr "設定/移除服務的淘汰日期"
 
 #: ../app/controllers/service_controller.rb:393
 msgid "Editing Service \"%{name}\""
@@ -11131,7 +11131,7 @@ msgstr "%{model} \"%{name}\" 使用率趨勢摘要"
 
 #: ../app/controllers/utilization_controller.rb:143
 msgid " - Filtered by %{filter}"
-msgstr " - 依 %{filter} 過濾"
+msgstr " - 已依 %{filter} 過濾"
 
 #: ../app/controllers/utilization_controller.rb:242
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:22
@@ -11166,7 +11166,7 @@ msgstr "實例 \"%{instance_name}\" 沒有連接的雲端磁區"
 
 #: ../app/controllers/vm_cloud_controller.rb:45
 msgid "Detach Cloud Volume from Instance \"%{instance_name}\""
-msgstr "從實例 \"%{instance_name}\" 分離雲端磁區"
+msgstr "將雲端磁區與實例 \"%{instance_name}\" 分離"
 
 #: ../app/controllers/vm_cloud_controller.rb:59
 msgid "Attaching Cloud Volume to Instance \"%{instance_name}\" was cancelled by the user"
@@ -11174,7 +11174,7 @@ msgstr "使用者已取消將雲端磁區連接至實例 \"%{instance_name}\""
 
 #: ../app/controllers/vm_cloud_controller.rb:111
 msgid "Detaching a Cloud Volume from Instance \"%{instance_name}\" was cancelled by the user"
-msgstr "使用者已取消從實例 \"%{instance_name}\" 分離雲端磁區"
+msgstr "使用者已取消將雲端磁區與實例 \"%{instance_name}\" 分離"
 
 #: ../app/controllers/vm_cloud_controller.rb:182
 #: ../app/presenters/tree_builder_instances.rb:12
@@ -11358,19 +11358,19 @@ msgstr "埠"
 
 #: ../app/controllers/vm_common.rb:366
 msgid "Snapshot VM '%{name}''"
-msgstr "Snapshot VM '%{name}''"
+msgstr "拍攝 VM '%{name}' 的 Snapshot"
 
 #: ../app/controllers/vm_common.rb:379
 msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name} 是必要的"
+msgstr "需要 %{missing_field_name}"
 
 #: ../app/controllers/vm_common.rb:382
 msgid "Snapshot VM '%{name}'"
-msgstr "Snapshot VM '%{name}'"
+msgstr "拍攝 VM '%{name}' 的 Snapshot"
 
 #: ../app/controllers/vm_common.rb:400
 msgid "Snapshot of VM %{name} was cancelled by the user"
-msgstr "使用者已取消 VM %{name} 的 Snapshot"
+msgstr "使用者已取消拍攝 VM %%{name} 的 Snapshot"
 
 #: ../app/controllers/vm_common.rb:426
 msgid "Error during 'Create Snapshot': %{message}"
@@ -11382,7 +11382,7 @@ msgstr "已開始建立 VM 和實例 \"%{name}\" 的 Snapshot"
 
 #: ../app/controllers/vm_common.rb:448
 msgid "Policy Simulation Details for %{name}"
-msgstr "%{name} 的原則模擬明細"
+msgstr "%{name} 的原則模擬詳細資料"
 
 #: ../app/controllers/vm_common.rb:464
 msgid "No policies were selected for Policy Simulation."
@@ -11438,7 +11438,7 @@ msgstr "母項 VM 不能是其中一個子項 VM"
 
 #: ../app/controllers/vm_common.rb:731
 msgid "Error during '%{name} update': %{message}"
-msgstr "在「%{name} 更新」期間發生錯誤：%{message}"
+msgstr "在「更新 %{name}」期間發生錯誤：%{message}"
 
 #: ../app/controllers/vm_common.rb:797 ../app/controllers/vm_common.rb:799
 msgid " (Analysis History)"
@@ -11500,7 +11500,7 @@ msgstr "保存的 VM 和範本"
 
 #: ../app/controllers/vm_common.rb:1039
 msgid "%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
-msgstr "%{object_types} 在 %{datastore_or_provider} \"%{provider_or_datastore_name}\" 之下"
+msgstr "%{datastore_or_provider} \"%{provider_or_datastore_name}\" 下的 %{object_types}"
 
 #: ../app/controllers/vm_common.rb:1040
 #: ../app/controllers/vm_infra_controller.rb:24
@@ -11663,7 +11663,7 @@ msgstr "將雲端磁區連接至 %{model} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1366
 msgid "Detach Cloud Volume from %{model} \"%{name}\""
-msgstr "從 %{model} \"%{name}\" 分離雲端磁區"
+msgstr "將雲端磁區與 %{model} \"%{name}\" 分離"
 
 #: ../app/controllers/vm_common.rb:1374
 msgid "Compare %{vm_or_template}"
@@ -11671,11 +11671,11 @@ msgstr "比較 %{vm_or_template}"
 
 #: ../app/controllers/vm_common.rb:1376
 msgid "Drift for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \\\"%{name}\" 的漂移"
+msgstr "%{vm_or_template} \"%{name}\" 的漂移"
 
 #: ../app/controllers/vm_common.rb:1381
 msgid "Live Migrating %{models}"
-msgstr "即時移轉 %{models}"
+msgstr "即時移轉%{models}"
 
 #: ../app/controllers/vm_common.rb:1385
 msgid "Evacuating %{models}"
@@ -11683,11 +11683,11 @@ msgstr "退出 %{models}"
 
 #: ../app/controllers/vm_common.rb:1389
 msgid "Associating Floating IP with %{model} \"%{name}\""
-msgstr "將浮動 IP 與 %{model} \"%{name}\" 產生關聯"
+msgstr "將浮動 IP 與 %{model} \"%{name}\" 建立關聯"
 
 #: ../app/controllers/vm_common.rb:1395
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "從 %{model} \"%{name}\" 取消關聯浮動 IP"
+msgstr "解除浮動 IP 與 %{model} \"%{name}\" 的關聯"
 
 #: ../app/controllers/vm_common.rb:1401
 msgid "Add Security Group to %{model} \"%{name}\""
@@ -11695,7 +11695,7 @@ msgstr "將安全群組新增至 %{model} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1407
 msgid "Remove Security Group from %{model} \"%{name}\""
-msgstr "從 %{model} \"%{name}\" 移除安全群組"
+msgstr "從 %{model} \"%{name}\" 中移除安全群組"
 
 #: ../app/controllers/vm_common.rb:1413
 msgid "Clone %{vm_or_template}"
@@ -11715,7 +11715,7 @@ msgstr "編輯 %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1429
 msgid "Chargeback preview for \"%{vm_name}\""
-msgstr "\"%{vm_name}\\\" 的記帳預覽"
+msgstr "\"%{vm_name}\" 的退款預覽"
 
 #: ../app/controllers/vm_common.rb:1433
 msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
@@ -11735,11 +11735,11 @@ msgstr "供應 %{vms_or_templates}"
 
 #: ../app/controllers/vm_common.rb:1455
 msgid "Set Ownership for %{vms_or_templates}"
-msgstr "設定 %{vms_or_templates} 的所有權"
+msgstr "設定%{vms_or_templates}的所有權"
 
 #: ../app/controllers/vm_common.rb:1459
 msgid "Capacity & Utilization data for %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \\\"%{name}\" 的「容量與使用率」資料"
+msgstr "%{vm_or_template} \"%{name}\" 的容量與使用率資料"
 
 #: ../app/controllers/vm_common.rb:1471
 msgid "%{vm_or_template} Policy Assignment"
@@ -11759,11 +11759,11 @@ msgstr "重新配置 %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1487
 msgid "Set/Remove retirement date for %{vm_or_template}"
-msgstr "設定/移除 %{vm_or_template} 的汰舊日期"
+msgstr "設定/移除%{vm_or_template}的淘汰日期"
 
 #: ../app/controllers/vm_common.rb:1491
 msgid "Right Size Recommendation for %{vm_or_template} \"%{name}\""
-msgstr "對於 %{vm_or_template} \"%{name}\" 的正確大小建議"
+msgstr "%{vm_or_template} \"%{name}\" 的正確大小建議"
 
 #: ../app/controllers/vm_common.rb:1495
 msgid "Edit Tags for %{vm_or_template}"
@@ -12443,7 +12443,7 @@ msgstr "未收集此叢集的時間表資料"
 
 #: ../app/helpers/application_helper/button/ems_refresh.rb:6
 msgid "Unable to refresh the provider while it is suspended"
-msgstr "無法重新整理已暫停的提供者"
+msgstr "無法重新整理已暫止的提供者"
 
 #: ../app/helpers/application_helper/button/ems_refresh.rb:7
 msgid "Credentials must be valid to refresh a provider"
@@ -12702,11 +12702,11 @@ msgstr "這個角色只能在「區域」層次上管理"
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:8
 msgid "Activate the %{server_role_description} Role on another Server to \\\nsuspend it on %{server_name} [%{server_id}]"
-msgstr "在另一部伺服器上啟動 %{server_role_description} 角色，\\\n以在 %{server_name} [%{server_id}] 上暫停它"
+msgstr "在另一部伺服器上啟動 %{server_role_description} 角色，\\\n以在 %{server_name} [%{server_id}] 上暫止它"
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:14
 msgid "Only active Roles on active Servers can be suspended"
-msgstr "只能暫停作用中伺服器上的作用中角色"
+msgstr "只能暫止作用中伺服器上的作用中角色"
 
 #: ../app/helpers/application_helper/button/security_group_new.rb:5
 msgid "No cloud providers support creating security groups."
@@ -12869,15 +12869,15 @@ msgstr "顯示此 %{entity_name} 的母項 %{linked_entity_name}"
 #: ../app/helpers/application_helper/listnav.rb:120
 #: ../app/helpers/application_helper/listnav.rb:127
 msgid "Show %{plural_linked_name}"
-msgstr "顯示 %{plural_linked_name}"
+msgstr "顯示%{plural_linked_name}"
 
 #: ../app/helpers/application_helper/listnav.rb:189
 msgid "Show all %{names}"
-msgstr "顯示所有 %{names}"
+msgstr "顯示所有%{names}"
 
 #: ../app/helpers/application_helper/listnav.rb:197
 msgid "Show %{name}"
-msgstr "顯示 %{name}"
+msgstr "顯示%{name}"
 
 #: ../app/helpers/application_helper/title.rb:26
 msgid "Automation Managers"
@@ -12902,7 +12902,7 @@ msgstr "關於"
 
 #: ../app/helpers/application_helper/title.rb:48
 msgid "Generic Object Definitions"
-msgstr "同屬物件定義"
+msgstr "一般物件定義"
 
 #: ../app/helpers/application_helper/title.rb:52
 msgid "Infrastructure Topology"
@@ -13527,7 +13527,7 @@ msgstr "列印或匯出為 PDF"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:37
 msgid "Show full screen report"
-msgstr "顯示完整畫面報告"
+msgstr "顯示全螢幕報告"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:42
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:16
@@ -13536,15 +13536,15 @@ msgstr "這會在瀏覽器中顯示整個報告（所有列）。您是否要繼
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:54
 msgid "Edit this Chargeback Rate"
-msgstr "編輯此收費費率"
+msgstr "編輯此計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:62
 msgid "Copy this Chargeback Rate"
-msgstr "複製此收費費率"
+msgstr "複製此計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:70
 msgid "Remove this Chargeback Rate from the VMDB"
-msgstr "從 VMDB 中移除此收費費率"
+msgstr "從 VMDB 中移除此計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:71
 msgid "Remove from the VMDB"
@@ -13552,27 +13552,27 @@ msgstr "從 VMDB 中移除"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:74
 msgid "Warning: This Chargeback Rate will be permanently removed!"
-msgstr "警告：將永久移除此收費費率！"
+msgstr "警告：將永久移除此計費費率！"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:12
 msgid "Add a new Chargeback Rate"
-msgstr "新增收費費率"
+msgstr "新增計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:18
 msgid "Edit the selected Chargeback Rate"
-msgstr "編輯選取的收費費率"
+msgstr "編輯選取的計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:28
 msgid "Copy the selected Chargeback Rate to a new Chargeback Rate"
-msgstr "將選取的收費費率複製到新的收費費率"
+msgstr "將選取的計費費率複製到新的計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:38
 msgid "Remove selected Chargeback Rates from the VMDB"
-msgstr "從 VMDB 中移除此收費費率"
+msgstr "從 VMDB 中移除此計費費率"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:42
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
-msgstr "警告：將永久移除選取的收費費率！"
+msgstr "警告：將永久移除選取的計費費率！"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:7
@@ -13626,12 +13626,12 @@ msgstr "暫停此實例？"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:40
 msgid "Suspend this Instance"
-msgstr "暫停此實例"
+msgstr "暫止此實例"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:43
 msgid "Suspend this Instance?"
-msgstr "暫停此實例？"
+msgstr "暫止此實例？"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:49
@@ -14115,7 +14115,7 @@ msgstr "將此條件複製到指派給原則 [%{condition_policy_description}] �
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:37
 msgid "Delete this %{condition_type} Condition"
-msgstr "刪除此 %{condition_type} 條件"
+msgstr "刪除這個 %{condition_type} 條件"
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:43
 msgid "Are you sure you want to delete this %{condition_type} Condition?"
@@ -14135,7 +14135,7 @@ msgstr "新增 VM 條件"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:16
 msgid "Add a New %{condition_type} Condition"
-msgstr "新增 %{condition_type} 條件"
+msgstr "新增%{condition_type}條件"
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:12
 msgid "Remove this Job"
@@ -14752,17 +14752,17 @@ msgstr "在伺服器 %{server_name} [%{server_id}] 上啟動 %{server_role_descr
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:43
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:45
 msgid "Suspend the %{server_role_description} Role on Server %{server_name} [%{server_id}]"
-msgstr "在伺服器 %{server_name} [%{server_id}] 上暫停 %{server_role_description} 角色"
+msgstr "在伺服器 %{server_name} [%{server_id}] 上暫止 %{server_role_description} 角色"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:44
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:46
 msgid "Suspend Role"
-msgstr "暫停角色"
+msgstr "暫止角色"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:45
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:47
 msgid "Suspend the %{server_role_description} Role on Server %{server_name} [%{server_id}]?"
-msgstr "在伺服器 %{server_name} [%{server_id}] 上暫停 %{server_role_description} 角色？"
+msgstr "在伺服器 %{server_name} [%{server_id}] 上暫止 %{server_role_description} 角色？"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:51
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:53
@@ -15738,7 +15738,7 @@ msgstr "編輯所選浮動 IP 的標籤"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_center.rb:12
 msgid "Edit Tags for this Generic Object Instance"
-msgstr "編輯此同屬物件實例的標籤"
+msgstr "編輯此一般物件實例的標籤"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_center.rb:17
@@ -15763,37 +15763,37 @@ msgstr "警告：將永久移除此按鈕群組！"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:11
 msgid "Edit this Generic Object Class"
-msgstr "編輯此同屬物件類別"
+msgstr "編輯此一般物件類別"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:29
 msgid "Remove this Generic Object Classes from Inventory"
-msgstr "從庫存中移除此同屬物件類別"
+msgstr "從庫存中移除此一般物件類別"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:32
 msgid "Warning: This Generic Object Class will be permanently removed!"
-msgstr "警告：將永久移除此同屬物件類別！"
+msgstr "警告：將永久移除此一般物件類別！"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:11
 msgid "Add a new Generic Object Class"
-msgstr "新增同屬物件類別"
+msgstr "新增一般物件類別"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:17
 msgid "Edit selected Generic Object Class"
-msgstr "編輯選取的同屬物件類別"
+msgstr "編輯選取的一般物件類別"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:26
 msgid "Remove selected Generic Object Classes from Inventory"
-msgstr "從庫存中移除選取的同屬物件類別"
+msgstr "從庫存中移除選取的一般物件類別"
 
 #: ../app/helpers/application_helper/toolbar/generic_objects_center.rb:14
 msgid "Edit Tags for the selected Generic Object Instances"
-msgstr "編輯所選同屬物件實例的標籤"
+msgstr "編輯所選一般物件實例的標籤"
 
 #: ../app/helpers/application_helper/toolbar/gtl_view.rb:6
 #: ../app/helpers/application_helper/toolbar/x_gtl_view.rb:6
@@ -16573,7 +16573,7 @@ msgstr "您確定要刪除此警示設定檔嗎？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_profiles_center.rb:13
 msgid "Add a New %{alert_profile_type} Alert Profile"
-msgstr "新增 %{alert_profile_type} 警示設定檔"
+msgstr "新增%{alert_profile_type}警示設定檔"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:12
 msgid "Add a New Alert"
@@ -16653,7 +16653,7 @@ msgstr "將此原則複製到新原則 [%{new_policy_description}]"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:26
 msgid "Copy this %{policy_type} Policy"
-msgstr "複製此 %{policy_type} 原則"
+msgstr "複製此%{policy_type}原則"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:29
 msgid "Are you sure you want to create Policy [%{new_policy_description}] from this Policy?"
@@ -16661,11 +16661,11 @@ msgstr "您確定要從這個原則建立原則 [%{new_policy_description}] 嗎�
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:40
 msgid "Delete this %{policy_type} Policy"
-msgstr "刪除此 %{policy_type} 原則"
+msgstr "刪除此%{policy_type}原則"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:46
 msgid "Are you sure you want to delete this %{policy_type} Policy?"
-msgstr "您確定要刪除此 %{policy_type} 原則嗎？"
+msgstr "您確定要刪除此%{policy_type}原則嗎？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:51
 msgid "Create a new Condition assigned to this Policy"
@@ -17034,13 +17034,13 @@ msgstr "編輯此編排堆疊的標籤"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:44
 msgid "Set Retirement Dates for this Orchestration Stack"
-msgstr "設定此編排堆疊的汰舊日期"
+msgstr "設定此編排堆疊的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:45
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:143
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:156
 msgid "Set Retirement Date"
-msgstr "設定汰舊日期"
+msgstr "設定淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:49
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:51
@@ -17065,14 +17065,14 @@ msgstr "編輯所選編排堆疊的標籤"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:55
 msgid "Set Retirement Dates for the selected Orchestration Stacks"
-msgstr "設定所選編排堆疊的汰舊日期"
+msgstr "設定所選編排堆疊的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:56
 #: ../app/helpers/application_helper/toolbar/service/lifecycle_mixin.rb:16
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:149
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:206
 msgid "Set Retirement Dates"
-msgstr "設定汰舊日期"
+msgstr "設定淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:64
 msgid "Retire selected Orchestration Stacks"
@@ -17613,7 +17613,7 @@ msgstr "列印或匯出"
 
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:12
 msgid "Show full screen Report"
-msgstr "顯示完整畫面報告"
+msgstr "顯示全螢幕報告"
 
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:24
 msgid "Warning: This Saved Report and ALL of its components will be permanently removed!"
@@ -17703,7 +17703,7 @@ msgstr "編輯所選安全群組的標籤"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:148
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:205
 msgid "Set Retirement Dates for the selected items"
-msgstr "設定所選項目的汰舊日期"
+msgstr "設定所選項目的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/service/lifecycle_mixin.rb:24
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:157
@@ -17777,7 +17777,7 @@ msgstr "重新配置此服務"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:66
 msgid "Set Retirement Dates for this Service"
-msgstr "設定此服務的汰舊日期"
+msgstr "設定此服務的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:73
 msgid "Retire this Service"
@@ -18322,12 +18322,12 @@ msgstr "暫停選取的項目？"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:229
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:283
 msgid "Suspend the selected items"
-msgstr "暫停選取的項目"
+msgstr "暫止選取的項目"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:234
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:288
 msgid "Suspend the selected items?"
-msgstr "暫停選取的項目？"
+msgstr "暫止選取的項目？"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:240
 msgid "Shelve the selected items"
@@ -18744,7 +18744,7 @@ msgstr "移轉此 VM"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:142
 msgid "Set Retirement Dates for this VM"
-msgstr "設定此 VM 的汰舊日期"
+msgstr "設定此 VM 的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:148
 msgid "Retire this VM"
@@ -18764,11 +18764,11 @@ msgstr "顯示此 VM 的時間表"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:179
 msgid "Show Chargeback preview"
-msgstr "顯示計費預覽"
+msgstr "顯示退款預覽"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:180
 msgid "Chargeback Preview"
-msgstr "計費預覽"
+msgstr "退款預覽"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:189
 msgid "VM Power Functions"
@@ -18808,11 +18808,11 @@ msgstr "關閉此 VM 的電源？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:232
 msgid "Suspend this VM"
-msgstr "暫停此 VM"
+msgstr "暫止此 VM"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:235
 msgid "Suspend this VM?"
-msgstr "暫停此 VM？"
+msgstr "暫止此 VM？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:241
 msgid "Reset this VM"
@@ -18918,7 +18918,7 @@ msgstr "起始檢查此實例的前次已知配置相符性？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:155
 msgid "Set Retirement Dates for this Instance"
-msgstr "設定此實例的汰舊日期"
+msgstr "設定此實例的淘汰日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:160
 msgid "Retire this Instance"
@@ -19107,7 +19107,7 @@ msgstr "MAC 位址"
 #: ../config/yaml_strings.rb:340
 #, fuzzy
 msgid "Zone"
-msgstr "Zone"
+msgstr "區域"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ConfigurationProfile.yaml
@@ -19151,7 +19151,7 @@ msgstr "Zone"
 #: ../config/yaml_strings.rb:472
 #, fuzzy
 msgid "Region"
-msgstr "Region"
+msgstr "區域"
 
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
@@ -19304,7 +19304,7 @@ msgstr "磁碟 I/O"
 #: ../app/views/chargeback/_cb_rate_edit_table.html.haml:21
 #: ../app/views/chargeback/_cb_rate_show.html.haml:30
 msgid "Fixed"
-msgstr "已修正"
+msgstr "固定"
 
 #: ../app/helpers/chargeback_helper.rb:9
 msgid "Network I/O"
@@ -19430,7 +19430,7 @@ msgstr "受管理子網路"
 #: ../app/helpers/storage_helper/textual_summary.rb:92
 #: ../app/helpers/textual_summary_helper.rb:180
 msgid "Show all %{label}"
-msgstr "顯示所有 %{label}"
+msgstr "顯示所有%{label}"
 
 #. TRANSLATORS: file: product/views/AvailabilityZone.yaml
 #. TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
@@ -20305,7 +20305,7 @@ msgstr "顯示具有 %{name} 的主機清單"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:83
 #: ../app/helpers/host_helper/textual_summary.rb:106
 msgid "All (%{number})"
-msgstr "全部 (%{number})"
+msgstr "所有 (%{number})"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:101
 msgid "Total CPU Resources"
@@ -20326,7 +20326,7 @@ msgstr "CPU 總計"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:113
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:62
 msgid "Total %{title} CPU Cores"
-msgstr "%{title} CPU 核心總計"
+msgstr "總計 %{title} 顆 CPU 核心"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:118
 msgid "Total Configured Memory"
@@ -20343,11 +20343,11 @@ msgstr "配置的 CPU 總計"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:143
 msgid "Show all %{title}"
-msgstr "顯示所有 %{title}"
+msgstr "顯示所有%{title}"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:153
 msgid "Show VMs in this %{title}, but not in Resource Pools below"
-msgstr "顯示此 %{title} 中、但不在以下「資源儲存區」中的 VM"
+msgstr "顯示在此 %{title} 中但不在下面的資源儲存區中的 VM"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:163
 msgid "Show all VMs in this %{title}"
@@ -20475,7 +20475,7 @@ msgstr "%{host_type} 主機數目"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:61
 msgid "Aggregate %{title} CPU Resources"
-msgstr "聚集 %{title} CPU 資源"
+msgstr "聚集 %{title} 個 CPU 資源"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:66
 msgid "Aggregate %{title} Memory"
@@ -20483,11 +20483,11 @@ msgstr "聚集 %{title} 記憶體"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:71
 msgid "Aggregate %{title} CPUs"
-msgstr "聚集 %{title} CPU"
+msgstr "聚集 %{title} 顆 CPU"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:75
 msgid "Aggregate %{title} CPU Cores"
-msgstr "聚集 %{title} CPU 核心"
+msgstr "聚集 %{title} 顆 CPU 核心"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:138
 msgid "States of Root Orchestration Stacks"
@@ -20503,7 +20503,7 @@ msgstr "雲端磁區類型"
 
 #: ../app/helpers/exp_atom_helper.rb:3
 msgid "Count of"
-msgstr "的計數"
+msgstr "計數"
 
 #: ../app/helpers/exp_atom_helper.rb:6
 msgid "Find"
@@ -20526,7 +20526,7 @@ msgstr "欄位"
 #: ../config/yaml_strings.rb:833
 #, fuzzy
 msgid "Tag"
-msgstr "標記"
+msgstr "標籤"
 
 #. TRANSLATORS: file: product/views/RegistryItem.yaml
 #: ../app/helpers/exp_atom_helper.rb:18 ../app/views/ops/_ap_form.html.haml:49
@@ -20693,7 +20693,7 @@ msgstr "%{label}"
 
 #: ../app/helpers/generic_object_helper/textual_summary.rb:49
 msgid "Show all %{associated_models}"
-msgstr "顯示所有 %{associated_models}"
+msgstr "顯示所有%{associated_models}"
 
 #: ../app/helpers/gtl_helper.rb:97
 #: ../app/javascript/optimization/optimization_list.js:12
@@ -20824,12 +20824,12 @@ msgstr "維護模式"
 
 #: ../app/helpers/host_helper/textual_summary.rb:189
 msgid "Show %{title} Storage Adapters"
-msgstr "顯示 %{title} 儲存體配接器"
+msgstr "顯示 %{title} 儲存體配接卡"
 
 #: ../app/helpers/host_helper/textual_summary.rb:200
 #: ../app/helpers/host_helper/textual_summary.rb:442
 msgid "Show %{title} Network"
-msgstr "顯示 %{title} 網路"
+msgstr "顯示%{title}網路"
 
 #: ../app/helpers/host_helper/textual_summary.rb:219
 msgid "Number of CPUs"
@@ -21270,7 +21270,7 @@ msgstr "狀態原因"
 #: ../app/helpers/service_helper/textual_summary.rb:140
 #: ../app/helpers/vm_helper/textual_summary.rb:198
 msgid "Retirement Date"
-msgstr "汰舊日期"
+msgstr "淘汰日期"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:72
 msgid "Child Orchestration Stacks"
@@ -21536,7 +21536,7 @@ msgstr "承租權"
 
 #: ../app/helpers/provider_foreman_helper.rb:154
 msgid "Puppet Realm"
-msgstr "Puppet 範圍"
+msgstr "Puppet 網域範圍"
 
 #: ../app/helpers/pxe_helper/textual_summary.rb:8
 msgid "URI Prefix"
@@ -21628,7 +21628,7 @@ msgstr "此物件已獲指派原則。"
 
 #: ../app/helpers/quadicon_helper.rb:44
 msgid "Data collection for this provider is suspended."
-msgstr "此提供者的資料收集已暫停。"
+msgstr "此提供者的資料收集已暫止。"
 
 #: ../app/helpers/quadicon_helper.rb:50
 msgid "Invalid authentication credentials"
@@ -22018,7 +22018,7 @@ msgstr "磁碟上的記憶體"
 #: ../app/helpers/service_helper/textual_summary.rb:146
 #: ../app/helpers/vm_helper/textual_summary.rb:204
 msgid "Retirement State"
-msgstr "汰舊狀態"
+msgstr "淘汰狀態"
 
 #: ../app/helpers/service_helper/textual_summary.rb:155
 msgid "Parent Catalog Item"
@@ -22086,7 +22086,7 @@ msgstr "儲存庫"
 
 #: ../app/helpers/service_helper/textual_summary.rb:289
 msgid "Show Generic Object Instances for this Service"
-msgstr "顯示此服務的同屬物件實例"
+msgstr "顯示此服務的一般物件實例"
 
 #: ../app/helpers/service_helper/textual_summary.rb:333
 msgid "Plays"
@@ -22197,7 +22197,7 @@ msgstr "選取的提供者"
 
 #: ../app/helpers/term_of_service_helper.rb:7
 msgid "Tagged Providers"
-msgstr "標記的提供者"
+msgstr "加上標籤的提供者"
 
 #: ../app/helpers/term_of_service_helper.rb:10
 #: ../app/helpers/term_of_service_helper.rb:46
@@ -22206,7 +22206,7 @@ msgstr "選取的叢集 / 部署角色"
 
 #: ../app/helpers/term_of_service_helper.rb:11
 msgid "Tagged Cluster / Deployment Roles"
-msgstr "標記的叢集 / 部署角色"
+msgstr "加上標籤的叢集 / 部署角色"
 
 #: ../app/helpers/term_of_service_helper.rb:14
 msgid "Selected Host / Nodes"
@@ -22214,7 +22214,7 @@ msgstr "選取的主機 / 節點"
 
 #: ../app/helpers/term_of_service_helper.rb:15
 msgid "Tagged Host / Nodes"
-msgstr "標記的主機 / 節點"
+msgstr "加上標籤的主機 / 節點"
 
 #: ../app/helpers/term_of_service_helper.rb:18
 msgid "Selected Folders"
@@ -22226,12 +22226,12 @@ msgstr "選取的資源儲存區"
 
 #: ../app/helpers/term_of_service_helper.rb:20
 msgid "Tagged Resource Pools"
-msgstr "標記的資源儲存區"
+msgstr "加上標籤的資源儲存區"
 
 #: ../app/helpers/term_of_service_helper.rb:21
 #: ../app/helpers/term_of_service_helper.rb:47
 msgid "Tagged VMs and Instances"
-msgstr "標記的 VM 和實例"
+msgstr "加上標籤的 VM 和實例"
 
 #: ../app/helpers/term_of_service_helper.rb:25
 msgid "Selected Datastores"
@@ -22239,7 +22239,7 @@ msgstr "選取的資料儲存庫"
 
 #: ../app/helpers/term_of_service_helper.rb:26
 msgid "Tagged Datastores"
-msgstr "標記的資料儲存庫"
+msgstr "加上標籤的資料儲存庫"
 
 #: ../app/helpers/term_of_service_helper.rb:30
 #: ../app/helpers/term_of_service_helper.rb:53
@@ -22252,7 +22252,7 @@ msgstr "選取的中介軟體伺服器"
 
 #: ../app/helpers/term_of_service_helper.rb:48
 msgid "Tagged Container Images"
-msgstr "標記的儲存器映像檔"
+msgstr "加上標籤的儲存器映像檔"
 
 #: ../app/helpers/term_of_service_helper.rb:49
 msgid "Labeled Container Images"
@@ -22553,7 +22553,7 @@ msgstr "產品"
 #: ../app/views/miq_policy/_profile_details.html.haml:93
 #: ../app/views/miq_policy/_profile_details.html.haml:105
 msgid "Notes"
-msgstr "注意事項"
+msgstr "附註"
 
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb:33
 msgid "<No notes have been entered for this VM>"
@@ -22561,7 +22561,7 @@ msgstr "<未輸入此 VM 的附註"
 
 #: ../app/helpers/textual_mixins/textual_zone.rb:4
 msgid "%{m_zone} (originally in %{o_zone})"
-msgstr "%{m_zone}（原本在 %{o_zone} 中）"
+msgstr "%{m_zone}（最初位於 %{o_zone}）"
 
 #: ../app/helpers/textual_mixins/textual_zone.rb:8
 msgid "Managed by Zone"
@@ -23018,7 +23018,7 @@ msgstr "根裝置類型"
 
 #: ../app/helpers/vm_helper.rb:24
 msgid "Virtual Private Cloud"
-msgstr "虛擬專用雲端"
+msgstr "虛擬私有雲"
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
 #: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb:1724
@@ -23213,7 +23213,7 @@ msgstr "未使用/過度認可配置"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:532
 msgid "(%{value}) * Overallocated"
-msgstr "（%{value}) * 過度配置"
+msgstr "(%{value}) * 過濾配置"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:548
 #: ../app/views/vm_common/_right_size.html.haml:43
@@ -23621,7 +23621,7 @@ msgstr "無法新增特性"
 
 #: ../app/javascript/components/flavor-form/flavor-form.jsx:64
 msgid "Add of Flavor \"%s\" was successfully initialized."
-msgstr "已順利起始設定新增特性 \"%s\"。"
+msgstr "已順利起始新增特性 \"%s\"。"
 
 #: ../app/javascript/components/flavor-form/flavor-form.jsx:70
 #: ../app/javascript/spec/flavor-form/flavor-form.spec.js:60
@@ -23882,7 +23882,7 @@ msgstr "已儲存區域 \"%s\" 中的 %s 伺服器 \"%s [%s]\" 的配置設定"
 
 #: ../app/javascript/components/workers-form/workers.schema.js:19
 msgid "Generic Workers"
-msgstr "同屬工作程式"
+msgstr "一般工作程式"
 
 #: ../app/javascript/components/workers-form/workers.schema.js:25
 #: ../app/javascript/components/workers-form/workers.schema.js:42
@@ -25066,7 +25066,7 @@ msgstr "選取列 %s"
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardGeneralStep/PlanWizardGeneralStep.js:36
 msgid "Selecting a different infrastructure mapping will cause all VM and option selections to be cleared."
-msgstr "選取不同的基礎架構對映將會導致所有的 VM 和選項選擇被清除。"
+msgstr "選取不同的基礎架構對映將會導致所有 VM 和選項選擇被清除。"
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardGeneralStep/PlanWizardGeneralStep.js:70
@@ -26104,7 +26104,7 @@ msgstr "清除"
 
 #: ../app/javascript/spec/flavor-form/flavor-form.spec.js:174
 msgid "Add of Flavor \"Flavor1\" was successfully initialized."
-msgstr "已順利起始設定新增特性 \"Flavor1\"。"
+msgstr "已順利起始新增特性 \"Flavor1\"。"
 
 #: ../app/javascript/spec/flavor-form/flavor-form.spec.js:190
 msgid "Unable to add Flavor Flavor1 . Name too short!"
@@ -26193,7 +26193,7 @@ msgstr "無法自動建立使用者，因為 LDAP 搜尋未傳回使用者的資
 
 #: ../app/models/authenticator/ldap.rb:141
 msgid "Required key not specified: [%{key}]"
-msgstr "未指定必要的金鑰：[%{key}]"
+msgstr "未指定必需的金鑰：[%{key}]"
 
 #: ../app/models/automation_request.rb:49
 msgid "unknown zone %{zone_name}"
@@ -26357,12 +26357,12 @@ msgstr "「子網路」未連接至作用中的「提供者」"
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair/operations.rb:34
 #: ../app/models/manageiq/providers/cloud_manager/template.rb:118
 msgid "%{message} is not available for %{name}."
-msgstr "%{name} 無法使用 %{message}。"
+msgstr "%{message} 不適用於 %{name}。"
 
 #: ../app/models/cloud_subnet/operations.rb:41
 #: ../app/models/cloud_volume/operations.rb:101
 msgid "Validation failed for %{name} operation %{operation}. %{reason}"
-msgstr "驗證 %{name} 作業 %{operation} 失敗。%{reason}"
+msgstr "%{name} 作業 %{operation} 的驗證失敗。%{reason}"
 
 #: ../app/models/cloud_tenant.rb:52
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
@@ -26707,19 +26707,19 @@ msgstr "韌體目標"
 
 #: ../app/models/flavor.rb:23
 msgid "%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)"
-msgstr "%{name}（%{num_cpus} PU，%{memory_gigabytes} GB RAM，不明大小根磁碟）"
+msgstr "%{name}（%{num_cpus} CPU、%{memory_gigabytes} GB RAM、不明大小根磁碟）"
 
 #: ../app/models/flavor.rb:25
 msgid "%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)"
-msgstr "%{name}（%{num_cpus} CPU，%{memory_gigabytes} GB RAM，%{root_disk_gigabytes} GB 根磁碟）"
+msgstr "%{name}（%{num_cpus} CPU、%{memory_gigabytes} GB RAM、%{root_disk_gigabytes} GB 根磁碟）"
 
 #: ../app/models/flavor.rb:29
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)"
-msgstr "%{name}（%{num_cpus} CPU，%{memory_gigabytes} GB RAM，不明大小根磁碟）"
+msgstr "%{name}（%{num_cpus} CPU、%{memory_gigabytes} GB RAM、不明大小根磁碟）"
 
 #: ../app/models/flavor.rb:31
 msgid "%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)"
-msgstr "%{name}（%{num_cpus} CPU，%{memory_gigabytes} GB RAM，%{root_disk_gigabytes} GB 根磁碟）"
+msgstr "%{name}（%{num_cpus} CPU、%{memory_gigabytes} GB RAM、%{root_disk_gigabytes} GB SVE 磁碟）"
 
 #: ../app/models/flavor.rb:72
 msgid "Create Flavor Operation"
@@ -26743,11 +26743,11 @@ msgstr "浮動數"
 
 #: ../app/models/generic_object_definition.rb:85
 msgid "[%{attrs}]: not searchable for Generic Object of %{name}"
-msgstr "[%{attrs}]：無法搜尋 %{name} 的同屬物件"
+msgstr "[%{attrs}]：無法搜尋 %{name} 的一般物件"
 
 #: ../app/models/generic_object_definition/import_export.rb:8
 msgid "No Generic Object Definition to Import"
-msgstr "沒有要匯入的同屬物件定義"
+msgstr "沒有要匯入的一般物件定義"
 
 #: ../app/models/generic_object_definition/import_export.rb:10
 msgid "Incorrect format."
@@ -26852,7 +26852,7 @@ msgstr[0] "ISO 映像檔"
 
 #: ../app/models/job/state_machine.rb:36
 msgid "%{signal} is not permitted at state %{state}"
-msgstr "在狀態為 %{state} 時不允許 %{signal}"
+msgstr "%{signal} 不允許處於狀態 %{state}"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
@@ -26876,7 +26876,7 @@ msgstr "LogFile local_file 為零"
 
 #: ../app/models/log_file.rb:49
 msgid "LogFile local_file: [%{file_name}] does not exist!"
-msgstr "LogFile local_file：[%{file_name}] 不存在"
+msgstr "LogFile local_file：[%{file_name}] 不存在！"
 
 #: ../app/models/log_file.rb:51
 msgid "Log Depot settings not configured"
@@ -26884,7 +26884,7 @@ msgstr "未配置日誌保存庫設定"
 
 #: ../app/models/log_file.rb:239
 msgid "started? not implemented for %{server_name}"
-msgstr "未對 %{server_name} 實作 started?"
+msgstr "已啟動？未針對 %{server_name} 實作"
 
 #: ../app/models/log_file.rb:244
 msgid "Log request failed since [%{resource} %{server_name}] is not started"
@@ -26901,7 +26901,7 @@ msgstr "未對 %{server_name} 實作 _post_my_logs"
 #: ../app/models/manageiq/providers/amazon/cloud_manager/vm.rb:83
 #: ../app/models/manageiq/providers/amazon/manager_mixin.rb:65
 msgid "Timeline is not available for %{model}"
-msgstr "沒有 %{model} 的時間表時間表可用"
+msgstr "時間表不適用於 %{model}"
 
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager.rb:44
 #, fuzzy
@@ -27298,7 +27298,7 @@ msgstr "使用者名稱或密碼無效"
 
 #: ../app/models/manageiq/providers/ansible_tower/shared/provider.rb:69
 msgid "%{name} Automation Manager"
-msgstr "%{name} Automation Manager"
+msgstr "%{name} 自動化管理程式"
 
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:31
 msgid "Timeline not supported for this region"
@@ -27319,7 +27319,7 @@ msgstr[0] "特性 (Microsoft Azure)"
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:66
 msgid "%{name} does not exist on %{management}"
-msgstr "%{name} 不存在於 %{management}"
+msgstr "%{name} 不存在於 %{management} 上"
 
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_stack.rb:74
@@ -27782,7 +27782,7 @@ msgstr "暫停作業"
 #:
 #: ../app/models/manageiq/providers/google/cloud_manager/vm/operations/power.rb:12
 msgid "Suspend Operation"
-msgstr "暫停作業"
+msgstr "暫止作業"
 
 #:
 #: ../app/models/manageiq/providers/google/cloud_manager/vm/operations/power.rb:20
@@ -28104,7 +28104,7 @@ msgstr "來源提供者的類型必須是 Vmware"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_or_template_shared/scanning.rb:42
 msgid "VMs must be scanned from an EVM server whose host is attached to the same\n  storage as the VM unless overridden via SmartProxy affinity.\n  Please verify that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management Relationship is set for the ManageIQ appliance"
-msgstr "除非透過 SmartProxy 親緣性置換，否則必須從其主機連接至與 VM 相同的儲存體的 EVM 伺服器中掃描 VM。\n  請驗證：\n  1) 1) 直接 LUN 已連接至 ManageIQ 軟體驅動裝置\n  2) 已為 ManageIQ 軟體驅動裝置設定管理關係"
+msgstr "除非透過 SmartProxy 親緣性置換，否則必須從其主機連接至與 VM 相同的儲存體的 EVM 伺服器中掃描 VM。\n  請驗證：\n  1) 直接 LUN 已連接至 ManageIQ 軟體驅動裝置\n  2) 已為 ManageIQ 軟體驅動裝置設定管理關係"
 
 #: ../app/models/manageiq/providers/storage_manager/cinder_manager.rb:35
 #: ../app/models/manageiq/providers/storage_manager/swift_manager.rb:31
@@ -28135,7 +28135,7 @@ msgstr "「主機名稱」或「叢集名稱」是必要的"
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/provision_workflow/dialog_field_validation.rb:12
 msgid "%{field_required} for Non-DRS enabled cluster"
-msgstr "用於非 DRS 啟用的叢集的 %{field_required}"
+msgstr "支援非 DRS 的叢集的 %{field_required}"
 
 #: ../app/models/manageiq/providers/vmware/infra_manager/template.rb:8
 msgid "not connected to ems"
@@ -28219,7 +28219,7 @@ msgstr "引數必須是選項雜湊"
 
 #: ../app/models/metric/ci_mixin.rb:89
 msgid ":percentage expected integer from 0-100, received: %{number}"
-msgstr ":百分比預期為 0-100 的整數，接收到：%{number}"
+msgstr "：百分比預期為 0-100 的整數，接收到：%{number}"
 
 #: ../app/models/metric/ci_mixin/capture.rb:17
 msgid "Start time must be earlier than End time"
@@ -28228,7 +28228,7 @@ msgstr "開始時間必須早於結束時間"
 #: ../app/models/metric/ci_mixin/capture.rb:130
 #: ../app/models/metric/ci_mixin/processing.rb:4 ../app/models/storage.rb:694
 msgid "invalid interval_name '%{name}'"
-msgstr "無效的 interval_name '%{name}'"
+msgstr "interval_name '%{name}' 無效"
 
 #: ../app/models/metric/ci_mixin/capture.rb:132
 msgid "end_time cannot be specified if start_time is nil"
@@ -28299,11 +28299,11 @@ msgstr "無法執行 Script，未指定檔案名稱"
 
 #: ../app/models/miq_action.rb:446
 msgid "unable to execute script, file name [%{file_name}] does not exist"
-msgstr "無法執行 Script，檔案名稱 [%{file_name}] 不存在"
+msgstr "無法執行 Script，檔名 [%{file_name}] 不存在"
 
 #: ../app/models/miq_action.rb:476
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
-msgstr "動作 Script 已結束，帶有 rc=%{rc_value}，錯誤=%{error_text}"
+msgstr "動作 Script 已結束，其 rc=%{rc_value}，錯誤=%{error_text}"
 
 #: ../app/models/miq_action.rb:816
 msgid "unable to find vCenter with id [%{id}]"
@@ -28597,7 +28597,7 @@ msgstr "資料夾根目錄不是提供者"
 
 #: ../app/models/miq_group.rb:93
 msgid "Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'"
-msgstr "找不到 user_role 'EvmRole-%{role_name}' for group '%{group_name}'"
+msgstr "找不到群組 '%{group_name}' 的 user_role 'EvmRole-%{role_name}'"
 
 #: ../app/models/miq_group.rb:133
 msgid "Bind failed for user %{user_name}"
@@ -28656,7 +28656,7 @@ msgstr "發佈"
 
 #: ../app/models/miq_provision.rb:95
 msgid "%{title} from [%{name}] to [%{vm_name}]"
-msgstr "%{title}：從 [%{name}] 到 [%{vm_name}]"
+msgstr "%{title} 從 [%{name}] 至 [%{vm_name}]"
 
 #: ../app/models/miq_provision/options_helper.rb:31
 msgid "Unable to find source Template/Vm with id [%{number}]"
@@ -28688,7 +28688,7 @@ msgstr "VM 無法啟動"
 
 #: ../app/models/miq_provision_configured_system_request.rb:47
 msgid "%{table} install on [%{name}]"
-msgstr "%{table} 安裝於 [%{name}]"
+msgstr "%{table} 安裝在 [%{name}] 上"
 
 #: ../app/models/miq_provision_request_template.rb:30
 msgid "Provision Request Templates do not support the execute method."
@@ -28715,7 +28715,7 @@ msgstr "找不到來源範本 [%{name}]"
 #: ../app/models/miq_provision_virt_workflow.rb:766
 #: ../app/models/miq_request_workflow.rb:1468
 msgid "Provision failed for the following reasons:\n%{errors}"
-msgstr "供應失敗，原因如下：\n%{errors}"
+msgstr "供應失敗，原因如下：%{errors}"
 
 #: ../app/models/miq_provision_virt_workflow.rb:797
 msgid "Multiple source template were found from input data:<%{data}>"
@@ -28737,7 +28737,7 @@ msgstr "在目錄中找不到 ID 為 [%{id}] 的主機"
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:51
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:58
 msgid "%{description} is required"
-msgstr "%{description} 是必要的"
+msgstr "需要 %{description}"
 
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:23
 msgid "%{description} Reservation is larger than VM Memory"
@@ -28753,11 +28753,11 @@ msgstr "目錄必須是 %{directory} 之一"
 
 #: ../app/models/miq_queue.rb:284
 msgid "%{log_message} \"%{error}\" attempting to get next message"
-msgstr "%{log_message} \"%{error}\" 正在嘗試取得下一個訊息"
+msgstr "%{log_message} \"%{error}\" 嘗試獲取下一則訊息"
 
 #: ../app/models/miq_queue.rb:397
 msgid "%{log_message} \"%{error}\" attempting merge next message"
-msgstr "%{log_message} \"%{error}\" 正在嘗試合併下一個訊息"
+msgstr "%{log_message} \"%{error}\" 嘗試合併下一則訊息"
 
 #: ../app/models/miq_queue.rb:427
 msgid "class_name cannot be nil"
@@ -28765,7 +28765,7 @@ msgstr "class_name 不能為零"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:68
 msgid "%{log} \"%{error}\" attempting to get next message"
-msgstr "%{log} \"%{error}\" 正在嘗試取得下一個訊息"
+msgstr "%{log} \"%{error}\" 嘗試獲取下一則訊息"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:141
 msgid "%{log} Message <%{message}> is of unknown type <%{type}>"
@@ -28773,7 +28773,7 @@ msgstr "%{log} 訊息 <%{message}> 為不明類型 <%{type}>"
 
 #: ../app/models/miq_region.rb:115
 msgid "Region [%{region_id}] does not match the database's region [%{db_id}]"
-msgstr "區域 [%{region_id}] 與資料庫德區域 [%{db_id}] 不符"
+msgstr "區域 [%{region_id}] 與資料庫的區域 [%{db_id}] 不符"
 
 #: ../app/models/miq_region.rb:290
 msgid "options should be a Hash of type => enabled"
@@ -28952,7 +28952,7 @@ msgstr "報告日期：%{report_date}"
 
 #: ../app/models/miq_report_result.rb:229
 msgid "Page %{page_number} of %{total_pages}"
-msgstr "第 %{page_number} 頁，共 %{total_pages} 頁"
+msgstr "第 %{page_number} 頁（共 %{total_pages}頁）"
 
 #: ../app/models/miq_report_result.rb:241
 #: ../app/models/miq_report_result.rb:303
@@ -29081,11 +29081,11 @@ msgstr[0] "淘汰作業"
 
 #: ../app/models/miq_schedule.rb:165
 msgid "Run %{interval} on %{start_time}"
-msgstr "於 %{start_time} 執行 %{interval}"
+msgstr "在 %{start_time} 執行 %{interval}"
 
 #: ../app/models/miq_schedule.rb:168
 msgid "Run %{interval} starting on %{start_time}"
-msgstr "於 %{start_time} 開始執行 %{interval}"
+msgstr "從 %{start_time} 開始執行 %{interval}"
 
 #: ../app/models/miq_schedule.rb:173
 msgid "minutes"
@@ -29093,23 +29093,23 @@ msgstr "分"
 
 #: ../app/models/miq_schedule.rb:175
 msgid "hours"
-msgstr "hours"
+msgstr "小時"
 
 #: ../app/models/miq_schedule.rb:177
 msgid "days"
-msgstr "days"
+msgstr "天"
 
 #: ../app/models/miq_schedule.rb:179
 msgid "weeks"
-msgstr "weeks"
+msgstr "週"
 
 #: ../app/models/miq_schedule.rb:181
 msgid "months"
-msgstr "months"
+msgstr "月"
 
 #: ../app/models/miq_schedule.rb:183
 msgid "Run %{interval} every %{value} %{unit} starting on %{start_time}"
-msgstr "每 %{value} %{unit} starting on %{start_time} 執行一次 %{interval}"
+msgstr "從 %{start_time} 開始每 %{value} %{unit} 執行一次 %{interval}"
 
 #: ../app/models/miq_schedule.rb:276
 msgid "No userid provided!"
@@ -29226,7 +29226,7 @@ msgstr "待命的客體作業"
 
 #: ../app/models/miq_template/operations.rb:28
 msgid "%{message} is not available for Images/Templates."
-msgstr "%{message} 不可用於「映像檔/範本」。"
+msgstr "%{message} 不適用於映像檔/範本。"
 
 #: ../app/models/miq_user_role.rb:18
 msgid "Read only roles cannot be deleted."
@@ -29372,7 +29372,7 @@ msgstr "未提供來源 VM"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:167
 msgid "Unable to find VM with Id: [%{vm_id}]"
-msgstr "找不到 ID 為 [%{vm_id}] 的 VM"
+msgstr "在目錄中找不到 ID 為 [%{vm_id}] 的 VM"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:202
 msgid "Customization Specification [%{name}] does not exist."
@@ -29430,7 +29430,7 @@ msgstr "指定的日期無效：%{date}"
 
 #: ../app/models/mixins/retirement_mixin.rb:167
 msgid "%{name} already retired"
-msgstr "已淘汰 %{name}"
+msgstr "%{name} 已重試"
 
 #: ../app/models/mixins/scanning_mixin.rb:44
 msgid "Unable to process data for job with id <%{number}>. Job not found."
@@ -30044,7 +30044,7 @@ msgstr "找不到主機 <%{name}> 的預設資源儲存區，無法移轉 VM"
 #: ../app/models/vm_or_template/operations/relocation.rb:45
 #: ../app/models/vm_or_template/operations/relocation.rb:82
 msgid "Specified Resource Pool <%{pool_name}> for Host <%{name}> is invalid, unable to migrate VM"
-msgstr "所指定的資源儲存區 <%{pool_name}> for Host <%{name}> 無效，無法移轉 VM"
+msgstr "針對主機 <%{name}> 所指定的資源儲存區 <%{pool_name}> 無效，無法移轉 VM"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:51
 msgid "The VM '%{name}' can not be migrated to the same host it is already running on."
@@ -30202,7 +30202,7 @@ msgstr "服務對話框匯入/匯出"
 
 #: ../app/presenters/tree_builder_alert_profile.rb:27
 msgid "%{model} Alert Profiles"
-msgstr "%{model} 警示設定檔"
+msgstr "%{model}警示設定檔"
 
 #: ../app/presenters/tree_builder_alert_profile_obj.rb:25
 #: ../app/views/cloud_topology/show.html.haml:21
@@ -30224,7 +30224,7 @@ msgstr "<已保存>"
 
 #: ../app/presenters/tree_builder_archived.rb:8
 msgid "Archived %{model}"
-msgstr "已保存 %{model}"
+msgstr "保存的 %{model}"
 
 #: ../app/presenters/tree_builder_archived.rb:9
 msgid "<Orphaned>"
@@ -30253,7 +30253,7 @@ msgstr "所有型錄"
 
 #: ../app/presenters/tree_builder_chargeback_reports.rb:10
 msgid "Saved Chargeback Reports"
-msgstr "已儲存計費報告"
+msgstr "已儲存退款報告"
 
 #: ../app/presenters/tree_builder_clusters.rb:45
 #: ../app/presenters/tree_builder_clusters.rb:47
@@ -30536,7 +30536,7 @@ msgstr " （非作用中）"
 
 #: ../app/presenters/tree_builder_policy_simulation.rb:83
 msgid "Policy%{caption}"
-msgstr "原則 %{caption}"
+msgstr "原則%{caption}"
 
 #: ../app/presenters/tree_builder_policy_simulation.rb:109
 #: ../app/presenters/tree_builder_policy_simulation_results.rb:90
@@ -30649,15 +30649,15 @@ msgstr "次要，"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:24
 msgid " (%{priority}active, PID=%{number})"
-msgstr " （%{priority} 作用中，PID=%{number}）"
+msgstr " （%{priority}作用中，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:28
 msgid " (%{priority}available, PID=%{number})"
-msgstr " （%{priority} 可用，PID=%{number}）"
+msgstr " （%{priority}可用，PID=%{number}）"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:31
 msgid " (%{priority}unavailable)"
-msgstr " （%{priority} 無法使用）"
+msgstr " （%{priority}無法使用）"
 
 #: ../app/presenters/tree_node/availability_zone.rb:3
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:18
@@ -30698,7 +30698,7 @@ msgstr "資料中心：%{datacenter_name}"
 
 #: ../app/presenters/tree_node/ems_cluster.rb:3
 msgid "Cluster / Deployment Role: %{name}"
-msgstr "叢集/部署角色：%{name}"
+msgstr "叢集 / 部署角色：%{name}"
 
 #: ../app/presenters/tree_node/ems_folder.rb:3
 msgid "Folder: %{folder_name}"
@@ -30715,7 +30715,7 @@ msgstr "%{type} 儲存體配接卡：%{name}"
 #: ../app/presenters/tree_node/host.rb:3
 #: ../app/views/layouts/listnav/_physical_server.html.haml:20
 msgid "Host / Node: %{name}"
-msgstr "主機/節點：%{name}"
+msgstr "主機 / 節點：%{name}"
 
 #: ../app/presenters/tree_node/lan.rb:3
 msgid "Port Group: %{name}"
@@ -30731,7 +30731,7 @@ msgstr "正在產生報告"
 
 #: ../app/presenters/tree_node/miq_report_result.rb:6
 msgid "Generating Report for - %{report_name}"
-msgstr "正在為 - %{report_name} 產生報告"
+msgstr "正在為 %{report_name} 產生報告"
 
 #: ../app/presenters/tree_node/miq_report_result.rb:8
 msgid "Error Generating Report"
@@ -30783,7 +30783,7 @@ msgstr "移除小組件"
 
 #: ../app/presenters/widget_presenter.rb:30
 msgid "Are you sure you want to remove '%{title}'from the Dashboard?"
-msgstr "您確定要從儀表板中移除 '%{title}' 嗎？"
+msgstr "確定要從儀表板中移除 '%{title}' 嗎？"
 
 #: ../app/presenters/widget_presenter.rb:39
 msgid "Maximize"
@@ -31041,7 +31041,7 @@ msgstr "編目"
 #: ../app/views/static/generic_object/main_custom_button_form.html.haml:61
 #, fuzzy
 msgid "Dialog"
-msgstr "Dialog"
+msgstr "對話框"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:69
 #: ../app/views/catalog/_st_angular_form.html.haml:84
@@ -31388,7 +31388,7 @@ msgstr "選擇"
 #: ../app/views/chargeback/_cb_rate_show.html.haml:25
 #: ../app/views/ems_container/ad_hoc/_chart_view_form.html.haml:31
 msgid "Rate"
-msgstr "率"
+msgstr "費率"
 
 #: ../app/views/chargeback/_cb_assignments.html.haml:89
 #: ../app/views/chargeback/_cb_assignments.html.haml:128
@@ -31397,11 +31397,11 @@ msgstr "已儲存項目"
 
 #: ../app/views/chargeback/_cb_assignments.html.haml:94
 msgid "Tag Name"
-msgstr "標記名稱"
+msgstr "標籤名稱"
 
 #: ../app/views/chargeback/_cb_rate_currency.html.haml:2
 msgid "Rate (in %{currency})"
-msgstr "率（單位：%{currency}）"
+msgstr "費率（單位：%{currency}）"
 
 #: ../app/views/chargeback/_cb_rate_edit.html.haml:21
 msgid "Currencies"
@@ -31462,7 +31462,7 @@ msgstr "移除層級"
 #: ../app/views/chargeback/_cb_rate_show.html.haml:26
 #: ../app/views/ops/_tenant_quota_form.html.haml:20
 msgid "Units"
-msgstr "單元"
+msgstr "單位"
 
 #: ../app/views/chargeback/_cb_tier_edit_values.html.haml:5
 #: ../app/views/chargeback/_cb_tier_edit_values.html.haml:9
@@ -31702,7 +31702,7 @@ msgstr "格線/並排圖示"
 
 #: ../app/views/configuration/_ui_1.html.haml:17
 msgid "Show %{title} Quadrants"
-msgstr "顯示 %{title} 象限"
+msgstr "顯示 %{title} 個象限"
 
 #: ../app/views/configuration/_ui_1.html.haml:24
 msgid "Truncate Long Text"
@@ -31770,7 +31770,7 @@ msgstr "漂移"
 #: ../app/views/configuration/_ui_2.html.haml:14
 #, fuzzy
 msgid "Tagging"
-msgstr "標記"
+msgstr "標籤"
 
 #: ../app/views/configuration/_ui_2.html.haml:14
 msgid "Compare Mode"
@@ -32159,12 +32159,12 @@ msgstr "子網路範圍"
 #: ../app/views/ems_physical_infra/discover.html.haml:31
 #: ../app/views/layouts/_discover.html.haml:36
 msgid "From Address"
-msgstr "從位址"
+msgstr "開始位址"
 
 #: ../app/views/ems_physical_infra/discover.html.haml:43
 #: ../app/views/layouts/_discover.html.haml:48
 msgid "To Address"
-msgstr "收件者位址"
+msgstr "結束位址"
 
 #: ../app/views/ems_physical_infra/discover.html.haml:69
 #: ../app/views/layouts/_discover.html.haml:64
@@ -32253,7 +32253,7 @@ msgstr "顯示在按鈕上"
 #: ../config/yaml_strings.rb:1544 ../lib/gtl_formatter.rb:56
 #, fuzzy
 msgid "Image"
-msgstr "Image"
+msgstr "影像"
 
 #:
 #: ../app/views/generic_object_definition/_show_custom_button_group.html.haml:31
@@ -32494,7 +32494,7 @@ msgstr "清除"
 
 #: ../app/views/layouts/_discover.html.haml:8
 msgid "Discover"
-msgstr "探測"
+msgstr "探索"
 
 #: ../app/views/layouts/_discover.html.haml:30
 msgid "IPMI Credentials"
@@ -32736,7 +32736,7 @@ msgstr "取代我。"
 
 #: ../app/views/layouts/_log_viewer.html.haml:1
 msgid "Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}"
-msgstr "來自區域 %{zone_name} 中的伺服器 %{server_name} [%{server_id}] 的前 1000 行"
+msgstr "來自區域 %{zone_name} 中的伺服器 %{server_name} [%{server_id}] 的最後 1000 行"
 
 #: ../app/views/layouts/_notifications_drawer.html.haml:2
 msgid "Notifications"
@@ -32755,12 +32755,12 @@ msgstr "上一個"
 
 #: ../app/views/layouts/_paging_bar.html.haml:31
 msgid "%{start_number} of %{total_items}"
-msgstr "%{start_number}/%{total_items}"
+msgstr "%{total_items} 之 %{start_number}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:33
 #: ../app/views/layouts/_paging_bar.html.haml:35
 msgid "%{start_number}-%{end_number} of %{total_items}"
-msgstr "%{start_number}-%{end_number}/%{total_items}"
+msgstr "%{total_items} 之 %{start_number} - %{end_number}"
 
 #: ../app/views/layouts/_paging_bar.html.haml:48
 #: ../app/views/layouts/_paging_bar.html.haml:50
@@ -32861,7 +32861,7 @@ msgstr "按一下以移除此原則"
 #: ../app/views/layouts/_policy_sim.html.haml:46
 msgid "Policy Simulation for %{amount} Item"
 msgid_plural "Policy Simulation for %{amount} Items"
-msgstr[0] "%{amount} 項目的原則模擬"
+msgstr[0] "%{amount} 個項目的原則模擬"
 
 #: ../app/views/layouts/_protect.html.haml:3
 msgid "Select Policy Profiles"
@@ -32878,7 +32878,7 @@ msgstr "* 原則設定檔只套用至下面的部分項目。"
 #: ../app/views/layouts/_protect.html.haml:20
 msgid "Policy changes will affect %{amount} %{item}"
 msgid_plural "Policy changes will affect %{amount} %{items}"
-msgstr[0] "原則變更將影響 %{amount} %{items}"
+msgstr[0] "原則變更將影響 %{amount} 個 %{items}"
 
 #: ../app/views/layouts/_role_visibility.html.haml:5
 #: ../app/views/static/generic_object/main_custom_button_form.html.haml:145
@@ -32930,7 +32930,7 @@ msgstr "<select a=\"\" value=\"\" to=\"\" assign=\"\"></select>"
 #: ../app/views/layouts/_tag_edit_items.html.haml:5
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] "正在標示 %{amount} %{objects}"
+msgstr[0] "針對 %{amount} 個%{objects}加上標籤"
 
 #: ../app/views/layouts/_tl_detail.html.haml:13
 msgid "Timeline View"
@@ -33317,7 +33317,7 @@ msgstr "用於在 AWS 上執行 SmartState Analysis 時所需的 Docker 登錄�
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:376
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:23
 msgid "Used to gather Capacity & Utilization metrics."
-msgstr "用來收集容量和使用率度量值。"
+msgstr "用來收集容量與使用率度量值。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:284
 msgid "Used to authenticate with OpenStack AMQP Messaging Bus for event handling. Configure AMQP if eventing is not enabled on Ceilometer."
@@ -33589,7 +33589,7 @@ msgstr "提供者：%{name}"
 
 #: ../app/views/layouts/listnav/_availability_zone.html.haml:15
 msgid "Show this Availability Zone's parent Cloud Provider"
-msgstr "顯示此可用性區域的上層雲端提供者"
+msgstr "顯示此可用性區域的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_cloud_object_store_container.html.haml:18
 #: ../app/views/layouts/listnav/_cloud_object_store_object.html.haml:18
@@ -33605,19 +33605,19 @@ msgstr "雲端物件 (%{count})"
 
 #: ../app/views/layouts/listnav/_cloud_object_store_container.html.haml:27
 msgid "Show this Cloud Object Store's child Cloud Objects'"
-msgstr "顯示此雲端物件儲存庫的下層雲端物件"
+msgstr "顯示此雲端物件儲存庫的子項雲端物件"
 
 #: ../app/views/layouts/listnav/_cloud_object_store_object.html.haml:23
 msgid "Cloud Object Store: %{name}"
-msgstr "雲端物件儲存庫：%{name}"
+msgstr "雲端物件儲存庫 %{name}"
 
 #: ../app/views/layouts/listnav/_cloud_object_store_object.html.haml:23
 msgid "Show this Cloud Object's parent Cloud Object Store"
-msgstr "顯示此雲端物件的上層雲端物件儲存庫"
+msgstr "顯示此雲端物件的母項雲端物件儲存庫"
 
 #: ../app/views/layouts/listnav/_cloud_tenant.html.haml:15
 msgid "Show this Cloud Tenant's parent Cloud Provider"
-msgstr "顯示此雲端租戶的上層雲端提供者"
+msgstr "顯示此雲端租戶的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_cloud_tenant.html.haml:43
 msgid "Show all Volume Snapshots"
@@ -33633,11 +33633,11 @@ msgstr "顯示所有雲端物件儲存庫"
 
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:18
 msgid "Show this Cloud Volume's parent Availability Zone"
-msgstr "顯示此雲端磁區的上層可用性區域"
+msgstr "顯示此雲端磁區的母項可用性區域"
 
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:23
 msgid "Show this Cloud Volume's parent Cloud Tenant"
-msgstr "顯示此雲端磁區的上層雲端租戶"
+msgstr "顯示此雲端磁區的母項雲端租戶"
 
 #: ../app/views/layouts/listnav/_cloud_volume.html.haml:29
 msgid "Cloud Volume Snapshots (0)"
@@ -33650,7 +33650,7 @@ msgstr "雲端磁區 Snapshot (%{count})"
 #: ../app/views/layouts/listnav/_cloud_volume_backup.html.haml:15
 #: ../app/views/layouts/listnav/_cloud_volume_type.html.haml:15
 msgid "Show this Backup's parent Cloud Provider"
-msgstr "顯示此備份的上層雲端提供者"
+msgstr "顯示此備份的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_cloud_volume_backup.html.haml:20
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:20
@@ -33659,15 +33659,15 @@ msgstr "雲端磁區：%{name}"
 
 #: ../app/views/layouts/listnav/_cloud_volume_backup.html.haml:20
 msgid "Show this Backup's parent Cloud Volume"
-msgstr "顯示此備份的上層雲端磁區"
+msgstr "顯示此備份的母項雲端磁區"
 
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:15
 msgid "Show this Snapshot's parent Storage Manager"
-msgstr "顯示此 Snapshot 的上層儲存體管理程式"
+msgstr "顯示此 Snapshot 的母項儲存體管理程式"
 
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:20
 msgid "Show this Snapshot's parent Cloud Volume"
-msgstr "顯示此 Snapshot 的上層雲端磁區"
+msgstr "顯示此 Snapshot 的母項雲端磁區"
 
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:26
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:29
@@ -33680,7 +33680,7 @@ msgstr "顯示基於此 Snapshot 的所有雲端磁區"
 
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:34
 msgid "Show this Snapshot's parent Cloud Tenant"
-msgstr "顯示此 Snapshot 的上層雲端租戶"
+msgstr "顯示此 Snapshot 的母項雲端租戶"
 
 #: ../app/views/layouts/listnav/_compare_sections.html.haml:24
 msgid "Comparison Sections"
@@ -33697,7 +33697,7 @@ msgstr "套用區段"
 
 #: ../app/views/layouts/listnav/_configuration_job.html.haml:17
 msgid "Show parent %s for this Job"
-msgstr "顯示此工作的上層 %s"
+msgstr "顯示此工作的母項 %s"
 
 #: ../app/views/layouts/listnav/_configuration_job.html.haml:25
 msgid "Service: %{name}"
@@ -33792,11 +33792,11 @@ msgstr "顯示 %{cluster_title} 漂移歷程"
 
 #: ../app/views/layouts/listnav/_ems_infra.html.haml:21
 msgid "Show all managed %{cluster}"
-msgstr "顯示所有受管理 %{cluster}"
+msgstr "顯示所有受管理的 %{cluster}"
 
 #: ../app/views/layouts/listnav/_ems_infra.html.haml:27
 msgid "Show all managed %{hosts}"
-msgstr "顯示所有受管理 %{hosts}"
+msgstr "顯示所有受管理的 %{hosts}"
 
 #: ../app/views/layouts/listnav/_ems_infra.html.haml:33
 msgid "Show all managed Datastores"
@@ -33831,11 +33831,11 @@ msgstr "顯示所有韌體二進位檔"
 
 #: ../app/views/layouts/listnav/_flavor.html.haml:17
 msgid "Show this Flavor's parent Cloud Provider"
-msgstr "顯示此特性的上層雲端提供者"
+msgstr "顯示此特性的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_host.html.haml:24
 msgid "Show %{host} devices"
-msgstr "顯示 %{host} 裝置"
+msgstr "顯示 %{host} 個裝置"
 
 #: ../app/views/layouts/listnav/_host.html.haml:29
 msgid "Show %{host} network"
@@ -33843,7 +33843,7 @@ msgstr "顯示 %{host} 網路"
 
 #: ../app/views/layouts/listnav/_host.html.haml:34
 msgid "Show %{host} storage adapters"
-msgstr "顯示 %{host} 儲存體配接卡"
+msgstr "顯示 %{host} 個儲存體配接卡"
 
 #: ../app/views/layouts/listnav/_host.html.haml:39
 msgid "Show %{host} OS information"
@@ -33859,11 +33859,11 @@ msgstr "基礎架構提供者：%{name}"
 
 #: ../app/views/layouts/listnav/_host.html.haml:69
 msgid "Show parent Infrastructure Provider for this %{host}"
-msgstr "顯示此 %{host} 的上層基礎架構提供者"
+msgstr "顯示此 %{host} 的母項基礎架構提供者"
 
 #: ../app/views/layouts/listnav/_host.html.haml:76
 msgid "Show parent %{cluster} for this %{host}"
-msgstr "顯示此 %{host} 的上層 %{cluster}"
+msgstr "顯示此 %{host} 的母項 %{cluster}"
 
 #: ../app/views/layouts/listnav/_host.html.haml:112
 msgid "Show %{host} drift history"
@@ -33919,7 +33919,7 @@ msgstr "提供者："
 
 #: ../app/views/layouts/listnav/_host_aggregate.html.haml:15
 msgid "Show this Host Aggregate's parent Cloud Provider"
-msgstr "顯示此主機聚集的上層雲端提供者"
+msgstr "顯示此主機聚集的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_miq_ae_class.html.haml:12
 msgid "View Instances"
@@ -33927,7 +33927,7 @@ msgstr "檢視實例"
 
 #: ../app/views/layouts/listnav/_orchestration_stack.html.haml:16
 msgid "Show parent Cloud Provider for this Stack"
-msgstr "顯示此堆疊的上層雲端提供者"
+msgstr "顯示此堆疊的母項雲端提供者"
 
 #: ../app/views/layouts/listnav/_orchestration_stack.html.haml:21
 msgid "Show Orchestration Template"
@@ -33947,7 +33947,7 @@ msgstr "儲存器提供者：%{name}"
 
 #: ../app/views/layouts/listnav/_persistent_volume.html.haml:15
 msgid "Show this persistent volume's parent Containers Provider"
-msgstr "顯示此持續性磁區的上層儲存器提供者"
+msgstr "顯示此持續性磁區的母項儲存器提供者"
 
 #: ../app/views/layouts/listnav/_persistent_volume.html.haml:20
 msgid "Pods (0)"
@@ -33963,7 +33963,7 @@ msgstr "Pod (%{count})"
 #: ../app/views/layouts/listnav/_physical_storage.html.haml:15
 #: ../app/views/layouts/listnav/_physical_switch.html.haml:15
 msgid "Show this parent Provider"
-msgstr "顯示此上層提供者"
+msgstr "顯示此母項提供者"
 
 #: ../app/views/layouts/listnav/_physical_server.html.haml:20
 msgid "Show Host"
@@ -33972,7 +33972,7 @@ msgstr "顯示主機"
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:17
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:26
 msgid "Parent %{title}: %{name}"
-msgstr "上層 %{title}：%{name}"
+msgstr "母項 %{title}：%{name}"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:17
 msgid "Show VMs"
@@ -33980,7 +33980,7 @@ msgstr "顯示 VM"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:26
 msgid "Show Parent %{host}"
-msgstr "顯示上層 %{host}"
+msgstr "顯示母項 %{host}"
 
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:48
 msgid "Show all Resource Pools in this Resource Pool"
@@ -33988,7 +33988,7 @@ msgstr "顯示此資源儲存區中的所有資源儲存區"
 
 #: ../app/views/layouts/listnav/_security_group.html.haml:24
 msgid "Show parent Orchestration Stack for this Security Group"
-msgstr "顯示此安全群組的上層編排堆疊"
+msgstr "顯示此安全群組的母項編排堆疊"
 
 #: ../app/views/layouts/listnav/_security_group.html.haml:24
 msgid "Stack: %{name}"
@@ -34018,7 +34018,7 @@ msgstr "選取過濾器以將它設為我的預設值"
 
 #: ../app/views/layouts/listnav/_storage.html.haml:22
 msgid "Show all registered %{hosts}"
-msgstr "顯示所有已登錄 %{hosts}"
+msgstr "顯示所有登錄的 %{hosts}"
 
 #: ../app/views/layouts/listnav/_storage.html.haml:29
 msgid "Show registered VMs"
@@ -34366,7 +34366,7 @@ msgstr "選用，如果未指定，則會使用方法名稱。"
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:26
 #: ../config/yaml_strings.rb:1658
 msgid "Data"
-msgstr "Data"
+msgstr "資料"
 
 #: ../app/views/miq_ae_class/_method_form.html.haml:64
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:26
@@ -34396,7 +34396,7 @@ msgstr "選取的網域是空的"
 #: ../app/views/miq_ae_customization/_dialog_details.html.haml:8
 #: ../app/views/report/_form_styling.html.haml:99
 msgid "Sample"
-msgstr "Sample"
+msgstr "範例"
 
 #: ../app/views/miq_ae_customization/_dialog_import_export.html.haml:5
 msgid "Import Service Dialogs"
@@ -34533,7 +34533,7 @@ msgstr "XML 視圖"
 
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml:8
 msgid "Object"
-msgstr "Object"
+msgstr "物件"
 
 #: ../app/views/miq_ae_tools/_results_tree.html.haml:7
 #: ../app/views/miq_ae_tools/_results_uri.html.haml:24
@@ -34979,7 +34979,7 @@ msgstr "警示選擇"
 
 #: ../app/views/miq_policy/_alert_profile_details.html.haml:46
 msgid "Available %{model} Alerts:"
-msgstr "可用的 %{model} 警示："
+msgstr "可用的%{model}警示："
 
 #: ../app/views/miq_policy/_alert_profile_details.html.haml:59
 msgid "Move selected Alerts into this Profile"
@@ -35047,7 +35047,7 @@ msgstr "檢視條件"
 
 #: ../app/views/miq_policy/_condition_folders.html.haml:12
 msgid "%{object} Conditions"
-msgstr "%{object} 條件"
+msgstr "%{object}條件"
 
 #: ../app/views/miq_policy/_condition_list.html.haml:8
 msgid "No %{model} Conditions are defined."
@@ -35215,11 +35215,11 @@ msgstr "編輯範圍"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:45
 msgid "By Username %{username} %{created_on}"
-msgstr "透過使用者名稱 %{username} %{created_on}"
+msgstr "依使用者名稱 %{username} %{created_on}"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:52
 msgid "By Username %{username} %{updated_on}"
-msgstr "透過使用者名稱 %{username} %{updated_on}"
+msgstr "依使用者名稱 %{username} %{updated_on}"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:81
 msgid "No Policy scope defined, the scope of this policy includes all elements."
@@ -35231,7 +35231,7 @@ msgstr "條件選擇"
 
 #: ../app/views/miq_policy/_policy_details.html.haml:89
 msgid "Available %{model} Conditions:"
-msgstr "可用的 %{model} 條件："
+msgstr "可用的%{model}條件："
 
 #: ../app/views/miq_policy/_policy_details.html.haml:99
 msgid "* If all Conditions are removed from a Policy, it will be unconditional and always evaluate to true."
@@ -35415,7 +35415,7 @@ msgstr "受影響的實體伺服器"
 
 #: ../app/views/miq_request/_pre_prov.html.haml:5
 msgid "Provision %{what} based on the selected %{type}"
-msgstr "基於選取的 %{type} 的供應 %{what}"
+msgstr "基於選取的%{type}供應%{what}"
 
 #: ../app/views/miq_request/_pre_prov.html.haml:12
 msgid "Hide deprecated"
@@ -35778,7 +35778,7 @@ msgstr "自訂日誌"
 
 #: ../app/views/ops/_all_tabs.html.haml:59
 msgid "C & U Collection"
-msgstr "容量和使用率收集"
+msgstr "容量與使用率收集"
 
 #: ../app/views/ops/_all_tabs.html.haml:63
 msgid "Red Hat Updates"
@@ -35816,7 +35816,7 @@ msgstr "依角色列出的伺服器"
 
 #: ../app/views/ops/_all_tabs.html.haml:124
 msgid "C & U Gap Collection"
-msgstr "容量和使用率間隙收集"
+msgstr "容量與使用率間隙收集"
 
 #: ../app/views/ops/_all_tabs.html.haml:147
 msgid "%{product} Log"
@@ -35979,7 +35979,7 @@ msgstr "單一值"
 #: ../app/views/ops/_category_form.html.haml:44
 #: ../app/views/ops/_category_form.html.haml:106
 msgid "Capture C & U Data by Tag"
-msgstr "透過標籤擷取容量和使用率資料"
+msgstr "透過標籤擷取容量與使用率資料"
 
 #: ../app/views/ops/_category_form.html.haml:113
 msgid "* 'Name' and 'Single Value' fields cannot be edited after adding a category."
@@ -36226,7 +36226,7 @@ msgstr "需要 LDAP 主機名稱和埠欄位才能執行 LDAP 設定驗證"
 
 #: ../app/views/ops/_log_viewer.html.haml:3
 msgid "Last 1000 lines from server %{name} [%{id}] in zone %{zone}"
-msgstr "來自區域 %{zone} 中的伺服器 %{name} [%{id}] 的前 1000 行"
+msgstr "來自區域 %{zone} 中的伺服器 %{name} [%{id}] 的最後 1000 行"
 
 #: ../app/views/ops/_logs_selected.html.haml:10
 msgid "Log Depot URI"
@@ -36369,11 +36369,11 @@ msgstr "%{type} 資訊"
 #: ../app/views/ops/_rbac_tenant_details.html.haml:21
 #: ../config/yaml_strings.rb:1248
 msgid "Parent"
-msgstr "上層"
+msgstr "母項"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:22
 msgid "View Parent Tenant"
-msgstr "檢視上層租戶"
+msgstr "檢視母項租戶"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:27
 msgid "Groups in this %{type}"
@@ -36389,7 +36389,7 @@ msgstr "按一下以檢視子租戶"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:64
 msgid "Click to view child TenantProject"
-msgstr "按一下以檢視下層 TenantProject"
+msgstr "按一下以檢視子項 TenantProject"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:73
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
@@ -36558,7 +36558,7 @@ msgstr "版本/建置"
 
 #: ../app/views/ops/_selected_by_servers.html.haml:72
 msgid "%{role} on Server: %{name} [%{id}]"
-msgstr "伺服器 %{name} [%{id}] 上的 %{role}"
+msgstr "伺服器上的 %{role}：%{name} [%{id}]"
 
 #: ../app/views/ops/_selected_by_servers.html.haml:79
 msgid "active"
@@ -36664,7 +36664,7 @@ msgstr "從外部鑑別取得使用者群組 (httpd)"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:9
 msgid "Capture C & U Data"
-msgstr "擷取容量和使用率資料"
+msgstr "擷取容量與使用率資料"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:13
 msgid "Click to add a new category"
@@ -36684,7 +36684,7 @@ msgstr "無法刪除種類 '%{category_name}'"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:48
 msgid "Are you sure you want to delete category '%{category_name}'?"
-msgstr "您確定要刪除種類 '%{category_name}'嗎？"
+msgstr "確定要刪除種類 '%{category_name}' 嗎？"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:48
 msgid "Click to delete this category"
@@ -36692,11 +36692,11 @@ msgstr "按一下以刪除此種類"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:15
 msgid "Collect for All %{clusters}"
-msgstr "收集所有 %{clusters}"
+msgstr "針對所有 %{clusters} 收集"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:22
 msgid "Note: Collect for All %{clusters} must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2"
-msgstr "附註：必須勾選「收集所有 %{clusters}」才能從 Red Hat OpenStack 或 Amazon EC2 等雲端提供者收集容量和使用率資料"
+msgstr "附註：必須勾選「針對所有 %{clusters}收集」才能從 Red Hat OpenStack 或 Amazon EC2 等雲端提供者收集容量和使用率資料"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:27
 msgid "No %{clusters} found in the current region."
@@ -36708,7 +36708,7 @@ msgstr "啟用透過 %{clusters} 收集"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:38
 msgid "VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected."
-msgstr "將只針對所選 %{hosts} 下的 VM 收集 VM 資料。針對選取的 %{cluster} and all of its %{hosts} when at least one %{host} 收集資料。"
+msgstr "將只針對所選 %{hosts} 下的 VM 收集 VM 資料。當至少選取一個 %{host}時，針對選取的 %{cluster}及其所有%{hosts} 收集資料。"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:42
 msgid "Note: No %{clusters} available."
@@ -36929,7 +36929,7 @@ msgstr "按一下以編輯此對映規則"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:28
 msgid "Are you sure you want to delete mapping '%{label_name}'?"
-msgstr "您確定要刪除對映 '%{label_name}'嗎？"
+msgstr "確定要刪除對映 '%{label_name}' 嗎？"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:28
 msgid "Click to delete this mapping"
@@ -37081,7 +37081,7 @@ msgstr "測試電子郵件位址"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:257
 msgid "disable"
-msgstr "停用 (disable)"
+msgstr "停用"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:257
 msgid "invoke"
@@ -37109,7 +37109,7 @@ msgstr "除錯"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:279
 msgid "error"
-msgstr "error"
+msgstr "錯誤"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:279
 msgid "fatal"
@@ -37169,7 +37169,7 @@ msgstr "%{kind} %{description} 中伺服器的區域角色狀態 "
 
 #: ../app/views/ops/_zone_tree.html.haml:7
 msgid "Status of Roles for Servers in %{kind} %{description}"
-msgstr "%{kind} %{description}  中伺服器的角色狀態"
+msgstr "%{kind} %{description} 中伺服器的角色狀態 "
 
 #: ../app/views/ops/_zone_tree.html.haml:10
 msgid "* Primary Server Roles shown as %{bold} text."
@@ -37274,7 +37274,7 @@ msgstr "檢查更新項目"
 
 #: ../app/views/ops/rhn/_server_table.html.haml:36
 msgid "Apply %{product} Update"
-msgstr "套用 %{product} 更新項目"
+msgstr "套用 %{product} 更新"
 
 #: ../app/views/ops/rhn/_server_table.html.haml:51
 msgid "Appliance"
@@ -37419,7 +37419,7 @@ msgstr "按一下以檢視 '%{title}'"
 
 #: ../app/views/report/_db_list.html.haml:30
 msgid "Click to view %{group} "
-msgstr "按一下以檢視 %{group}"
+msgstr "按一下以檢視 %{group} "
 
 #: ../app/views/report/_db_list.html.haml:38
 msgid "No Dashboards are defined for this group. Default dashboard will be shown."
@@ -37427,7 +37427,7 @@ msgstr "未定義此群組的儀表板。將顯示預設儀表板。"
 
 #: ../app/views/report/_db_list.html.haml:49
 msgid "Click to view '%{widgetset_description} (%{widgetset_name})'"
-msgstr "按一下以檢視 '%{widgetset_description} （%{widgetset_name}）'"
+msgstr "按一下以檢視 '%{widgetset_description} (%{widgetset_name})'"
 
 #: ../app/views/report/_db_seq_form.html.haml:4
 msgid "Dashboards:"
@@ -37513,7 +37513,7 @@ msgstr "要顯示的前幾個值"
 
 #: ../app/views/report/_form_chart.html.haml:58
 msgid "Sum 'Other' values"
-msgstr "將「其他」值求和"
+msgstr "將「其他」值加總"
 
 #: ../app/views/report/_form_chart.html.haml:65
 msgid "* Some charts my not produce desired results with a single sort field"
@@ -37521,7 +37521,7 @@ msgstr "* 部分圖表可能不能使用單個排序欄位產生所需的結果"
 
 #: ../app/views/report/_form_columns.html.haml:11
 msgid "* Base the report on"
-msgstr "* 報告基於"
+msgstr "* 報告依據"
 
 #: ../app/views/report/_form_columns.html.haml:28
 msgid "* Caution: Changing these fields will clear all selected values below them!"
@@ -37673,7 +37673,7 @@ msgstr "選擇提供者"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:136
 msgid "All %{chargeback_type}"
-msgstr "所有 %{chargeback_type}"
+msgstr "所有%{chargeback_type}"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:136
 msgid "Choose %{entity}"
@@ -37705,7 +37705,7 @@ msgstr "記帳間隔"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:207
 msgid "%{chargeback_interval} Ending with"
-msgstr "%{chargeback_interval} 結束為"
+msgstr "%{chargeback_interval} 結尾為"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:211
 msgid "%{number} Days Ago"
@@ -37820,7 +37820,7 @@ msgstr "樣式"
 
 #: ../app/views/report/_form_styling.html.haml:16
 msgid "If"
-msgstr "如果 "
+msgstr "If"
 
 #: ../app/views/report/_form_styling.html.haml:39
 msgid "Normal"
@@ -38687,7 +38687,7 @@ msgstr "僅顯示前 100 個"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:38
 msgid "Showing {{limit.notifications}} items out of {{notificationGroup.notifications.length}} total."
-msgstr "顯示 {{limit.notifications}} items out of {{notificationGroup.notifications.length}} 總計。"
+msgstr "顯示 {{limit.notifications}} 個項目（總計 {{notificationGroup.notifications.length}} 個）"
 
 #: ../app/views/static/notification_drawer/notification-drawer.html.haml:40
 msgid "Show all (may take a while)"
@@ -38715,11 +38715,11 @@ msgstr "無可用的資料"
 
 #: ../app/views/static/retirement-form.html.haml:8
 msgid "Set/Remove Retirement Date"
-msgstr "設定/移除汰舊日期"
+msgstr "設定/移除淘汰日期"
 
 #: ../app/views/static/retirement-form.html.haml:13
 msgid "Enter Retirement Date as"
-msgstr "輸入汰舊日期為"
+msgstr "輸入淘汰日期為"
 
 #: ../app/views/static/retirement-form.html.haml:15
 msgid "Specific Date and Time"
@@ -38732,15 +38732,15 @@ msgstr "從現在起的時間延遲"
 #: ../app/views/static/retirement-form.html.haml:21
 #: ../app/views/static/retirement-form.html.haml:32
 msgid "Retirement Date and Time"
-msgstr "汰舊日期和時間"
+msgstr "淘汰日期和時間"
 
 #: ../app/views/static/retirement-form.html.haml:37
 msgid "Retirement Warning"
-msgstr "汰舊警告"
+msgstr "淘汰警告"
 
 #: ../app/views/static/retirement-form.html.haml:48
 msgid "* Saving a blank date will remove all retirement dates"
-msgstr "* 儲存空白日期將移除所有汰舊日期"
+msgstr "* 儲存空白日期將移除所有淘汰日期"
 
 #: ../app/views/static/vm_cloud/add_security_group.html.haml:11
 msgid "Add Security Group"
@@ -38867,15 +38867,15 @@ msgstr[0] "%{amount} 個實例要退出"
 
 #: ../app/views/vm_common/_form.html.haml:38
 msgid "Parent VM Selection"
-msgstr "上層 VM 選擇"
+msgstr "母項 VM 選擇"
 
 #: ../app/views/vm_common/_form.html.haml:55
 msgid "Child VM Selection"
-msgstr "下層 VM 選擇"
+msgstr "子項 VM 選擇"
 
 #: ../app/views/vm_common/_form.html.haml:58
 msgid "Child VMs:"
-msgstr "下層 VM："
+msgstr "子項 VM："
 
 #: ../app/views/vm_common/_form.html.haml:70
 msgid "Move selected VMs to right"
@@ -38987,7 +38987,7 @@ msgstr " 需要有效的數值磁碟大小 "
 
 #: ../app/views/vm_common/_reconfigure.html.haml:206
 msgid " Add "
-msgstr " 加"
+msgstr " 新增"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:225
 msgid "Enter Size"
@@ -38995,7 +38995,7 @@ msgstr "輸入大小"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:238
 msgid "Disk size between {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} and 2TB required"
-msgstr "需要 {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} 與 2TB 之間的磁碟大小"
+msgstr "需要介於 {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} 與 2TB 之間的磁碟大小"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:277
 msgid "Resize"
@@ -39112,7 +39112,7 @@ msgstr "合適的大小調整（激進 - 從平均值 NORM 衍生）"
 
 #: ../app/views/vm_common/_right_size.html.haml:214
 msgid "* Recommendations are subject to minimum of CPU: %{cpu} and Memory: %{memory}."
-msgstr "* 建議受 CPU 下限限制：%{cpu} 和記憶體： %{memory}。"
+msgstr "* 建議大小必須符合 CPU 下限：%{cpu} 和記憶體： %{memory}。"
 
 #: ../app/views/vm_common/_snap.html.haml:4
 msgid "Snapshot information"
@@ -39120,7 +39120,7 @@ msgstr "Snapshot 資訊"
 
 #: ../app/views/vm_common/_snapshots_desc.html.haml:23
 msgid "(%{number} bytes)"
-msgstr "（%{number} 位元組）"
+msgstr "（%{number} 個位元組）"
 
 #: ../app/views/vm_common/_snapshots_desc.html.haml:33
 msgid "%{record_name} has no snapshots"
@@ -40051,7 +40051,7 @@ msgstr "性能狀態碼"
 #. TRANSLATORS: en.yml key: dictionary.column.v_parent_host
 #: ../config/dictionary_strings.rb:414 ../config/dictionary_strings.rb:1048
 msgid "Parent Host"
-msgstr "上層主機"
+msgstr "母項主機"
 
 #. TRANSLATORS: en.yml key: dictionary.column.hostnames
 #: ../config/dictionary_strings.rb:416
@@ -40767,7 +40767,7 @@ msgstr "已開啟的 VM 總數"
 #. TRANSLATORS: en.yml key: dictionary.column.total_vms_suspended
 #: ../config/dictionary_strings.rb:750
 msgid "Total VMs Power Suspended"
-msgstr "電源已暫停的 VM 總數"
+msgstr "電源已暫止的 VM 總數"
 
 #. TRANSLATORS: en.yml key: dictionary.column.total_vms_unknown
 #: ../config/dictionary_strings.rb:752
@@ -41434,7 +41434,7 @@ msgstr "總計可用空間百分比"
 #. TRANSLATORS: en.yml key: dictionary.column.v_host_vmm_product
 #: ../config/dictionary_strings.rb:1018
 msgid "Parent Host Platform"
-msgstr "上層主機平台"
+msgstr "母項主機平台"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_is_a_template
 #: ../config/dictionary_strings.rb:1020
@@ -41475,7 +41475,7 @@ msgstr "上層資料夾路徑（VM 和範本）"
 #: ../config/dictionary_strings.rb:1032 ../config/dictionary_strings.rb:1042
 #: ../config/yaml_strings.rb:5640
 msgid "Parent Cluster"
-msgstr "上層叢集"
+msgstr "母項叢集"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_owning_folder
 #: ../config/dictionary_strings.rb:1036
@@ -41499,7 +41499,7 @@ msgstr "母項資源儲存區"
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/dictionary_strings.rb:1046 ../config/yaml_strings.rb:4878
 msgid "Parent Folder"
-msgstr "上層檔案夾"
+msgstr "上層資料夾"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_pct_cpu_ready_delta_summation
 #: ../config/dictionary_strings.rb:1052
@@ -42005,7 +42005,7 @@ msgstr "映像檔的記帳"
 #: ../config/dictionary_strings.rb:1286
 #, fuzzy
 msgid "Chargeback Rate"
-msgstr "記帳率"
+msgstr "計費費率"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CloudResourceQuota
 #: ../config/dictionary_strings.rb:1298
@@ -42203,7 +42203,7 @@ msgstr "Sambas"
 #: ../config/dictionary_strings.rb:1468
 #, fuzzy
 msgid "Generic Object"
-msgstr "通用物件"
+msgstr "一般物件"
 
 #. TRANSLATORS: en.yml key: dictionary.model.GuestApplication (plural form)
 #: ../config/dictionary_strings.rb:1478
@@ -42982,12 +42982,12 @@ msgstr "主機 (Vmware)"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack
 #: ../config/dictionary_strings.rb:2000
 msgid "Physical Rack (Lenovo)"
-msgstr "實體機架 (Lenovo)"
+msgstr "實體框架 (Lenovo)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack (plural form)
 #: ../config/dictionary_strings.rb:2002
 msgid "Physical Racks (Lenovo)"
-msgstr "實體機架 (Lenovo)"
+msgstr "實體框架 (Lenovo)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis
 #: ../config/dictionary_strings.rb:2004
@@ -44339,7 +44339,7 @@ msgstr "來源"
 
 #: ../config/model_attributes.rb:237
 msgid "Chargeback rate"
-msgstr "記帳率"
+msgstr "計費費率"
 
 #: ../config/model_attributes.rb:238
 msgid "ChargebackRate|Created on"
@@ -44347,7 +44347,7 @@ msgstr "建立日期"
 
 #: ../config/model_attributes.rb:239
 msgid "ChargebackRate|Default"
-msgstr "預設值"
+msgstr "預設"
 
 #: ../config/model_attributes.rb:240
 msgid "ChargebackRate|Description"
@@ -44379,7 +44379,7 @@ msgstr "更新日期"
 
 #: ../config/model_attributes.rb:247
 msgid "Chargeback rate detail"
-msgstr "記帳率詳細資料"
+msgstr "計費費率詳細資料"
 
 #: ../config/model_attributes.rb:248
 msgid "ChargebackRateDetail|Created on"
@@ -44439,7 +44439,7 @@ msgstr "更新時間"
 
 #: ../config/model_attributes.rb:262
 msgid "Chargeback rate detail currency"
-msgstr "記帳率詳細資料貨幣"
+msgstr "計費費率詳細資料貨幣"
 
 #: ../config/model_attributes.rb:263
 msgid "ChargebackRateDetailCurrency|Code"
@@ -44475,7 +44475,7 @@ msgstr "Unicode 十六進位"
 
 #: ../config/model_attributes.rb:271
 msgid "Chargeback rate detail measure"
-msgstr "記帳率詳細資料測量"
+msgstr "計費費率詳細資料測量"
 
 #: ../config/model_attributes.rb:272
 msgid "ChargebackRateDetailMeasure|Href slug"
@@ -45415,7 +45415,7 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:509
 msgid "Condition|Notes"
-msgstr "注意事項"
+msgstr "附註"
 
 #: ../config/model_attributes.rb:510
 msgid "Condition|Read only"
@@ -46791,7 +46791,7 @@ msgstr "區域號碼"
 
 #: ../config/model_attributes.rb:854
 msgid "Container label tag mapping"
-msgstr "貨櫃標籤標記對映"
+msgstr "貨櫃標籤標籤對映"
 
 #: ../config/model_attributes.rb:855
 msgid "ContainerLabelTagMapping|Href slug"
@@ -47659,7 +47659,7 @@ msgstr "資源版本"
 
 #: ../config/model_attributes.rb:1071
 msgid "Container route"
-msgstr "儲存器路由"
+msgstr "儲存器路線"
 
 #: ../config/model_attributes.rb:1072
 msgid "ContainerRoute|Created on"
@@ -48719,11 +48719,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1337
 msgid "DialogField|Notes"
-msgstr "注意事項"
+msgstr "附註"
 
 #: ../config/model_attributes.rb:1338
 msgid "DialogField|Notes display"
-msgstr "注意事項顯示"
+msgstr "附註顯示"
 
 #: ../config/model_attributes.rb:1339
 msgid "DialogField|Options"
@@ -49255,7 +49255,7 @@ msgstr "V cpu vr 比例"
 
 #: ../config/model_attributes.rb:1472
 msgid "EmsCluster|V parent datacenter"
-msgstr "V 上層資料中心"
+msgstr "V 母項資料中心"
 
 #: ../config/model_attributes.rb:1473
 msgid "EmsCluster|V qualified desc"
@@ -50077,7 +50077,7 @@ msgstr "vm 開啟總數"
 
 #: ../config/model_attributes.rb:1677
 msgid "ExtManagementSystem|Total vms suspended"
-msgstr "vm 已暫停總數"
+msgstr "vm 已暫止總數"
 
 #: ../config/model_attributes.rb:1678
 msgid "ExtManagementSystem|Total vms unknown"
@@ -54770,7 +54770,7 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2857
 msgid "MiqDialog|Default"
-msgstr "預設值"
+msgstr "預設"
 
 #: ../config/model_attributes.rb:2858
 msgid "MiqDialog|Description"
@@ -54974,7 +54974,7 @@ msgstr "建立時間"
 
 #: ../config/model_attributes.rb:2908
 msgid "MiqEventDefinition|Default"
-msgstr "預設值"
+msgstr "預設"
 
 #: ../config/model_attributes.rb:2909
 msgid "MiqEventDefinition|Definition"
@@ -58163,7 +58163,7 @@ msgstr "VLAN 金鑰"
 
 #: ../config/model_attributes.rb:3708
 msgid "Physical rack"
-msgstr "實體機架"
+msgstr "實體框架"
 
 #: ../config/model_attributes.rb:3709
 msgid "PhysicalRack|Ems ref"
@@ -60646,7 +60646,7 @@ msgstr "區域號碼"
 
 #: ../config/model_attributes.rb:4337
 msgid "Tagging|Taggable type"
-msgstr "可標記類型"
+msgstr "可標籤類型"
 
 #: ../config/model_attributes.rb:4339
 msgid "Tenant|Allocated memory"
@@ -62738,7 +62738,7 @@ msgstr "對轉換主機執行作業"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:28
 msgid "Edit Tags"
-msgstr "編輯 TAG"
+msgstr "編輯標籤"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:30
@@ -62758,17 +62758,17 @@ msgstr "虛擬機器下的所有協定"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:43
 msgid "VMs & Templates Accordion"
-msgstr "虛擬機器與範本協定"
+msgstr "VM 和範本折疊項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:55
 msgid "VMs Accordion"
-msgstr "虛擬機器協定"
+msgstr "VM 折疊項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:59
 msgid "Templates Accordion"
-msgstr "範本協定"
+msgstr "範本折疊項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:66
@@ -63271,7 +63271,7 @@ msgstr "配置管理領導"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:286
 msgid "Set Retirement Date for Services"
-msgstr "設定服務的退休日期"
+msgstr "設定服務的淘汰日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:288
@@ -65185,22 +65185,22 @@ msgstr "費率協定"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1039
 msgid "Add a Chargeback Rate"
-msgstr "新增記帳率"
+msgstr "新增計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1041
 msgid "Copy a Chargeback Rate"
-msgstr "複製記帳率"
+msgstr "複製計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1043
 msgid "Delete a Chargeback Rate"
-msgstr "刪除記帳率"
+msgstr "刪除計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1045
 msgid "Edit a Chargeback Rate"
-msgstr "編輯記帳率"
+msgstr "編輯計費費率"
 
 #. TRANSLATORS: file: product/views/Account-users.yaml
 #. TRANSLATORS: file: product/views/User.yaml
@@ -65221,7 +65221,7 @@ msgstr "前次登出"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1053
 msgid "Chargeback Rate currencies Accordion"
-msgstr "記帳率貨幣協定"
+msgstr "計費費率貨幣協定"
 
 #. TRANSLATORS: file: product/views/Dialog.yaml
 #: ../config/yaml_strings.rb:1053
@@ -65236,7 +65236,7 @@ msgstr "測量"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1057
 msgid "Chargeback Rate measures Accordion"
-msgstr "記帳率測量協定"
+msgstr "計費費率測量協定"
 
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
@@ -65459,7 +65459,7 @@ msgstr "編輯事件指派"
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../config/yaml_strings.rb:1116
 msgid "GenericObject"
-msgstr "GenericObject"
+msgstr "一般物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1117
@@ -65589,7 +65589,7 @@ msgstr "新增原則動作"
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #: ../config/yaml_strings.rb:1159
 msgid "Chargeback Rates"
-msgstr "記帳率"
+msgstr "計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1161
@@ -65773,7 +65773,7 @@ msgstr "顯示個別警示定義"
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/yaml_strings.rb:1218
 msgid "VMs and Templates"
-msgstr "虛擬機器與範本"
+msgstr "VM 與範本"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1219
@@ -65884,7 +65884,7 @@ msgstr "AzureStack 編排範本"
 #: ../config/yaml_strings.rb:1254
 #, fuzzy
 msgid "Load Balancer"
-msgstr "負載平衡程式"
+msgstr "負載平衡器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1255
@@ -66621,7 +66621,7 @@ msgstr "修改我的設定"
 #. TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
 #: ../config/yaml_strings.rb:1484
 msgid "Address"
-msgstr "地址"
+msgstr "位址"
 
 #. TRANSLATORS: file: product/views/FloatingIp.yaml
 #: ../config/yaml_strings.rb:1486
@@ -66944,7 +66944,7 @@ msgstr "雲端物件儲存器"
 #. TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
 #: ../config/yaml_strings.rb:1598
 msgid "Size (bytes)"
-msgstr "大小 (位元組數)"
+msgstr "大小（位元組數）"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1599
@@ -67108,7 +67108,7 @@ msgstr "刪除角色"
 #. TRANSLATORS: file: product/views/MiqUserRole.yaml
 #: ../config/yaml_strings.rb:1643
 msgid "VM & Template Access Restriction"
-msgstr "虛擬機器與範本存取限制"
+msgstr "VM 與範本存取限制"
 
 #. TRANSLATORS: file: product/views/MiqUserRole.yaml
 #: ../config/yaml_strings.rb:1645
@@ -69395,7 +69395,7 @@ msgstr "檢視實例的原則模擬"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2542
 msgid "Set Retirement Date for Instances"
-msgstr "設定實例的退休日期"
+msgstr "設定實例的淘汰日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2544
@@ -69435,7 +69435,7 @@ msgstr "回復實例"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2560
 msgid "Suspend Instance"
-msgstr "暫停實例"
+msgstr "暫止實例"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2564
@@ -69695,7 +69695,7 @@ msgstr "顯示虛擬機器驅動"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2696
 msgid "Show Capacity & Utilization data of VMs"
-msgstr "顯示虛擬機器的容量和使用率資料"
+msgstr "顯示虛擬機器的容量與使用率資料"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2698
@@ -69740,7 +69740,7 @@ msgstr "檢視虛擬機器的原則模擬"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2716
 msgid "Set Retirement Date for VMs"
-msgstr "設定虛擬機器的汰舊日期"
+msgstr "設定虛擬機器的淘汰日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2718
@@ -69770,7 +69770,7 @@ msgstr "關閉虛擬機器電源"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2728
 msgid "Suspend VM"
-msgstr "暫停虛擬機器"
+msgstr "暫止虛擬機器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2730
@@ -69885,7 +69885,7 @@ msgstr "大量轉換"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2780
 msgid "Transform tagged VMs"
-msgstr "轉換標記的虛擬機器"
+msgstr "轉換標籤的虛擬機器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2782
@@ -70370,7 +70370,7 @@ msgstr "檢視實體框架"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2996
 msgid "Display Lists of Physical Racks"
-msgstr "顯示實體機架清單"
+msgstr "顯示實體框架清單"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2998
@@ -70380,7 +70380,7 @@ msgstr "顯示個別實體框架"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3000
 msgid "Perform Operations on Physical Racks"
-msgstr "對實體機架執行作業"
+msgstr "對實體框架執行作業"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3002
@@ -70935,7 +70935,7 @@ msgstr "停止服務"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3269
 msgid "Suspend services"
-msgstr "暫停服務"
+msgstr "暫止服務"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3271
@@ -71430,12 +71430,12 @@ msgstr "已供應 %{subject}。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3477
 msgid "Service %{subject} has been retired."
-msgstr "服務 %{subject} 已退休。"
+msgstr "服務 %{subject} 已淘汰。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3479
 msgid "Service %{subject} has started retirement."
-msgstr "服務 %{subject} 已開始退休。"
+msgstr "服務 %{subject} 已開始淘汰。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3481
@@ -71445,12 +71445,12 @@ msgstr "已供應虛擬機器 %{subject}。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3483
 msgid "Virtual Machine %{subject} has been retired."
-msgstr "虛擬機器 %{subject} 已退休。"
+msgstr "虛擬機器 %{subject} 已淘汰。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3485
 msgid "Virtual Machine %{subject} has started retirement."
-msgstr "虛擬機器 %{subject} 已開始退休。"
+msgstr "虛擬機器 %{subject} 已開始淘汰。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3487
@@ -71460,7 +71460,7 @@ msgstr "要求 %{subject} 已核准。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3489
 msgid "Request %{subject} has been denied."
-msgstr "已拒絕要求 %{subject}。"
+msgstr "要求 %{subject} 已被拒絕。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3491
@@ -71535,7 +71535,7 @@ msgstr "無法完成 %{subject} 的 %{snapshot_op} Snapshot： %{error}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3519
 msgid "Orchestration Stack %{subject} has been retired."
-msgstr "編排堆疊 %{subject} 已退休。"
+msgstr "編排堆疊 %{subject} 已淘汰。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3521
@@ -71560,12 +71560,12 @@ msgstr "毀損虛擬機器 %{subject} 失敗： %{error_message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3529
 msgid "Conversion Host %{op_name} of resource %{op_arg} completed successfully."
-msgstr "資源 %{op_arg} 的轉換主機 %{op_name} 已順利完成。"
+msgstr "資源 %{op_arg} 的主機轉換 %{op_name} 已順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3531
 msgid "Conversion Host %{op_name} of resource %{op_arg} failed. Please check the logs for further details."
-msgstr "資源 %{op_arg} 的轉換主機 %{op_name} 失敗。 請檢查日誌以取得詳細資料。"
+msgstr "資源 %{op_arg} 的主機轉換 %{op_name} 失敗。 請檢查日誌以取得詳細資料。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3533
@@ -71580,72 +71580,72 @@ msgstr "將磁區 %{subject} 連接至實例 %{instance_name} 失敗： %{error_
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3537
 msgid "Detaching Volume %{subject} from Instance %{instance_name} completed successfully."
-msgstr "將磁區 %{subject} 從實例 %{instance_name} 分離已順利完成。"
+msgstr "分離磁區 %{subject} 與實例 %{instance_name} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3539
 msgid "Detaching Volume %{subject} from Instance %{instance_name} failed: %{error_message}"
-msgstr "從實例 %{instance_name} 分離磁區 %{subject} 失敗： %{error_message}"
+msgstr "分離磁區 %{subject} 與實例 %{instance_name} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3541
 msgid "Creating Volume %{volume_name} completed successfully."
-msgstr "建立磁區 %{volume_name} 已順利完成。"
+msgstr "建立磁區 %{volume_name} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3543
 msgid "Creating Volume %{volume_name} failed: %{error_message}"
-msgstr "建立磁區 %{volume_name} 失敗： %{error_message}"
+msgstr "建立磁區 %{volume_name} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3545
 msgid "Updating Volume %{subject} completed successfully."
-msgstr "更新磁區 %{subject} 已順利完成。"
+msgstr "更新磁區 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3547
 msgid "Updating Volume %{subject} failed: %{error_message}"
-msgstr "更新磁區 %{subject} 失敗： %{error_message}"
+msgstr "更新磁區 %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3549
 msgid "Deleting Volume %{subject} completed successfully."
-msgstr "刪除磁區 %{subject} 已順利完成。"
+msgstr "刪除磁區 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3551
 msgid "Deleting Volume %{subject} failed: %{error_message}"
-msgstr "刪除磁區 %{subject} 失敗： %{error_message}"
+msgstr "刪除磁區 %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3553
 msgid "Creating Snapshot %{snapshot_name} of Volume %{volume_name} completed successfully."
-msgstr "建立磁區 %{volume_name} 的 Snapshot %{snapshot_name} 已順利完成。"
+msgstr "建立磁區 %{volume_name} 的 Snapshot %{snapshot_name} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3555
 msgid "Creating Snapshot %{snapshot_name} of Volume %{volume_name} failed: %{error_message}"
-msgstr "建立磁區 %{volume_name} 的 Snapshot %{snapshot_name} 失敗： %{error_message}"
+msgstr "建立磁區 %{volume_name} 的Snapshot %{snapshot_name} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3557
 msgid "Deleting Snapshot %{subject} of Volume %{volume_name} completed successfully."
-msgstr "刪除磁區 %{volume_name} 的 Snapshot %{subject} 已順利完成。"
+msgstr "刪除磁區 %{volume_name} 的 Snapshot %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3559
 msgid "Deleting Snapshot %{subject} of Volume %{volume_name} failed: %{error_message}"
-msgstr "刪除磁區 %{volume_name} 的 Snapshot %{subject} 失敗： %{error_message}"
+msgstr "刪除磁區 %{volume_name} 的Snapshot %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3561
 msgid "Deleting Cloud Tenant %{subject} completed successfully."
-msgstr "刪除雲端租戶 %{subject} 已順利完成。"
+msgstr "刪除雲端租戶 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3563
 msgid "Deleting Cloud Tenant %{subject} failed: %{error_message}"
-msgstr "刪除雲端租戶 %{subject} 失敗： %{error_message}"
+msgstr "刪除雲端租戶 %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3565
@@ -71660,37 +71660,37 @@ msgstr "訂閱管理程式無法啟用儲存庫 %{repo_name}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3569
 msgid "Killing worker %{name} due to excessive memory usage. %{memory_usage} used memory exceeds limit of %{memory_threshold}."
-msgstr "由於過多的記憶體用量，正在結束工作程式 %{name}。%{memory_usage} 已用記憶體超出了 %{memory_threshold} 限制。"
+msgstr "由於過多的記憶體用量，正在結束工作程式 %{name}。%{memory_usage} 已用記憶體超出了 %{memory_threshold}的限制。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3571
 msgid "Deleting Cloud Network %{subject} completed successfully."
-msgstr "刪除雲端網路 %{subject} 已順利完成。"
+msgstr "刪除雲端網路 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3573
 msgid "Deleting Cloud Network %{subject} failed: %{error_message}"
-msgstr "刪除雲端網路 %{subject} 失敗： %{error_message}"
+msgstr "刪除雲端網路 %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3575
 msgid "Deleting Cloud Subnet %{subject} completed successfully."
-msgstr "刪除雲端子網路 %{subject} 已順利完成。"
+msgstr "刪除雲端子網路 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3577
 msgid "Deleting Cloud Subnet %{subject} failed: %{error_message}"
-msgstr "刪除雲端子網路 %{subject} 失敗： %{error_message}"
+msgstr "刪除雲端子網路 %{subject} 失敗：%{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3579
 msgid "Deleting Network Router %{subject} completed successfully."
-msgstr "刪除網路路由器 %{subject} 已順利完成。"
+msgstr "刪除網路路由器 %{subject} 順利完成。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3581
 msgid "Deleting Network Router %{subject} failed: %{error_message}"
-msgstr "刪除網路路由器 %{subject} 失敗： %{error_message}"
+msgstr "刪除網路路由器 %{subject} 失敗： %%{error_message}"
 
 #. TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
 #: ../config/yaml_strings.rb:3583
@@ -72323,7 +72323,7 @@ msgstr "主機數目"
 #. TRANSLATORS: file: product/compare/ems_clusters.yaml
 #: ../config/yaml_strings.rb:4248
 msgid "Number Of VM Templates"
-msgstr "虛擬機器範本數目"
+msgstr "VM 範本數目"
 
 #. TRANSLATORS: file: product/compare/ems_clusters.yaml
 #: ../config/yaml_strings.rb:4250
@@ -72364,12 +72364,12 @@ msgstr "HA 失敗數上限"
 #. TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
 #: ../config/yaml_strings.rb:4280
 msgid "Datastore Capacity Trend over the last 6 months"
-msgstr "過去 6 個月的資料儲存庫容量趨勢"
+msgstr "最近 6 個月的資料儲存庫容量趨勢"
 
 #. TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
 #: ../config/yaml_strings.rb:4282
 msgid "Datastore Capacity Trend over 6 mos."
-msgstr "過去 6 個月的資料儲存庫容量趨勢"
+msgstr "最近 6 個月的資料儲存庫容量趨勢"
 
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
 #: ../config/yaml_strings.rb:4284
@@ -72625,7 +72625,7 @@ msgstr "過去一個月平均每日記憶體使用率大於 95% 的虛擬機器"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #: ../config/yaml_strings.rb:4621
 msgid "Top Storage Consumers"
-msgstr "上層儲存體消費者"
+msgstr "最上層儲存體消費者"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #: ../config/yaml_strings.rb:4623
@@ -73399,7 +73399,7 @@ msgstr "最近新增的主機"
 #. TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
 #: ../config/yaml_strings.rb:5049
 msgid "Cluster Memory and CPU usage over last 7 days"
-msgstr "過去 7 天的叢集記憶體及 CPU 使用率"
+msgstr "最近 7 天的叢集記憶體及 CPU 使用率"
 
 #. TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
 #: ../config/yaml_strings.rb:5051
@@ -73825,7 +73825,7 @@ msgstr "Miq 原則說明"
 #. TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
 #: ../config/yaml_strings.rb:5345
 msgid "Policy Events for the Last 7 Days"
-msgstr "過去 7 天的原則事件"
+msgstr "最近 7 天的原則事件"
 
 #. TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
 #: ../config/yaml_strings.rb:5347
@@ -74324,7 +74324,7 @@ msgstr "虛擬機器開機時間"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:5621
 msgid "VMs that have been Retired (past retirement date)"
-msgstr "已退休的虛擬機器（已過退休日期）"
+msgstr "已退休的虛擬機器（已過淘汰日期）"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:5623
@@ -74414,22 +74414,22 @@ msgstr "主機 I/O 趨勢（上週）"
 #. TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
 #: ../config/yaml_strings.rb:5672
 msgid "Host Peak Memory Used Trends over last 6 Months"
-msgstr "過去 6 個月的主機尖峰記憶體使用趨勢"
+msgstr "最近 6 個月的主機尖峰記憶體使用趨勢"
 
 #. TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
 #: ../config/yaml_strings.rb:5674
 msgid "Host Peak Memory Used Trends for 6 Mos."
-msgstr "過去 6 個月的主機尖峰記憶體使用趨勢"
+msgstr "最近 6 個月的主機尖峰記憶體使用趨勢"
 
 #. TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
 #: ../config/yaml_strings.rb:5676
 msgid "Host Peak CPU Used Trends over last 6 Months"
-msgstr "過去 6 個月的主機尖峰 CPU 使用趨勢"
+msgstr "最近 6 個月的主機尖峰 CPU 使用趨勢"
 
 #. TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
 #: ../config/yaml_strings.rb:5678
 msgid "Host Peak CPU Used Trend over 6 mos."
-msgstr "過去 6 個月的主機尖峰 CPU 使用趨勢"
+msgstr "最近 6 個月的主機尖峰 CPU 使用趨勢"
 
 #. TRANSLATORS: file: product/reports/770_Trending - Hosts/120_Host CPU Trends last week.yaml
 #: ../config/yaml_strings.rb:5680
@@ -74465,7 +74465,7 @@ msgstr "工具狀態"
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
 #: ../config/yaml_strings.rb:5693
 msgid "Registered VMs with Free Space < 35%"
-msgstr "含 35% 以下可用空間的登錄虛擬機器< 35%"
+msgstr "含 35% 以下可用空間的登錄虛擬機器"
 
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
 #: ../config/yaml_strings.rb:5695
@@ -75126,12 +75126,12 @@ msgstr "叢集 I/O 趨勢（上週）"
 #. TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
 #: ../config/yaml_strings.rb:6029
 msgid "Cluster memory trend based on past 6 months"
-msgstr "基於過去 6 個月的叢集記憶體趨勢"
+msgstr "基於最近 6 個月的叢集記憶體趨勢"
 
 #. TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
 #: ../config/yaml_strings.rb:6031
 msgid "Cluster memory trend  6 months"
-msgstr "過去 6 個月的叢集記憶體趨勢"
+msgstr "最近 6 個月的叢集記憶體趨勢"
 
 #. TRANSLATORS: file: product/reports/750_Trending - Clusters/080_Cluster Memory Trends last week.yaml
 #: ../config/yaml_strings.rb:6033
@@ -75238,7 +75238,7 @@ msgstr "必須定義使用者"
 
 #: ../lib/content_importer.rb:5
 msgid "No %{elements} for %{type} Profile == %{profile}"
-msgstr "沒有 %{type} 的%{elements} 設定檔 == %{profile}"
+msgstr "沒有 %{elements} 適用於 %{type} 設定檔 == %{profile}"
 
 #: ../lib/manageiq/api/engine.rb:35
 msgid "REST API"
@@ -75307,7 +75307,7 @@ msgstr "表示式形態異常，必須包含 'checkall'、'checkany'、'checkcou
 
 #: ../lib/miq_expression.rb:279 ../lib/miq_expression.rb:1441
 msgid "operator '%{operator_name}' is not supported"
-msgstr "運算子 '%{operator_name}' 不受支援"
+msgstr "不支援運算子 '%{operator_name}'"
 
 #: ../lib/miq_expression.rb:1124
 msgid "%{value_name} value must not be blank"
@@ -75335,7 +75335,7 @@ msgstr "值 '%{value}' 無效"
 
 #: ../lib/miq_expression.rb:1151
 msgid "Invalid Date/Time range, %{first_value} comes before %{second_value}"
-msgstr "日期/時間範圍無效，%{first_value} 在 %{second_value} 之前"
+msgstr "日期/時間範圍無效，%{first_value} 早於 %{second_value}"
 
 #: ../lib/miq_expression.rb:1157
 msgid "Value must be true or false"
@@ -75347,11 +75347,11 @@ msgstr "正規表示式 '%{value}' 無效， '%{error_message}'"
 
 #: ../lib/miq_expression.rb:1172
 msgid "Value '%{value}' must be in the form of %{format_type}"
-msgstr "值 '%{value}' 必須是 %{format_type} 格式"
+msgstr "值 '%{value}' 的格式必須是 %{format_type}"
 
 #: ../lib/rbac/filterer.rb:756
 msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
-msgstr "具名範圍 '%{scope_name}' 未針對類別 '%{class_name}' 定義"
+msgstr "具名範圍 '%{scope_name}' 未定義給類別 '%{class_name}'"
 
 #: ../lib/report_formatter/c3.rb:60 ../lib/report_formatter/c3.rb:127
 msgid "No data available."
@@ -75400,7 +75400,7 @@ msgstr "文字框"
 
 #: ./dist/js/ui-components.js:1
 msgid "New tab"
-msgstr "「新建」標籤"
+msgstr "新建標籤"
 
 #: ./dist/js/ui-components.js:1
 msgid "This field is required"
@@ -75786,7 +75786,7 @@ msgstr "套用"
 
 #: ./src/gtl/components/pagination/paging.html:22
 msgid "of {{pagingCtrl.settings.total}}"
-msgstr "{{pagingCtrl.settings.total}} 的"
+msgstr "/ {{pagingCtrl.settings.total}}"
 
 #: src/amazon-security-form-group/amazon-security-form-group.jsx:80
 msgid "Vpc ID"
@@ -75921,7 +75921,7 @@ msgstr "指派的值"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:166
 msgid "EVM User Being Tagged"
-msgstr "要標記的 EVM 使用者"
+msgstr "要加上標籤的 EVM 使用者"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:191
 #: src/rbac-forms/rbacUserForm.jsx:102
@@ -75946,7 +75946,7 @@ msgstr "密碼/驗證密碼不符"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:29
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:40
 msgid "Required"
-msgstr "需要"
+msgstr "必要項目"
 
 #: src/rbac-forms/rbacUserForm.jsx:48 src/rbac-forms/rbacUserPreview.jsx:51
 msgid "Full Name"
@@ -76023,7 +76023,7 @@ msgstr "標題是必要的"
 
 #: src/report-editor/basic-info.jsx:29
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #: src/report-editor/charts-warning.jsx:15
 msgid "Charts tab is not available unless a"
@@ -76079,7 +76079,7 @@ msgstr "選定欄位"
 #: src/report-editor/consolidation-table.jsx:49
 #: src/report-editor/formatting-table.jsx:53
 msgid "Column Name"
-msgstr "欄名稱"
+msgstr "直欄名稱"
 
 #: src/report-editor/consolidation-table.jsx:58
 msgid "Calculation"
@@ -76120,15 +76120,15 @@ msgstr "系統預設值（大約 1 小時）"
 
 #: src/report-editor/creation-timeout.jsx:19
 msgid "Cancel after"
-msgstr "取消之後"
+msgstr "在下列時間之後取消"
 
 #: src/report-editor/formatting-table.jsx:62
 msgid "Header"
-msgstr "標題"
+msgstr "標頭"
 
 #: src/report-editor/formatting-table.jsx:71
 msgid "Format"
-msgstr "格式化"
+msgstr "格式"
 
 #: src/report-editor/formatting-table.jsx:94
 msgid "Specify Column Headers and Formats"
@@ -76200,7 +76200,7 @@ msgstr "沒有選取任何項目"
 
 #: src/report-editor/sort-criteria.jsx:119
 msgid "Sort Order"
-msgstr "排序順序"
+msgstr "排序"
 
 #: src/report-editor/sort-criteria.jsx:127
 msgid "Show Sort Breaks"

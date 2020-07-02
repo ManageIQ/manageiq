@@ -358,7 +358,7 @@ msgstr "%s \"%s\" a été sauvegardé."
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-group-form.js:85
 #: ../app/assets/javascripts/components/ops/tenant.js:61
 msgid "%s \"%s\" has been successfully added."
-msgstr "%s \"%s\" a été ajouté."
+msgstr "%s \"%s\" ajouté."
 
 #:
 #: ../app/assets/javascripts/components/generic_object/generic-object-table.js:32
@@ -404,7 +404,7 @@ msgstr "Un à un"
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-form.js:68
 #: ../app/views/shared/buttons/_ab_show.html.haml:147
 msgid "To All"
-msgstr "À tous"
+msgstr "A tous"
 
 #:
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-form.js:69
@@ -524,7 +524,7 @@ msgstr "de "
 #:
 #: ../app/assets/javascripts/components/physical_infrastructures/change-password.js:26
 msgid "Requested password change for the %s \"%s\"."
-msgstr "u mot de passe demandé pour le  %s \"%s\"."
+msgstr "Mot de passe demandé pour le %s \"%s\"."
 
 #: ../app/assets/javascripts/components/recent-resource.js:24
 #: ../app/assets/javascripts/controllers/ems_container_dashboard/heatmap_controller.js:8
@@ -552,7 +552,7 @@ msgstr "L'ajout d'un groupe de sécurité a été annulé par l'utilisateur."
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-add-security-group.js:59
 msgid "%s has been successfully added."
-msgstr "%s a été ajouté."
+msgstr "%s ajouté."
 
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-remove-security-group.js:36
@@ -3209,8 +3209,8 @@ msgstr "Nom du serveur"
 #, fuzzy
 msgid "Hostname"
 msgid_plural "Hostnames"
-msgstr[0] "nom dhôte"
-msgstr[1] "noms dhôte"
+msgstr[0] "Nom dhôte"
+msgstr[1] "Noms dhôte"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:324
 #: ../app/helpers/provider_foreman_helper.rb:109
@@ -5948,7 +5948,7 @@ msgstr "La méthode d'automatisation \"%{name}\" a été ajoutée"
 #: ../app/controllers/miq_ae_class_controller.rb:1360
 #: ../app/controllers/mixins/manager_controller_mixin.rb:53
 msgid "%{model} \"%{name}\" was added"
-msgstr "%{model} \"%{name}\" a été ajouté"
+msgstr "%{model} \"%{name}\" ajouté"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1507
 #: ../app/views/miq_ae_class/_instance_fields.html.haml:2
@@ -6157,7 +6157,7 @@ msgstr "Personnalisation de l'automatisation"
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:12
 msgid "Add a new Dialog"
-msgstr "Ajouter une nouvelle boîte de Dialogue"
+msgstr "Ajouter une nouvelle boîte de dialogue"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:142
 msgid "Editing %{name} Service Dialog"
@@ -6528,7 +6528,7 @@ msgstr "Toutes les conditions %{typ}"
 #: ../app/presenters/tree_builder_policy.rb:54
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Compliance Policies"
-msgstr "Stratégie de Conformité"
+msgstr "Stratégies de conformité"
 
 #: ../app/controllers/miq_policy_controller.rb:545
 #: ../app/controllers/miq_policy_controller.rb:895
@@ -7645,7 +7645,7 @@ msgstr "La tâche d'évacuation de l'instance a échoué."
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:85
 msgid "Queued evacuation of Instance \"%{name}\""
-msgstr "Evacuation mise en file d''attente de l'instance \"%{name}\""
+msgstr "Evacuation mise en file d'attente de l'instance \"%{name}\""
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:87
 msgid "Unable to evacuate Instance \"%{name}\": %{details}"
@@ -7665,7 +7665,7 @@ msgstr "La tâche de migration dynamique de l'instance a échoué."
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb:76
 msgid "Queued live migration of Instance \"%{name}\""
-msgstr "Migration dynamique mise en file d''attente de l'instance \"%{name}\""
+msgstr "Migration dynamique mise en file d'attente de l'instance \"%{name}\""
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb:78
 msgid "Unable to live migrate Instance \"%{name}\": %{details}"
@@ -7884,7 +7884,7 @@ msgstr "La création d'une boîte de dialogue de service a été annulée par l'
 
 #: ../app/controllers/mixins/containers_common_mixin.rb:92
 msgid "Error when creating a Service Dialog from Container Template: %{error_message}"
-msgstr "Erreur lors de la création d''une boîte de dialogue de service à partir du modèle de conteneur : %{error_message}"
+msgstr "Erreur lors de la création d'une boîte de dialogue de service à partir du modèle de conteneur : %{error_message}"
 
 #: ../app/controllers/mixins/containers_common_mixin.rb:96
 msgid "Service Dialog \"%{name}\" was successfully created"
@@ -8138,7 +8138,7 @@ msgstr "Evénements de bouton personnalisés"
 
 #: ../app/controllers/mixins/generic_show_mixin.rb:176
 msgid "%{name} (All %{title})"
-msgstr "%{name} (tous les %{title})"
+msgstr "%{name} (Ensemble des %{title})"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:56
 msgid "%{model} \"%{name}\" was updated"
@@ -9428,7 +9428,7 @@ msgstr "Une valeur de filtre doit être sélectionnée"
 #: ../app/controllers/ops_controller/settings/schedules.rb:469
 #: ../app/controllers/report_controller/schedules.rb:288
 msgid "Warning: This 'Run Once' timer is in the past and will never run as currently configured"
-msgstr "Avertissement : ce minuteur 'Exécuter une fois' se situe dans le passé et ne s'exécutera jamais dans sa configuration actuelle"
+msgstr "Avertissement : Ce minuteur 'Exécuter une fois' se situe dans le passé et ne s'exécutera jamais dans sa configuration actuelle"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:631
 msgid "VM Analysis"
@@ -9690,7 +9690,7 @@ msgstr[1] "%{num} enregistrements corrects"
 msgid "%{num} bad record"
 msgid_plural "%{num} bad records"
 msgstr[0] "%{num} enregistrement incorrect"
-msgstr[1] "%{num}  enregistrements incorrects"
+msgstr[1] "%{num} enregistrements incorrects"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:82
 msgid "No valid import records were found, please upload another file"
@@ -10274,7 +10274,7 @@ msgstr "Tableaux de bord"
 
 #: ../app/controllers/report_controller.rb:316
 msgid "Dashboard Widgets"
-msgstr "Widget du tableau de bord"
+msgstr "Widgets de tableau de bord"
 
 #: ../app/controllers/report_controller.rb:321
 msgid "Edit Report Menus"
@@ -11321,7 +11321,7 @@ msgstr " (Dernière vérification de conformité)"
 
 #: ../app/controllers/vm_common.rb:235
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr " (Historique de conformité - Les  %{number} dernières vérifications)"
+msgstr " (Historique de conformité - Les %{number} dernières vérifications)"
 
 #: ../app/controllers/vm_common.rb:247
 msgid "%{name} (Disks)"
@@ -13044,7 +13044,7 @@ msgstr "Retirer cet identifiant de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:23
 msgid "Warning: The selected Credential will be permanently removed!"
-msgstr "Avertissement : l'identifiant sélectionné sera définitivement retiré."
+msgstr "Avertissement : L'identifiant sélectionné sera définitivement retiré."
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:31
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:45
@@ -13192,7 +13192,7 @@ msgstr "Retirer les identifiants sélectionnés de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:37
 msgid "Warning: The selected Credentials will be permanently removed!"
-msgstr "Avertissement : les identifiants sélectionnés seront définitivement retirés."
+msgstr "Avertissement : Les identifiants sélectionnés seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:53
 msgid "Edit Tags for the selected Ansible Credentials"
@@ -13259,7 +13259,7 @@ msgstr "Retirer les référentiels sélectionnés de l'inventaire"
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:60
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb:44
 msgid "Warning: The selected Repository will be permanently removed!"
-msgstr "Avertissement : le référentiel sélectionné sera définitivement retiré."
+msgstr "Avertissement : Le référentiel sélectionné sera définitivement retiré."
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:76
 msgid "Edit Tags for the selected Ansible Repositories"
@@ -13288,7 +13288,7 @@ msgstr "Retirer cette paire de clés de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:15
 msgid "Warning: The selected Key Pair and ALL of its components will be permanently removed!"
-msgstr "Avertissement : la paire de clés sélectionnée et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : La paire de clés sélectionnée et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:19
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:19
@@ -13317,7 +13317,7 @@ msgstr "Retirer les paires de clés sélectionnées de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:32
 msgid "Warning: The selected Key Pairs and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les paires de clés sélectionnées et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les paires de clés sélectionnées et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:50
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:60
@@ -13378,7 +13378,7 @@ msgstr "Retirer ce fournisseur de l'inventaire"
 #: ../app/helpers/application_helper/toolbar/configuration_manager_provider_center.rb:31
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:30
 msgid "Warning: The selected Provider and ALL of their components will be permanently removed!"
-msgstr "Avertissement : le fournisseur sélectionné et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Le fournisseur sélectionné et TOUS ses composants seront définitivement retirés."
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:13
@@ -13432,7 +13432,7 @@ msgstr "Retirer les éléments sélectionnés de l'inventaire"
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:85
 #: ../app/helpers/application_helper/toolbar/vms_center.rb:54
 msgid "Warning: The selected items and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les éléments sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les éléments sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:69
@@ -13492,7 +13492,7 @@ msgstr "Retirer ce bouton"
 #: ../app/helpers/application_helper/toolbar/catalogitem_button_center.rb:25
 #: ../app/helpers/application_helper/toolbar/custom_button_center.rb:23
 msgid "Warning: This Button will be permanently removed from the Virtual Management Database!"
-msgstr "Avertissement : ce bouton sera définitivement retiré de la base de données Virtual Management."
+msgstr "Avertissement : Ce bouton sera définitivement retiré de la base de données Virtual Management."
 
 #: ../app/helpers/application_helper/toolbar/catalogitem_button_center.rb:30
 #: ../app/helpers/application_helper/toolbar/custom_button_center.rb:28
@@ -13528,7 +13528,7 @@ msgstr "Retirer ce groupe de boutons"
 #: ../app/helpers/application_helper/toolbar/catalogitem_buttons_center.rb:31
 #: ../app/helpers/application_helper/toolbar/custom_buttons_center.rb:30
 msgid "Warning: The selected Button Group will be permanently removed!"
-msgstr "Avertissement : le groupe de boutons sélectionné sera définitivement retiré."
+msgstr "Avertissement : Le groupe de boutons sélectionné sera définitivement retiré."
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -13619,7 +13619,7 @@ msgstr "Retirer de VMDB"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:74
 msgid "Warning: This Chargeback Rate will be permanently removed!"
-msgstr "Avertissement : ce taux de rétrofacturation sera définitivement retiré."
+msgstr "Avertissement : Ce taux de rétrofacturation sera définitivement retiré."
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:12
 msgid "Add a new Chargeback Rate"
@@ -13639,7 +13639,7 @@ msgstr "Retirer les taux de rétrofacturation sélectionnés de VMDB"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:42
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
-msgstr "Avertissement : le taux de rétrofacturation sélectionné sera définitivement retiré."
+msgstr "Avertissement : Le taux de rétrofacturation sélectionné sera définitivement retiré."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:7
@@ -13829,7 +13829,7 @@ msgstr "Supprimer ce réseau cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:28
 msgid "Warning: This Cloud Network and ALL of its components will be removed!"
-msgstr "Avertissement : ce réseau cloud et TOUS ses composants seront retirés."
+msgstr "Avertissement : Ce réseau cloud et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:48
 msgid "Edit Tags for this Cloud Network"
@@ -13837,7 +13837,7 @@ msgstr "Editer les balises de ce réseau cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:14
 msgid "Add a new Cloud Network"
-msgstr "Ajouter un nouveau réseau Cloud"
+msgstr "Ajouter un nouveau réseau cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:36
 msgid "Edit Tags for the selected Cloud Networks"
@@ -13942,7 +13942,7 @@ msgstr "Supprimer ce sous-réseau cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:26
 msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
-msgstr "Avertissement : ce sous-réseau cloud et TOUS ses composants seront retirés."
+msgstr "Avertissement : Ce sous-réseau cloud et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:43
 msgid "Edit Tags for this Cloud Subnet"
@@ -14007,7 +14007,7 @@ msgstr "Supprimer les locataires de cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:31
 msgid "Warning: The selected Cloud Tenants will be permanently deleted!"
-msgstr "Avertissement : les locataires de cloud sélectionnés seront définitivement supprimés."
+msgstr "Avertissement : Les locataires de cloud sélectionnés seront définitivement supprimés."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backup_center.rb:12
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:12
@@ -14024,7 +14024,7 @@ msgstr "Supprimer les sauvegardes sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:27
 msgid "Warning: The selected Cloud Volume Backups will be removed!"
-msgstr "Avertissement : les sauvegardes de volume de cloud sélectionnées seront retirées."
+msgstr "Avertissement : Les sauvegardes de volume de cloud sélectionnées seront retirées."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:12
 msgid "Create a Backup of this Cloud Volume"
@@ -14056,7 +14056,7 @@ msgstr "Supprimer ce volume de cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:73
 msgid "Warning: This Cloud Volume and ALL of its components will be removed!"
-msgstr "Avertissement : ce volume de cloud et TOUS ses composants seront retirés."
+msgstr "Avertissement : Ce volume de cloud et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:88
 msgid "Edit tags for this Cloud Volume"
@@ -14108,7 +14108,7 @@ msgstr "Supprimer les volumes de cloud sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:86
 msgid "Warning: The selected Cloud Volume and ALL of their components will be removed!"
-msgstr "Avertissement : le volume de cloud sélectionné et TOUS ses composants seront retirés."
+msgstr "Avertissement : Le volume de cloud sélectionné et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb:6
 #: ../app/helpers/application_helper/toolbar/drift_center.rb:6
@@ -14210,7 +14210,7 @@ msgstr "Retirer ce travail"
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:15
 msgid "Warning: This Job and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce travail et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce travail et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:29
 msgid "Edit Tags for this Job"
@@ -14226,7 +14226,7 @@ msgstr "Retirer les travaux"
 
 #: ../app/helpers/application_helper/toolbar/configuration_jobs_center.rb:16
 msgid "Warning: The selected Jobs and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les travaux sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les travaux sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/configuration_jobs_center.rb:34
 msgid "Edit Tags for the selected Jobs"
@@ -14742,7 +14742,7 @@ msgstr "Retirer ce modèle de personnalisation"
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:27
 msgid "Warning: This Customization Template will be permanently removed!"
-msgstr "Avertissement : ce modèle de personnalisation sera définitivement retiré."
+msgstr "Avertissement : Ce modèle de personnalisation sera définitivement retiré."
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:12
@@ -14782,7 +14782,7 @@ msgstr "Retirer les modèles de personnalisation"
 #:
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:42
 msgid "Warning: The selected Customization Templates will be permanently removed!"
-msgstr "Avertissement : les modèles de personnalisation sélectionnés seront définitivement retirés."
+msgstr "Avertissement : Les modèles de personnalisation sélectionnés seront définitivement retirés."
 
 #:
 #: ../app/helpers/application_helper/toolbar/dashboard_summary_toggle_view.rb:33
@@ -14918,7 +14918,7 @@ msgstr "Redémarrer un serveur"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:99
 msgid "Warning: Server will be restarted, do you want to continue?"
-msgstr "Avertissement : le serveur va redémarrer, voulez-vous continuer?"
+msgstr "Avertissement : Le serveur va redémarrer, voulez-vous continuer?"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:104
 msgid "Select a worker to restart"
@@ -14930,7 +14930,7 @@ msgstr "Redémarrer l'agent sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:106
 msgid "Warning: Selected node will be restarted, do you want to continue?"
-msgstr "Avertissement : le noeud sélectionné va redémarrer, voulez-vous continuer ?"
+msgstr "Avertissement : Le noeud sélectionné va redémarrer, voulez-vous continuer ?"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:77
 msgid "Collect the current logs from the selected Zone"
@@ -14966,7 +14966,7 @@ msgstr "Supprimer la boîte de dialogue"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:32
 msgid "Warning: This Dialog will be permanently removed!"
-msgstr "Avertissement : cette boîte de dialogue sera définitivement retirée."
+msgstr "Avertissement : Cette boîte de dialogue sera définitivement retirée."
 
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:18
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:18
@@ -14985,7 +14985,7 @@ msgstr "Supprimer les boîtes de dialogue sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:42
 msgid "Warning: The selected Dialog will be permanently removed from the Virtual Management Database!"
-msgstr "Avertissement : la boîte de dialogue sélectionnée sera définitivement retirée de la base de données Virtual Management."
+msgstr "Avertissement : La boîte de dialogue sélectionnée sera définitivement retirée de la base de données Virtual Management."
 
 #: ../app/helpers/application_helper/toolbar/drifts_center.rb:6
 msgid "Select up to 10 timestamps for Drift Analysis"
@@ -15044,7 +15044,7 @@ msgstr "Supprimer les gestionnaires de stockage par blocs de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:27
 msgid "Warning: The selected Block Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les gestionnaires de stockage par blocs sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les gestionnaires de stockage par blocs sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:45
 msgid "Manage Policies for the selected Block Storage Managers"
@@ -15076,7 +15076,7 @@ msgstr "Retirer ce fournisseur de cloud de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:41
 msgid "Warning: This Cloud Provider and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce fournisseur de cloud et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce fournisseur de cloud et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:55
 msgid "Manage Policies for this Cloud Provider"
@@ -15139,7 +15139,7 @@ msgstr "Retirer les fournisseurs de cloud de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:43
 msgid "Warning: The selected Cloud Providers and ALL related components will be permanently removed!"
-msgstr "Avertissement : les fournisseurs de cloud sélectionnées et TOUS les composants associés seront définitivement retirés."
+msgstr "Avertissement : Les fournisseurs de cloud sélectionnées et TOUS les composants associés seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:61
 msgid "Manage Policies for the selected Cloud Providers"
@@ -15169,7 +15169,7 @@ msgstr "Retirer l'élément de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:21
 msgid "Warning: This item and ALL of its components will be permanently removed!"
-msgstr "Avertissement : cet élément et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cet élément et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:35
 #: ../app/helpers/application_helper/toolbar/host_center.rb:78
@@ -15212,7 +15212,7 @@ msgstr "Comparer les éléments sélectionnés"
 #: ../app/helpers/application_helper/toolbar/ems_clusters_center.rb:38
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:92
 msgid "Warning: The selected items and ALL of their components will be permanently removed!?"
-msgstr "Avertissement : les éléments sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les éléments sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_clusters_center.rb:56
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:110
@@ -15260,7 +15260,7 @@ msgstr "Retirer ce fournisseur de conteneurs de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:41
 msgid "Warning: This Containers Provider and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce fournisseur de conteneurs et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce fournisseur de conteneurs et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:55
 msgid "Show Timelines for this Containers Provider"
@@ -15329,7 +15329,7 @@ msgstr "Retirer les fournisseurs de conteneurs de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:55
 msgid "Warning: The selected Containers Providers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les fournisseurs de conteneurs sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les fournisseurs de conteneurs sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:73
 msgid "Edit Tags for these Containers Providers"
@@ -15380,7 +15380,7 @@ msgstr "Retirer ce fournisseur d'infrastructure de l'inventaire"
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:54
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:33
 msgid "Warning: This Infrastructure Provider and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce fournisseur d'infrastructure et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce fournisseur d'infrastructure et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:68
 msgid "Manage Policies for this Infrastructure Provider"
@@ -15448,7 +15448,7 @@ msgstr "Retirer les fournisseurs d'infrastructure de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:51
 msgid "Warning: The selected Infrastructure Providers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les fournisseurs d'infrastructure sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les fournisseurs d'infrastructure sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:69
 msgid "Manage Policies for the selected Infrastructure Providers"
@@ -15484,7 +15484,7 @@ msgstr "Retirer ce fournisseur de réseau de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:34
 msgid "Warning: This Network Provider and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce fournisseur de réseau et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce fournisseur de réseau et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:48
 msgid "Manage Policies for this Network Provider"
@@ -15528,7 +15528,7 @@ msgstr "Retirer les fournisseurs de réseau de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:44
 msgid "Warning: The selected Network Providers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les fournisseurs de réseau sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les fournisseurs de réseau sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:62
 msgid "Manage Policies for the selected Network Providers"
@@ -15556,7 +15556,7 @@ msgstr "Retirer les gestionnaires de stockage d'objets de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:27
 msgid "Warning: The selected Object Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les gestionnaires de stockage d'objets sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les gestionnaires de stockage d'objets sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:45
 msgid "Manage Policies for the selected Object Storage Managers"
@@ -15640,7 +15640,7 @@ msgstr "Retirer les fournisseurs d'infrastructure physique de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:49
 msgid "Warning: The selected Physical Infrastructure Providers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les fournisseurs d'infrastructure physique sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les fournisseurs d'infrastructure physique sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:67
 msgid "Manage Policies for the selected Physical Infrastructure Providers"
@@ -15680,7 +15680,7 @@ msgstr "Retirer ce gestionnaire de stockage de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:27
 msgid "Warning: This Storage Manager and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce gestionnaire de stockage et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce gestionnaire de stockage et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:41
 msgid "Manage Policies for this Storage Manager"
@@ -15712,7 +15712,7 @@ msgstr "Retirer les gestionnaires de stockage de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:27
 msgid "Warning: The selected Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les gestionnaires de stockage sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les gestionnaires de stockage sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:45
 msgid "Manage Policies for the selected Storage Managers"
@@ -15761,7 +15761,7 @@ msgstr "Retirer la version"
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:15
 msgid "Warning: The selected Flavor will be permanently removed!"
-msgstr "Avertissement : la version sélectionnée sera définitivement retirée."
+msgstr "Avertissement : La version sélectionnée sera définitivement retirée."
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:30
 msgid "Edit Tags for this Flavor"
@@ -15773,7 +15773,7 @@ msgstr "Retirer les versions sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:24
 msgid "Warning: The selected Flavors will be permanently removed!"
-msgstr "Avertissement : les versions sélectionnées seront définitivement retirées."
+msgstr "Avertissement : Les versions sélectionnées seront définitivement retirées."
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:43
 msgid "Edit Tags for the selected Flavors"
@@ -15815,7 +15815,7 @@ msgstr "Retirer ce bouton de l'inventaire"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_center.rb:20
 msgid "Warning: This Button will be permanently removed!"
-msgstr "Avertissement : ce bouton sera définitivement retiré."
+msgstr "Avertissement : Ce bouton sera définitivement retiré."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:23
@@ -15825,7 +15825,7 @@ msgstr "Retirer ce groupe de boutons de l'inventaire"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:27
 msgid "Warning: This Button Group will be permanently removed!"
-msgstr "Avertissement : ce groupe de boutons sera définitivement retiré."
+msgstr "Avertissement : Ce groupe de boutons sera définitivement retiré."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:11
@@ -15923,7 +15923,7 @@ msgstr "Supprimer les agrégats d'hôtes"
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:46
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:50
 msgid "Warning: The selected Host Aggregates will be permanently deleted!"
-msgstr "Avertissement : les agrégats d'hôtes sélectionnés seront définitivement supprimés."
+msgstr "Avertissement : Les agrégats d'hôtes sélectionnés seront définitivement supprimés."
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:63
 msgid "Edit Tags for this Host Aggregate"
@@ -16024,7 +16024,7 @@ msgstr "Activer/désactiver le mode maintenance pour cet élément ?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:64
 msgid "Warning: This item and ALL of its components will be permanently removed!?"
-msgstr "Avertissement : cet élément et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cet élément et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:96
 msgid "Analyze then Check Compliance for this item"
@@ -16285,7 +16285,7 @@ msgstr "Retirer ce magasin de données ISO de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
 msgid "Warning: This ISO Datastore and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce magasin de données ISO et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce magasin de données ISO et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:20
 msgid "Refresh Relationships for this ISO Datastore"
@@ -16309,7 +16309,7 @@ msgstr "Retirer les magasins de données ISO de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:22
 msgid "Warning: The selected ISO Datastores and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les magasins de données ISO sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les magasins de données ISO sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:29
 msgid "Refresh Relationships for selected ISO Datastores"
@@ -16648,11 +16648,11 @@ msgstr "Ajouter une nouvelle alerte"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:29
 msgid "Warning: This Dialog will be permanently removed from the Virtual Management Database!"
-msgstr "Avertissement : cette boîte de dialogue sera définitivement retirée de la base de données Virtual Management."
+msgstr "Avertissement : Cette boîte de dialogue sera définitivement retirée de la base de données Virtual Management."
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:42
 msgid "Warning: The selected Dialog will be permanently removed!"
-msgstr "Avertissement : la boîte de dialogue sélectionnée sera définitivement retirée."
+msgstr "Avertissement : La boîte de dialogue sélectionnée sera définitivement retirée."
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb:12
 msgid "Edit Actions for this Policy Event"
@@ -16792,7 +16792,7 @@ msgstr "Supprimer ce rapport sauvegardé de la base de données"
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:44
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb:25
 msgid "Warning: The selected Saved Reports will be permanently removed from the database!"
-msgstr "Avertissement : les rapports sauvegardés sélectionnés seront définitivement retirés de la base de données."
+msgstr "Avertissement : Les rapports sauvegardés sélectionnés seront définitivement retirés de la base de données."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:49
 msgid "Delete this Report from the Database"
@@ -16800,7 +16800,7 @@ msgstr "Supprimer ce rapport de la base de données"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:52
 msgid "Warning: The selected Reports will be permanently removed from the database!"
-msgstr "Avertissement : les rapports sélectionnés seront définitivement retirés de la base de données."
+msgstr "Avertissement : Les rapports sélectionnés seront définitivement retirés de la base de données."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:57
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:12
@@ -16820,7 +16820,7 @@ msgstr "Supprimer ce planning"
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:20
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:20
 msgid "Warning: This Schedule and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce planning et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce planning et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:24
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:24
@@ -16850,7 +16850,7 @@ msgstr "Supprimer les plannings sélectionnés"
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:31
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:30
 msgid "Warning: The selected Schedules and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les plannings sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les plannings sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:37
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:36
@@ -16941,7 +16941,7 @@ msgstr "Retirer les modèles"
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:56
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:66
 msgid "Warning: The selected Templates and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les modèles sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les modèles sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:74
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:84
@@ -16982,7 +16982,7 @@ msgstr "Supprimer ce widget de la base de données"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:25
 msgid "Warning: This Widget and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce widget et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce widget et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:30
 msgid "Generate Widget content now"
@@ -17010,7 +17010,7 @@ msgstr "Supprimer ce tableau de bord de la base de données"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:28
 msgid "Warning: This Dashboard and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce tableau de bord et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce tableau de bord et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_sets_center.rb:12
 msgid "Add a new Dashboard"
@@ -17055,7 +17055,7 @@ msgstr "Supprimer ce routeur"
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:48
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:25
 msgid "Warning: This Router and ALL of its components will be removed!"
-msgstr "Avertissement : ce routeur et TOUS ses composants seront retirés."
+msgstr "Avertissement : Ce routeur et TOUS ses composants seront retirés."
 
 #. TRANSLATORS: file: product/views/NetworkRouter.yaml
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:59
@@ -17093,7 +17093,7 @@ msgstr "Retirer cette pile d'orchestration de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:15
 msgid "Warning: This Orchestration Stack and ALL of its components will be permanently removed!"
-msgstr "Avertissement : cette pile d'orchestration et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cette pile d'orchestration et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:29
 msgid "Edit Tags for this Orchestration Stack"
@@ -17124,7 +17124,7 @@ msgstr "Retirer les piles d'orchestration de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:16
 msgid "Warning: The selected Orchestration Stacks and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les piles d'orchestration sélectionnées et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les piles d'orchestration sélectionnées et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:34
 msgid "Edit Tags for the selected Orchestration Stacks"
@@ -17540,7 +17540,7 @@ msgstr "Retirer ce type d'image système"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:20
 msgid "Warning: This System Image Type will be permanently removed!"
-msgstr "Avertissement : ce type d'image système sera définitivement retiré."
+msgstr "Avertissement : Ce type d'image système sera définitivement retiré."
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:12
 msgid "Add a new System Image Type"
@@ -17564,7 +17564,7 @@ msgstr "Retirer les types d'images système"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:31
 msgid "Warning: The selected System Image Types will be permanently removed!"
-msgstr "Avertissement : les types d'images système sélectionnés seront définitivement retirés."
+msgstr "Avertissement : Les types d'images système sélectionnés seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:12
 msgid "Edit this PXE Server"
@@ -17576,7 +17576,7 @@ msgstr "Retirer ce serveur PXE de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:20
 msgid "Warning: This PXE Server and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce serveur PXE et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce serveur PXE et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:25
 msgid "Refresh Relationships for this PXE Server"
@@ -17608,7 +17608,7 @@ msgstr "Retirer les serveurs PXE de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:31
 msgid "Warning: The selected PXE Servers and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les serveurs PXE sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les serveurs PXE sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:38
 msgid "Refresh Relationships for selected PXE Servers"
@@ -17644,7 +17644,7 @@ msgstr "Retirer le pool de ressources de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:15
 msgid "Warning: This Resource Pool and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce pool de ressources et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce pool de ressources et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:29
 msgid "Manage Policies for this Resource Pool"
@@ -17664,7 +17664,7 @@ msgstr "Retirer les pools de ressources de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/resource_pools_center.rb:18
 msgid "Warning: The selected Resource Pools and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les pools de ressources sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les pools de ressources sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/resource_pools_center.rb:36
 msgid "Manage Policies for the selected Resource Pools"
@@ -17684,7 +17684,7 @@ msgstr "Afficher un rapport plein écran"
 
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:24
 msgid "Warning: This Saved Report and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce rapport sauvegardé et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce rapport sauvegardé et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb:6
 msgid "Refresh selected Reports"
@@ -17708,7 +17708,7 @@ msgstr "Supprimer ce profil d'analyse"
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:27
 msgid "Warning: This Analysis Profile and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce profil d'analyse et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce profil d'analyse et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:12
 msgid "Add a new Host Analysis Profile"
@@ -17740,7 +17740,7 @@ msgstr "Supprimer les profils d'analyse sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:44
 msgid "Warning: The selected Analysis Profiles and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les profils d'analyse sélectionnées et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les profils d'analyse sélectionnées et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:14
 msgid "Edit this Security Group"
@@ -17808,7 +17808,7 @@ msgstr "Retirer les services de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:29
 msgid "Warning: The selected Services and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les services sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les services sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:35
 msgid "Set Ownership for the selected Services"
@@ -17828,7 +17828,7 @@ msgstr "Retirer le service de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:21
 msgid "Warning: This Service and ALL of their components will be permanently removed!"
-msgstr "Avertissement : ce service et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce service et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:26
 msgid "Set Ownership for this Service"
@@ -17902,7 +17902,7 @@ msgstr "Retirer le catalogue"
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:24
 msgid "Warning: This Catalog will be permanently removed!"
-msgstr "Avertissement : ce catalogue sera définitivement retiré."
+msgstr "Avertissement : Ce catalogue sera définitivement retiré."
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:12
@@ -17928,7 +17928,7 @@ msgstr "Retirer les catalogues"
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:31
 msgid "Warning: The selected Catalogs will be permanently removed!"
-msgstr "Avertissement : les catalogues sélectionnés seront définitivement retirés."
+msgstr "Avertissement : Les catalogues sélectionnés seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:12
 msgid "Add a New Catalog Item"
@@ -17988,7 +17988,7 @@ msgstr "Retirer le magasin de données de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:24
 msgid "Warning: This Datastore and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce magasin de données et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce magasin de données et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:39
 msgid "Edit Tags for this Datastore"
@@ -18016,7 +18016,7 @@ msgstr "Retirer les magasins de données de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:28
 msgid "Warning: The selected Datastores and ALL of their components will be permanently removed!"
-msgstr "Avertissement : les magasins de données sélectionnés et TOUS leurs composants seront définitivement retirés."
+msgstr "Avertissement : Les magasins de données sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:46
 msgid "Edit Tags for the selected Datastores"
@@ -18037,7 +18037,7 @@ msgstr "Supprimer les tâches sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:26
 msgid "Warning: The selected tasks will be permanently removed from the database!"
-msgstr "Avertissement : les tâches sélectionnées seront définitivement retirées de la base de données."
+msgstr "Avertissement : Les tâches sélectionnées seront définitivement retirées de la base de données."
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:32
 msgid "Delete tasks older than the selected task"
@@ -18049,7 +18049,7 @@ msgstr "Supprimer les plus anciennes"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:36
 msgid "Warning: Tasks that are older than selected task will be permanently removed from the database!"
-msgstr "Avertissement : les tâches antérieures à la tâche sélectionnée seront définitivement retirées de la base de données."
+msgstr "Avertissement : Les tâches antérieures à la tâche sélectionnée seront définitivement retirées de la base de données."
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:42
 msgid "Delete all finished tasks"
@@ -18061,7 +18061,7 @@ msgstr "Supprimer tout"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:46
 msgid "Warning: Finished tasks will be permanently removed from the database!"
-msgstr "Avertissement : les tâches terminées seront définitivement retirées de la base de données."
+msgstr "Avertissement : Les tâches terminées seront définitivement retirées de la base de données."
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:55
 msgid "Cancel the selected task"
@@ -18073,7 +18073,7 @@ msgstr "Annuler la tâche"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:59
 msgid "Warning: The selected task will be cancelled. Are you sure you want to cancel the task?"
-msgstr "Avertissement : la tâche sélectionnée sera annulée. Voulez-vous vraiment annuler cette tâche ?"
+msgstr "Avertissement : La tâche sélectionnée sera annulée. Voulez-vous vraiment annuler cette tâche ?"
 
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb:73
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:92
@@ -18224,7 +18224,7 @@ msgstr "Supprimer les profils temporels sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:41
 msgid "Warning: The selected Time Profiles will be permanently removed!"
-msgstr "Avertissement : les profils temporels sélectionnés seront définitivement retirés."
+msgstr "Avertissement : Les profils temporels sélectionnés seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/timeline_center.rb:6
 msgid "Download this Timeline data in text format"
@@ -18610,7 +18610,7 @@ msgstr "Retirer le modèle de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:40
 msgid "Warning: This Template and ALL of its components will be permanently removed!"
-msgstr "Avertissement : ce modèle et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Ce modèle et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:54
 msgid "Manage Policies for this Template"
@@ -18674,7 +18674,7 @@ msgstr "Retirer l'image de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:41
 msgid "Warning: This Image and ALL of its components will be permanently removed!"
-msgstr "Avertissement : cette image et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cette image et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:46
 msgid "CPU/Memory Recommendations of this Image"
@@ -18750,7 +18750,7 @@ msgstr "Supprimer la machine virtuelle de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:56
 msgid "Warning: This Virtual Machine and ALL of its components will be permanently removed!"
-msgstr "Avertissement : cette machine virtuelle et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cette machine virtuelle et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:60
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:46
@@ -18933,7 +18933,7 @@ msgstr "Retirer l'instance de l'inventaire"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:42
 msgid "Warning: This Instance and ALL of its components will be permanently removed!"
-msgstr "Avertissement : cette instance et TOUS ses composants seront définitivement retirés."
+msgstr "Avertissement : Cette instance et TOUS ses composants seront définitivement retirés."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:52
 msgid "Attach a Cloud Volume to this Instance"
@@ -19134,8 +19134,8 @@ msgstr "Adresse IPMI présente"
 #, fuzzy
 msgid "IP Address"
 msgid_plural "IP Addresses"
-msgstr[0] "adresse IP"
-msgstr[1] "adresses IP"
+msgstr[0] "Adresse IP"
+msgstr[1] "Adresses IP"
 
 #: ../app/helpers/automation_manager_helper.rb:26
 #: ../app/helpers/provider_configuration_manager_helper.rb:28
@@ -19292,13 +19292,13 @@ msgstr "Variable"
 #: ../app/helpers/vm_helper/textual_summary.rb:569
 #: ../app/views/vm_common/_right_size.html.haml:12
 msgid "Max"
-msgstr "Max"
+msgstr "Max."
 
 #: ../app/helpers/automation_manager_helper.rb:99
 #: ../app/helpers/container_project_helper/textual_summary.rb:50
 #: ../app/helpers/provider_foreman_helper.rb:263
 msgid "Min"
-msgstr "Min"
+msgstr "Min."
 
 #: ../app/helpers/automation_manager_helper.rb:99
 #: ../app/helpers/provider_foreman_helper.rb:263
@@ -20780,8 +20780,8 @@ msgstr "Aucun enregistrement trouvé."
 #, fuzzy
 msgid "MAC Address"
 msgid_plural "MAC Addresses"
-msgstr[0] "adresse MAC"
-msgstr[1] "adresses MAC"
+msgstr[0] "Adresse MAC"
+msgstr[1] "Adresses MAC"
 
 #: ../app/helpers/guest_device_helper/textual_summary.rb:34
 #, fuzzy
@@ -21189,7 +21189,7 @@ msgstr "Fournisseur de cloud"
 
 #: ../app/helpers/ops_helper.rb:30
 msgid "Caution: Manual changes to configuration files can disable the Server!"
-msgstr "Attention : les changements manuels apportés aux fichiers de configuration peuvent désactiver le serveur."
+msgstr "Attention : Les changements manuels apportés aux fichiers de configuration peuvent désactiver le serveur."
 
 #: ../app/helpers/ops_helper.rb:31
 msgid "Changes made to any individual settings will overwrite settings inherited from the Zone!"
@@ -21197,7 +21197,7 @@ msgstr "Les changements apportés à des paramètres individuels remplaceront le
 
 #: ../app/helpers/ops_helper.rb:33
 msgid "Caution: Manual changes to configuration files can disable the Zone!"
-msgstr "Attention : les changements manuels apportés aux fichiers de configuration peuvent désactiver la zone."
+msgstr "Attention : Les changements manuels apportés aux fichiers de configuration peuvent désactiver la zone."
 
 #: ../app/helpers/ops_helper.rb:34
 msgid "Changes made to any individual settings will overwrite settings inherited from the Region!"
@@ -21205,7 +21205,7 @@ msgstr "Les changements apportés à des paramètres individuels remplaceront le
 
 #: ../app/helpers/ops_helper.rb:36
 msgid "Caution: Manual changes to configuration files can disable the Region!"
-msgstr "Attention : les changements manuels apportés aux fichiers de configuration peuvent désactiver la région."
+msgstr "Attention : Les changements manuels apportés aux fichiers de configuration peuvent désactiver la région."
 
 #: ../app/helpers/ops_helper.rb:37
 msgid "Changes made to any individual settings will overwrite settings inherited from the template!"
@@ -23570,7 +23570,7 @@ msgstr "Vers le Haut"
 #: ../app/javascript/components/cloud-network-form/cloud-network-form.schema.js:199
 #: ../app/views/network_router/_common_new_edit.haml:77
 msgid "Down"
-msgstr "Vers le  Bas"
+msgstr "Vers le bas"
 
 #:
 #: ../app/javascript/components/cloud-network-form/cloud-network-form.schema.js:204
@@ -27294,7 +27294,7 @@ msgstr "Nom d'utilisateur pour l'escalade de privilèges"
 #:
 #: ../app/models/manageiq/providers/ansible_tower/shared/automation_manager/machine_credential.rb:41
 msgid "Privilege Escalation Password"
-msgstr "Mot de passe de l'escalade de privilèges"
+msgstr "Mot de passe pour l'escalade de privilèges"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/shared/automation_manager/machine_credential.rb:42
@@ -28170,7 +28170,7 @@ msgstr "Le sous-réseau est associé à une %{table} active"
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:9
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:17
 msgid "The Floating Ip is not connected to an active %{table}"
-msgstr "L'IP flottante n''est pas connectée à une %{table} active"
+msgstr "L'IP flottante n'est pas connectée à une %{table} active"
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:78
@@ -28284,7 +28284,7 @@ msgstr "Le fournisseur source doit être de type Vmware"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_or_template_shared/scanning.rb:42
 msgid "VMs must be scanned from an EVM server whose host is attached to the same\n  storage as the VM unless overridden via SmartProxy affinity.\n  Please verify that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management Relationship is set for the ManageIQ appliance"
-msgstr "Les machines virtuelles doivent être analysées à partir d'un serveur EVM dont l'hôte est associé au même\n  espace de stockage que la machine virtuelle, sauf si ce réglage est remplacé via une affinité SmartProxy. Veuillez vérifier que :\n  1) Des numéros d'unité logique directs sont associés à l'appareil ManageIQ\n  2) La relation de gestion est définie pour l'appareil ManageIQ"
+msgstr "Les machines virtuelles doivent être analysées à partir d'un serveur EVM dont l'hôte est associé au même\n  espace de stockage que la machine virtuelle, sauf si ce réglage est remplacé via une affinité SmartProxy.\n  Veuillez vérifier que :\n  1) Des numéros d'unité logique directs sont associés à l'appareil ManageIQ\n  2) La relation de gestion est définie pour l'appareil ManageIQ"
 
 #: ../app/models/manageiq/providers/storage_manager/cinder_manager.rb:35
 #: ../app/models/manageiq/providers/storage_manager/swift_manager.rb:31
@@ -28945,7 +28945,7 @@ msgstr "La réservation %{description} dépasse la capacité mémoire de la mach
 
 #: ../app/models/miq_queue.rb:63
 msgid "which must be an Integer or one of %{priority}"
-msgstr "qui doit être un entier ou l'une des  %{priority}"
+msgstr "qui doit être un entier ou l'une des %{priority}"
 
 #: ../app/models/miq_queue.rb:66
 msgid "dir must be one of %{directory}"
@@ -30666,90 +30666,90 @@ msgstr "Modèles vApp"
 #: ../app/presenters/tree_builder_policy.rb:12
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Host Compliance Policies"
-msgstr "Stratégies de conformité de l'hôte"
+msgstr "Stratégies de conformité d'hôte"
 
 #: ../app/presenters/tree_builder_policy.rb:13
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Vm Compliance Policies"
-msgstr "Stratégies de conformité de la machine virtuelle"
+msgstr "Stratégies de conformité de machine virtuelle"
 
 #: ../app/presenters/tree_builder_policy.rb:14
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Replicator Compliance Policies"
-msgstr "Stratégies de conformité du réplicateur"
+msgstr "Stratégies de conformité de réplicateur"
 
 #: ../app/presenters/tree_builder_policy.rb:15
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Pod Compliance Policies"
-msgstr "Stratégies de conformité du pod"
+msgstr "Stratégies de conformité de pod"
 
 #: ../app/presenters/tree_builder_policy.rb:16
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Node Compliance Policies"
-msgstr "Stratégies de conformité du noeud de conteneur"
+msgstr "Stratégies de conformité de noeud de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:17
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Image Compliance Policies"
-msgstr "Stratégies de conformité de l'image de conteneur"
+msgstr "Stratégies de conformité d'image de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:18
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Project Compliance Policies"
-msgstr "Stratégies de conformité du projet de conteneur"
+msgstr "Stratégies de conformité de projet de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:19
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Provider Compliance Policies"
-msgstr "Stratégies de conformité du fournisseur"
+msgstr "Stratégies de conformité de fournisseur"
 
 #: ../app/presenters/tree_builder_policy.rb:20
 msgid "Physical Server Compliance Policies"
-msgstr "Stratégies de conformité du serveur physique"
+msgstr "Stratégies de conformité de serveur physique"
 
 #: ../app/presenters/tree_builder_policy.rb:21
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Host Control Policies"
-msgstr "Stratégies de contrôle de l'hôte"
+msgstr "Stratégies de contrôle d'hôte"
 
 #: ../app/presenters/tree_builder_policy.rb:22
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Vm Control Policies"
-msgstr "Stratégies de contrôle de la machine virtuelle"
+msgstr "Stratégies de contrôle de machine virtuelle"
 
 #: ../app/presenters/tree_builder_policy.rb:23
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Replicator Control Policies"
-msgstr "Stratégies de contrôle du réplicateur"
+msgstr "Stratégies de contrôle de réplicateur"
 
 #: ../app/presenters/tree_builder_policy.rb:24
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Pod Control Policies"
-msgstr "Stratégies de contrôle du pod"
+msgstr "Stratégies de contrôle de pod"
 
 #: ../app/presenters/tree_builder_policy.rb:25
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Node Control Policies"
-msgstr "Stratégies de contrôle du noeud de conteneur"
+msgstr "Stratégies de contrôle de noeud de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:26
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Image Control Policies"
-msgstr "Stratégies de contrôle de l'image de conteneur"
+msgstr "Stratégies de contrôle d'image de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:27
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Container Project Control Policies"
-msgstr "Stratégies de contrôle du projet de conteneur"
+msgstr "Stratégies de contrôle de projet de conteneur"
 
 #: ../app/presenters/tree_builder_policy.rb:28
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Provider Control Policies"
-msgstr "Stratégies de contrôle du fournisseur"
+msgstr "Stratégies de contrôle de fournisseur"
 
 #: ../app/presenters/tree_builder_policy.rb:29
 msgid "Physical Server Control Policies"
-msgstr "Stratégie de contrôle du serveur physique"
+msgstr "Stratégie de contrôle de serveur physique"
 
 #: ../app/presenters/tree_builder_policy_simulation.rb:47
 #, fuzzy
@@ -31650,7 +31650,7 @@ msgstr "Détails du taux"
 
 #: ../app/views/chargeback/_cb_rate_edit.html.haml:38
 msgid "* Caution: The value Range end will not be included in the tier."
-msgstr "* Attention : la fin de la plage de valeurs ne sera pas incluse dans le niveau."
+msgstr "* Attention : La fin de la plage de valeurs ne sera pas incluse dans le niveau."
 
 #: ../app/views/chargeback/_cb_rate_edit_table.html.haml:10
 #: ../app/views/chargeback/_cb_rate_show.html.haml:20
@@ -32849,7 +32849,7 @@ msgstr "Aucun fournisseur à afficher. Veuillez en ajouter un."
 
 #: ../app/views/layouts/_empty.html.haml:9
 msgid "Learn more about this"
-msgstr "En savoir plus à ce sujet"
+msgstr "Plus d'infos sur le sujet"
 
 #: ../app/views/layouts/_empty.html.haml:12
 msgid "in the documentation."
@@ -34094,7 +34094,7 @@ msgstr "Fournisseur d'infrastructure : %{name}"
 
 #: ../app/views/layouts/listnav/_host.html.haml:69
 msgid "Show parent Infrastructure Provider for this %{host}"
-msgstr "Afficher le fournisseur d''infrastructure parent pour ce  %{host}"
+msgstr "Afficher le fournisseur d'infrastructure parent pour ce %{host}"
 
 #: ../app/views/layouts/listnav/_host.html.haml:76
 msgid "Show parent %{cluster} for this %{host}"
@@ -34374,7 +34374,7 @@ msgstr "Nom d'affichage"
 #: ../app/views/miq_ae_class/_inputs.html.haml:11
 #: ../app/views/miq_ae_class/_method_inputs.html.haml:86
 msgid "Default Value"
-msgstr "Valeur Par défaut"
+msgstr "Valeur par défaut"
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:10
 #: ../app/views/miq_ae_class/_class_fields.html.haml:54
@@ -35530,11 +35530,11 @@ msgstr "Afficher ce profil"
 
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Physical Infrastructure Compliance Policies"
-msgstr "Stratégies de conformité de l'infrastructure physique"
+msgstr "Stratégies de conformité d'infrastructure physique"
 
 #: ../app/views/miq_policy/_policy_folders.html.haml:2
 msgid "Physical Infrastructure Control Policies"
-msgstr "Stratégies de contrôle de l'infrastructure physique"
+msgstr "Stratégies de contrôle d'infrastructure physique"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:28
 msgid "Policy Selection"
@@ -35554,7 +35554,7 @@ msgstr "Retirer les stratégies sélectionnées de ce profil"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:60
 msgid "Profile Policies:"
-msgstr "Stratégies de profil :"
+msgstr "Stratégies du profil :"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:74
 msgid "No Policies are defined."
@@ -36594,7 +36594,7 @@ msgstr "Fonctions du produit (En lecture seule)"
 
 #: ../app/views/ops/_rbac_tag_box.html.haml:10
 msgid "No %{tenant_name} Tags have been assigned"
-msgstr "Aucune balise %{tenant_name} n'a été affectée"
+msgstr "Aucune balise de type %{tenant_name} affectée"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:5
 msgid "%{type} Information"
@@ -36702,7 +36702,7 @@ msgstr "Sélection d'objet"
 #: ../app/views/report/_show_schedule.html.haml:38
 #: ../app/views/report/_widget_show.html.haml:127 ../config/yaml_strings.rb:401
 msgid "Run At"
-msgstr "Exécuter à"
+msgstr "Exécution"
 
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../app/views/ops/_schedule_show.html.haml:101
@@ -36943,7 +36943,7 @@ msgstr "Activer la collecte par %{clusters}"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:38
 msgid "VM data will be collected for VMs under selected %{hosts} only. Data is collected for a %{cluster} and all of its %{hosts} when at least one %{host} is selected."
-msgstr "Les données de machine virtuelle seront collectées pour les machines virtuelles sous les %{hosts} sélectionnés uniquement. Les données sont collectées pour un %{cluster}  et tous ses %{hosts} quand un %{host} au moins est sélectionné."
+msgstr "Les données de machine virtuelle seront collectées pour les machines virtuelles sous les %{hosts} sélectionnés uniquement. Les données sont collectées pour un %{cluster} et tous ses %{hosts} quand un %{host} au moins est sélectionné."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:42
 msgid "Note: No %{clusters} available."
@@ -37760,7 +37760,7 @@ msgstr "* Baser le rapport sur"
 
 #: ../app/views/report/_form_columns.html.haml:28
 msgid "* Caution: Changing these fields will clear all selected values below them!"
-msgstr "* Attention : le changement de ces champs provoquera l'effacement de toutes les valeurs sélectionnées situées au-dessous !"
+msgstr "* Attention : Le changement de ces champs provoquera l'effacement de toutes les valeurs sélectionnées situées au-dessous"
 
 #: ../app/views/report/_form_columns.html.haml:43
 msgid "%{number} Hour"
@@ -38398,7 +38398,7 @@ msgstr "Texte de bouton désactivé"
 
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml:32
 msgid "Enablement and Visibility expressions can only be configured for buttons with \"Display for\" (previous tab) set to \"Single\""
-msgstr "Les expressions Activation et Visibilité ne peuvent être configurées que pour les boutons dont l'option \"Afficher pour\" (onglet précédent) a pour valeur \"Unique\""
+msgstr "Les expressions d'activation et de visibilité peuvent uniquement être configurées pour les boutons dont l'option \"Afficher pour\" (onglet précédent) a pour valeur \"Unique\""
 
 #: ../app/views/shared/buttons/_ab_form.html.haml:7
 msgid "Paste object details for use in a Button."
@@ -39239,7 +39239,7 @@ msgstr "Saisir la taille"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:238
 msgid "Disk size between {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} and 2TB required"
-msgstr "La taille du disque doit être comprise entre {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} et 2 To"
+msgstr "La taille du disque doit être comprise entre {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} et 2 To."
 
 #: ../app/views/vm_common/_reconfigure.html.haml:277
 msgid "Resize"
@@ -43730,11 +43730,11 @@ msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:23
 msgid "AdvancedSetting|Max"
-msgstr "Max"
+msgstr "Max."
 
 #: ../config/model_attributes.rb:24
 msgid "AdvancedSetting|Min"
-msgstr "Min"
+msgstr "Min."
 
 #: ../config/model_attributes.rb:25
 msgid "AdvancedSetting|Name"
@@ -53898,7 +53898,7 @@ msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2578
 msgid "MiddlewareDiagnosticReport|Queued at"
-msgstr "Mis en file d'attente à"
+msgstr "Mise en file d'attente"
 
 #: ../config/model_attributes.rb:2579
 msgid "MiddlewareDiagnosticReport|Region description"
@@ -56398,7 +56398,7 @@ msgstr "Type de ressource"
 
 #: ../config/model_attributes.rb:3203
 msgid "MiqSchedule|Run at"
-msgstr "Exécuter à"
+msgstr "Exécution"
 
 #: ../config/model_attributes.rb:3204
 msgid "MiqSchedule|Sched action"
@@ -56914,7 +56914,7 @@ msgstr "Options"
 
 #: ../config/model_attributes.rb:3332
 msgid "MiqWidget|Queued at"
-msgstr "Mis en file d'attente à"
+msgstr "Mise en file d'attente"
 
 #: ../config/model_attributes.rb:3333
 msgid "MiqWidget|Read only"
@@ -59461,7 +59461,7 @@ msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3972
 msgid "ServerRole|Max concurrent"
-msgstr "Max simultané"
+msgstr "Max. simultané"
 
 #: ../config/model_attributes.rb:3973
 msgid "ServerRole|Name"
@@ -63746,7 +63746,7 @@ msgstr "Retirer un agrégat d'hôtes"
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #: ../config/yaml_strings.rb:396
 msgid "Queued At"
-msgstr "Mis en file d'attente à"
+msgstr "Mise en file d'attente"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:398
@@ -71904,7 +71904,7 @@ msgstr "Le gestionnaire d'abonnements n'a pas pu activer le référentiel %{repo
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3569
 msgid "Killing worker %{name} due to excessive memory usage. %{memory_usage} used memory exceeds limit of %{memory_threshold}."
-msgstr "Arrêt de l'agent %{name} en raison d'un dépassement de mémoire. La mémoire utilisée, %{memory_usage}, dépasse la limite %{memory_threshold}."
+msgstr "Arrêt de l'agent %{name} en raison d'un dépassement de mémoire. La mémoire utilisée (%{memory_usage}) dépasse la limite de %{memory_threshold}."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3571
@@ -72603,7 +72603,7 @@ msgstr "Mémoire de machine virtuelle"
 #. TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
 #: ../config/yaml_strings.rb:4269
 msgid "HA Max Failures"
-msgstr "Nb max d'échecs HA"
+msgstr "Nb max. d'échecs haute disponibilité"
 
 #. TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
 #: ../config/yaml_strings.rb:4280
@@ -72920,7 +72920,7 @@ msgstr "Machine virtuelle : Mémoire"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:4655
 msgid " CPU - Peak Usage Rate Avg for Collected Intervals (%) (Max)"
-msgstr " UC - Moyenne du taux d'utilisation de pointe pour les intervalles de collecte (%) (Max)"
+msgstr " UC - Moyenne du taux d'utilisation de pointe pour les intervalles de collecte (%) (Max.)"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
@@ -72936,7 +72936,7 @@ msgstr "UC - Taux d'utilisation (MHz) (Moy.)"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:4662
 msgid " Memory - Peak Usage of Allocated for Collected Intervals (%) (Max)"
-msgstr " Mémoire - Utilisation de pointe pour les intervalles de collecte (%) (Max)"
+msgstr " Mémoire - Utilisation de pointe pour les intervalles de collecte (%) (Max.)"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:4664
@@ -74349,12 +74349,12 @@ msgstr "Mois (AAAA/MM)"
 #. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
 #: ../config/yaml_strings.rb:5508
 msgid "Daily Host Count (Max)"
-msgstr "Nombre quotidien d'hôtes (Max)"
+msgstr "Nombre quotidien d'hôtes (Max.)"
 
 #. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
 #: ../config/yaml_strings.rb:5510
 msgid "Daily Host Socket Count (Max)"
-msgstr "Nombre quotidien de sockets d'hôte (Max)"
+msgstr "Nombre quotidien de sockets d'hôte (Max.)"
 
 #. TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
 #: ../config/yaml_strings.rb:5512
@@ -76247,7 +76247,7 @@ msgstr "%s balises"
 
 #: src/rbac-forms/rbacUserTagsList.jsx:25
 msgid "No %s Tags have been assigned"
-msgstr "Aucune balise %s n'a été affectée"
+msgstr "Aucune balise de type %s affectée"
 
 #: src/report-editor/basic-info.jsx:11
 msgid "Basic Report Info"
@@ -76468,7 +76468,7 @@ msgstr "Le composant Chronologie a été chargé."
 
 #: src/tagging/components/InnerComponents/TagModifier.js:25
 msgid "Add/Modify tag"
-msgstr "Ajouter/modifier une balise"
+msgstr "Ajouter/Modifier une balise"
 
 #: src/tagging/components/InnerComponents/TagSelector.js:55
 msgid "Select tag category"
