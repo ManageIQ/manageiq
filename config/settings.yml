@@ -996,6 +996,7 @@
   :worker_messaging_frequency: 5.seconds
   :worker_monitor_frequency: 15.seconds
   :worker_monitor:
+    :enforce_resource_constraints: false
     :kill_algorithm:
       :name: :used_swap_percent_gt_value
       :value: 80
@@ -1088,6 +1089,7 @@
   :worker_base:
     :defaults:
       :count: 1
+      :cpu_threshold_percent: 50
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
@@ -1126,7 +1128,6 @@
         :poll: 10.seconds
     :queue_worker_base:
       :defaults:
-        :cpu_usage_threshold: 100.percent
         :dequeue_method: :drb
         :memory_threshold: 500.megabytes
         :poll_method: :normal
@@ -1160,7 +1161,6 @@
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
       :event_handler:
-        :cpu_usage_threshold: 0.percent
         :nice_delta: 7
       :generic_worker:
         :count: 2

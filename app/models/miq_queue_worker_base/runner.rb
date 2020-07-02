@@ -2,12 +2,7 @@ require 'miq-system'
 
 class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def after_sync_config
-    sync_cpu_usage_threshold
     sync_dequeue_method
-  end
-
-  def sync_cpu_usage_threshold
-    @cpu_usage_threshold = worker_settings[:cpu_usage_threshold]
   end
 
   def sync_dequeue_method
@@ -16,20 +11,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def dequeue_method_via_drb?
     @dequeue_method == :drb && drb_dequeue_available?
-  end
-
-  def thresholds_exceeded?
-    return false if @cpu_usage_threshold == 0
-
-    usage = MiqSystem.cpu_usage
-    return false if usage.nil?
-
-    if usage > @cpu_usage_threshold
-      _log.info("#{log_prefix} [#{Process.pid}] System CPU usage [#{usage}] exceeded threshold [#{@cpu_usage_threshold}], sleeping")
-      return true
-    end
-
-    false
   end
 
   def get_message_via_drb
@@ -136,7 +117,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     #   so we don't sleep in between messages
     loop do
       heartbeat
-      break if thresholds_exceeded?
       msg = get_message
       break if msg.nil?
       deliver_message(msg)

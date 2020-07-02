@@ -133,4 +133,55 @@ RSpec.describe MiqWorker::ContainerCommon do
       end
     end
   end
+
+  describe "#resource_constraints" do
+    context "when allowing resource constraints" do
+      before { stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => true}}) }
+
+      it "returns an empty hash when no thresholds are set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return({})
+        expect(MiqGenericWorker.new.resource_constraints).to eq({})
+      end
+
+      it "returns the correct hash when both values are set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold_percent => 50)
+        constraints = {
+          :limits => {
+            :memory => "500Mi",
+            :cpu    => "500m"
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+
+      it "returns only memory when memory is set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes)
+        constraints = {
+          :limits => {
+            :memory => "500Mi",
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+
+      it "returns only cpu when cpu is set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:cpu_threshold_percent => 80)
+        constraints = {
+          :limits => {
+            :cpu => "800m"
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+    end
+
+    context "when not allowing resource constraints" do
+      before { stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => false}}) }
+
+      it "always returns an empty hash" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes, :cpu_threshold => 50)
+        expect(MiqGenericWorker.new.resource_constraints).to eq({})
+      end
+    end
+  end
 end
