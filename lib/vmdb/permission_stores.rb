@@ -3,10 +3,10 @@ require "yaml"
 module Vmdb
   class PermissionStores
     def self.instance
-      @instance ||= new(blacklist)
+      @instance ||= new(unsupported)
     end
 
-    def self.blacklist
+    def self.unsupported
       permission_files.flat_map { |file| YAML.load_file(file) }
     end
 
@@ -16,14 +16,14 @@ module Vmdb
         .select(&:exist?)
     end
 
-    attr_reader :blacklist
+    attr_reader :unsupported
 
-    def initialize(blacklist)
-      @blacklist = blacklist
+    def initialize(unsupported)
+      @unsupported = unsupported
     end
 
     def can?(permission)
-      blacklist.exclude?(permission.to_s)
+      unsupported.exclude?(permission.to_s)
     end
 
     def supported_ems_type?(type)
