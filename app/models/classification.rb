@@ -7,7 +7,7 @@ class Classification < ApplicationRecord
   virtual_column :ns, :type => :string
 
   before_save    :save_tag
-  before_destroy :delete_tags_and_entries
+  before_destroy :validate_tag_mapping, :delete_tags_and_entries
 
   validates :description, :presence => true, :length => {:maximum => 255}
   validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
@@ -577,6 +577,13 @@ class Classification < ApplicationRecord
     end
 
     delete_tag_and_taggings
+  end
+
+  def validate_tag_mapping
+    if tag && ContainerLabelTagMapping.exists?(:tag_id => tag.id)
+      errors.add("", _("A Tag Mapping exists for this category and must be removed before deleting"))
+      throw :abort
+    end
   end
 
   # rubocop:enable Style/NumericPredicate
