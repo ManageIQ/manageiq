@@ -63,12 +63,13 @@ class ProviderTagMapping
     def map_label(type, label)
       # Apply both specific-type and any-type, independently.
       (map_name_type_value(label[:name], type, label[:value]) +
-       map_name_type_value(label[:name], nil,  label[:value]))
+       map_name_type_value(label[:name], nil, label[:value]) +
+       map_name_type_value(label[:name], "_all_entities_", label[:value]))
     end
 
     def map_name_type_value(name, type, value)
-      specific_value = @mappings[[name, type, value]] ||  @mappings[[name, "_all_entities_", value]] || []
-      any_value      = @mappings[[name, type, nil]]   ||  @mappings[[name, "_all_entities_", nil]]   || []
+      specific_value = @mappings[[name, type, value]] || []
+      any_value      = @mappings[[name, type, nil]] || []
       if !specific_value.empty?
         specific_value.map { |tag_id| emit_specific_reference(tag_id) }
       else
