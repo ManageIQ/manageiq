@@ -17,11 +17,17 @@ RSpec.describe ProviderTagMapping do
   end
   let(:ems) { FactoryBot.build(:ext_management_system) }
 
-  def labels(kv)
-    kv.map do |name, value|
+  def label(key_value_label)
+    key_value_label.map do |name, value|
       {:section => 'labels', :source => 'kubernetes',
        :name => name, :value => value}
     end
+  end
+
+  def labels(label_or_array)
+    (label_or_array.kind_of?(Hash) ? [label_or_array] : label_or_array).map do |key_value_label|
+      label(key_value_label)
+    end.flatten
   end
 
   def new_mapper
@@ -178,7 +184,36 @@ RSpec.describe ProviderTagMapping do
     end
   end
 
-  # Interactions between any-type and specific-type rows are somewhat arbitrary.
+  context "with all entities resource type" do
+    let(:other_cat_classification) { FactoryBot.create(:classification, :read_only => true, :name => 'environment') }
+    let(:other_cat_tag)            { other_cat_classification.tag }
+
+    before do
+      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'name', :tag => cat_tag)
+      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'DEV', :tag => cat_tag)
+      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'DEV', :tag => other_cat_tag)
+    end
+
+    let(:existing_label) { {"name" => "value_1"} }
+
+    it "creates tag from mapping" do
+      map_to_tags(new_mapper, "_all_entities_", existing_label)
+
+      expect(Classification.where(:description => "value_1").first.parent).to eq(cat_tag.classification)
+      expect(Classification.where(:description => "value_1").first.parent.tag).to eq(cat_tag)
+    end
+
+    let(:existing_label_dev_win) { {"DEV" => "WIN"} }
+    let(:existing_label_dev_linux) { {"DEV" => "LINUX"} }
+
+    it "creates tags from mappings with same label name" do
+      map_to_tags(new_mapper, "_all_entities_", [existing_label_dev_win, existing_label_dev_linux])
+      expect(Tag.find_by(:name => "#{cat_tag.name}/win")).not_to be_nil
+      expect(Tag.find_by(:name => "#{other_cat_tag.name}/win")).not_to be_nil
+    end
+  end
+
+  # Interactions   between any-type and specific-type rows are somewhat arbitrary.
   # Unclear if there is One Right behavior here; treating them independently
   # seemed the simplest well-defined behavior...
 
