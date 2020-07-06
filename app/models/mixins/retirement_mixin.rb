@@ -157,8 +157,6 @@ module RetirementMixin
       _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     elsif retiring?
       _log.info("#{retirement_object_title}: [#{name}] retirement in progress")
-    elsif retirement_queued?
-      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}> ")
     else
       lock do
         reload
