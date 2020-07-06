@@ -4,6 +4,7 @@ module RetirementMixin
   RETIREMENT_INITIALIZING = 'initializing'.freeze
   RETIREMENT_RETIRED  = 'retired'.freeze
   RETIREMENT_RETIRING = 'retiring'.freeze
+  RETIREMENT_QUEUED = 'queued'.freeze
 
   included do
     scope :scheduled_to_retire, -> { where(arel_table[:retires_on].not_eq(nil).or(arel_table[:retired].not_eq(true))) }
@@ -60,6 +61,11 @@ module RetirementMixin
   end
 
   def retires_on=(timestamp)
+    if retirement_queued?
+      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}> ")
+      return
+    end
+
     return if retires_on == timestamp
 
     if timestamp.nil? || (timestamp > Time.zone.now)
@@ -122,6 +128,11 @@ module RetirementMixin
   end
 
   def retirement_check
+    if retirement_queued?
+      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}> ")
+      return
+    end
+
     return if retired? || retiring? || retirement_initialized?
     requester = system_context_requester
 
@@ -134,8 +145,10 @@ module RetirementMixin
         _log.log_backtrace(err)
       end
     end
-
-    self.class.make_retire_request(id, requester, :initiated_by => 'system') if retirement_due?
+    if retirement_due?
+      self.class.make_retire_request(id, requester, :initiated_by => 'system')
+      update(:retirement_state => RETIREMENT_QUEUED)
+    end
   end
 
   def retire_now(requester = nil)
@@ -144,6 +157,8 @@ module RetirementMixin
       _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     elsif retiring?
       _log.info("#{retirement_object_title}: [#{name}] retirement in progress")
+    elsif retirement_queued?
+      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}> ")
     else
       lock do
         reload
@@ -199,6 +214,10 @@ module RetirementMixin
 
   def retirement_initialized?
     retirement_state == RETIREMENT_INITIALIZING
+  end
+
+  def retirement_queued?
+    retirement_state == RETIREMENT_QUEUED
   end
 
   def retirement_object_title
