@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 140 ending 2020-07-06
+
+### Added
+
+* Add memory and cpu limits on deployments [(#20193)](https://github.com/ManageIQ/manageiq/pull/20193)
+
+### Fixed
+
+* Double the initial delay and timeout for worker container liveness probes [(#20323)](https://github.com/ManageIQ/manageiq/pull/20323)
+* Add additional python3 module path for Centos8 support [(#20322)](https://github.com/ManageIQ/manageiq/pull/20322)
+* Move the systemd env var check into the systemd_worker? method [(#20321)](https://github.com/ManageIQ/manageiq/pull/20321)
+* Fix issue where the square brackets are being created as directories in docker [(#20312)](https://github.com/ManageIQ/manageiq/pull/20312)
+* Remove the miq_workers table from the reindex list [(#20305)](https://github.com/ManageIQ/manageiq/pull/20305)
+* Fixed Settings hierarchy on Global region [(#20299)](https://github.com/ManageIQ/manageiq/pull/20299)
+* Ensure ems workers are killed by their server/orchestrator pod [(#20290)](https://github.com/ManageIQ/manageiq/pull/20290)
+
 # Unreleased as of Sprint 139 ending 2020-06-22
 
 ### Added
