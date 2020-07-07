@@ -129,11 +129,20 @@ module RetirementMixin
 
   def retirement_check
     if retirement_queued?
-      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}> ")
+      _log.warn("Retirement  request already queued for  #{self.class.name} id:<#{id}>, name:<#{name}>")
       return
     end
 
-    return if retired? || retiring? || retirement_initialized?
+    if retired?
+      _log.warn("Object already retired.  #{self.class.name} id:<#{id}>, name:<#{name}>")
+      return
+    end
+
+    if retiring? || retirement_initialized?
+      _log.warn("Retirement  request already started #{self.class.name} id:<#{id}>, name:<#{name}>")
+      return
+    end
+
     requester = system_context_requester
 
     if !retirement_warned? && retirement_warning_due?
