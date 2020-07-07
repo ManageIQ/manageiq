@@ -159,7 +159,7 @@ class MiqRequest < ApplicationRecord
     where(:requester_id => miq_group.regional_groups.joins(:users).select("users.id"))
   end
 
-  # Supports old-style requests where specific request was a seperate table connected as a resource
+  # Supports old-style requests where specific request was a separate table connected as a resource
   def resource
     self
   end
