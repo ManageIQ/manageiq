@@ -161,7 +161,7 @@ module RetirementMixin
       lock do
         reload
         if error_retiring? || retirement_state.blank?
-          update(:retirement_state => "initializing", :retirement_requester => requester)
+          update(:retirement_state => RETIREMENT_INITIALIZING, :retirement_requester => requester)
           event_name = "request_#{retirement_event_prefix}_retire"
           _log.info("calling #{event_name}")
           begin
@@ -189,13 +189,13 @@ module RetirementMixin
 
   def mark_retired
     self[:retires_on] = Time.zone.now
-    update(:retired => true, :retirement_state => "retired")
+    update(:retired => true, :retirement_state => RETIREMENT_RETIRED)
   end
 
   def start_retirement
     return if retired? || retiring?
     $log.info("Starting Retirement for [#{name}]")
-    update(:retirement_state => "retiring")
+    update(:retirement_state => RETIREMENT_RETIRING)
   end
 
   def retired_validated?
