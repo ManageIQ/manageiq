@@ -43,5 +43,5 @@ else
   Vmdb::Application.config.session_store(session_store, session_options)
   msg = "Using session_store: #{Vmdb::Application.config.session_store}"
   $log.info("MIQ(SessionStore) #{msg}")
-  puts "** #{msg}" unless Rails.env.production?
+  puts "** #{msg}" if !Rails.env.production? && session_store != :mem_cache_store
 end
