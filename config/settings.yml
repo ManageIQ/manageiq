@@ -4,6 +4,7 @@
   :bind_dn:
   :bind_pwd:
   :bind_timeout: 30
+  :debug: false
   :follow_referrals: false
   :get_direct_groups: true
   :group_memberships_max_depth: 2
