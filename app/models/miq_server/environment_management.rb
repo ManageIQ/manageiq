@@ -43,9 +43,9 @@ module MiqServer::EnvironmentManagement
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else
-          require 'MiqSockUtil'
-          ipaddr      = MiqSockUtil.getIpAddr
-          hostname    = MiqSockUtil.getFullyQualifiedDomainName
+          require 'socket'
+          ipaddr      = Socket.ip_address_list.select{ |addr| addr.ipv4? && !addr.ipv4_private? }.first&.ip_address
+          hostname    = Socket.gethostbyname(Socket.gethostname).first
           mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue

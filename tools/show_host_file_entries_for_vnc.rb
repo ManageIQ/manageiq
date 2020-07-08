@@ -15,8 +15,9 @@ ManageIQ::Providers::Vmware::Host.all.each do |host|
   if host.ipaddress.ipaddress?
     ipaddress = host.ipaddress
   else
+    require 'socket'
     begin
-      ipaddress = MiqSockUtil.resolve_hostname(host.ipaddress)
+      ipaddress = TCPSocket.gethostbyname(hostname.split(',').first).last
     rescue SocketError => err
       STDERR.puts "Cannot resolve hostname(#{host.ipaddress}) for Host ID=#{host.id.inspect}, Name=#{host.name.inspect} because #{err.message}"
       next
