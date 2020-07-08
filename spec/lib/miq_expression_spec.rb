@@ -2279,6 +2279,20 @@ RSpec.describe MiqExpression do
 
       expect(MiqExpression._custom_details_for("ContainerImage", {})).to match_array(expected_result)
     end
+
+    context "model is ChargebackVm" do
+      let(:vm) { FactoryBot.create(:vm) }
+      let!(:custom_attribute_for_vm) { FactoryBot.create(:custom_attribute, :name => 'Application', :section => 'labels', :resource => vm) }
+
+      it "returns human names of custom attributes with sections" do
+        expected_result = [
+          ['Labels: Application', 'ChargebackVm-virtual_custom_attribute_Application:SECTION:labels'],
+          ['Custom Attribute: CATTR_1', 'ChargebackVm-virtual_custom_attribute_CATTR_1']
+        ]
+
+        expect(MiqExpression._custom_details_for("Vm", :model_for_column => "ChargebackVm")).to match_array(expected_result)
+      end
+    end
   end
 
   describe "#to_human" do
