@@ -15,7 +15,7 @@ class ContainerOrchestrator
           :template => {
             :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
             :spec     => {
-              :imagePullSecrets   => [{:name => ENV["IMAGE_PULL_SECRET"].to_s}],
+              :serviceAccountName => ENV["WORKER_SERVICE_ACCOUNT"],
               :containers         => [{
                 :name          => name,
                 :env           => default_environment,
