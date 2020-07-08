@@ -5,6 +5,8 @@ module Authenticator
     end
 
     def authorize_queue(username, request, options, *_args)
+      log_auth_debug("authorize_queue(username=#{username}, options=#{options})")
+
       user_attrs, membership_list =
         if options[:authorize_only]
           if options[:authorize_with_system_token].present?
@@ -15,6 +17,12 @@ module Authenticator
         else
           user_details_from_headers(username, request)
         end
+
+      if debug_auth?
+        log_auth_debug("authorize_queue user details:")
+        user_attrs.each { |k, v| log_auth_debug("  %-12{key} = %{val}" % {:key => k, :val => v}) }
+        log_auth_debug("  %-12{key} = %{val}" % {:key => "groups", :val => membership_list.join(', ')})
+      end
 
       super(username, request, {}, user_attrs, membership_list)
     end
@@ -122,6 +130,15 @@ module Authenticator
     end
 
     def user_details_from_headers(username, request)
+      if debug_auth?
+        log_auth_debug("user_details_from_headers(username=#{username})")
+
+        remote_user_headers = %w[X-REMOTE-USER X-REMOTE-USER-FIRSTNAME X-REMOTE-USER-LASTNAME X-REMOTE-USER-FULLNAME X-REMOTE-USER-EMAIL X-REMOTE-USER-DOMAIN X-REMOTE-USER-GROUPS]
+        logged_headers = remote_user_headers.map { |rh| "  %-24{key} = \"%{val}\"" % {:key => rh, :val => request.headers[rh]} }
+
+        log_auth_debug("External-Auth remote user request.headers:")
+        log_auth_debug(logged_headers)
+      end
       user_attrs = {:username  => username,
                     :fullname  => request.headers['X-REMOTE-USER-FULLNAME'],
                     :firstname => request.headers['X-REMOTE-USER-FIRSTNAME'],
