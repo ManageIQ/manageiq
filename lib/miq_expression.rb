@@ -809,7 +809,7 @@ class MiqExpression
     custom_attributes_details = []
 
     klass.custom_keys.each do |custom_key|
-      custom_detail_column = [model, CustomAttributeMixin.column_name(custom_key)].join("-")
+      custom_detail_column = [options[:model_for_column] || model, CustomAttributeMixin.column_name(custom_key)].join("-")
       custom_detail_name = CustomAttributeMixin.to_human(custom_key)
 
       if options[:include_model]
@@ -899,7 +899,7 @@ class MiqExpression
            else
              []
            end
-      md + td + _custom_details_for(cb_model, {})
+      md + td + _custom_details_for(cb_model, :model_for_column => model)
     else
       model_details(model, :include_model => false, :include_tags => true)
     end
