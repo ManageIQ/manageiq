@@ -17,7 +17,7 @@ ManageIQ::Providers::Vmware::Host.all.each do |host|
   else
     require 'socket'
     begin
-      ipaddress = TCPSocket.gethostbyname(hostname.split(',').first).last
+      ipaddress = TCPSocket.gethostbyname(host.ipaddress.split(',').first).last
     rescue SocketError => err
       STDERR.puts "Cannot resolve hostname(#{host.ipaddress}) for Host ID=#{host.id.inspect}, Name=#{host.name.inspect} because #{err.message}"
       next
