@@ -1,6 +1,19 @@
 require 'sys-uname'
+require 'socket'
 
 module MiqEnvironment
+  # Return the fully qualified hostname for the local host.
+  #
+  def self.fully_qualified_domain_name
+    Socket.gethostbyname(Socket.gethostname).first
+  end
+
+  # Return the local IP v4 address of the local host, ignoring private addresses.
+  #
+  def self.local_ip_address
+    Socket.ip_address_list.detect { |addr| addr.ipv4? && !addr.ipv4_private? }&.ip_address
+  end
+
   class Command
     EVM_KNOWN_COMMANDS = %w[apachectl memcached memcached-tool nohup service systemctl].freeze
 

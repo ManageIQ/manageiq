@@ -9,6 +9,16 @@ RSpec.describe MiqEnvironment do
       silence_warnings { Sys::Platform::IMPL = @old_impl } if @old_impl
     end
 
+    context "Host Info" do
+      example "fully_qualified_domain_name" do
+        expect(described_class.fully_qualified_domain_name).to eq(`hostname -f`.chomp)
+      end
+
+      example "local_ip_address" do
+        expect(described_class.local_ip_address).to eq(`hostname -i`.chomp)
+      end
+    end
+
     context "Command" do
       context ".supports_memcached?" do
         it "should run once and cache the result" do

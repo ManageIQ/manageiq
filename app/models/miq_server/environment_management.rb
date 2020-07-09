@@ -44,8 +44,8 @@ module MiqServer::EnvironmentManagement
           mac_address = eth0.mac_address
         else
           require 'socket'
-          ipaddr      = Socket.ip_address_list.detect { |addr| addr.ipv4? && !addr.ipv4_private? }&.ip_address
-          hostname    = Socket.gethostbyname(Socket.gethostname).first
+          ipaddr      = MiqEnvironment.local_ip_address
+          hostname    = MiqEnvironment.fully_qualified_domain_name
           mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue
