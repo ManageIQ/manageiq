@@ -946,26 +946,6 @@ class Host < ApplicationRecord
     OpenStruct.new(hash).inspect
   end
 
-  def rediscover(ipaddr, discover_types = [:esx])
-    require 'manageiq/network_discovery/discovery'
-    ost = OpenStruct.new(:ping => true, :discover_types => discover_types, :ipaddr => ipaddr)
-    _log.info("Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}")
-    begin
-      ManageIQ::NetworkDiscovery::Discovery.scan_host(ost)
-      _log.info("Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}")
-
-      unless ost.hypervisor.empty?
-        detect_discovered_hypervisor(ost, ipaddr)
-        os_name, os_type = detect_discovered_os(ost)
-        EmsRefresh.save_operating_system_inventory(self, :product_name => os_name, :product_type => os_type) unless os_name.nil?
-        EmsRefresh.save_hardware_inventory(self, :cpu_type => "intel")
-        save!
-      end
-    rescue => err
-      _log.log_backtrace(err)
-    end
-  end
-
   def self.discoverHost(options)
     require 'manageiq/network_discovery/discovery'
     ost = OpenStruct.new(Marshal.load(options))
