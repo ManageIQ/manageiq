@@ -43,9 +43,8 @@ module MiqServer::EnvironmentManagement
           hostname    = LinuxAdmin::Hosts.new.hostname
           mac_address = eth0.mac_address
         else
-          require 'MiqSockUtil'
-          ipaddr      = MiqSockUtil.getIpAddr
-          hostname    = MiqSockUtil.getFullyQualifiedDomainName
+          ipaddr      = MiqEnvironment.local_ip_address
+          hostname    = MiqEnvironment.fully_qualified_domain_name
           mac_address = UUIDTools::UUID.mac_address.dup
         end
       rescue

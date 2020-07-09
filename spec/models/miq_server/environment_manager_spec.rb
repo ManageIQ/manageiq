@@ -1,4 +1,17 @@
+require 'socket'
+
 RSpec.describe "Server Environment Management" do
+  let(:mac_address) { 'a:1:b:2:c:3:d:4' }
+  let(:hostname) { Socket.gethostname }
+  let(:loopback) { '127.0.0.1' }
+
+  context ".get_network_information" do
+    it "when in non-production mode" do
+      allow(UUIDTools::UUID).to receive(:mac_address).and_return(mac_address)
+      expect(MiqServer.get_network_information).to eq([loopback, hostname, mac_address])
+    end
+  end
+
   context ".spartan_mode" do
     before { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
     after { MiqServer.class_eval { instance_variable_set :@spartan_mode, nil } }
