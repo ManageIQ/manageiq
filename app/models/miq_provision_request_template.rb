@@ -21,6 +21,11 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     MiqProvision
   end
 
+  def post_create(_auto_approve)
+    update(:description => "Miq Provision Request Template for #{source.name}")
+    self
+  end
+
   def service_template_resource_copy
     dup.tap(&:save!)
   end
