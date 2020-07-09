@@ -115,7 +115,7 @@ module EmsRefresh
 
   def self.queue_merge(targets, ems, create_task = false)
     queue_options = {
-      :queue_name  => ems.queue_name,
+      :queue_name  => ems.queue_name_for_ems_refresh,
       :class_name  => name,
       :method_name => 'refresh',
       :role        => "ems_inventory",

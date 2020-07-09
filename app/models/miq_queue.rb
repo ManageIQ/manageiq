@@ -208,7 +208,7 @@ class MiqQueue < ApplicationRecord
       # options[:queue_name] = "generic"
       options[:role] = service
     when "ems_inventory"
-      options[:queue_name] = MiqEmsRefreshWorker.queue_name_for_ems(resource)
+      options[:queue_name] = resource.queue_name_for_ems_refresh
       options[:role]       = service
       options[:zone]       = resource.my_zone
     when "ems_operations"
