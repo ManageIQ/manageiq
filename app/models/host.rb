@@ -136,6 +136,7 @@ class Host < ApplicationRecord
   virtual_column :vmm_vendor_display,           :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
   virtual_column :archived, :type => :boolean
+  virtual_column :has_policies, :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}

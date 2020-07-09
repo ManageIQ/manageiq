@@ -36,6 +36,7 @@ module MiqPolicyMixin
   def has_policies?
     get_policies.length > 0
   end
+  alias has_policies has_policies?
 
   def resolve_policies(list, event = nil)
     MiqPolicy.resolve(self, list, event)
