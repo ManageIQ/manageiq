@@ -95,7 +95,7 @@ class EmsEvent < EventStream
 
     if event[:host_id].nil? && uid_ems.present?
       # Attempt to find a host in the current EMS first, then fallback to archived hosts
-      host = Host.find_by(:ems_id => event[:ems_id], :uid_ems => uid_ems) || Host.find_by(:ems_id => nil, :uid_ems => uid_ems)
+      host = Host.where(:uid_ems => uid_ems, :ems_id => [event[:ems_id], nil]).order("ems_id NULLS LAST").first
       unless host.nil?
         event[:host_id]     = host.id
         event[:host_name] ||= host.name

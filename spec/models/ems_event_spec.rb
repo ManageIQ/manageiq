@@ -302,6 +302,16 @@ RSpec.describe EmsEvent do
           expect(ems_event.host).to eq(host)
         end
       end
+
+      context "with active and archived hosts with the same uid_ems" do
+        let!(:archived_host) { FactoryBot.create(:host, :uid_ems => "6f3fa3f1-bbe0-4aab-9a69-5d652324357f") }
+        let!(:host)          { FactoryBot.create(:host, :uid_ems => "6f3fa3f1-bbe0-4aab-9a69-5d652324357f", :ext_management_system => ems) }
+
+        it "should prefer the active host" do
+          ems_event = described_class.add(ems.id, event)
+          expect(ems_event.host).to eq(host)
+        end
+      end
     end
   end
 
