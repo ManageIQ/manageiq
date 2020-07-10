@@ -90,7 +90,17 @@ class EmsEvent < EventStream
   end
 
   def self.process_host_in_event!(event, options = {})
+    uid_ems = event.delete(:host_uid_ems)
     process_object_in_event!(Host, event, options)
+
+    if event[:host_id].nil? && uid_ems.present?
+      # Attempt to find a host in the current EMS first, then fallback to archived hosts
+      host = Host.where(:uid_ems => uid_ems, :ems_id => [event[:ems_id], nil]).order("ems_id NULLS LAST").first
+      unless host.nil?
+        event[:host_id]     = host.id
+        event[:host_name] ||= host.name
+      end
+    end
   end
 
   def self.process_container_entities_in_event!(event, _options = {})
