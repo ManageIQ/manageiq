@@ -31,6 +31,11 @@ module ManageIQ::Providers
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
     has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
 
+    has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
+    # Only taggings mapped from labels, excluding user-assigned tags.
+    has_many :vm_and_template_taggings,      -> { joins(:tag).merge(Tag.controlled_by_mapping.or(Tag.possibly_controlled_by_mapping)) },
+                                             :through     => :vms_and_templates, :source => :taggings
+
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
     validates_presence_of :zone
