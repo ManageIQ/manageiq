@@ -151,13 +151,25 @@ class ChargebackRate < ApplicationRecord
     super || description == 'Default Container Image Rate'
   end
 
+  def assigment_type_description(record, type)
+    assignment_key = if %i[object storage].include?(type)
+                       record.kind_of?(MiqEnterprise) ? "enterprise" : record.class.table_name.singularize
+                     elsif type == :tag
+                       "#{record&.second}-tags"
+                     elsif type == :label
+                       "container_image-labels"
+                     end
+    rate_type_for_tos = rate_type == "Compute" ? :chargeback_compute : :chargeback_storage
+    TermOfServiceHelper::ASSIGN_TOS[rate_type_for_tos][assignment_key] || raise("'#{assignment_key}' as chargeback assignment type is not supported for #{rate_type_for_tos} rate.")
+  end
+
   def assigned_to
     result = []
 
     tos = get_assigned_tos
-    tos[:tags].each { |tag| result << {:tag => tag} }
-    tos[:objects].each { |object| result << {:object => object} }
-    tos[:labels].each { |label| result << {:label => label} }
+    tos[:tags].each { |tag| result << {:tag => tag, :assigment_type_description => assigment_type_description(tag, :tag)} }
+    tos[:objects].each { |object| result << {:object => object, :assigment_type_description => assigment_type_description(object, :object)} }
+    tos[:labels].each { |label| result << {:label => label, :assigment_type_description => assigment_type_description(label, :label)} }
 
     result
   end
