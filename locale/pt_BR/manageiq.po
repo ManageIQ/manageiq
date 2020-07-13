@@ -2282,7 +2282,9 @@ msgstr "Todos os %{labels} selecionados não estão na região atual"
 
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
-msgstr "O {n, plural, one {'%{label}' não está na região atual e será ignorado} other {'%{label}' não estão na região atual e serão ignorados }}"
+msgid_plural "%{label} are not in the current region and will be skipped"
+msgstr[0] "O %{label} não está na região atual e será ignorado"
+msgstr[1] "O %{label} não estão na região atual e serão ignorados "
 
 #: ../app/controllers/application_controller.rb:1585
 msgid "These VMs can not be migrated together."
@@ -3535,7 +3537,7 @@ msgstr "Designação de política do '%{model}'"
 #: ../app/controllers/application_controller/policy_support.rb:220
 #: ../app/controllers/vm_common.rb:1467
 msgid "%{vm_or_template} Policy Simulation"
-msgstr "Simulação de política do %{vm_or_template} "
+msgstr "Simulação de política do %{vm_or_template}"
 
 #: ../app/controllers/application_controller/policy_support.rb:239
 msgid "No Policy Profiles are available"
@@ -5220,7 +5222,7 @@ msgstr "Não é possível iniciar o aumento de capacidade: %{message}"
 
 #: ../app/controllers/ems_infra_controller.rb:247
 msgid " Scaling down to %{a} compute nodes"
-msgstr " Diminuindo a capacidade de nós de cálculo do %{a} "
+msgstr " Diminuindo a capacidade de nós de cálculo do %{a}"
 
 #: ../app/controllers/ems_infra_controller.rb:255
 msgid "Unable to initiate scale down: %{message}"
@@ -6206,7 +6208,7 @@ msgstr "O texto de ajuda instantânea do grupo de botões é necessário"
 #: ../app/controllers/miq_ae_customization_controller.rb:438
 #: ../app/presenters/menu/default_menu.rb:240
 msgid "Customization"
-msgstr "Customization"
+msgstr "Customização"
 
 #: ../app/controllers/miq_ae_customization_controller/custom_buttons.rb:16
 msgid "All Object Types"
@@ -6256,7 +6258,7 @@ msgstr "Diálogos \"%{name}\""
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:114
 msgid "%{typ} Dialogs"
-msgstr "Diálogos %{typ} "
+msgstr "Diálogos %{typ}"
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:196
 msgid "Default Dialog \"%{name}\" can not be edited"
@@ -6538,7 +6540,7 @@ msgstr "Políticas de controle"
 #: ../app/controllers/miq_policy_controller.rb:547
 #: ../app/controllers/miq_policy_controller.rb:896
 msgid "%{typ} Policies"
-msgstr "Políticas do %{typ} "
+msgstr "Políticas do %{typ}"
 
 #: ../app/controllers/miq_policy_controller.rb:551
 #: ../app/controllers/miq_policy_controller.rb:918
@@ -7708,7 +7710,7 @@ msgstr "A configuração da propriedade foi cancelada pelo usuário"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:164
 msgid "Ownership saved for selected %{object_types}"
-msgstr "Propriedade salva para o %{object_types} selecionado "
+msgstr "Propriedade salva para o %{object_types} selecionado"
 
 #: ../app/controllers/mixins/actions/vm_actions/policy_simulation.rb:18
 msgid "At least 1 VM must be selected for Policy Simulation"
@@ -8166,7 +8168,7 @@ msgstr "Todos os provedores do %{title}"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:349
 msgid "All %{title} Configured Systems"
-msgstr "Todos os sistemas configurados %{title} "
+msgstr "Todos os sistemas configurados %{title}"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:370
 msgid "All Ansible Tower Job Templates"
@@ -8693,7 +8695,7 @@ msgstr "Índice VMDB \"%{name}\""
 
 #: ../app/controllers/ops_controller/db.rb:126
 msgid "VMDB \"%{name}\" Table Utilization"
-msgstr "Utilização da tabela \"%{name}\" do VMDB "
+msgstr "Utilização da tabela \"%{name}\" do VMDB"
 
 #: ../app/controllers/ops_controller/db.rb:132
 msgid "VMDB Table \"%{name}\""
@@ -9136,11 +9138,11 @@ msgstr "O nome do log do evento é necessário"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:689
 msgid "%{description} category Scan"
-msgstr "Varredura de categoria %{description} "
+msgstr "Varredura de categoria %{description}"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:706
 msgid "%{description} registry Scan"
-msgstr "Varredura de registro %{description} "
+msgstr "Varredura de registro %{description}"
 
 #: ../app/controllers/ops_controller/settings/cap_and_u.rb:39
 msgid "Capacity and Utilization Collection settings saved"
@@ -9632,7 +9634,7 @@ msgstr "A Categoria \"%{name}\" foi salva"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:218
 msgid "Category %{description} [%{name}] record deleted"
-msgstr "O registro da Categoria %{description} [%{name}] foi excluído "
+msgstr "O registro da Categoria %{description} [%{name}] foi excluído"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:254
 msgid "Category %{description} [%{name}] record created ("
@@ -11157,7 +11159,7 @@ msgstr "Empresa"
 
 #: ../app/controllers/utilization_controller.rb:138
 msgid "%{model} \"%{name}\" Utilization Trend Summary"
-msgstr "Resumo da tendência de utilização %{model} \"%{name}\" "
+msgstr "Resumo da tendência de utilização %{model} \"%{name}\""
 
 #: ../app/controllers/utilization_controller.rb:143
 msgid " - Filtered by %{filter}"
@@ -11794,7 +11796,7 @@ msgstr "Capacidade e utilização de dados para %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1471
 msgid "%{vm_or_template} Policy Assignment"
-msgstr "Designação de política do %{vm_or_template} "
+msgstr "Designação de política do %{vm_or_template}"
 
 #: ../app/controllers/vm_common.rb:1475
 msgid "Reconfigure %{vm_or_template}"
@@ -12929,7 +12931,7 @@ msgstr "Este objeto já existe no banco de dados com o mesmo nome"
 
 #: ../app/helpers/application_helper/listnav.rb:98
 msgid "Show this %{entity_name}'s parent %{linked_entity_name}"
-msgstr "Mostrar este %{linked_entity_name} pai do %{entity_name} "
+msgstr "Mostrar este %{linked_entity_name} pai do %{entity_name}"
 
 #: ../app/helpers/application_helper/listnav.rb:120
 #: ../app/helpers/application_helper/listnav.rb:127
@@ -18166,7 +18168,7 @@ msgstr "Tem certeza de que deseja excluir este item e todos os seus filhos?"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:58
 msgid "Edit '%{customer_name}' Tags for this Tenant"
-msgstr "Editar Tags do '%{customer_name}' para\neste locatário "
+msgstr "Editar Tags do '%{customer_name}' para\neste locatário"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:13
 msgid "Edit the selected item"
@@ -20503,7 +20505,7 @@ msgstr "Nome do host %{name}"
 #: ../app/helpers/ems_container_helper/textual_summary.rb:123
 #: ../app/helpers/ems_container_helper/textual_summary.rb:129
 msgid "%{name} API Port"
-msgstr "Porta da API do %{name} "
+msgstr "Porta da API do %{name}"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:124
 msgid "%{name} Type"
@@ -20537,7 +20539,7 @@ msgstr "Número de hosts de controlador"
 
 #: ../app/helpers/ems_infra_helper.rb:21
 msgid "Number of %{host_type} Hosts"
-msgstr "Número de hosts do %{host_type} "
+msgstr "Número de hosts do %{host_type}"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:61
 msgid "Aggregate %{title} CPU Resources"
@@ -20553,7 +20555,7 @@ msgstr "Agregar CPUs do %{title}"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:75
 msgid "Aggregate %{title} CPU Cores"
-msgstr "Agregar núcleos da CPU do %{title} "
+msgstr "Agregar núcleos da CPU do %{title}"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:138
 msgid "States of Root Orchestration Stacks"
@@ -20561,7 +20563,7 @@ msgstr "Estados de pilhas de orquestração raiz"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:153
 msgid "%{title} Default VNC Port Range"
-msgstr "Intervalo de portas padrão do VNC %{title} "
+msgstr "Intervalo de portas padrão do VNC %{title}"
 
 #: ../app/helpers/ems_storage_helper/textual_summary.rb:83
 msgid "Cloud Volume Types"
@@ -20891,7 +20893,7 @@ msgstr "Modo de manutenção"
 
 #: ../app/helpers/host_helper/textual_summary.rb:189
 msgid "Show %{title} Storage Adapters"
-msgstr "Mostrar Adaptadores de armazenamento do %{title} "
+msgstr "Mostrar Adaptadores de armazenamento do %{title}"
 
 #: ../app/helpers/host_helper/textual_summary.rb:200
 #: ../app/helpers/host_helper/textual_summary.rb:442
@@ -20908,7 +20910,7 @@ msgstr "Núcleos da CPU por soquete"
 
 #: ../app/helpers/host_helper/textual_summary.rb:252
 msgid "Show this %{host_title}'s %{cluster_title}"
-msgstr "Mostrar este %{cluster_title} do %{host_title} "
+msgstr "Mostrar este %{cluster_title} do %{host_title}"
 
 #. TRANSLATORS: file: product/views/PhysicalServer.yaml
 #: ../app/helpers/host_helper/textual_summary.rb:261
@@ -30006,7 +30008,7 @@ msgstr "Não é possível obter armazenamentos para %{name}"
 
 #: ../app/models/vim_performance_analysis.rb:273
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
-msgstr "Modo não suportado (%{mode}) para opções do %{class} %{type} "
+msgstr "Modo não suportado (%{mode}) para opções do %{class} %{type}"
 
 #: ../app/models/vim_performance_analysis.rb:346
 msgid "unknown object type: %{class}"
@@ -31432,7 +31434,7 @@ msgstr "Fornecimento"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:105
 msgid "%{entry_point} Entry Point (NameSpace/Class/Instance)"
-msgstr "Ponto de entrada (NameSpace/Class/Instance) %{entry_point} "
+msgstr "Ponto de entrada (NameSpace/Class/Instance) %{entry_point}"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:122
 msgid "Ownership Group"
@@ -34283,7 +34285,7 @@ msgstr "Mostrar arquivos que não sejam de máquina virtual neste armazenamento 
 
 #: ../app/views/layouts/remote_console.html.haml:5
 msgid "%{product_name} HTML5 Remote Console"
-msgstr "Console remoto HTML5 %{product_name} "
+msgstr "Console remoto HTML5 %{product_name}"
 
 #: ../app/views/layouts/remote_console.html.haml:16
 msgid "Connecting"
@@ -35280,7 +35282,7 @@ msgstr "Visualizar condição"
 
 #: ../app/views/miq_policy/_condition_folders.html.haml:12
 msgid "%{object} Conditions"
-msgstr "Condições %{object} "
+msgstr "Condições %{object}"
 
 #: ../app/views/miq_policy/_condition_list.html.haml:8
 msgid "No %{model} Conditions are defined."
@@ -37138,7 +37140,7 @@ msgstr "* Requisitos: arquivo CSV formatado."
 
 #: ../app/views/ops/_settings_import_tags_tab.html.haml:7
 msgid "Upload %{customer_name} Tag Assignments for VMs"
-msgstr "Fazer upload de designações de tags para o %{customer_name} "
+msgstr "Fazer upload de designações de tags para o %{customer_name}"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:5
 msgid "Resource Entity"
@@ -39237,7 +39239,7 @@ msgstr "Inserir tamanho"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:238
 msgid "Disk size between {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} and 2TB required"
-msgstr "O tamanho do disco deve estar entre {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} e 2 TB "
+msgstr "O tamanho do disco deve estar entre {{1*disk.orgHdSize+1}} {{disk.orgHdUnit}} e 2 TB"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:277
 msgid "Resize"

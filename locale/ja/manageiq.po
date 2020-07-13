@@ -14025,11 +14025,11 @@ msgstr "選択したクラウド・ボリュームのスナップショットの
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:52
 msgid "Attach selected Cloud Volume to an Instance"
-msgstr "選択したクラウド・ボリュームのインスタンスへの割り当て"
+msgstr "選択したクラウド・ボリュームをインスタンスに割り当て"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:62
 msgid "Detach selected Cloud Volume from an Instance"
-msgstr "選択したクラウド・ボリュームのインスタンスからの割り当て解除"
+msgstr "選択したクラウド・ボリュームをインスタンスから割り当て解除"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:72
 msgid "Edit selected Cloud Volume"

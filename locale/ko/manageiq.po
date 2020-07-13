@@ -2224,7 +2224,7 @@ msgstr "이 보고서에 대한 레코드를 찾을 수 없음"
 
 #: ../app/controllers/application_controller.rb:720
 msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-msgstr "편집이 중단되었습니다! %{product}이(가) 브라우저의 이전 단추나 동일한 브라우저의 다중 탭 또는 창에서의 액세스를 지원하지 않습니다. 계속하기 전에 중복 세션을 닫으십시오."
+msgstr "편집이 중단되었습니다! %{product}이(가) 브라우저의 이전 단추나 동일한 브라우저의 다중 탭 또는 창에서의 액세스를 지원하지 않습니다.  계속하기 전에 중복 세션을 닫으십시오."
 
 #: ../app/controllers/application_controller.rb:877
 msgid "View this item"
@@ -2478,7 +2478,7 @@ msgstr "새 단추 그룹 추가"
 
 #: ../app/controllers/application_controller/buttons.rb:689
 msgid "Editing Button Group \"%{name}\""
-msgstr "단추 그룹 \"%{name}\" 편집 중"
+msgstr "단추 그룹 \"%{name}\" 편집"
 
 #: ../app/controllers/application_controller/buttons.rb:713
 msgid "Adding a new Button"
@@ -2486,7 +2486,7 @@ msgstr "새 단추 추가"
 
 #: ../app/controllers/application_controller/buttons.rb:715
 msgid "Editing Button \"%{name}\""
-msgstr "단추 \"%{name}\" 편집 중"
+msgstr "단추 \"%{name}\" 편집"
 
 #: ../app/controllers/application_controller/buttons.rb:789
 msgid "No fields were selected to move top"
@@ -4023,7 +4023,7 @@ msgstr "이 서비스 주문"
 
 #: ../app/controllers/catalog_controller.rb:988
 msgid "Editing Catalog \"%{name}\""
-msgstr "카탈로그 \"%{name}\" 편집 중"
+msgstr "카탈로그 \"%{name}\" 편집"
 
 #: ../app/controllers/catalog_controller.rb:990
 msgid "Adding a new Catalog"
@@ -4044,7 +4044,7 @@ msgstr "가격 / 월"
 
 #: ../app/controllers/catalog_controller.rb:1144
 msgid "Editing Service Catalog Item \"%{name}\""
-msgstr "서비스 카탈로그 항목 \"%{name}\" 편집 중"
+msgstr "서비스 카탈로그 항목 \"%{name}\" 편집"
 
 #: ../app/controllers/catalog_controller.rb:1197
 msgid "Adding a new Catalog Bundle"
@@ -4052,7 +4052,7 @@ msgstr "새 카탈로그 번들 추가"
 
 #: ../app/controllers/catalog_controller.rb:1199
 msgid "Editing Catalog Bundle \"%{name}\""
-msgstr "카탈로그 번들 \"%{name}\" 편집 중"
+msgstr "카탈로그 번들 \"%{name}\" 편집"
 
 #: ../app/controllers/catalog_controller.rb:1281
 #: ../app/views/catalog/_sandt_tree_show.html.haml:54
@@ -4098,7 +4098,7 @@ msgstr "가격은 숫자 값이어야 합니다."
 
 #: ../app/controllers/catalog_controller.rb:2023
 msgid "Editing %{model} Tags for \"%{name}\""
-msgstr "\"%{name}\"에 대한 %{model} 태그 편집 중"
+msgstr "\"%{name}\"에 대한 %{model} 태그 편집"
 
 #: ../app/controllers/chargeback_controller.rb:53
 #: ../app/controllers/chargeback_controller.rb:391
@@ -4465,7 +4465,7 @@ msgstr "회선당 하나의 DNS 이름 서버는 필수입니다."
 #: ../app/controllers/vm_common.rb:341
 #: ../app/presenters/menu/default_menu.rb:137 ../config/yaml_strings.rb:1523
 msgid "Subnets"
-msgstr "Subnets"
+msgstr "서브넷"
 
 #: ../app/controllers/cloud_tenant_controller.rb:36
 #: ../app/controllers/cloud_volume_controller.rb:29
@@ -5144,7 +5144,7 @@ msgstr "스케일링 축소는 지원되지 않습니다. %{name} %{new_value}�
 
 #: ../app/controllers/ems_infra_controller.rb:97
 msgid " %{name} from %{value} to %{parameters} "
-msgstr " %{value}에서 %{parameters}(으)로 %{name}"
+msgstr " %{value}에서 %{parameters}(으)로 %{name} "
 
 #: ../app/controllers/ems_infra_controller.rb:112
 #: ../app/views/ems_infra/scaledown.html.haml:40
@@ -5801,7 +5801,7 @@ msgstr "%{name} 도메인: 현재 버전 - %{version}, 사용 가능 버전 - %{
 #: ../app/controllers/miq_ae_class_controller.rb:509
 #: ../app/controllers/miq_ae_class_controller.rb:760
 msgid "Editing Automate Method \"%{name}\""
-msgstr "자동화 메소드 \"%{name}\" 편집 중"
+msgstr "자동화 메소드 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_class_controller.rb:548
 msgid "Adding a new Automate Instance"
@@ -5809,7 +5809,7 @@ msgstr "새 자동화 인스턴스 추가"
 
 #: ../app/controllers/miq_ae_class_controller.rb:550
 msgid "Editing Automate Instance \"%{name}\""
-msgstr "자동화 인스턴스 \"%{name}\" 편집 중"
+msgstr "자동화 인스턴스 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_class_controller.rb:570
 msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
@@ -5847,7 +5847,7 @@ msgstr "새 자동화 클래스 추가"
 
 #: ../app/controllers/miq_ae_class_controller.rb:675
 msgid "Editing Automate Class \"%{name}\""
-msgstr "자동화 클래스 \"%{name}\" 편집 중"
+msgstr "자동화 클래스 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_class_controller.rb:710
 msgid "Adding a new Class Schema"
@@ -5855,7 +5855,7 @@ msgstr "새 클래스 스키마 추가"
 
 #: ../app/controllers/miq_ae_class_controller.rb:712
 msgid "Editing Class Schema \"%{name}\""
-msgstr "클래스 스키마 \"%{name}\" 편집 중"
+msgstr "클래스 스키마 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_class_controller.rb:758
 msgid "Adding a new Automate Method"
@@ -6037,7 +6037,7 @@ msgstr "새 %{model} 추가 중"
 #: ../app/controllers/ops_controller.rb:631
 #: ../app/controllers/ops_controller.rb:697
 msgid "Editing %{model} \"%{name}\""
-msgstr "%{model} \"%{name}\" 편집 중"
+msgstr "%{model} \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2593
 #: ../app/views/report/_db_form.html.haml:33
@@ -6144,7 +6144,7 @@ msgstr "새 대화 상자 추가"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:142
 msgid "Editing %{name} Service Dialog"
-msgstr "%{name} 서비스 대화 상자 편집 중"
+msgstr "%{name} 서비스 대화 상자 편집"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:187
 msgid "Provisioning Dialogs"
@@ -6182,7 +6182,7 @@ msgstr "대화 상자 \"%{name}\" 복사 중"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:414
 msgid "Editing Dialog \"%{name}\""
-msgstr "대화 상자 \"%{name}\" 편집 중"
+msgstr "대화 상자 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:424
 msgid "Button Group Hover Text is required"
@@ -6489,7 +6489,7 @@ msgstr "새 정책 프로파일 추가"
 
 #: ../app/controllers/miq_policy_controller.rb:526
 msgid "Editing Policy Profile \"%{name}\""
-msgstr "정책 프로파일 \"%{name}\" 편집 중"
+msgstr "정책 프로파일 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:526
 #: ../app/controllers/miq_policy_controller/policy_profiles.rb:153
@@ -6544,7 +6544,7 @@ msgstr "%{model} 정책 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "Editing %{model} Policy \"%{name}\""
-msgstr "%{model} 정책 \"%{name}\" 편집 중"
+msgstr "%{model} 정책 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:571
 msgid " Condition Assignments"
@@ -6560,7 +6560,7 @@ msgstr "새 조건 추가"
 
 #: ../app/controllers/miq_policy_controller.rb:591
 msgid "Editing %{model} Condition \"%{name}\""
-msgstr "%{model} 조건 \"%{name}\" 편집 중"
+msgstr "%{model} 조건 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:595
 msgid "%{model} Condition \"%{name}\""
@@ -6568,7 +6568,7 @@ msgstr "%{model} 조건 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:602
 msgid "Editing Event \"%{name}\""
-msgstr "이벤트 \"%{name}\" 편집 중"
+msgstr "이벤트 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:602
 #: ../app/controllers/miq_policy_controller/events.rb:122
@@ -6586,7 +6586,7 @@ msgstr "조치 \"%{name}\""
 
 #: ../app/controllers/miq_policy_controller.rb:608
 msgid "Editing Action \"%{name}\""
-msgstr "조치 \"%{name}\" 편집 중"
+msgstr "조치 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:614
 msgid "Adding a new Alert Profile"
@@ -6594,7 +6594,7 @@ msgstr "새 경보 프로파일 추가"
 
 #: ../app/controllers/miq_policy_controller.rb:616
 msgid "Editing %{model} Alert Profile \"%{name}\""
-msgstr "%{model} 경보 프로파일 \"%{name}\" 편집 중"
+msgstr "%{model} 경보 프로파일 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:619
 #: ../app/controllers/miq_policy_controller/alert_profiles.rb:323
@@ -6607,7 +6607,7 @@ msgstr "새 경보 추가"
 
 #: ../app/controllers/miq_policy_controller.rb:626
 msgid "Editing assignments for Alert \"%{name}\""
-msgstr "경보 \"%{name}\"에 대한 지정 편집 중"
+msgstr "경보 \"%{name}\"에 대한 지정 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:628
 msgid "Assignments for Alert \"%{name}\""
@@ -6615,7 +6615,7 @@ msgstr "경보 \"%{name}\"에 대한 지정"
 
 #: ../app/controllers/miq_policy_controller.rb:630
 msgid "Editing Alert \"%{name}\""
-msgstr "경보 \"%{name}\" 편집 중"
+msgstr "경보 \"%{name}\" 편집"
 
 #: ../app/controllers/miq_policy_controller.rb:632
 #: ../app/controllers/miq_policy_controller/alerts.rb:687
@@ -7464,7 +7464,7 @@ msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다. %{hostname}의 �
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:143
 msgid "\"%{task}\": not available for %{hostname}"
-msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다. "
+msgstr "\"%{task}\": %{hostname}에 올바르지 않습니다."
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:171
 #: ../app/controllers/mixins/ems_common.rb:329
@@ -8384,7 +8384,7 @@ msgstr "새 구역 추가"
 
 #: ../app/controllers/ops_controller.rb:622
 msgid "Editing Zone \"%{name}\""
-msgstr "구역 \"%{name}\" 편집 중"
+msgstr "구역 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller.rb:622
 msgid "Zone \"%{name}\""
@@ -8400,7 +8400,7 @@ msgstr "새 맵핑 추가"
 
 #: ../app/controllers/ops_controller.rb:639
 msgid "Editing tag mapping from label \"%{name}\""
-msgstr "레이블 \"%{name}\"에서 태그 맵핑 편집 중"
+msgstr "레이블 \"%{name}\"에서 태그 맵핑 편집"
 
 #: ../app/controllers/ops_controller.rb:645
 msgid "Adding a new Analysis Profile"
@@ -8412,7 +8412,7 @@ msgstr "분석 프로파일 \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:647
 msgid "Editing Analysis Profile \"%{name}\""
-msgstr "분석 프로파일 \"%{name}\" 편집 중"
+msgstr "분석 프로파일 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller.rb:656
 #: ../app/controllers/report_controller.rb:698
@@ -8424,7 +8424,7 @@ msgstr "새 스케줄 추가"
 #: ../app/controllers/report_controller.rb:698
 #: ../app/controllers/report_controller.rb:710
 msgid "Editing Schedule \"%{name}\""
-msgstr "스케줄 \"%{name}\" 편집 중"
+msgstr "스케줄 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller.rb:658
 #: ../app/controllers/report_controller/schedules.rb:470
@@ -8916,7 +8916,7 @@ msgstr "기본 EVM 사용자 \"%{name}\"을(를) 복사할 수 없습니다."
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:560
 msgid "Editing %{model} for \"%{name}\""
-msgstr "\"%{name}\"에 대한 %{model} 편집 중"
+msgstr "\"%{name}\"에 대한 %{model} 편집"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:593
 msgid "Edit of %{name} was cancelled by the user"
@@ -8974,7 +8974,7 @@ msgstr "액세스 제어 지역 \"%{name}\""
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1001
 msgid "Editing User \"%{name}\""
-msgstr "사용자 \"%{name}\" 편집 중"
+msgstr "사용자 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1003
 msgid "Adding a new User"
@@ -8994,7 +8994,7 @@ msgstr "프로젝트/테넌트 선택"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1193
 msgid "Editing Group \"%{name}\""
-msgstr "그룹 \"%{name}\" 편집 중"
+msgstr "그룹 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1195
 msgid "Adding a new Group"
@@ -9002,7 +9002,7 @@ msgstr "새 그룹 추가"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1288
 msgid "Editing Role \"%{name}\""
-msgstr "역할 \"%{name}\" 편집 중"
+msgstr "역할 \"%{name}\" 편집"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1290
 msgid "Adding a new Role"
@@ -10005,7 +10005,7 @@ msgstr "새 PXE 서버 추가"
 
 #: ../app/controllers/pxe_controller.rb:142
 msgid "Editing PXE Server \"%{name}\""
-msgstr "PXE 서버 \"%{name}\" 편집 중"
+msgstr "PXE 서버 \"%{name}\" 편집"
 
 #: ../app/controllers/pxe_controller.rb:144
 #: ../app/controllers/pxe_controller/pxe_servers.rb:271
@@ -10043,7 +10043,7 @@ msgstr "새 사용자 정의 템플리트 추가"
 
 #: ../app/controllers/pxe_controller.rb:174
 msgid "Editing Customization Template \"%{name}\""
-msgstr "사용자 정의 템플리트 \"%{name}\" 편집 중"
+msgstr "사용자 정의 템플리트 \"%{name}\" 편집"
 
 #: ../app/controllers/pxe_controller.rb:176
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:241
@@ -10261,7 +10261,7 @@ msgstr "%{typ} 보고서"
 
 #: ../app/controllers/report_controller.rb:684
 msgid "Editing Dashboard sequence for \"%{name}\""
-msgstr "\"%{name}\"의 대시보드 순서 편집 중"
+msgstr "\"%{name}\"의 대시보드 순서 편집"
 
 #: ../app/controllers/report_controller.rb:686
 msgid "Adding a new dashboard"
@@ -10269,11 +10269,11 @@ msgstr "새 대시보드 추가"
 
 #: ../app/controllers/report_controller.rb:686
 msgid "Editing Dashboard \"%{name}\""
-msgstr "대시보드 \"%{name}\" 편집 중"
+msgstr "대시보드 \"%{name}\" 편집"
 
 #: ../app/controllers/report_controller.rb:702
 msgid "Editing Report \"%{name}\""
-msgstr "보고서 \"%{name}\" 편집 중"
+msgstr "보고서 \"%{name}\" 편집"
 
 #: ../app/controllers/report_controller.rb:723
 msgid "Adding a new Widget"
@@ -10281,7 +10281,7 @@ msgstr "새 위젯 추가"
 
 #: ../app/controllers/report_controller.rb:723
 msgid "Editing Widget \"%{title}\""
-msgstr "위젯 \"%{title}\" 편집 중"
+msgstr "위젯 \"%{title}\" 편집"
 
 #: ../app/controllers/report_controller.rb:732
 #: ../app/views/report/_menu_form1.html.haml:5
@@ -10364,7 +10364,7 @@ msgstr "폴더 관리 변경사항 버리기"
 #: ../app/controllers/report_controller.rb:832
 #: ../app/controllers/report_controller/menus.rb:630
 msgid "Editing EVM Group \"%{name}\""
-msgstr "EVM 그룹 \"%{name}\" 편집 중"
+msgstr "EVM 그룹 \"%{name}\" 편집"
 
 #: ../app/controllers/report_controller/dashboards.rb:9
 msgid "Edit of Dashboard Sequence was cancelled by the user"
@@ -10985,7 +10985,7 @@ msgstr "서비스의 폐기 날짜 설정/제거"
 
 #: ../app/controllers/service_controller.rb:393
 msgid "Editing Service \"%{name}\""
-msgstr "서비스 \"%{name}\" 편집 중"
+msgstr "서비스 \"%{name}\" 편집"
 
 #: ../app/controllers/service_controller.rb:397
 msgid "Edit Tags for Service"
@@ -11711,7 +11711,7 @@ msgstr "%{vm_or_template} 공개"
 
 #: ../app/controllers/vm_common.rb:1425
 msgid "Editing %{vm_or_template} \"%{name}\""
-msgstr "%{vm_or_template} \"%{name}\" 편집 중"
+msgstr "%{vm_or_template} \"%{name}\" 편집"
 
 #: ../app/controllers/vm_common.rb:1429
 msgid "Chargeback preview for \"%{vm_name}\""
@@ -26362,7 +26362,7 @@ msgstr "%{message}이(가) %{name}에 사용 가능하지 않습니다."
 #: ../app/models/cloud_subnet/operations.rb:41
 #: ../app/models/cloud_volume/operations.rb:101
 msgid "Validation failed for %{name} operation %{operation}. %{reason}"
-msgstr "%{name} 오퍼레이션 %{operation}에 대한 유효성 검사에 실패했습니다. %{reason} "
+msgstr "%{name} 오퍼레이션 %{operation}에 대한 유효성 검사에 실패했습니다. %{reason}"
 
 #: ../app/models/cloud_tenant.rb:52
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
@@ -32617,11 +32617,11 @@ msgstr "표시할 제공자가 없습니다. 제공자를 추가하십시오."
 
 #: ../app/views/layouts/_empty.html.haml:9
 msgid "Learn more about this"
-msgstr "자세히 보기"
+msgstr "문서에서"
 
 #: ../app/views/layouts/_empty.html.haml:12
 msgid "in the documentation."
-msgstr "문서에서"
+msgstr "자세히 보기"
 
 #: ../app/views/layouts/_exception_contents.html.haml:3
 msgid "Unexpected error encountered"
@@ -33334,7 +33334,7 @@ msgstr "이벤트 모니터링을 사용 가능하게 설정하십시오. VMware
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:292
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:298
 msgid "Disable event monitoring."
-msgstr "이벤트 모니터링을 사용 안함으로 설정하십시오."
+msgstr "이벤트 모니터링을 사용 안함으로 설정합니다. "
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:296
 msgid "Used to authenticate with Nuage AMQP Messaging Bus for event handling."
@@ -34160,14 +34160,14 @@ msgstr "최대 시간"
 #: ../app/views/miq_ae_class/_instance_fields.html.haml:11
 #: ../app/views/miq_ae_class/_instance_form.html.haml:48
 msgid "On Entry"
-msgstr "입력 시"
+msgstr "입력"
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:10
 #: ../app/views/miq_ae_class/_class_fields.html.haml:54
 #: ../app/views/miq_ae_class/_instance_fields.html.haml:12
 #: ../app/views/miq_ae_class/_instance_form.html.haml:49
 msgid "On Exit"
-msgstr "종료 시"
+msgstr "종료"
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:22
 #: ../app/views/miq_ae_class/_instance_form.html.haml:60
@@ -71480,7 +71480,7 @@ msgstr "%{message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3497
 msgid "The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted."
-msgstr "서버 %{name} 메모리 사용 %{memory_usage}이(가) %{memory_threshold} 한계를 초과했습니다. 서버 프로세스 %{pid}이(가) 종료되었으며 다시 시작됩니다."
+msgstr "서버 %{name} 메모리 사용 %{memory_usage}이(가) %{memory_threshold} 한계를 초과했습니다.  서버 프로세스 %{pid}이(가) 종료되었으며 다시 시작됩니다."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3499
@@ -71515,7 +71515,7 @@ msgstr "인스턴스 %{instance_name} 비우기 실패: %{error_message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3511
 msgid "The operation %{op_name} %{op_arg} on %{tower} completed successfully."
-msgstr "%{tower}의 %{op_name} %{op_arg} 오퍼레이션이 정상적으로 완료되었습니다."
+msgstr "%{tower}의 %{op_name} %%{op_arg} 오퍼레이션이 정상적으로 완료되었습니다."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3513
@@ -75380,7 +75380,7 @@ msgstr "차트 정의가 올바르지 않습니다."
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "한국어"
+msgstr "로컬_이름"
 
 #: ./dist/js/ui-components.js:1
 msgid "Check Box"

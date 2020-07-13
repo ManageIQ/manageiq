@@ -2224,7 +2224,7 @@ msgstr "No hay registros para este informe"
 
 #: ../app/controllers/application_controller.rb:720
 msgid "Edit aborted!  %{product} does not support the browser's back button or access from multiple tabs or windows of the same browser.  Please close any duplicate sessions before proceeding."
-msgstr "Edición cancelada.  %{product} no admite el botón volver del navegador ni el acceso desde varias fichas o ventanas del mismo navegador. Cierre las sesiones suplicadas antes de continuar."
+msgstr "Edición cancelada.  %{product} no admite el botón volver del navegador ni el acceso desde varias fichas o ventanas del mismo navegador.  Cierre las sesiones suplicadas antes de continuar."
 
 #: ../app/controllers/application_controller.rb:877
 msgid "View this item"
@@ -10422,7 +10422,7 @@ msgstr "El proceso para añadir un nuevo panel de control fue cancelado por el u
 
 #: ../app/controllers/report_controller/dashboards.rb:116
 msgid "Edit of Dashboard \"%{name}\" was cancelled by the user"
-msgstr "El usuario ha cancelado la edición del panel de control \"%{name}\" "
+msgstr "El usuario ha cancelado la edición del panel de control \"%{name}\""
 
 #: ../app/controllers/report_controller/dashboards.rb:134
 msgid "Dashboard \"%{name}\" was saved"
@@ -28188,7 +28188,7 @@ msgstr "No se puede encontrar la subred"
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:6
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:14
 msgid "The Security Group is not connected to an active %{table}"
-msgstr "\nEl grupo de seguridad no está conectado a una %{table} activa"
+msgstr "El grupo de seguridad no está conectado a una %{table} activa"
 
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:148
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:157
@@ -33446,7 +33446,7 @@ msgstr "Validar las credenciales iniciando sesión en el %{title_for_host} selec
 
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml:3
 msgid "%{host} to validate against, Username and matching password fields are needed to perform verification of credentials"
-msgstr "%{host} con el cual validar, se necesitan los campos de nombres de usuario y contraseña para realizar la verificación de credenciales\n"
+msgstr "%{host} con el cual validar, se necesitan los campos de nombres de usuario y contraseña para realizar la verificación de credenciales"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:22
 msgid "RSA key pair"
@@ -71724,7 +71724,7 @@ msgstr "%{message}"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3497
 msgid "The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted."
-msgstr "El uso de memoria del servidor %{name} %{memory_usage} ha superado el límite %{memory_threshold}. El proceso del servidor %{pid} se ha cancelado y se reiniciará."
+msgstr "El uso de memoria del servidor %{name} %{memory_usage} ha superado el límite %{memory_threshold}.  El proceso del servidor %{pid} se ha cancelado y se reiniciará."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3499

@@ -1483,7 +1483,7 @@ msgstr "未設定抄寫角色"
 #:
 #: ../app/assets/javascripts/controllers/ops/pglogical_replication_form_controller.js:83
 msgid "Replication will be disabled for this region"
-msgstr "將針對這個區域停用抄寫"
+msgstr "將針對這個地區停用抄寫"
 
 #:
 #: ../app/assets/javascripts/controllers/ops/pglogical_replication_form_controller.js:85
@@ -1503,7 +1503,7 @@ msgstr "更新的訂閱必須指向原始用以建立它的相同資料庫。如
 #:
 #: ../app/assets/javascripts/controllers/ops/pglogical_replication_form_controller.js:162
 msgid "Deleting a subscription will remove all replicated data which originated in the selected region. Do you want to continue?"
-msgstr "刪除訂閱將會移除源自所選區域的所有抄寫資料。要繼續嗎？"
+msgstr "刪除訂閱將會移除源自所選地區的所有抄寫資料。要繼續嗎？"
 
 #: ../app/assets/javascripts/controllers/playbook-reusable-code-mixin.js:36
 #: ../app/helpers/view_helper.rb:131
@@ -2272,16 +2272,16 @@ msgstr[0] "從 %{product} Database 刪除已儲存的報告期間發生錯誤"
 
 #: ../app/controllers/application_controller.rb:1118
 msgid "The selected %{label} is not in the current region"
-msgstr "選取的 %{label} 不在現行區域中"
+msgstr "選取的 %{label} 不在現行地區中"
 
 #: ../app/controllers/application_controller.rb:1120
 msgid "All selected %{labels} are not in the current region"
-msgstr "所有選取的 %{labels} 都不在現行區域中"
+msgstr "所有選取的 %{labels} 都不在現行地區中"
 
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
 msgid_plural "%{label} are not in the current region and will be skipped"
-msgstr[0] "%{label} 不在現行區域中，將會跳過"
+msgstr[0] "%{label} 不在現行地區中，將會跳過"
 
 #: ../app/controllers/application_controller.rb:1585
 msgid "These VMs can not be migrated together."
@@ -3164,7 +3164,7 @@ msgstr "發佈虛擬機器"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:235
 msgid "Edit %{type}"
-msgstr "編輯 %{type}"
+msgstr "編輯%{type}"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:237
 msgid "Add %{type}"
@@ -4113,7 +4113,7 @@ msgstr "所有指派"
 #: ../app/controllers/chargeback_controller.rb:55
 #: ../app/controllers/chargeback_controller.rb:427
 msgid "All Saved Chargeback Reports"
-msgstr "所有已儲存的退款報告"
+msgstr "所有已儲存的計費報告"
 
 #: ../app/controllers/chargeback_controller.rb:100
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
@@ -4149,18 +4149,18 @@ msgstr "%<typ>s 計費費率"
 
 #: ../app/controllers/chargeback_controller.rb:297
 msgid "Error during 'Rate assignments': %{error_message}"
-msgstr "「比率指派」期間發生錯誤：%{error_message}"
+msgstr "「費率指派」期間發生錯誤：%{error_message}"
 
 #: ../app/controllers/chargeback_controller.rb:299
 msgid "Rate Assignments saved"
-msgstr "已儲存的比率指派"
+msgstr "已儲存的費率指派"
 
 #: ../app/controllers/chargeback_controller.rb:307
 #: ../app/controllers/chargeback_controller.rb:974
 #: ../app/helpers/application_helper/title.rb:42
 #: ../app/presenters/menu/default_menu.rb:37
 msgid "Chargeback"
-msgstr "退款"
+msgstr "計費"
 
 #: ../app/controllers/chargeback_controller.rb:317
 #: ../app/controllers/report_controller.rb:24
@@ -4178,7 +4178,7 @@ msgstr "報告"
 #: ../app/controllers/chargeback_controller.rb:322
 #: ../app/presenters/tree_builder_chargeback_rates.rb:6
 msgid "Rates"
-msgstr "比率"
+msgstr "費率"
 
 #: ../app/controllers/chargeback_controller.rb:327
 #: ../app/presenters/tree_builder_chargeback_assignments.rb:6
@@ -4188,7 +4188,7 @@ msgstr "指派"
 
 #: ../app/controllers/chargeback_controller.rb:349
 msgid "Saved Chargeback Report [%{name}]"
-msgstr "已儲存的退款報告 [%{name}]"
+msgstr "已儲存的計費報告 [%{name}]"
 
 #: ../app/controllers/chargeback_controller.rb:351
 #: ../app/controllers/report_controller/saved_reports.rb:48
@@ -4213,15 +4213,15 @@ msgstr "儲存計費費率 \"%{name}\""
 
 #: ../app/controllers/chargeback_controller.rb:412
 msgid "Compute Rate Assignments"
-msgstr "計算比率指派"
+msgstr "計算費率指派"
 
 #: ../app/controllers/chargeback_controller.rb:413
 msgid "Storage Rate Assignments"
-msgstr "儲存比率指派"
+msgstr "儲存費率指派"
 
 #: ../app/controllers/chargeback_controller.rb:435
 msgid "Saved Chargeback Report \"%{last_run_on}\""
-msgstr "儲存的退款報告 \"%{last_run_on}\""
+msgstr "儲存的計費報告 \"%{last_run_on}\""
 
 #: ../app/controllers/chargeback_controller.rb:437
 msgid "Selected Saved Chargeback Report no longer exists"
@@ -4229,11 +4229,11 @@ msgstr "選取的「已儲存的計費費率」已不再存在"
 
 #: ../app/controllers/chargeback_controller.rb:449
 msgid "Saved Chargeback Reports \"%{report_name}\""
-msgstr "儲存的退款報告 \"%{report_name}\""
+msgstr "儲存的計費報告 \"%{report_name}\""
 
 #: ../app/controllers/chargeback_controller.rb:452
 msgid "Selected Chargeback Report no longer exists"
-msgstr "選取的「退款報告」已不再存在"
+msgstr "選取的「計費報告」已不再存在"
 
 #: ../app/controllers/chargeback_controller.rb:479
 msgid "Report \"%{report_name}\""
@@ -5989,7 +5989,7 @@ msgstr "使用者已取消複製 %{record}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1914
 msgid "Copy %{model}"
-msgstr "複製 %{model}"
+msgstr "複製%{model}"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2052
 msgid "Read Only Automate Domain \"%{name}\" cannot be deleted"
@@ -6037,7 +6037,7 @@ msgstr "新增%{model}"
 #: ../app/controllers/ops_controller.rb:631
 #: ../app/controllers/ops_controller.rb:697
 msgid "Editing %{model} \"%{name}\""
-msgstr "編輯 %{model} \"%{name}\""
+msgstr "編輯%{model} \"%{name}\""
 
 #: ../app/controllers/miq_ae_class_controller.rb:2593
 #: ../app/views/report/_db_form.html.haml:33
@@ -6144,7 +6144,7 @@ msgstr "新增對話框"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:142
 msgid "Editing %{name} Service Dialog"
-msgstr "編輯 %{name} 服務對話框"
+msgstr "編輯%{name}服務對話框"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:187
 msgid "Provisioning Dialogs"
@@ -6499,7 +6499,7 @@ msgstr "原則設定檔 \"%{name}\""
 #: ../app/controllers/miq_policy_controller.rb:535
 #: ../app/controllers/miq_policy_controller.rb:905
 msgid "All %{typ} Policies"
-msgstr "所有 %{typ} 原則"
+msgstr "所有%{typ}原則"
 
 #: ../app/controllers/miq_policy_controller.rb:538
 #: ../app/controllers/miq_policy_controller.rb:912
@@ -6532,11 +6532,11 @@ msgstr "所有%{typ}警示設定檔"
 
 #: ../app/controllers/miq_policy_controller.rb:561
 msgid "Adding a new %{model_name} %{mode} Policy"
-msgstr "新增 %{model_name} %{mode} 原則"
+msgstr "新增%{model_name}%{mode}原則"
 
 #: ../app/controllers/miq_policy_controller.rb:564
 msgid "Adding a new %{model_name} Policy"
-msgstr "新增 %{model_name} 原則"
+msgstr "新增%{model_name}原則"
 
 #: ../app/controllers/miq_policy_controller.rb:569
 msgid "%{model} Policy \"%{name}\""
@@ -8115,7 +8115,7 @@ msgstr "自訂按鈕事件"
 
 #: ../app/controllers/mixins/generic_show_mixin.rb:176
 msgid "%{name} (All %{title})"
-msgstr "%{name}（所有 %{title}）"
+msgstr "%{name}（所有%{title}）"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:56
 msgid "%{model} \"%{name}\" was updated"
@@ -8140,11 +8140,11 @@ msgstr[0] "已起始刪除 %{count} 提供者"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:341
 msgid "All %{title} Providers"
-msgstr "所有 %{title} 提供者"
+msgstr "所有%{title}提供者"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:349
 msgid "All %{title} Configured Systems"
-msgstr "所有 %{title} 配置的系統"
+msgstr "所有%{title}配置的系統"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:370
 msgid "All Ansible Tower Job Templates"
@@ -8356,7 +8356,7 @@ msgstr "套用良好的匯入記錄"
 
 #: ../app/controllers/ops_controller.rb:517
 msgid "[Region: %{description} [%{region}]]"
-msgstr "[區域：%{description} [%{region}]]"
+msgstr "[地區：%{description} [%{region}]]"
 
 #: ../app/controllers/ops_controller.rb:520
 msgid "Diagnostics %{text}"
@@ -8828,7 +8828,7 @@ msgstr "診斷 %{model} \"%{name}\""
 
 #: ../app/controllers/ops_controller/diagnostics.rb:758
 msgid "Diagnostics Region \"%{name}\""
-msgstr "診斷區域 \"%{name}\""
+msgstr "診斷地區 \"%{name}\""
 
 #: ../app/controllers/ops_controller/diagnostics.rb:766
 msgid "ManageIQ"
@@ -8970,7 +8970,7 @@ msgstr "角色 \"%{name}\""
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:857
 msgid "Access Control Region \"%{name}\""
-msgstr "存取控制區域 \"%{name}\""
+msgstr "存取控制地區 \"%{name}\""
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1001
 msgid "Editing User \"%{name}\""
@@ -9040,15 +9040,15 @@ msgstr "「LDAP 主機」應該是唯一的"
 #: ../app/controllers/ops_controller/settings.rb:138
 #: ../app/controllers/ops_controller/settings/common.rb:963
 msgid "%{product} Region \"%{name}\""
-msgstr "%{product} 區域 \"%{name}\""
+msgstr "%{product} 地區 \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings.rb:148
 msgid "Region description is required"
-msgstr "區域說明是必要的"
+msgstr "地區說明是必要的"
 
 #: ../app/controllers/ops_controller/settings.rb:165
 msgid "Region \"%{name}\" was saved"
-msgstr "已儲存區域 \"%{name}\""
+msgstr "已儲存地區 \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:5
 #: ../app/services/hawkular_proxy_service.rb:4
@@ -11093,7 +11093,7 @@ msgstr "章節"
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:70
 msgid "Item"
 msgid_plural "Items"
-msgstr[0] "項目"
+msgstr[0] "個項目"
 
 #: ../app/controllers/utilization_controller.rb:121
 #: ../app/controllers/utilization_controller.rb:127
@@ -11606,7 +11606,7 @@ msgstr[0] "執行中程序"
 #: ../app/controllers/vm_common.rb:1337
 msgid "Registry Item"
 msgid_plural "Registry Items"
-msgstr[0] "登錄項目"
+msgstr[0] "個登錄項目"
 
 #: ../app/controllers/vm_common.rb:1339
 #: ../app/helpers/container_helper/textual_summary.rb:154
@@ -11715,11 +11715,11 @@ msgstr "編輯 %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1429
 msgid "Chargeback preview for \"%{vm_name}\""
-msgstr "\"%{vm_name}\" 的退款預覽"
+msgstr "\"%{vm_name}\" 的計費預覽"
 
 #: ../app/controllers/vm_common.rb:1433
 msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
-msgstr "編輯 %{vm_or_template} \"%{name}\" 的 %{product} 伺服器關係"
+msgstr "編輯%{vm_or_template} \"%{name}\" 的 %{product} 伺服器關係"
 
 #: ../app/controllers/vm_common.rb:1440
 msgid "Provision Instances - Select an Image"
@@ -12698,7 +12698,7 @@ msgstr "只能啟動作用中伺服器上的可用角色"
 #: ../app/helpers/application_helper/button/server_demote.rb:8
 #: ../app/helpers/application_helper/button/server_promote.rb:8
 msgid "This role can only be managed at the Region level"
-msgstr "這個角色只能在「區域」層次上管理"
+msgstr "這個角色只能在「地區」層次上管理"
 
 #: ../app/helpers/application_helper/button/role_suspend.rb:8
 msgid "Activate the %{server_role_description} Role on another Server to \\\nsuspend it on %{server_name} [%{server_id}]"
@@ -16641,7 +16641,7 @@ msgstr "編輯所選群組的 '%{customer_name}' 標籤"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:13
 msgid "Add a New %{model} %{mode} Policy"
-msgstr "新增 %{model} %{mode} 原則"
+msgstr "新增%{model}%{mode}原則"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:12
 msgid "Edit Basic Info, Scope, and Notes"
@@ -18764,11 +18764,11 @@ msgstr "顯示此 VM 的時間表"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:179
 msgid "Show Chargeback preview"
-msgstr "顯示退款預覽"
+msgstr "顯示計費預覽"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:180
 msgid "Chargeback Preview"
-msgstr "退款預覽"
+msgstr "計費預覽"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:189
 msgid "VM Power Functions"
@@ -19151,7 +19151,7 @@ msgstr "區域"
 #: ../config/yaml_strings.rb:472
 #, fuzzy
 msgid "Region"
-msgstr "區域"
+msgstr "地區"
 
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
@@ -19262,7 +19262,7 @@ msgstr "選擇"
 #: ../app/views/report/_form_styling.html.haml:94
 #: ../app/views/report/_widget_show.html.haml:26 ../config/yaml_strings.rb:409
 msgid "Default"
-msgstr "預設值"
+msgstr "預設"
 
 #: ../app/helpers/automation_manager_helper.rb:120
 #: ../app/helpers/provider_foreman_helper.rb:284
@@ -21124,11 +21124,11 @@ msgstr "警告：手動變更配置檔可以停用區域 (Zone)！"
 
 #: ../app/helpers/ops_helper.rb:34
 msgid "Changes made to any individual settings will overwrite settings inherited from the Region!"
-msgstr "對任何個別設定所做的變更將改寫繼承自區域 (Region) 的設定！"
+msgstr "對任何個別設定所做的變更將改寫繼承自地區 (Region) 的設定！"
 
 #: ../app/helpers/ops_helper.rb:36
 msgid "Caution: Manual changes to configuration files can disable the Region!"
-msgstr "警告：手動變更配置檔可以停用區域 (Region)！"
+msgstr "警告：手動變更配置檔可以停用地區 (Region)！"
 
 #: ../app/helpers/ops_helper.rb:37
 msgid "Changes made to any individual settings will overwrite settings inherited from the template!"
@@ -21140,7 +21140,7 @@ msgstr "如果要重設回「區域」設定或刪除設定，請將值設為 <<
 
 #: ../app/helpers/ops_helper.rb:45
 msgid "To reset back to the Regions's setting or to delete a setting, set the value to <<reset>>."
-msgstr "如果要重設回「區域」設定或刪除設定，請將值設為 <<reset>>。"
+msgstr "如果要重設回「地區」設定或刪除設定，請將值設為 <<reset>>。"
 
 #: ../app/helpers/ops_helper.rb:47
 msgid "To reset back to the template's setting or to delete a setting, set the value to <<reset>>."
@@ -22507,16 +22507,16 @@ msgstr "前次重新整理日期"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:14
 msgid "Connect to this VM in its Region"
-msgstr "在其區域中連接至此 VM"
+msgstr "在其地區中連接至此 VM"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:24
 #: ../app/helpers/textual_mixins/textual_region.rb:27
 msgid "Connect to VM in its Region"
-msgstr "在其區域中連接至 VM"
+msgstr "在其地區中連接至 VM"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:24
 msgid "Remote Region"
-msgstr "遠端區域"
+msgstr "遠端地區"
 
 #. TRANSLATORS: file: product/views/ScanHistory.yaml
 #: ../app/helpers/textual_mixins/textual_scan_history.rb:3
@@ -23039,7 +23039,7 @@ msgstr "ID"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:41
 msgid "Multi Region"
-msgstr "多區域"
+msgstr "多地區"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:84
 msgid "Datastore Allocation Summary"
@@ -27302,7 +27302,7 @@ msgstr "%{name} 自動化管理程式"
 
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:31
 msgid "Timeline not supported for this region"
-msgstr "對此區域不支援時間表"
+msgstr "對此地區不支援時間表"
 
 #: ../app/models/manageiq/providers/azure/cloud_manager.rb:225
 #, fuzzy
@@ -28773,7 +28773,7 @@ msgstr "%{log} 訊息 <%{message}> 為不明類型 <%{type}>"
 
 #: ../app/models/miq_region.rb:115
 msgid "Region [%{region_id}] does not match the database's region [%{db_id}]"
-msgstr "區域 [%{region_id}] 與資料庫的區域 [%{db_id}] 不符"
+msgstr "地區 [%{region_id}] 與資料庫的地區 [%{db_id}] 不符"
 
 #: ../app/models/miq_region.rb:290
 msgid "options should be a Hash of type => enabled"
@@ -28793,11 +28793,11 @@ msgstr "由於遺漏埠，驗證失敗"
 
 #: ../app/models/miq_region_remote.rb:24
 msgid "Validation failed due to missing region"
-msgstr "由於遺漏區域，驗證失敗"
+msgstr "由於遺漏地區，驗證失敗"
 
 #: ../app/models/miq_region_remote.rb:28
 msgid "Validation failed because region %{region_name} has already been used"
-msgstr "驗證失敗，因為區域 %{region_name} 已被使用"
+msgstr "驗證失敗，因為地區 %{region_name} 已被使用"
 
 #: ../app/models/miq_region_remote.rb:33
 msgid "Validation failed"
@@ -28818,7 +28818,7 @@ msgstr "如果資料庫符合本端資料庫，則不能將主機設為 localhos
 #: ../app/models/miq_region_remote.rb:110
 msgid "Region Remote"
 msgid_plural "Region Remotes"
-msgstr[0] "區域遠端"
+msgstr[0] "地區遠端"
 
 #: ../app/models/miq_report.rb:277
 msgid "%{attribute} is not a valid attribute for %{name}"
@@ -30253,7 +30253,7 @@ msgstr "所有型錄"
 
 #: ../app/presenters/tree_builder_chargeback_reports.rb:10
 msgid "Saved Chargeback Reports"
-msgstr "已儲存退款報告"
+msgstr "已儲存計費報告"
 
 #: ../app/presenters/tree_builder_clusters.rb:45
 #: ../app/presenters/tree_builder_clusters.rb:47
@@ -30375,7 +30375,7 @@ msgstr "最上層"
 #: ../app/presenters/tree_builder_ops_rbac.rb:12
 #: ../app/presenters/tree_builder_ops_settings.rb:10
 msgid "%{product} Region: %{region_description} [%{region}]"
-msgstr "%{product} 區域：%{region_description} [%{region}]"
+msgstr "%{product} 地區：%{region_description} [%{region}]"
 
 #: ../app/presenters/tree_builder_ops_rbac.rb:32
 msgid "Roles"
@@ -31818,7 +31818,7 @@ msgstr "按一下以檢視/編輯時間設定檔"
 
 #: ../app/views/configuration_manager/_shared_form.html.haml:41
 msgid "No visible Zones found in current region"
-msgstr "在現行區域中找不到可見區域"
+msgstr "在現行地區中找不到可見區域"
 
 #: ../app/views/configuration_manager/_shared_form.html.haml:50
 msgid "Url"
@@ -31933,7 +31933,7 @@ msgstr "SSO 登入"
 
 #: ../app/views/dashboard/login.html.haml:114
 msgid "Region:"
-msgstr "區域："
+msgstr "地區："
 
 #: ../app/views/dashboard/login.html.haml:118
 msgid "(Global)"
@@ -36049,7 +36049,7 @@ msgstr "未定義任何備份排程"
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:135
 #: ../app/views/ops/_schedule_form_filter.html.haml:165
 msgid "AWS Region"
-msgstr "AWS 區域"
+msgstr "AWS 地區"
 
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:194
 msgid "Are you sure you want to Run a Database Backup Now?"
@@ -36700,7 +36700,7 @@ msgstr "附註：必須勾選「針對所有 %{clusters}收集」才能從 Red H
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:27
 msgid "No %{clusters} found in the current region."
-msgstr "在現行區域中找不到 %{clusters}。"
+msgstr "在現行地區中找不到 %{clusters}。"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:30
 msgid "Enable Collection by %{clusters}"
@@ -36720,7 +36720,7 @@ msgstr "針對所有資料儲存庫收集"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:58
 msgid "No Datastores found in the current region."
-msgstr "在現行區域中找不到資料儲存庫。"
+msgstr "在現行地區中找不到資料儲存庫。"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:61
 msgid "Enable Collection by Datastore"
@@ -36812,12 +36812,12 @@ msgstr "使用自訂登入文字"
 
 #: ../app/views/ops/_settings_details_tab.html.haml:7
 msgid "Region Information"
-msgstr "區域資訊"
+msgstr "地區資訊"
 
 #: ../app/views/ops/_settings_details_tab.html.haml:31
 #: ../app/views/ops/_settings_details_tab.html.haml:33
 msgid "Edit this Region"
-msgstr "編輯此區域"
+msgstr "編輯此地區"
 
 #: ../app/views/ops/_settings_details_tab.html.haml:37
 #: ../app/views/ops/_settings_details_tab.html.haml:39
@@ -37165,7 +37165,7 @@ msgstr "作用中 VM 掃描數上限"
 
 #: ../app/views/ops/_zone_tree.html.haml:5
 msgid "Status of Regional Roles for Servers in %{kind} %{description}"
-msgstr "%{kind} %{description} 中伺服器的區域角色狀態 "
+msgstr "%{kind} %{description} 中伺服器的地區角色狀態 "
 
 #: ../app/views/ops/_zone_tree.html.haml:7
 msgid "Status of Roles for Servers in %{kind} %{description}"
@@ -37181,7 +37181,7 @@ msgstr "bold"
 
 #: ../app/views/ops/_zone_tree.html.haml:12
 msgid "Region based nodes shown as %{dimmed} text."
-msgstr "顯示為 %{dimmed} 文字的區域型節點。"
+msgstr "顯示為 %{dimmed} 文字的地區型節點。"
 
 #: ../app/views/ops/_zone_tree.html.haml:12
 msgid "dimmed"
@@ -37217,7 +37217,7 @@ msgstr "此使用者限制為選取的資料夾及其下層資料夾。"
 
 #: ../app/views/ops/rhn/_info_subscribed.html.haml:2
 msgid "Appliances in this region can be registered with:"
-msgstr "此區域中的軟體驅動裝置可登錄至："
+msgstr "此地區中的軟體驅動裝置可登錄至："
 
 #: ../app/views/ops/rhn/_info_subscribed.html.haml:19
 #, fuzzy
@@ -37234,7 +37234,7 @@ msgstr "HTTP Proxy"
 
 #: ../app/views/ops/rhn/_info_unsubscribed.html.haml:3
 msgid "Software updates have not yet been configured. Select Edit Registration to register appliances in this region with Red Hat to receive software updates and other benefits."
-msgstr "尚未配置軟體更新項目。選取「編輯登錄」以向 Red Hat 登錄此區域中的軟體驅動裝置，以接收軟體更新項目和其他好處。"
+msgstr "尚未配置軟體更新項目。選取「編輯登錄」以向 Red Hat 登錄此地區中的軟體驅動裝置，以接收軟體更新項目和其他好處。"
 
 #: ../app/views/ops/rhn/_info_unsubscribed.html.haml:5
 msgid "You will need the following to register:"
@@ -42234,12 +42234,12 @@ msgstr "LDAP 網域"
 #. TRANSLATORS: en.yml key: dictionary.model.LdapRegion
 #: ../config/dictionary_strings.rb:1504
 msgid "LDAP Region"
-msgstr "LDAP 區域"
+msgstr "LDAP 地區"
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapRegion (plural form)
 #: ../config/dictionary_strings.rb:1506
 msgid "LDAP Regions"
-msgstr "LDAP 區域"
+msgstr "LDAP 地區"
 
 #. TRANSLATORS: en.yml key: dictionary.model.LdapServer
 #: ../config/dictionary_strings.rb:1508
@@ -43102,7 +43102,7 @@ msgstr "SmartProxy"
 #: ../config/dictionary_strings.rb:2102 ../config/dictionary_strings.rb:2668
 #: ../config/dictionary_strings.rb:2670 ../config/yaml_strings.rb:1736
 msgid "Regions"
-msgstr "區域"
+msgstr "地區"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSearch (plural form)
 #: ../config/dictionary_strings.rb:2118
@@ -43454,11 +43454,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:15
 msgid "Account|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:16
 msgid "Account|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:17
 msgid "Advanced setting"
@@ -43502,11 +43502,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:27
 msgid "AdvancedSetting|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:28
 msgid "AdvancedSetting|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:29
 msgid "AdvancedSetting|Resource type"
@@ -43582,11 +43582,11 @@ msgstr "機架名稱"
 
 #: ../config/model_attributes.rb:47
 msgid "AssetDetail|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:48
 msgid "AssetDetail|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:49
 msgid "AssetDetail|Resource type"
@@ -43618,11 +43618,11 @@ msgstr "優先順序"
 
 #: ../config/model_attributes.rb:56
 msgid "AssignedServerRole|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:57
 msgid "AssignedServerRole|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:58
 msgid "Audit event"
@@ -43646,11 +43646,11 @@ msgstr "訊息"
 
 #: ../config/model_attributes.rb:63
 msgid "AuditEvent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:64
 msgid "AuditEvent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:65
 msgid "AuditEvent|Severity"
@@ -43834,11 +43834,11 @@ msgstr "公開金鑰"
 
 #: ../config/model_attributes.rb:111
 msgid "Authentication|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:112
 msgid "Authentication|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:113
 msgid "Authentication|Request header challenge url"
@@ -43906,11 +43906,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:129
 msgid "AuthenticationConfigurationScriptBase|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:130
 msgid "AuthenticationConfigurationScriptBase|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:131
 msgid "Authentication orchestration stack"
@@ -43922,11 +43922,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:133
 msgid "AuthenticationOrchestrationStack|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:134
 msgid "AuthenticationOrchestrationStack|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:135
 msgid "Automate workspace"
@@ -43950,11 +43950,11 @@ msgstr "輸出"
 
 #: ../config/model_attributes.rb:140
 msgid "AutomateWorkspace|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:141
 msgid "AutomateWorkspace|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:142
 msgid "Availability zone"
@@ -44074,11 +44074,11 @@ msgstr "支援的提供者服務"
 
 #: ../config/model_attributes.rb:171
 msgid "AvailabilityZone|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:172
 msgid "AvailabilityZone|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:173
 msgid "AvailabilityZone|Total vms"
@@ -44110,11 +44110,11 @@ msgstr "組件大小"
 
 #: ../config/model_attributes.rb:180
 msgid "BinaryBlob|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:181
 msgid "BinaryBlob|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:182
 msgid "BinaryBlob|Resource type"
@@ -44138,11 +44138,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:187
 msgid "BinaryBlobPart|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:188
 msgid "BinaryBlobPart|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:189
 msgid "Blacklisted event"
@@ -44166,11 +44166,11 @@ msgstr "提供者模型"
 
 #: ../config/model_attributes.rb:194
 msgid "BlacklistedEvent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:195
 msgid "BlacklistedEvent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:196
 msgid "BlacklistedEvent|System"
@@ -44206,11 +44206,11 @@ msgstr "訊息"
 
 #: ../config/model_attributes.rb:204
 msgid "BottleneckEvent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:205
 msgid "BottleneckEvent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:206
 msgid "BottleneckEvent|Resource name"
@@ -44287,11 +44287,11 @@ msgstr "電源狀態"
 
 #: ../config/model_attributes.rb:224
 msgid "Canister|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:225
 msgid "Canister|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:226
 msgid "Canister|Serial number"
@@ -44327,11 +44327,11 @@ msgstr "度量值"
 
 #: ../config/model_attributes.rb:234
 msgid "ChargeableField|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:235
 msgid "ChargeableField|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:236
 msgid "ChargeableField|Source"
@@ -44367,11 +44367,11 @@ msgstr "率類型"
 
 #: ../config/model_attributes.rb:244
 msgid "ChargebackRate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:245
 msgid "ChargebackRate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:246
 msgid "ChargebackRate|Updated on"
@@ -44419,11 +44419,11 @@ msgstr "每單位"
 
 #: ../config/model_attributes.rb:257
 msgid "ChargebackRateDetail|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:258
 msgid "ChargebackRateDetail|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:259
 msgid "ChargebackRateDetail|Source"
@@ -44459,11 +44459,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:267
 msgid "ChargebackRateDetailCurrency|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:268
 msgid "ChargebackRateDetailCurrency|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:269
 msgid "ChargebackRateDetailCurrency|Symbol"
@@ -44487,11 +44487,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:274
 msgid "ChargebackRateDetailMeasure|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:275
 msgid "ChargebackRateDetailMeasure|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:276
 msgid "ChargebackRateDetailMeasure|Step"
@@ -44523,11 +44523,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:283
 msgid "ChargebackTier|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:284
 msgid "ChargebackTier|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:285
 msgid "ChargebackTier|Start"
@@ -44575,11 +44575,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:297
 msgid "Classification|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:298
 msgid "Classification|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:299
 msgid "Classification|Show"
@@ -44623,11 +44623,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:309
 msgid "CloudDatabase|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:310
 msgid "CloudDatabase|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:311
 msgid "CloudDatabase|Status"
@@ -44683,11 +44683,11 @@ msgstr "效能"
 
 #: ../config/model_attributes.rb:324
 msgid "CloudDatabaseFlavor|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:325
 msgid "CloudDatabaseFlavor|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:326
 msgid "CloudDatabaseFlavor|Total cloud databases"
@@ -44747,11 +44747,11 @@ msgstr "服務品質原則"
 
 #: ../config/model_attributes.rb:340
 msgid "CloudNetwork|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:341
 msgid "CloudNetwork|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:342
 msgid "CloudNetwork|Shared"
@@ -44799,11 +44799,11 @@ msgstr "物件計數"
 
 #: ../config/model_attributes.rb:353
 msgid "CloudObjectStoreContainer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:354
 msgid "CloudObjectStoreContainer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:355
 msgid "Cloud object store object"
@@ -44843,11 +44843,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:364
 msgid "CloudObjectStoreObject|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:365
 msgid "CloudObjectStoreObject|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:366
 msgid "Cloud resource quota"
@@ -44867,11 +44867,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:370
 msgid "CloudResourceQuota|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:371
 msgid "CloudResourceQuota|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:372
 msgid "CloudResourceQuota|Service name"
@@ -44907,11 +44907,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:380
 msgid "CloudService|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:381
 msgid "CloudService|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:382
 msgid "CloudService|Scheduling disabled"
@@ -44995,11 +44995,11 @@ msgstr "網路通訊協定"
 
 #: ../config/model_attributes.rb:402
 msgid "CloudSubnet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:403
 msgid "CloudSubnet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:404
 msgid "CloudSubnet|Status"
@@ -45027,11 +45027,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:410
 msgid "CloudSubnetNetworkPort|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:411
 msgid "CloudSubnetNetworkPort|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:412
 msgid "Cloud tenant"
@@ -45059,11 +45059,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:418
 msgid "CloudTenant|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:419
 msgid "CloudTenant|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:420
 msgid "CloudTenant|Total vms"
@@ -45079,11 +45079,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:423
 msgid "CloudTenantFlavor|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:424
 msgid "CloudTenantFlavor|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:425
 msgid "Cloud volume"
@@ -45127,11 +45127,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:435
 msgid "CloudVolume|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:436
 msgid "CloudVolume|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:437
 msgid "CloudVolume|Size"
@@ -45183,11 +45183,11 @@ msgstr "物件計數"
 
 #: ../config/model_attributes.rb:449
 msgid "CloudVolumeBackup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:450
 msgid "CloudVolumeBackup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:451
 msgid "CloudVolumeBackup|Size"
@@ -45227,11 +45227,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:460
 msgid "CloudVolumeSnapshot|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:461
 msgid "CloudVolumeSnapshot|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:462
 msgid "CloudVolumeSnapshot|Size"
@@ -45275,11 +45275,11 @@ msgstr "公用"
 
 #: ../config/model_attributes.rb:472
 msgid "CloudVolumeType|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:473
 msgid "CloudVolumeType|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:475
 msgid "Compliance|Compliant"
@@ -45295,11 +45295,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:478
 msgid "Compliance|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:479
 msgid "Compliance|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:480
 msgid "Compliance|Resource type"
@@ -45343,11 +45343,11 @@ msgstr "Miq 原則結果"
 
 #: ../config/model_attributes.rb:490
 msgid "ComplianceDetail|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:491
 msgid "ComplianceDetail|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:492
 msgid "ComplianceDetail|Resource name"
@@ -45371,11 +45371,11 @@ msgstr "受管理實體類型"
 
 #: ../config/model_attributes.rb:497
 msgid "ComputerSystem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:498
 msgid "ComputerSystem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:500
 msgid "Condition|Applies to exp"
@@ -45423,11 +45423,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:511
 msgid "Condition|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:512
 msgid "Condition|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:513
 msgid "Condition|Towhat"
@@ -45475,11 +45475,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:524
 msgid "ConditionSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:525
 msgid "ConditionSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:526
 msgid "ConditionSet|Set data"
@@ -45519,11 +45519,11 @@ msgstr "母項參照"
 
 #: ../config/model_attributes.rb:535
 msgid "ConfigurationLocation|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:536
 msgid "ConfigurationLocation|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:537
 msgid "ConfigurationLocation|Title"
@@ -45551,11 +45551,11 @@ msgstr "母項參照"
 
 #: ../config/model_attributes.rb:543
 msgid "ConfigurationOrganization|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:544
 msgid "ConfigurationOrganization|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:545
 msgid "ConfigurationOrganization|Title"
@@ -45623,11 +45623,11 @@ msgstr "母項參照"
 
 #: ../config/model_attributes.rb:561
 msgid "ConfigurationProfile|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:562
 msgid "ConfigurationProfile|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:563
 msgid "ConfigurationProfile|Total configured systems"
@@ -45655,11 +45655,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:569
 msgid "ConfigurationScriptBase|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:570
 msgid "ConfigurationScriptBase|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:571
 msgid "ConfigurationScriptBase|Survey spec"
@@ -45699,11 +45699,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:580
 msgid "ConfigurationScriptSource|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:581
 msgid "ConfigurationScriptSource|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:582
 msgid "ConfigurationScriptSource|Scm branch"
@@ -45755,11 +45755,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:594
 msgid "ConfigurationTag|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:595
 msgid "ConfigurationTag|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:596
 msgid "Configured system"
@@ -45847,11 +45847,11 @@ msgstr "Puppet 狀態"
 
 #: ../config/model_attributes.rb:617
 msgid "ConfiguredSystem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:618
 msgid "ConfiguredSystem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:619
 msgid "ConfiguredSystem|Virtual instance ref"
@@ -46063,11 +46063,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:672
 msgid "Container|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:673
 msgid "Container|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:674
 msgid "Container|Request cpu cores"
@@ -46179,11 +46179,11 @@ msgstr "輸出名稱"
 
 #: ../config/model_attributes.rb:701
 msgid "ContainerBuild|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:702
 msgid "ContainerBuild|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:703
 msgid "ContainerBuild|Resource version"
@@ -46303,11 +46303,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:732
 msgid "ContainerBuildPod|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:733
 msgid "ContainerBuildPod|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:734
 msgid "ContainerBuildPod|Resource version"
@@ -46351,11 +46351,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:744
 msgid "ContainerCondition|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:745
 msgid "ContainerCondition|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:746
 msgid "ContainerCondition|Status"
@@ -46379,11 +46379,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:751
 msgid "ContainerEnvVar|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:752
 msgid "ContainerEnvVar|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:753
 msgid "ContainerEnvVar|Value"
@@ -46587,11 +46587,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:803
 msgid "ContainerGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:804
 msgid "ContainerGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:805
 msgid "ContainerGroup|Resource version"
@@ -46615,11 +46615,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:810
 msgid "ContainerGroupsContainerServices|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:811
 msgid "ContainerGroupsContainerServices|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:812
 msgid "Container image"
@@ -46735,11 +46735,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:840
 msgid "ContainerImage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:841
 msgid "ContainerImage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:842
 msgid "ContainerImage|Registered on"
@@ -46783,15 +46783,15 @@ msgstr "埠"
 
 #: ../config/model_attributes.rb:852
 msgid "ContainerImageRegistry|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:853
 msgid "ContainerImageRegistry|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:854
 msgid "Container label tag mapping"
-msgstr "貨櫃標籤標籤對映"
+msgstr "儲存器標籤標記對映"
 
 #: ../config/model_attributes.rb:855
 msgid "ContainerLabelTagMapping|Href slug"
@@ -46811,11 +46811,11 @@ msgstr "含標籤的資源類型"
 
 #: ../config/model_attributes.rb:859
 msgid "ContainerLabelTagMapping|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:860
 msgid "ContainerLabelTagMapping|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:861
 msgid "Container limit"
@@ -46843,11 +46843,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:867
 msgid "ContainerLimit|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:868
 msgid "ContainerLimit|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:869
 msgid "ContainerLimit|Resource version"
@@ -46887,11 +46887,11 @@ msgstr "最小值"
 
 #: ../config/model_attributes.rb:878
 msgid "ContainerLimitItem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:879
 msgid "ContainerLimitItem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:880
 msgid "ContainerLimitItem|Resource"
@@ -47111,11 +47111,11 @@ msgstr "備妥條件狀態"
 
 #: ../config/model_attributes.rb:934
 msgid "ContainerNode|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:935
 msgid "ContainerNode|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:936
 msgid "ContainerNode|Resource version"
@@ -47155,11 +47155,11 @@ msgstr "通訊協定"
 
 #: ../config/model_attributes.rb:945
 msgid "ContainerPortConfig|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:946
 msgid "ContainerPortConfig|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:947
 msgid "Container project"
@@ -47339,11 +47339,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:991
 msgid "ContainerProject|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:992
 msgid "ContainerProject|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:993
 msgid "ContainerProject|Replicators count"
@@ -47391,11 +47391,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1004
 msgid "ContainerQuota|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1005
 msgid "ContainerQuota|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1006
 msgid "ContainerQuota|Resource version"
@@ -47439,11 +47439,11 @@ msgstr "發現的配額顯示"
 
 #: ../config/model_attributes.rb:1016
 msgid "ContainerQuotaItem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1017
 msgid "ContainerQuotaItem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1018
 msgid "ContainerQuotaItem|Resource"
@@ -47463,11 +47463,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:1022
 msgid "ContainerQuotaScope|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1023
 msgid "ContainerQuotaScope|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1024
 msgid "ContainerQuotaScope|Scope"
@@ -47643,11 +47643,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1067
 msgid "ContainerReplicator|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1068
 msgid "ContainerReplicator|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1069
 msgid "ContainerReplicator|Replicas"
@@ -47727,11 +47727,11 @@ msgstr "路徑"
 
 #: ../config/model_attributes.rb:1088
 msgid "ContainerRoute|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1089
 msgid "ContainerRoute|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1090
 msgid "ContainerRoute|Resource version"
@@ -47903,11 +47903,11 @@ msgstr "入口網站 IP"
 
 #: ../config/model_attributes.rb:1132
 msgid "ContainerService|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1133
 msgid "ContainerService|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1134
 msgid "ContainerService|Resource version"
@@ -47951,11 +47951,11 @@ msgstr "通訊協定"
 
 #: ../config/model_attributes.rb:1144
 msgid "ContainerServicePortConfig|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1145
 msgid "ContainerServicePortConfig|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1146
 msgid "ContainerServicePortConfig|Target port"
@@ -48027,11 +48027,11 @@ msgstr "物件"
 
 #: ../config/model_attributes.rb:1163
 msgid "ContainerTemplate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1164
 msgid "ContainerTemplate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1165
 msgid "ContainerTemplate|Resource version"
@@ -48107,11 +48107,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1183
 msgid "ContainerTemplateParameter|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1184
 msgid "ContainerTemplateParameter|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1185
 msgid "ContainerTemplateParameter|Required"
@@ -48243,11 +48243,11 @@ msgstr "收回原則"
 
 #: ../config/model_attributes.rb:1217
 msgid "ContainerVolume|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1218
 msgid "ContainerVolume|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1219
 msgid "ContainerVolume|Resource version"
@@ -48311,11 +48311,11 @@ msgstr "網路限制"
 
 #: ../config/model_attributes.rb:1234
 msgid "ConversionHost|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1235
 msgid "ConversionHost|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1236
 msgid "ConversionHost|Resource type"
@@ -48351,11 +48351,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1244
 msgid "CustomAttribute|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1245
 msgid "CustomAttribute|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1246
 msgid "CustomAttribute|Resource type"
@@ -48427,11 +48427,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:1263
 msgid "CustomButton|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1264
 msgid "CustomButton|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1265
 msgid "CustomButton|Updated on"
@@ -48495,11 +48495,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:1280
 msgid "CustomButtonSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1281
 msgid "CustomButtonSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1282
 msgid "CustomButtonSet|Set data"
@@ -48543,11 +48543,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1292
 msgid "CustomizationScript|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1293
 msgid "CustomizationScript|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1294
 msgid "CustomizationScript|User defined"
@@ -48575,11 +48575,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1300
 msgid "CustomizationSpec|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1301
 msgid "CustomizationSpec|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1302
 msgid "CustomizationSpec|Spec"
@@ -48607,11 +48607,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1308
 msgid "CustomizationTemplate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1309
 msgid "CustomizationTemplate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1310
 msgid "CustomizationTemplate|Script"
@@ -48635,11 +48635,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1315
 msgid "DatabaseBackup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1316
 msgid "DatabaseBackup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1318
 msgid "Dialog|Buttons"
@@ -48659,11 +48659,11 @@ msgstr "標籤"
 
 #: ../config/model_attributes.rb:1322
 msgid "Dialog|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1323
 msgid "Dialog|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1324
 msgid "Dialog field"
@@ -48743,11 +48743,11 @@ msgstr "重新配置"
 
 #: ../config/model_attributes.rb:1343
 msgid "DialogField|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1344
 msgid "DialogField|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1345
 msgid "DialogField|Required"
@@ -48827,11 +48827,11 @@ msgstr "位置"
 
 #: ../config/model_attributes.rb:1364
 msgid "DialogGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1365
 msgid "DialogGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1366
 msgid "Dialog tab"
@@ -48867,11 +48867,11 @@ msgstr "位置"
 
 #: ../config/model_attributes.rb:1374
 msgid "DialogTab|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1375
 msgid "DialogTab|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1377
 msgid "Disk|Allocated space"
@@ -48947,11 +48947,11 @@ msgstr "呈現"
 
 #: ../config/model_attributes.rb:1395
 msgid "Disk|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1396
 msgid "Disk|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1397
 msgid "Disk|Size"
@@ -48999,11 +48999,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:1408
 msgid "DriftState|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1409
 msgid "DriftState|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1410
 msgid "DriftState|Resource type"
@@ -49211,11 +49211,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1461
 msgid "EmsCluster|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1462
 msgid "EmsCluster|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1463
 msgid "EmsCluster|Total direct miq templates"
@@ -49291,11 +49291,11 @@ msgstr "標籤"
 
 #: ../config/model_attributes.rb:1481
 msgid "EmsExtension|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1482
 msgid "EmsExtension|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1483
 msgid "EmsExtension|Summary"
@@ -49363,11 +49363,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1499
 msgid "EmsFolder|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1500
 msgid "EmsFolder|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1501
 msgid "EmsFolder|Uid ems"
@@ -49403,11 +49403,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1509
 msgid "EmsLicense|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1510
 msgid "EmsLicense|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1511
 msgid "EmsLicense|Total licenses"
@@ -49452,11 +49452,11 @@ msgstr "埠"
 
 #: ../config/model_attributes.rb:1521
 msgid "Endpoint|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1522
 msgid "Endpoint|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1523
 msgid "Endpoint|Resource type"
@@ -49501,11 +49501,11 @@ msgstr "Miq 使用者角色名稱"
 
 #: ../config/model_attributes.rb:1533
 msgid "Entitlement|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1534
 msgid "Entitlement|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1535
 msgid "Event log"
@@ -49541,11 +49541,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1543
 msgid "EventLog|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1544
 msgid "EventLog|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1545
 msgid "EventLog|Source"
@@ -49669,11 +49669,11 @@ msgstr "中介軟體伺服器名稱"
 
 #: ../config/model_attributes.rb:1575
 msgid "EventStream|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1576
 msgid "EventStream|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1577
 msgid "EventStream|Source"
@@ -49969,7 +49969,7 @@ msgstr "專案"
 
 #: ../config/model_attributes.rb:1650
 msgid "ExtManagementSystem|Provider region"
-msgstr "提供者區域"
+msgstr "提供者地區"
 
 #: ../config/model_attributes.rb:1651
 msgid "ExtManagementSystem|Realm"
@@ -49977,11 +49977,11 @@ msgstr "領域"
 
 #: ../config/model_attributes.rb:1652
 msgid "ExtManagementSystem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1653
 msgid "ExtManagementSystem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1654
 msgid "ExtManagementSystem|Security protocol"
@@ -50105,11 +50105,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:1684
 msgid "ExternalUrl|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1685
 msgid "ExternalUrl|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1686
 msgid "ExternalUrl|Resource type"
@@ -50129,7 +50129,7 @@ msgstr "鑑別狀態"
 
 #: ../config/model_attributes.rb:1690
 msgid "FileDepot|Aws region"
-msgstr "Aws 區域"
+msgstr "Aws 地區"
 
 #: ../config/model_attributes.rb:1691
 msgid "FileDepot|Href slug"
@@ -50145,15 +50145,15 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1694
 msgid "FileDepot|Openstack region"
-msgstr "Openstack 區域"
+msgstr "Openstack 地區"
 
 #: ../config/model_attributes.rb:1695
 msgid "FileDepot|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1696
 msgid "FileDepot|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1697
 msgid "FileDepot|Security protocol"
@@ -50241,11 +50241,11 @@ msgstr "產品版本標頭"
 
 #: ../config/model_attributes.rb:1719
 msgid "Filesystem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1720
 msgid "Filesystem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1721
 msgid "Filesystem|Resource type"
@@ -50317,11 +50317,11 @@ msgstr "埠"
 
 #: ../config/model_attributes.rb:1738
 msgid "FirewallRule|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1739
 msgid "FirewallRule|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1740
 msgid "FirewallRule|Required"
@@ -50353,11 +50353,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1748
 msgid "Firmware|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1749
 msgid "Firmware|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1750
 msgid "Firmware|Release date"
@@ -50393,11 +50393,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1758
 msgid "FirmwareBinary|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1759
 msgid "FirmwareBinary|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1760
 msgid "FirmwareBinary|Version"
@@ -50413,11 +50413,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:1763
 msgid "FirmwareBinaryFirmwareTarget|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1764
 msgid "FirmwareBinaryFirmwareTarget|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1765
 msgid "Firmware registry"
@@ -50441,11 +50441,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1770
 msgid "FirmwareRegistry|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1771
 msgid "FirmwareRegistry|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1772
 msgid "Firmware target"
@@ -50465,11 +50465,11 @@ msgstr "模型"
 
 #: ../config/model_attributes.rb:1776
 msgid "FirmwareTarget|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1777
 msgid "FirmwareTarget|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1779
 msgid "Flavor|Block storage based only"
@@ -50525,11 +50525,11 @@ msgstr "公開可用"
 
 #: ../config/model_attributes.rb:1792
 msgid "Flavor|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1793
 msgid "Flavor|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1794
 msgid "Flavor|Root disk size"
@@ -50585,11 +50585,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:1807
 msgid "FloatingIp|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1808
 msgid "FloatingIp|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1809
 msgid "FloatingIp|Status"
@@ -50617,11 +50617,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:1815
 msgid "GenericObject|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1816
 msgid "GenericObject|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1817
 msgid "GenericObject|Uid"
@@ -50653,11 +50653,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:1824
 msgid "GenericObjectDefinition|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1825
 msgid "GenericObjectDefinition|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1826
 msgid "Git reference"
@@ -50685,11 +50685,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1832
 msgid "GitReference|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1833
 msgid "GitReference|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1834
 msgid "Git repository"
@@ -50713,11 +50713,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:1839
 msgid "GitRepository|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1840
 msgid "GitRepository|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1841
 msgid "GitRepository|Url"
@@ -50773,11 +50773,11 @@ msgstr "產品序號"
 
 #: ../config/model_attributes.rb:1854
 msgid "GuestApplication|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1855
 msgid "GuestApplication|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1856
 msgid "GuestApplication|Release"
@@ -50885,11 +50885,11 @@ msgstr "呈現"
 
 #: ../config/model_attributes.rb:1882
 msgid "GuestDevice|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1883
 msgid "GuestDevice|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1884
 msgid "GuestDevice|Size"
@@ -51057,11 +51057,11 @@ msgstr "Ram 大小（以位元組為單位）"
 
 #: ../config/model_attributes.rb:1926
 msgid "Hardware|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:1927
 msgid "Hardware|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1928
 msgid "Hardware|Root device type"
@@ -51437,11 +51437,11 @@ msgstr "內存大小"
 
 #: ../config/model_attributes.rb:2022
 msgid "Host|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2023
 msgid "Host|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2024
 msgid "Host|Service names"
@@ -51645,11 +51645,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2074
 msgid "HostAggregate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2075
 msgid "HostAggregate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2076
 msgid "HostAggregate|Total vms"
@@ -51665,11 +51665,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2079
 msgid "HostAggregateHost|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2080
 msgid "HostAggregateHost|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2081
 msgid "Host service group"
@@ -51685,11 +51685,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2084
 msgid "HostServiceGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2085
 msgid "HostServiceGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2086
 msgid "Host storage"
@@ -51713,11 +51713,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2091
 msgid "HostStorage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2092
 msgid "HostStorage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2093
 msgid "Host switch"
@@ -51729,11 +51729,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2095
 msgid "HostSwitch|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2096
 msgid "HostSwitch|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2097
 msgid "Import file upload"
@@ -51745,11 +51745,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2099
 msgid "ImportFileUpload|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2100
 msgid "ImportFileUpload|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2101
 msgid "Iso datastore"
@@ -51769,11 +51769,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2105
 msgid "IsoDatastore|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2106
 msgid "IsoDatastore|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2107
 msgid "Iso image"
@@ -51789,11 +51789,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2110
 msgid "IsoImage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2111
 msgid "IsoImage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2113
 msgid "Job|Agent message"
@@ -51833,11 +51833,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:2122
 msgid "Job|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2123
 msgid "Job|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2124
 msgid "Job|Started on"
@@ -51918,11 +51918,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2143
 msgid "Lan|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2144
 msgid "Lan|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2145
 msgid "Lan|Tag"
@@ -51970,11 +51970,11 @@ msgstr "訊息"
 
 #: ../config/model_attributes.rb:2156
 msgid "LifecycleEvent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2157
 msgid "LifecycleEvent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2158
 msgid "LifecycleEvent|Status"
@@ -52002,11 +52002,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2164
 msgid "LoadBalancer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2165
 msgid "LoadBalancer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2166
 msgid "LoadBalancer|Retired"
@@ -52070,11 +52070,11 @@ msgstr "通訊協定"
 
 #: ../config/model_attributes.rb:2181
 msgid "LoadBalancerHealthCheck|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2182
 msgid "LoadBalancerHealthCheck|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2183
 msgid "LoadBalancerHealthCheck|Timeout"
@@ -52102,11 +52102,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2189
 msgid "LoadBalancerHealthCheckMember|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2190
 msgid "LoadBalancerHealthCheckMember|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2191
 msgid "LoadBalancerHealthCheckMember|Status"
@@ -52154,11 +52154,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2202
 msgid "LoadBalancerListener|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2203
 msgid "LoadBalancerListener|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2204
 msgid "LoadBalancerListener|Total vms"
@@ -52174,11 +52174,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2207
 msgid "LoadBalancerListenerPool|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2208
 msgid "LoadBalancerListenerPool|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2209
 msgid "Load balancer pool"
@@ -52210,11 +52210,11 @@ msgstr "通訊協定"
 
 #: ../config/model_attributes.rb:2216
 msgid "LoadBalancerPool|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2217
 msgid "LoadBalancerPool|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2218
 msgid "LoadBalancerPool|Total vms"
@@ -52250,11 +52250,11 @@ msgstr "埠"
 
 #: ../config/model_attributes.rb:2226
 msgid "LoadBalancerPoolMember|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2227
 msgid "LoadBalancerPoolMember|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2228
 msgid "Load balancer pool member pool"
@@ -52266,11 +52266,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2230
 msgid "LoadBalancerPoolMemberPool|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2231
 msgid "LoadBalancerPoolMemberPool|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2232
 msgid "Log file"
@@ -52314,11 +52314,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2242
 msgid "LogFile|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2243
 msgid "LogFile|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2244
 msgid "LogFile|Resource type"
@@ -52582,11 +52582,11 @@ msgstr "網路使用率平均值"
 
 #: ../config/model_attributes.rb:2310
 msgid "Metric|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2311
 msgid "Metric|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2312
 msgid "Metric|Resource name"
@@ -53478,11 +53478,11 @@ msgstr "網路使用率平均值"
 
 #: ../config/model_attributes.rb:2534
 msgid "MetricRollup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2535
 msgid "MetricRollup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2536
 msgid "MetricRollup|Resource name"
@@ -53594,11 +53594,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2563
 msgid "MiddlewareDatasource|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2564
 msgid "MiddlewareDatasource|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2565
 msgid "Middleware deployment"
@@ -53630,11 +53630,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2572
 msgid "MiddlewareDeployment|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2573
 msgid "MiddlewareDeployment|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2574
 msgid "MiddlewareDeployment|Status"
@@ -53658,11 +53658,11 @@ msgstr "佇列位置"
 
 #: ../config/model_attributes.rb:2579
 msgid "MiddlewareDiagnosticReport|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2580
 msgid "MiddlewareDiagnosticReport|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2581
 msgid "MiddlewareDiagnosticReport|Requesting user"
@@ -53706,11 +53706,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2591
 msgid "MiddlewareDomain|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2592
 msgid "MiddlewareDomain|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2593
 msgid "MiddlewareDomain|Type path"
@@ -53750,11 +53750,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2602
 msgid "MiddlewareMessaging|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2603
 msgid "MiddlewareMessaging|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2604
 msgid "Middleware server"
@@ -53798,11 +53798,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2614
 msgid "MiddlewareServer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2615
 msgid "MiddlewareServer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2616
 msgid "MiddlewareServer|Type path"
@@ -53842,11 +53842,11 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:2625
 msgid "MiddlewareServerGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2626
 msgid "MiddlewareServerGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2627
 msgid "MiddlewareServerGroup|Type path"
@@ -53890,11 +53890,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:2637
 msgid "MiqAction|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2638
 msgid "MiqAction|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2639
 msgid "MiqAction|Updated on"
@@ -53942,11 +53942,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2650
 msgid "MiqActionSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2651
 msgid "MiqActionSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2652
 msgid "MiqActionSet|Set data"
@@ -54002,11 +54002,11 @@ msgstr "擁有者"
 
 #: ../config/model_attributes.rb:2665
 msgid "MiqAeClass|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2666
 msgid "MiqAeClass|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2667
 msgid "MiqAeClass|Updated by"
@@ -54098,11 +54098,11 @@ msgstr "優先順序"
 
 #: ../config/model_attributes.rb:2689
 msgid "MiqAeField|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2690
 msgid "MiqAeField|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2691
 msgid "MiqAeField|Scope"
@@ -54154,11 +54154,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2703
 msgid "MiqAeInstance|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2704
 msgid "MiqAeInstance|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2705
 msgid "MiqAeInstance|Updated by"
@@ -54214,11 +54214,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:2718
 msgid "MiqAeMethod|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2719
 msgid "MiqAeMethod|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2720
 msgid "MiqAeMethod|Scope"
@@ -54290,11 +54290,11 @@ msgstr "參照類型"
 
 #: ../config/model_attributes.rb:2737
 msgid "MiqAeNamespace|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2738
 msgid "MiqAeNamespace|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2739
 msgid "MiqAeNamespace|Source"
@@ -54358,11 +54358,11 @@ msgstr "結束時"
 
 #: ../config/model_attributes.rb:2754
 msgid "MiqAeValue|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2755
 msgid "MiqAeValue|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2756
 msgid "MiqAeValue|Updated by"
@@ -54394,11 +54394,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2763
 msgid "MiqAeWorkspace|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2764
 msgid "MiqAeWorkspace|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2765
 msgid "MiqAeWorkspace|Setters"
@@ -54486,11 +54486,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2786
 msgid "MiqAlert|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2787
 msgid "MiqAlert|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2788
 msgid "MiqAlert|Responds to events"
@@ -54542,11 +54542,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2800
 msgid "MiqAlertSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2801
 msgid "MiqAlertSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2802
 msgid "MiqAlertSet|Set data"
@@ -54598,11 +54598,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2814
 msgid "MiqAlertStatus|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2815
 msgid "MiqAlertStatus|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2816
 msgid "MiqAlertStatus|Resolved"
@@ -54642,11 +54642,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:2825
 msgid "MiqAlertStatusAction|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2826
 msgid "MiqAlertStatusAction|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2827
 msgid "Miq approval"
@@ -54678,11 +54678,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:2834
 msgid "MiqApproval|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2835
 msgid "MiqApproval|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2836
 msgid "MiqApproval|Stamped on"
@@ -54730,11 +54730,11 @@ msgstr "可用的 Postgres 更新"
 
 #: ../config/model_attributes.rb:2847
 msgid "MiqDatabase|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2848
 msgid "MiqDatabase|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2849
 msgid "MiqDatabase|Registration http proxy server"
@@ -54798,11 +54798,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2864
 msgid "MiqDialog|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2865
 msgid "MiqDialog|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2866
 msgid "Miq enterprise"
@@ -54950,11 +54950,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2902
 msgid "MiqEnterprise|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2903
 msgid "MiqEnterprise|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2904
 msgid "MiqEnterprise|Settings"
@@ -55006,11 +55006,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:2916
 msgid "MiqEventDefinition|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2917
 msgid "MiqEventDefinition|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2918
 msgid "MiqEventDefinition|Updated on"
@@ -55054,11 +55054,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2928
 msgid "MiqEventDefinitionSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2929
 msgid "MiqEventDefinitionSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2930
 msgid "MiqEventDefinitionSet|Set data"
@@ -55158,11 +55158,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2954
 msgid "MiqGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2955
 msgid "MiqGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2956
 msgid "MiqGroup|Sequence"
@@ -55230,11 +55230,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2972
 msgid "MiqPolicy|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2973
 msgid "MiqPolicy|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2974
 msgid "MiqPolicy|Towhat"
@@ -55274,11 +55274,11 @@ msgstr "限定元"
 
 #: ../config/model_attributes.rb:2983
 msgid "MiqPolicyContent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2984
 msgid "MiqPolicyContent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2985
 msgid "MiqPolicyContent|Success sequence"
@@ -55330,11 +55330,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:2997
 msgid "MiqPolicySet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:2998
 msgid "MiqPolicySet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2999
 msgid "MiqPolicySet|Set data"
@@ -55390,11 +55390,11 @@ msgstr "受保護的"
 
 #: ../config/model_attributes.rb:3012
 msgid "MiqProductFeature|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3013
 msgid "MiqProductFeature|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3014
 msgid "Miq product features share"
@@ -55406,11 +55406,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3016
 msgid "MiqProductFeaturesShare|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3017
 msgid "MiqProductFeaturesShare|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3018
 msgid "Miq queue"
@@ -55474,11 +55474,11 @@ msgstr "佇列名稱"
 
 #: ../config/model_attributes.rb:3033
 msgid "MiqQueue|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3034
 msgid "MiqQueue|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3035
 msgid "MiqQueue|Role"
@@ -55506,7 +55506,7 @@ msgstr "區域"
 
 #: ../config/model_attributes.rb:3041
 msgid "Miq region"
-msgstr "Miq 區域"
+msgstr "Miq 地區"
 
 #: ../config/model_attributes.rb:3042
 msgid "MiqRegion|Aggregate cpu speed"
@@ -55650,15 +55650,15 @@ msgstr "移轉執行"
 
 #: ../config/model_attributes.rb:3077
 msgid "MiqRegion|Region"
-msgstr "區域"
+msgstr "地區"
 
 #: ../config/model_attributes.rb:3078
 msgid "MiqRegion|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3079
 msgid "MiqRegion|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3080
 msgid "Miq report"
@@ -55766,11 +55766,11 @@ msgstr "優先順序"
 
 #: ../config/model_attributes.rb:3106
 msgid "MiqReport|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3107
 msgid "MiqReport|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3108
 msgid "MiqReport|Rpt group"
@@ -55846,11 +55846,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3126
 msgid "MiqReportResult|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3127
 msgid "MiqReportResult|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3128
 msgid "MiqReportResult|Report"
@@ -55898,11 +55898,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3139
 msgid "MiqReportResultDetail|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3140
 msgid "MiqReportResultDetail|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3141
 msgid "Miq request"
@@ -55958,11 +55958,11 @@ msgstr "原因"
 
 #: ../config/model_attributes.rb:3154
 msgid "MiqRequest|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3155
 msgid "MiqRequest|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3156
 msgid "MiqRequest|Request state"
@@ -56066,11 +56066,11 @@ msgstr "階段環境定義"
 
 #: ../config/model_attributes.rb:3181
 msgid "MiqRequestTask|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3182
 msgid "MiqRequestTask|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3183
 msgid "MiqRequestTask|Request type"
@@ -56142,11 +56142,11 @@ msgstr "產品預設值"
 
 #: ../config/model_attributes.rb:3200
 msgid "MiqSchedule|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3201
 msgid "MiqSchedule|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3202
 msgid "MiqSchedule|Resource type"
@@ -56218,11 +56218,11 @@ msgstr "Lun 類型"
 
 #: ../config/model_attributes.rb:3219
 msgid "MiqScsiLun|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3220
 msgid "MiqScsiLun|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3221
 msgid "MiqScsiLun|Uid ems"
@@ -56250,11 +56250,11 @@ msgstr "Iscsi 名稱"
 
 #: ../config/model_attributes.rb:3227
 msgid "MiqScsiTarget|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3228
 msgid "MiqScsiTarget|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3229
 msgid "MiqScsiTarget|Target"
@@ -56294,11 +56294,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:3238
 msgid "MiqSearch|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3239
 msgid "MiqSearch|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3240
 msgid "MiqSearch|Search key"
@@ -56414,11 +56414,11 @@ msgstr "集大小比例"
 
 #: ../config/model_attributes.rb:3268
 msgid "MiqServer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3269
 msgid "MiqServer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3270
 msgid "MiqServer|Rh registered"
@@ -56506,11 +56506,11 @@ msgstr "Rbac 特性名稱"
 
 #: ../config/model_attributes.rb:3291
 msgid "MiqShortcut|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3292
 msgid "MiqShortcut|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3293
 msgid "MiqShortcut|Sequence"
@@ -56558,11 +56558,11 @@ msgstr "完成百分比"
 
 #: ../config/model_attributes.rb:3304
 msgid "MiqTask|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3305
 msgid "MiqTask|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3306
 msgid "MiqTask|Results"
@@ -56618,11 +56618,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:3319
 msgid "MiqUserRole|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3320
 msgid "MiqUserRole|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3321
 msgid "MiqUserRole|Settings"
@@ -56678,11 +56678,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:3334
 msgid "MiqWidget|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3335
 msgid "MiqWidget|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3336
 msgid "MiqWidget|Resource type"
@@ -56718,11 +56718,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3344
 msgid "MiqWidgetContent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3345
 msgid "MiqWidgetContent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3346
 msgid "MiqWidgetContent|Timezone"
@@ -56766,11 +56766,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:3356
 msgid "MiqWidgetSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3357
 msgid "MiqWidgetSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3358
 msgid "MiqWidgetSet|Set data"
@@ -56802,11 +56802,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3365
 msgid "MiqWidgetShortcut|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3366
 msgid "MiqWidgetShortcut|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3367
 msgid "MiqWidgetShortcut|Sequence"
@@ -56870,11 +56870,11 @@ msgstr "佇列名稱"
 
 #: ../config/model_attributes.rb:3382
 msgid "MiqWorker|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3383
 msgid "MiqWorker|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3384
 msgid "MiqWorker|Sql spid"
@@ -56958,11 +56958,11 @@ msgstr "已取得租約"
 
 #: ../config/model_attributes.rb:3405
 msgid "Network|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3406
 msgid "Network|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3407
 msgid "Network|Subnet mask"
@@ -56994,11 +56994,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3414
 msgid "NetworkGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3415
 msgid "NetworkGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3416
 msgid "NetworkGroup|Status"
@@ -57090,11 +57090,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3438
 msgid "NetworkPort|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3439
 msgid "NetworkPort|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3440
 msgid "NetworkPort|Source"
@@ -57114,11 +57114,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3444
 msgid "NetworkPortSecurityGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3445
 msgid "NetworkPortSecurityGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3446
 msgid "Network router"
@@ -57166,11 +57166,11 @@ msgstr "傳播 vgws"
 
 #: ../config/model_attributes.rb:3457
 msgid "NetworkRouter|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3458
 msgid "NetworkRouter|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3459
 msgid "NetworkRouter|Routes"
@@ -57203,11 +57203,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:3466
 msgid "Notification|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3467
 msgid "Notification|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3468
 msgid "Notification|Subject type"
@@ -57227,11 +57227,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3472
 msgid "NotificationRecipient|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3473
 msgid "NotificationRecipient|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3474
 msgid "NotificationRecipient|Seen"
@@ -57271,11 +57271,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3483
 msgid "NotificationType|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3484
 msgid "NotificationType|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3485
 msgid "Openscap result"
@@ -57287,11 +57287,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3487
 msgid "OpenscapResult|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3488
 msgid "OpenscapResult|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3489
 msgid "OpenscapResult|Resource type"
@@ -57315,11 +57315,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3494
 msgid "OpenscapRuleResult|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3495
 msgid "OpenscapRuleResult|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3496
 msgid "OpenscapRuleResult|Result"
@@ -57411,11 +57411,11 @@ msgstr "密碼歷程"
 
 #: ../config/model_attributes.rb:3518
 msgid "OperatingSystem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3519
 msgid "OperatingSystem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3520
 msgid "OperatingSystem|Reset lockout counter"
@@ -57459,11 +57459,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3530
 msgid "OperatingSystemFlavor|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3531
 msgid "OperatingSystemFlavor|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3532
 msgid "Orchestration stack"
@@ -57523,11 +57523,11 @@ msgstr "擁有 LDAP 群組"
 
 #: ../config/model_attributes.rb:3546
 msgid "OrchestrationStack|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3547
 msgid "OrchestrationStack|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3548
 msgid "OrchestrationStack|Resource group"
@@ -57611,11 +57611,11 @@ msgstr "金鑰"
 
 #: ../config/model_attributes.rb:3568
 msgid "OrchestrationStackOutput|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3569
 msgid "OrchestrationStackOutput|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3570
 msgid "OrchestrationStackOutput|Value"
@@ -57639,11 +57639,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3575
 msgid "OrchestrationStackParameter|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3576
 msgid "OrchestrationStackParameter|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3577
 msgid "OrchestrationStackParameter|Value"
@@ -57687,11 +57687,11 @@ msgstr "實體資源"
 
 #: ../config/model_attributes.rb:3587
 msgid "OrchestrationStackResource|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3588
 msgid "OrchestrationStackResource|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3589
 msgid "OrchestrationStackResource|Resource category"
@@ -57747,11 +57747,11 @@ msgstr "可以訂購"
 
 #: ../config/model_attributes.rb:3602
 msgid "OrchestrationTemplate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3603
 msgid "OrchestrationTemplate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3604
 msgid "Os process"
@@ -57799,11 +57799,11 @@ msgstr "優先順序"
 
 #: ../config/model_attributes.rb:3615
 msgid "OsProcess|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3616
 msgid "OsProcess|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3617
 msgid "OsProcess|Updated on"
@@ -57843,11 +57843,11 @@ msgstr "分割區類型"
 
 #: ../config/model_attributes.rb:3627
 msgid "Partition|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3628
 msgid "Partition|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3629
 msgid "Partition|Size"
@@ -57907,11 +57907,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3644
 msgid "Patch|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3645
 msgid "Patch|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3646
 msgid "Patch|Service pack"
@@ -57971,11 +57971,11 @@ msgstr "階段"
 
 #: ../config/model_attributes.rb:3660
 msgid "PersistentVolumeClaim|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3661
 msgid "PersistentVolumeClaim|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3662
 msgid "PersistentVolumeClaim|Requests"
@@ -58031,11 +58031,11 @@ msgstr "電源供應器位置計數"
 
 #: ../config/model_attributes.rb:3675
 msgid "PhysicalChassis|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3676
 msgid "PhysicalChassis|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3677
 msgid "PhysicalChassis|Switch slot count"
@@ -58083,11 +58083,11 @@ msgstr "模型"
 
 #: ../config/model_attributes.rb:3688
 msgid "PhysicalDisk|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3689
 msgid "PhysicalDisk|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3690
 msgid "PhysicalDisk|Serial number"
@@ -58143,11 +58143,11 @@ msgstr "埠類型"
 
 #: ../config/model_attributes.rb:3703
 msgid "PhysicalNetworkPort|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3704
 msgid "PhysicalNetworkPort|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3705
 msgid "PhysicalNetworkPort|Uid ems"
@@ -58179,11 +58179,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3712
 msgid "PhysicalRack|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3713
 msgid "PhysicalRack|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3714
 msgid "PhysicalRack|Uid ems"
@@ -58255,11 +58255,11 @@ msgstr "原始電源狀態"
 
 #: ../config/model_attributes.rb:3731
 msgid "PhysicalServer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3732
 msgid "PhysicalServer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3733
 msgid "PhysicalServer|Serial number"
@@ -58323,11 +58323,11 @@ msgstr "整體性能狀態"
 
 #: ../config/model_attributes.rb:3748
 msgid "PhysicalStorage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3749
 msgid "PhysicalStorage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3750
 msgid "PhysicalStorage|Total space"
@@ -58360,11 +58360,11 @@ msgstr "Md5"
 
 #: ../config/model_attributes.rb:3757
 msgid "Picture|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3758
 msgid "Picture|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3759
 msgid "Picture|Resource type"
@@ -58392,11 +58392,11 @@ msgstr "Miq 原則說明"
 
 #: ../config/model_attributes.rb:3765
 msgid "PolicyEvent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3766
 msgid "PolicyEvent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3767
 msgid "PolicyEvent|Result"
@@ -58428,11 +58428,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3774
 msgid "PolicyEventContent|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3775
 msgid "PolicyEventContent|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3776
 msgid "PolicyEventContent|Resource description"
@@ -58460,11 +58460,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3783
 msgid "Provider|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3784
 msgid "Provider|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3785
 msgid "Provider|Security protocol"
@@ -58516,11 +58516,11 @@ msgstr "路徑"
 
 #: ../config/model_attributes.rb:3797
 msgid "PxeImage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3798
 msgid "PxeImage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3799
 msgid "Pxe image type"
@@ -58540,11 +58540,11 @@ msgstr "供應類型"
 
 #: ../config/model_attributes.rb:3803
 msgid "PxeImageType|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3804
 msgid "PxeImageType|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3805
 msgid "Pxe menu"
@@ -58564,11 +58564,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3809
 msgid "PxeMenu|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3810
 msgid "PxeMenu|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3811
 msgid "Pxe server"
@@ -58604,11 +58604,11 @@ msgstr "PXE 目錄"
 
 #: ../config/model_attributes.rb:3819
 msgid "PxeServer|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3820
 msgid "PxeServer|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3821
 msgid "PxeServer|Uri"
@@ -58652,11 +58652,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3831
 msgid "RegistryItem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3832
 msgid "RegistryItem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3833
 msgid "RegistryItem|Updated on"
@@ -58681,11 +58681,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3838
 msgid "Relationship|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3839
 msgid "Relationship|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3840
 msgid "Relationship|Relationship"
@@ -58745,11 +58745,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3854
 msgid "ResourceAction|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3855
 msgid "ResourceAction|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3856
 msgid "ResourceAction|Resource type"
@@ -58773,11 +58773,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3861
 msgid "ResourceGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3862
 msgid "ResourceGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3863
 msgid "Resource pool"
@@ -58877,11 +58877,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3887
 msgid "ResourcePool|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3888
 msgid "ResourcePool|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3889
 msgid "ResourcePool|Uid ems"
@@ -58953,11 +58953,11 @@ msgstr "訊息"
 
 #: ../config/model_attributes.rb:3906
 msgid "ScanHistory|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3907
 msgid "ScanHistory|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3908
 msgid "ScanHistory|Started on"
@@ -59025,11 +59025,11 @@ msgstr "產品預設值"
 
 #: ../config/model_attributes.rb:3924
 msgid "ScanItem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3925
 msgid "ScanItem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3926
 msgid "ScanItem|Updated on"
@@ -59073,11 +59073,11 @@ msgstr "唯讀"
 
 #: ../config/model_attributes.rb:3936
 msgid "ScanItemSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3937
 msgid "ScanItemSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3938
 msgid "ScanItemSet|Set data"
@@ -59105,11 +59105,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3944
 msgid "ScanResult|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3945
 msgid "ScanResult|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3946
 msgid "ScanResult|Resource type"
@@ -59137,11 +59137,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3952
 msgid "SecurityContext|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3953
 msgid "SecurityContext|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3954
 msgid "SecurityContext|Resource type"
@@ -59185,11 +59185,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3964
 msgid "SecurityGroup|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3965
 msgid "SecurityGroup|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3966
 msgid "SecurityGroup|Total vms"
@@ -59225,11 +59225,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:3974
 msgid "ServerRole|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:3975
 msgid "ServerRole|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:3976
 msgid "ServerRole|Role scope"
@@ -59497,11 +59497,11 @@ msgstr "價格"
 
 #: ../config/model_attributes.rb:4043
 msgid "Service|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4044
 msgid "Service|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4045
 msgid "Service|Retired"
@@ -59557,11 +59557,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4059
 msgid "ServiceInstance|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4060
 msgid "ServiceInstance|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4061
 msgid "Service offering"
@@ -59593,11 +59593,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4068
 msgid "ServiceOffering|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4069
 msgid "ServiceOffering|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4070
 msgid "Service order"
@@ -59617,11 +59617,11 @@ msgstr "放置位置"
 
 #: ../config/model_attributes.rb:4074
 msgid "ServiceOrder|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4075
 msgid "ServiceOrder|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4076
 msgid "ServiceOrder|State"
@@ -59661,11 +59661,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4085
 msgid "ServiceParametersSet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4086
 msgid "ServiceParametersSet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4087
 msgid "Service resource"
@@ -59693,11 +59693,11 @@ msgstr "供應索引"
 
 #: ../config/model_attributes.rb:4093
 msgid "ServiceResource|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4094
 msgid "ServiceResource|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4095
 msgid "ServiceResource|Resource description"
@@ -59833,11 +59833,11 @@ msgstr "供應成本"
 
 #: ../config/model_attributes.rb:4128
 msgid "ServiceTemplate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4129
 msgid "ServiceTemplate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4130
 msgid "ServiceTemplate|Service type"
@@ -59873,11 +59873,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4138
 msgid "ServiceTemplateCatalog|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4139
 msgid "ServiceTemplateCatalog|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4140
 msgid "Service template tenant"
@@ -59889,11 +59889,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4142
 msgid "ServiceTemplateTenant|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4143
 msgid "ServiceTemplateTenant|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4144
 msgid "Settings change"
@@ -59909,11 +59909,11 @@ msgstr "金鑰"
 
 #: ../config/model_attributes.rb:4147
 msgid "SettingsChange|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4148
 msgid "SettingsChange|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4149
 msgid "SettingsChange|Resource type"
@@ -59938,11 +59938,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4154
 msgid "Share|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4155
 msgid "Share|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4156
 msgid "Share|Resource type"
@@ -59994,11 +59994,11 @@ msgstr "母項 uid"
 
 #: ../config/model_attributes.rb:4169
 msgid "Snapshot|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4170
 msgid "Snapshot|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4171
 msgid "Snapshot|Total size"
@@ -60178,11 +60178,11 @@ msgstr "支援原始磁碟對映"
 
 #: ../config/model_attributes.rb:4216
 msgid "Storage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4217
 msgid "Storage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4218
 msgid "Storage|Snapshot size"
@@ -60326,11 +60326,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4253
 msgid "StorageFile|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4254
 msgid "StorageFile|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4255
 msgid "StorageFile|Rsc type"
@@ -60366,11 +60366,11 @@ msgstr "設定檔類型"
 
 #: ../config/model_attributes.rb:4263
 msgid "StorageProfile|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4264
 msgid "StorageProfile|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4265
 msgid "Storage profile storage"
@@ -60382,11 +60382,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4267
 msgid "StorageProfileStorage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4268
 msgid "StorageProfileStorage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4270
 msgid "Subnet|Cidr"
@@ -60406,11 +60406,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4274
 msgid "Subnet|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4275
 msgid "Subnet|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4277
 msgid "Switch|Allow promiscuous"
@@ -60454,11 +60454,11 @@ msgstr "電源狀態"
 
 #: ../config/model_attributes.rb:4287
 msgid "Switch|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4288
 msgid "Switch|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4289
 msgid "Switch|Shared"
@@ -60510,11 +60510,11 @@ msgstr "Proxy 狀態"
 
 #: ../config/model_attributes.rb:4301
 msgid "SystemConsole|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4302
 msgid "SystemConsole|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4303
 msgid "SystemConsole|Secret"
@@ -60582,11 +60582,11 @@ msgstr "物件名稱"
 
 #: ../config/model_attributes.rb:4319
 msgid "SystemService|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4320
 msgid "SystemService|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4321
 msgid "SystemService|Running"
@@ -60626,11 +60626,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4331
 msgid "Tag|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4332
 msgid "Tag|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4334
 msgid "Tagging|Href slug"
@@ -60638,11 +60638,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4335
 msgid "Tagging|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4336
 msgid "Tagging|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4337
 msgid "Tagging|Taggable type"
@@ -60734,11 +60734,11 @@ msgstr "佈建的儲存體"
 
 #: ../config/model_attributes.rb:4360
 msgid "Tenant|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4361
 msgid "Tenant|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4362
 msgid "Tenant|Source type"
@@ -60774,11 +60774,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4370
 msgid "TenantQuota|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4371
 msgid "TenantQuota|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4372
 msgid "TenantQuota|Total"
@@ -60830,11 +60830,11 @@ msgstr "設定檔類型"
 
 #: ../config/model_attributes.rb:4384
 msgid "TimeProfile|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4385
 msgid "TimeProfile|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4386
 msgid "TimeProfile|Rollup daily metrics"
@@ -60870,11 +60870,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:4394
 msgid "TransformationMapping|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4395
 msgid "TransformationMapping|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4396
 msgid "TransformationMapping|State"
@@ -60898,11 +60898,11 @@ msgstr "選項"
 
 #: ../config/model_attributes.rb:4401
 msgid "TransformationMappingItem|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4402
 msgid "TransformationMappingItem|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4403
 msgid "TransformationMappingItem|Source type"
@@ -61014,11 +61014,11 @@ msgstr "供應的儲存體"
 
 #: ../config/model_attributes.rb:4431
 msgid "User|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4432
 msgid "User|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4433
 msgid "User|Settings"
@@ -61046,11 +61046,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4439
 msgid "VimPerformanceOperatingRange|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4440
 msgid "VimPerformanceOperatingRange|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4441
 msgid "VimPerformanceOperatingRange|Resource type"
@@ -61074,11 +61074,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4446
 msgid "VimPerformanceState|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4447
 msgid "VimPerformanceState|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4448
 msgid "VimPerformanceState|Resource type"
@@ -61918,11 +61918,11 @@ msgstr "建議的 vcpus"
 
 #: ../config/model_attributes.rb:4657
 msgid "VmOrTemplate|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4658
 msgid "VmOrTemplate|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4659
 msgid "VmOrTemplate|Registered"
@@ -62178,11 +62178,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4722
 msgid "VmdbDatabase|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4723
 msgid "VmdbDatabase|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4724
 msgid "VmdbDatabase|Vendor"
@@ -62234,11 +62234,11 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:4736
 msgid "VmdbDatabaseMetric|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4737
 msgid "VmdbDatabaseMetric|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4738
 msgid "VmdbDatabaseMetric|Running processes"
@@ -62266,11 +62266,11 @@ msgstr "先前的原始度量"
 
 #: ../config/model_attributes.rb:4744
 msgid "VmdbIndex|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4745
 msgid "VmdbIndex|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4746
 msgid "Vmdb metric"
@@ -62322,11 +62322,11 @@ msgstr "膨脹百分比"
 
 #: ../config/model_attributes.rb:4758
 msgid "VmdbMetric|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4759
 msgid "VmdbMetric|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4760
 msgid "VmdbMetric|Resource type"
@@ -62398,11 +62398,11 @@ msgstr "先前的原始度量"
 
 #: ../config/model_attributes.rb:4777
 msgid "VmdbTable|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4778
 msgid "VmdbTable|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4780
 msgid "Volume|Created on"
@@ -62430,11 +62430,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4786
 msgid "Volume|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4787
 msgid "Volume|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4788
 msgid "Volume|Size"
@@ -62490,11 +62490,11 @@ msgstr "路徑"
 
 #: ../config/model_attributes.rb:4801
 msgid "WindowsImage|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4802
 msgid "WindowsImage|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4804
 msgid "Zone|Aggregate cpu speed"
@@ -62642,11 +62642,11 @@ msgstr "名稱"
 
 #: ../config/model_attributes.rb:4840
 msgid "Zone|Region description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #: ../config/model_attributes.rb:4841
 msgid "Zone|Region number"
-msgstr "區域號碼"
+msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4842
 msgid "Zone|Settings"
@@ -63368,7 +63368,7 @@ msgstr "新增雲端提供者"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 #: ../config/yaml_strings.rb:348
 msgid "Region Description"
-msgstr "區域說明"
+msgstr "地區說明"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:350
@@ -66892,17 +66892,17 @@ msgstr "VNF 編排範本"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1577
 msgid "Modify Region"
-msgstr "修改區域"
+msgstr "修改地區"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1579
 msgid "Modify Regions"
-msgstr "修改區域"
+msgstr "修改地區"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1581
 msgid "Edit a Region"
-msgstr "編輯區域"
+msgstr "編輯地區"
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../config/yaml_strings.rb:1581
@@ -67278,7 +67278,7 @@ msgstr "重新載入現行顯示"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1697
 msgid "Diagnostics Region Settings"
-msgstr "診斷區域設定"
+msgstr "診斷地區設定"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1699
@@ -75380,7 +75380,7 @@ msgstr "圖表定義無效"
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "國語"
+msgstr "繁體中文"
 
 #: ./dist/js/ui-components.js:1
 msgid "Check Box"
