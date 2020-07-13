@@ -3,9 +3,9 @@ RSpec.describe ServiceTemplate do
     let(:custom_button)                  { FactoryBot.create(:custom_button, :applies_to => service_template) }
     let(:custom_button_for_service)      { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
     let(:custom_button_set)              { FactoryBot.create(:custom_button_set, :owner => service_template, :set_data => set_data) }
-    let(:service_template)               { FactoryBot.create(:service_template) }
-    let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
-    let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
+    let(:service_template)               { FactoryBot.create(:service_template, :display => true) }
+    let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower, :display => true) }
+    let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration, :display => true) }
     let(:set_data)                       { {:applies_to_class => "Service", :button_order => [custom_button.id], :applies_to_id => service_template.id} }
 
     def copy_template(template, name = nil)
@@ -15,7 +15,7 @@ RSpec.describe ServiceTemplate do
       end.to(change { ServiceTemplate.count }.by(1))
       expect(copy.persisted?).to be(true)
       expect(copy.guid).not_to eq(template.guid)
-      expect(copy.display).to be(false)
+      expect(copy.display).to be(true)
       copy
     end
 

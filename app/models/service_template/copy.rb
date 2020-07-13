@@ -5,7 +5,7 @@ module ServiceTemplate::Copy
     if template_valid? && type != 'ServiceTemplateAnsiblePlaybook'
       ActiveRecord::Base.transaction do
         dup.tap do |template|
-          template.update!(:name => new_name, :display => false, :options => {:button_order => []})
+          template.update!(:name => new_name, :options => {:button_order => []})
           service_resources.each { |service_resource| resource_copy(service_resource, template) }
           resource_action_copy(template)
           additional_tenant_copy(template)
