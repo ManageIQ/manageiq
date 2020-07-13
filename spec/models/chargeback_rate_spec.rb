@@ -101,4 +101,62 @@ RSpec.describe ChargebackRate do
       it { is_expected.to eq(symbol) }
     end
   end
+
+  describe "#assigment_type_description" do
+    let(:compute_rate) { FactoryBot.create(:chargeback_rate) }
+    let(:storage_rate) { FactoryBot.create(:chargeback_rate, :rate_type => "Storage") }
+
+    ASSIGNMENTS = [
+      {:record => :miq_enterprise,
+       :type   => :object},
+      {:record => :ext_management_system,
+       :type   => :object},
+      {:record => :ems_cluster,
+       :type   => :object},
+      {:record => :tenant,
+       :type   => :object},
+      {:record => :storage,
+       :type   => :storage},
+      {:record => [nil, "vm"],
+       :type   => :tag},
+      {:record => [nil, "container_image"],
+       :type   => :tag},
+      {:record => [nil, "storage"],
+       :type   => :tag},
+      {:record => nil,
+       :type   => :label},
+    ].freeze
+
+    EXPECTED_ASSIGNMENTS = [
+      {:miq_enterprise          => "Compute", :expected_description_type => "The Enterprise"},
+      {:miq_enterprise          => "Storage", :expected_description_type => "The Enterprise"},
+      {:ext_management_system   => "Compute", :expected_description_type => "Selected Providers"},
+      {:ems_cluster             => "Compute", :expected_description_type => "Selected Clusters"},
+      {:tenant                  => "Compute", :expected_description_type => "Tenants"},
+      {:tenant                  => "Storage", :expected_description_type => "Tenants"},
+      {:storage                 => "Storage", :expected_description_type => "Selected Datastores"},
+      {"vm-tags"                => "Compute", :expected_description_type => "Tagged VMs and Instances"},
+      {"container_image-tags"   => "Compute", :expected_description_type => "Tagged Container Images"},
+      {"storage-tags"           => "Storage", :expected_description_type => "Tagged Datastores"},
+      {:custom_attribute        => "Compute", :expected_description_type => "Labeled Container Images"},
+    ].freeze
+
+    [:chargeback_compute, :chargeback_storage].each do |rate|
+      ASSIGNMENTS.each do |assignment|
+        selected_assignment = EXPECTED_ASSIGNMENTS.detect do |x|
+          key = assignment[:type] == :tag ? "#{assignment[:record][1]}-tags" : assignment[:record]
+          key = :custom_attribute if assignment[:type] == :label
+          x[key] == (rate == :chargeback_compute ? "Compute" : "Storage")
+        end
+        next unless selected_assignment
+
+        it "returns proper description of assigment type #{selected_assignment.keys.first}" do
+          record = assignment[:type] == :object || assignment[:type] == :storage ? FactoryBot.build(assignment[:record]) : assignment[:record]
+
+          rate_object = rate == :chargeback_compute ? compute_rate : storage_rate
+          expect(rate_object.assigment_type_description(record, assignment[:type])).to eq(selected_assignment[:expected_description_type])
+        end
+      end
+    end
+  end
 end
