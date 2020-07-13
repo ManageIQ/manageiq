@@ -1,4 +1,4 @@
-class <%= class_name %>::CloudManager::EventCatcher::Stream
+class <%= class_name %>::<%= manager_type %>::EventCatcher::Stream
   class ProviderUnreachable < ManageIQ::Providers::BaseManager::EventCatcher::Runner::TemporaryFailure
   end
 

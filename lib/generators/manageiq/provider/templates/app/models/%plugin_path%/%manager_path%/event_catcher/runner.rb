@@ -1,4 +1,4 @@
-class <%= class_name %>::CloudManager::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
+class <%= class_name %>::<%= manager_type %>::EventCatcher::Runner < ManageIQ::Providers::BaseManager::EventCatcher::Runner
   def stop_event_monitor
     event_monitor_handle.stop
   end
