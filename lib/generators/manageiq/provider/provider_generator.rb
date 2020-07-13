@@ -4,15 +4,6 @@ module ManageIQ
   class ProviderGenerator < PluginGenerator
     source_root File.expand_path('templates', __dir__)
 
-    class_option :vcr, :type => :boolean, :default => false,
-                 :desc => "Enable VCR cassettes (Default: --no-vcr)"
-
-    class_option :dummy, :type => :boolean, :default => false,
-                 :desc => "Generate dummy implementations (Default: --no-dummy)"
-
-    class_option :manager_type, :type => :string, :default => "cloud",
-                 :desc => "What type of manager to create (Default: \"cloud\")"
-
     def self.manager_types
       @manager_types ||= {
         "automation"    => "AutomationManager",
@@ -28,6 +19,15 @@ module ManageIQ
       }
     end
 
+    class_option :vcr, :type => :boolean, :default => false,
+                 :desc => "Enable VCR cassettes (Default: --no-vcr)"
+
+    class_option :dummy, :type => :boolean, :default => false,
+                 :desc => "Generate dummy implementations (Default: --no-dummy)"
+
+    class_option :manager_type, :type => :string,
+                 :desc => "What type of manager to create (Options: #{manager_types.keys.join(", ")})"
+
     def create_provider_files
       empty_directory "spec/models/#{plugin_path}"
 
@@ -35,7 +35,6 @@ module ManageIQ
         "[#{match}, 'app:test:providers_common']"
       end
 
-      validate_manager_type!
       create_dummy if options[:dummy]
       create_vcr   if options[:vcr]
     end
@@ -59,6 +58,7 @@ module ManageIQ
     end
 
     def create_dummy
+      validate_manager_type!
       template "app/models/%plugin_path%/%manager_path%/event_catcher/runner.rb"
       template "app/models/%plugin_path%/%manager_path%/event_catcher/stream.rb"
       template "app/models/%plugin_path%/%manager_path%/metrics_collector_worker/runner.rb"

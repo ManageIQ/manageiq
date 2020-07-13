@@ -4,4 +4,4 @@ Description:
 Example:
     rails generate manageiq:provider ManageIQ::Providers::VendorName
     rails generate manageiq:provider ManageIQ::Providers::VendorName --path ~/dev
-    rails generate manageiq:provider ManageIQ::Providers::VendorName --vcr --dummy
+    rails generate manageiq:provider ManageIQ::Providers::VendorName --vcr --dummy --manager-type=cloud
