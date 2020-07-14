@@ -1,1 +1,5 @@
 ui: env PORT=$PORT <%= Gem.ruby %> <%= Environment.run_single_worker_bin %> MiqUiWorker
+
+<% extra_workers.each do |worker_type| -%>
+<%= worker_type.downcase %>: env PORT=$PORT <%= Gem.ruby %> <%= Environment.run_single_worker_bin %> <%= worker_type %>
+<% end -%>
