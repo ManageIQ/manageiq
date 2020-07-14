@@ -6532,7 +6532,7 @@ msgstr "所有的 %{typ} 警报概要文件"
 
 #: ../app/controllers/miq_policy_controller.rb:561
 msgid "Adding a new %{model_name} %{mode} Policy"
-msgstr "添加新的%{model_name}%{mode}策略"
+msgstr "添加新的%{model_name} %{mode} 策略"
 
 #: ../app/controllers/miq_policy_controller.rb:564
 msgid "Adding a new %{model_name} Policy"
@@ -8115,7 +8115,7 @@ msgstr "定制按钮事件"
 
 #: ../app/controllers/mixins/generic_show_mixin.rb:176
 msgid "%{name} (All %{title})"
-msgstr "%{name}（所有的 %{title}）"
+msgstr "%{name}（所有的%{title}）"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:56
 msgid "%{model} \"%{name}\" was updated"
@@ -19262,7 +19262,7 @@ msgstr "选择"
 #: ../app/views/report/_form_styling.html.haml:94
 #: ../app/views/report/_widget_show.html.haml:26 ../config/yaml_strings.rb:409
 msgid "Default"
-msgstr "缺省值"
+msgstr "缺省"
 
 #: ../app/helpers/automation_manager_helper.rb:120
 #: ../app/helpers/provider_foreman_helper.rb:284
@@ -19282,7 +19282,7 @@ msgstr "显示所有云卷"
 #: ../app/helpers/catalog_helper/textual_summary.rb:19
 #: ../app/helpers/textual_summary_helper.rb:93
 msgid "%{name} Tags"
-msgstr "%{name} 个标记"
+msgstr "%{name} 标签"
 
 #: ../app/helpers/catalog_helper/textual_summary.rb:23
 #: ../app/helpers/textual_summary_helper.rb:98
@@ -22522,11 +22522,11 @@ msgstr "远程区域"
 #: ../app/helpers/textual_mixins/textual_scan_history.rb:3
 #: ../config/yaml_strings.rb:1220
 msgid "Analysis History"
-msgstr "分析历史"
+msgstr "分析历史记录"
 
 #: ../app/helpers/textual_mixins/textual_scan_history.rb:9
 msgid "Show virtual machine analysis history"
-msgstr "显示虚拟机分析历史"
+msgstr "显示虚拟机分析历史记录"
 
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb:5
 #: ../app/views/layouts/listnav/_host.html.haml:44
@@ -22711,7 +22711,7 @@ msgstr "<未知的>"
 
 #: ../app/helpers/textual_summary_helper.rb:224
 msgid "%{label} Credentials"
-msgstr "%{label} 凭证"
+msgstr "%{label}凭证"
 
 #: ../app/helpers/view_helper.rb:16
 msgid "A0 - 841mm x 1189mm"
@@ -27695,7 +27695,7 @@ msgstr "必须在子类中实现 raw_remove_security_group"
 #, fuzzy
 msgid "Configuration Manager"
 msgid_plural "Configuration Managers"
-msgstr[0] "配置管理者"
+msgstr[0] "配置管理器"
 
 #: ../app/models/manageiq/providers/container_manager.rb:60
 msgid "This provider type does not support external_logging"
@@ -27704,7 +27704,7 @@ msgstr "此供应商类型不支持外部日志"
 #: ../app/models/manageiq/providers/container_manager.rb:119
 msgid "Containers Manager"
 msgid_plural "Containers Managers"
-msgstr[0] "容器管理者"
+msgstr[0] "容器管理器"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource
 #:
@@ -27752,7 +27752,7 @@ msgstr "子类必须实现 poll_native_task"
 #, fuzzy
 msgid "Configuration Manager (Foreman)"
 msgid_plural "Configuration Managers (Foreman)"
-msgstr[0] "配置管理者 (Foreman)"
+msgstr[0] "配置管理器 (Foreman)"
 
 #:
 #: ../app/models/manageiq/providers/foreman/configuration_manager/configured_system.rb:32
@@ -30601,7 +30601,7 @@ msgstr "菜单"
 #: ../app/presenters/tree_builder_sections.rb:31
 #: ../app/views/ops/_rbac_group_details.html.haml:202
 msgid "%{current_tenant} Tags"
-msgstr "%{current_tenant} 个标记"
+msgstr "%{current_tenant} 标签"
 
 #: ../app/presenters/tree_builder_template_filter.rb:10
 msgid "All of the Templates that I can see"
@@ -42360,12 +42360,12 @@ msgstr "工作流模板 (Ansible Tower)"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager (plural form)
 #: ../config/dictionary_strings.rb:1650
 msgid "Configuration Managers (Foreman)"
-msgstr "配置管理者 (Foreman)"
+msgstr "配置管理器 (Foreman)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager (plural form)
 #: ../config/dictionary_strings.rb:1654
 msgid "Configuration Managers"
-msgstr "配置管理者"
+msgstr "配置管理器"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem (plural form)
 #: ../config/dictionary_strings.rb:1658
@@ -49015,7 +49015,7 @@ msgstr "时间戳记"
 
 #: ../config/model_attributes.rb:1412
 msgid "Ems cluster"
-msgstr "EMS 集群"
+msgstr "Ems 集群"
 
 #: ../config/model_attributes.rb:1413
 msgid "EmsCluster|Aggregate cpu speed"
@@ -72887,12 +72887,12 @@ msgstr " 磁盘 I/O - 平均值 (KBps)"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
 #: ../config/yaml_strings.rb:4748
 msgid "Top CPU Consumers (weekly)"
-msgstr "顶级 CPU 消费者（每周）"
+msgstr "排名靠前的 CPU 使用者（每周）"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
 #: ../config/yaml_strings.rb:4750
 msgid "Top Memory Consumers (weekly)"
-msgstr "顶级内存消费者（每周）"
+msgstr "排名靠前的内存使用者（每周）"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
 #: ../config/yaml_strings.rb:4752
@@ -75899,7 +75899,7 @@ msgstr "修改保存的密码"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:78
 msgid "No My Company Tags are assigned"
-msgstr "没有分配 '我的公司' 标签"
+msgstr "没有分配 My Company 标签"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:116
 msgid "Tag Assignment"
@@ -75946,7 +75946,7 @@ msgstr "密码/验证密码不匹配"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:29
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:40
 msgid "Required"
-msgstr "必需的"
+msgstr "必填"
 
 #: src/rbac-forms/rbacUserForm.jsx:48 src/rbac-forms/rbacUserPreview.jsx:51
 msgid "Full Name"
@@ -75999,7 +75999,7 @@ msgstr "智能管理"
 
 #: src/rbac-forms/rbacUserTagsList.jsx:19
 msgid "%s Tags"
-msgstr "%s 个标记"
+msgstr "%s 标签"
 
 #: src/rbac-forms/rbacUserTagsList.jsx:25
 msgid "No %s Tags have been assigned"

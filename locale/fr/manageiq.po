@@ -2283,7 +2283,7 @@ msgstr "Tous les %{labels} sélectionnés ne sont pas dans la région actuelle"
 #: ../app/controllers/application_controller.rb:1124
 msgid "%{label} is not in the current region and will be skipped"
 msgid_plural "%{label} are not in the current region and will be skipped"
-msgstr[0] "%{label} nest pas dans la région en cours et sera ignoré"
+msgstr[0] "%{label} n'est pas dans la région en cours et sera ignoré"
 msgstr[1] "%{label} ne sont pas dans la région en cours et seront ignorés"
 
 #: ../app/controllers/application_controller.rb:1585
@@ -3209,8 +3209,8 @@ msgstr "Nom du serveur"
 #, fuzzy
 msgid "Hostname"
 msgid_plural "Hostnames"
-msgstr[0] "Nom dhôte"
-msgstr[1] "Noms dhôte"
+msgstr[0] "Nom d'hôte"
+msgstr[1] "Noms d'hôte"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:324
 #: ../app/helpers/provider_foreman_helper.rb:109
@@ -4870,8 +4870,8 @@ msgstr "\"%{name}\" : les profils temporels globaux ne peuvent pas être supprim
 #: ../app/controllers/configuration_controller.rb:295
 msgid "\"%{name}\": In use by %{rep_count} Report, cannot be deleted"
 msgid_plural "\"%{name}\": In use by %{rep_count} Reports, cannot be deleted"
-msgstr[0] "\"%{name}\" : en cours dutilisation par %{rep_count} rapport. Suppression impossible."
-msgstr[1] "\"%{name}\" : en cours dutilisation par %{rep_count} rapports. Suppression impossible."
+msgstr[0] "\"%{name}\" : en cours d'utilisation par %{rep_count} rapport. Suppression impossible."
+msgstr[1] "\"%{name}\" : en cours d'utilisation par %{rep_count} rapports. Suppression impossible."
 
 #: ../app/controllers/configuration_controller.rb:337
 msgid "Adding copy of '%{description}'"
@@ -5597,8 +5597,8 @@ msgstr "Hôte \"%{hostname}\" retiré de l'agrégat d'hôtes \"%{name}\""
 #: ../app/controllers/host_aggregate_controller.rb:428
 msgid "Delete initiated for %{number} Host Aggregate."
 msgid_plural "Delete initiated for %{number} Host Aggregates."
-msgstr[0] "Suppression lancée pour %{number} agrégat dhôtes."
-msgstr[1] "Suppression lancée pour %{number} agrégats dhôtes."
+msgstr[0] "Suppression lancée pour %{number} agrégat d'hôtes."
+msgstr[1] "Suppression lancée pour %{number} agrégats d'hôtes."
 
 #: ../app/controllers/host_aggregate_controller.rb:438
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:136
@@ -9379,8 +9379,8 @@ msgstr "Une erreur s'est produite lors de la mise en file d'attente de l'action 
 #: ../app/controllers/report_controller/schedules.rb:108
 msgid "The selected Schedule has been queued to run"
 msgid_plural "The selected Schedules have been queued to run"
-msgstr[0] "Le planning sélectionné a été placé en file dattente pour exécution"
-msgstr[1] "Les plannings sélectionnés ont été placés en file dattente pour exécution"
+msgstr[0] "Le planning sélectionné a été placé en file d'attente pour exécution"
+msgstr[1] "Les plannings sélectionnés ont été placés en file d'attente pour exécution"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:62
 #: ../app/controllers/report_controller/schedules.rb:196
@@ -11619,14 +11619,14 @@ msgstr[1] "Pilotes de noyau"
 #: ../app/controllers/vm_common.rb:1327
 msgid "Init Process"
 msgid_plural "Init Processes"
-msgstr[0] "Processus dinitialisation"
-msgstr[1] "Processus dinitialisation"
+msgstr[0] "Processus d'initialisation"
+msgstr[1] "Processus d'initialisation"
 
 #: ../app/controllers/vm_common.rb:1329
 msgid "OS Info"
 msgid_plural "OS Info"
-msgstr[0] "Informations sur le système dexploitation"
-msgstr[1] "Informations sur le système dexploitation"
+msgstr[0] "Informations sur le système d'exploitation"
+msgstr[1] "Informations sur le système d'exploitation"
 
 #: ../app/controllers/vm_common.rb:1331
 #: ../app/helpers/vm_helper/textual_summary.rb:318
@@ -11646,8 +11646,8 @@ msgstr[1] "Correctifs"
 #: ../app/controllers/vm_common.rb:1335
 msgid "Running Process"
 msgid_plural "Running Processes"
-msgstr[0] "Processus en cours dexécution"
-msgstr[1] "Processus en cours dexécution"
+msgstr[0] "Processus en cours d'exécution"
+msgstr[1] "Processus en cours d'exécution"
 
 #: ../app/controllers/vm_common.rb:1337
 msgid "Registry Item"
@@ -11669,8 +11669,8 @@ msgstr[1] "Ressources"
 #: ../app/controllers/vm_common.rb:1341
 msgid "Scan History"
 msgid_plural "Scan History"
-msgstr[0] "Historique danalyse"
-msgstr[1] "Historique danalyse"
+msgstr[0] "Historique d'analyse"
+msgstr[1] "Historique d'analyse"
 
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
@@ -11877,8 +11877,8 @@ msgstr[1] "%{number} Machines virtuelles"
 #: ../app/decorators/manageiq/providers/automation_manager_decorator.rb:20
 msgid "%{number} Inventory Root Group"
 msgid_plural "%{number} Inventory Root Groups"
-msgstr[0] "%{number} groupe racine dinventaire"
-msgstr[1] "%{number} groupes racines dinventaire"
+msgstr[0] "%{number} groupe racine d'inventaire"
+msgstr[1] "%{number} groupes racines d'inventaire"
 
 #: ../app/decorators/manageiq/providers/automation_manager_decorator.rb:24
 #: ../app/decorators/manageiq/providers/cloud_manager_decorator.rb:22
@@ -11946,8 +11946,8 @@ msgstr[1] "%{number} clichés de volume de cloud"
 #: ../app/decorators/manageiq/providers/storage_manager_decorator.rb:38
 msgid "%{number} Cloud Object Store Container"
 msgid_plural "%{number} Cloud Object Store Containers"
-msgstr[0] "%{number} conteneur de magasin dobjets cloud"
-msgstr[1] "%{number} conteneurs de magasin dobjets cloud"
+msgstr[0] "%{number} conteneur de magasin d'objets cloud"
+msgstr[1] "%{number} conteneurs de magasin d'objets cloud"
 
 #: ../app/decorators/storage_decorator.rb:21
 msgid "%{number}"
@@ -19355,7 +19355,7 @@ msgstr "Balises %{name}"
 #: ../app/helpers/catalog_helper/textual_summary.rb:23
 #: ../app/helpers/textual_summary_helper.rb:98
 msgid "No %{label} have been assigned"
-msgstr "Aucune %{label} n'a été attribuée"
+msgstr "Aucune balise de type %{label} n'a été attribuée"
 
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #: ../app/helpers/chargeback_helper.rb:5
@@ -20932,7 +20932,7 @@ msgstr "Afficher l'historique de conformité de ce %{title} (10 dernières véri
 #: ../app/helpers/textual_mixins/vm_common.rb:78
 msgid "Show the User defined on this VM"
 msgid_plural "Show the Users defined on this VM"
-msgstr[0] "Afficher lutilisateur défini sur cette machine virtuelle"
+msgstr[0] "Afficher l'utilisateur défini sur cette machine virtuelle"
 msgstr[1] "Afficher les utilisateurs définis sur cette machine virtuelle"
 
 #: ../app/helpers/host_helper/textual_summary.rb:358
@@ -22235,8 +22235,8 @@ msgstr "Afficher tous les fichiers installés sur ce magasin de données"
 #: ../app/helpers/storage_helper/textual_summary.rb:152
 msgid "%{number} (%{percentage} of Used Space, %{amount} file)"
 msgid_plural "%{number} (%{percentage} of Used Space, %{amount} files)"
-msgstr[0] "%{number} (%{percentage} despace utilisé, %{amount} fichier)"
-msgstr[1] "%{number} (%{percentage} despace utilisé %{amount} fichiers)"
+msgstr[0] "%{number} (%{percentage} d'espace utilisé, %{amount} fichier)"
+msgstr[1] "%{number} (%{percentage} d'espace utilisé %{amount} fichiers)"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:169
 msgid "Show VM Provisioned Disk Files installed on this Datastore"
@@ -22480,8 +22480,8 @@ msgstr[1] "Afficher les fichiers installés sur cette machine virtuelle"
 #: ../app/helpers/textual_mixins/textual_init_processes.rb:9
 msgid "Show the Init Process installed on this VM"
 msgid_plural "Show the Init Processes installed on this VM"
-msgstr[0] "Afficher le processus dinitialisation installé sur cette machine virtuelle"
-msgstr[1] "Afficher les processus dinitialisation installés sur cette machine virtuelle"
+msgstr[0] "Afficher le processus d'initialisation installé sur cette machine virtuelle"
+msgstr[1] "Afficher les processus d'initialisation installés sur cette machine virtuelle"
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb:5
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb:16
@@ -22695,7 +22695,7 @@ msgstr[1] "Afficher les pilotes du système de fichiers installés sur cette mac
 #: ../app/helpers/textual_mixins/vm_common.rb:141
 msgid "Show the Registry Item installed on this VM"
 msgid_plural "Show the Registry Items installed on this VM"
-msgstr[0] "Afficher lélément de registre installé sur cette machine virtuelle"
+msgstr[0] "Afficher l'élément de registre installé sur cette machine virtuelle"
 msgstr[1] "Afficher les éléments de registre installés sur cette machine virtuelle"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:152
@@ -22709,8 +22709,8 @@ msgstr "Afficher les ressources de cette machine virtuelle"
 #: ../app/helpers/textual_mixins/vm_common.rb:173
 msgid "Show Event Log on this VM"
 msgid_plural "Show Event Logs on this VM"
-msgstr[0] "Afficher le journal dévénements sur cette machine virtuelle"
-msgstr[1] "Afficher les journaux dévénements sur cette machine virtuelle"
+msgstr[0] "Afficher le journal d'événements sur cette machine virtuelle"
+msgstr[1] "Afficher les journaux d'événements sur cette machine virtuelle"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:182
 #: ../app/views/network_router/_common_new_edit.haml:88
@@ -26269,8 +26269,8 @@ msgstr "%{name} non pris en charge pour le téléchargement"
 #: ../app/models/auth_token.rb:8
 msgid "Authentication Token"
 msgid_plural "Authentication Tokens"
-msgstr[0] "Jeton dauthentification"
-msgstr[1] "Jetons dauthentification"
+msgstr[0] "Jeton d'authentification"
+msgstr[1] "Jetons d'authentification"
 
 #: ../app/models/authenticator/base.rb:47
 msgid "Authentication failed"
@@ -26339,8 +26339,8 @@ msgstr "Image inconnue"
 #: ../config/dictionary_strings.rb:1280
 msgid "Chargeback for Image"
 msgid_plural "Chargebacks for Image"
-msgstr[0] "Rétrofacturation pour limage"
-msgstr[1] "Rétrofacturations pour limage"
+msgstr[0] "Rétrofacturation pour l'image"
+msgstr[1] "Rétrofacturations pour l'image"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
 #: ../app/models/chargeback_container_project.rb:74
@@ -26562,8 +26562,8 @@ msgstr "Opérateur non conforme, '%{operator}'"
 #: ../app/models/container_env_var.rb:4
 msgid "Container Environment Variable"
 msgid_plural "Container Environment Variables"
-msgstr[0] "Variable denvironnement du conteneur"
-msgstr[1] "Variables denvironnement du conteneur"
+msgstr[0] "Variable d'environnement du conteneur"
+msgstr[1] "Variables d'environnement du conteneur"
 
 #: ../app/models/container_group_performance.rb:7
 msgid "Pod Performance"
@@ -27027,8 +27027,8 @@ msgstr "Chronologie non disponible pour %{model}"
 #, fuzzy
 msgid "Automation Manager (Ansible Tower)"
 msgid_plural "Automation Managers (Ansible Tower)"
-msgstr[0] "Gestionnaire dautomatisation (Ansible Tower)"
-msgstr[1] "Gestionnaires dautomatisation (Ansible Tower)"
+msgstr[0] "Gestionnaire d'automatisation (Ansible Tower)"
+msgstr[1] "Gestionnaires d'automatisation (Ansible Tower)"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/amazon_credential.rb:5
@@ -27463,8 +27463,8 @@ msgstr "%{name} n'existe pas sur %{management}"
 #, fuzzy
 msgid "Orchestration Stack (Microsoft Azure)"
 msgid_plural "Orchestration Stacks (Microsoft Azure)"
-msgstr[0] "Pile dorchestration (Microsoft Azure)"
-msgstr[1] "Piles dorchestration (Microsoft Azure)"
+msgstr[0] "Pile d'orchestration (Microsoft Azure)"
+msgstr[1] "Piles d'orchestration (Microsoft Azure)"
 
 #:
 #: ../app/models/manageiq/providers/azure/cloud_manager/orchestration_template.rb:50
@@ -27691,8 +27691,8 @@ msgstr "Ouest des Etats-Unis 2"
 #: ../app/models/manageiq/providers/azure_stack/cloud_manager/orchestration_stack.rb:51
 msgid "Orchestration Stack (Microsoft AzureStack)"
 msgid_plural "Orchestration Stacks (Microsoft AzureStack)"
-msgstr[0] "Pile dorchestration (Microsoft AzureStack)"
-msgstr[1] "Piles dorchestration (Microsoft AzureStack)"
+msgstr[0] "Pile d'orchestration (Microsoft AzureStack)"
+msgstr[1] "Piles d'orchestration (Microsoft AzureStack)"
 
 #:
 #: ../app/models/manageiq/providers/azure_stack/cloud_manager/orchestration_template.rb:48
@@ -28022,8 +28022,8 @@ msgstr[1] "Groupes de sécurité (Google)"
 #: ../app/models/manageiq/providers/infra_manager.rb:64
 msgid "Infrastructure Manager"
 msgid_plural "Infrastructure Managers"
-msgstr[0] "Gestionnaire dinfrastructure"
-msgstr[1] "Gestionnaires dinfrastructure"
+msgstr[0] "Gestionnaire d'infrastructure"
+msgstr[1] "Gestionnaires d'infrastructure"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template
 #. TRANSLATORS: en.yml key: dictionary.table.container_template
@@ -28045,8 +28045,8 @@ msgstr "doit être implémenté dans une sous-classe"
 #: ../app/models/manageiq/providers/kubevirt/infra_manager.rb:163
 msgid "Infrastructure Provider (Kubevirt)"
 msgid_plural "Infrastructure Providers (Kubevirt)"
-msgstr[0] "Fournisseur dinfrastructure (Kubevirt)"
-msgstr[1] "Fournisseurs dinfrastructure (Kubevirt)"
+msgstr[0] "Fournisseur d'infrastructure (Kubevirt)"
+msgstr[1] "Fournisseurs d'infrastructure (Kubevirt)"
 
 #: ../app/models/manageiq/providers/kubevirt/infra_manager/template.rb:19
 msgid "Template (Kubevirt)"
@@ -28064,8 +28064,8 @@ msgstr[1] "Machines virtuelles (Kubevirt)"
 #, fuzzy
 msgid "Infrastructure Provider (Microsoft)"
 msgid_plural "Infrastructure Providers (Microsoft)"
-msgstr[0] "Fournisseur dinfrastructure (Microsoft)"
-msgstr[1] "Fournisseurs dinfrastructure (Microsoft)"
+msgstr[0] "Fournisseur d'infrastructure (Microsoft)"
+msgstr[1] "Fournisseurs d'infrastructure (Microsoft)"
 
 #: ../app/models/manageiq/providers/microsoft/infra_manager/host.rb:36
 #, fuzzy
@@ -28199,8 +28199,8 @@ msgstr "La console n'est pas prise en charge"
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:165
 msgid "Physical Infrastructure Manager"
 msgid_plural "Physical Infrastructure Managers"
-msgstr[0] "Gestionnaire dinfrastructure physique"
-msgstr[1] "Gestionnaires dinfrastructure physique"
+msgstr[0] "Gestionnaire d'infrastructure physique"
+msgstr[1] "Gestionnaires d'infrastructure physique"
 
 #:
 #: ../app/models/manageiq/providers/redfish/physical_infra_manager/physical_chassis.rb:4
@@ -28376,7 +28376,7 @@ msgstr "L'intervalle ou le sous-intervalle fait partie d'un autre niveau"
 #: ../config/dictionary_strings.rb:2024
 msgid "Metering for Image"
 msgid_plural "Metering for Images"
-msgstr[0] "Décompte pour limage"
+msgstr[0] "Décompte pour l'image"
 msgstr[1] "Décompte des images"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MeteringContainerProject
@@ -28505,8 +28505,8 @@ msgstr "L'action est référencée dans au moins une stratégie et ne peut pas �
 #: ../app/models/miq_action_set.rb:5
 msgid "Action Set"
 msgid_plural "Action Sets"
-msgstr[0] "Ensemble dactions"
-msgstr[1] "Ensembles dactions"
+msgstr[0] "Ensemble d'actions"
+msgstr[1] "Ensembles d'actions"
 
 #: ../app/models/miq_ae_class.rb:16 ../app/models/miq_ae_instance.rb:12
 msgid "may contain only alphanumeric and _ . - characters"
@@ -28519,8 +28519,8 @@ msgstr "peut contenir uniquement des caractères alphanumériques et _"
 #: ../app/models/miq_ae_field.rb:106
 msgid "Automation Field"
 msgid_plural "Automation Fields"
-msgstr[0] "Champ dautomatisation"
-msgstr[1] "Champs dautomatisation"
+msgstr[0] "Champ d'automatisation"
+msgstr[1] "Champs d'automatisation"
 
 #: ../app/models/miq_ae_namespace.rb:17
 msgid "may contain only alphanumeric and _ . - $ characters"
@@ -28529,14 +28529,14 @@ msgstr "peut contenir uniquement des caractères alphanumériques et _ . - $"
 #: ../app/models/miq_ae_value.rb:38
 msgid "Automation Value"
 msgid_plural "Automation Values"
-msgstr[0] "Valeur dautomatisation"
-msgstr[1] "Valeurs dautomatisation"
+msgstr[0] "Valeur d'automatisation"
+msgstr[1] "Valeurs d'automatisation"
 
 #: ../app/models/miq_ae_workspace.rb:27
 msgid "Automation Workspace"
 msgid_plural "Automation Workspaces"
-msgstr[0] "Espace de travail dautomatisation"
-msgstr[1] "Espaces de travail dautomatisation"
+msgstr[0] "Espace de travail d'automatisation"
+msgstr[1] "Espaces de travail d'automatisation"
 
 #: ../app/models/miq_ae_yaml_import.rb:242
 msgid "Error: Playbook method '%{method_name}' contains below listed error(s):"
@@ -28714,20 +28714,20 @@ msgstr[1] "Alertes"
 #, fuzzy
 msgid "Alert Profile"
 msgid_plural "Alert Profiles"
-msgstr[0] "Profil dalerte"
-msgstr[1] "Profils dalerte"
+msgstr[0] "Profil d'alerte"
+msgstr[1] "Profils d'alerte"
 
 #: ../app/models/miq_alert_status.rb:23
 msgid "Alert Status"
 msgid_plural "Alert Statuses"
-msgstr[0] "Statut de lalerte"
-msgstr[1] "Statuts de lalerte"
+msgstr[0] "Statut de l'alerte"
+msgstr[1] "Statuts de l'alerte"
 
 #: ../app/models/miq_alert_status_action.rb:38
 msgid "Alert Status Action"
 msgid_plural "Alert Status Actions"
-msgstr[0] "Action associée au statut de lalerte"
-msgstr[1] "Actions associées au statut de lalerte"
+msgstr[0] "Action associée au statut de l'alerte"
+msgstr[1] "Actions associées au statut de l'alerte"
 
 #: ../app/models/miq_approval.rb:50
 msgid "Approval"
@@ -28774,14 +28774,14 @@ msgstr "Mise à disposition du serveur physique"
 #: ../app/models/miq_event_definition.rb:175
 msgid "Event Definition"
 msgid_plural "Event Definitions"
-msgstr[0] "Définition dévénement"
-msgstr[1] "Définitions dévénement"
+msgstr[0] "Définition d'événement"
+msgstr[1] "Définitions d'événement"
 
 #: ../app/models/miq_event_definition_set.rb:28
 msgid "Event Definition Set"
 msgid_plural "Event Definition Sets"
-msgstr[0] "Jeu de définitions dévénement"
-msgstr[1] "Jeux de définitions dévénement"
+msgstr[0] "Jeu de définitions d'événement"
+msgstr[1] "Jeux de définitions d'événement"
 
 #: ../app/models/miq_filter.rb:44
 msgid "invalid tag: %{tag}"
@@ -31097,8 +31097,8 @@ msgstr "Serveurs récents"
 #: ../app/services/ems_physical_infra_dashboard_service.rb:184
 msgid "%{count} %{component_type} is in %{health_state} state."
 msgid_plural "%{count} %{component_type} are in %{health_state} state."
-msgstr[0] "%{count} %{component_type} est à létat %{health_state}."
-msgstr[1] "%{count} %{component_type} sont à létat %{health_state}."
+msgstr[0] "%{count} %{component_type} est à l'état %{health_state}."
+msgstr[1] "%{count} %{component_type} sont à l'état %{health_state}."
 
 #: ../app/services/git_based_domain_import_service.rb:101
 msgid "multiple domains"
@@ -38700,8 +38700,8 @@ msgstr[1] "Le nouveau paramètre affectera les services"
 #: ../app/views/shared/views/_retire.html.haml:7
 msgid "New setting will affect Orchestration Stack"
 msgid_plural "New setting will affect Orchestration Stacks"
-msgstr[0] "Le nouveau paramètre affectera la pile dorchestration"
-msgstr[1] "Le nouveau paramètre affectera les piles dorchestration"
+msgstr[0] "Le nouveau paramètre affectera la pile d'orchestration"
+msgstr[1] "Le nouveau paramètre affectera les piles d'orchestration"
 
 #: ../app/views/shared/views/_retire.html.haml:10
 msgid "New setting will affect VM"
