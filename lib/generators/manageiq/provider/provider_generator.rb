@@ -23,7 +23,7 @@ module ManageIQ
                  :desc => "Enable VCR cassettes (Default: --no-vcr)"
 
     class_option :scaffolding, :type => :boolean, :default => true,
-                 :desc => "Generate default class scaffolding (Default: true)"
+                 :desc => "Generate default class scaffolding (Default: --scaffolding)"
 
     class_option :manager_type, :type => :string,
                  :desc => "What type of manager to create, required if building scaffolding (Options: #{manager_types.keys.join(", ")})"
