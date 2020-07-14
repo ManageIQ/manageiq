@@ -1,4 +1,4 @@
-class <%= class_name %>::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
+class <%= class_name %>::<%= manager_type %>::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
 
   VIM_STYLE_COUNTERS = {
     "cpu_usage_rate_average"  => {

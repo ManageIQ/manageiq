@@ -1,4 +1,4 @@
-class <%= class_name %>::CloudManager < ManageIQ::Providers::CloudManager
+class <%= class_name %>::<%= manager_type %> < ManageIQ::Providers::<%= manager_type %>
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :Refresher

@@ -1,5 +1,5 @@
 class <%= class_name %>::Inventory::Persister < ManageIQ::Providers::Inventory::Persister
-  require_nested :CloudManager
+  require_nested :<%= manager_type %>
 
   def strategy
     nil

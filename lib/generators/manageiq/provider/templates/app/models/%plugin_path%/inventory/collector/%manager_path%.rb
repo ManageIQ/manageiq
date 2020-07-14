@@ -1,4 +1,4 @@
-class <%= class_name %>::Inventory::Collector::CloudManager < ManageIQ::Providers::Inventory::Collector
+class <%= class_name %>::Inventory::Collector::<%= manager_type %> < ManageIQ::Providers::Inventory::Collector
   def connection
     @connection ||= manager.connect
   end
