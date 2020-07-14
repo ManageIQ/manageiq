@@ -1,0 +1,1 @@
+::EmsStorage = ::ManageIQ::Providers::StorageManager
