@@ -30,6 +30,14 @@ module ManageIQ
         end
       end
 
+      def self.extra_workers
+        if (worker_string = ENV["FOREMAN_INTEGRATION_EXTRA_WORKERS"])
+          worker_string.split(",")
+        else
+          []
+        end
+      end
+
       def self.setup
         FileUtils.mkdir_p(Environment.tmp_dir)
         FileUtils.rm_f(procfile)
