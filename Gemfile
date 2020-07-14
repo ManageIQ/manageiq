@@ -56,7 +56,7 @@ gem "manageiq-ssh-util",              "~>0.1.1",       :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
 gem "money",                          "~>6.13.5",      :require => false
-gem "more_core_extensions",           "~>3.7"
+gem "more_core_extensions"                                               # min version should be set in manageiq-gems-pending, not here
 gem "net-ldap",                       "~>0.16.1",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "openscap",                       "~>0.4.8",       :require => false
