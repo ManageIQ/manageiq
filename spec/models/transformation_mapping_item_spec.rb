@@ -104,7 +104,13 @@ RSpec.describe TransformationMappingItem, :v2v do
   # Network Validation
   # ---------------------------------------------------------------------------
   context "Network validation" do
-    let(:cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
+    let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
+    let(:other_cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
+    let(:public_cloud_network) { FactoryBot.create(:cloud_network_public_openstack, :cloud_tenant => other_cloud_tenant) }
+
+    before do
+      ems_openstack.network_manager.public_networks << public_cloud_network
+    end
 
     # source network
     context "source vmware network" do
@@ -113,19 +119,23 @@ RSpec.describe TransformationMappingItem, :v2v do
       let(:src_lan) { FactoryBot.create(:lan, :switch => src_switch) }
 
       context "destination openstack" do
-        let(:dst_cloud_network) { FactoryBot.create(:cloud_network, :cloud_tenant => cloud_tenant) }
+        let(:dst_cloud_network) { FactoryBot.create(:cloud_network_openstack, :cloud_tenant => dst_cloud_tenant) }
 
-        let(:tmi_ops_cluster) { FactoryBot.create(:transformation_mapping_item, :source => vmware_cluster, :destination => cloud_tenant) }
-        let(:ops_mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_ops_cluster]) }
+        let(:tmi_osp_cluster) { FactoryBot.create(:transformation_mapping_item, :source => vmware_cluster, :destination => dst_cloud_tenant) }
+        let(:osp_mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_osp_cluster]) }
 
-        let(:valid_source) { FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_cloud_network, :transformation_mapping_id => ops_mapping.id) }
-        let(:invalid_source) { FactoryBot.build(:transformation_mapping_item, :source => dst_cloud_network, :destination => src_lan, :transformation_mapping_id => ops_mapping.id) }
 
-        it "valid source" do
-          expect(valid_source.valid?).to be(true)
+        it "valid mapping with private network" do
+          tmi = FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_cloud_network, :transformation_mapping_id => osp_mapping.id)
+          expect(tmi.valid?).to be(true)
+        end
+        it "valid mapping with public network" do
+          tmi = FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => public_cloud_network, :transformation_mapping_id => osp_mapping.id)
+          expect(tmi.valid?).to be(true)
         end
         it "invalid source" do
-          expect(invalid_source.valid?).to be(false)
+          tmi = FactoryBot.build(:transformation_mapping_item, :source => dst_cloud_network, :destination => src_lan, :transformation_mapping_id => osp_mapping.id)
+          expect(tmi.valid?).to be(false)
         end
       end
 
