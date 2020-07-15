@@ -45,7 +45,7 @@ class ContainerProject < ApplicationRecord
   include EventMixin
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = :all_container_groups
+  PERF_ROLLUP_CHILDREN = [:all_container_groups]
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
