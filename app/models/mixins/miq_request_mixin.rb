@@ -42,7 +42,7 @@ module MiqRequestMixin
   alias_method :tenant_identity, :get_user
 
   def tags
-    tag_ids.to_miq_a.each do |tag_id|
+    Array.wrap(tag_ids).each do |tag_id|
       tag = Classification.find(tag_id)
       yield(tag.name, tag.parent.name)  unless tag.nil?    # yield the tag's name and category
     end
@@ -71,7 +71,7 @@ module MiqRequestMixin
       self.tag_ids = nil
     else
       deletes = []
-      tag_ids.to_miq_a.each do |tag_id|
+      Array.wrap(tag_ids).each do |tag_id|
         tag = Classification.find(tag_id)
         next if category.to_s.casecmp(tag.parent.name) != 0
         next if !tag_name.blank? && tag_name.to_s.casecmp(tag.name) != 0
@@ -97,7 +97,7 @@ module MiqRequestMixin
   end
 
   def classifications
-    self.tag_ids.to_miq_a.each do |tag_id|
+    Array.wrap(self.tag_ids).each do |tag_id|
       classification = Classification.find(tag_id)
       yield(classification)  unless classification.nil?    # yield the whole classification
     end

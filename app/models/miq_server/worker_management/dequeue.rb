@@ -38,7 +38,7 @@ module MiqServer::WorkerManagement::Dequeue
         msg = messages[index]
         next if msg.nil?
         next if MiqQueue.lower_priority?(msg[:priority], get_queue_priority_for_worker(w))
-        next unless w[:class].required_roles.blank? || msg[:role].blank? || w[:class].required_roles.to_miq_a.include?(msg[:role])
+        next unless w[:class].required_roles.blank? || msg[:role].blank? || Array.wrap(w[:class].required_roles).include?(msg[:role])
         return messages.delete_at(index)
       end
 

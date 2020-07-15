@@ -175,7 +175,7 @@ module ScanningMixin
     cat_scan_list = []
     begin
       # Loop over all profiles and add category scan items to the array
-      scan_profiles.to_miq_a.each do |p|
+      Array.wrap(scan_profiles).each do |p|
         p["definition"].each do |d|
           if d["item_type"] == "category"
             d["definition"]["content"].to_miq_a.each { |item| cat_scan_list << item["target"] }

@@ -308,7 +308,7 @@ module Metric::Rollup
   end
 
   def self.rollup_burst(c, result, timestamp, value, types = nil)
-    (types || BURST_TYPES).to_miq_a.each do |type|
+    Array.wrap(types || BURST_TYPES).each do |type|
       ts_key, val_key = burst_col_names(type, c)
 
       if new_min_max?(result[val_key], value, type)

@@ -17,25 +17,25 @@ module AsyncDeleteMixin
     end
 
     def self.delete_queue(ids)
-      ids = ids.to_miq_a
+      ids = Array.wrap(ids)
       _log.info("Queuing delete of #{name} with the following ids: #{ids.inspect}")
       _queue_task(:delete, ids)
     end
 
     def self.destroy_queue(ids)
-      ids = ids.to_miq_a
+      ids = Array.wrap(ids)
       _log.info("Queuing destroy of #{name} with the following ids: #{ids.inspect}")
       _queue_task(:destroy, ids)
     end
 
     def delete_queue
       _log.info("Queuing delete of #{self.class.name} with id: #{id}")
-      self.class._queue_task(:delete, id.to_miq_a)
+      self.class._queue_task(:delete, Array.wrap(id))
     end
 
     def destroy_queue
       _log.info("Queuing destroy of #{self.class.name} with id: #{id}")
-      self.class._queue_task(:destroy, id.to_miq_a)
+      self.class._queue_task(:destroy, Array.wrap(id))
     end
   end
 end

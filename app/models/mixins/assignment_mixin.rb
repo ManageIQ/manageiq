@@ -25,7 +25,7 @@ module AssignmentMixin
     # objects => A single item or array of items
     #   item  => A CI instance (not classification) or a CI id of klass
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       tag = build_object_tag_path(obj, klass)
       tag_add(tag, :ns => namespace)
     end
@@ -36,7 +36,7 @@ module AssignmentMixin
     # objects => A single item or array of items
     #   item  => A CI instance (not classification) or a CI id of klass
     # klass   => The class of the object that self is to be unassigned from - (Takes both forms - Host or host, EmsCluster or ems_cluster)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       tag = build_object_tag_path(obj, klass)
       tag_remove(tag, :ns => namespace)
     end
@@ -47,7 +47,7 @@ module AssignmentMixin
     # objects => A single item or array of items
     #   item  => A classification entry instance or a classification entry id
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
       tag_add(tag, :ns => namespace)
@@ -56,7 +56,7 @@ module AssignmentMixin
   end
 
   def unassign_tags(objects, klass)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       tag = build_tag_tagging_path(obj, klass)
       next if tag.nil?
       tag_remove(tag, :ns => namespace)
@@ -68,7 +68,7 @@ module AssignmentMixin
     # objects => A single item or array of items
     #   item  => A classification entry instance or a classification entry id
     # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
         id = obj
         obj = CustomAttribute.find_by(:id => id)
@@ -84,7 +84,7 @@ module AssignmentMixin
   end
 
   def unassign_labels(objects, klass)
-    objects.to_miq_a.each do |obj|
+    Array.wrap(objects).each do |obj|
       tag = build_label_tag_path(obj, klass)
       next if tag.nil?
 

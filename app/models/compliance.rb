@@ -4,7 +4,7 @@ class Compliance < ApplicationRecord
   has_many    :compliance_details, :dependent => :destroy
 
   def self.check_compliance_queue(targets, inputs = {})
-    targets.to_miq_a.each do |target|
+    Array.wrap(targets).each do |target|
       MiqQueue.submit_job(
         :class_name  => name,
         :method_name => 'check_compliance',
@@ -14,7 +14,7 @@ class Compliance < ApplicationRecord
   end
 
   def self.scan_and_check_compliance_queue(targets, inputs = {})
-    targets.to_miq_a.each do |target|
+    Array.wrap(targets).each do |target|
       if target.kind_of?(Host)
         # Queue this with the vc-refresher taskid, so that any concurrent ems_refreshes don't clash with this one.
         MiqQueue.put(

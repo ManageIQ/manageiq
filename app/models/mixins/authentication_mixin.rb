@@ -252,7 +252,7 @@ module AuthenticationMixin
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => 'authentication_check_types',
-      :args        => [types.to_miq_a, method_options],
+      :args        => [Array.wrap(types), method_options],
       :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt])
     }
 

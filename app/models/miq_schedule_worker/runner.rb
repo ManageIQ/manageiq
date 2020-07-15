@@ -351,7 +351,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       raise _("invalid method: %{options}") % {:options => options[:method]}
     end
 
-    options[:tags].to_miq_a << CLASS_TAG
+    Array.wrap(options[:tags]) << CLASS_TAG
     @schedules[:scheduler] ||= []
     if options[:months]
       rufus_add_monthly_schedule(options)

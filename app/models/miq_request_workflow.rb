@@ -84,7 +84,7 @@ class MiqRequestWorkflow
     return false unless validate(values)
     password_helper(values, true)
     # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
+    values[:vm_tags] = (Array.wrap(values[:vm_tags]) + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
 
     set_request_values(values)
     if request
@@ -617,7 +617,7 @@ class MiqRequestWorkflow
   end
 
   def allowed_tags_and_pre_tags
-    pre_tags = @values[:pre_dialog_vm_tags].to_miq_a
+    pre_tags = Array.wrap(@values[:pre_dialog_vm_tags])
     return allowed_tags if pre_tags.blank?
 
     tag_cats = allowed_tags.dup
@@ -1276,7 +1276,7 @@ class MiqRequestWorkflow
     when :boolean         then value.to_s.downcase.in?(%w(true t))
     when :time            then Time.zone.parse(value)
     when :button          then value # Ignore
-    when :array_integer   then value.to_miq_a.map!(&:to_i)
+    when :array_integer   then Array.wrap(value).map!(&:to_i)
     else value # Ignore
     end
   end

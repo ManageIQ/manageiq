@@ -487,8 +487,7 @@ class Storage < ApplicationRecord
 
   def unmanaged_paths(vms = nil)
     vms = unmanaged_vm_config_files if vms.nil?
-    vms = vms.to_miq_a
-    vms.collect { |f| File.dirname(f) }.compact
+    Array.wrap(vms).collect { |f| File.dirname(f) }.compact
   end
 
   def qmessage?(method_name)
@@ -565,7 +564,7 @@ class Storage < ApplicationRecord
 
   # TODO: Is this still needed?
   def self.get_common_refresh_targets(storages)
-    storages = storages.to_miq_a
+    storages = Array.wrap(storages)
     return [] if storages.empty?
     storages = find(storages) unless storages[0].kind_of?(Storage)
 

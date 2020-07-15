@@ -76,7 +76,7 @@ module ToModelHash
         recs = send(spec)
         if recs.kind_of?(ActiveRecord::Base) || (recs.kind_of?(Array) && recs.first.kind_of?(ActiveRecord::Base))
           single_rec = !recs.kind_of?(Array)
-          recs = recs.to_miq_a.collect { |v| v.to_model_hash_attrs(spec) }
+          recs = Array.wrap(recs).collect { |v| v.to_model_hash_attrs(spec) }
           recs = recs.first if single_rec
         end
         result[spec] = recs unless recs.nil?
@@ -91,7 +91,7 @@ module ToModelHash
         else
           recs = send(k)
           single_rec = !iterable?(self.class, k)
-          recs = recs.to_miq_a.collect { |c| c.to_model_hash_recursive(v) }
+          recs = Array.wrap(recs).collect { |c| c.to_model_hash_recursive(v) }
           recs = recs.first if single_rec
         end
         result[k] = recs unless recs.nil?

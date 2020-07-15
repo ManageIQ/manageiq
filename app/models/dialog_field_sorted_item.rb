@@ -139,7 +139,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def static_raw_values
-    self[:values].to_miq_a.reject { |value| value[0].nil? }.reject(&:empty?)
+    Array.wrap(self[:values]).reject { |value| value[0].nil? }.reject(&:empty?)
   end
 
   def initial_values
