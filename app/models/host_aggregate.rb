@@ -19,7 +19,7 @@ class HostAggregate < ApplicationRecord
 
   virtual_total :total_vms, :vms
 
-  PERF_ROLLUP_CHILDREN = :vms
+  PERF_ROLLUP_CHILDREN = [:vms]
 
   def perf_rollup_parents(interval_name = nil)
     # don't rollup to ext_management_system since that's handled through availability zone

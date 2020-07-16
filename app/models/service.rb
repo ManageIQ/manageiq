@@ -457,7 +457,7 @@ class Service < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = :vms
+  PERF_ROLLUP_CHILDREN = [:vms]
 
   def perf_rollup_parents(interval_name = nil)
     [] unless interval_name == 'realtime'

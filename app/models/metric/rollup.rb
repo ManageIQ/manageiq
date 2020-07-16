@@ -186,7 +186,7 @@ module Metric::Rollup
 
   def self.rollup_realtime(obj, rt_ts, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics from child objects
-    children = obj.class::PERF_ROLLUP_CHILDREN.to_miq_a
+    children = obj.class::PERF_ROLLUP_CHILDREN
     children.each { |c| new_perf.merge!(rollup_child_metrics(obj, rt_ts, 'realtime', c)) } unless children.empty?
 
     new_perf.reverse_merge!(orig_perf)
@@ -201,7 +201,7 @@ module Metric::Rollup
     rollup_realtime_perfs(obj, rt_perfs, new_perf)
 
     # Roll up hourly metrics from child objects
-    children = obj.class::PERF_ROLLUP_CHILDREN.to_miq_a
+    children = obj.class::PERF_ROLLUP_CHILDREN
     children.each { |c| new_perf.merge!(rollup_child_metrics(obj, hour, 'hourly', c)) } unless children.empty?
 
     new_perf.reverse_merge!(orig_perf)

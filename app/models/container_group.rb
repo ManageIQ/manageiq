@@ -79,7 +79,7 @@ class ContainerGroup < ApplicationRecord
     end
   end
 
-  PERF_ROLLUP_CHILDREN = nil
+  PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(interval_name = nil)
     unless interval_name == 'realtime'

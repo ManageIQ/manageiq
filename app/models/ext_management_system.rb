@@ -793,7 +793,7 @@ class ExtManagementSystem < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = :hosts
+  PERF_ROLLUP_CHILDREN = [:hosts]
 
   def perf_rollup_parents(interval_name = nil)
     [MiqRegion.my_region].compact unless interval_name == 'realtime'

@@ -39,7 +39,7 @@ class Container < ApplicationRecord
     end
   end
 
-  PERF_ROLLUP_CHILDREN = nil
+  PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(_interval_name = nil)
     # No rollups: nodes performance are collected separately

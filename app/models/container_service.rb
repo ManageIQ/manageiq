@@ -30,7 +30,7 @@ class ContainerService < ApplicationRecord
 
   include Metric::CiMixin
 
-  PERF_ROLLUP_CHILDREN = :container_groups
+  PERF_ROLLUP_CHILDREN = [:container_groups]
 
   def perf_rollup_parents(interval_name = nil)
     []

@@ -1630,7 +1630,7 @@ class VmOrTemplate < ApplicationRecord
   # Metric methods
   #
 
-  PERF_ROLLUP_CHILDREN = nil
+  PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(interval_name = nil)
     [host, service].compact unless interval_name == 'realtime'

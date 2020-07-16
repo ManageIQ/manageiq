@@ -72,7 +72,7 @@ class ContainerNode < ApplicationRecord
   end
 
   # TODO: children will be container groups
-  PERF_ROLLUP_CHILDREN = nil
+  PERF_ROLLUP_CHILDREN = []
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system] unless interval_name == 'realtime'

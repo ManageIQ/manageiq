@@ -25,7 +25,7 @@ class AvailabilityZone < ApplicationRecord
     where(arel_table[:type].not_eq("ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull"))
   end
 
-  PERF_ROLLUP_CHILDREN = :vms
+  PERF_ROLLUP_CHILDREN = [:vms]
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system].compact unless interval_name == 'realtime'
