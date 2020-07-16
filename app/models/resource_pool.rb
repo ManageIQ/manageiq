@@ -1,4 +1,7 @@
+require 'ancestry'
+
 class ResourcePool < ApplicationRecord
+  has_ancestry
   include NewWithTypeStiMixin
   include TenantIdentityMixin
 
