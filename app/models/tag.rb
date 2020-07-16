@@ -153,15 +153,7 @@ class Tag < ApplicationRecord
 
   # @return [ActiveRecord::Relation] Scope for tags controlled by ProviderTagMapping.
   def self.controlled_by_mapping
-    queries = ProviderTagMapping::TAG_PREFIXES.collect do |prefix|
-      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
-    end
-    queries.inject(:or).is_entry
-  end
-
-  def self.possibly_controlled_by_mapping
-    # TODO: Should be able to do this with a join
-    is_entry.where(:id => ContainerLabelTagMapping.includes(:tag => :classification).where(:labeled_resource_type => "_all_entities_").map do |m|
+    is_entry.where(:id => ContainerLabelTagMapping.includes(:tag => :classification).map do |m|
       m.tag.classification.entries.map(&:tag_id)
     end.flatten.uniq)
   end

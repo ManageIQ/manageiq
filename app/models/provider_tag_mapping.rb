@@ -51,6 +51,10 @@ class ProviderTagMapping < ApplicationRecord
         Tagging.create!(:taggable => entity, :tag => tag)
       end
       (existing_tags - mapped_tags).tap do |tags|
+        # TODO: Need to decide whether we should delete a tagging for an "_all_entities_" mapping,
+        # where the tag assignment may have been assigned outside of the mapping
+        # The proposal is to add a new column to classifications to indicate whether the entry was created by la label
+        # mapping, a user or possibly the system during seeding
         Tagging.where(:taggable => entity, :tag => tags.collect(&:id)).destroy_all
       end
     end

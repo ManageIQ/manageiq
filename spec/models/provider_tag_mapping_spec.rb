@@ -257,6 +257,7 @@ RSpec.describe ProviderTagMapping do
       FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
       tag1
       tag2
+      tag3
 
       user_tag1
       user_tag2
@@ -289,14 +290,14 @@ RSpec.describe ProviderTagMapping do
     end
 
     # What happens with tags no mapping points to?
-    it "considers appropriately named tags as mapping-controlled" do
+    it "does not consider appropriately named tags as mapping-controlled unless they are included in a mapping" do
       cat = FactoryBot.create(:classification, :read_only => true, :name => 'kubernetes:foo')
       k_tag = cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
       cat = FactoryBot.create(:classification, :read_only => true, :name => 'amazon:river')
       a_tag = cat.add_entry(:name => 'jungle', :description => 'Rainforest').tag
 
       expect(Tag.controlled_by_mapping).not_to include(user_tag1, user_tag2)
-      expect(Tag.controlled_by_mapping).to include(k_tag, a_tag)
+      expect(Tag.controlled_by_mapping).not_to include(k_tag, a_tag)
     end
   end
 end
