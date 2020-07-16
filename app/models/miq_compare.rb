@@ -184,7 +184,7 @@ class MiqCompare
     when "VmOrTemplate"
       _("Workload")
     else
-      model.titleize
+      ui_lookup(:model => model)
     end
   end
 
