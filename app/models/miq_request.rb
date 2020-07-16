@@ -506,7 +506,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.create_request(values, requester, auto_approve = false)
-    values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
+    values[:src_ids] = Array.wrap(values[:src_ids]) unless values[:src_ids].nil?
     request_type = values.delete(:__request_type__) || request_types.first
     initiator = values.delete(:__initiated_by__) || 'user'
     request = create!(:options => values, :requester => requester, :request_type => request_type, :initiated_by => initiator)

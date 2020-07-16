@@ -285,7 +285,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def selected_tags_by_cat_and_name
-    tag_ids = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
+    tag_ids = (Array.wrap(@values[:vm_tags]) + Array.wrap(@values[:pre_dialog_vm_tags])).uniq
     return {} if tag_ids.blank?
 
     # Collect the filter tags by category

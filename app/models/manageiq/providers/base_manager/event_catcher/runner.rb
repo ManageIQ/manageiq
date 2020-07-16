@@ -176,12 +176,12 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
   def drain_queue
     while @queue.length > 0
-      @queue.deq.to_miq_a.each { |event| process_event(event) }
+      Array.wrap(@queue.deq).each { |event| process_event(event) }
     end
   end
 
   def process_events(events)
-    events.to_miq_a.each do |event|
+    Array.wrap(events).each do |event|
       heartbeat
       process_event(event)
       Thread.pass

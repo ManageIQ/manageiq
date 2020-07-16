@@ -58,8 +58,8 @@ module VimPerformanceAnalysis
 
     def get_targets
       if @options[:targets]
-        @compute = @options[:targets][:compute].to_miq_a
-        @storage = @options[:targets][:storage].to_miq_a
+        @compute = Array.wrap(@options[:targets][:compute])
+        @storage = Array.wrap(@options[:targets][:storage])
       elsif @options[:target_tags]
         topts = @options[:target_tags]
         includes = {:hardware => {}, :vms => {:hardware => {}}} if topts[:compute_type].to_sym == :Host

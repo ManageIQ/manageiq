@@ -61,7 +61,7 @@ class MiqLdap
   end
 
   def resolve_host(hosts, port)
-    hosts = hosts.to_miq_a
+    hosts = Array.wrap(hosts)
 
     selected_host = nil
     valid_address = false
@@ -69,7 +69,7 @@ class MiqLdap
     hosts.each do |host|
       if host.ipaddress?
         selected_host = host
-        addresses = host.to_miq_a # Host is already an IP Address, no need to resolve
+        addresses = Array.wrap(host) # Host is already an IP Address, no need to resolve
       else
         begin
           selected_host, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
@@ -386,7 +386,7 @@ class MiqLdap
     _log.debug("Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}")
     result = []
     # puts "obj #{obj.inspect}"
-    groups = MiqLdap.get_attr(obj, attr).to_miq_a
+    groups = Array.wrap(MiqLdap.get_attr(obj, attr))
     _log.debug("Groups: #{groups.inspect}")
     return result unless groups
 

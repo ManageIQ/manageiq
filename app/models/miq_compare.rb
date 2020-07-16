@@ -305,7 +305,7 @@ class MiqCompare
                     when :compare
                       Classification.lookup_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
                     when :drift
-                      rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
+                      Array.wrap(rec.tags).collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
                     end
       new_columns.compact!
 

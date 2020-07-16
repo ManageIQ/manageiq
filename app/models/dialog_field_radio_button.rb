@@ -21,6 +21,6 @@ class DialogFieldRadioButton < DialogFieldSortedItem
   end
 
   def static_raw_values
-    self[:values].to_miq_a
+    Array.wrap(self[:values])
   end
 end
