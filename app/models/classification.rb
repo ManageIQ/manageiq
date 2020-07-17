@@ -338,6 +338,10 @@ class Classification < ApplicationRecord
 
   attr_writer :name
 
+  def self.lookup_category_by_description(description, region_id = my_region_number)
+    is_category.in_region(region_id).find_by(:description => description)
+  end
+
   def find_entry_by_name(name, region_id = my_region_number)
     self.class.lookup_by_name(name, region_id, ns, self)
   end
