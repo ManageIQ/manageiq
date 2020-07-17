@@ -12,7 +12,7 @@ module GenericObjectDefinition::ImportExport
       existing_god = GenericObjectDefinition.find_by(:name => god["name"])
       if existing_god.present?
         if options[:overwrite]
-          # if generic object definition exists, overwrite it's content
+          # if generic object definition exists, overwrite its content
           msg = "Overwriting Generic Object Definition: [#{existing_god.name}]"
           existing_god.attributes = god
           result = {
@@ -21,7 +21,7 @@ module GenericObjectDefinition::ImportExport
             :status  => :update
           }
         else
-          # if generic object definition exists dont overwrite
+          # if generic object definition exists, do not overwrite
           msg = "Skipping Generic Object Definition (already in DB): [#{existing_god.name}]"
           result = {:message => msg, :level => :error, :status => :skip}
         end
