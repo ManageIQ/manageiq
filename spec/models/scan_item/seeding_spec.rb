@@ -2,7 +2,7 @@ require 'fileutils'
 
 RSpec.describe ScanItem do
   describe "::Seeding" do
-    include_examples(".seed called multiple times", 6)
+    include_examples ".seed called multiple times"
 
     describe ".seed" do
       let(:tmpdir)         { Pathname.new(Dir.mktmpdir) }

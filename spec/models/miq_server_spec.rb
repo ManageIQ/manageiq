@@ -5,7 +5,7 @@ RSpec.describe MiqServer do
       Zone.seed
     end
 
-    include_examples ".seed called multiple times"
+    include_examples ".seed called multiple times", 1
   end
 
   context "#hostname" do

@@ -1,5 +1,5 @@
 RSpec.describe MiqEnterprise do
-  include_examples ".seed called multiple times"
+  include_examples ".seed called multiple times", 1
 
   let(:enterprise) { FactoryBot.create(:miq_enterprise) }
 

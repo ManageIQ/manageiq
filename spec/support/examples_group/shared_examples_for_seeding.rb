@@ -1,7 +1,21 @@
-shared_examples_for ".seed called multiple times" do |count = 1|
+shared_examples_for ".seed called multiple times" do |expected_amount = nil|
   it ".seed called multiple times" do
-    3.times { described_class.seed }
-    expect(described_class.count).to eq(count)
+    described_class.seed
+    count = described_class.count
+    max_id = described_class.pluck(Arel.sql("MAX(id)"))
+
+    if expected_amount
+      expect(count).to eq expected_amount
+    else
+      expect(count).to be_positive
+    end
+
+    2.times do
+      described_class.seed
+
+      expect(described_class.count).to eq(count)
+      expect(described_class.pluck(Arel.sql("MAX(id)"))).to eq(max_id)
+    end
   end
 end
 

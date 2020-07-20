@@ -49,7 +49,7 @@ RSpec.describe MiqRegion do
       MiqRegion.seed
     end
 
-    include_examples ".seed called multiple times"
+    include_examples ".seed called multiple times", 1
 
     it "should have the expected region number" do
       expect(MiqRegion.first.region).to eq(@region_number)

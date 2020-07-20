@@ -59,7 +59,7 @@ RSpec.describe MiqDatabase do
   end
 
   context ".seed" do
-    include_examples ".seed called multiple times"
+    include_examples ".seed called multiple times", 1
 
     context "default values" do
       it "new record" do
