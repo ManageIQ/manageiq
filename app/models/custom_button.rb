@@ -46,6 +46,7 @@ class CustomButton < ApplicationRecord
     NetworkRouter,
     NetworkService,
     OrchestrationStack,
+    PhysicalServer,
     SecurityGroup,
     SecurityPolicy,
     SecurityPolicyRule,
