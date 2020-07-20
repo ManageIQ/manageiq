@@ -377,11 +377,9 @@ RSpec.describe User do
   end
 
   context ".seed" do
-    include_examples(".seed called multiple times", 1)
-
-    include_examples("seeding users with", [])
-
-    include_examples("seeding users with", [MiqUserRole, MiqGroup])
+    include_examples ".seed called multiple times", 1
+    include_examples "seeding users with", []
+    include_examples "seeding users with", [MiqUserRole, MiqGroup]
   end
 
   context "#accessible_vms" do
