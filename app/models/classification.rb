@@ -98,7 +98,7 @@ class Classification < ApplicationRecord
   # rubocop:disable Style/NumericPredicate
 
   def self.classify(obj, category_name, entry_name, is_request = true)
-    cat = Classification.find_by_name(category_name, obj.region_id)
+    cat = Classification.lookup_by_name(category_name, obj.region_id)
     return " - FAILED. Tag category '#{category_name}' not found in region #{obj.region_id}" if cat.nil?
 
     ent = cat.find_entry_by_name(entry_name, obj.region_id)
