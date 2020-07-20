@@ -1,4 +1,4 @@
-class <%= class_name %>::Inventory::Parser::<%= manager_type %> < ManageIQ::Providers::Inventory::Parser
+class <%= class_name %>::Inventory::Parser::<%= manager_type %> < <%= class_name %>::Inventory::Parser
   def parse
     vms
   end

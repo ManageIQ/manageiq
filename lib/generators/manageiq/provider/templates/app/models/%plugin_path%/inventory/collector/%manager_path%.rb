@@ -1,4 +1,4 @@
-class <%= class_name %>::Inventory::Collector::<%= manager_type %> < ManageIQ::Providers::Inventory::Collector
+class <%= class_name %>::Inventory::Collector::<%= manager_type %> < <%= class_name %>::Inventory::Collector
   def connection
     @connection ||= manager.connect
   end
