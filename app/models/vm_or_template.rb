@@ -47,11 +47,19 @@ class VmOrTemplate < ApplicationRecord
     "unknown"     => "Unknown"
   }
 
+  def self.all_vendor_types
+    @all_vendor_types ||= begin
+      leaf_subclasses.select { |c| c.respond_to?(:vendor_types) }.each_with_object({}) do |c, hash|
+        hash.merge!(c.vendor_types)
+      end.merge(VENDOR_TYPES)
+    end
+  end
+
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
   REMOTE_REGION_TASKS = POWER_OPS + %w(retire_now)
 
   validates_presence_of     :name, :location
-  validates                 :vendor, :inclusion => {:in => VENDOR_TYPES.keys}
+  validates                 :vendor, :inclusion => {:in => all_vendor_types.keys}
 
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :openscap_result, :as => :resource, :dependent => :destroy
@@ -594,7 +602,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def vendor_display
-    VENDOR_TYPES[vendor]
+    all_vendor_types[vendor]
   end
 
   #

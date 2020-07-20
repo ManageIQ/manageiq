@@ -23,9 +23,17 @@ class Host < ApplicationRecord
     nil               => "Unknown",
   }.freeze
 
+  def self.all_vendor_types
+    @all_vendor_types ||= begin
+      leaf_subclasses.select { |c| c.respond_to?(:vendor_types) }.each_with_object({}) do |c, hash|
+        hash.merge!(c.vendor_types)
+      end.merge(VENDOR_TYPES)
+    end
+  end
+
   validates_presence_of     :name
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
-  validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.keys
+  validates_inclusion_of    :vmm_vendor, :in => all_vendor_types.keys
 
   belongs_to                :ext_management_system, :foreign_key => "ems_id"
   belongs_to                :ems_cluster
@@ -615,7 +623,7 @@ class Host < ApplicationRecord
   end
 
   def vmm_vendor_display
-    VENDOR_TYPES[vmm_vendor]
+    all_vendor_types[vmm_vendor]
   end
 
   #
