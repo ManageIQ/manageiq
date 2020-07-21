@@ -380,7 +380,7 @@ class MiqReportResult < ApplicationRecord
 
   def self.with_current_user_groups
     current_user = User.current_user
-    current_user.report_admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
+    for_groups(current_user.report_admin_user? ? nil : current_user.miq_group_ids)
   end
 
   def self.with_chargeback
