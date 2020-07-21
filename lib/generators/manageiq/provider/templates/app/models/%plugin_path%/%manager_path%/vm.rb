@@ -7,6 +7,10 @@ class <%= class_name %>::<%= manager_type %>::Vm < ManageIQ::Providers::<%= mana
     OpenStruct.new
   end
 
+  def vendor_types
+    {"<%= provider_name %>" => "<%= provider_name.split('_').map(&:capitalize).join(' ') %>"}
+  end
+
   def raw_start
     with_provider_object(&:start)
     # Temporarily update state for quick UI response until refresh comes along
