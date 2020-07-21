@@ -82,11 +82,11 @@ RSpec.describe MiqReportResult do
         expect(report_result).not_to match_array([@report_result3, @report_result_nil_report_id])
       end
 
-      it "returns report all results, admin user logged" do
+      it "returns report all results with groups, admin user logged" do
         admin_role = FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE, :read_only => false)
         User.current_user.current_group.miq_user_role = admin_role
         report_result = MiqReportResult.with_current_user_groups
-        expected_reports = [@report_result1, @report_result2, @report_result3, @report_result_nil_report_id]
+        expected_reports = [@report_result1, @report_result2, @report_result3]
         expect(report_result).to match_array(expected_reports)
       end
     end
