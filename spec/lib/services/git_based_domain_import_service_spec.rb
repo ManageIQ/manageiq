@@ -68,7 +68,7 @@ describe GitBasedDomainImportService do
     include_context "import setup"
     before do
       allow(GitRepository).to receive(:find_by).with(:id => git_repo.id).and_return(git_repo)
-      allow(domain).to receive(:update_attribute).with(:enabled, true)
+      allow(domain).to receive(:update_attribute).with(:enabled, false)
       allow(MiqTask).to receive(:wait_for_taskid).with(task.id).and_return(task)
       allow(User).to receive(:current_user).and_return(user)
       allow(task).to receive(:message).and_return(nil)

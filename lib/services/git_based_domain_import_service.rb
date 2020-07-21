@@ -100,7 +100,7 @@ class GitBasedDomainImportService
     domain = task.task_results
     raise MiqException::Error, task.message unless domain.kind_of?(MiqAeDomain)
 
-    domain.update(:enabled => true)
+    domain.update(:enabled => false)
   end
 
   def refresh(git_repo_id)
