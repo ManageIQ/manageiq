@@ -22,14 +22,11 @@ module MiqPolicyMixin
     reload
   end
 
-  def get_policies(mode = nil)
-    ns = "/miq_policy"
-    cat = "assignment"
-    tag_list(:ns => ns, :cat => cat).split.collect do |t|
+  def get_policies
+    tag_list(:ns => "/miq_policy", :cat => "assignment").split.collect do |t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
-      policy = klass.camelize.constantize.find_by(:id => id.to_i)
-      policy if mode.nil? || policy.mode == mode
+      klass.camelize.constantize.find_by(:id => id.to_i)
     end.compact
   end
 
