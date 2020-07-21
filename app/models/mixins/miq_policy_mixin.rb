@@ -31,7 +31,7 @@ module MiqPolicyMixin
   end
 
   def has_policies?
-    get_policies.length > 0
+    tag_list(:ns => "/miq_policy", :cat => "assignment").split.length > 0
   end
 
   def resolve_policies(list, event = nil)
