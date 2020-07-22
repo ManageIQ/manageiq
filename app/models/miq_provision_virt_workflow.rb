@@ -726,8 +726,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     version = args.first.to_f
     return from_ws_ver_1_0(*args) if version == 1.0
 
-    # Move optional arguments into the MiqHashStruct object
-    prov_options = MiqHashStruct.new(
+    # Move optional arguments into the OpenStruct object
+    prov_options = OpenStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
       :miq_custom_attributes => args[8],
@@ -940,7 +940,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
-    options = MiqHashStruct.new if options.nil?
+    options = OpenStruct.new if options.nil?
     _log.warn("Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type]), :initial_pass => true}
@@ -1048,14 +1048,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :evm_object_class       => :Vm}
     data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.cloud_tenant_id
     if vm_or_template.operating_system
-      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
+      data_hash[:operating_system] = OpenStruct.new(:product_name => vm_or_template.operating_system.product_name)
     end
     if options[:include_datacenter] == true
       data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
     end
     assign_ems_data_to_data_hash(data_hash, vm_or_template)
 
-    MiqHashStruct.new(data_hash)
+    OpenStruct.new(data_hash)
   end
 
   def assign_ems_data_to_data_hash(data_hash, vm_or_template)
@@ -1072,7 +1072,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         end
 
         if @_ems_allowed_templates_cache[ems_id]
-          data_hash[:ext_management_system] = MiqHashStruct.new(:name => @_ems_allowed_templates_cache[ems_id])
+          data_hash[:ext_management_system] = OpenStruct.new(:name => @_ems_allowed_templates_cache[ems_id])
         end
       end
     elsif vm_or_template.ems_id

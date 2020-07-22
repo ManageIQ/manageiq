@@ -25,8 +25,8 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
   context "with allowed customization templates" do
     it "#allowed_customization_templates" do
-      expect(workflow.allowed_customization_templates.first).to be_a(MiqHashStruct)
-      expect(sysprep_workflow.allowed_customization_templates.first).to be_a(MiqHashStruct)
+      expect(workflow.allowed_customization_templates.first).to be_a(OpenStruct)
+      expect(sysprep_workflow.allowed_customization_templates.first).to be_a(OpenStruct)
     end
 
     it "should retrieve cloud-init templates when cloning" do
@@ -34,7 +34,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       result = workflow.allowed_customization_templates(options)
       customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
-      template_hash = result.first.instance_variable_get(:@hash)
+      template_hash = result.first.to_h
 
       expect(customization_template).to eq cloud_init_template.script
       expect(template_hash).to be_a(Hash)
@@ -51,7 +51,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
       result = sysprep_workflow.allowed_customization_templates(options)
       customization_template = sysprep_workflow.instance_variable_get(:@values)[:customization_template_script]
-      template_hash = result.first.instance_variable_get(:@hash)
+      template_hash = result.first.to_h
 
       expect(customization_template).to eq sysprep_template.script
       expect(template_hash).to be_a(Hash)

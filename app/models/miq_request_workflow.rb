@@ -1,5 +1,5 @@
 require 'enumerator'
-require 'miq-hash_struct'
+require 'ostruct'
 
 class MiqRequestWorkflow
   include Vmdb::Logging
@@ -113,6 +113,7 @@ class MiqRequestWorkflow
             init_values[field_name] = [val, field_values[:values][val]]
           else
             field_values[:values].each do |tz|
+              next unless tz.kind_of?(Array)
               if tz[1].to_i_with_method == val.to_i_with_method
                 # Save [value, description] for timezones array
                 init_values[field_name] = [val, tz[0]]
@@ -641,7 +642,7 @@ class MiqRequestWorkflow
   end
 
   def build_ci_hash_struct(ci, props)
-    nh = MiqHashStruct.new(:id => ci.id, :evm_object_class => ci.class.base_class.name.to_sym)
+    nh = OpenStruct.new(:id => ci.id, :evm_object_class => ci.class.base_class.name.to_sym)
     props.each { |p| nh.send("#{p}=", ci.send(p)) }
     nh
   end
@@ -849,7 +850,7 @@ class MiqRequestWorkflow
 
   def load_ems_node(item, log_header)
     @ems_xml_nodes ||= {}
-    klass_name = if item.kind_of?(MiqHashStruct)
+    klass_name = if item.kind_of?(OpenStruct)
                    Object.const_get(item.evm_object_class)
                  else
                    item.class.base_class
@@ -861,7 +862,7 @@ class MiqRequestWorkflow
 
   def ems_has_clusters?
     found = each_ems_metadata(nil, EmsCluster) { |ci| break(ci) }
-    return found.evm_object_class == :EmsCluster if found.kind_of?(MiqHashStruct)
+    return found.evm_object_class == :EmsCluster if found.kind_of?(OpenStruct)
     false
   end
 
@@ -1031,7 +1032,7 @@ class MiqRequestWorkflow
 
   def load_ar_obj(ci)
     return load_ar_objs(ci) if ci.kind_of?(Array)
-    return ci unless ci.kind_of?(MiqHashStruct)
+    return ci unless ci.kind_of?(OpenStruct)
     ci.evm_object_class.to_s.camelize.constantize.find_by(:id => ci.id)
   end
 
@@ -1251,7 +1252,7 @@ class MiqRequestWorkflow
       field_values = dlg_field[:values]
       _log.info("processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>")
       if field_values.present?
-        result = if field_values.first.kind_of?(MiqHashStruct)
+        result = if field_values.first.kind_of?(OpenStruct)
                    found = field_values.detect { |v| v.id == set_value }
                    [found.id, found.name] if found
                  elsif data_type == :array_integer
@@ -1292,7 +1293,7 @@ class MiqRequestWorkflow
       field_values = dlg_field[:values]
       _log.info("processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>")
       if field_values.present?
-        result = if field_values.first.kind_of?(MiqHashStruct)
+        result = if field_values.first.kind_of?(OpenStruct)
                    found = field_values.detect { |v| v.send(obj_key).to_s.downcase == find_value }
                    [found.id, found.send(obj_key)] if found
                  else
