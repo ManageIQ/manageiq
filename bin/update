@@ -29,7 +29,7 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
       ManageIQ::Environment.seed_database
     end
 
-    ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
+    ManageIQ::Environment.setup_test_environment
     ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
   end
 

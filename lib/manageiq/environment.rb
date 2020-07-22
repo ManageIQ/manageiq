@@ -93,6 +93,8 @@ module ManageIQ
     end
 
     def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
+      return if ENV["SKIP_TEST_RESET"]
+
       puts "\n== Resetting tests =="
       run_rake_task("#{task_prefix}test:vmdb:setup", :root => root)
     end
