@@ -165,6 +165,17 @@ class Service < ApplicationRecord
     parent.present? ? true : type.present?
   end
 
+  def retire_request_exists?
+    MiqRequest.with_type("ServiceRetireRequest").find_each do |request|
+      if request.options.try(:[], :src_ids)&.include?(id)
+        warn_message = "MiqRequest with id:#{request.id} to retire Service name:'#{name}' id:#{id} already created"
+        return true unless allow_retire_request_creation?(request, warn_message)
+      end
+    end
+
+    false
+  end
+
   alias root_service root
   alias services children
   alias direct_service_children children
