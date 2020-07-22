@@ -1,4 +1,8 @@
 RSpec.describe ContainerGroup do
+  subject { FactoryBot.create(:container_group) }
+
+  include_examples "MiqPolicyMixin"
+
   it "has container volumes and pods" do
     pvc = FactoryBot.create(
       :persistent_volume_claim,

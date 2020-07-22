@@ -1,4 +1,8 @@
 RSpec.describe MiqRegion do
+  subject { region }
+
+  include_examples "MiqPolicyMixin"
+
   let(:region) { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   # the first id from a region other than ours
   let(:external_region_id) do

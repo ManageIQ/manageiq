@@ -1,5 +1,9 @@
 RSpec.describe EmsCluster do
+  subject { FactoryBot.create(:ems_cluster) }
+
   include_examples "AggregationMixin"
+  include_examples "MiqPolicyMixin"
+
   context("VMware") do
     before do
       @cluster = FactoryBot.create(:ems_cluster)

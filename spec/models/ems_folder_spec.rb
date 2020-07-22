@@ -1,4 +1,8 @@
 RSpec.describe EmsFolder do
+  subject { FactoryBot.create(:ems_folder) }
+
+  include_examples "MiqPolicyMixin"
+
   context "with folder tree" do
     before do
       @root = FactoryBot.create(:ems_folder, :name => "root")

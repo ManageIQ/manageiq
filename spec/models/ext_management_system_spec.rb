@@ -1,5 +1,9 @@
 RSpec.describe ExtManagementSystem do
+  subject { FactoryBot.create(:ext_management_system) }
+
   include_examples "AggregationMixin"
+  include_examples "MiqPolicyMixin"
+
   describe ".with_tenant" do
     # tenant_root
     #   \___ tenant_eye_bee_em (service_template_eye_bee_em)

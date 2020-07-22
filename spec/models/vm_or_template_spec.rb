@@ -1,4 +1,8 @@
 RSpec.describe VmOrTemplate do
+  subject { vm }
+
+  include_examples "MiqPolicyMixin"
+
   include Spec::Support::ArelHelper
 
   let(:vm)      { FactoryBot.create(:vm_or_template) }
