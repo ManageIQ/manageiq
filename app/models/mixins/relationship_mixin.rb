@@ -640,7 +640,7 @@ module RelationshipMixin
   def remove_all_children(*args)
     # Determine if we are removing all or some children
     options = args.last.kind_of?(Hash) ? args.last : {}
-    of_type = options[:of_type].to_miq_a
+    of_type = Array.wrap(options[:of_type])
     all_children_removed = of_type.empty? || (child_types - of_type).empty?
 
     if self.is_root? && all_children_removed

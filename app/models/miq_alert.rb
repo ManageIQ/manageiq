@@ -195,7 +195,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_queue(targets, inputs = {})
-    targets.to_miq_a.each do |target|
+    Array.wrap(targets).each do |target|
       zone = target.respond_to?(:my_zone) ? target.my_zone : MiqServer.my_zone
       MiqQueue.put_unless_exists(
         :class_name  => self.class.name,
@@ -316,7 +316,7 @@ class MiqAlert < ApplicationRecord
     notifications = (self.options ||= {})[:notifications]
     notifications.each_key do |k|
       if k == :email
-        notifications[k].to_miq_a.each do |n|
+        Array.wrap(notifications[k]).each do |n|
           n[:to].each do |to|
             description = "#{k.to_s.titleize} Action To: [#{to}] for Alert: #{self.description}"
             actions << MiqAction.new(

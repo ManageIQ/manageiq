@@ -45,7 +45,7 @@ module MiqReport::Generator::Sorting
 
   def build_sort_suffix_data
     new_sortby = []
-    rpt_sortby = sortby.to_miq_a
+    rpt_sortby = Array.wrap(sortby)
     rpt_sortby.each do |sb|
       col, sfx = sb.split("__")
       if sfx && self.class.is_break_suffix?(sfx)

@@ -638,7 +638,7 @@ class MiqExpression
       val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.flat_map do |v|
+      v_arr = Array.wrap(val).flat_map do |v|
         if v.kind_of?(String)
           v = begin
                 eval(v)
@@ -651,7 +651,7 @@ class MiqExpression
       "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
+      v_arr = Array.wrap(val).flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
       "[#{v_arr.join(",")}]"
     else
       val
@@ -1089,7 +1089,7 @@ class MiqExpression
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
-      values = value.to_miq_a
+      values = value.kind_of?(String) ? value.lines.to_a : Array.wrap(value)
       return _("No Date/Time value specified") if values.empty? || values.include?(nil)
       return _("Two Date/Time values must be specified") if operator.downcase == "from" && values.length < 2
 
