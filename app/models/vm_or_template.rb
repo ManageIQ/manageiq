@@ -44,6 +44,7 @@ class VmOrTemplate < ApplicationRecord
     "openstack"   => "OpenStack",
     "google"      => "Google",
     "kubevirt"    => "KubeVirt",
+    "ibm"         => "IBM",
     "unknown"     => "Unknown"
   }
 
