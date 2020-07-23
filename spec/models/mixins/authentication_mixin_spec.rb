@@ -793,7 +793,7 @@ RSpec.describe AuthenticationMixin do
 
         expect do
           expect(h.authentication_status).to eq("Valid")
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect(h.association(:authentication_status_severity_level)).not_to be_loaded
       end
 
@@ -813,7 +813,7 @@ RSpec.describe AuthenticationMixin do
 
         expect do
           expect(h.authentication_status).to eq("Invalid")
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect(h.association(:authentication_status_severity_level)).not_to be_loaded
       end
 

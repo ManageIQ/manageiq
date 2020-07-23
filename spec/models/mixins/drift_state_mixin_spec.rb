@@ -47,7 +47,7 @@ RSpec.describe DriftStateMixin do
         h = Host.select(:id, :last_drift_state_timestamp).first
         expect do
           expect(h.last_drift_state_timestamp).to eq(recent_timestamp)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect(h.association(:last_drift_state)).not_to be_loaded
         expect(h.association(:last_drift_state_timestamp_rec)).not_to be_loaded
       end
@@ -82,7 +82,7 @@ RSpec.describe DriftStateMixin do
         h = Host.select(:id, :last_scan_on).first
         expect do
           expect(h.last_scan_on).to eq(recent_timestamp)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect(h.association(:last_drift_state)).not_to be_loaded
         expect(h.association(:last_drift_state_timestamp_rec)).not_to be_loaded
       end
@@ -91,7 +91,7 @@ RSpec.describe DriftStateMixin do
         h = Host.first # want a clean host record
         expect do
           expect(h.last_scan_on).to eq(recent_timestamp)
-        end.to match_query_limit_of(1)
+        end.to make_database_queries(:count => 1)
         expect(h.association(:last_drift_state)).not_to be_loaded
         expect(h.association(:last_drift_state_timestamp_rec)).to be_loaded
       end

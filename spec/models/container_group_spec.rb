@@ -51,14 +51,14 @@ RSpec.describe ContainerGroup do
       cr = condition_ready
       cg = ContainerGroup.includes(:ready_condition_status).references(:ready_condition_status).find_by(:id => container_group.id)
 
-      expect { expect(cg.ready_condition).to eq(cr) }.to match_query_limit_of(0)
+      expect { expect(cg.ready_condition).to eq(cr) }.to_not make_database_queries
     end
 
     it "handles non-preloaded conditions" do
       condition_other
       cr = condition_ready
       cg = ContainerGroup.find_by(:id => container_group.id)
-      expect { expect(cg.ready_condition).to eq(cr) }.to match_query_limit_of(1)
+      expect { expect(cg.ready_condition).to eq(cr) }.to make_database_queries(:count => 1)
     end
   end
 
