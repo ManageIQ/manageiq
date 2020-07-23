@@ -27,11 +27,11 @@ module MiqPolicyMixin
   end
 
   def get_policies
-    policy_tags.collect do |t|
-      klass, id = t.split("/")
-      next unless ["miq_policy", "miq_policy_set"].include?(klass)
-      klass.camelize.constantize.find_by(:id => id.to_i)
-    end.compact
+    policy_tags
+      .map { |t| t.split("/").first(2) }
+      .group_by(&:first)
+      .select { |klass, _ids| ["miq_policy", "miq_policy_set"].include?(klass) }
+      .flat_map { |klass, ids| klass.camelize.constantize.where(:id => ids).to_a }
   end
 
   def resolve_policies(list, event = nil)
