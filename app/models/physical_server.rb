@@ -1,4 +1,6 @@
 class PhysicalServer < ApplicationRecord
+  acts_as_miq_taggable
+
   include NewWithTypeStiMixin
   include MiqPolicyMixin
   include TenantIdentityMixin
@@ -7,8 +9,6 @@ class PhysicalServer < ApplicationRecord
   include ProviderObjectMixin
 
   include_concern 'Operations'
-
-  acts_as_miq_taggable
 
   VENDOR_TYPES = {
     # DB        Displayed

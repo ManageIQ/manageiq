@@ -1,4 +1,6 @@
 class ContainerProject < ApplicationRecord
+  acts_as_miq_taggable
+
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
@@ -52,8 +54,6 @@ class ContainerProject < ApplicationRecord
   def all_container_groups
     ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
   end
-
-  acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym

@@ -15,8 +15,8 @@ class MiqServer < ApplicationRecord
   include_concern 'UpdateManagement'
 
   include UuidMixin
-  include MiqPolicyMixin
   acts_as_miq_taggable
+  include MiqPolicyMixin
   include RelationshipMixin
 
   alias_attribute :description, :name
