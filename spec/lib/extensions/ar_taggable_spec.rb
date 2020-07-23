@@ -167,6 +167,48 @@ RSpec.describe ActsAsTaggable do
     end
   end
 
+  describe "#tag_attribute" do
+    before do
+      class TestModel < ApplicationRecord
+        self.table_name = "hosts"
+      end
+    end
+
+    after do
+      Object.send(:remove_const, :TestModel)
+    end
+
+    it "doesn't have a tag method" do
+      expect(TestModel.respond_to?(:tag_attribute)).to be(false)
+    end
+
+    it "can't declare detect tag" do
+      TestModel.acts_as_miq_taggable
+      expect(TestModel.respond_to?(:tag_attribute)).to be(true)
+    end
+
+    let(:franchise)      { FactoryBot.create(:classification,     :name => "franchise") }
+    let(:posh_franchise) { FactoryBot.create(:classification_tag, :name => "posh", :parent => franchise) }
+    let(:location)       { FactoryBot.create(:classification,     :name => "location") }
+    let(:south_location) { FactoryBot.create(:classification_tag, :name => "south", :parent => location) }
+
+    it "detects tags" do
+      TestModel.destroy_all
+      TestModel.acts_as_miq_taggable
+      TestModel.tag_attribute :franchise, franchise.tag.name
+
+      none  = TestModel.create
+      south = TestModel.create(:tags => [south_location.tag])
+      posh  = TestModel.create(:tags => [posh_franchise.tag])
+
+      expect(none.has_franchises?).to be(false)
+      expect(south.has_franchises?).to be(false)
+      expect(posh.has_franchises?).to be(true)
+
+      expect(TestModel.order(:id).select(:id, :has_franchises).map(&:has_franchises?)).to eq([false, false, true])
+    end
+  end
+
   it "#tag_list" do
     expect(Host.find_by(:name => "HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
     expect(Vm.find_by(:name => "VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)

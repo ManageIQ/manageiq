@@ -25,6 +25,15 @@ shared_examples_for "MiqPolicyMixin" do
         it "detects no policies in ruby" do
           expect(subject.has_policies?).to eq(false)
         end
+
+        it "detects no policies with preloaded tags in ruby" do
+          subject.tags.load
+          expect(subject.has_policies?).to eq(false)
+        end
+
+        it "detects no policies in SQL" do
+          expect(subject.class.select(:id, :has_policies).find(subject.id).has_policies).to be(false)
+        end
       end
 
       context "with a policy" do
@@ -32,6 +41,16 @@ shared_examples_for "MiqPolicyMixin" do
 
         it "detects policies in ruby" do
           expect(subject.has_policies?).to eq(true)
+        end
+
+        it "detects policies with preloaded tags in ruby" do
+          subject.tags.load
+          expect(subject.has_policies?).to eq(true)
+        end
+
+        it "detects policies in SQL" do
+          result = subject.class.select(:id, :has_policies).find(subject.id)
+          expect(result.has_policies).to be(true)
         end
       end
 
@@ -41,6 +60,32 @@ shared_examples_for "MiqPolicyMixin" do
         it "detects policies in ruby" do
           expect(subject.has_policies?).to eq(true)
         end
+
+        it "detects policies with preloaded tags in ruby" do
+          result = subject.class.select(:id, :has_policies).find(subject.id)
+          expect(result.has_policies).to be(true)
+        end
+
+        it "detects policies in sql" do
+          result = subject.class.select(:id, :has_policies).find(subject.id)
+          expect(result.has_policies).to be(true)
+        end
+      end
+    end
+
+    describe "#policy_tags" do
+      it "supports no policies" do
+        expect(subject.policy_tags).to eq([])
+      end
+
+      it "supports policies" do
+        subject.add_policy(policy)
+        expect(subject.policy_tags).to eq(["#{policy.class.name.underscore}/#{policy.id}"])
+      end
+
+      it "supports policy sets" do
+        subject.add_policy(policy_set)
+        expect(subject.policy_tags).to eq(["#{policy_set.class.name.underscore}/#{policy_set.id}"])
       end
     end
   end

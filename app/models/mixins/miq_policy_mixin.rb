@@ -1,6 +1,10 @@
 module MiqPolicyMixin
   extend ActiveSupport::Concern
 
+  included do
+    tag_attribute :policy, "/miq_policy/assignment"
+  end
+
   def add_policy(policy)
     ns = "/miq_policy"
     cat = "assignment/#{policy.class.to_s.underscore}"
@@ -23,15 +27,11 @@ module MiqPolicyMixin
   end
 
   def get_policies
-    tag_list(:ns => "/miq_policy", :cat => "assignment").split.collect do |t|
+    policy_tags.collect do |t|
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
       klass.camelize.constantize.find_by(:id => id.to_i)
     end.compact
-  end
-
-  def has_policies?
-    tag_list(:ns => "/miq_policy", :cat => "assignment").split.length > 0
   end
 
   def resolve_policies(list, event = nil)

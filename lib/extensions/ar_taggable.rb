@@ -77,6 +77,39 @@ module ActsAsTaggable
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
+
+    # defines an attribute that detects a certain tag namespace
+    # defines has_attrs, has_attrs? and attr_tags
+    def tag_attribute(attribute_name, namespace)
+      plural_attribute_name = "has_#{attribute_name.to_s.pluralize}"
+
+      virtual_attribute plural_attribute_name, :boolean, :uses => :tags, :arel => (lambda do |t|
+        ta = Tag.arel_table
+        tnga = Tagging.arel_table
+        t.grouping(
+          Arel.sql(
+            Tagging.joins(:tag).select('true')
+                   .where(ta[:name].matches("#{namespace}/%", nil, true))
+                   .where(tnga[:taggable_type].eq(base_class.name).and(tnga[:taggable_id].eq(arel_table[:id])))
+                   .limit(1).to_sql
+          )
+        )
+      end)
+
+      define_method("#{attribute_name}_tags") do
+        Tag.filter_ns(tags, namespace)
+      end
+
+      define_method(plural_attribute_name) do
+        if has_attribute?(plural_attribute_name)
+          read_attribute(plural_attribute_name) || false
+        else
+          Tag.filter_ns(tags, namespace).any?
+        end
+      end
+
+      alias_method "#{plural_attribute_name}?", plural_attribute_name
+    end
   end # module SingletonMethods
 
   def tag_with(list, options = {})
