@@ -73,6 +73,75 @@ RSpec.describe "VM Retirement Management" do
         expect(vm_with_owner.retirement_requester).to eq('admin')
       end
     end
+
+    context "does not create duplicate retirement request for the same object" do
+      before do
+        vm_with_owner.update(:retires_on => Time.zone.today)
+        @request = FactoryBot.create(:vm_retire_request, :requester => user, :source_id => vm_with_owner.id)
+      end
+
+      context "retirement request not approved yet" do
+        it "does not create request if existing retirement request is not approved yet" do
+          expect(vm_with_owner.class).not_to receive(:make_retire_request)
+          vm_with_owner.retirement_check
+        end
+      end
+
+      context "retirement request approved" do
+        before do
+          @request.approve(user, "I want to")
+        end
+
+        context "request status is 'Ok'" do
+          before do
+            @request.update(:status => 'Ok')
+          end
+
+          it "does not create request if existing retirement request's state is 'active'" do
+            @request.update(:request_state => 'active')
+            expect(vm_with_owner.class).not_to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+          end
+
+          it "does not create request if existing retirement request's state is 'pending'" do
+            @request.update(:request_state => 'pending')
+            expect(vm_with_owner.class).not_to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+          end
+
+          # Is it possible to have retieremnt request for Vm with process = false ?
+          # I am not sure if we should have this expectation....
+          it "creates request if existing retirement request's 'process' attribute set to false" do
+            @request.update(:request_state => "pending")
+            @request.update(:process => false)
+            expect(vm_with_owner.class).to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+          end
+
+          it "creates request if existing retirement request's state is not 'active' or 'pending'" do
+            @request.update(:request_state => "finished")
+            expect(vm_with_owner.class).to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+          end
+        end
+
+        context "request status is not 'Ok'" do
+          before do
+            @request.update(:status => 'Error')
+          end
+
+          it "create request for any state of existing retirement request" do
+            @request.update(:request_state => 'active')
+            expect(vm_with_owner.class).to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+
+            @request.update(:request_state => 'pending')
+            expect(vm_with_owner.class).to receive(:make_retire_request)
+            vm_with_owner.retirement_check
+          end
+        end
+      end
+    end
   end
 
   it "#start_retirement" do
