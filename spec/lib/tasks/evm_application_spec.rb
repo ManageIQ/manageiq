@@ -148,7 +148,7 @@ RSpec.describe EvmApplication do
     let(:region_padding)    { 6 }
 
     context "for just the local server" do
-      it "displays server status for the local server and it's workers" do
+      it "displays server status for the local server and its workers" do
 
         expected_output = <<~SERVER_INFO
           Checking EVM status...
