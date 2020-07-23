@@ -128,7 +128,7 @@ RSpec.describe ServiceTemplateAnsibleTower do
   end
 
   describe '#my_zone' do
-    let(:manager) { FactoryBot.create(:automation_manager_ansible_tower, :provider) }
+    let(:manager) { FactoryBot.create(:automation_manager_ansible_tower) }
     let(:job_template) { FactoryBot.create(:configuration_script, :manager => manager) }
     let(:service_template) { FactoryBot.create(:service_template_ansible_tower, :job_template => job_template) }
 
