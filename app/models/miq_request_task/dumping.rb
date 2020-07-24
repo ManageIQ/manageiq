@@ -34,7 +34,7 @@ module MiqRequestTask::Dumping
   def dump_obj(obj, prefix = nil, print_obj = STDOUT, print_method = :puts, options = {})
     self.class.dump_obj(obj, prefix, print_obj, print_method) do |val, key|
       value = val
-      if options.try(:[], :protected).try(:[], :path).to_miq_a.any? { |filter| key =~ filter }
+      if Array.wrap(options.try(:[], :protected).try(:[], :path)).any? { |filter| key =~ filter }
         value = "<PROTECTED>"
       end
       print_obj.send(print_method, "#{key}(#{val.class}) = #{value.inspect}")
