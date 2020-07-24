@@ -1,4 +1,6 @@
 module OwnershipMixin
+  ALLOWED_COLLECTIONS = %i[vms templates orchestration_stacks services service_templates authentications].freeze
+
   extend ActiveSupport::Concern
 
   included do
@@ -48,6 +50,17 @@ module OwnershipMixin
 
       t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:owning_ldap_group)]).eq(ldap_group))
     end)
+
+    def collection_name
+      collections = Api::ApiConfig[:collections].to_h.slice(*ALLOWED_COLLECTIONS)
+      found_collection = collections.detect do |_, collection|
+        kind_of?(collection[:klass].constantize)
+      end
+
+      raise NotImplementedError, _("Record is not allowed for set ownership screen.") unless found_collection
+
+      found_collection[0] # collection_name
+    end
   end
 
   module ClassMethods

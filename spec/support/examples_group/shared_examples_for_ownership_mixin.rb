@@ -20,6 +20,16 @@ shared_examples_for "OwnershipMixin" do
     let!(:user_owned)  { FactoryBot.create(factory, :name => "user_owned",  :evm_owner => user) }
     let!(:user_owned2) { FactoryBot.create(factory, :name => "user_owned2", :evm_owner => user2) }
 
+    describe "#collection_name" do
+      let(:collection_to_klass) do
+        {:service_template => :service_templates, :service => :services, :vm => :vms}
+      end
+
+      it "matches collection based on record" do
+        expect(no_group.collection_name).to eq(collection_to_klass[factory])
+      end
+    end
+
     describe ".user_or_group_owned" do
       let(:user_other_region) do
         other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
