@@ -4,7 +4,7 @@ module MiqConfigSssdLdap
   class AuthTemplateFilesError < StandardError; end
 
   class AuthTemplateFiles
-    TEMPLATE_DIR     = "/var/www/miq/system/TEMPLATE".freeze
+    TEMPLATE_DIR     = "/opt/manageiq/manageiq-appliance/TEMPLATE".freeze
     ALT_TEMPLATE_DIR = "/opt/rh/cfme-appliance/TEMPLATE".freeze
     HTTPD_CONF_DIR   = "/etc/httpd/conf.d".freeze
     PAM_CONF_DIR     = "/etc/pam.d".freeze
