@@ -446,7 +446,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
       expect(git_repository.url).to eq "https://example.com/foo.git"
       expect(git_repository.authentication).to eq auth
 
-      expect { configuration_script_source.git_repository }.to_not exceed_query_limit(0)
+      expect { configuration_script_source.git_repository }.to_not make_database_queries
       expect(configuration_script_source.git_repository_id).to eq git_repository.id
     end
 
@@ -467,7 +467,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
       expect(git_repository.url).to eq "https://example.com/foo.git"
       expect(git_repository.authentication).to eq auth
 
-      expect { configuration_script_source.git_repository }.to_not exceed_query_limit(0)
+      expect { configuration_script_source.git_repository }.to_not make_database_queries
       expect(configuration_script_source.git_repository_id).to eq git_repository.id
     end
 
