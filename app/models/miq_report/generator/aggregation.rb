@@ -8,7 +8,7 @@ module MiqReport::Generator::Aggregation
   end
 
   def generate_subtotals(table, group_keys, options)
-    gkeys  = group_keys.kind_of?(String) ? group_keys.lines.to_a : Array.wrap(group_keys)
+    gkeys  = group_keys.kind_of?(String) ? group_keys.lines : Array.wrap(group_keys)
     totals = {:count => 0, :row => {}}
     group  = {:count => 0, :row => {}}
     result = {}

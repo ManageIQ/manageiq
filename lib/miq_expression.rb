@@ -1089,7 +1089,7 @@ class MiqExpression
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
-      values = value.kind_of?(String) ? value.lines.to_a : Array.wrap(value)
+      values = value.kind_of?(String) ? value.lines : Array.wrap(value)
       return _("No Date/Time value specified") if values.empty? || values.include?(nil)
       return _("Two Date/Time values must be specified") if operator.downcase == "from" && values.length < 2
 
