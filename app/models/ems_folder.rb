@@ -1,4 +1,7 @@
+require 'ancestry'
+
 class EmsFolder < ApplicationRecord
+  has_ancestry
   include NewWithTypeStiMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
