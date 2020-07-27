@@ -42,6 +42,14 @@ RSpec.describe "Service Retirement Management" do
           expect(stack_with_owner.retirement_requester).to eq("admin")
         end
       end
+
+      it "does not create request if existing retirement request is not approved yet" do
+        stack_with_owner.update(:retires_on => Time.zone.today)
+        FactoryBot.create(:orchestration_stack_retire_request, :requester => user, :options => {:src_ids => [stack_with_owner.id]})
+        expect(stack_with_owner.class).not_to receive(:make_retire_request)
+
+        stack_with_owner.retirement_check
+      end
     end
 
     it "#start_retirement" do
