@@ -24,6 +24,6 @@ RSpec.describe "#number_of" do
     h.vms.load
     expect do
       expect(h.number_of(:vms)).to eq(2)
-    end.to match_query_limit_of(0)
+    end.to_not make_database_queries
   end
 end

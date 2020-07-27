@@ -35,33 +35,33 @@ shared_examples_for "AggregationMixin" do |through|
     describe "calculates single object" do
       context "host" do
         it "calculates #aggregate_cpu_speed" do
-          expect { expect(object.aggregate_cpu_speed).to eq(11_996) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_cpu_speed).to eq(11_996) }.to make_database_queries(:count => 0..1)
         end
 
         it "calculates #aggregate_cpu_total_cores" do
-          expect { expect(object.aggregate_cpu_total_cores).to eq(4) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_cpu_total_cores).to eq(4) }.to make_database_queries(:count => 0..1)
         end
 
         it "calculates #aggregate_disk_capacity" do
-          expect { expect(object.aggregate_disk_capacity).to eq(0.4e2) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_disk_capacity).to eq(0.4e2) }.to make_database_queries(:count => 0..1)
         end
 
         it "calculates #aggregate_memory" do
-          expect { expect(object.aggregate_memory).to eq(2048) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_memory).to eq(2048) }.to make_database_queries(:count => 0..1)
         end
 
         it "calculates #aggregate_physical_cpus" do
-          expect { expect(object.aggregate_physical_cpus).to eq(2) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_physical_cpus).to eq(2) }.to make_database_queries(:count => 0..1)
         end
       end
 
       context "vm" do
         it "calculates #aggregate_vm_memory" do
-          expect { expect(object.aggregate_vm_memory).to eq(2048) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_vm_memory).to eq(2048) }.to make_database_queries(:count => 0..1)
         end
 
         it "calculates #aggregate_vm_cpus" do
-          expect { expect(object.aggregate_vm_cpus).to eq(2) }.to_not exceed_query_limit(1)
+          expect { expect(object.aggregate_vm_cpus).to eq(2) }.to make_database_queries(:count => 0..1)
         end
       end
     end

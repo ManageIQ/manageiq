@@ -35,7 +35,7 @@ RSpec.describe ComplianceMixin do
 
         expect do
           expect(h.last_compliance_status).to eq(false)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect(h.association(:last_compliance)).not_to be_loaded
       end
 
