@@ -2662,15 +2662,15 @@ RSpec.describe Rbac::Filterer do
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
           expect(group).to eq(same_group)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id)
           expect(group).to eq(same_group)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, nil, user1.current_group.id.to_s)
           expect(group).to eq(same_group)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
       end
 
       it "skips lookup when group passed in" do
@@ -2679,15 +2679,15 @@ RSpec.describe Rbac::Filterer do
         expect do
           _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.first.id.to_s)
           expect(group).to eq(group_list.first)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect do
           _, group = filter.send(:lookup_user_group, user2, nil, nil, group_list.last.id)
           expect(group).to eq(group_list.last)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
         expect do
           _, group = filter.send(:lookup_user_group, user2, nil, group_list.first, nil)
           expect(group).to eq(group_list.first)
-        end.to match_query_limit_of(0)
+        end.to_not make_database_queries
       end
 
       it "uses group passed" do

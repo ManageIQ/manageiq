@@ -122,7 +122,7 @@ RSpec.describe VmOrTemplate do
         query  = Vm.miq_expression_includes_any_ipaddresses_arel("10.10.10")
         result = Vm.where(query)
         expect(result.to_a).to eq([subject])
-      end.to match_query_limit_of(1)
+      end.to make_database_queries(:count => 1)
     end
   end
 
@@ -796,7 +796,7 @@ RSpec.describe VmOrTemplate do
     it "uses calculated (inline) attribute with null hardware" do
       vm = FactoryBot.create(:vm_vmware)
       vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
-      expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
+      expect { expect(vm2.provisioned_storage).to eq(0) }.to_not make_database_queries
     end
 
     it "calculates in ruby" do
@@ -863,8 +863,8 @@ RSpec.describe VmOrTemplate do
     it "uses calculated (inline) attribute with null hardware" do
       vm = FactoryBot.create(:vm_vmware)
       vm2 = VmOrTemplate.select(:id, :num_disks, :num_hard_disks).find_by(:id => vm.id)
-      expect { expect(vm2.num_disks).to eq(0) }.to match_query_limit_of(0)
-      expect { expect(vm2.num_hard_disks).to eq(0) }.to match_query_limit_of(0)
+      expect { expect(vm2.num_disks).to eq(0) }.to_not make_database_queries
+      expect { expect(vm2.num_hard_disks).to eq(0) }.to_not make_database_queries
     end
 
     it "calculates in ruby" do

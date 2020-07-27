@@ -20,7 +20,7 @@ RSpec.describe ArRegion do
       expect do
         vm.miq_region        # 1 query for miq_region
         vm.reload.miq_region # 1 query for the reload, but *not* for miq_region
-      end.to match_query_limit_of(2)
+      end.to make_database_queries(:count => 2)
     end
   end
 

@@ -349,7 +349,7 @@ RSpec.describe RelationshipMixin do
       expect do
         nodes = host.with_relationship_type(test_rel_type, &:root)
         expect(nodes).to eq(host)
-      end.to match_query_limit_of(1) # lookup the relationship node
+      end.to make_database_queries(:count => 1) # lookup the relationship node
     end
 
     it "is a self with a tree's root node" do
@@ -357,7 +357,7 @@ RSpec.describe RelationshipMixin do
       expect do
         nodes = vms[0].with_relationship_type(test_rel_type, &:root)
         expect(nodes).to eq(vms[0])
-      end.to match_query_limit_of(1) # lookup the relationship node
+      end.to make_database_queries(:count => 1) # lookup the relationship node
     end
 
     it "is a parent with a tree's child node" do

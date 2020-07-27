@@ -365,8 +365,8 @@ RSpec.describe MiqProductFeature do
       FactoryBot.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id)
       FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id)
 
-      expect { MiqProductFeature.features }.to match_query_limit_of(1)
-      expect { MiqProductFeature.features }.to match_query_limit_of(0)
+      expect { MiqProductFeature.features }.to make_database_queries(:count => 1)
+      expect { MiqProductFeature.features }.to_not make_database_queries
 
       expect(MiqProductFeature.feature_root).to eq("f1")
       expect(MiqProductFeature.feature_children("f1")).to match_array(%w(f2 f3))
@@ -388,8 +388,8 @@ RSpec.describe MiqProductFeature do
     let!(:f5) { FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id) }
 
     it "memoizes hash to prevent extra db queries" do
-      expect { MiqProductFeature.obj_features }.to match_query_limit_of(1)
-      expect { MiqProductFeature.obj_features }.to match_query_limit_of(0)
+      expect { MiqProductFeature.obj_features }.to make_database_queries(:count => 1)
+      expect { MiqProductFeature.obj_features }.to_not make_database_queries
     end
 
     it "builds a hash with feature objects keyed by identifier" do

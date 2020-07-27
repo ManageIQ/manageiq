@@ -191,13 +191,13 @@ RSpec.describe Notification, :type => :model do
       NotificationType.seed if NotificationType.all.empty?
     end
 
-    it 'does not lookup notificaiton type without event or full_data' do
+    it 'does not lookup notification type without event or full_data' do
       NotificationType.names
       expect do
         Notification.notification_text(nil, nil)
         Notification.notification_text('abc', nil)
         Notification.notification_text(nil, {})
-      end.to match_query_limit_of(0)
+      end.to_not make_database_queries
     end
 
     it 'applies message' do

@@ -109,7 +109,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
 
       it '#load_hosts_vlans' do
         hosts = [@host1, @host2]
-        expect { workflow.load_hosts_vlans(hosts, {}) }.not_to exceed_query_limit(1)
+        expect { workflow.load_hosts_vlans(hosts, {}) }.to make_database_queries(:count => 0..1)
       end
     end
   end
