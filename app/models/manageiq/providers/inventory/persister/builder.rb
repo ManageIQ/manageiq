@@ -208,7 +208,7 @@ module ManageIQ::Providers
       def auto_model_class
         model_class = begin
           # a) Provider specific class
-          provider_module = ManageIQ::Providers::Inflector.provider_module(@persister_class).name
+          provider_module = @persister_class.provider_module
           manager_module = self.class.name.split('::').last
 
           class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"

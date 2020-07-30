@@ -95,6 +95,10 @@ class ManageIQ::Providers::Inventory::Persister
     end
   end
 
+  def self.provider_module
+    ManageIQ::Providers::Inflector.provider_module(self).name
+  end
+
   protected
 
   def initialize_inventory_collections
