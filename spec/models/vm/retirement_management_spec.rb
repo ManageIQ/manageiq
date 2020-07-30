@@ -109,8 +109,6 @@ RSpec.describe "VM Retirement Management" do
             vm_with_owner.retirement_check
           end
 
-          # Is it possible to have retieremnt request for Vm with process = false ?
-          # I am not sure if we should have this expectation....
           it "creates request if existing retirement request's 'process' attribute set to false" do
             @request.update(:request_state => "pending")
             @request.update(:process => false)
