@@ -736,11 +736,11 @@ module MiqReport::Generator
       if self.class.is_trend_column?(a)
         attrs[a] = build_calculate_trend_point(rec, a)
       else
-        attrs[a] = rec.send(a) if rec.respond_to?(a)
+        attrs[a] = _(rec.send(a)) if rec.respond_to?(a)
       end
     end
     attrs = attrs.inject({}) do |h, (k, v)|
-      h["#{options[:qualify_attribute_names]}.#{k}"] = v
+      h["#{options[:qualify_attribute_names]}.#{k}"] = _(v)
       h
     end if options[:qualify_attribute_names]
     attrs
