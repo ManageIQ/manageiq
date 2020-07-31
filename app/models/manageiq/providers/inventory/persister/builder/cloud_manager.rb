@@ -10,9 +10,10 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def key_pairs
+        def auth_key_pairs
           add_properties(
-            :model_class => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
+            :name        => :auth_key_pairs,
+            :association => :key_pairs,
             :manager_ref => %i(name)
           )
           add_default_values(

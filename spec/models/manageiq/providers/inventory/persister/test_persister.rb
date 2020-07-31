@@ -12,7 +12,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
       end
     end
 
-    add_key_pairs
+    add_auth_key_pairs
 
     # Child models with references in the Parent InventoryCollections for Cloud
     %i(availability_zones
@@ -76,8 +76,9 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
   private
 
   # Cloud InventoryCollection
-  def add_key_pairs
-    add_collection(cloud, :key_pairs) do |builder|
+  def add_auth_key_pairs
+    add_collection(cloud, :auth_key_pairs) do |builder|
+      builder.add_properties(:model_class => ::ManageIQ::Providers::CloudManager::AuthKeyPair)
       builder.add_properties(:manager_uuids => name_references(:key_pairs))
     end
   end

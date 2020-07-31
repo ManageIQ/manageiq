@@ -51,21 +51,21 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
       @vm_data101 = vm_data(101).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
-        :key_pairs        => [persister.key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
+        :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
         :location         => lazy_find_network1,
       )
 
       @vm_data102 = vm_data(102).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
-        :key_pairs        => [persister.key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
+        :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
         :location         => lazy_find_network2,
       )
 
       @vm_data160 = vm_data(160).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
         :genealogy_parent => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref]),
-        :key_pairs        => [persister.key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
+        :key_pairs        => [persister.auth_key_pairs.lazy_find(:name => key_pair_data(1)[:name])],
         :location         => lazy_find_network60,
       )
 
