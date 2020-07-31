@@ -1,10 +1,6 @@
 module PerEmsTypeWorkerMixin
   extend ActiveSupport::Concern
 
-  included do
-    self.check_for_minimal_role = false
-  end
-
   module ClassMethods
     def workers
       return 0 unless any_valid_ems_in_zone?

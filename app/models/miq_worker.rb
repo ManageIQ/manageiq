@@ -57,7 +57,6 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.workers
-    return (self.has_minimal_env_option? ? 1 : 0) if MiqServer.minimal_env? && check_for_minimal_role
     return 0 unless has_required_role?
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
@@ -80,25 +79,9 @@ class MiqWorker < ApplicationRecord
     count
   end
 
-  def self.has_minimal_env_option?
-    roles = if required_roles.kind_of?(Proc)
-              required_roles.call
-            else
-              required_roles
-            end
-
-    return false if MiqServer.minimal_env_options.empty? || roles.blank?
-
-    roles = Array(roles) if roles.kind_of?(String)
-    raise _("Unexpected type: <self.required_roles.class.name>") unless roles.kind_of?(Array)
-
-    roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
-  end
-
-  class_attribute :check_for_minimal_role, :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
+  class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
   self.include_stopping_workers_on_synchronize = false
-  self.check_for_minimal_role = true
-  self.required_roles         = []
+  self.required_roles = []
 
   def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')

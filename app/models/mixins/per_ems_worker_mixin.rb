@@ -5,7 +5,6 @@ module PerEmsWorkerMixin
 
   included do
     class_eval do
-      self.check_for_minimal_role = false
       self.workers = -> { desired_queue_names.length }
     end
   end
@@ -28,8 +27,6 @@ module PerEmsWorkerMixin
     end
 
     def desired_queue_names
-      return [] if MiqServer.minimal_env? && !has_minimal_env_option?
-
       all_valid_ems_in_zone.collect { |e| queue_name_for_ems(e) }
     end
 

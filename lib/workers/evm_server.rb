@@ -111,9 +111,8 @@ class EvmServer
 
     MiqEvent.raise_evm_event(@current_server, "evm_server_start")
 
-    msg = "Server starting in #{MiqServer.startup_mode} mode."
-    _log.info(msg)
-    puts "** #{msg}"
+    _log.info("Server starting...")
+    puts "** Server starting..."
 
     @current_server.starting_server_record
 
@@ -130,7 +129,8 @@ class EvmServer
     start_workers
 
     @current_server.update(:status => "started")
-    _log.info("Server starting complete")
+    _log.info("Server starting...Complete")
+    puts "** Server starting...Complete"
   end
 
   def monitor

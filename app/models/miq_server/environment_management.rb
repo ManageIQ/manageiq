@@ -4,35 +4,6 @@ module MiqServer::EnvironmentManagement
   extend ActiveSupport::Concern
 
   module ClassMethods
-    # Spartan mode used for testing only.
-    #   minimal - Runs with 1 worker monitor, 1 generic, and 1 priority worker only
-    #             Can also specify other specific worker types, to start a single
-    #               worker, via underscore separation, e.g. minimal_schedule to start
-    #               1 schedule worker.
-    def spartan_mode
-      @spartan_mode ||= ENV["MIQ_SPARTAN"].to_s.strip
-    end
-
-    def minimal_env?
-      spartan_mode.start_with?("minimal")
-    end
-
-    def normal_env?
-      !self.minimal_env?
-    end
-
-    MIQ_SPARTAN_ROLE_SEPARATOR = ":"
-    def minimal_env_options
-      @minimal_env_options ||= begin
-        minimal_env? ? spartan_mode.split(MIQ_SPARTAN_ROLE_SEPARATOR)[1..-1] : []
-      end
-    end
-
-    def startup_mode
-      return "Normal" unless minimal_env?
-      "Minimal".tap { |s| s << " [#{minimal_env_options.join(', ').presence}]" if minimal_env_options.present? }
-    end
-
     def get_network_information
       ipaddr = hostname = mac_address = nil
       begin
