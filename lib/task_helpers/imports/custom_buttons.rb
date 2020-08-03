@@ -9,7 +9,7 @@ module TaskHelpers
           $log.info("Importing Custom Buttons from: #{filename}")
 
           begin
-            import_custom_buttons(filename, options[:connect_dialog_by_name])
+            import_custom_buttons(filename, options)
           rescue StandardError
             raise StandardError, "Error importing #{filename} at #{$@}"
           end
@@ -19,17 +19,20 @@ module TaskHelpers
       private
 
       class ImportArInstances
-        def self.import(obj_hash, connect_dialog_by_name)
-          new.import(obj_hash, connect_dialog_by_name)
+        def self.import(obj_hash, options)
+          new.import(obj_hash, options)
         end
 
-        def import(obj_hash, connect_dialog_by_name)
-          @connect_dialog = connect_dialog_by_name
+        def import(obj_hash, options)
+          @connect_dialog =  options[:connect_dialog_by_name]
+          @overwrite = options[:overwrite]
           ActiveRecord::Base.transaction { obj_hash.each { |obj_def| create_object(*obj_def) } }
         end
 
         def create_object(class_name, obj_array)
           klass = class_name.camelize.constantize
+
+          delete_existing_objs(klass, obj_array) if @overwrite
 
           obj_array.collect do |obj|
             if klass.name == "CustomButtonSet"
@@ -42,6 +45,24 @@ module TaskHelpers
               add_associations(obj, new_obj)
               try("#{class_name}_post", new_obj)
             end
+          end
+        end
+
+        def delete_existing_objs(klass, obj_array)
+          objs_to_delete = []
+          obj_array.each do |obj|
+            if klass.name == "CustomButtonSet"
+              objs_to_delete << klass.find_by(:name => obj.fetch_path('attributes', 'name'))
+              obj["children"].each do |ch|
+                child_klass = ch.first.camelize.constantize
+                ch[1].each { |t| objs_to_delete << child_klass.find_by(:name => t.fetch_path('attributes', 'name')) }
+              end
+            end
+          end
+
+          objs_to_delete.compact.each do |obj|
+            _log.info("Overwriting #{obj.class.name} #{obj.name}")
+            obj.destroy
           end
         end
 
@@ -82,9 +103,9 @@ module TaskHelpers
         end
       end
 
-      def import_custom_buttons(filename, connect_dialog_by_name)
+      def import_custom_buttons(filename, options)
         custom_buttons = YAML.load_file(filename)
-        ImportArInstances.import(custom_buttons, connect_dialog_by_name)
+        ImportArInstances.import(custom_buttons, options)
       end
     end
   end
