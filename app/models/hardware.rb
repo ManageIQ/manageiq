@@ -211,10 +211,10 @@ class Hardware < ApplicationRecord
   end
 
   def m_bios(_parent, xmlNode, _deletes)
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["bios"])
+    new_bios = Digest::UUID.clean(xmlNode.attributes["bios"])
     self.bios = new_bios.nil? ? xmlNode.attributes["bios"] : new_bios
 
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["location"])
+    new_bios = Digest::UUID.clean(xmlNode.attributes["location"])
     self.bios_location = new_bios.nil? ? xmlNode.attributes["location"] : new_bios
   end
 
