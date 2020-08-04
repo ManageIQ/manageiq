@@ -53,10 +53,10 @@ class SystemConsole < ApplicationRecord
       return nil
     end
 
-    command = '/usr/bin/socat', "TCP-LISTEN:#{local_port},fork", "TCP:#{remote_address}:#{remote_port}"
-    _log.info("Running socat proxy command: #{command.join(' ')}")
+    command = AwesomeSpawn::CommandLineBuilder.new.build("/usr/bin/socat", ["TCP-LISTEN:" + local_port + ",fork", "TCP:" + remote_address + ":" + remote_port])
+    _log.info("Running socat proxy command: #{command}")
+    pid = spawn(command)
 
-    pid = spawn(*command)
     Process.detach(pid)
 
     return [local_address, local_port, pid]
