@@ -50,8 +50,7 @@ module Vmdb
       path_dir = ManageIQ.root.join("log")
 
       $container_log      = ContainerLogger.new
-      # TODO: The journald logger can occasionally segfault the worker process
-      # $journald_log       = create_journald_logger
+      $journald_log       = create_journald_logger
       $log                = create_multicast_logger(path_dir.join("evm.log"))
       $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
       $audit_log          = create_multicast_logger(path_dir.join("audit.log"), AuditLogger)
