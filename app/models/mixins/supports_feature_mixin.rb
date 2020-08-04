@@ -6,7 +6,7 @@
 #     supports :publish
 #     supports_not :fake, :reason => 'We keep it real'
 #     supports :archive do
-#       unsupported_reason_add(:archive, 'Its too good') if featured?
+#       unsupported_reason_add(:archive, 'It is too good') if featured?
 #     end
 #   end
 #
@@ -32,7 +32,7 @@
 #
 #   Post.unsupported_reason(:publish)                     # => "Feature not supported"
 #   Post.unsupported_reason(:fake)                        # => "We keep it real"
-#   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
+#   Post.new(featured: true).unsupported_reason(:archive) # => "It is too good"
 #
 # To query for known features you can ask the class or the instance via +feature_known?+
 #
