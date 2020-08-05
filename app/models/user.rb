@@ -58,6 +58,8 @@ class User < ApplicationRecord
 
   scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
 
+  scope :api_includes, -> { eager_load(:current_group => [:miq_user_role, :tenant]) }
+
   def self.with_roles_excluding(identifier)
     where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)
                              .where(:miq_product_features => {:identifier => identifier})
