@@ -174,7 +174,7 @@ module SupportsFeatureMixin
   end
 
   def self.reason_or_default(reason)
-    reason.present? ? reason : _("Feature not available/supported")
+    reason.present? ? reason : "Feature not available/supported"
   end
 
   # query instance for the reason why the feature is unsupported
@@ -259,6 +259,13 @@ module SupportsFeatureMixin
     def define_supports_feature_methods(feature, is_supported: true, reason: nil, &block)
       method_name = "supports_#{feature}?"
       feature = feature.to_sym
+
+      # Since a series of default methods were created upon inclusion, remove them
+      # if they're explicitly redefined.
+      if respond_to?(method_name)
+        singleton_class.undef_method(method_name)
+        undef_method(method_name)
+      end
 
       # defines the method on the instance
       define_method(method_name) do
