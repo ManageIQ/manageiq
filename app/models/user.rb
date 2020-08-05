@@ -175,11 +175,11 @@ class User < ApplicationRecord
   end
 
   def unlock!
-    update!(:failed_login_attempts => 0)
+    update_attribute(:failed_login_attempts, 0) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def fail_login!
-    update!(:failed_login_attempts => failed_login_attempts + 1)
+    update_attribute(:failed_login_attempts, failed_login_attempts + 1) # rubocop:disable Rails/SkipsModelValidations
 
     unlock_queue if locked?
   end
