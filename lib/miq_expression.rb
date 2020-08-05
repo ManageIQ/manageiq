@@ -26,6 +26,7 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+    @col_details = nil
   end
 
   def valid?(component = exp)
@@ -96,7 +97,7 @@ class MiqExpression
   end
 
   def to_human
-    self.class._to_human(@exp)
+    self.class._to_human(exp)
   end
 
   def self._to_human(exp, options = {})
@@ -156,7 +157,7 @@ class MiqExpression
   def to_ruby(tz = nil)
     return "" unless valid?
     tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
+    @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz)
     @ruby.dup
   end
 
@@ -293,7 +294,7 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
+    @pexp, attrs = preprocess_for_sql(exp.deep_clone)
     sql = to_arel(@pexp, tz).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
@@ -398,7 +399,7 @@ class MiqExpression
   end
 
   def col_details
-    @col_details ||= self.class.get_cols_from_expression(@exp, @preprocess_options)
+    @col_details ||= self.class.get_cols_from_expression(exp, preprocess_options)
   end
 
   def includes_for_sql
