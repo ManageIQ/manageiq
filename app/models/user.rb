@@ -58,7 +58,24 @@ class User < ApplicationRecord
 
   scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
 
-  scope :api_includes, -> { eager_load(:current_group => [:miq_user_role, :tenant]) }
+  # This just creates the following Hash:
+  #
+  #   {
+  #     :api_includes => :api_includes
+  #   }
+  #
+  # Where :default_scoped is the value for anything that doesn't match a key in
+  # the original array.  The "lookup hash" was chossen since it is much faster
+  # to do a hash table lookup than a `Array.includes?(KEY)`.
+  LOOKUP_SCOPES = Hash.new(:default_scoped).merge({:api_includes => :api_includes}).freeze
+
+  scope :api_includes, -> {
+    eager_load(:current_group => [
+      :miq_user_role,
+      :tenant,
+      :entitlement
+    ])
+  }
 
   def self.with_roles_excluding(identifier)
     where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)
@@ -265,8 +282,8 @@ class User < ApplicationRecord
     authenticator(username).authenticate_with_http_basic(username, password, request, options)
   end
 
-  def self.lookup_by_identity(username)
-    authenticator(username).lookup_by_identity(username)
+  def self.lookup_by_identity(username, lookup_scope: :none)
+    authenticator(username).lookup_by_identity(username, lookup_scope: lookup_scope)
   end
 
   def self.authorize_user(userid)

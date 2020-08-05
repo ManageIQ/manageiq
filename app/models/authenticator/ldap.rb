@@ -66,7 +66,7 @@ module Authenticator
       miq_ldap.normalize(miq_ldap.fqusername(username))
     end
 
-    def _authenticate(username, password, _request)
+    def _authenticate(username, password, request: nil, lookup_scope: nil)
       password.present? &&
         ldap_bind(username, password)
     end

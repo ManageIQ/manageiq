@@ -65,7 +65,7 @@ module Authenticator
         audit = {:event => audit_event, :userid => username}
 
         # The fail_message might or might not come from the _authenticate method
-        authenticated, fail_message = options[:authorize_only] || _authenticate(username, password, request)
+        authenticated, fail_message = options[:authorize_only] || _authenticate(username, password, request: request, lookup_scope: options[:lookup_scope])
         fail_message ||= _("Authentication failed") # Fall back to the default fail_message
 
         if authenticated
@@ -76,7 +76,7 @@ module Authenticator
           else
             # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
             # otherwise we will fail authentication
-            user_or_taskid = lookup_by_identity(username, request)
+            user_or_taskid = lookup_by_identity(username, request: request, lookup_scope: options[:lookup_scope])
             user_or_taskid ||= autocreate_user(username)
 
             unless user_or_taskid
@@ -200,8 +200,8 @@ module Authenticator
       [!!result, username]
     end
 
-    def lookup_by_identity(username, *_args)
-      case_insensitive_find_by_userid(username)
+    def lookup_by_identity(username, request: nil, lookup_scope: nil)
+      case_insensitive_find_by_userid(username, lookup_scope: lookup_scope)
     end
 
     # FIXME: LDAP
@@ -242,8 +242,9 @@ module Authenticator
       nil
     end
 
-    def case_insensitive_find_by_userid(username)
-      user =  User.lookup_by_userid(username)
+    def case_insensitive_find_by_userid(username, lookup_scope: nil)
+      base =  User.send(User::LOOKUP_SCOPES[lookup_scope])
+      user =  base.lookup_by_userid(username)
       user || User.in_my_region.where(:lower_userid => username.downcase).order(:lastlogon).last
     end
 

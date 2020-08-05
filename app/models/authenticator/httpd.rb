@@ -41,7 +41,7 @@ module Authenticator
       ext_auth_is_oidc? || ext_auth_is_saml?
     end
 
-    def _authenticate(_username, _password, request)
+    def _authenticate(_username, _password, request: nil, lookup_scope: nil)
       request.present? &&
         request.headers['X-REMOTE-USER'].present?
     end
@@ -85,29 +85,30 @@ module Authenticator
       [upn_username, user]
     end
 
-    def lookup_by_identity(username, request = nil)
+    def lookup_by_identity(username, request: nil, lookup_scope: nil)
       if request
         user_attrs, _membership_list = user_details_from_headers(username, request)
         upn_username = username_to_upn_name(user_attrs)
-        user =   find_userid_as_upn(upn_username)
-        user ||= find_userid_as_distinguished_name(user_attrs)
+        user =   find_userid_as_upn(upn_username, lookup_scope: lookup_scope)
+        user ||= find_userid_as_distinguished_name(user_attrs, lookup_scope: lookup_scope)
       end
-      user || case_insensitive_find_by_userid(username)
+      user || case_insensitive_find_by_userid(username, lookup_scope: lookup_scope)
     end
 
     private
 
-    def find_userid_as_upn(upn_username)
-      case_insensitive_find_by_userid(upn_username)
+    def find_userid_as_upn(upn_username, lookup_scope: nil)
+      case_insensitive_find_by_userid(upn_username, lookup_scope: lookup_scope)
     end
 
     def find_userid_as_username(identity, username)
       case_insensitive_find_by_userid(userid_for(identity, username))
     end
 
-    def find_userid_as_distinguished_name(user_attrs)
+    def find_userid_as_distinguished_name(user_attrs, lookup_scope: nil)
       dn_domain = user_attrs[:domain].downcase.split(".").map { |s| "dc=#{s}" }.join(",")
-      user = User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
+      base = User.send(User::LOOKUP_SCOPES[lookup_scope])
+      user = base.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
       user
     end
 

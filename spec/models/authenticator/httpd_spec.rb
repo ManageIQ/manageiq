@@ -107,19 +107,19 @@ RSpec.describe Authenticator::Httpd do
     end
 
     it "finds existing users as username" do
-      expect(subject.lookup_by_identity('alice', request)).to eq(alice)
+      expect(subject.lookup_by_identity('alice', request: request)).to eq(alice)
     end
 
     it "finds existing users as UPN" do
-      expect(subject.lookup_by_identity('cheshire', request)).to eq(cheshire)
+      expect(subject.lookup_by_identity('cheshire', request: request)).to eq(cheshire)
     end
 
     it "finds existing users as distinguished name" do
-      expect(subject.lookup_by_identity('towmater', request)).to eq(towmater_dn)
+      expect(subject.lookup_by_identity('towmater', request: request)).to eq(towmater_dn)
     end
 
     it "doesn't create new users" do
-      expect(subject.lookup_by_identity('bob', request)).to be_nil
+      expect(subject.lookup_by_identity('bob', request: request)).to be_nil
     end
   end
 
