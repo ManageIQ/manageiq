@@ -7,6 +7,7 @@ RSpec.describe "Server Environment Management" do
 
   context ".get_network_information" do
     it "when in non-production mode" do
+      require "uuidtools"
       allow(UUIDTools::UUID).to receive(:mac_address).and_return(mac_address)
       expect(MiqServer.get_network_information).to eq([loopback, hostname, mac_address])
     end

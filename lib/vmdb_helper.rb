@@ -1,5 +1,4 @@
 require 'miq-extensions'
-require 'miq-uuid'
 
 require 'ostruct'
 require 'fileutils'
