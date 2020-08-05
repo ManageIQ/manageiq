@@ -111,8 +111,7 @@ module Authenticator
       end
 
       if user_or_taskid.kind_of?(User)
-        user_or_taskid.lastlogon = Time.now.utc
-        user_or_taskid.save!
+        user_or_taskid.update_attribute(:lastlogon, Time.now.utc) # rubocop:disable Rails/SkipsModelValidations
       end
 
       user_or_taskid
