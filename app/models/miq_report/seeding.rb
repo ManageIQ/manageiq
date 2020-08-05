@@ -71,12 +71,20 @@ module MiqReport::Seeding
         begin
           report.update!(attrs)
         rescue ActiveRecord::RecordInvalid
-          duplicate = find_by(:name => name)
-          if duplicate&.rpt_type == "Custom"
-            _log.warn("A custom report already exists with the name #{duplicate.name.inspect}.  Skipping...")
-          elsif duplicate
-            _log.warn("A default report named '#{duplicate.name.inspect}' loaded from '#{duplicate.filename}' already exists. Updating attributes of existing report...")
-            duplicate.update!(attrs)
+          duplicate = where(:name => name).to_a
+          if duplicate.count > 1 && duplicate.all? { |r| r.rpt_type == "Default" }
+            _log.warn("Cowardly refusing to remove duplicate report records for '#{name}'.  " \
+                      "It is advised that you combine the report results for this report in " \
+                      "to one of the records, and delete the duplicates")
+            duplicate.each do |rec|
+              rec.seeding = true
+              rec.update!(attrs)
+            end
+          elsif duplicate.first&.rpt_type == "Custom"
+            _log.warn("A custom report already exists with the name #{duplicate.first.name.inspect}.  Skipping...")
+          elsif duplicate.first
+            _log.warn("A default report named '#{duplicate.first.name.inspect}' loaded from '#{duplicate.first.filename}' already exists. Updating attributes of existing report...")
+            duplicate.first.update!(attrs)
           else
             raise
           end
