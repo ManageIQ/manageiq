@@ -127,14 +127,11 @@ class Vm < VmOrTemplate
 
   def allow_retire_request_creation?
     MiqRequest.where(:source_type => "Vm", :source_id => id).with_type("VmRetireRequest").find_each do |r|
+      next if r.request_state == "finished" || r.status == "Error"
+
       warn_message = "MiqRequest with id:#{r.id} to retire Vm name:'#{name}' id:#{id} already created"
       if r.request_pending_approval?
         _log.warn("#{warn_message} but not approved yet")
-        return false
-      end
-
-      if (r.request_state == 'active' || r.request_state == 'pending') && r.status == 'Ok' && r.process == true
-        _log.warn("#{warn_message}  and retirement is in progress")
         return false
       end
     end
