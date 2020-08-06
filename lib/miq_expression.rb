@@ -27,6 +27,7 @@ class MiqExpression
     @exp = exp
     @context_type = ctype
     @col_details = nil
+    @ruby = nil
   end
 
   def valid?(component = exp)
