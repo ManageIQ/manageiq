@@ -22,6 +22,14 @@ module ManageIQ::Providers
           )
         end
 
+        def cloud_database_flavors
+          add_common_default_values
+        end
+
+        def cloud_databases
+          add_common_default_values
+        end
+
         def vm_and_template_labels
           # TODO(lsmola) make a generic CustomAttribute IC and move it to base class
           add_properties(
