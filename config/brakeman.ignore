@@ -3,24 +3,24 @@
     {
       "warning_type": "File Access",
       "warning_code": 16,
-      "fingerprint": "4e1918c2d5ff2beacc21db09f696af724d62f1a2a6a101e8e3cb564d0e8a94cd",
+      "fingerprint": "7f6bda68f4c5a29348e3135a58385304e23894e97d2b180251048a231a94f603",
       "check_name": "FileAccess",
       "message": "Model attribute used in file name",
-      "file": "app/models/miq_report/import_export.rb",
-      "line": 85,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "YAML.load_file(MiqReport.view_yaml_filename(db, current_user, options))",
+      "file": "app/models/miq_report/formats.rb",
+      "line": 2,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "YAML.load_file(ApplicationRecord::FIXTURE_DIR.join(\"miq_report_formats.yml\"))",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "MiqReport::ImportExport::ClassMethods",
-        "method": "load_from_view_options"
+        "class": "MiqReport::Formats",
+        "method": null
       },
-      "user_input": "MiqReport.view_yaml_filename(db, current_user, options)",
-      "confidence": "Medium",
-      "note": "Temporarily skipped, found in new brakeman version"
+      "user_input": "ApplicationRecord::FIXTURE_DIR.join(\"miq_report_formats.yml\")",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2017-11-01 11:16:49 -0400",
-  "brakeman_version": "3.7.2"
+  "updated": "2020-08-07 10:12:12 -0400",
+  "brakeman_version": "4.9.0"
 }
