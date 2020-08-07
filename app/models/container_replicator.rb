@@ -1,4 +1,6 @@
 class ContainerReplicator < ApplicationRecord
+  acts_as_miq_taggable
+
   include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
@@ -22,8 +24,6 @@ class ContainerReplicator < ApplicationRecord
   include Metric::CiMixin
 
   PERF_ROLLUP_CHILDREN = [:container_groups]
-
-  acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym

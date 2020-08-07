@@ -1,4 +1,6 @@
 class ContainerImage < ApplicationRecord
+  acts_as_miq_taggable
+
   include ComplianceMixin
   include MiqPolicyMixin
   include ScanningMixin
@@ -31,7 +33,6 @@ class ContainerImage < ApplicationRecord
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
 
-  acts_as_miq_taggable
   virtual_column :display_registry, :type => :string
   virtual_total :total_containers, :containers
 

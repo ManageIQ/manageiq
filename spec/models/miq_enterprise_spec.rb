@@ -1,6 +1,10 @@
 RSpec.describe MiqEnterprise do
+  subject { enterprise }
+
+  include_examples "MiqPolicyMixin"
   include_examples ".seed called multiple times", 1
 
+  # TODO:  Make this `subject` for consistency
   let(:enterprise) { FactoryBot.create(:miq_enterprise) }
 
   context "with all existing records" do

@@ -1,4 +1,8 @@
 RSpec.describe MiqServer do
+  subject { FactoryBot.create(:miq_server) }
+
+  include_examples "MiqPolicyMixin"
+
   context ".seed" do
     before do
       MiqRegion.seed

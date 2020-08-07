@@ -1,4 +1,6 @@
 class ContainerGroup < ApplicationRecord
+  acts_as_miq_taggable
+
   include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
@@ -64,8 +66,6 @@ class ContainerGroup < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
-
-  acts_as_miq_taggable
 
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym

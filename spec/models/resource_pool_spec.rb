@@ -1,4 +1,8 @@
 RSpec.describe ResourcePool do
+  subject { FactoryBot.create(:resource_pool) }
+
+  include_examples "MiqPolicyMixin"
+
   context "Testing VM count virtual columns" do
     before do
       @rp1 = FactoryBot.create(:resource_pool, :name => "RP 1")

@@ -1,4 +1,8 @@
 RSpec.describe ContainerImage do
+  subject { FactoryBot.create(:container_image) }
+
+  include_examples "MiqPolicyMixin"
+
   it "#full_name" do
     image = ContainerImage.new(:name => "fedora")
     expect(image.full_name).to eq("fedora")
