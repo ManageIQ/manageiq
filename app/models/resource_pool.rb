@@ -13,6 +13,7 @@ class ResourcePool < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   include RelationshipsAggregationMixin
+  include AggregationMixin::Methods
   include MiqPolicyMixin
   include AsyncDeleteMixin
 
