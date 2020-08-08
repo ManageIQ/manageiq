@@ -1,7 +1,6 @@
 require 'active_support/all'
 require 'active_record'
 require 'securerandom'
-require 'util/extensions/miq-deep'
 
 module FixAuth
   class FixAuthentication < ActiveRecord::Base
