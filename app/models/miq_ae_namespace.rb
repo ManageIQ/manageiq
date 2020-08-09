@@ -1,5 +1,4 @@
 require 'ancestry'
-require 'ancestry_patch'
 
 class MiqAeNamespace < ApplicationRecord
   has_ancestry
