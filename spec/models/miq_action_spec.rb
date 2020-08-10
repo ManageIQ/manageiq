@@ -265,6 +265,25 @@ RSpec.describe MiqAction do
     end
   end
 
+  context '#action_check_compliance' do
+    let(:vm) { FactoryBot.create(:vm_infra) }
+    let(:action) { FactoryBot.create(:miq_action, :name => 'check_compliance', :description => 'Check Host or Vm Compliance') }
+    let(:policy) { FactoryBot.create(:miq_policy, :mode => 'compliance') }
+    let(:event) { FactoryBot.create(:miq_event_definition, :description => 'vm_compliance_check') }
+
+    it 'will not execute for compliance polices' do
+      expect(vm).not_to receive(:check_compliance)
+      expect(MiqPolicy.logger).to receive(:warn)
+      action.action_check_compliance(action, vm, :policy => policy, :synchronous => true, :event => event)
+    end
+
+    it 'will execute for control polices' do
+      policy.update(:mode => 'control')
+      expect(vm).to receive(:check_compliance)
+      action.action_check_compliance(action, vm, :policy => policy, :synchronous => true, :event => event)
+    end
+  end
+
   context '.create_default_actions' do
     context 'seeding default actions from a file with 3 csv rows and some comments' do
       before do
