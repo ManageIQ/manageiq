@@ -987,6 +987,10 @@ class MiqAction < ApplicationRecord
     end
   end
 
+  def self.allowed_for_policies(mode)
+    mode == 'compliance' ? where.not(:name => 'check_compliance') : all
+  end
+
   def self.fixture_path
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
