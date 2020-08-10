@@ -97,7 +97,8 @@ class ConversionHost < ApplicationRecord
   end
 
   def check_ssh_connection
-    connect_ssh { |ssu| ssu.shell_exec('uname -a') }
+    command = AwesomeSpawn.build_command_line("uname", [:a])
+    connect_ssh { |ssu| ssu.shell_exec(command, nil, nil, nil) }
     true
   rescue => e
     false
@@ -133,7 +134,8 @@ class ConversionHost < ApplicationRecord
   end
 
   def kill_process(pid, signal = 'TERM')
-    connect_ssh { |ssu| ssu.shell_exec("/bin/kill -s #{signal} #{pid}") }
+    command = AwesomeSpawn.build_command_line("/bin/kill", [:s, signal, pid])
+    connect_ssh { |ssu| ssu.shell_exec(command) }
     true
   rescue
     false
@@ -266,10 +268,15 @@ class ConversionHost < ApplicationRecord
 
     host = hostname || ipaddress
 
-    command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
+    params = [
+      playbook,
+      :become,
+      [:inventory, "#{host},"],
+      {:extra_vars= => "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"}
+    ]
 
     auth = find_credentials(auth_type)
-    command << " --user #{auth.userid}"
+    params << [:user, auth.userid]
 
     case auth
     when AuthUseridPassword
@@ -281,13 +288,14 @@ class ConversionHost < ApplicationRecord
       ensure
         ssh_private_key_file.close
       end
-      command << " --private-key #{ssh_private_key_file.path}"
+      params << {:private_key => ssh_private_key_file.path}
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
     end
 
-    command << " --extra-vars '#{extra_vars.to_json}'"
+    extra_vars.each { |k, v| params << {:extra_vars= => "#{k}='#{v}'"} }
 
+    command = AwesomeSpawn.build_command_line("ansible-playbook", params)
     result = AwesomeSpawn.run(command)
 
     if result.failure?
