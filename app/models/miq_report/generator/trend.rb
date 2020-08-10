@@ -64,7 +64,7 @@ module MiqReport::Generator::Trend
     return nil if rec.respond_to?(:inside_time_profile) && rec.inside_time_profile == false
 
     begin
-      val = Math.slope_y_intercep(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
+      val = Math.slope_y_intercept(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
       return val > 0 ? val : 0
     rescue ZeroDivisionError
       return nil
