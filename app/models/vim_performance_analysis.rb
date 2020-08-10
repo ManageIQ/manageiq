@@ -473,7 +473,7 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return MiqStats.solve_for_y(timestamp.to_f, slope, yint)
+      return Math.slope_y_intercept(timestamp.to_f, slope, yint)
     rescue RangeError
       return nil
     rescue => err
@@ -487,7 +487,7 @@ module VimPerformanceAnalysis
     return nil if slope.nil?
 
     begin
-      return Time.at(MiqStats.solve_for_x(value.to_f, slope, yint)).utc
+      return Time.at(Math.slope_x_intercept(value.to_f, slope, yint)).utc
     rescue RangeError
       return nil
     rescue => err

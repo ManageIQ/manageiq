@@ -64,7 +64,7 @@ module MiqReport::Generator::Trend
     return nil if rec.respond_to?(:inside_time_profile) && rec.inside_time_profile == false
 
     begin
-      val = MiqStats.solve_for_y(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
+      val = Math.slope_y_intercep(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
       return val > 0 ? val : 0
     rescue ZeroDivisionError
       return nil
@@ -143,7 +143,7 @@ module MiqReport::Generator::Trend
       return unknown
     else
       begin
-        result = MiqStats.solve_for_x(limit, trend_data[trend_data_key][:slope], trend_data[trend_data_key][:yint])
+        result = Math.slope_x_intercept(limit, trend_data[trend_data_key][:slope], trend_data[trend_data_key][:yint])
         if result <= 1.year.from_now.to_i
           if Time.at(result).utc <= Time.now.utc
             return Time.at(result).utc.strftime("%m/%d/%Y")

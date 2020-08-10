@@ -139,7 +139,7 @@ class VimPerformanceTrend < ActsAsArModel
       return nil
     else
       begin
-        result = MiqStats.solve_for_x(limit, trend_data[:slope], trend_data[:yint])
+        result = Math.slope_x_intercept(limit, trend_data[:slope], trend_data[:yint])
         return Time.at(result).utc
       rescue RangeError
         return nil
