@@ -163,6 +163,19 @@ class Service < ApplicationRecord
     parent.present? ? true : type.present?
   end
 
+  def allow_retire_request_creation?
+    MiqRequest.with_type("ServiceRetireRequest").where(:approval_state => "pending_approval").find_each do |request|
+      if request.options.try(:[], :src_ids)&.include?(id)
+        next if request.request_state == "finished" || request.status == "Error"
+
+        _log.warn("MiqRequest with id:#{request.id} to retire Service name:'#{name}' id:#{id} already created but not approved yet")
+        return false
+      end
+    end
+
+    true
+  end
+
   alias root_service root
   alias services children
   alias direct_service_children children

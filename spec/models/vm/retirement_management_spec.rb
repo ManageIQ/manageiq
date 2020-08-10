@@ -72,6 +72,38 @@ describe "VM Retirement Management" do
         expect(vm_with_owner.retirement_requester).to eq('admin')
       end
     end
+
+    context "preventing creation of duplicate retirement request" do
+      before do
+        vm_with_owner.update(:retires_on => Time.zone.today)
+        @request = FactoryBot.create(:vm_retire_request, :requester => user, :source_id => vm_with_owner.id)
+      end
+
+      it "create request if existing request's state is 'finished' regardless approval status" do
+        @request.update(:request_state => 'finished')
+        expect(vm_with_owner.class).to receive(:make_retire_request)
+        vm_with_owner.retirement_check
+
+        @request.update(:approval_state => "approved")
+        expect(vm_with_owner.class).to receive(:make_retire_request)
+        vm_with_owner.retirement_check
+      end
+
+      it "create request if existing request's status is 'Error' regardless approval status" do
+        @request.update(:status => 'Error')
+        expect(vm_with_owner.class).to receive(:make_retire_request)
+        vm_with_owner.retirement_check
+
+        @request.update(:approval_state => "approved")
+        expect(vm_with_owner.class).to receive(:make_retire_request)
+        vm_with_owner.retirement_check
+      end
+
+      it "does not create request if existing request not approved and not finished and status is not 'Error'" do
+        expect(vm_with_owner.class).not_to receive(:make_retire_request)
+        vm_with_owner.retirement_check
+      end
+    end
   end
 
   it "#start_retirement" do

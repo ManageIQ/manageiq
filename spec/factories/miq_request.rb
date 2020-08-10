@@ -8,6 +8,7 @@ FactoryBot.define do
 
     factory :service_reconfigure_request,        :class => "ServiceReconfigureRequest"
     factory :service_retire_request,             :class => "ServiceRetireRequest"
+    factory :orchestration_stack_retire_request, :class => "OrchestrationStackRetireRequest"
     factory :service_template_provision_request, :class => "ServiceTemplateProvisionRequest" do
       source { create(:service_template) }
     end

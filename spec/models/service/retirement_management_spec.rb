@@ -38,6 +38,32 @@ describe "Service Retirement Management" do
         expect(@service.retirement_requester).to eq('admin')
       end
     end
+
+    context "preventing creation of duplicate retirement request" do
+      before do
+        service_with_owner.update(:retires_on => Time.zone.today)
+        @request = FactoryBot.create(:service_retire_request, :requester => user, :options => {:src_ids => [service_with_owner.id]})
+      end
+
+      context "retirement request not approved yet" do
+        it "create request if existing request's state is 'finished'" do
+          @request.update(:request_state => 'finished')
+          expect(service_with_owner.class).to receive(:make_retire_request)
+          service_with_owner.retirement_check
+        end
+
+        it "create request if existing request's status is 'Error'" do
+          @request.update(:status => 'Error')
+          expect(service_with_owner.class).to receive(:make_retire_request)
+          service_with_owner.retirement_check
+        end
+
+        it "does not create request if existing request not finished and status is not 'Error'" do
+          expect(service_with_owner.class).not_to receive(:make_retire_request)
+          service_with_owner.retirement_check
+        end
+      end
+    end
   end
 
   it "#start_retirement" do

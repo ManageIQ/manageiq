@@ -135,7 +135,17 @@ module RetirementMixin
       end
     end
 
-    self.class.make_retire_request(id, requester) if retirement_due?
+    if retirement_due?
+      if allow_retire_request_creation?
+        self.class.make_retire_request(id, requester)
+      else
+        _log.warn("Attempt to create duplicate retirement request has been terminated")
+      end
+    end
+  end
+
+  def allow_retire_request_creation?
+    true
   end
 
   def retire_now(requester = nil)

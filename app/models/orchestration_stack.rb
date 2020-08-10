@@ -103,6 +103,19 @@ class OrchestrationStack < ApplicationRecord
     self.tenant_id = miq_group.tenant_id if miq_group
   end
 
+  def allow_retire_request_creation?
+    MiqRequest.with_type("OrchestrationStackRetireRequest").where(:approval_state => "pending_approval").find_each do |request|
+      if request.options.try(:[], :src_ids)&.include?(id)
+        next if request.request_state == "finished" || request.status == "Error"
+
+        _log.warn("MiqRequest with id:#{request.id} to retire Orchestra tionStack name:'#{name}' id:#{id} already created but not approved yet")
+        return false
+      end
+    end
+
+    true
+  end
+
   private :directs_and_indirects
 
   def self.create_stack(orchestration_manager, stack_name, template, options = {})
