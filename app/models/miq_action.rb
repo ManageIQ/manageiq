@@ -369,6 +369,11 @@ class MiqAction < ApplicationRecord
       return
     end
 
+    if inputs[:policy].mode == 'compliance'
+      MiqPolicy.logger.warn("MIQ(action_check_compliance): Invoking action [#{action.description}] for event [#{inputs[:event].description}] would cause infinite loop, skipping")
+      return
+    end
+
     if inputs[:synchronous]
       MiqPolicy.logger.info("MIQ(action_check_compliance): Now executing [#{action.description}] of #{rec.class.name} [#{rec.name}]")
       rec.check_compliance
@@ -980,6 +985,10 @@ class MiqAction < ApplicationRecord
       _log.info("Creating [#{name}]")
       create(action_attributes)
     end
+  end
+
+  def self.allowed_for_policies(mode)
+    mode == 'compliance' ? where.not(:name => 'check_compliance') : all
   end
 
   def self.fixture_path
