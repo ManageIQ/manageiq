@@ -319,7 +319,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     unless options[:tag_filters].blank?
       tag_filters = options[:tag_filters].collect(&:to_s)
-      selected_tags = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
+      selected_tags = (Array.wrap(@values[:vm_tags]) + Array.wrap(@values[:pre_dialog_vm_tags])).uniq
       tag_conditions = []
 
       # Collect the filter tags by category
@@ -553,7 +553,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           domains[domain] = domain
         end
       else
-        @values[:forced_sysprep_domain_name].to_miq_a.each { |d| domains[d] = d }
+        Array.wrap(@values[:forced_sysprep_domain_name]).each { |d| domains[d] = d }
       end
       domains
     end
@@ -661,11 +661,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     spec      = cs_data[:spec]
     dialog    = @dialogs.fetch_path(:dialogs, :customize)
 
-    first_adapter = spec['nicSettingMap'].to_miq_a.first
+    first_adapter = Array.wrap(spec['nicSettingMap']).first
     if first_adapter.kind_of?(Hash)
       adapter = first_adapter['adapter']
-      spec_hash[:dns_servers]  = adapter['dnsServerList'].to_miq_a.join(', ')
-      spec_hash[:gateway]      = adapter['gateway'].to_miq_a.join(', ')
+      spec_hash[:dns_servers]  = Array.wrap(adapter['dnsServerList']).join(', ')
+      spec_hash[:gateway]      = Array.wrap(adapter['gateway']).join(', ')
       spec_hash[:subnet_mask]  = adapter['subnetMask'].to_s
       spec_hash[:ip_addr]      = adapter.fetch_path('ip', 'ipAddress').to_s
       # Combine the WINS server fields into 1 comma separated field list
@@ -673,8 +673,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     # In Linux, DNS server settings are global, not per adapter
-    spec_hash[:dns_servers]  = spec.fetch_path('globalIPSettings', 'dnsServerList').to_miq_a.join(', ') if spec_hash[:dns_servers].blank?
-    spec_hash[:dns_suffixes] = spec.fetch_path('globalIPSettings', 'dnsSuffixList').to_miq_a.join(', ')
+    spec_hash[:dns_servers]  = Array.wrap(spec.fetch_path('globalIPSettings', 'dnsServerList')).join(', ') if spec_hash[:dns_servers].blank?
+    spec_hash[:dns_suffixes] = Array.wrap(spec.fetch_path('globalIPSettings', 'dnsSuffixList')).join(', ')
 
     spec_hash[:addr_mode] = spec_hash[:ip_addr].blank? ? 'dhcp' : 'static'
 

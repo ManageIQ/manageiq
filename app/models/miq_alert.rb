@@ -328,7 +328,7 @@ class MiqAlert < ApplicationRecord
           end
         end
       elsif k == :snmp
-        notifications[k].to_miq_a.each do |n|
+        Array.wrap(notifications[k]).each do |n|
           description = "#{k.to_s.titleize} Action for Alert: #{self.description}"
           action_type = "snmp_trap"
           actions << MiqAction.new(

@@ -82,7 +82,7 @@ class MiqReport < ApplicationRecord
     q = joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
 
     if options[:select]
-      cols = options[:select].to_miq_a
+      cols = Array.wrap(options[:select])
       cols = cols.dup.unshift(:id) unless cols.include?(:id)
       cols.each { |c| q = q.select(arel_table[c]) }
     end

@@ -151,7 +151,7 @@ class EvmServer
   def check_migrations_up_to_date
     up_to_date, *message = SchemaMigration.up_to_date?
     level = up_to_date ? :info : :warn
-    message.to_miq_a.each { |msg| _log.send(level, msg) }
+    Array.wrap(message).each { |msg| _log.send(level, msg) }
     up_to_date
   end
 

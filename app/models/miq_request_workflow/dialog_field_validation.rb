@@ -1,11 +1,11 @@
 # These methods are available for dialog field validation, do not erase.
 module MiqRequestWorkflow::DialogFieldValidation
   def validate_tags(field, values, _dlg, fld, _value)
-    selected_tags_categories = values[field].to_miq_a.collect do |tag_id|
+    selected_tags_categories = Array.wrap(values[field]).collect do |tag_id|
       Classification.find_by(:id => tag_id).parent.name.to_sym
     end
 
-    required_tags = fld[:required_tags].to_miq_a.collect(&:to_sym)
+    required_tags = Array.wrap(fld[:required_tags]).collect(&:to_sym)
     missing_tags = required_tags - selected_tags_categories
     missing_categories_names = missing_tags.collect do |category|
       begin

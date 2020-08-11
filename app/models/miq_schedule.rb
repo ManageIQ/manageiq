@@ -356,7 +356,7 @@ class MiqSchedule < ApplicationRecord
 
   def next_interval_time
     unless self.valid? || errors[:run_at].blank?
-      _log.warn("Invalid schedule [#{id}] [#{name}]: #{errors[:run_at].to_miq_a.join(", ")}")
+      _log.warn("Invalid schedule [#{id}] [#{name}]: #{Array.wrap(errors[:run_at]).join(", ")}")
       return nil
     end
 
@@ -421,7 +421,7 @@ class MiqSchedule < ApplicationRecord
 
   def interval
     unless self.valid? || errors[:run_at].blank?
-      _log.warn("Invalid schedule [#{id}] [#{name}]: #{errors[:run_at].to_miq_a.join(", ")}")
+      _log.warn("Invalid schedule [#{id}] [#{name}]: #{Array.wrap(errors[:run_at]).join(", ")}")
       return nil
     end
 

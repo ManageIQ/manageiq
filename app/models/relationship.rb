@@ -105,8 +105,8 @@ class Relationship < ApplicationRecord
   # This prunes a tree already in memory
   # may be faster to prune the tree before creating the tree
   def self.filter_arranged_rels_by_resource_type(relationships, options)
-    of_type = options[:of_type].to_miq_a
-    except_type = options[:except_type].to_miq_a
+    of_type = Array.wrap(options[:of_type])
+    except_type = Array.wrap(options[:except_type])
     return relationships if of_type.empty? && except_type.empty?
 
     relationships.each_with_object({}) do |(rel, children), h|

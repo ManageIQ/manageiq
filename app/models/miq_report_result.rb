@@ -356,7 +356,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.delete_by_userid(userids)
-    userids = userids.to_miq_a
+    userids = Array.wrap(userids)
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
     MiqQueue.submit_job(
       :class_name  => name,
