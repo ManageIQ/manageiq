@@ -2,7 +2,9 @@
 shared_examples_for "MiqPolicyMixin" do
   context "MiqPolicyMixin methods" do
     let(:policy) { FactoryBot.create(:miq_policy) }
+    let(:policy2) { FactoryBot.create(:miq_policy) }
     let(:policy_set) { FactoryBot.create(:miq_policy_set).tap { |ps| ps.add_member(policy) } }
+    let(:policy_set) { FactoryBot.create(:miq_policy_set).tap { |ps| ps.add_member(policy2) } }
 
     describe "#get_policies" do
       it "supports no policies" do
@@ -15,8 +17,10 @@ shared_examples_for "MiqPolicyMixin" do
       end
 
       it "supports policy sets" do
+        subject.add_policy(policy)
+        subject.add_policy(policy2)
         subject.add_policy(policy_set)
-        expect(subject.get_policies).to eq([policy_set])
+        expect(subject.get_policies).to contain_exactly(policy_set, policy, policy2)
       end
     end
 
