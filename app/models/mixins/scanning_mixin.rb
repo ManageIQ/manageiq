@@ -178,7 +178,7 @@ module ScanningMixin
       Array.wrap(scan_profiles).each do |p|
         p["definition"].each do |d|
           if d["item_type"] == "category"
-            d["definition"]["content"].to_miq_a.each { |item| cat_scan_list << item["target"] }
+            Array.wrap(d["definition"]["content"]).each { |item| cat_scan_list << item["target"] }
           else
             cat_scan_list |= ["profiles"]
           end

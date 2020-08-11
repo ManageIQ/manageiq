@@ -137,7 +137,7 @@ module MiqProvisionMixin
              elsif folder.kind_of?(Array) && folder.length == 2 && folder.first.kind_of?(Integer)
                MiqAeMethodService::MiqAeServiceEmsFolder.find(folder.first)
              else
-               find_path = folder.to_miq_a.join('/')
+               find_path = Array.wrap(folder).join('/')
                found = eligible_resources(:folders).detect do |f|
                  folder_path = f.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)
                  folder_path.casecmp(find_path).zero?
