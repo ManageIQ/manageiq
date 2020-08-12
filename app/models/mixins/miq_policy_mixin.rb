@@ -31,7 +31,7 @@ module MiqPolicyMixin
       .map { |t| t.split("/").first(2) }
       .group_by(&:first)
       .select { |klass, _ids| ["miq_policy", "miq_policy_set"].include?(klass) }
-      .flat_map { |klass, ids| klass.camelize.constantize.where(:id => ids).to_a }
+      .flat_map { |klass, ids| klass.camelize.constantize.where(:id => ids.map(&:last)).to_a }
   end
 
   def resolve_policies(list, event = nil)
