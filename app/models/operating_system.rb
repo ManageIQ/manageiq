@@ -30,7 +30,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_solaris",   %w(solaris)],
     ["linux_generic",   %w(linux)],
     ["ibm_aix",         %w(aix)],
-    ["ibm_i",           %w(ibmi)],
+    ["ibm_i",           %w(ibmi)]
   ]
 
   def self.add_elements(vm, xmlNode)
