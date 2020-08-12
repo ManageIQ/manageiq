@@ -117,4 +117,18 @@ RSpec.describe ResourcePool do
       expect(subject.current_tenant).to eq(Tenant.root_tenant)
     end
   end
+
+  describe "all_hosts" do
+    let(:resource_pool) { FactoryBot.create(:resource_pool) }
+    let(:cluster) { FactoryBot.create(:ems_cluster) }
+    let(:rel) { FactoryBot.create(:relationship, :resource_type => "EmsCluster", :resource_id => cluster.id) }
+
+    it "doesn't call all_hosts on the cluster" do
+      cluster.with_relationship_type("ems_metadata") { cluster.add_child resource_pool }
+
+      expect(cluster).not_to receive(:all_hosts)
+
+      resource_pool.all_hosts
+    end
+  end
 end
