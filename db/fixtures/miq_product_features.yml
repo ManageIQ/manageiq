@@ -1854,10 +1854,6 @@
         :description: Edit a Policy Profile
         :feature_type: admin
         :identifier: miq_policy_set_edit
-      - :name: Edit Policies Assignment
-        :description: Edit Policy Profile's policies assignments
-        :feature_type: admin
-        :identifier: miq_policy_set_assign
   - :name: Policies
     :description: Everything under Policies
     :protected: true
