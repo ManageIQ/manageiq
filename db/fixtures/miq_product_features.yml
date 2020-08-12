@@ -1932,17 +1932,17 @@
     :description: Everything under Policy Events
     :protected: true
     :feature_type: node
-    :identifier: event
+    :identifier: miq_event
     :children:
     - :name: Modify
-      :description: Modify Conditions
+      :description: Modify Events
       :feature_type: admin
-      :identifier: event_admin
+      :identifier: miq_event_admin
       :children:
       - :name: Edit
         :description: Edit Event
         :feature_type: admin
-        :identifier: event_edit
+        :identifier: miq_event_edit
   - :name: Actions
     :description: Everything under Policy Actions
     :protected: true
