@@ -29,7 +29,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_esx",       %w(vmnixx86 vmwareesxserver esxserver vmwareesxi)],
     ["linux_solaris",   %w(solaris)],
     ["linux_generic",   %w(linux)],
-    ["ibm_aix",         %w(aix)],
+    ["unix_aix",        %w(aix)],
     ["ibm_i",           %w(ibmi)]
   ]
 
