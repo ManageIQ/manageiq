@@ -247,12 +247,12 @@ module EmsRefresh::SaveInventoryInfra
   alias_method :save_ems_clusters_inventory, :save_clusters_inventory
 
   def save_resource_pools_inventory(ems, hashes, target = nil, disconnect = true)
-    target = ems if target.nil? && disconnect
+    target = ems if target.nil?
 
     ems.resource_pools.reset
-    deletes = if (target == ems)
+    deletes = if disconnect && target == ems
                 :use_association
-              elsif target.kind_of?(Host)
+              elsif disconnect && target.kind_of?(Host)
                 target.all_resource_pools_with_default
               else
                 []
