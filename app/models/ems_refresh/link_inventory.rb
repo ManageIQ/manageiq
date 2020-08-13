@@ -1,6 +1,6 @@
 module EmsRefresh::LinkInventory
   # Link EMS inventory through the relationships table
-  def link_ems_inventory(ems, target, prev_relats, new_relats, disconnect = true)
+  def link_ems_inventory(ems, target, prev_relats, new_relats)
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
     _log.info("#{log_header} Linking EMS Inventory...")
     _log.debug("#{log_header} prev_relats: #{prev_relats.inspect}")
@@ -15,15 +15,15 @@ module EmsRefresh::LinkInventory
     _log.info("#{log_header} Updating EMS root folder relationship.")
     root_id = new_relats[:ext_management_systems_to_folders][ems.id][0]
     if root_id.nil?
-      ems.remove_all_children if disconnect
+      ems.remove_all_children
     else
-      ems.replace_children(instance_with_id(EmsFolder, root_id)) if disconnect
+      ems.replace_children(instance_with_id(EmsFolder, root_id))
     end
 
     # Do the Folders to *, and Clusters to * relationships
     #   For these, we only disconnect when doing an EMS refresh since we don't have
     #   enough information in the filtered data for other refresh types
-    do_disconnect = target.kind_of?(ExtManagementSystem) if disconnect
+    do_disconnect = target.kind_of?(ExtManagementSystem)
 
     # Do the Folders to Folders relationships
     update_relats(:folders_to_folders, prev_relats, new_relats) do |f|
@@ -76,7 +76,7 @@ module EmsRefresh::LinkInventory
     # Do the Hosts to * relationships, ResourcePool to * relationships
     #   For these, we only disconnect when doing an EMS or Host refresh since we don't
     #   have enough information in the filtered data for other refresh types
-    do_disconnect ||= target.kind_of?(Host) if disconnect
+    do_disconnect ||= target.kind_of?(Host)
 
     # Do the Hosts to ResourcePools relationships
     update_relats(:hosts_to_resource_pools, prev_relats, new_relats) do |h|
@@ -110,7 +110,7 @@ module EmsRefresh::LinkInventory
     #   We do disconnects for EMS, Host, and Vm target types since
     #   we have enough information in the filtered data
 
-    do_disconnect ||= target.kind_of?(VmOrTemplate) if disconnect
+    do_disconnect ||= target.kind_of?(VmOrTemplate)
 
     # Do the Folders to Vms relationships
     update_relats(:folders_to_vms, prev_relats, new_relats) do |f|

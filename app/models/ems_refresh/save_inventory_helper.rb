@@ -178,8 +178,8 @@ module EmsRefresh::SaveInventoryHelper
     top_level && (target == true || target.nil? || parent == target) ? :use_association : []
   end
 
-  def determine_deletes_using_association(ems, target, disconnect = true)
-    if disconnect && target == ems
+  def determine_deletes_using_association(ems, target)
+    if target == ems
       :use_association
     else
       []
