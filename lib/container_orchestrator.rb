@@ -58,7 +58,21 @@ class ContainerOrchestrator
     raise unless e.message =~ /not found/
   end
 
+  def get_pods
+    # TODO: we should set a label for workers we want to monitor so we don't accidentally kill memcached/postgresql pod
+    # :label_selector => "app=manageiq,worker=true"
+    kube_connection.get_pods(pod_options)
+  end
+
+  def watch_pods(resource_version)
+    watcher = kube_connection.watch_pods(pod_options.merge(:resource_version => resource_version))
+    watcher.each { |notice| yield notice }
+  end
+
   private
+  def pod_options
+    @pod_options ||= {:namespace => my_namespace, :label_selector => "app=#{app_name}"}
+  end
 
   def kube_connection
     @kube_connection ||= raw_connect(manager_uri("/api"))

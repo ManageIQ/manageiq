@@ -2,6 +2,7 @@ module MiqServer::WorkerManagement::Monitor
   extend ActiveSupport::Concern
 
   include_concern 'Kill'
+  include_concern 'Kubernetes'
   include_concern 'Quiesce'
   include_concern 'Reason'
   include_concern 'Settings'
@@ -68,6 +69,7 @@ module MiqServer::WorkerManagement::Monitor
     clean_worker_records
 
     if podified?
+      cleanup_failed_deployments
     elsif systemd?
       cleanup_failed_systemd_services
     end
