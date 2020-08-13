@@ -28,7 +28,9 @@ class OperatingSystem < ApplicationRecord
     ["linux_coreos",    %w(coreos)],
     ["linux_esx",       %w(vmnixx86 vmwareesxserver esxserver vmwareesxi)],
     ["linux_solaris",   %w(solaris)],
-    ["linux_generic",   %w(linux)]
+    ["linux_generic",   %w(linux)],
+    ["unix_aix",        %w(aix)],
+    ["ibm_i",           %w(ibmi)]
   ]
 
   def self.add_elements(vm, xmlNode)
