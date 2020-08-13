@@ -15,7 +15,7 @@ module RelativePathMixin
   end
 
   def lower_relative_path
-    rel_path&.downcase
+    relative_path&.downcase
   end
 
   def domain_name
