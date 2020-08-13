@@ -264,6 +264,9 @@ class EmsEvent < EventStream
       :event   => event[:event_type],
       :payload => event
     )
+  rescue => err
+    _log.warn("Failed to publish event [#{ems_id}] [#{event[:event_type]}]: #{err}")
+    _log.log_backtrace(err)
   end
 
   private_class_method :publish_event
