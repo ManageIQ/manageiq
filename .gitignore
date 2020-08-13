@@ -61,6 +61,7 @@ content/ansible_consolidated
 db/*.sqlite3
 db/schema.rb
 db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
+lib/manageiq/integration/seed_config.yml
 
 # log/
 log/*.gz

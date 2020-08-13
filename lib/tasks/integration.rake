@@ -4,8 +4,14 @@ namespace :integration do
 
   namespace :seed do
     task :all    => [:db, :assets]
-    task :db     => [:env, "test:vmdb:setup", "evm:foreman:seed"]
+    task :db     => [:env, "test:vmdb:setup", "evm:foreman:seed", :setup_db_cleaner]
     task :assets => [:env, "test:initialize", :compile_assets]
+
+    # Internal task:  call via integration:seed:db
+    task :setup_db_cleaner => :load_manager do
+      puts "Setting up ManageIQ::Integration::DatabaseCleaner..."
+      ManageIQ::Integration::DatabaseCleaner.setup!(force: true)
+    end
 
     task :compile_assets do |rake_task|
       app_prefix = rake_task.name.chomp('integration:seed:compile_assets')
