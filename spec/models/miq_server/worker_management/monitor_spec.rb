@@ -56,6 +56,13 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
         expect(MiqPriorityWorker).to receive(:sync_workers).and_return(:adds => [123])
         expect(server.sync_workers).to eq("MiqPriorityWorker"=>{:adds=>[123]})
       end
+
+      it "calls cleanup_failed_services" do
+        allow(MiqWorkerType).to receive(:worker_class_names).and_return([])
+        allow(MiqEnvironment::Command).to receive(:supports_systemd?).and_return(true)
+        expect(server).to receive(:cleanup_failed_systemd_services)
+        server.cleanup_failed_workers
+      end
     end
   end
 end
