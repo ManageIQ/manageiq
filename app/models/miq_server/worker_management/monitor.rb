@@ -8,6 +8,7 @@ module MiqServer::WorkerManagement::Monitor
   include_concern 'Start'
   include_concern 'Status'
   include_concern 'Stop'
+  include_concern 'Systemd'
   include_concern 'SystemLimits'
   include_concern 'Validation'
 
@@ -22,9 +23,7 @@ module MiqServer::WorkerManagement::Monitor
 
     MiqWorker.status_update_all
 
-    check_not_responding
-    check_pending_stop
-    clean_worker_records
+    cleanup_failed_workers
 
     # Monitor all remaining current worker records
     miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
@@ -61,6 +60,25 @@ module MiqServer::WorkerManagement::Monitor
       end
     end
     result
+  end
+
+  def cleanup_failed_workers
+    check_not_responding
+    check_pending_stop
+    clean_worker_records
+
+    if podified?
+    elsif systemd?
+      cleanup_failed_systemd_services
+    end
+  end
+
+  def podified?
+    MiqEnvironment::Command.is_podified?
+  end
+
+  def systemd?
+    MiqEnvironment::Command.supports_systemd?
   end
 
   def clean_worker_records
