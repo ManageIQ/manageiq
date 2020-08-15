@@ -110,6 +110,6 @@ module OwnershipMixin
   end
 
   def set_tenant_from_group
-    self.tenant_id = miq_group.tenant_id if miq_group
+    self.tenant_id = miq_group.tenant_id if miq_group_id_changed? && miq_group
   end
 end
