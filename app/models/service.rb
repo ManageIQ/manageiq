@@ -144,9 +144,7 @@ class Service < ApplicationRecord
   end
   virtual_attribute :service_id, :integer
 
-  def has_parent?
-    !root?
-  end
+  # has_parent? is from the ancestry mixin
   alias has_parent has_parent?
 
   def request_class
