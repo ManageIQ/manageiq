@@ -22,18 +22,6 @@ class EmsEvent
       EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
     end
 
-    def refresh_new_target
-      ems = ext_management_system
-      if ems.supports_refresh_new_target?
-        ep_class = ems.class::EventParser
-        target_hash, target_class, target_find = ep_class.parse_new_target(full_data, message, ems, event_type)
-
-        EmsRefresh.queue_refresh_new_target(ems, target_hash, target_class, target_find)
-      else
-        EmsRefresh.queue_refresh(ems)
-      end
-    end
-
     def policy(target_str, policy_event, param = nil)
       _log.debug("ems: [#{ems_id}]")
       return if ems_id.nil?

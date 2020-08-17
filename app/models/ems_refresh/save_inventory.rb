@@ -1,9 +1,9 @@
 module EmsRefresh::SaveInventory
   # Parsed inventory can come as hash of hashes or array of InventoryCollection's.
-  def save_ems_inventory(ems, hashes, target = nil, disconnect = true)
+  def save_ems_inventory(ems, hashes, target = nil)
     case ems
-    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target, disconnect)
-    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target, disconnect)
+    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
+    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
     when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
@@ -16,22 +16,18 @@ module EmsRefresh::SaveInventory
     update!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
   end
 
-  def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
-    save_ems_inventory(ems, hashes, target, false)
-  end
-
   #
   # Shared between Cloud and Infra
   #
 
-  def save_vms_inventory(ems, hashes, target = nil, disconnect = true)
+  def save_vms_inventory(ems, hashes, target = nil)
     return if hashes.nil?
-    target = ems if target.nil? && disconnect
+    target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if disconnect && (target.kind_of?(ExtManagementSystem) || target.kind_of?(Host))
+    disconnects = if (target.kind_of?(ExtManagementSystem) || target.kind_of?(Host))
                     target.vms_and_templates.reload.to_a
-                  elsif disconnect && target.kind_of?(Vm)
+                  elsif target.kind_of?(Vm)
                     [target.ruby_clone]
                   else
                     []

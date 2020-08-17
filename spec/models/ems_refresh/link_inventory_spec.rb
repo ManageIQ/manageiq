@@ -23,7 +23,7 @@ RSpec.describe EmsRefresh::LinkInventory do
         new_relats[:folders_to_vms].delete(folder1.id) if new_relats[:folders_to_vms][folder1.id].empty?
         new_relats[:folders_to_vms][folder2.id] = [vm1.id]
 
-        EmsRefresh.link_ems_inventory(ems, target, prev_relats, new_relats, true)
+        EmsRefresh.link_ems_inventory(ems, target, prev_relats, new_relats)
       end
 
       context "full refresh" do
