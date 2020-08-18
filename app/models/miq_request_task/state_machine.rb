@@ -21,7 +21,7 @@ module MiqRequestTask::StateMachine
     begin
       send(phase)
     rescue => err
-      case phase
+      case phase.to_sym
       when :finish
         $log.error("[#{err.class}: #{err.message}] encountered during [#{phase}]")
         $log.log_backtrace(err)
