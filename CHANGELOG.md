@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 143 ending 2020-08-17
+
+### Fixed
+
+* Don't allow kafka exceptions to cause EmsEvent.add_queue to fail [(#20440)](https://github.com/ManageIQ/manageiq/pull/20440)
+* Remove the miq-uuid reference [(#20419)](https://github.com/ManageIQ/manageiq/pull/20419)
+
 # Unreleased as of Sprint 142 ending 2020-08-03
 
 ### Fixed
