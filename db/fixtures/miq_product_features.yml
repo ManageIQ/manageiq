@@ -1978,29 +1978,29 @@
     :description: Everything under Policy Alert Profiles
     :protected: true
     :feature_type: node
-    :identifier: alert_profile
+    :identifier: miq_alert_set
     :children:
     - :name: Modify
       :description: Modify Policy Alert Profiles
       :feature_type: admin
-      :identifier: alert_profile_admin
+      :identifier: miq_alert_set_admin
       :children:
       - :name: Add
         :description: Add a Policy Alert Profile
         :feature_type: admin
-        :identifier: alert_profile_new
+        :identifier: miq_alert_set_new
       - :name: Edit
         :description: Edit a Policy Alert Profile
         :feature_type: admin
-        :identifier: alert_profile_edit
+        :identifier: miq_alert_set_edit
       - :name: Edit assignments
         :description: Edit assignments
         :feature_type: admin
-        :identifier: alert_profile_assign
+        :identifier: miq_alert_set_assign
       - :name: Delete
         :description: Delete a Policy Alert Profile
         :feature_type: admin
-        :identifier: alert_profile_delete
+        :identifier: miq_alert_set_delete
   - :name: Alerts
     :description: Everything under Policy Alerts
     :protected: true
