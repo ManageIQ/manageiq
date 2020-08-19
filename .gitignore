@@ -63,7 +63,7 @@ db/schema.rb
 db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
 
 # log/
-log
+log/
 
 # product/
 product/automate
