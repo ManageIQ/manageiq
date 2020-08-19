@@ -2005,29 +2005,29 @@
     :description: Everything under Policy Alerts
     :protected: true
     :feature_type: node
-    :identifier: alert
+    :identifier: miq_alert
     :children:
     - :name: Modify
       :description: Modify Policy Alerts
       :feature_type: admin
-      :identifier: alert_admin
+      :identifier: miq_alert_admin
       :children:
       - :name: Add
         :description: Add a Policy Alert
         :feature_type: admin
-        :identifier: alert_new
+        :identifier: miq_alert_new
       - :name: Copy
         :description: Copy a Policy Alert
         :feature_type: admin
-        :identifier: alert_copy
+        :identifier: miq_alert_copy
       - :name: Edit
         :description: Edit a Policy Alert
         :feature_type: admin
-        :identifier: alert_edit
+        :identifier: miq_alert_edit
       - :name: Delete
         :description: Delete a Policy Alert
         :feature_type: admin
-        :identifier: alert_delete
+        :identifier: miq_alert_delete
   - :name: Alerts Statuses
     :description: Everything under Alerts Statuses
     :protected: true
