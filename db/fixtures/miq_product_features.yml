@@ -1947,33 +1947,33 @@
     :description: Everything under Policy Actions
     :protected: true
     :feature_type: node
-    :identifier: action
+    :identifier: miq_action
     :children:
     - :name: Modify
       :description: Modify Policy Actions
       :feature_type: admin
-      :identifier: action_admin
+      :identifier: miq_action_admin
       :children:
       - :name: List
         :description: Display All Policy Actions
         :feature_type: view
-        :identifier: action_show_list
+        :identifier: miq_action_show_list
       - :name: Show
         :description: Show MiqAction
         :feature_type: view
-        :identifier: action_show
+        :identifier: miq_action_show
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin
-        :identifier: action_new
+        :identifier: miq_action_new
       - :name: Edit
         :description: Edit a Policy Action
         :feature_type: admin
-        :identifier: action_edit
+        :identifier: miq_action_edit
       - :name: Delete
         :description: Delete a Policy Action
         :feature_type: admin
-        :identifier: action_delete
+        :identifier: miq_action_delete
   - :name: Alert Profiles
     :description: Everything under Policy Alert Profiles
     :protected: true
