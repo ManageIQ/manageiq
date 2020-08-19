@@ -1,5 +1,4 @@
 require 'ancestry'
-require 'ancestry_patch'
 
 class Tenant < ApplicationRecord
   HARDCODED_LOGO = "custom_logo.png"

@@ -1,5 +1,4 @@
 require 'ancestry'
-require 'ancestry_patch'
 
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120

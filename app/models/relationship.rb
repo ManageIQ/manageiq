@@ -1,5 +1,4 @@
 require 'ancestry'
-require 'ancestry_patch'
 
 class Relationship < ApplicationRecord
   has_ancestry
