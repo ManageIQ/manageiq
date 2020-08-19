@@ -167,20 +167,15 @@ RSpec.describe Dialog do
       @dialog_group.reload
       expect(@dialog_group.dialog_fields.size).to eq(2)
 
-      button = FactoryBot.create(:dialog_field_button, :label => 'button', :name => 'button')
-      @dialog_group.dialog_fields << button
-      @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(3)
-
       check_box = FactoryBot.create(:dialog_field_text_box, :label => 'check box', :name => "check_box")
       @dialog_group.dialog_fields << check_box
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(4)
+      expect(@dialog_group.dialog_fields.size).to eq(3)
 
       drop_down_list = FactoryBot.create(:dialog_field_drop_down_list, :label => 'drop down list', :name => "drop_down_1")
       @dialog_group.dialog_fields << drop_down_list
       @dialog_group.reload
-      expect(@dialog_group.dialog_fields.size).to eq(5)
+      expect(@dialog_group.dialog_fields.size).to eq(4)
     end
   end
 

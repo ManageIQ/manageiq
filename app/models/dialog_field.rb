@@ -54,7 +54,6 @@ class DialogField < ApplicationRecord
     :dialog_field_text_area_box,
     :dialog_field_check_box,
     :dialog_field_drop_down_list,
-    :dialog_field_button,
     :dialog_field_tag_control,
     :dialog_field_radio_button,
     # Enable when UI support is available
@@ -66,8 +65,6 @@ class DialogField < ApplicationRecord
     "DialogFieldTextAreaBox"     => N_("Text Area Box"),
     "DialogFieldCheckBox"        => N_("Check Box"),
     "DialogFieldDropDownList"    => N_("Drop Down List"),
-    # Commented out next to field types until they can be implemented
-    #    "DialogFieldButton" => "Button",
     "DialogFieldTagControl"      => N_("Tag Control"),
     "DialogFieldDateControl"     => N_("Date Control"),
     "DialogFieldDateTimeControl" => N_("Date/Time Control"),
