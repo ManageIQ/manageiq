@@ -51,7 +51,12 @@ class MiqProvision < MiqProvisionTask
 
   def execute_queue
     super(:zone        => my_zone,
+          :queue_name  => my_queue_name,
           :msg_timeout => CLONE_SYNCHRONOUS ? CLONE_TIME_LIMIT : MiqQueue::TIMEOUT)
+  end
+
+  def my_queue_name
+    source.ext_management_system&.queue_name_for_ems_operations
   end
 
   def placement_auto
