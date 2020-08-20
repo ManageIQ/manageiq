@@ -188,6 +188,29 @@ RSpec.describe MiqProvision do
 
           @vm_prov.my_zone
         end
+
+        it "#execute_queue" do
+          tracking_label = "r#{@pr.id}_miq_provision_#{@vm_prov.id}"
+          miq_callback = {
+            :class_name  => 'MiqProvision',
+            :instance_id => @vm_prov.id,
+            :method_name => :execute_callback
+          }
+          allow(@pr).to receive(:approved?).and_return(true)
+          expect(MiqQueue).to receive(:put).with(
+            :class_name     => 'MiqProvision',
+            :instance_id    => @vm_prov.id,
+            :method_name    => 'execute',
+            :role           => 'ems_operations',
+            :tracking_label => tracking_label,
+            :msg_timeout    => MiqQueue::TIMEOUT,
+            :queue_name     => @vm_prov.my_queue_name,
+            :zone           => @vm_prov.my_zone,
+            :deliver_on     => nil,
+            :miq_callback   => miq_callback
+          )
+          @vm_prov.execute_queue
+        end
       end
     end
   end
