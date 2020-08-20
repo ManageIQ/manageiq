@@ -1858,41 +1858,41 @@
     :description: Everything under Policies
     :protected: true
     :feature_type: node
-    :identifier: policy
+    :identifier: miq_policy
     :children:
     - :name: View
       :description: View Policies
       :feature_type: view
-      :identifier: policy_view
+      :identifier: miq_policy_view
     - :name: Modify
       :description: Modify Policies
       :feature_type: admin
-      :identifier: policy_admin
+      :identifier: miq_policy_admin
       :children:
       - :name: Add
         :description: Add a Policy
         :feature_type: admin
-        :identifier: policy_new
+        :identifier: miq_policy_new
       - :name: Copy
         :description: Copy a Policy
         :feature_type: admin
-        :identifier: policy_copy
+        :identifier: miq_policy_copy
       - :name: Edit
         :description: Edit a Policy
         :feature_type: admin
-        :identifier: policy_edit
+        :identifier: miq_policy_edit
       - :name: Edit Condition Assignment
         :description: Edit Policy's Condition assignments
         :feature_type: admin
-        :identifier: policy_edit_conditions
+        :identifier: miq_policy_edit_conditions
       - :name: Edit Event Assignment
         :description: Edit Policy's Event assignments
         :feature_type: admin
-        :identifier: policy_edit_events
+        :identifier: miq_policy_edit_events
       - :name: Delete
         :description: Delete a Policy
         :feature_type: admin
-        :identifier: policy_delete
+        :identifier: miq_policy_delete
   - :name: Conditions
     :description: Everything under Conditions
     :protected: true
