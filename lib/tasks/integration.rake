@@ -57,6 +57,7 @@ namespace :integration do
     ENV["RAILS_ENV"] = "integration"
     ENV["RAILS_SERVE_STATIC_FILES"] = "true"
     Rails.env = ENV["RAILS_ENV"] if defined?(Rails)
+    Vmdb::Application.config.paths["config/environments"].glob = "#{Rails.env}.rb"
   end
 
   task :db_setup => [:env, :environment] do
