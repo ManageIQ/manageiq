@@ -59,6 +59,7 @@ Vmdb::Application.configure do
   # Production defaults this to true, so matching that.  Development and test
   # are both `false`, so CYPRESS_DEV=1 will match that.
   config.assets.compress = ENV['CYPRESS_DEV'].blank?
+  config.assets.gzip     = false
 
   # This setting has a confusing name...
   #
