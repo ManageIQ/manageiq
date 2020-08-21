@@ -355,6 +355,14 @@ RSpec.describe User do
     end
   end
 
+  context "virtual string cols" do
+    %w[ldap_group miq_group_description miq_user_role_name].each do |vcol|
+      it "should have virtual column #{vcol} " do
+        expect(described_class).to have_virtual_column vcol.to_s, :string
+      end
+    end
+  end
+
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryBot.create(:user, :password => "dummy") }
 
