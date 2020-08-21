@@ -5,7 +5,7 @@ namespace :integration do
   namespace :seed do
     task :all    => [:db, :assets]
     task :db     => [:env, "test:vmdb:setup", "evm:foreman:seed"]
-    task :assets => [:env, "test:initialize", :compile_assets]
+    task :assets => [:env, :environment, "test:initialize", :compile_assets]
 
     task :compile_assets do |rake_task|
       app_prefix = rake_task.name.chomp('integration:seed:compile_assets')
