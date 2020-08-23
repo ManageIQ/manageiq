@@ -74,20 +74,11 @@ class MiqReport < ApplicationRecord
   # Valid options are:
   #   ::miq_groups:    An MiqGroups instance on which to filter
   #   ::miq_group_ids: An MiqGroup ids on which to filter
-  #   ::select:       An Array of MiqReport columns to fetch
   def self.having_report_results(options = {})
     miq_group_ids = options[:miq_groups].collect(&:id) unless options[:miq_groups].nil?
 
     miq_group_ids ||= options[:miq_group_ids]
-    q = joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
-
-    if options[:select]
-      cols = Array.wrap(options[:select])
-      cols = cols.dup.unshift(:id) unless cols.include?(:id)
-      cols.each { |c| q = q.select(arel_table[c]) }
-    end
-
-    q
+    joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
   end
 
   def col_format_with_defaults
