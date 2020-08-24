@@ -4,14 +4,12 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def current_pods
     # TODO: Add mutex around access
-    @current_pods ||= begin
-      # The first call to current_pods will return an empty hash since the newly created collector thread hasn't collected anything yet.
-      start_pod_monitor
-      {}
-    end
+    @current_pods ||= {}
   end
 
   def cleanup_failed_deployments
+    ensure_pod_monitor_started
+
     # TODO: We should have a list of worker deployments we'll delete to avoid accidentally killing pg/memcached/orchestrator
     # See ContainerOrchestrator#get_pods
     failed_deployments.each do |failed|
@@ -26,8 +24,22 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   private
   def start_pod_monitor
-    # TODO: Ensure thread exceptions kill the thread and a new thread is created
-    @start_pod_monitor ||= Thread.new { monitor_pods }
+    @monitor_thread ||= begin
+      @current_pods = {}
+      Thread.new { monitor_pods }
+    end
+  end
+
+  def ensure_pod_monitor_started
+    if @monitor_thread.nil? || !@monitor_thread.alive?
+      if !@monitor_thread.nil? && @monitor_thread.status.nil?
+        dead_thread, @monitor_thread = @monitor_thread, nil
+        _log.info("#{log_prefix} Waiting for the Monitor Thread to exit...")
+        dead_thread.join
+      end
+
+      start_pod_monitor
+    end
   end
 
   def orchestrator
