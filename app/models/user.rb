@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
   has_many   :authentications, :foreign_key => :evm_owner_id, :dependent => :nullify, :inverse_of => :evm_owner
+  has_many   :sessions, :dependent => :destroy
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
@@ -206,7 +207,17 @@ class User < ApplicationRecord
   end
 
   def self.authenticate(username, password, request = nil, options = {})
-    authenticator(username).authenticate(username, password, request, options)
+    user = authenticator(username).authenticate(username, password, request, options)
+    user.try(:link_user_to_session, request)
+
+    user
+  end
+
+  def link_user_to_session(request)
+    return unless request
+    
+    session_id = request.session_options[:id]
+    sessions << Session.find_or_create_by(:session_id => session_id)
   end
 
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
