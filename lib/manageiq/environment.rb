@@ -24,6 +24,8 @@ module ManageIQ
       create_database_user if ENV["CI"]
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
+
+      prepare_codeclimate_test_reporter if ENV["CI"]
     end
 
     def self.ensure_config_files
@@ -116,6 +118,12 @@ module ManageIQ
 
     def self.create_database_user
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
+    end
+
+    def self.prepare_codeclimate_test_reporter
+      system!("curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter")
+      system!("chmod +x ./cc-test-reporter")
+      system!("./cc-test-reporter before-build")
     end
 
     def self.update_ui
