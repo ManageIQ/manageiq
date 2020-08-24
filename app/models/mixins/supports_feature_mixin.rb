@@ -127,6 +127,7 @@ module SupportsFeatureMixin
     :resize                              => 'Resizing',
     :retire                              => 'Retirement',
     :revert_to_snapshot                  => 'Revert Snapshot Operation',
+    :safe_delete                         => 'CloudVolume safe delete',
     :smartstate_analysis                 => 'Smartstate Analysis',
     :snapshot_create                     => 'Create Snapshot',
     :snapshots                           => 'Snapshots',
