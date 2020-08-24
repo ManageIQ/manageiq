@@ -6,7 +6,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     # TODO: Add mutex around access
     @current_pods ||= begin
       # The first call to current_pods will return an empty hash since the newly created collector thread hasn't collected anything yet.
-      collector_thread
+      start_pod_monitor
       {}
     end
   end
@@ -25,16 +25,16 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   private
-  def collector_thread
+  def start_pod_monitor
     # TODO: Ensure thread exceptions kill the thread and a new thread is created
-    @collector_thread ||= Thread.new { pod_collector }
+    @start_pod_monitor ||= Thread.new { monitor_pods }
   end
 
   def orchestrator
     @orchestrator ||= ContainerOrchestrator.new
   end
 
-  def pod_collector
+  def monitor_pods
     # TODO: To ensure we're in sync, we might want to break out of the watch, reset the current_pods and run this again
     collect_initial_pods
     watch_for_pod_events
