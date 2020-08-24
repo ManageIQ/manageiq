@@ -1,14 +1,7 @@
-dist: xenial
 language: ruby
 cache: bundler
 rvm:
-- 2.4.5
-- 2.5.3
-env:
-  global:
-  - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
-  - RUBY_GC_HEAP_INIT_SLOTS=600000
-  - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
+<%= YAML.load_file(Rails.root.join(".travis.yml"))["rvm"].map { |r| "- #{r}" }.join("\n") %>
 addons:
   postgresql: '10'
 install: bin/setup
