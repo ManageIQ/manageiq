@@ -13,20 +13,16 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def cleanup_failed_deployments
     ensure_pod_monitor_started
-
-    # TODO: We should have a list of worker deployments we'll delete to avoid accidentally killing pg/memcached/orchestrator
-    # See ContainerOrchestrator#get_pods
-    failed_deployments.each do |failed|
-      orchestrator.delete_deployment(failed)
-    end
+    delete_failed_deployments
   end
 
   def failed_deployments(restart_count = 5)
     # TODO: This logic might flag deployments that are hitting memory/cpu limits or otherwise not really 'failed'
-    current_pods.select { |name, h| h.fetch(:last_state_terminated) && h.fetch(:container_restarts, 0) > restart_count }.collect { |name, h| h[:label_name] }
+    current_pods.select { |_name, h| h.fetch(:last_state_terminated) && h.fetch(:container_restarts, 0) > restart_count }.collect { |_name, h| h[:label_name] }
   end
 
   private
+
   def start_pod_monitor
     @monitor_thread ||= begin
       reset_current_pods
@@ -38,11 +34,19 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     if @monitor_thread.nil? || !@monitor_thread.alive?
       if !@monitor_thread.nil? && @monitor_thread.status.nil?
         dead_thread, @monitor_thread = @monitor_thread, nil
-        _log.info("#{log_prefix} Waiting for the Monitor Thread to exit...")
+        _log.info("Waiting for the Monitor Thread to exit...")
         dead_thread.join
       end
 
       start_pod_monitor
+    end
+  end
+
+  def delete_failed_deployments
+    # TODO: We should have a list of worker deployments we'll delete to avoid accidentally killing pg/memcached/orchestrator
+    # See ContainerOrchestrator#get_pods
+    failed_deployments.each do |failed|
+      orchestrator.delete_deployment(failed)
     end
   end
 
@@ -59,24 +63,23 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   def collect_initial_pods
     pods = orchestrator.get_pods
     pods.each { |p| save_pod(p) }
-    self.pod_resource_version = pods.resourceVersion || 0
+    self.pod_resource_version = pods.resourceVersion
   end
 
   def watch_for_pod_events
-    watcher = orchestrator.watch_pods(self.pod_resource_version) do |event|
+    watcher = orchestrator.watch_pods(pod_resource_version || 0) do |event|
       case event.type.downcase
       when "added", "modified"
         save_pod(event.object)
       when "deleted"
         delete_pod(event.object)
       when "error"
-        # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:
-        # #<Kubeclient::Resource type="ERROR", object={:kind=>"Status", :apiVersion=>"v1", :metadata=>{}, :status=>"Failure", :message=>"too old resource version: 199900 (27177196)", :reason=>"Gone", :code=>410}>
-        message = event.object&.message
-        code    = event.object&.code
-        reason  = event.object&.reason
+        if status = event.object
+          # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:
+          # #<Kubeclient::Resource type="ERROR", object={:kind=>"Status", :apiVersion=>"v1", :metadata=>{}, :status=>"Failure", :message=>"too old resource version: 199900 (27177196)", :reason=>"Gone", :code=>410}>
+          log_pod_error_event(status.code, status.message, status.reason)
+        end
 
-        _log.warn("Restarting watch_pods at resource_version 0 due to error: [#{code} #{reason}], [#{message}]")
         self.pod_resource_version = 0
         break
       end
@@ -85,13 +88,19 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     watcher.finish if watcher
   end
 
+  def log_pod_error_event(code, message, reason)
+    _log.warn("Restarting watch_pods at resource_version 0 due to error: [#{code} #{reason}], [#{message}]")
+  end
+
   def save_pod(pod)
     # TODO: consider a more nuanced data structure if we're going to start using current_pods from sync_workers
     name = pod.metadata.name
-    current_pods[name] ||= {}
+    current_pods[name] ||= Concurrent::Hash.new
     current_pods[name][:label_name]            = pod.metadata.labels.name
+    return unless pod.status.containerStatuses
+
     current_pods[name][:last_state_running]    = pod.status.containerStatuses.all? { |cs| !!cs.state.running }
-    current_pods[name][:started_at]            = pod.status.containerStatuses.collect {|cs| cs.state.running && cs.state.running.startedAt }.compact
+    current_pods[name][:started_at]            = pod.status.containerStatuses.collect { |cs| cs.state.running && cs.state.running.startedAt }.compact
     current_pods[name][:last_state_terminated] = pod.status.containerStatuses.any? { |cs| !!cs.lastState.terminated }
     current_pods[name][:container_restarts]    = pod.status.containerStatuses.inject(0) { |sum, cs| sum += cs.restartCount if cs.lastState.terminated; sum }
   end

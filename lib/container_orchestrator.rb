@@ -64,7 +64,7 @@ class ContainerOrchestrator
     kube_connection.get_pods(pod_options)
   end
 
-  def watch_pods(resource_version)
+  def watch_pods(resource_version = 0)
     watcher = kube_connection.watch_pods(pod_options.merge(:resource_version => resource_version))
     watcher.each { |notice| yield notice }
   end

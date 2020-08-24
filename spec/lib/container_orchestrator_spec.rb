@@ -187,5 +187,34 @@ RSpec.describe ContainerOrchestrator do
         subject.delete_deployment("deploy_name")
       end
     end
+
+    describe "#get_pods" do
+      it "sets namespace and label_selector" do
+        expect(subject).to receive(:app_name).and_return("manageiq")
+        expect(kube_connection_stub).to receive(:get_pods).with(hash_including(:namespace => namespace, :label_selector => "app=manageiq"))
+        subject.get_pods
+      end
+    end
+
+    describe "#watch_pods" do
+      before do
+        expect(subject).to receive(:app_name).and_return("manageiq")
+      end
+
+      it "sets namespace and label_selector" do
+        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:namespace => namespace, :label_selector => "app=manageiq")).and_return([])
+        subject.watch_pods
+      end
+
+      it "defaults resource_version" do
+        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => 0)).and_return([])
+        subject.watch_pods
+      end
+
+      it "accepts provided resource_version" do
+        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => 100)).and_return([])
+        subject.watch_pods(100)
+      end
+    end
   end
 end
