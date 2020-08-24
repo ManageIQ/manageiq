@@ -53,7 +53,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   def monitor_pods
     # TODO: To ensure we're in sync, we might want to break out of the watch, reset the current_pods and run this again
     collect_initial_pods
-    watch_for_pod_events
+    loop { watch_for_pod_events }
   end
 
   def collect_initial_pods
@@ -63,16 +63,26 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def watch_for_pod_events
-    orchestrator.watch_pods(self.pod_resource_version) do |event|
+    watcher = orchestrator.watch_pods(self.pod_resource_version) do |event|
       case event.type.downcase
       when "added", "modified"
         save_pod(event.object)
       when "deleted"
         delete_pod(event.object)
       when "error"
-        # TODO
+        # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:
+        # #<Kubeclient::Resource type="ERROR", object={:kind=>"Status", :apiVersion=>"v1", :metadata=>{}, :status=>"Failure", :message=>"too old resource version: 199900 (27177196)", :reason=>"Gone", :code=>410}>
+        message = event.object&.message
+        code    = event.object&.code
+        reason  = event.object&.reason
+
+        _log.warn("Restarting watch_pods at resource_version 0 due to error: [#{code} #{reason}], [#{message}]")
+        self.pod_resource_version = 0
+        break
       end
     end
+  ensure
+    watcher.finish if watcher
   end
 
   def save_pod(pod)
