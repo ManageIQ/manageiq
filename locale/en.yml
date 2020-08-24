@@ -800,6 +800,10 @@ en:
       ManageIQ::Providers::Openstack::CloudManager::Flavor:                 Flavor (OpenStack)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::Amazon::CloudManager::Template:                  Image (Amazon)
+      ManageIQ::Providers::Openstack::CloudManager::Template:               Image (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::Template:                   Image (Microsoft Azure)
+      ManageIQ::Providers::Google::CloudManager::Template:                  Image (Google)
+      ManageIQ::Providers::Vmware::CloudManager::Template:                  Image (VMware vCloud)
       ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
       ManageIQ::Providers::CloudManager::OrchestrationStack:                Orchestration Stack
       ManageIQ::Providers::ContainerManager:                                Containers Provider
@@ -874,9 +878,11 @@ en:
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:      Physical Rack (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:   Physical Chassis (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:    Physical Storage (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:   Physical Storage (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
       ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:   Physical Server (Redfish)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate: Volume Snapshot Template (Openstack)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate:         Volume Template (Openstack)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM
