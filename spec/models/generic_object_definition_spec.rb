@@ -163,7 +163,7 @@ RSpec.describe GenericObjectDefinition do
     end
 
     it 'does nothing for existing method' do
-      expect { definition.add_property_method("method1") }.to make_database_queries(count: 11)
+      expect { definition.add_property_method("method1") }.to make_database_queries(:count => 4..8)
       expect(definition.properties).to include(:methods => %w(method1))
     end
   end

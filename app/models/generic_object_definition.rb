@@ -137,7 +137,9 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def add_property_method(name)
-    properties[:methods] << name.to_s unless properties[:methods].include?(name.to_s)
+    return if properties[:methods].include?(name.to_s)
+
+    properties[:methods] << name.to_s
     save!
   end
 
