@@ -3,8 +3,12 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   attr_accessor :pod_resource_version
 
   def current_pods
-    # TODO: Add mutex around access
-    @current_pods ||= {}
+    @current_pods ||= Concurrent::Hash.new
+  end
+
+  def reset_current_pods
+    @current_pods = nil
+    current_pods
   end
 
   def cleanup_failed_deployments
@@ -25,7 +29,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   private
   def start_pod_monitor
     @monitor_thread ||= begin
-      @current_pods = {}
+      reset_current_pods
       Thread.new { monitor_pods }
     end
   end
