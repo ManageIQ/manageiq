@@ -4273,6 +4273,35 @@
         :feature_type: admin
         :identifier: network_service_entry_delete
 
+# Load Balancer
+- :name: Load Balancers
+  :description: Everything under Load Balancers
+  :feature_type: node
+  :identifier: load_balancer
+  :children:
+  - :name: View
+    :description: View Load Balancers
+    :feature_type: view
+    :identifier: load_balancer_view
+    :children:
+    - :name: List
+      :description: Display Lists of Load Balancers
+      :feature_type: view
+      :identifier: load_balancer_show_list
+    - :name: Show
+      :description: Display Individual Load Balancers
+      :feature_type: view
+      :identifier: load_balancer_show
+  - :name: Operate
+    :description: Perform Operations on Load Balancers
+    :feature_type: control
+    :identifier: load_balancer_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Load Balancer
+      :feature_type: control
+      :identifier: load_balancer_tag
+
 # ContainerGroup
 - :name: Pods
   :description: Everything under Pods

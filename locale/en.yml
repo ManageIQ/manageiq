@@ -1026,6 +1026,7 @@ en:
       ems_physical_infras:         Physical Infrastructure Providers
       ems_storage:                 Storage Manager
       floating_ips:                Floating IP
+      load_balancer:               Load Balancer
       network_port:                Network Port
       network_router:              Network Router
       evm_owner:                   EVM Owner

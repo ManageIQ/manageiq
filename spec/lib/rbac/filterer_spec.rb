@@ -2019,6 +2019,7 @@ RSpec.describe Rbac::Filterer do
         CloudNetwork
         CloudSubnet
         FloatingIp
+        LoadBalancer
         NetworkPort
         NetworkRouter
         SecurityGroup
