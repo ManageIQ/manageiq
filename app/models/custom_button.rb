@@ -12,7 +12,7 @@ class CustomButton < ApplicationRecord
   serialize :visibility
 
   validates :applies_to_class, :presence => true
-  validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
+  validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true, :if => :name_or_description_changed?
 
   virtual_attribute :uri_attributes, :string
 
@@ -69,6 +69,10 @@ class CustomButton < ApplicationRecord
     end
 
     where(:applies_to_class => applies_to_class, :applies_to_id => applies_to_id)
+  end
+
+  def name_or_description_changed?
+    name_changed? || description_changed?
   end
 
   def expanded_serializable_hash

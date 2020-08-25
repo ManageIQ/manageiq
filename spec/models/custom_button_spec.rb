@@ -21,7 +21,7 @@ RSpec.describe CustomButton do
 
   it "doesn't access database when unchanged model is saved" do
     m = described_class.create
-    expect { m.save }.to make_database_queries(:count => 5)
+    expect { m.save }.to make_database_queries(:count => 3)
   end
 
   context "with no buttons" do
