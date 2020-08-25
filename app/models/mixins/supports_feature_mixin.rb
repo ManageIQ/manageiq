@@ -76,7 +76,6 @@ module SupportsFeatureMixin
     :conversion_host                     => 'Conversion host capable',
     :create_floating_ip                  => 'Floating IP Creation',
     :create_host_aggregate               => 'Host Aggregate Creation',
-    :create_security_group               => 'Security Group Creation',
     :console                             => 'Remote Console',
     :external_logging                    => 'Launch External Logging UI',
     :swift_service                       => 'Swift storage service',
