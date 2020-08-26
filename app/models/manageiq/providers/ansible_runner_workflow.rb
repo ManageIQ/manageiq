@@ -153,6 +153,9 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     save!
     _log.info("Checking out git repository to #{options[:git_checkout_tempdir].inspect}...")
     css.checkout_git_repository(options[:git_checkout_tempdir])
+  rescue MiqException::MiqUnreachableError => err
+    miq_task.job.timeout!
+    raise "Failed to connect with [#{err.class}: #{err}], job aborted"
   end
 
   def cleanup_git_repository
