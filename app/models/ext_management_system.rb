@@ -140,6 +140,12 @@ class ExtManagementSystem < ApplicationRecord
   supports :refresh_ems
   supports_not :assume_role
 
+  supports :create_security_group do
+    unless SecurityGroup.class_by_ems(self).supports_create?
+      unsupported_reason_add(:create_security_group, _('Security Group creation is not supported'))
+    end
+  end
+
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|
       transaction do
@@ -258,6 +264,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
   virtual_column :supports_cinder_volume_types, :type => :boolean
   virtual_column :supports_volume_availability_zones, :type => :boolean
+  virtual_column :supports_create_security_group, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -771,6 +778,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_volume_availability_zones
     supports_volume_availability_zones?
+  end
+
+  def supports_create_security_group
+    supports_create_security_group?
   end
 
   def get_reserve(field)
