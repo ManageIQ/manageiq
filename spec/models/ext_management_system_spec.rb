@@ -68,6 +68,7 @@ RSpec.describe ExtManagementSystem do
       "ibm_cloud_network"               => "IBM Cloud Networks",
       "ibm_cloud_power_virtual_servers" => "IBM Cloud",
       "ibm_cloud_storage"               => "IBM Cloud Storage",
+      "ibm_terraform_configuration"     => "IBM Terraform Configuration",
       "kubernetes"                      => "Kubernetes",
       "kubernetes_monitor"              => "Kubernetes Monitor",
       "kubevirt"                        => "KubeVirt",

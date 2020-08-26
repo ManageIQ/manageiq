@@ -122,6 +122,10 @@ group :ibm_cloud, :manageiq_default do
   manageiq_plugin "manageiq-providers-ibm_cloud"
 end
 
+group :ibm_terraform, :manageiq_default do
+  manageiq_plugin "manageiq-providers-ibm_terraform"
+end
+
 group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
 end
