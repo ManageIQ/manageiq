@@ -5,6 +5,7 @@ RSpec.describe EmsCloud do
                       ManageIQ::Providers::AzureStack::CloudManager,
                       ManageIQ::Providers::Openstack::CloudManager,
                       ManageIQ::Providers::Google::CloudManager,
+                      ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
                       ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)
     expect(described_class.types).to match_array(expected_types)
   end
@@ -15,6 +16,7 @@ RSpec.describe EmsCloud do
                            ManageIQ::Providers::AzureStack::CloudManager,
                            ManageIQ::Providers::Openstack::CloudManager,
                            ManageIQ::Providers::Google::CloudManager,
+                           ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
                            ManageIQ::Providers::Vmware::CloudManager]
     expect(described_class.supported_subclasses).to match_array(expected_subclasses)
   end
@@ -25,6 +27,7 @@ RSpec.describe EmsCloud do
                       ManageIQ::Providers::AzureStack::CloudManager,
                       ManageIQ::Providers::Openstack::CloudManager,
                       ManageIQ::Providers::Google::CloudManager,
+                      ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
                       ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)
     expect(described_class.supported_types).to match_array(expected_types)
   end

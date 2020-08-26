@@ -118,6 +118,10 @@ group :google, :manageiq_default do
   manageiq_plugin "manageiq-providers-google"
 end
 
+group :ibm_cloud, :manageiq_default do
+  manageiq_plugin "manageiq-providers-ibm_cloud"
+end
+
 group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
 end
