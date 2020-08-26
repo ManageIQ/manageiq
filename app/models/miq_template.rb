@@ -35,7 +35,8 @@ class MiqTemplate < VmOrTemplate
   delegate :supports_kickstart_provisioning?, :to => :class
 
   def self.eligible_for_provisioning
-    where(arel_table[:ems_id].not_eq(nil))
+    types = descendants.select(&:supports_provisioning?).map(&:name)
+    where(:type => types).where.not(:ems_id => nil)
   end
 
   def self.without_volume_templates
