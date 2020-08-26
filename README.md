@@ -52,7 +52,7 @@ See [LICENSE.txt](LICENSE.txt).
 Except where otherwise noted, all ManageIQ source files are covered by
 the following copyright and license notice:
 
-Copyright 2014-2019 ManageIQ Authors.
+Copyright 2014-2020 ManageIQ Authors.
 
 ## Export Notice
 
