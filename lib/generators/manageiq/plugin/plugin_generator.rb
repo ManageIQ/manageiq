@@ -41,6 +41,7 @@ module ManageIQ
       template "bin/setup"
       template "bin/update"
       chmod "bin", 0755 & ~File.umask, :verbose => false
+      empty_directory_with_keep_file "bundler.d"
       template "config/settings.yml"
       template "lib/%plugin_name%.rb"
       template "lib/%plugin_path%/engine.rb"
