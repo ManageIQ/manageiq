@@ -319,7 +319,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     unless options[:tag_filters].blank?
       tag_filters = options[:tag_filters].collect(&:to_s)
-      selected_tags = (Array.wrap(@values[:vm_tags]) + Array.wrap(@values[:pre_dialog_vm_tags])).uniq
+      selected_tags = (Array.wrap(@values[:vm_tags].presence) + Array.wrap(@values[:pre_dialog_vm_tags].presence)).uniq
       tag_conditions = []
 
       # Collect the filter tags by category
@@ -553,7 +553,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           domains[domain] = domain
         end
       else
-        Array.wrap(@values[:forced_sysprep_domain_name]).each { |d| domains[d] = d }
+        Array.wrap(@values[:forced_sysprep_domain_name].split('\n')).each { |d| domains[d] = d }
       end
       domains
     end
