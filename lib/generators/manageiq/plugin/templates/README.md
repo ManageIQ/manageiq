@@ -11,7 +11,7 @@
 
 ## Development
 
-See the section on plugins in the [ManageIQ Developer Setup](https://github.com/ManageIQ/guides/blob/master/developer_setup/plugins.md)
+See the section on plugins in the [ManageIQ Developer Setup](http://manageiq.org/docs/guides/developer_setup/plugins)
 
 For quick local setup run `bin/setup`, which will clone the core ManageIQ repository under the *spec* directory and setup necessary config files. If you have already cloned it, you can run `bin/update` to bring the core ManageIQ code up to date.
 

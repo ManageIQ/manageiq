@@ -41,12 +41,10 @@ module ManageIQ
       template "bin/setup"
       template "bin/update"
       chmod "bin", 0755 & ~File.umask, :verbose => false
-      template "config/initializers/gettext.rb"
       template "config/settings.yml"
       template "lib/%plugin_name%.rb"
       template "lib/%plugin_path%/engine.rb"
       template "lib/%plugin_path%/version.rb"
-      template "lib/tasks/%plugin_name%.rake"
       template "lib/tasks/README.md"
       template "lib/tasks_private/spec.rake"
       empty_directory_with_keep_file "locale"
@@ -79,7 +77,7 @@ module ManageIQ
     end
 
     def plugin_description
-      @plugin_description ||= "#{file_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}"
+      @plugin_description ||= "#{file_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
     end
 
     def empty_directory_with_keep_file(destination, config = {})
