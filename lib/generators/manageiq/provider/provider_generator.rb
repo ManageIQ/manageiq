@@ -43,6 +43,14 @@ module ManageIQ
 
     alias provider_name file_name
 
+    def plugin_human_name
+      @plugin_human_name ||= "#{file_name.titleize} Provider"
+    end
+
+    def plugin_description
+      @plugin_description ||= "#{Vmdb::Appliance.PRODUCT_NAME} plugin for the #{file_name.titleize} provider."
+    end
+
     def validate_manager_type!
       return unless manager_type.nil?
 
