@@ -57,5 +57,6 @@
 /content                                        @bdunne
 /config                                         @jrafanie
 /db                                             @agrare @bdunne
+/lib/generators                                 @agrare
 /lib/manageiq/reporting                         @jrafanie
 /product*                                       @h-kataria
