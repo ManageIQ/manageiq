@@ -384,7 +384,7 @@ RSpec.describe Job do
 
     context "after_update_commit callback calls" do
       describe "#update_linked_task" do
-        it "executes when 'after_update_commit' callbacke triggered" do
+        it "executes when 'after_update_commit' callback triggered" do
           expect(@job).to receive(:update_linked_task)
           @job.save
         end
