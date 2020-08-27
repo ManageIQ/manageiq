@@ -1,21 +1,4 @@
 module EmsRefresh::SaveInventory
-  # Parsed inventory can come as hash of hashes or array of InventoryCollection's.
-  def save_ems_inventory(ems, hashes, target = nil)
-    case ems
-    when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
-    when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
-    when EmsPhysicalInfra                                   then save_ems_physical_infra_inventory(ems, hashes, target)
-    when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
-    when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
-    when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
-    when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
-    when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
-    end
-
-    # Handle updates to the ext_management_system
-    update!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
-  end
-
   #
   # Shared between Cloud and Infra
   #

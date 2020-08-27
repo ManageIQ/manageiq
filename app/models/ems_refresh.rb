@@ -1,19 +1,10 @@
 module EmsRefresh
   extend EmsRefresh::SaveInventory
-  extend EmsRefresh::SaveInventoryBlockStorage
   extend EmsRefresh::SaveInventoryCloud
   extend EmsRefresh::SaveInventoryInfra
-  extend EmsRefresh::SaveInventoryPhysicalInfra
-  extend EmsRefresh::SaveInventoryContainer
   extend EmsRefresh::SaveInventoryNetwork
-  extend EmsRefresh::SaveInventoryObjectStorage
   extend EmsRefresh::SaveInventoryHelper
-  extend EmsRefresh::SaveInventoryProvisioning
-  extend EmsRefresh::SaveInventoryConfiguration
-  extend EmsRefresh::SaveInventoryAutomation
-  extend EmsRefresh::SaveInventoryOrchestrationStacks
   extend EmsRefresh::LinkInventory
-  extend EmsRefresh::MetadataRelats
 
   def self.debug_trace
     Settings.ems_refresh[:debug_trace]
