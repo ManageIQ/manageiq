@@ -29,7 +29,7 @@ module ManageIQ
       template ".rspec_ci"
       template ".rubocop.yml"
       template ".rubocop_cc.yml"
-      template ".rubocop_local.yml"
+      template ".rubocop_local.yml", :skip => true
       template ".travis.yml"
       template ".yamllint"
       template "Gemfile"
