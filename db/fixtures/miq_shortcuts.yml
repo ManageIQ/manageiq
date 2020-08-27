@@ -354,6 +354,11 @@
   :url: /network_port/show_list
   :rbac_feature_name: network_port_show_list
   :startup: true
+- :name: load_balancers
+  :description: Networks / Load Balancers
+  :url: /load_balancer/show_list
+  :rbac_feature_name: load_balancer_show_list
+  :startup: true
 - :name: network_topology
   :description: Networks / Topology
   :url: /network_topology

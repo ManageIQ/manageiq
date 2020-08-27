@@ -1039,6 +1039,7 @@
   - ems_infra
   - ems_physical_infra
   - host
+  - load_balancer
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -1284,6 +1285,7 @@
   - infra_topology
   - instance_view
   - iso_datastore_view
+  - load_balancer_view
   - miq_ae_class_log
   - miq_ae_domain_view
   - miq_report_saved_reports_view
