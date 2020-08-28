@@ -18,6 +18,7 @@ module TaskHelpers
         unless abs_path == dir
           options[:directory] = abs_path
         end
+      end
       
       ensure_absolute_path(options[:directory])
   
