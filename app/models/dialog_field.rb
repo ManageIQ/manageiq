@@ -55,9 +55,7 @@ class DialogField < ApplicationRecord
     :dialog_field_check_box,
     :dialog_field_drop_down_list,
     :dialog_field_tag_control,
-    :dialog_field_radio_button,
-    # Enable when UI support is available
-    # #:dialog_field_list_view      # Future
+    :dialog_field_radio_button
   ]
 
   DIALOG_FIELD_TYPES = {
