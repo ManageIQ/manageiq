@@ -184,6 +184,40 @@ RSpec.describe ProviderTagMapping do
     end
   end
 
+  context "with mapping to single-value, existing category" do
+    it "replaces an existing tag on the resources with the value of the external label" do
+
+    end
+
+    context "with 2 mappings to the same category" do
+      it "should be valid" do
+
+      end
+
+      context "and a resource has both labels applied externally" do
+        it "should only apply one of the label values" do
+          # The order in which the labels are mapped in not deterministic. Therefore, only one tag int he category should be applied
+          # and it can be either one
+          # TODO: This will require a change to the mapping part of the refresh because it currently will apply both values
+        end
+      end
+    end
+  end
+
+  context "with 2 mappings to the same category (implied multi-value)" do
+    it "should be valid" do
+
+    end
+
+    it "should add new tag during mapping" do
+
+    end
+
+    it "should not add new tag during mapping if resource is already tagged with the same tag" do
+
+    end
+  end
+
   context "with all entities resource type" do
     let(:other_cat_classification) { FactoryBot.create(:classification, :read_only => true, :name => 'environment') }
     let(:other_cat_tag)            { other_cat_classification.tag }
