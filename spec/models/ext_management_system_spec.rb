@@ -66,7 +66,7 @@ RSpec.describe ExtManagementSystem do
       "gce"                             => "Google Compute Engine",
       "gce_network"                     => "Google Network",
       "ibm_cloud_network"               => "IBM Cloud Networks",
-      "ibm_cloud_power_virtual_servers" => "IBM Cloud",
+      "ibm_cloud_power_virtual_servers" => "IBM Power Systems Virtual Servers",
       "ibm_cloud_storage"               => "IBM Cloud Storage",
       "ibm_terraform_configuration"     => "IBM Terraform Configuration",
       "kubernetes"                      => "Kubernetes",
