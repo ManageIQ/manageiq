@@ -32,7 +32,7 @@ RSpec.describe MiqAeNamespace do
       expect(subject.errors[:name]).to be_present
     end
 
-    context "with a duplicite names" do
+    context "with duplicate names" do
       let(:domain) { FactoryBot.create(:miq_ae_domain) }
       let(:ns1)    { FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => domain) }
 
