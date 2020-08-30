@@ -70,9 +70,9 @@ RSpec.describe MiqAeField do
       end
     end
 
-    it "doesn't access database when unchanged model is saved" do
-      m = described_class.create
-      expect { m.save }.to make_database_queries(:count => 4)
+    it "doesn't access database (either via name uniqueness or set_user_info validation) when unchanged model is saved" do
+      miq_ae_field = described_class.create!(:name => "display_name")
+      expect { miq_ae_field.save }.to make_database_queries(:count => 2)
     end
 
     it "should process boolean fields properly" do
