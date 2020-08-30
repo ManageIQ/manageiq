@@ -70,6 +70,11 @@ RSpec.describe MiqAeField do
       end
     end
 
+    it "doesn't access database when unchanged model is saved" do
+      m = described_class.create
+      expect { m.save }.to make_database_queries(:count => 4)
+    end
+
     it "should process boolean fields properly" do
       fname1 = "TEST_EVALUATE"
       f1 = @c1.ae_fields.build(:name => fname1)
