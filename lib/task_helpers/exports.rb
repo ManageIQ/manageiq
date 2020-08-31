@@ -12,16 +12,9 @@ module TaskHelpers
         opt :directory, 'Directory to place exported files in', :type => :string, :required => true
         opt :all, 'Export read-only objects', :type => :boolean, :default => false
       end
-
-      def ensure_absolute_path(dir)
-        abs_path = File.absolute_path(dir)
-        unless abs_path == dir
-          options[:directory] = abs_path
-        end
-      end
       
-      ensure_absolute_path(options[:directory])
-  
+      options[:directory] = File.absolute_path(options[:directory])
+      
       error = validate_directory(options[:directory])
       Optimist.die :directory, error if error
 
