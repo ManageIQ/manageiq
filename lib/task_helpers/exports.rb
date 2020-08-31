@@ -13,6 +13,8 @@ module TaskHelpers
         opt :all, 'Export read-only objects', :type => :boolean, :default => false
       end
 
+      options[:directory] = File.absolute_path(options[:directory])
+
       error = validate_directory(options[:directory])
       Optimist.die :directory, error if error
 
