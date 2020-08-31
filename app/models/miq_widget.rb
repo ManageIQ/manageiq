@@ -202,11 +202,12 @@ class MiqWidget < ApplicationRecord
       end
     else
       timeout_stalled_task
-      unless MiqTask.exists?(:name   => "Generate Widget: '#{title}'",
-                             :userid => User.current_userid || 'system',
-                             :state  => %w(Queued Active))
+      if MiqTask.exists?(:name   => "Generate Widget: '#{title}'",
+                         :userid => User.current_userid || 'system',
+                         :state  => %w[Queued Active])
+        _log.warn("#{log_prefix} Skipping task creation for widget content generation. Task with name \"Generate Widget: '#{title}' already exists\"")
+      else
         task = create_task(group_hash.length)
-
         _log.info("#{log_prefix} Queueing Content Generation")
         group_hash.each do |g, u|
           options = generate_content_options(g, u)
@@ -336,9 +337,11 @@ class MiqWidget < ApplicationRecord
       generate_content(*options)
     else
       timeout_stalled_task
-      unless MiqTask.exists?(:name   => "Generate Widget: '#{title}'",
-                             :userid => user.userid,
-                             :state  => %w(Queued Active))
+      if MiqTask.exists?(:name   => "Generate Widget: '#{title}'",
+                         :userid => user.userid,
+                         :state  => %w[Queued Active])
+        _log.warn("#{log_prefix} Skipping task creation for widget content generation. Task with name \"Generate Widget: '#{title}' already exists\"")
+      else
         create_task(1, user.userid)
         queue_generate_content_for_users_or_group(*options)
       end
