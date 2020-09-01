@@ -160,8 +160,12 @@ class EmsEvent < EventStream
   end
 
   def manager_refresh_targets
-    require "inventory_refresh"
-    ext_management_system.class::EventTargetParser.new(self).parse
+    if ext_management_system.allow_targeted_refresh?
+      require "inventory_refresh"
+      ext_management_system.class::EventTargetParser.new(self).parse
+    else
+      ext_management_system
+    end
   end
 
   def self.display_name(number = 1)
