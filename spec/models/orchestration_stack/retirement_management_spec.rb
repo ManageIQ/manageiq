@@ -119,7 +119,7 @@ RSpec.describe "Service Retirement Management" do
     end
 
     it "#finish_retirement" do
-      message = "OrchestrationStack: [#{orchestration_stack.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+      message = "OrchestrationStack: [id:<#{orchestration_stack.id}>, name:<#{orchestration_stack.name}>] with Retires On value: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
       expect(orchestration_stack).to receive(:raise_audit_event).with("orchestration_stack_retired", message, nil)
 
       orchestration_stack.finish_retirement
