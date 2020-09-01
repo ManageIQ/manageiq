@@ -477,12 +477,22 @@ RSpec.describe EmsEvent do
     end
   end
 
-  context 'manager refresh', :manager_refresh do
+  context 'manager refresh' do
     let(:ems_azure) { FactoryBot.create(:ems_azure) }
-    let(:ems_event) {
+    let(:ems_event_azure) {
       FactoryBot.create(
         :ems_event,
         :ext_management_system => ems_azure,
+        :event_type => "CloneVM_Task",
+        :full_data  => {"info" => {"task" => "task-5324"}}
+      )
+    }
+
+    let(:ems_openstack_infra) { FactoryBot.create(:ems_openstack_infra) }
+    let(:ems_event_openstack) {
+      FactoryBot.create(
+        :ems_event,
+        :ext_management_system => ems_openstack_infra,
         :event_type => "CloneVM_Task",
         :full_data  => {"info" => {"task" => "task-5324"}}
       )
@@ -498,7 +508,12 @@ RSpec.describe EmsEvent do
       expect(klass).to receive(:new)
       expect(target_parser).to receive(:parse)
 
-      ems_event.manager_refresh_targets
+      ems_event_azure.manager_refresh_targets
+    end
+
+    it 'returns the ems if targeted refresh is not supported' do
+      expect(ems_openstack_infra).to receive(:allow_targeted_refresh?).and_return(false)
+      expect(ems_event_openstack.manager_refresh_targets).to eq(ems_openstack_infra)
     end
   end
 end
