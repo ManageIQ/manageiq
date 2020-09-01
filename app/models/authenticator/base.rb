@@ -243,9 +243,14 @@ module Authenticator
     end
 
     def case_insensitive_find_by_userid(username, lookup_scope: nil)
+      user_key                          = username.downcase
+      @lookup                         ||= {}
+      @lookup[user_key]               ||= {}
+      return @lookup[user_key][lookup_scope] if @lookup[username][lookup_scope]
+
       base =  User.send(User::LOOKUP_SCOPES[lookup_scope])
       user =  base.lookup_by_userid(username)
-      user || User.in_my_region.where(:lower_userid => username.downcase).order(:lastlogon).last
+      @lookup[user_key][lookup_scope] = user || base.in_my_region.where(:lower_userid => user_key).order(:lastlogon).last
     end
 
     def userid_for(_identity, username)
