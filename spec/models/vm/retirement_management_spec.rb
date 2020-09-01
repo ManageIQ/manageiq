@@ -222,7 +222,7 @@ describe "VM Retirement Management" do
   end
 
   it "#finish_retirement" do
-    message = "Vm: [#{vm2.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+    message = "Vm: [id:<#{vm2.id}>, name:<#{vm2.name}>] with Retires On value: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
     expect(vm2).to receive(:raise_audit_event).with("vm_retired", message, nil)
 
     vm2.finish_retirement

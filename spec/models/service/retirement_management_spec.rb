@@ -184,7 +184,7 @@ describe "Service Retirement Management" do
   end
 
   it "#finish_retirement" do
-    message = "Service: [#{@service.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+    message = "Service: [id:<#{@service.id}>, name:<#{@service.name}>] with Retires On value: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
     expect(@service).to receive(:raise_audit_event).with("service_retired", message, nil)
 
     @service.finish_retirement
