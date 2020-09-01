@@ -170,7 +170,7 @@ class EmsEvent < EventStream
   end
 
   def manager_refresh_targets
-    if ext_management_system.allows_targeted_refresh?
+    if ext_management_system.allow_targeted_refresh?
       require "inventory_refresh"
       ext_management_system.class::EventTargetParser.new(self).parse
     else

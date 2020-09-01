@@ -476,4 +476,29 @@ RSpec.describe EmsEvent do
       end
     end
   end
+
+  context 'manager refresh', :manager_refresh do
+    let(:ems_azure) { FactoryBot.create(:ems_azure) }
+    let(:ems_event) {
+      FactoryBot.create(
+        :ems_event,
+        :ext_management_system => ems_azure,
+        :event_type => "CloneVM_Task",
+        :full_data  => {"info" => {"task" => "task-5324"}}
+      )
+    }
+
+    it 'performs a targeted refresh if supported' do
+      klass = ems_azure.class.const_get('EventTargetParser')
+      target_parser = klass.new(ems_azure)
+
+      allow(klass).to receive(:new).and_return(target_parser)
+
+      expect(ems_azure).to receive(:allow_targeted_refresh?).and_return(true)
+      expect(klass).to receive(:new)
+      expect(target_parser).to receive(:parse)
+
+      ems_event.manager_refresh_targets
+    end
+  end
 end
