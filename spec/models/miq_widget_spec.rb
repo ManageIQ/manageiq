@@ -318,7 +318,14 @@ RSpec.describe MiqWidget do
       }
     end
 
-    it "returns MiqTask id if successful" do
+    it "skips task creation and records warn message if MiqTask for generating widget content exists and not finished" do
+      MiqTask.create(:name => "Generate Widget: '#{@widget.title}'", :state => "Queued", :status => "Ok", :userid => "system")
+      expect($log).to receive(:warn).with(skip_message(@widget))
+      @widget.queue_generate_content
+    end
+
+    it "returns MiqTask id if successful and not records warn message" do
+      expect($log).not_to receive(:warn).with(skip_message(@widget))
       return_value = @widget.queue_generate_content
       expect(return_value).to equal(MiqTask.where(:name => "Generate Widget: '#{@widget.title}'",
                                                   :id   => @widget.reload.miq_task_id).first.id)
@@ -629,6 +636,13 @@ RSpec.describe MiqWidget do
     it "with single user" do
       expect { @widget.create_initial_content_for_user(@user) }.not_to raise_error
     end
+
+    it "skips task creation and record warn message if MiqTask for generating widget content exists and not finished" do
+      MiqTask.create(:name => "Generate Widget: '#{@widget.title}'", :state => "Queued", :status => "Ok", :userid => @user.userid)
+      allow(@widget).to receive(:contents_for_user).and_return(nil)
+      expect($log).to receive(:warn).with(skip_message(@widget))
+      @widget.create_initial_content_for_user(@user)
+    end
   end
 
   context "multiple groups" do
@@ -838,4 +852,8 @@ RSpec.describe MiqWidget do
       expect(widget.status_message).to eq("message")
     end
   end
+end
+
+RSpec::Matchers.define :skip_message do |widget|
+  match { |actual| actual.include?("Skipping task creation for widget content generation. Task with name \"Generate Widget: '#{widget.title}' already exists\"") }
 end
