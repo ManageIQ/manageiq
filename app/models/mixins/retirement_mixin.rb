@@ -64,7 +64,7 @@ module RetirementMixin
 
     if timestamp.nil? || (timestamp > Time.zone.now)
       self.retired = false
-      _log.warn("Resetting retirement state from #{retirement_state}") unless retirement_state.nil?
+      _log.warn("Resetting retirement state from #{retirement_state} for id:<#{id}>, name:<#{name}>") unless retirement_state.nil?
       self.retirement_state = nil
     end
 
@@ -75,9 +75,9 @@ module RetirementMixin
 
   def extend_retires_on(days, date = Time.zone.now)
     raise _("Invalid Date specified: %{date}") % {:date => date} unless date.kind_of?(ActiveSupport::TimeWithZone)
-    _log.info("Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> ")
+    _log.info("Extending Retirement Date on #{self.class.name} for id:<#{id}>, name:<#{name}> ")
     new_retires_date = date.in_time_zone + days.to_i.days
-    _log.info("Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}")
+    _log.info("Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date} for id:<#{id}>, name:<#{name}>")
     self.retires_on = new_retires_date
     save
   end
@@ -85,7 +85,7 @@ module RetirementMixin
   def retire(options = {})
     return unless options.keys.any? { |key| [:date, :warn].include?(key) }
 
-    message = "#{retirement_object_title}: [#{name}]"
+    message = "#{retirement_object_title}: [id:<#{id}>, name:<#{name}>]"
 
     if options.key?(:date)
       date = nil
@@ -139,7 +139,7 @@ module RetirementMixin
       if allow_retire_request_creation?
         self.class.make_retire_request(id, requester, :initiated_by => 'system')
       else
-        _log.warn("Attempt to create duplicate retirement request has been terminated")
+        _log.warn("Attempt to create duplicate retirement request for id:<#{id}>, name:<#{name}> has been terminated")
       end
     end
   end
@@ -151,9 +151,9 @@ module RetirementMixin
   def retire_now(requester = nil)
     if retired
       return if retired_validated?
-      _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
+      _log.info("#{retirement_object_title}: [id:<#{id}>, name:<#{name}>], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     elsif retiring?
-      _log.info("#{retirement_object_title}: [#{name}] retirement in progress")
+      _log.info("#{retirement_object_title}: [id:<#{id}>, name:<#{name}>] retirement in progress")
     else
       lock do
         reload
@@ -167,7 +167,7 @@ module RetirementMixin
             _log.log_backtrace(err)
           end
         else
-          _log.info("#{retirement_object_title}: retirement for [#{name}] got updated while waiting to be unlocked and is now #{retirement_state}")
+          _log.info("#{retirement_object_title}: retirement for [id:<#{id}>, name:<#{name}>] got updated while waiting to be unlocked and is now #{retirement_state}")
         end
       end
     end
@@ -178,7 +178,7 @@ module RetirementMixin
     $log.info("Finishing Retirement for [#{name}]")
     requester = retirement_requester
     mark_retired
-    message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], has been retired"
+    message = "#{self.class.base_model.name}: [id:<#{id}>, name:<#{name}>] with Retires On value: [#{retires_on.strftime("%x %R %Z")}], has been retired"
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message, requester)
     $log.info("Called audit event for: #{message} ")
@@ -191,7 +191,7 @@ module RetirementMixin
 
   def start_retirement
     return if retired? || retiring?
-    $log.info("Starting Retirement for [#{name}]")
+    $log.info("Starting Retirement for [id:<#{id}>, name:<#{name}>]")
     update(:retirement_state => "retiring")
   end
 
@@ -229,7 +229,7 @@ module RetirementMixin
 
   def raise_retirement_event(event_name, requester = nil)
     q_options = q_user_info(retire_queue_options, requester)
-    $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
+    $log.info("Raising Retirement Event for [id:<#{id}>, name:<#{name}>] with queue options: #{q_options.inspect}")
     MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
   end
 
@@ -264,14 +264,14 @@ module RetirementMixin
 
   def system_context_requester
     if evm_owner.blank?
-      $log.info("System context defaulting to admin user because owner of #{name} (#{self.class}) not set or owner no longer found in database.")
+      $log.info("System context defaulting to admin user because owner of id:<#{id}>, name:<#{name}> (#{self.class}) not set or owner no longer found in database.")
       return User.super_admin
     end
     if evm_owner.current_group.nil?
-      $log.info("System context defaulting to admin user because owner of #{name} (#{self.class}) was found but lacks a group.")
+      $log.info("System context defaulting to admin user because owner of id:<#{id}>, name:<#{name}> (#{self.class}) was found but lacks a group.")
       return User.super_admin
     end
-    $log.info("Setting retirement requester of #{name} to #{evm_owner_id}.")
+    $log.info("Setting retirement requester of id:<#{id}>, name:<#{name}> to #{evm_owner_id}.")
     evm_owner
   end
 
