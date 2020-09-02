@@ -181,7 +181,7 @@ class Service < ApplicationRecord
   virtual_has_many :services
 
   def indirect_service_children
-    descendants.where.not(child_conditions)
+    descendants.where.not(children)
   end
   Vmdb::Deprecation.deprecate_methods(self, :indirect_service_children)
 

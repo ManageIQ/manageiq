@@ -400,7 +400,7 @@ module RelationshipMixin
   def grandchild_rels(*args)
     options = args.extract_options!
     rels = relationships.inject(Relationship.none) do |stmt, r|
-      stmt.or(Relationship.where(r.grandchild_conditions))
+      stmt.or(r.grandchildren)
     end
     Relationship.filter_by_resource_type(rels, options)
   end
@@ -412,7 +412,7 @@ module RelationshipMixin
   def child_and_grandchild_rels(*args)
     options = args.extract_options!
     rels = relationships.inject(Relationship.none) do |stmt, r|
-      stmt.or(Relationship.where(r.child_and_grandchild_conditions))
+      stmt.or(r.child_and_grandchildren)
     end
     Relationship.filter_by_resource_type(rels, options)
   end
