@@ -205,10 +205,10 @@ RSpec.describe MiqUserRole do
     #   - profile_new (H)
     it "allows hidden child of hidden parent" do
       EvmSpecHelper.seed_specific_product_features(
-        %w(policy_profile_admin profile_new container_dashboard)
+        %w(miq_ae_class_explorer miq_ae_namespace_new container_dashboard)
       )
       user = FactoryBot.create(:user, :features => "container_dashboard")
-      expect(user.role_allows?(:identifier => "profile_new")).to be_truthy
+      expect(user.role_allows?(:identifier => "miq_ae_namespace_new")).to be_truthy
     end
   end
 
