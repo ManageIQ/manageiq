@@ -39,11 +39,15 @@ class VmReconfigureTask < MiqRequestTask
 
   def self.build_disk_message(options)
     if options[:disk_add].present?
-      disk_sizes = options[:disk_add].collect { |d| d["disk_size_in_mb"].to_i.megabytes.to_s(:human_size) + ", Type: " + d["type"].to_s }
+      disk_sizes = options[:disk_add].collect { |d| disk_size_message(d) }
       "Add Disks: #{options[:disk_add].length} : #{disk_sizes.join(", ")} "
     end
   end
   private_class_method :build_disk_message
+
+  def self.disk_size_message(disk)
+    disk["disk_size_in_mb"].to_i.megabytes.to_s(:human_size) + ", Type: " + disk["type"]
+  end
 
   def self.resource_name(req)
     return req.source.name if req.source
