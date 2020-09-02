@@ -59,6 +59,11 @@ RSpec.describe MiqReport do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create
+    expect { m.save }.to make_database_queries(:count => 2)
+  end
+
   context "#format_row" do
     let(:row) { {"boot_time" => Time.now.in_time_zone('Moscow'), "name" => "v2v-ubuntu-kk"} }
     let(:report) do
