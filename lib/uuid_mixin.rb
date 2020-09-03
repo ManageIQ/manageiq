@@ -2,7 +2,7 @@ module UuidMixin
   extend ActiveSupport::Concern
   included do
     default_value_for(:guid) { SecureRandom.uuid }
-    validates :guid,  :uniqueness => true, :presence => true
+    validates :guid,  :uniqueness_when_changed => true, :presence => true
   end
 
   def dup

@@ -7,7 +7,7 @@ class MiqAlert < ApplicationRecord
   serialize :hash_expression
   serialize :options
 
-  validates :description, :presence => true, :uniqueness => true
+  validates :description, :presence => true, :uniqueness_when_changed => true
   validate :validate_automate_expressions
   validate :validate_single_expression
   validates :severity, :inclusion => { :in => SEVERITIES }
