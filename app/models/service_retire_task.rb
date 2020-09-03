@@ -30,6 +30,9 @@ class ServiceRetireTask < MiqRetireTask
     Service.where(:id => options[:src_ids]).each do |parent_svc|
       if create_subtasks?(parent_svc)
         _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
+        if parent_svc.children.where(:name => parent_svc.name).exists?
+          _log.info("- retirement requested for service <#{parent_svc.id}> with child of same name (#{parent_svc.name})")
+        end
         create_retire_subtasks(parent_svc, self)
       end
     end
