@@ -1,7 +1,0 @@
-# for export:
-
-invoke script export.sh <abs-export-dir-path> <domain>
-
-# for import:
-
-invoke script import.sh <abs-dir-path> <domain> 
