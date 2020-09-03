@@ -30,7 +30,7 @@ class VmReconfigureTask < MiqRequestTask
     new_settings << "Processor Sockets: #{req_obj.options[:number_of_sockets].to_i}" if req_obj.options[:number_of_sockets].present?
     new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" if req_obj.options[:cores_per_socket].present?
     new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" if req_obj.options[:number_of_cpus].present?
-    new_settings << "Add Disks: #{req_obj.options[:disk_add].length} : #{req_obj.options[:disk_add].collect { |d| d["disk_size_in_mb"].to_i.megabytes.to_s(:human_size) }.join(", ")} " if req_obj.options[:disk_add].present?
+    new_settings << "Add Disks: #{req_obj.options[:disk_add].length} : #{req_obj.options[:disk_add].collect { |d| disk_info(d) }.join(", ")} " if req_obj.options[:disk_add].present?
     new_settings << "Remove Disks: #{req_obj.options[:disk_remove].length}" if req_obj.options[:disk_remove].present?
     new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" if req_obj.options[:disk_resize].present?
     new_settings << "Add Network Adapters: #{req_obj.options[:network_adapter_add].length}" if req_obj.options[:network_adapter_add].present?
@@ -38,6 +38,10 @@ class VmReconfigureTask < MiqRequestTask
     new_settings << "Attach CD/DVDs: #{req_obj.options[:cdrom_connect].length}" if req_obj.options[:cdrom_connect].present?
     new_settings << "Detach CD/DVDs: #{req_obj.options[:cdrom_disconnect].length}" if req_obj.options[:cdrom_disconnect].present?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
+  end
+
+  def self.disk_info(disk)
+    disk["disk_size_in_mb"].to_i.megabytes.to_s(:human_size) + ", Type: " + disk["type"].to_s
   end
 
   def after_request_task_create
