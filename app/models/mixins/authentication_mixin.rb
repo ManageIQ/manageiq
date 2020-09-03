@@ -2,10 +2,59 @@ module AuthenticationMixin
   extend ActiveSupport::Concern
 
   included do
+    # There are some dirty, dirty Ruby/Rails reasons why this method needs to
+    # exist like this, and I will try and explain:
+    #
+    # First, we need the extra +.where+ here because if this is used in a
+    # nested SELECT statement (aka: virtual_delegate), the +resource_type+
+    # check is dropped on the floor and not included in the subquery.  As a
+    # result, it will just pickup the first record to match the
+    # relationship_id column and that could be associated with any OTHER object
+    # with an Authentication record.
+    #
+    # For example, you get back an Authentication record for an EMS record when
+    # you are looking up one for a Host.
+    #
+    # Secondly, the reason this method exists, and is FIRST (prior to the
+    # +has_one+ that uses it) is it needs to be defined prior to the
+    # ActiveRecord::Relation method that calls it.  Also, it needs to be a
+    # method so the proper local variable, +authentication_mixin_relation+, can
+    # be defined with the class that the +resource_type+ needs to match and
+    # remain in scope for the Proc below.  If it is a class variable or done in
+    # other fashion, it will be overwritten whenever this module is included
+    # elsewhere, or is called against ActiveRecord::Relation, and not the class
+    # we are mixing into.
+    #
+    # Finally, the use of a prepared statement is also for some reason required
+    # over the Hash syntax since otherwise the following is ERROR is produced
+    # when doing a nested SELECT:
+    #
+    #     PG::ProtocolViolation: ERROR:  bind message supplies 0 parameters,
+    #     but prepared statement "" requires 1 (ActiveRecord::StatementInvalid)
+    #
+    # FIXME:  If we handle this in `virtual_attributes`, then this can be
+    # deleted and returned to the following proc on the has one:
+    #
+    #     has_one :authentication_status_severity_level,
+    #             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) }
+    #             # ...
+    #
+    # But keep the test that was added ;)
+    #
+    def self.authentication_status_severity_level_filter
+      # required to be done here so it is in scope of the Proc below
+      authentication_mixin_relation = name
+
+      proc do
+        where('"authentications"."resource_type" = ?', authentication_mixin_relation)
+          .order(Authentication::STATUS_SEVERITY_AREL.desc)
+      end
+    end
+
     has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
 
     has_one  :authentication_status_severity_level,
-             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) },
+             authentication_status_severity_level_filter,
              :as         => :resource,
              :inverse_of => :resource,
              :class_name => "Authentication"
