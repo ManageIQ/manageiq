@@ -55,14 +55,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential <
 
   def self.params_to_attributes(params)
     attrs            = params.dup
-    attrs[:auth_key] = attrs.delete(:secret)
+    attrs[:auth_key] = attrs.delete(:secret) if attrs.key?(:secret)
 
     if %i[client tenant subscription].any? {|opt| attrs.has_key? opt }
-      attrs[:options] = {
-        :client       => attrs.delete(:client),
-        :tenant       => attrs.delete(:tenant),
-        :subscription => attrs.delete(:subscription)
-      }
+      attrs[:options]              ||= {}
+      attrs[:options][:client]       = attrs.delete(:client)       if attrs.key?(:client)
+      attrs[:options][:tenant]       = attrs.delete(:tenant)       if attrs.key?(:tenant)
+      attrs[:options][:subscription] = attrs.delete(:subscription) if attrs.key?(:subscription)
     end
 
     attrs
