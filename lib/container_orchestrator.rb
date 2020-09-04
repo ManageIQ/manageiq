@@ -59,8 +59,6 @@ class ContainerOrchestrator
   end
 
   def get_pods
-    # TODO: we should set a label for workers we want to monitor so we don't accidentally kill memcached/postgresql pod
-    # :label_selector => "app=manageiq,worker=true"
     kube_connection.get_pods(pod_options)
   end
 
@@ -71,7 +69,7 @@ class ContainerOrchestrator
 
   private
   def pod_options
-    @pod_options ||= {:namespace => my_namespace, :label_selector => "app=#{app_name}"}
+    {:namespace => my_namespace, :label_selector => [app_name_selector, orchestrated_by_selector].join(",")}
   end
 
   def kube_connection

@@ -188,32 +188,38 @@ RSpec.describe ContainerOrchestrator do
       end
     end
 
-    describe "#get_pods" do
-      it "sets namespace and label_selector" do
-        expect(subject).to receive(:app_name).and_return("manageiq")
-        expect(kube_connection_stub).to receive(:get_pods).with(hash_including(:namespace => namespace, :label_selector => "app=manageiq"))
-        subject.get_pods
-      end
-    end
+    describe "initial pods and updates" do
+      let(:orchestrator_pod_name) { "orchestrator-9f99d8cb9" }
+      let(:app_name) { "manageiq" }
 
-    describe "#watch_pods" do
       before do
-        expect(subject).to receive(:app_name).and_return("manageiq")
+        allow(subject).to receive(:app_name).and_return(app_name)
+        allow(subject).to receive(:pod_name).and_return(orchestrator_pod_name)
       end
 
-      it "sets namespace and label_selector" do
-        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:namespace => namespace, :label_selector => "app=manageiq")).and_return([])
-        subject.watch_pods
+      describe "#get_pods" do
+        it "sets namespace and label_selector" do
+          expect(subject).to receive(:app_name).and_return("manageiq")
+          expect(kube_connection_stub).to receive(:get_pods).with(hash_including(:namespace => namespace, :label_selector => "app=#{app_name},#{app_name}-orchestrated-by=#{orchestrator_pod_name}"))
+          subject.get_pods
+        end
       end
 
-      it "defaults resource_version" do
-        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => nil)).and_return([])
-        subject.watch_pods
-      end
+      describe "#watch_pods" do
+        it "sets namespace and label_selector" do
+          expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:namespace => namespace, :resource_version => 0, :label_selector => "app=#{app_name},#{app_name}-orchestrated-by=#{orchestrator_pod_name}")).and_return([])
+          subject.watch_pods(0)
+        end
 
-      it "accepts provided resource_version" do
-        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => 100)).and_return([])
-        subject.watch_pods(100)
+        it "defaults resource_version" do
+          expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => nil)).and_return([])
+          subject.watch_pods
+        end
+
+        it "accepts provided resource_version" do
+          expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => 100)).and_return([])
+          subject.watch_pods(100)
+        end
       end
     end
   end
