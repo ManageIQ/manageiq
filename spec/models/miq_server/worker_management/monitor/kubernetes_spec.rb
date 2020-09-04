@@ -151,13 +151,6 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       double(:object => event_object)
     end
 
-    it "ensures watcher.finish" do
-      watcher = double
-      allow(orchestrator).to receive(:watch_pods).and_return(watcher)
-      expect(watcher).to receive(:finish)
-      server.send(:watch_for_pod_events)
-    end
-
     context "processes event" do
       before do
         allow(orchestrator).to receive(:watch_pods).and_yield(watch_event)

@@ -65,7 +65,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def watch_for_pod_events
-    watcher = orchestrator.watch_pods(pod_resource_version) do |event|
+    orchestrator.watch_pods(pod_resource_version) do |event|
       case event.type.downcase
       when "added", "modified"
         save_pod(event.object)
@@ -82,8 +82,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
         break
       end
     end
-  ensure
-    watcher.finish if watcher
   end
 
   def log_pod_error_event(code, message, reason)
