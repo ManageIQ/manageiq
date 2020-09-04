@@ -93,8 +93,8 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
     ch = Concurrent::Hash.new
     ch[:label_name]            = pod.metadata.labels.name
-    ch[:last_state_terminated] = pod.status.containerStatuses.any? { |cs| !!cs.lastState.terminated }
-    ch[:container_restarts]    = pod.status.containerStatuses.inject(0) { |sum, cs| sum += cs.restartCount if cs.lastState.terminated; sum }
+    ch[:last_state_terminated] = pod.status.containerStatuses.any? { |cs| cs.lastState.terminated }
+    ch[:container_restarts]    = pod.status.containerStatuses.sum { |cs| cs.restartCount.to_i }
 
     name = pod.metadata.name
     current_pods[name] ||= ch
