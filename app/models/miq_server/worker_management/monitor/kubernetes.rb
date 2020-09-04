@@ -21,9 +21,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   private
 
   def start_pod_monitor
-    @monitor_thread ||= begin
-      Thread.new { monitor_pods }
-    end
+    @monitor_thread ||= Thread.new { monitor_pods }
   end
 
   def ensure_pod_monitor_started
