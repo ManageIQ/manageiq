@@ -153,7 +153,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
     context "processes event" do
       before do
-        allow(orchestrator).to receive(:watch_pods).and_yield(watch_event)
+        allow(orchestrator).to receive(:watch_pods).and_return([watch_event])
       end
 
       it "ADDED calls save_pod with event object" do
