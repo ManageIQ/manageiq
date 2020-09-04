@@ -193,13 +193,13 @@ class Relationship < ApplicationRecord
   # reminders:
   # - matches("a%", nil, true) is case sensitive matching (i.e.: "like 'a%'") vs default (i.e.: "ilike 'a%'")
   #
-  def grandchild_conditions
+  def grandchildren
     t = self.class.arel_table
-    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true)
-                           .and(t[:ancestry].does_not_match("#{child_ancestry}/%/%", nil, true)))
+    self.class.where(t[:ancestry].matches("#{child_ancestry}/%", nil, true))
+        .where(t[:ancestry].does_not_match("#{child_ancestry}/%/%", nil, true))
   end
 
-  def child_and_grandchild_conditions
-    grandchild_conditions.or(child_conditions)
+  def child_and_grandchildren
+    grandchildren.or(children)
   end
 end
