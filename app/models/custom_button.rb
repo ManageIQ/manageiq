@@ -12,7 +12,7 @@ class CustomButton < ApplicationRecord
   serialize :visibility
 
   validates :applies_to_class, :presence => true
-  validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
+  validates :name, :description, :uniqueness_when_changed => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
 
   virtual_attribute :uri_attributes, :string
 
