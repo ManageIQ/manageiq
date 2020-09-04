@@ -97,11 +97,8 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     ch[:container_restarts]    = pod.status.containerStatuses.inject(0) { |sum, cs| sum += cs.restartCount if cs.lastState.terminated; sum }
 
     name = pod.metadata.name
-    if current_pods[name]
-      current_pods[name].merge!(ch)
-    else
-      current_pods[name] = ch
-    end
+    current_pods[name] ||= ch
+    current_pods[name].merge!(ch)
   end
 
   def delete_pod(pod)
