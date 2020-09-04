@@ -111,10 +111,20 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
       expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
       expect(server.pod_resource_version).to eql(resource_version)
-      expect(server.current_pods[deployment_name][:last_state_running]).to eql(true)
-      expect(server.current_pods[deployment_name][:started_at]).to eql([started_at])
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
       expect(server.current_pods[deployment_name][:container_restarts]).to eql(0)
+    end
+
+    it "calls save_pod to update a known running pod" do
+      pod_hash = Concurrent::Hash.new
+      pod_hash[:label_name] = pod_label
+      pod_hash[:last_state_terminated] = true
+
+      server.current_pods[deployment_name] = pod_hash
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
+
+      server.send(:collect_initial_pods)
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
     end
 
     it "calls save_pod for terminated pod" do
@@ -124,7 +134,6 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       server.send(:collect_initial_pods)
 
       expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
-      expect(server.current_pods[deployment_name][:last_state_running]).to eql(false)
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
       expect(server.current_pods[deployment_name][:container_restarts]).to eql(10)
     end

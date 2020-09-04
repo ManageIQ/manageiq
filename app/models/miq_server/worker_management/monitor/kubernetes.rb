@@ -7,8 +7,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def reset_current_pods
-    @current_pods = nil
-    current_pods
+    current_pods.clear
   end
 
   def cleanup_failed_deployments
@@ -93,16 +92,19 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def save_pod(pod)
-    # TODO: consider a more nuanced data structure if we're going to start using current_pods from sync_workers
-    name = pod.metadata.name
-    current_pods[name] ||= Concurrent::Hash.new
-    current_pods[name][:label_name]            = pod.metadata.labels.name
     return unless pod.status.containerStatuses
 
-    current_pods[name][:last_state_running]    = pod.status.containerStatuses.all? { |cs| !!cs.state.running }
-    current_pods[name][:started_at]            = pod.status.containerStatuses.collect { |cs| cs.state.running && cs.state.running.startedAt }.compact
-    current_pods[name][:last_state_terminated] = pod.status.containerStatuses.any? { |cs| !!cs.lastState.terminated }
-    current_pods[name][:container_restarts]    = pod.status.containerStatuses.inject(0) { |sum, cs| sum += cs.restartCount if cs.lastState.terminated; sum }
+    ch = Concurrent::Hash.new
+    ch[:label_name]            = pod.metadata.labels.name
+    ch[:last_state_terminated] = pod.status.containerStatuses.any? { |cs| !!cs.lastState.terminated }
+    ch[:container_restarts]    = pod.status.containerStatuses.inject(0) { |sum, cs| sum += cs.restartCount if cs.lastState.terminated; sum }
+
+    name = pod.metadata.name
+    if current_pods[name]
+      current_pods[name].merge!(ch)
+    else
+      current_pods[name] = ch
+    end
   end
 
   def delete_pod(pod)
