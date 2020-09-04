@@ -2,65 +2,46 @@ RSpec.describe UniqueWithinRegionValidator do
   describe "#unique_within_region" do
     context "class without STI" do
       let(:case_sensitive_class) do
-        Class.new(User).tap do |c|
-          c.class_eval do
-            validates :name, :unique_within_region => true
-          end
+        Class.new(ApplicationRecord) do
+          self.table_name = "users"
+          validates :name, :unique_within_region => true
         end
       end
 
       let(:case_insensitive_class) do
-        Class.new(User).tap do |c|
-          c.class_eval do
-            validates :name, :unique_within_region => {:match_case => false}
-          end
+        Class.new(ApplicationRecord) do
+          self.table_name = "users"
+          validates :name, :unique_within_region => {:match_case => false}
         end
       end
 
       let(:scoped_class) do
-        Class.new(User).tap do |c|
-          c.class_eval do
-            validates :name, :unique_within_region => {:scope => :email}
-          end
+        Class.new(ApplicationRecord) do
+          self.table_name = "users"
+          validates :name, :unique_within_region => {:scope => :email}
         end
       end
 
       let(:test_name)  { "thename" }
-      let(:test_email) { "thename@example.com" }
 
       let(:in_first_region_id) do
-        FactoryBot.create(
-          :user,
+        case_sensitive_class.create(
           :id    => case_sensitive_class.id_in_region(1, 0),
           :name  => test_name,
-          :email => test_email
         ).id
       end
 
       let(:also_in_first_region_id) do
-        FactoryBot.create(
-          :user,
+        case_sensitive_class.create(
           :id    => case_sensitive_class.id_in_region(2, 0),
           :name  => test_name.upcase,
-          :email => test_email
-        ).id
-      end
-
-      let(:new_email_in_first_region_id) do
-        FactoryBot.create(
-          :user,
-          :id    => case_sensitive_class.id_in_region(3, 0),
-          :name  => test_name,
-          :email => "other@example.com"
         ).id
       end
 
       let(:in_second_region_id) do
-        FactoryBot.create(
-          :user,
+        case_sensitive_class.create(
           :id    => case_sensitive_class.id_in_region(2, 1),
           :name  => test_name,
-          :email => test_email
         ).id
       end
 
@@ -84,10 +65,10 @@ RSpec.describe UniqueWithinRegionValidator do
 
       it "is case insensitive if match_case is set to false" do
         in_first_region_rec      = case_insensitive_class.find(in_first_region_id)
-        also_in_first_region_rec = case_insensitive_class.find(also_in_first_region_id)
+        also_in_first_region_rec = case_insensitive_class.new(:id => case_sensitive_class.id_in_region(2, 0), :name => test_name)
         in_second_region_rec     = case_insensitive_class.find(in_second_region_id)
 
-        expect(in_first_region_rec.valid?).to be false
+        expect(in_first_region_rec.valid?).to be true
         expect(also_in_first_region_rec.valid?).to be false
         expect(in_second_region_rec.valid?).to be true
       end
@@ -95,17 +76,15 @@ RSpec.describe UniqueWithinRegionValidator do
       it "applies the passed scope" do
         in_first_region_rec           = scoped_class.find(in_first_region_id)
         also_in_first_region_rec      = scoped_class.find(also_in_first_region_id)
-        new_email_in_first_region_rec = scoped_class.find(new_email_in_first_region_id)
         in_second_region_rec          = scoped_class.find(in_second_region_id)
 
         expect(in_first_region_rec.valid?).to be true
         expect(also_in_first_region_rec.valid?).to be true
-        expect(new_email_in_first_region_rec.valid?).to be true
         expect(in_second_region_rec.valid?).to be true
 
-        new_email_in_first_region_rec.email = test_email
+        also_in_first_region_rec.name = test_name
 
-        expect(new_email_in_first_region_rec.valid?).to be false
+        expect(also_in_first_region_rec.valid?).to be false
       end
     end
 
