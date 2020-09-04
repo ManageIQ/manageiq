@@ -86,6 +86,28 @@ RSpec.describe UniqueWithinRegionValidator do
 
         expect(also_in_first_region_rec.valid?).to be false
       end
+
+      it "gracefully handles no name" do
+        rec = case_sensitive_class.new
+        expect { rec.valid? }.not_to make_database_queries
+      end
+
+      it "queries for a new record" do
+        rec = case_sensitive_class.new(:name => 'abc')
+
+        expect { rec.valid? }.to make_database_queries(:count => 1)
+      end
+
+      it "queries for a changed record" do
+        rec = case_sensitive_class.create(:name => 'abc')
+        rec.name += '2'
+        expect { rec.valid? }.to make_database_queries(:count => 1)
+      end
+
+      it "doesn't query for an unchanged record" do
+        rec = case_sensitive_class.create(:name => 'abc')
+        expect { rec.valid? }.not_to make_database_queries
+      end
     end
 
     context "class with STI" do

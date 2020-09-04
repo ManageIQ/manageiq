@@ -331,7 +331,7 @@ RSpec.describe Zone do
   context "#valid?" do
     it "doesn't query for an unchanged record" do
       zone = FactoryBot.create(:zone)
-      expect { zone.valid? }.to make_database_queries(:count => 1)
+      expect { zone.valid? }.not_to make_database_queries
     end
   end
 end
