@@ -24,7 +24,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def start_pod_monitor
     @monitor_thread ||= begin
-      reset_current_pods
       Thread.new { monitor_pods }
     end
   end
@@ -54,9 +53,13 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def monitor_pods
-    # TODO: To ensure we're in sync, we might want to break out of the watch, reset the current_pods and run this again
-    collect_initial_pods
-    loop { watch_for_pod_events }
+    loop do
+      reset_current_pods
+      collect_initial_pods
+
+      # watch_for_pod_events doesn't return unless an error caused us to break out of it, so we'll reset and start over again
+      watch_for_pod_events
+    end
   end
 
   def collect_initial_pods
