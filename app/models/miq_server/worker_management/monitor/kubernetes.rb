@@ -1,13 +1,11 @@
 module MiqServer::WorkerManagement::Monitor::Kubernetes
   extend ActiveSupport::Concern
   attr_accessor :pod_resource_version
+  attr_reader :current_pods
 
-  def current_pods
-    @current_pods ||= Concurrent::Hash.new
-  end
-
-  def reset_current_pods
-    current_pods.clear
+  def initialize(*args)
+    @current_pods = Concurrent::Hash.new
+    super
   end
 
   def cleanup_failed_deployments
@@ -54,7 +52,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def monitor_pods
     loop do
-      reset_current_pods
+      current_pods.clear
       collect_initial_pods
 
       # watch_for_pod_events doesn't return unless an error caused us to break out of it, so we'll reset and start over again

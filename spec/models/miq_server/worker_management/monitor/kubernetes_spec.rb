@@ -10,7 +10,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
   end
 
   after do
-    server.reset_current_pods
+    server.current_pods.clear
   end
 
   context "#cleanup_failed_deployments" do
