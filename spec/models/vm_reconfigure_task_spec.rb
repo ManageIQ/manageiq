@@ -9,7 +9,7 @@ describe VmReconfigureTask do
   let(:request) do
     VmReconfigureRequest.create(:requester    => user,
                                 :options      => {:src_ids  => [vm.id],
-                                                  :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"}]},
+                                                  :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true", "type" => "thin"}]},
                                 :request_type => 'vm_reconfigure')
   end
 
@@ -28,7 +28,8 @@ describe VmReconfigureTask do
 
     describe "#self.get_description" do
       it "should get the task description" do
-        expect(VmReconfigureTask.get_description(request)).to eq("VM Reconfigure for: #{vm} - Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)} ")
+        expect(VmReconfigureTask.get_description(request)).to eq("VM Reconfigure for: #{vm} - Add Disks: 1 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, "\
+          "Type: #{request.options[:disk_add][0]["type"]} ")
       end
     end
 
@@ -44,15 +45,15 @@ describe VmReconfigureTask do
     let(:request) do
       VmReconfigureRequest.create(:requester    => user,
                                   :options      => {:src_ids  => [vm.id],
-                                                    :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true"},
-                                                                  {"disk_size_in_mb" => "44", "persistent" => "true"}]},
+                                                    :disk_add => [{"disk_size_in_mb" => "33", "persistent" => "true", "type" => "thin"},
+                                                                  {"disk_size_in_mb" => "44", "persistent" => "true", "type" => "thick"}]},
                                   :request_type => 'vm_reconfigure')
     end
 
     describe "#self.get_description" do
       it "should get the task description" do
         expect(VmReconfigureTask.get_description(request)).to eq("VM Reconfigure for: #{vm} - Add Disks: 2 : #{request.options[:disk_add][0]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, "\
-          "#{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)} ")
+          "Type: #{request.options[:disk_add][0]["type"]}, #{request.options[:disk_add][1]["disk_size_in_mb"].to_i.megabytes.to_s(:human_size)}, Type: #{request.options[:disk_add][1]["type"]} ")
       end
     end
 
