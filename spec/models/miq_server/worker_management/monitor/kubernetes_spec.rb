@@ -151,12 +151,6 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       double(:object => event_object)
     end
 
-    it "defaults pod_resource_version to 0 if not available" do
-      server.pod_resource_version = nil
-      expect(orchestrator).to receive(:watch_pods).with(0)
-      server.send(:watch_for_pod_events)
-    end
-
     it "ensures watcher.finish" do
       watcher = double
       allow(orchestrator).to receive(:watch_pods).and_return(watcher)
@@ -212,7 +206,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
         end
 
         server.send(:watch_for_pod_events)
-        expect(server.pod_resource_version).to eql(0)
+        expect(server.pod_resource_version).to eql(nil)
       end
     end
   end

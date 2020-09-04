@@ -207,7 +207,7 @@ RSpec.describe ContainerOrchestrator do
       end
 
       it "defaults resource_version" do
-        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => 0)).and_return([])
+        expect(kube_connection_stub).to receive(:watch_pods).with(hash_including(:resource_version => nil)).and_return([])
         subject.watch_pods
       end
 

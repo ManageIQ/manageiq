@@ -17,7 +17,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def failed_deployments(restart_count = 5)
     # TODO: This logic might flag deployments that are hitting memory/cpu limits or otherwise not really 'failed'
-    current_pods.select { |_name, h| h.fetch(:last_state_terminated) && h.fetch(:container_restarts, 0) > restart_count }.collect { |_name, h| h[:label_name] }
+    current_pods.values.select { |h| h[:last_state_terminated] && h.fetch(:container_restarts, 0) > restart_count }.collect { |h| h[:label_name] }
   end
 
   private
@@ -66,7 +66,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def watch_for_pod_events
-    watcher = orchestrator.watch_pods(pod_resource_version || 0) do |event|
+    watcher = orchestrator.watch_pods(pod_resource_version) do |event|
       case event.type.downcase
       when "added", "modified"
         save_pod(event.object)
@@ -79,7 +79,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
           log_pod_error_event(status.code, status.message, status.reason)
         end
 
-        self.pod_resource_version = 0
+        self.pod_resource_version = nil
         break
       end
     end
