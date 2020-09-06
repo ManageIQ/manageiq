@@ -9,7 +9,7 @@ RSpec.describe ChargeableField, :type => :model do
 
   it "doesn't access database when unchanged model is saved" do
     m = FactoryBot.create(:chargeable_field)
-    expect { m.valid? }.to make_database_queries(:count => 1)
+    expect { m.valid? }.not_to make_database_queries
   end
 
   describe "#cols_on_metric_rollup" do
