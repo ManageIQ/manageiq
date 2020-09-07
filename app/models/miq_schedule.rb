@@ -4,7 +4,7 @@ class MiqSchedule < ApplicationRecord
   include YAMLImportExportMixin
   deprecate_attribute :towhat, :resource_type
 
-  validates :name, :uniqueness => {:scope => [:userid, :resource_type]}
+  validates :name, :uniqueness_when_changed => {:scope => [:userid, :resource_type]}
   validates :name, :description, :resource_type, :run_at, :presence => true
   validate  :validate_run_at, :validate_file_depot
 
