@@ -19,6 +19,11 @@ RSpec.describe CustomButton do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:custom_button, :applies_to_class => Vm)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   context "with no buttons" do
     describe '#evaluate_enablement_expression_for' do
       let(:miq_expression) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_1'}) }
