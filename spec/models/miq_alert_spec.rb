@@ -573,4 +573,11 @@ RSpec.describe MiqAlert do
       )
     end
   end
+
+  describe "#valid?" do
+    it "doesn't query for an unchanged record" do
+      alert = FactoryBot.create(:miq_alert)
+      expect { alert.valid? }.not_to make_database_queries
+    end
+  end
 end
