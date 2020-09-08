@@ -6,10 +6,14 @@ class StorageResource < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
+  belongs_to :ext_management_system, :foreign_key => :ems_id,
+             :class_name => "ExtManagementSystem", :inverse_of => :storage_resources
   belongs_to :storage_system, :foreign_key => :storage_system_id, :class_name => "StorageSystem"
 
-  has_many :storage_services
+  has_many :service_resource_attachments, :inverse_of => :storage_resource
+  has_many :storage_services, :through => :service_resource_attachments
+
+  has_many :cloud_volumes, :inverse_of => :storage_resource
 
   acts_as_miq_taggable
 

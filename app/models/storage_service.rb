@@ -6,13 +6,13 @@ class StorageService < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
+  belongs_to :ext_management_system, :foreign_key => :ems_id,
+             :class_name => "ExtManagementSystem", :inverse_of => :storage_services
 
-  has_many   :service_resource_attachments
-  has_many   :storage_resources, :through => :service_resource_attachments
+  has_many :service_resource_attachments, :inverse_of => :storage_service
+  has_many :storage_resources, :through => :service_resource_attachments
 
   acts_as_miq_taggable
-
 
   def self.available
   # left_outer_joins(:attachments).where("disks.backing_id" => nil)

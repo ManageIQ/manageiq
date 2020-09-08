@@ -13,8 +13,10 @@ class CloudVolume < ApplicationRecord
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
-  belongs_to :storage_resource, :foreign_key => :storage_resource_id, :class_name => "StorageResource"
-  belongs_to :storage_service, :foreign_key => :storage_service_id, :class_name => "StorageService"
+  belongs_to :storage_resource, :foreign_key => :storage_resource_id,
+             :class_name => "StorageResource", :inverse_of => :cloud_volumes
+  belongs_to :storage_service, :foreign_key => :storage_service_id,
+             :class_name => "StorageService", :inverse_of => :cloud_volumes
   has_many   :cloud_volume_backups
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
@@ -159,12 +161,12 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
 
-
   # ========================================== safe-delete ==========================================
+  
   def safe_delete_volume_queue(userid)
     task_opts = {
       :action => "Safe deleting Cloud Volume for user #{userid}",
-        :userid => userid
+      :userid => userid
     }
 
     queue_opts = {

@@ -40,6 +40,5 @@ module ManageIQ::Providers
         hash[klass.ems_type] = klass.description
       end
     end
-
   end
 end
