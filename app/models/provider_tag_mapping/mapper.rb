@@ -45,7 +45,15 @@ class ProviderTagMapping
     # @param labels [Array] array of {:name, :value} hashes.
     # @return [Array<InventoryObject>] representing desired tags.
     def map_labels(type, labels)
-      labels.collect_concat { |label| map_label(type, label) }.uniq
+      inventory_objects = labels.collect_concat { |label| map_label(type, label) }.uniq
+
+      inventory_objects_by_category = inventory_objects.group_by { |inventory_object| inventory_object[:category_tag_id] }
+
+      single_value_category_tags = Classification.where(:tag_id => inventory_objects_by_category.keys, :single_value => true).pluck(:tag_id)
+
+      inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
+        single_value_category_tags.include?(category_tag_id) ? grouped_inventory_objects.first : grouped_inventory_objects
+      end.flatten.compact
     end
 
     # Convert "tag references" to actual Tag objects.  Must have been resolved to known id first.

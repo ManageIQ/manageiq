@@ -15,7 +15,7 @@ RSpec.describe ProviderTagMapping do
     cat = FactoryBot.create(:classification, :name => 'kubernetes::user_could_enter_this')
     cat.add_entry(:name => 'hello', :description => 'Hello').tag
   end
-  let(:ems) { FactoryBot.build(:ext_management_system) }
+  let(:ems) { FactoryBot.create(:ext_management_system) }
 
   def label(key_value_label)
     key_value_label.map do |name, value|
@@ -184,37 +184,234 @@ RSpec.describe ProviderTagMapping do
     end
   end
 
-  context "with mapping to single-value, existing category" do
-    it "replaces an existing tag on the resources with the value of the external label" do
+  context "with Image" do
+    let!(:single_value_category) { FactoryBot.create(:classification_environment_with_tags) }
+    let!(:multi_value_category)  { FactoryBot.create(:classification_department_with_tags) }
 
+    let(:ems_amazon) { FactoryBot.create(:ems_amazon) }
+    let!(:vm)        { FactoryBot.create(:vm_amazon, :ems_id => ems_amazon.id, :ems_ref => "some_ems_ref", :uid_ems => "some_ems_ref") }
+    let(:mapper)     { new_mapper }
+
+    let(:amazon_persister)    { ManageIQ::Providers::Amazon::Inventory::Persister::CloudManager.new(ems_amazon, ems_amazon) }
+    let(:vm_inventory_object) { amazon_persister.vms.find_or_build("some_ems_ref") }
+
+    let(:taggings_collections) do
+      vm_collection       = amazon_persister.inventory_collections[9]
+      taggings_collection = amazon_persister.inventory_collections[8]
+      tags_collection     = mapper.tags_to_resolve_collection
+
+      [tags_collection, vm_collection, taggings_collection]
     end
 
-    context "with 2 mappings to the same category" do
-      it "should be valid" do
+    let(:externals_labels) { [] }
 
+    def populate_taggings_collections_with(inventory_objects)
+      inventory_objects.each do |inventory_object|
+        amazon_persister.vm_and_template_taggings.build(:taggable => vm_inventory_object, :tag => inventory_object)
+      end
+    end
+
+    subject do
+      tags_inventory_objects = mapper.map_labels("Image", externals_labels)
+      populate_taggings_collections_with(tags_inventory_objects)
+      InventoryRefresh::SaveInventory.save_inventory(ems_amazon, taggings_collections)
+    end
+
+    context "with mapping to single-value, existing category" do
+      before do
+        FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
       end
 
-      context "and a resource has both labels applied externally" do
-        it "should only apply one of the label values" do
-          # The order in which the labels are mapped in not deterministic. Therefore, only one tag int he category should be applied
-          # and it can be either one
-          # TODO: This will require a change to the mapping part of the refresh because it currently will apply both values
+      let(:externals_labels) do # provider label
+        [{:name => 'Name', :value => 'Accounting'}]
+      end
+
+      it "replaces an existing tag on the resource with the value of the external label" do
+        expect(vm.tags).to be_empty
+
+        existing_tag_on_vm = Tag.lookup_by_classification_name('environment/quarantine')
+        vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+        expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+        subject
+
+        expected_tags = [Tag.lookup_by_classification_name('environment/accounting')]
+        expect(vm.reload.tags).to eq(expected_tags)
+      end
+
+      it "adds a tag to the resource with the value of the external label" do
+        expect(vm.tags).to be_empty
+
+        subject
+
+        expected_tags = [Tag.lookup_by_classification_name('environment/accounting')]
+        expect(vm.reload.tags).to eq(expected_tags)
+      end
+
+      it "adds a tag from external label to the resource and pre-assigned tag from multi value category" do
+        expect(vm.tags).to be_empty
+
+        existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
+        vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+        expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+        subject
+
+        expected_tags = [Tag.lookup_by_classification_name('environment/accounting'), existing_tag_on_vm]
+        expect(vm.reload.tags).to eq(expected_tags)
+      end
+
+      context "with more mappings" do
+        let!(:single_value_category_2) { FactoryBot.create(:classification_location_with_tags) }
+
+        let(:externals_labels) do # provider label
+          [{:name => 'Name',   :value => 'Accounting'},
+           {:name => 'Locality', :value => 'Brno'}]
+        end
+
+        before do
+          FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Locality", :tag => single_value_category_2.tag)
+        end
+
+        context "when mappings are targeted to different categories" do
+          it "adds tags to resource" do
+            expect(vm.tags).to be_empty
+
+            subject
+
+            expected_tags = %w[location/brno environment/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+            expect(vm.reload.tags).to match_array(expected_tags)
+          end
+        end
+
+        context "when mappings are targeted to same categories" do
+          let(:externals_labels) do # provider label
+            [{:name => 'Name', :value => 'Accounting'},
+             {:name => 'Location', :value => 'Production'}]
+          end
+
+          before do
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Location", :tag => single_value_category.tag)
+          end
+
+          it "only applies one of the label values" do
+            expect(vm.tags).to be_empty
+
+            subject
+
+            expected_tags = %w[environment/accounting environment/production].map { |x| Tag.lookup_by_classification_name(x) }
+            expect(vm.reload.tags.count).to eq(1)
+
+            # The order in which the labels are mapped in not deterministic. Therefore, only one tag int he category should be applied
+            # and it can be either one
+            expect(vm.reload.tags.first).to eq(expected_tags.first).or(be == expected_tags.second)
+          end
         end
       end
     end
-  end
 
-  context "with 2 mappings to the same category (implied multi-value)" do
-    it "should be valid" do
+    context "with mapping with multi-value category" do
+      let!(:multi_value_category_2) { FactoryBot.create(:classification_cost_center_with_tags) }
 
-    end
+      let(:externals_labels) do # provider label
+        [{:name => 'Name', :value => 'Accounting'}]
+      end
 
-    it "should add new tag during mapping" do
+      before do
+        FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+      end
 
-    end
+      it "adds a tag to the resource with the value of the external label" do
+        expect(vm.tags).to be_empty
 
-    it "should not add new tag during mapping if resource is already tagged with the same tag" do
+        subject
 
+        expected_tags = [Tag.lookup_by_classification_name('department/accounting')]
+        expect(vm.reload.tags).to eq(expected_tags)
+      end
+
+      it "replaces pre-assigned tag with same category as target category from mapping" do
+        expect(vm.tags).to be_empty
+
+        existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
+        vm.tag_add(existing_tag_on_vm.name, :ns => '')
+        expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+        subject
+
+        expect(vm.reload.tags).to match_array([Tag.lookup_by_classification_name('department/accounting')])
+      end
+
+      it "add tag with same category as target category from mapping" do
+        expect(vm.tags).to be_empty
+
+        existing_tag_on_vm = Tag.lookup_by_classification_name('cc/001')
+        vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+        expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+        subject
+
+        expected_tags = [existing_tag_on_vm, Tag.lookup_by_classification_name('department/accounting')]
+        expect(vm.reload.tags).to match_array(expected_tags)
+      end
+
+      it "doesn't add new tag during mapping if resource is already tagged with the same tag" do
+        expect(vm.tags).to be_empty
+
+        existing_tag_on_vm = Tag.lookup_by_classification_name('department/accounting')
+        vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+        subject
+
+        expect(vm.reload.tags).to match_array([existing_tag_on_vm])
+      end
+
+      context "with more mappings" do
+        let(:externals_labels) do # provider labels
+          [{:name => 'Name', :value => 'Accounting'},
+           {:name => 'Finance Center', :value => '007'}]
+        end
+
+        context "when mappings are targeted to different categories" do
+          before do
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category_2.tag)
+          end
+
+          it "adds tags to resource" do
+            expect(vm.tags).to be_empty
+
+            subject
+
+            expected_tags = %w[cc/007 department/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+            expect(vm.reload.tags).to match_array(expected_tags)
+          end
+        end
+
+        context "when mappings are targeted to same categories" do
+          let(:externals_labels) do # provider labels
+            [{:name => 'Name', :value => 'Accounting'},
+             {:name => 'Finance Center', :value => '007'}]
+          end
+
+          before do
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category.tag)
+          end
+
+          it "only applies one of the label values" do
+            expect(vm.tags).to be_empty
+
+            subject
+
+            expected_tags = %w[department/007 department/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+            expect(vm.reload.tags).to match_array(expected_tags)
+          end
+        end
+      end
     end
   end
 
