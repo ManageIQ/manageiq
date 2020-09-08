@@ -1,5 +1,5 @@
 class StorageSystemType < ApplicationRecord
-  #include_concern 'Operations'
+  # include_concern 'Operations'
 
   include NewWithTypeStiMixin
   include ProviderObjectMixin
@@ -11,9 +11,8 @@ class StorageSystemType < ApplicationRecord
 
   acts_as_miq_taggable
 
-
   def self.available
-    #left_outer_joins(:attachments).where("disks.backing_id" => nil)
+    # left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)
@@ -21,5 +20,4 @@ class StorageSystemType < ApplicationRecord
     # side, that would return correct class for each provider
     ext_management_system && ext_management_system.class::StorageSystemType
   end
-
 end

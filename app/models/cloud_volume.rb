@@ -163,18 +163,18 @@ class CloudVolume < ApplicationRecord
   # ========================================== safe-delete ==========================================
   def safe_delete_volume_queue(userid)
     task_opts = {
-        :action => "Safe deleting Cloud Volume for user #{userid}",
+      :action => "Safe deleting Cloud Volume for user #{userid}",
         :userid => userid
     }
 
     queue_opts = {
-        :class_name => self.class.name,
+      :class_name  => self.class.name,
         :method_name => 'safe_delete_volume',
         :instance_id => id,
-        :role => 'ems_operations',
-        :queue_name => ext_management_system.queue_name_for_ems_operations,
-        :zone => ext_management_system.my_zone,
-        :args => []
+        :role        => 'ems_operations',
+        :queue_name  => ext_management_system.queue_name_for_ems_operations,
+        :zone        => ext_management_system.my_zone,
+        :args        => []
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -188,12 +188,9 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_safe_delete_volume must be implemented in a subclass")
   end
 
-
   def validate_safe_delete_volume
     validate_unsupported("Safe Delete Volume Operation")
   end
-
-  # ==================================================================================================
 
   def available_vms
     raise NotImplementedError, _("available_vms must be implemented in a subclass")

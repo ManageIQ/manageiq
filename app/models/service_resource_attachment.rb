@@ -10,12 +10,10 @@ class ServiceResourceAttachment < ApplicationRecord
   belongs_to :storage_service, :foreign_key => :storage_service_id, :class_name => "StorageService"
   belongs_to :storage_resource, :foreign_key => :storage_resource_id, :class_name => "StorageResource"
 
-
   acts_as_miq_taggable
 
-
   def self.available
-    #left_outer_joins(:attachments).where("disks.backing_id" => nil)
+    # left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)
@@ -23,6 +21,4 @@ class ServiceResourceAttachment < ApplicationRecord
     # side, that would return correct class for each provider
     ext_management_system && ext_management_system.class::StorageSystem
   end
-
-
 end

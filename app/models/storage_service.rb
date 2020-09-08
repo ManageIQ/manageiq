@@ -1,6 +1,4 @@
 class StorageService < ApplicationRecord
-  #include_concern 'Operations'
-
   include NewWithTypeStiMixin
   include ProviderObjectMixin
   include AsyncDeleteMixin
@@ -17,7 +15,7 @@ class StorageService < ApplicationRecord
 
 
   def self.available
-    #left_outer_joins(:attachments).where("disks.backing_id" => nil)
+  # left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)

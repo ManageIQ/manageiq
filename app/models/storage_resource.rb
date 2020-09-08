@@ -1,6 +1,4 @@
 class StorageResource < ApplicationRecord
-  #include_concern 'Operations'
-
   include NewWithTypeStiMixin
   include ProviderObjectMixin
   include AsyncDeleteMixin
@@ -11,13 +9,12 @@ class StorageResource < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :storage_system, :foreign_key => :storage_system_id, :class_name => "StorageSystem"
 
-  has_many  :storage_services
+  has_many :storage_services
 
   acts_as_miq_taggable
 
-
   def self.available
-    #left_outer_joins(:attachments).where("disks.backing_id" => nil)
+    # left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)
@@ -51,6 +48,7 @@ class StorageResource < ApplicationRecord
 
   def self.create_storage_resource(ems_id, options = {})
     raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
@@ -61,7 +59,8 @@ class StorageResource < ApplicationRecord
   def self.validate_create_storage_resource(ext_management_system)
     klass = class_by_ems(ext_management_system)
     return klass.validate_create_storage_resource(ext_management_system) if ext_management_system &&
-                                                                  klass.respond_to?(:validate_create_storage_resource)
+                                                                            klass.respond_to?(:validate_create_storage_resource)
+
     validate_unsupported("Create StorageResource Operation")
   end
 
@@ -136,5 +135,4 @@ class StorageResource < ApplicationRecord
   def raw_delete_storage_resource
     raise NotImplementedError, _("raw_delete_storage_resource must be implemented in a subclass")
   end
-
 end
