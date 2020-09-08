@@ -7,6 +7,11 @@ RSpec.describe ChargeableField, :type => :model do
     it { is_expected.to eq("#{group}_#{source}") }
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:chargeable_field)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   describe "#cols_on_metric_rollup" do
     before do
       ChargebackRateDetailMeasure.seed
