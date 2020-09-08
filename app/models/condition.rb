@@ -3,7 +3,7 @@ class Condition < ApplicationRecord
   before_validation :default_name_to_guid, :on => :create
 
   validates :name, :description, :expression, :towhat, :presence => true
-  validates :name, :description, :uniqueness => true
+  validates :name, :description, :uniqueness_when_changed => true
 
   acts_as_miq_taggable
   acts_as_miq_set_member

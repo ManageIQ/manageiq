@@ -36,6 +36,11 @@ RSpec.describe Condition do
       end
     end
 
+    it "doesn't access database when unchanged model is saved" do
+      m = FactoryBot.create(:condition)
+      expect { m.valid? }.not_to make_database_queries
+    end
+
     context "expression with <find>" do
       let(:cluster) { FactoryBot.create(:ems_cluster) }
       let(:host1) { FactoryBot.create(:host, :ems_cluster => cluster) }
