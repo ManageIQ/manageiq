@@ -27,6 +27,11 @@ RSpec.describe MiqSchedule do
       FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now)
     end
 
+    it "doesn't access database when unchanged model is saved" do
+      m = FactoryBot.create(:miq_schedule)
+      expect { m.valid? }.not_to make_database_queries
+    end
+
     context "MiqReport" do
       it "exports to array" do
         miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
