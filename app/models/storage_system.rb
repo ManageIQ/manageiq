@@ -8,10 +8,11 @@ class StorageSystem < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
-
-  has_many :storage_resources
-  belongs_to :storage_system_type, :foreign_key => :storage_system_type_id, :class_name => "StorageSystemType"
+  belongs_to :ext_management_system, :foreign_key => :ems_id,
+             :class_name => "ExtManagementSystem", :inverse_of => :storage_systems
+  has_many :storage_resources, :dependent => :destroy
+  belongs_to :storage_system_type, :class_name => "StorageSystemType",
+             :inverse_of => :storage_systems
 
   acts_as_miq_taggable
 

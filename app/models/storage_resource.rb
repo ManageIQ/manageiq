@@ -8,12 +8,12 @@ class StorageResource < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id,
              :class_name => "ExtManagementSystem", :inverse_of => :storage_resources
-  belongs_to :storage_system, :foreign_key => :storage_system_id, :class_name => "StorageSystem"
+  belongs_to :storage_system, :class_name => "StorageSystem", :inverse_of => :storage_resources
 
-  has_many :service_resource_attachments, :inverse_of => :storage_resource
-  has_many :storage_services, :through => :service_resource_attachments
+  has_many :service_resource_attachments, :inverse_of => :storage_resource, :dependent => :destroy
+  has_many :storage_services, :through => :service_resource_attachments, :dependent => :destroy
 
-  has_many :cloud_volumes, :inverse_of => :storage_resource
+  has_many :cloud_volumes, :inverse_of => :storage_resource, :dependent => :destroy
 
   acts_as_miq_taggable
 
