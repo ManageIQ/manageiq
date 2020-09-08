@@ -12,7 +12,7 @@ class StorageSystem < ApplicationRecord
              :class_name => "ExtManagementSystem", :inverse_of => :storage_systems
   has_many :storage_resources, :dependent => :destroy
   belongs_to :storage_system_type, :class_name => "StorageSystemType",
-             :inverse_of => :storage_systems
+                                   :inverse_of => :storage_systems
 
   acts_as_miq_taggable
 

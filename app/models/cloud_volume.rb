@@ -162,7 +162,7 @@ class CloudVolume < ApplicationRecord
   end
 
   # ========================================== safe-delete ==========================================
-  
+
   def safe_delete_volume_queue(userid)
     task_opts = {
       :action => "Safe deleting Cloud Volume for user #{userid}",
@@ -171,12 +171,12 @@ class CloudVolume < ApplicationRecord
 
     queue_opts = {
       :class_name  => self.class.name,
-        :method_name => 'safe_delete_volume',
-        :instance_id => id,
-        :role        => 'ems_operations',
-        :queue_name  => ext_management_system.queue_name_for_ems_operations,
-        :zone        => ext_management_system.my_zone,
-        :args        => []
+      :method_name => 'safe_delete_volume',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)

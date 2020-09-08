@@ -6110,14 +6110,14 @@
     :feature_type: view
     :identifier: storage_resource_view
     :children:
-     - :name: List
-       :description: Display Lists of Storage Resources
-       :feature_type: view
-       :identifier: storage_resource_show_list
-     - :name: Show
-       :description: Display Individual Storage Resources
-       :feature_type: view
-       :identifier: storage_resource_show
+    - :name: List
+      :description: Display Lists of Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show_list
+    - :name: Show
+      :description: Display Individual Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show
   - :name: Operate
     :description: Perform Operations on Storage Resources
     :feature_type: control

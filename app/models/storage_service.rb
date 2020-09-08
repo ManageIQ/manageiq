@@ -15,7 +15,7 @@ class StorageService < ApplicationRecord
   acts_as_miq_taggable
 
   def self.available
-  # left_outer_joins(:attachments).where("disks.backing_id" => nil)
+    # left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)
@@ -49,6 +49,7 @@ class StorageService < ApplicationRecord
 
   def self.create_storage_service(ems_id, options = {})
     raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
@@ -58,8 +59,9 @@ class StorageService < ApplicationRecord
 
   def self.validate_create_storage_service(ext_management_system)
     klass = class_by_ems(ext_management_system)
-    return klass.validate_create_storage_service(ext_management_system) if ext_management_system &&
-                                                                  klass.respond_to?(:validate_create_storage_service)
+    return klass.validate_create_storage_service(ext_management_system) if
+        ext_management_system && klass.respond_to?(:validate_create_storage_service)
+
     validate_unsupported("Create StorageService Operation")
   end
 
@@ -134,5 +136,4 @@ class StorageService < ApplicationRecord
   def raw_delete_storage_service
     raise NotImplementedError, _("raw_delete_storage_service must be implemented in a subclass")
   end
-
 end
