@@ -17,8 +17,7 @@ class MiqProductFeature < ApplicationRecord
 
   virtual_delegate :identifier, :to => :parent, :prefix => true, :allow_nil => true, :type => :string
 
-  validates_presence_of   :identifier
-  validates_uniqueness_of :identifier
+  validates :identifier, :uniqueness_when_changed => true, :presence => true
 
   DETAIL_ATTRS = [
     :name,

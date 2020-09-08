@@ -11,6 +11,11 @@ RSpec.describe MiqProductFeature do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_product_feature, :identifier => "some_feature")
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   # - container_dashboard
   # - miq_report_widget_editor
   #   - miq_report_widget_admin
