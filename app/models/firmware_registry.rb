@@ -5,7 +5,7 @@ class FirmwareRegistry < ApplicationRecord
   has_one :endpoint, :as => :resource, :dependent => :destroy, :inverse_of => :resource
   has_one :authentication, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
 
   def sync_fw_binaries_queue
     MiqQueue.put_unless_exists(
