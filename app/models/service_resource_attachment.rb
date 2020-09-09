@@ -6,12 +6,9 @@ class ServiceResourceAttachment < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id,
-             :class_name => "ExtManagementSystem", :inverse_of => :service_resource_attachments
-  belongs_to :storage_service, :foreign_key => :storage_service_id,
-             :class_name => "StorageService", :inverse_of => service_resource_attachments
-  belongs_to :storage_resource, :foreign_key => :storage_resource_id,
-             :class_name => "StorageResource", :inverse_of => service_resource_attachments
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :service_resource_attachments
+  belongs_to :storage_service, :inverse_of => :service_resource_attachments
+  belongs_to :storage_resource, :inverse_of => :service_resource_attachments
 
   acts_as_miq_taggable
 

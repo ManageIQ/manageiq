@@ -7,8 +7,8 @@ class StorageResource < ApplicationRecord
   include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id,
-             :class_name => "ExtManagementSystem", :inverse_of => :storage_resources
-  belongs_to :storage_system, :class_name => "StorageSystem", :inverse_of => :storage_resources
+             :inverse_of => :storage_resources
+  belongs_to :storage_system, :inverse_of => :storage_resources
 
   has_many :service_resource_attachments, :inverse_of => :storage_resource, :dependent => :destroy
   has_many :storage_services, :through => :service_resource_attachments, :dependent => :destroy

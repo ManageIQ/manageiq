@@ -7,7 +7,7 @@ class StorageSystemType < ApplicationRecord
   include SupportsFeatureMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id,
-             :class_name => "ExtManagementSystem", :inverse_of => :storage_system_types
+             :inverse_of => :storage_system_types
   has_many :storage_systems, :dependent => :nullify
 
   acts_as_miq_taggable
