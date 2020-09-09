@@ -25,6 +25,11 @@ RSpec.describe FirmwareRegistry do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:firmware_registry)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   it '#sync_fw_binaries_raw' do
     expect { subject.sync_fw_binaries_raw }.to raise_error(NotImplementedError)
   end
