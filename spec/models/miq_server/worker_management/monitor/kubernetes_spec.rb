@@ -124,7 +124,6 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       server.send(:collect_initial_pods)
 
       expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
-      expect(server.pod_resource_version).to eql(resource_version)
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
       expect(server.current_pods[deployment_name][:container_restarts]).to eql(0)
     end
@@ -152,9 +151,8 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       expect(server.current_pods[deployment_name][:container_restarts]).to eql(10)
     end
 
-    it "sets get_pods resource_version" do
-      server.send(:collect_initial_pods)
-      expect(server.pod_resource_version).to eql(resource_version)
+    it "returns resource_version" do
+      expect(server.send(:collect_initial_pods)).to eql(resource_version)
     end
   end
 
@@ -173,30 +171,29 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       it "ADDED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("ADDED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events)
+        server.send(:watch_for_pod_events, nil)
       end
 
       it "MODIFIED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("MODIFIED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events)
+        server.send(:watch_for_pod_events, nil)
       end
 
       it "DELETED calls delete_pod with event object" do
         allow(watch_event).to receive(:type).and_return("DELETED")
         expect(server).to receive(:delete_pod).with(event_object)
-        server.send(:watch_for_pod_events)
+        server.send(:watch_for_pod_events, nil)
       end
 
       it "UNKNOWN type isn't saved or deleted" do
         allow(watch_event).to receive(:type).and_return("UNKNOWN")
         expect(server).to receive(:save_pod).never
         expect(server).to receive(:delete_pod).never
-        server.send(:watch_for_pod_events)
+        server.send(:watch_for_pod_events, nil)
       end
 
-      it "ERROR logs warning, resets pod_resource_version and breaks" do
-        server.pod_resource_version = 1000
+      it "ERROR logs warning and breaks" do
         expected_code = 410
         expected_message = "too old resource version: 199900 (27177196)"
         expected_reason = "Gone"
@@ -212,8 +209,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
           expect(reason).to eql(expected_reason)
         end
 
-        server.send(:watch_for_pod_events)
-        expect(server.pod_resource_version).to eql(nil)
+        server.send(:watch_for_pod_events, nil)
       end
     end
   end

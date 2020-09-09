@@ -1,6 +1,5 @@
 module MiqServer::WorkerManagement::Monitor::Kubernetes
   extend ActiveSupport::Concern
-  attr_accessor :pod_resource_version
 
   included do
     cattr_accessor :current_pods
@@ -50,21 +49,21 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   def monitor_pods
     loop do
       current_pods.clear
-      collect_initial_pods
+      resource_version = collect_initial_pods
 
       # watch_for_pod_events doesn't return unless an error caused us to break out of it, so we'll reset and start over again
-      watch_for_pod_events
+      watch_for_pod_events(resource_version)
     end
   end
 
   def collect_initial_pods
     pods = orchestrator.get_pods
     pods.each { |p| save_pod(p) }
-    self.pod_resource_version = pods.resourceVersion
+    pods.resourceVersion
   end
 
-  def watch_for_pod_events
-    orchestrator.watch_pods(pod_resource_version).each do |event|
+  def watch_for_pod_events(resource_version)
+    orchestrator.watch_pods(resource_version).each do |event|
       case event.type.downcase
       when "added", "modified"
         save_pod(event.object)
@@ -77,14 +76,13 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
           log_pod_error_event(status.code, status.message, status.reason)
         end
 
-        self.pod_resource_version = nil
         break
       end
     end
   end
 
   def log_pod_error_event(code, message, reason)
-    _log.warn("Restarting watch_pods at resource_version 0 due to error: [#{code} #{reason}], [#{message}]")
+    _log.warn("Restarting watch_for_pod_events due to error: [#{code} #{reason}], [#{message}]")
   end
 
   def save_pod(pod)
