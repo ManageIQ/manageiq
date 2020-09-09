@@ -109,8 +109,8 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     let(:pods) do
       metadata = double(:name => deployment_name, :labels => double(:name => pod_label))
       state = double(:running => double(:startedAt => started_at))
-      lastState = double(:terminated => nil)
-      status = double(:containerStatuses => [double(:state => state, :lastState => lastState, :restartCount => 0)])
+      last_state = double(:terminated => nil)
+      status = double(:containerStatuses => [double(:state => state, :lastState => last_state, :restartCount => 0)])
       pods = [double(:metadata => metadata, :status => status)]
       allow(pods).to receive(:resourceVersion).and_return(resource_version)
       pods

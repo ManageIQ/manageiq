@@ -35,8 +35,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def delete_failed_deployments
-    # TODO: We should have a list of worker deployments we'll delete to avoid accidentally killing pg/memcached/orchestrator
-    # See ContainerOrchestrator#get_pods
     failed_deployments.each do |failed|
       orchestrator.delete_deployment(failed)
     end
@@ -51,7 +49,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
       current_pods.clear
       resource_version = collect_initial_pods
 
-      # watch_for_pod_events doesn't return unless an error caused us to break out of it, so we'll reset and start over again
+      # watch_for_pod_events doesn't return unless an error caused us to break out of it, so we'll start over again
       watch_for_pod_events(resource_version)
     end
   end
@@ -70,7 +68,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
       when "deleted"
         delete_pod(event.object)
       when "error"
-        if status = event.object
+        if (status = event.object)
           # ocp 3 appears to return 'ERROR' watch events with the object containing the 410 code and "Gone" reason like below:
           # #<Kubeclient::Resource type="ERROR", object={:kind=>"Status", :apiVersion=>"v1", :metadata=>{}, :status=>"Failure", :message=>"too old resource version: 199900 (27177196)", :reason=>"Gone", :code=>410}>
           log_pod_error_event(status.code, status.message, status.reason)
