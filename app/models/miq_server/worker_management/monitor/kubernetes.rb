@@ -1,11 +1,10 @@
 module MiqServer::WorkerManagement::Monitor::Kubernetes
   extend ActiveSupport::Concern
   attr_accessor :pod_resource_version
-  attr_reader :current_pods
 
-  def initialize(*args)
-    @current_pods = Concurrent::Hash.new
-    super
+  included do
+    cattr_accessor :current_pods
+    self.current_pods = Concurrent::Hash.new
   end
 
   def cleanup_failed_deployments

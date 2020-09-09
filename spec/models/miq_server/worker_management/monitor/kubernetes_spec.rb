@@ -13,6 +13,20 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     server.current_pods.clear
   end
 
+  it "#current_pods initialized" do
+    expect(server.current_pods).to_not be_nil
+  end
+
+  it ".current_pods initialized" do
+    expect(server.class.current_pods).to_not be_nil
+  end
+
+  it ".current_pods and #current_pods share the same hash" do
+    expect(server.class.current_pods.object_id).to eql(server.current_pods.object_id)
+    server.current_pods[:a] = :b
+    expect(server.class.current_pods[:a]).to eql(:b)
+  end
+
   context "#cleanup_failed_deployments" do
     context "#ensure_pod_monitor_started" do
       before do
