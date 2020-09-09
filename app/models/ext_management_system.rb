@@ -61,6 +61,7 @@ class ExtManagementSystem < ApplicationRecord
       endpoints.each { |endpoint| ems.assign_nested_endpoint(endpoint) }
       authentications.each { |authentication| ems.assign_nested_authentication(authentication) }
 
+      ems.provider.save! if ems.provider.present? && ems.provider.changed?
       ems.save!
     end
   end
@@ -157,6 +158,7 @@ class ExtManagementSystem < ApplicationRecord
         ems.endpoints = endpoints.map(&method(:assign_nested_endpoint))
         ems.authentications = authentications.map(&method(:assign_nested_authentication))
 
+        ems.provider.save! if ems.provider.present? && ems.provider.changed?
         ems.save!
       end
     end
