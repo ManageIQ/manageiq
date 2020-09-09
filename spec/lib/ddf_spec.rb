@@ -81,4 +81,14 @@ RSpec.describe DDF do
       authentications.default.password
     ]
   end
+
+  describe ".find_field" do
+    it "when field is found" do
+      expect(described_class.find_field(schema, userid_field[:id])).to equal userid_field
+    end
+
+    it "when field is not found" do
+      expect(described_class.find_field(schema, 'foo')).to be_nil
+    end
+  end
 end

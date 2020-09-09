@@ -18,4 +18,11 @@ module DDF
 
     arr.compact.uniq
   end
+
+  def self.find_field(schema, id)
+    traverse(schema) do |item|
+      return item if item[:id] == id
+    end
+    nil
+  end
 end
