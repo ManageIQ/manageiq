@@ -6,8 +6,7 @@ class StorageSystemType < ApplicationRecord
   include AvailabilityMixin
   include SupportsFeatureMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id,
-             :inverse_of => :storage_system_types
+  belongs_to :ext_management_system, :foreign_key => :ems_id
   has_many :storage_systems, :dependent => :nullify
 
   acts_as_miq_taggable
