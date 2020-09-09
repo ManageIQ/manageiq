@@ -6,14 +6,14 @@ class ContainerOrchestrator
       {
         :metadata => {
           :name            => name,
-          :labels          => {:app => app_name},
+          :labels          => common_labels,
           :namespace       => my_namespace,
           :ownerReferences => owner_references
         },
         :spec     => {
           :selector => {:matchLabels => {:name => name}},
           :template => {
-            :metadata => {:name => name, :labels => {:name => name, :app => app_name}},
+            :metadata => {:name => name, :labels => common_labels.merge(:name => name)},
             :spec     => {
               :serviceAccountName => ENV["WORKER_SERVICE_ACCOUNT"],
               :containers         => [{
@@ -31,7 +31,7 @@ class ContainerOrchestrator
       {
         :metadata => {
           :name            => name,
-          :labels          => {:app => app_name},
+          :labels          => common_labels,
           :namespace       => my_namespace,
           :ownerReferences => owner_references
         },
@@ -50,7 +50,7 @@ class ContainerOrchestrator
       {
         :metadata   => {
           :name            => name,
-          :labels          => {:app => app_name},
+          :labels          => common_labels,
           :namespace       => my_namespace,
           :ownerReferences => owner_references
         },
@@ -112,15 +112,43 @@ class ContainerOrchestrator
       ENV["APP_NAME"]
     end
 
+    def app_name_label
+      {:app => app_name}
+    end
+
+    def app_name_selector
+      "app=#{app_name}"
+    end
+
+    def common_labels
+      app_name_label.merge(orchestrated_by_label)
+    end
+
+    def orchestrated_by_label
+      {:"#{app_name}-orchestrated-by" => pod_name}
+    end
+
+    def orchestrated_by_selector
+      "#{app_name}-orchestrated-by=#{pod_name}"
+    end
+
     def owner_references
       [{
         :apiVersion         => "v1",
         :blockOwnerDeletion => true,
         :controller         => true,
         :kind               => "Pod",
-        :name               => ENV["POD_NAME"],
-        :uid                => ENV["POD_UID"]
+        :name               => pod_name,
+        :uid                => pod_uid
       }]
+    end
+
+    def pod_name
+      ENV['POD_NAME']
+    end
+
+    def pod_uid
+      ENV["POD_UID"]
     end
   end
 end

@@ -58,7 +58,18 @@ class ContainerOrchestrator
     raise unless e.message =~ /not found/
   end
 
+  def get_pods
+    kube_connection.get_pods(pod_options)
+  end
+
+  def watch_pods(resource_version = nil)
+    kube_connection.watch_pods(pod_options.merge(:resource_version => resource_version))
+  end
+
   private
+  def pod_options
+    {:namespace => my_namespace, :label_selector => [app_name_selector, orchestrated_by_selector].join(",")}
+  end
 
   def kube_connection
     @kube_connection ||= raw_connect(manager_uri("/api"))
