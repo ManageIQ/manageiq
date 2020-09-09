@@ -54,6 +54,11 @@ RSpec.describe MiqSearch do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_search)
+    expect { m.valid? }.to make_database_queries(:count => 1)
+  end
+
   describe "#results" do
     it "respects filter" do
       all_vms
