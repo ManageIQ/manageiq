@@ -61,6 +61,11 @@ RSpec.describe MiqWidget do
       end
     end
 
+    it "doesn't access database when unchanged model is saved" do
+      m = FactoryBot.create(:miq_widget)
+      expect { m.valid? }.to make_database_queries(:count => 1)
+    end
+
     describe "#sync_schedule" do
       let(:schedule) do
         filter = @widget_chart_vendor_and_guest_os.filter_for_schedule
