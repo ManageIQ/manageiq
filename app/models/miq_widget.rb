@@ -18,7 +18,7 @@ class MiqWidget < ApplicationRecord
   has_many   :miq_shortcuts, :through => :miq_widget_shortcuts
 
   validates_presence_of   :title, :description
-  validates_uniqueness_of :description
+  validates :description, :uniqueness_when_changed => true
   VALID_CONTENT_TYPES = %w( report chart rss menu )
   validates_inclusion_of :content_type, :in => VALID_CONTENT_TYPES, :message => "should be one of #{VALID_CONTENT_TYPES.join(", ")}"
 
