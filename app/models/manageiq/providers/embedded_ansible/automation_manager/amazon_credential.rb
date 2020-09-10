@@ -38,7 +38,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential 
 
   def self.params_to_attributes(params)
     attrs = params.dup
-    attrs[:auth_key] = attrs.delete(:security_token)
+    attrs[:auth_key] = attrs.delete(:security_token) if attrs.key?(:security_token)
     attrs
   end
 end

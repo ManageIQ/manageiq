@@ -67,8 +67,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
   def self.params_to_attributes(params)
     attrs = params.dup
 
-    attrs[:auth_key]          = attrs.delete(:ssh_key_data)
-    attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock)
+    attrs[:auth_key]          = attrs.delete(:ssh_key_data)   if attrs.key?(:ssh_key_data)
+    attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock) if attrs.key?(:ssh_key_unlock)
 
     if attrs[:become_method]
       attrs[:options] = { :become_method => attrs.delete(:become_method) }

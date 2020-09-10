@@ -88,10 +88,19 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
       it "#update_in_provider to succeed" do
         expect(Notification).to receive(:create!).never
 
+        previous_params_to_attrs = params_to_attrs.each_with_object({}) do |key, attrs|
+                                     attrs[key] = ansible_cred.send(key)
+                                   end
+
         result = ansible_cred.update_in_provider update_params
 
         expect(result).to be_a(credential_class)
         expect(result.name).to eq("Updated Credential")
+
+        # Doesn't muck up old attrs
+        previous_params_to_attrs.each do |attr, value|
+          expect(result.send(attr)).to eq(value)
+        end
       end
 
       it "#update_in_provider_queue" do
@@ -200,6 +209,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:auth_key, :auth_key_password, :become_method] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -272,6 +282,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:authorize, :auth_key, :auth_key_password, :become_password] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -330,6 +341,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret3")
         }
       end
+      let(:params_to_attrs) { [:auth_key, :auth_key_password] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -369,16 +381,15 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           :password_encrypted => ManageIQ::Password.try_encrypt("secret1")
         }
       end
+      let(:params_to_attrs) { [:password] }
       let(:update_params) do
         {
           :name           => "Updated Credential",
-          :vault_password => "supersecret"
         }
       end
       let(:update_queue_params) do
         {
           :name           => "Updated Credential",
-          :vault_password => ManageIQ::Password.encrypt("supersecret")
         }
       end
     end
@@ -415,6 +426,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           :auth_key_encrypted => ManageIQ::Password.try_encrypt("secret2")
         }
       end
+      let(:params_to_attrs) { [:auth_key] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -487,6 +499,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:auth_key, :client, :tenant, :subscription] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -498,6 +511,22 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           :name     => "Updated Credential",
           :password => ManageIQ::Password.encrypt("supersecret")
         }
+      end
+
+      it "#update_in_provider updating a single option" do
+        ansible_cred = credential_class.raw_create_in_provider(manager, params)
+        expect(Notification).to receive(:create!).never
+        expect(ansible_cred.client).to eq("client")
+        expect(ansible_cred.tenant).to eq("tenant")
+        expect(ansible_cred.subscription).to eq("subscription")
+
+        result = ansible_cred.update_in_provider(:name => "Updated Credential", :client => "foo")
+
+        expect(result).to be_a(credential_class)
+        expect(result.name).to eq("Updated Credential")
+        expect(result.client).to eq("foo")
+        expect(result.tenant).to eq("tenant")
+        expect(result.subscription).to eq("subscription")
       end
     end
   end
@@ -544,18 +573,9 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
-      let(:update_params) do
-        {
-          :name         => "Updated Credential",
-          :ssh_key_data => "supersecret"
-        }
-      end
-      let(:update_queue_params) do
-        {
-          :name         => "Updated Credential",
-          :ssh_key_data => ManageIQ::Password.encrypt("supersecret")
-        }
-      end
+      let(:params_to_attrs)     { [:auth_key, :project] }
+      let(:update_params)       { {:name => "Updated Credential"} }
+      let(:update_queue_params) { {:name => "Updated Credential"} }
     end
   end
 
@@ -611,6 +631,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:host, :domain, :project] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -668,6 +689,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:host] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
@@ -725,6 +747,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
           }
         }
       end
+      let(:params_to_attrs) { [:host] }
       let(:update_params) do
         {
           :name     => "Updated Credential",
