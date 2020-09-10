@@ -4,11 +4,11 @@ class MiqSearch < ApplicationRecord
   include_concern 'ImportExport'
   include YAMLImportExportMixin
 
-  validates_uniqueness_of :name, :scope => "db"
+  validates :name, :uniqueness_when_changed => {:scope => "db"}
 
   # validate if the name of a new filter is unique in Global Filters
-  validates :description, :uniqueness => { :scope => "db", :conditions => -> { where.not(:search_type => 'user') },
-                          :if => proc { |miq_search| miq_search.search_type == 'global' } }
+  validates :description, :uniqueness_when_changed => {:scope => "db", :conditions => -> { where.not(:search_type => 'user') },
+                          :if => proc { |miq_search| miq_search.search_type == 'global' }}
 
   has_many  :miq_schedules
 
