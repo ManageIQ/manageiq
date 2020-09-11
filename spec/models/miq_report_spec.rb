@@ -827,8 +827,8 @@ RSpec.describe MiqReport do
         @expected_html_rows.push(generate_html_row(false, @tenant.name, formatted_values))
 
         formatted_values = {:name => "Allocated Storage in GB", :total => "4.0 GB",
-                            :used => "#{1_000_000.0 / 1.gigabyte} GB", :allocated => "0.0 GB",
-                            :available => "#{(4.gigabytes - 1_000_000.0) / 1.gigabyte} GB"}
+                            :used => "#{(1_000_000.0 / 1.gigabyte).round(1)} GB", :allocated => "0.0 GB",
+                            :available => "#{((4.gigabytes - 1_000_000.0) / 1.gigabyte).round(1)} GB"}
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
 
         formatted_values = {:name => "Allocated Number of Templates", :total => "4 Count", :used => "1 Count",
