@@ -52,7 +52,11 @@ class ProviderTagMapping
       single_value_category_tags = Classification.where(:tag_id => inventory_objects_by_category.keys, :single_value => true).pluck(:tag_id)
 
       inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
-        single_value_category_tags.include?(category_tag_id) ? grouped_inventory_objects.first : grouped_inventory_objects
+        if single_value_tag_ids.include?(category_tag_id)
+          grouped_inventory_objects.sort_by { |x| x.data.fetch(:entry_name) }.first
+        else
+          grouped_inventory_objects
+        end
       end.flatten.compact
     end
 

@@ -288,25 +288,25 @@ RSpec.describe ProviderTagMapping do
 
         context "when mappings are targeted to same categories" do
           let(:externals_labels) do # provider label
-            [{:name => 'Name', :value => 'Accounting'},
-             {:name => 'Location', :value => 'Production'}]
+            [{:name => 'Name', :value => 'Windows'},
+             {:name => 'Location', :value => 'Production'},
+             {:name => 'Cost Center', :value  => '007'}]
           end
 
           before do
             FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Location", :tag => single_value_category.tag)
+            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Cost Center", :tag => single_value_category.tag)
           end
 
           it "only applies one of the label values" do
             expect(vm.tags).to be_empty
 
             subject
-
-            expected_tags = %w[environment/accounting environment/production].map { |x| Tag.lookup_by_classification_name(x) }
             expect(vm.reload.tags.count).to eq(1)
 
-            # The order in which the labels are mapped in not deterministic. Therefore, only one tag int he category should be applied
-            # and it can be either one
-            expect(vm.reload.tags.first).to eq(expected_tags.first).or(be == expected_tags.second)
+            # Only first tag is assigned to Vm and this tag is selected according to
+            # alphanumeric order of labels's names
+            expect(vm.reload.tags.first.name).to eq("/managed/environment/007")
           end
         end
       end
