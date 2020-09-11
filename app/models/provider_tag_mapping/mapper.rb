@@ -38,6 +38,21 @@ class ProviderTagMapping
       )
     end
 
+    def cached_filter_single_value_category_tag_ids(category_tag_ids)
+      @single_value_category_tag_ids ||= []
+      @multiple_value_category_tag_ids ||= []
+
+      tag_ids = category_tag_ids - @single_value_category_tag_ids - @multiple_value_category_tag_ids
+
+      if tag_ids.present? # some tag ids are not cached yet
+        single_value_tag_ids = Classification.where(:tag_id => tag_ids, :single_value => true).pluck(:tag_id)
+        @single_value_category_tag_ids.concat(single_value_tag_ids)
+        @multiple_value_category_tag_ids.concat(tag_ids - single_value_tag_ids)
+      end
+
+      @single_value_category_tag_ids & category_tag_ids
+    end
+
     # Compute desired tags, in intermediate form to be resolved later.
     #
     # @param type [String] Matched against `labeled_resource_type` in mappings.
@@ -49,7 +64,7 @@ class ProviderTagMapping
 
       inventory_objects_by_category = inventory_objects.group_by { |inventory_object| inventory_object[:category_tag_id] }
 
-      single_value_category_tags = Classification.where(:tag_id => inventory_objects_by_category.keys, :single_value => true).pluck(:tag_id)
+      single_value_tag_ids = cached_filter_single_value_category_tag_ids(inventory_objects_by_category.keys)
 
       inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
         if single_value_tag_ids.include?(category_tag_id)

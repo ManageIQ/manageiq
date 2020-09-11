@@ -217,6 +217,33 @@ RSpec.describe ProviderTagMapping do
       InventoryRefresh::SaveInventory.save_inventory(ems_amazon, taggings_collections)
     end
 
+
+    describe "#cached_filter_single_value_category_tag_ids" do
+      it "uses cache properly for single value categories" do
+        where_params = {:tag_id => [single_value_category.tag_id], :single_value => true}
+        expect(Classification).to receive(:where).with(where_params).exactly(1).times.and_call_original
+
+        mapper = new_mapper
+        tag_ids = mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        expect(tag_ids).to eq([single_value_category.tag_id])
+      end
+
+      it "uses cache properly for multi and single value categories" do
+        input_tag_ids = [single_value_category.tag_id, multi_value_category.tag_id]
+        where_params = {:tag_id => input_tag_ids, :single_value => true}
+        expect(Classification).to receive(:where).with(where_params).exactly(1).times.and_call_original
+
+        mapper = new_mapper
+        tag_ids = mapper.cached_filter_single_value_category_tag_ids(input_tag_ids)
+        mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids([multi_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids(input_tag_ids)
+
+        expect(tag_ids).to eq([single_value_category.tag_id])
+      end
+    end
+
     context "with mapping to single-value, existing category" do
       before do
         FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
