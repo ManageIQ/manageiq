@@ -1,4 +1,34 @@
 RSpec.describe MiqSearch do
+  context "validate name uniqueness" do
+    it "with same name" do
+      miq_search = FactoryBot.create(:miq_search)
+
+      expect { FactoryBot.create(:miq_search, :name => miq_search.name) }
+        .to raise_error(ActiveRecord::RecordInvalid, /Name has already been taken/)
+    end
+
+    it "with different names" do
+      FactoryBot.create(:miq_search)
+
+      expect { FactoryBot.create(:miq_search) }.to_not raise_error
+    end
+  end
+
+  context "validate description uniqueness" do
+    it "with same description" do
+      miq_search = FactoryBot.create(:miq_search, :search_type => 'global')
+
+      expect { FactoryBot.create(:miq_search, :description => miq_search.description, :search_type => 'global') }
+        .to raise_error(ActiveRecord::RecordInvalid, /Description has already been taken/)
+    end
+
+    it "with different descriptions" do
+      FactoryBot.create(:miq_search, :search_type => 'global')
+
+      expect { FactoryBot.create(:miq_search, :search_type => 'global') }.to_not raise_error
+    end
+  end
+
   describe '#descriptions' do
     it "hashes" do
       srchs = [

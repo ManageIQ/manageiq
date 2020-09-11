@@ -7,7 +7,7 @@ class UniquenessWhenChangedValidator < ActiveRecord::Validations::UniquenessVali
   # Examples:
   #   validates :name, :uniqueness_when_changed => true
   def validate_each(record, attribute, value)
-    return unless record.changed.include?(attribute.to_s) || record.new_record?
+    return if value.nil? || !record.send("#{attribute}_changed?")
 
     super
   end
