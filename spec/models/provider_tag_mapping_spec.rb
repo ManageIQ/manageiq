@@ -249,7 +249,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to eq(expected_tags)
       end
 
-      it "adds a tag from external label to the resource and pre-assigned tag from multi value category" do
+      it "adds a tag from external label to the resource and pre-existing tag from multi value category" do
         expect(vm.tags).to be_empty
 
         existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
@@ -263,7 +263,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to eq(expected_tags)
       end
 
-      context "with more mappings" do
+      context "with multiple mappings" do
         let!(:single_value_category_2) { FactoryBot.create(:classification_location_with_tags) }
 
         let(:externals_labels) do # provider label
@@ -332,7 +332,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to eq(expected_tags)
       end
 
-      it "replaces pre-assigned tag with same category as target category from mapping" do
+      it "reassigns to the tag specified in the mapping with same category as a pre-existing tag" do
         expect(vm.tags).to be_empty
 
         existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
@@ -344,7 +344,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to match_array([Tag.lookup_by_classification_name('department/accounting')])
       end
 
-      it "add tag with same category as target category from mapping" do
+      it "add tag with a category that is different from the target category from mapping " do
         expect(vm.tags).to be_empty
 
         existing_tag_on_vm = Tag.lookup_by_classification_name('cc/001')
@@ -369,7 +369,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to match_array([existing_tag_on_vm])
       end
 
-      context "with more mappings" do
+      context "with multiple mappings" do
         let(:externals_labels) do # provider labels
           [{:name => 'Name', :value => 'Accounting'},
            {:name => 'Finance Center', :value => '007'}]
