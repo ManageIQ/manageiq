@@ -32,7 +32,7 @@ class GenericObjectDefinition < ApplicationRecord
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
   validate  :validate_property_attributes,
             :validate_property_associations,
             :validate_property_methods,
