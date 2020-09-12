@@ -15,6 +15,11 @@ RSpec.describe GenericObjectDefinition do
     )
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:generic_object_definition)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   it 'requires name attribute present' do
     expect(described_class.new).not_to be_valid
   end
