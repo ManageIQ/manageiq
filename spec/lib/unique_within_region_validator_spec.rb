@@ -25,21 +25,21 @@ RSpec.describe UniqueWithinRegionValidator do
       let(:test_name)  { "thename" }
 
       let(:in_first_region_id) do
-        case_sensitive_class.create(
+        case_sensitive_class.create!(
           :id    => case_sensitive_class.id_in_region(1, 0),
           :name  => test_name,
         ).id
       end
 
       let(:also_in_first_region_id) do
-        case_sensitive_class.create(
+        case_sensitive_class.create!(
           :id    => case_sensitive_class.id_in_region(2, 0),
           :name  => test_name.upcase,
         ).id
       end
 
       let(:in_second_region_id) do
-        case_sensitive_class.create(
+        case_sensitive_class.create!(
           :id    => case_sensitive_class.id_in_region(2, 1),
           :name  => test_name,
         ).id
@@ -99,13 +99,13 @@ RSpec.describe UniqueWithinRegionValidator do
       end
 
       it "queries for a changed record" do
-        rec = case_sensitive_class.create(:name => 'abc')
+        rec = case_sensitive_class.create!(:name => 'abc')
         rec.name += '2'
         expect { rec.valid? }.to make_database_queries(:count => 1)
       end
 
       it "doesn't query for an unchanged record" do
-        rec = case_sensitive_class.create(:name => 'abc')
+        rec = case_sensitive_class.create!(:name => 'abc')
         expect { rec.valid? }.not_to make_database_queries
       end
     end
@@ -136,14 +136,14 @@ RSpec.describe UniqueWithinRegionValidator do
 
       context "two subclasses" do
         it "raises error with non-unique names in same region" do
-          test_subclass1.create(:name => "foo")
+          test_subclass1.create!(:name => "foo")
 
           expect { test_subclass2.create!(:name => "foo") }
             .to raise_error(ActiveRecord::RecordInvalid, / Name is not unique within region/)
         end
 
         it "doesn't raise error with unique names" do
-          test_subclass1.create(:name => "foo")
+          test_subclass1.create!(:name => "foo")
 
           expect { test_subclass2.create!(:name => "bar") }.to_not raise_error
         end
