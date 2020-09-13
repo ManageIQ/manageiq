@@ -11,6 +11,11 @@ RSpec.describe ChargebackRate do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:chargeback_rate)
+    expect { m.valid? }.to make_database_queries(:count => 1)
+  end
+
   context ".validate_rate_type" do
     it "handles valid types" do
       [:compute, :storage, 'compute', 'storage', 'Compute', 'Storage'].each do |type|
