@@ -217,7 +217,6 @@ RSpec.describe ProviderTagMapping do
       InventoryRefresh::SaveInventory.save_inventory(ems_amazon, taggings_collections)
     end
 
-
     describe "#cached_filter_single_value_category_tag_ids" do
       it "uses cache properly for single value categories" do
         where_params = {:tag_id => [single_value_category.tag_id], :single_value => true}
@@ -317,7 +316,7 @@ RSpec.describe ProviderTagMapping do
           let(:externals_labels) do # provider label
             [{:name => 'Name', :value => 'Windows'},
              {:name => 'Location', :value => 'Production'},
-             {:name => 'Cost Center', :value  => '007'}]
+             {:name => 'Cost Center', :value => '007'}]
           end
 
           before do

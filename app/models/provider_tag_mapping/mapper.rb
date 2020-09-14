@@ -68,7 +68,7 @@ class ProviderTagMapping
 
       inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
         if single_value_tag_ids.include?(category_tag_id)
-          grouped_inventory_objects.sort_by { |x| x.data.fetch(:entry_name) }.first
+          grouped_inventory_objects.min_by { |x| x.data.fetch(:entry_name) }
         else
           grouped_inventory_objects
         end
