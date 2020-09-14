@@ -60,7 +60,6 @@ class VmOrTemplate < ApplicationRecord
   has_one                   :miq_provision, :dependent => :nullify, :as => :destination
   has_one                   :miq_provision_template, :through => "miq_provision", :source => "source", :source_type => "VmOrTemplate"
   has_one                   :miq_server, :foreign_key => :vm_id, :inverse_of => :vm
-  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   belongs_to                :host
   belongs_to                :ems_cluster

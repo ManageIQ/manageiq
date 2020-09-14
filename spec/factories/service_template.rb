@@ -6,7 +6,6 @@ FactoryBot.define do
   factory :service_template_ansible_playbook, :class => 'ServiceTemplateAnsiblePlaybook', :parent => :service_template
   factory :service_template_ansible_tower, :class => 'ServiceTemplateAnsibleTower', :parent => :service_template
   factory :service_template_container_template, :class => 'ServiceTemplateContainerTemplate', :parent => :service_template
-  factory :service_template_transformation_plan, :class => 'ServiceTemplateTransformationPlan', :parent => :service_template
 
   trait :with_provision_resource_action_and_dialog do
     after(:create) do |x|
