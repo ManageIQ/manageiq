@@ -11,8 +11,8 @@ class PxeServer < ApplicationRecord
 
   acts_as_miq_taggable
 
-  validates_presence_of   :name, :uri
-  validates_uniqueness_of :name
+  validates :uri, :presence => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
 
   has_many :pxe_menus,      :dependent => :destroy
   has_many :pxe_images,     :dependent => :destroy

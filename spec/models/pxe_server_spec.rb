@@ -24,6 +24,11 @@ RSpec.describe PxeServer do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:pxe_server)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   context "pxelinux depot" do
     before do
       @pxe_server.pxe_directory = "pxelinux.cfg"
