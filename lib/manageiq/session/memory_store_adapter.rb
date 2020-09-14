@@ -30,3 +30,13 @@ module ActionDispatch
     end
   end
 end
+
+module ManageIQ
+  module Session
+    class MemoryStoreAdapter < AbstractStoreAdapter
+      def type
+        :memory_store
+      end
+    end
+  end
+end
