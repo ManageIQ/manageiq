@@ -84,6 +84,10 @@ class ExtManagementSystem < ApplicationRecord
   has_many :disks,             :through => :hardwares
   has_many :physical_servers,  :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
+  has_many :vm_and_template_labels, :through => :vms_and_templates, :source => :labels
+  # Only taggings mapped from labels, excluding user-assigned tags.
+  has_many :vm_and_template_taggings, -> { joins(:tag).merge(Tag.controlled_by_mapping) }, :through => :vms_and_templates, :source => :taggings
+
   has_many :storages, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
                                                       :inverse_of => :ext_management_system
