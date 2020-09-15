@@ -8,6 +8,8 @@ require "extensions/session_extension"
 #
 module ManageIQ
   module Session
+    FakeRequest = Struct.new(:env)
+
     # :call-seq:
     #   ManageIQ::Session.store=(Symbol)
     #
@@ -35,6 +37,15 @@ module ManageIQ
       msg = "Using session_store: #{Vmdb::Application.config.session_store}"
       _log.info(msg)
       puts "** #{msg}" if !Rails.env.production? && adapter.type != :mem_cache_store
+    end
+
+    # Create a fake request that can be passed to methods in the SessionStore
+    # (like `.delete_session`) where a request object is required.
+    #
+    # Create a new one each time instead of memoizing to avoid data getting
+    # attached to the request hash (env).
+    def self.fake_request
+      FakeRequest.new({})
     end
   end
 end
