@@ -144,7 +144,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   #
   # A file is considered a playbook if it has one line that matches
   # VALID_PLAYBOOK_CHECK, or it starts with $ANSIBLE_VAULT, which in that case
-  # it is an encrypted file which it isn't possible to decern if it is a
+  # it is an encrypted file which it isn't possible to discern if it is a
   # playbook or a different type of yaml file.
   #
   def playbook?(filename, worktree)
