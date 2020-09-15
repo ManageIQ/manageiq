@@ -81,42 +81,6 @@ module ManageIQ::Providers
           )
         end
 
-        def vm_and_template_labels
-          # TODO(lsmola) make a generic CustomAttribute IC and move it to base class
-          add_properties(
-            :model_class                  => ::CustomAttribute,
-            :manager_ref                  => %i(resource name),
-            :parent_inventory_collections => %i(vms miq_templates)
-          )
-
-          add_targeted_arel(
-            lambda do |inventory_collection|
-              manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
-              inventory_collection.parent.vm_and_template_labels.where(
-                'vms' => {:ems_ref => manager_uuids}
-              )
-            end
-          )
-        end
-
-        def vm_and_template_taggings
-          add_properties(
-            :model_class                  => Tagging,
-            :manager_ref                  => %i(taggable tag),
-            :parent_inventory_collections => %i(vms miq_templates)
-          )
-
-          add_targeted_arel(
-            lambda do |inventory_collection|
-              manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
-              ems = inventory_collection.parent
-              ems.vm_and_template_taggings.where(
-                'taggable_id' => ems.vms_and_templates.where(:ems_ref => manager_uuids)
-              )
-            end
-          )
-        end
-
         def vm_and_miq_template_ancestry
           skip_auto_inventory_attributes
           skip_model_class
