@@ -1,4 +1,9 @@
 RSpec.describe CustomizationTemplate do
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:customization_template)
+    expect { m.valid? }.to make_database_queries(:count => 1)
+  end
+
   context "unique name validation" do
     it "doesn't allow same name, same pxe_image_type in same region" do
       pit = FactoryBot.create(:pxe_image_type)
