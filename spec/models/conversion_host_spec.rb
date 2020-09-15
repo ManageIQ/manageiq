@@ -104,6 +104,11 @@ RSpec.describe ConversionHost, :v2v do
       end
     end
 
+    it "doesn't access database when unchanged model is saved" do
+      m = FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:vm_openstack))
+      expect { m.valid? }.not_to make_database_queries
+    end
+
     context "#ipaddress" do
       it "returns first IP address if 'address' is nil" do
         expect(conversion_host_1.ipaddress).to eq('10.0.0.1')
