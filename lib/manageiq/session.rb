@@ -10,6 +10,15 @@ module ManageIQ
   module Session
     FakeRequest = Struct.new(:env)
 
+    # Fetch the currently configured session store
+    #
+    # This is lazily fetched and memoized from Rails' middleware stack, as we
+    # don't want to fetch/precache it from Rails until that process of defining
+    # the middleware stack has completed.
+    def self.store
+      @store ||= fetch_store_from_rails
+    end
+
     # :call-seq:
     #   ManageIQ::Session.store=(Symbol)
     #
@@ -26,6 +35,8 @@ module ManageIQ
       raise ArgumentError, "invalid session store adapter: #{session_store.inspect}" unless adapter_klass
 
       configure_session_store(adapter_klass.new)
+
+      @store = nil
     end
 
     # :nodoc:
@@ -47,5 +58,18 @@ module ManageIQ
     def self.fake_request
       FakeRequest.new({})
     end
+
+    def self.fetch_store_from_rails
+      middleware          = Rails.application
+      session_store_klass = ActionDispatch::Session::SessionObject
+
+      loop do
+        return nil        if middleware.nil?
+        return middleware if middleware.kind_of?(session_store_klass)
+
+        middleware = middleware.instance_variable_get(:@app)
+      end
+    end
+    private_class_method :fetch_store_from_rails
   end
 end
