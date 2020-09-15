@@ -80,7 +80,7 @@ class TransformationMappingItem < ApplicationRecord
     elsif destination.kind_of?(CloudNetwork) # Openstack, lans are of 'CloudNetwork' type
       tmin             = tm.transformation_mapping_items.where(:destination_type => "CloudTenant")
       dst_cluster_lans = tmin.collect(&:destination).flat_map(&:cloud_networks)
-      dst_cluster_lans |= tmin.map(&:destination).map(&:ext_management_system).flat_map(&:cloud_networks).select { |n| n.shared }.uniq
+      dst_cluster_lans |= tmin.map(&:destination).map(&:ext_management_system).flat_map(&:cloud_networks).select(&:shared).uniq
     end
 
     unless dst_cluster_lans.include?(destination_lan)
