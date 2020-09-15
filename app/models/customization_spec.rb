@@ -1,4 +1,6 @@
 class CustomizationSpec < ApplicationRecord
+  require "VMwareWebService/VimTypes"
+
   belongs_to :ext_management_system, :foreign_key => "ems_id"
 
   serialize :spec
