@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 145 ending 2020-09-14
+
+### Fixed
+
+* Fixed embedded ansible edit credentials [(#20524)](https://github.com/ManageIQ/manageiq/pull/20524)
+
 # Unreleased as of Sprint 144 ending 2020-08-31
 
 ### Fixed
