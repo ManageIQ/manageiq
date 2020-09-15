@@ -77,8 +77,8 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       # TODO(lsmola) make a generic CustomAttribute IC and move it to base class
       add_properties(
         :model_class                  => ::CustomAttribute,
-        :manager_ref                  => %i(resource name),
-        :parent_inventory_collections => %i(vms miq_templates)
+        :manager_ref                  => %i[resource name],
+        :parent_inventory_collections => %i[vms miq_templates]
       )
 
       add_targeted_arel(
@@ -94,8 +94,8 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     def vm_and_template_taggings
       add_properties(
         :model_class                  => Tagging,
-        :manager_ref                  => %i(taggable tag),
-        :parent_inventory_collections => %i(vms miq_templates)
+        :manager_ref                  => %i[taggable tag],
+        :parent_inventory_collections => %i[vms miq_templates]
       )
 
       add_targeted_arel(
