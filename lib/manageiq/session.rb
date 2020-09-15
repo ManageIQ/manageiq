@@ -50,6 +50,18 @@ module ManageIQ
       puts "** #{msg}" if !Rails.env.production? && adapter.type != :mem_cache_store
     end
 
+    # :call-seq:
+    #   ManageIQ::Session.revoke(id)         -> Array
+    #   ManageIQ::Session.revoke(id1, id2)   -> Array
+    #   ManageIQ::Session.revoke([id1, id2]) -> Array
+    #
+    # Revokes sessions for one or multiple session ids given.  Returns the list
+    # of session ids provided and sent to be delete from the session @store.
+    #
+    def self.revoke(*session_ids)
+      store.delete_sessions(session_ids.flatten)
+    end
+
     # Create a fake request that can be passed to methods in the SessionStore
     # (like `.delete_session`) where a request object is required.
     #
@@ -59,6 +71,14 @@ module ManageIQ
       FakeRequest.new({})
     end
 
+    # :nodoc:
+    #
+    # Loops through the middleware stack and finds the configured session store
+    # for the Rails application.
+    #
+    # Currently there is "good" no way to fetch the given instance of the
+    # session store, so this is the best option available.
+    #
     def self.fetch_store_from_rails
       middleware          = Rails.application
       session_store_klass = ActionDispatch::Session::SessionObject
