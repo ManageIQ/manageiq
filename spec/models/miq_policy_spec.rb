@@ -1,4 +1,9 @@
 RSpec.describe MiqPolicy do
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_policy)
+    expect { m.valid? }.to make_database_queries(:count => 2)
+  end
+
   context "Testing edge cases on conditions" do
     # The conditions reflection on MiqPolicy is affected when called through a
     # belongs_to or has_one, which is used under the covers in MiqSet.  This
