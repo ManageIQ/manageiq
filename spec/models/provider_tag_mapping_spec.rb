@@ -428,7 +428,7 @@ RSpec.describe ProviderTagMapping do
             FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category.tag)
           end
 
-          it "only applies one of the label values" do
+          it "applies all the label values" do
             expect(vm.tags).to be_empty
 
             subject
