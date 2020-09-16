@@ -3,6 +3,35 @@ RSpec.describe ResourcePool do
 
   include_examples "MiqPolicyMixin"
 
+  describe "AggregationMixin methods" do
+    let(:host) { FactoryBot.create(:host, :storage) }
+    let(:rp) { FactoryBot.create(:resource_pool) }
+    let(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 2048)) }
+    let(:vm2) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 1024)) }
+
+    before do
+      rp.with_relationship_type("ems_metadata") { rp.set_parent host }
+      vm.with_relationship_type("ems_metadata") { vm.set_parent rp }
+      vm2.with_relationship_type("ems_metadata") { vm2.set_parent rp }
+    end
+
+    it "aggregate_vm_memory" do
+      expect(rp.aggregate_vm_memory).to eq(3072)
+    end
+
+    it "aggregate_vm_cpus" do
+      expect(rp.aggregate_vm_cpus).to eq(4)
+    end
+
+    it "all_storages" do
+      expect(rp.all_storages).to eq([Storage.first])
+    end
+
+    it "returns zero for nonexistent associations" do
+      expect(rp.aggregate_cpu_total_cores).to eq(0)
+    end
+  end
+
   context "Testing VM count virtual columns" do
     before do
       @rp1 = FactoryBot.create(:resource_pool, :name => "RP 1")

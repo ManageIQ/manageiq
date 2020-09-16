@@ -3,6 +3,35 @@ RSpec.describe EmsFolder do
 
   include_examples "MiqPolicyMixin"
 
+  describe "AggregationMixin methods" do
+    let(:host) { FactoryBot.create(:host) }
+    let(:rp) { FactoryBot.create(:resource_pool) }
+    let(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 2048)) }
+    let(:vm2) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu2x2, :memory_mb => 1024)) }
+
+    before do
+      subject.with_relationship_type("ems_metadata") { subject.set_parent host }
+      vm.with_relationship_type("ems_metadata") { vm.set_parent subject }
+      vm2.with_relationship_type("ems_metadata") { vm2.set_parent subject }
+    end
+
+    it "aggregate_vm_memory" do
+      expect(subject.aggregate_vm_memory).to eq(3072)
+    end
+
+    it "aggregate_vm_cpus" do
+      expect(subject.aggregate_vm_cpus).to eq(4)
+    end
+
+    it "all_storages" do
+      expect(subject.all_storages).to eq([])
+    end
+
+    it "returns zero for nonexistent associations" do
+      expect(subject.aggregate_cpu_total_cores).to eq(0)
+    end
+  end
+
   context "with folder tree" do
     before do
       @root = FactoryBot.create(:ems_folder, :name => "root")
