@@ -370,7 +370,7 @@ RSpec.describe ProviderTagMapping do
         expect(vm.reload.tags).to match_array([Tag.lookup_by_classification_name('department/accounting')])
       end
 
-      it "add tag with a category that is different from the target category from mapping " do
+      it "adds a tag with the category from mapping, when there is an existing tag on the resource from a different category then that of the mapping" do
         expect(vm.tags).to be_empty
 
         existing_tag_on_vm = Tag.lookup_by_classification_name('cc/001')
