@@ -1,7 +1,7 @@
 RSpec.describe MiqPolicy do
   it "doesn't access database when unchanged model is saved" do
     m = FactoryBot.create(:miq_policy)
-    expect { m.valid? }.to make_database_queries(:count => 2)
+    expect { m.valid? }.not_to make_database_queries
   end
 
   context "Testing edge cases on conditions" do
