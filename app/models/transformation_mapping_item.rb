@@ -3,7 +3,7 @@ class TransformationMappingItem < ApplicationRecord
   belongs_to :source,      :polymorphic => true
   belongs_to :destination, :polymorphic => true
 
-  validates :source_id, :uniqueness => {:scope => [:transformation_mapping_id, :source_type, :destination_type]}
+  validates :source_id, :uniqueness_when_changed => {:scope => [:transformation_mapping_id, :source_type, :destination_type]}
 
   validate :validate_source_cluster,      :if => -> { source.kind_of?(EmsCluster) }
   validate :validate_destination_cluster, :if => -> { destination.kind_of?(EmsCluster) || destination.kind_of?(CloudTenant) }
