@@ -64,7 +64,7 @@ gem "pg",                                              :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "psych",                          "~>3.1",         :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.2.4", ">=5.2.4.3"
+gem "rails",                          "~>5.2.4", ">=5.2.4.4"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=12.3.3",      :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
