@@ -260,35 +260,31 @@ module SupportsFeatureMixin
       method_name = "supports_#{feature}?"
       feature = feature.to_sym
 
-      # Since a series of default methods were created upon inclusion, remove them
-      # if they're explicitly redefined.
-      if respond_to?(method_name)
-        singleton_class.undef_method(method_name)
-        undef_method(method_name)
-      end
-
-      # defines the method on the instance
-      define_method(method_name) do
-        unsupported.delete(feature)
-        if block_given?
-          begin
-            instance_eval(&block)
-          rescue => e
-            _log.log_backtrace(e)
-            unsupported_reason_add(feature, "Internal Error: #{e.message}")
+      # silence potential redefinition warnings
+      silence_warnings do
+        # defines the method on the instance
+        define_method(method_name) do
+          unsupported.delete(feature)
+          if block_given?
+            begin
+              instance_eval(&block)
+            rescue => e
+              _log.log_backtrace(e)
+              unsupported_reason_add(feature, "Internal Error: #{e.message}")
+            end
+          else
+            unsupported_reason_add(feature, reason) unless is_supported
           end
-        else
-          unsupported_reason_add(feature, reason) unless is_supported
+          !unsupported.key?(feature)
         end
-        !unsupported.key?(feature)
-      end
 
-      # defines the method on the class
-      define_singleton_method(method_name) do
-        unsupported.delete(feature)
-        # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-        unsupported_reason_add(feature, reason) unless is_supported
-        !unsupported.key?(feature)
+        # defines the method on the class
+        define_singleton_method(method_name) do
+          unsupported.delete(feature)
+          # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
+          unsupported_reason_add(feature, reason) unless is_supported
+          !unsupported.key?(feature)
+        end
       end
     end
   end
