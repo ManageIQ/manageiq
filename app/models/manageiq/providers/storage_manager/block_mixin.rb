@@ -8,7 +8,7 @@ module ManageIQ::Providers::StorageManager::BlockMixin
              :inverse_of => :ext_management_system
     has_many :storage_resources,  :foreign_key => "ems_id", :dependent => :destroy,
              :inverse_of => :ext_management_system
-    has_many :storage_system_types, :foreign_key => :ems_id, :dependent => :destroy,
+    has_many :storage_system_families, :foreign_key => :ems_id, :dependent => :destroy,
              :inverse_of => :ext_management_system
     has_many :storage_services, :foreign_key => "ems_id", :dependent => :destroy,
              :inverse_of => :ext_management_system

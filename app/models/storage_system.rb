@@ -10,7 +10,7 @@ class StorageSystem < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   has_many :storage_resources, :dependent => :destroy
-  belongs_to :storage_system_type, :inverse_of => :storage_systems
+  belongs_to :storage_system_family, :inverse_of => :storage_systems
 
   acts_as_miq_taggable
 
