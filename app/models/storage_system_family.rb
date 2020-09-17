@@ -11,10 +11,6 @@ class StorageSystemFamily < ApplicationRecord
 
   acts_as_miq_taggable
 
-  def self.available
-    # left_outer_joins(:attachments).where("disks.backing_id" => nil)
-  end
-
   def self.class_by_ems(ext_management_system)
     # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
