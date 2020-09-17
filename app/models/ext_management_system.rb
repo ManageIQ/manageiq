@@ -109,7 +109,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
-  has_many :miq_events, :as => :target, :dependent => :destroy
+  has_many :miq_events, :as => :target # Destroy will be handled by purger
   has_many :ems_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "ems_id", :inverse_of => :ext_management_system
   has_many :policy_events, -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
   has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id", :inverse_of => :generating_ems
