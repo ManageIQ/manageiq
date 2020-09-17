@@ -1,45 +1,60 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::CloudCredential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Username'),
-      :help_text => N_('The username to use to connect to the Microsoft Azure account')
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Username'),
+      :helperText => N_('The username to use to connect to the Microsoft Azure account'),
+      :name       => 'userid',
+      :id         => 'userid',
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Password'),
-      :help_text => N_('The password to use to connect to the Microsoft Azure account')
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Password'),
+      :helperText => N_('The password to use to connect to the Microsoft Azure account'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+    },
+  ].freeze
 
-  EXTRA_ATTRIBUTES = {
-    :subscription => {
-      :type       => :string,
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
       :label      => N_('Subscription ID'),
-      :help_text  => N_('The Subscription UUID for the Microsoft Azure account'),
-      :max_length => 1024,
-      :required   => true
+      :helperText => N_('The Subscription ID for the Microsoft Azure account'),
+      :name       => 'subscription',
+      :id         => 'subscription',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :tenant       => {
-      :type       => :string,
+    {
+      :component  => 'text-field',
       :label      => N_('Tenant ID'),
-      :help_text  => N_('The Tenant ID for the Microsoft Azure account'),
-      :max_length => 1024
+      :helperText => N_('The Tenant ID for the Microsoft Azure account'),
+      :name       => 'tenant',
+      :id         => 'tenant',
+      :maxLength  => 1024,
     },
-    :secret       => {
-      :type       => :password,
+    {
+      :component  => 'password-field',
       :label      => N_('Client Secret'),
-      :help_text  => N_('The Client Secret for the Microsoft Azure account'),
-      :max_length => 1024,
+      :helperText => N_('The Client Secret for the Microsoft Azure account'),
+      :name       => 'secret',
+      :id         => 'secret',
+      :type       => 'password',
+      :maxLength  => 1024,
     },
-    :client       => {
-      :type       => :string,
+    {
+      :component  => 'text-field',
       :label      => N_('Client ID'),
-      :help_text  => N_('The Client ID for the Microsoft Azure account'),
-      :max_length => 128
+      :helperText => N_('The Client ID for the Microsoft Azure account'),
+      :name       => 'client',
+      :id         => 'client',
+      :maxLength  => 128,
     },
-  }.freeze
+  ].freeze
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :type       => 'cloud',

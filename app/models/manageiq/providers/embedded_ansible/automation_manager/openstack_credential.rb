@@ -1,42 +1,58 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::CloudCredential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Username'),
-      :help_text => N_('The username to use to connect to OpenStack'),
-      :required  => true
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Username'),
+      :helperText => N_('The username to use to connect to OpenStack'),
+      :name       => 'userid',
+      :id         => 'userid',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Password (API Key)'),
-      :help_text => N_('The password or API key to use to connect to OpenStack'),
-      :required  => true
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Password (API Key)'),
+      :helperText => N_('The password or API key to use to connect to OpenStack'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
-  EXTRA_ATTRIBUTES = {
-    :host    => {
-      :type       => :string,
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
       :label      => N_('Host (Authentication URL)'),
-      :help_text  => N_('The host to authenticate with. For example, https://openstack.business.com/v2.0'),
-      :max_length => 1024,
-      :required   => true
+      :helperText => N_('The host to authenticate with. For example, https://openstack.business.com/v2.0'),
+      :name       => 'host',
+      :id         => 'host',
+      :maxLength  => 1024,
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :project => {
-      :type       => :string,
+    {
+      :component  => 'text-field',
       :label      => N_('Project (Tenant Name)'),
-      :help_text  => N_('This is the tenant name. This value is usually the same as the username'),
-      :max_length => 100,
-      :required   => true
+      :helperText => N_('This is the tenant name. This value is usually the same as the username'),
+      :name       => 'project',
+      :id         => 'project',
+      :maxLength  => 100,
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :domain  => {
-      :type       => :string,
+    {
+      :component  => 'text-field',
       :label      => N_('Domain Name'),
-      :help_text  => N_('OpenStack domains define administrative boundaries. It is only needed for Keystone v3 authentication URLs'),
-      :max_length => 100
-    }
-  }.freeze
+      :helperText => N_('OpenStack domains define administrative boundaries. It is only needed for Keystone v3 authentication URLs'),
+      :name       => 'domain',
+      :id         => 'domain',
+      :maxLength  => 100,
+    },
+  ].freeze
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :type       => 'cloud',

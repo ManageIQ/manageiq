@@ -1,28 +1,41 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::CloudCredential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Access Key'),
-      :help_text => N_('AWS Access Key for this credential'),
-      :required  => true
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Access Key'),
+      :helperText => N_('AWS Access Key for this credential'),
+      :name       => 'userid',
+      :id         => 'userid',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Secret Key'),
-      :help_text => N_('AWS Secret Key for this credential'),
-      :required  => true
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Secret Key'),
+      :helperText => N_('AWS Secret Key for this credential'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
-  EXTRA_ATTRIBUTES = {
-    :security_token => {
-      :type       => :password,
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'password-field',
       :label      => N_('STS Token'),
-      :help_text  => N_('Security Token Service(STS) Token for this credential'),
-      :max_length => 1024
-    }
-  }.freeze
+      :helperText => N_('Security Token Service(STS) Token for this credential'),
+      :name       => 'security_token',
+      :id         => 'security_token',
+      :type       => 'password',
+      :maxLength  => 1024,
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :type       => 'cloud',
