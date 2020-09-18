@@ -369,8 +369,10 @@ RSpec.describe MiqProductFeature do
       f3 = FactoryBot.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id)
       FactoryBot.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id)
       FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id)
+      MiqProductFeature.attribute_names # 0..1 queries
+      Tenant.attribute_names # 0..1 queries
 
-      expect { MiqProductFeature.features }.to make_database_queries(:count => 1)
+      expect { MiqProductFeature.features }.to make_database_queries(:count => 1..2)
       expect { MiqProductFeature.features }.to_not make_database_queries
 
       expect(MiqProductFeature.feature_root).to eq("f1")
