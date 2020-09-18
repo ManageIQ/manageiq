@@ -16,7 +16,7 @@ RSpec.describe MiqUserRole do
     end
 
     it "with existing records" do
-      # administrator is a role that we know is provide with the product
+      # administrator is a role that we know is provided with the product
       # this is not testing administrator privileges
       changed   = FactoryBot.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
       unchanged = FactoryBot.create(:miq_user_role, :name => "xxx", :read_only => false)
