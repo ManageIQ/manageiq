@@ -17,10 +17,7 @@
 #
 # All involved tags must also have a Classification.
 #
-# TODO: rename, no longer specific to containers.
-class ContainerLabelTagMapping < ApplicationRecord
-  self.table_name = "provider_tag_mappings"
-
+class ProviderTagMapping < ApplicationRecord
   belongs_to :tag
 
   require_nested :Mapper
@@ -28,10 +25,10 @@ class ContainerLabelTagMapping < ApplicationRecord
   TAG_PREFIXES = %w(amazon azure kubernetes openstack).map { |name| "/managed/#{name}:" }.freeze
   validate :validate_tag_prefix
 
-  # Return ContainerLabelTagMapping::Mapper instance that holds all current mappings,
+  # Return ProviderTagMapping::Mapper instance that holds all current mappings,
   # can compute applicable tags, and create/find Tag records.
   def self.mapper
-    ContainerLabelTagMapping::Mapper.new(in_my_region.all)
+    ProviderTagMapping::Mapper.new(in_my_region.all)
   end
 
   # Assigning/unassigning should be possible without Mapper instance, perhaps in another process.

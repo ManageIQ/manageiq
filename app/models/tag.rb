@@ -4,7 +4,7 @@ class Tag < ApplicationRecord
   has_one :category, :through => :classification, :source => :parent
   virtual_has_one :categorization, :class_name => "Hash"
 
-  has_many :container_label_tag_mappings
+  has_many :provider_tag_mappings
 
   before_destroy :remove_from_managed_filters
 
@@ -151,9 +151,9 @@ class Tag < ApplicationRecord
       end
   end
 
-  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
+  # @return [ActiveRecord::Relation] Scope for tags controlled by ProviderTagMapping.
   def self.controlled_by_mapping
-    queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
+    queries = ProviderTagMapping::TAG_PREFIXES.collect do |prefix|
       where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
     end
     queries.inject(:or).read_only.is_entry
