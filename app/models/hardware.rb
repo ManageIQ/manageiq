@@ -30,8 +30,8 @@ class Hardware < ApplicationRecord
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
 
-  virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
-  virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
+  virtual_sum :used_disk_storage,      :disks, :used_disk_storage
+  virtual_sum :allocated_disk_storage, :disks, :size
   virtual_total     :num_disks,              :disks
   virtual_total     :num_hard_disks,         :hard_disks
 
