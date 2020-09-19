@@ -327,4 +327,11 @@ RSpec.describe Zone do
       expect(message).to be_nil
     end
   end
+
+  context "#valid?" do
+    it "doesn't query for an unchanged record" do
+      zone = FactoryBot.create(:zone)
+      expect { zone.valid? }.not_to make_database_queries
+    end
+  end
 end
