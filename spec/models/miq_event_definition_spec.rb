@@ -1,5 +1,11 @@
 RSpec.describe MiqEventDefinition do
   let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
+
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_event_definition)
+    expect { m.valid? }.to make_database_queries(:count => 1)
+  end
+
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do
       let!(:set1) { create_set!('host_operations') }
