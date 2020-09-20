@@ -1,6 +1,11 @@
 RSpec.describe Endpoint do
   let(:endpoint) { FactoryBot.build(:endpoint) }
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:endpoint, :url => 'thing1')
+    expect { m.valid? }.to make_database_queries(:count => 1)
+  end
+
   describe "#verify_ssl" do
     context "when non set" do
       it "is default to verify ssl" do
