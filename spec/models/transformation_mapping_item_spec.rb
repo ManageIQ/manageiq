@@ -8,6 +8,11 @@ RSpec.describe TransformationMappingItem, :v2v do
   let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
   let(:openstack_cluster) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => ems_openstack) }
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:transformation_mapping_item)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   # ---------------------------------------------------------------------------
   # Cluster Validation
   # ---------------------------------------------------------------------------
