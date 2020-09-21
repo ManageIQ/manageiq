@@ -7,10 +7,9 @@ class MiqAeField < ApplicationRecord
   has_many   :ae_values,  :class_name => "MiqAeValue",  :foreign_key => :field_id, :dependent => :destroy,
                           :inverse_of => :ae_field
 
-  validates :name, :uniqueness => {:scope => [:class_id, :method_id], :case_sensitive => false}, :if => :name_changed?
-  validates_presence_of   :name
-  validates_format_of     :name, :with    => /\A[\w]+\z/i,
-                                 :message => N_("may contain only alphanumeric and _ characters")
+  validates :name, :uniqueness_when_changed => {:scope => [:class_id, :method_id], :case_sensitive => false},
+                   :presence                => true,
+                   :format                  => {:with => /\A[\w]+\z/i, :message => N_("may contain only alphanumeric and _ characters")}
 
   validates_inclusion_of  :substitute, :in => [true, false]
 

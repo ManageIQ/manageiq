@@ -72,7 +72,42 @@ RSpec.describe MiqAeField do
 
     it "doesn't access database (either via name uniqueness or set_user_info validation) when unchanged model is saved" do
       miq_ae_field = described_class.create!(:name => "display_name")
-      expect { miq_ae_field.save }.to make_database_queries(:count => 2)
+      expect { miq_ae_field.valid? }.not_to make_database_queries
+    end
+
+    describe "name validation" do
+      it "doesn't allow spaces" do
+        expect { FactoryBot.create(:miq_ae_field, :name => 'invalid name') }
+          .to raise_error(ActiveRecord::RecordInvalid, / Name may contain only alphanumeric and _ characters/)
+      end
+
+      it "out of scope doesn't raise error" do
+        ae_class = FactoryBot.create(:miq_ae_class)
+        FactoryBot.create(:miq_ae_field, :class_id => ae_class.id, :name => 'non_unique_name')
+        expect { FactoryBot.create(:miq_ae_field, :class_id => ae_class.id + 1, :name => 'non_unique_name') }
+          .not_to raise_error
+      end
+
+      it "in scope raises error regardless of case" do
+        ae_class = FactoryBot.create(:miq_ae_class)
+        FactoryBot.create(:miq_ae_field, :class_id => ae_class.id, :name => 'non_unique_name')
+        expect { FactoryBot.create(:miq_ae_field, :class_id => ae_class.id, :name => 'Non_unique_name') }
+          .to raise_error(ActiveRecord::RecordInvalid, / Name has already been taken/)
+      end
+
+      it "doesn't allow nil" do
+        expect { FactoryBot.create(:miq_ae_field, :name => nil) }
+          .to raise_error(ActiveRecord::RecordInvalid, / Name can't be blank/)
+      end
+
+      it "doesn't allow hyphens" do
+        expect { FactoryBot.create(:miq_ae_field, :name => 'invalid-name') }
+          .to raise_error(ActiveRecord::RecordInvalid, / Name may contain only alphanumeric and _ characters/)
+      end
+
+      it "allows underscores" do
+        expect { FactoryBot.create(:miq_ae_field, :name => 'valid_name') }.not_to raise_error
+      end
     end
 
     it "should process boolean fields properly" do
