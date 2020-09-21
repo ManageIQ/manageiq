@@ -3,6 +3,11 @@ RSpec.describe MiqUserRole do
     @expected_user_role_count = 20
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_user_role)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   context ".seed" do
     it "empty table" do
       MiqUserRole.seed
