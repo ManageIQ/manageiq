@@ -19,6 +19,8 @@
 #
 # TODO: rename, no longer specific to containers.
 class ContainerLabelTagMapping < ApplicationRecord
+  self.table_name = "provider_tag_mappings"
+
   belongs_to :tag
 
   require_nested :Mapper
