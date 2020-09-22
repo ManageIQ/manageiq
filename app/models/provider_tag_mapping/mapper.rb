@@ -66,9 +66,16 @@ class ProviderTagMapping
 
       single_value_tag_ids = cached_filter_single_value_category_tag_ids(inventory_objects_by_category.keys)
 
-      inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
+       inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
         if single_value_tag_ids.include?(category_tag_id)
-          grouped_inventory_objects.min_by { |x| x.data.fetch(:entry_name) }
+          selected_inventory_object = grouped_inventory_objects.min_by { |x| x.data.fetch(:entry_name) }
+          if grouped_inventory_objects.count > 1
+            $log.warn("Label to Tag Mapper has encountered multiple mappings for the only single value tag category [Classification##{category_tag_id}]")
+            possible_labels = grouped_inventory_objects.map{ |x| x.data.fetch(:entry_description) }.join(', ')
+            $log.warn("Only selected label value [#{selected_inventory_object.data.fetch(:entry_description)}] is going to be mapped (possible labels [#{possible_labels}]).")
+          end
+
+          selected_inventory_object
         else
           grouped_inventory_objects
         end
