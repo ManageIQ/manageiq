@@ -4,4 +4,6 @@ Vmdb::Application.routes.draw do
     logger.level = Logger.const_get(::Settings.log.level_remote_console.upcase)
     mount RemoteConsole::RackServer.new(:logger => logger) => '/ws/console'
   end
+
+  mount ManageIQ::Integration::Engine, :at => "/" if Rails.env.integration?
 end

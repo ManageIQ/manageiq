@@ -1,4 +1,4 @@
-if ENV['RAILS_USE_MEMORY_STORE'] || (!Rails.env.development? && !Rails.env.production?)
+if ENV['RAILS_USE_MEMORY_STORE'] || Rails.env.test? || Rails.env.integration?
   Vmdb::Application.config.session_store(:memory_store)
 else
   session_store =
