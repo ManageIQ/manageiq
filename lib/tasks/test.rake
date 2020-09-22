@@ -3,11 +3,13 @@ require_relative './evm_test_helper'
 if defined?(RSpec)
 namespace :test do
   task :initialize do
-    if ENV['RAILS_ENV'] && ENV["RAILS_ENV"] != "test"
+    if ENV['RAILS_ENV'] && !%w[test integration].include?(ENV["RAILS_ENV"])
       warn "Warning: RAILS_ENV is currently set to '#{ENV["RAILS_ENV"]}'. Forcing to 'test' for this run."
+      ENV['RAILS_ENV'] = "test"
+    elsif ENV['RAILS_ENV'].blank?
+      ENV['RAILS_ENV'] = "test"
     end
-    ENV['RAILS_ENV'] = "test"
-    Rails.env = 'test' if defined?(Rails)
+    Rails.env = ENV['RAILS_ENV'] if defined?(Rails)
 
     ENV['VERBOSE'] ||= "false"
   end

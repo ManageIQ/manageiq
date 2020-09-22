@@ -306,6 +306,11 @@ class MiqWorker::Runner
   end
 
   def config_out_of_date?
+    # Skip config syncing if in integration_env
+    #
+    # TODO:  Handle this better for single worker versus appliance
+    return false if Rails.env.integration?
+
     @my_last_config_change ||= Time.now.utc
 
     last_config_change = server_last_change(:last_config_change)

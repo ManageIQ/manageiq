@@ -1,0 +1,7 @@
+---
+:log:
+  :level_rails: debug
+:webservices:
+  :url: http://localhost:4000
+:server:
+  :session_store: memory

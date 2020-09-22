@@ -42,4 +42,13 @@ class PidFile
 
     true
   end
+
+  def terminate(regexp = nil)
+    if pid && running?(regexp)
+      Process.kill("TERM", pid)
+      FileUtils.rm(@fname)
+    else
+      warn "PID file for server (#{@fname}) or matching process doesn't exist... moving on"
+    end
+  end
 end
