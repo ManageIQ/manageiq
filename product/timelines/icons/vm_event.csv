@@ -58,7 +58,7 @@ recommendhostsforvm,recommend_hosts_for_vm
 reconfigvm_task,vm_registering
 reconfigvm_task_complete,vm_registered
 reconnecthost_task,host_connecting
-refreshstoragesystem,refresh_storage_system
+refreshphysicalStorage,refresh_physical_storage
 registervm_task,vm_registering
 registervm_task_complete,vm_registered
 relocattaskevent,relocating

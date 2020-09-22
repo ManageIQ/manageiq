@@ -203,7 +203,7 @@
       - ExitMaintenanceMode_Task_Complete
       - FailoverLevelRestored
       - MarkAsTemplate_Complete
-      - RefreshStorageSystem
+      - RefreshPhysicalStorage
       - ResourcePoolReconfiguredEvent
       - TemplateToVm
       - USER_ADD_DISK_TO_VM
