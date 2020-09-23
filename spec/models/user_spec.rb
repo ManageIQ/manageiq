@@ -16,8 +16,19 @@ RSpec.describe User do
       expect(FactoryBot.build(:user, :email => nil)).to be_valid
     end
 
+    it "should validate current_group with a value of nil" do
+      user = FactoryBot.build(:user, :current_group_id => nil)
+      expect(user).to be_valid
+      expect(user.current_group_id).to be_nil
+    end
+
     it "should save proper email address" do
       expect(FactoryBot.build(:user, :email => "that.guy@manageiq.com")).to be_valid
+    end
+
+    it "doesn't validate fields that did not change. specifically group, tenant, and userid" do
+      u = FactoryBot.create(:user)
+      expect { u.update(:lastlogon => Time.zone.now) }.to make_database_queries(:count => 1, :matching => /(select|update)/i)
     end
   end
 
@@ -269,8 +280,13 @@ RSpec.describe User do
         expect(@user.valid?).to be_truthy
       end
 
-      it "when assigning to a group not under the user" do
+      it "when assigning to a group not under the user via object" do
         @user.current_group = @group3
+        expect(@user.valid?).to be_falsey
+      end
+
+      it "when assigning to a group not under the user via group_id" do
+        @user.current_group_id = @group3.id
         expect(@user.valid?).to be_falsey
       end
 
