@@ -220,6 +220,12 @@ class User < ApplicationRecord
     sessions << Session.find_or_create_by(:session_id => session_id)
   end
 
+  def revoke_sessions
+    current_sessions = Session.where(:user_id => id)
+    ManageIQ::Session.revoke(current_sessions.map(&:session_id))
+    current_sessions.destroy_all
+  end
+
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
     authenticator(username).authenticate_with_http_basic(username, password, request, options)
   end
