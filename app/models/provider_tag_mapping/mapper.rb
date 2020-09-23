@@ -1,6 +1,6 @@
 # coding: utf-8
-class ContainerLabelTagMapping
-  # Performs most of the work of ContainerLabelTagMapping - holds current mappings,
+class ProviderTagMapping
+  # Performs most of the work of ProviderTagMapping - holds current mappings,
   # computes applicable tags, and creates/finds Tag records - except actually [un]assigning.
   class Mapper
     # @return [InventoryCollection<Tag>] a collection saving which will find/create (never delete) all
@@ -10,7 +10,7 @@ class ContainerLabelTagMapping
     #   Doesn't require saving, not really interesting.
     attr_reader :specific_tags_collection
 
-    # @param mappings [Array<ContainerLabelTagMapping>] Mapping records to use
+    # @param mappings [Array<ProviderTagMapping>] Mapping records to use
     def initialize(mappings)
       # {[name, type, value] => [tag_id, ...]}
       @mappings = mappings.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }

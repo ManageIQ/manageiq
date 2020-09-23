@@ -23,7 +23,7 @@ context "save_tags_inventory" do
     @tag3 = mapped_tag('kubernetes::foo', 'bar') # All entities
   end
 
-  # Simulate what ContainerLabelTagMapping::Mapper.map_labels(...) would return, after resolving to tag ids.
+  # Simulate what ProviderTagMapping::Mapper.map_labels(...) would return, after resolving to tag ids.
   # Note that we don't explicitly test the mapping
   # creation here, the assumption is that these were the generated mappings.
   let(:data) do

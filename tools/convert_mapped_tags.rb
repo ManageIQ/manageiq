@@ -25,8 +25,8 @@ end
 puts
 
 ActiveRecord::Base.transaction do
-  condition_for_mapped_tags = ContainerLabelTagMapping::TAG_PREFIXES.map { "tags.name LIKE ?" }.join(' OR ')
-  tag_values = ContainerLabelTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" }
+  condition_for_mapped_tags = ProviderTagMapping::TAG_PREFIXES.map { "tags.name LIKE ?" }.join(' OR ')
+  tag_values = ProviderTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" }
 
   Classification.where.not(:id => Classification.region_to_range) # only other regions(not current, we expected that current region is global)
                 .is_category

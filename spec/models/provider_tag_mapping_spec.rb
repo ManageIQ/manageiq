@@ -1,4 +1,4 @@
-RSpec.describe ContainerLabelTagMapping do
+RSpec.describe ProviderTagMapping do
   let(:cat_classification) { FactoryBot.create(:classification, :read_only => true, :name => 'kubernetes:1') }
   let(:cat_tag) { cat_classification.tag }
   let(:tag1) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
@@ -25,14 +25,14 @@ RSpec.describe ContainerLabelTagMapping do
   end
 
   def new_mapper
-    ContainerLabelTagMapping.mapper
+    ProviderTagMapping.mapper
   end
 
   # All-in-one
   def map_to_tags(mapper, model_name, labels_kv)
     tag_refs = mapper.map_labels(model_name, labels(labels_kv))
     InventoryRefresh::SaveInventory.save_inventory(ems, [mapper.tags_to_resolve_collection])
-    ContainerLabelTagMapping::Mapper.references_to_tags(tag_refs)
+    ProviderTagMapping::Mapper.references_to_tags(tag_refs)
   end
 
   context "with empty mapping" do
@@ -43,8 +43,8 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "with 2 mappings for same label" do
     before do
-      FactoryBot.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
-      FactoryBot.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
+      FactoryBot.create(:provider_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
+      FactoryBot.create(:provider_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
 
     it "map_labels returns 2 tags" do
@@ -55,9 +55,9 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "with any-value and specific-value mappings" do
     before do
-      FactoryBot.create(:container_label_tag_mapping, :tag => cat_tag)
-      FactoryBot.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
-      FactoryBot.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag2)
+      FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :label_value => 'value-1', :tag => tag1)
+      FactoryBot.create(:provider_tag_mapping, :label_value => 'value-1', :tag => tag2)
     end
 
     it "prefers specific-value" do
@@ -67,7 +67,7 @@ RSpec.describe ContainerLabelTagMapping do
     it "creates tag for new value" do
       expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2)
 
-      mapper1 = ContainerLabelTagMapping.mapper
+      mapper1 = ProviderTagMapping.mapper
       tags = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
       expect(tags.size).to eq(1)
       generated_tag = tags[0]
@@ -85,7 +85,7 @@ RSpec.describe ContainerLabelTagMapping do
 
       # And nothing changes when we re-load the mappings table.
 
-      mapper2 = ContainerLabelTagMapping.mapper
+      mapper2 = ProviderTagMapping.mapper
 
       tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-2')
       expect(tags2).to contain_exactly(generated_tag)
@@ -96,7 +96,7 @@ RSpec.describe ContainerLabelTagMapping do
     it "handles names that differ only by case" do
       # Kubernetes names are case-sensitive
       # (but the optional domain prefix must be lowercase).
-      FactoryBot.create(:container_label_tag_mapping,
+      FactoryBot.create(:provider_tag_mapping,
                          :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name_case' => 'value')
       tags2 = map_to_tags(new_mapper, 'ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
@@ -131,8 +131,8 @@ RSpec.describe ContainerLabelTagMapping do
     # each with independently cached mapping table.
     context "2 workers with independent cache" do
       it "handle known value simultaneously" do
-        mapper1 = ContainerLabelTagMapping.mapper
-        mapper2 = ContainerLabelTagMapping.mapper
+        mapper1 = ProviderTagMapping.mapper
+        mapper2 = ProviderTagMapping.mapper
         tags1 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-1')
         tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-1')
         expect(tags1).to contain_exactly(tag1, tag2)
@@ -140,8 +140,8 @@ RSpec.describe ContainerLabelTagMapping do
       end
 
       it "handle new value encountered simultaneously" do
-        mapper1 = ContainerLabelTagMapping.mapper
-        mapper2 = ContainerLabelTagMapping.mapper
+        mapper1 = ProviderTagMapping.mapper
+        mapper2 = ProviderTagMapping.mapper
         tags1 = map_to_tags(mapper1, 'ContainerNode', 'name' => 'value-2')
         tags2 = map_to_tags(mapper2, 'ContainerNode', 'name' => 'value-2')
         expect(tags1.size).to eq(1)
@@ -152,8 +152,8 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "with 2 any-value mappings onto same category" do
     before do
-      FactoryBot.create(:container_label_tag_mapping, :label_name => 'name1', :tag => cat_tag)
-      FactoryBot.create(:container_label_tag_mapping, :label_name => 'name2', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :label_name => 'name1', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :label_name => 'name2', :tag => cat_tag)
     end
 
     it "maps same new value in both into 1 new tag" do
@@ -165,15 +165,15 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "given a label with empty value" do
     it "any-value mapping is ignored" do
-      FactoryBot.create(:container_label_tag_mapping, :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
       expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to be_empty
     end
 
     it "honors specific mapping for the empty value" do
-      FactoryBot.create(:container_label_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
+      FactoryBot.create(:provider_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
       expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
       # same with both any-value and specific-value mappings
-      FactoryBot.create(:container_label_tag_mapping, :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
       expect(map_to_tags(new_mapper, 'ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
     end
   end
@@ -184,8 +184,8 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "with any-type and specific-type mappings" do
     before do
-      FactoryBot.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
-      FactoryBot.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
+      FactoryBot.create(:provider_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
+      FactoryBot.create(:provider_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
     it "applies both independently" do
@@ -199,8 +199,8 @@ RSpec.describe ContainerLabelTagMapping do
 
   context "any-type specific-value vs specific-type any-value" do
     before do
-      FactoryBot.create(:container_label_tag_mapping, :only_nodes, :tag => cat_tag)
-      FactoryBot.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
+      FactoryBot.create(:provider_tag_mapping, :only_nodes, :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
     it "resolves them independently" do
@@ -219,7 +219,7 @@ RSpec.describe ContainerLabelTagMapping do
 
     before do
       # For tag1, tag2 to be controlled by the mapping, though current implementation doesn't care.
-      FactoryBot.create(:container_label_tag_mapping, :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
       tag1
       tag2
 
@@ -229,15 +229,15 @@ RSpec.describe ContainerLabelTagMapping do
 
     it "assigns new tags, idempotently" do
       expect(node.tags).to be_empty
-      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1)])
+      ProviderTagMapping.retag_entity(node, [ref_to_tag(tag1)])
       expect(node.tags).to contain_exactly(tag1)
-      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1)])
+      ProviderTagMapping.retag_entity(node, [ref_to_tag(tag1)])
       expect(node.tags).to contain_exactly(tag1)
     end
 
     it "unassigns obsolete mapping-controlled tags" do
       node.tags = [tag1]
-      ContainerLabelTagMapping.retag_entity(node, [])
+      ProviderTagMapping.retag_entity(node, [])
       expect(node.tags).to be_empty
     end
 
@@ -247,7 +247,7 @@ RSpec.describe ContainerLabelTagMapping do
       node.tags = [tag1, user_tag1, user_tag2, tag2]
       expect(node.tags.controlled_by_mapping).to contain_exactly(tag1, tag2)
 
-      ContainerLabelTagMapping.retag_entity(node, [ref_to_tag(tag1), ref_to_tag(tag3)])
+      ProviderTagMapping.retag_entity(node, [ref_to_tag(tag1), ref_to_tag(tag3)])
 
       expect(node.tags).to contain_exactly(user_tag1, user_tag2, tag1, tag3)
       expect(node.tags.controlled_by_mapping).to contain_exactly(tag1, tag3)

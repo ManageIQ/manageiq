@@ -106,7 +106,7 @@ class ManageIQ::Providers::Inventory::Persister
   end
 
   def initialize_tag_mapper
-    @tag_mapper ||= ContainerLabelTagMapping.mapper
+    @tag_mapper ||= ProviderTagMapping.mapper
     collections[:tags_to_resolve] = @tag_mapper.tags_to_resolve_collection
   end
 
