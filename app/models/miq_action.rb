@@ -25,8 +25,8 @@ class MiqAction < ApplicationRecord
              )
   end
 
-  validates_presence_of     :name, :description, :action_type
-  validates_uniqueness_of   :name, :description
+  validates :action_type,        :presence => true
+  validates :name, :description, :presence => true, :uniqueness_when_changed => true
   validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
