@@ -9,10 +9,6 @@ class MiqPriorityWorker < MiqQueueWorkerBase
     MiqQueue::HIGH_PRIORITY
   end
 
-  def self.supports_container?
-    true
-  end
-
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_PRIORITY_WORKERS
   end

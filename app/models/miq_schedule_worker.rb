@@ -6,10 +6,6 @@ class MiqScheduleWorker < MiqWorker
 
   self.workers = 1
 
-  def self.supports_container?
-    true
-  end
-
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_SCHEDULE_WORKERS
   end

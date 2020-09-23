@@ -10,10 +10,6 @@ module PerEmsWorkerMixin
   end
 
   module ClassMethods
-    def supports_container?
-      true
-    end
-
     def ems_class
       parent
     end

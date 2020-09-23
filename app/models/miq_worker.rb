@@ -286,12 +286,8 @@ class MiqWorker < ApplicationRecord
     end
   end
 
-  def self.supports_container?
-    false
-  end
-
   def self.containerized_worker?
-    MiqEnvironment::Command.is_podified? && supports_container?
+    MiqEnvironment::Command.is_podified?
   end
 
   def containerized_worker?
