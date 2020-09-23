@@ -13,10 +13,6 @@ class MiqRemoteConsoleWorker < MiqWorker
   include MiqWebServerWorkerMixin
   include MiqWorker::ServiceWorker
 
-  def self.supports_container?
-    true
-  end
-
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_REMOTE_CONSOLE_WORKERS
   end

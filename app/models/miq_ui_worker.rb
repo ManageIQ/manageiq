@@ -12,10 +12,6 @@ class MiqUiWorker < MiqWorker
   include MiqWebServerWorkerMixin
   include MiqWorker::ServiceWorker
 
-  def self.supports_container?
-    true
-  end
-
   def self.bundler_groups
     %w[manageiq_default ui_dependencies graphql_api]
   end

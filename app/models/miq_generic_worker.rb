@@ -5,10 +5,6 @@ class MiqGenericWorker < MiqQueueWorkerBase
 
   self.default_queue_name = "generic"
 
-  def self.supports_container?
-    true
-  end
-
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_GENERIC_WORKERS
   end

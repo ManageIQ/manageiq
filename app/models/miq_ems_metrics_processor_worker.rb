@@ -10,10 +10,6 @@ class MiqEmsMetricsProcessorWorker < MiqQueueWorkerBase
     @friendly_name ||= "C&U Metrics Processor"
   end
 
-  def self.supports_container?
-    true
-  end
-
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_METRICS_PROCESSOR_WORKERS
   end
