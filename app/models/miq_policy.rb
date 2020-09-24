@@ -19,9 +19,9 @@ class MiqPolicy < ApplicationRecord
   include YAMLImportExportMixin
   before_validation :default_name_to_guid, :on => :create
 
-  default_value_for :towhat, 'Vm'
-  default_value_for :active, true
-  default_value_for :mode,   'control'
+  attribute :towhat, :string,  :default => "Vm"
+  attribute :active, :boolean, :default => true
+  attribute :mode,   :string,  :default => "control"
 
   # NOTE: If another class references MiqPolicy through an ActiveRecord association,
   #   particularly has_one and belongs_to, calling .conditions will result in
