@@ -52,6 +52,11 @@ RSpec.describe TransformationMapping, :v2v do
     end
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:transformation_mapping)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   context '#destination' do
     it "finds the destination" do
       expect(mapping_redhat.destination(src_cluster_vmware)).to eq(dst_cluster_redhat)

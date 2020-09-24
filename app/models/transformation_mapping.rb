@@ -5,7 +5,7 @@ class TransformationMapping < ApplicationRecord
   has_many :service_resources, :as => :resource, :dependent => :nullify
   has_many :service_templates, :through => :service_resources
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
 
   def destination(source)
     transformation_mapping_items.find_by(:source => source).try(:destination)
