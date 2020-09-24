@@ -738,19 +738,30 @@ RSpec.describe VmOrTemplate do
     let(:group2) { FactoryBot.create(:miq_group, :tenant => tenant2) }
 
     it "assigns the tenant from the group" do
-      expect(FactoryBot.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1)
+      expect { expect(FactoryBot.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1) }.to make_database_queries(:count => 26..30)
     end
 
     it "assigns the tenant from the group_id" do
-      expect(FactoryBot.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1)
+      expect { expect(FactoryBot.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1) }.to make_database_queries(:count => 27..31)
+    end
+
+    # three == two for savepoint & release and one for `SELECT  "event_streams".* FROM "event_streams" WHERE "event_streams"."type" IN ('EmsEvent') AND (vm_or_template_id...`
+    it "doesn't hit db if group remains the same on update" do
+      vm = FactoryBot.create(:vm_vmware, :miq_group => group1)
+      expect { vm.update(:miq_group_id => group1.id) }.to make_database_queries(:count => 3)
+    end
+
+    it "valid check doesn't hit the database" do
+      m = FactoryBot.create(:vm_vmware, :miq_group => group1)
+      expect { m.valid? }.not_to make_database_queries
     end
 
     it "assigns the tenant from the group over the tenant" do
-      expect(FactoryBot.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
+      expect { expect(FactoryBot.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1) }.to make_database_queries(:count => 42)
     end
 
     it "uses default tenant via tenancy_mixin" do
-      expect(FactoryBot.create(:vm_vmware).tenant).to eq(Tenant.root_tenant)
+      expect { expect(FactoryBot.create(:vm_vmware).tenant).to eq(Tenant.root_tenant) }.to make_database_queries(:count => 7..12)
     end
 
     it "changes the tenant after changing the group" do
