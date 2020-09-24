@@ -102,8 +102,7 @@ RSpec.describe ProviderTagMapping do
     it "handles names that differ only by case" do
       # Kubernetes names are case-sensitive
       # (but the optional domain prefix must be lowercase).
-      FactoryBot.create(:provider_tag_mapping,
-                         :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
+      FactoryBot.create(:provider_tag_mapping, :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name_case' => 'value')
       tags2 = map_to_tags(new_mapper, 'ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
       expect(tags).to be_empty
@@ -247,7 +246,7 @@ RSpec.describe ProviderTagMapping do
     %w[nAMe Name].each do |label_name|
       context "with mapping to single-value, existing category and label name: #{label_name}" do
         before do
-          FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
+          FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
         end
 
         let(:externals_labels) do # provider label
@@ -300,7 +299,7 @@ RSpec.describe ProviderTagMapping do
           end
 
           before do
-            FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Locality", :tag => single_value_category_2.tag)
+            FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Locality", :tag => single_value_category_2.tag)
           end
 
           context "when mappings are targeted to different categories" do
@@ -322,8 +321,8 @@ RSpec.describe ProviderTagMapping do
             end
 
             before do
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Location", :tag => single_value_category.tag)
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Cost Center", :tag => single_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Location", :tag => single_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Cost Center", :tag => single_value_category.tag)
             end
 
             it "only applies one of the label values" do
@@ -348,7 +347,7 @@ RSpec.describe ProviderTagMapping do
         end
 
         before do
-          FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+          FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
         end
 
         it "adds a tag to the resource with the value of the external label" do
@@ -405,8 +404,8 @@ RSpec.describe ProviderTagMapping do
 
           context "when mappings are targeted to different categories" do
             before do
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category_2.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category_2.tag)
             end
 
             it "adds tags to resource" do
@@ -426,8 +425,8 @@ RSpec.describe ProviderTagMapping do
             end
 
             before do
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
-              FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category.tag)
             end
 
             it "applies all the label values" do
@@ -449,9 +448,9 @@ RSpec.describe ProviderTagMapping do
     let(:other_cat_tag)            { other_cat_classification.tag }
 
     before do
-      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'name', :tag => cat_tag)
-      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'DEV', :tag => cat_tag)
-      FactoryBot.create(:container_label_tag_mapping, :all_entities, :label_name => 'DEV', :tag => other_cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'name', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'DEV', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'DEV', :tag => other_cat_tag)
     end
 
     let(:existing_label) { {"name" => "value_1"} }
