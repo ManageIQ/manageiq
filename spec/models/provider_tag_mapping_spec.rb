@@ -299,7 +299,7 @@ RSpec.describe ProviderTagMapping do
           let!(:single_value_category_2) { FactoryBot.create(:classification_location_with_tags) }
 
           let(:externals_labels) do # provider label
-            [{:name => label_name,   :value => 'Accounting'},
+            [{:name => label_name, :value => 'Accounting'},
              {:name => 'Locality', :value => 'Brno'}]
           end
 

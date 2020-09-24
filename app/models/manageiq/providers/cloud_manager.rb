@@ -33,8 +33,10 @@ module ManageIQ::Providers
 
     has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
     # Only taggings mapped from labels, excluding user-assigned tags.
-    has_many :vm_and_template_taggings,      -> { joins(:tag).merge(Tag.controlled_by_mapping) },
-                                             :through     => :vms_and_templates, :source => :taggings
+    has_many :vm_and_template_taggings,
+             -> { joins(:tag).merge(Tag.controlled_by_mapping) },
+             :through => :vms_and_templates,
+             :source  => :taggings
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
