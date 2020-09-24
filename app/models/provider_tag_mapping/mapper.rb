@@ -10,10 +10,17 @@ class ProviderTagMapping
     #   Doesn't require saving, not really interesting.
     attr_reader :specific_tags_collection
 
+    #   Doesn't require saving, not really interesting.
+    attr_reader :specific_tags_collection
+
+    attr_reader :parameters
+
     # @param mappings [Array<ProviderTagMapping>] Mapping records to use
-    def initialize(mappings)
+    def initialize(mappings, mapper_parameters)
+      @parameters = mapper_parameters
+
       # {[name, type, value] => [tag_id, ...]}
-      @mappings = mappings.group_by { |m| [m.label_name&.downcase, m.labeled_resource_type, m.label_value].freeze }
+      @mappings = mappings.group_by { |m| [case_insensitive_labels? ? m.label_name&.downcase : m.label_name, m.labeled_resource_type, m.label_value].freeze }
                           .transform_values { |ms| ms.collect(&:tag_id) }
 
       require "inventory_refresh"
@@ -36,6 +43,10 @@ class ProviderTagMapping
         :model_class => Tag,
         :manager_ref => [:id],
       )
+    end
+
+    def case_insensitive_labels?
+      @parameters&.fetch_path(:case_insensitive_labels)
     end
 
     def cached_filter_single_value_category_tag_ids(category_tag_ids)
@@ -95,8 +106,8 @@ class ProviderTagMapping
     private
 
     def map_label(type, label)
-      label_name = label[:name]&.downcase
-      # Apply both specific-type and any-type, independently.
+      label_name = case_insensitive_labels? ? label[:name]&.downcase : label[:name]
+          # Apply both specific-type and any-type, independently.
       (map_name_type_value(label_name, type, label[:value]) +
        map_name_type_value(label_name, nil, label[:value]) +
        map_name_type_value(label_name, "_all_entities_", label[:value]))

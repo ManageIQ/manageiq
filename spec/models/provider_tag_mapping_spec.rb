@@ -15,6 +15,7 @@ RSpec.describe ProviderTagMapping do
     cat = FactoryBot.create(:classification, :name => 'kubernetes::user_could_enter_this')
     cat.add_entry(:name => 'hello', :description => 'Hello').tag
   end
+
   let(:ems) { FactoryBot.create(:ext_management_system) }
 
   def label(key_value_label)
@@ -31,7 +32,7 @@ RSpec.describe ProviderTagMapping do
   end
 
   def new_mapper
-    ProviderTagMapping.mapper
+    ProviderTagMapping.mapper(:case_insensitive_labels => ems.try(:case_insensitive_labels?))
   end
 
   # All-in-one
@@ -102,6 +103,7 @@ RSpec.describe ProviderTagMapping do
     it "handles names that differ only by case" do
       # Kubernetes names are case-sensitive
       # (but the optional domain prefix must be lowercase).
+      allow(ems).to receive(:case_insensitive_labels?).and_return(false) # kubernetes
       FactoryBot.create(:provider_tag_mapping, :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name_case' => 'value')
       tags2 = map_to_tags(new_mapper, 'ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
@@ -242,8 +244,11 @@ RSpec.describe ProviderTagMapping do
       end
     end
 
+    %w[nAme Name].each do |label_name|
+      before do
+        allow(ems).to receive(:case_insensitive_labels?).and_return(true)
+      end
 
-    %w[nAMe Name].each do |label_name|
       context "with mapping to single-value, existing category and label name: #{label_name}" do
         before do
           FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
@@ -287,7 +292,7 @@ RSpec.describe ProviderTagMapping do
           subject
 
           expected_tags = [Tag.lookup_by_classification_name('environment/accounting'), existing_tag_on_vm]
-          expect(vm.reload.tags).to eq(expected_tags)
+          expect(vm.reload.tags).to match_array(expected_tags)
         end
 
         context "with multiple mappings" do

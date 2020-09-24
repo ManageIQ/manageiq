@@ -27,8 +27,8 @@ class ProviderTagMapping < ApplicationRecord
 
   # Return ProviderTagMapping::Mapper instance that holds all current mappings,
   # can compute applicable tags, and create/find Tag records.
-  def self.mapper
-    ProviderTagMapping::Mapper.new(in_my_region.all)
+  def self.mapper(mapper_parameters = {})
+    ProviderTagMapping::Mapper.new(in_my_region.all, mapper_parameters)
   end
 
   # Assigning/unassigning should be possible without Mapper instance, perhaps in another process.

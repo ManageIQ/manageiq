@@ -106,7 +106,7 @@ class ManageIQ::Providers::Inventory::Persister
   end
 
   def initialize_tag_mapper
-    @tag_mapper ||= ProviderTagMapping.mapper
+    @tag_mapper ||= ProviderTagMapping.mapper(:case_insensitive_labels => manager.try(:case_insensitive_labels?))
     collections[:tags_to_resolve] = @tag_mapper.tags_to_resolve_collection
   end
 
