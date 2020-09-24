@@ -68,6 +68,7 @@ RSpec.describe ExtManagementSystem do
       "ibm_cloud_power_virtual_servers_network" => "IBM Power Systems Virtual Servers Network",
       "ibm_cloud_power_virtual_servers"         => "IBM Power Systems Virtual Servers",
       "ibm_cloud_power_virtual_servers_storage" => "IBM Power Systems Virtual Servers Storage",
+      "ibm_cloud_vpc_network"                   => "IBM Cloud VPC Network",
       "ibm_terraform_configuration"             => "IBM Terraform Configuration",
       "ibm_vpc"                                 => "IBM Virtual Private Cloud",
       "kubernetes"                              => "Kubernetes",
