@@ -3,7 +3,7 @@ RSpec.describe TenantQuota do
 
   it "doesn't access database when unchanged model is saved" do
     m = described_class.create(:tenant => tenant, :name => :cpu_allocated, :value => 16)
-    expect { m.valid? }.to make_database_queries(:count => 1)
+    expect { m.valid? }.not_to make_database_queries
   end
 
   describe "#valid?" do
