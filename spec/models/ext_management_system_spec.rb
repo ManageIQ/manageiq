@@ -49,58 +49,13 @@ RSpec.describe ExtManagementSystem do
     described_class.create_discovered_ems(ost)
   end
 
-  let(:all_types_and_descriptions) do
-    {
-      "ansible_tower_automation"                => "Ansible Tower Automation",
-      "azure"                                   => "Azure",
-      "azure_network"                           => "Azure Network",
-      "azure_stack"                             => "Azure Stack",
-      "azure_stack_network"                     => "Azure Stack Network",
-      "ec2"                                     => "Amazon EC2",
-      "ec2_network"                             => "Amazon EC2 Network",
-      "ec2_ebs_storage"                         => "Amazon EBS",
-      "embedded_ansible_automation"             => "Embedded Ansible Automation",
-      "s3"                                      => "Amazon S3",
-      "foreman_configuration"                   => "Foreman Configuration",
-      "foreman_provisioning"                    => "Foreman Provisioning",
-      "gce"                                     => "Google Compute Engine",
-      "gce_network"                             => "Google Network",
-      "ibm_cloud_power_virtual_servers_network" => "IBM Power Systems Virtual Servers Network",
-      "ibm_cloud_power_virtual_servers"         => "IBM Power Systems Virtual Servers",
-      "ibm_cloud_power_virtual_servers_storage" => "IBM Power Systems Virtual Servers Storage",
-      "ibm_cloud_vpc_network"                   => "IBM Cloud VPC Network",
-      "ibm_terraform_configuration"             => "IBM Terraform Configuration",
-      "ibm_vpc"                                 => "IBM Virtual Private Cloud",
-      "kubernetes"                              => "Kubernetes",
-      "kubernetes_monitor"                      => "Kubernetes Monitor",
-      "kubevirt"                                => "KubeVirt",
-      "openshift"                               => "OpenShift",
-      "openshift_monitor"                       => "Openshift Monitor",
-      "openstack"                               => "OpenStack",
-      "openstack_infra"                         => "OpenStack Platform Director",
-      "openstack_network"                       => "OpenStack Network",
-      "lenovo_ph_infra"                         => "Lenovo XClarity",
-      "nsxt"                                    => "VMware NSX-T Network Manager",
-      "nuage_network"                           => "Nuage Network Manager",
-      "redfish_ph_infra"                        => "Redfish",
-      "redhat_network"                          => "Redhat Network",
-      "rhevm"                                   => "Red Hat Virtualization",
-      "scvmm"                                   => "Microsoft System Center VMM",
-      "vmwarews"                                => "VMware vCenter",
-      "vmware_cloud"                            => "VMware vCloud",
-      "vmware_cloud_network"                    => "VMware Cloud Network",
-      "cinder"                                  => "Cinder ",
-      "swift"                                   => "Swift ",
-    }
-  end
-
   it ".types" do
-    expect(described_class.types).to match_array(all_types_and_descriptions.keys)
+    expect(described_class.types).to include("ec2", "vmwarews")
   end
 
   describe ".supported_types" do
     it "with default permissions" do
-      expect(described_class.supported_types).to match_array(all_types_and_descriptions.keys)
+      expect(described_class.supported_types).to include("ec2", "vmwarews")
     end
 
     it "with removed permissions" do
@@ -112,7 +67,7 @@ RSpec.describe ExtManagementSystem do
 
   describe ".supported_types_and_descriptions_hash" do
     it "with default permissions" do
-      expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
+      expect(described_class.supported_types_and_descriptions_hash).to include("vmwarews" => "VMware vCenter")
     end
 
     it "with removed permissions" do
