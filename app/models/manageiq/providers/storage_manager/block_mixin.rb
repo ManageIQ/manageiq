@@ -2,8 +2,7 @@ module ManageIQ::Providers::StorageManager::BlockMixin
   extend ActiveSupport::Concern
 
   included do
-    has_many :cloud_volumes,      :foreign_key => :ems_id,  :dependent => :destroy,
-             :inverse_of => :ext_management_system
+    has_many :cloud_volumes,      :foreign_key => :ems_id,  :dependent => :destroy
     has_many :physical_storages,    :foreign_key => "ems_id", :dependent => :destroy,
              :inverse_of => :ext_management_system
     has_many :storage_resources,  :foreign_key => "ems_id", :dependent => :destroy,
