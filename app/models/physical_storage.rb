@@ -6,6 +6,9 @@ class PhysicalStorage < ApplicationRecord
   belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_storages
   belongs_to :physical_chassis, :inverse_of => :physical_storages
 
+  has_many :storage_resources, :dependent => :destroy
+  belongs_to :physical_storage_family, :inverse_of => :physical_storages
+
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
 
   has_many :canisters, :dependent => :destroy, :inverse_of => false

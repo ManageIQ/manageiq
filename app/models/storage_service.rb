@@ -1,0 +1,21 @@
+class StorageService < ApplicationRecord
+  include NewWithTypeStiMixin
+  include ProviderObjectMixin
+  include AsyncDeleteMixin
+  include AvailabilityMixin
+  include SupportsFeatureMixin
+  include CustomActionsMixin
+
+  belongs_to :ext_management_system, :foreign_key => :ems_id,
+             :class_name => "ExtManagementSystem"
+  has_many :service_resource_attachments, :inverse_of => :storage_service, :dependent => :destroy
+  has_many :storage_resources, :through => :service_resource_attachments
+
+  acts_as_miq_taggable
+
+  def self.class_by_ems(ext_management_system)
+    # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
+    # side, that would return correct class for each provider
+    ext_management_system && ext_management_system.class::StorageService
+  end
+end
