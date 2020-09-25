@@ -208,7 +208,7 @@ class VmOrTemplate < ApplicationRecord
     ext_management_system&.kind_of?(ManageIQ::Providers::InfraManager)
   end
 
-  # The SQL form of `#registered?`, with it's inverse as well.
+  # The SQL form of `#registered?`, with its inverse as well.
   # TODO: Vmware Specific (copied (old) TODO from #registered?)
   scope :registered, (lambda do
     where(arel_table[:template].eq(false).or(arel_table[:ems_id].not_eq(nil)).and(arel_table[:host_id].not_eq(nil)))
