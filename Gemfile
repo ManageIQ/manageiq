@@ -65,6 +65,7 @@ gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>6.0.3", ">=6.0.3.7"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
+gem "redis-rails",                                           :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
 gem "ripper_ruby_parser",               "~>1.5.1",           :require => false
 gem "ruby-progressbar",                 "~>1.7.0",           :require => false

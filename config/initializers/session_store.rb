@@ -4,6 +4,7 @@ session_store ||= case Settings.server.session_store
                   when "sql"    then :active_record_store
                   when "memory" then :memory_store
                   when "cache"  then :mem_cache_store
+                  when "redis"  then :redis_store
                   end
 
 ManageIQ::Session.store = session_store

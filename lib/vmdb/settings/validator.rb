@@ -125,9 +125,9 @@ module Vmdb
           end
         end
 
-        if keys.include?(:session_store) && !%w(sql memory cache).include?(data.session_store)
+        if keys.include?(:session_store) && %w[sql memory cache redis].exclude?(data.session_store)
           valid = false
-          errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
+          errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\", \"redis\""]
         end
 
         if keys.include?(:zone)

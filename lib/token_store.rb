@@ -42,6 +42,11 @@ class TokenStore
         ActiveSupport::Cache::MemCacheStore.new(MiqMemcached.server_address, options).tap do |store|
           store.extend KeyValueHelpers
         end
+      when "redis"
+        require "redis-store"
+        ActiveSupport::Cache::RedisStore.new(redis_url, options).tap do |store|
+          store.extend KeyValueHelpers
+        end
       else
         raise "unsupported session store type: #{::Settings.server.session_store}"
       end
@@ -56,4 +61,9 @@ class TokenStore
     }
   end
   private_class_method :cache_store_options
+
+  def self.redis_url
+    # e.g.: redis://:secrets@example.com:1234/9?foo=bar&baz=qux'
+    ENV["REDIS_URL"].presence || ::Settings.session.redis_url
+  end
 end
