@@ -44,7 +44,7 @@ class User < ApplicationRecord
   validates :userid, :unique_within_region => {:match_case => false}
   validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
                                 :allow_nil => true, :message => "must be a valid email address"}
-  validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
+  validates :current_group, :inclusion => {:in => proc { |u| u.miq_groups }, :allow_nil => true, :if => :current_group_id_changed?}
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
   # with the class method of the same name (User.authenticate)
