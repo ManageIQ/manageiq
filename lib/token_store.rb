@@ -1,6 +1,4 @@
 class TokenStore
-  @token_caches = {} # Hash of Memory/Dalli Store Caches, Keyed by namespace
-
   module KeyValueHelpers
     def delete_all_for_user(userid)
       Array(read("tokens_for_#{userid}")).each do |token|
@@ -22,10 +20,14 @@ class TokenStore
     end
   end
 
+  def self.token_caches
+    @token_caches ||= {} # Hash of Memory/Dalli Store Caches, Keyed by namespace
+  end
+
   # only used by TokenManager.token_store
   # @return a token store for users
   def self.acquire(namespace, token_ttl)
-    @token_caches[namespace] ||= begin
+    token_caches[namespace] ||= begin
       options = cache_store_options(namespace, token_ttl)
       case ::Settings.server.session_store
       when "sql"

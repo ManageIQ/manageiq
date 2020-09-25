@@ -224,6 +224,10 @@ class User < ApplicationRecord
     current_sessions = Session.where(:user_id => id)
     ManageIQ::Session.revoke(current_sessions.map(&:session_id))
     current_sessions.destroy_all
+
+    TokenStore.token_caches.each do |_, token_store|
+      token_store.delete_all_for_user(userid)
+    end
   end
 
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
