@@ -6052,6 +6052,37 @@
         :feature_type: admin
         :identifier: ems_object_storage_delete
 
+
+  # Storage Resource
+- :name: Storage Resources
+  :description: Everything under Storage Resources
+  :feature_type: node
+  :identifier: storage_resource
+  :children:
+  - :name: View
+    :description: View Storage Resources
+    :feature_type: view
+    :identifier: storage_resource_view
+    :children:
+    - :name: List
+      :description: Display Lists of Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show_list
+    - :name: Show
+      :description: Display Individual Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show
+  - :name: Operate
+    :description: Perform Operations on Storage Resources
+    :feature_type: control
+    :identifier: storage_resource_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Storage Resources
+      :feature_type: control
+      :identifier: storage_resource_tag
+
+
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
   :description: Everything under Physical Infrastructure Providers
