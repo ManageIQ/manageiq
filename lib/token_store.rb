@@ -15,6 +15,9 @@ class TokenStore
       when "cache"
         require 'active_support/cache/dalli_store'
         ActiveSupport::Cache::DalliStore.new(MiqMemcached.server_address, options)
+      when "redis"
+        require "redis-store"
+        ActiveSupport::Cache::RedisStore.new(redis_url, options)
       else
         raise "unsupported session store type: #{::Settings.server.session_store}"
       end
@@ -29,4 +32,13 @@ class TokenStore
     }
   end
   private_class_method :cache_store_options
+
+  def self.redis_url
+    if ENV["REDIS_URL"]
+      ENV["REDIS_URL"]
+    else
+      # redis://:secrets@example.com:1234/9?foo=bar&baz=qux'
+      ::Settings.session.redis_url
+    end
+  end
 end
