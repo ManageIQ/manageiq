@@ -220,6 +220,21 @@ class User < ApplicationRecord
     sessions << Session.find_or_create_by(:session_id => session_id)
   end
 
+  def broadcast_revoke_sessions
+    if Settings.server.session_store == "cache"
+      MiqQueue.broadcast(
+        :class_name  => self.class.name,
+        :instance_id => id,
+        :method_name => :revoke_sessions
+      )
+    else
+      # If using SQL or Memory, the sessions don't need to (or can't) be
+      # revoked via a broadcast since the session/token stores are not server
+      # specific, so execute it inline.
+      revoke_sessions
+    end
+  end
+
   def revoke_sessions
     current_sessions = Session.where(:user_id => id)
     ManageIQ::Session.revoke(current_sessions.map(&:session_id))
