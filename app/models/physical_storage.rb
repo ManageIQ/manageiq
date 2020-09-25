@@ -82,6 +82,12 @@ class PhysicalStorage < ApplicationRecord
     klass.raw_create_physical_storage(ext_management_system, options)
   end
 
+  def self.class_by_ems(ext_management_system)
+    # TODO(lsmola) taken from OrchesTration stacks, correct approach should be to have a factory on ExtManagementSystem
+    # side, that would return correct class for each provider
+    ext_management_system && ext_management_system.class::PhysicalStorage
+  end
+
   def self.validate_create_physical_storage(ext_management_system)
     klass = class_by_ems(ext_management_system)
     return klass.validate_create_physical_storage(ext_management_system) if ext_management_system &&
