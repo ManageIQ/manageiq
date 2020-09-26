@@ -11,5 +11,4 @@ class ServiceResourceAttachment < ApplicationRecord
   belongs_to :storage_resource, :inverse_of => :service_resource_attachments
 
   acts_as_miq_taggable
-
 end

@@ -10,5 +10,4 @@ class PhysicalStorageFamily < ApplicationRecord
   has_many :physical_storages, :dependent => :nullify
 
   acts_as_miq_taggable
-
 end
