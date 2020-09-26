@@ -11,8 +11,8 @@ class OrchestrationTemplate < ApplicationRecord
   default_value_for :orderable, true
 
   validates :md5,
-            :uniqueness => {:scope => :draft, :message => "of content already exists (content must be unique)"},
-            :if         => :unique_md5?
+            :uniqueness_when_changed => {:scope => :draft, :message => "of content already exists (content must be unique)"},
+            :if                      => :unique_md5?
   validates_presence_of :name
 
   scope :orderable, -> { where(:orderable => true) }
