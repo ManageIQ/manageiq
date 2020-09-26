@@ -4,7 +4,7 @@ class SystemConsole < ApplicationRecord
 
   default_value_for :opened, false
 
-  validates :url_secret, :uniqueness => true
+  validates :url_secret, :uniqueness_when_changed => true
 
   def connection_params
     {
