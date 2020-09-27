@@ -8,8 +8,8 @@ class StorageService < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id,
                                      :class_name  => "ExtManagementSystem"
-  has_many :service_resource_attachments, :inverse_of => :storage_service, :dependent => :destroy
-  has_many :storage_resources, :through => :service_resource_attachments
+  has_many :storage_service_resource_attachments, :inverse_of => :storage_service, :dependent => :destroy
+  has_many :storage_resources, :through => :storage_service_resource_attachments
 
   acts_as_miq_taggable
 
