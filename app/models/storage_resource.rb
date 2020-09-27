@@ -9,8 +9,8 @@ class StorageResource < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :physical_storage, :inverse_of => :storage_resources
 
-  has_many :service_resource_attachments, :inverse_of => :storage_resource, :dependent => :destroy
-  has_many :storage_services, :through => :service_resource_attachments, :dependent => :destroy
+  has_many :storage_service_resource_attachments, :inverse_of => :storage_resource, :dependent => :destroy
+  has_many :storage_services, :through => :storage_service_resource_attachments, :dependent => :destroy
 
   has_many :cloud_volumes, :inverse_of => :storage_resource, :dependent => :destroy
 
