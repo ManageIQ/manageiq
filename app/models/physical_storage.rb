@@ -1,9 +1,8 @@
 class PhysicalStorage < ApplicationRecord
   include SupportsFeatureMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_storages,
-   :class_name => "ManageIQ::Providers::PhysicalInfraManager"
-  belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_storages
+  belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :physical_rack, :foreign_key => :physical_rack_id
   belongs_to :physical_chassis, :inverse_of => :physical_storages
 
   has_many :storage_resources, :dependent => :destroy
