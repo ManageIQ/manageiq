@@ -43,14 +43,14 @@ class Tenant < ApplicationRecord
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
   belongs_to :source, :polymorphic => true
 
-  validates :subdomain, :uniqueness => true, :allow_nil => true
-  validates :domain,    :uniqueness => true, :allow_nil => true
+  validates :subdomain, :uniqueness_when_changed => true, :allow_nil => true
+  validates :domain,    :uniqueness_when_changed => true, :allow_nil => true
   validate  :validate_only_one_root
   validates :description, :presence => true
-  validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope      => :ancestry,
-                                   :conditions => -> { in_my_region },
-                                   :message    => "should be unique per parent"}
+  validates :name, :presence                  => true, :unless => :use_config_for_attributes?,
+                   :uniqueness_when_changed   => {:scope      => :ancestry,
+                                                  :conditions => -> { in_my_region },
+                                                  :message    => "should be unique per parent"}
   validate :validate_default_tenant, :on => :update, :if => :saved_change_to_default_miq_group_id?
 
   scope :all_tenants,  -> { where(:divisible => true) }
