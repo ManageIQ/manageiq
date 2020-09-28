@@ -1,5 +1,7 @@
 class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
+  include SupportsFeatureMixin
+
   acts_as_miq_taggable
   belongs_to :configuration_location
   belongs_to :configuration_organization
