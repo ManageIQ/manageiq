@@ -674,7 +674,7 @@ class VmOrTemplate < ApplicationRecord
                       storage_name = $1
                       temp_path = $2.strip
                       # Some esx servers add a leading "/".
-                      # This needs to be striped off to allow matching on location
+                      # This needs to be stripped off to allow matching on location
                       temp_path.sub(/^\//,'')
                     # local
                     else
@@ -1197,7 +1197,7 @@ class VmOrTemplate < ApplicationRecord
     vms_list = vms_to_update.collect { |v| {:id => v.id, :name => v.name, :uid_ems => v.uid_ems} }
     found = ems.find_vm_create_events(vms_list)
 
-    # Loop through the found VM's and set their create times
+    # Loop through the found VMs and set their create times
     found.each do |vmh|
       v = vms_to_update.detect { |vm| vm.id == vmh[:id] }
       v.update_attribute(:ems_created_on, vmh[:created_time])
