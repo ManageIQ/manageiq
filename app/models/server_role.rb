@@ -2,7 +2,7 @@ class ServerRole < ApplicationRecord
   has_many :assigned_server_roles
   has_many :miq_servers, :through => :assigned_server_roles
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
 
   scope :database_roles, -> { where(:role_scope => 'database').order(:name) }
   scope :region_roles,   -> { where(:role_scope => 'region').order(:name) }
