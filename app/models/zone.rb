@@ -235,14 +235,6 @@ class Zone < ApplicationRecord
     miq_servers.any?(&:started?)
   end
 
-  def ntp_reload_queue
-    servers = active_miq_servers
-    return if servers.blank?
-    _log.info("Zone: [#{name}], Queueing ntp_reload for [#{servers.length}] active_miq_servers, ids: #{servers.collect(&:id)}")
-
-    servers.each(&:ntp_reload_queue)
-  end
-
   def message_for_invalid_delete
     return _("cannot delete default zone") if name == "default"
     return _("cannot delete maintenance zone") if self == self.class.maintenance_zone

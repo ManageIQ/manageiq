@@ -55,18 +55,4 @@ module MiqServer::QueueManagement
     _log.info(log_message)
     enqueue_for_server('restart')
   end
-
-  def ntp_reload_queue
-    # matches ntp_reload's guard clause
-    return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_container?
-
-    MiqQueue.put(
-      :class_name  => "MiqServer",
-      :instance_id => id,
-      :method_name => "ntp_reload",
-      :server_guid => guid,
-      :priority    => MiqQueue::HIGH_PRIORITY,
-      :zone        => my_zone
-    )
-  end
 end

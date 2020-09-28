@@ -216,7 +216,11 @@ module Ansible
 
         begin
           fetch_galaxy_roles(playbook_or_role_args)
-          result = AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+
+          result = wait_for(pid_file(base_dir)) do
+            AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+          end
+
           res = response(base_dir, ansible_runner_method, result)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
@@ -352,6 +356,33 @@ module Ansible
 
       def env_dir(base_dir)
         FileUtils.mkdir_p(File.join(base_dir, "env")).first
+      end
+
+      def pid_file(base_dir)
+        File.join(base_dir, "pid")
+      end
+
+      def wait_for(path, timeout: 10.seconds)
+        require "listen"
+        require "concurrent"
+
+        path_created = Concurrent::Event.new
+
+        listener = Listen.to(File.dirname(path), :only => %r{\A#{File.basename(path)}\z}) do |modified, added, _removed|
+          path_created.set if added.include?(path) || modified.include?(path)
+        end
+
+        thread = Thread.new { listener.start }
+
+        begin
+          res = yield
+          raise "Timed out waiting for #{path}" unless path_created.wait(timeout)
+        ensure
+          listener.stop
+          thread.join
+        end
+
+        res
       end
 
       PYTHON2_MODULE_PATHS = %w[

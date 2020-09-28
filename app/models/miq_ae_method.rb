@@ -15,10 +15,11 @@ class MiqAeMethod < ApplicationRecord
   has_many   :inputs,   -> { order(:priority) }, :class_name => "MiqAeField", :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
-  validates               :name, :scope, :domain_id, :class_id, :presence => true
-  validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
-  validates_format_of     :name, :with    => /\A[\w]+\z/i,
-                                 :message => N_("may contain only alphanumeric and _ characters")
+  validates :scope, :domain_id, :class_id, :presence => true
+  validates :name,  :presence                => true,
+                    :uniqueness_when_changed => {:case_sensitive => false, :scope => [:class_id, :scope]},
+                    :format                  => {:with    => /\A[\w]+\z/i,
+                                                 :message => N_("may contain only alphanumeric and _ characters")}
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES

@@ -127,7 +127,10 @@ module ManageIQ::Providers
         end
 
         def hosts
-          add_properties(:attributes_blacklist => %i[parent])
+          add_properties(
+            :attributes_blacklist => %i[parent],
+            :delete_method        => :disconnect_inv
+          )
           add_common_default_values
 
           add_custom_reconnect_block(

@@ -683,206 +683,208 @@ en:
       write_ios_per_sec:           Write (IOPS)
 
     model:
-      AuditEvent:               EVM Audit Event
-      AvailabilityZone:         Availability Zone
-      HostAggregate:            Host Aggregate
-      ChargebackVm:             Chargeback for Vms
-      ChargebackContainerImage: Chargeback for Image
-      ChargebackContainerProject: Chargeback for Projects
-      ChargebackRate:           Chargeback Rate
-      Classification:           Category
-      CloudNetwork:             Cloud Network
-      CloudResourceQuota:       Cloud Resource Quota
-      CloudSubnet:              Cloud Subnet
-      CloudTenant:              Cloud Tenant
-      CloudVolume:              Cloud Volume
-      CloudVolumeBackup:        Cloud Volume Backup
-      CloudVolumeSnapshot:      Cloud Volume Snapshot
-      Compliance:               Compliance History
-      Compliances:              Compliance History
-      Condition:                Condition
-      ContainerBuild:           Container Build
-      ContainerQuota:           Container Quota
-      CustomButton:             Button
-      CustomButtonSet:          Button Group
-      ConfigurationScript:      Template (Ansible Tower)
-      ConfigurationScriptSource: Repository
-      Container:                Container
-      ContainerPerformance:     Performance - Container
-      ContainerGroup:           Container Pod
-      ContainerGroupPerformance: Performance - Pod
-      ContainerImageRegistry:   Container Image Registry
-      ContainerImage:           Container Image
-      ContainerNode:            Container Node
-      ContainerNodePerformance: Performance - Container Node
-      ContainerProject:         Container Project
-      ContainerProjectPerformance: Performance - Container Project
-      ContainerRoute:           Container Route
-      ContainerReplicator:      Container Replicator
-      ContainerService:         Container Service
-      ContainerTemplate:        Container Template
-      EmsCluster:               Cluster
-      EmsClusterPerformance:    Performance - Cluster
-      EmsEvent:                 Management Event
-      EmsFolder:                Folder
-      ExtManagementSystem:      Provider
+      AuditEvent:                     EVM Audit Event
+      AvailabilityZone:               Availability Zone
+      HostAggregate:                  Host Aggregate
+      ChargebackVm:                   Chargeback for Vms
+      ChargebackContainerImage:       Chargeback for Image
+      ChargebackContainerProject:     Chargeback for Projects
+      ChargebackRate:                 Chargeback Rate
+      Classification:                 Category
+      CloudNetwork:                   Cloud Network
+      CloudObjectStoreContainer:      Cloud Object Store Container
+      CloudResourceQuota:             Cloud Resource Quota
+      CloudSubnet:                    Cloud Subnet
+      CloudTenant:                    Cloud Tenant
+      CloudVolume:                    Cloud Volume
+      CloudVolumeBackup:              Cloud Volume Backup
+      CloudVolumeSnapshot:            Cloud Volume Snapshot
+      Compliance:                     Compliance History
+      Compliances:                    Compliance History
+      Condition:                      Condition
+      ContainerBuild:                 Container Build
+      ContainerQuota:                 Container Quota
+      CustomButton:                   Button
+      CustomButtonSet:                Button Group
+      ConfigurationScript:            Template (Ansible Tower)
+      ConfigurationScriptSource:      Repository
+      Container:                      Container
+      ContainerPerformance:           Performance - Container
+      ContainerGroup:                 Container Pod
+      ContainerGroupPerformance:      Performance - Pod
+      ContainerImageRegistry:         Container Image Registry
+      ContainerImage:                 Container Image
+      ContainerNode:                  Container Node
+      ContainerNodePerformance:       Performance - Container Node
+      ContainerProject:               Container Project
+      ContainerProjectPerformance:    Performance - Container Project
+      ContainerRoute:                 Container Route
+      ContainerReplicator:            Container Replicator
+      ContainerService:               Container Service
+      ContainerTemplate:              Container Template
+      ContainerVolume:                Container Volume
+      EmsCluster:                     Cluster
+      EmsClusterPerformance:          Performance - Cluster
+      EmsEvent:                       Management Event
+      EmsFolder:                      Folder
+      ExtManagementSystem:            Provider
       ExtManagementSystemPerformance: Performance - Provider
-      FileDepotFtp:             FTP
-      FileDepotFtpAnonymous:    Anonymous FTP
-      FileDepotNfs:             NFS
-      FileDepotS3:              AWS S3
-      FileDepotSwift:           OpenStack Swift
-      FileDepotSmb:             Samba
-      Filesystem:               File
-      Flavor:                   Flavor
-      FloatingIp:               Floating IP
-      GenericObject:            Generic Object
-      GenericObjectDefinition:  Generic Object Class
-      GuestApplication:         Guest Application
-      GuestDevice:              Guest Device
-      Host:                     Host
-      HostPerformance:          Performance - Host
-      IsoDatastore:             ISO Datastore
-      IsoImage:                 ISO Image
-      LdapDomain:               LDAP Domain
-      LdapRegion:               LDAP Region
-      LdapServer:               LDAP Server
-      LoadBalancer:             Load Balancer
-      ManageIQ::Providers::AutomationManager:                                        Automation Manager
-      ManageIQ::Providers::BaseManager:                                     Provider
-      ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                Credential
-      ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:     Repository
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:     Credential (Amazon)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential:     Credential (Google)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential:    Credential (Machine)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential:    Credential (Network)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential:      Credential (Vault)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:  Credential (OpenStack)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:  Credential (Rackspace)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential:        Credential (RHV)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential: Credential (Satellite)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:        Credential (SCM)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:     Credential (VMware)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:             Playbook (Embedded Ansible)
+      FileDepotFtp:                   FTP
+      FileDepotFtpAnonymous:          Anonymous FTP
+      FileDepotNfs:                   NFS
+      FileDepotS3:                    AWS S3
+      FileDepotSwift:                 OpenStack Swift
+      FileDepotSmb:                   Samba
+      Filesystem:                     File
+      Flavor:                         Flavor
+      FloatingIp:                     Floating IP
+      GenericObject:                  Generic Object
+      GenericObjectDefinition:        Generic Object Class
+      GuestApplication:               Guest Application
+      GuestDevice:                    Guest Device
+      Host:                           Host
+      HostPerformance:                Performance - Host
+      IsoDatastore:                   ISO Datastore
+      IsoImage:                       ISO Image
+      LdapDomain:                     LDAP Domain
+      LdapRegion:                     LDAP Region
+      LdapServer:                     LDAP Server
+      LoadBalancer:                   Load Balancer
+      ManageIQ::Providers::AutomationManager:                                             Automation Manager
+      ManageIQ::Providers::BaseManager:                                                   Provider
+      ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                     Credential
+      ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:          Repository
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:          Credential (Amazon)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential:           Credential (Microsoft Azure)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential:          Credential (Google)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential:         Credential (Machine)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential:         Credential (Network)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential:           Credential (Vault)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:       Credential (OpenStack)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:       Credential (Rackspace)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential:             Credential (RHV)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential:      Credential (Satellite)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:             Credential (SCM)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:          Credential (VMware)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:                  Playbook (Embedded Ansible)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource: Repository (Embedded Ansible)
-      ManageIQ::Providers::AutomationManager::Authentication:                     Credential
-      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:     Credential (Amazon)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:     Credential (Google)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:    Credential (Machine)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:    Credential (Network)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:  Credential (OpenStack)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:  Credential (Rackspace)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential: Credential (Satellite)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:        Credential (SCM)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
-      ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow: Workflow Template (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
-      ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
-      ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem: Configured System (Ansible Tower)
-      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:         Ansible Tower Job
-      ManageIQ::Providers::CloudManager:                                    Cloud Provider
-      ManageIQ::Providers::CloudManager::AuthKeyPair:                       Key Pair
-      ManageIQ::Providers::CloudManager::Vm:                                Instance
-      ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
-      ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
-      ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
-      ManageIQ::Providers::Vmware::CloudManager::Vm:                        Instance (VMware vCloud)
-      ManageIQ::Providers::Amazon::CloudManager::Flavor:                    Flavor (Amazon)
-      ManageIQ::Providers::Google::CloudManager::Flavor:                    Flavor (Google)
-      ManageIQ::Providers::Azure::CloudManager::Flavor:                     Flavor (Microsoft Azure)
-      ManageIQ::Providers::Openstack::CloudManager::Flavor:                 Flavor (OpenStack)
-      ManageIQ::Providers::CloudManager::Template:                          Image
-      ManageIQ::Providers::Amazon::CloudManager::Template:                  Image (Amazon)
-      ManageIQ::Providers::Openstack::CloudManager::Template:               Image (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::Template:                   Image (Microsoft Azure)
-      ManageIQ::Providers::Google::CloudManager::Template:                  Image (Google)
-      ManageIQ::Providers::Vmware::CloudManager::Template:                  Image (VMware vCloud)
-      ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
-      ManageIQ::Providers::CloudManager::OrchestrationStack:                Orchestration Stack
-      ManageIQ::Providers::ContainerManager:                                Containers Provider
-      ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
-      ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
-      ManageIQ::Providers::InfraManager::Template:                          Template
-      ManageIQ::Providers::NetworkManager:                                  Network Manager
-      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider
-      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
-      ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
-      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
-      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (VMware)
-      ManageIQ::Providers::Vmware::InfraManager::Vm:                        Virtual Machine (VMware)
-      ManageIQ::Providers::Microsoft::InfraManager::Vm:                     Virtual Machine (Microsoft)
-      ManageIQ::Providers::Redhat::InfraManager::Vm:                        Virtual Machine (Red Hat)
-      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private: Cloud Network (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public: External Cloud Network (OpenStack)
-      ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
-      ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
-      ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud)
-      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
-      ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
-      ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
-      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift)
-      ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate:  Container Template (OpenShift)
-      ManageIQ::Providers::Amazon::NetworkManager:                          Network Provider (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:            Cloud Network (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:             Cloud Subnet (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::LoadBalancer:            Load Balancer (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:           Security Group (Amazon)
-      ManageIQ::Providers::Amazon::StorageManager::Ebs:                     Elastic Block Storage Manager (Amazon)
-      ManageIQ::Providers::Google::NetworkManager:                          Network Provider (Google)
-      ManageIQ::Providers::Google::NetworkManager::SecurityGroup:           Security Group (Google)
-      ManageIQ::Providers::Google::NetworkManager::LoadBalancer:            Load Balancer (Google)
-      ManageIQ::Providers::Google::NetworkManager::NetworkPort:             Network Port (Google)
-      ManageIQ::Providers::Google::NetworkManager::FloatingIp:              Floating Ip (Google)
-      ManageIQ::Providers::Google::NetworkManager::NetworkRouter:           Network Router (Google)
-      ManageIQ::Providers::Google::NetworkManager::CloudSubnet:             Cloud Subnet (Google)
-      ManageIQ::Providers::Google::NetworkManager::CloudNetwork:            Cloud Network (Google)
-      ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
-      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer:             LoadBalancer (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:              Cloud Subnet (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::SecurityGroup:            Security Group (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::NetworkRouter:            Network Router (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
-      ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:              Floating IP (Amazon)
-      ManageIQ::Providers::Azure::NetworkManager::FloatingIp:               Floating IP (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
-      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
-      ManageIQ::Providers::Openstack::CloudManager::CloudTenant:            Cloud Tenant (OpenStack)
-      ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
-      ManageIQ::Providers::Openstack::StorageManager::CinderManager:        Cinder Block Storage Manager (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
-      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter:           Network Router (Amazon)
-      ManageIQ::Providers::Azure::NetworkManager:                           Network Manager (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
-      ManageIQ::Providers::StorageManager:                                  Storage Manager
-      ManageIQ::Providers::StorageManager::CinderManager:                   Storage Manager (Cinder)
-      ManageIQ::Providers::StorageManager::SwiftManager:                    Storage Manager (Swift)
-      ManageIQ::Providers::Microsoft::InfraManager::Host:                   Host (Microsoft)
-      ManageIQ::Providers::Openstack::InfraManager::Host:                   Host (OpenStack)
-      ManageIQ::Providers::Redhat::InfraManager::Host:                      Host (Redhat)
-      ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
-      ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:      Physical Rack (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:   Physical Chassis (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:   Physical Storage (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
-      ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:   Physical Server (Redfish)
-      ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate: Volume Snapshot Template (Openstack)
-      ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate:         Volume Template (Openstack)
+      ManageIQ::Providers::AutomationManager::Authentication:                             Credential
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:              Credential (Microsoft Azure)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:             Credential (Google)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:            Credential (Machine)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:            Credential (Network)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:          Credential (OpenStack)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:          Credential (Rackspace)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential:         Credential (Satellite)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:                Credential (SCM)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:             Credential (VMware)
+      ManageIQ::Providers::AnsibleTower::AutomationManager:                               Automation Manager (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript:          Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow:        Workflow Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
+      ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
+      ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System (Ansible Tower)
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem:               Configured System (Foreman)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:                          Ansible Tower Job
+      ManageIQ::Providers::CloudManager:                                                  Cloud Provider
+      ManageIQ::Providers::CloudManager::AuthKeyPair:                                     Key Pair
+      ManageIQ::Providers::CloudManager::Vm:                                              Instance
+      ManageIQ::Providers::Google::CloudManager::Vm:                                      Instance (Google)
+      ManageIQ::Providers::Openstack::CloudManager::Vm:                                   Instance (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::Vm:                                       Instance (Microsoft Azure)
+      ManageIQ::Providers::Amazon::CloudManager::Vm:                                      Instance (Amazon)
+      ManageIQ::Providers::Vmware::CloudManager::Vm:                                      Instance (VMware vCloud)
+      ManageIQ::Providers::Amazon::CloudManager::Flavor:                                  Flavor (Amazon)
+      ManageIQ::Providers::Google::CloudManager::Flavor:                                  Flavor (Google)
+      ManageIQ::Providers::Azure::CloudManager::Flavor:                                   Flavor (Microsoft Azure)
+      ManageIQ::Providers::Openstack::CloudManager::Flavor:                               Flavor (OpenStack)
+      ManageIQ::Providers::CloudManager::Template:                                        Image
+      ManageIQ::Providers::Amazon::CloudManager::Template:                                Image (Amazon)
+      ManageIQ::Providers::Openstack::CloudManager::Template:                             Image (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::Template:                                 Image (Microsoft Azure)
+      ManageIQ::Providers::Google::CloudManager::Template:                                Image (Google)
+      ManageIQ::Providers::Vmware::CloudManager::Template:                                Image (VMware vCloud)
+      ManageIQ::Providers::CloudManager::VirtualTemplate:                                 Resourceless Server Template
+      ManageIQ::Providers::CloudManager::OrchestrationStack:                              Orchestration Stack
+      ManageIQ::Providers::ContainerManager:                                              Containers Provider
+      ManageIQ::Providers::InfraManager:                                                  Infrastructure Provider
+      ManageIQ::Providers::InfraManager::Vm:                                              Virtual Machine
+      ManageIQ::Providers::InfraManager::Template:                                        Template
+      ManageIQ::Providers::NetworkManager:                                                Network Manager
+      ManageIQ::Providers::PhysicalInfraManager:                                          Physical Infrastructure Provider
+      ManageIQ::Providers::Openstack::InfraManager:                                       Infrastructure Provider (OpenStack)
+      ManageIQ::Providers::Microsoft::InfraManager:                                       Infrastructure Provider (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager:                                          Infrastructure Provider (Red Hat)
+      ManageIQ::Providers::Vmware::InfraManager:                                          Infrastructure Provider (VMware)
+      ManageIQ::Providers::Vmware::InfraManager::Vm:                                      Virtual Machine (VMware)
+      ManageIQ::Providers::Microsoft::InfraManager::Vm:                                   Virtual Machine (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager::Vm:                                      Virtual Machine (Red Hat)
+      ManageIQ::Providers::Openstack::CloudManager:                                       Cloud Provider (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager:                                     Network Provider (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:                       Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private:              Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public:               External Cloud Network (OpenStack)
+      ManageIQ::Providers::Amazon::CloudManager:                                          Cloud Provider (Amazon)
+      ManageIQ::Providers::Azure::CloudManager:                                           Cloud Provider (Microsoft Azure)
+      ManageIQ::Providers::Vmware::CloudManager:                                          Cloud Provider (VMware vCloud)
+      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:                           Cloud Network (Microsoft Azure)
+      ManageIQ::Providers::Kubernetes::ContainerManager:                                  Container Provider (Kubernetes)
+      ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:                  Pod (Kubernetes)
+      ManageIQ::Providers::Openshift::ContainerManager:                                   Container Provider (OpenShift)
+      ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate:                Container Template (OpenShift)
+      ManageIQ::Providers::Amazon::NetworkManager:                                        Network Provider (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:                          Cloud Network (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:                           Cloud Subnet (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::LoadBalancer:                          Load Balancer (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:                         Security Group (Amazon)
+      ManageIQ::Providers::Amazon::StorageManager::Ebs:                                   Elastic Block Storage Manager (Amazon)
+      ManageIQ::Providers::Google::NetworkManager:                                        Network Provider (Google)
+      ManageIQ::Providers::Google::NetworkManager::SecurityGroup:                         Security Group (Google)
+      ManageIQ::Providers::Google::NetworkManager::LoadBalancer:                          Load Balancer (Google)
+      ManageIQ::Providers::Google::NetworkManager::NetworkPort:                           Network Port (Google)
+      ManageIQ::Providers::Google::NetworkManager::FloatingIp:                            Floating Ip (Google)
+      ManageIQ::Providers::Google::NetworkManager::NetworkRouter:                         Network Router (Google)
+      ManageIQ::Providers::Google::NetworkManager::CloudSubnet:                           Cloud Subnet (Google)
+      ManageIQ::Providers::Google::NetworkManager::CloudNetwork:                          Cloud Network (Google)
+      ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:                      Security Group (OpenStack)
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer:                           LoadBalancer (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:                            Cloud Subnet (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::SecurityGroup:                          Security Group (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkRouter:                          Network Router (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:                         Floating IP (OpenStack)
+      ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:                            Floating IP (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager::FloatingIp:                             Floating IP (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:                        Cloud Subnet (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:                      Network Router (OpenStack)
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:                   Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::CloudManager::CloudTenant:                          Cloud Tenant (OpenStack)
+      ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:                   Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::StorageManager::CinderManager:                      Cinder Block Storage Manager (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:                       Orchestration Stack (Microsoft Azure)
+      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:                      Orchestration Stack (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:                           Network Port (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter:                         Network Router (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager:                                         Network Manager (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:                            Network Port (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:                        Network Port (OpenStack)
+      ManageIQ::Providers::StorageManager:                                                Storage Manager
+      ManageIQ::Providers::StorageManager::CinderManager:                                 Storage Manager (Cinder)
+      ManageIQ::Providers::StorageManager::SwiftManager:                                  Storage Manager (Swift)
+      ManageIQ::Providers::Microsoft::InfraManager::Host:                                 Host (Microsoft)
+      ManageIQ::Providers::Openstack::InfraManager::Host:                                 Host (OpenStack)
+      ManageIQ::Providers::Redhat::InfraManager::Host:                                    Host (Redhat)
+      ManageIQ::Providers::Vmware::InfraManager::Host:                                    Host (Vmware)
+      ManageIQ::Providers::Vmware::InfraManager::HostEsx:                                 Host (Vmware)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:                    Physical Rack (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:                 Physical Chassis (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:                  Physical Server (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:                 Physical Storage (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:                  Physical Switch (Lenovo)
+      ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:                 Physical Server (Redfish)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate:               Volume Snapshot Template (Openstack)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate:                       Volume Template (Openstack)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM
@@ -916,6 +918,7 @@ en:
       MiqWorker:                EVM Worker
       NetworkPort:              Network Port
       NetworkRouter:            Network Router
+      NetworkService:           Network Service
       OrchestrationStack:       Orchestration Stack
       OrchestrationTemplate:    Orchestration Template
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate:    CloudFormation Template
@@ -935,6 +938,8 @@ en:
       Repository:               Repository
       ResourcePool:             Resource Pool
       SecurityGroup:            Security Group
+      SecurityPolicy:           Security Policy
+      SecurityPolicyRule:       Security Policy Rule
       ScanItem:                 Scan Item
       ScanItemSet:              Analysis Profile
       Service:                  Service

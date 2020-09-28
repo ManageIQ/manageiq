@@ -443,8 +443,8 @@ module AuthenticationMixin
   end
 
   def assign_nested_authentication(attributes)
-    record = authentications.where(:authtype => attributes['authtype']).first_or_initialize
     klass = authentication_class(attributes)
+    record = authentications.where(:authtype => attributes['authtype']).first_or_initialize(:type => klass.to_s)
     record.assign_attributes(attributes.merge(:type => klass.to_s, :name => "#{self.class.name} #{name}"))
     record # `assign_attributes` always returns `nil`
   end

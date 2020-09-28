@@ -115,7 +115,7 @@ module PerEmsWorkerMixin
     end
 
     def ems_id_from_queue_name(queue_name)
-      queue_name.kind_of?(Array) ? queue_name.collect { |q| parse_ems_id(q) }.flatten : parse_ems_id(queue_name)
+      parse_ems_id(queue_name)
     end
 
     def ems_from_queue_name(queue_name)

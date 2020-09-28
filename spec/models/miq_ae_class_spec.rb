@@ -1,6 +1,13 @@
 RSpec.describe MiqAeClass do
   include Spec::Support::AutomationHelper
 
+  it "doesn’t access database when unchanged model is saved" do
+    d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    expect { c1.valid? }.not_to make_database_queries
+  end
+
   describe "name attribute validation" do
     let(:ns) { FactoryBot.create(:miq_ae_namespace) }
     subject { described_class.new(:ae_namespace => ns) }

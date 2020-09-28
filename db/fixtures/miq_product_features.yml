@@ -4898,6 +4898,10 @@
       :description: Edit Configuration Profiles Tags
       :feature_type: control
       :identifier: configuration_profile_tag
+    - :name: Configuration Profile console
+      :description: Open a Configuration Profile console
+      :feature_type: control
+      :identifier: configuration_profile_console
 - :name: Configured Systems
   :description: Everything under Configured Systems
   :feature_type: node
@@ -6052,6 +6056,37 @@
         :feature_type: admin
         :identifier: ems_object_storage_delete
 
+
+  # Storage Resource
+- :name: Storage Resources
+  :description: Everything under Storage Resources
+  :feature_type: node
+  :identifier: storage_resource
+  :children:
+  - :name: View
+    :description: View Storage Resources
+    :feature_type: view
+    :identifier: storage_resource_view
+    :children:
+    - :name: List
+      :description: Display Lists of Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show_list
+    - :name: Show
+      :description: Display Individual Storage Resources
+      :feature_type: view
+      :identifier: storage_resource_show
+  - :name: Operate
+    :description: Perform Operations on Storage Resources
+    :feature_type: control
+    :identifier: storage_resource_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Storage Resources
+      :feature_type: control
+      :identifier: storage_resource_tag
+
+
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
   :description: Everything under Physical Infrastructure Providers
@@ -6265,6 +6300,23 @@
       :description: Refresh relationships and power states for all items related to Physical Storages
       :feature_type: control
       :identifier: physical_storage_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Physical Storage
+      :feature_type: control
+      :identifier: physical_storage_tag
+  - :name: Modify
+    :description: Modify Physical Storage
+    :feature_type: admin
+    :identifier: physical_storage_admin
+    :children:
+    - :name: Add
+      :description: Add a Physical Storage
+      :feature_type: admin
+      :identifier: physical_storage_new
+    - :name: Edit
+      :description: Edit a Physical Storage
+      :feature_type: admin
+      :identifier: physical_storage_edit
 
 # Physical Servers
 - :name: Physical Servers
@@ -6561,6 +6613,11 @@
       :hidden: true
       :feature_type: view
       :identifier: custom_button_events_show_list
+  - :name: Revoke Sessions of Other Users
+    :description: Revoke Sessions of Other Users
+    :hidden: true
+    :feature_type: control
+    :identifier: revoke_user_sessions
   - :name: Service Offerings
     :description: Everything under Service Offerings
     :feature_type: node

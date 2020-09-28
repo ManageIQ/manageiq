@@ -111,6 +111,12 @@ unless options[:dry_run]
     runner_options[:guid] = worker.guid
     $log.info("Starting #{worker.class.name} with runner options #{runner_options}")
     worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
+  rescue SystemExit
+    raise
+  rescue Exception => err
+    MiqWorker::Runner.safe_log(worker, "An unhandled error has occurred: #{err}\n#{err.backtrace.join("\n")}", :error)
+    STDERR.puts("ERROR: An unhandled error has occurred: #{err}. See log for details.") rescue nil
+    exit 1
   ensure
     FileUtils.rm_f(worker.heartbeat_file)
     $log.info("Deleting worker record for #{worker.class.name}, id #{worker.id}")

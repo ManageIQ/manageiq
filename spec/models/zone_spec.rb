@@ -167,28 +167,6 @@ RSpec.describe Zone do
     end
   end
 
-  context "#ntp_reload_queue" do
-    it "queues a ntp reload for all active servers in the zone" do
-      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
-      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
-      zone     = FactoryBot.create(:zone)
-      server_1 = FactoryBot.create(:miq_server, :zone => zone)
-      FactoryBot.create(:miq_server, :zone => zone, :status => "stopped")
-
-      zone.ntp_reload_queue
-
-      expect(MiqQueue.count).to eq(1)
-      expect(
-        MiqQueue.where(
-          :class_name  => "MiqServer",
-          :instance_id => server_1.id,
-          :method_name => "ntp_reload",
-          :server_guid => server_1.guid,
-        ).count
-      ).to eq(1)
-    end
-  end
-
   context "maintenance zone" do
     before { MiqRegion.seed }
 

@@ -60,7 +60,7 @@ module Vmdb
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :verify, :data, :_pwd, :__protected]
+    config.filter_parameters += [:password, :verify, :data, :auth_key, :_pwd, :__protected]
 
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
@@ -140,6 +140,7 @@ module Vmdb
 
       # To evaluate settings or database.yml with encrypted passwords
       require 'manageiq-password'
+      require 'manageiq/password/password_mixin'
       ManageIQ::Password.key_root = Rails.root.join("certs")
 
       require 'vmdb_helper'

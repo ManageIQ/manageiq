@@ -127,7 +127,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
-  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
+  validates :name,     :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validates :zone,     :presence => true
 
@@ -269,6 +269,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_cinder_volume_types, :type => :boolean
   virtual_column :supports_volume_availability_zones, :type => :boolean
   virtual_column :supports_create_security_group, :type => :boolean
+  virtual_column :supports_storage_services, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -693,6 +694,10 @@ class ExtManagementSystem < ApplicationRecord
     'generic'
   end
 
+  def queue_name_for_ems_refresh
+    queue_name
+  end
+
   def enforce_policy(target, event)
     inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
@@ -786,6 +791,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_create_security_group
     supports_create_security_group?
+  end
+
+  def supports_storage_services
+    supports_storage_services?
   end
 
   def get_reserve(field)
