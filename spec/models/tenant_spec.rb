@@ -17,6 +17,11 @@ RSpec.describe Tenant do
     Tenant.seed
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create
+    expect { m.valid? }.to make_database_queries(:count => 2)
+  end
+
   describe "#default_tenant" do
     it "has a default tenant" do
       expect(default_tenant).to be_truthy
