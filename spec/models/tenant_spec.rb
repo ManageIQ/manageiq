@@ -18,8 +18,8 @@ RSpec.describe Tenant do
   end
 
   it "doesn't access database when unchanged model is saved" do
-    m = described_class.create
-    expect { m.valid? }.to make_database_queries(:count => 2)
+    m = described_class.create!(:parent => described_class.create!)
+    expect { m.valid? }.not_to make_database_queries
   end
 
   describe "#default_tenant" do
