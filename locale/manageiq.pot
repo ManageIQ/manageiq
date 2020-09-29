@@ -46207,10 +46207,6 @@ msgstr ""
 msgid "* Some charts my not produce desired results with a single sort field"
 msgstr ""
 
-#: ../app/views/ops/_zone_form.html.haml:66
-msgid "* Specified NTP settings apply to this zone only and are not global."
-msgstr ""
-
 #: ../app/views/report/_form_styling.html.haml:104
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr ""
@@ -60756,12 +60752,6 @@ msgstr ""
 msgid "NFS Server"
 msgstr ""
 
-#: ../app/views/ops/_zone_form.html.haml:43
-#: ../app/views/ops/_settings_server_tab.html.haml:123
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml:25
-msgid "NTP Servers"
-msgstr ""
-
 #: ../app/views/catalog/_sandt_tree_show.html.haml:23
 #: ../app/views/catalog/_form_basic_info.html.haml:10
 msgid "Name / Description"
@@ -69987,10 +69977,6 @@ msgstr ""
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:12
 msgid "Specific Tags"
-msgstr ""
-
-#: ../app/views/ops/_settings_server_tab.html.haml:147
-msgid "Specified NTP settings applied here will override Zone NTP settings."
 msgstr ""
 
 #: src/report-editor/consolidation-table.jsx:82

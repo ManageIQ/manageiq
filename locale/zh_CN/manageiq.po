@@ -47596,10 +47596,6 @@ msgstr "* 选择一个或多个连续的组来上移或下移。"
 msgid "* Some charts my not produce desired results with a single sort field"
 msgstr "* 某些图表用单一排序字段可能不会产生想要的结果"
 
-#: ../app/views/ops/_zone_form.html.haml:66
-msgid "* Specified NTP settings apply to this zone only and are not global."
-msgstr "* 指定的 NTP 设置只适用于这个区而不是全局。"
-
 #: ../app/views/report/_form_styling.html.haml:104
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr "* 条件列中的每个条件都是从上至下进行判断的。"
@@ -62104,12 +62100,6 @@ msgstr "我的服务"
 msgid "NFS Server"
 msgstr "NFS 服务器"
 
-#: ../app/views/ops/_zone_form.html.haml:43
-#: ../app/views/ops/_settings_server_tab.html.haml:123
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml:25
-msgid "NTP Servers"
-msgstr "NTP 服务器"
-
 #: ../app/views/catalog/_sandt_tree_show.html.haml:23
 #: ../app/views/catalog/_form_basic_info.html.haml:10
 msgid "Name / Description"
@@ -71273,10 +71263,6 @@ msgstr "特定主机"
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:12
 msgid "Specific Tags"
 msgstr "具体标签"
-
-#: ../app/views/ops/_settings_server_tab.html.haml:147
-msgid "Specified NTP settings applied here will override Zone NTP settings."
-msgstr "在这里应用指定的 NTP 设置将覆盖区的 NTP 设置。"
 
 #: src/report-editor/consolidation-table.jsx:82
 msgid "Specify Calculations for Summary Rows"
