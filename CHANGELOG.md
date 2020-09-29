@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 146 ending 2020-09-28
+
+### Added
+
+* Remove MiqWorker supports\_container? method, as most workers now support podified [(#20583)](https://github.com/ManageIQ/manageiq/pull/20583)
+
 # Unreleased as of Sprint 145 ending 2020-09-14
 
 ### Fixed
