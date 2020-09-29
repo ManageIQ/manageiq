@@ -1,10 +1,5 @@
 class StorageServiceResourceAttachment < ApplicationRecord
-  include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include AsyncDeleteMixin
-  include AvailabilityMixin
-  include SupportsFeatureMixin
-  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :storage_service, :inverse_of => :storage_service_resource_attachments

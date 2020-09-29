@@ -1,8 +1,6 @@
 class StorageResource < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
-  include AsyncDeleteMixin
-  include AvailabilityMixin
   include SupportsFeatureMixin
   include CustomActionsMixin
 
