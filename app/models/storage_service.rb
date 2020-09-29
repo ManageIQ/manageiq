@@ -8,6 +8,7 @@ class StorageService < ApplicationRecord
                                      :class_name  => "ExtManagementSystem"
   has_many :storage_service_resource_attachments, :inverse_of => :storage_service, :dependent => :destroy
   has_many :storage_resources, :through => :storage_service_resource_attachments
+  has_many :cloud_volumes
 
   acts_as_miq_taggable
 
