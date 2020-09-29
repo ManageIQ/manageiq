@@ -1,4 +1,5 @@
 require 'memoist'
+require 'ancestry'
 
 module RelationshipMixin
   extend ActiveSupport::Concern
@@ -26,6 +27,7 @@ module RelationshipMixin
     extend Memoist
 
     cattr_accessor :default_relationship_type
+    class_attribute :skip_relationships, :default => []
 
     has_many :all_relationships, :class_name => "Relationship", :dependent => :destroy, :as => :resource
 
@@ -54,6 +56,10 @@ module RelationshipMixin
     @association_cache.delete(:all_relationships)
   end
 
+  def use_ancestry?
+    skip_relationships.include?(relationship_type)
+  end
+
   #
   # relationship_type scoping methods
   #
@@ -77,6 +83,7 @@ module RelationshipMixin
   def with_relationship_type(rel)
     raise _("no block given") unless block_given?
 
+    rel = rel.to_s
     rel_changed = rel && (relationship_type != rel)
     self.relationship_type = rel unless rel.nil?
 
@@ -138,6 +145,8 @@ module RelationshipMixin
 
   # Returns all of the class/id pairs of the parents of the record, [] for a root node
   def parent_ids(*args)
+    return Array.wrap(parent_id(*args)) if use_ancestry?
+
     Relationship.resource_pairs(parent_rels(*args))
   end
 
@@ -155,6 +164,8 @@ module RelationshipMixin
 
   # Returns the parent of the record, nil for a root node
   def parent(*args)
+    return call_ancestry_method(:parent) if use_ancestry?
+
     rels = parent_rels(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
     rels.first.try(:resource)
@@ -162,6 +173,8 @@ module RelationshipMixin
 
   # Returns the class/id pair of the parent of the record, nil for a root node
   def parent_id(*args)
+    return call_ancestry_method(:parent_id) if use_ancestry?
+
     rels = parent_ids(*args).take(2)
     raise _("Multiple parents found.") if rels.length > 1
     rels.first
@@ -177,16 +190,22 @@ module RelationshipMixin
 
   # Returns the root of the tree the record is in, self for a root node
   def root(*args)
+    return call_ancestry_method(:root) if use_ancestry?
+
     Relationship.resource(root_rel(*args))
   end
 
   # Returns the id of the root of the tree the record is in
   def root_id(*args)
+    return call_ancestry_method(:root_id) if use_ancestry?
+
     Relationship.resource_pair(root_rel(*args))
   end
 
   # Returns true if the record is a root node, false otherwise
   def is_root?
+    return call_ancestry_method(:is_root?) if use_ancestry?
+
     rel = relationship # TODO: Handle a node that is a root and a node at the same time
     rel.nil? ? true : rel.is_root?
   end
@@ -210,12 +229,16 @@ module RelationshipMixin
   # Returns a list of ancestor records, starting with the root record and ending
   #   with the parent record
   def ancestors(*args)
+    return call_ancestry_method(:ancestors) if use_ancestry?
+
     Relationship.resources(ancestor_rels(*args))
   end
 
   # Returns a list of ancestor class/id pairs, starting with the root class/id
   #   and ending with the parent class/id
   def ancestor_ids(*args)
+    return call_ancestry_method(:ancestor_ids) if use_ancestry?
+
     Relationship.resource_pairs(ancestor_rels(*args))
   end
 
@@ -236,12 +259,16 @@ module RelationshipMixin
   # Returns a list of the path records, starting with the root record and ending
   #   with the node's own record
   def path(*args)
+    return call_ancestry_method(:path) if use_ancestry?
+
     Relationship.resources(path_rels(*args)) # TODO: Prevent preload of self which is in the list
   end
 
   # Returns a list of the path class/id pairs, starting with the root class/id
   #   and ending with the node's own class/id
   def path_ids(*args)
+    return call_ancestry_method(:path_ids) if use_ancestry?
+
     Relationship.resource_pairs(path_rels(*args))
   end
 
@@ -259,11 +286,15 @@ module RelationshipMixin
 
   # Returns a list of child records
   def children(*args)
+    return call_ancestry_method(:children) if use_ancestry?
+
     Relationship.resources(child_rels(*args))
   end
 
   # Returns a list of child class/id pairs
   def child_ids(*args)
+    return call_ancestry_method(:child_ids) if use_ancestry?
+
     Relationship.resource_pairs(child_rels(*args))
   end
 
@@ -274,11 +305,15 @@ module RelationshipMixin
 
   # Returns true if the record has any children, false otherwise
   def has_children?
+    return call_ancestry_method(:has_children?) if use_ancestry?
+
     relationships.any?(&:has_children?)
   end
 
   # Returns true if the record has no children, false otherwise
   def is_childless?
+    return call_ancestry_method(:is_childless?) if use_ancestry?
+
     relationships.all?(&:is_childless?)
   end
 
@@ -291,11 +326,15 @@ module RelationshipMixin
 
   # Returns a list of sibling records
   def siblings(*args)
+    return call_ancestry_method(:siblings) if use_ancestry?
+
     Relationship.resources(sibling_rels(*args))
   end
 
   # Returns a list of sibling class/id pairs
   def sibling_ids(*args)
+    return call_ancestry_method(:sibling_ids) if use_ancestry?
+
     Relationship.resource_pairs(sibling_rels(*args))
   end
 
@@ -306,11 +345,15 @@ module RelationshipMixin
 
   # Returns true if the record's parent has more than one child
   def has_siblings?
+    return call_ancestry_method(:has_siblings?) if use_ancestry?
+
     relationships.any?(&:has_siblings?)
   end
 
   # Returns true if the record is the only child of its parent
   def is_only_child?
+    return call_ancestry_method(:is_only_child?) if use_ancestry?
+
     relationships.all?(&:is_only_child?)
   end
 
@@ -323,11 +366,15 @@ module RelationshipMixin
 
   # Returns a list of descendant records
   def descendants(*args)
+    return call_ancestry_method(:descendants) if use_ancestry?
+
     Relationship.resources(descendant_rels(*args))
   end
 
   # Returns a list of descendant class/id pairs
   def descendant_ids(*args)
+    return call_ancestry_method(:descendant_ids) if use_ancestry?
+
     Relationship.resource_pairs(descendant_rels(*args))
   end
 
@@ -366,11 +413,15 @@ module RelationshipMixin
 
   # Returns a list of all records in the record's subtree
   def subtree(*args)
+    return call_ancestry_method(:subtree) if use_ancestry?
+
     Relationship.resources(subtree_rels(*args)) # TODO: Prevent preload of self which is in the list
   end
 
   # Returns a list of all class/id pairs in the record's subtree
   def subtree_ids(*args)
+    return call_ancestry_method(:subtree_ids) if use_ancestry?
+
     Relationship.resource_pairs(subtree_rels(*args))
   end
 
@@ -419,6 +470,8 @@ module RelationshipMixin
 
   # Return the depth of the node, root nodes are at depth 0
   def depth
+    return call_ancestry_method(:depth) if use_ancestry?
+
     rel = relationship(:raise_on_multiple => true) # TODO: Handle multiple nodes with a way to detect which node you want
     rel.nil? ? 0 : rel.depth
   end
@@ -527,10 +580,14 @@ module RelationshipMixin
   end
 
   def add_parent(parent)
+    return update(:parent => parent) if use_ancestry?
+
     parent.with_relationship_type(relationship_type) { parent.add_child(self) }
   end
 
   def add_children(*child_objs)
+    return child_objs.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => self) } } if use_ancestry?
+
     options = child_objs.extract_options!
     child_objs = child_objs.flatten
 
@@ -565,6 +622,11 @@ module RelationshipMixin
   alias_method :add_child, :add_children
 
   def parent=(parent)
+    if use_ancestry?
+      call_ancestry_method(:parent=, parent)
+      return
+    end
+
     if parent.nil?
       remove_all_parents
     else
@@ -611,10 +673,14 @@ module RelationshipMixin
   end
 
   def remove_parent(parent)
+    return update!(:parent => nil) if use_ancestry?
+
     parent.with_relationship_type(relationship_type) { parent.remove_child(self) }
   end
 
   def remove_children(*child_objs)
+    return child_objs.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => nil) } } if use_ancestry?
+
     child_objs = child_objs.flatten.compact
     return child_objs if child_objs.empty?
 
@@ -634,6 +700,8 @@ module RelationshipMixin
   alias_method :remove_child, :remove_children
 
   def remove_all_parents(*args)
+    return update!(:parent => nil) if use_ancestry?
+
     parents(*args).collect { |p| remove_parent(p) }
   end
 
@@ -664,10 +732,14 @@ module RelationshipMixin
   end
 
   def is_descendant_of?(obj)
+    return call_ancestry_method(:descendant_of?, obj) if use_ancestry?
+
     ancestor_ids.include?([obj.class.base_class.name, obj.id])
   end
 
   def is_ancestor_of?(obj)
+    return obj.with_relationship_type(relationship_type) { obj.descendant_of?(self) } if use_ancestry?
+
     descendant_ids.include?([obj.class.base_class.name, obj.id])
   end
 
@@ -681,5 +753,13 @@ module RelationshipMixin
 
   def puts_relationship_tree
     Relationship.puts_arranged_resources(subtree_arranged)
+  end
+
+  private
+
+  # this allows us to call similarly named ancestry or mixin methods
+  def call_ancestry_method(method_name, *args)
+    bound_method = ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::InstanceMethods.instance_method(method_name)).bind(self)
+    args.empty? ? bound_method.call : bound_method.call(*args)
   end
 end
