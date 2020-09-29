@@ -3,6 +3,10 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   include CloudInitTemplateMixin
   include SysprepTemplateMixin
 
+  def keys_for_volumes
+    [:name, :size, :delete_on_terminate]
+  end
+
   def allowed_availability_zones(_options = {})
     source = load_ar_obj(get_source_vm)
     targets = get_targets_for_ems(source, :cloud_filter, AvailabilityZone, 'availability_zones.available')
