@@ -93,12 +93,12 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
       configuration_script_payloads.reload
     end
     update!(:status            => "successful",
-                       :last_updated_on   => Time.zone.now,
-                       :last_update_error => nil)
+            :last_updated_on   => Time.zone.now,
+            :last_update_error => nil)
   rescue => error
     update!(:status            => "error",
-                       :last_updated_on   => Time.zone.now,
-                       :last_update_error => format_sync_error(error))
+            :last_updated_on   => Time.zone.now,
+            :last_update_error => format_sync_error(error))
     raise error
   end
 
