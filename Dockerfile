@@ -1,5 +1,6 @@
 ARG IMAGE_REF=latest
-FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
+ARG ARCH=x86_64
+FROM localhost/manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
@@ -12,9 +13,12 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
     dnf clean all
 
 ## Copy/link the appliance files again so that we get ssl
-RUN ${APPLIANCE_ROOT}/setup && \
+RUN source /etc/default/evm && \
+    $APPLIANCE_SOURCE_DIRECTORY/setup && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
+
+RUN if [ ${ARCH} = "s390x" ]; then dnf -y install redhat-rpm-config make ruby-devel && gem install ffi -v 1.13.1 ; fi
 
 ## Overwrite entrypoint from pods repo
 COPY docker-assets/entrypoint /usr/local/bin
@@ -23,5 +27,5 @@ EXPOSE 443
 
 LABEL name="manageiq"
 
-VOLUME [ "/var/lib/pgsql/data" ]
-VOLUME [ ${APP_ROOT} ]
+VOLUME "/var/lib/pgsql/data"
+VOLUME ${APP_ROOT}
