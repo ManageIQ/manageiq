@@ -231,4 +231,12 @@ describe GenericMailer do
   it "returns an array of openssl verify modes" do
     expect(GenericMailer.openssl_verify_modes).to eq([["None", "none"], ["Peer", "peer"], ["Client Once", "client_once"], ["Fail If No Peer Cert", "fail_if_no_peer_cert"]])
   end
+
+  it "sets optional smtp keys as expected" do
+    mail = GenericMailer.new
+    options = {:enable_starttls_auto => false, :openssl_verify_mode => :none}
+    mail.send(:set_mailer_smtp, options)
+    options.delete(:authentication) # Deal with current pass by ref issue
+    expect(ActionMailer::Base.smtp_settings).to include(options)
+  end
 end

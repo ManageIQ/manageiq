@@ -184,7 +184,7 @@ class GenericMailer < ActionMailer::Base
     else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
-    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings[key] }
+    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }
 
     ActionMailer::Base.smtp_settings = am_settings
     log_smtp_settings = am_settings.dup
