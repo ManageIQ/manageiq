@@ -4,7 +4,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   include SysprepTemplateMixin
 
   def volume_dialog_keys
-    [:name, :size, :delete_on_terminate]
+    %i[name size delete_on_terminate]
   end
 
   def allowed_availability_zones(_options = {})
