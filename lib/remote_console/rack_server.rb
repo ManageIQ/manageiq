@@ -82,6 +82,9 @@ module RemoteConsole
         ws_sock = env['rack.hijack'].call # Hijack the socket from the incoming HTTP connection
         console_sock = TCPSocket.open(record.host_name, record.port) # Open a TCP connection to the remote endpoint
 
+        ws_sock.autoclose = false
+        console_sock.autoclose = false
+
         # These adapters will be used for reading/writing from/to the particular sockets
         @adapters[console_sock] = ClientAdapter.new(record, console_sock)
         @adapters[ws_sock] = ServerAdapter.new(record, env, ws_sock)
@@ -108,13 +111,13 @@ module RemoteConsole
         @logger.send(log_level, message % {:vm_id => record.vm_id})
       end
 
+      @proxy.pop(sock_a, sock_b) unless sock_a.nil? || sock_b.nil?
+
       # Close the sockets if they aren't closed yet
       [sock_a, sock_b].each do |sock|
         sock.try(:close)
         @adapters.delete(sock)
       end
-
-      @proxy.pop(sock_a, sock_b) unless sock_a.nil? || sock_b.nil?
     end
 
     # Primitive same-origin policy checking in production
