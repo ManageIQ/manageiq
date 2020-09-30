@@ -12,7 +12,7 @@ class Authentication < ApplicationRecord
     end
   end
 
-  include PasswordMixin
+  include ManageIQ::Password::PasswordMixin
   encrypt_column :auth_key
   encrypt_column :auth_key_password
   encrypt_column :become_password
