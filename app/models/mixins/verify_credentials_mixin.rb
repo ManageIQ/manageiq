@@ -63,7 +63,7 @@ module VerifyCredentialsMixin
       DDF.traverse(params_for_create) do |field|
         key_path = field[:name].try(:split, '.')
         if options.key_path?(key_path) && field[:type] == 'password'
-          options.store_path(key_path, MiqPassword.try_encrypt(options.fetch_path(key_path)))
+          options.store_path(key_path, ManageIQ::Password.try_encrypt(options.fetch_path(key_path)))
         end
       end
     end

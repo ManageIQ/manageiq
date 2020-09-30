@@ -21,8 +21,9 @@ module RemoteConsole
         # This callback should be set just once, yielding with the parsed message
         @driver.on(:message) { |msg| yield(msg.data) } if @driver.listeners(:message).length.zero?
 
-        data = @ssl.sysread(length) # Read from the socket
-        @driver.parse(data) # Parse the incoming data, run the callback from above
+        data = @ssl.send(:sysread_nonblock, length, :exception => false)
+        # Parse the incoming data, run the callback from above
+        @driver.parse(data) if data != :wait_readable
       end
 
       def issue(data)
