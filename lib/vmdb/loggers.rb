@@ -33,7 +33,7 @@ module Vmdb
       apply_config_value(config, $datawarehouse_log,  :level_datawarehouse)
       apply_config_value(config, $fog_log,            :level_fog)
       apply_config_value(config, $gce_log,            :level_gce)
-      apply_config_value(config, $ibm_cloud_log,      :level_ibmcloud)
+      apply_config_value(config, $ibm_cloud_log,      :level_ibm_cloud)
       apply_config_value(config, $kube_log,           :level_kube)
       apply_config_value(config, $lenovo_log,         :level_lenovo)
       apply_config_value(config, $nsxt_log,           :level_nsxt)
