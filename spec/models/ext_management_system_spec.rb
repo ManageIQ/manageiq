@@ -707,6 +707,40 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
+  describe ".create_from_params" do
+    let(:zone)   { EvmSpecHelper.create_guid_miq_server_zone.last }
+    let(:params) { {"name" => "My Provider", "zone_id" => zone.id.to_s, "type" => "ManageIQ::Providers::Amazon::CloudManager", "provider_region" => "us-east-1"} }
+    let(:endpoints) { [{"role" => "default"}] }
+
+    context "with a userid/password type authentication" do
+      let(:authentications) { [{"authtype" => "default", "userid" => "user", "password" => "password"}] }
+
+      it "creates an AuthUseridPassword type authentication record" do
+        ems = described_class.create_from_params(params, endpoints, authentications)
+        expect(ems.authentications.first.class.name).to eq("AuthUseridPassword")
+      end
+
+      it "queues an initial authentication check" do
+        described_class.create_from_params(params, endpoints, authentications)
+        expect(MiqQueue.pluck(:class_name, :method_name)).to include(["ExtManagementSystem", "authentication_check_types"])
+      end
+    end
+
+    context "with an auth_token type authentication" do
+      let(:authentications) { [{"authtype" => "default", "auth_key" => "abcdefg"}] }
+
+      it "creates an AuthToken type authentication record" do
+        ems = described_class.create_from_params(params, endpoints, authentications)
+        expect(ems.authentications.first.class.name).to eq("AuthToken")
+      end
+
+      it "queues an initial authentication check" do
+        described_class.create_from_params(params, endpoints, authentications)
+        expect(MiqQueue.pluck(:class_name, :method_name)).to include(["ExtManagementSystem", "authentication_check_types"])
+      end
+    end
+  end
+
   context "virtual column :supports_block_storage" do
     it "returns true if block storage is supported" do
       ems = FactoryBot.create(:ext_management_system)
