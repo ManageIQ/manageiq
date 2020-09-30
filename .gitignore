@@ -17,6 +17,7 @@
 .ruby-version
 .sass-cache/
 .tags
+.repo/
 /data/*
 /productization
 /plugins
