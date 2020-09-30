@@ -6609,6 +6609,11 @@
       :hidden: true
       :feature_type: view
       :identifier: custom_button_events_show_list
+  - :name: Revoke Sessions of Other Users
+    :description: Revoke Sessions of Other Users
+    :hidden: true
+    :feature_type: control
+    :identifier: revoke_user_sessions
   - :name: Service Offerings
     :description: Everything under Service Offerings
     :feature_type: node
