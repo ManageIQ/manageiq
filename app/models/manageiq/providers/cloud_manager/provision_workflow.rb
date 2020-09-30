@@ -3,7 +3,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   include CloudInitTemplateMixin
   include SysprepTemplateMixin
 
-  def keys_for_volumes
+  def volume_dialog_keys
     [:name, :size, :delete_on_terminate]
   end
 
