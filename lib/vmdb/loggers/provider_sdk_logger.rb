@@ -1,11 +1,11 @@
 module Vmdb::Loggers
-  class AzureLogger < VMDBLogger
+  class ProviderSdkLogger < VMDBLogger
     def initialize(*loggers)
       super
 
       # pulled from Ruby's `Logger::Formatter`, which is what it defaults to when it is `nil`
       @datetime_format = "%Y-%m-%dT%H:%M:%S.%6N "
-      @formatter       = Vmdb::Loggers::AzureLogger::Formatter.new
+      @formatter       = Vmdb::Loggers::ProviderSdkLogger::Formatter.new
     end
 
     def <<(msg)
