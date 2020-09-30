@@ -143,6 +143,7 @@ module SupportsFeatureMixin
     :update_security_group               => 'Security Group Update',
     :upgrade_cluster                     => 'Cluster Upgrade',
     :block_storage                       => 'Block Storage',
+    :storage_services                    => 'Storage Services',
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
     :volume_multiattachment              => 'Volume Multiattachment',

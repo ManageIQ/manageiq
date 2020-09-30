@@ -269,6 +269,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_cinder_volume_types, :type => :boolean
   virtual_column :supports_volume_availability_zones, :type => :boolean
   virtual_column :supports_create_security_group, :type => :boolean
+  virtual_column :supports_storage_services, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -786,6 +787,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_create_security_group
     supports_create_security_group?
+  end
+
+  def supports_storage_services
+    supports_storage_services?
   end
 
   def get_reserve(field)
