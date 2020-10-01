@@ -94,6 +94,7 @@
   :infra_provider: https://manageiq.org/docs/reference/latest/managing_providers/#infrastructure-providers
   :network_provider: https://manageiq.org/docs/reference/latest/managing_providers/#network-managers
   :physical_infra_provider: https://www.manageiq.org/docs/reference/latest/managing_providers/#discovering-physical-infrastucture-providers
+  :storage_manager: https://www.manageiq.org/docs/reference/latest/managing_providers/#storage-managers
 
 :drift_states:
   :history:
