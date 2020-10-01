@@ -6296,6 +6296,23 @@
       :description: Refresh relationships and power states for all items related to Physical Storages
       :feature_type: control
       :identifier: physical_storage_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Physical Storage
+      :feature_type: control
+      :identifier: physical_storage_tag
+  - :name: Modify
+    :description: Modify Physical Storage
+    :feature_type: admin
+    :identifier: physical_storage_admin
+    :children:
+    - :name: Add
+      :description: Add a Physical Storage
+      :feature_type: admin
+      :identifier: physical_storage_new
+    - :name: Edit
+      :description: Edit a Physical Storage
+      :feature_type: admin
+      :identifier: physical_storage_edit
 
 # Physical Servers
 - :name: Physical Servers
