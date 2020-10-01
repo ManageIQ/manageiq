@@ -10,6 +10,7 @@ module ManageIQ::Providers
     supports_not :block_storage
     supports_not :object_storage
     supports_not :cloud_object_store_container_create
+    supports_not :ems_storage_new
 
     belongs_to :parent_manager,
                :foreign_key => :parent_ems_id,
@@ -23,6 +24,13 @@ module ManageIQ::Providers
     class << model_name
       define_method(:route_key) { "ems_storages" }
       define_method(:singular_route_key) { "ems_storage" }
+    end
+
+    # Allow only adding supported types. Non-supported types for adding will not be visible in the Type field
+    def self.supported_types_and_descriptions_hash
+      supported_subclasses.select(&:supports_ems_storage_new?).each_with_object({}) do |klass, hash|
+        hash[klass.ems_type] = klass.description
+      end
     end
   end
 end
