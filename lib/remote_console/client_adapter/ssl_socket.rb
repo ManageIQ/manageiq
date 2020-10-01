@@ -9,7 +9,14 @@ module RemoteConsole
       end
 
       def fetch(length)
-        yield(@ssl.sysread(length))
+        data = @ssl.send(:sysread_nonblock, length, :exception => false)
+        # Give a second chance for the read if it's blocking after a 1s timeout
+        if data == :wait_readable
+          IO.select([@ssl], [], [], 1)
+          data = @ssl.send(:sysread_nonblock, length)
+        end
+
+        yield(data)
       end
 
       def issue(data)
