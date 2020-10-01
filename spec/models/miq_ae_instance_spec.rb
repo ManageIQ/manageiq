@@ -1,4 +1,13 @@
 RSpec.describe MiqAeInstance do
+
+  it "accesses database once when unchanged model is saved" do
+    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1')
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'n1', :parent => d1)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+    expect { i1.valid? }.to make_database_queries(:count => 1)
+  end
+
   context "legacy tests" do
     before do
       @user = FactoryBot.create(:user_with_group)
