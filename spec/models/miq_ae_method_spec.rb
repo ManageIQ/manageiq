@@ -47,7 +47,7 @@ RSpec.describe MiqAeMethod do
                            :scope    => "instance",
                            :language => "ruby",
                            :location => "inline")
-    expect { f1.valid? }.to make_database_queries(:count => 1)
+    expect { f1.valid? }.not_to make_database_queries
   end
 
   context "#copy" do
