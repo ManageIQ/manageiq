@@ -87,13 +87,13 @@
   :product_documentation_direct_link: true
   :product_support_website: https://www.manageiq.org
   :product_support_website_text: ManageIQ.org
-  :ansible_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#adding-an-ansible-tower-provider
-  :cloud_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#cloud_providers
-  :configuration_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#configuration_management_providers
-  :container_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#containers-providers
-  :infra_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#infrastructure_providers
-  :network_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#network_providers
-  :physical_infra_provider: https://manageiq.org/docs/reference/latest/doc-Managing_Providers/miq/#infrastructure_providers
+  :ansible_provider: https://manageiq.org/docs/reference/latest/managing_providers/#adding-an-ansible-tower-provider
+  :cloud_provider: https://manageiq.org/docs/reference/latest/managing_providers/#cloud-providers
+  :configuration_provider: https://manageiq.org/docs/reference/latest/managing_providers/#configuration-management-providers
+  :container_provider: https://manageiq.org/docs/reference/latest/managing_providers/#containers-providers
+  :infra_provider: https://manageiq.org/docs/reference/latest/managing_providers/#infrastructure-providers
+  :network_provider: https://manageiq.org/docs/reference/latest/managing_providers/#network-managers
+  :physical_infra_provider: https://www.manageiq.org/docs/reference/latest/managing_providers/#discovering-physical-infrastucture-providers
 
 :drift_states:
   :history:
