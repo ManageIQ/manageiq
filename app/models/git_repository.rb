@@ -25,6 +25,20 @@ class GitRepository < ApplicationRecord
     FileUtils.rm_rf(directory_name)
   end
 
+  # Check the connection for the remote.
+  #
+  # Does not clone a repo or use an existing one, and instead initializes a
+  # repo in a temp path to check the remote to see if it can accept
+  # connections.
+  def check_connection
+    Dir.mktmpdir do |tmp_repo_dir|
+      repo_opts    = worktree_params.merge(:new => true, :path => tmp_repo_dir)
+      tmp_worktree = GitWorktree.new(repo_opts)
+
+      tmp_worktree.check_connection(url)
+    end
+  end
+
   def refresh
     update_repo
     transaction do
