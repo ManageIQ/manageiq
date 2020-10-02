@@ -17,6 +17,8 @@ module ManageIQ::Providers
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
 
+    delegate :queue_name_for_ems_refresh, :to => :parent_manager
+
     def self.display_name(number = 1)
       n_('Storage Manager', 'Storage Managers', number)
     end
