@@ -76,6 +76,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(config_info[action.downcase.to_sym][:playbook_id])
   end
 
+  def repository(action)
+    GitRepository.find(config_info[action.downcase.to_sym][:repository_id])
+  end
+
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
     unless config_info
