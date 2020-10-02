@@ -258,6 +258,14 @@ class GitWorktree
     end
   end
 
+  def check_connection(url)
+    with_remote_options do |remote_options|
+      @repo.remotes
+           .create_anonymous(url)
+           .check_connection(:fetch, remote_options)
+    end
+  end
+
   def with_remote_options
     if @ssh_private_key
       @ssh_private_key_file = Tempfile.new
