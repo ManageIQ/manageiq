@@ -5,7 +5,7 @@ RSpec.describe MiqAeClass do
     d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     n1 = FactoryBot.create(:miq_ae_namespace, :parent => d1)
     c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    expect { c1.valid? }.to make_database_queries(:count => 1)
+    expect { c1.valid? }.not_to make_database_queries
   end
 
   describe "name attribute validation" do

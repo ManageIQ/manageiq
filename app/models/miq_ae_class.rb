@@ -12,10 +12,10 @@ class MiqAeClass < ApplicationRecord
   has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
                             :dependent => :destroy, :inverse_of => :ae_class
 
-  validates :name, :namespace_id, :domain_id, :presence => true
-  validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
-  validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
-                                 :message => N_("may contain only alphanumeric and _ . - characters")
+  validates :namespace_id, :domain_id, :presence => true
+  validates :name, :presence                => true,
+                   :uniqueness_when_changed => {:case_sensitive => false, :scope => :namespace_id},
+                   :format                  => {:with => /\A[\w.-]+\z/i, :message => N_("may contain only alphanumeric and _ . - characters")}
   before_validation :set_relative_path
   after_save :set_children_relative_path
 
