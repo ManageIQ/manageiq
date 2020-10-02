@@ -6,19 +6,13 @@ require "fix_auth/models"
 
 RSpec.describe FixAuth::AuthModel do
   let(:pass)    { "password" }
-  let(:enc_old) { ManageIQ::Password.new.encrypt(pass, "v2", legacy_key) }
+
+  let(:enc_old) { ManageIQ::Password.encrypt(pass, legacy_key) }
   let(:enc_new) { ManageIQ::Password.encrypt(pass) }
   let(:enc_bad) { "v2:{5555555555555555555555==}" }
 
   let(:legacy_key) { ManageIQ::Password::Key.new }
-
-  before do
-    ManageIQ::Password.keys["alt"] = legacy_key
-  end
-
-  after do
-    ManageIQ::Password.clear_keys
-  end
+  let(:options)    { {:legacy_key => legacy_key} }
 
   context "#authentications" do
     subject { FixAuth::FixAuthentication }
@@ -66,26 +60,26 @@ RSpec.describe FixAuth::AuthModel do
 
     context "#recrypt" do
       it "should not upgrade blank column" do
-        subject.fix_passwords(blank)
+        subject.fix_passwords(blank, options)
         expect(blank).not_to be_password_changed
       end
 
       it "should upgrade old columns" do
-        subject.fix_passwords(old)
+        subject.fix_passwords(old, options)
         expect(old).to be_password_changed
       end
 
       it "should not encrypt plaintext columns" do
-        subject.fix_passwords(plain)
+        subject.fix_passwords(plain, options)
         expect(plain).to_not be_password_changed
       end
 
       it "should raise exception for bad encryption" do
-        expect { subject.fix_passwords(bad) }.to raise_error(ManageIQ::Password::PasswordError)
+        expect { subject.fix_passwords(bad, options) }.to raise_error(ManageIQ::Password::PasswordError)
       end
 
       it "should replace for bad encryption" do
-        subject.fix_passwords(bad, :invalid => "other")
+        subject.fix_passwords(bad, options.merge(:invalid => "other"))
         expect(bad.password).to be_encrypted("other")
       end
 
@@ -98,7 +92,7 @@ RSpec.describe FixAuth::AuthModel do
         let(:legacy_key) { ManageIQ::Password::Key.new(nil, "XamduEwrkgMSeLjl+LQeutAWsLgKi3tR1mdEtclDPyM=") }
 
         it "should upgrade the column" do
-          subject.fix_passwords(old_new)
+          subject.fix_passwords(old_new, options)
           expect(old_new.password).to be_encrypted(pass)
           expect(old_new.auth_key).to be_encrypted(pass)
         end
@@ -107,7 +101,7 @@ RSpec.describe FixAuth::AuthModel do
 
     context "#hardcode" do
       it "should upgrade old columns" do
-        subject.fix_passwords(old, :hardcode => "newpass")
+        subject.fix_passwords(old, options.merge(:hardcode => "newpass"))
         expect(old.password).to be_encrypted("newpass")
         expect(old.auth_key).to be_blank
       end
@@ -121,22 +115,22 @@ RSpec.describe FixAuth::AuthModel do
     let(:bad)   { subject.create(:session_secret_token => enc_bad) }
 
     it "uses random numbers for hardcode" do
-      subject.fix_passwords(old, :hardcode => "newpass")
+      subject.fix_passwords(old, options.merge(:hardcode => "newpass"))
       expect(old.session_secret_token).to be_encrypted
       expect(ManageIQ::Password.decrypt(old.session_secret_token)).to_not eq "newpass"
       expect(old.session_secret_token).not_to eq(enc_old)
     end
 
     it "uses random numbers for invalid" do
-      subject.fix_passwords(bad, :invalid => "newpass")
+      subject.fix_passwords(bad, options.merge(:invalid => "newpass"))
       expect(bad.session_secret_token).to be_encrypted
       expect(ManageIQ::Password.decrypt(bad.session_secret_token)).to_not eq "newpass"
       expect(bad.session_secret_token).not_to eq(enc_old)
     end
 
     it "upgrades" do
-      expect(subject.fix_passwords(old).session_secret_token).to   eq(enc_new)
-      expect(subject.fix_passwords(newer).session_secret_token).to eq(enc_new)
+      expect(subject.fix_passwords(old, options).session_secret_token).to   eq(enc_new)
+      expect(subject.fix_passwords(newer, options).session_secret_token).to eq(enc_new)
     end
   end
 
@@ -149,7 +143,7 @@ RSpec.describe FixAuth::AuthModel do
 
     it "should update with complex contenders" do
       old # make sure record exists
-      subject.run(:silent => true)
+      subject.run(options.merge(:silent => true))
       expect(old.reload.value).to   eq(enc_new)
       expect(newer.reload.value).to eq(enc_new)
     end
@@ -162,18 +156,18 @@ RSpec.describe FixAuth::AuthModel do
     let(:bad)   { subject.create(:key => "/bad/password", :value => enc_bad) }
 
     it "with hardcode" do
-      subject.fix_passwords(old, :hardcode => pass)
+      subject.fix_passwords(old, options.merge(:hardcode => pass))
       expect(old.value).to eq(enc_new)
     end
 
     it "with invalid" do
-      subject.fix_passwords(bad, :invalid => pass)
+      subject.fix_passwords(bad, options.merge(:invalid => pass))
       expect(bad.value).to eq(enc_new)
     end
 
     it "upgrades" do
-      expect(subject.fix_passwords(old).value).to   eq(enc_new)
-      expect(subject.fix_passwords(newer).value).to eq(enc_new)
+      expect(subject.fix_passwords(old, options).value).to   eq(enc_new)
+      expect(subject.fix_passwords(newer, options).value).to eq(enc_new)
     end
   end
 end
