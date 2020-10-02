@@ -56,4 +56,8 @@ class CloudObjectStoreContainer < ApplicationRecord
   def self.raw_cloud_object_store_container_create(_ext_management_system, _options)
     raise NotImplementedError, _("must be implemented in subclass")
   end
+
+  def self.display_name(number = 1)
+    n_('Cloud Object Store Container', 'Cloud Object Store Containers', number)
+  end
 end
