@@ -4898,6 +4898,10 @@
       :description: Edit Configuration Profiles Tags
       :feature_type: control
       :identifier: configuration_profile_tag
+    - :name: Configuration Profile console
+      :description: Open a Configuration Profile console
+      :feature_type: control
+      :identifier: configuration_profile_console
 - :name: Configured Systems
   :description: Everything under Configured Systems
   :feature_type: node
