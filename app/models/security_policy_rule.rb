@@ -80,4 +80,8 @@ class SecurityPolicyRule < ApplicationRecord
   def raw_delete_security_policy_rule(_options)
     raise NotImplementedError, _("raw_delete_security_policy_rule must be implemented in a subclass")
   end
+
+  def self.display_name(number = 1)
+    n_('Security Policy Rule', 'Security Policy Rules', number)
+  end
 end
