@@ -258,6 +258,11 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   let(:miq_requests) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "finished")] }
   let(:miq_requests_with_in_progress_request) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "active")] }
 
+  it "doesn’t access database when unchanged model is saved" do
+    f1 = described_class.create!(:name => 'f1')
+    expect { f1.valid? }.to make_database_queries(:count => 1)
+  end
+
   describe '#validate_order' do
     let(:service_template) { described_class.create_catalog_item(catalog_item_options) }
 
