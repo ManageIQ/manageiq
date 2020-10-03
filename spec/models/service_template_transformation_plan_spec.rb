@@ -260,7 +260,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
 
   it "doesn’t access database when unchanged model is saved" do
     f1 = described_class.create!(:name => 'f1')
-    expect { f1.valid? }.to make_database_queries(:count => 1)
+    expect { f1.valid? }.not_to make_database_queries
   end
 
   describe '#validate_order' do
