@@ -3,6 +3,11 @@ RSpec.describe ServiceTemplateCatalog do
     Tenant.seed
   end
 
+  it "doesn’t access database when unchanged model is saved" do
+    f1 = described_class.create!(:name => 'f1')
+    expect { f1.valid? }.to make_database_queries(:count => 3)
+  end
+
   describe "#name" do
     it "is unique per tenant" do
       FactoryBot.create(:service_template_catalog, :name => "common", :tenant => root_tenant)
