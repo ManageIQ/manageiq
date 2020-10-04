@@ -2,7 +2,7 @@ RSpec.describe MiqAeNamespace do
   it "doesn’t access database when unchanged model is saved" do
     domain = FactoryBot.create(:miq_ae_domain)
     ns1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent => domain)
-    expect { ns1.valid? }.to make_database_queries(:count => 1)
+    expect { ns1.valid? }.not_to make_database_queries
   end
 
   describe "name attribute validation" do
