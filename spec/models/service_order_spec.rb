@@ -18,6 +18,11 @@ RSpec.describe ServiceOrder do
   end
   let(:tenant) { Tenant.seed }
 
+  it "doesn't accesse database when unchanged model is saved" do
+    service_order
+    expect { service_order.valid? }.not_to make_database_queries
+  end
+
   it "should add an miq_request properly" do
     expect request.service_order == service_order.id
     expect request.process == false
