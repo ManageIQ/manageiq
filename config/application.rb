@@ -140,6 +140,7 @@ module Vmdb
 
       # To evaluate settings or database.yml with encrypted passwords
       require 'manageiq-password'
+      require 'manageiq/password/password_mixin'
       ManageIQ::Password.key_root = Rails.root.join("certs")
 
       require 'vmdb_helper'
