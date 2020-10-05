@@ -11,7 +11,7 @@ class ServiceOrder < ApplicationRecord
   has_many :miq_requests, :dependent => :nullify
 
   validates :state, :inclusion => {:in => [STATE_WISH, STATE_CART, STATE_ORDERED]}
-  validates :state, :uniqueness => { :scope => [:user_id, :tenant_id] }, :if => :cart?
+  validates :state, :uniqueness_when_changed => {:scope => [:user_id, :tenant_id]}, :if => :cart?
   validates :name, :presence => true, :on => :update
 
   before_create :assign_user

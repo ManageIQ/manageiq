@@ -18,9 +18,9 @@ RSpec.describe ServiceOrder do
   end
   let(:tenant) { Tenant.seed }
 
-  it "accesses database when unchanged model is saved" do
+  it "doesn't accesse database when unchanged model is saved" do
     service_order
-    expect { service_order.valid? }.to make_database_queries(:count => 1)
+    expect { service_order.valid? }.not_to make_database_queries
   end
 
   it "should add an miq_request properly" do
