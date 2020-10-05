@@ -6,10 +6,14 @@ class Authentication < ApplicationRecord
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication
-      AuthUseridPassword.new(*args, &block)
-    else
-      super
+      args = [{}] if args.empty?
+      h = args.first if args.first.kind_of?(Hash)
+
+      type = h[inheritance_column.to_sym] || h[inheritance_column.to_s]
+      h[inheritance_column.to_sym] = "AuthUseridPassword" if type.nil?
     end
+
+    super
   end
 
   include PasswordMixin

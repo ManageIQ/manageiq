@@ -444,12 +444,7 @@ module AuthenticationMixin
 
   def assign_nested_authentication(attributes)
     klass = authentication_class(attributes)
-    record = authentications.find_by(:authtype => attributes['authtype'])
-    if record.nil?
-      record = klass.new(:resource => self)
-      authentications << record
-    end
-
+    record = authentications.where(:authtype => attributes['authtype']).first_or_initialize(:type => klass.to_s)
     record.assign_attributes(attributes.merge(:type => klass.to_s, :name => "#{self.class.name} #{name}"))
     record # `assign_attributes` always returns `nil`
   end
