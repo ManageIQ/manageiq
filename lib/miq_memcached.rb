@@ -10,6 +10,13 @@ module MiqMemcached
     end
   end
 
+  # @param options options passed to the memcached client
+  # e.g.: :namespace => namespace
+  def self.client(options)
+    require 'dalli'
+    Dalli::Client.new(MiqMemcached.server_address, options)
+  end
+
   class Error < RuntimeError; end
   class ControlError < Error; end
 

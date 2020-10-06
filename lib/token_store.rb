@@ -1,17 +1,23 @@
 class TokenStore
   @token_caches = {} # Hash of Memory/Dalli Store Caches, Keyed by namespace
 
+  # only used by TokenManager.token_store
+  # @return a token store for users
   def self.acquire(namespace, token_ttl)
     @token_caches[namespace] ||= begin
+      options = cache_store_options(namespace, token_ttl)
       case ::Settings.server.session_store
       when "sql"
-        SqlStore.new(cache_store_options(namespace, token_ttl))
+        SqlStore.new(options)
       when "memory"
         require 'active_support/cache/memory_store'
-        ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace, token_ttl))
+        ActiveSupport::Cache::MemoryStore.new(options)
       when "cache"
         require 'active_support/cache/dalli_store'
-        ActiveSupport::Cache::DalliStore.new(MiqMemcached.server_address, cache_store_options(namespace, token_ttl))
+        ActiveSupport::Cache::DalliStore.new(MiqMemcached.server_address, options)
+      when "redis"
+        require "redis-store"
+        ActiveSupport::Cache::RedisStore.new(redis_url, options)
       else
         raise "unsupported session store type: #{::Settings.server.session_store}"
       end
@@ -26,4 +32,13 @@ class TokenStore
     }
   end
   private_class_method :cache_store_options
+
+  def self.redis_url
+    if ENV["REDIS_URL"]
+      ENV["REDIS_URL"]
+    else
+      # redis://:secrets@example.com:1234/9?foo=bar&baz=qux'
+      ::Settings.session.redis_url
+    end
+  end
 end
