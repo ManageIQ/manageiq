@@ -731,7 +731,7 @@ GEM
       manageiq-password (~> 0.3)
       pg
       pg-dsn_parser (~> 0.1)
-    manageiq-smartstate (0.5.9)
+    manageiq-smartstate (0.5.10)
       azure-armrest (~> 0.9.6)
       binary_struct (~> 2.1)
       iniparse
@@ -1112,7 +1112,7 @@ DEPENDENCIES
   manageiq-providers-scvmm!
   manageiq-providers-vmware!
   manageiq-schema!
-  manageiq-smartstate (~> 0.5.3)
+  manageiq-smartstate (~> 0.5.10)
   manageiq-ui-classic!
   manageiq-v2v!
   memoist (~> 0.15.0)
