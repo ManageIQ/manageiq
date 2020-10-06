@@ -111,6 +111,13 @@ FactoryBot.define do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
+  factory :ems_autosde,
+          :aliases => ["manageiq/providers/storage_manager/autosde_manager"],
+          :class   => "ManageIQ::Providers::Autosde::StorageManager",
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
+
   factory :ems_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
           :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
