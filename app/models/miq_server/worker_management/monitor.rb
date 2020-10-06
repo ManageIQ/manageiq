@@ -166,8 +166,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def key_store
-    require 'dalli'
-    @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
+    @key_store ||= MiqMemcached.client(:namespace => "server_monitor")
   end
 
   def notify_workers_of_config_change(last_sync)
