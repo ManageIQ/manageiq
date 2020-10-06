@@ -48,10 +48,9 @@ class MiqWorker
       return {} if !Settings.server.worker_monitor.enforce_resource_constraints || (mem_threshold.nil? && cpu_threshold.nil?)
 
       {:limits => {}}.tap do |h|
-        h[:limits][:memory] = "#{mem_threshold / 1.megabyte}Mi" if mem_threshold
+        h[:limits][:memory] = format_memory_threshold(mem_threshold) if mem_threshold
         if cpu_threshold
-          millicores = ((cpu_threshold / 100.0) * 1000).to_i
-          h[:limits][:cpu] = "#{millicores}m"
+          h[:limits][:cpu] = format_cpu_threshold(cpu_threshold)
         end
       end
     end
@@ -78,6 +77,16 @@ class MiqWorker
         deployment_name << "-#{Array(ems_id).map { |id| ApplicationRecord.split_id(id).last }.join("-")}" if respond_to?(:ems_id)
         "#{deployment_prefix}#{deployment_name.underscore.dasherize.tr("/", "-")}"
       end
+    end
+
+    private
+
+    def format_memory_threshold(value)
+      "#{value / 1.megabyte}Mi"
+    end
+
+    def format_cpu_threshold(value)
+      "#{((value / 100.0) * 1000).to_i}m"
     end
   end
 end
