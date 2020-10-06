@@ -42,16 +42,19 @@ class MiqWorker
     end
 
     def resource_constraints
-      mem_threshold = self.class.worker_settings[:memory_threshold]
-      cpu_threshold = self.class.worker_settings[:cpu_threshold_percent]
+      return {} unless Settings.server.worker_monitor.enforce_resource_constraints
 
-      return {} if !Settings.server.worker_monitor.enforce_resource_constraints || (mem_threshold.nil? && cpu_threshold.nil?)
+      mem_limit = self.class.worker_settings[:memory_threshold]
+      cpu_limit = self.class.worker_settings[:cpu_threshold_percent]
+      mem_request   = self.class.worker_settings[:memory_request]
+      cpu_request   = self.class.worker_settings[:cpu_request_percent]
 
-      {:limits => {}}.tap do |h|
-        h[:limits][:memory] = format_memory_threshold(mem_threshold) if mem_threshold
-        if cpu_threshold
-          h[:limits][:cpu] = format_cpu_threshold(cpu_threshold)
-        end
+      {}.tap do |h|
+        h.store_path(:limits, :memory, format_memory_threshold(mem_limit)) if mem_limit
+        h.store_path(:limits, :cpu, format_cpu_threshold(cpu_limit)) if cpu_limit
+
+        h.store_path(:defaultRequest, :memory, format_memory_threshold(mem_request)) if mem_request
+        h.store_path(:defaultRequest, :cpu, format_cpu_threshold(cpu_request)) if cpu_request
       end
     end
 
