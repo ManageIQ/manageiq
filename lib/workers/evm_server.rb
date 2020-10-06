@@ -101,7 +101,6 @@ class EvmServer
 
     Vmdb::Appliance.log_config_on_startup
 
-    @current_server.ntp_reload
     @current_server.set_database_application_name
 
     EvmDatabase.seed_rest

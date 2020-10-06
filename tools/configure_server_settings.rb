@@ -11,7 +11,6 @@ opts = Optimist.options(ARGV) do
          "Example (Boolean): #{__FILE__} -s 1 -p ui/mark_translated_strings -v true -t boolean\n" \
          "Example (Symbol):  #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/poll_method -v escalate -t symbol\n" \
          "Example (Float):   #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float" \
-         "Example (Array):   #{__FILE__} -s 1 -p ntp/server -v 0.pool.ntp.org,1.pool.ntp.org -t array"
 
   opt :dry_run,         "Dry Run",                                  :short => "d"
   opt :serverid,        "Server Id",                                :short => "s", :type => :integer, :required => false

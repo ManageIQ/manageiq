@@ -48436,11 +48436,6 @@ msgstr ""
 "* Alguns gráficos podem não produzir os resultados desejados com um único "
 "campo de classificação"
 
-#: ../app/views/ops/_zone_form.html.haml:66
-msgid "* Specified NTP settings apply to this zone only and are not global."
-msgstr ""
-"* As configurações de NTP se aplicam somente a esta zona e não são globais."
-
 #: ../app/views/report/_form_styling.html.haml:104
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr ""
@@ -63319,12 +63314,6 @@ msgstr "Meus serviços"
 msgid "NFS Server"
 msgstr "Servidor NFS"
 
-#: ../app/views/ops/_zone_form.html.haml:43
-#: ../app/views/ops/_settings_server_tab.html.haml:123
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml:25
-msgid "NTP Servers"
-msgstr "Servidores NTP"
-
 #: ../app/views/catalog/_sandt_tree_show.html.haml:23
 #: ../app/views/catalog/_form_basic_info.html.haml:10
 msgid "Name / Description"
@@ -72867,12 +72856,6 @@ msgstr "Especificar hosts"
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:12
 msgid "Specific Tags"
 msgstr "Tags específicas"
-
-#: ../app/views/ops/_settings_server_tab.html.haml:147
-msgid "Specified NTP settings applied here will override Zone NTP settings."
-msgstr ""
-"As configurações de NTP especificadas e aplicadas aqui substituirão as "
-"configurações da zona de NTP."
 
 #: src/report-editor/consolidation-table.jsx:82
 msgid "Specify Calculations for Summary Rows"

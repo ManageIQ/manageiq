@@ -47605,10 +47605,6 @@ msgstr "* 1 つ以上の連続するグループを選択して上下に移動�
 msgid "* Some charts my not produce desired results with a single sort field"
 msgstr "* 一部のチャートの場合、単一ソートフィールドで必要な結果が生成されない可能性があります"
 
-#: ../app/views/ops/_zone_form.html.haml:66
-msgid "* Specified NTP settings apply to this zone only and are not global."
-msgstr "* 指定された NTP 設定はこのゾーンにのみ適用されるものでグローバル設定ではありません。"
-
 #: ../app/views/report/_form_styling.html.haml:104
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
 msgstr "* スタイル \"If\" 条件の評価は、1 列ごとに上から下に実行されます。"
@@ -62122,12 +62118,6 @@ msgstr "マイサービス"
 msgid "NFS Server"
 msgstr "NFS サーバー"
 
-#: ../app/views/ops/_zone_form.html.haml:43
-#: ../app/views/ops/_settings_server_tab.html.haml:123
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml:25
-msgid "NTP Servers"
-msgstr "NTP サーバー"
-
 #: ../app/views/catalog/_sandt_tree_show.html.haml:23
 #: ../app/views/catalog/_form_basic_info.html.haml:10
 msgid "Name / Description"
@@ -71301,10 +71291,6 @@ msgstr "特定のホスト"
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:12
 msgid "Specific Tags"
 msgstr "特定のタグ"
-
-#: ../app/views/ops/_settings_server_tab.html.haml:147
-msgid "Specified NTP settings applied here will override Zone NTP settings."
-msgstr "ここで指定される NTP 設定はゾーン NTP 設定をオーバーライドします。"
 
 #: src/report-editor/consolidation-table.jsx:82
 msgid "Specify Calculations for Summary Rows"
