@@ -46,6 +46,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "inventory_refresh",              "~>0.2.0",       :require => false
 gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>2.0", ">=2.0.1", :require => false
+gem "listen",                         "~>3.2",         :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
 gem "manageiq-api-client",            "~>0.3.4",       :require => false
 gem "manageiq-loggers",               "~>0.5.0",       :require => false
@@ -68,7 +69,6 @@ gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.2.4", ">=5.2.4.4"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=12.3.3",      :require => false
-gem "rb-inotify",                     "~>0.10.0",      :require => false
 gem "rest-client",                    "~>2.1.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false

@@ -363,28 +363,27 @@ module Ansible
       end
 
       def wait_for(path)
-        require "rb-inotify"
+        require "listen"
+        require "concurrent"
+
         dir_name  = File.dirname(path)
         file_name = File.basename(path)
 
         path_created = Concurrent::Event.new
 
-        notifier = INotify::Notifier.new
-        notifier.watch(dir_name, :moved_to, :create) do |event|
-          # Once the file we are looking for is created set the concurrent event
-          path_created.set if event.name == file_name
+        listener = Listen.to(dir_name, :only => %r{\A#{file_name}\z}) do |modified, added, _removed|
+          path_created.set if added.include?(path) || modified.include?(path)
         end
 
-        thread = Thread.new { notifier.run }
+        thread = Thread.new { listener.start }
 
-        res = yield
-
-        # Wait for the target file to exist
-        path_created.wait
-
-        # Shutdown the inotify loop and join the thread
-        notifier.close
-        thread.join
+        begin
+          res = yield
+          path_created.wait
+        ensure
+          listener.stop
+          thread.join
+        end
 
         res
       end
