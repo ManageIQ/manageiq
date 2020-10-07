@@ -217,6 +217,7 @@ module Ansible
         begin
           fetch_galaxy_roles(playbook_or_role_args)
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+          wait_on(File.join(base_dir, "artifacts"))
           res = response(base_dir, ansible_runner_method, result)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
@@ -376,6 +377,13 @@ module Ansible
 
       def determine_existing_python_paths_for(*paths)
         paths.select { |path| File.exist?(path) }
+      end
+
+      def wait_on(dir)
+        100.times do
+          Dir.exist?(dir)
+          sleep(0.1)
+        end
       end
     end
   end
