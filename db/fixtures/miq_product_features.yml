@@ -1884,11 +1884,15 @@
       - :name: Edit Condition Assignment
         :description: Edit Policy's Condition assignments
         :feature_type: admin
-        :identifier: miq_policy_edit_conditions
+        :identifier: miq_policy_conditions_assignment
       - :name: Edit Event Assignment
         :description: Edit Policy's Event assignments
         :feature_type: admin
-        :identifier: miq_policy_edit_events
+        :identifier: miq_policy_events_assignment
+      - :name: Edit Actions for Policy Event
+        :description: Edit Actions for Policy Event
+        :feature_type: admin
+        :identifier: miq_policy_event_edit
       - :name: Delete
         :description: Delete a Policy
         :feature_type: admin
@@ -1933,16 +1937,6 @@
     :protected: true
     :feature_type: node
     :identifier: miq_event
-    :children:
-    - :name: Modify
-      :description: Modify Events
-      :feature_type: admin
-      :identifier: miq_event_admin
-      :children:
-      - :name: Edit
-        :description: Edit Event
-        :feature_type: admin
-        :identifier: miq_event_edit
   - :name: Actions
     :description: Everything under Policy Actions
     :protected: true
