@@ -216,7 +216,11 @@ module Ansible
 
         begin
           fetch_galaxy_roles(playbook_or_role_args)
-          result = AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+
+          result = wait_for(pid_file(base_dir)) do
+            AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+          end
+
           res = response(base_dir, ansible_runner_method, result)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
@@ -352,6 +356,37 @@ module Ansible
 
       def env_dir(base_dir)
         FileUtils.mkdir_p(File.join(base_dir, "env")).first
+      end
+
+      def pid_file(base_dir)
+        File.join(base_dir, "pid")
+      end
+
+      def wait_for(path)
+        require "rb-inotify"
+        dir_name  = File.dirname(path)
+        file_name = File.basename(path)
+
+        path_created = Concurrent::Event.new
+
+        notifier = INotify::Notifier.new
+        notifier.watch(dir_name, :moved_to, :create) do |event|
+          # Once the file we are looking for is created set the concurrent event
+          path_created.set if event.name == file_name
+        end
+
+        thread = Thread.new { notifier.run }
+
+        res = yield
+
+        # Wait for the target file to exist
+        path_created.wait
+
+        # Shutdown the inotify loop and join the thread
+        notifier.close
+        thread.join
+
+        res
       end
 
       PYTHON2_MODULE_PATHS = %w[
