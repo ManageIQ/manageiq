@@ -28,3 +28,7 @@ yaml_strings_to_extract:
   - title
   - name
   - headers
+  product/charts/miq_reports/*.yaml:
+  - title
+  - name
+  - headers
