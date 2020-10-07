@@ -362,16 +362,13 @@ module Ansible
         File.join(base_dir, "pid")
       end
 
-      def wait_for(path)
+      def wait_for(path, timeout: 1.minute)
         require "listen"
         require "concurrent"
 
-        dir_name  = File.dirname(path)
-        file_name = File.basename(path)
-
         path_created = Concurrent::Event.new
 
-        listener = Listen.to(dir_name, :only => %r{\A#{file_name}\z}) do |modified, added, _removed|
+        listener = Listen.to(File.dirname(path), :only => %r{\A#{File.basename(path)}\z}) do |modified, added, _removed|
           path_created.set if added.include?(path) || modified.include?(path)
         end
 
@@ -379,7 +376,7 @@ module Ansible
 
         begin
           res = yield
-          path_created.wait
+          path_created.wait(timeout)
         ensure
           listener.stop
           thread.join
