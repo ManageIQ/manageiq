@@ -127,7 +127,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
-  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
+  validates :name,     :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validates :zone,     :presence => true
 
