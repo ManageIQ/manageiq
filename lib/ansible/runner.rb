@@ -362,7 +362,7 @@ module Ansible
         File.join(base_dir, "pid")
       end
 
-      def wait_for(path, timeout: 1.minute)
+      def wait_for(path, timeout: 30.seconds)
         require "listen"
         require "concurrent"
 
@@ -376,7 +376,7 @@ module Ansible
 
         begin
           res = yield
-          path_created.wait(timeout)
+          raise "Timed out waiting for #{path}" unless path_created.wait(timeout)
         ensure
           listener.stop
           thread.join
