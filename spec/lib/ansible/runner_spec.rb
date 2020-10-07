@@ -17,6 +17,7 @@ RSpec.describe Ansible::Runner do
   describe ".run" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
+      allow(described_class).to receive(:wait_for)
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(playbook).and_return(true)
     end
@@ -171,6 +172,7 @@ RSpec.describe Ansible::Runner do
   describe ".run_async" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
+      allow(described_class).to receive(:wait_for)
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(playbook).and_return(true)
     end
@@ -219,6 +221,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
+      allow(described_class).to receive(:wait_for)
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(role_path).and_return(true)
     end
@@ -275,6 +278,7 @@ RSpec.describe Ansible::Runner do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
     before do
+      allow(described_class).to receive(:wait_for)
       allow(File).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).with(role_path).and_return(true)
     end
