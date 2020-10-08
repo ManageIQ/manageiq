@@ -113,8 +113,12 @@ class MiqWorker::Runner
     do_work_loop
   end
 
+  def self.log_prefix
+    @log_prefix ||= "MIQ(#{name})"
+  end
+
   def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name})"
+    self.class.log_prefix
   end
 
   #
@@ -159,13 +163,13 @@ class MiqWorker::Runner
   # Worker exit methods
   #
 
-  def safe_log(message = nil, exit_code = 0)
+  def self.safe_log(worker, message = nil, exit_code = 0)
     meth = (exit_code == 0) ? :info : :error
 
     prefix = "#{log_prefix} "      rescue ""
     pid    = "PID [#{Process.pid}] "    rescue ""
-    guid   = @worker.nil? ? '' : "GUID [#{@worker.guid}] "  rescue ""
-    id     = @worker.nil? ? '' : "ID [#{@worker.id}] "      rescue ""
+    guid   = worker.nil? ? '' : "GUID [#{worker.guid}] "  rescue ""
+    id     = worker.nil? ? '' : "ID [#{worker.id}] "      rescue ""
     logmsg = "#{prefix}#{id}#{pid}#{guid}#{message}"
 
     begin
@@ -173,6 +177,10 @@ class MiqWorker::Runner
     rescue
       puts "#{meth.to_s.upcase}: #{logmsg}" rescue nil
     end
+  end
+
+  def safe_log(message = nil, exit_code = 0)
+    self.class.safe_log(@worker, message, exit_code)
   end
 
   def update_worker_record_at_exit(exit_code)
@@ -260,8 +268,8 @@ class MiqWorker::Runner
         _log.warn(msg)
         recover_from_temporary_failure
       rescue SystemExit
-        do_exit("SystemExit signal received.  ")
-      rescue => err
+        do_exit("SystemExit signal received.")
+      rescue Exception => err
         do_exit("An error has occurred during work processing: #{err}\n#{err.backtrace.join("\n")}", 1)
       else
         @backoff = nil
