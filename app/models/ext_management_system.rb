@@ -129,7 +129,7 @@ class ExtManagementSystem < ApplicationRecord
 
   validates :name,     :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
-  validates :zone,     :presence => true
+  validates :zone,     :presence => true, :unless => :zone_id
 
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
   validate :validate_ems_enabled_when_zone_changed?, :validate_zone_not_maintenance_when_ems_enabled?
@@ -192,7 +192,11 @@ class ExtManagementSystem < ApplicationRecord
 
   # validation - Zone cannot be maintenance_zone when enabled == true
   def validate_zone_not_maintenance_when_ems_enabled?
-    if enabled? && zone.present? && zone == Zone.maintenance_zone
+#    byebug if (zone_id == Zone.maintenance_zone&.id) != (zone == Zone.maintenance_zone)
+    if enabled? &&
+      (zone_id || zone) &&
+      zone == Zone.maintenance_zone
+#      (zone_id == Zone.maintenance_zone&.id || zone == Zone.maintenance_zone)
       errors.add(:zone, N_("cannot be the maintenance zone when provider is active"))
     end
   end
