@@ -19,6 +19,7 @@ module Vmdb::Loggers
         msg = msg.sub(/Bearer(.*?)\"/, 'Bearer [FILTERED] "')
         msg = msg.sub(/SharedKey(.*?)\"/, 'SharedKey [FILTERED] "')
         msg = msg.sub(/client_secret=(.*?)&/, "client_secret=[FILTERED]&")
+        msg = msg.sub(/apikey=(.*?)\"/, 'apikey=[FILTERED]"')
         super(severity, datetime, progname, msg)
       end
     end
