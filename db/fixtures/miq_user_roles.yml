@@ -91,6 +91,7 @@
   - vm_infra_explorer
   - sui_services
   - sui_notifications
+  - revoke_user_sessions
 
 - :name: EvmRole-approver
   :read_only: true
