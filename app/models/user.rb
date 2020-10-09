@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
   has_many   :authentications, :foreign_key => :evm_owner_id, :dependent => :nullify, :inverse_of => :evm_owner
+  has_many   :sessions, :dependent => :destroy
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
@@ -206,7 +207,42 @@ class User < ApplicationRecord
   end
 
   def self.authenticate(username, password, request = nil, options = {})
-    authenticator(username).authenticate(username, password, request, options)
+    user = authenticator(username).authenticate(username, password, request, options)
+    user.try(:link_to_session, request)
+
+    user
+  end
+
+  def link_to_session(request)
+    return unless request
+    return unless (session_id = request.session_options[:id])
+
+    sessions << Session.find_or_create_by(:session_id => session_id)
+  end
+
+  def broadcast_revoke_sessions
+    if Settings.server.session_store == "cache"
+      MiqQueue.broadcast(
+        :class_name  => self.class.name,
+        :instance_id => id,
+        :method_name => :revoke_sessions
+      )
+    else
+      # If using SQL or Memory, the sessions don't need to (or can't) be
+      # revoked via a broadcast since the session/token stores are not server
+      # specific, so execute it inline.
+      revoke_sessions
+    end
+  end
+
+  def revoke_sessions
+    current_sessions = Session.where(:user_id => id)
+    ManageIQ::Session.revoke(current_sessions.map(&:session_id))
+    current_sessions.destroy_all
+
+    TokenStore.token_caches.each do |_, token_store|
+      token_store.delete_all_for_user(userid)
+    end
   end
 
   def self.authenticate_with_http_basic(username, password, request = nil, options = {})
