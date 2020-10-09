@@ -19,6 +19,21 @@ RSpec.describe Classification do
     end
   end
 
+  it "validates description uniqueness" do
+    c1 = described_class.create!(:name => "parent", :description => "this is getting annoying")
+    described_class.create!(:name => "child", :description => "cat", :parent => c1)
+    c2 = described_class.new(:name => "child", :description => "cat", :parent => c1)
+
+    expect(c2.valid?).to be(false)
+  end
+
+  it "accesses database once when unchanged model is saved" do
+    c1 = described_class.create!(:name => "parent", :description => "this is getting annoying")
+    c2 = described_class.create!(:name => "child", :description => "cat", :parent => c1)
+
+    expect { expect(c2.valid?).to be(true) }.to make_database_queries(:count => 1)
+  end
+
   context "enforce_policy" do
     let(:tag) { FactoryBot.build(:classification_tag, :parent => FactoryBot.build(:classification)) }
 

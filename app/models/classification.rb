@@ -9,12 +9,7 @@ class Classification < ApplicationRecord
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
 
-  validates :description, :presence => true, :length => {:maximum => 255}
-  validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
-    cond = c.class.in_region(region_id).where(:parent_id => c.parent_id, :description => c.description)
-    cond = cond.where.not(:id => c.id) unless c.new_record?
-    cond.exists?
-  }
+  validates :description, :presence => true, :length => {:maximum => 255}, :unique_within_region => {:scope => :parent_id}
 
   NAME_MAX_LENGTH = 50
   validates :name, :presence => true, :length => {:maximum => NAME_MAX_LENGTH}
