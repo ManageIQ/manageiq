@@ -100,9 +100,4 @@ class ConfiguredSystem < ApplicationRecord
   def image_name
     "configured_system"
   end
-
-  def source_url
-    # to be overridden by individual provider
-    nil
-  end
 end

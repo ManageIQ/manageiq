@@ -78,9 +78,4 @@ class ConfigurationProfile < ApplicationRecord
   def image_name
     "configuration_profile"
   end
-
-  def source_url
-    # to be overridden by individual provider
-    nil
-  end
 end
