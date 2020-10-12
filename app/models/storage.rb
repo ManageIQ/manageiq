@@ -30,8 +30,6 @@ class Storage < ApplicationRecord
   scope :available, -> { where(:maintenance => [nil, false]) }
 
   validates_presence_of     :name
-  # We can't uncomment this until the SmartProxy starts sending location when registering VMs
-  # validates_uniqueness_of   :location
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
