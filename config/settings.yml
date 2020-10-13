@@ -1090,10 +1090,12 @@
   :worker_base:
     :defaults:
       :count: 1
+      :cpu_request_percent: 25
       :cpu_threshold_percent: 50
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
+      :memory_request: 250.megabytes
       :memory_threshold: 400.megabytes
       :nice_delta: 10
       :parent_time_threshold: 3.minutes
