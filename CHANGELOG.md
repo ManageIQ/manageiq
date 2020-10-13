@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 147 ending 2020-10-12
+
+### Added
+
+* Prefer ManageIQ::Password over legacy MiqPassword constant [(#20631)](https://github.com/ManageIQ/manageiq/pull/20631)
+* Remove NTP from core [(#20623)](https://github.com/ManageIQ/manageiq/pull/20623)
+
+### Fixed
+
+* Use inotify to wait for ansible-runner pid file creation [(#20666)](https://github.com/ManageIQ/manageiq/pull/20666)
+* Filtered the auth key in api.log [(#20632)](https://github.com/ManageIQ/manageiq/pull/20632)
+* Delegate queue\_name for refresh to parent manager instead of queue_name arrays [(#20345)](https://github.com/ManageIQ/manageiq/pull/20345)
+* Update the Ansible::Runner wait_for timeout [(#20674)](https://github.com/ManageIQ/manageiq/pull/20674)
+
 # Unreleased as of Sprint 146 ending 2020-09-28
 
 ### Added
