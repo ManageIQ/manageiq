@@ -153,9 +153,8 @@ class Tag < ApplicationRecord
 
   # @return [ActiveRecord::Relation] Scope for tags controlled by ProviderTagMapping.
   def self.controlled_by_mapping
-    is_entry.where(:id => ProviderTagMapping.includes(:tag => :classification).map do |m|
-      m.tag.classification.entries.map(&:tag_id)
-    end.flatten.uniq)
+    cat_ids = ProviderTagMapping.eager_load(:tag => :classification).map {|m| m.tag.classification.id}.uniq
+    where(:id => Classification.where(:parent_id => cat_ids).includes(:tag).pluck(:tag_id))
   end
 
   private

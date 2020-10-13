@@ -584,7 +584,7 @@ class Classification < ApplicationRecord
   end
 
   def validate_tag_mapping
-    if tag && ProviderTagMapping.exists?(:tag_id => tag.id)
+    if tag&.provider_tag_mappings.any?
       errors.add("", _("A Tag Mapping exists for this category and must be removed before deleting"))
       throw :abort
     end
