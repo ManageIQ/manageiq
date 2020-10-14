@@ -3,9 +3,7 @@ language: ruby
 rvm:
 - 2.5.7
 - 2.6.5
-sudo: false
-cache:
-  bundler: true
+cache: bundler
 env:
   global:
   - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
