@@ -4933,6 +4933,10 @@
       :description: Provision Configured Systems
       :feature_type: control
       :identifier: configured_system_provision
+    - :name: Configured System console
+      :description: Open a Configured System console
+      :feature_type: control
+      :identifier: configured_system_console
 
 # Embedded Automation Manager
 - :name: Embedded Automation Manager
