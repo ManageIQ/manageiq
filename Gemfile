@@ -73,6 +73,7 @@ gem "rest-client",                    "~>2.1.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>2.0.0",       :require => false
+gem "rugged",                         "~>1.0",         :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sprockets",                      "~>3.7.2",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
@@ -81,8 +82,7 @@ gem "sys-filesystem",                 "~>1.3.4"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
-gem "rugged",                         "=0.28.2.2", :source => "https://rubygems.manageiq.org", :require => false
-gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
+gem "ruport", "=1.7.0.3", :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
