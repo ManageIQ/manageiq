@@ -18,6 +18,9 @@ RSpec.describe ProviderTagMapping do
 
   let(:ems) { FactoryBot.create(:ext_management_system) }
 
+  let(:ems_amazon)       { FactoryBot.create(:ems_amazon) }
+  let(:amazon_persister) { ManageIQ::Providers::Amazon::Inventory::Persister::CloudManager.new(ems_amazon, ems_amazon) }
+
   def label(key_value_label)
     key_value_label.map do |name, value|
       {:section => 'labels', :source => 'kubernetes',
@@ -32,7 +35,7 @@ RSpec.describe ProviderTagMapping do
   end
 
   def new_mapper
-    ProviderTagMapping.mapper(:case_insensitive_labels => ems.try(:case_insensitive_labels?))
+    ProviderTagMapping.mapper(:case_sensitive_labels => amazon_persister.send(:case_sensitive_labels?))
   end
 
   # All-in-one
@@ -189,11 +192,9 @@ RSpec.describe ProviderTagMapping do
     let!(:single_value_category) { FactoryBot.create(:classification_environment_with_tags) }
     let!(:multi_value_category)  { FactoryBot.create(:classification_department_with_tags) }
 
-    let(:ems_amazon) { FactoryBot.create(:ems_amazon) }
     let!(:vm)        { FactoryBot.create(:vm_amazon, :ems_id => ems_amazon.id, :ems_ref => "some_ems_ref", :uid_ems => "some_ems_ref") }
     let(:mapper)     { new_mapper }
 
-    let(:amazon_persister)    { ManageIQ::Providers::Amazon::Inventory::Persister::CloudManager.new(ems_amazon, ems_amazon) }
     let(:vm_inventory_object) { amazon_persister.vms.find_or_build("some_ems_ref") }
 
     let(:taggings_collections) do
@@ -246,7 +247,7 @@ RSpec.describe ProviderTagMapping do
 
     %w[nAme Name].each do |label_name|
       before do
-        allow(ems).to receive(:case_insensitive_labels?).and_return(true)
+        allow(amazon_persister).to receive(:case_sensitive_labels?).and_return(false)
       end
 
       context "with mapping to single-value, existing category and label name: #{label_name}" do
