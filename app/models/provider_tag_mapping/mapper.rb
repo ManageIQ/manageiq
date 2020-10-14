@@ -13,8 +13,8 @@ class ProviderTagMapping
     attr_reader :parameters
 
     # @param mappings [Array<ProviderTagMapping>] Mapping records to use
-    def initialize(mappings, mapper_parameters)
-      @parameters = mapper_parameters
+    def initialize(mappings, mapper_parameters = {})
+      @parameters = mapper_parameters || {}
 
       # {[name, type, value] => [tag_id, ...]}
       @mappings = mappings.group_by { |m| [case_insensitive_labels? ? m.label_name&.downcase : m.label_name, m.labeled_resource_type, m.label_value].freeze }
@@ -43,7 +43,7 @@ class ProviderTagMapping
     end
 
     def case_insensitive_labels?
-      @parameters&.fetch_path(:case_insensitive_labels)
+      @parameters[:case_insensitive_labels]
     end
 
     def cached_filter_single_value_category_tag_ids(category_tag_ids)
