@@ -19,9 +19,9 @@ module CinderManagerMixin
 
     def ensure_cinder_managers
       ensure_cinder_manager
-      cinder_manager.name            = "#{name} Cinder Manager"
-      cinder_manager.zone_id         = zone_id
-      cinder_manager.provider_region = provider_region
+      cinder_manager.name = "#{name} Cinder Manager"
+      propagate_child_attributes(cinder_manager)
+
       true
     end
   end

@@ -16,9 +16,9 @@ module SwiftManagerMixin
 
     def ensure_swift_managers
       ensure_swift_manager
-      swift_manager.name            = "#{name} Swift Manager"
-      swift_manager.zone_id         = zone_id
-      swift_manager.provider_region = provider_region
+      swift_manager.name = "#{name} Swift Manager"
+      propagate_child_attributes(swift_manager)
+
       true
     end
   end

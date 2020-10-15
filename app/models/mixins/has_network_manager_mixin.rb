@@ -32,10 +32,7 @@ module HasNetworkManagerMixin
     end
 
     def ensure_managers_zone_and_provider_region
-      if network_manager
-        network_manager.zone_id         = zone_id
-        network_manager.provider_region = provider_region
-      end
+      propagate_child_attributes(network_manager) if network_manager
     end
   end
 end

@@ -656,6 +656,16 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def propagate_child_attributes(child)
+    child.zone_id              = zone_id
+    child.zone_before_pause_id = zone_before_pause_id
+    child.enabled              = enabled
+    child.provider_region      = provider_region
+    child.tenant_id            = tenant_id
+
+    child
+  end
+
   def destroy(task_id = nil)
     disable!(:validate => false) if enabled?
 

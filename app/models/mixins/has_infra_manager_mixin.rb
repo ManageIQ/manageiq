@@ -17,13 +17,6 @@ module HasInfraManagerMixin
   private
 
   def ensure_infra_manager
-    if infra_manager.nil?
-      build_infra_manager(:parent_manager  => self,
-                          :name            => "#{name} Virtualization Manager",
-                          :zone_id         => zone_id,
-                          :provider_region => provider_region)
-    end
-
-    infra_manager
+    infra_manager ||= propagate_child_attributes(build_infra_manager(:name => "#{name} Virtualization Manager"))
   end
 end
