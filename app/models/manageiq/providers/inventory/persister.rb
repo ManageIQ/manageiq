@@ -105,8 +105,12 @@ class ManageIQ::Providers::Inventory::Persister
     # can be implemented in a subclass
   end
 
+  def case_sensitive_labels?
+    true
+  end
+
   def initialize_tag_mapper
-    @tag_mapper ||= ProviderTagMapping.mapper
+    @tag_mapper ||= ProviderTagMapping.mapper(:case_sensitive_labels => case_sensitive_labels?)
     collections[:tags_to_resolve] = @tag_mapper.tags_to_resolve_collection
   end
 

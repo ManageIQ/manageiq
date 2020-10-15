@@ -7,7 +7,7 @@ class Classification < ApplicationRecord
   virtual_column :ns, :type => :string
 
   before_save    :save_tag
-  before_destroy :delete_tags_and_entries
+  before_destroy :validate_tag_mapping, :delete_tags_and_entries
 
   validates :description, :presence => true, :length => {:maximum => 255}, :unique_within_region => {:scope => :parent_id}
 
@@ -333,6 +333,10 @@ class Classification < ApplicationRecord
 
   attr_writer :name
 
+  def self.lookup_category_by_description(description, region_id = my_region_number)
+    is_category.in_region(region_id).find_by(:description => description)
+  end
+
   def find_entry_by_name(name, region_id = my_region_number)
     self.class.lookup_by_name(name, region_id, ns, self)
   end
@@ -572,6 +576,13 @@ class Classification < ApplicationRecord
     end
 
     delete_tag_and_taggings
+  end
+
+  def validate_tag_mapping
+    if tag&.provider_tag_mappings&.any?
+      errors.add("", _("A Tag Mapping exists for this category and must be removed before deleting"))
+      throw :abort
+    end
   end
 
   # rubocop:enable Style/NumericPredicate

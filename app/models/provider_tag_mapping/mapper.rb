@@ -10,10 +10,14 @@ class ProviderTagMapping
     #   Doesn't require saving, not really interesting.
     attr_reader :specific_tags_collection
 
+    attr_reader :parameters
+
     # @param mappings [Array<ProviderTagMapping>] Mapping records to use
-    def initialize(mappings)
+    def initialize(mappings, mapper_parameters = {})
+      @parameters = mapper_parameters || {}
+
       # {[name, type, value] => [tag_id, ...]}
-      @mappings = mappings.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
+      @mappings = mappings.group_by { |m| [case_sensitive_labels? ? m.label_name : m.label_name&.downcase, m.labeled_resource_type, m.label_value].freeze }
                           .transform_values { |ms| ms.collect(&:tag_id) }
 
       require "inventory_refresh"
@@ -38,6 +42,25 @@ class ProviderTagMapping
       )
     end
 
+    def case_sensitive_labels?
+      @parameters[:case_sensitive_labels]
+    end
+
+    def cached_filter_single_value_category_tag_ids(category_tag_ids)
+      @single_value_category_tag_ids ||= []
+      @multiple_value_category_tag_ids ||= []
+
+      tag_ids = category_tag_ids - @single_value_category_tag_ids - @multiple_value_category_tag_ids
+
+      if tag_ids.present? # some tag ids are not cached yet
+        single_value_tag_ids = Classification.where(:tag_id => tag_ids, :single_value => true).pluck(:tag_id)
+        @single_value_category_tag_ids.concat(single_value_tag_ids)
+        @multiple_value_category_tag_ids.concat(tag_ids - single_value_tag_ids)
+      end
+
+      @single_value_category_tag_ids & category_tag_ids
+    end
+
     # Compute desired tags, in intermediate form to be resolved later.
     #
     # @param type [String] Matched against `labeled_resource_type` in mappings.
@@ -45,7 +68,26 @@ class ProviderTagMapping
     # @param labels [Array] array of {:name, :value} hashes.
     # @return [Array<InventoryObject>] representing desired tags.
     def map_labels(type, labels)
-      labels.collect_concat { |label| map_label(type, label) }.uniq
+      inventory_objects = labels.collect_concat { |label| map_label(type, label) }.uniq
+
+      inventory_objects_by_category = inventory_objects.group_by { |inventory_object| inventory_object[:category_tag_id] }
+
+      single_value_tag_ids = cached_filter_single_value_category_tag_ids(inventory_objects_by_category.keys)
+
+      inventory_objects_by_category.map do |category_tag_id, grouped_inventory_objects|
+        if single_value_tag_ids.include?(category_tag_id)
+          selected_inventory_object = grouped_inventory_objects.min_by { |x| x.data.fetch(:entry_name) }
+          if grouped_inventory_objects.count > 1
+            $log.warn("Label to Tag Mapper has encountered multiple mappings for the only single value tag category [Classification##{category_tag_id}]")
+            possible_labels = grouped_inventory_objects.map { |x| x.data.fetch(:entry_description) }.join(', ')
+            $log.warn("Only selected label value [#{selected_inventory_object.data.fetch(:entry_description)}] is going to be mapped (possible labels [#{possible_labels}]).")
+          end
+
+          selected_inventory_object
+        else
+          grouped_inventory_objects
+        end
+      end.flatten.compact
     end
 
     # Convert "tag references" to actual Tag objects.  Must have been resolved to known id first.
@@ -61,9 +103,11 @@ class ProviderTagMapping
     private
 
     def map_label(type, label)
+      label_name = case_sensitive_labels? ? label[:name] : label[:name]&.downcase
       # Apply both specific-type and any-type, independently.
-      (map_name_type_value(label[:name], type, label[:value]) +
-       map_name_type_value(label[:name], nil,  label[:value]))
+      (map_name_type_value(label_name, type, label[:value]) +
+       map_name_type_value(label_name, nil, label[:value]) +
+       map_name_type_value(label_name, "_all_entities_", label[:value]))
     end
 
     def map_name_type_value(name, type, value)

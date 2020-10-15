@@ -15,17 +15,27 @@ RSpec.describe ProviderTagMapping do
     cat = FactoryBot.create(:classification, :name => 'kubernetes::user_could_enter_this')
     cat.add_entry(:name => 'hello', :description => 'Hello').tag
   end
-  let(:ems) { FactoryBot.build(:ext_management_system) }
 
-  def labels(kv)
-    kv.map do |name, value|
+  let(:ems) { FactoryBot.create(:ext_management_system) }
+
+  let(:ems_amazon)       { FactoryBot.create(:ems_amazon) }
+  let(:amazon_persister) { ManageIQ::Providers::Amazon::Inventory::Persister::CloudManager.new(ems_amazon, ems_amazon) }
+
+  def label(key_value_label)
+    key_value_label.map do |name, value|
       {:section => 'labels', :source => 'kubernetes',
        :name => name, :value => value}
     end
   end
 
+  def labels(label_or_array)
+    (label_or_array.kind_of?(Hash) ? [label_or_array] : label_or_array).map do |key_value_label|
+      label(key_value_label)
+    end.flatten
+  end
+
   def new_mapper
-    ProviderTagMapping.mapper
+    ProviderTagMapping.mapper(:case_sensitive_labels => amazon_persister.send(:case_sensitive_labels?))
   end
 
   # All-in-one
@@ -96,8 +106,8 @@ RSpec.describe ProviderTagMapping do
     it "handles names that differ only by case" do
       # Kubernetes names are case-sensitive
       # (but the optional domain prefix must be lowercase).
-      FactoryBot.create(:provider_tag_mapping,
-                         :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
+      allow(ems).to receive(:case_insensitive_labels?).and_return(false) # kubernetes
+      FactoryBot.create(:provider_tag_mapping, :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
       tags = map_to_tags(new_mapper, 'ContainerNode', 'name_case' => 'value')
       tags2 = map_to_tags(new_mapper, 'ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
       expect(tags).to be_empty
@@ -178,7 +188,297 @@ RSpec.describe ProviderTagMapping do
     end
   end
 
-  # Interactions between any-type and specific-type rows are somewhat arbitrary.
+  context "with Image" do
+    let!(:single_value_category) { FactoryBot.create(:classification_environment_with_tags) }
+    let!(:multi_value_category)  { FactoryBot.create(:classification_department_with_tags) }
+
+    let!(:vm)        { FactoryBot.create(:vm_amazon, :ems_id => ems_amazon.id, :ems_ref => "some_ems_ref", :uid_ems => "some_ems_ref") }
+    let(:mapper)     { new_mapper }
+
+    let(:vm_inventory_object) { amazon_persister.vms.find_or_build("some_ems_ref") }
+
+    let(:taggings_collections) do
+      vm_collection       = amazon_persister.inventory_collections[9]
+      taggings_collection = amazon_persister.inventory_collections[8]
+      tags_collection     = mapper.tags_to_resolve_collection
+
+      [tags_collection, vm_collection, taggings_collection]
+    end
+
+    let(:externals_labels) { [] }
+
+    def populate_taggings_collections_with(inventory_objects)
+      inventory_objects.each do |inventory_object|
+        amazon_persister.vm_and_template_taggings.build(:taggable => vm_inventory_object, :tag => inventory_object)
+      end
+    end
+
+    subject do
+      tags_inventory_objects = mapper.map_labels("Image", externals_labels)
+      populate_taggings_collections_with(tags_inventory_objects)
+      InventoryRefresh::SaveInventory.save_inventory(ems_amazon, taggings_collections)
+    end
+
+    describe "#cached_filter_single_value_category_tag_ids" do
+      it "uses cache properly for single value categories" do
+        where_params = {:tag_id => [single_value_category.tag_id], :single_value => true}
+        expect(Classification).to receive(:where).with(where_params).exactly(1).times.and_call_original
+
+        mapper = new_mapper
+        tag_ids = mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        expect(tag_ids).to eq([single_value_category.tag_id])
+      end
+
+      it "uses cache properly for multi and single value categories" do
+        input_tag_ids = [single_value_category.tag_id, multi_value_category.tag_id]
+        where_params = {:tag_id => input_tag_ids, :single_value => true}
+        expect(Classification).to receive(:where).with(where_params).exactly(1).times.and_call_original
+
+        mapper = new_mapper
+        tag_ids = mapper.cached_filter_single_value_category_tag_ids(input_tag_ids)
+        mapper.cached_filter_single_value_category_tag_ids([single_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids([multi_value_category.tag_id])
+        mapper.cached_filter_single_value_category_tag_ids(input_tag_ids)
+
+        expect(tag_ids).to eq([single_value_category.tag_id])
+      end
+    end
+
+    %w[nAme Name].each do |label_name|
+      before do
+        allow(amazon_persister).to receive(:case_sensitive_labels?).and_return(false)
+      end
+
+      context "with mapping to single-value, existing category and label name: #{label_name}" do
+        before do
+          FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => single_value_category.tag)
+        end
+
+        let(:externals_labels) do # provider label
+          [{:name => label_name, :value => 'Accounting'}]
+        end
+
+        it "replaces an existing tag on the resource with the value of the external label" do
+          expect(vm.tags).to be_empty
+
+          existing_tag_on_vm = Tag.lookup_by_classification_name('environment/quarantine')
+          vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+          expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+          subject
+
+          expected_tags = [Tag.lookup_by_classification_name('environment/accounting')]
+          expect(vm.reload.tags).to eq(expected_tags)
+        end
+
+        it "adds a tag to the resource with the value of the external label" do
+          expect(vm.tags).to be_empty
+
+          subject
+
+          expected_tags = [Tag.lookup_by_classification_name('environment/accounting')]
+          expect(vm.reload.tags).to eq(expected_tags)
+        end
+
+        it "adds a tag from external label to the resource and pre-existing tag from multi value category" do
+          expect(vm.tags).to be_empty
+
+          existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
+          vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+          expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+          subject
+
+          expected_tags = [Tag.lookup_by_classification_name('environment/accounting'), existing_tag_on_vm]
+          expect(vm.reload.tags).to match_array(expected_tags)
+        end
+
+        context "with multiple mappings" do
+          let!(:single_value_category_2) { FactoryBot.create(:classification_location_with_tags) }
+
+          let(:externals_labels) do # provider label
+            [{:name => label_name, :value => 'Accounting'},
+             {:name => 'Locality', :value => 'Brno'}]
+          end
+
+          before do
+            FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Locality", :tag => single_value_category_2.tag)
+          end
+
+          context "when mappings are targeted to different categories" do
+            it "adds tags to resource" do
+              expect(vm.tags).to be_empty
+
+              subject
+
+              expected_tags = %w[location/brno environment/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+              expect(vm.reload.tags).to match_array(expected_tags)
+            end
+          end
+
+          context "when mappings are targeted to same categories" do
+            let(:externals_labels) do # provider label
+              [{:name => label_name, :value => 'Windows'},
+               {:name => 'Location', :value => 'Production'},
+               {:name => 'Cost Center', :value => '007'}]
+            end
+
+            before do
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Location", :tag => single_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Cost Center", :tag => single_value_category.tag)
+            end
+
+            it "only applies one of the label values" do
+              expect(vm.tags).to be_empty
+
+              subject
+              expect(vm.reload.tags.count).to eq(1)
+
+              # Only first tag is assigned to Vm and this tag is selected according to
+              # alphanumeric order of labels's names
+              expect(vm.reload.tags.first.name).to eq("/managed/environment/007")
+            end
+          end
+        end
+      end
+
+      context "with mapping with multi-value category and with label name #{label_name}" do
+        let!(:multi_value_category_2) { FactoryBot.create(:classification_cost_center_with_tags) }
+
+        let(:externals_labels) do # provider label
+          [{:name => label_name, :value => 'Accounting'}]
+        end
+
+        before do
+          FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+        end
+
+        it "adds a tag to the resource with the value of the external label" do
+          expect(vm.tags).to be_empty
+
+          subject
+
+          expected_tags = [Tag.lookup_by_classification_name('department/accounting')]
+          expect(vm.reload.tags).to eq(expected_tags)
+        end
+
+        it "reassigns to the tag specified in the mapping with same category as a pre-existing tag" do
+          expect(vm.tags).to be_empty
+
+          existing_tag_on_vm = Tag.lookup_by_classification_name('department/hr')
+          vm.tag_add(existing_tag_on_vm.name, :ns => '')
+          expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+          subject
+
+          expect(vm.reload.tags).to match_array([Tag.lookup_by_classification_name('department/accounting')])
+        end
+
+        it "adds a tag with the category from mapping, when there is an existing tag on the resource from a different category then that of the mapping" do
+          expect(vm.tags).to be_empty
+
+          existing_tag_on_vm = Tag.lookup_by_classification_name('cc/001')
+          vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+          expect(vm.reload.tags).to eq([existing_tag_on_vm])
+
+          subject
+
+          expected_tags = [existing_tag_on_vm, Tag.lookup_by_classification_name('department/accounting')]
+          expect(vm.reload.tags).to match_array(expected_tags)
+        end
+
+        it "doesn't add new tag during mapping if resource is already tagged with the same tag" do
+          expect(vm.tags).to be_empty
+
+          existing_tag_on_vm = Tag.lookup_by_classification_name('department/accounting')
+          vm.tag_add(existing_tag_on_vm.name, :ns => '')
+
+          subject
+
+          expect(vm.reload.tags).to match_array([existing_tag_on_vm])
+        end
+
+        context "with multiple mappings" do
+          let(:externals_labels) do # provider labels
+            [{:name => label_name, :value => 'Accounting'},
+             {:name => 'Finance Center', :value => '007'}]
+          end
+
+          context "when mappings are targeted to different categories" do
+            before do
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category_2.tag)
+            end
+
+            it "adds tags to resource" do
+              expect(vm.tags).to be_empty
+
+              subject
+
+              expected_tags = %w[cc/007 department/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+              expect(vm.reload.tags).to match_array(expected_tags)
+            end
+          end
+
+          context "when mappings are targeted to same categories" do
+            let(:externals_labels) do # provider labels
+              [{:name => label_name, :value => 'Accounting'},
+               {:name => 'Finance Center', :value => '007'}]
+            end
+
+            before do
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Name", :tag => multi_value_category.tag)
+              FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => "Finance Center", :tag => multi_value_category.tag)
+            end
+
+            it "applies all the label values" do
+              expect(vm.tags).to be_empty
+
+              subject
+
+              expected_tags = %w[department/007 department/accounting].map { |x| Tag.lookup_by_classification_name(x) }
+              expect(vm.reload.tags).to match_array(expected_tags)
+            end
+          end
+        end
+      end
+    end
+  end
+
+  context "with all entities resource type" do
+    let(:other_cat_classification) { FactoryBot.create(:classification, :read_only => true, :name => 'environment') }
+    let(:other_cat_tag)            { other_cat_classification.tag }
+
+    before do
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'name', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'DEV', :tag => cat_tag)
+      FactoryBot.create(:provider_tag_mapping, :all_entities, :label_name => 'DEV', :tag => other_cat_tag)
+    end
+
+    let(:existing_label) { {"name" => "value_1"} }
+
+    it "creates tag from mapping" do
+      map_to_tags(new_mapper, "_all_entities_", existing_label)
+
+      expect(Classification.where(:description => "value_1").first.parent).to eq(cat_tag.classification)
+      expect(Classification.where(:description => "value_1").first.parent.tag).to eq(cat_tag)
+    end
+
+    let(:existing_label_dev_win) { {"DEV" => "WIN"} }
+    let(:existing_label_dev_linux) { {"DEV" => "LINUX"} }
+
+    it "creates tags from mappings with same label name" do
+      map_to_tags(new_mapper, "_all_entities_", [existing_label_dev_win, existing_label_dev_linux])
+      expect(Tag.find_by(:name => "#{cat_tag.name}/win")).not_to be_nil
+      expect(Tag.find_by(:name => "#{other_cat_tag.name}/win")).not_to be_nil
+    end
+  end
+
+  # Interactions   between any-type and specific-type rows are somewhat arbitrary.
   # Unclear if there is One Right behavior here; treating them independently
   # seemed the simplest well-defined behavior...
 
@@ -222,6 +522,7 @@ RSpec.describe ProviderTagMapping do
       FactoryBot.create(:provider_tag_mapping, :tag => cat_tag)
       tag1
       tag2
+      tag3
 
       user_tag1
       user_tag2
@@ -254,14 +555,14 @@ RSpec.describe ProviderTagMapping do
     end
 
     # What happens with tags no mapping points to?
-    it "considers appropriately named tags as mapping-controlled" do
+    it "does not consider appropriately named tags as mapping-controlled unless they are included in a mapping" do
       cat = FactoryBot.create(:classification, :read_only => true, :name => 'kubernetes:foo')
       k_tag = cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
       cat = FactoryBot.create(:classification, :read_only => true, :name => 'amazon:river')
       a_tag = cat.add_entry(:name => 'jungle', :description => 'Rainforest').tag
 
       expect(Tag.controlled_by_mapping).not_to include(user_tag1, user_tag2)
-      expect(Tag.controlled_by_mapping).to include(k_tag, a_tag)
+      expect(Tag.controlled_by_mapping).not_to include(k_tag, a_tag)
     end
   end
 end

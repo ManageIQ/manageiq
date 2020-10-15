@@ -5,6 +5,10 @@ FactoryBot.define do
     trait :only_nodes do
       labeled_resource_type { 'ContainerNode' }
     end
+
+    trait :all_entities do
+      labeled_resource_type { '_all_entities_' }
+    end
   end
 
   # Mapping for <All> entities, as created in UI.

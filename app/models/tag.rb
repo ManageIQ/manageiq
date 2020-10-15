@@ -153,10 +153,8 @@ class Tag < ApplicationRecord
 
   # @return [ActiveRecord::Relation] Scope for tags controlled by ProviderTagMapping.
   def self.controlled_by_mapping
-    queries = ProviderTagMapping::TAG_PREFIXES.collect do |prefix|
-      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
-    end
-    queries.inject(:or).read_only.is_entry
+    cat_ids = ProviderTagMapping.eager_load(:tag => :classification).map { |m| m.tag.classification.id }.uniq
+    where(:id => Classification.where(:parent_id => cat_ids).includes(:tag).pluck(:tag_id))
   end
 
   private
