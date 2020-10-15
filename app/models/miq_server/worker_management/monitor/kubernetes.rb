@@ -19,7 +19,18 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   private
 
   def start_pod_monitor
-    @monitor_thread ||= Thread.new { monitor_pods }
+    require 'http'
+    Thread.new do
+      _log.info("Started new monitor thread of #{Thread.list.length} total")
+      begin
+        monitor_pods
+      rescue HTTP::ConnectionError => e
+        _log.error("Exiting monitor thread due to [#{e.class.name}]: #{e}")
+      rescue => e
+        _log.error("Exiting monitor thread after uncaught error")
+        _log.log_backtrace(e)
+      end
+    end
   end
 
   def ensure_pod_monitor_started
@@ -29,8 +40,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
         _log.info("Waiting for the Monitor Thread to exit...")
         dead_thread.join
       end
-
-      start_pod_monitor
+      @monitor_thread = start_pod_monitor
     end
   end
 
