@@ -1,5 +1,4 @@
 ---
-dist: xenial
 language: ruby
 rvm:
 - 2.5.8
