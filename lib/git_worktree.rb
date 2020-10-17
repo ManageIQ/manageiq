@@ -186,7 +186,7 @@ class GitWorktree
   def file_attributes(fname)
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
-    walker.push(@repo.ref(local_ref).target)
+    walker.push(@repo.ref(local_ref).target.oid)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
