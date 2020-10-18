@@ -25,6 +25,7 @@ class PhysicalStorage < ApplicationRecord
 
   supports :refresh_ems
   supports_not :create
+  supports_not :delete
   acts_as_miq_taggable
 
   def my_zone
@@ -44,6 +45,41 @@ class PhysicalStorage < ApplicationRecord
     end
 
     EmsRefresh.queue_refresh(ext_management_system)
+  end
+
+  def raw_delete_physical_storage
+    raise NotImplementedError, _("raw_delete_physical_storage must be implemented in a subclass")
+  end
+
+  def delete_physical_storage
+    raw_delete_physical_storage
+  end
+
+  supports :delete do
+    unless respond_to?(:delete)
+      unsupported_reason_add(:delete, _("#{ext_management_system.type} provider type does not support deleting. " +
+                                            "#{ext_management_system.name} could not be deleted."))
+    end
+  end
+
+  # Delete a storage system as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  def delete_physical_storage_queue(userid)
+
+    task_opts = {
+      :action => "deleting PhysicalStorage for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_physical_storage',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def self.create_physical_storage_queue(userid, ext_management_system, options = {})
