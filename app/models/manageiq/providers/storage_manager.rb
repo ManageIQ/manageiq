@@ -12,6 +12,9 @@ module ManageIQ::Providers
     supports_not :cloud_object_store_container_create
     supports_not :ems_storage_new
 
+    has_many :cloud_tenants, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :volume_availability_zones, :class_name => "AvailabilityZone", :foreign_key => :ems_id, :dependent => :destroy
+
     belongs_to :parent_manager,
                :foreign_key => :parent_ems_id,
                :class_name  => "ManageIQ::Providers::BaseManager",
