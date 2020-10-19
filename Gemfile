@@ -82,7 +82,7 @@ gem "sys-filesystem",                 "~>1.3.4"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
-gem "ruport", "=1.7.0.3", :source => "https://rubygems.manageiq.org"
+gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
