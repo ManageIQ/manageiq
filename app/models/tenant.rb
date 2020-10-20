@@ -61,6 +61,7 @@ class Tenant < ApplicationRecord
 
   before_save :nil_blanks
   after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
+  after_save -> { MiqProductFeature.invalidate_caches }
   before_destroy :ensure_can_be_destroyed
 
   def self.scope_by_tenant?
