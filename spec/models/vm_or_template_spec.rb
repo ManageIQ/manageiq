@@ -760,28 +760,6 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  describe "#assign_ems_created_on_queue" do
-    it "queuing task to execute 'assign_ems_created_on' on server with 'ems_operations' role" do
-      expect(MiqQueue).to receive(:submit_job).with(
-        :class_name  => described_class.name,
-        :method_name => 'assign_ems_created_on',
-        :role        => 'ems_operations',
-        :args        => [vm.id],
-        :priority    => MiqQueue::MIN_PRIORITY
-      )
-      described_class.assign_ems_created_on_queue(vm.id)
-    end
-  end
-
-  describe "assign_ems_created_on" do
-    it "assigns timestamp on `VmDeployedEvent` event to `vm#ems_created_on field " do
-      timestamp = Time.now.utc.change(:usec => 0)
-      FactoryBot.create(:ems_event, :event_type => "VmDeployedEvent", :dest_vm_or_template => vm, :timestamp => timestamp)
-      described_class.assign_ems_created_on(vm.id)
-      expect(vm.reload.ems_created_on.utc).to eq(timestamp)
-    end
-  end
-
   it "with ems_events" do
     ems            = FactoryBot.create(:ems_vmware_with_authentication)
     vm             = FactoryBot.create(:vm_vmware, :ext_management_system => ems)

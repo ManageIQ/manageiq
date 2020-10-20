@@ -1127,8 +1127,6 @@ class VmOrTemplate < ApplicationRecord
         v.post_create_actions_queue
         added_vm_ids << v.id
       end
-
-      assign_ems_created_on_queue(added_vm_ids) if ::Settings.ems_refresh.capture_vm_created_on_date
     end
 
     post_refresh_ems_folder_updates(ems, update_start_time, added_vms)
@@ -1163,46 +1161,6 @@ class VmOrTemplate < ApplicationRecord
     updated_vms.each(&:classify_with_parent_folder_path_queue)
   end
   private_class_method :post_refresh_ems_folder_updates
-
-  def self.assign_ems_created_on_queue(vm_ids)
-    MiqQueue.submit_job(
-      :class_name  => name,
-      :method_name => 'assign_ems_created_on',
-      :role        => 'ems_operations',
-      :args        => [vm_ids],
-      :priority    => MiqQueue::MIN_PRIORITY
-    )
-  end
-
-  def self.assign_ems_created_on(vm_ids)
-    vms_to_update = VmOrTemplate.where(:id => vm_ids, :ems_created_on => nil)
-    return if vms_to_update.empty?
-
-    # Of the VMs without a VM create time, filter out the ones for which we
-    #   already have a VM create event
-    vms_to_update = vms_to_update.reject do |v|
-      # TODO: Vmware specific (fix with event rework?)
-      event = v.ems_events.find_by(:event_type => ["VmCreatedEvent", "VmDeployedEvent"])
-      v.update_attribute(:ems_created_on, event.timestamp) if event && v.ems_created_on != event.timestamp
-      event
-    end
-    return if vms_to_update.empty?
-
-    # Of the VMs still without an VM create time, use historical events, if
-    #   available, to determine the VM create time
-    ems = vms_to_update.first.ext_management_system
-    # TODO: Vmware specific
-    return unless ems && ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-
-    vms_list = vms_to_update.collect { |v| {:id => v.id, :name => v.name, :uid_ems => v.uid_ems} }
-    found = ems.find_vm_create_events(vms_list)
-
-    # Loop through the found VMs and set their create times
-    found.each do |vmh|
-      v = vms_to_update.detect { |vm| vm.id == vmh[:id] }
-      v.update_attribute(:ems_created_on, vmh[:created_time])
-    end
-  end
 
   def post_create_actions_queue
     MiqQueue.submit_job(
