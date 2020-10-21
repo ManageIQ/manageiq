@@ -232,6 +232,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
+           :path,
+           :path=,
            :verify_ssl,
            :verify_ssl=,
            :certificate_authority,
@@ -245,6 +247,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
   virtual_column :port,                    :type => :integer, :uses => :endpoints
   virtual_column :security_protocol,       :type => :string,  :uses => :endpoints
+  virtual_column :path,                    :type => :string,  :uses => :endpoints
 
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
