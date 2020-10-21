@@ -76,11 +76,11 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def disable
-    pglogical.disable_subscription(id).check
+    MiqPglogical.with_connection_error_handling { pglogical.disable_subscription(id).check }
   end
 
   def enable
-    pglogical.enable_subscription(id).check
+    MiqPglogical.with_connection_error_handling { pglogical.enable_subscription(id).check }
   end
 
   def self.pglogical(refresh = false)
@@ -116,7 +116,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def sync_tables
-    pglogical.sync_subscription(id)
+    MiqPglogical.with_connection_error_handling { pglogical.sync_subscription(id) }
   end
 
   # translate the output from the pglogical stored proc to our object columns
@@ -174,7 +174,9 @@ class PglogicalSubscription < ActsAsArModel
   private_class_method :remote_region_attributes
 
   def self.subscriptions
-    pglogical.subscriptions(connection.current_database)
+    MiqPglogical.with_connection_error_handling do
+      pglogical.subscriptions(connection.current_database)
+    end
   end
   private_class_method :subscriptions
 
@@ -200,13 +202,15 @@ class PglogicalSubscription < ActsAsArModel
   private
 
   def safe_delete
-    pglogical.drop_subscription(id, true)
+    MiqPglogical.with_connection_error_handling { pglogical.drop_subscription(id, true) }
   rescue PG::InternalError => e
     raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
     connection.transaction do
       disable
-      pglogical.alter_subscription_options(id, "slot_name" => "NONE")
-      pglogical.drop_subscription(id, true)
+      MiqPglogical.with_connection_error_handling do
+        pglogical.alter_subscription_options(id, "slot_name" => "NONE")
+        pglogical.drop_subscription(id, true)
+      end
     end
   end
 
@@ -222,7 +226,11 @@ class PglogicalSubscription < ActsAsArModel
 
   def update_subscription
     find_password if password.nil?
-    pglogical.set_subscription_conninfo(id, conn_info_hash)
+
+    MiqPglogical.with_connection_error_handling do
+      pglogical.set_subscription_conninfo(id, conn_info_hash)
+    end
+
     self
   end
 
@@ -236,7 +244,9 @@ class PglogicalSubscription < ActsAsArModel
 
   def create_subscription
     MiqRegion.destroy_region(connection, remote_region_number)
-    pglogical.create_subscription(new_subscription_name, conn_info_hash, [MiqPglogical::PUBLICATION_NAME]).check
+    MiqPglogical.with_connection_error_handling do
+      pglogical.create_subscription(new_subscription_name, conn_info_hash, [MiqPglogical::PUBLICATION_NAME]).check
+    end
     self
   end
 
@@ -272,6 +282,8 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def subscription_attributes
-    pglogical.subscriptions.find { |s| s["subscription_name"] == id }
+    MiqPglogical.with_connection_error_handling do
+      pglogical.subscriptions.find { |s| s["subscription_name"] == id }
+    end
   end
 end
