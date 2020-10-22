@@ -259,7 +259,7 @@ unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
     gem "PoParser"
-    gem "rubocop-performance", "~>1.3",    :require => false
+    gem "manageiq-style",               :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                     :require => false
     gem "yard"

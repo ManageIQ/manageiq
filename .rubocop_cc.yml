@@ -1,4 +1,4 @@
 inherit_from:
-- .rubocop_base.yml
-- .rubocop_cc_base.yml
-- .rubocop_local.yml
+- ".rubocop_base.yml"
+- ".rubocop_cc_base.yml"
+- ".rubocop_local.yml"

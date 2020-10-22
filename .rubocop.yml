@@ -1,3 +1,4 @@
+inherit_gem:
+  manageiq-style: ".rubocop_base.yml"
 inherit_from:
-- https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
-- .rubocop_local.yml
+- ".rubocop_local.yml"
