@@ -238,6 +238,7 @@ class ExtManagementSystem < ApplicationRecord
            :certificate_authority=,
            :to => :default_endpoint,
            :allow_nil => true
+  delegate :path, :path=, :to => :default_endpoint, :prefix => "endpoint", :allow_nil => true
 
   alias_method :address, :hostname # TODO: Remove all callers of address
 
