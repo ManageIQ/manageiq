@@ -264,6 +264,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
   virtual_column :supports_block_storage,  :type => :boolean
+  virtual_column :supports_cloud_tenants,  :type => :boolean
   virtual_column :supports_volume_multiattachment, :type => :boolean
   virtual_column :supports_volume_resizing, :type => :boolean
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
@@ -768,6 +769,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_block_storage
     supports_block_storage?
+  end
+
+  def supports_cloud_tenants
+    supports_cloud_tenants?
   end
 
   def supports_volume_multiattachment
