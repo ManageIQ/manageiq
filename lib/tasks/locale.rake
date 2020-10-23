@@ -1,6 +1,6 @@
 namespace :locale do
   desc "Extract strings from en.yml and store them in a ruby file for gettext:find"
-  task :store_dictionary_strings do
+  task :store_dictionary_strings => :environment do
     output_strings = [
       "# This is automatically generated file (rake locale:store_dictionary_strings).",
       "# The file contains strings extracted from en.yml for gettext to find."
