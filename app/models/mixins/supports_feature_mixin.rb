@@ -130,6 +130,7 @@ module SupportsFeatureMixin
     :revert_to_snapshot                  => 'Revert Snapshot Operation',
     :smartstate_analysis                 => 'Smartstate Analysis',
     :snapshot_create                     => 'Create Snapshot',
+    :snapshot_memory                     => 'Snapshot the Memory',
     :snapshots                           => 'Snapshots',
     :shutdown_guest                      => 'Shutdown Guest Operation',
     :start                               => 'Start',

@@ -42,6 +42,12 @@ module VmOrTemplate::Operations::Snapshot
         unsupported_reason_add(:revert_to_snapshot, unsupported_reason(:remove_snapshot))
       end
     end
+
+    virtual_column :supports_snapshot_memory, :type => :boolean
+
+    def supports_snapshot_memory
+      supports_snapshot_memory?
+    end
   end
 
   def raw_create_snapshot(name, desc = nil, memory)
