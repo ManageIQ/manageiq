@@ -1416,7 +1416,7 @@ en:
     model:
       AuditEvent:                     EVM Audit Event
       AvailabilityZone:               Availability Zone
-      BottleneckEvent:                Bottleneck Events
+      BottleneckEvent:                Bottleneck Event
       HostAggregate:                  Host Aggregate
       ChargebackVm:                   Chargeback for Vms
       ChargebackContainerImage:       Chargeback for Image
@@ -1650,7 +1650,7 @@ en:
       MiqWorker:                EVM Worker
       NetworkPort:              Network Port
       NetworkRouter:            Network Router
-      Network:                  Networks
+      Network:                  Network
       NetworkService:           Network Service
       OrchestrationStack:       Orchestration Stack
       OrchestrationTemplate:    Orchestration Template
@@ -1661,7 +1661,7 @@ en:
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
       PersistentVolume:         Persistent Volume
       PhysicalChassis:          Physical Chassis
-      PhysicalRack:             Physical Racks
+      PhysicalRack:             Physical Rack
       PhysicalServer:           Physical Server
       PhysicalSwitch:           Physical Switch
       PolicyEvent:              Policy Event
