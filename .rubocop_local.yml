@@ -2,7 +2,7 @@ AllCops:
   Exclude:
   - lib/generators/**/templates/**/*
   - db/schema.rb
-GlobalVars:
+Style/GlobalVars:
   AllowedVariables:
   # Loggers
   - $api_log
