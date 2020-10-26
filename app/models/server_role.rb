@@ -32,13 +32,6 @@ class ServerRole < ApplicationRecord
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 
-  def self.to_role(server_role)
-    # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
-    return server_role if server_role.kind_of?(ServerRole)
-    role_name = server_role.to_s.strip.downcase
-    ServerRole.find_by(:name => role_name) || raise(_("Role <%{name}> not defined in server_roles table") % {:name => role_name})
-  end
-
   def self.all_names
     order(:name).pluck(:name)
   end

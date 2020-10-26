@@ -160,7 +160,7 @@ RSpec.describe Zone do
 
       it "server when enabled" do
         server = FactoryBot.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
-        server.assign_role('cockpit_ws', 1)
+        server.assign_role(ServerRole.find_by(:name => 'cockpit_ws'), 1)
         server.activate_roles('cockpit_ws')
         expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
       end

@@ -305,7 +305,7 @@ RSpec.describe Vm do
       vm = FactoryBot.create(:vm_openstack, :ext_management_system => @ems)
       allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
       server = FactoryBot.create(:miq_server, :ipaddress => "10.0.0.2", :has_active_cockpit_ws => true, :zone => @zone)
-      server.assign_role('cockpit_ws', 1)
+      server.assign_role(ServerRole.find_by(:name => 'cockpit_ws'), 1)
       server.activate_roles('cockpit_ws')
       expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
     end
