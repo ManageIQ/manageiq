@@ -201,7 +201,7 @@ RSpec.describe MiqProductFeature do
           let!(:other_miq_region) { FactoryBot.create(:miq_region) }
           let!(:tenant_product_feature_other_region) do
             Tenant.skip_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
-            tenant = FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_miq_region))
+            tenant = FactoryBot.create(:tenant, :id => id_for_model_in_region(Tenant, other_miq_region))
             Tenant.set_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
 
             tenant

@@ -9,7 +9,7 @@ FactoryBot.define do
     other_region
 
     after(:create) do |instance, evaluator|
-      instance.default_miq_group = FactoryGirl.create(:miq_group, :in_other_region, :other_region => evaluator.other_region, :default_tenant => instance)
+      instance.default_miq_group = FactoryBot.create(:miq_group, :in_other_region, :other_region => evaluator.other_region, :default_tenant => instance)
     end
   end
 

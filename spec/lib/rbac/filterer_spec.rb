@@ -2879,19 +2879,19 @@ RSpec.describe Rbac::Filterer do
     let(:common_t2_name) { "Tenant 2" }
     # global(default) region
     # T1 -> T2 -> T3
-    let(:t1) { FactoryGirl.create(:tenant) }
-    let(:t2) { FactoryGirl.create(:tenant, :parent => t1, :name => common_t2_name.upcase) }
-    let(:t3) { FactoryGirl.create(:tenant, :parent => t2) }
+    let(:t1) { FactoryBot.create(:tenant) }
+    let(:t2) { FactoryBot.create(:tenant, :parent => t1, :name => common_t2_name.upcase) }
+    let(:t3) { FactoryBot.create(:tenant, :parent => t2) }
 
     # user with T2
     #
-    let(:group_t2) { FactoryGirl.create(:miq_group, :tenant => t2) }
-    let(:user_t2)  { FactoryGirl.create(:user, :miq_groups => [group_t2]) }
+    let(:group_t2) { FactoryBot.create(:miq_group, :tenant => t2) }
+    let(:user_t2)  { FactoryBot.create(:user, :miq_groups => [group_t2]) }
 
     # in other region
     #
     #
-    let(:other_region) { FactoryGirl.create(:miq_region) }
+    let(:other_region) { FactoryBot.create(:miq_region) }
 
     def id_for_model_in_region(model, other_region)
       model.id_in_region(model.count + 1_000_000, other_region.region)
@@ -2899,18 +2899,18 @@ RSpec.describe Rbac::Filterer do
 
     #
     # T1 -> T2 -> T3
-    let(:t1_other_region) { FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_region)) }
-    let(:t2_other_region) { FactoryGirl.create(:tenant, :parent => t1_other_region, :id => id_for_model_in_region(Tenant, other_region), :name => common_t2_name) }
-    let(:t3_other_region) { FactoryGirl.create(:tenant, :parent => t2_other_region, :id => id_for_model_in_region(Tenant, other_region)) }
+    let(:t1_other_region) { FactoryBot.create(:tenant, :id => id_for_model_in_region(Tenant, other_region)) }
+    let(:t2_other_region) { FactoryBot.create(:tenant, :parent => t1_other_region, :id => id_for_model_in_region(Tenant, other_region), :name => common_t2_name) }
+    let(:t3_other_region) { FactoryBot.create(:tenant, :parent => t2_other_region, :id => id_for_model_in_region(Tenant, other_region)) }
 
     #
     # user with T2
     #
-    let(:group_t2_other_region) { FactoryGirl.create(:miq_group, :tenant => t2_other_region, :id => id_for_model_in_region(MiqGroup, other_region)) }
-    let(:user_t2_other_region)  { FactoryGirl.create(:user, :miq_groups => [group_t2_other_region], :id => id_for_model_in_region(User, other_region)) }
-    let!(:service_template_other_region) { FactoryGirl.create(:service_template, :tenant => t2_other_region, :id => id_for_model_in_region(ServiceTemplate, other_region)) }
+    let(:group_t2_other_region) { FactoryBot.create(:miq_group, :tenant => t2_other_region, :id => id_for_model_in_region(MiqGroup, other_region)) }
+    let(:user_t2_other_region)  { FactoryBot.create(:user, :miq_groups => [group_t2_other_region], :id => id_for_model_in_region(User, other_region)) }
+    let!(:service_template_other_region) { FactoryBot.create(:service_template, :tenant => t2_other_region, :id => id_for_model_in_region(ServiceTemplate, other_region)) }
 
-    let!(:vm_other_region) { FactoryGirl.create(:vm, :tenant => t2_other_region, :id => id_for_model_in_region(Vm, other_region)) }
+    let!(:vm_other_region) { FactoryBot.create(:vm, :tenant => t2_other_region, :id => id_for_model_in_region(Vm, other_region)) }
 
     it "finds also service templates from other region" do
       expect(ServiceTemplate.count).to eq(1)

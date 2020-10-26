@@ -103,7 +103,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
   context "#pre_execute" do
     let(:state) { "pre_execute" }
-    let(:css)   { FactoryGirl.create(:embedded_ansible_configuration_script_source) }
+    let(:css)   { FactoryBot.create(:embedded_ansible_configuration_script_source) }
     let(:roles_relative_path) { "path/to/role" }
 
     context "with roles_path" do

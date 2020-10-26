@@ -1226,7 +1226,7 @@ RSpec.describe ChargebackVm do
         #   T3(vm_1, vm_2)
         #
         let!(:root_tenant_region_1) do
-          tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => region_1)
+          tenant_other_region = FactoryBot.create(:tenant, :in_other_region, :other_region => region_1)
           tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
           tenant_other_region
         end
