@@ -1,4 +1,4 @@
-ARG IMAGE_REF=kasparov
+ARG IMAGE_REF=latest-kasparov
 FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
