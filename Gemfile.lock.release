@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 81e5aa96658a859fbe1c78ebde77d656f4808820
-  tag: jansa-1
+  tag: jansa-2
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: c3d69383906645a311e9e11fdd996715664f7711
-  tag: jansa-1
+  revision: 915333f2077b83bd22c0bbcfae33d4622148aca5
+  tag: jansa-2
   specs:
     manageiq-api (4.2.0)
       config
@@ -23,7 +23,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: f0185addb172cbdbb1b24951b611bfb41224c4c7
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -31,7 +31,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 17200c151daeac285b840c5ef76b3e4b98afce7b
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,8 +39,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: 0a69dd354a878d0f5acd81471ff67121007eb34c
-  tag: jansa-1
+  revision: 796481d99f326537c21395d4bb3fe97c93d38258
+  tag: jansa-2
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -48,14 +48,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: 99057dd8323e81904f5ac9d39bb4aae6d61e2088
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 4ced08bb22dddab4b7620b3f0a6969f36734a748
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-gems-pending (0.1.0)
       activerecord (< 5.3)
@@ -85,7 +85,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-graphql
   revision: 79d5cc8535547de06d225143a9b66f13dc74a56d
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-graphql (0.1.0)
       graphql (~> 1.7, < 1.10.6)
@@ -94,8 +94,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: c26d323134400e98be1d4df0bbcc26edf1719454
-  tag: jansa-1
+  revision: aa8ce32a2c0182057f063bca22265400ae79ca24
+  tag: jansa-2
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -112,7 +112,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 4752923e1d7fa793becb4d3984d96b7d5d4561cf
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -120,7 +120,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: 7451d272f78a7705f904e7a7f2fa48223f246c70
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.9.15)
@@ -128,7 +128,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: 7aea5775e52f1907b184ddb6505322ec6ff53442
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (= 0.18.3)
@@ -140,7 +140,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: 12e8797c1eaafee88ff4f814f1fa77e0b3caeb3a
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
@@ -148,7 +148,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: 5b40c430d191b25be6bc91c44fcf4007de5b125b
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.9.1)
@@ -156,7 +156,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
   revision: aa5a4f45a247bfc4b407750d9e5d0b0b2d61249e
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-kubernetes (0.1.0)
       hawkular-client (~> 4.1)
@@ -169,7 +169,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: 45d4b13928e9c9b21ab315e38a74058a8c8f3f3b
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-kubevirt (0.0.1)
       fog-kubevirt (~> 1.0)
@@ -178,7 +178,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
   revision: 0fc0bacb8a67eace5f165ad356610ac9f09b896a
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -186,7 +186,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
   revision: cc324ef04e85e928f25c01db9861c38ce42e8599
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -194,7 +194,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: 814ce3c562dfdc29e7a58065a319bfd5651590ac
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
@@ -202,7 +202,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
   revision: 27cd5ab541f547c95d79d01a893eaab090df673d
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (>= 5.0, < 5.3)
@@ -214,8 +214,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: cecf6e8e3b6d6b75b81a275d52ca425a2222b95e
-  tag: jansa-1
+  revision: d45edfdca71e651880a2b2bd51d23050891baec2
+  tag: jansa-2
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.3.0)
@@ -223,7 +223,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: 3e24f856ab74c54173400caf72a3b0b1121a6a50
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -231,27 +231,27 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
   revision: f07d645db71e0365d8017600df356c8a6dd0fff8
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: e79a5906de0c6604b7d138829fa142a619e807b6
-  tag: jansa-1
+  revision: 70f087a9f7bfb4f8d1bf6ce497b6d3fe4b66a91e
+  tag: jansa-2
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
       fog-vcloud-director (~> 0.3.0)
       rbvmomi (~> 2.0.0)
-      vmware_web_service (~> 1.0.5)
+      vmware_web_service (~> 1.0.8)
       vsphere-automation-sdk (~> 0.2.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: a800fbb786e464c873220ccaf210124ea286012c
-  tag: jansa-1
+  tag: jansa-2
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.0)
@@ -265,8 +265,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: ed9e3142e2a152e59b9f86382107b0034a87aa13
-  tag: jansa-1
+  revision: f99a1763003656b30540a6982c8747bfc8b83256
+  tag: jansa-2
   specs:
     manageiq-ui-classic (0.1.0)
       coffee-rails
@@ -282,8 +282,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-v2v
-  revision: 5dfbdaab6ab5fb9f68ae4426e3e37dc3eb4ab1cb
-  tag: jansa-1
+  revision: 0b260939952fb855317fa4b640316439196edfc5
+  tag: jansa-2
   specs:
     manageiq-v2v (0.0.1)
 
@@ -297,37 +297,37 @@ GEM
   remote: https://rubygems.org/
   remote: https://rubygems.manageiq.org/
   specs:
-    actioncable (5.2.4.3)
-      actionpack (= 5.2.4.3)
+    actioncable (5.2.4.4)
+      actionpack (= 5.2.4.4)
       nio4r (~> 2.0)
       websocket-driver (>= 0.6.1)
-    actionmailer (5.2.4.3)
-      actionpack (= 5.2.4.3)
-      actionview (= 5.2.4.3)
-      activejob (= 5.2.4.3)
+    actionmailer (5.2.4.4)
+      actionpack (= 5.2.4.4)
+      actionview (= 5.2.4.4)
+      activejob (= 5.2.4.4)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (5.2.4.3)
-      actionview (= 5.2.4.3)
-      activesupport (= 5.2.4.3)
+    actionpack (5.2.4.4)
+      actionview (= 5.2.4.4)
+      activesupport (= 5.2.4.4)
       rack (~> 2.0, >= 2.0.8)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (5.2.4.3)
-      activesupport (= 5.2.4.3)
+    actionview (5.2.4.4)
+      activesupport (= 5.2.4.4)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activejob (5.2.4.3)
-      activesupport (= 5.2.4.3)
+    activejob (5.2.4.4)
+      activesupport (= 5.2.4.4)
       globalid (>= 0.3.6)
-    activemodel (5.2.4.3)
-      activesupport (= 5.2.4.3)
-    activerecord (5.2.4.3)
-      activemodel (= 5.2.4.3)
-      activesupport (= 5.2.4.3)
+    activemodel (5.2.4.4)
+      activesupport (= 5.2.4.4)
+    activerecord (5.2.4.4)
+      activemodel (= 5.2.4.4)
+      activesupport (= 5.2.4.4)
       arel (>= 9.0)
     activerecord-id_regions (0.3.0)
       activerecord (>= 5.0, < 5.3)
@@ -341,11 +341,11 @@ GEM
       railties (>= 4.0)
     activerecord-virtual_attributes (1.6.0)
       activerecord (>= 5.0)
-    activestorage (5.2.4.3)
-      actionpack (= 5.2.4.3)
-      activerecord (= 5.2.4.3)
+    activestorage (5.2.4.4)
+      actionpack (= 5.2.4.4)
+      activerecord (= 5.2.4.4)
       marcel (~> 0.3.1)
-    activesupport (5.2.4.3)
+    activesupport (5.2.4.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -830,18 +830,18 @@ GEM
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rails (5.2.4.3)
-      actioncable (= 5.2.4.3)
-      actionmailer (= 5.2.4.3)
-      actionpack (= 5.2.4.3)
-      actionview (= 5.2.4.3)
-      activejob (= 5.2.4.3)
-      activemodel (= 5.2.4.3)
-      activerecord (= 5.2.4.3)
-      activestorage (= 5.2.4.3)
-      activesupport (= 5.2.4.3)
+    rails (5.2.4.4)
+      actioncable (= 5.2.4.4)
+      actionmailer (= 5.2.4.4)
+      actionpack (= 5.2.4.4)
+      actionview (= 5.2.4.4)
+      activejob (= 5.2.4.4)
+      activemodel (= 5.2.4.4)
+      activerecord (= 5.2.4.4)
+      activestorage (= 5.2.4.4)
+      activesupport (= 5.2.4.4)
       bundler (>= 1.3.0)
-      railties (= 5.2.4.3)
+      railties (= 5.2.4.4)
       sprockets-rails (>= 2.0.0)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
@@ -851,9 +851,9 @@ GEM
     rails-i18n (5.1.3)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
-    railties (5.2.4.3)
-      actionpack (= 5.2.4.3)
-      activesupport (= 5.2.4.3)
+    railties (5.2.4.4)
+      actionpack (= 5.2.4.4)
+      activesupport (= 5.2.4.4)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
@@ -980,7 +980,7 @@ GEM
     uuid (2.3.9)
       macaddr (~> 1.0)
     uuidtools (2.1.5)
-    vmware_web_service (1.0.7)
+    vmware_web_service (1.0.8)
       activesupport (>= 5.0, < 5.3)
       ffi-vix_disk_lib (~> 1.1)
       handsoap (~> 0.2.5)
@@ -1131,7 +1131,7 @@ DEPENDENCIES
   puma (~> 4.2)
   qpid_proton (~> 0.30.0)
   query_relation (~> 0.1.0)
-  rails (~> 5.2.4, >= 5.2.4.3)
+  rails (~> 5.2.4, >= 5.2.4.4)
   rails-i18n (~> 5.x)
   rake (>= 12.3.3)
   responders (~> 2.0)
