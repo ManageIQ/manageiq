@@ -11,15 +11,11 @@ module SwiftManagerMixin
              :cloud_object_store_objects,
              :to        => :swift_manager,
              :allow_nil => true
+  end
 
-    private
+  private
 
-    def ensure_swift_managers
-      ensure_swift_manager
-      swift_manager.name            = "#{name} Swift Manager"
-      swift_manager.zone_id         = zone_id
-      swift_manager.provider_region = provider_region
-      true
-    end
+  def ensure_swift_manager
+    swift_manager || build_swift_manager
   end
 end

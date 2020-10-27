@@ -19,10 +19,9 @@ module HasMonitoringManagerMixin
 
   def ensure_monitoring_manager
     if monitoring_manager.nil?
-      build_monitoring_manager(:parent_manager  => self,
-                               :name            => "#{name} Monitoring Manager",
-                               :zone_id         => zone_id,
-                               :provider_region => provider_region)
+      build_monitoring_manager
+      # TODO: move this out of here and into ensure managers
+      propagate_child_manager_attributes(monitoring_manager, "#{name} Monitoring Manager")
     end
 
     monitoring_manager

@@ -14,15 +14,11 @@ module CinderManagerMixin
              :cloud_volume_backups,
              :to        => :cinder_manager,
              :allow_nil => true
+  end
 
-    private
+  private
 
-    def ensure_cinder_managers
-      ensure_cinder_manager
-      cinder_manager.name            = "#{name} Cinder Manager"
-      cinder_manager.zone_id         = zone_id
-      cinder_manager.provider_region = provider_region
-      true
-    end
+  def ensure_cinder_manager
+    cinder_manager || build_cinder_manager
   end
 end

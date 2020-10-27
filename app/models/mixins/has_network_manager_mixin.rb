@@ -25,16 +25,22 @@ module HasNetworkManagerMixin
 
     private
 
+    def ensure_network_manager
+      # TODO: remove name from here once all child classes
+      network_manager || build_network_manager(:name => "#{name} Network Manager")
+    end
+
+    # TODO: remove and have each manager implement this
     def ensure_managers
       ensure_network_manager
       network_manager.name = "#{name} Network Manager" if network_manager
       ensure_managers_zone_and_provider_region
     end
 
+    # TODO: remove and have each manager implement this
     def ensure_managers_zone_and_provider_region
       if network_manager
-        network_manager.zone_id         = zone_id
-        network_manager.provider_region = provider_region
+        propagate_child_manager_attributes(network_manager, "#{name} Network Manager")
       end
     end
   end
