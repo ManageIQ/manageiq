@@ -84,7 +84,7 @@ class MiqRegionRemote < ApplicationRecord
     host = host.to_s.strip
     raise ArgumentError, _("host cannot be blank") if host.blank?
     if [nil, "", "localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
-      local_database = ActiveRecord::Base.configurations.fetch_path(Rails.env, "database").to_s.strip
+      local_database = (ActiveRecord::Base.configurations[Rails.env] || {})["database"].to_s.strip
       if database == local_database
         raise ArgumentError, _("host cannot be set to localhost if database matches the local database")
       end
