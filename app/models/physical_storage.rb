@@ -55,17 +55,9 @@ class PhysicalStorage < ApplicationRecord
     raw_delete_physical_storage
   end
 
-  supports :delete do
-    unless respond_to?(:delete)
-      unsupported_reason_add(:delete, _("#{ext_management_system.type} provider type does not support deleting. " +
-                                            "#{ext_management_system.name} could not be deleted."))
-    end
-  end
-
   # Delete a storage system as a queued task and return the task id. The queue
   # name and the queue zone are derived from the EMS, and a userid is mandatory.
   def delete_physical_storage_queue(userid)
-
     task_opts = {
       :action => "deleting PhysicalStorage for user #{userid}",
       :userid => userid
