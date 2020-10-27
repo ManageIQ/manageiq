@@ -26,16 +26,15 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
     create!(create_params)
   end
 
-  def self.password_attribute_keys
-    self::API_ATTRIBUTES.map do |k, v|
-      k if v[:type] == :password
-    end.compact
-  end
-
   def self.encrypt_queue_params(params)
-    encrypted_params = params.slice(*password_attribute_keys)
-    encrypted_params.transform_values! { |v| ManageIQ::Password.try_encrypt(v) }
-    params.merge(encrypted_params)
+    options = params.dup
+    DDF.traverse(:fields => self::API_ATTRIBUTES) do |field|
+      key_path = field[:name].try(:split, '.').try(:map, &:to_sym)
+      if options.key_path?(key_path) && field[:type] == 'password'
+        options.store_path(key_path, ManageIQ::Password.try_encrypt(options.fetch_path(key_path)))
+      end
+    end
+    options
   end
 
   def raw_update_in_provider(params)

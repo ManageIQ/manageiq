@@ -1,55 +1,89 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Username'),
-      :help_text => N_('Username for this credential')
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Username'),
+      :helperText => N_('Username for this credential'),
+      :name       => 'userid',
+      :id         => 'userid',
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Password'),
-      :help_text => N_('Password for this credential')
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Password'),
+      :helperText => N_('Password for this credential'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+    },
+  ].freeze
 
   # rubocop:disable Layout/AlignHash
   #
   # looks better to align the nested keys to the same distance, instead of
   # scope just for the hash in question (which is what rubocop does.
-  EXTRA_ATTRIBUTES = {
-    :ssh_key_data => {
-      :type       => :password,
-      :multiline  => true,
-      :label      => N_('Private key'),
-      :help_text  => N_('RSA or DSA private key to be used instead of password')
+  EXTRA_ATTRIBUTES = [
+    {
+      :component      => 'password-field',
+      :label          => N_('Private key'),
+      :helperText     => N_('RSA or DSA private key to be used instead of password'),
+      :componentClass => 'textarea',
+      :name           => 'ssh_key_data',
+      :id             => 'ssh_key_data',
+      :type           => 'password',
     },
-    :ssh_key_unlock => {
-      :type       => :password,
+    {
+      :component  => 'password-field',
       :label      => N_('Private key passphrase'),
-      :help_text  => N_('Passphrase to unlock SSH private key if encrypted'),
-      :max_length => 1024
+      :helperText => N_('Passphrase to unlock SSH private key if encrypted'),
+      :name       => 'ssh_key_unlock',
+      :id         => 'ssh_key_unlock',
+      :maxLength  => 1024,
+      :type       => 'password',
     },
-    :become_method => {
-      :type       => :choice,
-      :label      => N_('Privilege Escalation'),
-      :help_text  => N_('Privilege escalation method'),
-      :choices    => ['', 'sudo', 'su', 'pbrun', 'pfexec', 'doas', 'dzdo', 'pmrun', 'runas', 'enable', 'ksu', 'sesu', 'machinectl']
+    {
+      :component        => 'select',
+      :label            => N_('Privilege Escalation'),
+      :helperText       => N_('Privilege escalation method'),
+      :name             => 'become_method',
+      :id               => 'become_method',
+      :type             => 'choice',
+      :isClearable      => true,
+      :options          => %w[
+        sudo
+        su
+        pbrum
+        pfexec
+        doas
+        dzdo
+        pmrun
+        runas
+        enable
+        ksu
+        sesu
+        machinectl
+      ].map { |item| {:label => item, :value => item} },
     },
-    :become_username => {
-      :type       => :string,
+    {
+      :component  => 'text-field',
       :label      => N_('Privilege Escalation Username'),
-      :help_text  => N_('Privilege escalation username'),
-      :max_length => 1024
+      :helperText => N_('Privilege escalation username'),
+      :name       => 'become_username',
+      :id         => 'become_username',
+      :maxLength  => 1024,
     },
-    :become_password => {
-      :type       => :password,
+    {
+      :component  => 'password-field',
       :label      => N_('Privilege Escalation Password'),
-      :help_text  => N_('Password for privilege escalation method'),
-      :max_length => 1024
-    }
-  }.freeze
+      :helperText => N_('Password for privilege escalation method'),
+      :name       => 'become_password',
+      :id         => 'become_password',
+      :maxLength  => 1024,
+      :type       => 'password',
+    },
+  ].freeze
   # rubocop:enable Layout/AlignHash
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :label      => N_('Machine'),
