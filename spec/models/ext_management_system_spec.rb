@@ -464,9 +464,9 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'disables an ems with child managers and moves them to maintenance zone' do
-      zone  = FactoryGirl.create(:zone)
-      ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
-      child = FactoryGirl.create(:ext_management_system, :zone => zone)
+      zone  = FactoryBot.create(:zone)
+      ems   = FactoryBot.create(:ext_management_system, :zone => zone)
+      child = FactoryBot.create(:ext_management_system, :zone => zone)
       ems.child_managers << child
 
       2.times do
@@ -484,14 +484,14 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'disables an ems and moves child managers created by ensure_managers() to maintenance zone' do
-      zone  = FactoryGirl.create(:zone)
+      zone  = FactoryBot.create(:zone)
       emses = {
-        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
-        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
-        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
-        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
-        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
-        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+        :amazon_cloud    => FactoryBot.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryBot.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryBot.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryBot.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryBot.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryBot.create(:ems_vmware_cloud,    :zone => zone),
       }
 
       2.times do
@@ -523,13 +523,13 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "enables an ems with child managers and move them from maintenance zone" do
-      zone = FactoryGirl.create(:zone)
-      ems = FactoryGirl.create(:ext_management_system,
+      zone = FactoryBot.create(:zone)
+      ems = FactoryBot.create(:ext_management_system,
                                :zone_before_pause => zone,
                                :zone              => Zone.maintenance_zone,
                                :enabled           => false)
 
-      child = FactoryGirl.create(:ext_management_system,
+      child = FactoryBot.create(:ext_management_system,
                                  :zone_before_pause => zone,
                                  :zone              => Zone.maintenance_zone,
                                  :enabled           => false)
@@ -548,8 +548,8 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "doesn't change zone when ems was disabled before" do
-      zone = FactoryGirl.create(:zone)
-      ems = FactoryGirl.create(:ext_management_system,
+      zone = FactoryBot.create(:zone)
+      ems = FactoryBot.create(:ext_management_system,
                                :zone_before_pause => nil,
                                :zone              => zone,
                                :enabled           => false)
@@ -561,15 +561,15 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'enables an ems and moves child managers created by ensure_managers() to original zone' do
-      zone  = FactoryGirl.create(:zone)
+      zone  = FactoryBot.create(:zone)
       # Cannot create paused child managers this way, so we first pause! (tested yet) and then resume!
       emses = {
-        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
-        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
-        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
-        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
-        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
-        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+        :amazon_cloud    => FactoryBot.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryBot.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryBot.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryBot.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryBot.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryBot.create(:ems_vmware_cloud,    :zone => zone),
       }
 
       # managers with child managers created with ensure_managers() callback has own callback to change zone
@@ -602,16 +602,16 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'is allowed when enabled' do
-      zone = FactoryGirl.create(:zone)
-      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone)
+      zone = FactoryBot.create(:zone)
+      ems  = FactoryBot.create(:ext_management_system, :zone => Zone.default_zone)
 
       ems.zone = zone
       expect(ems.save).to eq(true)
     end
 
     it 'is denied when disabled' do
-      zone = FactoryGirl.create(:zone)
-      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
+      zone = FactoryBot.create(:zone)
+      ems  = FactoryBot.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
 
       ems.zone = zone
       expect(ems.save).to eq(false)
@@ -619,9 +619,9 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'to maintenance is not possible when provider enabled' do
-      zone_visible = FactoryGirl.create(:zone)
+      zone_visible = FactoryBot.create(:zone)
 
-      ems = FactoryGirl.create(:ext_management_system, :zone => zone_visible, :enabled => true)
+      ems = FactoryBot.create(:ext_management_system, :zone => zone_visible, :enabled => true)
 
       ems.zone = Zone.maintenance_zone
       expect(ems.save).to eq(false)
