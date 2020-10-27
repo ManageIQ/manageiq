@@ -506,7 +506,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   # @returns Hash<class, Integer> Hash of ems_class => refresh_interval
   def schedule_settings_for_ems_refresh
-    ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
+    ExtManagementSystem.supported_subclasses.each.with_object({}) do |klass, hash|
       next unless klass.ems_type
       every = ::Settings.ems_refresh[klass.ems_type].try(:refresh_interval) || ::Settings.ems_refresh.refresh_interval
       every = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i

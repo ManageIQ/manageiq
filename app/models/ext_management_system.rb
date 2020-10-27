@@ -9,8 +9,12 @@ class ExtManagementSystem < ApplicationRecord
     where(:tenant_id => tenant.ancestor_ids + [tenant_id])
   end
 
+  def self.concrete_subclasses
+    leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
+  end
+
   def self.types
-    leaf_subclasses.collect(&:ems_type)
+    concrete_subclasses.collect(&:ems_type)
   end
 
   def self.supported_types
@@ -18,7 +22,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_subclasses
-    leaf_subclasses.select(&:permitted?)
+    concrete_subclasses.select(&:permitted?)
   end
 
   def self.permitted?
@@ -402,7 +406,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.model_from_emstype(emstype)
     emstype = emstype.downcase
-    ExtManagementSystem.leaf_subclasses.detect { |k| k.ems_type == emstype }
+    ExtManagementSystem.concrete_subclasses.detect { |k| k.ems_type == emstype }
   end
 
   def self.short_token

@@ -37,7 +37,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   it ".model_name_from_emstype" do
-    described_class.leaf_subclasses.each do |klass|
+    described_class.concrete_subclasses.each do |klass|
       expect(described_class.model_name_from_emstype(klass.ems_type)).to eq(klass.name)
     end
     expect(described_class.model_name_from_emstype('foo')).to be_nil
