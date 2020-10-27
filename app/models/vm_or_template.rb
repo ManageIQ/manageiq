@@ -296,10 +296,10 @@ class VmOrTemplate < ApplicationRecord
   include StorageMixin
 
   def self.manager_class
-    if parent == Object
+    if module_parent == Object
       ExtManagementSystem
     else
-      parent
+      module_parent
     end
   end
 

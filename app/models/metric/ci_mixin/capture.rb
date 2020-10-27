@@ -3,7 +3,7 @@ module Metric::CiMixin::Capture
     if self.kind_of?(ExtManagementSystem)
       self.class::MetricsCapture.new(targets, ext_management_system)
     else
-      self.class.parent::MetricsCapture.new(targets || self, ext_management_system)
+      self.class.module_parent::MetricsCapture.new(targets || self, ext_management_system)
     end
   end
 

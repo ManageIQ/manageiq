@@ -9,7 +9,7 @@ class ServiceAnsibleTower < Service
   alias_method :job_options=, :stack_options=
 
   def launch_job
-    job_class = "#{job_template.class.parent.name}::#{job_template.class.stack_type}".constantize
+    job_class = "#{job_template.class.module_parent.name}::#{job_template.class.stack_type}".constantize
     options = job_options.with_indifferent_access.deep_merge(
       :extra_vars => {
         'manageiq'            => service_manageiq_env,

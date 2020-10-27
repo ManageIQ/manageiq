@@ -157,9 +157,9 @@ class MiqWorker < ApplicationRecord
     @settings_name ||=
       if self == MiqWorker
         :worker_base
-      elsif parent.try(:short_token)
+      elsif module_parent.try(:short_token)
         # :generic_worker_infra, :generic_worker_vmware
-        :"#{normalized_type}_#{parent.short_token.underscore}"
+        :"#{normalized_type}_#{module_parent.short_token.underscore}"
       else
         # :generic_worker
         normalized_type.to_sym
@@ -552,7 +552,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.normalized_type
-    @normalized_type ||= if parent == Object
+    @normalized_type ||= if module_parent == Object
                            name.sub(/^Miq/, '').underscore
                          else
                            name.demodulize.underscore

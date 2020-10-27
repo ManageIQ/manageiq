@@ -9,7 +9,7 @@ module PerEmsTypeWorkerMixin
     end
 
     def ems_class
-      parent
+      module_parent
     end
 
     def emses_in_zone

@@ -410,12 +410,12 @@ class ExtManagementSystem < ApplicationRecord
   def self.short_token
     if self == ManageIQ::Providers::BaseManager
       nil
-    elsif parent == ManageIQ::Providers
+    elsif module_parent == ManageIQ::Providers
       # "Infra"
       name.demodulize.sub(/Manager$/, '')
-    elsif parent != Object
+    elsif module_parent != Object
       # "Vmware"
-      parent.name.demodulize
+      module_parent.name.demodulize
     end
   end
 

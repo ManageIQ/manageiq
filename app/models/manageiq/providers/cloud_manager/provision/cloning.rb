@@ -4,7 +4,7 @@ module ManageIQ::Providers::CloudManager::Provision::Cloning
   end
 
   def vm_model_class
-    self.class.parent::Vm
+    self.class.module_parent::Vm
   end
 
   def validate_dest_name
