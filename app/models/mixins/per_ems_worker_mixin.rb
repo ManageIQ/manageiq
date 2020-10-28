@@ -96,9 +96,6 @@ module PerEmsWorkerMixin
       server_scope.where(:queue_name => queue_name).order("started_on DESC")
     end
 
-    alias find_by_queue_name lookup_by_queue_name
-    Vmdb::Deprecation.deprecate_methods(self, :find_by_queue_name => :lookup_by_queue_name)
-
     def queue_name_for_ems(ems)
       return ems unless ems.kind_of?(ExtManagementSystem)
 
