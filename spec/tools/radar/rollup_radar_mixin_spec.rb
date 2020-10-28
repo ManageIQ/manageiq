@@ -102,8 +102,8 @@ describe RollupRadarMixin do
   end
 
   def check_results(results, expected)
-    results.sort_by! { |x| Time.parse(x['hourly_timestamp']).utc }
-    expected.sort_by! { |x| Time.parse(x['hourly_timestamp']).utc }
+    results.sort_by! { |x| x['hourly_timestamp'].utc }
+    expected.sort_by! { |x| x['hourly_timestamp'] }
 
     results.zip(expected).each do |result, expected_result|
       expect(result).to(include(expected_result))
@@ -133,12 +133,12 @@ describe RollupRadarMixin do
       exp = [{"label_name"             => "com.redhat.component",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 00:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 00:00:00 +0000").utc,
               "max_sum_used_cores"     => 2.0},
              {"label_name"             => "com.redhat.component",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 01:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 01:00:00 +0000").utc,
               "max_sum_used_cores"     => 2.0}]
 
       check_results(results, exp)
@@ -187,12 +187,12 @@ describe RollupRadarMixin do
       exp = [{"label_name"             => "com.redhat.component",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 00:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 00:00:00 +0000").utc,
               "max_sum_used_cores"     => 1.0},
              {"label_name"             => "com.redhat.component",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 01:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 01:00:00 +0000").utc,
               "max_sum_used_cores"     => 1.0}]
 
       check_results(results, exp)
@@ -236,12 +236,12 @@ describe RollupRadarMixin do
         exp = [{"label_name"             => "com.redhat.component",
                 "label_value"            => "EAP7",
                 "container_project_name" => container_project.name,
-                "hourly_timestamp"       => "2012-09-01 00:00:00",
+                "hourly_timestamp"       => Time.parse("2012-09-01 00:00:00 +0000").utc,
                 "max_sum_used_cores"     => 1.5},
                {"label_name"             => "com.redhat.component",
                 "label_value"            => "EAP7",
                 "container_project_name" => container_project.name,
-                "hourly_timestamp"       => "2012-09-01 01:00:00",
+                "hourly_timestamp"       => Time.parse("2012-09-01 01:00:00 +0000").utc,
                 "max_sum_used_cores"     => 1.0}]
 
         check_results(results, exp)
@@ -286,12 +286,12 @@ describe RollupRadarMixin do
       exp = [{"label_name"             => "com.redhat.component_different",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 00:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 00:00:00 +0000").utc,
               "max_sum_used_cores"     => 0.2},
              {"label_name"             => "com.redhat.component_different",
               "label_value"            => "EAP7",
               "container_project_name" => container_project.name,
-              "hourly_timestamp"       => "2012-09-01 01:00:00",
+              "hourly_timestamp"       => Time.parse("2012-09-01 01:00:00 +0000").utc,
               "max_sum_used_cores"     => 1.0}]
 
       check_results(results, exp)
