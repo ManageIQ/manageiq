@@ -1,7 +1,7 @@
 module Vmdb
   class Deprecation
     def self.instance
-      @instance ||= ActiveSupport::Deprecation.new("L-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
+      @instance ||= ActiveSupport::Deprecation.new("M-release", "ManageIQ").tap { |d| d.behavior = default_behavior }
     end
 
     def self.method_missing(method_name, *args, &block)
