@@ -142,7 +142,7 @@ RSpec.describe Hardware do
 
       it "bails database calculation" do
         hardware
-        expect(virtual_column_sql_value(Hardware, "allocated_disk_storage")).to be_nil
+        expect(virtual_column_sql_value(Hardware, "allocated_disk_storage")).to eq(0.0)
       end
     end
 
@@ -174,7 +174,7 @@ RSpec.describe Hardware do
 
       it "bails database calculation" do
         hardware
-        expect(virtual_column_sql_value(Hardware, "used_disk_storage")).to be_nil
+        expect(virtual_column_sql_value(Hardware, "used_disk_storage")).to eq(0.0)
       end
     end
 
