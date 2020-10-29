@@ -61,6 +61,10 @@ RSpec.describe "Server Role Management" do
         @miq_server.role = desired
         expect(@miq_server.server_role_names).to eq(%w( ems_operations scheduler ))
       end
+
+      it "with an invalid role name" do
+        expect { @miq_server.role = 'foo' }.to raise_error(ArgumentError, /not defined/)
+      end
     end
 
     context "server_role_names=" do
@@ -87,6 +91,10 @@ RSpec.describe "Server Role Management" do
         desired = %w[ems_operations scheduler scheduler]
         @miq_server.server_role_names = desired
         expect(@miq_server.server_role_names).to eq(%w[ems_operations scheduler])
+      end
+
+      it "with an invalid role name" do
+        expect { @miq_server.server_role_names = ['foo'] }.to raise_error(ArgumentError, /not defined/)
       end
     end
 

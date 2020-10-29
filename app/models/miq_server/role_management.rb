@@ -139,7 +139,12 @@ module MiqServer::RoleManagement
       if roles.blank?
         server_roles.delete_all
       else
-        desired = (roles == "*" ? ServerRole.all_names : roles.map { |role| role.strip.downcase }.sort)
+        all_roles = ServerRole.all_names
+
+        desired = (roles == "*" ? all_roles : roles.map { |role| role.strip.downcase }.sort)
+        invalid = desired - all_roles
+        raise ArgumentError, _("Roles <%{names}> not defined") % {:names => invalid.join(", ")} if invalid.any?
+
         current = server_role_names
 
         # MiqServer#server_role_names may include database scoped roles, which are managed elsewhere,
