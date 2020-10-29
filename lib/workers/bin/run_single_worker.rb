@@ -60,6 +60,7 @@ end
 opt_parser.parse!
 worker_class = ARGV[0]
 
+puts "** Booting #{worker_class} with PID: #{Process.pid}#{" and options: #{options.inspect}" if options.any?}..." unless options[:list]
 require File.expand_path("../../../config/environment", __dir__)
 
 if options[:list]
