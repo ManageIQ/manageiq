@@ -102,14 +102,12 @@ module MiqServer::RoleManagement
   end
 
   def is_master_for_role?(server_role)
-    server_role = ServerRole.to_role(server_role)
-    assigned    = assigned_server_roles.find_by(:server_role_id => server_role.id)
+    assigned = assigned_server_roles.find_by(:server_role_id => server_role.id)
     return false if assigned.nil?
     assigned.priority == 1
   end
 
   def set_master_for_role(server_role)
-    server_role = ServerRole.to_role(server_role)
     if server_role.master_supported?
       zone.miq_servers.reject { |s| s.id == id }.each do |server|
         assigned = server.assigned_server_roles.find_by(:server_role_id =>  server_role.id)
@@ -121,7 +119,7 @@ module MiqServer::RoleManagement
   end
 
   def remove_master_for_role(server_role)
-    assign_role(ServerRole.to_role(server_role), 2)
+    assign_role(server_role, 2)
   end
 
   def check_server_roles
@@ -178,7 +176,6 @@ module MiqServer::RoleManagement
   end
 
   def assign_role(server_role, priority = nil)
-    server_role          = ServerRole.to_role(server_role)
     assigned_server_role = assigned_server_roles.find_or_create_by(:server_role_id => server_role.id)
     if assigned_server_role.priority.nil? || (priority.kind_of?(Numeric) && assigned_server_role.priority != priority)
       priority ||= AssignedServerRole::DEFAULT_PRIORITY

@@ -14,8 +14,6 @@ RSpec.describe "Server Monitor" do
       @server_roles.each do |server_role|
         expect(server_role.unlimited?).to be_truthy        if server_role.max_concurrent == 0
         expect(server_role.master_supported?).to be_truthy if server_role.max_concurrent == 1
-        expect(ServerRole.to_role(server_role)).to eq(server_role)
-        expect(ServerRole.to_role(server_role.name)).to eq(server_role)
       end
     end
 
@@ -331,14 +329,14 @@ RSpec.describe "Server Monitor" do
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
         @roles1 = [['ems_operations', 1], ['event', 2], ['scheduler', 2], ['reporting', 1]]
-        @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
+        @roles1.each { |role, priority| @miq_server1.assign_role(ServerRole.find_by(:name => role), priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
         @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
         @roles2 = [['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1]]
-        @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
+        @roles2.each { |role, priority| @miq_server2.assign_role(ServerRole.find_by(:name => role), priority) }
         @miq_server2.activate_roles("event", "ems_operations", 'scheduler', 'reporting')
 
         @miq_server1.monitor_servers
@@ -420,17 +418,17 @@ RSpec.describe "Server Monitor" do
         @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :name => "Miq1")
         @miq_server1.deactivate_all_roles
         @roles1 = [['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2],]
-        @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
+        @roles1.each { |role, priority| @miq_server1.assign_role(ServerRole.find_by(:name => role), priority) }
 
         @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
         @miq_server2.deactivate_all_roles
         @roles2 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 3], ['ems_inventory', 2],]
-        @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
+        @roles2.each { |role, priority| @miq_server2.assign_role(ServerRole.find_by(:name => role), priority) }
 
         @miq_server3 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
         @miq_server3.deactivate_all_roles
         @roles3 = [['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1]]
-        @roles3.each { |role, priority| @miq_server3.assign_role(role, priority) }
+        @roles3.each { |role, priority| @miq_server3.assign_role(ServerRole.find_by(:name => role), priority) }
 
         @miq_server1.monitor_servers
         @miq_server1.monitor_server_roles if @miq_server1.is_master?
@@ -506,21 +504,25 @@ RSpec.describe "Server Monitor" do
       end
 
       it "should respond to helper methods for UI" do
-        expect(@miq_server1.is_master_for_role?("ems_operations")).not_to be_truthy
-        expect(@miq_server2.is_master_for_role?("ems_operations")).to be_truthy
-        expect(@miq_server3.is_master_for_role?("ems_operations")).not_to be_truthy
+        role = ServerRole.find_by(:name => "ems_operations")
+        expect(@miq_server1.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?(role)).to be_truthy
+        expect(@miq_server3.is_master_for_role?(role)).not_to be_truthy
 
-        expect(@miq_server1.is_master_for_role?("event")).not_to be_truthy
-        expect(@miq_server2.is_master_for_role?("event")).to be_truthy
-        expect(@miq_server3.is_master_for_role?("event")).not_to be_truthy
+        role = ServerRole.find_by(:name => "event")
+        expect(@miq_server1.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?(role)).to be_truthy
+        expect(@miq_server3.is_master_for_role?(role)).not_to be_truthy
 
-        expect(@miq_server1.is_master_for_role?("ems_inventory")).not_to be_truthy
-        expect(@miq_server2.is_master_for_role?("ems_inventory")).not_to be_truthy
-        expect(@miq_server3.is_master_for_role?("ems_inventory")).to be_truthy
+        role = ServerRole.find_by(:name => "ems_inventory")
+        expect(@miq_server1.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server3.is_master_for_role?(role)).to be_truthy
 
-        expect(@miq_server1.is_master_for_role?("ems_metrics_coordinator")).not_to be_truthy
-        expect(@miq_server2.is_master_for_role?("ems_metrics_coordinator")).not_to be_truthy
-        expect(@miq_server3.is_master_for_role?("ems_metrics_coordinator")).to be_truthy
+        role = ServerRole.find_by(:name => "ems_metrics_coordinator")
+        expect(@miq_server1.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server2.is_master_for_role?(role)).not_to be_truthy
+        expect(@miq_server3.is_master_for_role?(role)).to be_truthy
       end
 
       context "when Server3 is stopped" do
@@ -808,12 +810,12 @@ RSpec.describe "Server Monitor" do
           @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
           @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
-          @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
+          @roles1.each { |role, priority| @miq_server1.assign_role(ServerRole.find_by(:name => role), priority) }
 
           @miq_server2 = FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
           @roles2 = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1]]
-          @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
+          @roles2.each { |role, priority| @miq_server2.assign_role(ServerRole.find_by(:name => role), priority) }
 
           @miq_server1.monitor_server_roles
         end
