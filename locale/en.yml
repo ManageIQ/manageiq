@@ -5,7 +5,7 @@ en:
   product:
     name: ManageIQ
     name_full: ManageIQ
-    copyright: "Copyright (c) 2019 ManageIQ. Sponsored by Red Hat Inc."
+    copyright: "Copyright (c) 2020 ManageIQ. Sponsored by Red Hat Inc."
   activerecord:
     attributes:
       ems_cloud:
