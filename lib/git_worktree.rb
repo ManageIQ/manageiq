@@ -259,6 +259,9 @@ class GitWorktree
   end
 
   # Ping the git repository endpoint to verify that the network connection is still up.
+  # We use this approach for now over Rugged#check_connection because of a segfault:
+  #
+  #   https://github.com/libgit2/rugged/issues/859
   #
   def check_connection(url)
     require 'net/ping/http'
