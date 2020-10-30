@@ -9,6 +9,9 @@
             - <%= provider_name.upcase %>_instance_power_on
             - <%= provider_name.upcase %>_instance_power_off
 <% end -%>
+:ems_refresh:
+  :<%= provider_name %>:
+    :refresh_interval: 15.minutes
 :http_proxy:
   :<%= provider_name %>:
     :host:
