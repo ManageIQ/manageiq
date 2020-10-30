@@ -1,6 +1,8 @@
 class MiqSchedule < ApplicationRecord
   include DeprecationMixin
   include_concern 'ImportExport'
+  include_concern 'Filters'
+
   include YAMLImportExportMixin
   deprecate_attribute :towhat, :resource_type
 
