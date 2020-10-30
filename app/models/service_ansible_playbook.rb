@@ -19,7 +19,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def check_connection(action)
-    repository(action).check_connection
+    repository(action).check_connection?
   end
 
   def launch_ansible_job_queue(action)

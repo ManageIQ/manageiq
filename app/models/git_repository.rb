@@ -25,18 +25,23 @@ class GitRepository < ApplicationRecord
     FileUtils.rm_rf(directory_name)
   end
 
-  # Check the connection for the remote.
+  # Ping the git repository endpoint to verify that the network connection is still up.
+  # We use this approach for now over Rugged#check_connection because of a segfault:
   #
-  # Does not clone a repo or use an existing one, and instead initializes a
-  # repo in a temp path to check the remote to see if it can accept
-  # connections.
-  def check_connection
-    Dir.mktmpdir do |tmp_repo_dir|
-      repo_opts    = worktree_params.merge(:new => true, :path => tmp_repo_dir)
-      tmp_worktree = GitWorktree.new(repo_opts)
+  #   https://github.com/libgit2/rugged/issues/859
+  #
+  def check_connection?
+    require 'net/ping/http'
 
-      tmp_worktree.check_connection(url)
-    end
+    # URI library cannot handle git urls, so just convert it to a standard url.
+    url = url.sub(':', '/').sub('git@', 'https://www.') if url.start_with?('git@')
+
+    # Secure endpoints only as port 80 may not be enabled for outgoing traffic.
+    url = url.sub('http', 'https') if url.start_with?('http://')
+
+    $log.debug("pinging url '#{url}' to verify network connection")
+
+    Net::Ping::HTTP.new(url).ping?
   end
 
   def refresh

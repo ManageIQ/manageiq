@@ -258,25 +258,6 @@ class GitWorktree
     end
   end
 
-  # Ping the git repository endpoint to verify that the network connection is still up.
-  # We use this approach for now over Rugged#check_connection because of a segfault:
-  #
-  #   https://github.com/libgit2/rugged/issues/859
-  #
-  def check_connection(url)
-    require 'net/ping/http'
-
-    # URI library cannot handle git urls, so just convert it to a standard url.
-    url = url.sub(':', '/').sub('git@', 'https://www.') if url.start_with?('git@')
-
-    # Secure endpoints only as port 80 may not be enabled for outgoing traffic.
-    url = url.sub('http', 'https') if url.start_with?('http://')
-
-    $log.debug("pinging url '#{url}' to verify network connection")
-
-    Net::Ping::HTTP.new(url).ping?
-  end
-
   def with_remote_options
     if @ssh_private_key
       @ssh_private_key_file = Tempfile.new
