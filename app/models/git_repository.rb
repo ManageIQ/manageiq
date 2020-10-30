@@ -31,17 +31,19 @@ class GitRepository < ApplicationRecord
   #   https://github.com/libgit2/rugged/issues/859
   #
   def check_connection?
-    require 'net/ping/http'
+    require 'net/ping/external'
 
     # URI library cannot handle git urls, so just convert it to a standard url.
-    url = url.sub(':', '/').sub('git@', 'https://www.') if url.start_with?('git@')
+    url = url.sub(':', '/').sub('git@', 'https://') if url.start_with?('git@')
+    host = URI.parse(url).hostname
 
-    # Secure endpoints only as port 80 may not be enabled for outgoing traffic.
-    url = url.sub('http', 'https') if url.start_with?('http://')
+    $log.debug("pinging '#{host}' to verify network connection")
+    ext_ping = Net::Ping::External.new(host)
 
-    $log.debug("pinging url '#{url}' to verify network connection")
+    result = ext_ping.ping?
+    $log.debug("ping failed: #{ext_ping.exception}") unless result
 
-    Net::Ping::HTTP.new(url).ping?
+    result
   end
 
   def refresh
