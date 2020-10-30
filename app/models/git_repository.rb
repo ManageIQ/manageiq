@@ -34,8 +34,8 @@ class GitRepository < ApplicationRecord
     require 'net/ping/external'
 
     # URI library cannot handle git urls, so just convert it to a standard url.
-    url = url.sub(':', '/').sub('git@', 'https://') if url.start_with?('git@')
-    host = URI.parse(url).hostname
+    temp_url = url.sub(':', '/').sub('git@', 'https://') if url.start_with?('git@')
+    host = URI.parse(temp_url).hostname
 
     $log.debug("pinging '#{host}' to verify network connection")
     ext_ping = Net::Ping::External.new(host)
