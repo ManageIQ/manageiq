@@ -35,7 +35,7 @@ class GitRepository < ApplicationRecord
 
     # URI library cannot handle git urls, so just convert it to a standard url.
     temp_url = url.dup
-    temp_url = url.sub(':', '/').sub('git@', 'https://') if url.start_with?('git@')
+    temp_url = temp_url.sub(':', '/').sub('git@', 'https://') if temp_url.start_with?('git@')
 
     host = URI.parse(temp_url).hostname
 
