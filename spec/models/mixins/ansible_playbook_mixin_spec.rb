@@ -27,5 +27,11 @@ RSpec.describe AnsiblePlaybookMixin do
       expect($log).to receive(:info).with("Stdout from ansible job ansible_playbook_mixin_test: <test ansible text>")
       test_instance.playbook_log_stdout('always', job)
     end
+
+    it "raises an error if the job is nil" do
+      expect($log).to receive(:error).with("Job was nil, must pass a valid job")
+      expect($log).to receive(:log_backtrace)
+      test_instance.playbook_log_stdout('always', nil)
+    end
   end
 end
