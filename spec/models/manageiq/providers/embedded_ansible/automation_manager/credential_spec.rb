@@ -299,61 +299,86 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
   end
 
   context "ScmCredential" do
-    it_behaves_like 'an embedded_ansible credential' do
-      let(:credential_class) { embedded_ansible::ScmCredential }
+    let(:credential_class) { embedded_ansible::ScmCredential }
+    let(:expected_ssh_key) { "secret2\n" }
 
-      let(:params) do
-        {
-          :name           => "Scm Credential",
-          :userid         => "userid",
-          :password       => "secret1",
-          :ssh_key_data   => "secret2",
-          :ssh_key_unlock => "secret3"
-        }
-      end
-      let(:queue_create_params) do
-        {
-          :name           => "Scm Credential",
-          :userid         => "userid",
-          :password       => ManageIQ::Password.encrypt("secret1"),
-          :ssh_key_data   => ManageIQ::Password.encrypt("secret2"),
-          :ssh_key_unlock => ManageIQ::Password.encrypt("secret3")
-        }
-      end
-      let(:params_to_attributes) do
-        {
-          :name              => "Scm Credential",
-          :userid            => "userid",
-          :password          => "secret1",
-          :auth_key          => "secret2",
-          :auth_key_password => "secret3",
-        }
-      end
-      let(:expected_values) do
-        {
-          :name                        => "Scm Credential",
-          :userid                      => "userid",
-          :password                    => "secret1",
-          :ssh_key_data                => "secret2",
-          :ssh_key_unlock              => "secret3",
-          :password_encrypted          => ManageIQ::Password.try_encrypt("secret1"),
-          :auth_key_encrypted          => ManageIQ::Password.try_encrypt("secret2"),
-          :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret3")
-        }
-      end
-      let(:params_to_attrs) { [:auth_key, :auth_key_password] }
-      let(:update_params) do
-        {
-          :name     => "Updated Credential",
-          :password => "supersecret"
-        }
-      end
-      let(:update_queue_params) do
-        {
-          :name     => "Updated Credential",
-          :password => ManageIQ::Password.encrypt("supersecret")
-        }
-      end
+    let(:params) do
+      {
+        :name           => "Scm Credential",
+        :userid         => "userid",
+        :password       => "secret1",
+        :ssh_key_data   => passed_in_ssh_key,
+        :ssh_key_unlock => "secret3"
+      }
+    end
+    let(:queue_create_params) do
+      {
+        :name           => "Scm Credential",
+        :userid         => "userid",
+        :password       => ManageIQ::Password.encrypt("secret1"),
+        :ssh_key_data   => ManageIQ::Password.encrypt(passed_in_ssh_key),
+        :ssh_key_unlock => ManageIQ::Password.encrypt("secret3")
+      }
+    end
+    let(:params_to_attributes) do
+      {
+        :name              => "Scm Credential",
+        :userid            => "userid",
+        :password          => "secret1",
+        :auth_key          => passed_in_ssh_key,
+        :auth_key_password => "secret3",
+      }
+    end
+    let(:expected_values) do
+      {
+        :name                        => "Scm Credential",
+        :userid                      => "userid",
+        :password                    => "secret1",
+        :ssh_key_data                => expected_ssh_key,
+        :ssh_key_unlock              => "secret3",
+        :password_encrypted          => ManageIQ::Password.try_encrypt("secret1"),
+        :auth_key_encrypted          => expected_ssh_key.present? ? ManageIQ::Password.try_encrypt(expected_ssh_key) : expected_ssh_key,
+        :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret3")
+      }
+    end
+    let(:params_to_attrs) { [:auth_key, :auth_key_password] }
+    let(:update_params) do
+      {
+        :name     => "Updated Credential",
+        :password => "supersecret"
+      }
+    end
+    let(:update_queue_params) do
+      {
+        :name     => "Updated Credential",
+        :password => ManageIQ::Password.encrypt("supersecret")
+      }
+    end
+
+    context "with an SSH key that ends with a newline" do
+      let(:passed_in_ssh_key) { "secret2\n" }
+
+      it_behaves_like 'an embedded_ansible credential'
+    end
+
+    context "with an SSH key that does not end with a newline" do
+      let(:passed_in_ssh_key) { "secret2" }
+
+      it_behaves_like 'an embedded_ansible credential'
+    end
+
+    context "with an nil SSH key" do
+      let(:passed_in_ssh_key) { nil }
+      let(:expected_ssh_key)  { nil }
+
+      it_behaves_like 'an embedded_ansible credential'
+    end
+
+    context "with a empty string SSH key" do
+      let(:passed_in_ssh_key) { "" }
+      let(:expected_ssh_key)  { "" }
+
+      it_behaves_like 'an embedded_ansible credential'
     end
   end
 
