@@ -54,6 +54,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential < M
   alias ssh_key_data   auth_key
   alias ssh_key_unlock auth_key_password
 
+  before_validation :ensure_newline_for_ssh_key
+
   def self.display_name(number = 1)
     n_('Credential (SCM)', 'Credentials (SCM)', number)
   end
@@ -65,5 +67,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential < M
     attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock)  if attrs.key?(:ssh_key_unlock)
 
     attrs
+  end
+
+  private
+
+  def ensure_newline_for_ssh_key
+    self.auth_key = "#{auth_key}\n" if auth_key.present? && auth_key[-1] != "\n"
   end
 end
