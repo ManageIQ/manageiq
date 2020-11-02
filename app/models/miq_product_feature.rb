@@ -107,6 +107,18 @@ class MiqProductFeature < ApplicationRecord
     @detail = nil
   end
 
+  # invalidate feature cache on this server and others
+  #
+  # called when data in the features change (typically tenant data).
+  # This then uses the queue to tell other servers they need to update as well.
+  def self.invalidate_caches_queue
+    invalidate_caches
+    MiqQueue.broadcast(
+      :class_name  => name,
+      :method_name => "invalidate_caches"
+    )
+  end
+
   def self.features
     @feature_cache ||= begin
       # create hash with parent identifier and details
