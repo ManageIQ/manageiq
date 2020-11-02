@@ -64,7 +64,7 @@ class Tenant < ApplicationRecord
 
   before_save :nil_blanks
   after_save -> { MiqProductFeature.invalidate_caches }
-  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes, :update_miq_product_features_for_tenant_nodes
 
   def self.scope_by_tenant?
     true
@@ -310,6 +310,10 @@ class Tenant < ApplicationRecord
 
   def destroy_with_subtree
     subtree.sort_by(&:depth).reverse.each(&:destroy)
+  end
+
+  def update_miq_product_features_for_tenant_nodes
+    MiqProductFeature.invalidate_caches_queue
   end
 
   private
