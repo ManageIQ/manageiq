@@ -136,6 +136,7 @@ module SupportsFeatureMixin
     :start                               => 'Start',
     :streaming_refresh                   => 'Streaming refresh',
     :suspend                             => 'Suspending',
+    :pause                               => 'Pause a VM',
     :terminate                           => 'Terminate a VM',
     :timeline                            => 'Query for events',
     :update_aggregate                    => 'Host Aggregate Update',
