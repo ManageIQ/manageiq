@@ -374,6 +374,20 @@ RSpec.describe GitRepository do
         expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
         expect(repo.check_connection?).to eq(true)
       end
+
+      it "handles ssh urls without issue" do
+        allow(repo).to receive(:url).and_return("ssh://user@example.com:443/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "handles file urls without issue" do
+        allow(repo).to receive(:url).and_return("file://example.com/server/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
     end
   end
 end
