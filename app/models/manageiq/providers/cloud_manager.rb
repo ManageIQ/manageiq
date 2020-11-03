@@ -42,6 +42,7 @@ module ManageIQ::Providers
 
     validates_presence_of :zone
 
+    # TODO: remove and have each manager include this
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 
