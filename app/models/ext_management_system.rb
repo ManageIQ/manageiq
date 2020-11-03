@@ -263,6 +263,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
+  virtual_column :supports_auth_key_pair_create, :type => :boolean
   virtual_column :supports_block_storage,  :type => :boolean
   virtual_column :supports_cloud_tenants,  :type => :boolean
   virtual_column :supports_volume_multiattachment, :type => :boolean
@@ -767,6 +768,10 @@ class ExtManagementSystem < ApplicationRecord
   def total_vms_never;     vm_count_by_state("never");     end
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
+
+  def supports_auth_key_pair_create
+    supports_auth_key_pair_create?
+  end
 
   def supports_block_storage
     supports_block_storage?
