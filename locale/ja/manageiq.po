@@ -45889,7 +45889,7 @@ msgstr "資格情報が定義されていません"
 #: ../app/decorators/manageiq/providers/autosde/storage_manager_decorator.rb:19
 msgid "%{number} Storage Pool"
 msgid_plural "%{number} Storage Pools"
-msgstr[0] "ストレージ・プール ( %) {number}"
+msgstr[0] "ストレージ・プール %{number}"
 
 #: ../app/helpers/ems_network_helper/textual_summary.rb:60
 #: ../app/helpers/ems_physical_infra_helper/textual_summary.rb:55
