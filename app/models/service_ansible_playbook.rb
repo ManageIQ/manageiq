@@ -171,6 +171,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def log_stdout(action)
     log_option = options.fetch_path(:config_info, action.downcase.to_sym, :log_output) || 'on_error'
-    playbook_log_stdout(log_option, job(action))
+    job = job(action)
+    if job.nil?
+      $log.info("No stdout available due to missing job")
+    else
+      playbook_log_stdout(log_option, job)
+    end
   end
 end
