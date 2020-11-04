@@ -89,8 +89,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def on_error(action)
     _log.info("on_error called for service action: #{action}")
     update_attributes(:retirement_state => 'error') if action == "Retirement"
-    job(action).try(:refresh_ems)
-    postprocess(action)
+    if job(action)
+      job(action).try(:refresh_ems)
+      postprocess(action)
+    else
+      _log.info("postprocess not called because job was nil")
+    end
   end
 
   def retain_resources_on_retirement?
