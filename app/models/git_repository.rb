@@ -25,6 +25,29 @@ class GitRepository < ApplicationRecord
     FileUtils.rm_rf(directory_name)
   end
 
+  # Ping the git repository endpoint to verify that the network connection is still up.
+  # We use this approach for now over Rugged#check_connection because of a segfault:
+  #
+  #   https://github.com/libgit2/rugged/issues/859
+  #
+  def check_connection?
+    require 'net/ping/external'
+
+    # URI library cannot handle git urls, so just convert it to a standard url.
+    temp_url = url.dup.to_s
+    temp_url = temp_url.sub(':', '/').sub('git@', 'https://') if temp_url.start_with?('git@')
+
+    host = URI.parse(temp_url).hostname
+
+    $log.debug("pinging '#{host}' to verify network connection")
+    ext_ping = Net::Ping::External.new(host)
+
+    result = ext_ping.ping?
+    $log.debug("ping failed: #{ext_ping.exception}") unless result
+
+    result
+  end
+
   def refresh
     update_repo
     transaction do
