@@ -345,5 +345,49 @@ describe GitRepository do
         end
       end
     end
+
+    context "check_connection?" do
+      require 'net/ping/external'
+      let(:ext_ping) { instance_double(Net::Ping::External) }
+
+      before do
+        allow(Net::Ping::External).to receive(:new).and_return(ext_ping)
+        allow(ext_ping).to receive(:exception)
+      end
+
+      it "returns true if it can ping the repo" do
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging '.*' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "returns false if it cannot ping the repo" do
+        allow(ext_ping).to receive(:ping?).and_return(false)
+        expect($log).to receive(:debug).with(/pinging '.*' to verify network connection/)
+        expect($log).to receive(:debug).with(/ping failed: .*/)
+        expect(repo.check_connection?).to eq(false)
+      end
+
+      it "handles git urls without issue" do
+        allow(repo).to receive(:url).and_return("git@example.com:ManageIQ/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "handles ssh urls without issue" do
+        allow(repo).to receive(:url).and_return("ssh://user@example.com:443/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "handles file urls without issue" do
+        allow(repo).to receive(:url).and_return("file://example.com/server/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+    end
   end
 end

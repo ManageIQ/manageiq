@@ -2,7 +2,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   include AnsibleExtraVarsMixin
   include AnsiblePlaybookMixin
 
-  delegate :playbook, :to => :service_template, :allow_nil => true
+  delegate :playbook, :repository, :to => :service_template, :allow_nil => true
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
@@ -16,6 +16,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def execute(action)
     launch_ansible_job_queue(action)
+  end
+
+  def check_connection(action)
+    repository(action).check_connection?
   end
 
   def launch_ansible_job_queue(action)
