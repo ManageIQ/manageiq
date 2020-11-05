@@ -33,7 +33,7 @@ opt_parser = OptionParser.new do |opts|
     options[:ems_id] = val
   end
 
-  opts.on("-s=system_uid", "--system-uid=system_uid", "Set the system uid coorelating a MiqWorker row to an external system's resource.") do |val|
+  opts.on("-s=system_uid", "--system-uid=system_uid", "Set the system uid correlating a MiqWorker row to an external system's resource.") do |val|
     options[:system_uid] = val
   end
 
