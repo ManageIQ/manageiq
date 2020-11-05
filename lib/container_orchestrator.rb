@@ -2,6 +2,7 @@ autoload(:Kubeclient, 'kubeclient')
 autoload(:KubeException, 'kubeclient')
 
 class ContainerOrchestrator
+  include Vmdb::Logging
   include_concern 'ObjectDefinition'
 
   TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
@@ -40,6 +41,7 @@ class ContainerOrchestrator
   end
 
   def delete_deployment(name)
+    _log.info("Deleting [#{name}] in namespace: #{my_namespace}")
     scale(name, 0)
     kube_apps_connection.delete_deployment(name, my_namespace)
   rescue KubeException => e
