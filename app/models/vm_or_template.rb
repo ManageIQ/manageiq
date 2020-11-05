@@ -529,9 +529,19 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def genealogy_parent=(parent)
-    @genealogy_parent_object = parent
+    with_relationship_type('genealogy') do
+      if use_ancestry?
+        self.parent = parent
+      else
+        @genealogy_parent_object = parent
+      end
+    end
   end
 
+  # save_genealogy_information is only necessary for relationships using genealogy
+  # when using ancestry, the relationship will be saved after the fact
+  # when not using ancestry, the relationship is saved on assignment, necessitating the prior save of the vm/template record
+  # this variable is used to delay that assignment
   def save_genealogy_information
     if defined?(@genealogy_parent_object) && @genealogy_parent_object
       with_relationship_type('genealogy') { self.parent = @genealogy_parent_object }
