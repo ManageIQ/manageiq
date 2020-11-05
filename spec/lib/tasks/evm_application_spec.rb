@@ -65,8 +65,8 @@ RSpec.describe EvmApplication do
     let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000, :system_uid => "1-ui-7f658c8654-5ln9g") }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000, :system_uid => "1-generic-5cf45d7656-h6jzs") }
     let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays worker status for local and remote server" do
@@ -83,6 +83,7 @@ RSpec.describe EvmApplication do
             "Queue"     => "",
             "Started"   => "",
             "Heartbeat" => "",
+            "System UID" => "1-ui-7f658c8654-5ln9g",
             "MB Usage"  => "",
           },
           {
@@ -96,6 +97,7 @@ RSpec.describe EvmApplication do
             "Queue"     => "",
             "Started"   => "",
             "Heartbeat" => "",
+            "System UID" => nil,
             "MB Usage"  => "",
           },
           {
@@ -109,6 +111,7 @@ RSpec.describe EvmApplication do
             "Queue"     => "",
             "Started"   => "",
             "Heartbeat" => "",
+            "System UID" => "1-generic-5cf45d7656-h6jzs",
             "MB Usage"  => "",
           },
         ]
@@ -158,9 +161,9 @@ RSpec.describe EvmApplication do
 
           * marks a master appliance
 
-           #{header(:Region)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
-          -#{line_for(:Region)}-|-#{line_for(:Zone)      }-|------|--------|-#{line_for(:PID)       }-|------|--------------------------|-------|---------|-----------|----------
-           #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{      local.name     } |       |         |           |
+           #{header(:Region)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | System UID | MB Usage
+          -#{line_for(:Region)}-|-#{line_for(:Zone)      }-|------|--------|-#{line_for(:PID)       }-|------|--------------------------|-------|---------|-----------|------------|----------
+           #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{      local.name     } |       |         |           |            |
         SERVER_INFO
 
       expect { EvmApplication.status }.to output(expected_output).to_stdout
