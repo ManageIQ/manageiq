@@ -33,6 +33,10 @@ opt_parser = OptionParser.new do |opts|
     options[:ems_id] = val
   end
 
+  opts.on("-s=system_uid", "--system-uid=system_uid", "Set the system uid coorelating a MiqWorker row to an external system's resource.") do |val|
+    options[:system_uid] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -95,6 +99,8 @@ unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
 
+  create_options[:system_uid] = options[:system_uid] if options[:system_uid]
+
   if options[:ems_id]
     create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
     runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
@@ -102,7 +108,9 @@ unless options[:dry_run]
 
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
-               wrkr.update(:pid => Process.pid)
+               update_options = {:pid => Process.pid}
+               update_options[:system_uid] = options[:system_uid] if options[:system_uid]
+               wrkr.update(update_options)
              end
            else
              worker_class.create_worker_record(create_options)
