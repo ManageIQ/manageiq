@@ -33,11 +33,11 @@ RSpec.describe Zone do
     end
 
     it "hosts in virtual reflections" do
-      expect(described_class.includes(:aggregate_cpu_speed)).not_to be_nil
+      expect(described_class.includes(:total_cpu_speed)).not_to be_nil
     end
 
     it "vms_and_templates in virtual reflections" do
-      expect(described_class.includes(:aggregate_vm_cpus)).not_to be_nil
+      expect(described_class.includes(:total_vm_cpus)).not_to be_nil
     end
   end
 

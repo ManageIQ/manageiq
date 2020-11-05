@@ -276,10 +276,10 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_create_security_group, :type => :boolean
   virtual_column :supports_storage_services, :type => :boolean
 
-  virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
-  virtual_aggregate :total_memory, :hosts, :sum, :ram_size
-  virtual_aggregate :total_cloud_vcpus, :vms, :sum, :cpu_total_cores
-  virtual_aggregate :total_cloud_memory, :vms, :sum, :ram_size
+  virtual_sum :total_vcpus,        :hosts, :total_vcpus
+  virtual_sum :total_memory,       :hosts, :ram_size
+  virtual_sum :total_cloud_vcpus,  :vms,   :cpu_total_cores
+  virtual_sum :total_cloud_memory, :vms,   :ram_size
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
