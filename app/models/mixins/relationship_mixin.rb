@@ -26,7 +26,7 @@ module RelationshipMixin
   included do
     extend Memoist
 
-    cattr_accessor :default_relationship_type
+    class_attribute :default_relationship_type
     class_attribute :skip_relationships, :default => []
 
     has_many :all_relationships, :class_name => "Relationship", :dependent => :destroy, :as => :resource
