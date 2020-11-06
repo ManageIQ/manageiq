@@ -7,8 +7,8 @@ RSpec.describe ServiceTemplateAnsiblePlaybook do
   let(:script_source) { FactoryBot.create(:configuration_script_source, :manager => ems) }
 
   let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
-  let(:provider) { FactoryBot.create(:provider_embedded_ansible, :default_inventory => 1) }
-  let(:ems)      { FactoryBot.create(:automation_manager_ansible_tower, :provider => provider) }
+  let(:provider) { ems.provider }
+  let(:ems)      { FactoryBot.create(:embedded_automation_manager_ansible) }
 
   let(:playbook) do
     FactoryBot.create(:embedded_playbook,
