@@ -1,3 +1,4 @@
+require 'ancestry'
 require 'ostruct'
 require 'cgi'
 require 'uri'
@@ -9,6 +10,7 @@ class VmOrTemplate < ApplicationRecord
   include SupportsFeatureMixin
 
   self.table_name = 'vms'
+  has_ancestry
 
   include_concern 'Operations'
   include_concern 'RetirementManagement'
@@ -285,6 +287,7 @@ class VmOrTemplate < ApplicationRecord
 
   include RelationshipMixin
   self.default_relationship_type = "genealogy"
+  self.skip_relationships += ["genealogy"]
 
   include MiqPolicyMixin
   include AlertMixin
