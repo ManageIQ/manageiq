@@ -679,10 +679,10 @@ module RelationshipMixin
   end
 
   def remove_children(*child_objs)
-    return child_objs.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => nil) } } if use_ancestry?
-
     child_objs = child_objs.flatten.compact
     return child_objs if child_objs.empty?
+
+    return child_objs.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => nil) } } if use_ancestry?
 
     child_rels = self.child_rels
 
