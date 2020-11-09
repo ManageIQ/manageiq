@@ -71,7 +71,7 @@ RSpec.describe GitRepository do
       end
 
       before do
-        allow(MiqServer).to receive(:my_zone).and_return("default")
+        EvmSpecHelper.local_miq_server
         allow(gwt).to receive(:branches).with(anything).and_return(branch_list)
         allow(gwt).to receive(:tags).with(no_args).and_return(tag_list)
         allow(gwt).to receive(:branch_info) do |name|
