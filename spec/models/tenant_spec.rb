@@ -251,6 +251,49 @@ RSpec.describe Tenant do
       expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
       expect(tenant.errors.full_messages[0]).to eq("A tenant created by tenant mapping cannot be deleted.")
     end
+
+    it "wouldn't delete tenant with subtenants" do
+      parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant, :name => "Tenant")
+      FactoryBot.create(:tenant, :parent => parent_tenant, :name => "Subtenant")
+      expect { parent_tenant.destroy! }.to raise_error(Ancestry::AncestryException)
+    end
+
+    it "wouldn't delete tenant with subprojects" do
+      parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant, :name => "Tenant")
+      FactoryBot.create(:tenant, :parent => parent_tenant, :name => "Subtenant", :divisible => false)
+      expect { parent_tenant.destroy! }.to raise_error(Ancestry::AncestryException)
+    end
+  end
+
+  describe "#destroy_with_subtree" do
+    before do
+      root_tenant = Tenant.seed
+      @parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant)
+      @sub_tenant = FactoryBot.create(:tenant, :parent => @parent_tenant)
+      FactoryBot.create(:tenant, :parent => @sub_tenant)
+      sub_sub_tenant = FactoryBot.create(:tenant, :parent => @sub_tenant)
+      FactoryBot.create(:tenant, :parent =>sub_sub_tenant)
+
+      @sub_project = FactoryBot.create(:tenant, :parent => @parent_tenant, :divisible => false)
+      FactoryBot.create(:tenant, :parent => @sub_project, :divisible => false)
+      FactoryBot.create(:tenant, :parent => @sub_project, :divisible => false)
+    end
+
+    it "deletes tenant with all sub-tenants" do
+      expect(Tenant.count).to eq(9)
+      @sub_tenant.destroy_with_subtree
+      expect(Tenant.count).to eq(5)
+    end
+
+    it "deletes project with all sub-projects" do
+      @sub_project.destroy_with_subtree
+      expect(Tenant.count).to eq(6)
+    end
+
+    it "deletes tenant with all sub-projects and sub-tenants" do
+      @parent_tenant.destroy_with_subtree
+      expect(Tenant.count).to eq(1)
+    end
   end
 
   describe "#description" do

@@ -162,9 +162,7 @@ module ManageIQ::Providers
       if source_tenant
         # We just destroyed ourself, reload the source_tenant association
         source_tenant.reload
-        source_tenant.all_subtenants.destroy_all
-        source_tenant.all_subprojects.destroy_all
-        source_tenant.destroy
+        source_tenant.destroy_with_subtree
       end
     end
 
