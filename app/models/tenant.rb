@@ -18,7 +18,9 @@ class Tenant < ApplicationRecord
   default_value_for :divisible,   true
   default_value_for :use_config_for_attributes, false
 
-  has_ancestry
+  before_destroy :ensure_can_be_destroyed
+
+  has_ancestry(:orphan_strategy => :restrict)
 
   has_many :providers
   has_many :ext_management_systems
@@ -62,7 +64,6 @@ class Tenant < ApplicationRecord
 
   before_save :nil_blanks
   after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
-  before_destroy :ensure_can_be_destroyed
 
   def self.scope_by_tenant?
     true
@@ -304,6 +305,10 @@ class Tenant < ApplicationRecord
 
   def create_miq_product_features_for_tenant_nodes
     MiqProductFeature.seed_single_tenant_miq_product_features(self)
+  end
+
+  def destroy_with_subtree
+    subtree.sort_by(&:depth).reverse.each(&:destroy)
   end
 
   private
