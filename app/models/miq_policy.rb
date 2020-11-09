@@ -51,7 +51,7 @@ class MiqPolicy < ApplicationRecord
 
   attr_accessor :reserved
 
-  cattr_accessor :associations_to_get_policies
+  class_attribute :associations_to_get_policies
 
   @@built_in_policies = nil
 
