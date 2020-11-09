@@ -250,8 +250,12 @@ RSpec.describe EmsRefresh do
     let(:vm)  { FactoryBot.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
 
     it 'sends the command to queue' do
-      EmsRefresh.queue_merge([vm], ems)
+      EmsRefresh.queue_merge([vm.class.to_s, vm.id], ems)
       expect(MiqQueue.count).to eq(1)
+    end
+
+    it 'raises arg error if passed an object' do
+      expect { EmsRefresh.queue_merge([vm], ems) }.to raise_error(ArgumentError)
     end
 
     context "task creation" do
@@ -261,12 +265,12 @@ RSpec.describe EmsRefresh do
       end
 
       it 'returns id of MiqTask linked to queued item' do
-        task_id = EmsRefresh.queue_merge([vm], ems, true)
+        task_id = EmsRefresh.queue_merge([vm.class.to_s, vm.id], ems, true)
         expect(task_id).to eq @miq_task.id
       end
 
       it 'links created task with queued item' do
-        task_id = EmsRefresh.queue_merge([vm], ems)
+        task_id = EmsRefresh.queue_merge([vm.class.to_s, vm.id], ems)
         queue_item = MiqQueue.find_by(:method_name => 'refresh', :role => "ems_inventory")
         expect(queue_item.miq_task_id).to eq task_id
       end

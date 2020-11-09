@@ -130,6 +130,11 @@ module EmsRefresh
     MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : msg.data.concat(targets)
       targets = uniq_targets(targets)
+      obj = targets.select { |t| t.kind_of?(ApplicationRecord) }
+      if obj.present?
+        obj.each { |i| _log.warn("queue_merge called with class: #{i.class.name}, id: #{i.id}") }
+        raise ArgumentError, "cannot call queue_merge with an activerecord object"
+      end
 
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
