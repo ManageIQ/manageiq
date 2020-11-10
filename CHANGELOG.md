@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 149 ending 2020-11-09
+
+### Fixed
+
+* Ensure newline for :ssh\_key\_data [(#20771)](https://github.com/ManageIQ/manageiq/pull/20771)
+* Add check for invalid roles in server\_role\_names= [(#20731)](https://github.com/ManageIQ/manageiq/pull/20731)
+
 # Unreleased as of Sprint 147 ending 2020-10-12
 
 ### Added
