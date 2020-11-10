@@ -62,6 +62,7 @@ module SupportsFeatureMixin
     :add_interface                       => 'Add Interface',
     :add_security_group                  => 'Add Security Group',
     :associate_floating_ip               => 'Associate a Floating IP',
+    :auth_key_pair_create                => 'Auth Key Pair Creation',
     :clone                               => 'Clone',
     # FIXME: this is just a internal helper and should be refactored
     :control                             => 'Basic control operations',
