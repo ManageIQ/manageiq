@@ -20,6 +20,11 @@ class MiqUiWorker < MiqWorker
     MiqWorkerType::KILL_PRIORITY_UI_WORKERS
   end
 
+  def self.preload_for_worker_role
+    super
+    Api::ApiConfig.collections.each { |_k, v| v.klass.try(:constantize).try(:descendants) }
+  end
+
   def container_port
     3001
   end
