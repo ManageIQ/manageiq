@@ -390,7 +390,9 @@ FactoryBot.define do
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :parent  => :automation_manager
+          :parent  => :automation_manager do
+    provider :factory => :provider_embedded_ansible
+  end
 
   # Leaf classes for provisioning_manager
 
