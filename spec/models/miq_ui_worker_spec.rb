@@ -43,4 +43,11 @@ RSpec.describe MiqUiWorker do
       expect(described_class.reserve_port(ports)).to eq(3001)
     end
   end
+
+  it "#preload_for_worker_role autoloads api collection classes and descendants" do
+    allow(EvmDatabase).to receive(:seeded_primordially?).and_return(true)
+    expect(MiqUiWorker).to receive(:configure_secret_token)
+    MiqUiWorker.preload_for_worker_role
+    expect(defined?(ServiceAnsibleTower)).to be_truthy
+  end
 end
