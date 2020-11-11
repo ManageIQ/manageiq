@@ -85,7 +85,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
   end
 
   def automate_output_value
-    MiqAeEngine.create_automation_attribute_array_value(Classification.where(:id => @value.to_s.split(",")))
+    MiqAeEngine.create_automation_attribute_array_value(Classification.where(:id => @value.kind_of?(String) ? @value.split(',') : @value))
   end
 
   def automate_key_name
