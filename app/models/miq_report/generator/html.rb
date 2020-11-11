@@ -138,10 +138,10 @@ module MiqReport::Generator::Html
 
     content =
       if group == :_total_
-        "All Rows"
+        _("All Rows")
       else
         group_label = group_text || group
-        group_label = "<Empty>" if group_label.blank?
+        group_label = _("<Empty>") if group_label.blank?
         "#{label}#{group_label}"
       end
 
@@ -156,7 +156,7 @@ module MiqReport::Generator::Html
         if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
           grp_output = ""
           grp_output << "<tr>"
-          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{calc.last.pluralize}:</td>"
+          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last.pluralize)}:</td>"
           col_order.each_with_index do |c, c_idx|        # Go through the columns
             next if c_idx == 0                                # Skip first column
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
