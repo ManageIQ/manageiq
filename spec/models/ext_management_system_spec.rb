@@ -79,7 +79,7 @@ RSpec.describe ExtManagementSystem do
 
   it "does access database when unchanged model is saved" do
     r = FactoryBot.create(:ems_vmware)
-    expect { r.valid? }.to make_database_queries(:count => 3)
+    expect { r.valid? }.to make_database_queries(:count => 1..3)
   end
 
   it ".ems_infra_discovery_types" do

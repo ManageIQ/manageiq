@@ -5,7 +5,7 @@ RSpec.describe ServiceTemplateCatalog do
 
   it "doesn’t access database when unchanged model is saved" do
     f1 = described_class.create!(:name => 'f1')
-    expect { f1.valid? }.to make_database_queries(:count => 2)
+    expect { f1.valid? }.to make_database_queries(:count => 0..2)
   end
 
   describe "#name" do
