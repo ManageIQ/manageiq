@@ -17,6 +17,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
+    sync_from_system
     sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
@@ -61,6 +62,26 @@ module MiqServer::WorkerManagement::Monitor
       end
     end
     result
+  end
+
+  def sync_from_system
+    if podified?
+      ensure_pod_monitor_started
+    end
+
+    cleanup_orphaned_worker_rows
+  end
+
+  def cleanup_orphaned_worker_rows
+    if podified?
+      unless current_pods.empty?
+        orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys)
+        unless orphaned_rows.empty?
+          _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
+          orphaned_rows.destroy_all
+        end
+      end
+    end
   end
 
   def cleanup_failed_workers

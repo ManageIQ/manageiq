@@ -151,6 +151,7 @@ class EvmApplication
           "Queue"     => compact_queue_uri(w.queue_name, w.uri),
           "Started"   => compact_date(w.started_on),
           "Heartbeat" => compact_date(w.last_heartbeat),
+          "System UID" => w.system_uid,
           "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
