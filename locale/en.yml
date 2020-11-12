@@ -1662,6 +1662,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate:     Azure Template
       ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate:          VNF Template
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
+      ManageIQ::Providers::Vmware::InfraManager::OrchestrationTemplate:    OVF Template
       PersistentVolume:         Persistent Volume
       PhysicalChassis:          Physical Chassis
       PhysicalRack:             Physical Rack
