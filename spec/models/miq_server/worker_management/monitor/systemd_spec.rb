@@ -20,11 +20,14 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
     end
 
     context "with failed services" do
-      let(:units) { [{:name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "failed", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
+      let(:service_name) { "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
+      let(:units) { [{:name => service_name, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "failed", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
 
       it "calls DisableUnitFiles with the service name" do
-        expect(systemd_manager).to receive(:StopUnit).with("generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", "replace")
-        expect(systemd_manager).to receive(:DisableUnitFiles).with(["generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service"], false)
+        expect(systemd_manager).to receive(:StopUnit).with(service_name, "replace")
+        expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name)
+        expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name], false)
+
         server.cleanup_failed_systemd_services
       end
     end
