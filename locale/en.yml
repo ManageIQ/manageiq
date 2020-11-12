@@ -1431,6 +1431,7 @@ en:
       CloudVolume:                    Cloud Volume
       CloudVolumeBackup:              Cloud Volume Backup
       CloudVolumeSnapshot:            Cloud Volume Snapshot
+      CloudVolumeType:                Cloud Volume Type
       Compliance:                     Compliance History
       Compliances:                    Compliance History
       Condition:                      Condition
@@ -1468,6 +1469,7 @@ en:
       FileDepotSwift:                 OpenStack Swift
       FileDepotSmb:                   Samba
       Filesystem:                     File
+      FirmwareRegistry:               Firmware Registry
       Flavor:                         Flavor
       FloatingIp:                     Floating IP
       GenericObject:                  Generic Object
