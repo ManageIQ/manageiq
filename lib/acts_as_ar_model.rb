@@ -1,5 +1,6 @@
 class ActsAsArModel
   include Vmdb::Logging
+  include ArVisibleAttribute
 
   def self.connection
     ActiveRecord::Base.connection

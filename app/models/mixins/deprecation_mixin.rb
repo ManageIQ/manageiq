@@ -18,6 +18,7 @@ module DeprecationMixin
     def deprecate_attribute(old_attribute, new_attribute)
       deprecate_attribute_methods(old_attribute, new_attribute)
       virtual_attribute(old_attribute, -> { type_for_attribute(new_attribute.to_s) })
+      hide_attribute(old_attribute)
     end
 
     def deprecate_attribute_methods(old_attribute, new_attribute)
