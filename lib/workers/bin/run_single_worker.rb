@@ -81,7 +81,7 @@ end
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
-options[:ems_id] ||= ENV["EMS_ID"]
+options[:ems_id] ||= ENV["EMS_ID"].try(:split, ',')
 
 if options[:roles].present?
   MiqServer.my_server.server_role_names += options[:roles]
