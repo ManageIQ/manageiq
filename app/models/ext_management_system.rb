@@ -275,6 +275,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_create_flavor, :type => :boolean
   virtual_column :supports_volume_availability_zones, :type => :boolean
   virtual_column :supports_create_security_group, :type => :boolean
+  virtual_column :supports_create_host_aggregate, :type => :boolean
   virtual_column :supports_storage_services, :type => :boolean
 
   virtual_sum :total_vcpus,        :hosts, :total_vcpus
@@ -797,6 +798,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_cloud_object_store_container_create
     supports_cloud_object_store_container_create?
+  end
+
+  def supports_create_host_aggregate
+    supports_create_host_aggregate?
   end
 
   def supports_cinder_volume_types
