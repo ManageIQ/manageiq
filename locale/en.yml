@@ -1525,6 +1525,7 @@ en:
       ManageIQ::Providers::CloudManager::Vm:                                              Instance
       ManageIQ::Providers::Google::CloudManager::Vm:                                      Instance (Google)
       ManageIQ::Providers::Openstack::CloudManager::Vm:                                   Instance (OpenStack)
+      ManageIQ::Providers::IbmCloud::VPC::CloudManager::Vm:                               Instance (IBM)
       ManageIQ::Providers::Azure::CloudManager::Vm:                                       Instance (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                                      Instance (Amazon)
       ManageIQ::Providers::Vmware::CloudManager::Vm:                                      Instance (VMware vCloud)
