@@ -1822,263 +1822,206 @@
   :identifier: rss
 
 # Policy
-- :name: Explorer
-  :description: Control Explorer
+- :name: Control
+  :description: Control
   :feature_type: node
-  :identifier: control_explorer
+  :identifier: control
   :children:
-  - :name: View All Records
-    :description: View all Records in Control Explorer
-    :feature_type: view
-    :hidden: true
-    :identifier: control_explorer_view
   - :name: Policy Profiles
-    :description: Everything under Policy Profiles Accordion
+    :description: Everything under Policy Profiles
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: policy_profile
+    :identifier: miq_policy_set
     :children:
     - :name: View
       :description: View Policy Profiles
       :feature_type: view
-      :identifier: policy_profile_view
+      :identifier: miq_policy_set_view
     - :name: Modify
       :description: Modify Policy Profiles
       :feature_type: admin
-      :hidden: true
-      :identifier: policy_profile_admin
+      :identifier: miq_policy_set_admin
       :children:
       - :name: Add
         :description: Add a Policy Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: profile_new
+        :identifier: miq_policy_set_new
       - :name: Delete
         :description: Delete a Policy Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: profile_delete
+        :identifier: miq_policy_set_delete
       - :name: Edit
         :description: Edit a Policy Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: profile_edit
-      - :name: Edit Policies Assignment
-        :description: Edit Policy Profile's policies assignments
-        :feature_type: admin
-        :hidden: true
-        :identifier: policy_profile_assign
+        :identifier: miq_policy_set_edit
   - :name: Policies
-    :description: Everything under Policies Accordion
+    :description: Everything under Policies
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: policy
+    :identifier: miq_policy
     :children:
     - :name: View
       :description: View Policies
       :feature_type: view
-      :identifier: policy_view
+      :identifier: miq_policy_view
     - :name: Modify
       :description: Modify Policies
       :feature_type: admin
-      :hidden: true
-      :identifier: policy_admin
+      :identifier: miq_policy_admin
       :children:
       - :name: Add
         :description: Add a Policy
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_new
+        :identifier: miq_policy_new
       - :name: Copy
         :description: Copy a Policy
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_copy
+        :identifier: miq_policy_copy
       - :name: Edit
         :description: Edit a Policy
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_edit
+        :identifier: miq_policy_edit
       - :name: Edit Condition Assignment
         :description: Edit Policy's Condition assignments
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_edit_conditions
+        :identifier: miq_policy_conditions_assignment
       - :name: Edit Event Assignment
         :description: Edit Policy's Event assignments
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_edit_events
+        :identifier: miq_policy_events_assignment
+      - :name: Edit Actions for Policy Event
+        :description: Edit Actions for Policy Event
+        :feature_type: admin
+        :identifier: miq_policy_event_edit
       - :name: Delete
         :description: Delete a Policy
         :feature_type: admin
-        :hidden: true
-        :identifier: policy_delete
+        :identifier: miq_policy_delete
   - :name: Conditions
-    :description: Everything under Conditions Accordion
+    :description: Everything under Conditions
     :protected: true
     :feature_type: node
-    :hidden: true
     :identifier: condition
     :children:
     - :name: Modify
       :description: Modify Conditions
       :feature_type: admin
-      :hidden: true
       :identifier: condition_admin
       :children:
       - :name: Add
         :description: Add a Condition
         :feature_type: admin
-        :hidden: true
         :identifier: condition_new
       - :name: Copy
         :description: Copy a Condition
         :feature_type: admin
-        :hidden: true
         :identifier: condition_copy
       - :name: Copy Condition to specified Policy
         :description: Copy Condition to a new Condition assigned to specified Policy
         :feature_type: admin
-        :hidden: true
         :identifier: condition_policy_copy
       - :name: Edit
         :description: Edit a Condition
         :feature_type: admin
-        :hidden: true
         :identifier: condition_edit
       - :name: Delete
         :description: Delete a Condition
         :feature_type: admin
-        :hidden: true
         :identifier: condition_delete
       - :name: Remove from Policy
         :description: Remove Condition from specified Policy
         :feature_type: admin
-        :hidden: true
         :identifier: condition_remove
   - :name: Events
-    :description: Everything under Policy Events Accordion
+    :description: Everything under Policy Events
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: event
-    :children:
-    - :name: Modify
-      :description: Modify Conditions
-      :feature_type: admin
-      :hidden: true
-      :identifier: event_admin
-      :children:
-      - :name: Edit
-        :description: Edit Event
-        :feature_type: admin
-        :hidden: true
-        :identifier: event_edit
+    :identifier: miq_event
   - :name: Actions
-    :description: Everything under Policy Actions Accordion
+    :description: Everything under Policy Actions
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: action
+    :identifier: miq_action
     :children:
     - :name: Modify
       :description: Modify Policy Actions
       :feature_type: admin
-      :hidden: true
-      :identifier: action_admin
+      :identifier: miq_action_admin
       :children:
       - :name: List
         :description: Display All Policy Actions
         :feature_type: view
-        :identifier: action_show_list
+        :identifier: miq_action_show_list
       - :name: Show
         :description: Show MiqAction
         :feature_type: view
-        :identifier: action_show
+        :identifier: miq_action_show
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin
-        :hidden: true
-        :identifier: action_new
+        :identifier: miq_action_new
       - :name: Edit
         :description: Edit a Policy Action
         :feature_type: admin
-        :hidden: true
-        :identifier: action_edit
+        :identifier: miq_action_edit
       - :name: Delete
         :description: Delete a Policy Action
         :feature_type: admin
-        :hidden: true
-        :identifier: action_delete
+        :identifier: miq_action_delete
   - :name: Alert Profiles
-    :description: Everything under Policy Alert Profiles Accordion
+    :description: Everything under Policy Alert Profiles
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: alert_profile
+    :identifier: miq_alert_set
     :children:
     - :name: Modify
       :description: Modify Policy Alert Profiles
       :feature_type: admin
-      :hidden: true
-      :identifier: alert_profile_admin
+      :identifier: miq_alert_set_admin
       :children:
       - :name: Add
         :description: Add a Policy Alert Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_profile_new
+        :identifier: miq_alert_set_new
       - :name: Edit
         :description: Edit a Policy Alert Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_profile_edit
+        :identifier: miq_alert_set_edit
       - :name: Edit assignments
         :description: Edit assignments
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_profile_assign
+        :identifier: miq_alert_set_assign
       - :name: Delete
         :description: Delete a Policy Alert Profile
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_profile_delete
+        :identifier: miq_alert_set_delete
   - :name: Alerts
-    :description: Everything under Policy Alerts Accordion
+    :description: Everything under Policy Alerts
     :protected: true
     :feature_type: node
-    :hidden: true
-    :identifier: alert
+    :identifier: miq_alert
     :children:
     - :name: Modify
       :description: Modify Policy Alerts
       :feature_type: admin
-      :hidden: true
-      :identifier: alert_admin
+      :identifier: miq_alert_admin
       :children:
       - :name: Add
         :description: Add a Policy Alert
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_new
+        :identifier: miq_alert_new
       - :name: Copy
         :description: Copy a Policy Alert
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_copy
+        :identifier: miq_alert_copy
       - :name: Edit
         :description: Edit a Policy Alert
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_edit
+        :identifier: miq_alert_edit
       - :name: Delete
         :description: Delete a Policy Alert
         :feature_type: admin
-        :hidden: true
-        :identifier: alert_delete
+        :identifier: miq_alert_delete
   - :name: Alerts Statuses
     :description: Everything under Alerts Statuses
     :protected: true
