@@ -667,6 +667,13 @@
       :name: datetime
       :format: "%m/%d/%y %H:%M:%S %Z"
 
+  :datetime_local:
+    :description: Date/Time (M/D/Y H:M:S Z)
+    :data_types:
+    - :datetime
+    :function:
+      :name: datetime_local
+
   :date_hour:
     :description: Date/Hour (M/D/Y H:00 Z)
     :data_types:

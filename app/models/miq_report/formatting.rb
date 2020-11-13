@@ -213,6 +213,10 @@ module MiqReport::Formatting
     end
   end
 
+  def format_datetime_local(val, _options)
+    format_timezone(val, Time.zone.name, "gtl")
+  end
+
   def format_set(val, options)
     return val unless val.kind_of?(Array)
     options[:delimiter] ||= ", "
