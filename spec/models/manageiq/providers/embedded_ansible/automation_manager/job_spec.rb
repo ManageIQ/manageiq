@@ -15,7 +15,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
     let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager => manager) }
     let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source, :manager => manager) }
-    let(:manager)               { FactoryBot.create(:embedded_automation_manager_ansible, :provider) }
+    let(:manager)               { provider.automation_manager }
+    let(:provider)              { FactoryBot.create(:provider_embedded_ansible) }
 
     let(:machine_credential)    { FactoryBot.create(:ansible_machine_credential, :manager_ref => "1", :resource => manager) }
     let(:cloud_credential)      { FactoryBot.create(:ansible_cloud_credential,   :manager_ref => "2", :resource => manager) }
