@@ -98,7 +98,10 @@ unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
 
-  create_options[:system_uid] = options[:system_uid] if options[:system_uid]
+  # Hack for schema-less backport(no new system_uid column):
+  # reuse existing guid column to store/retrieve the system_uid, pod name in pods.
+  # https://github.com/ManageIQ/manageiq/pull/20792
+  create_options[:guid] = options[:system_uid] if options[:system_uid]
 
   if options[:ems_id]
     create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
@@ -108,7 +111,7 @@ unless options[:dry_run]
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
                update_options = {:pid => Process.pid}
-               update_options[:system_uid] = options[:system_uid] if options[:system_uid]
+               update_options[:guid] = options[:system_uid] if options[:system_uid]
                wrkr.update(update_options)
              end
            else

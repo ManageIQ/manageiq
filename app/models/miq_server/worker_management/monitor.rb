@@ -75,9 +75,12 @@ module MiqServer::WorkerManagement::Monitor
   def cleanup_orphaned_worker_rows
     if podified?
       unless current_pods.empty?
-        orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys)
+        # Hack for schema-less backport(no new system_uid column):
+        # reuse existing guid column to store/retrieve the system_uid, pod name in pods.
+        # https://github.com/ManageIQ/manageiq/pull/20792
+        orphaned_rows = miq_workers.where.not(:guid => current_pods.keys)
         unless orphaned_rows.empty?
-          _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
+          _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:guid).inspect}")
           orphaned_rows.destroy_all
         end
       end

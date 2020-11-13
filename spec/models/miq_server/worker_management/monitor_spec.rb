@@ -66,15 +66,15 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
         end
 
         it "removes this server's orphaned rows" do
-          worker.update(:system_uid => "1-generic-orphan")
-          FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server, :system_uid => "1-generic-active")
+          worker.update(:guid => "1-generic-orphan")
+          FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server, :guid => "1-generic-active")
           server.cleanup_orphaned_worker_rows
           expect(MiqWorker.count).to eq(1)
         end
 
         it "skips orphaned rows for other servers" do
-          worker.update(:miq_server => server2, :system_uid => "1-generic-orphan")
-          FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server2, :system_uid => "1-generic-active")
+          worker.update(:miq_server => server2, :guid => "1-generic-orphan")
+          FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server2, :guid => "1-generic-active")
           server.cleanup_orphaned_worker_rows
           expect(MiqWorker.count).to eq(2)
         end
