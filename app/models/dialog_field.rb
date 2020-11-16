@@ -107,7 +107,7 @@ class DialogField < ApplicationRecord
     self.default_value = given_value
   end
 
-  def initialize_with_values(dialog_values)
+  def initialize_with_values(_dialog_values)
     # override in subclasses
     nil
   end

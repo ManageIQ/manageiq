@@ -407,7 +407,7 @@ module MiqReport::Generator
     res
   end
 
-  def build_table(data, db, options = {})
+  def build_table(data, _db, options = {})
     data = data.to_a
     objs = data[0] && data[0].kind_of?(Integer) ? db_klass.where(:id => data) : data.compact
 

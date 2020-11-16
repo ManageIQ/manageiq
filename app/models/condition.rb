@@ -30,7 +30,7 @@ class Condition < ApplicationRecord
     pluck(:expression)
   end
 
-  def self.evaluate(cond, rec, inputs = {}, attr = :expression)
+  def self.evaluate(cond, rec, _inputs = {}, attr = :expression)
     expression = cond.send(attr)
     name = cond.try(:description) || cond.try(:name)
     if expression.kind_of?(MiqExpression)

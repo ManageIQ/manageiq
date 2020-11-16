@@ -9,7 +9,7 @@ module VmOrTemplate::Operations
 
   alias_method :ruby_clone, :clone
 
-  def raw_clone(name, folder, pool = nil, host = nil, datastore = nil, powerOn = false, template_flag = false, transform = nil, config = nil, customization = nil, disk = nil)
+  def raw_clone(_name, _folder, _pool = nil, _host = nil, _datastore = nil, _powerOn = false, _template_flag = false, _transform = nil, _config = nil, _customization = nil, _disk = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -29,7 +29,7 @@ module VmOrTemplate::Operations
     raw_mark_as_template
   end
 
-  def raw_mark_as_vm(pool, host = nil)
+  def raw_mark_as_vm(_pool, _host = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -67,7 +67,7 @@ module VmOrTemplate::Operations
     check_policy_prevent(:request_vm_destroy, :destroy_queue)
   end
 
-  def raw_rename(new_name)
+  def raw_rename(_new_name)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 

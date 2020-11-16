@@ -575,7 +575,7 @@ class ExtManagementSystem < ApplicationRecord
     refresh_ems(ems_ids, true) unless ems_ids.empty?
   end
 
-  def self.refresh_ems(ems_ids, reload = false)
+  def self.refresh_ems(ems_ids, _reload = false)
     ems_ids = [ems_ids] unless ems_ids.kind_of?(Array)
     ems_ids = ems_ids.collect { |id| [ExtManagementSystem, id] }
     EmsRefresh.queue_refresh(ems_ids)

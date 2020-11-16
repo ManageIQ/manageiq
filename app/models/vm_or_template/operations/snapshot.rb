@@ -44,7 +44,7 @@ module VmOrTemplate::Operations::Snapshot
     end
   end
 
-  def raw_create_snapshot(name, desc = nil, memory)
+  def raw_create_snapshot(_name, _desc = nil, _memory)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -56,7 +56,7 @@ module VmOrTemplate::Operations::Snapshot
     check_policy_prevent(:request_vm_create_snapshot, :create_snapshot_queue, name, desc, memory)
   end
 
-  def raw_remove_snapshot(snapshot_id)
+  def raw_remove_snapshot(_snapshot_id)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -111,7 +111,7 @@ module VmOrTemplate::Operations::Snapshot
     )
   end
 
-  def raw_remove_snapshot_by_description(description, refresh = false)
+  def raw_remove_snapshot_by_description(_description, _refresh = false)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -149,7 +149,7 @@ module VmOrTemplate::Operations::Snapshot
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def raw_revert_to_snapshot(snapshot_id)
+  def raw_revert_to_snapshot(_snapshot_id)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
