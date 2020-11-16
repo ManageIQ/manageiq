@@ -7,7 +7,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def cleanup_failed_deployments
-    ensure_pod_monitor_started
     delete_failed_deployments
   end
 

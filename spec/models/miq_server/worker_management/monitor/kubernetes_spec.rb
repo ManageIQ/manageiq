@@ -27,78 +27,76 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     expect(server.class.current_pods[:a]).to eql(:b)
   end
 
-  context "#cleanup_failed_deployments" do
-    context "#ensure_pod_monitor_started" do
-      before do
-        allow(server).to receive(:delete_failed_deployments)
-      end
+  context "#ensure_pod_monitor_started" do
+    before do
+      allow(server).to receive(:delete_failed_deployments)
+    end
 
-      it "calls start_pod_monitor if nil monitor thread" do
-        expect(server).to receive(:start_pod_monitor)
-        server.instance_variable_set(:@monitor_thread, nil)
-        server.cleanup_failed_deployments
-      end
+    it "calls start_pod_monitor if nil monitor thread" do
+      expect(server).to receive(:start_pod_monitor)
+      server.instance_variable_set(:@monitor_thread, nil)
+      server.send(:ensure_pod_monitor_started)
+    end
 
-      it "calls start_pod_monitor if monitor thread terminated normally" do
-        expect(server).to receive(:start_pod_monitor)
-        thread = double(:alive? => false, :status => false)
-        expect(thread).to receive(:join).never
+    it "calls start_pod_monitor if monitor thread terminated normally" do
+      expect(server).to receive(:start_pod_monitor)
+      thread = double(:alive? => false, :status => false)
+      expect(thread).to receive(:join).never
 
-        server.instance_variable_set(:@monitor_thread, thread)
-        server.cleanup_failed_deployments
-      end
+      server.instance_variable_set(:@monitor_thread, thread)
+      server.send(:ensure_pod_monitor_started)
+    end
 
-      it "joins a dead thread with an exception before calling start_pod_monitor" do
-        expect(server).to receive(:start_pod_monitor)
-        thread = double(:alive? => false, :status => nil)
-        expect(thread).to receive(:join).once
+    it "joins a dead thread with an exception before calling start_pod_monitor" do
+      expect(server).to receive(:start_pod_monitor)
+      thread = double(:alive? => false, :status => nil)
+      expect(thread).to receive(:join).once
 
-        server.instance_variable_set(:@monitor_thread, thread)
+      server.instance_variable_set(:@monitor_thread, thread)
+      server.send(:ensure_pod_monitor_started)
+    end
+  end
+
+  context "#delete_failed_deployments" do
+    let(:current_pods) do
+      stats = Concurrent::Hash.new
+      stats[:last_state_terminated] = false
+      stats[:container_restarts] = 0
+      stats[:label_name] = pod_label
+
+      h = Concurrent::Hash.new
+      h['1-generic-79bb8b8bb5-8ggbg'] = stats
+      h
+    end
+
+    before do
+      allow(server).to receive(:ensure_pod_monitor_started)
+    end
+
+    context "with no deployments" do
+      it "doesn't call delete_deployment" do
+        allow(server).to receive(:current_pods).and_return(Concurrent::Hash.new)
+        expect(orchestrator).to receive(:delete_deployment).never
         server.cleanup_failed_deployments
       end
     end
 
-    context "#delete_failed_deployments" do
-      let(:current_pods) do
-        stats = Concurrent::Hash.new
-        stats[:last_state_terminated] = false
-        stats[:container_restarts] = 0
-        stats[:label_name] = pod_label
-
-        h = Concurrent::Hash.new
-        h['1-generic-79bb8b8bb5-8ggbg'] = stats
-        h
+    context "with 1 running deployment" do
+      it "doesn't call delete_deployment" do
+        allow(server).to receive(:current_pods).and_return(current_pods)
+        expect(orchestrator).to receive(:delete_deployment).never
+        server.cleanup_failed_deployments
       end
+    end
 
-      before do
-        allow(server).to receive(:ensure_pod_monitor_started)
-      end
+    context "with a failed deployment" do
+      it "calls delete_deployment with pod name" do
+        current_pods[deployment_name][:last_state_terminated] = true
+        current_pods[deployment_name][:container_restarts] = 100
 
-      context "with no deployments" do
-        it "doesn't call delete_deployment" do
-          allow(server).to receive(:current_pods).and_return(Concurrent::Hash.new)
-          expect(orchestrator).to receive(:delete_deployment).never
-          server.cleanup_failed_deployments
-        end
-      end
-
-      context "with 1 running deployment" do
-        it "doesn't call delete_deployment" do
-          allow(server).to receive(:current_pods).and_return(current_pods)
-          expect(orchestrator).to receive(:delete_deployment).never
-          server.cleanup_failed_deployments
-        end
-      end
-
-      context "with a failed deployment" do
-        it "calls delete_deployment with pod name" do
-          current_pods[deployment_name][:last_state_terminated] = true
-          current_pods[deployment_name][:container_restarts] = 100
-
-          allow(server).to receive(:current_pods).and_return(current_pods)
-          expect(orchestrator).to receive(:delete_deployment).with(pod_label)
-          server.cleanup_failed_deployments
-        end
+        allow(server).to receive(:current_pods).and_return(current_pods)
+        expect(orchestrator).to receive(:delete_deployment).with(pod_label)
+        server.cleanup_failed_deployments
       end
     end
   end
