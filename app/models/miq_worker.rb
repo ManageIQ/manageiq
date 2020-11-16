@@ -19,7 +19,7 @@ class MiqWorker < ApplicationRecord
   scope :with_miq_server_id, ->(server_id) { where(:miq_server_id => server_id) }
   scope :with_status,        ->(status)    { where(:status => status) }
 
-  cattr_accessor :my_guid, :instance_accessor => false
+  class_attribute :my_guid
 
   STATUS_CREATING = 'creating'.freeze
   STATUS_STARTING = 'starting'.freeze
