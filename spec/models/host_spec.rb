@@ -140,6 +140,7 @@ RSpec.describe Host do
       it "policy passes" do
         expect_any_instance_of(described_class).to receive(:ipmi_power_on)
 
+        MiqQueue.delete_all
         @host.start
         status, message, result = MiqQueue.first.deliver
         MiqQueue.first.delivered(status, message, result)
