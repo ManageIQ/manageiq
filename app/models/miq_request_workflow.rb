@@ -8,7 +8,8 @@ class MiqRequestWorkflow
   # We rely on MiqRequestWorkflow's descendants to be comprehensive
   singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
 
-  attr_accessor :dialogs, :requester, :values, :last_vm_id
+  attr_accessor :requester, :values, :last_vm_id
+  attr_writer :dialogs
 
   def self.automate_dialog_request
     nil
