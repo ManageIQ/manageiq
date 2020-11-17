@@ -583,6 +583,7 @@ RSpec.describe ExtManagementSystem do
 
         expect(manager.network_manager.zone_before_pause).to be_nil
         expect(manager.network_manager.zone).to eq(zone)
+        expect(manager.network_manager.zone_).to eq(zone_id)
       end
 
       # The same for storage managers, i.e. amazon
