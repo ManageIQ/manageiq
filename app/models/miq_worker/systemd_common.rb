@@ -12,8 +12,8 @@ class MiqWorker
       end
 
       def ensure_systemd_files
-        target_file_path.write(target_file) unless target_file_path.exist?
-        service_file_path.write(unit_file) unless service_file_path.exist?
+        target_file_path.write(target_file)
+        service_file_path.write(unit_file)
       end
 
       def service_base_name
