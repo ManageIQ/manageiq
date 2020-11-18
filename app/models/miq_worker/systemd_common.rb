@@ -69,7 +69,7 @@ class MiqWorker
           WorkingDirectory=#{working_directory}
           Environment=BUNDLER_GROUPS=#{bundler_groups.join(",")}
           ExecStart=/bin/bash -lc '#{exec_start}'
-          Restart=always
+          Restart=no
           Slice=#{slice_name}
         UNIT_FILE
       end
