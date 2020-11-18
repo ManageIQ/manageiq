@@ -22,7 +22,7 @@ class ProviderTagMapping < ApplicationRecord
 
   require_nested :Mapper
 
-  TAG_PREFIXES = %w(amazon azure kubernetes ibm openstack vmware).map { |name| "/managed/#{name}:" }.freeze
+  TAG_PREFIXES = ExtManagementSystem.label_mapping_prefixes.map { |name| "/managed/#{name}:" }.freeze
   validate :validate_tag_prefix
 
   # Return ProviderTagMapping::Mapper instance that holds all current mappings,

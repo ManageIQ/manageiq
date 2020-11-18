@@ -50,6 +50,18 @@ class ExtManagementSystem < ApplicationRecord
     catalog_types.present?
   end
 
+  def self.label_mapping_classes
+    supported_subclasses.select(&:supports_label_mapping?)
+  end
+
+  def self.label_mapping_prefixes
+    label_mapping_classes.map(&:label_mapping_prefix).uniq
+  end
+
+  def self.entities_for_label_mapping
+    label_mapping_classes.reduce({}) { |all_mappings, klass| all_mappings.merge(klass.entities_for_label_mapping) }
+  end
+
   def self.provider_create_params
     supported_types_for_create.each_with_object({}) do |ems_type, create_params|
       create_params[ems_type.name] = ems_type.params_for_create if ems_type.respond_to?(:params_for_create)

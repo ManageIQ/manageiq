@@ -101,6 +101,7 @@ module SupportsFeatureMixin
     :launch_html5_console                => 'Launch HTML5 Console',
     :launch_vmrc_console                 => 'Launch VMRC Console',
     :launch_native_console               => 'Launch Native Console',
+    :label_mapping                       => 'Label Mapping',
     :admin_ui                            => 'Open Admin UI for a Provider',
     :live_migrate                        => 'Live Migration',
     :warm_migrate                        => 'Warm Migration',

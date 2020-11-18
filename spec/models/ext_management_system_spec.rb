@@ -1,4 +1,8 @@
 RSpec.describe ExtManagementSystem do
+  it "supports label mapping for provider subclasses" do
+    expect(ExtManagementSystem.entities_for_label_mapping.keys).to include("VmOpenstack", "VmIBM")
+  end
+
   subject { FactoryBot.create(:ext_management_system) }
 
   include_examples "AggregationMixin"
