@@ -78,6 +78,12 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
           server.cleanup_orphaned_worker_rows
           expect(MiqWorker.count).to eq(2)
         end
+
+        it "skips MiqCockpitWsWorker rows" do
+          worker.update(:system_uid => "an_actual_guid", :type => "MiqCockpitWsWorker")
+          server.cleanup_orphaned_worker_rows
+          expect(MiqCockpitWsWorker.count).to eq(1)
+        end
       end
     end
 
