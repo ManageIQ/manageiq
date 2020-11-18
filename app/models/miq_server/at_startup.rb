@@ -5,7 +5,7 @@ module MiqServer::AtStartup
   module ClassMethods
     def startup!
       log_managed_entities
-      write_systemd_service_files if MiqEnvironment::Command.supports_systemd?
+      write_systemd_unit_files
       clean_all_workers
       clean_dequeued_messages
       purge_report_results
@@ -18,7 +18,10 @@ module MiqServer::AtStartup
       log_not_under_management(prefix)
     end
 
-    def write_systemd_service_files
+    def write_systemd_unit_files
+      return unless MiqEnvironment::Command.supports_systemd?
+
+      _log.info("Writing Systemd unit files...")
       MiqWorkerType.worker_class_names.each do |class_name|
         worker_klass = class_name.safe_constantize
         worker_klass.ensure_systemd_files if worker_klass&.systemd_worker?
@@ -26,6 +29,7 @@ module MiqServer::AtStartup
         _log.warn("Failed to write systemd service files: #{err}")
         _log.log_backtrace(err)
       end
+      _log.info("Writing Systemd unit files...Complete")
     end
 
     # Delete and Kill all workers that were running previously
