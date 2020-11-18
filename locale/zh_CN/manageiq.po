@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
+"Language: zh\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../app/models/classification.rb:191
@@ -122,7 +122,7 @@ msgstr "% 已用"
 
 #: ../app/models/vm_or_template.rb:1797
 msgid "%{action} cannot be performed on orphaned VM."
-msgstr "%{action} 无法在孤立的虚拟机上执行。"
+msgstr "%{action} 无法在孤立 VM 上执行。"
 
 #: ../app/models/miq_report.rb:285
 msgid "%{attribute} is not a valid attribute for %{name}"
@@ -2925,14 +2925,14 @@ msgstr "闪烁 Loc LED"
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage
 #: ../config/dictionary_strings.rb:2520
 msgid "Block Storage Manager"
-msgstr "块存储管理者"
+msgstr "块存储管理器"
 
 #. TRANSLATORS: file: product/views/ems_block_storage.yaml
 #: ../app/controllers/mixins/ems_common.rb:48
 #: ../app/controllers/ems_block_storage_controller.rb:23
 #: ../config/yaml_strings.rb:1430
 msgid "Block Storage Managers"
-msgstr "块存储管理者"
+msgstr "块存储管理器"
 
 #: ../app/models/generic_object_definition.rb:15
 msgid "Boolean"
@@ -6540,7 +6540,7 @@ msgstr[0] "配置脚本有效内容"
 #: ../config/model_display_names.rb:53
 msgid "Configuration Tag"
 msgid_plural "Configuration Tags"
-msgstr[0] "配置标记"
+msgstr[0] "配置标签"
 
 #. TRANSLATORS: en.yml key: dictionary.column.config_xml
 #: ../config/dictionary_strings.rb:238
@@ -7045,7 +7045,7 @@ msgstr[0] "容器组容器服务"
 #: ../config/model_display_names.rb:60 ../config/dictionary_strings.rb:1378
 msgid "Container Image"
 msgid_plural "Container Images"
-msgstr[0] "容器映像"
+msgstr[0] "容器镜像"
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/130_Images by Failed OpenSCAP Rule Results.yaml
 #: ../config/yaml_strings.rb:5182
@@ -7061,7 +7061,7 @@ msgstr "容器镜像注册表"
 #: ../config/model_display_names.rb:61 ../config/dictionary_strings.rb:1374
 msgid "Container Image Registry"
 msgid_plural "Container Image Registries"
-msgstr[0] "容器映像注册表"
+msgstr[0] "容器镜像注册表"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../app/presenters/menu/default_menu.rb:135 ../config/yaml_strings.rb:801
@@ -7245,12 +7245,12 @@ msgstr "容器模板 (Openshift)"
 #: ../config/model_display_names.rb:77
 msgid "Container Volume"
 msgid_plural "Container Volumes"
-msgstr[0] "容器容量"
+msgstr[0] "容器卷"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerVolume (plural form)
 #: ../config/dictionary_strings.rb:1416
 msgid "Container Volumes"
-msgstr "容器容量"
+msgstr "容器卷"
 
 #: ../config/model_attributes.rb:688
 msgid "Container build"
@@ -7342,11 +7342,11 @@ msgstr "容器模板参数"
 
 #: ../config/model_attributes.rb:1191
 msgid "Container volume"
-msgstr "容器容量"
+msgstr "容器卷"
 
 #: ../config/model_attributes.rb:717
 msgid "ContainerBuildPod|Completion timestamp"
-msgstr "完成事件戳"
+msgstr "完成时间戳"
 
 #: ../config/model_attributes.rb:718
 msgid "ContainerBuildPod|Created on"
@@ -9456,7 +9456,7 @@ msgstr "容器浏览器"
 #: ../app/models/manageiq/providers/container_manager.rb:109
 msgid "Containers Manager"
 msgid_plural "Containers Managers"
-msgstr[0] "容器管理器"
+msgstr[0] "容器管理者"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ContainerManager
 #. TRANSLATORS: en.yml key: dictionary.table.ems_container
@@ -12824,7 +12824,7 @@ msgstr "显示单独的备份"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3060
 msgid "Display Individual Block Storage Managers"
-msgstr "显示单独的块存储管理者"
+msgstr "显示单独的块存储管理器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1039
@@ -13249,7 +13249,7 @@ msgstr "显示备份列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3058
 msgid "Display Lists of Block Storage Managers"
-msgstr "显示块存储管理者列表"
+msgstr "显示块存储管理器列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1037
@@ -13710,7 +13710,7 @@ msgstr "显示可用性区域的时间线"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3062
 msgid "Display Timelines for Block Storage Managers"
-msgstr "显示块存储管理者的时间线"
+msgstr "显示块存储管理器的时间线"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:304
@@ -14571,7 +14571,7 @@ msgstr "编辑备份的标签"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3066
 msgid "Edit Tags of Block Storage Managers"
-msgstr "编辑块存储管理者的标签"
+msgstr "编辑块存储管理器的标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2038
@@ -15194,7 +15194,7 @@ msgstr[0] "EMS 许可证"
 
 #: ../config/model_attributes.rb:1428
 msgid "Ems cluster"
-msgstr "Ems 集群"
+msgstr "EMS 集群"
 
 #: ../config/model_attributes.rb:1493
 msgid "Ems extension"
@@ -16196,7 +16196,7 @@ msgstr "“可用性区域”下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3054
 msgid "Everything under Block Storage Managers"
-msgstr "块存储管理者下的任何内容"
+msgstr "块存储管理器下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:158
@@ -20527,7 +20527,7 @@ msgstr "基础架构供应商"
 #: ../app/models/manageiq/providers/microsoft/infra_manager.rb:273
 msgid "Infrastructure Provider (Microsoft)"
 msgid_plural "Infrastructure Providers (Microsoft)"
-msgstr[0] "基础架构供应商 (Microsoft)"
+msgstr[0] "基础结构供应商 (Microsoft)"
 
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb:434
 msgid "Infrastructure Provider (OpenStack)"
@@ -21948,7 +21948,7 @@ msgstr "管理主机的策略"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3068
 msgid "Manage Policies of Block Storage Managers"
-msgstr "管理块存储管理者的策略"
+msgstr "管理块存储管理器的策略"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:312
@@ -27436,7 +27436,7 @@ msgstr "修改可用的服务"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3072
 msgid "Modify Block Storage Managers"
-msgstr "修改块存储管理者"
+msgstr "修改块存储管理器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1379
@@ -28929,7 +28929,7 @@ msgstr "未指定日期/时间值"
 
 #: ../app/models/generic_object_definition/import_export.rb:8
 msgid "No Generic Object Definition to Import"
-msgstr "没有要导入的常规对象定义"
+msgstr "没有要导入的通用对象定义"
 
 #: ../app/models/miq_policy/import_export.rb:8
 msgid "No Policy to Import"
@@ -30690,7 +30690,7 @@ msgstr "对备份执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3064
 msgid "Perform Operations on Block Storage Managers"
-msgstr "对块存储管理者执行操作"
+msgstr "对块存储管理器执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:190
@@ -33519,7 +33519,7 @@ msgstr "刷新审计日志"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3070
 msgid "Refresh Block Storage Managers"
-msgstr "刷新块存储管理者"
+msgstr "刷新块存储管理器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:320
@@ -34006,7 +34006,7 @@ msgstr "移除"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3074
 msgid "Remove Block Storage Manager"
-msgstr "移除块存储管理者"
+msgstr "移除块存储管理器"
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:21
@@ -39556,12 +39556,12 @@ msgstr "工具状态"
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
 #: ../config/yaml_strings.rb:5801
 msgid "Top CPU Consumers (weekly)"
-msgstr "排名靠前的 CPU 使用者（每周）"
+msgstr "顶级 CPU 消费者（每周）"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
 #: ../config/yaml_strings.rb:5910
 msgid "Top Memory Consumers (weekly)"
-msgstr "排名靠前的内存使用者（每周）"
+msgstr "顶级内存消费者（每周）"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #: ../config/yaml_strings.rb:5927
@@ -42189,7 +42189,7 @@ msgstr "查看备份"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3056
 msgid "View Block Storage Managers"
-msgstr "查看块存储管理者"
+msgstr "查看块存储管理器"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:164
@@ -46980,7 +46980,7 @@ msgstr "Nuage 供应商"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:29
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:40
 msgid "Required"
-msgstr "必填"
+msgstr "必需的"
 
 #: ../app/views/static/cloud_subnet/cloud-subnet-form.html.haml:80
 msgid "Subnet Name"
@@ -48141,7 +48141,7 @@ msgstr[0] "%{cpu} 个 CPU"
 #: ../app/presenters/tree_builder_sections.rb:32
 #: ../app/views/ops/_rbac_group_details.html.haml:194
 msgid "%{current_tenant} Tags"
-msgstr "%{current_tenant} 标签"
+msgstr "%{current_tenant} 个标记"
 
 #: ../app/controllers/application_controller/performance.rb:673
 msgid "%{date_from} to %{date_to}"
@@ -48334,7 +48334,7 @@ msgstr "%{name}“%{vm_name}”偏移报告"
 #: ../app/controllers/mixins/generic_show_mixin.rb:178
 #: ../app/controllers/ops_controller.rb:854
 msgid "%{name} (All %{title})"
-msgstr "%{name}（所有的%{title}）"
+msgstr "%{name}（所有的 %{title}）"
 
 #: ../app/controllers/service_controller.rb:191
 msgid "%{name} (All Generic Objects)"
@@ -48409,7 +48409,7 @@ msgstr "%{name} 主机名"
 #: ../app/helpers/textual_summary_helper.rb:93
 #: ../app/helpers/catalog_helper/textual_summary.rb:19
 msgid "%{name} Tags"
-msgstr "%{name} 标签"
+msgstr "%{name} 个标记"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:124
 msgid "%{name} Type"
@@ -50403,7 +50403,7 @@ msgstr "添加新的时间概要文件"
 
 #: ../app/javascript/components/provider-form/index.jsx:122
 msgid "Add of %s was cancelled by the user"
-msgstr "用户已取消添加 %s 的操作"
+msgstr "用户已取消添加%s"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1177
 msgid "Add of Automate Method was cancelled by the user"
@@ -50640,7 +50640,7 @@ msgstr "添加/修改标签"
 
 #: ../app/controllers/miq_policy_controller.rb:554
 msgid "Adding a new %{model_name} %{mode} Policy"
-msgstr "添加新的%{model_name} %{mode} 策略"
+msgstr "添加新的%{model_name}%{mode}策略"
 
 #: ../app/controllers/miq_policy_controller.rb:557
 msgid "Adding a new %{model_name} Policy"
@@ -50976,11 +50976,11 @@ msgstr "要评估的警报"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:136
 msgid "All %{chargeback_type}"
-msgstr "所有的 %{chargeback_type}"
+msgstr "所有%{chargeback_type}"
 
 #: ../app/controllers/miq_policy_controller.rb:394
 msgid "All %{items}"
-msgstr "所有的 %{items}"
+msgstr "所有%{items}"
 
 #: ../app/controllers/vm_common.rb:1024
 #: ../app/controllers/generic_object_definition_controller.rb:189
@@ -50988,7 +50988,7 @@ msgstr "所有的 %{items}"
 #: ../app/controllers/catalog_controller.rb:1597
 #: ../app/controllers/catalog_controller.rb:1612
 msgid "All %{models}"
-msgstr "所有的 %{models}"
+msgstr "所有%{models}"
 
 #: ../app/controllers/mixins/automation_manager_controller_mixin.rb:202
 msgid "All %{title} Configured Systems"
@@ -51559,7 +51559,7 @@ msgstr "分析关联性已保存"
 #: ../app/helpers/textual_mixins/textual_scan_history.rb:3
 #: ../config/yaml_strings.rb:1483
 msgid "Analysis History"
-msgstr "分析历史记录"
+msgstr "分析历史"
 
 #: ../app/controllers/ops_controller.rb:653
 msgid "Analysis Profile \"%{name}\""
@@ -57777,12 +57777,12 @@ msgstr "编辑服务的标签"
 
 #: ../app/helpers/application_helper/toolbar/containers_center.rb:14
 msgid "Edit Tags for selected Containers"
-msgstr "为所选容器编辑标记"
+msgstr "编辑所选容器的标签"
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:74
 msgid "Edit Tags for the selected Ansible Tower Providers"
-msgstr "为所选的 Ansible Tower 供应商编辑标签"
+msgstr "编辑所选 Ansible Tower 供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/availability_zones_center.rb:14
 msgid "Edit Tags for the selected Availability Zones"
@@ -57790,7 +57790,7 @@ msgstr "编辑所选可用性区域的标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:74
 msgid "Edit Tags for the selected Block Storage Managers"
-msgstr "编辑选定块存储管理者的标签"
+msgstr "编辑选定块存储管理器的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:36
 msgid "Edit Tags for the selected Cloud Networks"
@@ -58149,7 +58149,7 @@ msgstr "编辑这个项目的标签"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:58
 msgid "Edit Tags selected Pxe Servers"
-msgstr "为所选 Pxe 服务器编辑标记"
+msgstr "编辑所选 Pxe 服务器的标签"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:376
 msgid "Edit User Group Sequence"
@@ -60427,7 +60427,7 @@ msgstr "通用对象定义 %{record_name}"
 #: ../app/views/layouts/listnav/_generic_object_definition_show_list_with_treeview.html.haml:2
 #: ../config/yaml_strings.rb:1541
 msgid "Generic Object Definitions"
-msgstr "常规对象定义"
+msgstr "通用对象定义"
 
 #: ../app/javascript/components/workers-form/workers.schema.js:21
 msgid "Generic Workers"
@@ -62200,7 +62200,7 @@ msgstr "在 %{location} 中管理文件夹"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:64
 msgid "Manage Policies for the selected Block Storage Managers"
-msgstr "管理选定块存储管理者的策略"
+msgstr "管理选定块存储管理器的策略"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:61
 msgid "Manage Policies for the selected Cloud Providers"
@@ -66855,11 +66855,11 @@ msgstr "刷新与所选物理机架相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:12
 msgid "Refresh relationships and power states for all items related to the selected Block Storage Managers"
-msgstr "刷新与选定块存储管理者相关的所有项目的关系和电源状态"
+msgstr "刷新与选定块存储管理器相关的所有项目的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:16
 msgid "Refresh relationships and power states for all items related to the selected Block Storage Managers?"
-msgstr "是否刷新与选定块存储管理者相关的所有项目的关系和电源状态？"
+msgstr "是否刷新与选定块存储管理器相关的所有项目的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:12
 msgid "Refresh relationships and power states for all items related to the selected Cloud Providers"
@@ -67538,7 +67538,7 @@ msgstr "从这个概要文件移除所选的警报"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:41
 msgid "Remove selected Block Storage Managers from Inventory"
-msgstr "从库存移除所选的块存储管理者"
+msgstr "从库存移除所选的块存储管理器"
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:27
@@ -70904,66 +70904,66 @@ msgstr "显示刷新输出结果"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:160
 msgid "Show resources of this VM"
-msgstr "显示这个虚拟机的资源"
+msgstr "显示此虚拟机的资源"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:67
 msgid "Show the %{label} installed on this VM"
-msgstr "显示这个虚拟机上安装的 %{label}"
+msgstr "显示此虚拟机上安装的 %{label}"
 
 #: ../app/helpers/host_helper/textual_summary.rb:463
 msgid "Show the Advanced Setting installed on this Host"
 msgid_plural "Show the Advanced Settings installed on this Host"
-msgstr[0] "显示这个主机上安装的高级设置"
+msgstr[0] "显示此主机上安装的高级设置"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:127
 msgid "Show the File System Driver installed on this VM"
 msgid_plural "Show the File System Drivers installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的文件系统驱动程序"
+msgstr[0] "显示此虚拟机上安装的文件系统驱动程序"
 
 #: ../app/helpers/host_helper/textual_summary.rb:453
 msgid "Show the File installed on this Host"
 msgid_plural "Show the Files installed on this Host"
-msgstr[0] "显示这个主机上安装的文件"
+msgstr[0] "显示此主机上安装的文件"
 
 #: ../app/helpers/textual_mixins/textual_filesystems.rb:6
 msgid "Show the File installed on this VM"
 msgid_plural "Show the Files installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的文件"
+msgstr[0] "显示此虚拟机上安装的文件"
 
 #: ../app/helpers/host_helper/textual_summary.rb:403
 msgid "Show the Firewall Rule defined on this Host"
 msgid_plural "Show the Firewall Rules defined on this Host"
-msgstr[0] "显示这个主机上定义的防火墙规则"
+msgstr[0] "显示此主机上定义的防火墙规则"
 
 #: ../app/helpers/host_helper/textual_summary.rb:391
 msgid "Show the Group defined on this Host"
 msgid_plural "Show the Groups defined on this Host"
-msgstr[0] "显示这个主机上定义的组"
+msgstr[0] "显示此主机上定义的组"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:89
 msgid "Show the Group defined on this VM"
 msgid_plural "Show the Groups defined on this VM"
-msgstr[0] "显示这个虚拟机上定义的组"
+msgstr[0] "显示此虚拟机上定义的组"
 
 #: ../app/helpers/textual_mixins/textual_init_processes.rb:9
 msgid "Show the Init Process installed on this VM"
 msgid_plural "Show the Init Processes installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的初始进程"
+msgstr[0] "显示此虚拟机上安装的初始进程"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:114
 msgid "Show the Kernel Driver installed on this VM"
 msgid_plural "Show the Kernel Drivers installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的内核驱动"
+msgstr[0] "显示此虚拟机上安装的内核驱动"
 
 #: ../app/helpers/host_helper/textual_summary.rb:431
 msgid "Show the Package installed on this Host"
 msgid_plural "Show the Packages installed on this Host"
-msgstr[0] "显示这个主机上安装的软件包"
+msgstr[0] "显示此主机上安装的软件包"
 
 #: ../app/helpers/host_helper/textual_summary.rb:421
 msgid "Show the Patch defined on this Host"
 msgid_plural "Show the Patches defined on this Host"
-msgstr[0] "显示这个主机上定义的补丁"
+msgstr[0] "显示此主机上定义的补丁"
 
 #: ../app/helpers/textual_mixins/textual_patches.rb:8
 msgid "Show the Patch defined on this VM"
@@ -70973,35 +70973,35 @@ msgstr[0] "显示在此虚拟机上定义的补丁"
 #: ../app/helpers/textual_mixins/vm_common.rb:141
 msgid "Show the Registry Item installed on this VM"
 msgid_plural "Show the Registry Items installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的注册表项"
+msgstr[0] "显示此虚拟机上安装的注册表项"
 
 #: ../app/helpers/host_helper/textual_summary.rb:442
 msgid "Show the Service installed on this Host"
 msgid_plural "Show the Services installed on this Host"
-msgstr[0] "显示这个主机上安装的服务"
+msgstr[0] "显示此主机上安装的服务"
 
 #: ../app/helpers/host_helper/textual_summary.rb:379
 #: ../app/helpers/textual_mixins/vm_common.rb:78
 msgid "Show the User defined on this VM"
 msgid_plural "Show the Users defined on this VM"
-msgstr[0] "显示这个虚拟机上定义的用户"
+msgstr[0] "显示此虚拟机上定义的用户"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:101
 msgid "Show the Win32 Service installed on this VM"
 msgid_plural "Show the Win32 Services installed on this VM"
-msgstr[0] "显示这个虚拟机上安装的 Win32 服务"
+msgstr[0] "显示此虚拟机上安装的 Win32 服务"
 
 #: ../app/helpers/textual_mixins/textual_advanced_settings.rb:6
 msgid "Show the advanced settings on this VM"
-msgstr "显示这个虚拟机上的高级设置"
+msgstr "显示此虚拟机上的高级设置"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:152
 msgid "Show the snapshot info for this VM"
-msgstr "显示这个虚拟机的快照信息"
+msgstr "显示此虚拟机的快照信息"
 
 #: ../app/helpers/application_helper/listnav.rb:96
 msgid "Show this %{entity_name}'s parent %{linked_entity_name}"
-msgstr "显示这个 %{entity_name} 的父 %{linked_entity_name}"
+msgstr "显示此 %{entity_name} 的父 %{linked_entity_name}"
 
 #: ../app/helpers/cloud_volume_backup_helper/textual_summary.rb:38
 msgid "Show this Backup's Cloud Tenants"
@@ -71141,7 +71141,7 @@ msgstr "显示使用情况"
 
 #: ../app/helpers/textual_mixins/textual_scan_history.rb:9
 msgid "Show virtual machine analysis history"
-msgstr "显示虚拟机分析历史记录"
+msgstr "显示虚拟机分析历史"
 
 #: ../app/helpers/textual_mixins/textual_drift.rb:10
 msgid "Show virtual machine drift history"
@@ -73047,19 +73047,19 @@ msgstr "数据存储区已使用的空间总数"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:113
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:62
 msgid "Total Host CPU Cores"
-msgstr "总计主机 CPU 核心"
+msgstr "主机 CPU 核心总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:47
 msgid "Total Host CPU Resources"
-msgstr "总计主机 CPU 资源"
+msgstr "主机 CPU 资源总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:57
 msgid "Total Host CPUs"
-msgstr "总计主机 CPU"
+msgstr "主机 CPU 总计"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:52
 msgid "Total Host Memory"
-msgstr "总计主机内存"
+msgstr "主机内存总计"
 
 #: ../app/controllers/application_controller/compare.rb:1337
 msgid "Total Matches"
@@ -73068,7 +73068,7 @@ msgstr "匹配总数"
 #: ../app/views/vm_common/_reconfigure.html.haml:101
 #: ../app/views/miq_request/_reconfigure_show.html.haml:28
 msgid "Total Processors"
-msgstr "总共的处理器"
+msgstr "处理器总数"
 
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../config/yaml_strings.rb:1444
@@ -73323,7 +73323,7 @@ msgstr "只能通过按钮为单一实体打开 URL"
 
 #: ../app/views/ansible_repository/_repository_form.html.haml:50
 msgid "URL must include a protocol (http://, https:// or file://) or be a valid SSH path (user@server:path or ssh://user@address:port/path)"
-msgstr "URL 必须包含一个协议（http://、https:// 或 file://）或者有效的 SSH 路径（user@server:path 或 ssh://user@address:port/path）"
+msgstr "URL 必须包含一个协议（http://、https:// 或 file://）或者必须是有效的 SSH 路径（user@server:path 或 ssh://user@address:port/path）"
 
 #: ../app/helpers/view_helper.rb:24
 msgid "US Executive - 7.25in x 10.5in"
@@ -74792,7 +74792,7 @@ msgstr "警告：所选分析概要文件及其全部组件将永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:45
 msgid "Warning: The selected Block Storage Managers and ALL of their components will be permanently removed!"
-msgstr "警告：所选的块存储管理者及其全部组件都将被永久移除！"
+msgstr "警告：所选的块存储管理器及其全部组件都将被永久移除！"
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:31
@@ -77620,7 +77620,7 @@ msgstr "正在等待 VM IP 地址"
 
 #: ../app/javascript/react/screens/App/Overview/OverviewConstants.js:67
 msgid "Waiting for an available conversion host. You can continue waiting or go to the Migration Settings page to increase the number of migrations per host"
-msgstr "等待可用的转换主机。您可以继续等待，或者转至 '迁移设置' 页面，增加每台主机的迁移数量"
+msgstr "正在等待可用的转换主机。您可以继续等待，或者转至“迁移设置”页面增加每台主机的迁移数量。"
 
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationInProgressListItem.js:82
@@ -78017,7 +78017,7 @@ msgstr "确认密码"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:78
 msgid "No My Company Tags are assigned"
-msgstr "没有分配 My Company 标签"
+msgstr "没有分配 '我的公司' 标签"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:121
 msgid "Select a customer tag to assign"
@@ -78045,7 +78045,7 @@ msgstr "当前组"
 
 #: src/rbac-forms/rbacUserTagsList.jsx:19
 msgid "%s Tags"
-msgstr "%s 标签"
+msgstr "%s 个标记"
 
 #: src/rbac-forms/rbacUserTagsList.jsx:25
 msgid "No %s Tags have been assigned"

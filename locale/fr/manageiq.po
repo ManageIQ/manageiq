@@ -1061,7 +1061,7 @@ msgstr "Ajouter une règle de stratégie de sécurité"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3050
 msgid "Add a Storage Manager"
-msgstr "Ajouter un Gestionnaire de stockage"
+msgstr "Ajouter un gestionnaire de stockage"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2080
@@ -3334,7 +3334,7 @@ msgstr "UC - Utilisation minimale pour les intervalles de collecte (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6022
 msgid "CPU - Moderate "
-msgstr "UC - Modérée"
+msgstr "UC - Modérée "
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
 #: ../config/dictionary_strings.rb:884
@@ -4905,7 +4905,7 @@ msgstr[1] "Services cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:783
 msgid "Cloud Service Scheduling toggle"
-msgstr "Activation/désactivation de la planification de service de cloud"
+msgstr "Activation/désactivation de la planification de service cloud"
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
 #: ../app/helpers/vm_helper.rb:29 ../config/yaml_strings.rb:1840
@@ -10292,7 +10292,7 @@ msgstr "Crée des clichés"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3747
 msgid "Creating Backup %{backup_name} of Volume %{subject} completed successfully."
-msgstr "La création de la sauvegarde %{backup_name} du volume %{subject} a abouti. "
+msgstr "La création de la sauvegarde %{backup_name} du volume %{subject} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3749
@@ -11724,7 +11724,7 @@ msgstr "Supprimer des clichés"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3751
 msgid "Deleting Backup %{subject} of Volume %{volume_name} completed successfully."
-msgstr "La suppression de la sauvegarde %{subject} du volume %{volume_name} a abouti. "
+msgstr "La suppression de la sauvegarde %{subject} du volume %{volume_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3753
@@ -17300,7 +17300,7 @@ msgstr[1] "Réseaux cloud externes (OpenStack)"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public (plural form)
 #: ../config/dictionary_strings.rb:1826
 msgid "External Cloud Networks (OpenStack)"
-msgstr "Réseaux cloud externe (Openstack)"
+msgstr "Réseaux cloud externes (Openstack)"
 
 #: ../app/models/miq_alert.rb:480
 msgid "External Prometheus Alerts"
@@ -18093,7 +18093,7 @@ msgstr[1] "Adresses IP flottantes (OpenStack)"
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb:115
 #: ../app/views/network_topology/show.html.haml:25
 msgid "Floating IPs"
-msgstr "IP flottantes"
+msgstr "Adresses IP flottantes"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::FloatingIp (plural form)
 #: ../config/dictionary_strings.rb:1942
@@ -30138,7 +30138,7 @@ msgstr "Modèle d'orchestration"
 
 #: ../app/models/service_orchestration.rb:197
 msgid "Orchestration template runner finished with error. Check evm.log for details."
-msgstr "Le module d'exécution de module d'orchestration s'est terminé avec des erreurs. Pour plus de détails, voir le journal EVM. "
+msgstr "Le module d'exécution de module d'orchestration s'est terminé avec des erreurs. Pour plus de détails, voir le journal EVM."
 
 #: ../config/model_attributes.rb:3552
 msgid "OrchestrationStackOutput|Description"
@@ -35240,7 +35240,7 @@ msgstr "Restaurer à partir d'une sauvegarde de volume"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3755
 msgid "Restoring Backup %{subject} of Volume %{volume_name} completed successfully."
-msgstr "La restauration de la sauvegarde %{subject} du volume %{volume_name} a abouti. "
+msgstr "La restauration de la sauvegarde %{subject} du volume %{volume_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3757
@@ -36438,7 +36438,7 @@ msgstr[1] "Ensembles de paramètres de service"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3388
 msgid "Service Parameters Sets"
-msgstr "Ensemble de paramètres de service"
+msgstr "Ensembles de paramètres de service"
 
 #: ../app/models/miq_request.rb:103
 msgid "Service Provision"
@@ -37292,7 +37292,7 @@ msgstr[1] "Changements apportés aux paramètres"
 
 #: ../config/model_attributes.rb:4187
 msgid "Settings change"
-msgstr "Changement de paramètres"
+msgstr "Changement apporté aux paramètres"
 
 #: ../config/model_attributes.rb:4188
 msgid "SettingsChange|Href slug"
@@ -40143,7 +40143,7 @@ msgstr "Elément de mappage de transformation"
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:22
 msgid "Transformation mapping was invalid."
-msgstr "Le mappage de transformation n'était pas valide. "
+msgstr "Le mappage de transformation n'était pas valide."
 
 #: ../config/model_attributes.rb:4467
 msgid "TransformationMappingItem|Destination type"
@@ -41814,7 +41814,7 @@ msgstr "La version de machine virtuelle n'appartient pas à cloud_tenant_flavors
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:83
 msgid "VM flavor not available; can not proceed without it."
-msgstr "Version de machine virtuelle non disponible ; impossible de poursuivre sans elle. "
+msgstr "Version de machine virtuelle non disponible ; impossible de poursuivre sans elle."
 
 #: ../app/models/vm_or_template/operations/configuration.rb:87
 msgid "VM has no EMS, unable to add disk"
@@ -41966,7 +41966,7 @@ msgstr "Le groupe de sécurité de machine virtuelle n'appartient pas à cloud_t
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:95
 msgid "VM security group not available; can not proceed without it."
-msgstr "Groupe de sécurité de machine virtuelle non disponible ; impossible de poursuivre sans lui. "
+msgstr "Groupe de sécurité de machine virtuelle non disponible ; impossible de poursuivre sans lui."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2836
@@ -44845,7 +44845,7 @@ msgstr "Oui"
 
 #: ../app/models/authenticator/database.rb:16
 msgid "Your account has been locked due to too many failed login attempts, please contact the administrator."
-msgstr "Votre compte a été verrouillé en raison d'un trop grand nombre de tentatives de connexion infructueuses, veuillez contacter l'administrateur. "
+msgstr "Votre compte a été verrouillé en raison d'un trop grand nombre de tentatives de connexion infructueuses, veuillez contacter l'administrateur."
 
 #. TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
@@ -45866,7 +45866,7 @@ msgstr "L'identifiant \\\"%{credential_name}\\\" n'existe pas dans l'appareil. A
 
 #: ../app/models/miq_ae_yaml_import.rb:86
 msgid "Domain name change for a system domain import is not supported."
-msgstr "Le changement de nom de domaine pour une importation de domaine système n'est pas pris en charge. "
+msgstr "Le changement de nom de domaine pour une importation de domaine système n'est pas pris en charge."
 
 #: ../app/models/miq_ae_yaml_import.rb:263
 msgid "Error: Playbook method '%{method_name}' contains below listed error(s):"
@@ -45875,7 +45875,7 @@ msgstr "Erreur : la méthode de playbook \\\"%{method_name}\\\" contient l(es) 
 #: ../app/models/miq_ae_yaml_import.rb:82
 #: ../app/models/miq_ae_yaml_import.rb:90
 msgid "Git based system domain import is not supported."
-msgstr "L'importation de domaine système basé sur Git n'est pas prise en charge. "
+msgstr "L'importation de domaine système basé sur Git n'est pas prise en charge."
 
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb:86
@@ -45884,7 +45884,7 @@ msgstr "Attribut non valide [%{attr}] pour %{object}"
 
 #: ../app/models/miq_ae_git_import.rb:25
 msgid "Multiple Domain import is not supported."
-msgstr "L'importation de domaine multiple n'est pas prise en charge. "
+msgstr "L'importation de domaine multiple n'est pas prise en charge."
 
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb:85
@@ -46093,11 +46093,11 @@ msgstr "ID de clé d'accès"
 
 #: ../app/models/authenticator/amazon.rb:42
 msgid "Access key %{number} belongs to IAM user, not to the AWS account holder."
-msgstr "La clé d'accès %{number} appartient à un utilisateur IAM et non au titulaire de compte AWS. "
+msgstr "La clé d'accès %{number} appartient à un utilisateur IAM et non au titulaire de compte AWS."
 
 #: ../app/models/authenticator/amazon.rb:96
 msgid "Access key %{number} does not match an IAM user for aws account holder."
-msgstr "La clé d'accès %{number} ne correspond pas à un utilisateur IAM pour le titulaire de compte AWS. "
+msgstr "La clé d'accès %{number} ne correspond pas à un utilisateur IAM pour le titulaire de compte AWS."
 
 #: ../lib/manageiq/providers/amazon/engine.rb:14
 msgid "Amazon Provider"
@@ -46818,11 +46818,11 @@ msgstr "Détecter"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu d'accéder à l'emplacement par défaut.\n  Exemple : http://my_file_server.org:3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se trouver là. "
+msgstr "Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu d'accéder à l'emplacement par défaut.\n  Exemple : http://my_file_server.org:3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se trouver là."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:678
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu d'accéder à l'emplacement par défaut.\n  Exemple : http://my_file_server.org:3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se trouver là. "
+msgstr "Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu d'accéder à l'emplacement par défaut.\nExemple : http://my_file_server.org:3333/xccdf_files/\n  Le fichier com.redhat.rhsa-RHEL7.ds.xml.bz2 est censé se trouver là."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:616
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:632
@@ -47321,7 +47321,7 @@ msgstr "Fournisseur VMware NSX-T"
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/cloud_networks_center.rb:35
 msgid "Warning: The selected Cloud Networks and ALL of their components will be permanently removed!"
-msgstr "Avertissement : Les réseaux cloud sélectionnés et TOUS leurs composants seront définitivement retirés. "
+msgstr "Avertissement : Les réseaux cloud sélectionnés et TOUS leurs composants seront définitivement retirés."
 
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/security_groups_center.rb:34
@@ -47336,7 +47336,7 @@ msgstr "Avertissement : Les groupes de sécurité sélectionnés et leurs règle
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/security_policy_rules_center.rb:34
 msgid "Warning: The selected Security Policy Rules and ALL of their components will be permanently removed!"
-msgstr "Avertissement : Les règles de stratégie de sécurité sélectionnées et TOUS leurs composants seront définitivement retirés. "
+msgstr "Avertissement : Les règles de stratégie de sécurité sélectionnées et TOUS leurs composants seront définitivement retirés."
 
 #: ../app/helpers/textual_summary_helper.rb:214
 msgid "AMQP"
@@ -47486,12 +47486,12 @@ msgstr "Région du fournisseur"
 #:
 #: ../app/models/manageiq/providers/openstack/infra_manager/orchestration_stack.rb:76
 msgid "Provider stack is not ready to be updated, another operation is in progress."
-msgstr "La pile de fournisseur n'est pas prête à être mise à jour, une autre opération est en cours. "
+msgstr "La pile de fournisseur n'est pas prête à être mise à jour, une autre opération est en cours."
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:47
 msgid "Quota exceeded for routers."
-msgstr "Quota dépassé pour les routeurs. "
+msgstr "Quota dépassé pour les routeurs."
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:22
 msgid "RSA key pair"
@@ -47594,7 +47594,7 @@ msgstr "Cette %{instance} n'a pas d'%{security_groups} associées"
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:17
 msgid "Unable to delete \"%{name}\" because it has associated ports."
-msgstr "Impossible de supprimer %{name}\" car des ports lui sont associés. "
+msgstr "Impossible de supprimer %{name}\" car des ports lui sont associés."
 
 #:
 #: ../app/models/manageiq/providers/openstack/cloud_manager/orchestration_template.rb:187
@@ -47650,11 +47650,11 @@ msgstr "La suppression n'est pas autorisée pour un cliché actif"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_import.rb:65
 msgid "Error while configuring VM network."
-msgstr "Erreur lors de la configuration du réseau de machine virtuelle. "
+msgstr "Erreur lors de la configuration du réseau de machine virtuelle."
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_import.rb:56
 msgid "Error while importing the VM."
-msgstr "Erreur lors de l'importation de la machine virtuelle. "
+msgstr "Erreur lors de l'importation de la machine virtuelle."
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:5
@@ -47664,7 +47664,7 @@ msgstr "L'hôte n'est pas spécifié ; impossible de migrer la machine virtuelle
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb:275
 msgid "Memory Limit is supported for RHV 4.1 and above. Current provider version is %{version}."
-msgstr "La limite de mémoire est prise en charge pour RHV 4.1 et plus. La version de fournisseur en cours est %{version}. "
+msgstr "La limite de mémoire est prise en charge pour RHV 4.1 et plus. La version de fournisseur en cours est %{version}."
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:312
 msgid "Paste here the trusted CA certificates, in PEM format."
@@ -47708,7 +47708,7 @@ msgstr "Le pool de ressources spécifié <%{pool_name}> pour l'hôte <%{name}> n
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb:289
 msgid "Template sealing is supported only for non-Windows OS."
-msgstr "Le scellement de modèle est pris en charge uniquement pour les systèmes d'exploitation non Windows. "
+msgstr "Le scellement de modèle est pris en charge uniquement pour les systèmes d'exploitation non Windows."
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/host.rb:53
 msgid "The Host is not connected to an active provider"
@@ -47887,7 +47887,7 @@ msgstr "%{field_required} pour cluster activé non DRS"
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/ovf_service_template.rb:33
 msgid ":provision section is missing from :config_info in options hash."
-msgstr ": la section provision est manquante dans config_info dans le hachage d'options. "
+msgstr ": la section provision est manquante dans config_info dans le hachage d'options."
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:21
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:22
@@ -47955,7 +47955,7 @@ msgstr "Refus de suppression d'un cliché en présence d'un cliché de fichier d
 #: ../app/models/manageiq/providers/vmware/infra_manager/orchestration_template.rb:26
 #: ../app/models/manageiq/providers/vmware/infra_manager/ovf_service_template.rb:34
 msgid "Resource pool is required for content library item deployment."
-msgstr "Le champ Pool de ressources est oligatoire pour le déploiement d'élement de bibliothèque de contenu. "
+msgstr "Le champ Pool de ressources est oligatoire pour le déploiement d'élement de bibliothèque de contenu."
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm/operations/guest.rb:9
@@ -48004,7 +48004,7 @@ msgstr "La migration à chaud ne peut pas faire migrer une machine virtuelle com
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/orchestration_template.rb:27
 msgid "accept_all_eula is required for content library item deployment."
-msgstr "accept_all_eula est obligatoire pour le déploiement d'élément de bibliothèque de contenu. "
+msgstr "accept_all_eula est obligatoire pour le déploiement d'élément de bibliothèque de contenu."
 
 #: ../app/models/manageiq/providers/vmware/infra_manager/vim_connect_mixin.rb:7
 msgid "no console credentials defined"
@@ -48304,7 +48304,7 @@ msgstr "\"%{action}\" pour le commutateur \"%{name}\""
 
 #: ../app/controllers/mixins/generic_button_mixin.rb:108
 msgid "\"%{action}\" requires a single item to be selected."
-msgstr "\"%{action}\" nécessite qu'un seul élément soit sélectionné. "
+msgstr "\"%{action}\" nécessite qu'un seul élément soit sélectionné."
 
 #: ../app/controllers/application_controller/ci_processing.rb:823
 msgid "\"%{datastore_name}\": cannot be removed, has vms or hosts"
@@ -48441,7 +48441,7 @@ msgstr "%d%% en cours d'utilisation"
 #: ../app/assets/javascripts/controllers/ems_container_dashboard/heatmap_controller.js:51
 #: ../app/assets/javascripts/controllers/ems_infra_dashboard/heatmap_controller.js:48
 msgid "%d%% in use of %d %s total"
-msgstr "%d%% en utilisation sur %d %s total"
+msgstr "%d%% en cours d'utilisation sur %d %s total"
 
 #:
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-form.js:166
@@ -48476,7 +48476,7 @@ msgstr "%s %s a été sauvegardé"
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-add-security-group.js:59
 msgid "%s has been successfully added."
-msgstr "%s ajouté."
+msgstr "%s a été ajouté."
 
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-remove-security-group.js:44
@@ -50835,7 +50835,7 @@ msgstr "Ajouter un nouveau profil temporel"
 
 #: ../app/javascript/components/provider-form/index.jsx:122
 msgid "Add of %s was cancelled by the user"
-msgstr "L'ajout de %s a été annulé par l'utilisateur"
+msgstr "%s : l'ajout a été annulé par l'utilisateur"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1177
 msgid "Add of Automate Method was cancelled by the user"
@@ -51341,15 +51341,15 @@ msgstr "Agrégat de mémoire d'hôte"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:68
 msgid "Aggregate Node CPU Cores"
-msgstr "Coeurs d'UC du noeud agrégé"
+msgstr "Agrégat de coeurs d'UC de noeud"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:61
 msgid "Aggregate Node Memory"
-msgstr "Mémoire du noeud agrégé"
+msgstr "Agrégat de mémoire de noeud"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:231
 msgid "Aggregate disk capacity"
-msgstr "Capacité du disque agrégé"
+msgstr "Agrégat de capacité disque"
 
 #:
 #: ../app/assets/javascripts/controllers/ems_container_dashboard/utilization_trend_chart_controller.js:21
@@ -53355,7 +53355,7 @@ msgstr "Par fournisseur d'infrastructure/de cloud"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Clusters"
-msgstr "Par clusters"
+msgstr "Par cluster"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Host"
@@ -53650,7 +53650,7 @@ msgstr "Impossible d'analyser le fichier JSON : %{message}"
 
 #: ../app/controllers/restful_redirect_controller.rb:19
 msgid "Cannot redirect to \"%{record}\" provider."
-msgstr "Redirection impossible vers le fournisseur \"%{record}\". "
+msgstr "Redirection impossible vers le fournisseur \"%{record}\"."
 
 #: ../app/controllers/ops_controller/diagnostics.rb:483
 msgid "Cannot start log collection, a log collection is already in progress within this scope"
@@ -53817,7 +53817,7 @@ msgstr "Attention : Les changements manuels apportés aux fichiers de configurat
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:7
 msgid "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting existing tags on resources with mapped provider labels."
-msgstr "Attention : les mappages avec l'entité de ressource 'All-Entities' peut remplacer des balises existantes sur les ressources par des libellés de fournisseur mappés. "
+msgstr "Attention : les mappages avec l'entité de ressource 'All-Entities' peut remplacer des balises existantes sur les ressources par des libellés de fournisseur mappés."
 
 #: ../app/views/ops/_rbac_user_details.html.haml:1
 #: ../app/javascript/components/async-credentials/password-field.jsx:85
@@ -55291,7 +55291,7 @@ msgstr "Configuration (%{number})"
 #: ../app/controllers/configured_system_controller.rb:56
 #: ../app/controllers/ems_configuration_controller.rb:99
 msgid "Configuration Management"
-msgstr "Gestion de la configuration"
+msgstr "Gestion de configuration"
 
 #: ../app/views/layouts/listnav/_configuration_profile.html.haml:17
 #: ../app/views/layouts/listnav/_configured_system.html.haml:17
@@ -56193,11 +56193,11 @@ msgstr "Groupe en cours :"
 
 #: ../app/helpers/container_replicator_helper/textual_summary.rb:30
 msgid "Current pods"
-msgstr "Pods actuels"
+msgstr "Pods en cours"
 
 #: ../app/helpers/application_helper/button/vm_snapshot_add.rb:4
 msgid "Current user lacks permissions to create a new snapshot for this VM"
-msgstr "L'utilisateur actuel ne dispose pas des droits appropriés pour créer un cliché pour cette machine virtuelle"
+msgstr "L'utilisateur en cours ne dispose pas des droits lui permettant de créer un cliché pour cette machine virtuelle"
 
 #: ../app/views/miq_policy/_action_options.html.haml:33
 msgid "Custom Attribute Settings"
@@ -57315,7 +57315,7 @@ msgstr "Destination"
 
 #: ../app/helpers/network_router_helper/textual_summary.rb:55
 msgid "Destination CIDR"
-msgstr "Routage CIDR cible"
+msgstr "Routage CIDR de destination"
 
 #. TRANSLATORS: file: product/views/SecurityPolicyRule.yaml
 #: ../app/helpers/security_policy_helper/textual_summary.rb:39
@@ -57634,15 +57634,15 @@ msgstr "La taille de disque doit être supérieure à {{1*disk.orgHdSize+1}} {{d
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:93
 msgid "Disk size in GB"
-msgstr "Taille du disque en Go"
+msgstr "Taille de disque en Go"
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:91
 msgid "Disk size must be greater than 0"
-msgstr "La taille du disque doit être supérieure à 0"
+msgstr "La taille de disque doit être supérieure à 0"
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:86
 msgid "Disk size must be integer"
-msgstr "La taille du disque doit être un nombre entier"
+msgstr "La taille de disque doit être un nombre entier"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:484
 #: ../app/views/vm_common/_reconfigure.html.haml:118
@@ -59549,7 +59549,7 @@ msgstr "Activer la collecte par cluster"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:58
 msgid "Enable Collection by Datastore"
-msgstr "Activer la collecte par le magasin de données"
+msgstr "Activer la collecte par magasin de données"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:118
 msgid "Enable OpenID-Connect"
@@ -64308,7 +64308,7 @@ msgstr "Aucun fournisseur de cloud ne prend en charge la création de routeurs r
 
 #: ../app/helpers/application_helper/button/network_service_entry_new.rb:11
 msgid "No cloud providers support creating network service entries."
-msgstr "Aucun fournisseur de cloud ne prend en charge la création d'entrées de service réseau. "
+msgstr "Aucun fournisseur de cloud ne prend en charge la création d'entrées de service réseau."
 
 #: ../app/helpers/application_helper/button/network_service_new.rb:11
 msgid "No cloud providers support creating network services."
@@ -64728,54 +64728,54 @@ msgstr "Remarque :"
 
 #: ../app/views/catalog/_form_resources_info.html.haml:20
 msgid "Note: Ansible Playbook based resources can not be added to a Catalog Bundle"
-msgstr "Remarque : les ressources basées sur un playbook Ansible ne peuvent pas être ajoutées à un groupement de catalogues"
+msgstr "Remarque : Les ressources basées sur un playbook Ansible ne peuvent pas être ajoutées à un groupement de catalogues"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:22
 msgid "Note: Collect for All Clusters must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2"
-msgstr "Remarque : l'option Collecter pour tous les clusters doit être sélectionnée pour permettre la collecte des données de capacité et d'utilisation à partir des fournisseurs de cloud comme Red Hat OpenStack ou Amazon EC2"
+msgstr "Remarque : L'option Collecter pour tous les clusters doit être sélectionnée pour permettre la collecte des données de capacité et d'utilisation à partir de fournisseurs de cloud comme Red Hat OpenStack ou Amazon EC2."
 
 #: ../app/views/catalog/_form_request_info.html.haml:9
 #: ../app/views/miq_request/_prov_edit.html.haml:6
 msgid "Note: Fields marked with * are required."
-msgstr "Remarque : le symbole * indique un champ obligatoire."
+msgstr "Remarque : Le symbole * indique un champ obligatoire."
 
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:41
 msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
-msgstr "Remarque : la collecte d'écart n'est disponible que pour les infrastructures VMware vSphere."
+msgstr "Remarque : La collecte d'écart n'est disponible que pour les infrastructures VMware vSphere."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:39
 msgid "Note: No Clusters available."
-msgstr "Remarque : aucun cluster n'est disponible."
+msgstr "Remarque : Aucun cluster n'est disponible."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:65
 msgid "Note: No Datastores available."
-msgstr "Remarque : aucun magasin de données n'est disponible"
+msgstr "Remarque : Aucun magasin de données n'est disponible"
 
 #: ../app/views/report/_form_filter_performance.html.haml:44
 msgid "Note: Only Time Profiles with 'Roll Up Performance' set are shown."
-msgstr "Remarque : seuls les profils temporels pour lesquels le paramètre 'Performances de cumul' est configuré sont affichés."
+msgstr "Remarque : Seuls les profils temporels pour lesquels le paramètre 'Performances de cumul' est configuré sont affichés."
 
 #: ../app/views/shared/views/_ownership.html.haml:14
 msgid "Note: Some items might be hidden due to the possibility of an ownership change"
-msgstr "Remarque : certains éléments peuvent être masqués en raison de la possibilité de changer de propriétaire"
+msgstr "Remarque : Certains éléments peuvent être masqués en raison de la possibilité de changer de propriétaire"
 
 #: ../app/views/ops/_rbac_tenant_details.html.haml:7
 msgid "Note: Total quota can be restricted by quotas defined at upper levels"
-msgstr "Remarque : le quota total peut être limité par des quotas définis à des niveaux supérieurs."
+msgstr "Remarque : Le quota total peut être limité par des quotas définis à des niveaux supérieurs."
 
 #: ../app/views/layouts/_auth_credentials.html.haml:25
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:48
 #: ../app/views/static/auth-credentials.html.haml:26
 msgid "Note: Username must be in the format: name@realm"
-msgstr "Remarque : le nom d'utilisation doit être au format : nom@domaine"
+msgstr "Remarque : Le nom d'utilisateur doit être au format : name@realm"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:98
 msgid "Note: a restart of the virtual machine might be required for the changes to apply."
-msgstr "Remarque : vous serez peut-être obligé de redémarrer la machine virtuelle pour que les changements soient appliqués."
+msgstr "Remarque : Vous serez peut-être obligé de redémarrer la machine virtuelle pour que les changements soient appliqués."
 
 #: ../app/views/container_topology/show.html.haml:50
 msgid "Note: displaying a very large number of objects in the topology display can adversely affect the performance of some web browsers."
-msgstr "Remarque : l'affichage d'un très grand nombre d'objets dans la topologie peut dégrader les performances de certains navigateurs Web."
+msgstr "Remarque : L'affichage d'un très grand nombre d'objets dans la topologie peut dégrader les performances de certains navigateurs Web."
 
 #: ../app/views/miq_policy/_alert_profile_details.html.haml:154
 #: ../app/views/miq_policy/_alert_profile_assign.html.haml:16
@@ -64900,7 +64900,7 @@ msgstr "Modèle OVF"
 
 #: ../app/controllers/catalog_controller.rb:886
 msgid "OVF Template is required, please select one from the list"
-msgstr "Le champ Modèle OVF est obligatoire. Effectuez une sélection dans la liste. "
+msgstr "Le champ Modèle OVF est obligatoire. Effectuez une sélection dans la liste."
 
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml:8
 msgid "Object"
@@ -68871,7 +68871,7 @@ msgstr "Pool de ressources \"%{name}\" : erreur lors de l'opération '%{task}' :
 
 #: ../app/controllers/catalog_controller.rb:887
 msgid "Resource Pool is required, please select one from the list"
-msgstr "Le champ Pool de ressources est obligatoire. Effectuez une sélection dans la liste. "
+msgstr "Le champ Pool de ressources est obligatoire. Effectuez une sélection dans la liste."
 
 #: ../app/helpers/container_project_helper/textual_summary.rb:27
 msgid "Resource Quota"
@@ -69190,7 +69190,7 @@ msgstr "Point d'entrée de déclassement (espace de nom/classe/instance)"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:380
 msgid "Retirement Info"
-msgstr "Informations sur le retrait"
+msgstr "Informations de déclassement"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:209
 #: ../app/helpers/service_helper/textual_summary.rb:146
@@ -69809,7 +69809,7 @@ msgstr "Sélectionner tout"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:301
 msgid "Select Ceilometer if eventing is not enabled on AMQP."
-msgstr "Sélectionnez Célomètre si la gestion des événements n'est pas activée sur AMQP."
+msgstr "Sélectionnez Ceilometer si la gestion des événements n'est pas activée sur AMQP."
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:48
 msgid "Select Classes to copy"
@@ -71080,11 +71080,11 @@ msgstr "Afficher des périphériques de machine virtuelle"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:153
 msgid "Show VMs in this Cluster, but not in Resource Pools below"
-msgstr "Afficher les machines virtuelles dans ce cluster, mais pas dans les pools de ressources ci-dessous"
+msgstr "Afficher les machines virtuelles de ce cluster, mais pas des pools de ressources dessous"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:106
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
-msgstr "Afficher les machines virtuelles dans ce pool de ressources, mais pas dans les pools de ressources ci-dessous"
+msgstr "Afficher les machines virtuelles de ce pool de ressources, mais pas des pools de ressources dessous"
 
 #: ../app/helpers/generic_object_helper/textual_summary.rb:50
 msgid "Show all %{associated_models}"
@@ -71236,15 +71236,15 @@ msgstr "Afficher tous les gestionnaires de stockage"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:175
 msgid "Show all Templates in this Cluster"
-msgstr "Afficher tous les modèles dans ce cluster"
+msgstr "Afficher tous les modèles de ce cluster"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:163
 msgid "Show all VMs in this Cluster"
-msgstr "Afficher toutes les machines virtuelles dans ce cluster"
+msgstr "Afficher toutes les machines virtuelles de ce cluster"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:116
 msgid "Show all VMs in this Resource Pool"
-msgstr "Afficher toutes les machines virtuelles dans ce pool de ressources"
+msgstr "Afficher toutes les machines virtuelles de ce pool de ressources"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:89
 msgid "Show all Volumes"
@@ -71634,11 +71634,11 @@ msgstr "Afficher la généalogie de la machine virtuelle"
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:130
 msgid "Showing %s items out of %s total."
-msgstr "Affichage de %s éléments sur un total de %s. "
+msgstr "Affichage de %s éléments sur un total de %s."
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:130
 msgid "Showing all %s items."
-msgstr "Affichage de tous les éléments %s. "
+msgstr "Affichage de tous les éléments %s."
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:167
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:174
@@ -72827,7 +72827,7 @@ msgstr "L'élément copié ne sera pas affiché dans le catalogue par défaut"
 
 #: ../app/controllers/application_controller/advanced_search.rb:263
 msgid "The current search details have been reset"
-msgstr "Les détails de la recherche actuelle ont été réinitialisés"
+msgstr "Les détails de la recherche en cours ont été réinitialisés"
 
 #: ../app/controllers/vm_common.rb:901
 msgid "The entity is not available or user is not authorized to access it."
@@ -73224,7 +73224,7 @@ msgstr "Cet utilisateur est limité aux éléments sélectionnés et à leurs en
 
 #: ../app/helpers/vm_helper/textual_summary.rb:37
 msgid "This virtual machine requires restart."
-msgstr "Cette machine virtuelle doit être redémarrée. "
+msgstr "Cette machine virtuelle doit être redémarrée."
 
 #: ../app/presenters/widget_presenter.rb:57
 msgid "This will show the chart and the entire report (all rows) in your browser. Do you want to proceed?"
@@ -73292,11 +73292,11 @@ msgstr "Vue chronologique"
 
 #: ../app/controllers/mixins/more_show_actions.rb:10
 msgid "Timelines for %{table} \"%{name}\""
-msgstr "Chronologies pour %{table} \"%{name}\""
+msgstr "Chronologies : %{table} \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1529
 msgid "Timelines for %{virtual_machine} \"%{name}\""
-msgstr "Chronologies pour %{virtual_machine} \"%{name}\""
+msgstr "Chronologies : %{virtual_machine} \"%{name}\""
 
 #: ../app/helpers/textual_mixins/vm_common.rb:223
 msgid "Timeout (ms)"
@@ -73806,7 +73806,7 @@ msgstr "L'URL ne peut être ouverte par des boutons que pour une entité unique"
 
 #: ../app/views/ansible_repository/_repository_form.html.haml:50
 msgid "URL must include a protocol (http://, https:// or file://) or be a valid SSH path (user@server:path or ssh://user@address:port/path)"
-msgstr "L'URL doit inclure un protocole (http://, https:// ou file://) ou être un chemin SSH valide (user@server:path ou ssh://user@address:port/path)"
+msgstr "L'URL doit inclure un protocole (http://, https:// ou file://) ou être un chemin SSH valide (utilisateur@serveur:chemin ou ssh://utilisateur@adresse:port/chemin)"
 
 #: ../app/helpers/view_helper.rb:24
 msgid "US Executive - 7.25in x 10.5in"
@@ -74681,7 +74681,7 @@ msgstr "Conditions de la machine virtuelle et de l'instance"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:35
 msgid "VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected."
-msgstr "Les données de machine virtuelle seront collectées pour les machines virtuelles sous les hôtes sélectionnés uniquement. Les données sont collectées pour un cluster et tous ses hôtes lorsqu'au moins un hôte est sélectionné. "
+msgstr "Les données de machine virtuelle seront collectées pour les machines virtuelles sous les hôtes sélectionnés uniquement. Les données sont collectées pour un cluster et tous ses hôtes lorsqu'au moins un hôte est sélectionné."
 
 #: ../app/controllers/vm_common.rb:225
 msgid "VM has too many parents."
@@ -75524,7 +75524,7 @@ msgstr "Avertissement : cette IP flottante et TOUS ses composants seront retir�
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:32
 msgid "Warning: This Generic Object Definition will be permanently removed!"
-msgstr "Avertissement : Cette définition d'objet générique sera définitivement retirée. "
+msgstr "Avertissement : Cette définition d'objet générique sera définitivement retirée."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
 msgid "Warning: This ISO Datastore and ALL of its components will be permanently removed!"
@@ -75583,11 +75583,11 @@ msgstr "Avertissement : ce groupe de sécurité et TOUS ses composants seront d
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:28
 msgid "Warning: This Security Policy Rule and ALL of its components will be removed!"
-msgstr "Avertissement : Cette règle de stratégie de sécurité et TOUS ses composants seront retirés. "
+msgstr "Avertissement : Cette règle de stratégie de sécurité et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:28
 msgid "Warning: This Security Policy and ALL of its components will be removed!"
-msgstr "Avertissement : Cette stratégie de sécurité et TOUS ses composants seront retirés. "
+msgstr "Avertissement : Cette stratégie de sécurité et TOUS ses composants seront retirés."
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:21
 msgid "Warning: This Service and ALL of their components will be permanently removed!"
@@ -76680,7 +76680,7 @@ msgstr "Afficher les différents hôtes de conversion"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:18
 msgid "Display Lists of Conversion Hosts"
-msgstr "Afficher les listes des hôtes de conversion"
+msgstr "Afficher les listes d'hôtes de conversion"
 
 #:
 #: ../app/javascript/react/screens/App/Plan/components/PlanRequestDetailList/PlanRequestDetailList.js:446
@@ -77252,7 +77252,7 @@ msgstr "Aucun cluster n'a été trouvé."
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:124
 msgid "No clusters match your search."
-msgstr "Aucun cluster ne correspond à votre recherche. "
+msgstr "Aucun cluster ne correspond à votre recherche."
 
 #:
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/ConversionHostsListItem.js:61
@@ -77262,12 +77262,12 @@ msgstr "Aucune information disponible sur la tâche de configuration"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:253
 msgid "No datastores found."
-msgstr "Aucun magasin de données trouvé. "
+msgstr "Aucun magasin de données trouvé."
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:268
 msgid "No datastores match your search."
-msgstr "Aucun magasin de données ne correspond à votre recherche. "
+msgstr "Aucun magasin de données ne correspond à votre recherche."
 
 #:
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/ConversionHostWizard/ConversionHostWizardHostsStep/ConversionHostWizardHostsStep.js:21
@@ -77302,7 +77302,7 @@ msgstr "Aucun réseau trouvé."
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardNetworksStep/components/NetworksStepForm/NetworksStepForm.js:296
 msgid "No networks match your search."
-msgstr "Aucun réseau ne correspond à votre recherche. "
+msgstr "Aucun réseau ne correspond à votre recherche."
 
 #: ../app/javascript/react/screens/App/Overview/OverviewConstants.js:35
 msgid "Not Started Plans"
@@ -77645,7 +77645,7 @@ msgstr "Sélectionner un ou plusieurs hôtes..."
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardNetworksStep/components/NetworksStepForm/NetworksStepForm.js:351
 msgid "Select one or more source networks to map to a single target. Select Add Mapping. Multiple mappings can be added."
-msgstr "Sélectionnez un ou plusieurs réseaux source à mapper vers une cible unique. Sélectionnez Ajouter un mappage. Plusieurs mappages peuvent être ajoutés. "
+msgstr "Sélectionnez un ou plusieurs réseaux source à mapper vers une cible unique. Sélectionnez Ajouter un mappage. Plusieurs mappages peuvent être ajoutés."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardAdvancedOptionsStep/PlanWizardAdvancedOptionsStep.js:70
@@ -77666,12 +77666,12 @@ msgstr "Sélectionner la ligne %s"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:171
 msgid "Select source cluster(s) and a target cluster and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Sélectionner un ou plusieurs cluster(s) source et un cluster cible, puis cliquez sur Ajouter un mappage pour ajouter le mappage. Plusieurs mappages peuvent être ajoutés. "
+msgstr "Sélectionner un ou plusieurs cluster(s) source et un cluster cible, puis cliquez sur Ajouter un mappage pour ajouter le mappage. Plusieurs mappages peuvent être ajoutés."
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:322
 msgid "Select source datastore(s) and a target datastore and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Sélectionner un ou plusieurs magasin(s) de données source et un magasin de données cible, puis cliquez sur Ajouter un mappage pour ajouter le mappage. Plusieurs mappages peuvent être ajoutés. "
+msgstr "Sélectionner un ou plusieurs magasin(s) de données source et un magasin de données cible, puis cliquez sur Ajouter un mappage pour ajouter le mappage. Plusieurs mappages peuvent être ajoutés."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardGeneralStep/PlanWizardGeneralStep.js:36
@@ -78116,7 +78116,7 @@ msgstr "En attente d'un hôte de conversion disponible. Vous pouvez continuer à
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationInProgressListItem.js:82
 msgid "Waiting for an available conversion host. You can continue waiting or go to the Migration Settings page to increase the number of migrations per host."
-msgstr "En attente d'un hôte de conversion disponible. Vous pouvez continuer à attendre ou accéder à la page Paramètres de migration pour augmenter le nombre de migrations par hôte. "
+msgstr "En attente d'un hôte de conversion disponible. Vous pouvez continuer à attendre ou accéder à la page Paramètres de migration pour augmenter le nombre de migrations par hôte."
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:61
 msgid "Waiting for inventory refresh"

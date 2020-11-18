@@ -98,7 +98,7 @@ msgstr "% de disco usado"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_realtime.yaml
 #: ../config/yaml_strings.rb:6372
 msgid "% Idle"
-msgstr "% desocupado "
+msgstr "% desocupado"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -414,7 +414,7 @@ msgstr "Clave secreta de AWS para esta credencial"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3559
 msgid "Ability to add global filter"
-msgstr "Prestación para añadir filtro global "
+msgstr "Prestación para añadir filtro global"
 
 #: ../app/presenters/menu/default_menu.rb:308
 #: ../app/helpers/application_helper/title.rb:45
@@ -1829,7 +1829,7 @@ msgstr "ID asociados"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
 #: ../config/yaml_strings.rb:6398
 msgid "Associated Record IDs"
-msgstr "ID de registro asociados "
+msgstr "ID de registro asociados"
 
 #: ../app/views/vm_common/_attach.html.haml:29
 #: ../app/views/cloud_volume/attach.html.haml:40
@@ -2661,7 +2661,7 @@ msgstr "Promedio de Tamaño de Escritura"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
 #: ../config/yaml_strings.rb:6516
 msgid "Avg % CPU Ready"
-msgstr "% promedio de CPU preparada "
+msgstr "% promedio de CPU preparada"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -2672,7 +2672,7 @@ msgstr "% promedio de CPU preparada "
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_hourly.yaml
 #: ../config/yaml_strings.rb:6358
 msgid "Avg % Used"
-msgstr "Promedio de % utilizado "
+msgstr "Promedio de % utilizado"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #: ../config/yaml_strings.rb:6459
@@ -2683,7 +2683,7 @@ msgstr "Promedio disponible"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
 #: ../config/yaml_strings.rb:6513
 msgid "Avg CPU % Used"
-msgstr "% promedio de CPU utilizada "
+msgstr "% promedio de CPU utilizada"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tophour.yaml
@@ -2774,7 +2774,7 @@ msgstr "Valor de promedio utilizado"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_daily.yaml
 #: ../config/yaml_strings.rb:6445
 msgid "Avg VM Count"
-msgstr "Promedio de recuento de máquinas virtuales "
+msgstr "Promedio de recuento de máquinas virtuales"
 
 #: ../app/helpers/application_helper/discover.rb:4
 msgid "Azure"
@@ -3085,7 +3085,7 @@ msgstr "Botón"
 #:
 #: ../app/helpers/application_helper/button/generic_object_definition_button_button_group_delete.rb:18
 msgid "Button Group"
-msgstr "Grupo de botones "
+msgstr "Grupo de botones"
 
 #: ../app/views/generic_object_definition/_show_actions.html.haml:5
 msgid "Button Groups"
@@ -3253,7 +3253,7 @@ msgstr "CPU: Tasa de uso total para máquinas virtuales secundarias para interva
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6016
 msgid "CPU - Aggressive "
-msgstr "CPU - Agresiva"
+msgstr "CPU - Agresiva "
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb:770
@@ -3626,7 +3626,7 @@ msgstr "Ampliar reserva de CPU"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6010
 msgid "CPU Right Sizing Recommendations"
-msgstr "Recomendaciones de tamaño correcto de CPU "
+msgstr "Recomendaciones de tamaño correcto de CPU"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:4680
@@ -4238,7 +4238,7 @@ msgstr "Vista previa de Chargeback"
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
 #: ../config/yaml_strings.rb:6537
 msgid "Chargeback Preview for Single VM"
-msgstr "Vista previa de Chargeback para una única máquina virtual "
+msgstr "Vista previa de Chargeback para una única máquina virtual"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
 #: ../config/model_display_names.rb:18 ../config/dictionary_strings.rb:1286
@@ -5997,7 +5997,7 @@ msgstr "Comparar"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:674
 msgid "Compare List of Clusters"
-msgstr "Comparar lista de clústeres "
+msgstr "Comparar lista de clústeres"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:719
@@ -6767,7 +6767,7 @@ msgstr "Número de región"
 
 #: ../config/model_attributes.rb:566
 msgid "ConfigurationProfile|Target platform"
-msgstr "ConfigurationProfile|Plataforma de destino "
+msgstr "ConfigurationProfile|Plataforma de destino"
 
 #: ../config/model_attributes.rb:567
 msgid "ConfigurationProfile|Total configured systems"
@@ -6916,7 +6916,7 @@ msgstr "Aprovisionamiento del sistema configurado"
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:28
 msgid "Configured System console"
-msgstr "Consola del sistema configurado "
+msgstr "Consola del sistema configurado"
 
 #: ../app/presenters/menu/default_menu.rb:39
 #: ../app/controllers/automation_manager_controller.rb:210
@@ -7352,7 +7352,7 @@ msgstr[1] "Volúmenes del contenedor"
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerVolume (plural form)
 #: ../config/dictionary_strings.rb:1416
 msgid "Container Volumes"
-msgstr "Volúmenes del contenedor "
+msgstr "Volúmenes del contenedor"
 
 #: ../config/model_attributes.rb:688
 msgid "Container build"
@@ -8056,7 +8056,7 @@ msgstr "Puertos expuestos"
 
 #: ../config/model_attributes.rb:840
 msgid "ContainerImage|Has policies"
-msgstr "ContainerImage|Tiene políticas "
+msgstr "ContainerImage|Tiene políticas"
 
 #: ../config/model_attributes.rb:841
 msgid "ContainerImage|Href slug"
@@ -10292,7 +10292,7 @@ msgstr "Crea instantáneas"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3747
 msgid "Creating Backup %{backup_name} of Volume %{subject} completed successfully."
-msgstr "La creación de la copia de seguridad %{backup_name} del volumen %{subject} se ha completado correctamente. "
+msgstr "La creación de la copia de seguridad %{backup_name} del volumen %{subject} se ha completado correctamente."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3749
@@ -10516,7 +10516,7 @@ msgstr "Moneda, 2 decimales ($1234,00)"
 
 #: ../config/model_attributes.rb:1245
 msgid "Currency|Code"
-msgstr "Currency|Código "
+msgstr "Currency|Código"
 
 #: ../config/model_attributes.rb:1246
 msgid "Currency|Full name"
@@ -10532,7 +10532,7 @@ msgstr "Currency|Nombre"
 
 #: ../config/model_attributes.rb:1249
 msgid "Currency|Region description"
-msgstr "Currency|Descripción de región "
+msgstr "Currency|Descripción de región"
 
 #: ../config/model_attributes.rb:1250
 msgid "Currency|Region number"
@@ -11724,7 +11724,7 @@ msgstr "Eliminar instantáneas"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3751
 msgid "Deleting Backup %{subject} of Volume %{volume_name} completed successfully."
-msgstr "La supresión de la copia de seguridad de %{subject} del volumen %{volume_name} se ha completado correctamente. "
+msgstr "La supresión de la copia de seguridad de %{subject} del volumen %{volume_name} se ha completado correctamente."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3753
@@ -12338,7 +12338,7 @@ msgstr "Número de región"
 
 #: ../config/model_attributes.rb:1337
 msgid "Dialog|System"
-msgstr "Diálogo|Sistema "
+msgstr "Diálogo|Sistema"
 
 #. TRANSLATORS: file: product/views/ResourcePool.yaml
 #: ../app/controllers/mixins/generic_show_mixin.rb:148
@@ -12575,7 +12575,7 @@ msgstr "Tipo de Dispositivo de Disco"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #: ../config/yaml_strings.rb:6529
 msgid "Disk File Storage"
-msgstr "Almacenamiento de archivos de disco "
+msgstr "Almacenamiento de archivos de disco"
 
 #. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
 #: ../config/yaml_strings.rb:3968
@@ -12969,7 +12969,7 @@ msgstr "Mostrar los administradores de almacenamiento en bloque individualmente"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1039
 msgid "Display Individual Chargeback Rates"
-msgstr "Mostrar tarifas de Chargeback individuales "
+msgstr "Mostrar tarifas de Chargeback individuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1027
@@ -13004,7 +13004,7 @@ msgstr "Mostrar subredes de nube individuales"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:682
 msgid "Display Individual Clusters"
-msgstr "Mostrar clústeres individuales "
+msgstr "Mostrar clústeres individuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2614
@@ -13294,7 +13294,7 @@ msgstr "Mostrar administradores de almacenamiento individual"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3108
 msgid "Display Individual Storage Resources"
-msgstr "Mostrar recursos de almacenamiento individuales "
+msgstr "Mostrar recursos de almacenamiento individuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2976
@@ -13399,7 +13399,7 @@ msgstr "Mostrar listas de tarifas de Chargeback"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1025
 msgid "Display Lists of Chargeback Saved Reports"
-msgstr "Mostrar listas de informes guardados de Chargeback "
+msgstr "Mostrar listas de informes guardados de Chargeback"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2032
@@ -13860,7 +13860,7 @@ msgstr "Mostrar escalas de tiempo para proveedores de nube"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:688
 msgid "Display Timelines for Clusters"
-msgstr "Mostrar escalas de tiempo para clústeres "
+msgstr "Mostrar escalas de tiempo para clústeres"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2206
@@ -13970,7 +13970,7 @@ msgstr "Mostrar desplazamiento de máquinas virtuales"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3430
 msgid "Display any dashboards"
-msgstr "Mostrar cualquier panel de control "
+msgstr "Mostrar cualquier panel de control"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3422
@@ -14837,7 +14837,7 @@ msgstr "Modificar etiquetas de pares de clave"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2172
 msgid "Edit Tags of Load Balancer"
-msgstr "Modificar etiquetas del equilibrador de carga "
+msgstr "Modificar etiquetas del equilibrador de carga"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2058
@@ -15322,7 +15322,7 @@ msgstr "Administrador de automatización insertado"
 #. TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
 #: ../config/yaml_strings.rb:4977
 msgid "Ems Cluster Name"
-msgstr "Ems Nombre de Cluster"
+msgstr "Nombre de clúster Ems"
 
 #: ../config/model_display_names.rb:107
 msgid "Ems Extension"
@@ -15446,7 +15446,7 @@ msgstr "Referencia EMS"
 
 #: ../config/model_attributes.rb:1452
 msgid "EmsCluster|Ems ref type"
-msgstr "EmsCluster|Tipo de referencia Ems "
+msgstr "EmsCluster|Tipo de referencia Ems"
 
 #: ../config/model_attributes.rb:1453
 msgid "EmsCluster|First drift state timestamp"
@@ -15466,7 +15466,7 @@ msgstr "Máx. fallas de HA"
 
 #: ../config/model_attributes.rb:1457
 msgid "EmsCluster|Has policies"
-msgstr "EmsCluster|Tiene políticas "
+msgstr "EmsCluster|Tiene políticas"
 
 #: ../config/model_attributes.rb:1458
 msgid "EmsCluster|Hidden"
@@ -15682,15 +15682,15 @@ msgstr "Referencia EMS"
 
 #: ../config/model_attributes.rb:1513
 msgid "EmsFolder|Ems ref type"
-msgstr "EmsFolder|Tipo de referencia Ems "
+msgstr "EmsFolder|Tipo de referencia Ems"
 
 #: ../config/model_attributes.rb:1514
 msgid "EmsFolder|Folder path"
-msgstr "EmsFolder|Vía de acceso de carpeta "
+msgstr "EmsFolder|Vía de acceso de carpeta"
 
 #: ../config/model_attributes.rb:1515
 msgid "EmsFolder|Has policies"
-msgstr "EmsFolder|tiene políticas "
+msgstr "EmsFolder|tiene políticas"
 
 #: ../config/model_attributes.rb:1516
 msgid "EmsFolder|Hidden"
@@ -16605,7 +16605,7 @@ msgstr "Todo bajo Proveedores de infraestructura"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2162
 msgid "Everything under Load Balancers"
-msgstr "Todo bajo Equilibradores de carga "
+msgstr "Todo bajo Equilibradores de carga"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3356
@@ -17020,7 +17020,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:1634
 msgid "ExtManagementSystem|Has policies"
-msgstr "ExtManagementSystem|Tiene políticas "
+msgstr "ExtManagementSystem|Tiene políticas"
 
 #: ../config/model_attributes.rb:1635
 msgid "ExtManagementSystem|Host default vnc port end"
@@ -17196,7 +17196,7 @@ msgstr "ExtManagementSystem|Admite la creación de grupo de seguridad"
 
 #: ../config/model_attributes.rb:1678
 msgid "ExtManagementSystem|Supports storage services"
-msgstr "ExtManagementSystem|Admite servicios de almacenamiento "
+msgstr "ExtManagementSystem|Admite servicios de almacenamiento"
 
 #: ../config/model_attributes.rb:1679
 msgid "ExtManagementSystem|Supports volume availability zones"
@@ -17883,7 +17883,7 @@ msgstr "Costo de cómputo fijo 2"
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
 #: ../config/yaml_strings.rb:6543
 msgid "Fixed Compute Metric"
-msgstr "Métrica de cómputo fijo "
+msgstr "Métrica de cómputo fijo"
 
 #. TRANSLATORS: en.yml key: dictionary.column.fixed_storage_1_cost
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
@@ -19124,7 +19124,7 @@ msgstr "Modelo"
 
 #: ../config/model_attributes.rb:1944
 msgid "Hardware|Num disks"
-msgstr "Hardware|Número de discos "
+msgstr "Hardware|Número de discos"
 
 #: ../config/model_attributes.rb:1945
 msgid "Hardware|Num hard disks"
@@ -19224,13 +19224,13 @@ msgstr "Plantillas Heat"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6496
 msgid "High % Oper Range"
-msgstr "% de rango operativo alto "
+msgstr "% de rango operativo alto"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6490
 msgid "High Oper Range"
-msgstr "Rango operativo alto "
+msgstr "Rango operativo alto"
 
 #: ../app/helpers/compliance_summary_helper.rb:34
 #: ../app/views/shared/views/_alerts_list.html.haml:78
@@ -19997,7 +19997,7 @@ msgstr "Referencia de EMS"
 
 #: ../config/model_attributes.rb:1999
 msgid "Host|Ems ref type"
-msgstr "Host|Tipo de referencia Ems "
+msgstr "Host|Tipo de referencia Ems"
 
 #: ../config/model_attributes.rb:2000
 msgid "Host|Enabled inbound ports"
@@ -22062,7 +22062,7 @@ msgstr "No se admite el inicio de sesión en la plataforma [%{os_name}]"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6499
 msgid "Low % Oper Range"
-msgstr "% de rango operativo bajo "
+msgstr "% de rango operativo bajo"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -22240,7 +22240,7 @@ msgstr "Administrar políticas de administradores de almacenamiento"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:696
 msgid "Manage Policies on Clusters"
-msgstr "Gestionar políticas en clústeres "
+msgstr "Gestionar políticas en clústeres"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2782
@@ -22333,7 +22333,7 @@ msgstr "Máximo"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6454
 msgid "Max % Used"
-msgstr "% máximo utilizado "
+msgstr "% máximo utilizado"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -22341,7 +22341,7 @@ msgstr "% máximo utilizado "
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_util_daily.yaml
 #: ../config/yaml_strings.rb:6319
 msgid "Max Available"
-msgstr "Máximo disponible "
+msgstr "Máximo disponible"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -22919,7 +22919,7 @@ msgstr "Tendencia de promedio de memoria usada"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_topday.yaml
 #: ../config/yaml_strings.rb:6533
 msgid "Memory File Storage"
-msgstr "Almacenamiento de archivos de memoria "
+msgstr "Almacenamiento de archivos de memoria"
 
 #. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
 #: ../config/yaml_strings.rb:3972
@@ -23133,7 +23133,7 @@ msgstr "Acumulación de métricas"
 
 #: ../config/model_attributes.rb:2361
 msgid "MetricRollup|Abs max cpu usage rate average timestamp"
-msgstr "Marca de tiempo promedio de tasa de uso de CPU máx. ABS"
+msgstr "Marca de tiempo promedio de tasa de uso de CPU máx. Abs"
 
 #: ../config/model_attributes.rb:2362
 msgid "MetricRollup|Abs max cpu usage rate average value"
@@ -24393,7 +24393,7 @@ msgstr "Mínimo"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6451
 msgid "Min % Used"
-msgstr "% mínimo utilizado "
+msgstr "% mínimo utilizado"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -24810,11 +24810,11 @@ msgstr "MiqAeClass|Hereda"
 
 #: ../config/model_attributes.rb:2622
 msgid "MiqAeClass|Lower name"
-msgstr "MiqAeClass|Nombre inferior "
+msgstr "MiqAeClass|Nombre inferior"
 
 #: ../config/model_attributes.rb:2623
 msgid "MiqAeClass|Lower relative path"
-msgstr "MiqAeClass|Vía de acceso relativa inferior "
+msgstr "MiqAeClass|Vía de acceso relativa inferior"
 
 #: ../config/model_attributes.rb:2624
 msgid "MiqAeClass|Name"
@@ -24834,7 +24834,7 @@ msgstr "MiqAeClass|Número de región"
 
 #: ../config/model_attributes.rb:2628
 msgid "MiqAeClass|Relative path"
-msgstr "MiqAeClass|Vía de acceso relativa "
+msgstr "MiqAeClass|Vía de acceso relativa"
 
 #: ../config/model_attributes.rb:2629
 msgid "MiqAeClass|Updated by"
@@ -24970,11 +24970,11 @@ msgstr "MiqAeInstance|Hereda"
 
 #: ../config/model_attributes.rb:2664
 msgid "MiqAeInstance|Lower name"
-msgstr "MiqAeInstance|Nombre inferior "
+msgstr "MiqAeInstance|Nombre inferior"
 
 #: ../config/model_attributes.rb:2665
 msgid "MiqAeInstance|Lower relative path"
-msgstr "MiqAeInstance|Vía de acceso relativa inferior "
+msgstr "MiqAeInstance|Vía de acceso relativa inferior"
 
 #: ../config/model_attributes.rb:2666
 msgid "MiqAeInstance|Name"
@@ -25038,7 +25038,7 @@ msgstr "MiqAeMethod|Nombre inferior"
 
 #: ../config/model_attributes.rb:2682
 msgid "MiqAeMethod|Lower relative path"
-msgstr "MiqAeMethod|Vía de acceso relativa inferior "
+msgstr "MiqAeMethod|Vía de acceso relativa inferior"
 
 #: ../config/model_attributes.rb:2683
 msgid "MiqAeMethod|Name"
@@ -25118,7 +25118,7 @@ msgstr "MiqAeNamespace|Nombre inferior"
 
 #: ../config/model_attributes.rb:2703
 msgid "MiqAeNamespace|Lower relative path"
-msgstr "MiqAeNamespace|Vía de acceso relativa inferior "
+msgstr "MiqAeNamespace|Vía de acceso relativa inferior"
 
 #: ../config/model_attributes.rb:2704
 msgid "MiqAeNamespace|Name"
@@ -27498,7 +27498,7 @@ msgstr "Visibilidad"
 
 #: ../config/model_attributes.rb:3354
 msgid "MiqWorkerType|Bundler groups"
-msgstr "MiqWorkerType|Grupos de empaquetado "
+msgstr "MiqWorkerType|Grupos de empaquetado"
 
 #: ../config/model_attributes.rb:3355
 msgid "MiqWorkerType|Href slug"
@@ -30138,7 +30138,7 @@ msgstr "Plantilla de orquestación"
 
 #: ../app/models/service_orchestration.rb:197
 msgid "Orchestration template runner finished with error. Check evm.log for details."
-msgstr "La plantilla de orquestación ha finalizado con errores. Compruebe evm.log para obtener más detalles. "
+msgstr "La plantilla de orquestación ha finalizado con errores. Compruebe evm.log para obtener más detalles."
 
 #: ../config/model_attributes.rb:3552
 msgid "OrchestrationStackOutput|Description"
@@ -31348,7 +31348,7 @@ msgstr "Realizar análisis SmartState para hosts"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:694
 msgid "Perform SmartState Analysis on Clusters"
-msgstr "Realizar análisis SmartState en clústeres "
+msgstr "Realizar análisis SmartState en clústeres"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2248
@@ -32094,7 +32094,7 @@ msgstr "PhysicalStorageFamily|Href slug"
 
 #: ../config/model_attributes.rb:3744
 msgid "PhysicalStorageFamily|Name"
-msgstr "PhysicalStorageFamily|Nombre "
+msgstr "PhysicalStorageFamily|Nombre"
 
 #: ../config/model_attributes.rb:3745
 msgid "PhysicalStorageFamily|Region description"
@@ -33729,22 +33729,22 @@ msgstr "Reconfigurar opciones de servicios"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2934
 msgid "Reconfigure VM CPU"
-msgstr "Reconfigurar CPU de máquina virtual "
+msgstr "Reconfigurar CPU de máquina virtual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2940
 msgid "Reconfigure VM Disks"
-msgstr "Reconfigurar discos de máquina virtual "
+msgstr "Reconfigurar discos de máquina virtual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2942
 msgid "Reconfigure VM Drives"
-msgstr "Reconfigurar unidades de máquina virtual "
+msgstr "Reconfigurar unidades de máquina virtual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2936
 msgid "Reconfigure VM Memory"
-msgstr "Reconfigurar memoria de máquina virtual "
+msgstr "Reconfigurar memoria de máquina virtual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2930
@@ -33754,7 +33754,7 @@ msgstr "Reconfigurar memoria de máquina virtual/CPU/..."
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2938
 msgid "Reconfigure VM Networks"
-msgstr "Reconfigurar redes de máquina virtual "
+msgstr "Reconfigurar redes de máquina virtual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2932
@@ -33764,7 +33764,7 @@ msgstr "Reconfigurar máquinas virtuales"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2928
 msgid "Reconfigure VMs button"
-msgstr "Botón Reconfigurar máquinas virtuales "
+msgstr "Botón Reconfigurar máquinas virtuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2796
@@ -33960,7 +33960,7 @@ msgstr "Actualizar relaciones para todos los ítemes relacionados de proveedor"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2426
 msgid "Refresh relationships for all items related to Configuration Manager Provider"
-msgstr "Actualizar relaciones para todos los ítemes relacionados con el proveedor de administradores de configuración "
+msgstr "Actualizar relaciones para todos los ítemes relacionados con el proveedor de administradores de configuración"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ConfigurationProfile.yaml
@@ -34226,7 +34226,7 @@ msgstr "Relaciones"
 
 #: ../config/model_attributes.rb:3839
 msgid "Relationship|Ancestry"
-msgstr "Ascesdencia"
+msgstr "Relationship|Ascendencia"
 
 #: ../config/model_attributes.rb:3840
 msgid "Relationship|Href slug"
@@ -34603,7 +34603,7 @@ msgstr "Eliminar servicios"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2914
 msgid "Rename VM"
-msgstr "Renombrar máquina virtual "
+msgstr "Renombrar máquina virtual"
 
 #: ../app/helpers/application_helper/toolbar/custom_button_set_center.rb:31
 msgid "Reorder"
@@ -35240,7 +35240,7 @@ msgstr "Restaurar a partir de la copia de respaldo de un volumen"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3755
 msgid "Restoring Backup %{subject} of Volume %{volume_name} completed successfully."
-msgstr "La restauración de la copia de seguridad %{subject} del volumen %{volume_name} se ha completado correctamente. "
+msgstr "La restauración de la copia de seguridad %{subject} del volumen %{volume_name} se ha completado correctamente."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3757
@@ -35449,7 +35449,7 @@ msgstr "Instancias en ejecución"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_hourly.yaml
 #: ../config/yaml_strings.rb:6593
 msgid "Running VMs"
-msgstr "Máquinas virtuales en ejecución "
+msgstr "Máquinas virtuales en ejecución"
 
 #: ../app/models/miq_scsi_lun.rb:5
 msgid "SCSI LUN"
@@ -37178,7 +37178,7 @@ msgstr[1] "Sesiones"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:795
 msgid "Set Hosts to Manageable State"
-msgstr "Establecer hosts en estado gestionado "
+msgstr "Establecer hosts en estado gestionado"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:56
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:90
@@ -37575,7 +37575,7 @@ msgstr "Colocar host en espera"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:777
 msgid "Shutdown a Host"
-msgstr "Apagar un host "
+msgstr "Apagar un host"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:773
@@ -38266,7 +38266,7 @@ msgstr "Servicio de almacenamiento"
 
 #: ../config/model_attributes.rb:4332
 msgid "Storage service resource attachment"
-msgstr "Adjunto de recurso de servicio de almacenamiento "
+msgstr "Adjunto de recurso de servicio de almacenamiento"
 
 #: ../config/model_attributes.rb:4293
 msgid "StorageFile|Base name"
@@ -40225,7 +40225,7 @@ msgstr "Promedio de tendencia utilizado"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
 #: ../config/yaml_strings.rb:6457
 msgid "Trend Max % Used"
-msgstr "% máximo de tendencia utilizado "
+msgstr "% máximo de tendencia utilizado"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -40239,7 +40239,7 @@ msgstr "E/S máxima de tendencia"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_util_daily.yaml
 #: ../config/yaml_strings.rb:6345
 msgid "Trend Max Used"
-msgstr "Máximo de tendencia utilizado "
+msgstr "Máximo de tendencia utilizado"
 
 #. TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
 #: ../config/yaml_strings.rb:3791
@@ -41479,7 +41479,7 @@ msgstr "Nombre de usuario VC"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_summ_daily.yaml
 #: ../config/yaml_strings.rb:6301
 msgid "VIM Performance Daily"
-msgstr "Rendimiento de VIM diario "
+msgstr "Rendimiento de VIM diario"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_daily.yaml
 #: ../config/yaml_strings.rb:6443
@@ -41490,7 +41490,7 @@ msgstr "Rendimiento de VIM diario por etiqueta"
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_hourly_cloud.yaml
 #: ../config/yaml_strings.rb:6401
 msgid "VIM Performance Hourly"
-msgstr "Rendimiento de VIM por hora "
+msgstr "Rendimiento de VIM por hora"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_hourly.yaml
 #: ../config/yaml_strings.rb:6438
@@ -41896,7 +41896,7 @@ msgstr "La máquina virtual no tiene EMS; no se puede eliminar el disco"
 
 #: ../app/models/vm_or_template/operations/configuration.rb:103
 msgid "VM has no EMS, unable to resize disk"
-msgstr "La máquina virtual no tiene EMS; no se puede redimensionar el disco "
+msgstr "La máquina virtual no tiene EMS; no se puede redimensionar el disco"
 
 #: ../app/models/vm_or_template/operations.rb:94
 msgid "VM has no EMS, unable to set custom attribute"
@@ -41966,7 +41966,7 @@ msgstr "El grupo de seguridad de VM no pertenece a cloud_tenant_security_groups"
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:95
 msgid "VM security group not available; can not proceed without it."
-msgstr "El grupo de seguridad VM no está disponible; no puede continuar sin él. "
+msgstr "El grupo de seguridad VM no está disponible; no puede continuar sin él."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2836
@@ -45821,7 +45821,7 @@ msgstr "que debe ser un número entero o uno de %{priority}"
 
 #: ../app/models/zone.rb:242
 msgid "zone name '%{name}' is used by a provider"
-msgstr "un proveedor utiliza el nombre de zona '%{name}' "
+msgstr "un proveedor utiliza el nombre de zona '%{name}'"
 
 #: ../app/models/zone.rb:241
 msgid "zone name '%{name}' is used by a server"
@@ -45906,7 +45906,7 @@ msgstr "No se ha encontrado el repositorio '%{repository_name}' en la base de da
 
 #: ../app/models/miq_ae_yaml_import.rb:84
 msgid "System domain import is not supported."
-msgstr "No se da soporte a la importación del dominio del sistema. "
+msgstr "No se da soporte a la importación del dominio del sistema."
 
 #: ../app/models/miq_ae_yaml_import.rb:310
 msgid "Vault Credential '%{vault_credential_name}' doesn't exist in the appliance please add this credential and retry the import."
@@ -46151,7 +46151,7 @@ msgstr "Debería tener acceso privilegiado como root o administrador"
 
 #: ../app/models/authenticator/amazon.rb:115
 msgid "SignatureMismatch - check your AWS Secret Access Key and signing method"
-msgstr "SignatureMismatch - Compruebe la clave de acceso secreto de AWS y el método de firma "
+msgstr "SignatureMismatch - Compruebe la clave de acceso secreto de AWS y el método de firma"
 
 #: ../app/helpers/textual_summary_helper.rb:218
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:29
@@ -46656,7 +46656,7 @@ msgstr "Procesadores autorizados"
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:93
 msgid "Entitled Processors field does not contain a well-formed positive number"
-msgstr "El campo Procesadores autorizados no contiene un número positivo con el formato correcto "
+msgstr "El campo Procesadores autorizados no contiene un número positivo con el formato correcto"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:96
@@ -46777,7 +46777,7 @@ msgstr[1] "Sistemas configurados (IBM Terraform)"
 
 #: ../lib/manageiq/providers/ibm_terraform/engine.rb:14
 msgid "IBM Terraform Provider"
-msgstr "Proveedor de IBM Terraform "
+msgstr "Proveedor de IBM Terraform"
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb:51
 msgid "Managed Services URL"
@@ -46818,11 +46818,11 @@ msgstr "Detectar"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada. Ejemplo: http://my_file_server.org:3333/xccdf_files/ Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación. "
+msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada.\n  Ejemplo: http://my_file_server.org:3333/xccdf_files/ Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:678
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada. Ejemplo: http://my_file_server.org:3333/xccdf_files/\n  Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación. "
+msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada.\nEjemplo: http://my_file_server.org:3333/xccdf_files/\n  Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:616
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:632
@@ -46872,15 +46872,15 @@ msgstr "Etiqueta de imagen"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:626
 msgid "Image-Inspector"
-msgstr "Inspector de imagen "
+msgstr "Inspector de imagen"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:39
 msgid "Image-Inspector Registry"
-msgstr "Registro de inspector de imagen "
+msgstr "Registro de inspector de imagen"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:34
 msgid "Image-Inspector Repository"
-msgstr "Repositorio de inspector de imagen "
+msgstr "Repositorio de inspector de imagen"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:654
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:35
@@ -46889,7 +46889,7 @@ msgstr "Repositorio de inspector de imagen. Ejemplo: openshift/image-inspector"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:44
 msgid "Image-Inspector Tag"
-msgstr "Etiqueta de inspector de imagen "
+msgstr "Etiqueta de inspector de imagen"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:670
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:45
@@ -46960,7 +46960,7 @@ msgstr "Certificados de CA de confianza"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:722
 msgid "Unsupported endpoint"
-msgstr "Punto final no soportado "
+msgstr "Punto final no soportado"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:112
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:42
@@ -46997,11 +46997,11 @@ msgstr[1] "Máquinas virtuales (Kubevirt)"
 #:
 #: ../app/models/manageiq/providers/lenovo/physical_infra_manager/operations/ansible_sender.rb:78
 msgid "%{method_name} is not a valid name to an Ansible operation!"
-msgstr "%{method_name} no es un nombre válido para una operación Ansible: "
+msgstr "%{method_name} no es un nombre válido para una operación Ansible:"
 
 #: ../app/javascript/components/form/fields/physical_server_field.js:70
 msgid "Choose a Server"
-msgstr "Seleccione un servidor "
+msgstr "Seleccione un servidor"
 
 #: ../app/javascript/components/form/fields/config_pattern_field.js:64
 msgid "Choose a pattern"
@@ -47054,7 +47054,7 @@ msgstr "Máscara de subred CIDR para la subred de la red de nube"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:84
 msgid "CIDR Subnet Mask is required"
-msgstr "La máscara de subred CIDR es necesaria "
+msgstr "La máscara de subred CIDR es necesaria"
 
 #: ../app/models/manageiq/providers/nsxt/network_manager/cloud_network.rb:4
 msgid "Cloud Network (NSX-T)"
@@ -47097,7 +47097,7 @@ msgstr "Suprimir reglas de política de seguridad seleccionadas"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:72
 msgid "Description of the Cloud Network"
-msgstr "Descripción de la red de nube "
+msgstr "Descripción de la red de nube"
 
 #:
 #: ../app/javascript/components/security-groups/nsxt-security-group-form.schema.js:23
@@ -47116,7 +47116,7 @@ msgstr "Descripción de la regla de política de seguridad"
 
 #: ../app/controllers/security_policy_rule_controller.rb:26
 msgid "Destination Security Groups"
-msgstr "Grupos de seguridad de destino "
+msgstr "Grupos de seguridad de destino"
 
 #:
 #: ../app/javascript/components/security-policy-rules/nsxt-security-policy-rule-form.schema.js:39
@@ -47146,7 +47146,7 @@ msgstr "Modificar regla de política de seguridad"
 
 #: ../app/models/manageiq/providers/nsxt/manager_mixin.rb:98
 msgid "Federation Global Manager"
-msgstr "Gestor global de federación "
+msgstr "Gestor global de federación"
 
 #: ../app/models/manageiq/providers/nsxt/manager_mixin.rb:102
 msgid "Federation Local or Single Manager"
@@ -47172,7 +47172,7 @@ msgstr "El nombre es obligatorio"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:60
 msgid "Name of the Cloud Network"
-msgstr "Nombre de la red de nube "
+msgstr "Nombre de la red de nube"
 
 #:
 #: ../app/javascript/components/security-groups/nsxt-security-group-form.schema.js:11
@@ -47269,7 +47269,7 @@ msgstr "La zona de seguridad es necesaria"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:94
 msgid "Security Zone of the Cloud Network"
-msgstr "Zona de seguridad de la red de nube "
+msgstr "Zona de seguridad de la red de nube"
 
 #:
 #: ../app/javascript/components/security-groups/nsxt-security-group-form.schema.js:29
@@ -47316,7 +47316,7 @@ msgstr "Actualizar regla de política de seguridad"
 
 #: ../lib/manageiq/providers/nsxt/engine.rb:14
 msgid "VMware NSX-T Provider"
-msgstr "Proveedor de VMware NSX-T "
+msgstr "Proveedor de VMware NSX-T"
 
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/cloud_networks_center.rb:35
@@ -47426,7 +47426,7 @@ msgstr "Plantilla de OpenShift"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/flavor.rb:48
 msgid "%{cpus} CPUs, %{ram} RAM, %{disk_size} Root Disk"
-msgstr "%{cpus} de CPU, %{ram} de RAM, %{disk_size} de disco raíz "
+msgstr "%{cpus} de CPU, %{ram} de RAM, %{disk_size} de disco raíz"
 
 #: ../app/models/manageiq/providers/openstack/infra_manager/host.rb:332
 msgid "Cannot start. Already on."
@@ -47469,7 +47469,7 @@ msgstr "No se admite la operación de migración."
 
 #: ../lib/manageiq/providers/openstack/legacy/openstack_handle/handle.rb:67
 msgid "Numeric-only passwords are not accepted"
-msgstr "No se aceptan contraseñas solo numéricas "
+msgstr "No se aceptan contraseñas solo numéricas"
 
 #: ../lib/manageiq/providers/openstack/engine.rb:14
 msgid "OpenStack Provider"
@@ -47491,7 +47491,7 @@ msgstr "La pila de proveedores no está preparada para su actualización, hay ot
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:47
 msgid "Quota exceeded for routers."
-msgstr "Se ha excedido la cuota de enrutadores. "
+msgstr "Se ha excedido la cuota de enrutadores."
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:22
 msgid "RSA key pair"
@@ -47534,7 +47534,7 @@ msgstr "La red de nube no está conectada a una %{table} activa"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/flavor.rb:27
 msgid "The Flavor is not connected to an active %{table}"
-msgstr "La clase no está conectada a una %{table} activa "
+msgstr "La clase no está conectada a una %{table} activa"
 
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:10
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:18
@@ -47543,7 +47543,7 @@ msgstr "La IP flotante no está conectada a una %{table} activa"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/template.rb:78
 msgid "The Image is not connected to an active %{table}"
-msgstr "La imagen no está conectada a una %{table} activa "
+msgstr "La imagen no está conectada a una %{table} activa"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/vm/resize.rb:8
 msgid "The Instance cannot be resized, current state has to be active or shutoff."
@@ -47594,12 +47594,12 @@ msgstr "Esta %{instance} no tiene ninguna %{security_groups} asociada"
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:17
 msgid "Unable to delete \"%{name}\" because it has associated ports."
-msgstr "No se puede suprimir \"%{name}\" debido a que tiene puertos asociados. "
+msgstr "No se puede suprimir \"%{name}\" debido a que tiene puertos asociados."
 
 #:
 #: ../app/models/manageiq/providers/openstack/cloud_manager/orchestration_template.rb:187
 msgid "Unknown constraint %{constraint}"
-msgstr "Restricción %{constraint} desconocida "
+msgstr "Restricción %{constraint} desconocida"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb:280
@@ -47650,7 +47650,7 @@ msgstr "No está permitido suprimir para una instantánea que está activa"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_import.rb:65
 msgid "Error while configuring VM network."
-msgstr "Error al configurar la red de la máquina virtual. "
+msgstr "Error al configurar la red de la máquina virtual."
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_import.rb:56
 msgid "Error while importing the VM."
@@ -47712,7 +47712,7 @@ msgstr "El sellado de plantillas sólo está soportado para sistemas operativos 
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/host.rb:53
 msgid "The Host is not connected to an active provider"
-msgstr "El host no está conectado a un proveedor activo "
+msgstr "El host no está conectado a un proveedor activo"
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:20
@@ -47887,7 +47887,7 @@ msgstr "%{field_required} para clúster no habilitado para DRS"
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/ovf_service_template.rb:33
 msgid ":provision section is missing from :config_info in options hash."
-msgstr ":falta la sección de suministro en: config_info, en el hash de opciones. "
+msgstr ":falta la sección de suministro en: config_info, en el hash de opciones."
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:21
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:22
@@ -48004,7 +48004,7 @@ msgstr "La migración en caliente no puede migrar una máquina virtual con insta
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/orchestration_template.rb:27
 msgid "accept_all_eula is required for content library item deployment."
-msgstr "accept_all_eula es necesario para el despliegue de elementos de la biblioteca de contenido. "
+msgstr "accept_all_eula es necesario para el despliegue de elementos de la biblioteca de contenido."
 
 #: ../app/models/manageiq/providers/vmware/infra_manager/vim_connect_mixin.rb:7
 msgid "no console credentials defined"
@@ -48471,7 +48471,7 @@ msgstr "%s \"%s\" con instancias de %s no se puede suprimir"
 
 #: ../app/javascript/components/provider-form/index.jsx:132
 msgid "%s %s was saved"
-msgstr "%s %s se ha guardado "
+msgstr "%s %s se ha guardado"
 
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-add-security-group.js:59
@@ -48490,7 +48490,7 @@ msgstr "Se ha cerrado la sesión de %s, redireccionando a la página de inicio d
 #: ../app/javascript/toolbar-actions/delete.js:32
 #: ../app/assets/javascripts/components/generic_object/generic-object-definition-toolbar.js:71
 msgid "%s: \"%s\" was successfully deleted"
-msgstr "%s: \"%s\" se ha suprimido correctamente "
+msgstr "%s: \"%s\" se ha suprimido correctamente"
 
 #: ../app/controllers/application_controller/ci_processing.rb:605
 msgid "%{action_name} action does not apply to selected items"
@@ -51236,7 +51236,7 @@ msgstr "Adición de copia de '%{description}'"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:19
 msgid "Adding of physical storage was cancelled by the user"
-msgstr "El usuario ha cancelado la adición de almacenamiento físico "
+msgstr "El usuario ha cancelado la adición de almacenamiento físico"
 
 #:
 #: ../app/assets/javascripts/components/vm_cloud/vm-cloud-add-security-group.js:51
@@ -51325,19 +51325,19 @@ msgstr "Puerto de agente"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:81
 msgid "Aggregate Host CPU Cores"
-msgstr "Agregar núcleos de CPU de host "
+msgstr "Agregar núcleos de CPU de host"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:67
 msgid "Aggregate Host CPU Resources"
-msgstr "Agregar recursos de CPU de host "
+msgstr "Agregar recursos de CPU de host"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:77
 msgid "Aggregate Host CPUs"
-msgstr "Agregar CPU de host "
+msgstr "Agregar CPU de host"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:72
 msgid "Aggregate Host Memory"
-msgstr "Agregar memoria de host "
+msgstr "Agregar memoria de host"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:68
 msgid "Aggregate Node CPU Cores"
@@ -51707,7 +51707,7 @@ msgstr "Todas las plantillas e imágenes"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:662
 msgid "All Templates for Clusters"
-msgstr "Todas las plantillas para clústeres "
+msgstr "Todas las plantillas para clústeres"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:663
 msgid "All Templates for Host"
@@ -51753,7 +51753,7 @@ msgstr "Todas las máquinas virtuales y plantillas que puedo ver"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:652
 msgid "All VMs for Clusters"
-msgstr "Todas las máquinas virtuales para clústeres "
+msgstr "Todas las máquinas virtuales para clústeres"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:653
 msgid "All VMs for Host"
@@ -52281,11 +52281,11 @@ msgstr "¿Está seguro de que desea suprimir los siguientes proveedores de admin
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:17
 msgid "Are you sure you want to delete the following Key Pair?"
-msgstr "¿Está seguro de que desea suprimir el siguiente par de claves? "
+msgstr "¿Está seguro de que desea suprimir el siguiente par de claves?"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:36
 msgid "Are you sure you want to delete the following Key Pairs?"
-msgstr "¿Está seguro de que desea suprimir los siguientes pares de claves? "
+msgstr "¿Está seguro de que desea suprimir los siguientes pares de claves?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:25
 msgid "Are you sure you want to delete the following credential?"
@@ -52651,7 +52651,7 @@ msgstr "Se debe configurar por lo menos un correo electrónico, un SNMP Trap, un
 
 #: ../app/views/layouts/listnav/_compare_sections.html.haml:44
 msgid "At least one section must be selected"
-msgstr "Se debe seleccionar al menos una sección "
+msgstr "Se debe seleccionar al menos una sección"
 
 #: ../app/assets/javascripts/components/miq-request-options.js:21
 msgid "At least one status must be selected"
@@ -52675,7 +52675,7 @@ msgstr "Adjuntar un volumen de nube a esta instancia"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:25
 msgid "Attach a new storage system"
-msgstr "Adjuntar un nuevo sistema de almacenamiento "
+msgstr "Adjuntar un nuevo sistema de almacenamiento"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:56
 msgid "Attach selected Cloud Volume to an Instance"
@@ -53182,11 +53182,11 @@ msgstr "Basado en bloque de almacenamiento"
 
 #: ../app/helpers/availability_zone_helper/textual_summary.rb:43
 msgid "Block storage disk capacity"
-msgstr "Capacidad de disco de almacenamiento de bloques "
+msgstr "Capacidad de disco de almacenamiento de bloques"
 
 #: ../app/helpers/availability_zone_helper/textual_summary.rb:48
 msgid "Block storage disk usage"
-msgstr "Uso de disco de almacenamiento de bloques "
+msgstr "Uso de disco de almacenamiento de bloques"
 
 #: ../app/helpers/report_helper.rb:12
 msgid "Blue Background"
@@ -53355,11 +53355,11 @@ msgstr "Por proveedores de infraestructura/nube"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Clusters"
-msgstr "Por clústeres "
+msgstr "Por clústeres"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Host"
-msgstr "Por host "
+msgstr "Por host"
 
 #: ../app/controllers/application_controller/buttons.rb:1008
 #: ../app/views/shared/buttons/_ab_show.html.haml:147
@@ -53720,7 +53720,7 @@ msgstr "¿Capturó las métricas relacionadas con el proveedor de contenedores?"
 
 #: ../app/controllers/catalog_controller.rb:647
 msgid "Catalog \"%{name}\" was saved"
-msgstr "El catálogo \"%{name}\" se ha guardado "
+msgstr "El catálogo \"%{name}\" se ha guardado"
 
 #: ../app/controllers/catalog_controller.rb:397
 msgid "Catalog Bundle \"%{name}\" was added"
@@ -53749,7 +53749,7 @@ msgstr "Tipo de elemento del catálogo"
 #: ../app/helpers/ops_helper/textual_summary.rb:78
 #: ../config/yaml_strings.rb:1806
 msgid "Catalog Items and Bundles"
-msgstr "Elementos y paquetes del catálogo "
+msgstr "Elementos y paquetes del catálogo"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:82
 msgid "Category \"%{name}\" was added"
@@ -53817,7 +53817,7 @@ msgstr "Atención: ¡Los cambios manuales a los archivos de configuración puede
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:7
 msgid "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting existing tags on resources with mapped provider labels."
-msgstr "Precaución: Es posible que las asignaciones con la entidad de recursos 'All-Entities' reemplacen las etiquetas existentes en los recursos por las etiquetas de proveedor asignadas. "
+msgstr "Precaución: Es posible que las asignaciones con la entidad de recursos 'All-Entities' reemplacen las etiquetas existentes en los recursos por las etiquetas de proveedor asignadas."
 
 #: ../app/views/ops/_rbac_user_details.html.haml:1
 #: ../app/javascript/components/async-credentials/password-field.jsx:85
@@ -54233,7 +54233,7 @@ msgstr "Elija un programa para ver de los menús a la izquierda."
 #: ../app/controllers/catalog_controller.rb:1397
 #: ../app/controllers/catalog_controller.rb:1398
 msgid "Choose a Template"
-msgstr "Seleccionar una plantilla "
+msgstr "Seleccionar una plantilla"
 
 #: ../app/helpers/application_helper/button/timeline_download.rb:7
 #: ../app/views/dashboard/_tl_detail.html.haml:15
@@ -54475,7 +54475,7 @@ msgstr "Pulse para seleccionar el punto de entrada de suministro"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:196
 msgid "Click to select Reconfigure Entry Point"
-msgstr "Pulse para seleccionar el punto de entrada de reconfiguración "
+msgstr "Pulse para seleccionar el punto de entrada de reconfiguración"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:217
 msgid "Click to select Retirement Entry Point"
@@ -54756,7 +54756,7 @@ msgstr "El volumen de nube \"%{name}\" no está asociado a ninguna instancia"
 
 #: ../app/helpers/application_helper/button/volume_attach.rb:6
 msgid "Cloud Volume \"%{name}\" is not available to be attached to any Instances"
-msgstr "El volumen de nube \"%{name}\" no está disponible para ser asignado a cualquiera de las instancias "
+msgstr "El volumen de nube \"%{name}\" no está disponible para ser asignado a cualquiera de las instancias"
 
 #: ../app/controllers/cloud_volume_controller.rb:329
 msgid "Cloud Volume \"%{name}\" updated"
@@ -54769,7 +54769,7 @@ msgstr "El volumen de nube \"%{volume_name}\" no está asociado a ninguna instan
 
 #: ../app/controllers/cloud_volume_controller.rb:27
 msgid "Cloud Volume \"%{volume_name}\" is not available to be attached to any Instances"
-msgstr "El volumen de nube \"%{volume_name}\" no está disponible para ser asignado a cualquiera de las instancias "
+msgstr "El volumen de nube \"%{volume_name}\" no está disponible para ser asignado a cualquiera de las instancias"
 
 #: ../app/controllers/cloud_volume_controller.rb:229
 msgid "Cloud Volume creation failed: Task start failed"
@@ -54886,7 +54886,7 @@ msgstr "Clúster \"%{name}\": Error durante '%{task}': %{error_message}"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:631
 msgid "Cluster Analysis"
-msgstr "Análisis del clúster "
+msgstr "Análisis del clúster"
 
 #:
 #: ../app/assets/javascripts/controllers/schedule/schedule_form_controller.js:190
@@ -54909,12 +54909,12 @@ msgstr "Clúster: %{name}"
 
 #: ../app/controllers/application_controller/ci_processing.rb:552
 msgid "Cluster: %{task} successfully initiated"
-msgstr "Clúster: %{task} se ha iniciado correctamente "
+msgstr "Clúster: %{task} se ha iniciado correctamente"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:20
 #: ../app/views/ops/_rbac_group_details.html.haml:196
 msgid "Clusters, Datastores, Hosts, Managers & Providers"
-msgstr "Clústeres, almacenes de datos, hosts y proveedores "
+msgstr "Clústeres, almacenes de datos, hosts y proveedores"
 
 #:
 #: ../app/assets/javascripts/controllers/cloud_volume/cloud_volume_form_controller.js:237
@@ -54972,7 +54972,7 @@ msgstr "Recopilar registros actuales"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:15
 msgid "Collect for All Clusters"
-msgstr "Recopilar para todos los clústeres "
+msgstr "Recopilar para todos los clústeres"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:46
 msgid "Collect for All Datastores"
@@ -55344,7 +55344,7 @@ msgstr "Configurar columnas del informe"
 
 #: ../app/controllers/configured_system_controller.rb:36
 msgid "Configured System console access failed: Task start failed"
-msgstr "Ha fallado el acceso a la consola del sistema configurado: Ha fallado el inicio de la tarea "
+msgstr "Ha fallado el acceso a la consola del sistema configurado: Ha fallado el inicio de la tarea"
 
 #: ../app/presenters/tree_node/configured_system.rb:4
 msgid "Configured System: %{hostname}"
@@ -55387,7 +55387,7 @@ msgstr "Confirmar conexión"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:349
 msgid "Confirm Edit"
-msgstr "Confirmar edición "
+msgstr "Confirmar edición"
 
 #: ../app/views/static/ems_physical_infra/change_password.html.haml:41
 msgid "Confirm New Password"
@@ -56393,7 +56393,7 @@ msgstr "Política DNS"
 
 #: ../app/javascript/angular/dashboard/widget-wrapper.js:46
 msgid "Dashboard \"%s\" was refreshed"
-msgstr "Se ha renovado el panel de control \"%s\" "
+msgstr "Se ha renovado el panel de control \"%s\""
 
 #: ../app/controllers/report_controller/dashboards.rb:306
 msgid "Dashboard \"%{name}\""
@@ -56755,15 +56755,15 @@ msgstr "Retraso (minutos)"
 
 #: ../app/helpers/application_helper/button/condition_delete.rb:6
 msgid "Delete %{condition_type} Condition"
-msgstr "Suprimir condición %{condition_type} "
+msgstr "Suprimir condición %{condition_type}"
 
 #: ../app/helpers/application_helper/button/policy_delete.rb:6
 msgid "Delete %{policy_type} Policy"
-msgstr "Suprimir política %{policy_type} "
+msgstr "Suprimir política %{policy_type}"
 
 #: ../app/helpers/application_helper/toolbar/miq_action_center.rb:28
 msgid "Delete Action"
-msgstr "Suprimir acción "
+msgstr "Suprimir acción"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:35
 msgid "Delete Alert"
@@ -57177,11 +57177,11 @@ msgstr "Eliminar este grupo de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:24
 msgid "Delete this Security Policy"
-msgstr "Suprimir esta política de seguridad "
+msgstr "Suprimir esta política de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:24
 msgid "Delete this Security Policy Rule"
-msgstr "Suprimir esta regla de política de seguridad "
+msgstr "Suprimir esta regla de política de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:23
 msgid "Delete this User"
@@ -57284,7 +57284,7 @@ msgstr "Descendente"
 
 #: ../app/controllers/ops_controller/settings/zones.rb:27
 msgid "Description can't be blank"
-msgstr "La descripción no puede estar en blanco "
+msgstr "La descripción no puede estar en blanco"
 
 #:
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-form.js:242
@@ -57797,7 +57797,7 @@ msgstr "Bajar clave privada"
 #: ../app/helpers/application_helper/toolbar/logs_center.rb:12
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:53
 msgid "Download the Entire %{log_type} Log File"
-msgstr "Descartar el archivo de registro de %{log_type} completo"
+msgstr "Descargar el archivo de registro de %{log_type} completo"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:24
 msgid "Download the Entire Audit Log File"
@@ -58176,7 +58176,7 @@ msgstr "Modificar servicio seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:32
 msgid "Edit Selected Storage Manager"
-msgstr "Editar administrador de almacenamiento seleccionado "
+msgstr "Editar administrador de almacenamiento seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:45
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:35
@@ -58295,11 +58295,11 @@ msgstr "Modificar etiquetas para los proveedores de red seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:61
 msgid "Edit Tags for the selected Network Routers"
-msgstr "Modificar las etiquetas para los enrutadores de redes"
+msgstr "Modificar las etiquetas para los enrutadores de red seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/network_services_center.rb:16
 msgid "Edit Tags for the selected Network Services"
-msgstr "Modificar las etiquetas para los servicios de red seleccionados "
+msgstr "Modificar las etiquetas para los servicios de red seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:54
 msgid "Edit Tags for the selected Object Storage Managers"
@@ -58414,11 +58414,11 @@ msgstr "Modificar las etiquetas para esta subred de nube"
 
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:49
 msgid "Edit Tags for this Configuration Manager"
-msgstr "Modificar etiquetas para este administrador de configuración "
+msgstr "Modificar etiquetas para este administrador de configuración"
 
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:68
 msgid "Edit Tags for this Configuration Manager Provider"
-msgstr "Modificar etiquetas para este proveedor de administradores de configuración "
+msgstr "Modificar etiquetas para este proveedor de administradores de configuración"
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:12
 #: ../app/helpers/application_helper/toolbar/x_automation_manager_ansible_tower_configured_system_center.rb:12
@@ -58534,11 +58534,11 @@ msgstr "Modificar etiquetas para este Pod"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_center.rb:27
 msgid "Edit Tags for this Pxe Image"
-msgstr "Modificar etiquetas para esta imagen Pxe "
+msgstr "Modificar etiquetas para esta imagen Pxe"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:41
 msgid "Edit Tags for this Pxe Server"
-msgstr "Modificar etiquetas para esta servidor Pxe "
+msgstr "Modificar etiquetas para esta servidor Pxe"
 
 #: ../app/helpers/application_helper/toolbar/container_replicator_center.rb:38
 msgid "Edit Tags for this Replicator"
@@ -58585,7 +58585,7 @@ msgstr "Modificar etiquetas para esta máquina virtual"
 
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb:27
 msgid "Edit Tags for this Windows Image"
-msgstr "Modificar etiquetas para esta imagen de Windows "
+msgstr "Modificar etiquetas para esta imagen de Windows"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:84
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:40
@@ -58639,7 +58639,7 @@ msgstr "El usuario ha cancelado la edición de %s \"%s\"."
 
 #: ../app/javascript/components/provider-form/index.jsx:121
 msgid "Edit of %s \"%s\" was cancelled by the user"
-msgstr "El usuario ha cancelado la edición de %s \"%s\" "
+msgstr "El usuario ha cancelado la edición de %s \"%s\""
 
 #: ../app/controllers/vm_common.rb:707
 msgid "Edit of %{model} \"%{name}\" was cancelled by the user"
@@ -58829,7 +58829,7 @@ msgstr "El proceso de Editar proveedor fue cancelado por el usuario"
 
 #: ../app/javascript/components/region-form/index.jsx:21
 msgid "Edit of Region was cancelled by the user"
-msgstr "El usuario ha cancelado la edición de la región "
+msgstr "El usuario ha cancelado la edición de la región"
 
 #: ../app/controllers/report_controller/reports/editor.rb:53
 msgid "Edit of Report \"%{name}\" was cancelled by the user"
@@ -59253,11 +59253,11 @@ msgstr "Editar este grupo de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:14
 msgid "Edit this Security Policy"
-msgstr "Editar esta política de seguridad "
+msgstr "Editar esta política de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:14
 msgid "Edit this Security Policy Rule"
-msgstr "Editar esta regla de política de seguridad "
+msgstr "Editar esta regla de política de seguridad"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:12
 msgid "Edit this Service"
@@ -59545,7 +59545,7 @@ msgstr "EmsStorage"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:29
 msgid "Enable Collection by Cluster"
-msgstr "Habilitar recopilación por clúster "
+msgstr "Habilitar recopilación por clúster"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:58
 msgid "Enable Collection by Datastore"
@@ -61115,7 +61115,7 @@ msgstr "Se ha eliminado el host \"%{hostname}\" del agregado de host \"%{name}\"
 
 #: ../app/controllers/host_controller.rb:178
 msgid "Host \"%{name}\" was saved"
-msgstr "Se ha guardado el host %{name}\" "
+msgstr "Se ha guardado el host %{name}\""
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:12
 msgid "Host \"%{name}\": Error during '%{task}': %{message}"
@@ -61200,7 +61200,7 @@ msgstr "Plataforma de hosts"
 
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml:3
 msgid "Host to validate against, Username and matching password fields are needed to perform verification of credentials"
-msgstr "Host para la validación; es necesario que coincidan los campos de nombre de usuario y contraseña para verificar las credenciales "
+msgstr "Host para la validación; es necesario que coincidan los campos de nombre de usuario y contraseña para verificar las credenciales"
 
 #: ../app/presenters/tree_builder_storage_adapters.rb:23
 #: ../app/presenters/tree_builder_network.rb:23
@@ -62606,7 +62606,7 @@ msgstr "Información principal"
 
 #: ../app/javascript/menu/main-menu.jsx:80
 msgid "Main Menu"
-msgstr "Menú principal "
+msgstr "Menú principal"
 
 #: ../app/helpers/network_router_helper/textual_summary.rb:38
 msgid "Main Route Table"
@@ -62912,7 +62912,7 @@ msgstr "La asignación para la etiqueta \"%{entity}\", \"%{label}\" y la categor
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:211
 msgid "Mapping for \"%{entity}\", Label \"%{label}\": Tag Category \"%{cat_description}\" must exist"
-msgstr "La asignación para la etiqueta \"%{entity}\", \"%{label}\": Categoría de etiqueta \"%{cat_description}\" debe existir "
+msgstr "La asignación para la etiqueta \"%{entity}\", \"%{label}\": Categoría de etiqueta \"%{cat_description}\" debe existir"
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:160
 msgid "Mark All Read"
@@ -63529,7 +63529,7 @@ msgstr "Ha fallado el acceso a la consola nativa: %{message}"
 
 #: ../app/controllers/vm_remote.rb:115
 msgid "Native console access failed: Task start failed"
-msgstr "Ha fallado el acceso a la consola nativa: Ha fallado el inicio de la tarea "
+msgstr "Ha fallado el acceso a la consola nativa: Ha fallado el inicio de la tarea"
 
 #: ../app/views/vm_common/_config.html.haml:99
 msgid "Network Adapter"
@@ -63708,7 +63708,7 @@ msgstr "Nuevo objeto"
 
 #: ../app/javascript/components/field-array/index.jsx:76
 msgid "New option"
-msgstr "Nueva opción "
+msgstr "Nueva opción"
 
 #: ../app/assets/javascripts/components/auth-credentials.js:36
 msgid "New password"
@@ -63763,7 +63763,7 @@ msgstr "Hora de ejecución siguiente"
 
 #: ../app/javascript/angular/dashboard/widget-footer.js:12
 msgid "Next Update On"
-msgstr "Próxima actualización en "
+msgstr "Próxima actualización en"
 
 #: ../app/views/miq_policy/_alert_profile_list.html.haml:8
 msgid "No %{alert_profile_type} Alert Profiles are defined that match the entered search string."
@@ -63972,7 +63972,7 @@ msgstr "No se añadió ningún proveedor de nube que admita el aprovisionamiento
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:26
 msgid "No Clusters found in the current region."
-msgstr "No se ha encontrado ningún clúster en la región actual. "
+msgstr "No se ha encontrado ningún clúster en la región actual."
 
 #: ../app/presenters/tree_builder_compliance_history.rb:28
 msgid "No Compliance Policies Found"
@@ -64745,7 +64745,7 @@ msgstr "Nota: La funcionalidad Gap Collection (recolección de brechas) solo est
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:39
 msgid "Note: No Clusters available."
-msgstr "Nota: No hay clústeres disponibles. "
+msgstr "Nota: No hay clústeres disponibles."
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:65
 msgid "Note: No Datastores available."
@@ -64900,7 +64900,7 @@ msgstr "Plantilla OVF"
 
 #: ../app/controllers/catalog_controller.rb:886
 msgid "OVF Template is required, please select one from the list"
-msgstr "La plantilla OVF es necesaria, seleccione una en la lista "
+msgstr "La plantilla OVF es necesaria, seleccione una en la lista"
 
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml:8
 msgid "Object"
@@ -65156,7 +65156,7 @@ msgstr "Abrir una consola VMRC para esta máquina virtual. Esto requiere que VMR
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:286
 msgid "Open a native console for this VM"
-msgstr "Abrir una consola nativa para esta máquina virtual "
+msgstr "Abrir una consola nativa para esta máquina virtual"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:295
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:78
@@ -65192,11 +65192,11 @@ msgstr "Abrir una consola de administración para este proveedor"
 
 #: ../app/helpers/application_helper/toolbar/configuration_profile_center.rb:12
 msgid "Open the Configuration Profile console"
-msgstr "Abrir la consola de perfil de configuración "
+msgstr "Abrir la consola de perfil de configuración"
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:27
 msgid "Open the Configured System console"
-msgstr "Abrir la consola del sistema configurado "
+msgstr "Abrir la consola del sistema configurado"
 
 #: ../app/presenters/widget_presenter.rb:52
 msgid "Open the chart and full report in a new window"
@@ -65660,7 +65660,7 @@ msgstr "La contraseña y confirmación de contraseña no coinciden"
 #:
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:72
 msgid "Password:"
-msgstr "Contraseña: "
+msgstr "Contraseña:"
 
 #: ../app/views/shared/buttons/_ab_form.html.haml:19
 msgid "Paste is not available, no object information has been copied from the Simulation screen"
@@ -65923,7 +65923,7 @@ msgstr "Servidores físicos sin host"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:13
 msgid "Physical storage added"
-msgstr "Almacenamiento físico añadido "
+msgstr "Almacenamiento físico añadido"
 
 #: ../app/views/security_group/edit.html.haml:29
 #: ../app/views/security_group/new.html.haml:38
@@ -66587,11 +66587,11 @@ msgstr "Se ha añadido la asignación de etiquetas de proveedor \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:302
 msgid "Provider Tag Mapping \"%{name}\" was saved"
-msgstr "Se ha guardado la asignación de etiquetas de proveedor \"%{name}\" "
+msgstr "Se ha guardado la asignación de etiquetas de proveedor \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:327
 msgid "Provider Tag Mapping \"%{name}\": Delete successful"
-msgstr "Asignación de etiquetas de proveedor \"%{name}\": La supresión se ha realizado correctamente "
+msgstr "Asignación de etiquetas de proveedor \"%{name}\": La supresión se ha realizado correctamente"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:91
 msgid "Provider Type:"
@@ -67615,7 +67615,7 @@ msgstr "Nodos basados en región mostrados como texto %{dimmed}."
 
 #: ../app/javascript/components/region-form/index.jsx:27
 msgid "Region was saved"
-msgstr "Se ha guardado la región "
+msgstr "Se ha guardado la región"
 
 #: ../app/views/dashboard/login.html.haml:113
 msgid "Region:"
@@ -68871,7 +68871,7 @@ msgstr "Agrupación de recursos \"%{name}\": Error durante '%{task}': %{error_me
 
 #: ../app/controllers/catalog_controller.rb:887
 msgid "Resource Pool is required, please select one from the list"
-msgstr "La agrupación de recursos es necesaria, seleccione una en la lista "
+msgstr "La agrupación de recursos es necesaria, seleccione una en la lista"
 
 #: ../app/helpers/container_project_helper/textual_summary.rb:27
 msgid "Resource Quota"
@@ -68898,7 +68898,7 @@ msgstr "Se debe seleccionar un recurso"
 #:
 #: ../app/assets/javascripts/controllers/ems_storage_dashboard/heatmap_controller.js:43
 msgid "Resource: "
-msgstr "Recurso:"
+msgstr "Recurso: "
 
 #. TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
 #: ../app/controllers/orchestration_stack_controller.rb:51
@@ -68914,7 +68914,7 @@ msgstr "Recursos"
 #: ../app/services/ems_storage_dashboard_service.rb:46
 #: ../app/assets/javascripts/controllers/ems_storage_dashboard/heatmap_controller.js:32
 msgid "Resources (Pools)"
-msgstr "Recursos (Agrupaciones) "
+msgstr "Recursos (Agrupaciones)"
 
 #: ../app/javascript/components/firmware-registry/firmware-registry-form.jsx:8
 msgid "Rest API Depot"
@@ -69749,7 +69749,7 @@ msgstr "Menú secundario"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:85
 msgid "Secret Access Keys do not match"
-msgstr "Las llaves de acceso secreto no coinciden"
+msgstr "Las claves de acceso secreto no coinciden"
 
 #: ../app/helpers/container_group_helper/textual_summary.rb:62
 msgid "Secret Name"
@@ -70128,7 +70128,7 @@ msgstr "Seleccionar solo un campo o campos consecutivos para mover hacia la part
 
 #: ../app/controllers/application_controller/buttons.rb:737
 msgid "Select only one or consecutive fields to move to the top"
-msgstr "Seleccionar solo un campo o campos consecutivos para mover hacia la parte superior"
+msgstr "Seleccione un único campo o campos consecutivos para moverlos a la parte superior"
 
 #: ../app/controllers/report_controller/menus.rb:384
 #: ../app/controllers/report_controller/menus.rb:428
@@ -70136,7 +70136,7 @@ msgstr "Seleccionar solo un campo o campos consecutivos para mover hacia la part
 #: ../app/controllers/application_controller/buttons.rb:1152
 #: ../app/controllers/ops_controller/ops_rbac.rb:417
 msgid "Select only one or consecutive fields to move up"
-msgstr "Seleccionar solo un campo o campos consecutivos para mover hacia arriba"
+msgstr "Seleccione un único campo o campos consecutivos para moverlos arriba"
 
 #: src/tagging/components/InnerComponents/TagSelector.js:55
 msgid "Select tag category"
@@ -70149,7 +70149,7 @@ msgstr "Seleccionar valor de la etiqueta"
 #:
 #: ../app/javascript/components/orchestration-template/orchestration-template-form.schema.js:112
 msgid "Select the format type below to apply syntax highlighting for better readability"
-msgstr "Seleccione el tipo de formato siguiente para aplicar el resaltado de sintaxis para facilitar la lectura "
+msgstr "Seleccione el tipo de formato siguiente para aplicar el resaltado de sintaxis para facilitar la lectura"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:12
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:22
@@ -70859,7 +70859,7 @@ msgstr "Mostrar volúmenes de nube"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:194
 msgid "Show Cluster drift history"
-msgstr "Mostrar historial de desplazamiento de clúster "
+msgstr "Mostrar historial de desplazamiento de clúster"
 
 #: ../app/helpers/compliance_summary_helper.rb:40
 msgid "Show Compliance History of this %{model} (Last 10 Checks)"
@@ -70932,7 +70932,7 @@ msgstr "Mostrar red de host"
 
 #: ../app/helpers/host_helper/textual_summary.rb:214
 msgid "Show Host Storage Adapters"
-msgstr "Mostrar adaptadores de almacenamiento de host "
+msgstr "Mostrar adaptadores de almacenamiento de host"
 
 #: ../app/views/miq_ae_class/_method_form.html.haml:79
 msgid "Show Input Parameters"
@@ -71236,11 +71236,11 @@ msgstr "Mostrar todos los Administradores de almacenamiento"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:175
 msgid "Show all Templates in this Cluster"
-msgstr "Mostrar todas las plantillas de este clúster "
+msgstr "Mostrar todas las plantillas de este clúster"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:163
 msgid "Show all VMs in this Cluster"
-msgstr "Mostrar todas las máquinas virtuales de este clúster "
+msgstr "Mostrar todas las máquinas virtuales de este clúster"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:116
 msgid "Show all VMs in this Resource Pool"
@@ -71518,7 +71518,7 @@ msgstr "Mostrar este perfil de configuración del sistema configurado"
 
 #: ../app/helpers/host_helper/textual_summary.rb:338
 msgid "Show this Host's Availability Zone"
-msgstr "Mostrar zona de disponibilidad de este host "
+msgstr "Mostrar zona de disponibilidad de este host"
 
 #: ../app/helpers/host_helper/textual_summary.rb:278
 msgid "Show this Host's Cluster"
@@ -71568,7 +71568,7 @@ msgstr "Mostrar inquilinos de nube de esta MV"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:231
 msgid "Show this VM's Cluster"
-msgstr "Mostrar el clúster de esta máquina virtual "
+msgstr "Mostrar el clúster de esta máquina virtual"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:266
 #: ../app/helpers/vm_helper/textual_summary.rb:274
@@ -71581,7 +71581,7 @@ msgstr "Mostrar clase de esta MV"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:242
 msgid "Show this VM's Host"
-msgstr "Mostrar el host de esta máquina virtual "
+msgstr "Mostrar el host de esta máquina virtual"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:341
 msgid "Show this VM's Orchestration Stack '%{name}'"
@@ -71634,11 +71634,11 @@ msgstr "Mostrar genealogía de máquina virtual"
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:130
 msgid "Showing %s items out of %s total."
-msgstr "Mostrar %s elementos de un total de %s. "
+msgstr "Mostrar %s elementos de un total de %s."
 
 #: ../app/javascript/components/notification-drawer/notification-drawer.jsx:130
 msgid "Showing all %s items."
-msgstr "Mostrar todos los %s elementos. "
+msgstr "Mostrar todos los %s elementos."
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:167
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:174
@@ -72016,7 +72016,7 @@ msgstr "Iniciar el rol de %{server_role_description} en el servidor %{server_nam
 #: ../app/views/layouts/_discover.html.haml:64
 #: ../app/views/ems_physical_infra/discover.html.haml:69
 msgid "Start the Host Discovery"
-msgstr "Iniciar el descubrimiento de host "
+msgstr "Iniciar el descubrimiento de host"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:207
 msgid "Start the selected items"
@@ -72544,7 +72544,7 @@ msgstr "Tipo de sistema"
 #:
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:41
 msgid "System Type:"
-msgstr "Tipo de sistema: "
+msgstr "Tipo de sistema:"
 
 #: ../app/views/layouts/_ae_resolve_options.html.haml:13
 #: ../app/views/static/ae_resolve_options/ae-resolve-options.html.haml:6
@@ -72835,7 +72835,7 @@ msgstr "La entidad no está disponible o el usuario no tiene autorización para 
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:29
 msgid "The item \"%s\" has been successfully deleted"
-msgstr "El elemento \"%s\" se ha suprimido correctamente "
+msgstr "El elemento \"%s\" se ha suprimido correctamente"
 
 #: ../app/controllers/application_controller.rb:1035
 msgid "The selected %{label} is not in the current region"
@@ -73009,7 +73009,7 @@ msgstr "Debe haber al menos 2 paneles para editar la secuencia"
 
 #: ../app/controllers/dashboard_controller.rb:354
 msgid "There was an error during refresh."
-msgstr "Se ha producido un error durante la renovación. "
+msgstr "Se ha producido un error durante la renovación."
 
 #:
 #: ../app/assets/javascripts/controllers/dialog_editor/dialog_editor_controller.js:186
@@ -73530,11 +73530,11 @@ msgstr "Total de espacio utilizado en almacén de datos"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:113
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:62
 msgid "Total Host CPU Cores"
-msgstr "Total de núcleos de CPU de host "
+msgstr "Total de núcleos de CPU de host"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:47
 msgid "Total Host CPU Resources"
-msgstr "Total de recursos de CPU de host "
+msgstr "Total de recursos de CPU de host"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:57
 msgid "Total Host CPUs"
@@ -73542,7 +73542,7 @@ msgstr "Total de CPU de host"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:52
 msgid "Total Host Memory"
-msgstr "Total de memoria de host "
+msgstr "Total de memoria de host"
 
 #: ../app/controllers/application_controller/compare.rb:1337
 msgid "Total Matches"
@@ -73641,7 +73641,7 @@ msgstr "Vista de árbol"
 
 #: ../app/controllers/application_controller/performance.rb:1247
 msgid "Trend Interval"
-msgstr "Intervalo de tendencia\n"
+msgstr "Intervalo de tendencia"
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:572
 msgid "Trend Steepness must be an integer"
@@ -74484,7 +74484,7 @@ msgstr "El usuario ya no existe"
 
 #: ../app/controllers/application_controller/user_script_file.rb:13
 msgid "User script \"%{params}\" upload was successful"
-msgstr "El script de usuario \"%{params}\" se ha cargado correctamente "
+msgstr "El script de usuario \"%{params}\" se ha cargado correctamente"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:143
 msgid "User to Look Up"
@@ -74497,7 +74497,7 @@ msgstr "El usuario introducirá el valor"
 #:
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:63
 msgid "User:"
-msgstr "Usuario: "
+msgstr "Usuario:"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:40
 msgid "Username (optional):"
@@ -74542,7 +74542,7 @@ msgstr "Resumen de utilización"
 
 #: ../app/controllers/application_controller/performance.rb:1246
 msgid "Utilization Trend Summary for"
-msgstr "Resumen de tendencia de utilización para "
+msgstr "Resumen de tendencia de utilización para"
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:70
 msgid "VCPUs"
@@ -74681,7 +74681,7 @@ msgstr "Condiciones de máquina virtual e instancia"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:35
 msgid "VM data will be collected for VMs under selected Hosts only. Data is collected for a Cluster and all of its Hosts when at least one Host is selected."
-msgstr "Solo se recopilarán datos de máquina virtual para las máquinas virtuales bajo hosts. Se recopilan datos para un clúster y todos sus hosts, cuando al menos un host está seleccionado. "
+msgstr "Solo se recopilarán datos de máquina virtual para las máquinas virtuales bajo hosts. Se recopilan datos para un clúster y todos sus hosts, cuando al menos un host está seleccionado."
 
 #: ../app/controllers/vm_common.rb:225
 msgid "VM has too many parents."
@@ -74798,7 +74798,7 @@ msgstr "Validar los credenciales para el registro en el Servidor"
 #: ../app/views/layouts/_form_buttons_verify.html.haml:12
 #: ../app/views/layouts/angular/_form_buttons_verify_angular.html.haml:2
 msgid "Validate the credentials by logging into the selected Host"
-msgstr "Validar las credenciales iniciando sesión en el host seleccionado "
+msgstr "Validar las credenciales iniciando sesión en el host seleccionado"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:54
 msgid "Validating"
@@ -74818,7 +74818,7 @@ msgstr "Error de validación:"
 #:
 #: ../app/javascript/components/provider-form/validate-provider-credentials.jsx:24
 msgid "Validation failed: unknown error"
-msgstr "Ha fallado la validación: Error desconocido "
+msgstr "Ha fallado la validación: Error desconocido"
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:135
 #: ../app/controllers/cloud_volume_controller.rb:248
@@ -75224,7 +75224,7 @@ msgstr "Tipos de volumen"
 
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb:179
 msgid "Volume path"
-msgstr "Vía de acceso de volumen "
+msgstr "Vía de acceso de volumen"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:398
 msgid "WINS Server"
@@ -75583,11 +75583,11 @@ msgstr "Advertencia: Este grupo de seguridad y TODOS sus componentes se quitará
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:28
 msgid "Warning: This Security Policy Rule and ALL of its components will be removed!"
-msgstr "Advertencia: Se eliminarán esta regla de política de seguridad y TODOS sus componentes. "
+msgstr "Advertencia: Se eliminarán esta regla de política de seguridad y TODOS sus componentes."
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:28
 msgid "Warning: This Security Policy and ALL of its components will be removed!"
-msgstr "Advertencia: Se eliminarán esta política de seguridad y TODOS sus componentes. "
+msgstr "Advertencia: Se eliminarán esta política de seguridad y TODOS sus componentes."
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:21
 msgid "Warning: This Service and ALL of their components will be permanently removed!"
@@ -76383,7 +76383,7 @@ msgstr "Se asignaron todas las redes de origen."
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:64
 msgid "Applying Right-Sizing Recommendation"
-msgstr "Aplicando la recomendación de tamaño adecuado "
+msgstr "Aplicando la recomendación de tamaño adecuado"
 
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationsCompletedList.js:139
@@ -77059,7 +77059,7 @@ msgstr "Migrando"
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationInProgressListItem.js:178
 msgid "Migrating data"
-msgstr "Migración de datos "
+msgstr "Migración de datos"
 
 #: ../app/controllers/migration_controller.rb:9
 #: ../app/javascript/react/screens/App/Plan/Plan.js:168
@@ -77262,7 +77262,7 @@ msgstr "No hay información de la tarea de configuración disponible"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:253
 msgid "No datastores found."
-msgstr "No se ha encontrado ningún almacén de datos. "
+msgstr "No se ha encontrado ningún almacén de datos."
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:268
@@ -77395,7 +77395,7 @@ msgstr "Antes de la migración seleccione %s"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:59
 msgid "Precopying disks"
-msgstr "Copia previa de discos "
+msgstr "Copia previa de discos"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:39
 msgid "Premigrate VM"
@@ -77475,7 +77475,7 @@ msgstr "Límites de utilización de recursos para migraciones"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:41
 msgid "Restoring VM Attributes"
-msgstr "Restauración de atributos de máquina virtual "
+msgstr "Restauración de atributos de máquina virtual"
 
 #:
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/RetryConversionHostConfirmationModal/RetryConversionHostConfirmationModal.js:42
@@ -77502,11 +77502,11 @@ msgstr "Ejecución del servicio de playbook %s. Esto puede tardar varios minutos
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:50
 msgid "Running postmigration playbook"
-msgstr "Ejecución de playbook posterior a la migración "
+msgstr "Ejecución de playbook posterior a la migración"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:46
 msgid "Running premigration playbook"
-msgstr "Ejecución de playbook anterior a la migración "
+msgstr "Ejecución de playbook anterior a la migración"
 
 #:
 #: ../app/javascript/react/screens/App/Settings/screens/ConversionHostsSettings/components/ConversionHostWizard/ConversionHostWizardAuthenticationStep/ConversionHostWizardAuthenticationStep.js:49
@@ -77549,22 +77549,22 @@ msgstr "Hora programada"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:181
 msgid "Search source clusters"
-msgstr "Buscar clústeres de origen "
+msgstr "Buscar clústeres de origen"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:331
 msgid "Search source datastores"
-msgstr "Buscar almacenes de datos de origen "
+msgstr "Buscar almacenes de datos de origen"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardNetworksStep/components/NetworksStepForm/NetworksStepForm.js:362
 msgid "Search source networks"
-msgstr "Buscar redes de origen "
+msgstr "Buscar redes de origen"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:208
 msgid "Search target clusters"
-msgstr "Buscar clústeres de destino "
+msgstr "Buscar clústeres de destino"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:361
@@ -77579,7 +77579,7 @@ msgstr "Buscar redes de destino"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/DualPaneMapper/DualPaneMapperList.js:31
 msgid "Search..."
-msgstr "Buscar... "
+msgstr "Buscar..."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardVMStep/PlanWizardVMStep.js:104
@@ -77645,7 +77645,7 @@ msgstr "Seleccione uno o varios hosts..."
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardNetworksStep/components/NetworksStepForm/NetworksStepForm.js:351
 msgid "Select one or more source networks to map to a single target. Select Add Mapping. Multiple mappings can be added."
-msgstr "Seleccione una o más redes de origen para asignarlas a un único destino. Seleccione Añadir asignación. Se pueden añadir varias asignaciones. "
+msgstr "Seleccione una o más redes de origen para asignarlas a un único destino. Seleccione Añadir asignación. Se pueden añadir varias asignaciones."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardAdvancedOptionsStep/PlanWizardAdvancedOptionsStep.js:70
@@ -77666,12 +77666,12 @@ msgstr "Seleccione la fila %s"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:171
 msgid "Select source cluster(s) and a target cluster and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Seleccione el o los clústeres de origen y un clúster de destino y pulse Añadir asignación para añadir la asignación. Se pueden añadir varias asignaciones. "
+msgstr "Seleccione el o los clústeres de origen y un clúster de destino y pulse Añadir asignación para añadir la asignación. Se pueden añadir varias asignaciones."
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:322
 msgid "Select source datastore(s) and a target datastore and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Seleccione el o los almacenes de datos de origen y un almacén de datos de destino y pulse Añadir asignación para añadir la asignación. Se pueden añadir varias asignaciones. "
+msgstr "Seleccione el o los almacenes de datos de origen y un almacén de datos de destino y pulse Añadir asignación para añadir la asignación. Se pueden añadir varias asignaciones."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardGeneralStep/PlanWizardGeneralStep.js:36
@@ -78107,16 +78107,16 @@ msgstr "Máquina virtual migrada"
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:60
 msgid "Waiting for VM IP address"
-msgstr "Esperando la dirección IP de la máquina virtual "
+msgstr "Esperando la dirección IP de la máquina virtual"
 
 #: ../app/javascript/react/screens/App/Overview/OverviewConstants.js:67
 msgid "Waiting for an available conversion host. You can continue waiting or go to the Migration Settings page to increase the number of migrations per host"
-msgstr "Esperando un host de conversión disponible. Puede seguir esperando o ir a la página de Configuración de migración para aumentar el número de migraciones por host"
+msgstr "A la espera de que un host de conversión esté disponible. Puede seguir esperando o ir a la página de Configuración de migración para aumentar el número de migraciones por host"
 
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationInProgressListItem.js:82
 msgid "Waiting for an available conversion host. You can continue waiting or go to the Migration Settings page to increase the number of migrations per host."
-msgstr "A la espera de que un host de conversión esté disponible. Puede seguir esperando o ir a la página de Configuración de la migración para aumentar el número de migraciones por host. "
+msgstr "A la espera de que un host de conversión esté disponible. Puede seguir esperando o ir a la página de Configuración de la migración para aumentar el número de migraciones por host."
 
 #: ../app/javascript/react/screens/App/Plan/PlanConstants.js:61
 msgid "Waiting for inventory refresh"
