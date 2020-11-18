@@ -3,6 +3,13 @@ module MiqServer::AtStartup
   include Vmdb::Logging
 
   module ClassMethods
+    def startup!
+      log_managed_entities
+      clean_all_workers
+      clean_dequeued_messages
+      purge_report_results
+    end
+
     def log_managed_entities
       region = MiqRegion.my_region
       prefix = "#{_log.prefix} Region: [#{region.region}], name: [#{region.name}]"

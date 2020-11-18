@@ -118,10 +118,7 @@ class EvmServer
     configure_server_roles
     clear_queue
 
-    MiqServer.log_managed_entities
-    MiqServer.clean_all_workers
-    MiqServer.clean_dequeued_messages
-    MiqServer.purge_report_results
+    MiqServer.startup!
 
     @current_server.delete_active_log_collections_queue
 
