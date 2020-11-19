@@ -14902,7 +14902,7 @@ msgstr "Tags für Ressourcenpools bearbeiten"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1950
 msgid "Edit Tags of Security Group"
-msgstr "Tags für Sicherheitsgruppen bearbeiten"
+msgstr "Tags für Sicherheitsgruppe bearbeiten"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1972
@@ -16450,7 +16450,7 @@ msgstr "Alles unter 'Konfigurierte Systeme'"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2594
 msgid "Everything under Configured Systems accordion"
-msgstr "Alles unter dem Akkordeon 'Konfigurierte Systeme"
+msgstr "Alles unter dem Akkordeon 'Konfigurierte Systeme'"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1019
@@ -41924,7 +41924,7 @@ msgstr "VM hat keinen Provider, Gastbetriebssystem kann nicht heruntergefahren w
 
 #: ../app/models/vm/operations/guest.rb:29
 msgid "VM has no Provider, unable to standby guest OS"
-msgstr "hat keinen Provider, Gastbetriebssystem kann nicht in den Standby-Modus versetzt werden"
+msgstr "VM hat keinen Provider, Gastbetriebssystem kann nicht in den Standby-Modus versetzt werden"
 
 #: ../app/models/vm_or_template/operations.rb:51
 msgid "VM has no Provider, unable to unregister VM"
@@ -45058,7 +45058,7 @@ msgstr "Genehmigung erforderlich für %{task}"
 
 #: ../app/models/cloud_volume.rb:163
 msgid "available_vms must be implemented in a subclass"
-msgstr "available_vms muss in einer Unterklasse implementiert werden"
+msgstr "'available_vms' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/ext_management_system.rb:189
 msgid "cannot be changed because the provider is paused"
@@ -45086,7 +45086,7 @@ msgstr "Wartungszone kann nicht gelöscht werden"
 
 #: ../app/models/service_generic.rb:16
 msgid "check_completed must be implemented in a subclass"
-msgstr "check_completed muss in einer Unterklasse implementiert werden"
+msgstr "'check_completed' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/mixins/miq_provision_quota_mixin.rb:10
 msgid "check_quota called with an invalid provisioning quota method <%{type}>"
@@ -45094,7 +45094,7 @@ msgstr "check_quota mit einer ungültigen Methode vom Typ <%{type}> zur Kontinge
 
 #: ../app/models/service_generic.rb:29
 msgid "check_refreshed must be implemented in a subclass"
-msgstr "check_refreshed muss in einer Unterklasse implementiert werden"
+msgstr "'check_refreshed' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/miq_queue.rb:432
 msgid "class_name cannot be nil"
@@ -45163,12 +45163,12 @@ msgstr "Ausdruck fehlerhaft; muss eines der Elemente 'checkall', 'checkany' oder
 #: ../app/models/cloud_volume.rb:77 ../app/models/physical_storage.rb:71
 #: ../app/models/cloud_object_store_container.rb:48
 msgid "ext_management_system cannot be found"
-msgstr "ext_management_system kann nicht gefunden werden"
+msgstr "'ext_management_system' kann nicht gefunden werden"
 
 #:
 #: ../app/models/manageiq/providers/openstack/cloud_manager/cloud_volume_snapshot.rb:40
 msgid "ext_management_system cannot be nil"
-msgstr "ext_management_system kann nicht 'nil' (null) sein"
+msgstr "'ext_management_system' kann nicht 'nil' (null) sein"
 
 #: ../app/views/layouts/exp_atom/_edit_field.html.haml:54
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:39
@@ -45515,19 +45515,19 @@ msgstr "'provider_object_release' muss durch eine Unterklasse implementiert werd
 
 #: ../app/models/vm_or_template.rb:1180
 msgid "raise_created_event must be implemented in a subclass"
-msgstr "raise_created_event muss in einer Unterklasse implementiert werden"
+msgstr "'raise_created_event' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:192
 msgid "raw_add_security_group must be implemented in a subclass"
-msgstr "raw_add_security_group muss in einer Unterklasse implementiert werden"
+msgstr "'raw_add_security_group' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:130
 msgid "raw_associate_floating_ip must be implemented in a subclass"
-msgstr "raw_associate_floating_ip muss in einer Unterklasse implementiert werden"
+msgstr "'raw_associate_floating_ip' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_tenant.rb:54
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
-msgstr "raw_create_cloud_tenant muss in einer Unterklasse implementiert werden"
+msgstr "'raw_create_cloud_tenant' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/physical_storage.rb:84
 msgid "raw_create_physical_storage must be implemented in a subclass"
@@ -45535,15 +45535,15 @@ msgstr "'raw_create_physical_storage' muss in einer Unterklasse implementiert we
 
 #: ../app/models/orchestration_stack.rb:119
 msgid "raw_create_stack must be implemented in a subclass"
-msgstr "raw_create_stack muss in einer Unterklasse implementiert werden"
+msgstr "'raw_create_stack' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_volume.rb:91
 msgid "raw_create_volume must be implemented in a subclass"
-msgstr "raw_create_volume muss in einer Unterklasse implementiert werden"
+msgstr "'raw_create_volume' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_volume_backup.rb:72
 msgid "raw_delete must be implemented in a subclass"
-msgstr "raw_delete muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_network.rb:105
 msgid "raw_delete_cloud_network must be implemented in a subclass"
@@ -45551,27 +45551,27 @@ msgstr "'raw_delete_cloud_network' muss in einer Unterklasse implementiert werde
 
 #: ../app/models/cloud_subnet.rb:63
 msgid "raw_delete_cloud_subnet must be implemented in a subclass"
-msgstr "raw_delete_cloud_subnet muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_cloud_subnet' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_tenant.rb:117
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
-msgstr "raw_delete_cloud_tenant muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_cloud_tenant' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/flavor.rb:110
 msgid "raw_delete_flavor must be implemented in a subclass"
-msgstr "raw_delete_flavor muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_flavor' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb:115
 msgid "raw_delete_image must be implemented in a subclass"
-msgstr "raw_delete_image muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_image' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair/operations.rb:9
 msgid "raw_delete_key_pair must be implemented in a subclass"
-msgstr "raw_delete_key_pair muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_key_pair' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/load_balancer.rb:70
 msgid "raw_delete_load_balancer must be implemented in a subclass"
-msgstr "raw_delete_load_balancer muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_load_balancer' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/security_group.rb:88
 msgid "raw_delete_security_group must be implemented in a subclass"
@@ -45587,43 +45587,43 @@ msgstr "'raw_delete_security_policy_rule' muss in einer Unterklasse implementier
 
 #: ../app/models/cloud_volume_snapshot.rb:69
 msgid "raw_delete_snapshot must be implemented in a subclass"
-msgstr "raw_delete_snapshot muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_snapshot' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/orchestration_stack.rb:139
 msgid "raw_delete_stack must be implemented in a subclass"
-msgstr "raw_delete_stack muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_stack' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_volume.rb:159
 msgid "raw_delete_volume must be implemented in a subclass"
-msgstr "raw_delete_volume muss in einer Unterklasse implementiert werden"
+msgstr "'raw_delete_volume' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:161
 msgid "raw_disassociate_floating_ip must be implemented in a subclass"
-msgstr "raw_disassociate_floating_ip muss in einer Unterklasse implementiert werden"
+msgstr "'raw_disassociate_floating_ip' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:11
 msgid "raw_evacuate must be implemented in a subclass"
-msgstr "raw_evacuate muss in einer Unterklasse implementiert werden"
+msgstr "'raw_evacuate' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/load_balancer.rb:82
 msgid "raw_exists must be implemented in a subclass"
-msgstr "raw_exists muss in einer Unterklasse implementiert werden"
+msgstr "'raw_exists' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:3
 msgid "raw_live_migrate must be implemented in a subclass"
-msgstr "raw_live_migrate muss in einer Unterklasse implementiert werden"
+msgstr "'raw_live_migrate' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:223
 msgid "raw_remove_security_group must be implemented in a subclass"
-msgstr "raw_remove_security_group muss in einer Unterklasse implementiert werden"
+msgstr "'raw_remove_security_group' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_volume_backup.rb:42
 msgid "raw_restore must be implemented in a subclass"
-msgstr "raw_restore muss in einer Unterklasse implementiert werden"
+msgstr "'raw_restore' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/orchestration_stack.rb:147 ../app/models/load_balancer.rb:78
 msgid "raw_status must be implemented in a subclass"
-msgstr "raw_status muss in einer Unterklasse implementiert werden"
+msgstr "'raw_status' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_network.rb:80
 msgid "raw_update_cloud_network must be implemented in a subclass"
@@ -45631,15 +45631,15 @@ msgstr "'raw_update_cloud_network' muss in einer Unterklasse implementiert werde
 
 #: ../app/models/cloud_tenant.rb:86
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
-msgstr "raw_update_cloud_tenant muss in einer Unterklasse implementiert werden"
+msgstr "'raw_update_cloud_tenant' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb:89
 msgid "raw_update_image must be implemented in a subclass"
-msgstr "raw_update_image muss in einer Unterklasse implementiert werden"
+msgstr "'raw_update_image' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
-msgstr "raw_update_load_balancer muss in einer Unterklasse implementiert werden"
+msgstr "'raw_update_load_balancer' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/security_group.rb:63
 msgid "raw_update_security_group must be implemented in a subclass"
@@ -45655,15 +45655,15 @@ msgstr "'raw_update_security_policy_rule' muss in einer Unterklasse implementier
 
 #: ../app/models/orchestration_stack.rb:123
 msgid "raw_update_stack must be implemented in a subclass"
-msgstr "raw_update_stack muss in einer Unterklasse implementiert werden"
+msgstr "'raw_update_stack' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/cloud_volume.rb:125 ../app/models/physical_storage.rb:115
 msgid "raw_update_volume must be implemented in a subclass"
-msgstr "raw_update_volume muss in einer Unterklasse implementiert werden"
+msgstr "'raw_update_volume' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/service_generic.rb:21
 msgid "refresh must be implemented in a subclass"
-msgstr "refresh muss in einer Unterklasse implementiert werden"
+msgstr "'refresh' muss in einer Unterklasse implementiert werden"
 
 #: ../app/models/ems_folder.rb:119 ../app/models/ems_cluster.rb:76
 msgid "register_host must be implemented by a subclass"
@@ -45671,7 +45671,7 @@ msgstr "'register_host' muss durch eine Unterklasse implementiert werden"
 
 #: ../app/models/service_template.rb:507
 msgid "service_type cannot be changed"
-msgstr "service_type kann nicht geändert werden"
+msgstr "'service_type' kann nicht geändert werden"
 
 #: ../app/models/binary_blob.rb:17 ../app/models/binary_blob.rb:64
 msgid "size of %{name} id [%{number}] is incorrect"
@@ -47693,7 +47693,7 @@ msgstr "Zurücksetzen ist nur zulässig, wenn VM inaktiv ist. Aktueller Status: 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm/operations/snapshot.rb:60
 msgid "Revert is not allowed for a snapshot that is the active one"
-msgstr "Zurücksetzen auf die aktive Momentaufnahme ist nicht zulässig"
+msgstr "Die Aktion 'Zurücksetzen' ist für die aktive Momentaufnahme nicht zulässig"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_import.rb:77
 msgid "Source provider must be of type Vmware"
@@ -57289,7 +57289,7 @@ msgstr "Die Beschreibung darf nicht leer sein"
 #:
 #: ../app/assets/javascripts/components/generic_object/main-custom-button-form.js:242
 msgid "Description has already been taken"
-msgstr "Beschreibung wurde bereits genommen"
+msgstr "Beschreibung wurde bereits verwendet"
 
 #: ../app/controllers/application_controller/buttons.rb:337
 #: ../app/controllers/chargeback_rate_controller.rb:143
@@ -58466,7 +58466,7 @@ msgstr "Tags für dieses Hostaggregat bearbeiten"
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:88
 #: ../app/helpers/application_helper/toolbar/container_image_center.rb:30
 msgid "Edit Tags for this Image"
-msgstr "Tags für diesen Image bearbeiten"
+msgstr "Tags für dieses Image bearbeiten"
 
 #:
 #: ../app/helpers/application_helper/toolbar/container_image_registry_center.rb:12
@@ -60049,7 +60049,7 @@ msgstr "Fehler: Kein zu importierendes Widget ausgewählt."
 #: ../app/controllers/storage_controller.rb:254
 #: ../app/helpers/application_helper.rb:1031
 msgid "Error: Record no longer exists in the database"
-msgstr "Fehler: Datensatz in der Datenbank nicht mehr vorhanden"
+msgstr "Fehler: Der Datensatz ist nicht mehr in der Datenbank vorhanden"
 
 #: ../app/controllers/chargeback_report_controller.rb:41
 msgid "Error: Report no longer exists in the database"
@@ -75246,16 +75246,16 @@ msgstr "Warnungsanzahl"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:18
 msgid "Warning: ALL Objects will be permanently removed from the Object Storage Container!"
-msgstr "Warnung: Alle Objekte werden dauerhaft aus dem Objektspeichercontainer entfernt!"
+msgstr "Warnung: Alle Objekte werden dauerhaft aus dem Objektspeichercontainer entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:27
 msgid "Warning: ALL Objects will be permanently removed from the selected Object Storage Containers!"
-msgstr "Warnung: Alle Objekte werden dauerhaft aus den ausgewählten Objektspeichercontainern entfernt!"
+msgstr "Warnung: Alle Objekte werden dauerhaft aus den ausgewählten Objektspeichercontainern entfernt."
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:46
 msgid "Warning: Finished tasks will be permanently removed from the database!"
-msgstr "Warnung: Beendete Tasks werden dauerhaft aus der Datenbank entfernt!"
+msgstr "Warnung: Beendete Tasks werden dauerhaft aus der Datenbank entfernt."
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:106
 msgid "Warning: Selected node will be restarted, do you want to continue?"
@@ -75267,28 +75267,28 @@ msgstr "Warnung: Server wird erneut gestartet. Wollen Sie fortfahren?"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:36
 msgid "Warning: Tasks that are older than selected task will be permanently removed from the database!"
-msgstr "Warnung: Tasks, die älter als die ausgewählte Task sind, werden dauerhaft aus der Datenbank entfernt!"
+msgstr "Warnung: Tasks, die älter als die ausgewählte Task sind, werden dauerhaft aus der Datenbank entfernt."
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:44
 msgid "Warning: The selected Analysis Profiles and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Analyseprofile und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Analyseprofile und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:45
 msgid "Warning: The selected Block Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Blockspeichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Blockspeichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:31
 msgid "Warning: The selected Catalogs will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Kataloge werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Kataloge werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rates_center.rb:46
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
-msgstr "Warnung: Die ausgewählte Rückerstattungsrate wird dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählte Rückerstattungsrate wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:43
 msgid "Warning: The selected Cloud Providers and ALL related components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Cloud-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Cloud-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:31
 msgid "Warning: The selected Cloud Tenants will be permanently deleted!"
@@ -75296,40 +75296,40 @@ msgstr "Warnung: Die ausgewählten Cloud-Tenants werden dauerhaft gelöscht!"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:27
 msgid "Warning: The selected Cloud Volume Backups will be removed!"
-msgstr "Warnung: Die ausgewählten Clouddatenträgersicherungen werden entfernt!"
+msgstr "Warnung: Die ausgewählten Clouddatenträgersicherungen werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:90
 msgid "Warning: The selected Cloud Volume and ALL of their components will be removed!"
-msgstr "Warnung: Der ausgewählte Clouddatenträger und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Der ausgewählte Clouddatenträger und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:55
 msgid "Warning: The selected Containers Providers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Container-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Container-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:42
 msgid "Warning: The selected Customization Templates will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Anpassungsvorlagen werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Anpassungsvorlagen werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:28
 msgid "Warning: The selected Datastores and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:42
 msgid "Warning: The selected Dialog will be permanently removed from the Virtual Management Database!"
-msgstr "Warnung: Der ausgewählte Dialog wird dauerhaft aus der Datenbank für virtuelles Management entfernt!"
+msgstr "Warnung: Der ausgewählte Dialog wird dauerhaft aus der Datenbank für virtuelles Management entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:42
 msgid "Warning: The selected Dialog will be permanently removed!"
-msgstr "Warnung: Der ausgewählte Dialog wird dauerhaft entfernt!"
+msgstr "Warnung: Der ausgewählte Dialog wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:15
 msgid "Warning: The selected Flavor will be permanently removed!"
-msgstr "Warnung: Die ausgewählte Variante wird dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählte Variante wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:24
 msgid "Warning: The selected Flavors will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Varianten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Varianten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:46
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:50
@@ -75338,106 +75338,106 @@ msgstr "Warnung: Die ausgewählten Hostaggregate werden dauerhaft gelöscht!"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:22
 msgid "Warning: The selected ISO Datastores and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten ISO-Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten ISO-Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:51
 msgid "Warning: The selected Infrastructure Providers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Infrastrukturprovider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Infrastrukturprovider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/configuration_jobs_center.rb:27
 msgid "Warning: The selected Jobs and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Jobs und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Jobs und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:44
 msgid "Warning: The selected Network Providers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Netzbetreiber und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Netzbetreiber und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:30
 msgid "Warning: The selected Object Storage Container and ALL related Objects will be permanently removed!"
-msgstr "Warnung: Der ausgewählte Objektspeichercontainer und alle zugehörigen Objekte werden dauerhaft entfernt!"
+msgstr "Warnung: Der ausgewählte Objektspeichercontainer und alle zugehörigen Objekte werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_containers_center.rb:39
 msgid "Warning: The selected Object Storage Containers and ALL related Objects will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Objektspeichercontainer und alle zugehörigen Objekte werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Objektspeichercontainer und alle zugehörigen Objekte werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:27
 msgid "Warning: The selected Object Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Objektspeichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Objektspeichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:18
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_objects_center.rb:20
 msgid "Warning: The selected Object Storage Object will be permanently removed!"
-msgstr "Warnung: Das ausgewählte Objektspeicherobjekt wird dauerhaft entfernt!"
+msgstr "Warnung: Das ausgewählte Objektspeicherobjekt wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:16
 msgid "Warning: The selected Orchestration Stacks and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Orchestrierungsstacks und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Orchestrierungsstacks und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:31
 msgid "Warning: The selected PXE Servers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten PXE-Server und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten PXE-Server und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:49
 msgid "Warning: The selected Physical Infrastructure Providers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Provider für physische Infrastruktur und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Provider für physische Infrastruktur und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:30
 msgid "Warning: The selected Provider and ALL of their components will be permanently removed!"
-msgstr "Warnung: Der ausgewählte Provider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Der ausgewählte Provider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:52
 msgid "Warning: The selected Reports will be permanently removed from the database!"
-msgstr "Warnung: Die ausgewählten Berichte werden dauerhaft aus der Datenbank entfernt!"
+msgstr "Warnung: Die ausgewählten Berichte werden dauerhaft aus der Datenbank entfernt."
 
 #: ../app/helpers/application_helper/toolbar/resource_pools_center.rb:18
 msgid "Warning: The selected Resource Pools and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Ressourcenpools und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Ressourcenpools und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:44
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb:25
 msgid "Warning: The selected Saved Reports will be permanently removed from the database!"
-msgstr "Warnung: Die ausgewählten gespeicherten Berichte werden dauerhaft aus der Datenbank entfernt!"
+msgstr "Warnung: Die ausgewählten gespeicherten Berichte werden dauerhaft aus der Datenbank entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:30
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:31
 msgid "Warning: The selected Schedules and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Zeitpläne und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Zeitpläne und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:29
 msgid "Warning: The selected Services and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Services und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Services und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:27
 msgid "Warning: The selected Storage Managers and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Speichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Speichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:31
 msgid "Warning: The selected System Image Types will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Systemimagetypen werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Systemimagetypen werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:66
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:56
 msgid "Warning: The selected Templates and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Vorlagen und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Vorlagen und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:41
 msgid "Warning: The selected Time Profiles will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Zeitprofile werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Zeitprofile werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:85
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb:66
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:66
 #: ../app/helpers/application_helper/toolbar/vms_center.rb:54
 msgid "Warning: The selected items and ALL of their components will be permanently removed!"
-msgstr "Warnung: Die ausgewählten Elemente und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Die ausgewählten Elemente und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_clusters_center.rb:38
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:92
 msgid "Warning: The selected items and ALL of their components will be permanently removed!?"
-msgstr "Warnung: Die ausgewählten Elemente und alle zugehörigen Komponenten werden dauerhaft entfernt!?"
+msgstr "Warnung: Die ausgewählten Elemente und alle zugehörigen Komponenten werden dauerhaft entfernt.?"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:59
 msgid "Warning: The selected task will be cancelled. Are you sure you want to cancel the task?"
@@ -75445,7 +75445,7 @@ msgstr "Warnung: Die ausgewählte Task wird abgebrochen. Soll die Task abgebroch
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:26
 msgid "Warning: The selected tasks will be permanently removed from the database!"
-msgstr "Warnung: Die ausgewählten Tasks werden dauerhaft aus der Datenbank entfernt!"
+msgstr "Warnung: Die ausgewählten Tasks werden dauerhaft aus der Datenbank entfernt."
 
 #: ../app/controllers/report_controller/schedules.rb:287
 #: ../app/controllers/ops_controller/settings/schedules.rb:464
@@ -75454,41 +75454,41 @@ msgstr "Warnung: Dieser Zeitgeber 'Einmal ausführen' liegt in der Vergangenheit
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:27
 msgid "Warning: This Analysis Profile and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieses Analyseprofil und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieses Analyseprofil und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_center.rb:18
 msgid "Warning: This Button will be permanently removed!"
-msgstr "Warnung: Diese Schaltfläche wird dauerhaft entfernt!"
+msgstr "Warnung: Diese Schaltfläche wird dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:24
 msgid "Warning: This Catalog will be permanently removed!"
-msgstr "Warnung: Dieser Katalog wird dauerhaft entfernt!"
+msgstr "Warnung: Dieser Katalog wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rate_center.rb:29
 msgid "Warning: This Chargeback Rate will be permanently removed!"
-msgstr "Warnung: Diese Rückerstattungsrate wird dauerhaft entfernt!"
+msgstr "Warnung: Diese Rückerstattungsrate wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:28
 msgid "Warning: This Cloud Network and ALL of its components will be removed!"
-msgstr "Warnung: Das ausgewählte Cloudnetz und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Das ausgewählte Cloudnetz und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:41
 msgid "Warning: This Cloud Provider and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Cloud-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Cloud-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:26
 msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
-msgstr "Warnung: Das ausgewählte Cloudteilnetz und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Das ausgewählte Cloudteilnetz und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:73
 msgid "Warning: This Cloud Volume and ALL of its components will be removed!"
-msgstr "Warnung: Dieser Clouddatenträger und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Dieser Clouddatenträger und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:41
 msgid "Warning: This Containers Provider and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Container-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Container-Provider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:24
@@ -75498,27 +75498,27 @@ msgstr "Warnung: Diese angepasste Schaltflächengruppe wird dauerhaft entfernt."
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:27
 msgid "Warning: This Customization Template will be permanently removed!"
-msgstr "Warnung: Diese Anpassungsvorlage wird dauerhaft entfernt!"
+msgstr "Warnung: Diese Anpassungsvorlage wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:28
 msgid "Warning: This Dashboard and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieses Dashboard und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieses Dashboard und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:24
 msgid "Warning: This Datastore and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:29
 msgid "Warning: This Dialog will be permanently removed from the Virtual Management Database!"
-msgstr "Warnung: Dieser Dialog wird dauerhaft aus der Datenbank für virtuelles Management entfernt!"
+msgstr "Warnung: Dieser Dialog wird dauerhaft aus der Datenbank für virtuelles Management entfernt."
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:32
 msgid "Warning: This Dialog will be permanently removed!"
-msgstr "Warnung: Dieser Dialog wird dauerhaft entfernt!"
+msgstr "Warnung: Dieser Dialog wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:28
 msgid "Warning: This Floating IP and ALL of its components will be removed!"
-msgstr "Warnung: Diese variable IP-Adresse und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Diese variable IP-Adresse und alle zugehörigen Komponenten werden entfernt."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
@@ -75528,58 +75528,58 @@ msgstr "Warnung: Diese generische Objektdefinition wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
 msgid "Warning: This ISO Datastore and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser ISO-Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser ISO-Datenspeicher und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:41
 msgid "Warning: This Image and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieses Image und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieses Image und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:33
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:54
 msgid "Warning: This Infrastructure Provider and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Infrastrukturprovider und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Infrastrukturprovider und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:42
 msgid "Warning: This Instance and ALL of its components will be permanently removed!"
-msgstr "Warnung: Diese Instanz und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Diese Instanz und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:15
 msgid "Warning: This Job and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Job und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Job und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:34
 msgid "Warning: This Network Provider and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Netzbetreiber und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Netzbetreiber und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:15
 msgid "Warning: This Orchestration Stack and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Orchestrierungsstack und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Orchestrierungsstack und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:20
 msgid "Warning: This PXE Server and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser PXE-Server und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser PXE-Server und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:15
 msgid "Warning: This Resource Pool and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Ressourcenpool und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Ressourcenpool und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:48
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:25
 msgid "Warning: This Router and ALL of its components will be removed!"
-msgstr "Warnung: Dieser Router und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Dieser Router und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:24
 msgid "Warning: This Saved Report and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser gespeicherte Bericht und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser gespeicherte Bericht und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:20
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:20
 msgid "Warning: This Schedule and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Zeitplan und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Zeitplan und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:28
 msgid "Warning: This Security Group and ALL of its components will be removed!"
-msgstr "Warnung: Diese Sicherheitsgruppe und alle zugehörigen Komponenten werden entfernt!"
+msgstr "Warnung: Diese Sicherheitsgruppe und alle zugehörigen Komponenten werden entfernt."
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:28
 msgid "Warning: This Security Policy Rule and ALL of its components will be removed!"
@@ -75591,35 +75591,35 @@ msgstr "Warnung: Diese Sicherheitsrichtlinie und alle zugehörigen Komponenten w
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:21
 msgid "Warning: This Service and ALL of their components will be permanently removed!"
-msgstr "Warnung: Dieser Service und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Service und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:33
 msgid "Warning: This Storage Manager and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieser Speichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieser Speichermanager und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:20
 msgid "Warning: This System Image Type will be permanently removed!"
-msgstr "Warnung: Dieser Systemimagetyp wird dauerhaft entfernt!"
+msgstr "Warnung: Dieser Systemimagetyp wird dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:40
 msgid "Warning: This Template and ALL of its components will be permanently removed!"
-msgstr "Warnung: Diese Vorlage und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Diese Vorlage und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:56
 msgid "Warning: This Virtual Machine and ALL of its components will be permanently removed!"
-msgstr "Warnung: Diese virtuelle Maschine und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Diese virtuelle Maschine und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:25
 msgid "Warning: This Widget and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieses Widget und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieses Widget und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:21
 msgid "Warning: This item and ALL of its components will be permanently removed!"
-msgstr "Warnung: Dieses Element und alle zugehörigen Komponenten werden dauerhaft entfernt!"
+msgstr "Warnung: Dieses Element und alle zugehörigen Komponenten werden dauerhaft entfernt."
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:64
 msgid "Warning: This item and ALL of its components will be permanently removed!?"
-msgstr "Warnung: Dieses Element und alle zugehörigen Komponenten werden dauerhaft entfernt!?"
+msgstr "Warnung: Dieses Element und alle zugehörigen Komponenten werden dauerhaft entfernt.?"
 
 #: ../app/controllers/mixins/dashboard_view_mixin.rb:17
 #: ../app/views/shared/_provider_paused.html.haml:5

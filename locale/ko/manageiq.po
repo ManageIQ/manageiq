@@ -89,7 +89,7 @@ msgstr "# Pods per Ready Status"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:4686
 msgid "% Disk Used"
-msgstr "% 디스크 사용"
+msgstr "디스크 사용 %"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -29884,7 +29884,7 @@ msgstr "오케스트레이션 템플리트"
 
 #: ../app/models/service_orchestration.rb:197
 msgid "Orchestration template runner finished with error. Check evm.log for details."
-msgstr "오케스트레이션 템플리트 실행기가 오류와 함께 완료되었습니다. 세부사항은 evm.log를 확인하십시오. "
+msgstr "오케스트레이션 템플리트 실행기가 오류와 함께 완료되었습니다. 세부사항은 evm.log를 확인하십시오."
 
 #: ../config/model_attributes.rb:3552
 msgid "OrchestrationStackOutput|Description"
@@ -41466,7 +41466,7 @@ msgstr "VM 플레이버는 cloud_tenant_flavors에 속하지 않음"
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:83
 msgid "VM flavor not available; can not proceed without it."
-msgstr "VM 플레이버를 사용할 수 없음: 이 플레이버 없이 진행할 수 없습니다. "
+msgstr "VM 플레이버를 사용할 수 없음: 이 플레이버 없이 진행할 수 없습니다."
 
 #: ../app/models/vm_or_template/operations/configuration.rb:87
 msgid "VM has no EMS, unable to add disk"
@@ -41617,7 +41617,7 @@ msgstr "VM 보안 그룹이 cloud_tenant_security_groups에 속하지 않음"
 #:
 #: ../app/models/service_template_transformation_plan/validate_config_info.rb:95
 msgid "VM security group not available; can not proceed without it."
-msgstr "VM 보안 그룹을 사용할 수 없음: 이 보안 그룹 없이 진행할 수 없습니다. "
+msgstr "VM 보안 그룹을 사용할 수 없음: 이 보안 그룹 없이 진행할 수 없습니다."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2836
@@ -44478,7 +44478,7 @@ msgstr "예"
 
 #: ../app/models/authenticator/database.rb:16
 msgid "Your account has been locked due to too many failed login attempts, please contact the administrator."
-msgstr "로그인 시도가 너무 많이 실패하여 사용자 계정이 잠겼습니다. 관리자에게 문의하십시오. "
+msgstr "로그인 시도가 너무 많이 실패하여 사용자 계정이 잠겼습니다. 관리자에게 문의하십시오."
 
 #. TRANSLATORS: file: product/views/ConfigurationProfile.yaml
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
@@ -44881,7 +44881,7 @@ msgstr "작업 템플리트가 설정되지 않음"
 
 #: ../lib/vmdb/fast_gettext_helper.rb:66
 msgid "locale_name"
-msgstr "로컬_이름"
+msgstr "한국어"
 
 #: ../app/mailers/generic_mailer.rb:152
 msgid "login"
@@ -45486,7 +45486,7 @@ msgstr "자동화 엔진"
 
 #: ../app/models/miq_ae_yaml_import.rb:92
 msgid "Cannot import into a locked domain."
-msgstr "잠긴 도메인으로 가져올 수 없습니다. "
+msgstr "잠긴 도메인으로 가져올 수 없습니다."
 
 #: ../app/models/miq_ae_yaml_import.rb:313
 msgid "Cloud Credential '%{cloud_credential_name}' doesn't exist in the appliance please add this credential and retry the import."
@@ -45498,7 +45498,7 @@ msgstr "인증 정보 '%{credential_name}'이(가) 어플라이언스에 없음,
 
 #: ../app/models/miq_ae_yaml_import.rb:86
 msgid "Domain name change for a system domain import is not supported."
-msgstr "시스템 도메인 가져오기에 대한 도메인 이름 변경이 지원되지 않습니다. "
+msgstr "시스템 도메인 가져오기에 대한 도메인 이름 변경이 지원되지 않습니다."
 
 #: ../app/models/miq_ae_yaml_import.rb:263
 msgid "Error: Playbook method '%{method_name}' contains below listed error(s):"
@@ -45507,7 +45507,7 @@ msgstr "오류: 플레이북 메소드 '%{method_name}'에 아래에 나열된 �
 #: ../app/models/miq_ae_yaml_import.rb:82
 #: ../app/models/miq_ae_yaml_import.rb:90
 msgid "Git based system domain import is not supported."
-msgstr "Git 기반 시스템 도메인 가져오기가 지원되지 않습니다. "
+msgstr "Git 기반 시스템 도메인 가져오기가 지원되지 않습니다."
 
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb:86
@@ -46425,11 +46425,11 @@ msgstr "발견"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n  예: http://my_file_server.org:3333/xccdf_files/\n  여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이 있습니다. "
+msgstr "기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n  예: http://my_file_server.org:3333/xccdf_files/\n  여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이 있습니다."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:678
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n예: http://my_file_server.org:3333/xccdf_files/\n여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이 있습니다. "
+msgstr "기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n예: http://my_file_server.org:3333/xccdf_files/\n여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이 있습니다."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:616
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:632
@@ -53384,7 +53384,7 @@ msgstr "주의: 구성 파일을 수동으로 변경하면 구역이 사용 안�
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:7
 msgid "Caution: Mappings with Resource Entity 'All-Entities' could cause overwriting existing tags on resources with mapped provider labels."
-msgstr "주의: 리소스 엔티티 'All-Entities'와의 맵핑으로 인해 리소스의 기존 태그를 맵핑된 제공자 레이블로 겹쳐씁니다. "
+msgstr "주의: 리소스 엔티티 'All-Entities'와의 맵핑으로 인해 리소스의 기존 태그를 맵핑된 제공자 레이블로 겹쳐씁니다."
 
 #: ../app/views/ops/_rbac_user_details.html.haml:1
 #: ../app/javascript/components/async-credentials/password-field.jsx:85
@@ -54074,15 +54074,15 @@ msgstr "%{group}을(를) 보려면 클릭하십시오. "
 
 #: ../app/helpers/ops_helper/textual_summary.rb:127
 msgid "Click to view %{name} Group"
-msgstr "%{name} 그룹을 보려면 클릭하십시오. "
+msgstr "%{name} 그룹을 보려면 클릭하십시오."
 
 #: ../app/helpers/ops_helper/textual_summary.rb:143
 msgid "Click to view %{name} Tenant"
-msgstr "%{name} 테넌트를 보려면 클릭하십시오. "
+msgstr "%{name} 테넌트를 보려면 클릭하십시오."
 
 #: ../app/helpers/ops_helper/textual_summary.rb:156
 msgid "Click to view %{name} TenantProject"
-msgstr "%{name} 테넌트 프로젝트를 보려면 클릭하십시오. "
+msgstr "%{name} 테넌트 프로젝트를 보려면 클릭하십시오."
 
 #: ../app/views/report/_db_list.html.haml:12
 msgid "Click to view '%{title}'"
@@ -57066,7 +57066,7 @@ msgstr "로컬 로그인 사용 안함"
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:307
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:313
 msgid "Disable event monitoring."
-msgstr "이벤트 모니터링을 사용 안함으로 설정합니다. "
+msgstr "이벤트 모니터링을 사용 안함으로 설정합니다."
 
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:45
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:46
