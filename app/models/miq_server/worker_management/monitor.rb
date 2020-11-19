@@ -78,7 +78,9 @@ module MiqServer::WorkerManagement::Monitor
         # Hack for schema-less backport(no new system_uid column):
         # reuse existing guid column to store/retrieve the system_uid, pod name in pods.
         # https://github.com/ManageIQ/manageiq/pull/20792
-        orphaned_rows = miq_workers.where.not(:guid => current_pods.keys)
+        #
+        # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
+        orphaned_rows = miq_workers.where.not(:type => %w[MiqCockpitWsWorker]).where.not(:guid => current_pods.keys)
         unless orphaned_rows.empty?
           _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:guid).inspect}")
           orphaned_rows.destroy_all
