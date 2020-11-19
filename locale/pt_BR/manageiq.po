@@ -3253,7 +3253,7 @@ msgstr "CPU - Taxa de uso agregada das máquinas virtuais filho para o máx. de 
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6016
 msgid "CPU - Aggressive "
-msgstr "CPU - Agressivo"
+msgstr "CPU - Agressivo "
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb:770
@@ -14697,7 +14697,7 @@ msgstr "Editar tags para os repositórios do Ansible selecionados"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2570
 msgid "Edit Tags of Ansible Tower Provider"
-msgstr "Editar tags do provedor do Ansible Tower"
+msgstr "Editar tags do Provedor Ansible Tower"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:362
@@ -30138,7 +30138,7 @@ msgstr "Modelo de orquestração"
 
 #: ../app/models/service_orchestration.rb:197
 msgid "Orchestration template runner finished with error. Check evm.log for details."
-msgstr "O executor de modelo de orquestração foi\nconcluído com\nerro.   Verifique o evm.log para obter detalhes. "
+msgstr "O executor de modelo de orquestração foi\nconcluído com\nerro. Verifique o evm.log para obter detalhes."
 
 #: ../config/model_attributes.rb:3552
 msgid "OrchestrationStackOutput|Description"
@@ -45256,7 +45256,7 @@ msgstr "login"
 
 #: ../app/models/miq_ae_namespace.rb:19
 msgid "may contain only alphanumeric and _ . - $ characters"
-msgstr "pode conter apenas caracteres alfanuméricos e  _. - $"
+msgstr "pode conter apenas alfanuméricos e _. - $"
 
 #: ../app/models/miq_ae_class.rb:18 ../app/models/miq_ae_instance.rb:17
 msgid "may contain only alphanumeric and _ . - characters"
@@ -46204,7 +46204,7 @@ msgstr "não conectado a EMS"
 
 #: ../lib/manageiq/providers/ansible_tower/engine.rb:14
 msgid "Ansible Tower Provider"
-msgstr "Provedor do Ansible Tower"
+msgstr "Provedor Ansible Tower"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/workflow_job.rb:42
@@ -46330,7 +46330,7 @@ msgstr "Sudeste da Austrália"
 
 #: ../lib/manageiq/providers/azure/engine.rb:15
 msgid "Azure Provider"
-msgstr "Provedor Azure "
+msgstr "Provedor Azure"
 
 #: ../app/models/manageiq/providers/azure/regions.rb:26
 msgid "Brazil South"
@@ -46566,7 +46566,7 @@ msgstr "Serviço não suportado: %{service}"
 
 #: ../lib/manageiq/providers/foreman/engine.rb:14
 msgid "Foreman Provider"
-msgstr "Provedor do Foreman"
+msgstr "Provedor Foreman"
 
 #: ../app/models/manageiq/providers/foreman/provider.rb:149
 msgid "URL has to be HTTPS"
@@ -46588,7 +46588,7 @@ msgstr "Google"
 
 #: ../lib/manageiq/providers/google/engine.rb:14
 msgid "Google Provider"
-msgstr "Provedor do Google"
+msgstr "Provedor Google"
 
 #:
 #: ../app/models/manageiq/providers/google/inventory/parser/cloud_manager.rb:204
@@ -46818,11 +46818,11 @@ msgstr "Detectar"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir um prefixo de caminho de URL para o\narquivo XCCDF em vez de acessar o local padrão.  Por exemplo:\nhttp://my_file_server.org: 3333/xccdf_files/ Esperando\nencontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
+msgstr "Permite definir um prefixo de caminho de URL para o\narquivo XCCDF em vez de acessar o local padrão.\n  Por exemplo:\nhttp://my_file_server.org: 3333/xccdf_files/ Esperando\nencontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:678
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir um prefixo de caminho de URL para o\narquivo XCCDF em vez de acessar o local padrão.  Por\nexemplo: http://my_file_server.org: 3333/xccdf_files/\nEsperando encontrar o arquivo\ncom.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
+msgstr "Permite definir um prefixo de caminho de URL para o\narquivo XCCDF em vez de acessar o local padrão.\nPor\nexemplo: http://my_file_server.org: 3333/xccdf_files/\nEsperando encontrar o arquivo\ncom.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:616
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:632
@@ -46841,11 +46841,11 @@ msgstr "Proxy HTTP para conectar o ManageIQ ao provedor. Por\nexemplo:\nhttp://u
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:633
 msgid "HTTP Proxy to connect image inspector pods to the internet. example: http://user:password@my_http_proxy"
-msgstr "Proxy HTTP para conectar pods de inspetor de imagem\nà Internet. Por exemplo: http://user:password@my_http_proxy"
+msgstr "Proxy HTTP para conectar pods de inspetor de imagem\nà Internet. Por\nexemplo:\nhttp://user:password@my_http_proxy"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:23
 msgid "HTTP Proxy to connect image inspector pods to the internet. example: http://user:password@my_https_proxy"
-msgstr "Proxy HTTP para conectar pods de inspetor de imagem\nà Internet. Por exemplo: http://user:password@my_https_proxy"
+msgstr "Proxy HTTP para conectar pods de inspetor de imagem\nà Internet. Por\nexemplo:\nhttp://user:password@my_https_proxy"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:639
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:26
@@ -46980,7 +46980,7 @@ msgstr[1] "Provedores de infraestrutura (Kubevirt)"
 
 #: ../lib/manageiq/providers/kubevirt/engine.rb:14
 msgid "KubeVirt Provider"
-msgstr "Provedor do KubeVirt"
+msgstr "Provedor KubeVirt"
 
 #: ../app/models/manageiq/providers/kubevirt/infra_manager/template.rb:27
 msgid "Template (Kubevirt)"
@@ -46997,7 +46997,7 @@ msgstr[1] "Máquinas virtuais (Kubevirt)"
 #:
 #: ../app/models/manageiq/providers/lenovo/physical_infra_manager/operations/ansible_sender.rb:78
 msgid "%{method_name} is not a valid name to an Ansible operation!"
-msgstr "\n%{method_name}\nnão é um nome válido para uma operação do Ansible!"
+msgstr "%{method_name}\nnão é um nome válido para uma operação do Ansible!"
 
 #: ../app/javascript/components/form/fields/physical_server_field.js:70
 msgid "Choose a Server"
@@ -47049,7 +47049,7 @@ msgstr "Máscara de sub-rede de CIDR"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:79
 msgid "CIDR Subnet Mask for the subnet of the Cloud Network"
-msgstr "Máscara de sub-rede de CIDR para a sub-rede da rede\nem nuvem "
+msgstr "Máscara de sub-rede de CIDR para a sub-rede da rede\nem nuvem"
 
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:84
@@ -47379,7 +47379,7 @@ msgstr "Máscara de rede"
 
 #: ../lib/manageiq/providers/nuage/engine.rb:14
 msgid "Nuage Provider"
-msgstr "Provedor do Nuage"
+msgstr "Provedor Nuage"
 
 #: src/rbac-forms/rbacUserForm.jsx:46 src/rbac-forms/rbacUserForm.jsx:55
 #: src/rbac-forms/rbacUserForm.jsx:64
@@ -47604,7 +47604,7 @@ msgstr "Restrição desconhecida\n%{constraint}"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow.rb:280
 msgid "%{description} VM Memory is larger than Memory Limit"
-msgstr "\n%{description}\nA memória da VM é maior que limite de memória"
+msgstr "%{description}\nA memória da VM é maior que limite de memória"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/ovirt_services.rb:1038
 #: ../app/models/manageiq/providers/redhat/infra_manager/ovirt_services.rb:1049
@@ -47819,7 +47819,7 @@ msgstr "Provisionar servidores físicos selecionados"
 
 #: ../lib/manageiq/providers/redfish/engine.rb:14
 msgid "Redfish Provider"
-msgstr "Provedor do Redfish"
+msgstr "Provedor Redfish"
 
 #: ../app/javascript/components/server-provision.schema.js:46
 msgid "Select a Customization Template"
@@ -47863,7 +47863,7 @@ msgstr "Kerberos"
 
 #: ../lib/manageiq/providers/scvmm/engine.rb:14
 msgid "Microsoft SCVMM Provider"
-msgstr "Provedor do Microsoft SCVMM"
+msgstr "Provedor Microsoft SCVMM"
 
 #: ../app/helpers/configured_system_helper/textual_summary.rb:101
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:317
@@ -48304,7 +48304,7 @@ msgstr "\"%{action}\" para o comutador \"%{name}\""
 
 #: ../app/controllers/mixins/generic_button_mixin.rb:108
 msgid "\"%{action}\" requires a single item to be selected."
-msgstr "\n\"%{action}\"\nrequer que um único item seja selecionado."
+msgstr "\"%{action}\"\nrequer que um único item seja selecionado."
 
 #: ../app/controllers/application_controller/ci_processing.rb:823
 msgid "\"%{datastore_name}\": cannot be removed, has vms or hosts"
@@ -48316,7 +48316,7 @@ msgstr "O Domínio automatizado \"%{field}\" não pode ser excluído"
 
 #: ../app/controllers/mixins/generic_button_mixin.rb:117
 msgid "\"%{item_name}\" does not supports %{action}"
-msgstr "\n\"%{item_name}\"\nnão suporta\n%{action}"
+msgstr "\"%{item_name}\"\nnão suporta\n%{action}"
 
 #: ../app/controllers/configuration_controller.rb:280
 msgid "\"%{name}\": Global Time Profiles cannot be deleted"
@@ -48569,7 +48569,7 @@ msgstr "%{description}"
 
 #: ../app/helpers/application_helper.rb:825
 msgid "%{description} (Default)"
-msgstr "\n%{description}\n(Padrão)"
+msgstr "%{description}\n(Padrão)"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:699
 msgid "%{description} category Scan"
@@ -48602,7 +48602,7 @@ msgstr "O %{image} \"%{name}\" foi transferido por upload"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:27
 msgid "%{image} must be a .%{type} file"
-msgstr "\n%{image}\ndeve ser\num .%{type} Lista de Arquivos"
+msgstr "%{image}\ndeve ser\num .%{type} Lista de Arquivos"
 
 #: ../app/helpers/generic_object_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:60
@@ -50394,7 +50394,7 @@ msgstr "Incluir adaptadores de rede"
 #: ../app/controllers/physical_storage_controller.rb:18
 #: ../app/controllers/mixins/ems_common.rb:142
 msgid "Add New %{table}"
-msgstr "Incluir novo %{table}"
+msgstr "Incluir Novo %{table}"
 
 #: ../app/controllers/cloud_network_controller.rb:135
 msgid "Add New Cloud Network"
@@ -50613,7 +50613,7 @@ msgstr "Incluir uma nova ação"
 #: ../app/controllers/automation_manager_controller.rb:408
 #: ../app/views/automation_manager/explorer.html.haml:24
 msgid "Add a new Ansible Tower Provider"
-msgstr "Incluir um novo provedor do Ansible Tower"
+msgstr "Incluir um novo provedor Ansible Tower"
 
 #: ../app/controllers/automation_manager_controller.rb:392
 msgid "Add a new Automation Manager Provider"
@@ -54515,7 +54515,7 @@ msgstr "Clique para visualizar\no\nlocatário %{name}"
 
 #: ../app/helpers/ops_helper/textual_summary.rb:156
 msgid "Click to view %{name} TenantProject"
-msgstr "Clique para visualizar\no TenantProject\n%{name}\n"
+msgstr "Clique para visualizar\no TenantProject\n%{name}"
 
 #: ../app/views/report/_db_list.html.haml:12
 msgid "Click to view '%{title}'"
@@ -57961,7 +57961,7 @@ msgstr "Usuário do EVM \"%{name}\""
 
 #: ../app/controllers/mixins/ems_common.rb:172
 msgid "Edit %{object_type} '%{object_name}'"
-msgstr "Editar o %{object_type} '%{object_name}'"
+msgstr "Editar %{object_type} '%{object_name}'"
 
 #: ../app/controllers/vm_common.rb:1463
 msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
@@ -61170,7 +61170,7 @@ msgstr "Políticas de controle do host"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:159
 msgid "Host Default VNC Port Range"
-msgstr "Intervalo de portas de VNC do host padrão "
+msgstr "Intervalo de portas de VNC do host padrão"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:412
 msgid "Host File"
@@ -70859,7 +70859,7 @@ msgstr "Mostrar volumes de nuvem"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:194
 msgid "Show Cluster drift history"
-msgstr "Mostrar o histórico de desvio do cluster "
+msgstr "Mostrar o histórico de desvio do cluster"
 
 #: ../app/helpers/compliance_summary_helper.rb:40
 msgid "Show Compliance History of this %{model} (Last 10 Checks)"
@@ -77559,7 +77559,7 @@ msgstr "Procurar armazenamentos de dados de origem"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardNetworksStep/components/NetworksStepForm/NetworksStepForm.js:362
 msgid "Search source networks"
-msgstr "Procurar redes de origem "
+msgstr "Procurar redes de origem"
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:208
@@ -77666,12 +77666,12 @@ msgstr "Selecione a linha %s"
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardClustersStep/components/ClustersStepForm/ClustersStepForm.js:171
 msgid "Select source cluster(s) and a target cluster and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Selecione clusters de origem e um cluster de\ndestino e clique em Incluir mapeamento para incluir o\nmapeamento. Vários mapeamentos podem ser incluídos."
+msgstr "Selecione clusters de origem e um cluster de\ndestino e clique em Incluir mapeamento para incluir o\nmapeamento. Vários\nmapeamentos podem ser incluídos."
 
 #:
 #: ../app/javascript/react/screens/App/Mappings/screens/MappingWizard/components/MappingWizardDatastoresStep/components/DatastoresStepForm/DatastoresStepForm.js:322
 msgid "Select source datastore(s) and a target datastore and click Add Mapping to add the mapping. Multiple mappings can be added."
-msgstr "Selecione armazenamentos de dados de origem e um\narmazenamento de dados de\ndestino e clique em Incluir mapeamento para incluir o\nmapeamento. Vários mapeamentos podem ser incluídos."
+msgstr "Selecione armazenamentos de dados de origem e um\narmazenamento de dados de\ndestino e clique em Incluir mapeamento para incluir o\nmapeamento. Vários\nmapeamentos podem ser incluídos."
 
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardGeneralStep/PlanWizardGeneralStep.js:36

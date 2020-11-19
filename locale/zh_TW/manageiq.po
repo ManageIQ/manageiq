@@ -549,7 +549,7 @@ msgstr "Homedir"
 
 #: ../config/model_attributes.rb:11
 msgid "Account|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:12
 msgid "Account|Last logon"
@@ -914,12 +914,12 @@ msgstr "新增認證"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1423
 msgid "Add a Custom Button Group for a Generic Object Class"
-msgstr "新增一般物件類別的自訂按鈕群組"
+msgstr "新增通用物件類別的自訂按鈕群組"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1435
 msgid "Add a Custom Button for a Generic Object Class"
-msgstr "新增一般物件類別的自訂按鈕"
+msgstr "新增通用物件類別的自訂按鈕"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:967
@@ -934,12 +934,12 @@ msgstr "新增浮動 IP"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1467
 msgid "Add a Generic Object"
-msgstr "新增一般物件"
+msgstr "新增通用物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1419
 msgid "Add a Generic Object Class"
-msgstr "新增一般物件類別"
+msgstr "新增通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1613
@@ -1191,7 +1191,7 @@ msgstr "顯示名稱"
 
 #: ../config/model_attributes.rb:22
 msgid "AdvancedSetting|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:23
 msgid "AdvancedSetting|Max"
@@ -1541,7 +1541,7 @@ msgstr "Ansible Tower"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_Job.yaml
 #: ../config/yaml_strings.rb:1315
 msgid "Ansible Tower Job"
-msgstr "Ansible 塔架工作"
+msgstr "Ansible Tower 工作"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_Job.yaml
 #: ../config/yaml_strings.rb:1313
@@ -1551,7 +1551,7 @@ msgstr "Ansible Tower 工作"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager.yaml
 #: ../config/yaml_strings.rb:1243
 msgid "Ansible Tower Providers"
-msgstr "Ansible 塔架提供者"
+msgstr "Ansible Tower 提供者"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3410
@@ -1674,7 +1674,7 @@ msgstr "現場可更換單元"
 
 #: ../config/model_attributes.rb:36
 msgid "AssetDetail|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:37
 msgid "AssetDetail|Location"
@@ -1751,7 +1751,7 @@ msgstr[0] "指派的伺服器角色"
 
 #: ../config/model_attributes.rb:52
 msgid "Assigned server role"
-msgstr "已指派伺服器角色"
+msgstr "指派的伺服器角色"
 
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
 #: ../config/yaml_strings.rb:5101
@@ -1764,7 +1764,7 @@ msgstr "作用中"
 
 #: ../config/model_attributes.rb:54
 msgid "AssignedServerRole|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:55
 msgid "AssignedServerRole|Priority"
@@ -1873,7 +1873,7 @@ msgstr "事件"
 
 #: ../config/model_attributes.rb:61
 msgid "AuditEvent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:62
 msgid "AuditEvent|Message"
@@ -1946,7 +1946,7 @@ msgstr "鑑別編排堆疊"
 
 #: ../config/model_attributes.rb:128
 msgid "AuthenticationConfigurationScriptBase|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:129
 msgid "AuthenticationConfigurationScriptBase|Region description"
@@ -1958,7 +1958,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:132
 msgid "AuthenticationOrchestrationStack|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:133
 msgid "AuthenticationOrchestrationStack|Region description"
@@ -2030,7 +2030,7 @@ msgstr "Google 管理的網域"
 
 #: ../config/model_attributes.rb:86
 msgid "Authentication|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:87
 msgid "Authentication|Htpassd users"
@@ -2289,7 +2289,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:137
 msgid "AutomateWorkspace|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:138
 msgid "AutomateWorkspace|Input"
@@ -2439,7 +2439,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:153
 msgid "AvailabilityZone|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:154
 msgid "AvailabilityZone|Max cpu usage rate average avg over time period"
@@ -2822,7 +2822,7 @@ msgstr "資料"
 
 #: ../config/model_attributes.rb:186
 msgid "BinaryBlobPart|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:187
 msgid "BinaryBlobPart|Region description"
@@ -2838,7 +2838,7 @@ msgstr "資料類型"
 
 #: ../config/model_attributes.rb:176
 msgid "BinaryBlob|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:177
 msgid "BinaryBlob|Md5"
@@ -2891,7 +2891,7 @@ msgstr "事件名稱"
 
 #: ../config/model_attributes.rb:192
 msgid "BlacklistedEvent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:193
 msgid "BlacklistedEvent|Provider model"
@@ -2999,7 +2999,7 @@ msgstr "將來"
 
 #: ../config/model_attributes.rb:202
 msgid "BottleneckEvent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:203
 msgid "BottleneckEvent|Message"
@@ -3756,7 +3756,7 @@ msgstr "主機埠"
 
 #: ../config/model_attributes.rb:219
 msgid "Canister|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:220
 msgid "Canister|Name"
@@ -4168,7 +4168,7 @@ msgstr "群組"
 
 #: ../config/model_attributes.rb:232
 msgid "ChargeableField|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:233
 msgid "ChargeableField|Metric"
@@ -4197,12 +4197,12 @@ msgstr "計費"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3394
 msgid "Chargeback Currencies"
-msgstr "退款貨幣"
+msgstr "計費貨幣"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3398
 msgid "Chargeback Measures"
-msgstr "退款測量"
+msgstr "計費測量"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:187
 msgid "Chargeback Preview"
@@ -4211,28 +4211,28 @@ msgstr "計費預覽"
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
 #: ../config/yaml_strings.rb:6537
 msgid "Chargeback Preview for Single VM"
-msgstr "單一虛擬機器的退款預覽"
+msgstr "單一虛擬機器的計費預覽"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
 #: ../config/model_display_names.rb:18 ../config/dictionary_strings.rb:1286
 msgid "Chargeback Rate"
 msgid_plural "Chargeback Rates"
-msgstr[0] "退款率"
+msgstr[0] "計費費率"
 
 #: ../config/model_display_names.rb:19
 msgid "Chargeback Rate Detail"
 msgid_plural "Chargeback Rate Details"
-msgstr[0] "退款率詳細資料"
+msgstr[0] "計費費率詳細資料"
 
 #: ../config/model_display_names.rb:20
 msgid "Chargeback Rate Detail Currency"
 msgid_plural "Chargeback Rate Detail Currencies"
-msgstr[0] "退款率詳細資料貨幣"
+msgstr[0] "計費費率詳細資料貨幣"
 
 #: ../config/model_display_names.rb:21
 msgid "Chargeback Rate Detail Measure"
 msgid_plural "Chargeback Rate Detail Measures"
-msgstr[0] "退款率詳細資料測量"
+msgstr[0] "計費費率詳細資料測量"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3396
@@ -4253,7 +4253,7 @@ msgstr "計費費率"
 #: ../config/model_display_names.rb:22
 msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
-msgstr[0] "退款層級"
+msgstr[0] "計費層級"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage
 #: ../app/models/chargeback_container_image.rb:115
@@ -4314,7 +4314,7 @@ msgstr "完整名稱"
 
 #: ../config/model_attributes.rb:266
 msgid "ChargebackRateDetailCurrency|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:267
 msgid "ChargebackRateDetailCurrency|Name"
@@ -4338,7 +4338,7 @@ msgstr "Unicode 十六進位"
 
 #: ../config/model_attributes.rb:273
 msgid "ChargebackRateDetailMeasure|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:274
 msgid "ChargebackRateDetailMeasure|Name"
@@ -4386,7 +4386,7 @@ msgstr "群組"
 
 #: ../config/model_attributes.rb:254
 msgid "ChargebackRateDetail|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:255
 msgid "ChargebackRateDetail|Metric"
@@ -4442,7 +4442,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:243
 msgid "ChargebackRate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:244
 msgid "ChargebackRate|Rate type"
@@ -4470,7 +4470,7 @@ msgstr "固定率"
 
 #: ../config/model_attributes.rb:283
 msgid "ChargebackTier|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:284
 msgid "ChargebackTier|Region description"
@@ -4587,7 +4587,7 @@ msgstr "範例文字"
 
 #: ../config/model_attributes.rb:292
 msgid "Classification|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:293
 msgid "Classification|Icon"
@@ -5115,7 +5115,7 @@ msgstr "已啟用"
 
 #: ../config/model_attributes.rb:319
 msgid "CloudDatabaseFlavor|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:320
 msgid "CloudDatabaseFlavor|Max connections"
@@ -5163,7 +5163,7 @@ msgstr "額外屬性"
 
 #: ../config/model_attributes.rb:307
 msgid "CloudDatabase|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:308
 msgid "CloudDatabase|Max storage"
@@ -5197,7 +5197,7 @@ msgstr "已用儲存體"
 #: ../app/models/manageiq/providers/amazon/cloud_manager/orchestration_template.rb:66
 msgid "CloudFormation Template"
 msgid_plural "CloudFormation Templates"
-msgstr[0] "雲端格式範本"
+msgstr[0] "CloudFormation 範本"
 
 #: ../app/presenters/tree_builder_orchestration_templates.rb:19
 #: ../app/presenters/tree_builder_orchestration_templates.rb:21
@@ -5230,7 +5230,7 @@ msgstr "額外屬性"
 
 #: ../config/model_attributes.rb:335
 msgid "CloudNetwork|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:336
 msgid "CloudNetwork|Maximum transmission unit"
@@ -5286,7 +5286,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:351
 msgid "CloudObjectStoreContainer|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:352
 msgid "CloudObjectStoreContainer|Key"
@@ -5326,7 +5326,7 @@ msgstr "Etag"
 
 #: ../config/model_attributes.rb:362
 msgid "CloudObjectStoreObject|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:363
 msgid "CloudObjectStoreObject|Key"
@@ -5354,7 +5354,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:370
 msgid "CloudResourceQuota|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:371
 msgid "CloudResourceQuota|Name"
@@ -5394,7 +5394,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:381
 msgid "CloudService|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:382
 msgid "CloudService|Region description"
@@ -5426,7 +5426,7 @@ msgstr "位址"
 
 #: ../config/model_attributes.rb:412
 msgid "CloudSubnetNetworkPort|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:413
 msgid "CloudSubnetNetworkPort|Region description"
@@ -5474,7 +5474,7 @@ msgstr "主機路由"
 
 #: ../config/model_attributes.rb:398
 msgid "CloudSubnet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:399
 msgid "CloudSubnet|Ip version"
@@ -5518,7 +5518,7 @@ msgstr "VM 總數"
 
 #: ../config/model_attributes.rb:425
 msgid "CloudTenantFlavor|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:426
 msgid "CloudTenantFlavor|Region description"
@@ -5542,7 +5542,7 @@ msgstr "已啟用"
 
 #: ../config/model_attributes.rb:419
 msgid "CloudTenant|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:420
 msgid "CloudTenant|Name"
@@ -5578,7 +5578,7 @@ msgstr "具有相依備份"
 
 #: ../config/model_attributes.rb:448
 msgid "CloudVolumeBackup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:449
 msgid "CloudVolumeBackup|Is incremental"
@@ -5626,7 +5626,7 @@ msgstr "已加密"
 
 #: ../config/model_attributes.rb:461
 msgid "CloudVolumeSnapshot|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:462
 msgid "CloudVolumeSnapshot|Name"
@@ -5666,7 +5666,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:472
 msgid "CloudVolumeType|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:473
 msgid "CloudVolumeType|Name"
@@ -5706,7 +5706,7 @@ msgstr "已加密"
 
 #: ../config/model_attributes.rb:434
 msgid "CloudVolume|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:435
 msgid "CloudVolume|Iops"
@@ -6013,7 +6013,7 @@ msgstr "建立日期"
 
 #: ../config/model_attributes.rb:490
 msgid "ComplianceDetail|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:491
 msgid "ComplianceDetail|Miq policy desc"
@@ -6049,7 +6049,7 @@ msgstr "事件類型"
 
 #: ../config/model_attributes.rb:480
 msgid "Compliance|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:481
 msgid "Compliance|Region description"
@@ -6082,7 +6082,7 @@ msgstr "電腦系統"
 
 #: ../config/model_attributes.rb:498
 msgid "ComputerSystem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:499
 msgid "ComputerSystem|Managed entity type"
@@ -6127,7 +6127,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:522
 msgid "ConditionSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:523
 msgid "ConditionSet|Mode"
@@ -6209,7 +6209,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:510
 msgid "Condition|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:511
 msgid "Condition|Name"
@@ -6573,7 +6573,7 @@ msgstr "配置標籤"
 
 #: ../config/model_attributes.rb:534
 msgid "ConfigurationLocation|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:535
 msgid "ConfigurationLocation|Manager ref"
@@ -6601,7 +6601,7 @@ msgstr "標題"
 
 #: ../config/model_attributes.rb:542
 msgid "ConfigurationOrganization|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:543
 msgid "ConfigurationOrganization|Manager ref"
@@ -6661,7 +6661,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:558
 msgid "ConfigurationProfile|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:559
 msgid "ConfigurationProfile|Manager ref"
@@ -6697,7 +6697,7 @@ msgstr "目標平台"
 
 #: ../config/model_attributes.rb:567
 msgid "ConfigurationProfile|Total configured systems"
-msgstr "已配置系統總數"
+msgstr "配置系統總數"
 
 #: ../config/model_attributes.rb:569
 msgid "ConfigurationScriptBase|Description"
@@ -6705,7 +6705,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:570
 msgid "ConfigurationScriptBase|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:571
 msgid "ConfigurationScriptBase|Manager ref"
@@ -6737,7 +6737,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:579
 msgid "ConfigurationScriptSource|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:580
 msgid "ConfigurationScriptSource|Last update error"
@@ -6797,7 +6797,7 @@ msgstr "內容總數"
 
 #: ../config/model_attributes.rb:595
 msgid "ConfigurationTag|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:596
 msgid "ConfigurationTag|Manager ref"
@@ -6835,7 +6835,7 @@ msgstr[0] "配置的系統 (Foreman)"
 
 #: ../app/models/miq_dialog.rb:11
 msgid "Configured System Provision"
-msgstr "已配置系統供應"
+msgstr "配置系統供應"
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:28
 msgid "Configured System console"
@@ -6849,21 +6849,21 @@ msgstr "配置系統主控台"
 #: ../app/views/automation_manager/_inventory_group.html.haml:6
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml:31
 msgid "Configured Systems"
-msgstr "已配置系統"
+msgstr "配置系統"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem (plural form)
 #: ../config/dictionary_strings.rb:1666
 msgid "Configured Systems (Ansible Tower)"
-msgstr "已配置系統 (Ansible Tower)"
+msgstr "配置系統 (Ansible Tower)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem (plural form)
 #: ../config/dictionary_strings.rb:1670
 msgid "Configured Systems (Foreman)"
-msgstr "已配置系統 (Foreman)"
+msgstr "配置系統 (Foreman)"
 
 #: ../config/model_attributes.rb:600
 msgid "Configured system"
-msgstr "已配置系統"
+msgstr "配置系統"
 
 #: ../config/model_attributes.rb:601
 msgid "ConfiguredSystem|Build state"
@@ -6911,7 +6911,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:612
 msgid "ConfiguredSystem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:613
 msgid "ConfiguredSystem|Ipaddress"
@@ -7045,12 +7045,12 @@ msgstr[0] "儲存器群組儲存器服務"
 #: ../config/model_display_names.rb:60 ../config/dictionary_strings.rb:1378
 msgid "Container Image"
 msgid_plural "Container Images"
-msgstr[0] "容器映像檔"
+msgstr[0] "儲存器映像檔"
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/130_Images by Failed OpenSCAP Rule Results.yaml
 #: ../config/yaml_strings.rb:5182
 msgid "Container Image Name"
-msgstr "容器映像檔名稱"
+msgstr "儲存器映像檔名稱"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerImageRegistry (plural form)
 #: ../config/dictionary_strings.rb:1376
@@ -7061,7 +7061,7 @@ msgstr "儲存器映像檔登錄"
 #: ../config/model_display_names.rb:61 ../config/dictionary_strings.rb:1374
 msgid "Container Image Registry"
 msgid_plural "Container Image Registries"
-msgstr[0] "容器映像檔登錄"
+msgstr[0] "儲存器映像檔登錄"
 
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../app/presenters/menu/default_menu.rb:135 ../config/yaml_strings.rb:801
@@ -7282,7 +7282,7 @@ msgstr "儲存器映像檔"
 
 #: ../config/model_attributes.rb:854
 msgid "Container image registry"
-msgstr "容器映像檔登錄"
+msgstr "儲存器映像檔登錄"
 
 #: ../config/model_attributes.rb:862
 msgid "Container limit"
@@ -7402,7 +7402,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:731
 msgid "ContainerBuildPod|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:732
 msgid "ContainerBuildPod|Message"
@@ -7502,7 +7502,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:703
 msgid "ContainerBuild|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:704
 msgid "ContainerBuild|Name"
@@ -7558,7 +7558,7 @@ msgstr "儲存器實體類型"
 
 #: ../config/model_attributes.rb:744
 msgid "ContainerCondition|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:745
 msgid "ContainerCondition|Last heartbeat time"
@@ -7598,7 +7598,7 @@ msgstr "欄位路徑"
 
 #: ../config/model_attributes.rb:755
 msgid "ContainerEnvVar|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:756
 msgid "ContainerEnvVar|Name"
@@ -7618,7 +7618,7 @@ msgstr "值"
 
 #: ../config/model_attributes.rb:816
 msgid "ContainerGroupsContainerServices|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:817
 msgid "ContainerGroupsContainerServices|Region description"
@@ -7726,7 +7726,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:785
 msgid "ContainerGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:786
 msgid "ContainerGroup|Ipaddress"
@@ -7854,7 +7854,7 @@ msgstr "主機"
 
 #: ../config/model_attributes.rb:857
 msgid "ContainerImageRegistry|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:858
 msgid "ContainerImageRegistry|Name"
@@ -7958,7 +7958,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:841
 msgid "ContainerImage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:842
 msgid "ContainerImage|Image ref"
@@ -8018,7 +8018,7 @@ msgstr "預設要求"
 
 #: ../config/model_attributes.rb:874
 msgid "ContainerLimitItem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:875
 msgid "ContainerLimitItem|Item type"
@@ -8062,7 +8062,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:866
 msgid "ContainerLimit|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:867
 msgid "ContainerLimit|Name"
@@ -8178,7 +8178,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:907
 msgid "ContainerNode|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:908
 msgid "ContainerNode|Identity infra"
@@ -8318,7 +8318,7 @@ msgstr "主機埠"
 
 #: ../config/model_attributes.rb:943
 msgid "ContainerPortConfig|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:944
 msgid "ContainerPortConfig|Name"
@@ -8446,7 +8446,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:976
 msgid "ContainerProject|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:977
 msgid "ContainerProject|Images count"
@@ -8546,7 +8546,7 @@ msgstr "刪除日期"
 
 #: ../config/model_attributes.rb:1012
 msgid "ContainerQuotaItem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1013
 msgid "ContainerQuotaItem|Quota desired"
@@ -8590,7 +8590,7 @@ msgstr "刪除日期"
 
 #: ../config/model_attributes.rb:1024
 msgid "ContainerQuotaScope|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1025
 msgid "ContainerQuotaScope|Region description"
@@ -8622,7 +8622,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1005
 msgid "ContainerQuota|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1006
 msgid "ContainerQuota|Name"
@@ -8734,7 +8734,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:1052
 msgid "ContainerReplicator|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1053
 msgid "ContainerReplicator|Last compliance status"
@@ -8878,7 +8878,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:1089
 msgid "ContainerRoute|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1090
 msgid "ContainerRoute|Name"
@@ -8906,7 +8906,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1143
 msgid "ContainerServicePortConfig|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1144
 msgid "ContainerServicePortConfig|Name"
@@ -9026,7 +9026,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1118
 msgid "ContainerService|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1119
 msgid "ContainerService|Max cpu usage rate average avg over time period"
@@ -9174,7 +9174,7 @@ msgstr "產生"
 
 #: ../config/model_attributes.rb:1185
 msgid "ContainerTemplateParameter|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1186
 msgid "ContainerTemplateParameter|Name"
@@ -9242,7 +9242,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1163
 msgid "ContainerTemplate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1164
 msgid "ContainerTemplate|Name"
@@ -9334,7 +9334,7 @@ msgstr "Glusterfs 端點名稱"
 
 #: ../config/model_attributes.rb:1208
 msgid "ContainerVolume|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1209
 msgid "ContainerVolume|Iscsi iqn"
@@ -9549,7 +9549,7 @@ msgstr "完成時間"
 
 #: ../config/model_attributes.rb:645
 msgid "Container|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:646
 msgid "Container|Image"
@@ -9874,7 +9874,7 @@ msgstr "Cpu 限制"
 
 #: ../config/model_attributes.rb:1233
 msgid "ConversionHost|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1234
 msgid "ConversionHost|Max concurrent tasks"
@@ -10487,7 +10487,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1255
 msgid "CustomAttribute|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1256
 msgid "CustomAttribute|Name"
@@ -10543,7 +10543,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:1288
 msgid "CustomButtonSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1289
 msgid "CustomButtonSet|Mode"
@@ -10611,7 +10611,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:1273
 msgid "CustomButton|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1274
 msgid "CustomButton|Name"
@@ -10740,7 +10740,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1301
 msgid "CustomizationScript|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1302
 msgid "CustomizationScript|In use"
@@ -10772,7 +10772,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1310
 msgid "CustomizationSpec|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1311
 msgid "CustomizationSpec|Last update time"
@@ -10804,7 +10804,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1319
 msgid "CustomizationTemplate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1320
 msgid "CustomizationTemplate|Name"
@@ -10949,7 +10949,7 @@ msgstr "資料庫備份"
 
 #: ../config/model_attributes.rb:1326
 msgid "DatabaseBackup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1327
 msgid "DatabaseBackup|Name"
@@ -11491,12 +11491,12 @@ msgstr "刪除認證"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1431
 msgid "Delete a Custom Button Group for a Generic Object Class"
-msgstr "刪除一般物件類別的自訂按鈕群組"
+msgstr "刪除通用物件類別的自訂按鈕群組"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1443
 msgid "Delete a Custom Button for a Generic Object Class"
-msgstr "刪除一般物件類別的自訂按鈕"
+msgstr "刪除通用物件類別的自訂按鈕"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:971
@@ -12000,7 +12000,7 @@ msgstr "動態"
 
 #: ../config/model_attributes.rb:1347
 msgid "DialogField|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1348
 msgid "DialogField|Label"
@@ -12108,7 +12108,7 @@ msgstr "顯示方法選項"
 
 #: ../config/model_attributes.rb:1375
 msgid "DialogGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1376
 msgid "DialogGroup|Label"
@@ -12144,7 +12144,7 @@ msgstr "顯示方法選項"
 
 #: ../config/model_attributes.rb:1385
 msgid "DialogTab|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1386
 msgid "DialogTab|Label"
@@ -12182,7 +12182,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1333
 msgid "Dialog|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1334
 msgid "Dialog|Label"
@@ -12709,7 +12709,7 @@ msgstr "可用空間"
 
 #: ../config/model_attributes.rb:1405
 msgid "Disk|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1406
 msgid "Disk|Location"
@@ -12829,12 +12829,12 @@ msgstr "顯示個別區塊儲存體管理程式"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1039
 msgid "Display Individual Chargeback Rates"
-msgstr "顯示個別退款率"
+msgstr "顯示個別計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1027
 msgid "Display Individual Chargeback Saved Report"
-msgstr "顯示個別退款節約報告"
+msgstr "顯示個別計費節約報告"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2034
@@ -12979,12 +12979,12 @@ msgstr "顯示個別浮動 IP"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1411
 msgid "Display Individual Generic Object Classes"
-msgstr "顯示個別的一般物件類別"
+msgstr "顯示個別的通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1453
 msgid "Display Individual Generic Objects"
-msgstr "顯示個別一般物件"
+msgstr "顯示個別通用物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1609
@@ -13254,12 +13254,12 @@ msgstr "顯示區塊儲存體管理程式的清單"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1037
 msgid "Display Lists of Chargeback Rates"
-msgstr "顯示退款率清單"
+msgstr "顯示計費費率清單"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1025
 msgid "Display Lists of Chargeback Saved Reports"
-msgstr "顯示退款節約報告清單"
+msgstr "顯示計費節約報告清單"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2032
@@ -13409,12 +13409,12 @@ msgstr "顯示浮動 IP 清單"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1409
 msgid "Display Lists of Generic Object Classes"
-msgstr "顯示一般物件類別的清單"
+msgstr "顯示通用物件類別的清單"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1451
 msgid "Display Lists of Generic Objects"
-msgstr "顯示一般物件的清單"
+msgstr "顯示通用物件的清單"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1607
@@ -14029,7 +14029,7 @@ msgstr "資料"
 
 #: ../config/model_attributes.rb:1423
 msgid "DriftState|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1424
 msgid "DriftState|Region description"
@@ -14372,7 +14372,7 @@ msgstr "編輯事件指派"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1465
 msgid "Edit Generic Object"
-msgstr "編輯一般物件"
+msgstr "編輯通用物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:745
@@ -14556,7 +14556,7 @@ msgstr "編輯所選 Ansible 儲存庫的標籤"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2570
 msgid "Edit Tags of Ansible Tower Provider"
-msgstr "編輯 Ansible 塔架提供者的標籤"
+msgstr "編輯 Ansible Tower 提供者的標籤"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:362
@@ -14676,7 +14676,7 @@ msgstr "編輯浮動 IP 的標籤"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1457
 msgid "Edit Tags of Generic Objects"
-msgstr "編輯一般物件的標籤"
+msgstr "編輯通用物件的標籤"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:380
@@ -14881,12 +14881,12 @@ msgstr "編輯認證"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1427
 msgid "Edit a Custom Button Group for a Generic Object Class"
-msgstr "編輯一般物件類別的自訂按鈕群組"
+msgstr "編輯通用物件類別的自訂按鈕群組"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1439
 msgid "Edit a Custom Button for a Generic Object Class"
-msgstr "編輯一般物件類別的自訂按鈕"
+msgstr "編輯通用物件類別的自訂按鈕"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:973
@@ -14896,7 +14896,7 @@ msgstr "編輯儀表板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1417
 msgid "Edit a Generic Object Class"
-msgstr "編輯一般物件類別"
+msgstr "編輯通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1615
@@ -15180,7 +15180,7 @@ msgstr "內嵌自動化管理程式"
 #. TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
 #: ../config/yaml_strings.rb:4977
 msgid "Ems Cluster Name"
-msgstr "Ems 叢集名稱"
+msgstr "EMS 叢集名稱"
 
 #: ../config/model_display_names.rb:107
 msgid "Ems Extension"
@@ -15330,7 +15330,7 @@ msgstr "隱藏"
 
 #: ../config/model_attributes.rb:1459
 msgid "EmsCluster|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1460
 msgid "EmsCluster|Last drift state timestamp"
@@ -15474,7 +15474,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1496
 msgid "EmsExtension|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1497
 msgid "EmsExtension|Key"
@@ -15554,7 +15554,7 @@ msgstr "隱藏"
 
 #: ../config/model_attributes.rb:1517
 msgid "EmsFolder|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1518
 msgid "EmsFolder|Name"
@@ -15582,7 +15582,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:1525
 msgid "EmsLicense|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1526
 msgid "EmsLicense|License edition"
@@ -15676,7 +15676,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:1537
 msgid "Endpoint|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1538
 msgid "Endpoint|Ipaddress"
@@ -15753,7 +15753,7 @@ msgstr "過濾"
 
 #: ../config/model_attributes.rb:1551
 msgid "Entitlement|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1552
 msgid "Entitlement|Miq user role name"
@@ -15945,7 +15945,7 @@ msgstr "已產生"
 
 #: ../config/model_attributes.rb:1559
 msgid "EventLog|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1560
 msgid "EventLog|Level"
@@ -16061,7 +16061,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:1589
 msgid "EventStream|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1590
 msgid "EventStream|Is task"
@@ -16181,7 +16181,7 @@ msgstr "Ansible 下的所有項目"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2560
 msgid "Everything under Ansible Tower"
-msgstr "Ansible 塔架下的所有項目"
+msgstr "Ansible Tower 下的所有項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:512
@@ -16421,12 +16421,12 @@ msgstr "浮動 IP 下的所有項目"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1405
 msgid "Everything under Generic Object Classes"
-msgstr "一般物件類別下的所有項目"
+msgstr "通用物件類別下的所有項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1447
 msgid "Everything under Generic Objects"
-msgstr "一般物件下的所有項目"
+msgstr "通用物件下的所有項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3290
@@ -16701,7 +16701,7 @@ msgstr "範本折疊項目下的所有項目"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1055
 msgid "Everything under Timelines"
-msgstr "時間表中的所有項目"
+msgstr "時間表下的所有項目"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3326
@@ -16763,11 +16763,11 @@ msgstr "聚集實體 cpu"
 
 #: ../config/model_attributes.rb:1607
 msgid "ExtManagementSystem|Aggregate vm cpus"
-msgstr "聚集 vm cpu"
+msgstr "聚集虛擬機器 CPU"
 
 #: ../config/model_attributes.rb:1608
 msgid "ExtManagementSystem|Aggregate vm memory"
-msgstr "聚集 vm 記憶體"
+msgstr "聚集虛擬機器記憶體"
 
 #: ../config/model_attributes.rb:1609
 msgid "ExtManagementSystem|Api version"
@@ -16887,7 +16887,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:1638
 msgid "ExtManagementSystem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1639
 msgid "ExtManagementSystem|Ipaddress"
@@ -17167,7 +17167,7 @@ msgstr "外部 URL"
 
 #: ../config/model_attributes.rb:1703
 msgid "ExternalUrl|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1704
 msgid "ExternalUrl|Region description"
@@ -17309,7 +17309,7 @@ msgstr "Aws 地區"
 
 #: ../config/model_attributes.rb:1711
 msgid "FileDepot|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1712
 msgid "FileDepot|Keystone api version"
@@ -17403,7 +17403,7 @@ msgstr "群組"
 
 #: ../config/model_attributes.rb:1731
 msgid "Filesystem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1732
 msgid "Filesystem|Md5"
@@ -17504,7 +17504,7 @@ msgstr "主機通訊協定"
 
 #: ../config/model_attributes.rb:1754
 msgid "FirewallRule|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1755
 msgid "FirewallRule|Name"
@@ -17588,7 +17588,7 @@ msgstr "韌體目標"
 
 #: ../config/model_attributes.rb:1782
 msgid "FirmwareBinaryFirmwareTarget|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1783
 msgid "FirmwareBinaryFirmwareTarget|Region description"
@@ -17608,7 +17608,7 @@ msgstr "外部參照"
 
 #: ../config/model_attributes.rb:1776
 msgid "FirmwareBinary|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1777
 msgid "FirmwareBinary|Name"
@@ -17628,7 +17628,7 @@ msgstr "版本"
 
 #: ../config/model_attributes.rb:1786
 msgid "FirmwareRegistry|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1787
 msgid "FirmwareRegistry|Last refresh error"
@@ -17652,7 +17652,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1793
 msgid "FirmwareTarget|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1794
 msgid "FirmwareTarget|Manufacturer"
@@ -17681,7 +17681,7 @@ msgstr "建置"
 
 #: ../config/model_attributes.rb:1766
 msgid "Firmware|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1767
 msgid "Firmware|Name"
@@ -17838,7 +17838,7 @@ msgstr "暫時磁碟大小"
 
 #: ../config/model_attributes.rb:1808
 msgid "Flavor|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1809
 msgid "Flavor|Memory"
@@ -17974,7 +17974,7 @@ msgstr "固定 IP 位址"
 
 #: ../config/model_attributes.rb:1826
 msgid "FloatingIp|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1827
 msgid "FloatingIp|Region description"
@@ -18157,7 +18157,7 @@ msgstr "產生報告 [%{name}] 已完成"
 
 #: ../app/models/service_template.rb:94
 msgid "Generic"
-msgstr "一般"
+msgstr "通用"
 
 #. TRANSLATORS: en.yml key: dictionary.model.GenericObject
 #: ../config/model_display_names.rb:126 ../config/dictionary_strings.rb:1476
@@ -18176,7 +18176,7 @@ msgstr[0] "通用物件類別"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/dictionary_strings.rb:1482 ../config/yaml_strings.rb:1403
 msgid "Generic Object Classes"
-msgstr "一般物件類別"
+msgstr "通用物件類別"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/presenters/menu/default_menu.rb:259
@@ -18184,15 +18184,15 @@ msgstr "一般物件類別"
 #: ../app/helpers/service_helper/textual_summary.rb:99
 #: ../config/yaml_strings.rb:1168
 msgid "Generic Objects"
-msgstr "一般物件"
+msgstr "通用物件"
 
 #: ../config/model_attributes.rb:1830
 msgid "Generic object"
-msgstr "一般物件"
+msgstr "通用物件"
 
 #: ../config/model_attributes.rb:1838
 msgid "Generic object definition"
-msgstr "一般物件定義"
+msgstr "通用物件定義"
 
 #: ../config/model_attributes.rb:1839
 msgid "GenericObjectDefinition|Description"
@@ -18200,11 +18200,11 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1840
 msgid "GenericObjectDefinition|Generic objects count"
-msgstr "一般物件計數"
+msgstr "通用物件計數"
 
 #: ../config/model_attributes.rb:1841
 msgid "GenericObjectDefinition|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1842
 msgid "GenericObjectDefinition|Name"
@@ -18224,11 +18224,11 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1831
 msgid "GenericObject|Generic object definition name"
-msgstr "一般物件定義名稱"
+msgstr "通用物件定義名稱"
 
 #: ../config/model_attributes.rb:1832
 msgid "GenericObject|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1833
 msgid "GenericObject|Name"
@@ -18292,7 +18292,7 @@ msgstr "確定時間"
 
 #: ../config/model_attributes.rb:1850
 msgid "GitReference|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1851
 msgid "GitReference|Name"
@@ -18312,7 +18312,7 @@ msgstr "鑑別狀態"
 
 #: ../config/model_attributes.rb:1856
 msgid "GitRepository|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1857
 msgid "GitRepository|Last refresh on"
@@ -18532,15 +18532,15 @@ msgstr "Windows 的訪客作業系統密碼資訊"
 
 #: ../config/model_attributes.rb:1863
 msgid "Guest application"
-msgstr "來賓應用程式"
+msgstr "訪客應用程式"
 
 #: ../config/model_attributes.rb:1884
 msgid "Guest device"
-msgstr "來賓裝置"
+msgstr "訪客裝置"
 
 #: ../config/model_attributes.rb:1864
 msgid "GuestApplication|Arch"
-msgstr "架構"
+msgstr "訪客應用程式|架構"
 
 #: ../config/model_attributes.rb:1865
 msgid "GuestApplication|Build time"
@@ -18552,7 +18552,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:1867
 msgid "GuestApplication|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1868
 msgid "GuestApplication|Install time"
@@ -18644,7 +18644,7 @@ msgstr "裝置類型"
 
 #: ../config/model_attributes.rb:1891
 msgid "GuestDevice|Ems ref"
-msgstr "Ems 參照"
+msgstr "EMS 參照"
 
 #: ../config/model_attributes.rb:1892
 msgid "GuestDevice|Field replaceable unit"
@@ -18660,7 +18660,7 @@ msgstr "可用空間"
 
 #: ../config/model_attributes.rb:1895
 msgid "GuestDevice|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1896
 msgid "GuestDevice|Iscsi alias"
@@ -18720,7 +18720,7 @@ msgstr "開始連接"
 
 #: ../config/model_attributes.rb:1910
 msgid "GuestDevice|Uid ems"
-msgstr "Uid ems"
+msgstr "UID EMS"
 
 #: ../config/model_attributes.rb:1911
 msgid "GuestDevice|Vlan enabled"
@@ -18732,7 +18732,7 @@ msgstr "Vlan 金鑰"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:209
 msgid "HA Admit Control"
-msgstr "HA 附加控制"
+msgstr "HA 允許控制"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:203
 msgid "HA Enabled"
@@ -18909,7 +18909,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:1934
 msgid "Hardware|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:1935
 msgid "Hardware|Introspected"
@@ -19361,7 +19361,7 @@ msgstr "找不到 ID 為 %{host_id} 的主機"
 
 #: ../config/model_attributes.rb:2110
 msgid "HostAggregateHost|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2111
 msgid "HostAggregateHost|Region description"
@@ -19413,7 +19413,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:2088
 msgid "HostAggregate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2089
 msgid "HostAggregate|Max cpu usage rate average avg over time period"
@@ -19497,7 +19497,7 @@ msgstr "虛擬機器總計"
 
 #: ../config/model_attributes.rb:2114
 msgid "HostServiceGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2115
 msgid "HostServiceGroup|Name"
@@ -19517,7 +19517,7 @@ msgstr "可存取"
 
 #: ../config/model_attributes.rb:2120
 msgid "HostStorage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2121
 msgid "HostStorage|Read only"
@@ -19533,7 +19533,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2125
 msgid "HostSwitch|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2126
 msgid "HostSwitch|Region description"
@@ -19887,7 +19887,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:2018
 msgid "Host|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2019
 msgid "Host|Hyperthreading"
@@ -20454,7 +20454,7 @@ msgstr "匯入/匯出"
 
 #: ../config/model_attributes.rb:2129
 msgid "ImportFileUpload|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2130
 msgid "ImportFileUpload|Region description"
@@ -20806,7 +20806,7 @@ msgstr "Iso 映像"
 
 #: ../config/model_attributes.rb:2133
 msgid "IsoDatastore|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2134
 msgid "IsoDatastore|Last refresh on"
@@ -20826,7 +20826,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2139
 msgid "IsoImage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2140
 msgid "IsoImage|Name"
@@ -20879,7 +20879,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2149
 msgid "Job|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2150
 msgid "Job|Message"
@@ -21099,7 +21099,7 @@ msgstr "偽造傳輸"
 
 #: ../config/model_attributes.rb:2171
 msgid "Lan|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2172
 msgid "Lan|Mac changes"
@@ -21261,7 +21261,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2184
 msgid "LifecycleEvent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2185
 msgid "LifecycleEvent|Location"
@@ -21432,7 +21432,7 @@ msgstr "負載平衡器 (Microsoft Azure)"
 
 #: ../config/model_attributes.rb:2219
 msgid "LoadBalancerHealthCheckMember|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2220
 msgid "LoadBalancerHealthCheckMember|Region description"
@@ -21460,7 +21460,7 @@ msgstr "性能臨界值"
 
 #: ../config/model_attributes.rb:2207
 msgid "LoadBalancerHealthCheck|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2208
 msgid "LoadBalancerHealthCheck|Interval"
@@ -21504,7 +21504,7 @@ msgstr "URL 路徑"
 
 #: ../config/model_attributes.rb:2237
 msgid "LoadBalancerListenerPool|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2238
 msgid "LoadBalancerListenerPool|Region description"
@@ -21524,7 +21524,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:2227
 msgid "LoadBalancerListener|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2228
 msgid "LoadBalancerListener|Instance port range"
@@ -21560,7 +21560,7 @@ msgstr "虛擬機器總計"
 
 #: ../config/model_attributes.rb:2260
 msgid "LoadBalancerPoolMemberPool|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2261
 msgid "LoadBalancerPoolMemberPool|Region description"
@@ -21580,7 +21580,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:2253
 msgid "LoadBalancerPoolMember|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2254
 msgid "LoadBalancerPoolMember|Load balancer health check states"
@@ -21612,7 +21612,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:2243
 msgid "LoadBalancerPool|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2244
 msgid "LoadBalancerPool|Load balancer algorithm"
@@ -21653,7 +21653,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:2193
 msgid "LoadBalancer|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2194
 msgid "LoadBalancer|Name"
@@ -21787,7 +21787,7 @@ msgstr "歷程"
 
 #: ../config/model_attributes.rb:2267
 msgid "LogFile|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2268
 msgid "LogFile|Local file"
@@ -21978,7 +21978,7 @@ msgstr "管理儲存器提供者的原則"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1459
 msgid "Manage Policies of Generic Objects"
-msgstr "管理一般物件的原則"
+msgstr "管理通用物件的原則"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:624
@@ -23206,7 +23206,7 @@ msgstr "磁碟使用率平均值"
 
 #: ../config/model_attributes.rb:2436
 msgid "MetricRollup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2437
 msgid "MetricRollup|Intervals in rollup"
@@ -23442,7 +23442,7 @@ msgstr "狀態儲存器群組刪除速率上限"
 
 #: ../config/model_attributes.rb:2495
 msgid "MetricRollup|Max stat container image registration rate"
-msgstr "狀態容器映像檔登錄速率上限"
+msgstr "狀態儲存器映像檔登錄速率上限"
 
 #: ../config/model_attributes.rb:2496
 msgid "MetricRollup|Max sys uptime absolute latest"
@@ -23710,7 +23710,7 @@ msgstr "狀態儲存器群組刪除速率下限"
 
 #: ../config/model_attributes.rb:2562
 msgid "MetricRollup|Min stat container image registration rate"
-msgstr "狀態容器映像檔登錄速率下限"
+msgstr "狀態儲存器映像檔登錄速率下限"
 
 #: ../config/model_attributes.rb:2563
 msgid "MetricRollup|Min sys uptime absolute latest"
@@ -23746,7 +23746,7 @@ msgstr "狀態儲存器群組刪除速率"
 
 #: ../config/model_attributes.rb:2571
 msgid "MetricRollup|Stat container image registration rate"
-msgstr "狀態容器映像檔登錄速率"
+msgstr "狀態儲存器映像檔登錄速率"
 
 #: ../config/model_attributes.rb:2572
 msgid "MetricRollup|Sys uptime absolute latest"
@@ -24024,7 +24024,7 @@ msgstr "磁碟使用率平均值"
 
 #: ../config/model_attributes.rb:2330
 msgid "Metric|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2331
 msgid "Metric|Intervals in rollup"
@@ -24466,7 +24466,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2604
 msgid "MiqActionSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2605
 msgid "MiqActionSet|Mode"
@@ -24530,7 +24530,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2593
 msgid "MiqAction|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2594
 msgid "MiqAction|Name"
@@ -24574,7 +24574,7 @@ msgstr "Fq 名稱"
 
 #: ../config/model_attributes.rb:2620
 msgid "MiqAeClass|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2621
 msgid "MiqAeClass|Inherits"
@@ -24654,7 +24654,7 @@ msgstr "顯示名稱"
 
 #: ../config/model_attributes.rb:2641
 msgid "MiqAeField|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2642
 msgid "MiqAeField|Max retries"
@@ -24734,7 +24734,7 @@ msgstr "顯示名稱"
 
 #: ../config/model_attributes.rb:2662
 msgid "MiqAeInstance|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2663
 msgid "MiqAeInstance|Inherits"
@@ -24794,7 +24794,7 @@ msgstr "內嵌方法"
 
 #: ../config/model_attributes.rb:2678
 msgid "MiqAeMethod|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2679
 msgid "MiqAeMethod|Language"
@@ -24878,7 +24878,7 @@ msgstr "已啟用"
 
 #: ../config/model_attributes.rb:2700
 msgid "MiqAeNamespace|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2701
 msgid "MiqAeNamespace|Last import on"
@@ -24954,7 +24954,7 @@ msgstr "顯示名稱"
 
 #: ../config/model_attributes.rb:2720
 msgid "MiqAeValue|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2721
 msgid "MiqAeValue|Max retries"
@@ -25006,7 +25006,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2734
 msgid "MiqAeWorkspace|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2735
 msgid "MiqAeWorkspace|Region description"
@@ -25046,7 +25046,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2767
 msgid "MiqAlertSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2768
 msgid "MiqAlertSet|Mode"
@@ -25098,7 +25098,7 @@ msgstr "註解"
 
 #: ../config/model_attributes.rb:2796
 msgid "MiqAlertStatusAction|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2797
 msgid "MiqAlertStatusAction|Region description"
@@ -25134,7 +25134,7 @@ msgstr "隱藏"
 
 #: ../config/model_attributes.rb:2785
 msgid "MiqAlertStatus|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2786
 msgid "MiqAlertStatus|Region description"
@@ -25198,7 +25198,7 @@ msgstr "雜湊表示式"
 
 #: ../config/model_attributes.rb:2750
 msgid "MiqAlert|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2751
 msgid "MiqAlert|Miq expression"
@@ -25266,7 +25266,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:2804
 msgid "MiqApproval|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2805
 msgid "MiqApproval|Reason"
@@ -25314,7 +25314,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2817
 msgid "MiqDatabase|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2818
 msgid "MiqDatabase|Postgres update available"
@@ -25378,7 +25378,7 @@ msgstr "檔名"
 
 #: ../config/model_attributes.rb:2834
 msgid "MiqDialog|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2835
 msgid "MiqDialog|Name"
@@ -25442,7 +25442,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:2851
 msgid "MiqEnterprise|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2852
 msgid "MiqEnterprise|Max cpu usage rate average avg over time period"
@@ -25538,7 +25538,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2889
 msgid "MiqEventDefinitionSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2890
 msgid "MiqEventDefinitionSet|Mode"
@@ -25610,7 +25610,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2880
 msgid "MiqEventDefinition|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2881
 msgid "MiqEventDefinition|Name"
@@ -25630,7 +25630,7 @@ msgstr "更新時間"
 
 #: ../app/models/miq_widget/content_generator.rb:50
 msgid "MiqGroup %{description} was not found"
-msgstr "找不到 MiqGroup %{description}"
+msgstr "找不到 Miq 群組 %{description}"
 
 #: ../config/model_attributes.rb:2901
 msgid "MiqGroup|Allocated memory"
@@ -25698,7 +25698,7 @@ msgstr "群組類型"
 
 #: ../config/model_attributes.rb:2917
 msgid "MiqGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2918
 msgid "MiqGroup|Miq user role name"
@@ -25750,7 +25750,7 @@ msgstr "失敗同步"
 
 #: ../config/model_attributes.rb:2948
 msgid "MiqPolicyContent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2949
 msgid "MiqPolicyContent|Qualifier"
@@ -25790,7 +25790,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2959
 msgid "MiqPolicySet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2960
 msgid "MiqPolicySet|Mode"
@@ -25858,7 +25858,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2934
 msgid "MiqPolicy|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2935
 msgid "MiqPolicy|Mode"
@@ -25898,7 +25898,7 @@ msgstr "更新時間"
 
 #: ../config/model_attributes.rb:2982
 msgid "MiqProductFeaturesShare|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2983
 msgid "MiqProductFeaturesShare|Region description"
@@ -25922,7 +25922,7 @@ msgstr "隱藏"
 
 #: ../config/model_attributes.rb:2974
 msgid "MiqProductFeature|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2975
 msgid "MiqProductFeature|Identifier"
@@ -25974,7 +25974,7 @@ msgstr "處理程式類型"
 
 #: ../config/model_attributes.rb:2992
 msgid "MiqQueue|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:2993
 msgid "MiqQueue|Lock version"
@@ -26086,7 +26086,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:3021
 msgid "MiqRegion|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3022
 msgid "MiqRegion|Max cpu usage rate average avg over time period"
@@ -26170,7 +26170,7 @@ msgstr "資料類型"
 
 #: ../config/model_attributes.rb:3099
 msgid "MiqReportResultDetail|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3100
 msgid "MiqReportResultDetail|Region description"
@@ -26190,7 +26190,7 @@ msgstr "資料庫"
 
 #: ../config/model_attributes.rb:3082
 msgid "MiqReportResult|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3083
 msgid "MiqReportResult|Last accessed on"
@@ -26326,7 +26326,7 @@ msgstr "標頭"
 
 #: ../config/model_attributes.rb:3061
 msgid "MiqReport|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3062
 msgid "MiqReport|Human expression"
@@ -26414,7 +26414,7 @@ msgstr "目的地類型"
 
 #: ../config/model_attributes.rb:3137
 msgid "MiqRequestTask|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3138
 msgid "MiqRequestTask|Message"
@@ -26490,7 +26490,7 @@ msgstr "履行時間"
 
 #: ../config/model_attributes.rb:3109
 msgid "MiqRequest|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3110
 msgid "MiqRequest|Initiated by"
@@ -26602,7 +26602,7 @@ msgstr "過濾器"
 
 #: ../config/model_attributes.rb:3156
 msgid "MiqSchedule|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3157
 msgid "MiqSchedule|Last run on"
@@ -26682,7 +26682,7 @@ msgstr "裝置類型"
 
 #: ../config/model_attributes.rb:3177
 msgid "MiqScsiLun|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3178
 msgid "MiqScsiLun|Lun"
@@ -26710,7 +26710,7 @@ msgstr "位址"
 
 #: ../config/model_attributes.rb:3185
 msgid "MiqScsiTarget|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3186
 msgid "MiqScsiTarget|Iscsi alias"
@@ -26750,7 +26750,7 @@ msgstr "過濾器"
 
 #: ../config/model_attributes.rb:3196
 msgid "MiqSearch|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3197
 msgid "MiqSearch|Name"
@@ -26822,7 +26822,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:3215
 msgid "MiqServer|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3216
 msgid "MiqServer|Ipaddress"
@@ -26958,7 +26958,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:3250
 msgid "MiqShortcut|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3251
 msgid "MiqShortcut|Name"
@@ -27014,7 +27014,7 @@ msgstr "建立時間"
 
 #: ../config/model_attributes.rb:3261
 msgid "MiqTask|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3262
 msgid "MiqTask|Identifier"
@@ -27078,7 +27078,7 @@ msgstr "群組計數"
 
 #: ../config/model_attributes.rb:3278
 msgid "MiqUserRole|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3279
 msgid "MiqUserRole|Name"
@@ -27110,7 +27110,7 @@ msgstr "內容"
 
 #: ../config/model_attributes.rb:3305
 msgid "MiqWidgetContent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3306
 msgid "MiqWidgetContent|Region description"
@@ -27138,7 +27138,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:3313
 msgid "MiqWidgetSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3314
 msgid "MiqWidgetSet|Mode"
@@ -27186,7 +27186,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:3326
 msgid "MiqWidgetShortcut|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3327
 msgid "MiqWidgetShortcut|Region description"
@@ -27218,7 +27218,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:3290
 msgid "MiqWidget|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3291
 msgid "MiqWidget|Last generated content on"
@@ -27306,7 +27306,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:3334
 msgid "MiqWorker|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3335
 msgid "MiqWorker|Last heartbeat"
@@ -27461,7 +27461,7 @@ msgstr "修改型錄項目"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1041
 msgid "Modify Chargeback Rates"
-msgstr "修改退款率"
+msgstr "修改計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:412
@@ -27556,12 +27556,12 @@ msgstr "修改浮動 IP"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1413
 msgid "Modify Generic Object Classes"
-msgstr "修改一般物件類別"
+msgstr "修改通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1461
 msgid "Modify Generic Objects"
-msgstr "修改一般物件"
+msgstr "修改通用物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1611
@@ -28583,7 +28583,7 @@ msgstr "已啟用"
 
 #: ../config/model_attributes.rb:3381
 msgid "NetworkGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3382
 msgid "NetworkGroup|Name"
@@ -28603,7 +28603,7 @@ msgstr "狀態"
 
 #: ../config/model_attributes.rb:3412
 msgid "NetworkPortSecurityGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3413
 msgid "NetworkPortSecurityGroup|Region description"
@@ -28679,7 +28679,7 @@ msgstr "浮動 IP 位址"
 
 #: ../config/model_attributes.rb:3403
 msgid "NetworkPort|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3404
 msgid "NetworkPort|Ipaddresses"
@@ -28735,7 +28735,7 @@ msgstr "高可用性"
 
 #: ../config/model_attributes.rb:3422
 msgid "NetworkRouter|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3423
 msgid "NetworkRouter|Main route table"
@@ -28877,7 +28877,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:3369
 msgid "Network|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3370
 msgid "Network|Ipaddress"
@@ -28929,7 +28929,7 @@ msgstr "未指定日期/時間值"
 
 #: ../app/models/generic_object_definition/import_export.rb:8
 msgid "No Generic Object Definition to Import"
-msgstr "沒有要匯入的一般物件定義"
+msgstr "沒有要匯入的通用物件定義"
 
 #: ../app/models/miq_policy/import_export.rb:8
 msgid "No Policy to Import"
@@ -29133,7 +29133,7 @@ msgstr "詳細資料"
 
 #: ../config/model_attributes.rb:3459
 msgid "NotificationRecipient|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3460
 msgid "NotificationRecipient|Region description"
@@ -29157,7 +29157,7 @@ msgstr "到期時間"
 
 #: ../config/model_attributes.rb:3466
 msgid "NotificationType|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3467
 msgid "NotificationType|Level"
@@ -29194,7 +29194,7 @@ msgstr "原因類型"
 
 #: ../config/model_attributes.rb:3452
 msgid "Notification|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3453
 msgid "Notification|Options"
@@ -29505,7 +29505,7 @@ msgstr "Openscap 規則結果"
 
 #: ../config/model_attributes.rb:3474
 msgid "OpenscapResult|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3475
 msgid "OpenscapResult|Region description"
@@ -29525,7 +29525,7 @@ msgstr "Cves"
 
 #: ../config/model_attributes.rb:3480
 msgid "OpenscapRuleResult|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3481
 msgid "OpenscapRuleResult|Name"
@@ -29608,7 +29608,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:3515
 msgid "OperatingSystemFlavor|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3516
 msgid "OperatingSystemFlavor|Manager ref"
@@ -29640,7 +29640,7 @@ msgstr "配送"
 
 #: ../config/model_attributes.rb:3491
 msgid "OperatingSystem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3492
 msgid "OperatingSystem|Kernel version"
@@ -29896,7 +29896,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3554
 msgid "OrchestrationStackOutput|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3555
 msgid "OrchestrationStackOutput|Key"
@@ -29920,7 +29920,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3561
 msgid "OrchestrationStackParameter|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3562
 msgid "OrchestrationStackParameter|Name"
@@ -29952,7 +29952,7 @@ msgstr "完成時間"
 
 #: ../config/model_attributes.rb:3570
 msgid "OrchestrationStackResource|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3571
 msgid "OrchestrationStackResource|Last updated"
@@ -30028,7 +30028,7 @@ msgstr "主機"
 
 #: ../config/model_attributes.rb:3529
 msgid "OrchestrationStack|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3530
 msgid "OrchestrationStack|Name"
@@ -30132,7 +30132,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3586
 msgid "OrchestrationTemplate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3587
 msgid "OrchestrationTemplate|Md5"
@@ -30202,7 +30202,7 @@ msgstr "建立時間"
 
 #: ../config/model_attributes.rb:3595
 msgid "OsProcess|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3596
 msgid "OsProcess|Memory size"
@@ -30443,7 +30443,7 @@ msgstr "可用空間"
 
 #: ../config/model_attributes.rb:3611
 msgid "Partition|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3612
 msgid "Partition|Location"
@@ -30559,7 +30559,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:3627
 msgid "Patch|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3628
 msgid "Patch|Installed"
@@ -30825,7 +30825,7 @@ msgstr "對浮動 IP 執行作業"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1455
 msgid "Perform Operations on Generic Objects"
-msgstr "對一般物件執行作業"
+msgstr "對通用物件執行作業"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:378
@@ -31278,7 +31278,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3644
 msgid "PersistentVolumeClaim|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3645
 msgid "PersistentVolumeClaim|Limits"
@@ -31550,7 +31550,7 @@ msgstr "性能狀態"
 
 #: ../config/model_attributes.rb:3658
 msgid "PhysicalChassis|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3659
 msgid "PhysicalChassis|Management module slot count"
@@ -31606,7 +31606,7 @@ msgstr "性能狀態"
 
 #: ../config/model_attributes.rb:3673
 msgid "PhysicalDisk|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3674
 msgid "PhysicalDisk|Location"
@@ -31646,7 +31646,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3684
 msgid "PhysicalNetworkPort|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3685
 msgid "PhysicalNetworkPort|Mac address"
@@ -31698,7 +31698,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3698
 msgid "PhysicalRack|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3699
 msgid "PhysicalRack|Name"
@@ -31750,7 +31750,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:3712
 msgid "PhysicalServer|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3713
 msgid "PhysicalServer|Machine type"
@@ -31858,7 +31858,7 @@ msgstr "性能狀態"
 
 #: ../config/model_attributes.rb:3734
 msgid "PhysicalStorage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3735
 msgid "PhysicalStorage|Name"
@@ -31904,7 +31904,7 @@ msgstr "副檔名"
 
 #: ../config/model_attributes.rb:3751
 msgid "Picture|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3752
 msgid "Picture|Md5"
@@ -32284,7 +32284,7 @@ msgstr "原則已不再存在"
 
 #: ../config/model_attributes.rb:3769
 msgid "PolicyEventContent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3770
 msgid "PolicyEventContent|Region description"
@@ -32308,7 +32308,7 @@ msgstr "事件類型"
 
 #: ../config/model_attributes.rb:3758
 msgid "PolicyEvent|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3759
 msgid "PolicyEvent|Miq event definition description"
@@ -32907,7 +32907,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3777
 msgid "Provider|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3778
 msgid "Provider|Name"
@@ -33101,7 +33101,7 @@ msgstr "PXE 伺服器"
 
 #: ../config/model_attributes.rb:3803
 msgid "PxeImageType|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3804
 msgid "PxeImageType|Name"
@@ -33129,7 +33129,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:3794
 msgid "PxeImage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3795
 msgid "PxeImage|Initrd"
@@ -33169,7 +33169,7 @@ msgstr "檔案名稱"
 
 #: ../config/model_attributes.rb:3811
 msgid "PxeMenu|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3812
 msgid "PxeMenu|Region description"
@@ -33193,7 +33193,7 @@ msgstr "自訂作業目錄"
 
 #: ../config/model_attributes.rb:3818
 msgid "PxeServer|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3819
 msgid "PxeServer|Last refresh on"
@@ -33829,7 +33829,7 @@ msgstr "格式"
 
 #: ../config/model_attributes.rb:3832
 msgid "RegistryItem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3833
 msgid "RegistryItem|Name"
@@ -33939,7 +33939,7 @@ msgstr "先例"
 
 #: ../config/model_attributes.rb:3840
 msgid "Relationship|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3841
 msgid "Relationship|Region description"
@@ -34081,12 +34081,12 @@ msgstr "移除浮動 IP"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1415
 msgid "Remove Generic Object Classes"
-msgstr "修改一般物件類別"
+msgstr "修改通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1463
 msgid "Remove Generic Objects"
-msgstr "移除一般物件"
+msgstr "移除通用物件"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:394
@@ -34647,7 +34647,7 @@ msgstr "配置範本類型"
 
 #: ../config/model_attributes.rb:3856
 msgid "ResourceAction|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3857
 msgid "ResourceAction|Region description"
@@ -34667,7 +34667,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3862
 msgid "ResourceGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3863
 msgid "ResourceGroup|Name"
@@ -34747,7 +34747,7 @@ msgstr "具有原則"
 
 #: ../config/model_attributes.rb:3883
 msgid "ResourcePool|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3884
 msgid "ResourcePool|Is default"
@@ -35277,7 +35277,7 @@ msgstr "完成時間"
 
 #: ../config/model_attributes.rb:3908
 msgid "ScanHistory|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3909
 msgid "ScanHistory|Message"
@@ -35321,7 +35321,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3935
 msgid "ScanItemSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3936
 msgid "ScanItemSet|Mode"
@@ -35389,7 +35389,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3923
 msgid "ScanItem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3924
 msgid "ScanItem|Item type"
@@ -35421,7 +35421,7 @@ msgstr "更新時間"
 
 #: ../config/model_attributes.rb:3947
 msgid "ScanResult|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3948
 msgid "ScanResult|Region description"
@@ -35665,7 +35665,7 @@ msgstr "安全原則規則來源安全群組"
 
 #: ../config/model_attributes.rb:3955
 msgid "SecurityContext|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3956
 msgid "SecurityContext|Region description"
@@ -35705,7 +35705,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:3966
 msgid "SecurityGroup|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:3967
 msgid "SecurityGroup|Name"
@@ -35918,7 +35918,7 @@ msgstr "外部失效接手"
 
 #: ../config/model_attributes.rb:4013
 msgid "ServerRole|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4014
 msgid "ServerRole|Max concurrent"
@@ -36203,7 +36203,7 @@ msgstr "額外"
 
 #: ../config/model_attributes.rb:4100
 msgid "ServiceInstance|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4101
 msgid "ServiceInstance|Name"
@@ -36235,7 +36235,7 @@ msgstr "額外"
 
 #: ../config/model_attributes.rb:4109
 msgid "ServiceOffering|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4110
 msgid "ServiceOffering|Name"
@@ -36251,7 +36251,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4114
 msgid "ServiceOrder|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4115
 msgid "ServiceOrder|Name"
@@ -36295,7 +36295,7 @@ msgstr "額外"
 
 #: ../config/model_attributes.rb:4126
 msgid "ServiceParametersSet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4127
 msgid "ServiceParametersSet|Name"
@@ -36315,7 +36315,7 @@ msgstr "群組 idx"
 
 #: ../config/model_attributes.rb:4132
 msgid "ServiceResource|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4133
 msgid "ServiceResource|Name"
@@ -36387,7 +36387,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4179
 msgid "ServiceTemplateCatalog|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4180
 msgid "ServiceTemplateCatalog|Name"
@@ -36403,7 +36403,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4184
 msgid "ServiceTemplateTenant|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4185
 msgid "ServiceTemplateTenant|Region description"
@@ -36455,7 +36455,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:4160
 msgid "ServiceTemplate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4161
 msgid "ServiceTemplate|Internal"
@@ -36698,7 +36698,7 @@ msgstr "具有母項"
 
 #: ../config/model_attributes.rb:4059
 msgid "Service|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4060
 msgid "Service|Initiator"
@@ -36965,7 +36965,7 @@ msgstr "設定變更"
 
 #: ../config/model_attributes.rb:4188
 msgid "SettingsChange|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4189
 msgid "SettingsChange|Key"
@@ -37008,7 +37008,7 @@ msgstr "容許租戶繼承"
 
 #: ../config/model_attributes.rb:4196
 msgid "Share|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4197
 msgid "Share|Region description"
@@ -37453,7 +37453,7 @@ msgstr "檔名"
 
 #: ../config/model_attributes.rb:4209
 msgid "Snapshot|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4210
 msgid "Snapshot|Name"
@@ -37939,7 +37939,7 @@ msgstr "副檔名"
 
 #: ../config/model_attributes.rb:4295
 msgid "StorageFile|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4296
 msgid "StorageFile|Mtime"
@@ -37971,7 +37971,7 @@ msgstr "V 大小數值"
 
 #: ../config/model_attributes.rb:4311
 msgid "StorageProfileStorage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4312
 msgid "StorageProfileStorage|Region description"
@@ -37987,7 +37987,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:4305
 msgid "StorageProfile|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4306
 msgid "StorageProfile|Name"
@@ -38155,7 +38155,7 @@ msgstr "可用空間"
 
 #: ../config/model_attributes.rb:4236
 msgid "Storage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4237
 msgid "Storage|Last perf capture on"
@@ -38417,7 +38417,7 @@ msgstr "Ems 參照"
 
 #: ../config/model_attributes.rb:4340
 msgid "Subnet|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4341
 msgid "Subnet|Name"
@@ -38561,7 +38561,7 @@ msgstr "性能狀態"
 
 #: ../config/model_attributes.rb:4349
 msgid "Switch|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4350
 msgid "Switch|Mac changes"
@@ -38654,7 +38654,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:4363
 msgid "SystemConsole|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4364
 msgid "SystemConsole|Opened"
@@ -38730,7 +38730,7 @@ msgstr "啟用執行層次"
 
 #: ../config/model_attributes.rb:4383
 msgid "SystemService|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4384
 msgid "SystemService|Image path"
@@ -38814,7 +38814,7 @@ msgstr[0] "標記"
 
 #: ../config/model_attributes.rb:4402
 msgid "Tagging|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4403
 msgid "Tagging|Region description"
@@ -38840,7 +38840,7 @@ msgstr "標籤"
 
 #: ../config/model_attributes.rb:4397
 msgid "Tag|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4398
 msgid "Tag|Name"
@@ -38998,7 +38998,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4437
 msgid "TenantQuota|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4438
 msgid "TenantQuota|Name"
@@ -39075,7 +39075,7 @@ msgstr "網域"
 
 #: ../config/model_attributes.rb:4415
 msgid "Tenant|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4416
 msgid "Tenant|Login logo content type"
@@ -39454,7 +39454,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4449
 msgid "TimeProfile|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4450
 msgid "TimeProfile|Profile"
@@ -39804,7 +39804,7 @@ msgstr "目的地類型"
 
 #: ../config/model_attributes.rb:4468
 msgid "TransformationMappingItem|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4469
 msgid "TransformationMappingItem|Options"
@@ -39832,7 +39832,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4460
 msgid "TransformationMapping|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4461
 msgid "TransformationMapping|Name"
@@ -41000,7 +41000,7 @@ msgstr "名字"
 
 #: ../config/model_attributes.rb:4490
 msgid "User|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4491
 msgid "User|Icon"
@@ -42204,7 +42204,7 @@ msgstr "檢視型錄"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1035
 msgid "View Chargeback Rates"
-msgstr "檢視退款率"
+msgstr "檢視計費費率"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2030
@@ -42379,12 +42379,12 @@ msgstr "檢視浮動 IP"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1407
 msgid "View Generic Object Classes"
-msgstr "檢視一般物件類別"
+msgstr "檢視通用物件類別"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1449
 msgid "View Generic Objects"
-msgstr "檢視一般物件"
+msgstr "檢視通用物件"
 
 #: ../app/views/ems_container/ad_hoc/_list_view_form.html.haml:32
 msgid "View Graph"
@@ -42824,7 +42824,7 @@ msgstr "日"
 
 #: ../config/model_attributes.rb:4508
 msgid "VimPerformanceOperatingRange|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4509
 msgid "VimPerformanceOperatingRange|Region description"
@@ -42848,7 +42848,7 @@ msgstr "擷取間隔"
 
 #: ../config/model_attributes.rb:4515
 msgid "VimPerformanceState|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4516
 msgid "VimPerformanceState|Region description"
@@ -43534,7 +43534,7 @@ msgstr "主機名稱"
 
 #: ../config/model_attributes.rb:4650
 msgid "VmOrTemplate|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4651
 msgid "VmOrTemplate|Ipaddresses"
@@ -43862,7 +43862,7 @@ msgstr "需要重新啟動"
 
 #: ../config/model_attributes.rb:4732
 msgid "VmOrTemplate|Retired"
-msgstr "已退休"
+msgstr "已淘汰"
 
 #: ../config/model_attributes.rb:4733
 msgid "VmOrTemplate|Retirement last warn"
@@ -44232,7 +44232,7 @@ msgstr "可用空間百分比"
 
 #: ../config/model_attributes.rb:4792
 msgid "Volume|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4793
 msgid "Volume|Name"
@@ -44386,7 +44386,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4805
 msgid "WindowsImage|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4806
 msgid "WindowsImage|Index"
@@ -44591,7 +44591,7 @@ msgstr "說明"
 
 #: ../config/model_attributes.rb:4831
 msgid "Zone|Href slug"
-msgstr "Href slug"
+msgstr "Href Slug"
 
 #: ../config/model_attributes.rb:4832
 msgid "Zone|Max cpu usage rate average avg over time period"
@@ -44679,7 +44679,7 @@ msgstr "可見"
 
 #: ../app/models/generic_object_definition.rb:85
 msgid "[%{attrs}]: not searchable for Generic Object of %{name}"
-msgstr "[%{attrs}]：無法搜尋 %{name} 的一般物件"
+msgstr "[%{attrs}]：無法搜尋 %{name} 的通用物件"
 
 #: ../app/models/log_file.rb:261
 msgid "_post_my_logs not implemented for %{server_name}"
@@ -45822,7 +45822,7 @@ msgstr "未連接至 ems"
 
 #: ../lib/manageiq/providers/ansible_tower/engine.rb:14
 msgid "Ansible Tower Provider"
-msgstr "Ansible 塔架提供者"
+msgstr "Ansible Tower 提供者"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/workflow_job.rb:42
@@ -48338,7 +48338,7 @@ msgstr "%{name}（所有%{title}）"
 
 #: ../app/controllers/service_controller.rb:191
 msgid "%{name} (All Generic Objects)"
-msgstr "%{name}（所有一般物件）"
+msgstr "%{name}（所有通用物件）"
 
 #: ../app/controllers/mixins/more_show_actions.rb:47
 msgid "%{name} (Compliance History - Last %{number} Checks)"
@@ -50280,7 +50280,7 @@ msgstr "新增浮動 IP"
 #: ../app/controllers/generic_object_definition_controller.rb:76
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:11
 msgid "Add a new Generic Object Definition"
-msgstr "新增一般物件定義"
+msgstr "新增通用物件定義"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:12
 msgid "Add a new Group"
@@ -50403,7 +50403,7 @@ msgstr "新增時間設定檔"
 
 #: ../app/javascript/components/provider-form/index.jsx:122
 msgid "Add of %s was cancelled by the user"
-msgstr "使用者已取消新增 %s"
+msgstr "使用者已取消新增%s"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1177
 msgid "Add of Automate Method was cancelled by the user"
@@ -51612,11 +51612,11 @@ msgstr "Ansible 教戰手冊"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1281
 msgid "Ansible Tower Configured System"
-msgstr "Ansible 塔架配置系統"
+msgstr "Ansible Tower 配置系統"
 
 #: ../app/presenters/tree_builder_automation_manager_configured_systems.rb:19
 msgid "Ansible Tower Configured Systems"
-msgstr "Ansible Tower 已配置系統"
+msgstr "Ansible Tower 配置系統"
 
 #: ../app/helpers/miq_ae_class_helper.rb:143
 msgid "Ansible Tower Job Template"
@@ -51631,7 +51631,7 @@ msgstr "Ansible Tower 範本"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager_ConfigurationScript.yaml
 #: ../config/yaml_strings.rb:1013
 msgid "Ansible Tower Templates"
-msgstr "Ansible 塔架範本"
+msgstr "Ansible Tower 範本"
 
 #: ../app/helpers/miq_ae_class_helper.rb:145
 msgid "Ansible Tower Workflow Template"
@@ -53478,7 +53478,7 @@ msgstr "變更為遠端抄寫角色將移除所有現行訂閱"
 
 #: ../app/controllers/chargeback_assignment_controller.rb:15
 msgid "Chargeback Assignments"
-msgstr "退款指派"
+msgstr "計費指派"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:43
 msgid "Chargeback Filters"
@@ -53507,7 +53507,7 @@ msgstr "記帳資源"
 
 #: ../app/controllers/chargeback_report_controller.rb:28
 msgid "Chargeback Saved Reports"
-msgstr "退款節約報告"
+msgstr "計費節約報告"
 
 #: ../app/controllers/vm_common.rb:1457
 msgid "Chargeback preview for \"%{vm_name}\""
@@ -54379,12 +54379,12 @@ msgstr "雲端磁區 Snapshot 建立失敗：作業啟動失敗：ID [%{id}]"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #: ../config/yaml_strings.rb:1469
 msgid "CloudFormations Orchestration Template"
-msgstr "雲端格式編排範本"
+msgstr "CloudFormation 編排範本"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Amazon_CloudManager_OrchestrationTemplate.yaml
 #: ../config/yaml_strings.rb:1467
 msgid "CloudFormations Orchestration Templates"
-msgstr "雲端格式編排範本"
+msgstr "CloudFormation 編排範本"
 
 #: ../app/views/pxe/_template_form.html.haml:38
 msgid "CloudInit"
@@ -54915,7 +54915,7 @@ msgstr "配置系統主控台存取失敗：作業啟動失敗"
 
 #: ../app/presenters/tree_node/configured_system.rb:4
 msgid "Configured System: %{hostname}"
-msgstr "已配置系統：%{hostname}"
+msgstr "配置系統：%{hostname}"
 
 #: ../app/controllers/automation_manager_controller.rb:445
 msgid "Configured Systems under Inventory Group \"%{name}\""
@@ -54924,13 +54924,13 @@ msgstr "已在庫存群組 \"%{name}\" 下配置系統"
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1471
 msgid "ConfiguredSystem"
-msgstr "已配置系統"
+msgstr "配置系統"
 
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1284
 msgid "ConfiguredSystems"
-msgstr "已配置系統"
+msgstr "配置系統"
 
 #: ../app/javascript/react/screens/App/common/ConfirmModal.js:70
 msgid "Confirm"
@@ -55128,7 +55128,7 @@ msgstr "儲存器建置"
 #. TRANSLATORS: file: product/views/ContainerImage.yaml
 #: ../config/yaml_strings.rb:803
 msgid "ContainerImage"
-msgstr "容器映像檔"
+msgstr "儲存器映像檔"
 
 #. TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
 #: ../config/yaml_strings.rb:1214
@@ -55424,7 +55424,7 @@ msgstr "複製到相同的路徑"
 
 #: ../app/controllers/catalog_controller.rb:689
 msgid "Copying %{record_name}"
-msgstr "正在複製 %{record_name}"
+msgstr "複製 %{record_name}"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:407
 msgid "Copying Dialog \"%{name}\""
@@ -57818,7 +57818,7 @@ msgstr "編輯所選浮動 IP 的標籤"
 
 #: ../app/helpers/application_helper/toolbar/generic_objects_center.rb:14
 msgid "Edit Tags for the selected Generic Object Instances"
-msgstr "編輯所選一般物件實例的標籤"
+msgstr "編輯所選通用物件實例的標籤"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:68
 msgid "Edit Tags for the selected Host Aggregates"
@@ -57980,7 +57980,7 @@ msgstr "編輯此配置管理程式提供者的標籤"
 #: ../app/helpers/application_helper/toolbar/configured_systems_center.rb:30
 #: ../app/helpers/application_helper/toolbar/configured_system/automation/policy_mixin.rb:13
 msgid "Edit Tags for this Configured System"
-msgstr "編輯此已配置系統的標籤"
+msgstr "編輯此配置系統的標籤"
 
 #: ../app/helpers/application_helper/toolbar/container_center.rb:42
 msgid "Edit Tags for this Container"
@@ -58012,7 +58012,7 @@ msgstr "編輯此浮動 IP 的標籤"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_center.rb:12
 msgid "Edit Tags for this Generic Object Instance"
-msgstr "編輯此一般物件實例的標籤"
+msgstr "編輯此通用物件實例的標籤"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:63
 msgid "Edit Tags for this Host Aggregate"
@@ -58169,7 +58169,7 @@ msgstr "編輯認證 \"%{name}\""
 
 #: ../app/controllers/generic_object_definition_controller.rb:83
 msgid "Edit a Generic Object Definition '%{name}'"
-msgstr "編輯一般物件定義 '%{name}'"
+msgstr "編輯通用物件定義 '%{name}'"
 
 #: ../app/controllers/ansible_repository_controller.rb:73
 msgid "Edit a Repository \"%{name}\""
@@ -58880,11 +58880,11 @@ msgstr "編輯%{model}原則 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:2167
 msgid "Editing %{model} Tags for \"%{name}\""
-msgstr "正在編輯 \"%{name}\" 的 %{model} 標籤"
+msgstr "編輯 \"%{name}\" 的 %{model} 標籤"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:564
 msgid "Editing %{model} for \"%{name}\""
-msgstr "正在編輯 \"%{name}\" 的 %{model}"
+msgstr "編輯 \"%{name}\" 的 %{model}"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:143
 msgid "Editing %{name} Service Dialog"
@@ -58892,7 +58892,7 @@ msgstr "編輯%{name}服務對話框"
 
 #: ../app/controllers/catalog_controller.rb:683
 msgid "Editing %{record_name}"
-msgstr "正在編輯 %{record_name}"
+msgstr "編輯 %{record_name}"
 
 #: ../app/controllers/vm_common.rb:1453
 msgid "Editing %{vm_or_template} \"%{name}\""
@@ -58933,7 +58933,7 @@ msgstr "編輯按鈕群組 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:1011
 msgid "Editing Catalog \"%{name}\""
-msgstr "正在編輯型錄 \"%{name}\""
+msgstr "編輯型錄 \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:1225
 msgid "Editing Catalog Bundle \"%{name}\""
@@ -60171,7 +60171,7 @@ msgstr "防火牆規則"
 #: ../app/helpers/firmware_registry_helper/textual_summary.rb:13
 #: ../config/yaml_strings.rb:1274
 msgid "Firmware Binaries"
-msgstr "韌體二進位"
+msgstr "韌體二進位檔"
 
 #: ../app/helpers/physical_server_helper/textual_summary.rb:42
 msgid "Firmware Compliance"
@@ -60427,21 +60427,21 @@ msgstr "通用物件定義 %{record_name}"
 #: ../app/views/layouts/listnav/_generic_object_definition_show_list_with_treeview.html.haml:2
 #: ../config/yaml_strings.rb:1541
 msgid "Generic Object Definitions"
-msgstr "一般物件定義"
+msgstr "通用物件定義"
 
 #: ../app/javascript/components/workers-form/workers.schema.js:21
 msgid "Generic Workers"
-msgstr "一般工作程式"
+msgstr "通用工作程式"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../config/yaml_strings.rb:1170
 msgid "GenericObject"
-msgstr "一般物件"
+msgstr "通用物件"
 
 #. TRANSLATORS: file: product/views/GenericObjectDefinition.yaml
 #: ../config/yaml_strings.rb:1543
 msgid "GenericObjectDefinition"
-msgstr "一般物件定義"
+msgstr "通用物件定義"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:66
 msgid "Get User Groups from Amazon"
@@ -63880,7 +63880,7 @@ msgstr "沒有雲端提供者支援金鑰組匯入或建立。"
 #: ../app/controllers/mixins/manager_controller_mixin.rb:178
 msgid "No common configuration profiles available for the selected configured system"
 msgid_plural "No common configuration profiles available for the selected configured systems"
-msgstr[0] "沒有共用配置設定檔可供用於選取的已配置系統"
+msgstr[0] "沒有共用配置設定檔可供用於選取的配置系統"
 
 #: ../app/controllers/ems_infra_controller.rb:115
 msgid "No compute hosts were selected for scale down."
@@ -64670,7 +64670,7 @@ msgstr "只能啟動作用中伺服器上的可用角色"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:79
 msgid "Only available for VM, Provider, Service, User, Group, Tenant, Cloud Tenant and Generic Object with \"Display for\" set to \"Single\""
-msgstr "只可用於「顯示對象」設為「單個」的 VM、提供者、服務、使用者、群組、租戶、雲端租戶和一般物件。"
+msgstr "只可用於「顯示對象」設為「單個」的 VM、提供者、服務、使用者、群組、租戶、雲端租戶和通用物件。"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:71
 msgid "Only available when \"Display for\" is set to \"Single\""
@@ -67944,7 +67944,7 @@ msgstr "使用者已取消重新命名 VM \"%{name}\""
 
 #: ../app/controllers/mixins/actions/vm_actions/rename.rb:91
 msgid "Rename of Virtual Machine \"%{name}\" has been initiated"
-msgstr "已起始重新命名虛擬機器 \"%{name}\""
+msgstr "已起始給虛擬機器 \"%{name}\" 重新命名作業"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:64
 msgid "Rename selected item"
@@ -70459,7 +70459,7 @@ msgstr[0] "顯示此 VM 上的事件日誌"
 
 #: ../app/helpers/service_helper/textual_summary.rb:289
 msgid "Show Generic Object Instances for this Service"
-msgstr "顯示此服務的一般物件實例"
+msgstr "顯示此服務的通用物件實例"
 
 #: ../app/helpers/host_helper/textual_summary.rb:226
 #: ../app/helpers/host_helper/textual_summary.rb:473
@@ -73112,11 +73112,11 @@ msgstr "可用性區域總計"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:10
 msgid "Totals for Hosts"
-msgstr "主機的總計"
+msgstr "主機總計"
 
 #: ../app/helpers/service_helper/textual_summary.rb:77
 msgid "Totals for Service VMs"
-msgstr "服務 VM 的總計"
+msgstr "服務 VM 總計"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:19
 msgid "Totals for VMs"
@@ -73538,7 +73538,7 @@ msgstr "無法移除子網路 \"%{name}\"：%{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/rename.rb:93
 msgid "Unable to rename Virtual Machine \"%{name}\": %{details}"
-msgstr "無法重新命名虛擬機器 \"%{name}\"：%{details}"
+msgstr "無法給虛擬機器 \"%{name}\" 重新命名：%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:489
 msgid "Unable to restore Cloud Volume \"%{name}\" from backup: %{details}"
@@ -74597,7 +74597,7 @@ msgstr "檢視此 ISO 映像檔"
 
 #: ../app/views/ops/_settings_evm_servers_tab.html.haml:59
 msgid "View this MiqServer"
-msgstr "檢視此 MiqServer"
+msgstr "檢視此 Miq 伺服器"
 
 #:
 #: ../app/helpers/application_helper/toolbar/stack_orchestration_template_center.rb:24
