@@ -5803,7 +5803,7 @@ msgstr "CloudVolume|Tipo de volume"
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardVMStep/components/PlanWizardVMStepTable.js:87
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardVMStep/components/PlanWizardVMStepTable.js:226
 msgid "Cluster"
-msgstr "Grupo"
+msgstr "Cluster"
 
 #. TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
 #: ../config/yaml_strings.rb:4975
@@ -20954,7 +20954,7 @@ msgstr "Intervalo"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:797
 msgid "Introspect Hosts"
-msgstr "Hosts de introspecção"
+msgstr "Observar hosts"
 
 #: ../app/models/mixins/retirement_mixin.rb:77
 msgid "Invalid Date specified: %{date}"
@@ -28776,7 +28776,7 @@ msgstr[1] "Entradas de serviço de rede"
 #: ../app/helpers/security_policy_helper/textual_summary.rb:39
 #: ../config/yaml_strings.rb:271
 msgid "Network Services"
-msgstr "Serviços de Rede"
+msgstr "Serviços de rede"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
 #: ../config/yaml_strings.rb:6040
@@ -35904,14 +35904,14 @@ msgstr "Grupos de segurança (OpenStack)"
 #: ../app/helpers/ems_network_helper/textual_summary.rb:76
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb:111
 msgid "Security Policies"
-msgstr "Políticas de Segurança"
+msgstr "Políticas de segurança"
 
 #. TRANSLATORS: file: product/views/SecurityPolicy.yaml
 #. TRANSLATORS: file: product/views/SecurityPolicyRule.yaml
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb:112
 #: ../config/yaml_strings.rb:274
 msgid "Security Policy"
-msgstr "Diretiva de segurança"
+msgstr "Política de segurança"
 
 #. TRANSLATORS: file: product/views/SecurityPolicyRule.yaml
 #: ../config/yaml_strings.rb:263
@@ -35921,20 +35921,20 @@ msgstr "Regra de política de segurança"
 #: ../config/model_display_names.rb:207
 msgid "Security Policy Rule Destination Security Group"
 msgid_plural "Security Policy Rule Destination Security Groups"
-msgstr[0] "Grupo de segurança\nde destino da regra de política de\nsegurança"
-msgstr[1] "Grupos de segurança\nde destino da regra de política de segurança"
+msgstr[0] "Grupo de segurança de destino da regra de política de segurança"
+msgstr[1] "Grupos de segurança de destino da regra de política de segurança"
 
 #: ../config/model_display_names.rb:208
 msgid "Security Policy Rule Network Service"
 msgid_plural "Security Policy Rule Network Services"
-msgstr[0] "Serviço de rede da\nregra de política de segurança"
-msgstr[1] "Serviços de\nrede da\nregra de política de segurança"
+msgstr[0] "Serviço de rede da regra de política de segurança"
+msgstr[1] "Serviços de rede da regra de política de segurança"
 
 #: ../config/model_display_names.rb:209
 msgid "Security Policy Rule Source Security Group"
 msgid_plural "Security Policy Rule Source Security Groups"
-msgstr[0] "Grupo de segurança de\norigem da regra de política de\nsegurança"
-msgstr[1] "Grupos de segurança de origem da\nregra de política de segurança"
+msgstr[0] "Grupo de segurança de origem da regra de política de segurança"
+msgstr[1] "Grupos de segurança de origem da regra de política de segurança"
 
 #. TRANSLATORS: file: product/views/NetworkService.yaml
 #: ../app/helpers/security_group_helper/textual_summary.rb:29
@@ -38209,7 +38209,7 @@ msgstr[1] "Recursos de\narmazenamento"
 #. TRANSLATORS: file: product/views/StorageResource.yaml
 #: ../app/presenters/menu/default_menu.rb:191 ../config/yaml_strings.rb:1434
 msgid "Storage Resources"
-msgstr "Recursos de Armazenamento"
+msgstr "Recursos de armazenamento"
 
 #: ../app/views/cloud_volume/_common_new_edit.html.haml:126
 msgid "Storage Service"
@@ -47331,7 +47331,7 @@ msgstr "Aviso: os Grupos de Segurança selecionados e suas\nreferências de VM s
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/security_policies_center.rb:34
 msgid "Warning: The selected Security Policies and their Security Policy Rules will be permanently removed!"
-msgstr "Aviso: as Políticas de Segurança selecionadas e\nsuas Regras de Política de Segurança serão removidas\npermanentemente!"
+msgstr "Aviso: as Políticas de segurança selecionadas e\nsuas Regras de Política de Segurança serão removidas\npermanentemente!"
 
 #:
 #: ../app/helper/manageiq/providers/nsxt/toolbar_overrides/security_policy_rules_center.rb:34
@@ -50206,7 +50206,7 @@ msgstr "Modos de Acesso"
 
 #: ../app/views/ops/_rbac_role_details.html.haml:33
 msgid "Access Restriction for Catalog Items, Orchestration Stacks, Key Pairs, Services, VMs, and Templates"
-msgstr "Restrição de acesso para itens do catálogo, pilhas\nde orquestração, pares de chaves, Serviços, VMs e\nModelos"
+msgstr "Restrição de acesso para itens do catálogo, pilhas\nde orquestração, pares de chaves, serviços, VMs e modelos"
 
 #: ../app/helpers/pxe_helper/textual_summary.rb:16
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:23
@@ -52259,12 +52259,12 @@ msgstr "Tem certeza de que deseja excluir o seguinte\nProvedor Ansible Tower?"
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:53
 msgid "Are you sure you want to delete the following Ansible Tower Providers?"
-msgstr "Tem certeza de que deseja excluir os seguintes\nprovedores do Ansible Tower?"
+msgstr "Tem certeza de que deseja excluir os seguintes provedores do Ansible Tower?"
 
 #: ../app/helpers/application_helper/toolbar/catalogitem_buttons_center.rb:32
 #: ../app/helpers/application_helper/toolbar/custom_buttons_center.rb:32
 msgid "Are you sure you want to delete the following Button Group?"
-msgstr "Tem certeza de que deseja excluir o seguinte grupo\nde botão?"
+msgstr "Tem certeza de que deseja excluir o seguinte grupo de botão?"
 
 #: ../app/helpers/application_helper/toolbar/catalogitem_button_center.rb:26
 #: ../app/helpers/application_helper/toolbar/custom_button_center.rb:25
@@ -52273,19 +52273,19 @@ msgstr "Tem certeza de que deseja excluir o Botão a seguir?"
 
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:31
 msgid "Are you sure you want to delete the following Configuration Management Provider?"
-msgstr "Tem certeza de que deseja excluir o seguinte\nProvedor de Gerenciamento de Configuração?"
+msgstr "Tem certeza de que deseja excluir o seguinte Provedor de Gerenciamento de Configuração?"
 
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:47
 msgid "Are you sure you want to delete the following Configuration Management Providers?"
-msgstr "Tem certeza de que deseja excluir os seguintes\nProvedores de Gerenciamento de Configuração?"
+msgstr "Tem certeza de que deseja excluir os seguintes Provedores de Gerenciamento de Configuração?"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:17
 msgid "Are you sure you want to delete the following Key Pair?"
-msgstr "Tem certeza de que deseja excluir o seguinte par de\nchaves?"
+msgstr "Tem certeza de que deseja excluir o seguinte par de chaves?"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_clouds_center.rb:36
 msgid "Are you sure you want to delete the following Key Pairs?"
-msgstr "Tem certeza de que deseja excluir os seguintes\npares de chaves?"
+msgstr "Tem certeza de que deseja excluir os seguintes pares de chaves?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:25
 msgid "Are you sure you want to delete the following credential?"
@@ -52293,15 +52293,15 @@ msgstr "Tem certeza de que deseja excluir a seguinte credencial?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credentials_center.rb:40
 msgid "Are you sure you want to delete the following credentials?"
-msgstr "Tem certeza de que deseja excluir as credenciais a\nseguir?"
+msgstr "Tem certeza de que deseja excluir as credenciais a seguir?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:62
 msgid "Are you sure you want to delete the following repositories?"
-msgstr "Tem certeza de que deseja excluir os repositórios a\nseguir?"
+msgstr "Tem certeza de que deseja excluir os repositórios a seguir?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb:46
 msgid "Are you sure you want to delete the following repository?"
-msgstr "Tem certeza de que deseja excluir o repositório a\nseguir?"
+msgstr "Tem certeza de que deseja excluir o repositório a seguir?"
 
 #: ../app/helpers/application_helper/button/condition_delete.rb:7
 msgid "Are you sure you want to delete this %{condition_type} Condition?"
@@ -53359,7 +53359,7 @@ msgstr "Por clusters"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:31
 msgid "By Host"
-msgstr "Por Host"
+msgstr "Por host"
 
 #: ../app/controllers/application_controller/buttons.rb:1008
 #: ../app/views/shared/buttons/_ab_show.html.haml:147
@@ -56824,7 +56824,7 @@ msgstr "Excluir o provedor de gerenciamento de configuração"
 
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:46
 msgid "Delete Configuration Management Providers"
-msgstr "Excluir os provedores de gerenciamento de\nconfiguração"
+msgstr "Excluir os provedores de gerenciamento de configuração"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:24
 msgid "Delete Credential"
@@ -57220,7 +57220,7 @@ msgstr "A exclusão da entrada '%{entry_name}' também a removerá a designaçã
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:29
 msgid "Deletion of item %s has been successfully initiated"
-msgstr "A exclusão do item\n%s\nfoi iniciada com sucesso"
+msgstr "A exclusão do item %s foi iniciada com sucesso"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:51
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:53
@@ -57379,7 +57379,7 @@ msgstr "A separação de um Volume de nuvem da instância \"%{instance_name}\" f
 
 #: ../app/views/ops/_rbac_group_details.html.haml:60
 msgid "Detailed Description"
-msgstr "Descrição Detalhada"
+msgstr "Descrição detalhada"
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb:32
 #: ../app/helpers/application_helper/toolbar/drift_center.rb:32
@@ -58418,7 +58418,7 @@ msgstr "Editar tags para este gerenciador de\nconfiguração"
 
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:68
 msgid "Edit Tags for this Configuration Manager Provider"
-msgstr "Editar tags para este provedor de gerenciador de\narmazenamento"
+msgstr "Editar tags para este provedor de gerenciador de armazenamento"
 
 #: ../app/helpers/application_helper/toolbar/configured_system_center.rb:12
 #: ../app/helpers/application_helper/toolbar/x_automation_manager_ansible_tower_configured_system_center.rb:12
@@ -70957,11 +70957,11 @@ msgstr "Mostrar outros arquivos da MV instalados neste armazenamento de dados"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:84
 msgid "Show Parent Cluster '%{name}'"
-msgstr "Mostrar o cluster pai\n'%{name}'"
+msgstr "Mostrar o cluster pai '%{name}'"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:96
 msgid "Show Parent Host '%{name}'"
-msgstr "Mostrar o host pai\n'%{name}'"
+msgstr "Mostrar o host pai '%{name}'"
 
 #: ../app/helpers/ansible_playbook_helper/textual_summary.rb:36
 msgid "Show Repository"
@@ -71080,7 +71080,7 @@ msgstr "Mostrar dispositivos de máquinas virtuais"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:153
 msgid "Show VMs in this Cluster, but not in Resource Pools below"
-msgstr "Mostrar as VMs neste cluster, mas não nos conjuntos\nde\nrecursos abaixo"
+msgstr "Mostrar as VMs neste cluster, mas não nos conjuntos de recursos abaixo"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:106
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
@@ -71456,8 +71456,8 @@ msgstr[1] "Mostrar os Registry Items instalados nesta VM"
 #: ../app/helpers/host_helper/textual_summary.rb:442
 msgid "Show the Service installed on this Host"
 msgid_plural "Show the Services installed on this Host"
-msgstr[0] "Mostrar o serviço instalado\nneste host"
-msgstr[1] "Mostrar os serviços instalados\nneste host"
+msgstr[0] "Mostrar o serviço instalado neste host"
+msgstr[1] "Mostrar os serviços instalados neste host"
 
 #: ../app/helpers/host_helper/textual_summary.rb:379
 #: ../app/helpers/textual_mixins/vm_common.rb:78
@@ -73790,11 +73790,11 @@ msgstr "Prefixo de URI"
 
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:76
 msgid "URI should begin with s3:// for Amazon Web Services, nfs:// for Network File System, swift:// for OpenStack Swift or smb:// for Samba"
-msgstr "O URI deve começar com s3:// para Amazon Web\nServices, nfs:// para Network File System, swift://\npara OpenStack Swift ou smb:// para Samba"
+msgstr "O URI deve começar com s3:// para Amazon Web Services, nfs:// para Network File System, swift:// para OpenStack Swift ou smb:// para Samba"
 
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.schema.js:84
 msgid "URI should begin with s3://, nfs://, swift:// or smb://"
-msgstr "O URI deve começar com s3://, nfs://, swift://\nou smb://"
+msgstr "O URI deve começar com s3://, nfs://, swift:// ou smb://"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:264
 msgid "URL (i.e. www.mypage.com)"
@@ -73806,7 +73806,7 @@ msgstr "A URL pode ser aberta apenas pelos botões de uma entidade única"
 
 #: ../app/views/ansible_repository/_repository_form.html.haml:50
 msgid "URL must include a protocol (http://, https:// or file://) or be a valid SSH path (user@server:path or ssh://user@address:port/path)"
-msgstr "A URL deve incluir um protocolo (http://, https://\nou file://) ou ser um caminho SSH válido\n(user@server:path ou ssh://user@enderes:port/path)"
+msgstr "A URL deve incluir um protocolo (http://, https:// ou file://) ou ser um caminho SSH válido (usuário@servidor:caminho ou ssh://usuário@endereço:porta/caminho)"
 
 #: ../app/helpers/view_helper.rb:24
 msgid "US Executive - 7.25in x 10.5in"
