@@ -12,8 +12,8 @@ class MiqWorker
       end
 
       def ensure_systemd_files
-        target_file_path.write(target_file) unless target_file_path.exist?
-        service_file_path.write(unit_file) unless service_file_path.exist?
+        target_file_path.write(target_file)
+        service_file_path.write(unit_file)
       end
 
       def service_base_name
@@ -69,7 +69,7 @@ class MiqWorker
           WorkingDirectory=#{working_directory}
           Environment=BUNDLER_GROUPS=#{bundler_groups.join(",")}
           ExecStart=/bin/bash -lc '#{exec_start}'
-          Restart=always
+          Restart=no
           Slice=#{slice_name}
         UNIT_FILE
       end
