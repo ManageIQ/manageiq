@@ -53,8 +53,8 @@ class MiqWorker
         h.store_path(:limits, :memory, format_memory_threshold(mem_limit)) if mem_limit
         h.store_path(:limits, :cpu, format_cpu_threshold(cpu_limit)) if cpu_limit
 
-        h.store_path(:defaultRequest, :memory, format_memory_threshold(mem_request)) if mem_request
-        h.store_path(:defaultRequest, :cpu, format_cpu_threshold(cpu_request)) if cpu_request
+        h.store_path(:requests, :memory, format_memory_threshold(mem_request)) if mem_request
+        h.store_path(:requests, :cpu, format_cpu_threshold(cpu_request)) if cpu_request
       end
     end
 

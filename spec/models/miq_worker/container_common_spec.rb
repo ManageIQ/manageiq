@@ -177,7 +177,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       it "returns default cpu when it is set" do
         allow(MiqGenericWorker).to receive(:worker_settings).and_return(:cpu_request_percent => 10)
         constraints = {
-          :defaultRequest => {
+          :requests => {
             :cpu => "100m"
           }
         }
@@ -187,7 +187,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       it "returns default memory when it is set" do
         allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 250.megabytes)
         constraints = {
-          :defaultRequest => {
+          :requests => {
             :memory => "250Mi",
           }
         }
@@ -197,7 +197,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       it "returns memory pair when set" do
         allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 250.megabytes, :memory_threshold => 600.megabytes)
         constraints = {
-          :defaultRequest => {
+          :requests => {
             :memory => "250Mi",
           },
           :limits         => {
