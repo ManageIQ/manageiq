@@ -178,6 +178,22 @@ class MiqServer < ApplicationRecord
     exceeded
   end
 
+  def worker_monitor
+    @worker_monitor ||= initialize_worker_monitor
+  end
+
+  def initialize_worker_monitor
+    worker_monitor_klass_name = if systemd?
+      MiqServer::WorkerManagement::Monitor::Systemd
+    elsif podified?
+      MiqServer::WorkerManagement::Monitor::Kubernetes
+    else
+      MiqServer::WorkerManagement::Monitor::Process
+    end
+
+    worker_monitor_klass_name.new
+  end
+
   def monitor
     now = Time.now.utc
     Benchmark.realtime_block(:heartbeat)               { heartbeat }                        if threshold_exceeded?(:heartbeat_frequency, now)
@@ -189,7 +205,7 @@ class MiqServer < ApplicationRecord
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
-    Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
+    Benchmark.realtime_block(:worker_monitor)          { worker_monitor.monitor_workers }   if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
     monitor_myself
   rescue SystemExit, SignalException

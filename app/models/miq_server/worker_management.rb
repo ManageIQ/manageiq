@@ -1,9 +1,10 @@
 module MiqServer::WorkerManagement
   extend ActiveSupport::Concern
 
+  require_nested :Monitor
+
   include_concern 'Dequeue'
   include_concern 'Heartbeat'
-  include_concern 'Monitor'
 
   included do
     has_many :miq_workers
