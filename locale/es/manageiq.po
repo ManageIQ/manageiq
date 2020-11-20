@@ -55676,7 +55676,7 @@ msgstr "La acción Copiar no se aplica a la función seleccionada Automatizar es
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:16
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:17
 msgid "Copy from Provisioning"
-msgstr "Copiar desde Aprovisionamiento\\n"
+msgstr "Copiar desde Aprovisionamiento"
 
 #: ../app/views/catalog/_confirmation_modal.html.haml:35
 msgid "Copy from provisioning"
