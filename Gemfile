@@ -9,7 +9,7 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "kasparov"
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :tag => "kasparov-1-alpha1"
 
 # Modified gems for gems-pending.  Setting sources here since they are git references
 gem "handsoap", "=0.2.5.5", :require => false, :source => "https://rubygems.manageiq.org"
@@ -17,7 +17,7 @@ gem "handsoap", "=0.2.5.5", :require => false, :source => "https://rubygems.mana
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "kasparov"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :tag => "kasparov-1-alpha1"
   end
 end
 
@@ -96,7 +96,7 @@ gem "american_date"
 ### providers
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
-  gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "kasparov" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+  gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :tag => "kasparov-1-alpha1" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 end
 
 group :ansible_tower, :manageiq_default do
