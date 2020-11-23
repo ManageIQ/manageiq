@@ -6,7 +6,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
   end
 
   describe '#catalog_types' do
-    let(:ems) { FactoryBot.create(:embedded_automation_manager_ansible) }
+    let(:provider) { FactoryBot.create(:provider_embedded_ansible) }
+    let(:ems)      { provider.automation_manager }
 
     it "includes generic_ansible_playbook" do
       expect(ems.catalog_types).to include("generic_ansible_playbook")
