@@ -104,10 +104,11 @@ class ProviderTagMapping
 
     def map_label(type, label)
       label_name = case_sensitive_labels? ? label[:name] : label[:name]&.downcase
+      label_value = label[:value]
       # Apply both specific-type and any-type, independently.
-      (map_name_type_value(label_name, type, label[:value]) +
-       map_name_type_value(label_name, nil, label[:value]) +
-       map_name_type_value(label_name, "_all_entities_", label[:value]))
+      (map_name_type_value(label_name, type, label_value) +
+       map_name_type_value(label_name, nil, label_value) +
+       map_name_type_value(label_name, "_all_entities_", label_value))
     end
 
     def map_name_type_value(name, type, value)
