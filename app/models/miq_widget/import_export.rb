@@ -2,7 +2,7 @@ module MiqWidget::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def import_from_hash(widget, options = {})
+    def import_from_hash(widget, _options = {})
       raise _("No Widget to Import") if widget.nil?
 
       WidgetImportService.new.import_widget_from_hash(widget)

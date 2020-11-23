@@ -475,7 +475,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @ldap_ous
   end
 
-  def allowed_organizational_units(options = {})
+  def allowed_organizational_units(_options = {})
     {}
   end
 

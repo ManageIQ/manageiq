@@ -457,7 +457,7 @@ class VmOrTemplate < ApplicationRecord
   end
   private_class_method :task_arguments
 
-  def powerops_callback(task_id, status, msg, result, queue_item)
+  def powerops_callback(task_id, status, msg, result, _queue_item)
     task = MiqTask.find_by(:id => task_id)
     task.queue_callback("Finished", status, msg, result) if task
   end

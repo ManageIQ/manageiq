@@ -80,7 +80,7 @@ class MiqRequestWorkflow
   end
 
   # Helper method when not using workflow
-  def make_request(request, values, requester = nil, auto_approve = false)
+  def make_request(request, values, _requester = nil, auto_approve = false)
     return false unless validate(values)
     password_helper(values, true)
     # Ensure that tags selected in the pre-dialog get applied to the request

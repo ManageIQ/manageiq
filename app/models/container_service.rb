@@ -32,7 +32,7 @@ class ContainerService < ApplicationRecord
 
   PERF_ROLLUP_CHILDREN = [:container_groups]
 
-  def perf_rollup_parents(interval_name = nil)
+  def perf_rollup_parents(_interval_name = nil)
     []
   end
 end

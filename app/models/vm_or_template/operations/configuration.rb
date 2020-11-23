@@ -1,5 +1,5 @@
 module VmOrTemplate::Operations::Configuration
-  def raw_set_memory(mb)
+  def raw_set_memory(_mb)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -9,7 +9,7 @@ module VmOrTemplate::Operations::Configuration
     raw_set_memory(mb)
   end
 
-  def raw_set_number_of_cpus(num)
+  def raw_set_number_of_cpus(_num)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -79,7 +79,7 @@ module VmOrTemplate::Operations::Configuration
     raw_disconnect_floppies
   end
 
-  def raw_add_disk(disk_name, disk_size_mb, options = {})
+  def raw_add_disk(_disk_name, _disk_size_mb, _options = {})
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -89,7 +89,7 @@ module VmOrTemplate::Operations::Configuration
     raw_add_disk(disk_name, disk_size_mb, options)
   end
 
-  def raw_remove_disk(disk_name, options = {})
+  def raw_remove_disk(_disk_name, _options = {})
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -109,7 +109,7 @@ module VmOrTemplate::Operations::Configuration
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def raw_attach_volume(volume_id, device = nil)
+  def raw_attach_volume(_volume_id, _device = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -119,11 +119,11 @@ module VmOrTemplate::Operations::Configuration
     raw_attach_volume(volume_id, device)
   end
 
-  def raw_detach_volume(volume_id)
+  def raw_detach_volume(_volume_id)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def detach_volume(volume_id, device = nil)
+  def detach_volume(volume_id, _device = nil)
     raise _("VM has no EMS, unable to detach volume") unless ext_management_system
 
     raw_detach_volume(volume_id)

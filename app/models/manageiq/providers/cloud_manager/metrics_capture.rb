@@ -2,7 +2,7 @@ class ManageIQ::Providers::CloudManager::MetricsCapture < ManageIQ::Providers::B
   # @return vms under all availability zones
   #         and vms under no availability zone
   # NOTE: some stacks (e.g. nova) default to no availability zone
-  def capture_ems_targets(options = {})
+  def capture_ems_targets(_options = {})
     MiqPreloader.preload([ems], :vms => [{:availability_zone => :tags}, :ext_management_system])
 
     ems.vms.select do |vm|
