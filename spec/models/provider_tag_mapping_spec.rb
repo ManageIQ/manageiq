@@ -256,7 +256,7 @@ RSpec.describe ProviderTagMapping do
         end
 
         let(:externals_labels) do # provider label
-          [{:name => label_name, :value => 'Accounting'}]
+          [{:name => label_name, :value => ' Accounting'}]
         end
 
         it "replaces an existing tag on the resource with the value of the external label" do
@@ -301,7 +301,7 @@ RSpec.describe ProviderTagMapping do
 
           let(:externals_labels) do # provider label
             [{:name => label_name, :value => 'Accounting'},
-             {:name => 'Locality', :value => 'Brno'}]
+             {:name => 'Locality', :value => '   Brno   '}]
           end
 
           before do
@@ -349,7 +349,7 @@ RSpec.describe ProviderTagMapping do
         let!(:multi_value_category_2) { FactoryBot.create(:classification_cost_center_with_tags) }
 
         let(:externals_labels) do # provider label
-          [{:name => label_name, :value => 'Accounting'}]
+          [{:name => label_name, :value => ' Accounting'}]
         end
 
         before do
@@ -427,7 +427,7 @@ RSpec.describe ProviderTagMapping do
           context "when mappings are targeted to same categories" do
             let(:externals_labels) do # provider labels
               [{:name => label_name, :value => 'Accounting'},
-               {:name => 'Finance Center', :value => '007'}]
+               {:name => 'Finance Center', :value => ' 007'}]
             end
 
             before do
