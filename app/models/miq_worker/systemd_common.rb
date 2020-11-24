@@ -115,6 +115,21 @@ class MiqWorker
       systemd.StopUnit(unit_name, mode)
     end
 
+    def sd_notify_started
+      require "sd_notify"
+      SdNotify.ready
+    end
+
+    def sd_notify_stopping
+      require "sd_notify"
+      SdNotify.stopping
+    end
+
+    def sd_notify_watchdog
+      require "sd_notify"
+      SdNotify.watchdog
+    end
+
     private
 
     def systemd
@@ -166,6 +181,7 @@ class MiqWorker
         MemoryHigh=#{worker_settings[:memory_threshold].bytes}
         TimeoutStartSec=#{worker_settings[:starting_timeout]}
         TimeoutStopSec=#{worker_settings[:stopping_timeout]}
+        WatchdogSec=#{worker_settings[:heartbeat_timeout]}
         #{unit_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
       UNIT_CONFIG_FILE
     end

@@ -142,6 +142,7 @@ class MiqWorker::Runner
 
   def started_worker_record
     reload_worker_record
+    @worker.sd_notify_started if @worker.systemd_worker?
     @worker.status         = "started"
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
@@ -191,6 +192,7 @@ class MiqWorker::Runner
     @worker.stopped_on = Time.now.utc
     @worker.save
 
+    @worker.sd_notify_stopping if @worker.systemd_worker?
     @worker.status_update
     @worker.log_status
   end
@@ -289,6 +291,7 @@ class MiqWorker::Runner
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
 
     heartbeat_to_file
+    @worker.sd_notify_watchdog if @worker.systemd_worker?
 
     if config_out_of_date?
       _log.info("#{log_prefix} Synchronizing configuration...")
