@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 150 ending 2020-11-23
+
+### Added
+
+* Tenant changes changes miq product features on all servers [(#20772)](https://github.com/ManageIQ/manageiq/pull/20772)
+
+### Fixed
+
+* Auto-restart systemd workers results in duplicates [(#20824)](https://github.com/ManageIQ/manageiq/pull/20824)
+* Call ResetFailedUnit when cleaning up failed services [(#20810)](https://github.com/ManageIQ/manageiq/pull/20810)
+* Ensure that options[:ems\_id] is an Array when passed as an ENV var [(#20809)](https://github.com/ManageIQ/manageiq/pull/20809)
+
 # Unreleased as of Sprint 149 ending 2020-11-09
 
 ### Fixed
