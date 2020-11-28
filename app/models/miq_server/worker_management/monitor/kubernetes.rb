@@ -2,7 +2,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   extend ActiveSupport::Concern
 
   included do
-    cattr_accessor :current_pods
+    class_attribute :current_pods
     self.current_pods = Concurrent::Hash.new
   end
 
