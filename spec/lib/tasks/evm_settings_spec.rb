@@ -27,6 +27,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=false")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=none")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
         EvmSettings.get_keys
       end
 
@@ -51,6 +52,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=true")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=oidc")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
         EvmSettings.get_keys
       end
 
@@ -75,8 +77,19 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=false")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=saml")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
         EvmSettings.get_keys
       end
+    end
+  end
+
+  describe "ALLOWED_KEYS" do
+    it "has the correct keys" do
+      @settings_keys = ["/authentication/httpd_role", "/authentication/local_login_disabled", "/authentication/mode",
+                       "/authentication/oidc_enabled", "/authentication/provider_type", "/authentication/saml_enabled",
+                       "/authentication/sso_enabled", "/prototype/messaging_type"].sort
+
+      expect(EvmSettings::ALLOWED_KEYS.sort).to eq(@settings_keys)
     end
   end
 end
