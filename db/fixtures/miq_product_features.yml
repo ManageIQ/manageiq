@@ -6033,32 +6033,32 @@
       :feature_type: control
       :identifier: storage_resource_tag
 
-  # Storage Consumers
-- :name: Storage Consumers
-  :description: Everything under Storage Consumers
+  # Physical Storage Consumers
+- :name: Physical Storage Consumers
+  :description: Everything under Physical Storage Consumers
   :feature_type: node
-  :identifier: storage_consumer
+  :identifier: physical_storage_consumer
   :children:
   - :name: View
-    :description: View Storage Consumers
+    :description: View Physical Storage Consumers
     :feature_type: view
     :identifier: storage_consumer_view
     :children:
     - :name: List
-      :description: Display Lists of Storage Consumers
+      :description: Display Lists of Physical Storage Consumers
       :feature_type: view
       :identifier: storage_consumer_show_list
     - :name: Show
-      :description: Display Individual Storage Consumers
+      :description: Display Individual Physical Storage Consumers
       :feature_type: view
       :identifier: storage_consumer_show
   - :name: Operate
-    :description: Perform Operations on Storage Consumers
+    :description: Perform Operations on Physical Storage Consumers
     :feature_type: control
     :identifier: storage_consumer_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Storage Consumers
+      :description: Edit Tags of Physical Storage Consumers
       :feature_type: control
       :identifier: storage_consumer_tag
 

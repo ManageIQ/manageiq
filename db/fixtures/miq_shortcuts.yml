@@ -389,10 +389,10 @@
   :url: /cloud_volume_type/show_list
   :rbac_feature_name: cloud_volume_type_show_list
   :startup: true
-- :name: storage_consumers
+- :name: physical_storage_consumers
   :description: Storage / Block Storage / Storage Consumers
-  :url: /storage_consumer/show_list
-  :rbac_feature_name: storage_consumer_show_list
+  :url: /physical_storage_consumer/show_list
+  :rbac_feature_name: physical_storage_consumer_show_list
   :startup: true
 - :name: ems_object_storage
   :description: Storage / Object Storage / Managers
