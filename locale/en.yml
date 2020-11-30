@@ -1344,6 +1344,8 @@ en:
       fixed_compute_1_rate:                  Fixed Compute Rate 1
       fixed_compute_2_rate:                  Fixed Compute Rate 2
       fixed_compute_metric:                  Fixed Compute Metric
+      fixed_compute_1_metric:                Fixed Compute Metric 1
+      fixed_compute_2_metric:                Fixed Compute Metric 2
       fixed_cost:                            Fixed Total Cost
       fixed_2_cost:                          Fixed 2 Cost
       fixed_storage_1_cost:                  Fixed Storage Cost 1
