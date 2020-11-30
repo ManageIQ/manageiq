@@ -56867,7 +56867,7 @@ msgstr "必要なアクセス・モード"
 
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb:53
 msgid "Destination"
-msgstr "宛先\n"
+msgstr "宛先"
 
 #: ../app/helpers/network_router_helper/textual_summary.rb:55
 msgid "Destination CIDR"
@@ -66049,7 +66049,7 @@ msgstr "プロファイル・ポリシー:"
 #: ../app/presenters/menu/default_menu.rb:38
 #: ../app/controllers/configuration_profile_controller.rb:59
 msgid "Profiles"
-msgstr "プロファイル\n"
+msgstr "プロファイル"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:96
 msgid "Project/Tenant"
@@ -68893,7 +68893,7 @@ msgstr "Ruby スクリプトは式でサポートされなくなりました。�
 #: ../app/helpers/security_policy_helper/textual_summary.rb:37
 #: ../config/yaml_strings.rb:1539
 msgid "Rules"
-msgstr "規則\n"
+msgstr "規則"
 
 #: ../app/views/ops/_schedule_form_timer.html.haml:7
 #: ../app/views/report/_schedule_form_timer.html.haml:8
@@ -77653,7 +77653,7 @@ msgstr "ターゲット・プロバイダー内で少なくとも 1 つの変換
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/PlanWizard.js:155
 msgid "You've selected a premigration or postmigration playbook service but no VMs on which to run the playbook service. Are you sure you want to continue?"
-msgstr "移行前または移行後の Playbook サービスを選択しましたが、Playbook サービスを実行する VM は選択していません。続行しますか?\n"
+msgstr "移行前または移行後の Playbook サービスを選択しましたが、Playbook サービスを実行する VM は選択していません。続行しますか?"
 
 #:
 #: ../app/javascript/react/screens/App/Overview/components/Migrations/MigrationInProgressListItem.js:182

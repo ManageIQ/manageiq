@@ -10297,7 +10297,7 @@ msgstr "La creación de la copia de seguridad %{backup_name} del volumen %{subje
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3749
 msgid "Creating Backup %{backup_name} of Volume %{subject} failed: %{error_message}"
-msgstr "Error al crear la copia de seguridad %{backup_name} del volumen %{subject}:\n%{error_message}"
+msgstr "Error al crear la copia de seguridad %{backup_name} del volumen %{subject}: %{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3759
@@ -46818,7 +46818,7 @@ msgstr "Detectar"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada.\n  Ejemplo: http://my_file_server.org:3333/xccdf_files/ Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación."
+msgstr "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en lugar de acceder a la ubicación predeterminada.\n  Ejemplo: http://my_file_server.org:3333/xccdf_files/\n Se espera encontrar el archivo com.redhat.rhsa-RHEL7.ds.xml.bz2 en esta ubicación."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager_mixin.rb:678
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
@@ -47739,7 +47739,7 @@ msgstr "Esta funcionalidad no se admite en la versión API del proveedor"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_or_template_shared/scanning.rb:51
 msgid "VMs must be scanned from an EVM server whose host is attached to the same\n  storage as the VM unless overridden via SmartProxy affinity.\n  Please verify that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management Relationship is set for the ManageIQ appliance"
-msgstr "Se deben analizar las MV desde un servidor EVM cuyo host esté conectado al mismo almacenamiento que la MV, a menos que se anule mediante afinidad con SmartProxy.\n  Compruebe que:\n  1) Los LUN directos estén conectados a un dispositivo ManageIQ\n  2) La relación de gestión esté configurada para el dispositivo ManageIQ"
+msgstr "Se deben analizar las MV desde un servidor EVM cuyo host esté conectado al mismo\n almacenamiento que la MV, a menos que se anule mediante afinidad con SmartProxy.\n  Compruebe que:\n  1) Los LUN directos estén conectados a un dispositivo ManageIQ\n  2) La relación de gestión esté configurada para el dispositivo ManageIQ"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow/dialog_field_validation.rb:11
@@ -55676,7 +55676,7 @@ msgstr "La acción Copiar no se aplica a la función seleccionada Automatizar es
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:16
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:17
 msgid "Copy from Provisioning"
-msgstr "Copiar desde Aprovisionamiento\\n"
+msgstr "Copiar desde Aprovisionamiento"
 
 #: ../app/views/catalog/_confirmation_modal.html.haml:35
 msgid "Copy from provisioning"

@@ -47739,7 +47739,7 @@ msgstr "Questa funzione non è supportata dalla versione api del provider"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_or_template_shared/scanning.rb:51
 msgid "VMs must be scanned from an EVM server whose host is attached to the same\n  storage as the VM unless overridden via SmartProxy affinity.\n  Please verify that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management Relationship is set for the ManageIQ appliance"
-msgstr "Le VM devono essere scansate da un server EVM il cui host è collegato alla stessa memoria della VM a meno che non sovrascrivi tramite affinità SmartProxy.\n  Si prega di verificare che: 1) I LUN diretti siano collegati al dispositivo ManageIQ 2) La Relazione di gestione sia impostata per il dispositivo ManageIQ"
+msgstr "Le VM devono essere scansate da un server EVM il cui host è collegato alla stessa\n  memoria della VM a meno che non sovrascrivi tramite affinità SmartProxy.\n  Si prega di verificare che:\n  1) I LUN diretti siano collegati al dispositivo ManageIQ\n  2) La Relazione di gestione sia impostata per il dispositivo ManageIQ"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow/dialog_field_validation.rb:11
