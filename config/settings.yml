@@ -1090,13 +1090,13 @@
   :worker_base:
     :defaults:
       :count: 1
-      :cpu_request_percent: 25
-      :cpu_threshold_percent: 50
+      :cpu_request_percent: 15
+      :cpu_threshold_percent: 100
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
-      :memory_request: 250.megabytes
-      :memory_threshold: 400.megabytes
+      :memory_request: 500.megabytes
+      :memory_threshold: 600.megabytes
       :nice_delta: 10
       :parent_time_threshold: 3.minutes
       :poll: 3.seconds
@@ -1132,13 +1132,11 @@
     :queue_worker_base:
       :defaults:
         :dequeue_method: :drb
-        :memory_threshold: 600.megabytes
         :poll_method: :normal
         :queue_timeout: 10.minutes
       :ems_metrics_collector_worker:
         :defaults:
           :count: 2
-          :memory_threshold: 600.megabytes
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_google: {}
@@ -1168,7 +1166,6 @@
       :generic_worker:
         :count: 2
       :priority_worker:
-        :memory_threshold: 600.megabytes
         :count: 2
         :nice_delta: 1
         :poll: 1.seconds
