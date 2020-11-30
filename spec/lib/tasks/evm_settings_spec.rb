@@ -85,9 +85,8 @@ RSpec.describe "EvmSettings", :type => :rake_task do
 
   describe "ALLOWED_KEYS" do
     it "has the correct keys" do
-      @settings_keys = ["/authentication/httpd_role", "/authentication/local_login_disabled", "/authentication/mode",
-                       "/authentication/oidc_enabled", "/authentication/provider_type", "/authentication/saml_enabled",
-                       "/authentication/sso_enabled", "/prototype/messaging_type"].sort
+      @settings_keys = ["/authentication/httpd_role", "/authentication/local_login_disabled", "/authentication/mode", "/authentication/oidc_enabled",
+                        "/authentication/provider_type", "/authentication/saml_enabled", "/authentication/sso_enabled", "/prototype/messaging_type"].sort
 
       expect(EvmSettings::ALLOWED_KEYS.sort).to eq(@settings_keys)
     end
