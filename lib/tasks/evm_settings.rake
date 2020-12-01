@@ -6,7 +6,8 @@ module EvmSettings
     "/authentication/saml_enabled",
     "/authentication/oidc_enabled",
     "/authentication/provider_type",
-    "/authentication/local_login_disabled"
+    "/authentication/local_login_disabled",
+    "/prototype/messaging_type"
   ].freeze
 
   INFO  ||= "info".freeze
