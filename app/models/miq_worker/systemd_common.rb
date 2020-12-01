@@ -116,18 +116,15 @@ class MiqWorker
     end
 
     def sd_notify_started
-      require "sd_notify"
-      SdNotify.ready
+      sd_notify.ready
     end
 
     def sd_notify_stopping
-      require "sd_notify"
-      SdNotify.stopping
+      sd_notify.stopping
     end
 
     def sd_notify_watchdog
-      require "sd_notify"
-      SdNotify.watchdog
+      sd_notify.watchdog
     end
 
     private
@@ -136,6 +133,13 @@ class MiqWorker
       @systemd ||= begin
         require "dbus/systemd"
         DBus::Systemd::Manager.new
+      end
+    end
+
+    def sd_notify
+      @sd_notify ||= begin
+        require "sd_notify"
+        SdNotify
       end
     end
 
