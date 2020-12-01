@@ -3,26 +3,18 @@ require 'pg/logical_replication'
 
 class MiqPglogical
   include Vmdb::Logging
+  include ConnectionHandling
 
   PUBLICATION_NAME = 'miq'.freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
-  def self.with_connection_error_handling
-    retry_attempted ||= false
-    yield
-  rescue PG::ConnectionBad
-    raise if retry_attempted
-
-    pglogical(true)
-    retry_attempted = true
-    retry
+  # :nodoc:
+  #
+  # Note:  Don't use a delegate with this method, since we want the
+  # .with_connection_error_handling to wrap this methods
+  def subscriber?
+    self.class.with_connection_error_handling { pglogical.subscriber? }
   end
-
-  def initialize
-    @pg_connection = ApplicationRecord.connection.raw_connection
-  end
-
-  delegate :subscriber?, :to => :pglogical
 
   def provider?
     self.class.with_connection_error_handling { pglogical.publishes?(PUBLICATION_NAME) }
@@ -80,10 +72,8 @@ class MiqPglogical
     PglogicalSubscription.save_all!(subscriptions_to_save)
   end
 
-  private
-
-  def pglogical(refresh = false)
-    @pglogical = nil if refresh
-    @pglogical ||= PG::LogicalReplication::Client.new(@pg_connection)
+  def self.pg_connection
+    ApplicationRecord.connection.raw_connection
   end
+  private_class_method :pg_connection
 end
