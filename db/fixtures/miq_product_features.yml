@@ -6509,6 +6509,13 @@
   :identifier: shortcuts
   :hidden: true
 
+# Timezones
+- :name: Timezones
+  :description: List of available timezones
+  :feature_type: view
+  :identifier: timezones
+  :hidden: true
+
 # API
 - :name: API
   :description: Features Exclusive to the API
