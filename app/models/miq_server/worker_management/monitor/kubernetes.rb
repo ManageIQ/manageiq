@@ -15,6 +15,23 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     current_pods.values.select { |h| h[:last_state_terminated] && h.fetch(:container_restarts, 0) > restart_count }.collect { |h| h[:label_name] }
   end
 
+  def sync_deployment_settings
+    return unless podified?
+    return unless Settings.server.worker_monitor.enforce_resource_constraints
+
+    podified_miq_workers.each do |worker|
+      if worker.deployment_resource_constraints_changed?
+        _log.info("Constraints changed, patching deployment: [#{worker.worker_deployment_name}]")
+        worker.patch_deployment
+      end
+    end
+  end
+
+  def podified_miq_workers
+    # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
+    miq_workers.where.not(:type => %w[MiqCockpitWsWorker])
+  end
+
   private
 
   def start_pod_monitor

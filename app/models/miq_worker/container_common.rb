@@ -29,6 +29,29 @@ class MiqWorker
       delete_container_objects if self.class.workers.zero?
     end
 
+    def patch_deployment
+      # Start with just resource constraints. Perhaps the livenessProbe, readinessProbe,
+      # and various timeouts such as terminationGracePeriodSeconds, could be patched later on.
+      # Note, we need to specify the name and image as they're required fields for the API to 'find'
+      # the correct container, even if we only ever have one.
+      data = {
+        :spec => {
+          :template => {
+            :spec => {
+              :containers => [
+                {
+                  :name      => worker_deployment_name,
+                  :image     => container_image,
+                  :resources => resource_constraints
+                }
+              ]
+            }
+          }
+        }
+      }
+      ContainerOrchestrator.new.patch_deployment(worker_deployment_name, data)
+    end
+
     def zone_selector
       {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone-#{MiqServer.my_zone}" => "true"}
     end
@@ -56,6 +79,13 @@ class MiqWorker
         h.store_path(:requests, :memory, format_memory_threshold(mem_request)) if mem_request
         h.store_path(:requests, :cpu, format_cpu_threshold(cpu_request)) if cpu_request
       end
+    end
+
+    def deployment_resource_constraints_changed?
+      container = ContainerOrchestrator.cached_deployment.fetch_path(worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
+      current_constraints = container.try(:fetch, :resources, nil) || {}
+      desired_constraints = resource_constraints
+      (current_constraints.blank? && !desired_constraints.blank?) || (current_constraints != desired_constraints)
     end
 
     def container_image_namespace
