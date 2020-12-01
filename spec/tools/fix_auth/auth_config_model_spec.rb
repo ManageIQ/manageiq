@@ -36,7 +36,7 @@ RSpec.describe FixAuth::AuthConfigModel do
       )
     end
 
-    it "upgrades request (find with prefix, dont stringify keys)" do
+    it "upgrades request (find with prefix, do not stringify keys)" do
       subject.fix_passwords(request)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
@@ -64,7 +64,7 @@ RSpec.describe FixAuth::AuthConfigModel do
       )
     end
 
-    it "upgrades request (find with prefix, dont stringify keys)" do
+    it "upgrades request (find with prefix, do not stringify keys)" do
       subject.fix_passwords(request)
       expect(request).to be_changed
       new_options = YAML.load(request.options)

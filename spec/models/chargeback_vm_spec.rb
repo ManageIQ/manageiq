@@ -1408,7 +1408,7 @@ RSpec.describe ChargebackVm do
         expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
       end
 
-      context 'metrics are included (but dont have any)' do
+      context 'metrics are included (but do not have any)' do
         it 'is not generating report with options[:include_metrics]=true' do
           options[:include_metrics] = true
           expect(subject).to be_nil

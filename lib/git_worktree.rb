@@ -446,7 +446,7 @@ class GitWorktree
 
   def create_commit(message, tree, parents)
     author = {:email => @email, :name => @username || @email, :time => Time.now}
-    # Create the actual commit but dont update the reference
+    # Create the actual commit but do not update the reference
     Rugged::Commit.create(@repo, :author  => author,  :committer  => author,
                                  :message => message, :parents    => parents,
                                  :tree    => tree)
