@@ -68,10 +68,4 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential < M
 
     attrs
   end
-
-  private
-
-  def ensure_newline_for_ssh_key
-    self.auth_key = "#{auth_key}\n" if auth_key.present? && auth_key[-1] != "\n"
-  end
 end

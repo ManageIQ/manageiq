@@ -59,4 +59,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
     self.manager_ref = self.id
     save!
   end
+
+  private
+
+  def ensure_newline_for_ssh_key
+    self.auth_key = "#{auth_key}\n" if auth_key.present? && auth_key[-1] != "\n"
+  end
 end
