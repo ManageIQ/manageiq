@@ -3005,7 +3005,6 @@ RSpec.describe Rbac::Filterer do
     end
   end
 
-  # private method
   describe ".select_from_order_columns" do
     subject { described_class.new }
     it "removes empty" do
@@ -3050,6 +3049,46 @@ RSpec.describe Rbac::Filterer do
 
     def ascenders(cols)
       cols.map { |c| Arel::Nodes::Ascending.new(c) }
+    end
+  end
+
+  context "scope by product feature" do
+    let(:shortcut_feature1) { "shortcut_feature_1" }
+    let(:shortcut_feature2) { "shortcut_feature_2" }
+    let(:product_feature1)  { FactoryBot.create(:miq_product_feature, :identifier => shortcut_feature1) }
+    let(:product_feature2)  { FactoryBot.create(:miq_product_feature, :identifier => shortcut_feature2) }
+    let!(:shortcut1)         { FactoryBot.create(:miq_shortcut, :rbac_feature_name => shortcut_feature1) }
+    let!(:shortcut2)         { FactoryBot.create(:miq_shortcut, :rbac_feature_name => shortcut_feature2) }
+
+    let(:user_role1) do
+      FactoryBot.create(:miq_user_role, :name => "role_name_1", :miq_product_features => [product_feature1])
+    end
+
+    let(:user_role2) do
+      FactoryBot.create(:miq_user_role, :name => "role_name_2", :miq_product_features => [product_feature1, product_feature2])
+    end
+
+    let(:group1) do
+      FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role1)
+    end
+
+    let(:group2) do
+      FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role2)
+    end
+
+    let!(:user1) { FactoryBot.create(:user, :miq_groups => [group1]) }
+    let!(:user2) { FactoryBot.create(:user, :miq_groups => [group2]) }
+    let!(:user)  { FactoryBot.create(:user) }
+
+    it "filters miq shortcuts according to MiqShortcut#rbac_feature_name" do
+      results = described_class.filtered(MiqShortcut, :user => user)
+      expect(results).to be_empty
+
+      results = described_class.filtered(MiqShortcut, :user => user1)
+      expect(results).to match_array([shortcut1])
+
+      results = described_class.filtered(MiqShortcut, :user => user2)
+      expect(results).to match_array([shortcut1, shortcut2])
     end
   end
 
