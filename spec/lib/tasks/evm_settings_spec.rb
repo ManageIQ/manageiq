@@ -17,6 +17,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
                                :local_login_disabled => false,
                                :provider_type        => "none",
                                :sso_enabled          => false},
+           :prototype      => {:messaging_type       => "krabby patties"},
            :binary_blob    => {:purge_window_size    => 100}}
 
         allow(Settings).to receive(:to_hash).and_return(@settings_hash)
@@ -27,7 +28,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=false")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=none")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
-        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=krabby patties")
         EvmSettings.get_keys
       end
 
@@ -42,6 +43,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
                                :local_login_disabled => false,
                                :provider_type        => "oidc",
                                :sso_enabled          => false},
+           :prototype      => {:messaging_type       => "krabby patties"},
            :binary_blob    => {:purge_window_size    => 100}}
 
         allow(Settings).to receive(:to_hash).and_return(@settings_hash)
@@ -52,7 +54,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=true")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=oidc")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
-        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=krabby patties")
         EvmSettings.get_keys
       end
 
@@ -67,6 +69,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
                                :local_login_disabled => false,
                                :provider_type        => "saml",
                                :sso_enabled          => false},
+           :prototype      => {:messaging_type       => "krabby patties"},
            :binary_blob    => {:purge_window_size    => 100}}
 
         allow(Settings).to receive(:to_hash).and_return(@settings_hash)
@@ -77,7 +80,7 @@ RSpec.describe "EvmSettings", :type => :rake_task do
         expect(STDOUT).to receive(:puts).with("/authentication/oidc_enabled=false")
         expect(STDOUT).to receive(:puts).with("/authentication/provider_type=saml")
         expect(STDOUT).to receive(:puts).with("/authentication/local_login_disabled=false")
-        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=")
+        expect(STDOUT).to receive(:puts).with("/prototype/messaging_type=krabby patties")
         EvmSettings.get_keys
       end
     end
