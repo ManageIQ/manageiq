@@ -91,7 +91,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
           "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => "keypass"
         )
 
-        expect(File.read(key_file)).to eq("key_data")
+        expect(File.read(key_file)).to eq("key_data\n")
       end
 
       it "doesn't create the password file if there are no passwords" do
