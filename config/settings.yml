@@ -1095,10 +1095,6 @@
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
-    :ems_refresh_core_worker:
-      :poll: 1.seconds
-      :nice_delta: 1
-      :thread_shutdown_timeout: 10.seconds
     :event_catcher:
       :defaults:
         :flooding_events_per_minute: 30
