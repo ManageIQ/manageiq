@@ -18,6 +18,8 @@
     :password:
     :port:
     :user:
+:log:
+  :level_<%= provider_name %>: info
 <% if options[:scaffolding] -%>
 :workers:
   :worker_base:

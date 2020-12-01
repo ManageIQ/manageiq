@@ -112,18 +112,9 @@
 :ems_refresh:
   :debug_trace: false
   :capture_vm_created_on_date: false
-  :ansible_tower_automation:
-    :allow_targeted_refresh: true
-    :refresh_interval: 15.minutes
-  :foreman_configuration:
-    :refresh_interval: 15.minutes
-  :foreman_provisioning:
-    :refresh_interval: 1.hour
   :full_refresh_threshold: 100
   :raise_vm_snapshot_complete_if_created_within: 15.minutes
   :refresh_interval: 24.hours
-  :scvmm:
-    :refresh_interval: 15.minutes
 :event_handling:
   :bottleneck_event_groups:
     :Capacity:
@@ -839,12 +830,6 @@
     :port:
     :user:
     :scheme:
-  :gce:
-    :host:
-    :password:
-    :port:
-    :user:
-    :scheme:
 :log:
   :collection:
     :include_automate_models_and_dialogs: true
@@ -871,17 +856,8 @@
   :level_rails: info
   :level_api: info
   :level_automation: info
-  :level_azure_stack: info
-  :level_cn_monitoring: info
   :level_fog: info
-  :level_gce: info
-  :level_mw: info
-  :level_nsxt: info
-  :level_nuage: info
   :level_policy: info
-  :level_scvmm: info
-  :level_vcloud: info
-  :level_vim: warn
   :level_remote_console: info
 :notifications:
   :history:
@@ -1092,9 +1068,6 @@
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
       :systemd_enabled: true
-    :agent_coordinator_worker:
-      :heartbeat_timeout: 30.minutes
-      :poll: 30.seconds
     :event_catcher:
       :defaults:
         :flooding_events_per_minute: 30
@@ -1104,10 +1077,6 @@
         :memory_threshold: 2.gigabytes
         :nice_delta: 1
         :poll: 1.seconds
-      :event_catcher_ansible_tower:
-        :poll: 20.seconds
-      :event_catcher_google:
-        :poll: 15.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
@@ -1122,7 +1091,6 @@
           :count: 2
           :nice_delta: 3
           :poll_method: :escalate
-        :ems_metrics_collector_worker_google: {}
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 800.megabytes
@@ -1137,13 +1105,6 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :dequeue_method: :sql
-        :ems_refresh_worker_ansible_tower_automation: {}
-        :ems_refresh_worker_foreman_configuration: {}
-        :ems_refresh_worker_foreman_provisioning: {}
-        :ems_refresh_worker_google: {}
-        :ems_refresh_worker_google_network: {}
-        :ems_refresh_worker_microsoft: {}
-        :ems_refresh_worker_nuage_network: {}
       :event_handler:
         :nice_delta: 7
       :generic_worker:
