@@ -60,6 +60,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
   alias ssh_key_data   auth_key
   alias ssh_key_unlock auth_key_password
 
+  before_validation :ensure_newline_for_ssh_key
+
   def self.display_name(number = 1)
     n_('Credential (Machine)', 'Credentials (Machine)', number)
   end
