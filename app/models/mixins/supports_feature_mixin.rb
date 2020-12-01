@@ -77,6 +77,7 @@ module SupportsFeatureMixin
     :backup_restore                      => 'CloudVolume backup restore',
     :cinder_service                      => 'Cinder storage service',
     :cinder_volume_types                 => 'Cinder volume types',
+    :collect_running_processes           => 'Collect running processes',
     :conversion_host                     => 'Conversion host capable',
     :create_flavor                       => 'Flavor Creation',
     :create_floating_ip                  => 'Floating IP Creation',
