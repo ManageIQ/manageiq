@@ -254,7 +254,7 @@ module SupportsFeatureMixin
 
     def unsupported
       # This is a class variable and it might be modified during runtime
-      # because we dont eager load all classes at boot time, so it needs to be thread safe
+      # because we do not eager load all classes at boot time, so it needs to be thread safe
       @unsupported ||= Concurrent::Hash.new
     end
 

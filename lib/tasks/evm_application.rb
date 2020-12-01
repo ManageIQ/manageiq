@@ -72,7 +72,7 @@ class EvmApplication
     duplicate_columns.delete("Status") # always show status
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
 
-    # dont give headsup for empty values
+    # do not give heads-up for empty values
     heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
     if heads_up.present?
       puts "", "All rows have the values: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"

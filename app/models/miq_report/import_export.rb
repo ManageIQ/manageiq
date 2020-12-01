@@ -74,12 +74,12 @@ module MiqReport::ImportExport
             rep.attributes = report
             result = {:message => "Replaced Report: [#{report["name"]}]", :level => :info, :status => :update}
           else
-            # if report exists dont overwrite
+            # if report exists, do not overwrite
             msg = "Skipping Report (already in DB under a different group): [#{report["name"]}]"
             result = {:message => msg, :level => :error, :status => :skip}
           end
         else
-          # if report exists dont overwrite
+          # if report exists, do not overwrite
           msg = "Skipping Report (already in DB): [#{report["name"]}]"
           result = {:message => msg, :level => :info, :status => :keep}
         end

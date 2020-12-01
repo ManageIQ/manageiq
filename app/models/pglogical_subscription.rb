@@ -123,7 +123,7 @@ class PglogicalSubscription < ActsAsArModel
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys
 
-    # delete the things we dont care about
+    # delete the things we do not care about
     cols.delete(:database_name)
     cols.delete(:owner)
     cols.delete(:slot_name)
