@@ -127,6 +127,11 @@ class MiqWorker
       sd_notify.watchdog
     end
 
+    def sd_notify_watchdog_usec(timeout_in_seconds)
+      usec = timeout_in_seconds * 1_000_000
+      sd_notify.notify("WATCHDOG_USEC=#{usec}", false)
+    end
+
     private
 
     def systemd
