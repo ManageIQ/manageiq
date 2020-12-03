@@ -6,4 +6,8 @@ class FileDepotNfs < FileDepot
   def self.uri_prefix
     "nfs"
   end
+
+  def self.display_name(number = 1)
+    n_('NFS', 'NFS', number)
+  end
 end

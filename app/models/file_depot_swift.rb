@@ -64,4 +64,8 @@ class FileDepotSwift < FileDepot
     uri.query = query_elements.join('&').presence
     uri.to_s
   end
+
+  def self.display_name(number = 1)
+    n_('OpenStack Swift', 'OpenStack Swift', number)
+  end
 end
