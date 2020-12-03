@@ -70,6 +70,7 @@ class MiqWorker
           Environment=BUNDLER_GROUPS=#{bundler_groups.join(",")}
           ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=no
+          Type=notify
           Slice=#{slice_name}
         UNIT_FILE
       end
