@@ -32,7 +32,7 @@ module MiqServer::WorkerManagement::Monitor
       # Push the heartbeat into the database
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
-      next unless validate_worker(worker)
+      validate_worker(worker)
     end
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
