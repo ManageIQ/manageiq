@@ -156,7 +156,7 @@ module MiqReport::Generator::Html
         if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
           grp_output = ""
           grp_output << "<tr>"
-          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last.pluralize)}:</td>"
+          grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{_(calc.last)}:</td>"
           col_order.each_with_index do |c, c_idx|        # Go through the columns
             next if c_idx == 0                                # Skip first column
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
