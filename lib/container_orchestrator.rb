@@ -80,9 +80,11 @@ class ContainerOrchestrator
   end
 
   def get_deployments
+    kube_apps_connection.get_deployments(default_get_options)
   end
 
   def watch_deployments(resource_version = nil)
+    kube_apps_connection.watch_deployments(default_get_options.merge(:resource_version => resource_version))
   end
 
   def get_pods
