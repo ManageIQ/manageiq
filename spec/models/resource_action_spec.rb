@@ -111,15 +111,30 @@ RSpec.describe ResourceAction do
   context "#automate_queue_hash" do
     let(:button) { FactoryBot.create(:custom_button, :applies_to_class => "Vm") }
     let(:ra)     { FactoryBot.create(:resource_action, :resource => button) }
-    let(:user)   { FactoryBot.create(:user_with_group) }
     let(:target) { FactoryBot.create(:vm_vmware) }
 
-    it "passes result_format" do
-      expect(ra.automate_queue_hash(target, {"result_format"=>"ignore"}, user)).to include(:attrs => {"result_format"=>"ignore"})
+    context "with user" do
+      let(:user) { FactoryBot.create(:user_with_group) }
+
+      it "passes result_format" do
+        expect(ra.automate_queue_hash(target, {"result_format"=>"ignore"}, user)).to include(:attrs => {"result_format"=>"ignore"})
+      end
+
+      it "does not pass result_format by default" do
+        expect(ra.automate_queue_hash(target, {}, user)).not_to include(:attrs => {"result_format"=>"ignore"})
+      end
     end
 
-    it "does not pass result_format by default" do
-      expect(ra.automate_queue_hash(target, {}, user)).not_to include(:attrs => {"result_format"=>"ignore"})
+    context "without user" do
+      let(:user) { nil }
+
+      it "passes result_format" do
+        expect(ra.automate_queue_hash(target, {"result_format"=>"ignore"}, user)).to include(:attrs => {"result_format"=>"ignore"})
+      end
+
+      it "does not pass result_format by default" do
+        expect(ra.automate_queue_hash(target, {}, user)).not_to include(:attrs => {"result_format"=>"ignore"})
+      end
     end
   end
 end

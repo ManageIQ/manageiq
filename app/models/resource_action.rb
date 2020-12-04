@@ -39,10 +39,10 @@ class ResourceAction < ApplicationRecord
       :open_url_task_id => open_url_task_id,
       :attrs            => attrs,
     }.merge(override_values).tap do |args|
-      args[:user_id] ||= user.id
-      args[:miq_group_id] ||= user.current_group.id
-      args[:tenant_id] ||= user.current_tenant.id
-      args[:username] ||= user.userid
+      args[:user_id] ||= user.try(:id)
+      args[:miq_group_id] ||= user.try(:current_group).try(:id)
+      args[:tenant_id] ||= user.try(:current_tenant).try(:id)
+      args[:username] ||= user.try(:userid)
     end
   end
 
