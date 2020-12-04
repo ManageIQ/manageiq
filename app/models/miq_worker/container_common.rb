@@ -85,13 +85,6 @@ class MiqWorker
       end
     end
 
-    def deployment_resource_constraints_changed?
-      container = ContainerOrchestrator.cached_deployment.fetch_path(worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
-      current_constraints = container.try(:fetch, :resources, nil) || {}
-      desired_constraints = resource_constraints
-      (current_constraints.blank? && !desired_constraints.blank?) || (current_constraints != desired_constraints)
-    end
-
     def container_image_namespace
       ENV["CONTAINER_IMAGE_NAMESPACE"]
     end

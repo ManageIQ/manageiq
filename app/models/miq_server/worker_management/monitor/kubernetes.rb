@@ -28,7 +28,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     podified_miq_workers.each do |worker|
       next if checked_deployments.include?(worker.worker_deployment_name)
 
-      if worker.deployment_resource_constraints_changed?
+      if deployment_resource_constraints_changed?(worker)
         _log.info("Constraints changed, patching deployment: [#{worker.worker_deployment_name}]")
         worker.patch_deployment
       end
@@ -39,6 +39,13 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   def podified_miq_workers
     # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
     miq_workers.where.not(:type => %w[MiqCockpitWsWorker])
+  end
+
+  def deployment_resource_constraints_changed?(worker)
+    container = current_deployments.fetch_path(worker.worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
+    current_constraints = container.try(:fetch, :resources, nil) || {}
+    desired_constraints = worker.resource_constraints
+    (current_constraints.blank? && desired_constraints.present?) || (current_constraints != desired_constraints)
   end
 
   private

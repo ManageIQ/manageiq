@@ -8,8 +8,6 @@ class ContainerOrchestrator
   TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
   CA_CERT_FILE = "/run/secrets/kubernetes.io/serviceaccount/ca.crt".freeze
 
-  class_attribute :cached_deployment, :default => Hash.new({})
-
   def self.available?
     File.exist?(TOKEN_FILE) && File.exist?(CA_CERT_FILE)
   end
@@ -20,27 +18,15 @@ class ContainerOrchestrator
 
   def patch_deployment(deployment_name, data)
     _log.info("deployment_name: #{deployment_name}, data: #{data.inspect}")
-    kube_apps_connection.patch_deployment(deployment_name, data, my_namespace).tap do
-      cache_deployment(deployment_name, data, :merge)
-    end
+    kube_apps_connection.patch_deployment(deployment_name, data, my_namespace)
   end
 
   def create_deployment(name)
     definition = deployment_definition(name)
     yield(definition) if block_given?
-    kube_apps_connection.create_deployment(definition).tap { cache_deployment(name, definition) }
+    kube_apps_connection.create_deployment(definition)
   rescue KubeException => e
     raise unless e.message =~ /already exists/
-  end
-
-  def cache_deployment(name, data, type = :full)
-    # Track the current definition as we create/update so we can detect changes
-    case type
-    when :merge
-      self.class.cached_deployment[name] = self.class.cached_deployment[name].deep_merge(data)
-    when :full
-      self.class.cached_deployment[name] = data
-    end
   end
 
   def create_service(name, selector, port)
