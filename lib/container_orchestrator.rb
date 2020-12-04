@@ -79,16 +79,22 @@ class ContainerOrchestrator
     raise unless e.message =~ /not found/
   end
 
+  def get_deployments
+  end
+
+  def watch_deployments(resource_version = nil)
+  end
+
   def get_pods
-    kube_connection.get_pods(pod_options)
+    kube_connection.get_pods(default_get_options)
   end
 
   def watch_pods(resource_version = nil)
-    kube_connection.watch_pods(pod_options.merge(:resource_version => resource_version))
+    kube_connection.watch_pods(default_get_options.merge(:resource_version => resource_version))
   end
 
   private
-  def pod_options
+  def default_get_options
     {:namespace => my_namespace, :label_selector => [app_name_selector, orchestrated_by_selector].join(",")}
   end
 

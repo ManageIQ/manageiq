@@ -32,27 +32,34 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       allow(server).to receive(:delete_failed_deployments)
     end
 
-    it "calls start_pod_monitor if nil monitor thread" do
-      expect(server).to receive(:start_pod_monitor)
-      server.instance_variable_set(:@monitor_thread, nil)
+    it "calls start_kube_monitor if nil monitor thread" do
+      expect(server).to receive(:start_kube_monitor).once.with(:deployments)
+      expect(server).to receive(:start_kube_monitor).once.with(:pods)
+
+      server.deployments_monitor_thread = nil
+      server.pods_monitor_thread = nil
       server.send(:ensure_pod_monitor_started)
     end
 
-    it "calls start_pod_monitor if monitor thread terminated normally" do
-      expect(server).to receive(:start_pod_monitor)
+    it "calls start_kube_monitor if monitor thread terminated normally" do
+      expect(server).to receive(:start_kube_monitor).twice
       thread = double(:alive? => false, :status => false)
       expect(thread).to receive(:join).never
 
-      server.instance_variable_set(:@monitor_thread, thread)
+      server.deployments_monitor_thread = thread
+      server.pods_monitor_thread = thread
       server.send(:ensure_pod_monitor_started)
     end
 
-    it "joins a dead thread with an exception before calling start_pod_monitor" do
-      expect(server).to receive(:start_pod_monitor)
-      thread = double(:alive? => false, :status => nil)
-      expect(thread).to receive(:join).once
+    it "joins a dead thread with an exception before calling start_kube_monitor" do
+      expect(server).to receive(:start_kube_monitor).twice
+      thread = double
+      expect(thread).to receive(:alive?).twice.and_return(false)
+      expect(thread).to receive(:status).twice.and_return(nil)
+      expect(thread).to receive(:join).twice
 
-      server.instance_variable_set(:@monitor_thread, thread)
+      server.deployments_monitor_thread = thread
+      server.pods_monitor_thread = thread
       server.send(:ensure_pod_monitor_started)
     end
   end
@@ -169,26 +176,26 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       it "ADDED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("ADDED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events, nil)
+        server.send(:watch_for_pod_events, :pods, nil)
       end
 
       it "MODIFIED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("MODIFIED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events, nil)
+        server.send(:watch_for_pod_events, :pods, nil)
       end
 
       it "DELETED calls delete_pod with event object" do
         allow(watch_event).to receive(:type).and_return("DELETED")
         expect(server).to receive(:delete_pod).with(event_object)
-        server.send(:watch_for_pod_events, nil)
+        server.send(:watch_for_pod_events, :pods, nil)
       end
 
       it "UNKNOWN type isn't saved or deleted" do
         allow(watch_event).to receive(:type).and_return("UNKNOWN")
         expect(server).to receive(:save_pod).never
         expect(server).to receive(:delete_pod).never
-        server.send(:watch_for_pod_events, nil)
+        server.send(:watch_for_pod_events, :pods, nil)
       end
 
       it "ERROR logs warning and breaks" do
@@ -207,7 +214,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
           expect(reason).to eql(expected_reason)
         end
 
-        server.send(:watch_for_pod_events, nil)
+        server.send(:watch_for_pod_events, :pods, nil)
       end
     end
   end
