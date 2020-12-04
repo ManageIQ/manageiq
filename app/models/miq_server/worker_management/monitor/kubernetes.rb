@@ -19,11 +19,15 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     return unless podified?
     return unless Settings.server.worker_monitor.enforce_resource_constraints
 
+    checked_deployments = Set.new
     podified_miq_workers.each do |worker|
+      next if checked_deployments.include?(worker.worker_deployment_name)
+
       if worker.deployment_resource_constraints_changed?
         _log.info("Constraints changed, patching deployment: [#{worker.worker_deployment_name}]")
         worker.patch_deployment
       end
+      checked_deployments << worker.worker_deployment_name
     end
   end
 
