@@ -6502,6 +6502,13 @@
       :identifier: transformation_mapping_delete
       :feature_type: admin
 
+# Shortcuts
+- :name: Shortcuts
+  :description: Shortcuts that can be set as a startpage
+  :feature_type: view
+  :identifier: shortcuts
+  :hidden: true
+
 # API
 - :name: API
   :description: Features Exclusive to the API
