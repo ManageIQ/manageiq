@@ -1378,6 +1378,27 @@ RSpec.describe ChargebackVm do
         expect(subject.storage_allocated_cost).to   eq(disk_cost)
         expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
       end
+
+      context "group by tags" do
+        let!(:tag_category_qa) { FactoryBot.create(:classification_tag, :parent => @tag.category, :name => "qa", :description => "QA") }
+
+        let!(:vm_qa)  { FactoryBot.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day) }
+        let(:options) { base_options.except(:tag, :userid).merge(:groupby => "tag", :tenant_id => vm1.tenant.id.to_s, :interval => 'daily', :groupby_tag => 'environment') }
+
+        let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => MiqEnterprise.first} }
+
+        before do
+          vm_qa.tag_with("/managed/environment/#{tag_category_qa.name}", :ns => '*')
+          ChargebackRate.set_assignments(:compute, [rate_assignment_options])
+        end
+
+        subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
+
+        it "groups report by tag names" do
+          expected_result = [[vm_qa.id, tag_category_qa.description], [vm1.id, @tag.classification.description]]
+          expect(subject.map { |x| [x.entity.id, x.tag_name] }).to match_array(expected_result)
+        end
+      end
     end
 
     context 'for any virtual machine' do
