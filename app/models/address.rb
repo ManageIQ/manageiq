@@ -4,7 +4,8 @@ class Address < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :physical_storage_consumer, :inverse_of => :addresses
   belongs_to :physical_storage, :inverse_of => :addresses
-  belongs_to :port, :polymorphic => true
+  belongs_to :owner, :polymorphic => true
+  # belongs_to :port, :polymorphic => true
 
   acts_as_miq_taggable
 
@@ -12,5 +13,9 @@ class Address < ApplicationRecord
     # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
     ext_management_system && ext_management_system.class::Address
+  end
+
+  def get_address_string()
+    raise NotImplementedError, _("must be implemented in subclass")
   end
 end
