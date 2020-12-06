@@ -2,9 +2,10 @@ class Address < ApplicationRecord
   include ProviderObjectMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
-  belongs_to :physical_storage_consumer, :inverse_of => :addresses
-  belongs_to :physical_storage, :inverse_of => :addresses
+  # belongs_to :physical_storage_consumer, :inverse_of => :addresses
+  # belongs_to :physical_storage, :inverse_of => :addresses
   belongs_to :port, :polymorphic => true
+  belongs_to :owner, :polymorphic => true
 
   acts_as_miq_taggable
 

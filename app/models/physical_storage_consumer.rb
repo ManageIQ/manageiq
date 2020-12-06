@@ -7,7 +7,7 @@ class PhysicalStorageConsumer < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :physical_storage, :inverse_of => :physical_storage_consumers
 
-  has_many :addresses, :dependent => :destroy
+  has_many :addresses, :as => :owner, :dependent => :destroy
 
   virtual_total :v_total_addresses, :addresses
 
