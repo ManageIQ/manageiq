@@ -45,7 +45,16 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     container = current_deployments.fetch_path(worker.worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
     current_constraints = container.try(:fetch, :resources, nil) || {}
     desired_constraints = worker.resource_constraints
-    (current_constraints.blank? && desired_constraints.present?) || (current_constraints != desired_constraints)
+    constraints_changed?(current_constraints, desired_constraints)
+  end
+
+  def constraints_changed?(current, desired)
+    return true if (current.blank? && desired.present?)
+
+    current.fetch_path(:requests, :cpu)                             != desired.fetch_path(:requests, :cpu) ||
+      current.fetch_path(:limits, :cpu)                             != desired.fetch_path(:limits, :cpu) ||
+      current.fetch_path(:requests, :memory).try(:iec_60027_2_to_i) != desired.fetch_path(:requests, :memory).try(:iec_60027_2_to_i) ||
+      current.fetch_path(:limits, :memory).try(:iec_60027_2_to_i)   != desired.fetch_path(:limits, :memory).try(:iec_60027_2_to_i)
   end
 
   private

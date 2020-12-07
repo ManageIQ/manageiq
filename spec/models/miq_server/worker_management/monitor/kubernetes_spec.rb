@@ -11,6 +11,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
   after do
     server.current_pods.clear
+    server.current_deployments.clear
   end
 
   it "#current_pods initialized" do
@@ -216,6 +217,63 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
         server.send(:watch_for_pod_events, :pods, nil)
       end
+    end
+  end
+
+  context "deployment_resource_constraints_changed?" do
+    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
+    let(:deployment) do
+      {
+        :spec => {
+          :template => {
+            :spec => {
+              :containers => [:resources => constraint_one]
+            }
+          }
+        }
+      }
+    end
+    let(:worker) { FactoryBot.create(:miq_generic_worker, :miq_server => server) }
+
+    it "empty current_deployments" do
+      server.current_deployments[worker.worker_deployment_name] = nil
+      allow(worker).to receive(:resource_constraints).and_return(constraint_one)
+      expect(server).to receive(:constraints_changed?).with({}, constraint_one)
+      server.deployment_resource_constraints_changed?(worker)
+    end
+
+    it "normal" do
+      server.current_deployments[worker.worker_deployment_name] = deployment
+      allow(worker).to receive(:resource_constraints).and_return(constraint_one)
+      expect(server).to receive(:constraints_changed?).with(constraint_one, constraint_one)
+      server.deployment_resource_constraints_changed?(worker)
+    end
+  end
+
+  context "constraints_changed?" do
+    let(:empty) { {} }
+    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
+    let(:constraint_two) { {:limits => {:cpu => "888m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
+
+    it "No current, no desired constraints" do
+      expect(server.constraints_changed?(empty, empty)).to eql(false)
+    end
+
+    it "No current, new desired constraints" do
+      expect(server.constraints_changed?(empty, constraint_one)).to eql(true)
+    end
+
+    it "Current equals desired" do
+      expect(server.constraints_changed?(constraint_one, constraint_one)).to eql(false)
+    end
+
+    it "Current does not equal desired" do
+      expect(server.constraints_changed?(constraint_one, constraint_two)).to eql(true)
+    end
+
+    it "Detects 1024Mi memory == 1Gi" do
+      new_value = {:limits => {:memory => "1024Mi"}}
+      expect(server.constraints_changed?(constraint_one, constraint_one.merge(new_value))).to eql(true)
     end
   end
 end
