@@ -21,7 +21,11 @@ FactoryBot.define do
   end
 
   factory :miq_report_with_results, :parent => :miq_report do
-    miq_report_results { [FactoryBot.create(:miq_report_result, :miq_group => miq_group)] }
+    transient do
+      number_of_results { 1 }
+    end
+
+    miq_report_results { FactoryBot.create_list(:miq_report_result, number_of_results, :miq_group => miq_group) }
   end
 
   factory :miq_report_chargeback, :parent => :miq_report do
