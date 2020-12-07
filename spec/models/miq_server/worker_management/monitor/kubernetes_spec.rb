@@ -1,3 +1,5 @@
+require 'recursive-open-struct'
+
 RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
   let(:server)          { EvmSpecHelper.create_guid_miq_server_zone.second }
   let(:orchestrator)    { double("ContainerOrchestrator") }
@@ -106,6 +108,50 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
         expect(orchestrator).to receive(:delete_deployment).with(pod_label)
         server.cleanup_failed_deployments
       end
+    end
+  end
+
+  context "#save_deployment(private)" do
+    let(:pod_name) { "1-generic" }
+    let(:fake_deployment_data) do
+      RecursiveOpenStruct.new(
+        :metadata => {
+          :name => pod_name
+        },
+        :spec => {
+          :replicas => 2,
+          :template => {
+            :spec => {
+              :containers => [{:name => pod_name}]
+            }
+          }
+        },
+        :status => {
+          :readyReplicas => 2
+        }
+      )
+    end
+
+    it "saves replicas" do
+      server.send(:save_deployment, fake_deployment_data)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eql(2)
+    end
+
+    it "saves containers" do
+      server.send(:save_deployment, fake_deployment_data)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :template, :spec, :containers).first[:name]).to eql(pod_name)
+    end
+
+    it "discards other keys" do
+      server.send(:save_deployment, fake_deployment_data)
+      expect(server.current_deployments[pod_name].keys).to eql([:spec])
+    end
+
+    it "updates existing saved deployment" do
+      server.send(:save_deployment, fake_deployment_data)
+      fake_deployment_data.spec.replicas = 5
+      server.send(:save_deployment, fake_deployment_data)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eql(5)
     end
   end
 

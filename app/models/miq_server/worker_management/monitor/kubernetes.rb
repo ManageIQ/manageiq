@@ -159,8 +159,10 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def save_deployment(deployment)
     name = deployment.metadata.name
-    current_deployments[name] ||= Concurrent::Hash.new
-    current_deployments[name].merge!(deployment.to_h)
+    new_hash = Concurrent::Hash.new
+    new_hash[:spec] = deployment.spec.to_h
+    current_deployments[name] ||= new_hash
+    current_deployments[name].merge!(new_hash)
   end
 
   def delete_deployment(deployment)
