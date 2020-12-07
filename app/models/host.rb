@@ -1095,10 +1095,10 @@ class Host < ApplicationRecord
     services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
-      services = MiqLinux::Utils.parse_systemctl_list(services)
+      MiqLinux::Utils.parse_systemctl_list(services)
     else
       services = ssu.shell_exec("chkconfig --list")
-      services = MiqLinux::Utils.parse_chkconfig_list(services)
+      MiqLinux::Utils.parse_chkconfig_list(services)
     end
   end
 
