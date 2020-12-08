@@ -95,7 +95,7 @@ module ManageIQ::Providers
       count += physical_chassis.where(:health_state => state).count
       count += physical_servers.where(:health_state => state).count
       count += physical_switches.where(:health_state => state).count
-      count += physical_storages.where(:health_state => state).count
+      count + physical_storages.where(:health_state => state).count
     end
 
     def assign_health_states
@@ -112,13 +112,13 @@ module ManageIQ::Providers
       count = 0
 
       if component
-        count = component.count
+        component.count
       else
         count += physical_racks.count
         count += physical_chassis.count
         count += physical_servers.count
         count += physical_switches.count
-        count += physical_storages.count
+        count + physical_storages.count
       end
     end
 
