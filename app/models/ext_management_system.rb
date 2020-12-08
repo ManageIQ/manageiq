@@ -4,6 +4,8 @@ class ExtManagementSystem < ApplicationRecord
   include ExternalUrlMixin
   include VerifyCredentialsMixin
 
+  hide_attribute "aggregate_memory" # better to use total_memory (coin toss - they're similar)
+
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)
     where(:tenant_id => tenant.ancestor_ids + [tenant_id])

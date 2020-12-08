@@ -909,7 +909,7 @@ class MiqExpression
     parent[:class_path] ||= model.name
     parent[:assoc_path] ||= model.name
     parent[:root] ||= model.name
-    result = {:columns => model.attribute_names, :parent => parent}
+    result = {:columns => model.visible_attribute_names, :parent => parent}
     result[:reflections] = {}
 
     model.reflections_with_virtual.each do |assoc, ref|

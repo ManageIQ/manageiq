@@ -7,4 +7,11 @@ RSpec.describe DeprecationMixin do
       expect(Host.arel_attribute(:address).name).to eq("hostname") # typically this is a symbol. not perfect but it works
     end
   end
+
+  # Host.deprecate_attribute :address, :hostname
+  context ".visible_attribute_names" do
+    it "hides deprecate_attribute columns" do
+      expect(Host.visible_attribute_names).not_to include("address")
+    end
+  end
 end
