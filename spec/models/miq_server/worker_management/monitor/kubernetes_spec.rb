@@ -266,6 +266,40 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     end
   end
 
+  context "#sync_deployment_settings" do
+    let(:worker1) { FactoryBot.create(:miq_generic_worker, :miq_server => server) }
+    let(:worker2) { FactoryBot.create(:miq_generic_worker, :miq_server => server) }
+    let(:worker3) { FactoryBot.create(:miq_priority_worker, :miq_server => server) }
+
+    before do
+      allow(server).to receive(:podified?).and_return(true)
+    end
+
+    it "calls patch_deployment when changed" do
+      allow(server).to receive(:podified_miq_workers).and_return([worker1])
+      allow(server).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(true)
+      expect(worker1).to receive(:patch_deployment)
+      server.sync_deployment_settings
+    end
+
+    it "doesn't call patch_deployment when unchanged" do
+      allow(server).to receive(:podified_miq_workers).and_return([worker1])
+      allow(server).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(false)
+      expect(worker1).to receive(:patch_deployment).never
+      server.sync_deployment_settings
+    end
+
+    it "calls patch_deployment when changed once per worker class" do
+      allow(server).to receive(:podified_miq_workers).and_return([worker1, worker2, worker3])
+      allow(server).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(true)
+      allow(server).to receive(:deployment_resource_constraints_changed?).with(worker3).and_return(true)
+      expect(worker1).to receive(:patch_deployment)
+      expect(worker2).to receive(:patch_deployment).never
+      expect(worker3).to receive(:patch_deployment)
+      server.sync_deployment_settings
+    end
+  end
+
   context "deployment_resource_constraints_changed?" do
     let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}} }
     let(:deployment) do
@@ -282,6 +316,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     let(:worker) { FactoryBot.create(:miq_generic_worker, :miq_server => server) }
 
     it "empty current_deployments" do
+      stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => true}})
       server.current_deployments[worker.worker_deployment_name] = nil
       allow(worker).to receive(:resource_constraints).and_return(constraint_one)
       expect(server).to receive(:constraints_changed?).with({}, constraint_one)
@@ -289,10 +324,17 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     end
 
     it "normal" do
+      stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => true}})
       server.current_deployments[worker.worker_deployment_name] = deployment
       allow(worker).to receive(:resource_constraints).and_return(constraint_one)
       expect(server).to receive(:constraints_changed?).with(constraint_one, constraint_one)
       server.deployment_resource_constraints_changed?(worker)
+    end
+
+    it "detects no changes if not enforced" do
+      stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => false}})
+      expect(server).to receive(:constraints_changed?).never
+      expect(server.deployment_resource_constraints_changed?(worker)).to eql(false)
     end
   end
 

@@ -22,7 +22,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def sync_deployment_settings
     return unless podified?
-    return unless Settings.server.worker_monitor.enforce_resource_constraints
 
     checked_deployments = Set.new
     podified_miq_workers.each do |worker|
@@ -42,6 +41,8 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def deployment_resource_constraints_changed?(worker)
+    return false unless Settings.server.worker_monitor.enforce_resource_constraints
+
     container = current_deployments.fetch_path(worker.worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
     current_constraints = container.try(:fetch, :resources, nil) || {}
     desired_constraints = worker.resource_constraints
