@@ -619,7 +619,6 @@ class MiqAction < ApplicationRecord
     log_prefix += " VM: [#{rec.name}] Id: [#{rec.id}]"
 
     age_threshold = (Time.now.utc - action.options[:age])
-    has_ch = false
     snaps_to_delete = rec.snapshots.each_with_object([]) do |s, arr|
       next if s.is_a_type?(:evm_snapshot)
 
@@ -646,7 +645,6 @@ class MiqAction < ApplicationRecord
     end
     log_prefix += " VM: [#{rec.name}] Id: [#{rec.id}]"
 
-    has_ch = false
     snap   = nil
     rec.snapshots.order("create_time DESC").each do |s|
       next if s.is_a_type?(:evm_snapshot)

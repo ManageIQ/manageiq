@@ -50,7 +50,6 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
     end
 
     def create_in_provider_queue(manager_id, params, auth_user = nil)
-      manager = parent.find(manager_id)
       action = "Creating #{self::FRIENDLY_NAME}"
       action << " (name=#{params[:name]})" if params[:name]
       queue(nil, "create_in_provider", [manager_id, encrypt_queue_params(params)], action, auth_user)

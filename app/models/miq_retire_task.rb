@@ -11,7 +11,6 @@ class MiqRetireTask < MiqRequestTask
              req_obj.source.name
            end
 
-    new_settings = []
     "#{request_class::TASK_DESCRIPTION} for: #{name}"
   end
 
