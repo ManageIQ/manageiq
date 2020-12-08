@@ -76,4 +76,8 @@ class FileDepotS3 < FileDepot
       MiqException::MiqHostError.new("Unexpected response returned from system: #{err.message}")
     end
   end
+
+  def self.display_name(number = 1)
+    n_('AWS S3', 'AWS S3', number)
+  end
 end
