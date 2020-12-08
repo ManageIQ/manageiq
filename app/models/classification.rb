@@ -6,6 +6,9 @@ class Classification < ApplicationRecord
   virtual_column :name, :type => :string
   virtual_column :ns, :type => :string
 
+  # from acts_as_tree
+  alias entries children
+
   before_save    :save_tag
   before_destroy :validate_tag_mapping, :delete_tags_and_entries
 
@@ -267,10 +270,6 @@ class Classification < ApplicationRecord
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
     children.create!(options)
-  end
-
-  def entries
-    children
   end
 
   def lookup_by_entry(type)
