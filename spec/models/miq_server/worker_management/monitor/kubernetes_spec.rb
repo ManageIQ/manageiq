@@ -30,18 +30,14 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     expect(server.class.current_pods[:a]).to eql(:b)
   end
 
-  context "#ensure_pod_monitor_started" do
-    before do
-      allow(server).to receive(:delete_failed_deployments)
-    end
-
+  context "#ensure_kube_monitors_started" do
     it "calls start_kube_monitor if nil monitor thread" do
       expect(server).to receive(:start_kube_monitor).once.with(:deployments)
       expect(server).to receive(:start_kube_monitor).once.with(:pods)
 
       server.deployments_monitor_thread = nil
       server.pods_monitor_thread = nil
-      server.send(:ensure_pod_monitor_started)
+      server.send(:ensure_kube_monitors_started)
     end
 
     it "calls start_kube_monitor if monitor thread terminated normally" do
@@ -51,7 +47,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
       server.deployments_monitor_thread = thread
       server.pods_monitor_thread = thread
-      server.send(:ensure_pod_monitor_started)
+      server.send(:ensure_kube_monitors_started)
     end
 
     it "joins a dead thread with an exception before calling start_kube_monitor" do
@@ -63,7 +59,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
       server.deployments_monitor_thread = thread
       server.pods_monitor_thread = thread
-      server.send(:ensure_pod_monitor_started)
+      server.send(:ensure_kube_monitors_started)
     end
   end
 
@@ -80,7 +76,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     end
 
     before do
-      allow(server).to receive(:ensure_pod_monitor_started)
+      allow(server).to receive(:ensure_kube_monitors_started)
     end
 
     context "with no deployments" do
@@ -155,7 +151,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     end
   end
 
-  context "#collect_initial_pods(private)" do
+  context "#collect_initial(private)" do
     let(:resource_version) { "21943006" }
     let(:started_at) { "2020-07-22T18:47:08Z" }
     let(:pods) do
@@ -172,8 +168,17 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       allow(orchestrator).to receive(:get_pods).and_return(pods)
     end
 
+    it "collects deployments optionally" do
+      deploy = double
+      deployments = [deploy]
+      allow(deployments).to receive(:resourceVersion).and_return(resource_version)
+      allow(orchestrator).to receive(:get_deployments).and_return(deployments)
+      expect(server).to receive(:save_deployment).with(deploy)
+      server.send(:collect_initial, :deployments)
+    end
+
     it "calls save_pod for running pod" do
-      server.send(:collect_initial_pods)
+      server.send(:collect_initial)
 
       expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
@@ -188,7 +193,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       server.current_pods[deployment_name] = pod_hash
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
 
-      server.send(:collect_initial_pods)
+      server.send(:collect_initial)
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
     end
 
@@ -196,7 +201,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       allow(pods.first.status.containerStatuses.first.lastState).to receive(:terminated).and_return(double(:exitCode => 1, :reason => "Error"))
       allow(pods.first.status.containerStatuses.first.state).to receive(:running).and_return(nil)
       allow(pods.first.status.containerStatuses.first).to receive(:restartCount).and_return(10)
-      server.send(:collect_initial_pods)
+      server.send(:collect_initial)
 
       expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
       expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
@@ -204,11 +209,11 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     end
 
     it "returns resource_version" do
-      expect(server.send(:collect_initial_pods)).to eql(resource_version)
+      expect(server.send(:collect_initial)).to eql(resource_version)
     end
   end
 
-  context "#watch_for_pod_events(private)" do
+  context "#watch_for_events(private)" do
     let(:event_object) { double }
 
     let(:watch_event) do
@@ -223,26 +228,26 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       it "ADDED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("ADDED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events, :pods, nil)
+        server.send(:watch_for_events, :pods, nil)
       end
 
       it "MODIFIED calls save_pod with event object" do
         allow(watch_event).to receive(:type).and_return("MODIFIED")
         expect(server).to receive(:save_pod).with(event_object)
-        server.send(:watch_for_pod_events, :pods, nil)
+        server.send(:watch_for_events, :pods, nil)
       end
 
       it "DELETED calls delete_pod with event object" do
         allow(watch_event).to receive(:type).and_return("DELETED")
         expect(server).to receive(:delete_pod).with(event_object)
-        server.send(:watch_for_pod_events, :pods, nil)
+        server.send(:watch_for_events, :pods, nil)
       end
 
       it "UNKNOWN type isn't saved or deleted" do
         allow(watch_event).to receive(:type).and_return("UNKNOWN")
         expect(server).to receive(:save_pod).never
         expect(server).to receive(:delete_pod).never
-        server.send(:watch_for_pod_events, :pods, nil)
+        server.send(:watch_for_events, :pods, nil)
       end
 
       it "ERROR logs warning and breaks" do
@@ -261,7 +266,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
           expect(reason).to eql(expected_reason)
         end
 
-        server.send(:watch_for_pod_events, :pods, nil)
+        server.send(:watch_for_events, :pods, nil)
       end
     end
   end

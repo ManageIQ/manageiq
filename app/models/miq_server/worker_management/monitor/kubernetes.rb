@@ -87,8 +87,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
       end
     end
   end
-  # Remove callers to start_pod_monitor
-  alias_method :start_pod_monitor, :start_kube_monitor
 
   def ensure_kube_monitors_started
     [:deployments, :pods].each do |resource|
@@ -106,8 +104,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
       end
     end
   end
-  # Remove callers to ensure_pod_monitor_started
-  alias_method :ensure_pod_monitor_started, :ensure_kube_monitors_started
 
   def delete_failed_deployments
     failed_deployments.each do |failed|
@@ -143,8 +139,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
     objects.each { |p| send("save_#{resource.to_s.singularize}", p) }
     objects.resourceVersion
   end
-  # TODO: Remove callers to collect_initial_pods
-  alias_method :collect_initial_pods, :collect_initial
 
   def watch_for_events(resource, resource_version)
     orchestrator.send("watch_#{resource}", resource_version).each do |event|
@@ -164,11 +158,9 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
       end
     end
   end
-  # TODO: Remove callers of watch_for_events
-  alias_method :watch_for_pod_events, :watch_for_events
 
   def log_resource_error_event(code, message, reason)
-    _log.warn("Restarting watch_for_pod_events due to error: [#{code} #{reason}], [#{message}]")
+    _log.warn("Restarting watch_for_events due to error: [#{code} #{reason}], [#{message}]")
   end
 
   def save_deployment(deployment)
