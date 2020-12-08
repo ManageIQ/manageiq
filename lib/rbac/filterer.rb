@@ -152,6 +152,7 @@ module Rbac
     ).freeze
 
     ADDITIONAL_TENANT_CLASSES = %w[ServiceTemplate].freeze
+    PRODUCT_FEATURE_CLASSES = %w[MiqShortcut].freeze
 
     include Vmdb::Logging
 
@@ -537,6 +538,16 @@ module Rbac
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
+    def scope_by_product_feature(scope, user, miq_group)
+      user_or_group = user || miq_group
+      scope_features = scope.pluck(:id, :rbac_feature_name)
+      scope_ids = scope_features.map do |id, feature|
+        Rbac.role_allows?(:feature => feature, :any => true, :user => user_or_group) ? id : nil
+      end.compact
+
+      scope.where(:id => scope_ids)
+    end
+
     def scope_to_additional_tenants(scope, user, miq_group)
       user_or_group = user || miq_group
 
@@ -592,6 +603,13 @@ module Rbac
       ADDITIONAL_TENANT_CLASSES.include?(safe_base_class(klass).name)
     end
 
+    def scope_by_product_feature?(klass)
+      class_name = safe_base_class(klass).try(:name)
+      return false unless class_name
+
+      PRODUCT_FEATURE_CLASSES.include?(class_name)
+    end
+
     ##
     # Main scoping method
     #
@@ -637,6 +655,8 @@ module Rbac
       elsif klass == Tenant
         filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, rbac_filters['managed']))
         scope_by_ids(scope, filtered_ids)
+      elsif scope_by_product_feature?(scope)
+        scope_by_product_feature(scope, user, miq_group)
       else
         scope
       end
