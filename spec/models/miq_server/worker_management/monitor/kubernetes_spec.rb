@@ -267,7 +267,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
   end
 
   context "deployment_resource_constraints_changed?" do
-    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
+    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}} }
     let(:deployment) do
       {
         :spec => {
@@ -298,8 +298,8 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
   context "constraints_changed?" do
     let(:empty) { {} }
-    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
-    let(:constraint_two) { {:limits => {:cpu => "888m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"} } }
+    let(:constraint_one) { {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}} }
+    let(:constraint_two) { {:limits => {:cpu => "888m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}} }
 
     it "No current, no desired constraints" do
       expect(server.constraints_changed?(empty, empty)).to eql(false)
@@ -319,7 +319,37 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
     it "Detects 1024Mi memory == 1Gi" do
       new_value = {:limits => {:memory => "1024Mi"}}
-      expect(server.constraints_changed?(constraint_one, constraint_one.merge(new_value))).to eql(true)
+      expect(server.constraints_changed?(constraint_one, constraint_one.deep_merge(new_value))).to eql(false)
+    end
+
+    it "Current missing cpu limit" do
+      current = {:limits => {:memory => "1Gi"},                 :requests => {:cpu => "150m", :memory => "500Mi"}}
+      desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
+      expect(server.constraints_changed?(current, desired)).to eql(true)
+    end
+
+    it "Desired missing cpu limit" do
+      current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
+      desired = {:limits => {:memory => "1Gi"},                 :requests => {:cpu => "150m", :memory => "500Mi"}}
+      expect(server.constraints_changed?(current, desired)).to eql(true)
+    end
+
+    it "Current missing memory request" do
+      current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m"}}
+      desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
+      expect(server.constraints_changed?(current, desired)).to eql(true)
+    end
+
+    it "Desired missing memory request" do
+      current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
+      desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m"}}
+      expect(server.constraints_changed?(current, desired)).to eql(true)
+    end
+
+    it "checks millicores" do
+      current = constraint_one.deep_merge(:limits => {:cpu => "1"})
+      desired = constraint_one.deep_merge(:limits => {:cpu => "1000m"})
+      expect(server.constraints_changed?(current, desired)).to eql(false)
     end
   end
 end

@@ -49,15 +49,28 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def constraints_changed?(current, desired)
-    return true if (current.blank? && desired.present?)
+    return true if current.blank? && desired.present?
+    return true if current.present? && desired.blank?
+    return false if current.blank? && desired.blank?
 
-    current.fetch_path(:requests, :cpu)                             != desired.fetch_path(:requests, :cpu) ||
-      current.fetch_path(:limits, :cpu)                             != desired.fetch_path(:limits, :cpu) ||
-      current.fetch_path(:requests, :memory).try(:iec_60027_2_to_i) != desired.fetch_path(:requests, :memory).try(:iec_60027_2_to_i) ||
-      current.fetch_path(:limits, :memory).try(:iec_60027_2_to_i)   != desired.fetch_path(:limits, :memory).try(:iec_60027_2_to_i)
+    !cpu_value_eql?(current.fetch_path(:requests, :cpu), desired.fetch_path(:requests, :cpu)) ||
+      !cpu_value_eql?(current.fetch_path(:limits, :cpu), desired.fetch_path(:limits, :cpu)) ||
+      !mem_value_eql?(current.fetch_path(:requests, :memory), desired.fetch_path(:requests, :memory)) ||
+      !mem_value_eql?(current.fetch_path(:limits, :memory), desired.fetch_path(:limits, :memory))
   end
 
   private
+
+  def cpu_value_eql?(current, desired)
+    # Convert to millicores if not already converted: "1" -> 1000; "1000m" -> 1000
+    current = current.to_s[-1] == "m" ? current.to_i : current.to_i * 1000
+    desired = desired.to_s[-1] == "m" ? desired.to_i : desired.to_i * 1000
+    current == desired
+  end
+
+  def mem_value_eql?(current, desired)
+    current.try(:iec_60027_2_to_i) == desired.try(:iec_60027_2_to_i)
+  end
 
   def start_kube_monitor(resource = :pods)
     require 'http'
