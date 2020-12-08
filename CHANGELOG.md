@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 151 ending 2020-12-07
+
+### Added
+
+* Cleanup a useless next unless in worker monitor [(#20862)](https://github.com/ManageIQ/manageiq/pull/20862)
+
+### Fixed
+
+* EmbeddedAnsible Ensure newline for auth_key in MachineCredential [(#20845)](https://github.com/ManageIQ/manageiq/pull/20845)
+
 # Unreleased as of Sprint 150 ending 2020-11-23
 
 ### Added
