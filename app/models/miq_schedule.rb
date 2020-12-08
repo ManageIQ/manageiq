@@ -267,19 +267,6 @@ class MiqSchedule < ApplicationRecord
     action_db_backup(DatabaseBackup, nil)
   end
 
-  def self.run_adhoc_db_gc(options)
-    # options can include:
-    # :userid       "admin"
-    # :aggressive   true  (if provided and true, a full GC will be done)
-
-    userid = options.delete(:userid)
-    raise _("No userid provided!") unless userid
-
-    sch = new(:userid => userid, :sched_action => {:options => options})
-    sch.action_db_gc(DatabaseBackup, nil)
-    # Don't save the schedule since we don't have CRUD for DB GC schedules yet
-  end
-
   def action_evaluate_alert(obj, _at)
     MiqAlert.evaluate_queue(obj)
     _log.info("Action [#{name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
