@@ -685,41 +685,6 @@ RSpec.describe MiqSchedule do
       end
     end
 
-    context "valid db_gc unsaved schedule, run_adhoc_db_gc" do
-      before do
-        @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
-        @gc_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").first
-
-        @region = FactoryBot.create(:miq_region)
-        allow(MiqRegion).to receive(:my_region).and_return(@region)
-      end
-
-      it "should create 1 miq task" do
-        tasks = MiqTask.where(:name => "Database GC", :userid => "admin")
-        expect(tasks.length).to eq(1)
-        expect(tasks.first.id).to eq(@task_id)
-      end
-
-      it "should create one gc queue message for the database role" do
-        expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").count).to eq(1)
-      end
-
-      context "deliver DatabaseBackup.gc message" do
-        before do
-          # stub out the actual backup behavior
-          allow(PostgresAdmin).to receive(:gc)
-
-          @status, message, result = @gc_message.deliver
-          @gc_message.delivered(@status, message, result)
-        end
-
-        it "should have queue message ok, and task is Ok and Finished" do
-          expect(@status).to eq("ok")
-          expect(MiqTask.where(:state => "Finished", :status => "Ok").count).to eq(1)
-        end
-      end
-    end
-
     context "valid action_automation_request" do
       let(:admin) { FactoryBot.create(:user_miq_request_approver) }
       let(:ems)   { FactoryBot.create(:ext_management_system) }
