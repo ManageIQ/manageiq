@@ -167,6 +167,42 @@ module Vmdb
 
         return valid, errors
       end
+
+      def workers(data)
+        valid, errors = true, []
+        # worker_settings expects a hash-like structure with nested keys: :config and :workers
+        data = {:config => {:workers => data}}
+        MiqWorker.descendants.each do |worker_class|
+          result, new_errors = validate_worker_request_limit(worker_class, data)
+          if result == false
+            valid = false
+            errors += new_errors
+          end
+        end
+
+        return valid, errors
+      end
+
+      def validate_worker_request_limit(worker_class, data)
+        valid = true
+        errors = []
+        worker_settings = worker_class.worker_settings(data)
+        cpu_request     = worker_settings.fetch(:cpu_request_percent, 0)
+        cpu_limit       = worker_settings.fetch(:cpu_threshold_percent, Float::INFINITY)
+        memory_request  = worker_settings.fetch(:memory_request, 0.bytes)
+        memory_limit    = worker_settings.fetch(:memory_threshold, Float::INFINITY.megabytes)
+
+        if cpu_request > cpu_limit
+          valid = false
+          errors << [:invalid_value, "#{worker_class.settings_name}: cpu_request_percent: #{cpu_request} cannot exceed cpu_threshold_percent: #{cpu_limit}"]
+        end
+
+        if memory_request > memory_limit
+          valid = false
+          errors << [:invalid_value, "#{worker_class.settings_name}: memory_request: #{memory_request} cannot exceed memory_threshold: #{memory_limit}"]
+        end
+        return valid, errors
+      end
     end
   end
 end

@@ -75,4 +75,32 @@ RSpec.describe Vmdb::Settings::Validator do
       expect(validator.valid?).to be expected
     end
   end
+
+  context "workers section" do
+    subject { described_class.new({:workers => {}}) }
+    it "is invalid with cpu_request_percent > cpu_threshold_percent" do
+      allow(MiqScheduleWorker).to receive(:worker_settings).and_return(:cpu_request_percent => 50, :cpu_threshold_percent => 40)
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
+    it "is invalid with memory_request > memory_threshold" do
+      allow(MiqScheduleWorker).to receive(:worker_settings).and_return(:memory_request => 600.megabytes, :memory_threshold => 500.megabytes)
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.last).to include("cannot exceed memory_threshold")
+    end
+
+    [:memory_request, 500.megabytes, :memory_threshold, 500.megabytes, :cpu_request, 50, :cpu_threshold_percent, 50].each_slice(2) do |key, value|
+      it "is valid when specifying only: #{key}" do
+        allow(MiqScheduleWorker).to receive(:worker_settings).and_return(key => value)
+        result, errors = subject.validate
+        expect(result).to eql(true)
+        expect(errors.empty?).to eql(true)
+      end
+    end
+  end
 end
