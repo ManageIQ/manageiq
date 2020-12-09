@@ -48,10 +48,10 @@ module Vmdb
       apply_config_value(config, $remote_console_log, :level_remote_console)
     end
 
-    def self.create_loggers
+    private_class_method def self.create_loggers
       path_dir = ManageIQ.root.join("log")
 
-      $container_log      = ContainerLogger.new
+      $container_log      = create_container_logger
       $journald_log       = create_journald_logger
       $log                = create_multicast_logger(path_dir.join("evm.log"))
       $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
@@ -82,15 +82,20 @@ module Vmdb
 
       configure_external_loggers
     end
-    private_class_method :create_loggers
 
-    def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
+    private_class_method def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
       logger_class.new(log_file_path).tap do |logger|
-        logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
+        logger.extend(ActiveSupport::Logger.broadcast($container_log)) if $container_log
         logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
       end
     end
-    private_class_method :create_multicast_logger
+
+    private_class_method def self.create_container_logger
+      return unless ENV["CONTAINER"]
+
+      require "manageiq/loggers/container"
+      ManageIQ::Loggers::Container.new
+    end
 
     private_class_method def self.create_journald_logger
       return unless MiqEnvironment::Command.supports_systemd?
