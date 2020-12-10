@@ -285,6 +285,8 @@ class VmOrTemplate < ApplicationRecord
 
   include RelationshipMixin
   self.default_relationship_type = "genealogy"
+  alias child_resources children
+  alias parent_resource parent
 
   include MiqPolicyMixin
   include AlertMixin
@@ -1772,14 +1774,6 @@ class VmOrTemplate < ApplicationRecord
     unless console_supported?('spice') || console_supported?('vnc')
       unsupported_reason_add(:console, N_("Console not supported"))
     end
-  end
-
-  def child_resources
-    children
-  end
-
-  def parent_resource
-    parent
   end
 
   def self.display_name(number = 1)
