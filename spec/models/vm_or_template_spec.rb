@@ -116,6 +116,8 @@ RSpec.describe VmOrTemplate do
       reloaded_vm = Vm.find(vm.id)
       expect(reloaded_vm.parent).to eq(parent)
       expect(reloaded_vm.genealogy_parent).to eq(parent)
+      expect(reloaded_vm.parent_resource).to eq(parent)
+      expect(Vm.find(parent.id).child_resources).to eq([vm])
     end
 
     it "sets parent via =" do
@@ -124,7 +126,8 @@ RSpec.describe VmOrTemplate do
 
       reloaded_vm = Vm.find(vm.id)
       expect(reloaded_vm.parent).to eq(parent)
-      expect(reloaded_vm.genealogy_parent).to eq(parent)
+      expect(reloaded_vm.parent_resource).to eq(parent)
+      expect(Vm.find(parent.id).child_resources).to eq([vm])
     end
   end
 
