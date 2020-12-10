@@ -33,7 +33,7 @@ gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        "~> 2.1.4",      :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
-gem "config",                         "=2.2.1",        :require => false
+gem "config",                         "~>2.2", ">=2.2.1", :require => false
 gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
