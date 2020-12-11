@@ -1,8 +1,23 @@
 class MiqWidgetSet < ApplicationRecord
+  include_concern 'SetData'
+
   acts_as_miq_set
 
+  before_destroy :ensure_can_be_destroyed
   before_destroy :destroy_user_versions
+  before_destroy :delete_from_dashboard_order
+
+  after_save     :add_to_dashboard_order
   before_save    :keep_group_when_saving
+  after_save     :update_members
+
+  validates :group_id, :presence => true, :unless => :read_only?
+
+  validates :name, :format => {:with => /\A[^|]*\z/, :on => :create, :message => "cannot contain \"|\""}
+
+  validates :description, :uniqueness_when_changed => {:scope   => :owner_id,
+                                                       :message => _("Description (Tab Title) must be unique for this group")}
+  belongs_to :group, :class_name => 'MiqGroup'
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
 
@@ -12,6 +27,31 @@ class MiqWidgetSet < ApplicationRecord
 
   def self.with_users
     where.not(:userid => nil)
+  end
+
+  def update_members
+    replace_children(Array(set_data_widgets)) if members.map(&:id) != set_data_widgets.ids
+    current_user = User.current_user
+    members.each { |w| w.create_initial_content_for_user(current_user.userid) } if current_user # Generate content if not there
+  end
+
+  def add_to_dashboard_order
+    return unless group_id
+
+    group.add_to_dashboard_order(id)
+    group.save
+  end
+
+  def delete_from_dashboard_order
+    return unless group_id
+
+    group = MiqGroup.find(group_id)
+    group.delete_from_dashboard_order(id)
+    group.save
+  end
+
+  def ensure_can_be_destroyed
+    errors.add(:base, _("Unable to delete read-only WidgetSet")) if read_only?
   end
 
   def destroy_user_versions
@@ -88,6 +128,7 @@ class MiqWidgetSet < ApplicationRecord
                          :owner_type  => "MiqGroup",
                          :set_type    => source_widget_set.set_type,
                          :set_data    => source_widget_set.set_data,
+                         :group_id    => assign_to_group.id,
                          :owner_id    => assign_to_group.id)
   end
 

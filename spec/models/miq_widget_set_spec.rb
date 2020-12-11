@@ -2,7 +2,49 @@ RSpec.describe MiqWidgetSet do
   let(:group) { user.current_group }
   let(:user)  { FactoryBot.create(:user_with_group) }
   before do
-    @ws_group = FactoryBot.create(:miq_widget_set, :name => 'Home', :owner => group)
+    @ws_group = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :owner => group)
+  end
+
+  describe "validate" do
+    it "validates that MiqWidgetSet#name cannot contain \"|\" " do
+      widget_set = MiqWidgetSet.create(:name => 'TEST|TEST')
+
+      expect(widget_set.errors.messages).to include(:name => ["cannot contain \"|\""])
+    end
+
+    let(:other_group) { FactoryBot.create(:miq_group) }
+
+    it "validates that MiqWidgetSet has unique description inside group" do
+      widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => group)
+      expect(widget_set.errors.messages).to include(:description => ["Description (Tab Title) must be unique for this group"])
+
+      widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => nil)
+      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+
+      widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
+      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+    end
+
+    it "validates that there is at least one widget in set_data" do
+      widget_set = MiqWidgetSet.create
+
+      expect(widget_set.errors.messages).to include(:set_data => ["One widget must be selected(set_data)"])
+    end
+
+    it "validates that widgets in set_data have to exist" do
+      unknown_id = MiqWidgetSet.maximum(:id) + 1
+      widget_set = MiqWidgetSet.create(:set_data => {:col1 => [unknown_id]})
+
+      expect(widget_set.errors.messages).to include(:set_data => ["Unable to find widget ids: #{unknown_id}"])
+    end
+
+    it "validates that group_id has to be present for non-read_only widget sets" do
+      widget_set = MiqWidgetSet.create(:read_only => false)
+      expect(widget_set.errors.messages).to include(:group_id => ["can't be blank"])
+
+      widget_set = MiqWidgetSet.create(:read_only => true)
+      expect(widget_set.errors.messages).not_to include(:set_data => ["can't be blank"])
+    end
   end
 
   it "when a group dashboard is deleted" do
@@ -22,7 +64,7 @@ RSpec.describe MiqWidgetSet do
 
   context "with a user" do
     before do
-      FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
+      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id)
     end
 
     it "initial state" do
@@ -42,7 +84,7 @@ RSpec.describe MiqWidgetSet do
 
   describe ".destroy_user_versions" do
     before do
-      FactoryBot.create(:miq_widget_set, :name => 'User_Home', :userid => user.userid)
+      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'User_Home', :userid => user.userid, :owner => group)
     end
 
     it "destroys all user's versions of dashboards (dashboards been customized by user)" do
@@ -55,12 +97,12 @@ RSpec.describe MiqWidgetSet do
 
   describe "#where_unique_on" do
     let(:group2) { FactoryBot.create(:miq_group, :description => 'dev group2') }
-    let(:ws_1)   { FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
+    let(:ws_1)   { FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id) }
 
     before do
       user.miq_groups << group2
       ws_1
-      FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group2.id)
+      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group2.id)
     end
 
     it "initial state" do
@@ -78,26 +120,28 @@ RSpec.describe MiqWidgetSet do
 
   describe "#with_users" do
     it "brings back records with users" do
-      ws_1 = FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
-      expect(described_class.with_users).to eq([ws_1])
+      ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id)
+      expect(described_class.with_users).to eq([ws])
     end
   end
 
   context ".find_with_same_order" do
     it "returns in index order" do
-      g1 = FactoryBot.create(:miq_widget_set)
-      g2 = FactoryBot.create(:miq_widget_set)
+      g1 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
+      g2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
       expect(MiqWidgetSet.find_with_same_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
     end
 
     it "returns in non index order" do
-      g1 = FactoryBot.create(:miq_widget_set)
-      g2 = FactoryBot.create(:miq_widget_set)
+      g1 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
+      g2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
       expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
     end
   end
 
   context "loading group specific defaul dashboard" do
+    let!(:miq_widget_set) { FactoryBot.create(:miq_widget, :description => 'chart_vendor_and_guest_os') }
+
     describe ".sync_from_file" do
       let(:dashboard_name) { "Dashboard for Group" }
       before do
@@ -130,11 +174,12 @@ RSpec.describe MiqWidgetSet do
   end
 
   describe ".copy_dashboard" do
-    let(:name) { "New Dashboard Name" }
-    let(:tab) { "Dashboard Tab" }
+    let(:name)        { "New Dashboard Name" }
+    let(:tab)         { "Dashboard Tab" }
+    let(:other_group) { FactoryBot.create(:miq_group) }
 
     it "does not raises error if the same dashboard name used for different groups" do
-      expect { MiqWidgetSet.copy_dashboard(@ws_group, @ws_group.name, tab) }.not_to raise_error
+      expect { MiqWidgetSet.copy_dashboard(@ws_group, @ws_group.name, tab, other_group.id) }.not_to raise_error
     end
 
     it "raises error if passed tab name is empty" do
@@ -159,10 +204,8 @@ RSpec.describe MiqWidgetSet do
     end
 
     it "keeps the same set of widgets and dashboard's settings" do
-      set_data = {:col1 => [1], :col2 => [2], :col3 => [], :locked => false, :reset_upon_login => false, :last_group_db_updated => Time.now.utc}
-      @ws_group.update(:set_data => set_data)
       new_dashboard = MiqWidgetSet.copy_dashboard(@ws_group, name, tab)
-      expect(new_dashboard.set_data).to eq set_data
+      expect(new_dashboard.set_data).to eq @ws_group.set_data
     end
   end
 end
