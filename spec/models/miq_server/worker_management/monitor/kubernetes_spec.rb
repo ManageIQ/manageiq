@@ -130,24 +130,24 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
 
     it "saves replicas" do
       server.send(:save_deployment, fake_deployment_data)
-      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eql(2)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eq(2)
     end
 
     it "saves containers" do
       server.send(:save_deployment, fake_deployment_data)
-      expect(server.current_deployments[pod_name].fetch_path(:spec, :template, :spec, :containers).first[:name]).to eql(pod_name)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :template, :spec, :containers).first[:name]).to eq(pod_name)
     end
 
     it "discards other keys" do
       server.send(:save_deployment, fake_deployment_data)
-      expect(server.current_deployments[pod_name].keys).to eql([:spec])
+      expect(server.current_deployments[pod_name].keys).to eq([:spec])
     end
 
     it "updates existing saved deployment" do
       server.send(:save_deployment, fake_deployment_data)
       fake_deployment_data.spec.replicas = 5
       server.send(:save_deployment, fake_deployment_data)
-      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eql(5)
+      expect(server.current_deployments[pod_name].fetch_path(:spec, :replicas)).to eq(5)
     end
   end
 
@@ -180,9 +180,9 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     it "calls save_pod for running pod" do
       server.send(:collect_initial)
 
-      expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
-      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
-      expect(server.current_pods[deployment_name][:container_restarts]).to eql(0)
+      expect(server.current_pods[deployment_name][:label_name]).to eq(pod_label)
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eq(false)
+      expect(server.current_pods[deployment_name][:container_restarts]).to eq(0)
     end
 
     it "calls save_pod to update a known running pod" do
@@ -191,10 +191,10 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       pod_hash[:last_state_terminated] = true
 
       server.current_pods[deployment_name] = pod_hash
-      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eq(true)
 
       server.send(:collect_initial)
-      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(false)
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eq(false)
     end
 
     it "calls save_pod for terminated pod" do
@@ -203,13 +203,13 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       allow(pods.first.status.containerStatuses.first).to receive(:restartCount).and_return(10)
       server.send(:collect_initial)
 
-      expect(server.current_pods[deployment_name][:label_name]).to eql(pod_label)
-      expect(server.current_pods[deployment_name][:last_state_terminated]).to eql(true)
-      expect(server.current_pods[deployment_name][:container_restarts]).to eql(10)
+      expect(server.current_pods[deployment_name][:label_name]).to eq(pod_label)
+      expect(server.current_pods[deployment_name][:last_state_terminated]).to eq(true)
+      expect(server.current_pods[deployment_name][:container_restarts]).to eq(10)
     end
 
     it "returns resource_version" do
-      expect(server.send(:collect_initial)).to eql(resource_version)
+      expect(server.send(:collect_initial)).to eq(resource_version)
     end
   end
 
@@ -261,9 +261,9 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
         allow(event_object).to receive(:reason).and_return(expected_reason)
 
         allow(server).to receive(:log_pod_error_event) do |code, message, reason|
-          expect(code).to eql(expected_code)
-          expect(message).to eql(expected_message)
-          expect(reason).to eql(expected_reason)
+          expect(code).to eq(expected_code)
+          expect(message).to eq(expected_message)
+          expect(reason).to eq(expected_reason)
         end
 
         server.send(:watch_for_events, :pods, nil)
@@ -339,7 +339,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     it "detects no changes if not enforced" do
       stub_settings(:server => {:worker_monitor => {:enforce_resource_constraints => false}})
       expect(server).to receive(:constraints_changed?).never
-      expect(server.deployment_resource_constraints_changed?(worker)).to eql(false)
+      expect(server.deployment_resource_constraints_changed?(worker)).to eq(false)
     end
   end
 
@@ -349,54 +349,54 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
     let(:constraint_two) { {:limits => {:cpu => "888m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}} }
 
     it "No current, no desired constraints" do
-      expect(server.constraints_changed?(empty, empty)).to eql(false)
+      expect(server.constraints_changed?(empty, empty)).to eq(false)
     end
 
     it "No current, new desired constraints" do
-      expect(server.constraints_changed?(empty, constraint_one)).to eql(true)
+      expect(server.constraints_changed?(empty, constraint_one)).to eq(true)
     end
 
     it "Current equals desired" do
-      expect(server.constraints_changed?(constraint_one, constraint_one)).to eql(false)
+      expect(server.constraints_changed?(constraint_one, constraint_one)).to eq(false)
     end
 
     it "Current does not equal desired" do
-      expect(server.constraints_changed?(constraint_one, constraint_two)).to eql(true)
+      expect(server.constraints_changed?(constraint_one, constraint_two)).to eq(true)
     end
 
     it "Detects 1024Mi memory == 1Gi" do
       new_value = {:limits => {:memory => "1024Mi"}}
-      expect(server.constraints_changed?(constraint_one, constraint_one.deep_merge(new_value))).to eql(false)
+      expect(server.constraints_changed?(constraint_one, constraint_one.deep_merge(new_value))).to eq(false)
     end
 
     it "Current missing cpu limit" do
       current = {:limits => {:memory => "1Gi"},                 :requests => {:cpu => "150m", :memory => "500Mi"}}
       desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
-      expect(server.constraints_changed?(current, desired)).to eql(true)
+      expect(server.constraints_changed?(current, desired)).to eq(true)
     end
 
     it "Desired missing cpu limit" do
       current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
       desired = {:limits => {:memory => "1Gi"},                 :requests => {:cpu => "150m", :memory => "500Mi"}}
-      expect(server.constraints_changed?(current, desired)).to eql(true)
+      expect(server.constraints_changed?(current, desired)).to eq(true)
     end
 
     it "Current missing memory request" do
       current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m"}}
       desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
-      expect(server.constraints_changed?(current, desired)).to eql(true)
+      expect(server.constraints_changed?(current, desired)).to eq(true)
     end
 
     it "Desired missing memory request" do
       current = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
       desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m"}}
-      expect(server.constraints_changed?(current, desired)).to eql(true)
+      expect(server.constraints_changed?(current, desired)).to eq(true)
     end
 
     it "checks millicores" do
       current = constraint_one.deep_merge(:limits => {:cpu => "1"})
       desired = constraint_one.deep_merge(:limits => {:cpu => "1000m"})
-      expect(server.constraints_changed?(current, desired)).to eql(false)
+      expect(server.constraints_changed?(current, desired)).to eq(false)
     end
   end
 end
