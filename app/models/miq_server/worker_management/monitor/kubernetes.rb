@@ -21,8 +21,6 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def sync_deployment_settings
-    return unless podified?
-
     checked_deployments = Set.new
     podified_miq_workers.each do |worker|
       next if checked_deployments.include?(worker.worker_deployment_name)
