@@ -4,6 +4,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   delegate :playbook, :repository, :to => :service_template, :allow_nil => true
 
+  def my_zone
+    miq_request&.my_zone
+  end
+
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
     if add_options.present?
@@ -33,7 +37,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "launch_ansible_job",
-      :role        => "embedded_ansible"
+      :role        => "embedded_ansible",
+      :zone        => my_zone
     }
 
     task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
