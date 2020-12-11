@@ -48,14 +48,17 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def constraints_changed?(current, desired)
-    return true if current.blank? && desired.present?
-    return true if current.present? && desired.blank?
-    return false if current.blank? && desired.blank?
-
-    !cpu_value_eql?(current.fetch_path(:requests, :cpu), desired.fetch_path(:requests, :cpu)) ||
-      !cpu_value_eql?(current.fetch_path(:limits, :cpu), desired.fetch_path(:limits, :cpu)) ||
-      !mem_value_eql?(current.fetch_path(:requests, :memory), desired.fetch_path(:requests, :memory)) ||
-      !mem_value_eql?(current.fetch_path(:limits, :memory), desired.fetch_path(:limits, :memory))
+    if current.present? && desired.present?
+      !cpu_value_eql?(current.fetch_path(:requests, :cpu), desired.fetch_path(:requests, :cpu)) ||
+        !cpu_value_eql?(current.fetch_path(:limits, :cpu), desired.fetch_path(:limits, :cpu)) ||
+        !mem_value_eql?(current.fetch_path(:requests, :memory), desired.fetch_path(:requests, :memory)) ||
+        !mem_value_eql?(current.fetch_path(:limits, :memory), desired.fetch_path(:limits, :memory))
+    else
+      # current, no desired    => changed
+      # no current, desired    => changed
+      # no current, no desired => unchanged
+      current.blank? ^ desired.blank?
+    end
   end
 
   private
