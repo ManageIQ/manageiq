@@ -70,11 +70,13 @@ class MiqWorker
       mem_limit = self.class.worker_settings[:memory_threshold]
       cpu_limit = self.class.worker_settings[:cpu_threshold_percent]
 
-      # TODO: If request > limit, set request = limit or raise an error
-      # kubeclient will raise each time if we try:
+      # If request > limit, kubeclient will raise each time we try
       # [Kubeclient::HttpError]: Deployment.apps "1-schedule" is invalid: spec.template.spec.containers[0].resources.requests: Invalid value: "567Mi": must be less than or equal to memory limit
       mem_request   = self.class.worker_settings[:memory_request]
       cpu_request   = self.class.worker_settings[:cpu_request_percent]
+
+      raise ArgumentError, "cpu_request_percent cannot exceed cpu_threshold_percent" if (cpu_request || 0) > (cpu_limit || Float::INFINITY)
+      raise ArgumentError, "memory_request cannot exceed memory_threshold"           if (mem_request || 0) > (mem_limit || Float::INFINITY.megabytes)
 
       {}.tap do |h|
         h.store_path(:limits, :memory, format_memory_threshold(mem_limit)) if mem_limit
