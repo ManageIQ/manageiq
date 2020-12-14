@@ -52,7 +52,7 @@ class MiqReport < ApplicationRecord
 
   attr_accessor_that_yamls :reserved, :skip_references # For legacy imports
 
-  GROUPINGS = [[:min, N_("Minimum")], [:avg, N_("Average")], [:max, N_("Maximum")], [:total, N_("Total")]].freeze
+  GROUPINGS = [[:min, N_("Minimum"), N_("Minima")], [:avg, N_("Average"), N_("Averages")], [:max, N_("Maximum"), N_("Maxima")], [:total, N_("Total"), N_("Totals")]].freeze
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   IMPORT_CLASS_NAMES = %w(MiqReport).freeze
 
