@@ -27,13 +27,7 @@ module MiqServer::WorkerManagement::Monitor
 
     cleanup_failed_workers
 
-    # Monitor all remaining current worker records
-    miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
-      # Push the heartbeat into the database
-      persist_last_heartbeat(worker)
-      # Check the worker record for heartbeat timeouts
-      validate_worker(worker)
-    end
+    monitor_active_workers
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
   end
@@ -81,6 +75,22 @@ module MiqServer::WorkerManagement::Monitor
           orphaned_rows.destroy_all
         end
       end
+    end
+  end
+
+  def monitor_active_workers
+    # When k8s or systemd is operating as the worker monitor then all of the
+    # worker monitoring (liveness, memory threshold) is handled by those
+    # systems.  Only when workers are run as standalone processes does MiqServer
+    # have to monitor the workers itself.
+    return if podified? || systemd?
+
+    # Monitor all remaining current worker records
+    miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
+      # Push the heartbeat into the database
+      persist_last_heartbeat(worker)
+      # Check the worker record for heartbeat timeouts
+      validate_worker(worker)
     end
   end
 
