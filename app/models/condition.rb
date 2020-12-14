@@ -33,11 +33,7 @@ class Condition < ApplicationRecord
   def self.evaluate(cond, rec, _inputs = {}, attr = :expression)
     expression = cond.send(attr)
     name = cond.try(:description) || cond.try(:name)
-    if expression.kind_of?(MiqExpression)
-      mode = "object"
-    else
-      mode = expression["mode"]
-    end
+    mode = expression.kind_of?(MiqExpression) ? "object" : expression["mode"]
 
     case mode
     when "script"
@@ -58,14 +54,14 @@ class Condition < ApplicationRecord
         end
       end
     when "tag_expr", "tag_expr_v2", "object"
-      case mode
-      when "tag_expr"
-        expr = expression["expr"]
-      when "tag_expr_v2"
-        expr = MiqExpression.new(expression["expr"]).to_ruby
-      when "object"
-        expr = expression.to_ruby
-      end
+      expr = case mode
+             when "tag_expr"
+               expression["expr"]
+             when "tag_expr_v2"
+               MiqExpression.new(expression["expr"]).to_ruby
+             when "object"
+               expression.to_ruby
+             end
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression before substitution: [#{expr.gsub(/\n/, " ")}]")
 
