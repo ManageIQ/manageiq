@@ -649,10 +649,9 @@ class MiqQueue < ApplicationRecord
     opts = messaging_options_from_env || messaging_options_from_file
     return if opts.nil?
 
-    opts.transform_values! { |v| String === v ? ManageIQ::Password.try_decrypt(v) : v }
+    opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
     opts.merge(:encoding => "json", :protocol => messaging_protocol)
   end
-
   private_class_method :messaging_client_options
 
   def self.messaging_protocol
