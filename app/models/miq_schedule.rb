@@ -1,8 +1,8 @@
 class MiqSchedule < ApplicationRecord
-  include DeprecationMixin
   include_concern 'ImportExport'
   include YAMLImportExportMixin
-  deprecate_attribute :towhat, :resource_type
+  hide_attribute "towhat"
+  hide_attribute "resource_type"
 
   validates :name, :uniqueness_when_changed => {:scope => [:userid, :resource_type]}
   validates :name, :description, :resource_type, :run_at, :presence => true

@@ -9,7 +9,6 @@ class Host < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
-  include DeprecationMixin
   include CustomActionsMixin
 
   VENDOR_TYPES = {
@@ -95,7 +94,8 @@ class Host < ApplicationRecord
 
   serialize :settings, Hash
 
-  deprecate_attribute :address,  :hostname
+  hide_attribute "address"
+  hide_attribute "hostname"
   alias_attribute     :state,    :power_state
   alias_attribute     :to_s,     :name
 
