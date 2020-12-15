@@ -153,15 +153,92 @@ RSpec.describe Condition do
   end
 
   describe ".import_from_hash" do
-    it "removes condition modifier" do
-      cond_hash = {
-        "description" => "test condition",
-        "expression"  => MiqExpression.new(">" => {"field" => "Vm-cpu_num", "value" => 2}),
-        "modifier"    => 'deny',
-        "towhat"      => "Vm"
-      }
-      condition, _s = Condition.import_from_hash(cond_hash)
-      expect(condition.expression.exp).to eq("not" => {">" => {"field" => "Vm-cpu_num", "value" => 2}})
+    let(:description) { "some description" }
+    let(:name)        { "some name" }
+    let(:guid)        { "some guid" }
+    let(:expression)  { {">" => {"field" => "Vm-cpu_num", "value" => 2}} }
+    let(:condition) do
+      {"description" => description,
+       "expression"  => MiqExpression.new(expression),
+       "modifier"    => 'deny',
+       "towhat"      => "Vm",
+       "guid"        => guid,
+       "name"        => name}
+    end
+
+    before do
+      @condition, _s = Condition.import_from_hash(condition)
+    end
+
+    it "removes condition modifier and adds new record to Condition model" do
+      expect(@condition.expression.exp).to eq("not" => expression)
+      expect(Condition.count).to eq(1)
+    end
+
+    context "unique constrains" do
+      let(:new_description) { "new description" }
+      let(:new_name)        { "new name" }
+      let(:new_guid)        { "new guid" }
+      let(:new_expression)  { {">" => {"field" => "Vm-cpu_num", "value" => 55}} }
+      let(:new_condition) do
+        {"description" => new_description,
+         "expression"  => MiqExpression.new(new_expression),
+         "modifier"    => 'deny',
+         "towhat"      => "Vm",
+         "guid"        => new_guid,
+         "name"        => new_name}
+      end
+
+      it "adds new records if guid, name and description for record in Hash are unique" do
+        _, status = Condition.import_from_hash(new_condition)
+        expect(status[:status]).to eq(:add)
+
+        expect(Condition.count).to eq(2)
+        new_condition = Condition.last
+        expect(new_condition.expression.exp).to eq("not" => new_expression)
+        expect(new_condition.name).to eq(new_name)
+        expect(new_condition.description).to eq(new_description)
+        expect(new_condition.guid).to eq(new_guid)
+      end
+
+      it "updates existing DB record if it has the same guid as record in Hash" do
+        new_condition["guid"] = guid
+        _, status = Condition.import_from_hash(new_condition)
+        expect(status[:status]).to eq(:update)
+
+        expect(Condition.count).to eq(1)
+        new_condition = Condition.last
+        expect(new_condition.expression.exp).to eq("not" => new_expression)
+        expect(new_condition.name).to eq(new_name)
+        expect(new_condition.description).to eq(new_description)
+        expect(new_condition.guid).to eq(guid)
+      end
+
+      it "updates existing DB record if it has the same name as record in Hash but guids are different" do
+        new_condition["name"] = name
+        _, status = Condition.import_from_hash(new_condition)
+        expect(status[:status]).to eq(:update)
+
+        expect(Condition.count).to eq(1)
+        new_condition = Condition.last
+        expect(new_condition.expression.exp).to eq("not" => new_expression)
+        expect(new_condition.name).to eq(name)
+        expect(new_condition.description).to eq(new_description)
+        expect(new_condition.guid).to eq(new_guid)
+      end
+
+      it "updates existing DB record if it has the same description as record in Hash but guids are different" do
+        new_condition["description"] = description
+        _, status = Condition.import_from_hash(new_condition)
+        expect(status[:status]).to eq(:update)
+
+        expect(Condition.count).to eq(1)
+        new_condition = Condition.last
+        expect(new_condition.expression.exp).to eq("not" => new_expression)
+        expect(new_condition.name).to eq(new_name)
+        expect(new_condition.description).to eq(description)
+        expect(new_condition.guid).to eq(new_guid)
+      end
     end
   end
 
