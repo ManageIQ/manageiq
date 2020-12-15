@@ -1,4 +1,3 @@
-require 'thread'
 require 'concurrent/atomic/event'
 require 'util/duplicate_blocker'
 
