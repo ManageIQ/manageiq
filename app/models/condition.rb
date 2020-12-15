@@ -266,7 +266,8 @@ class Condition < ApplicationRecord
     condition.delete("modifier")
 
     status = {:class => name, :description => condition["description"]}
-    c = Condition.find_by(:guid => condition["guid"])
+    c = Condition.find_by(:guid => condition["guid"]) || Condition.find_by(:name => condition["name"]) ||
+        Condition.find_by(:description => condition["description"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 
     if c.nil?
