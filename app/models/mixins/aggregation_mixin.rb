@@ -8,5 +8,8 @@ module AggregationMixin
     virtual_sum :aggregate_physical_cpus,   :host_hardwares, :cpu_sockets
     virtual_sum :aggregate_vm_cpus,         :vm_hardwares,   :cpu_sockets
     virtual_sum :aggregate_vm_memory,       :vm_hardwares,   :memory_mb
+
+    alias_method :all_vms_and_templates,  :vms_and_templates
+    alias_method :all_vm_or_template_ids, :vm_or_template_ids
   end
 end
