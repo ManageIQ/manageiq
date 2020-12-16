@@ -154,6 +154,11 @@ RSpec.describe MiqWorker::ContainerCommon do
         expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
       end
 
+      it "raises ArgumentError when request > limit" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 750.megabytes, :memory_threshold => 500.megabytes)
+        expect { MiqGenericWorker.new.resource_constraints }.to raise_error(ArgumentError)
+      end
+
       it "returns only memory when memory is set" do
         allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes)
         constraints = {

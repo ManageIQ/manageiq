@@ -69,13 +69,17 @@ module MiqServer::WorkerManagement::Monitor
     end
 
     cleanup_orphaned_worker_rows
+
+    if podified?
+      sync_deployment_settings
+    end
   end
 
   def cleanup_orphaned_worker_rows
     if podified?
+      # TODO: Move to a method in the kubernetes namespace
       unless current_pods.empty?
-        # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
-        orphaned_rows = miq_workers.where.not(:type => %w[MiqCockpitWsWorker]).where.not(:system_uid => current_pods.keys)
+        orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
         unless orphaned_rows.empty?
           _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
           orphaned_rows.destroy_all
