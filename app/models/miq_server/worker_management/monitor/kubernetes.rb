@@ -65,8 +65,8 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
 
   def cpu_value_eql?(current, desired)
     # Convert to millicores if not already converted: "1" -> 1000; "1000m" -> 1000
-    current = current.to_s[-1] == "m" ? current.to_i : current.to_i * 1000
-    desired = desired.to_s[-1] == "m" ? desired.to_i : desired.to_i * 1000
+    current = current.to_s[-1] == "m" ? current.to_f : current.to_f * 1000
+    desired = desired.to_s[-1] == "m" ? desired.to_f : desired.to_f * 1000
     current == desired
   end
 

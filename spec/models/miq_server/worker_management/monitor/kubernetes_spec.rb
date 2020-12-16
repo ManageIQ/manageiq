@@ -369,6 +369,13 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kubernetes do
       expect(server.constraints_changed?(constraint_one, constraint_one.deep_merge(new_value))).to eq(false)
     end
 
+    it "Detects 0.15 == 150m" do
+      # From: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits
+      # A request with a decimal point, like 0.1, is converted to 100m by the API, and precision finer than 1m is not allowed. For this reason, the form 100m might be preferred.
+      new_value = {:requests => {:cpu => "0.15"}}
+      expect(server.constraints_changed?(constraint_one, constraint_one.deep_merge(new_value))).to eq(false)
+    end
+
     it "Current missing cpu limit" do
       current = {:limits => {:memory => "1Gi"},                 :requests => {:cpu => "150m", :memory => "500Mi"}}
       desired = {:limits => {:cpu => "999m", :memory => "1Gi"}, :requests => {:cpu => "150m", :memory => "500Mi"}}
