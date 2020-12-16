@@ -98,6 +98,8 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def queue_post_provision
+    _log.info("Queuing post provision of #{self.class.name} id: #{id}, zone: #{my_zone}")
+
     MiqQueue.put(
       :class_name     => self.class.name,
       :instance_id    => id,
