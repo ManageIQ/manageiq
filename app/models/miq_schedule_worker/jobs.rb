@@ -4,7 +4,7 @@ class MiqScheduleWorker::Jobs
   end
 
   def miq_server_status_update
-    queue_work(:class_name  => "MiqServer", :method_name => "status_update", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
+    queue_work(:class_name  => "MiqServer", :method_name => "status_update", :queue_name => 'miq_server', :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def miq_server_worker_log_status

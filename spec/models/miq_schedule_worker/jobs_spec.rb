@@ -60,4 +60,17 @@ RSpec.describe MiqScheduleWorker::Jobs do
       )
     end
   end
+
+  context "with guid, server, zone" do
+    let!(:guid_server_zone) { EvmSpecHelper.create_guid_miq_server_zone }
+    let(:guid) { guid_server_zone.first }
+    let(:zone) { guid_server_zone.last }
+
+    context "queues for miq_server process" do
+      it "#miq_server_status_update" do
+        described_class.new.miq_server_status_update
+        expect(MiqQueue.where(:method_name => "status_update").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+      end
+    end
+  end
 end
