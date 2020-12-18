@@ -19,7 +19,7 @@ class MiqWorker::Runner
 
   def poll_method
     return @poll_method unless @poll_method.nil?
-    self.poll_method = worker_settings[:poll_method]
+    self.poll_method = worker_settings[:poll_method]&.to_sym
   end
 
   def poll_method=(val)
