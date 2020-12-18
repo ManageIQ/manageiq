@@ -1,23 +1,24 @@
 class MiqScheduleWorker::Jobs
   def vmdb_appliance_log_config
-    queue_work(:class_name  => "Vmdb::Appliance", :method_name => "log_config", :server_guid => MiqServer.my_guid)
+    queue_work(:class_name  => "Vmdb::Appliance", :method_name => "log_config", :queue_name => 'miq_server', :server_guid => MiqServer.my_guid)
   end
 
   def miq_server_status_update
+    # Needs to be run on the server process
     queue_work(:class_name  => "MiqServer", :method_name => "status_update", :queue_name => 'miq_server', :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def miq_server_worker_log_status
-    queue_work(:class_name  => "MiqServer", :method_name => "log_status",     :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
-    queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
+    queue_work(:class_name  => "MiqServer", :method_name => "log_status",     :queue_name => 'miq_server', :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
+    queue_work(:class_name  => "MiqWorker", :method_name => "log_status_all", :queue_name => 'miq_server', :task_id => "log_status", :server_guid => MiqServer.my_guid, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def miq_server_audit_managed_resources
-    queue_work(:class_name  => "MiqServer", :method_name => "audit_managed_resources", :task_id => "audit_managed_resources", :server_guid => MiqServer.my_guid)
+    queue_work(:class_name  => "MiqServer", :method_name => "audit_managed_resources", :queue_name => 'miq_server', :task_id => "audit_managed_resources", :server_guid => MiqServer.my_guid)
   end
 
   def vmdb_database_connection_log_statistics
-    queue_work(:class_name  => "VmdbDatabaseConnection", :method_name => "log_statistics", :server_guid => MiqServer.my_guid)
+    queue_work(:class_name  => "VmdbDatabaseConnection", :method_name => "log_statistics", :queue_name => 'miq_server', :server_guid => MiqServer.my_guid)
   end
 
   def miq_server_queue_update_registration_status
