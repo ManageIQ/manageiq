@@ -248,7 +248,7 @@ module Rbac
         else
           target_ids  = targets.collect(&:id)
           klass       = targets.first.class
-          klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
+          klass       = rbac_base_class(klass) unless klass.respond_to?(:find)
           klass       = safe_base_class(klass) if is_sti?(klass) # always scope to base class if model is STI
         end
         scope = apply_scope(klass, scope)
