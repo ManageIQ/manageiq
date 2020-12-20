@@ -6033,34 +6033,34 @@
       :feature_type: control
       :identifier: storage_resource_tag
 
-  # Physical Storage Consumers
-- :name: Physical Storage Consumers
-  :description: Everything under Physical Storage Consumers
+  # host_initiator
+- :name: Host Initiator
+  :description: Everything under Host Initiators
   :feature_type: node
-  :identifier: physical_storage_consumer
+  :identifier: host_initiator
   :children:
   - :name: View
-    :description: View Physical Storage Consumers
+    :description: View Host Initiators
     :feature_type: view
-    :identifier: storage_consumer_view
+    :identifier: host_initiator_view
     :children:
     - :name: List
-      :description: Display Lists of Physical Storage Consumers
+      :description: Display Lists of Host Initiators
       :feature_type: view
-      :identifier: storage_consumer_show_list
+      :identifier: host_initiator_show_list
     - :name: Show
-      :description: Display Individual Physical Storage Consumers
+      :description: Display Individual Host Initiators
       :feature_type: view
-      :identifier: storage_consumer_show
+      :identifier: host_initiator_show
   - :name: Operate
-    :description: Perform Operations on Physical Storage Consumers
+    :description: Perform Operations on Host Initiators
     :feature_type: control
-    :identifier: storage_consumer_control
+    :identifier: host_initiator_control
     :children:
     - :name: Edit Tags
-      :description: Edit Tags of Physical Storage Consumers
+      :description: Edit Tags of Host Initiators
       :feature_type: control
-      :identifier: storage_consumer_tag
+      :identifier: host_initiator_tag
 
 
 # EmsPhysicalInfra

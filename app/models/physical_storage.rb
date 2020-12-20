@@ -10,7 +10,7 @@ class PhysicalStorage < ApplicationRecord
   belongs_to :physical_chassis, :inverse_of => :physical_storages
 
   has_many :storage_resources, :dependent => :destroy
-  has_many :physical_storage_consumers, :dependent => :destroy
+  has_many :host_initiators, :dependent => :destroy
   belongs_to :physical_storage_family, :inverse_of => :physical_storages
 
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false

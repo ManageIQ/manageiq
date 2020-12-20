@@ -1,7 +1,7 @@
 class IscsiAddress < ApplicationRecord
   include ProviderObjectMixin
 
-  has_many :addresses, :as => :port
+  has_many :san_addresses, :as => :port
 
   acts_as_miq_taggable
 
