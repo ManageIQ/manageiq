@@ -20,6 +20,7 @@ class CloudVolume < ApplicationRecord
   has_many   :attachments, :class_name => 'Disk', :as => :backing
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
+  has_many   :volume_mappings, :dependent => :destroy
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 

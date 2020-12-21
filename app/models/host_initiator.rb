@@ -7,6 +7,7 @@ class HostInitiator < ApplicationRecord
   belongs_to :physical_storage, :inverse_of => :host_initiators
 
   has_many :san_addresses, :as => :owner, :dependent => :destroy
+  has_many :volume_mappings, :dependent => :destroy
 
   virtual_total :v_total_addresses, :san_addresses
 

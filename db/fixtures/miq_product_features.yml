@@ -6086,6 +6086,36 @@
       :feature_type: control
       :identifier: storage_resource_tag
 
+
+  # Volume Mapping
+- :name: Volume Mapping
+  :description: Everything under Volume Mapping
+  :feature_type: node
+  :identifier: volume_mapping
+  :children:
+  - :name: View
+    :description: View Volume Mappings
+    :feature_type: view
+    :identifier: volume_mapping_view
+    :children:
+    - :name: List
+      :description: Display Lists of Volume Mappings
+      :feature_type: view
+      :identifier: volume_mapping_show_list
+    - :name: Show
+      :description: Display Individual Volume Mappings
+      :feature_type: view
+      :identifier: volume_mapping_show
+  - :name: Operate
+    :description: Perform Operations on Volume Mappings
+    :feature_type: control
+    :identifier: volume_mapping_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Volume Mappings
+      :feature_type: control
+      :identifier: volume_mapping_tag
+
   # host_initiator
 - :name: Host Initiator
   :description: Everything under Host Initiators
