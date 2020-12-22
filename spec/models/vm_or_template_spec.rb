@@ -863,7 +863,7 @@ RSpec.describe VmOrTemplate do
     it "calculates in ruby" do
       hardware = FactoryBot.create(:hardware, :memory_mb => 10)
       vm = FactoryBot.create(:vm_vmware, :hardware => hardware)
-      disk = FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+      FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
       expect(vm.used_storage).to eq(10 * 1024 * 1024 + 1024) # memory_mb + size on disk
     end
   end
