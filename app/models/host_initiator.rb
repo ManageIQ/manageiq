@@ -16,5 +16,4 @@ class HostInitiator < ApplicationRecord
     # side, that would return correct class for each provider
     ext_management_system && ext_management_system.class::HostInitiator
   end
-
 end
