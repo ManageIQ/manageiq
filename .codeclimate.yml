@@ -33,6 +33,7 @@ plugins:
     config: ".rubocop_cc.yml"
     channel: rubocop-0-82
 exclude_patterns:
+- lib/generators/**/templates/
 - node_modules/
 - spec/
 - test/
