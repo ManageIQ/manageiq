@@ -63,6 +63,7 @@ class Service < ApplicationRecord
   include CustomActionsMixin
   include CustomAttributeMixin
   include ExternalUrlMixin
+  include DeprecationMixin
   include LifecycleMixin
   include Metric::CiMixin
   include NewWithTypeStiMixin
@@ -107,6 +108,7 @@ class Service < ApplicationRecord
 
   alias parent_service parent
   alias_attribute :service, :parent
+  deprecate_attribute :display, :visible
   virtual_belongs_to :service
 
   def power_states
