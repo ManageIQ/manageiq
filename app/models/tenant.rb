@@ -58,7 +58,8 @@ class Tenant < ApplicationRecord
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
-  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
+  after_save -> { MiqProductFeature.invalidate_caches }
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes, :update_miq_product_features_for_tenant_nodes
   before_destroy :ensure_can_be_destroyed
 
   def self.scope_by_tenant?
@@ -321,6 +322,10 @@ class Tenant < ApplicationRecord
     }
 
     attrs
+  end
+
+  def update_miq_product_features_for_tenant_nodes
+    MiqProductFeature.invalidate_caches_queue
   end
 
   private
