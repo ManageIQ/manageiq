@@ -409,7 +409,7 @@ class MiqAlert < ApplicationRecord
   def self.automate_expressions
     @automate_expressions ||= [
       {:name => "nothing", :description => N_(" Nothing"), :db => BASE_TABLES, :options => []},
-      {:name => "ems_alarm", :description => N_("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}',
+      {:name => "ems_alarm", :description => N_("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => "AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}",
         :options => [
           {:name => :ems_id, :description => N_("Management System")},
           {:name => :ems_alarm_mor, :description => N_("Alarm")}
