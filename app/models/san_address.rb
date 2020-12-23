@@ -6,9 +6,7 @@ class SanAddress < ApplicationRecord
 
   acts_as_miq_taggable
 
-  def self.class_by_ems(ext_management_system)
-    # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
-    # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::SanAddress
+  def get_address_info
+    raise NotImplementedError, _("must be implemented in subclass")
   end
 end

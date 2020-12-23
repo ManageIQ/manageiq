@@ -11,6 +11,7 @@ class PhysicalStorage < ApplicationRecord
 
   has_many :storage_resources, :dependent => :destroy
   has_many :host_initiators, :dependent => :destroy
+  has_many :san_addresses, :through => :host_initiators
   belongs_to :physical_storage_family, :inverse_of => :physical_storages
 
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
