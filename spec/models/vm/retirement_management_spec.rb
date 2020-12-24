@@ -152,7 +152,6 @@ RSpec.describe "VM Retirement Management" do
   it "#retire_now without userid" do
     event_name = 'request_vm_retire'
     event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
-    options = {:zone => @zone.name}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, :zone => @zone.name).once
 
