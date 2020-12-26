@@ -880,9 +880,9 @@ RSpec.describe VmOrTemplate do
     end
 
     it "uses calculated (inline) attribute with null hardware" do
-      vm = FactoryBot.create(:vm_vmware)
-      vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
-      expect { expect(vm2.provisioned_storage).to eq(0) }.to_not make_database_queries
+      FactoryBot.create(:vm_vmware)
+      vm = VmOrTemplate.select(:id, :provisioned_storage).first
+      expect { expect(vm.provisioned_storage).to eq(0) }.to_not make_database_queries
     end
 
     it "calculates in ruby" do
