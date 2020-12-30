@@ -1983,10 +1983,10 @@
     :feature_type: node
     :identifier: miq_action
     :children:
-    - :name: Modify
-      :description: Modify Policy Actions
-      :feature_type: admin
-      :identifier: miq_action_admin
+    - :name: View
+      :description: View Policy Actions
+      :feature_type: view
+      :identifier: miq_action_view
       :children:
       - :name: List
         :description: Display All Policy Actions
@@ -1996,6 +1996,11 @@
         :description: Show MiqAction
         :feature_type: view
         :identifier: miq_action_show
+    - :name: Modify
+      :description: Modify Policy Actions
+      :feature_type: admin
+      :identifier: miq_action_admin
+      :children:
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin
