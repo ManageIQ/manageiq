@@ -436,8 +436,8 @@
   :startup: true
 - :name: miq_alert_set
   :description: Control / Alert Profiles
-  :url: /miq_alert_set/explorer
-  :rbac_feature_name: miq_alert_set
+  :url: /miq_alert_set/show_list
+  :rbac_feature_name: miq_alert_set_show_list
   :startup: true
 - :name: miq_alert
   :description: Control / Alerts
