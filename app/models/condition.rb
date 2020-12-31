@@ -16,6 +16,18 @@ class Condition < ApplicationRecord
 
   attr_accessor :reserved
 
+  TOWHAT_APPLIES_TO_CLASSES = {
+    "ContainerGroup"      => ui_lookup(:model => "ContainerGroup"),
+    "ContainerImage"      => ui_lookup(:model => "ContainerImage"),
+    "ContainerNode"       => ui_lookup(:model => "ContainerNode"),
+    "ContainerProject"    => ui_lookup(:model => "ContainerProject"),
+    "ContainerReplicator" => ui_lookup(:model => "ContainerReplicator"),
+    "ExtManagementSystem" => ui_lookup(:model => "ExtManagementSystem"),
+    "Host"                => ui_lookup(:model => "Host"),
+    "PhysicalServer"      => ui_lookup(:model => "PhysicalServer"),
+    "Vm"                  => ui_lookup(:model => "Vm")
+  }.freeze
+
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
     rec_model = "Vm" if rec_model.downcase.match("template")
