@@ -404,10 +404,40 @@
   :url: /cloud_object_store_object/show_list
   :rbac_feature_name: cloud_object_store_object_show_list
   :startup: true
-- :name: control_explorer
-  :description: Control / Explorer
+- :name: miq_policy_set
+  :description: Control / Policy Profiles
+  :url: /miq_policy_set/explorer
+  :rbac_feature_name: miq_policy_set
+  :startup: true
+- :name: miq_policy
+  :description: Control / Policies
   :url: /miq_policy/explorer
-  :rbac_feature_name: control_explorer_view
+  :rbac_feature_name: miq_policy
+  :startup: true
+- :name: miq_event
+  :description: Control / Events
+  :url: /miq_event/explorer
+  :rbac_feature_name: miq_event
+  :startup: true
+- :name: consdition
+  :description: Control / Conditions
+  :url: /condition/explorer
+  :rbac_feature_name: condition
+  :startup: true
+- :name: miq_action
+  :description: Control / Actions
+  :url: /miq_action/explorer
+  :rbac_feature_name: miq_action
+  :startup: true
+- :name: miq_alert_set
+  :description: Control / Alert Profiles
+  :url: /miq_alert_set/explorer
+  :rbac_feature_name: miq_alert_set
+  :startup: true
+- :name: miq_alert
+  :description: Control / Alerts
+  :url: /miq_alert/explorer
+  :rbac_feature_name: miq_alert
   :startup: true
 - :name: policy_simulation
   :description: Control / Simulation

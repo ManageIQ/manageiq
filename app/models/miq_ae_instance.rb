@@ -9,10 +9,12 @@ class MiqAeInstance < ApplicationRecord
                          :dependent => :destroy, :autosave => true
 
   before_validation :set_relative_path
-  validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
-  validates               :name, :domain_id, :class_id, :presence => true
-  validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
-                                 :message => N_("may contain only alphanumeric and _ . - characters")
+  validates         :domain_id, :class_id, :presence => true
+  validates         :name, :presence                => true,
+                           :uniqueness_when_changed => {:case_sensitive => false,
+                                                        :scope          => :class_id},
+                           :format                  => {:with    => /\A[\w.-]+\z/i,
+                                                        :message => N_("may contain only alphanumeric and _ . - characters")}
 
   def self.lookup_by_name(name)
     find_by(:lower_name => name.downcase)

@@ -2,7 +2,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   include AnsibleExtraVarsMixin
   include AnsiblePlaybookMixin
 
-  delegate :playbook, :to => :service_template, :allow_nil => true
+  delegate :playbook, :repository, :to => :service_template, :allow_nil => true
+
+  def my_zone
+    miq_request&.my_zone
+  end
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
@@ -18,6 +22,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     launch_ansible_job_queue(action)
   end
 
+  def check_connection(action)
+    repository(action).check_connection?
+  end
+
   def launch_ansible_job_queue(action)
     task_opts = {
       :action => "Launching Ansible Job",
@@ -29,7 +37,8 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "launch_ansible_job",
-      :role        => "embedded_ansible"
+      :role        => "embedded_ansible",
+      :zone        => my_zone
     }
 
     task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -89,8 +98,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def on_error(action)
     _log.info("on_error called for service action: #{action}")
     update(:retirement_state => 'error') if action == "Retirement"
-    job(action).try(:refresh_ems)
-    postprocess(action)
+    if job(action)
+      job(action).try(:refresh_ems)
+      postprocess(action)
+    else
+      _log.info("postprocess not called because job was nil")
+    end
   end
 
   def retain_resources_on_retirement?
@@ -171,6 +184,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def log_stdout(action)
     log_option = options.fetch_path(:config_info, action.downcase.to_sym, :log_output) || 'on_error'
-    playbook_log_stdout(log_option, job(action))
+    job = job(action)
+    if job.nil?
+      $log.info("No stdout available due to missing job")
+    else
+      playbook_log_stdout(log_option, job)
+    end
   end
 end

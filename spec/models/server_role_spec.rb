@@ -1,4 +1,9 @@
 RSpec.describe ServerRole do
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   context "Without Seeding" do
     before do
       @server_roles = []

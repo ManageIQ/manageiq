@@ -61,7 +61,7 @@ RSpec.describe MiqReport do
 
   it "doesn't access database when unchanged model is saved" do
     m = described_class.create
-    expect { m.save }.to make_database_queries(:count => 2)
+    expect { m.valid? }.not_to make_database_queries
   end
 
   context "#format_row" do

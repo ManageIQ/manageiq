@@ -17,19 +17,18 @@
 #
 # All involved tags must also have a Classification.
 #
-# TODO: rename, no longer specific to containers.
-class ContainerLabelTagMapping < ApplicationRecord
+class ProviderTagMapping < ApplicationRecord
   belongs_to :tag
 
   require_nested :Mapper
 
-  TAG_PREFIXES = %w(amazon azure kubernetes openstack).map { |name| "/managed/#{name}:" }.freeze
+  TAG_PREFIXES = ExtManagementSystem.label_mapping_prefixes.map { |name| "/managed/#{name}:" }.freeze
   validate :validate_tag_prefix
 
-  # Return ContainerLabelTagMapping::Mapper instance that holds all current mappings,
+  # Return ProviderTagMapping::Mapper instance that holds all current mappings,
   # can compute applicable tags, and create/find Tag records.
-  def self.mapper
-    ContainerLabelTagMapping::Mapper.new(in_my_region.all)
+  def self.mapper(mapper_parameters = {})
+    ProviderTagMapping::Mapper.new(in_my_region.all, mapper_parameters)
   end
 
   # Assigning/unassigning should be possible without Mapper instance, perhaps in another process.
@@ -60,6 +59,8 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
 
   def validate_tag_prefix
+    return if labeled_resource_type == "_all_entities_"
+
     unless TAG_PREFIXES.any? { |prefix| tag.name.start_with?(prefix) }
       errors.add(:tag_id, "tag category name #{tag.name} doesn't start with any of #{TAG_PREFIXES}")
     end

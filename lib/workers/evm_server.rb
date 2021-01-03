@@ -101,7 +101,6 @@ class EvmServer
 
     Vmdb::Appliance.log_config_on_startup
 
-    @current_server.ntp_reload
     @current_server.set_database_application_name
 
     EvmDatabase.seed_rest
@@ -119,10 +118,7 @@ class EvmServer
     configure_server_roles
     clear_queue
 
-    MiqServer.log_managed_entities
-    MiqServer.clean_all_workers
-    MiqServer.clean_dequeued_messages
-    MiqServer.purge_report_results
+    MiqServer.startup!
 
     @current_server.delete_active_log_collections_queue
 
@@ -151,7 +147,7 @@ class EvmServer
   def check_migrations_up_to_date
     up_to_date, *message = SchemaMigration.up_to_date?
     level = up_to_date ? :info : :warn
-    Array.wrap(message).each { |msg| _log.send(level, msg) }
+    Array.wrap(message.presence).each { |msg| _log.send(level, msg) }
     up_to_date
   end
 

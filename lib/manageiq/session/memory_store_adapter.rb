@@ -10,6 +10,10 @@ module ActionDispatch
     class MemoryStore < AbstractStore
       GLOBAL_HASH_TABLE = {} #:nodoc:
 
+      def delete_sessions(session_ids)
+        session_ids.each { |session_id| GLOBAL_HASH_TABLE.delete(session_id) }
+      end
+
       private
 
       def find_session(_req, session_id)
@@ -26,6 +30,16 @@ module ActionDispatch
       def delete_session(_req, session_id, _options)
         GLOBAL_HASH_TABLE.delete(session_id)
         generate_sid
+      end
+    end
+  end
+end
+
+module ManageIQ
+  module Session
+    class MemoryStoreAdapter < AbstractStoreAdapter
+      def type
+        :memory_store
       end
     end
   end

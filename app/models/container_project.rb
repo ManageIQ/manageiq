@@ -66,19 +66,19 @@ class ContainerProject < ApplicationRecord
     end
   end
 
-  def perf_rollup_parents(interval_name = nil)
+  def perf_rollup_parents(_interval_name = nil)
     []
   end
 
-  def aggregate_memory(targets = nil)
+  def aggregate_memory(_targets = nil)
     Hardware.where(:computer_system => computer_systems).sum(:memory_mb)
   end
 
-  def aggregate_cpu_speed(targets = nil)
+  def aggregate_cpu_speed(_targets = nil)
     Hardware.where(:computer_system => computer_systems).sum(:cpu_speed)
   end
 
-  def aggregate_cpu_total_cores(targets = nil)
+  def aggregate_cpu_total_cores(_targets = nil)
     Hardware.where(:computer_system => computer_systems).sum(:cpu_total_cores)
   end
 

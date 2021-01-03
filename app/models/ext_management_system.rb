@@ -4,6 +4,8 @@ class ExtManagementSystem < ApplicationRecord
   include ExternalUrlMixin
   include VerifyCredentialsMixin
 
+  hide_attribute "aggregate_memory" # better to use total_memory (coin toss - they're similar)
+
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)
     where(:tenant_id => tenant.ancestor_ids + [tenant_id])
@@ -50,6 +52,18 @@ class ExtManagementSystem < ApplicationRecord
     catalog_types.present?
   end
 
+  def self.label_mapping_classes
+    supported_subclasses.select(&:supports_label_mapping?)
+  end
+
+  def self.label_mapping_prefixes
+    label_mapping_classes.map(&:label_mapping_prefix).uniq
+  end
+
+  def self.entities_for_label_mapping
+    label_mapping_classes.reduce({}) { |all_mappings, klass| all_mappings.merge(klass.entities_for_label_mapping) }
+  end
+
   def self.provider_create_params
     supported_types_for_create.each_with_object({}) do |ems_type, create_params|
       create_params[ems_type.name] = ems_type.params_for_create if ems_type.respond_to?(:params_for_create)
@@ -61,6 +75,7 @@ class ExtManagementSystem < ApplicationRecord
       endpoints.each { |endpoint| ems.assign_nested_endpoint(endpoint) }
       authentications.each { |authentication| ems.assign_nested_authentication(authentication) }
 
+      ems.provider.save! if ems.provider.present? && ems.provider.changed?
       ems.save!
     end
   end
@@ -84,14 +99,11 @@ class ExtManagementSystem < ApplicationRecord
   has_many :disks,             :through => :hardwares
   has_many :physical_servers,  :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
-  has_many :storages, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
-                                                      :inverse_of => :ext_management_system
-  has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
-                                                          :inverse_of => :generating_ems
-  has_many :policy_events,  -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
+  has_many :vm_and_template_labels, :through => :vms_and_templates, :source => :labels
+  # Only taggings mapped from labels, excluding user-assigned tags.
+  has_many :vm_and_template_taggings, -> { joins(:tag).merge(Tag.controlled_by_mapping) }, :through => :vms_and_templates, :source => :taggings
 
-  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :storages, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :miq_alert_statuses, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :datacenters,    :foreign_key => "ems_id", :class_name => "Datacenter", :inverse_of => :ext_management_system
@@ -101,6 +113,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :storage_profiles,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :storage_profile_storages, :through => :storage_profiles
   has_many :customization_scripts, :foreign_key => "manager_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
@@ -110,8 +123,12 @@ class ExtManagementSystem < ApplicationRecord
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
-  has_many :miq_events,             :as => :target, :dependent => :destroy
-  has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
+
+  has_many :miq_events, :as => :target # Destroy will be handled by purger
+  has_many :ems_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "ems_id", :inverse_of => :ext_management_system
+  has_many :policy_events, -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
+  has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id", :inverse_of => :generating_ems
+  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   has_many :vms_and_templates_advanced_settings, :through => :vms_and_templates, :source => :advanced_settings
   has_many :service_instances, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
@@ -124,7 +141,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
-  validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
+  validates :name,     :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validates :zone,     :presence => true
 
@@ -157,6 +174,7 @@ class ExtManagementSystem < ApplicationRecord
         ems.endpoints = endpoints.map(&method(:assign_nested_endpoint))
         ems.authentications = authentications.map(&method(:assign_nested_authentication))
 
+        ems.provider.save! if ems.provider.present? && ems.provider.changed?
         ems.save!
       end
     end
@@ -234,6 +252,7 @@ class ExtManagementSystem < ApplicationRecord
            :certificate_authority=,
            :to => :default_endpoint,
            :allow_nil => true
+  delegate :path, :path=, :to => :default_endpoint, :prefix => "endpoint", :allow_nil => true
 
   alias_method :address, :hostname # TODO: Remove all callers of address
 
@@ -258,18 +277,25 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
+  virtual_column :supports_auth_key_pair_create, :type => :boolean
   virtual_column :supports_block_storage,  :type => :boolean
+  virtual_column :supports_cloud_tenants,  :type => :boolean
   virtual_column :supports_volume_multiattachment, :type => :boolean
   virtual_column :supports_volume_resizing, :type => :boolean
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
   virtual_column :supports_cinder_volume_types, :type => :boolean
+  virtual_column :supports_cloud_volume, :type => :boolean
+  virtual_column :supports_cloud_volume_create, :type => :boolean
+  virtual_column :supports_create_flavor, :type => :boolean
   virtual_column :supports_volume_availability_zones, :type => :boolean
   virtual_column :supports_create_security_group, :type => :boolean
+  virtual_column :supports_create_host_aggregate, :type => :boolean
+  virtual_column :supports_storage_services, :type => :boolean
 
-  virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
-  virtual_aggregate :total_memory, :hosts, :sum, :ram_size
-  virtual_aggregate :total_cloud_vcpus, :vms, :sum, :cpu_total_cores
-  virtual_aggregate :total_cloud_memory, :vms, :sum, :ram_size
+  virtual_sum :total_vcpus,        :hosts, :total_vcpus
+  virtual_sum :total_memory,       :hosts, :ram_size
+  virtual_sum :total_cloud_vcpus,  :vms,   :cpu_total_cores
+  virtual_sum :total_cloud_memory, :vms,   :ram_size
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
@@ -563,7 +589,7 @@ class ExtManagementSystem < ApplicationRecord
     refresh_ems(ems_ids, true) unless ems_ids.empty?
   end
 
-  def self.refresh_ems(ems_ids, reload = false)
+  def self.refresh_ems(ems_ids, _reload = false)
     ems_ids = [ems_ids] unless ems_ids.kind_of?(Array)
     ems_ids = ems_ids.collect { |id| [ExtManagementSystem, id] }
     EmsRefresh.queue_refresh(ems_ids)
@@ -689,6 +715,10 @@ class ExtManagementSystem < ApplicationRecord
     'generic'
   end
 
+  def queue_name_for_ems_refresh
+    queue_name
+  end
+
   def enforce_policy(target, event)
     inputs = {:ext_management_system => self}
     inputs[:vm]   = target if target.kind_of?(Vm)
@@ -756,8 +786,16 @@ class ExtManagementSystem < ApplicationRecord
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
+  def supports_auth_key_pair_create
+    supports_auth_key_pair_create?
+  end
+
   def supports_block_storage
     supports_block_storage?
+  end
+
+  def supports_cloud_tenants
+    supports_cloud_tenants?
   end
 
   def supports_volume_multiattachment
@@ -768,12 +806,28 @@ class ExtManagementSystem < ApplicationRecord
     supports_volume_resizing?
   end
 
+  def supports_create_flavor
+    supports_create_flavor?
+  end
+
   def supports_cloud_object_store_container_create
     supports_cloud_object_store_container_create?
   end
 
+  def supports_create_host_aggregate
+    supports_create_host_aggregate?
+  end
+
   def supports_cinder_volume_types
     supports_cinder_volume_types?
+  end
+
+  def supports_cloud_volume
+    supports_cloud_volume?
+  end
+
+  def supports_cloud_volume_create
+    supports_cloud_volume_create?
   end
 
   def supports_volume_availability_zones
@@ -782,6 +836,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_create_security_group
     supports_create_security_group?
+  end
+
+  def supports_storage_services
+    supports_storage_services?
   end
 
   def get_reserve(field)

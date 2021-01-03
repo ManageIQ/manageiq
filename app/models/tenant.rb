@@ -17,7 +17,9 @@ class Tenant < ApplicationRecord
   default_value_for :divisible,   true
   default_value_for :use_config_for_attributes, false
 
-  has_ancestry
+  before_destroy :ensure_can_be_destroyed
+
+  has_ancestry(:orphan_strategy => :restrict)
 
   has_many :providers
   has_many :ext_management_systems
@@ -43,14 +45,14 @@ class Tenant < ApplicationRecord
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
   belongs_to :source, :polymorphic => true
 
-  validates :subdomain, :uniqueness => true, :allow_nil => true
-  validates :domain,    :uniqueness => true, :allow_nil => true
+  validates :subdomain, :uniqueness_when_changed => true, :allow_nil => true
+  validates :domain,    :uniqueness_when_changed => true, :allow_nil => true
   validate  :validate_only_one_root
   validates :description, :presence => true
-  validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope      => :ancestry,
-                                   :conditions => -> { in_my_region },
-                                   :message    => "should be unique per parent"}
+  validates :name, :presence                  => true, :unless => :use_config_for_attributes?,
+                   :uniqueness_when_changed   => {:scope      => :ancestry,
+                                                  :conditions => -> { in_my_region },
+                                                  :message    => "should be unique per parent"}
   validate :validate_default_tenant, :on => :update, :if => :saved_change_to_default_miq_group_id?
 
   scope :all_tenants,  -> { where(:divisible => true) }
@@ -60,8 +62,8 @@ class Tenant < ApplicationRecord
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
-  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
-  before_destroy :ensure_can_be_destroyed
+  after_save -> { MiqProductFeature.invalidate_caches }
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes, :update_miq_product_features_for_tenant_nodes
 
   def self.scope_by_tenant?
     true
@@ -315,6 +317,14 @@ class Tenant < ApplicationRecord
 
   def create_miq_product_features_for_tenant_nodes
     MiqProductFeature.seed_single_tenant_miq_product_features(self)
+  end
+
+  def update_miq_product_features_for_tenant_nodes
+    MiqProductFeature.invalidate_caches_queue
+  end
+
+  def destroy_with_subtree
+    subtree.sort_by(&:depth).reverse.each(&:destroy)
   end
 
   private

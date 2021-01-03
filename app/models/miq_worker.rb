@@ -19,7 +19,7 @@ class MiqWorker < ApplicationRecord
   scope :with_miq_server_id, ->(server_id) { where(:miq_server_id => server_id) }
   scope :with_status,        ->(status)    { where(:status => status) }
 
-  cattr_accessor :my_guid, :instance_accessor => false
+  class_attribute :my_guid
 
   STATUS_CREATING = 'creating'.freeze
   STATUS_STARTING = 'starting'.freeze
@@ -49,7 +49,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.bundler_groups
-    %w[manageiq_default]
+    %w[manageiq_default ui_dependencies]
   end
 
   def self.kill_priority
@@ -274,24 +274,8 @@ class MiqWorker < ApplicationRecord
     MiqWorker.log_status(level)
   end
 
-  # Overriding queue_name as now some queue names can be
-  # arrays of names for some workers not just a singular name.
-  # We use JSON.parse as the array of names is stored as a string.
-  # This converts it back to a Ruby Array safely.
-  def queue_name
-    begin
-      JSON.parse(self[:queue_name]).sort
-    rescue JSON::ParserError, TypeError
-      self[:queue_name]
-    end
-  end
-
-  def self.supports_container?
-    false
-  end
-
   def self.containerized_worker?
-    MiqEnvironment::Command.is_podified? && supports_container?
+    MiqEnvironment::Command.is_podified?
   end
 
   def containerized_worker?

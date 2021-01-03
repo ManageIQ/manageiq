@@ -1,7 +1,7 @@
 RSpec.describe MiqReport::ImportExport do
   before do
-    @some_user = FactoryGirl.create(:user)
-    @some_group = FactoryGirl.create(:miq_group)
+    @some_user = FactoryBot.create(:user)
+    @some_group = FactoryBot.create(:miq_group)
     @old_report = FactoryBot.create(:miq_report,
                                     :name         => "Test Report",
                                     :rpt_type     => "Custom",

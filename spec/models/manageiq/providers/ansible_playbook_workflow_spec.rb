@@ -103,7 +103,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
   context "#pre_execute" do
     let(:state) { "pre_execute" }
-    let(:css)   { FactoryGirl.create(:embedded_ansible_configuration_script_source) }
+    let(:css)   { FactoryBot.create(:embedded_ansible_configuration_script_source) }
     let(:playbook_relative_path) { "path/to/playbook" }
 
     context "with playbook_path" do

@@ -25,8 +25,8 @@ class MiqAction < ApplicationRecord
              )
   end
 
-  validates_presence_of     :name, :description, :action_type
-  validates_uniqueness_of   :name, :description
+  validates :action_type,        :presence => true
+  validates :name, :description, :presence => true, :uniqueness_when_changed => true
   validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
@@ -619,7 +619,6 @@ class MiqAction < ApplicationRecord
     log_prefix += " VM: [#{rec.name}] Id: [#{rec.id}]"
 
     age_threshold = (Time.now.utc - action.options[:age])
-    has_ch = false
     snaps_to_delete = rec.snapshots.each_with_object([]) do |s, arr|
       next if s.is_a_type?(:evm_snapshot)
 
@@ -646,7 +645,6 @@ class MiqAction < ApplicationRecord
     end
     log_prefix += " VM: [#{rec.name}] Id: [#{rec.id}]"
 
-    has_ch = false
     snap   = nil
     rec.snapshots.order("create_time DESC").each do |s|
       next if s.is_a_type?(:evm_snapshot)

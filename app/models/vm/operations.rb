@@ -39,6 +39,13 @@ module Vm::Operations
     rescue StandardError => err
       unsupported_reason_add(:launch_native_console, _('VM NATIVE Console error: %{error}') % {:error => err})
     end
+
+    supports :collect_running_processes do
+      check = validate_collect_running_processes
+      unless check[:message].nil?
+        unsupported_reason_add(:collect_running_processes, _(check[:message]))
+      end
+    end
   end
 
   def cockpit_url
@@ -60,28 +67,28 @@ module Vm::Operations
 
     # Report reasons why collection is not available for this VM
     unless ['windows'].include?(platform)
-      s[:message] = 'VM Process collection is only available for Windows VMs.'
+      s[:message] = N_('VM Process collection is only available for Windows VMs.')
       return s
     end
     unless self.runnable?
-      s[:message] = 'VM Process collection is only available for Runnable VMs.'
+      s[:message] = N_('VM Process collection is only available for Runnable VMs.')
       return s
     end
 
     # From here on out collection is possible, but may not be currently available.
     s[:available] = true
     unless state == "on"
-      s[:message] = 'VM Process collection is only available while the VM is powered on.'
+      s[:message] = N_('VM Process collection is only available while the VM is powered on.')
       return s
     end
 
     if my_zone.nil? || my_zone_obj.auth_user_pwd(:windows_domain).nil?
-      s[:message] = 'VM Process collection requires credentials set at the Zone level.'
+      s[:message] = N_('VM Process collection requires credentials set at the Zone level.')
       return s
     end
 
     if ipaddresses.blank?
-      s[:message] = 'VM Process collection requires an IP address for the VM.'
+      s[:message] = N_('VM Process collection requires an IP address for the VM.')
       return s
     end
 

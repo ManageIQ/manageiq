@@ -2,7 +2,7 @@ class ServerRole < ApplicationRecord
   has_many :assigned_server_roles
   has_many :miq_servers, :through => :assigned_server_roles
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness_when_changed => true
 
   scope :database_roles, -> { where(:role_scope => 'database').order(:name) }
   scope :region_roles,   -> { where(:role_scope => 'region').order(:name) }
@@ -30,13 +30,6 @@ class ServerRole < ApplicationRecord
 
   def self.fixture_path
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
-  end
-
-  def self.to_role(server_role)
-    # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
-    return server_role if server_role.kind_of?(ServerRole)
-    role_name = server_role.to_s.strip.downcase
-    ServerRole.find_by(:name => role_name) || raise(_("Role <%{name}> not defined in server_roles table") % {:name => role_name})
   end
 
   def self.all_names

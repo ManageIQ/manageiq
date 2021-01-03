@@ -18,7 +18,6 @@ def seq_padded_for_sorting(n)
 end
 
 require 'factory_bot'
-FactoryGirl = FactoryBot # Alias until all associated repositories are updated
 
 # In case we are running as an engine, the factories are located in the dummy app
 FactoryBot.definition_file_paths << 'spec/manageiq/spec/factories'
@@ -43,12 +42,12 @@ FactoryBot.define do
 
       unless evaluator.other_region
         raise "You need to pass specific region  with :other_region: \n"\
-              "FactoryGirl.create(:#{instance.class.to_s.tableize.singularize.to_sym}, :in_other_region, :other_region => <region>) "
+              "FactoryBot.create(:#{instance.class.to_s.tableize.singularize.to_sym}, :in_other_region, :other_region => <region>) "
       end
 
       sequence_id = "id_for_other_region_#{instance.class}_#{evaluator.other_region}".to_sym
       @sequence ||= {}
-      @sequence[sequence_id] ||= FactoryGirl::Syntax::Default::DSL.new.sequence(sequence_id) { |n| instance.class.id_in_region(n, evaluator.other_region.region) }
+      @sequence[sequence_id] ||= FactoryBot::Syntax::Default::DSL.new.sequence(sequence_id) { |n| instance.class.id_in_region(n, evaluator.other_region.region) }
       instance.id = generate(sequence_id)
     end
   end

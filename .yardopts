@@ -1,4 +1,4 @@
 app/models/mixins/supports_feature_mixin.rb
 app/models/manager_refresh
-app/models/container_label_tag_mapping.rb
-app/models/container_label_tag_mapping
+app/models/provider_tag_mapping.rb
+app/models/provider_tag_mapping

@@ -1,4 +1,9 @@
 RSpec.describe MiqAction do
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_action)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   describe "#invoke_or_queue" do
     before do
       @action = MiqAction.new

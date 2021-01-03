@@ -29,6 +29,29 @@ class MiqWorker
       delete_container_objects if self.class.workers.zero?
     end
 
+    def patch_deployment
+      # Start with just resource constraints. Perhaps the livenessProbe, readinessProbe,
+      # and various timeouts such as terminationGracePeriodSeconds, could be patched later on.
+      # Note, we need to specify the name and image as they're required fields for the API to 'find'
+      # the correct container, even if we only ever have one.
+      data = {
+        :spec => {
+          :template => {
+            :spec => {
+              :containers => [
+                {
+                  :name      => worker_deployment_name,
+                  :image     => container_image,
+                  :resources => resource_constraints
+                }
+              ]
+            }
+          }
+        }
+      }
+      ContainerOrchestrator.new.patch_deployment(worker_deployment_name, data)
+    end
+
     def zone_selector
       {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone-#{MiqServer.my_zone}" => "true"}
     end
@@ -42,17 +65,25 @@ class MiqWorker
     end
 
     def resource_constraints
-      mem_threshold = self.class.worker_settings[:memory_threshold]
-      cpu_threshold = self.class.worker_settings[:cpu_threshold_percent]
+      return {} unless Settings.server.worker_monitor.enforce_resource_constraints
 
-      return {} if !Settings.server.worker_monitor.enforce_resource_constraints || (mem_threshold.nil? && cpu_threshold.nil?)
+      mem_limit = self.class.worker_settings[:memory_threshold]
+      cpu_limit = self.class.worker_settings[:cpu_threshold_percent]
 
-      {:limits => {}}.tap do |h|
-        h[:limits][:memory] = "#{mem_threshold / 1.megabyte}Mi" if mem_threshold
-        if cpu_threshold
-          millicores = ((cpu_threshold / 100.0) * 1000).to_i
-          h[:limits][:cpu] = "#{millicores}m"
-        end
+      # If request > limit, kubeclient will raise each time we try
+      # [Kubeclient::HttpError]: Deployment.apps "1-schedule" is invalid: spec.template.spec.containers[0].resources.requests: Invalid value: "567Mi": must be less than or equal to memory limit
+      mem_request   = self.class.worker_settings[:memory_request]
+      cpu_request   = self.class.worker_settings[:cpu_request_percent]
+
+      raise ArgumentError, "cpu_request_percent cannot exceed cpu_threshold_percent" if (cpu_request || 0) > (cpu_limit || Float::INFINITY)
+      raise ArgumentError, "memory_request cannot exceed memory_threshold"           if (mem_request || 0) > (mem_limit || Float::INFINITY.megabytes)
+
+      {}.tap do |h|
+        h.store_path(:limits, :memory, format_memory_threshold(mem_limit)) if mem_limit
+        h.store_path(:limits, :cpu, format_cpu_threshold(cpu_limit)) if cpu_limit
+
+        h.store_path(:requests, :memory, format_memory_threshold(mem_request)) if mem_request
+        h.store_path(:requests, :cpu, format_cpu_threshold(cpu_request)) if cpu_request
       end
     end
 
@@ -78,6 +109,16 @@ class MiqWorker
         deployment_name << "-#{Array(ems_id).map { |id| ApplicationRecord.split_id(id).last }.join("-")}" if respond_to?(:ems_id)
         "#{deployment_prefix}#{deployment_name.underscore.dasherize.tr("/", "-")}"
       end
+    end
+
+    private
+
+    def format_memory_threshold(value)
+      "#{value / 1.megabyte}Mi"
+    end
+
+    def format_cpu_threshold(value)
+      "#{((value / 100.0) * 1000).to_i}m"
     end
   end
 end

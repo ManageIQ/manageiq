@@ -33,11 +33,11 @@ RSpec.describe Zone do
     end
 
     it "hosts in virtual reflections" do
-      expect(described_class.includes(:aggregate_cpu_speed)).not_to be_nil
+      expect(described_class.includes(:total_cpu_speed)).not_to be_nil
     end
 
     it "vms_and_templates in virtual reflections" do
-      expect(described_class.includes(:aggregate_vm_cpus)).not_to be_nil
+      expect(described_class.includes(:total_vm_cpus)).not_to be_nil
     end
   end
 
@@ -160,32 +160,10 @@ RSpec.describe Zone do
 
       it "server when enabled" do
         server = FactoryBot.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
-        server.assign_role('cockpit_ws', 1)
+        server.assign_role(ServerRole.find_by(:name => 'cockpit_ws'), 1)
         server.activate_roles('cockpit_ws')
         expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
       end
-    end
-  end
-
-  context "#ntp_reload_queue" do
-    it "queues a ntp reload for all active servers in the zone" do
-      allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
-      allow(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
-      zone     = FactoryBot.create(:zone)
-      server_1 = FactoryBot.create(:miq_server, :zone => zone)
-      FactoryBot.create(:miq_server, :zone => zone, :status => "stopped")
-
-      zone.ntp_reload_queue
-
-      expect(MiqQueue.count).to eq(1)
-      expect(
-        MiqQueue.where(
-          :class_name  => "MiqServer",
-          :instance_id => server_1.id,
-          :method_name => "ntp_reload",
-          :server_guid => server_1.guid,
-        ).count
-      ).to eq(1)
     end
   end
 
@@ -325,6 +303,13 @@ RSpec.describe Zone do
       zone = FactoryBot.create(:miq_server).zone
       message = zone.message_for_invalid_delete
       expect(message).to be_nil
+    end
+  end
+
+  context "#valid?" do
+    it "doesn't query for an unchanged record" do
+      zone = FactoryBot.create(:zone)
+      expect { zone.valid? }.not_to make_database_queries
     end
   end
 end

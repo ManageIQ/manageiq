@@ -5,7 +5,7 @@ FactoryBot.define do
   end
 
   factory :cloud_volume_snapshot_openstack,
-          :class  => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
+          :class  => "ManageIQ::Providers::Openstack::StorageManager::CinderManager::CloudVolumeSnapshot",
           :parent => :cloud_volume_snapshot do
     status { "available" }
   end

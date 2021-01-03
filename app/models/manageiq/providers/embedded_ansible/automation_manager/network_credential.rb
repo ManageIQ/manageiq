@@ -1,49 +1,71 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Username'),
-      :help_text => N_('Username for this credential'),
-      :required  => true
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Username'),
+      :helperText => N_('Username for this credential'),
+      :name       => 'userid',
+      :id         => 'userid',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Password'),
-      :help_text => N_('Password for this credential'),
-      :required  => true
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Password'),
+      :helperText => N_('Password for this credential'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
   # rubocop:disable Layout/AlignHash
   #
   # looks better to align the nested keys to the same distance, instead of
   # scope just for the hash in question (which is what rubocop does).
-  EXTRA_ATTRIBUTES = {
-    :authorize      => {
-      :type         => :boolean,
-      :label        => N_('Authorize'),
-      :help_text    => N_('Whether to use the authorize mechanism')
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'switch',
+      :label      => N_('Authorize'),
+      :helperText => N_('Whether to use the authorize mechanism'),
+      :name       => 'authorize',
+      :id         => 'authorize',
+      :onText     => 'Yes',
+      :offText    => 'No',
+      :type       => 'boolean',
     },
-    :authorize_password => {
-      :type         => :password,
-      :label        => N_('Authorize password'),
-      :help_text    => N_('Password used by the authorize mechanism')
+    {
+      :component  => 'password-field',
+      :label      => N_('Authorize password'),
+      :helperText => N_('Password used by the authorize mechanism'),
+      :name       => 'authorize_password',
+      :id         => 'authorize_password',
+      :type       => 'password',
     },
-    :ssh_key_data   => {
-      :type         => :password,
-      :multiline    => true,
-      :label        => N_('SSH key'),
-      :help_text    => N_('RSA or DSA private key to be used instead of password')
+    {
+      :component      => 'password-field',
+      :label          => N_('SSH key'),
+      :componentClass => 'textarea',
+      :helperText     => N_('RSA or DSA private key to be used instead of password'),
+      :name           => 'ssh_key_data',
+      :id             => 'ssh_key_data',
+      :type           => 'password',
     },
-    :ssh_key_unlock => {
-      :type         => :password,
-      :label        => N_('Private key passphrase'),
-      :help_text    => N_('Passphrase to unlock SSH private key if encrypted'),
-      :max_length   => 1024
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Private key passphrase'),
+      :helperText => N_('Passphrase to unlock SSH private key if encrypted'),
+      :name       => 'ssh_key_unlock',
+      :id         => 'ssh_key_unlock',
+      :type       => 'password',
+      :maxLength  => 1024,
+    },
+  ].freeze
   # rubocop:enable Layout/AlignHash
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :label      => N_('Network'),

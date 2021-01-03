@@ -69,7 +69,7 @@ module Metric::Purging
     purge_by_date(older_than, "hourly", window, total_limit, &block)
   end
 
-  def self.purge_realtime(older_than, window = nil, total_limit = nil, &block)
+  def self.purge_realtime(older_than, _window = nil, _total_limit = nil)
     truncate_child_tables(older_than)
   end
 

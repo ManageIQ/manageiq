@@ -16,14 +16,14 @@ class ConversionHost < ApplicationRecord
 
   validates :name, :presence => true
   validates :resource, :presence => true
-  validates :resource_id, :uniqueness => { :scope => :resource_type }
+  validates :resource_id, :uniqueness_when_changed => {:scope => :resource_type}
 
   validates :address,
-    :uniqueness => true,
-    :format     => { :with => Resolv::AddressRegex },
-    :inclusion  => { :in => ->(conversion_host) { conversion_host.resource.ipaddresses } },
-    :unless     => ->(conversion_host) { conversion_host.address.blank? || conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? },
-    :presence   => false
+            :uniqueness_when_changed => true,
+            :format                  => {:with => Resolv::AddressRegex},
+            :inclusion               => {:in => ->(conversion_host) { conversion_host.resource.ipaddresses }},
+            :unless                  => ->(conversion_host) { conversion_host.address.blank? || conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? },
+            :presence                => false
 
   validate :resource_supports_conversion_host
 

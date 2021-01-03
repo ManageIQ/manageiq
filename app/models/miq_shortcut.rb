@@ -17,7 +17,7 @@ class MiqShortcut < ApplicationRecord
       rec = db_data[s[:name]]
       if rec.nil?
         _log.info("Creating #{s.inspect}")
-        rec = create!(s)
+        create!(s)
       else
         rec.attributes = s
         if rec.changed?

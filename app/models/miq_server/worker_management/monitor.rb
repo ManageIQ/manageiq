@@ -17,6 +17,7 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     self.class.my_server_clear_cache
 
+    sync_from_system
     sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
@@ -31,7 +32,7 @@ module MiqServer::WorkerManagement::Monitor
       # Push the heartbeat into the database
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
-      next unless validate_worker(worker)
+      validate_worker(worker)
     end
 
     do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
@@ -51,7 +52,6 @@ module MiqServer::WorkerManagement::Monitor
         c = class_name.constantize
         raise NameError, "Constant problem: expected: #{class_name}, constantized: #{c.name}" unless c.name == class_name
 
-        c.ensure_systemd_files if c.systemd_worker?
         result[c.name] = c.sync_workers
         result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
       rescue => error
@@ -61,6 +61,31 @@ module MiqServer::WorkerManagement::Monitor
       end
     end
     result
+  end
+
+  def sync_from_system
+    if podified?
+      ensure_pod_monitor_started
+    end
+
+    cleanup_orphaned_worker_rows
+
+    if podified?
+      sync_deployment_settings
+    end
+  end
+
+  def cleanup_orphaned_worker_rows
+    if podified?
+      # TODO: Move to a method in the kubernetes namespace
+      unless current_pods.empty?
+        orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
+        unless orphaned_rows.empty?
+          _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
+          orphaned_rows.destroy_all
+        end
+      end
+    end
   end
 
   def cleanup_failed_workers
@@ -166,8 +191,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def key_store
-    require 'dalli'
-    @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
+    @key_store ||= MiqMemcached.client(:namespace => "server_monitor")
   end
 
   def notify_workers_of_config_change(last_sync)

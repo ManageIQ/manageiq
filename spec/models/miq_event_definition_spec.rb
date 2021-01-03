@@ -1,5 +1,27 @@
 RSpec.describe MiqEventDefinition do
   let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
+
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:miq_event_definition)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
+  describe "name validation" do
+    it "does allow nil" do
+      expect { FactoryBot.create(:miq_event_definition, :name => nil) }.not_to raise_error
+    end
+
+    it "allows alpha-numeric, underscore and hyphen characters" do
+      expect { FactoryBot.create(:miq_event_definition, :name => 'valid_name-87_539_319') }
+        .not_to raise_error
+    end
+
+    it "doesn't allow spaces" do
+      expect { FactoryBot.create(:miq_event_definition, :name => 'invalid name') }
+        .to raise_error(ActiveRecord::RecordInvalid, / Name must only contain alpha-numeric, underscore and hyphen characters without spaces/)
+    end
+  end
+
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do
       let!(:set1) { create_set!('host_operations') }

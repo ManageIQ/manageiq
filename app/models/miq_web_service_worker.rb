@@ -12,10 +12,6 @@ class MiqWebServiceWorker < MiqWorker
   include MiqWebServerWorkerMixin
   include MiqWorker::ServiceWorker
 
-  def self.supports_container?
-    true
-  end
-
   def self.bundler_groups
     # TODO: The api process now looks at the existing UI session as of: https://github.com/ManageIQ/manageiq-api/pull/543
     # ui-classic should not be but is serialializing its classes into session, so we need to have access to them for deserialization

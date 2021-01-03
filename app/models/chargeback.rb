@@ -102,7 +102,7 @@ class Chargeback < ActsAsArModel
     "#{consumption.resource_id}_#{ts_key}"
   end
 
-  def self.groupby_label_value(consumption, groupby_label)
+  def self.groupby_label_value(_consumption, _groupby_label)
     nil
   end
 

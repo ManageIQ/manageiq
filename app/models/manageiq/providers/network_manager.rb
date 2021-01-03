@@ -39,6 +39,8 @@ module ManageIQ::Providers
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
 
+    delegate :queue_name_for_ems_refresh, :to => :parent_manager
+
     has_many :availability_zones,            -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :flavors,                       -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id
     has_many :cloud_tenants,                 -> { where.not(:ems_id => nil) }, :primary_key => :parent_ems_id, :foreign_key => :ems_id

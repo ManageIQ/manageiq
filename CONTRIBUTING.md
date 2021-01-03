@@ -4,7 +4,7 @@ Please read the [ManageIQ guides](http://github.com/ManageIQ/guides) before cont
 
 The guides contain our Ruby coding standards as well as general standards around commits, pull requests, and more.
 
-If you wish to contribute a translation of the project in your language, please read [Internationalization Guidelines](https://manageiq.org/documentation/development/i18n) before contributing.
+If you wish to contribute a translation of the project in your language, please read [Internationalization Guidelines](https://www.manageiq.org/docs/guides/i18n.html) before contributing.
 
 Thanks for your contribution!
 

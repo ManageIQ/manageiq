@@ -31,7 +31,7 @@ class ChargebackRateDetailMeasure < ApplicationRecord
         rec = ChargebackRateDetailMeasure.find_by(:name => cbr[:name])
         if rec.nil?
           _log.info("Creating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
-          rec = ChargebackRateDetailMeasure.create(cbr)
+          ChargebackRateDetailMeasure.create(cbr)
         else
           fixture_mtime = File.mtime(fixture_file_measure).utc
           if fixture_mtime > rec.created_at

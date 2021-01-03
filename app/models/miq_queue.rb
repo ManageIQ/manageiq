@@ -208,7 +208,7 @@ class MiqQueue < ApplicationRecord
       # options[:queue_name] = "generic"
       options[:role] = service
     when "ems_inventory"
-      options[:queue_name] = MiqEmsRefreshWorker.queue_name_for_ems(resource)
+      options[:queue_name] = resource.queue_name_for_ems_refresh
       options[:role]       = service
       options[:zone]       = resource.my_zone
     when "ems_operations"
@@ -646,10 +646,11 @@ class MiqQueue < ApplicationRecord
   private_class_method :optional_values
 
   def self.messaging_client_options
-    (messaging_options_from_env || messaging_options_from_file)&.merge(
-      :encoding => "json",
-      :protocol => messaging_protocol,
-    )&.tap { |h| h[:password] = MiqPassword.try_decrypt(h.delete(:password)) }
+    opts = messaging_options_from_env || messaging_options_from_file
+    return if opts.nil?
+
+    opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
+    opts.merge(:encoding => "json", :protocol => messaging_protocol)
   end
   private_class_method :messaging_client_options
 

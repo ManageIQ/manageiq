@@ -30,7 +30,7 @@ module Vmdb::Loggers
       def call(severity, time, progname, msg)
         # From https://github.com/ViaQ/elasticsearch-templates/releases -> Downloads -> *.asciidoc
         # NOTE: These values are in a specific order for easier human readbility via STDOUT
-        {
+        payload = {
           :@timestamp => format_datetime(time),
           :hostname   => hostname,
           :pid        => $PROCESS_ID,
@@ -39,7 +39,8 @@ module Vmdb::Loggers
           :level      => translate_error(severity),
           :message    => prefix_task_id(msg2str(msg)),
           # :tags => "tags string",
-        }.delete_nils.to_json << "\n"
+        }.delete_nils
+        JSON.generate(payload) << "\n"
       end
 
       private

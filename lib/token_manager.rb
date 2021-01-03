@@ -17,9 +17,9 @@ class TokenManager
     ttl = token_options.delete(:token_ttl_override) || token_ttl
     token_data = {:token_ttl => ttl, :expires_on => Time.now.utc + ttl}
 
-    token_store.write(token,
-                      token_data.merge!(prune_token_options(token_options)),
-                      :expires_in => token_ttl)
+    token_store.create_user_token(token,
+                                  token_data.merge!(prune_token_options(token_options)),
+                                  :expires_in => token_ttl)
     token
   end
 

@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Kasparov".freeze
+      "Lasker".freeze
     end
 
     def self.RELEASE

@@ -1,16 +1,19 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential
-  COMMON_ATTRIBUTES = {}.freeze
+  COMMON_ATTRIBUTES = [].freeze
 
-  EXTRA_ATTRIBUTES = {
-    :vault_password => {
-      :type       => :password,
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'password-field',
       :label      => N_('Vault password'),
-      :help_text  => N_('Vault password'),
-      :max_length => 1024
-    }
-  }.freeze
+      :helperText => N_('Vault password'),
+      :name       => 'vault_password',
+      :id         => 'vault_password',
+      :maxLength  => 1024,
+      :type       => 'password',
+    },
+  ].freeze
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :label      => N_('Vault'),

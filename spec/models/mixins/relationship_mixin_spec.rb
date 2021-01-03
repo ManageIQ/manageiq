@@ -202,6 +202,162 @@ RSpec.describe RelationshipMixin do
       end
     end
 
+    describe "shared ancestry/rel methods" do
+      let(:service1) {  ancestry_class.create }
+      let(:service2) {  ancestry_class.create }
+      let(:service3) {  ancestry_class.create }
+      let(:service4) {  ancestry_class.create }
+
+      let(:ancestry_class) do
+        Class.new(ApplicationRecord) do
+          def self.name
+            "services"
+          end
+          has_ancestry
+          self.table_name = "services"
+          include RelationshipMixin
+          self.skip_relationships += ["custom"]
+        end
+      end
+
+      before do
+        service1.with_relationship_type("custom") { service1.update!(:parent => service2) }
+        service3.with_relationship_type("custom") { service3.update!(:parent => service1) }
+        service4.with_relationship_type("custom") { service4.update!(:parent => service1) }
+      end
+
+      it "#ancestors" do
+        expect(service3.with_relationship_type("custom") { service3.ancestors }).to contain_exactly(service1, service2)
+      end
+
+      it "#ancestor_ids" do
+        expect(service3.with_relationship_type("custom") { service3.ancestor_ids }).to contain_exactly(service1.id, service2.id)
+      end
+
+      it "#children" do
+        expect(service2.with_relationship_type("custom") { service2.children }).to contain_exactly(service1)
+      end
+
+      it "#subtree" do
+        expect(service1.with_relationship_type("custom") { service1.subtree }).to contain_exactly(service3, service4, service1)
+      end
+
+      it "#siblings" do
+        expect(service4.with_relationship_type("custom") { service4.siblings }).to contain_exactly(service3, service4)
+      end
+
+      it "#sibling_ids" do
+        expect(service4.with_relationship_type("custom") { service4.sibling_ids }).to contain_exactly(service3.id, service4.id)
+      end
+
+      it "#root" do
+        expect(service4.with_relationship_type("custom") { service4.root_id }).to eq(service2.id)
+      end
+
+      it "#root_id" do
+        expect(service4.with_relationship_type("custom") { service4.root_id }).to eq(service2.id)
+      end
+
+      it "#parent" do
+        expect(service1.with_relationship_type("custom") { service1.parent }).to eq(service2)
+      end
+
+      it "#parent_id" do
+        expect(service1.with_relationship_type("custom") { service1.parent_id }).to eq(service2.id)
+      end
+
+      it "#is_root?" do
+        expect(service2.with_relationship_type("custom") { service2.is_root? }).to eq(true)
+      end
+
+      it "#is_root? false" do
+        expect(service1.with_relationship_type("custom") { service1.is_root? }).to eq(false)
+      end
+
+      it "#descendant_ids" do
+        expect(service2.with_relationship_type("custom") { service2.descendant_ids }).to contain_exactly(service1.id, service3.id, service4.id)
+      end
+
+      it "#has_siblings?" do
+        expect(service4.with_relationship_type("custom") { service4.has_siblings? }).to eq(true)
+      end
+
+      it "#has_siblings? false" do
+        expect(service1.with_relationship_type("custom") { service1.has_siblings? }).to eq(false)
+      end
+
+      it "#depth" do
+        expect(service3.with_relationship_type("custom") { service3.depth }).to eq(2)
+      end
+
+      it "#path_ids" do
+        expect(service3.with_relationship_type("custom") { service3.path_ids }).to contain_exactly(service1.id, service3.id, service2.id)
+      end
+
+      it "#child_ids" do
+        expect(service2.with_relationship_type("custom") { service2.child_ids }).to eq([service1.id])
+      end
+
+      it "#is_childless?" do
+        expect(service4.with_relationship_type("custom") { service4.is_childless? }).to eq(true)
+      end
+
+      it "#is_childless? false" do
+        expect(service2.with_relationship_type("custom") { service2.is_childless? }).to eq(false)
+      end
+
+      it "#descendants" do
+        expect(service2.with_relationship_type("custom") { service2.descendants }).to contain_exactly(service1, service3, service4)
+      end
+
+      it "#subtree_ids" do
+        expect(service1.with_relationship_type("custom") { service1.subtree_ids }).to contain_exactly(service1.id, service3.id, service4.id)
+      end
+
+      it "#is_only_child?" do
+        expect(service1.with_relationship_type("custom") { service1.is_only_child? }).to eq(true)
+      end
+
+      it "#is_only_child? false" do
+        expect(service3.with_relationship_type("custom") { service3.is_only_child? }).to eq(false)
+      end
+
+      it "#has_children?" do
+        expect(service2.with_relationship_type("custom") { service2.has_children? }).to eq(true)
+      end
+
+      it "#has_children? false" do
+        expect(service4.with_relationship_type("custom") { service4.has_children? }).to eq(false)
+      end
+
+      it "#is_ancestor_of?" do
+        expect(service2.with_relationship_type("custom") { service2.is_ancestor_of?(service3) }).to eq(true)
+      end
+
+      it "#is_descendant_of?" do
+        expect(service3.with_relationship_type("custom") { service3.is_descendant_of?(service1) }).to eq(true)
+      end
+
+      it "#remove_children" do
+        expect(service1.with_relationship_type("custom") { service1.remove_children(service4) }).to eq([service4])
+        expect(service1.with_relationship_type("custom") { service1.children }).to contain_exactly(service3)
+      end
+
+      it "#add_children" do
+        service5 = ancestry_class.create
+        expect(service1.with_relationship_type("custom") { service1.add_children(service5) }).to eq([service5])
+        service5.save!
+        expect(service1.with_relationship_type("custom") { service1.children }).to contain_exactly(service3, service4, service5)
+      end
+
+      it "#parent=" do
+        service6 = ancestry_class.create
+        expect(service2.with_relationship_type("custom") { service2.parent=(service6) }).to eq(service6)
+        service2.save!
+        expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
+      end
+    end
+
     describe "#add_parent" do
       let(:folder1) { FactoryBot.create(:ems_folder) }
       let(:folder2) { FactoryBot.create(:ems_folder) }

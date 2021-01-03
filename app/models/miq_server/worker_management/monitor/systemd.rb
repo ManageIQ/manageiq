@@ -29,6 +29,7 @@ module MiqServer::WorkerManagement::Monitor::Systemd
   def systemd_stop_services(service_names)
     service_names.each do |service_name|
       systemd_manager.StopUnit(service_name, "replace")
+      systemd_manager.ResetFailedUnit(service_name)
 
       service_settings_dir = systemd_unit_dir.join("#{service_name}.d")
       FileUtils.rm_r(service_settings_dir) if service_settings_dir.exist?

@@ -111,6 +111,13 @@ FactoryBot.define do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
+  factory :ems_autosde,
+          :aliases => ["manageiq/providers/storage_manager/autosde_manager"],
+          :class   => "ManageIQ::Providers::Autosde::StorageManager",
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
+
   factory :ems_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
           :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
@@ -383,7 +390,11 @@ FactoryBot.define do
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :parent  => :automation_manager
+          :parent  => :automation_manager do
+    provider {
+      raise "DO NOT USE!  Use :provider_embedded_ansible and reference the automation_manager from that record"
+    }
+  end
 
   # Leaf classes for provisioning_manager
 

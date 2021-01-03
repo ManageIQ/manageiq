@@ -71,7 +71,7 @@ RSpec.describe GitRepository do
       end
 
       before do
-        allow(MiqServer).to receive(:my_zone).and_return("default")
+        EvmSpecHelper.local_miq_server
         allow(gwt).to receive(:branches).with(anything).and_return(branch_list)
         allow(gwt).to receive(:tags).with(no_args).and_return(tag_list)
         allow(gwt).to receive(:branch_info) do |name|
@@ -343,6 +343,50 @@ RSpec.describe GitRepository do
           expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
           expect(GitRepository.find(repo_id)).not_to be_nil
         end
+      end
+    end
+
+    context "check_connection?" do
+      require 'net/ping/external'
+      let(:ext_ping) { instance_double(Net::Ping::External) }
+
+      before do
+        allow(Net::Ping::External).to receive(:new).and_return(ext_ping)
+        allow(ext_ping).to receive(:exception)
+      end
+
+      it "returns true if it can ping the repo" do
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging '.*' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "returns false if it cannot ping the repo" do
+        allow(ext_ping).to receive(:ping?).and_return(false)
+        expect($log).to receive(:debug).with(/pinging '.*' to verify network connection/)
+        expect($log).to receive(:debug).with(/ping failed: .*/)
+        expect(repo.check_connection?).to eq(false)
+      end
+
+      it "handles git urls without issue" do
+        allow(repo).to receive(:url).and_return("git@example.com:ManageIQ/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "handles ssh urls without issue" do
+        allow(repo).to receive(:url).and_return("ssh://user@example.com:443/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
+      end
+
+      it "handles file urls without issue" do
+        allow(repo).to receive(:url).and_return("file://example.com/server/manageiq.git")
+        allow(ext_ping).to receive(:ping?).and_return(true)
+        expect($log).to receive(:debug).with(/pinging 'example.com' to verify network connection/)
+        expect(repo.check_connection?).to eq(true)
       end
     end
   end

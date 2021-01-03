@@ -8,7 +8,8 @@ class MiqRequestWorkflow
   # We rely on MiqRequestWorkflow's descendants to be comprehensive
   singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
 
-  attr_accessor :dialogs, :requester, :values, :last_vm_id
+  attr_accessor :requester, :values, :last_vm_id
+  attr_writer :dialogs
 
   def self.automate_dialog_request
     nil
@@ -80,7 +81,7 @@ class MiqRequestWorkflow
   end
 
   # Helper method when not using workflow
-  def make_request(request, values, requester = nil, auto_approve = false)
+  def make_request(request, values, _requester = nil, auto_approve = false)
     return false unless validate(values)
     password_helper(values, true)
     # Ensure that tags selected in the pre-dialog get applied to the request

@@ -33,6 +33,10 @@ opt_parser = OptionParser.new do |opts|
     options[:ems_id] = val
   end
 
+  opts.on("-s=system_uid", "--system-uid=system_uid", "Set the system uid correlating a MiqWorker row to an external system's resource.") do |val|
+    options[:system_uid] = val
+  end
+
   opts.on("-h", "--help", "Displays this help") do
     puts opts
     exit
@@ -60,6 +64,7 @@ end
 opt_parser.parse!
 worker_class = ARGV[0]
 
+puts "** Booting #{worker_class} with PID: #{Process.pid}#{" and options: #{options.inspect}" if options.any?}..." unless options[:list]
 require File.expand_path("../../../config/environment", __dir__)
 
 if options[:list]
@@ -76,7 +81,7 @@ end
 # Skip heartbeating with single worker
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 
-options[:ems_id] ||= ENV["EMS_ID"]
+options[:ems_id] ||= ENV["EMS_ID"].try(:split, ',')
 
 if options[:roles].present?
   MiqServer.my_server.server_role_names += options[:roles]
@@ -94,6 +99,8 @@ unless options[:dry_run]
   create_options = {:pid => Process.pid}
   runner_options = {}
 
+  create_options[:system_uid] = options[:system_uid] if options[:system_uid]
+
   if options[:ems_id]
     create_options[:queue_name] = options[:ems_id].length == 1 ? "ems_#{options[:ems_id].first}" : options[:ems_id].collect { |id| "ems_#{id}" }
     runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
@@ -101,7 +108,9 @@ unless options[:dry_run]
 
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
-               wrkr.update(:pid => Process.pid)
+               update_options = {:pid => Process.pid}
+               update_options[:system_uid] = options[:system_uid] if options[:system_uid]
+               wrkr.update(update_options)
              end
            else
              worker_class.create_worker_record(create_options)
@@ -111,6 +120,12 @@ unless options[:dry_run]
     runner_options[:guid] = worker.guid
     $log.info("Starting #{worker.class.name} with runner options #{runner_options}")
     worker.class::Runner.new(runner_options).tap(&:setup_sigterm_trap).start
+  rescue SystemExit
+    raise
+  rescue Exception => err
+    MiqWorker::Runner.safe_log(worker, "An unhandled error has occurred: #{err}\n#{err.backtrace.join("\n")}", :error)
+    STDERR.puts("ERROR: An unhandled error has occurred: #{err}. See log for details.") rescue nil
+    exit 1
   ensure
     FileUtils.rm_f(worker.heartbeat_file)
     $log.info("Deleting worker record for #{worker.class.name}, id #{worker.id}")

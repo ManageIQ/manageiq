@@ -1,7 +1,8 @@
 RSpec.describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
     before do
-      @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
+      ServerRole.seed
+      @miq_server = EvmSpecHelper.local_miq_server.tap { |s| s.role = "notifier" }
       @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryBot.create(:vm_vmware)
 

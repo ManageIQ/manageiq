@@ -154,6 +154,11 @@ RSpec.describe MiqWorker::ContainerCommon do
         expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
       end
 
+      it "raises ArgumentError when request > limit" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 750.megabytes, :memory_threshold => 500.megabytes)
+        expect { MiqGenericWorker.new.resource_constraints }.to raise_error(ArgumentError)
+      end
+
       it "returns only memory when memory is set" do
         allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_threshold => 500.megabytes)
         constraints = {
@@ -169,6 +174,39 @@ RSpec.describe MiqWorker::ContainerCommon do
         constraints = {
           :limits => {
             :cpu => "800m"
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+
+      it "returns default cpu when it is set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:cpu_request_percent => 10)
+        constraints = {
+          :requests => {
+            :cpu => "100m"
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+
+      it "returns default memory when it is set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 250.megabytes)
+        constraints = {
+          :requests => {
+            :memory => "250Mi",
+          }
+        }
+        expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)
+      end
+
+      it "returns memory pair when set" do
+        allow(MiqGenericWorker).to receive(:worker_settings).and_return(:memory_request => 250.megabytes, :memory_threshold => 600.megabytes)
+        constraints = {
+          :requests => {
+            :memory => "250Mi",
+          },
+          :limits         => {
+            :memory => "600Mi",
           }
         }
         expect(MiqGenericWorker.new.resource_constraints).to eq(constraints)

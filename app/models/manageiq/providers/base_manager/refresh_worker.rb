@@ -7,17 +7,6 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   self.include_stopping_workers_on_synchronize = true
   self.required_roles = %w[ems_inventory]
 
-  def self.queue_name_for_ems(ems)
-    return ems unless ems.kind_of?(ExtManagementSystem)
-    return ems.queue_name unless ems.child_managers.any?
-    combined_managers(ems).map(&:queue_name).sort
-  end
-
-  def self.combined_managers(ems)
-    [ems].concat(ems.child_managers)
-  end
-  private_class_method :combined_managers
-
   def friendly_name
     @friendly_name ||= begin
       ems = ext_management_system

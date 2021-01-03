@@ -62,9 +62,13 @@ module SupportsFeatureMixin
     :add_interface                       => 'Add Interface',
     :add_security_group                  => 'Add Security Group',
     :associate_floating_ip               => 'Associate a Floating IP',
+    :auth_key_pair_create                => 'Auth Key Pair Creation',
     :clone                               => 'Clone',
     # FIXME: this is just a internal helper and should be refactored
     :control                             => 'Basic control operations',
+    :cloud_tenants                       => 'CloudTenant',
+    :cloud_volume                        => 'Cloud Volume',
+    :cloud_volume_create                 => 'Create Cloud Volume',
     :cloud_tenant_mapping                => 'CloudTenant mapping',
     :cloud_object_store_container_create => 'Create Object Store Container',
     :cloud_object_store_container_clear  => 'Clear Object Store Container',
@@ -73,7 +77,9 @@ module SupportsFeatureMixin
     :backup_restore                      => 'CloudVolume backup restore',
     :cinder_service                      => 'Cinder storage service',
     :cinder_volume_types                 => 'Cinder volume types',
+    :collect_running_processes           => 'Collect running processes',
     :conversion_host                     => 'Conversion host capable',
+    :create_flavor                       => 'Flavor Creation',
     :create_floating_ip                  => 'Floating IP Creation',
     :create_host_aggregate               => 'Host Aggregate Creation',
     :create_security_group               => 'Security Group Creation',
@@ -96,6 +102,7 @@ module SupportsFeatureMixin
     :launch_html5_console                => 'Launch HTML5 Console',
     :launch_vmrc_console                 => 'Launch VMRC Console',
     :launch_native_console               => 'Launch Native Console',
+    :label_mapping                       => 'Label Mapping',
     :admin_ui                            => 'Open Admin UI for a Provider',
     :live_migrate                        => 'Live Migration',
     :warm_migrate                        => 'Warm Migration',
@@ -134,15 +141,18 @@ module SupportsFeatureMixin
     :start                               => 'Start',
     :streaming_refresh                   => 'Streaming refresh',
     :suspend                             => 'Suspending',
+    :pause                               => 'Pause a VM',
     :terminate                           => 'Terminate a VM',
     :timeline                            => 'Query for events',
     :update_aggregate                    => 'Host Aggregate Update',
     :update                              => 'Update',
     :update_floating_ip                  => 'Update Floating IP association',
     :ems_network_new                     => 'New EMS Network Provider',
+    :ems_storage_new                     => 'New EMS Storage Manager',
     :update_security_group               => 'Security Group Update',
     :upgrade_cluster                     => 'Cluster Upgrade',
     :block_storage                       => 'Block Storage',
+    :storage_services                    => 'Storage Services',
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
     :volume_multiattachment              => 'Volume Multiattachment',
@@ -245,7 +255,7 @@ module SupportsFeatureMixin
 
     def unsupported
       # This is a class variable and it might be modified during runtime
-      # because we dont eager load all classes at boot time, so it needs to be thread safe
+      # because we do not eager load all classes at boot time, so it needs to be thread safe
       @unsupported ||= Concurrent::Hash.new
     end
 
@@ -260,28 +270,31 @@ module SupportsFeatureMixin
       method_name = "supports_#{feature}?"
       feature = feature.to_sym
 
-      # defines the method on the instance
-      define_method(method_name) do
-        unsupported.delete(feature)
-        if block_given?
-          begin
-            instance_eval(&block)
-          rescue => e
-            _log.log_backtrace(e)
-            unsupported_reason_add(feature, "Internal Error: #{e.message}")
+      # silence potential redefinition warnings
+      silence_warnings do
+        # defines the method on the instance
+        define_method(method_name) do
+          unsupported.delete(feature)
+          if block_given?
+            begin
+              instance_eval(&block)
+            rescue => e
+              _log.log_backtrace(e)
+              unsupported_reason_add(feature, "Internal Error: #{e.message}")
+            end
+          else
+            unsupported_reason_add(feature, reason) unless is_supported
           end
-        else
-          unsupported_reason_add(feature, reason) unless is_supported
+          !unsupported.key?(feature)
         end
-        !unsupported.key?(feature)
-      end
 
-      # defines the method on the class
-      define_singleton_method(method_name) do
-        unsupported.delete(feature)
-        # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
-        unsupported_reason_add(feature, reason) unless is_supported
-        !unsupported.key?(feature)
+        # defines the method on the class
+        define_singleton_method(method_name) do
+          unsupported.delete(feature)
+          # TODO: durandom - make reason evaluate in class context, to e.g. include the name of a subclass (.to_proc?)
+          unsupported_reason_add(feature, reason) unless is_supported
+          !unsupported.key?(feature)
+        end
       end
     end
   end

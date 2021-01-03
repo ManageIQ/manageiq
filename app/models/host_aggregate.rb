@@ -21,7 +21,7 @@ class HostAggregate < ApplicationRecord
 
   PERF_ROLLUP_CHILDREN = [:vms]
 
-  def perf_rollup_parents(interval_name = nil)
+  def perf_rollup_parents(_interval_name = nil)
     # don't rollup to ext_management_system since that's handled through availability zone
     nil
   end

@@ -62,8 +62,8 @@ class Service < ApplicationRecord
   include CiFeatureMixin
   include CustomActionsMixin
   include CustomAttributeMixin
-  include DeprecationMixin
   include ExternalUrlMixin
+  include DeprecationMixin
   include LifecycleMixin
   include Metric::CiMixin
   include NewWithTypeStiMixin
@@ -78,6 +78,8 @@ class Service < ApplicationRecord
   include_concern 'Operations'
   include_concern 'ResourceLinking'
   include_concern 'RetirementManagement'
+
+  hide_attribute "display"
 
   virtual_total :v_total_vms, :vms, :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
 
@@ -106,8 +108,8 @@ class Service < ApplicationRecord
 
   alias parent_service parent
   alias_attribute :service, :parent
-  virtual_belongs_to :service
   deprecate_attribute :display, :visible
+  virtual_belongs_to :service
 
   def power_states
     vms.map(&:power_state)

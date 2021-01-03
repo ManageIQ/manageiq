@@ -2879,19 +2879,19 @@ RSpec.describe Rbac::Filterer do
     let(:common_t2_name) { "Tenant 2" }
     # global(default) region
     # T1 -> T2 -> T3
-    let(:t1) { FactoryGirl.create(:tenant) }
-    let(:t2) { FactoryGirl.create(:tenant, :parent => t1, :name => common_t2_name.upcase) }
-    let(:t3) { FactoryGirl.create(:tenant, :parent => t2) }
+    let(:t1) { FactoryBot.create(:tenant) }
+    let(:t2) { FactoryBot.create(:tenant, :parent => t1, :name => common_t2_name.upcase) }
+    let(:t3) { FactoryBot.create(:tenant, :parent => t2) }
 
     # user with T2
     #
-    let(:group_t2) { FactoryGirl.create(:miq_group, :tenant => t2) }
-    let(:user_t2)  { FactoryGirl.create(:user, :miq_groups => [group_t2]) }
+    let(:group_t2) { FactoryBot.create(:miq_group, :tenant => t2) }
+    let(:user_t2)  { FactoryBot.create(:user, :miq_groups => [group_t2]) }
 
     # in other region
     #
     #
-    let(:other_region) { FactoryGirl.create(:miq_region) }
+    let(:other_region) { FactoryBot.create(:miq_region) }
 
     def id_for_model_in_region(model, other_region)
       model.id_in_region(model.count + 1_000_000, other_region.region)
@@ -2899,18 +2899,18 @@ RSpec.describe Rbac::Filterer do
 
     #
     # T1 -> T2 -> T3
-    let(:t1_other_region) { FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_region)) }
-    let(:t2_other_region) { FactoryGirl.create(:tenant, :parent => t1_other_region, :id => id_for_model_in_region(Tenant, other_region), :name => common_t2_name) }
-    let(:t3_other_region) { FactoryGirl.create(:tenant, :parent => t2_other_region, :id => id_for_model_in_region(Tenant, other_region)) }
+    let(:t1_other_region) { FactoryBot.create(:tenant, :id => id_for_model_in_region(Tenant, other_region)) }
+    let(:t2_other_region) { FactoryBot.create(:tenant, :parent => t1_other_region, :id => id_for_model_in_region(Tenant, other_region), :name => common_t2_name) }
+    let(:t3_other_region) { FactoryBot.create(:tenant, :parent => t2_other_region, :id => id_for_model_in_region(Tenant, other_region)) }
 
     #
     # user with T2
     #
-    let(:group_t2_other_region) { FactoryGirl.create(:miq_group, :tenant => t2_other_region, :id => id_for_model_in_region(MiqGroup, other_region)) }
-    let(:user_t2_other_region)  { FactoryGirl.create(:user, :miq_groups => [group_t2_other_region], :id => id_for_model_in_region(User, other_region)) }
-    let!(:service_template_other_region) { FactoryGirl.create(:service_template, :tenant => t2_other_region, :id => id_for_model_in_region(ServiceTemplate, other_region)) }
+    let(:group_t2_other_region) { FactoryBot.create(:miq_group, :tenant => t2_other_region, :id => id_for_model_in_region(MiqGroup, other_region)) }
+    let(:user_t2_other_region)  { FactoryBot.create(:user, :miq_groups => [group_t2_other_region], :id => id_for_model_in_region(User, other_region)) }
+    let!(:service_template_other_region) { FactoryBot.create(:service_template, :tenant => t2_other_region, :id => id_for_model_in_region(ServiceTemplate, other_region)) }
 
-    let!(:vm_other_region) { FactoryGirl.create(:vm, :tenant => t2_other_region, :id => id_for_model_in_region(Vm, other_region)) }
+    let!(:vm_other_region) { FactoryBot.create(:vm, :tenant => t2_other_region, :id => id_for_model_in_region(Vm, other_region)) }
 
     it "finds also service templates from other region" do
       expect(ServiceTemplate.count).to eq(1)
@@ -3005,7 +3005,6 @@ RSpec.describe Rbac::Filterer do
     end
   end
 
-  # private method
   describe ".select_from_order_columns" do
     subject { described_class.new }
     it "removes empty" do
@@ -3050,6 +3049,46 @@ RSpec.describe Rbac::Filterer do
 
     def ascenders(cols)
       cols.map { |c| Arel::Nodes::Ascending.new(c) }
+    end
+  end
+
+  context "scope by product feature" do
+    let(:shortcut_feature1) { "shortcut_feature_1" }
+    let(:shortcut_feature2) { "shortcut_feature_2" }
+    let(:product_feature1)  { FactoryBot.create(:miq_product_feature, :identifier => shortcut_feature1) }
+    let(:product_feature2)  { FactoryBot.create(:miq_product_feature, :identifier => shortcut_feature2) }
+    let!(:shortcut1)         { FactoryBot.create(:miq_shortcut, :rbac_feature_name => shortcut_feature1) }
+    let!(:shortcut2)         { FactoryBot.create(:miq_shortcut, :rbac_feature_name => shortcut_feature2) }
+
+    let(:user_role1) do
+      FactoryBot.create(:miq_user_role, :name => "role_name_1", :miq_product_features => [product_feature1])
+    end
+
+    let(:user_role2) do
+      FactoryBot.create(:miq_user_role, :name => "role_name_2", :miq_product_features => [product_feature1, product_feature2])
+    end
+
+    let(:group1) do
+      FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role1)
+    end
+
+    let(:group2) do
+      FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role2)
+    end
+
+    let!(:user1) { FactoryBot.create(:user, :miq_groups => [group1]) }
+    let!(:user2) { FactoryBot.create(:user, :miq_groups => [group2]) }
+    let!(:user)  { FactoryBot.create(:user) }
+
+    it "filters miq shortcuts according to MiqShortcut#rbac_feature_name" do
+      results = described_class.filtered(MiqShortcut, :user => user)
+      expect(results).to be_empty
+
+      results = described_class.filtered(MiqShortcut, :user => user1)
+      expect(results).to match_array([shortcut1])
+
+      results = described_class.filtered(MiqShortcut, :user => user2)
+      expect(results).to match_array([shortcut1, shortcut2])
     end
   end
 

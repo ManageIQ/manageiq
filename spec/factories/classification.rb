@@ -40,4 +40,28 @@ FactoryBot.define do
       FactoryBot.create(:classification_tag, :parent => c, :name => "hr",         :description => "Human Resources")
     end
   end
+
+  factory :classification_environment_with_tags, :parent => :classification do
+    name         { "environment" }
+    description  { "Environment" }
+    single_value { true }
+
+    after(:create) do |c|
+      FactoryBot.create(:classification_tag, :parent => c, :name => "accounting", :description => "Accounting")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "production", :description => "Production")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "quarantine", :description => "Quarantine")
+    end
+  end
+
+  factory :classification_location_with_tags, :parent => :classification do
+    name         { "location" }
+    description  { "Location" }
+    single_value { true }
+
+    after(:create) do |c|
+      FactoryBot.create(:classification_tag, :parent => c, :name => "ny", :description => "New York")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "chicago", :description => "Chicago")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "brno", :description => "Brno")
+    end
+  end
 end

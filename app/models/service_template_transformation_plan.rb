@@ -43,7 +43,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     nil
   end
 
-  validates :name, :presence => true, :uniqueness => {:scope => [:tenant_id]}
+  validates :name, :presence => true, :uniqueness_when_changed => {:scope => [:tenant_id]}
 
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
   # options

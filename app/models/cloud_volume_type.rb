@@ -12,4 +12,8 @@ class CloudVolumeType < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     ext_management_system && ext_management_system.class::CloudVolumeType
   end
+
+  def self.display_name(number = 1)
+    n_('Cloud Volume Type', 'Cloud Volume Types', number)
+  end
 end

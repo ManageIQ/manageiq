@@ -267,7 +267,7 @@ RSpec.describe SupportsFeatureMixin do
     it "can be supported by the class" do
       stub_const("NukeablePost", Class.new(SpecialPost) do
         supports :nuke do
-          unsupported_reason_add(:nuke, "dont nuke the bribe") if bribe
+          unsupported_reason_add(:nuke, "do not nuke the bribe") if bribe
         end
       end)
       expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false

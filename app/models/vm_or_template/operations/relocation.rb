@@ -38,7 +38,7 @@ module VmOrTemplate::Operations::Relocation
     raw_evacuate(options)
   end
 
-  def raw_migrate(host, pool = nil, priority = "defaultPriority", state = nil)
+  def raw_migrate(_host, _pool = nil, _priority = "defaultPriority", _state = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -48,7 +48,7 @@ module VmOrTemplate::Operations::Relocation
     raw_migrate(host, pool, priority, state)
   end
 
-  def raw_relocate(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = "defaultPriority", disk = nil)
+  def raw_relocate(_host, _pool = nil, _datastore = nil, _disk_move_type = nil, _transform = nil, _priority = "defaultPriority", _disk = nil)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
@@ -58,7 +58,7 @@ module VmOrTemplate::Operations::Relocation
     raw_relocate(host, pool, datastore, disk_move_type, transform, priority, disk)
   end
 
-  def raw_move_into_folder(folder)
+  def raw_move_into_folder(_folder)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 

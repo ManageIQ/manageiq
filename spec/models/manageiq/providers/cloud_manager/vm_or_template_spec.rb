@@ -36,11 +36,11 @@ RSpec.describe ManageIQ::Providers::CloudManager::VmOrTemplate do
   end
 
   describe "miq_group" do
-    let(:user)         { FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group]) }
-    let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
-    let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
-    let(:tenant_group) { FactoryGirl.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
-    let(:cloud_template_1) { FactoryGirl.create(:class => "TemplateCloud") }
+    let(:user)         { FactoryBot.create(:user, :userid => 'user', :miq_groups => [tenant_group]) }
+    let(:tenant)       { FactoryBot.build(:tenant, :parent => default_tenant) }
+    let(:tenant_users) { FactoryBot.create(:miq_user_role, :name => "tenant-users") }
+    let(:tenant_group) { FactoryBot.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
+    let(:cloud_template_1) { FactoryBot.create(:class => "TemplateCloud") }
 
     it "finds correct tenant id clause when tenant has source_id" do
       User.current_user = user

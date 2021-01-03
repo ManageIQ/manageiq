@@ -3,7 +3,7 @@ class ManageIQ::Providers::Inventory::Persister
   require 'yaml'
   require_nested :Builder
 
-  attr_reader :manager, :target, :collections
+  attr_reader :manager, :target, :collections, :tag_mapper
 
   include ::ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
 
@@ -103,6 +103,15 @@ class ManageIQ::Providers::Inventory::Persister
 
   def initialize_inventory_collections
     # can be implemented in a subclass
+  end
+
+  def case_sensitive_labels?
+    true
+  end
+
+  def initialize_tag_mapper
+    @tag_mapper ||= ProviderTagMapping.mapper(:case_sensitive_labels => case_sensitive_labels?)
+    collections[:tags_to_resolve] = @tag_mapper.tags_to_resolve_collection
   end
 
   # @return [Hash] entire Persister object serialized to hash

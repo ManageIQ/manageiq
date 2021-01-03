@@ -1,29 +1,40 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential < ManageIQ::Providers::EmbeddedAnsible::AutomationManager::CloudCredential
-  COMMON_ATTRIBUTES = {
-    :userid   => {
-      :label     => N_('Username'),
-      :help_text => N_('Username for this credential'),
-      :required  => true
+  COMMON_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
+      :label      => N_('Username'),
+      :helperText => N_('Username for this credential'),
+      :name       => 'userid',
+      :id         => 'userid',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
     },
-    :password => {
-      :type      => :password,
-      :label     => N_('Password'),
-      :help_text => N_('Password for this credential'),
-      :required  => true
-    }
-  }.freeze
+    {
+      :component  => 'password-field',
+      :label      => N_('Password'),
+      :helperText => N_('Password for this credential'),
+      :name       => 'password',
+      :id         => 'password',
+      :type       => 'password',
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
-  EXTRA_ATTRIBUTES = {
-    :host => {
-      :type       => :string,
+  EXTRA_ATTRIBUTES = [
+    {
+      :component  => 'text-field',
       :label      => N_('vCenter Host'),
-      :help_text  => N_('The hostname or IP address of the vCenter Host'),
-      :max_length => 1024,
-      :required   => true
-    }
-  }.freeze
+      :helperText => N_('The hostname or IP address of the vCenter Host'),
+      :name       => 'host',
+      :id         => 'host',
+      :maxLength  => 1024,
+      :isRequired => true,
+      :validate   => [{:type => 'required'}],
+    },
+  ].freeze
 
-  API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+  API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 
   API_OPTIONS = {
     :label      => N_('VMware'),

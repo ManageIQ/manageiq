@@ -9,7 +9,6 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
            :authentication_status_ok?,
            :authentications,
            :authentication_for_summary,
-           :zone,
            :cinder_service,
            :connect,
            :verify_credentials,

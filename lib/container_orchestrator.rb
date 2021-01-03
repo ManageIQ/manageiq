@@ -2,6 +2,7 @@ autoload(:Kubeclient, 'kubeclient')
 autoload(:KubeException, 'kubeclient')
 
 class ContainerOrchestrator
+  include Vmdb::Logging
   include_concern 'ObjectDefinition'
 
   TOKEN_FILE   = "/run/secrets/kubernetes.io/serviceaccount/token".freeze
@@ -12,7 +13,12 @@ class ContainerOrchestrator
   end
 
   def scale(deployment_name, replicas)
-    kube_apps_connection.patch_deployment(deployment_name, { :spec => { :replicas => replicas } }, my_namespace)
+    patch_deployment(deployment_name, {:spec => {:replicas => replicas}})
+  end
+
+  def patch_deployment(deployment_name, data)
+    _log.info("deployment_name: #{deployment_name}, data: #{data.inspect}")
+    kube_apps_connection.patch_deployment(deployment_name, data, my_namespace)
   end
 
   def create_deployment(name)
@@ -40,6 +46,7 @@ class ContainerOrchestrator
   end
 
   def delete_deployment(name)
+    _log.info("Deleting [#{name}] in namespace: #{my_namespace}")
     scale(name, 0)
     kube_apps_connection.delete_deployment(name, my_namespace)
   rescue KubeException => e
@@ -58,16 +65,24 @@ class ContainerOrchestrator
     raise unless e.message =~ /not found/
   end
 
+  def get_deployments
+    kube_apps_connection.get_deployments(default_get_options)
+  end
+
+  def watch_deployments(resource_version = nil)
+    kube_apps_connection.watch_deployments(default_get_options.merge(:resource_version => resource_version))
+  end
+
   def get_pods
-    kube_connection.get_pods(pod_options)
+    kube_connection.get_pods(default_get_options)
   end
 
   def watch_pods(resource_version = nil)
-    kube_connection.watch_pods(pod_options.merge(:resource_version => resource_version))
+    kube_connection.watch_pods(default_get_options.merge(:resource_version => resource_version))
   end
 
   private
-  def pod_options
+  def default_get_options
     {:namespace => my_namespace, :label_selector => [app_name_selector, orchestrated_by_selector].join(",")}
   end
 

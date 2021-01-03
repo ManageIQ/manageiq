@@ -12,16 +12,17 @@ class MiqUiWorker < MiqWorker
   include MiqWebServerWorkerMixin
   include MiqWorker::ServiceWorker
 
-  def self.supports_container?
-    true
-  end
-
   def self.bundler_groups
     %w[manageiq_default ui_dependencies graphql_api]
   end
 
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_UI_WORKERS
+  end
+
+  def self.preload_for_worker_role
+    super
+    Api::ApiConfig.collections.each { |_k, v| v.klass.try(:constantize).try(:descendants) }
   end
 
   def container_port

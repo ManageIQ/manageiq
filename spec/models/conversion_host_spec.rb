@@ -104,6 +104,24 @@ RSpec.describe ConversionHost, :v2v do
       end
     end
 
+    describe "uniqueness_when_changed validation" do
+      context "resource_id validation" do
+        it "doesn't access database when unchanged model is saved" do
+          m = FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:vm_openstack))
+          expect { m.valid? }.not_to make_database_queries
+        end
+      end
+
+      context "address validation" do
+        it "doesn't access database when unchanged model is saved" do
+          conversion_host = FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:vm_openstack), :address => '127.0.0.1')
+          allow(vm).to receive(:ipaddresses).and_return(['10.0.1.1', 'FE80::0202:B3FF:FE1E:3267', '192.168.1.1'])
+
+          expect { conversion_host.valid? }.not_to make_database_queries
+        end
+      end
+    end
+
     context "#ipaddress" do
       it "returns first IP address if 'address' is nil" do
         expect(conversion_host_1.ipaddress).to eq('10.0.0.1')

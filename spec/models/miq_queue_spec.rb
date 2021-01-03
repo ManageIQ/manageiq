@@ -1008,7 +1008,7 @@ RSpec.describe MiqQueue do
         end
 
         it "with encrypted password" do
-          stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => MiqPassword.encrypt("password")))
+          stub_const("ENV", env_vars.to_h.merge("MESSAGING_PASSWORD" => ManageIQ::Password.encrypt("password")))
 
           expect(YAML).not_to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE)
 
@@ -1058,15 +1058,16 @@ RSpec.describe MiqQueue do
 
       it "with encrypted password" do
         allow(YAML).to receive(:load_file).and_call_original
-        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => MiqPassword.encrypt("password")})
+        expect(YAML).to receive(:load_file).with(MiqQueue::MESSAGING_CONFIG_FILE).and_return("test" => {"hostname" => "kafka.example.com", "port" => 9092, "username" => "user", "password" => ManageIQ::Password.encrypt("password"), "sasl.password" => ManageIQ::Password.encrypt("password")})
 
         expect(MiqQueue.send(:messaging_client_options)).to eq(
-          :encoding => "json",
-          :host     => "kafka.example.com",
-          :password => "password",
-          :port     => 9092,
-          :protocol => nil,
-          :username => "user"
+          :encoding        => "json",
+          :host            => "kafka.example.com",
+          :password        => "password",
+          :port            => 9092,
+          :protocol        => nil,
+          :"sasl.password" => "password",
+          :username        => "user"
         )
       end
     end

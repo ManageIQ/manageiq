@@ -201,7 +201,7 @@ RSpec.describe MiqProductFeature do
           let!(:other_miq_region) { FactoryBot.create(:miq_region) }
           let!(:tenant_product_feature_other_region) do
             Tenant.skip_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
-            tenant = FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_miq_region))
+            tenant = FactoryBot.create(:tenant, :id => id_for_model_in_region(Tenant, other_miq_region))
             Tenant.set_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
 
             tenant
@@ -369,8 +369,10 @@ RSpec.describe MiqProductFeature do
       f3 = FactoryBot.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id)
       FactoryBot.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id)
       FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id)
+      MiqProductFeature.attribute_names # 0..1 queries
+      Tenant.attribute_names # 0..1 queries
 
-      expect { MiqProductFeature.features }.to make_database_queries(:count => 1)
+      expect { MiqProductFeature.features }.to make_database_queries(:count => 1..2)
       expect { MiqProductFeature.features }.to_not make_database_queries
 
       expect(MiqProductFeature.feature_root).to eq("f1")

@@ -5,7 +5,7 @@ en:
   product:
     name: ManageIQ
     name_full: ManageIQ
-    copyright: "Copyright (c) 2019 ManageIQ. Sponsored by Red Hat Inc."
+    copyright: "Copyright (c) 2020 ManageIQ. Sponsored by Red Hat Inc."
   activerecord:
     attributes:
       ems_cloud:
@@ -103,40 +103,99 @@ en:
         v_derived_cpu_reserved_pct:    CPU - Reserved (%)
         v_derived_memory_reserved_pct: Memory - Reserved (%)
 
+      abs_max_cpu_usagemhz_rate_average_timestamp: Absolute Max CPU Usage MHz Rate Average Timestamp
+      abs_max_cpu_usagemhz_rate_average_value: Absolute Max CPU Usage MHz Rate Average Value
       abs_max_cpu_usage_rate_average_timestamp: CPU - Absolute Max Usage Rate (Timestamp)
       abs_max_cpu_usage_rate_average_value: CPU - Absolute Max Usage Rate (%)
+      abs_max_derived_memory_used_timestamp: Absolute Max Derived Memory Used Timestamp
+      abs_max_derived_memory_used_value: Absolute Max Derived Memory Used Value
       abs_max_disk_usage_rate_average_timestamp: Disk I/O - Absolute Max Usage Rate (Timestamp)
       abs_max_disk_usage_rate_average_value: Disk I/O - Absolute Max Usage Rate (KBps)
       abs_max_mem_usage_absolute_average_timestamp: Memory - Absolute Max Usage Rate (Timestamp)
       abs_max_mem_usage_absolute_average_value: Memory - Absolute Max Usage Rate (%)
       abs_max_net_usage_rate_average_timestamp: Network I/O - Absolute Max Usage Rate (Timestamp)
       abs_max_net_usage_rate_average_value: Network I/O - Absolute Max Usage Rate (KBps)
+      abs_min_cpu_usagemhz_rate_average_timestamp: Absolute Min CPU Usage MHz Rate Average Timestamp
+      abs_min_cpu_usagemhz_rate_average_value: Absolute Min CPU Usage MHz Rate Average Value
       abs_min_cpu_usage_rate_average_timestamp: CPU - Absolute Min Usage Rate (Timestamp)
       abs_min_cpu_usage_rate_average_value: CPU - Absolute Min Usage Rate (%)
+      abs_min_derived_memory_used_timestamp: Absolute Min Derived Memory Used Timestamp
+      abs_min_derived_memory_used_value: Absolute Min Derived Memory Used Value
       abs_min_disk_usage_rate_average_timestamp: Disk I/O - Absolute Min Usage Rate (Timestamp)
       abs_min_disk_usage_rate_average_value: Disk I/O - Absolute Min Usage Rate (KBps)
       abs_min_mem_usage_absolute_average_timestamp: Memory - Absolute Min Usage Rate (Timestamp)
       abs_min_mem_usage_absolute_average_value: Memory - Absolute Min Usage Rate (%)
       abs_min_net_usage_rate_average_timestamp: Network I/O - Absolute Min Usage Rate (Timestamp)
       abs_min_net_usage_rate_average_value: Network I/O - Absolute Min Usage Rate (KBps)
+      access_modes: Access Modes
       acctid: Account ID
       accttype: Account Type
       action_type_description: Type
       active: Active
+      address: Address
       admin_disabled: Lockdown Mode
+      aggregate_all_vm_cpus: Aggregate All Vm CPUs
+      aggregate_all_vm_disk_count: Aggregate All Vm Disk Count
+      aggregate_all_vm_disk_space_allocated: Aggregate All Vm Disk Space Allocated
+      aggregate_all_vm_disk_space_used: Aggregate All Vm Disk Space Used
+      aggregate_all_vm_memory_on_disk: Aggregate All Vm Memory On Disk
+      aggregate_all_vm_memory: Aggregate All Vm Memory
       aggregate_cpu_speed: Total CPU Speed
       aggregate_cpu_total_cores: Total Number of Logical CPUs
+      aggregate_direct_vm_cpus: Aggregate Direct Vm CPUs
+      aggregate_direct_vm_disk_count: Aggregate Direct Vm Disk Count
+      aggregate_direct_vm_disk_space_allocated: Aggregate Direct Vm Disk Space Allocated
+      aggregate_direct_vm_disk_space_used: Aggregate Direct Vm Disk Space Used
+      aggregate_direct_vm_memory_on_disk: Aggregate Direct Vm Memory On Disk
+      aggregate_direct_vm_memory: Aggregate Direct Vm Memory
+      aggregate_disk_capacity: Aggregate Disk Capacity
       aggregate_memory: Total Memory
       aggregate_physical_cpus: Total Number of Physical CPUs
+      aggregate_vm_cpus: Aggregate Vm CPUs
+      aggregate_vm_memory: Aggregate Vm Memory
+      all_enabled_ports: All Enabled Ports
+      allocated_disk_storage: Allocated Disk Storage
       allocated_memory: Allocated Memory
       allocated_storage: Allocated Storage
       allocated_vcpu: Allocated vCPU
+      allow_promiscuous: Allow Promiscuous
+      ancestry: Ancestry
+      api_version: API Version
+      approval_state: Approval State
+      arch: Arch
+      architecture: Architecture
+      archived: Archived
+      asset_tag: Asset Tag
+      author: Author
+      authtype: Authtype
+      autostart: Autostart
       avg_latency: Usage (All) - Latency in MicroSeconds for All Operations Avg
       avg_latency_max: Usage (All) - Latency in MicroSeconds for All Operations Avg Max
       avg_latency_min: Usage (All) - Latency in MicroSeconds for All Operations Avg Min
+      authentication_status: Authentication Status
+      backing_ref: Backing Ref
+      base_name: Base Name
+      become_username: Become Username
+      beginning_of_resource_existence_in_report_interval: Beginning Of Report Existence In Report Interval
       bios: BIOS
       bios_location: BIOS Location
+      blade_slot_count: Blade Slot Count
+      block_storage_based_only: Block Storage Based Only
+      bootable: Bootable
+      boot_time: Boot Time
+      build: Build
+      build_source_type: Build Source Type
+      build_state: Build State
+      build_time: Build Time
+      busy: Busy
+      cancelation_status: Cancelation Status
+      capabilities_add: Capabilities Add
+      capabilities_drop: Capabilities Drop
+      capacity: Capacity
+      certificate_authority: Certificate Authority
       chain_id: Chain ID
+      chargeback_rates: Chargeback Rates
+      cidr: Cidr
       cifs_other_latency: Usage (CIFS) - Time for Other Operations Avg
       cifs_other_latency_max: Usage (CIFS) - Time for Other Operations Avg Max
       cifs_other_latency_min: Usage (CIFS) - Time for Other Operations Avg Min
@@ -161,9 +220,44 @@ en:
       cifs_write_ops: Usage (CIFS) - Number of Writes per Second
       cifs_write_ops_max: Usage (CIFS) - Number of Writes per Second Max
       cifs_write_ops_min: Usage (CIFS) - Number of Writes per Second Min
+      claim_name: Claim Name
+      cloud: Cloud
+      cloud_network_only: Cloud Network Only
+      cloud_subnet_required: Cloud Subnet Required
+      command: Command
+      common_fs_type: Common Fs Type
+      common_partition: Common Partition
+      common_path: Common Path
+      common_read_only: Common Read Only
+      common_secret: Common Secret
+      completion_deadline_seconds: Completion Deadline Seconds
+      compliant: Compliant
       config_xml: Configuration XML
+      configuration_architecture_name: Configuration Architecture Name
+      configuration_compute_profile_name: Configuration Compute Profile Name
+      configuration_domain_name: Configuration Domain Name
+      configuration_environment_name: Configuration Environment Name
+      configuration_profile_name: Configuration Profile Name
+      configuration_realm_name: Configuration Realm Name
+      connection_state: Connection State
+      container_group_name: Container Group Name
+      container_groups_count: Container Groups Count
+      container_name: Container Name
+      container_namespace: Container Namespace
+      container_node_name: Container Node Name
+      container_replicator_name: Container Replicator Name
+      container_runtime_version: Container Runtime Version
+      containers_count: Containers Count
+      content: Content
+      context_data: Context Data
       count_of_trend: Data Points
+      count_of_vmdk_disk_files: Count Of Vmdk Disk Files
+      counterpart_type: Counterpart Type
       cpu_affinity: CPU Affinity
+      cpu_cores: CPU Cores
+      cpu_cores_per_socket: CPU Cores Per Socket
+      cpu_hot_add_enabled: CPU Hot Add Enabled
+      cpu_hot_remove_enabled: CPU Hot Remove Enabled
       cpu_limit: CPU Limit
       cpu_ready_delta_summation: CPU - Aggregate Time Child VMs Spent in Ready State (ms)
       cpu_reserve: CPU Reserve
@@ -173,8 +267,12 @@ en:
       cpu_speed: CPU Speed
       cpu_system_delta_summation: CPU - Aggregate Time Child VMs Spent in System State (ms)
       cpu_time: CPU Time
+      cpu_total_cores: Number of CPU Cores
       cpu_type: CPU Type
       cpu_usage_rate_average: CPU - Usage Rate for Collected Intervals (%)
+      cpu_usage_rate_average_avg_over_time_period: CPU Usage Rate Average Avg Over Time Period
+      cpu_usage_rate_average_high_over_time_period: CPU Usage Rate Average High Over Time Period
+      cpu_usage_rate_average_low_over_time_period: CPU Usage Rate Average Low Over Time Period
       cpu_usagemhz_rate_average: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals (MHz)
       cpu_usagemhz_rate_average_avg_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Avg (MHz)
       cpu_usagemhz_rate_average_high_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day High Avg (MHz)
@@ -182,14 +280,35 @@ en:
       cpu_usagemhz_rate_average_max_over_time_period: CPU - Aggregate Usage Rate for Child VMs for Collected Intervals 30 Day Max (MHz)
       cpu_used_delta_summation: CPU - Aggregate Time Used for Child VMs (ms)
       cpu_wait_delta_summation: CPU - Aggregate Time Spent in Wait State for Child VMs (ms)
+      cpus: Cpus
       created_at: Date Created
       created_on: Date Created
+      creation_time: Creation Time
+      credentials_changed_on: Credentials Changed On
+      current_replicas: Current Replicas
+      custom_1: Custom 1
+      custom_2: Custom 2
+      custom_3: Custom 3
+      custom_4: Custom 4
+      custom_5: Custom 5
+      custom_6: Custom 6
+      custom_7: Custom 7
+      custom_8: Custom 8
+      custom_9: Custom 9
+      customization_script_medium_name: Customization Script Medium Name
+      customization_script_ptable_name: Customization Script Ptable Name
+      debris_size: Debris Size
+      default_gateway: Default Gateway
+      deleted_on: Deleted On
       depend_on_group: Depends on Group
       depend_on_service: Depends on Service
+      deprecated: Deprecated
       derived_cpu_available: CPU Total Installed
       derived_cpu_reserved: CPU - Available (MHz)
       derived_host_count_off: State - Number of Hosts Powered Off  - Hourly Count / Daily Avg
       derived_host_count_on: State - Number of Hosts Powered On  - Hourly Count / Daily Avg
+      derived_host_count_total: Derived Host Count Total
+      derived_host_sockets: Derived Host Sockets
       derived_memory_available: Memory - Total Allocated for Child VMs (MB)
       derived_memory_reserved: Memory - Available (MB)
       derived_memory_used: Memory - Aggregate Used for Child VMs for Collected Intervals (MB)
@@ -219,56 +338,321 @@ en:
       derived_storage_vm_count_registered: Content - Avg Count of Registered VMs
       derived_storage_vm_count_unmanaged: Content - Avg Count of Unmanaged VMs
       derived_storage_vm_count_unregistered: Content - Avg Count of Unregistered VMs
+      derived_vm_allocated_disk_storage: Derived Vm Allocated Disk Storage
       derived_vm_count_off: State - Peak Avg VMs Powered-off - Hourly Count / Daily Avg
       derived_vm_count_on: State - Peak Avg VMs Powered-On - Hourly Count / Daily Avg
+      derived_vm_count_total: Derived Vm Count Total
+      derived_vm_numvcpus: Derived Vm Numvcpus
+      derived_vm_used_disk_storage: Derived Vm Used Disk Storage
+      description: Description
+      dest_ems_cluster_name: Destination Ems Cluster Name
+      dest_ems_cluster_uid: Destination Ems Cluster Uid
       dest_host_name: Destination Host Name
+      dest_vm_ems_ref: Destination Vm Ems Ref
       dest_vm_location: Destination VM Location
       dest_vm_name: Destination VM Name
+      destination_type: Destination Type
+      detailed_description: Detailed Description
       dhcp_enabled: DHCP Enabled
       dhcp_server: DHCP Server
+      digest: Digest
       direction_of_trend: Trend
+      directory_hierarchy_supported: Directory Hierarchy Supported
+      disconnected: Disconnected
+      disk_1_disk_type: Disk 1 Disk Type
+      disk_1_mode: Disk 1 Mode
+      disk_1_partitions_aligned: Disk 1 Partitions Aligned
+      disk_1_size_on_disk: Disk 1 Size On Disk
+      disk_1_size: Disk 1 Size
+      disk_1_used_percent_of_provisioned: Disk 1 Used Percent Of Provisioned
+      disk_2_disk_type: Disk 2 Disk Type
+      disk_2_mode: Disk 2 Mode
+      disk_2_partitions_aligned: Disk 2 Partitions Aligned
+      disk_2_size_on_disk: Disk 2 Size On Disk
+      disk_2_size: Disk 2 Size
+      disk_2_used_percent_of_provisioned: Disk 2 Used Percent Of Provisioned
+      disk_3_disk_type: Disk 3 Disk Type
+      disk_3_mode: Disk 3 Mode
+      disk_3_partitions_aligned: Disk 3 Partitions Aligned
+      disk_3_size_on_disk: Disk 3 Size On Disk
+      disk_3_size: Disk 3 Size
+      disk_3_used_percent_of_provisioned: Disk 3 Used Percent Of Provisioned
+      disk_4_disk_type: Disk 4 Disk Type
+      disk_4_mode: Disk 4 Mode
+      disk_4_partitions_aligned: Disk 4 Partitions Aligned
+      disk_4_size_on_disk: Disk 4 Size On Disk
+      disk_4_size: Disk 4 Size
+      disk_4_used_percent_of_provisioned: Disk 4 Used Percent Of Provisioned
+      disk_5_disk_type: Disk 5 Disk Type
+      disk_5_mode: Disk 5 Mode
+      disk_5_partitions_aligned: Disk 5 Partitions Aligned
+      disk_5_size_on_disk: Disk 5 Size On Disk
+      disk_5_size: Disk 5 Size
+      disk_5_used_percent_of_provisioned: Disk 5 Used Percent Of Provisioned
+      disk_6_disk_type: Disk 6 Disk Type
+      disk_6_mode: Disk 6 Mode
+      disk_6_partitions_aligned: Disk 6 Partitions Aligned
+      disk_6_size_on_disk: Disk 6 Size On Disk
+      disk_6_size: Disk 6 Size
+      disk_6_used_percent_of_provisioned: Disk 6 Used Percent Of Provisioned
+      disk_7_disk_type: Disk 7 Disk Type
+      disk_7_mode: Disk 7 Mode
+      disk_7_partitions_aligned: Disk 7 Partitions Aligned
+      disk_7_size_on_disk: Disk 7 Size On Disk
+      disk_7_size: Disk 7 Size
+      disk_7_used_percent_of_provisioned: Disk 7 Used Percent Of Provisioned
+      disk_8_disk_type: Disk 8 Disk Type
+      disk_8_mode: Disk 8 Mode
+      disk_8_partitions_aligned: Disk 8 Partitions Aligned
+      disk_8_size_on_disk: Disk 8 Size On Disk
+      disk_8_size: Disk 8 Size
+      disk_8_used_percent_of_provisioned: Disk 8 Used Percent Of Provisioned
+      disk_9_disk_type: Disk 9 Disk Type
+      disk_9_mode: Disk 9 Mode
+      disk_9_partitions_aligned: Disk 2 Partitions Aligned
+      disk_9_size_on_disk: Disk 9 Size On Disk
+      disk_9_size: Disk 9 Size
+      disk_9_used_percent_of_provisioned: Disk 9 Used Percent Of Provisioned
       disk_devicelatency_absolute_average: Disk Latency - Avg (ms)
       disk_kernellatency_absolute_average: Disk Kernel Latency - Avg (ms)
       disk_queuelatency_absolute_average: Disk Queue Latency - Avg (ms)
+      disk_size: Disk Size
       disk_usage_rate_average: Disk I/O - Avg (KBps)
       disks_aligned: Disks Aligned
+      display: Display
+      display_name: Display Name
+      display_deprecated: Display Deprecated
+      display_memory: Display Memory
+      display_operating_system: Display Operating System
+      display_platform: Display Platform
+      display_registry: Display Registry
+      display_tenant: Display Tenant
+      display_type: Display Type
+      divisible: Divisible
+      dns_policy: DNS Policy
       dns_server: DNS Server
+      docker_version: Docker Version
+      domain: Domain
+      draft: Draft
+      drb_uri: Drb Uri
+      drs_automation_level: Drs Automation Level
+      drs_enabled: Drs Enabled
+      drs_migration_threshold: Drs Migration Threshold
       effective_cpu: CPU - Effective
       effective_memory: Memory - Effective
+      email: Email
+      empty_dir_medium_type: Empty Dir Medium Type
       ems_cluster_name: Cluster
+      ems_cluster_uid: Ems Cluster Uid
+      ems_compliance_name: Ems Compliance Name
+      ems_compliance_status: Ems Compliance Status
+      ems_ref: Ems Ref
+      ems_ref_type: Ems Ref Type
+      emstype: Emstype
       emstype_description: Type Description
       enabled: Active
+      enabled_inbound_ports: Enabled Inbound Ports
+      enabled_outbound_ports: Enabled Outbound Ports
+      enabled_run_level_0_services: Enabled Run Level 0 Services
+      enabled_run_level_1_services: Enabled Run Level 1 Services
+      enabled_run_level_2_services: Enabled Run Level 2 Services
+      enabled_run_level_3_services: Enabled Run Level 3 Services
+      enabled_run_level_4_services: Enabled Run Level 4 Services
+      enabled_run_level_5_services: Enabled Run Level 5 Services
+      enabled_run_level_6_services: Enabled Run Level 6 Services
+      enabled_tcp_inbound_ports: Enabled Tcp Inbound Ports
+      enabled_tcp_outbound_ports: Enabled Tcp Outbound Ports
+      enabled_udp_inbound_ports: Enabled Udp Inbound Ports
+      enabled_udp_outbound_ports: Enabled Udp Outbound Ports
+      encrypted: Encrypted
+      end_of_resource_existence_in_report_interval: End Of Resource Existence In Report Interval
       end_trend_value: End
+      entrypoint: Entrypoint
+      environment_variables: Environment Variables
+      ephemeral_disk_count: Ephemeral Disk Count
+      ephemeral_disk_size: Ephemeral Disk Size
       evaluation_description: What is evaluated
+      event: Event
       event_src: Event Source
+      event_type: Event Type
+      evm_owner_email: Evm Owner Email
+      evm_owner_name: Evm Owner Name
+      evm_owner_userid: Evm Owner Userid
+      existence_hours_metric: Existence Hours Metric
+      exit_code: Exit Code
+      exposed_ports: Exposed Ports
+      ext_name: Ext Name
+      external_facing: External Facing
+      extra_attributes: Extra Attributes
+      failed_login_attempts: Failed Login Attempts
+      failover: Failover
+      fan_slot_count: Fan Slot Count
+      fault_tolerance: Fault Tolerance
+      field_replaceable_unit: Field Replaceable Unit
+      fingerprint: Fingerprint
       filename: File Name
+      finish_time: Finish Time
+      finished_at: Finished At
+      first_drift_state_timestamp: First Drift State Timestamp
+      first_name: First Name
+      fixed_ip_address: Fixed IP Address
+      fixed_ip_addresses: Fixed IP Addresses
+      floating_ip_addresses: Floating IP Addresses
+      forged_transmits: Forged Transmits
+      format: Format
       fqname: Fully Qualified Name
+      free_space: Free Space
+      friendly_name: Friendly Name
+      fulfilled_on: Fulfilled On
+      full_data: Full Data
+      full_name: Full Name
+      future: Future
+      gce_pd_name: Gce Pd Name
+      generic_subtype: Generic Subtype
+      github_organizations: Github Organizations
+      git_repository: Git Repository
+      git_revision: Git Revision
+      glusterfs_endpoint_name: Glusterfs Endpoint Name
+      google_hosted_domain: Google Hosted Domain
+      group: Group
+      group_level: Group Level
+      group_name: Group Name
+      group_type: Group Type
+      groups_count: Groups Count
       guest_os: Guest OS
       guid: EVM Unique ID (Guid)
+      ha_admit_control: Ha Admit Control
+      ha_enabled: Ha Enabled
+      ha_max_failures: Ha Max Failures
+      has_active_cockpit_ws: Has Active Cockpit Ws
+      has_active_remote_console: Has Active Remote Console
+      has_active_userinterface: Has Active Userinterface
+      has_active_webservices: Has Active Webservices
+      has_parent: Has Parent
+      has_policies: Has Policies
       has_rdm_disk: Has an RDM Disk?
+      has_vix_disk_lib: Has Vix Disk Lib
       health_state: Health State Code
       health_state_str: Health State
+      hidden: Hidden
       homedir: Home Directory
       host_name: Parent Host
+      host_default_vnc_port_end: Host Default Vnc Port End
+      host_default_vnc_port_start: Host Default Vnc Port Start
+      host: Host
+      hostname: Hostname
       hostnames: Host Names
+      hosts: Hosts
+      href_slug: Href Slug
+      htpassd_users: Htpassd Users
+      hyperthreading: Hyperthreading
+      hypervisor_hostname: Hypervisor Hostname
+      identity_infra: Identity Infra
+      identity_machine: Identity Machine
+      identity_system: Identity System
+      image: Image
+      image?: Image?
+      image_pull_policy: Image Pull Policy
+      image_ref: Image Ref
+      images_count: Images Count
+      initiated_by: Initiated By
+      initiator: Initiator
+      install_time: Install Time
+      internal: Internal
+      iops: IOPS
       ip_address: IP Address
       ip_addresses: IP Addresses
       ipaddress: IP Address
       ipaddresses: IP Addresses
       ipmi_address: IPMI IP Address
       ipmi_enabled: IPMI Enabled
+      ipmi_present: IPMI Present
+      ipv6address: IPv6 Address
+      is_default: Is Default
       is_evm_appliance: Is an EVM Appliance?
+      is_master: Is Master
+      is_task: Is Task
+      iscsi_iqn: Iscsi Iqn
+      iscsi_lun: Iscsi Lun
+      iscsi_target_portal: Iscsi Target Portal
+      kernel_version: Kernel Version
+      kubernetes_kubelet_version: Kubernetes Kubelet Version
+      kubernetes_proxy_version: Kubernetes Proxy Version
+      language: Language
+      last_checkin: Last Checkin
+      last_compliance_status: Last Compliance Status
+      last_compliance_timestamp: Last Compliance Timestamp
+      last_drift_state_timestamp: Last Drift State Timestamp
+      last_exit_code: Last Exit Code
+      last_finished_at: Last Finished At
+      last_heartbeat: Last Heartbeat
+      last_invalid_on: Last Invalid On
+      last_inventory_date: Last Inventory Date
+      last_message: Last Message
+      last_metrics_error: Last Metrics Error
+      last_metrics_success_date: Last Metrics Success Date
+      last_metrics_update_date: Last Metrics Update Date
+      last_name: Last Name
+      last_perf_capture_on: Last Perf Capture On
+      last_reason: Last Reason
+      last_refresh_date: Last Refresh Date
+      last_refresh_error: Last Refresh Error
+      last_refresh_status: Last Refresh Status
       last_scan_attempt_on: Last Analysis Attempt On
       last_scan_on: Last Analysis Time
+      last_signal: Last Signal
+      last_started_at: Last Started At
+      last_state: Last State
       last_sync_on: Last Sync Time
+      last_update_check: Last Update Check
       last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
+      last_valid_on: Last Valid On
+      lastlogoff: Last Logoff
+      lastlogon: Last Logon
+      ldap_bind_dn: LDAP Bind Dn
+      ldap_email: LDAP Email
       ldap_group: LDAP Group
-      cpu_total_cores: Number of CPU Cores
+      ldap_insecure: LDAP Insecure
+      ldap_name: LDAP Name
+      ldap_preferred_user_name: LDAP Preferred User Name
+      ldap_url: LDAP Url
+      lease_expires: Lease Expires
+      lease_obtained: Lease Obtained
+      lifecycle_state: Lifecycle State
+      limit_cpu_cores: Limit CPU Cores
+      limit_memory_bytes: Limit Memory Bytes
+      linked_clone: Linked Clone
+      lives_on_type: Lives On Type
+      load_balancer_health_check_state: Load Balancer Health Check State
+      load_balancer_health_check_states_with_reason: Load Balancer Health Check States With Reason
+      load_balancer_health_check_states: Load Balancer Health States
+      location: Location
+      login: Login
+      login_logo_content_type: Login Logo Content Type
+      login_logo_file_name: Login Logo File Name
+      login_logo_file_size: Login Logo File Size
+      login_logo_updated_at: Login Logo Updated At
+      login_text: Login Text
+      logo: Logo
+      logo_content_type: Logo Content Type
+      logo_file_name: Logo File Name
+      logo_file_size: Logo File Size
+      logo_updated_at: Logo Updated At
+      long_description: Long Description
       mac_address: MAC Address
       mac_addresses: MAC Addresses
-      macaddress: MAC Address
-      macaddresses: MAC Addresses
+      mac_changes: MAC Changes
+      macaddress: MACaddress
+      macaddresses: MACaddresses
+      machine_type: Machine Type
+      maintenance_reason: Maintenance Reason
+      maintenance: Maintenance
+      management_module_slot_count: Management Module Slot Count
+      manager_ref: Manager Ref
+      manufacturer: Manufacturer
+      master: Master
+      max_container_groups: Max Container Groups
       max_cpu_usage_rate_average: CPU - Peak Usage Rate Avg for Collected Intervals (%)
       max_cpu_usage_rate_average_avg_over_time_period: CPU - Peak Usage Rate Avg for Collected Intervals 30 Day Avg (%)
       max_cpu_usage_rate_average_avg_over_time_period_without_overhead: CPU - Peak Usage Rate Avg for Collected Intervals Without Host Overhead 30 Day Avg (%)
@@ -283,6 +667,8 @@ en:
       max_derived_cpu_reserved: CPU Max Available MHz
       max_derived_host_count_off: State - Peak Number of Hosts Powered Off  - Hourly Count / Daily Avg
       max_derived_host_count_on: State - Peak Number of Hosts Powered On  - Hourly Count / Daily Avg
+      max_derived_host_count_total: Max Derived Host Count Total
+      max_derived_host_sockets: Max Derived Host Sockets
       max_derived_memory_available: Memory Max Total
       max_derived_memory_reserved: Memory Max Available
       max_derived_memory_used: Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)
@@ -290,6 +676,13 @@ en:
       max_derived_storage_total: Disk Space Max Total
       max_derived_vm_count_off: State - Peak Number of VMs Powered Off  - Hourly Count / Daily Avg
       max_derived_vm_count_on: State - Peak Number of VMs Powered On  - Hourly Count / Daily Avg
+      max_derived_vm_allocated_disk_storage: Max Derived Vm Allocated Disk Storage
+      max_derived_vm_count_total: Max Derived Vm Count Total
+      max_derived_vm_numvcpus: Max Derived Vm Numvcpus
+      max_derived_vm_used_disk_storage: Max Derived Vm Used Disk Storage
+      max_disk_devicelatency_absolute_average: Max Disk Device Latency Absolute Average
+      max_disk_kernellatency_absolute_average: Max Disk Kernel Latency Absolute Average
+      max_disk_queuelatency_absolute_average: Max Disk Queue Latency Absolute Average
       max_disk_usage_rate_average: Disk I/O - Peak Avg for Collected Intervals (KBps)
       max_mem_swapin_absolute_average: Memory - Swap In Max Average
       max_mem_swapout_absolute_average: Memory - Swap Out Max Average
@@ -307,27 +700,60 @@ en:
       max_mem_vmmemctl_absolute_average: Memory - Balloon Max Average
       max_mem_vmmemctltarget_absolute_average: Memory - Balloon Target Max Average
       max_net_usage_rate_average: Network I/O - Peak Avg for Collected Intervals (KBps)
+      max_stat_container_group_create_rate: Max Stat Container Group Create Rate
+      max_stat_container_group_delete_rate: Max Stat Container Group Delete Rate
+      max_stat_container_image_registration_rate: Max Stat Container Image Registration Rate
       max_sys_uptime_absolute_latest: Uptime - Peak Uptime for Collected Intervals (Seconds)
       max_trend_value: Max
       max_v_derived_storage_used: Disk Space Max Used
+      maximum_transmission_unit: Maximum Transmission Unit
+      md5: Md5
       mem_cpu: Memory
       mem_swapin_absolute_average: Memory - Swap In Average
       mem_swapout_absolute_average: Memory - Swap Out Average
       mem_swapped_absolute_average: Memory - Swapped Average
       mem_swaptarget_absolute_average: Memory - Swap Target Average
       mem_usage_absolute_average: Memory - Usage of Total Allocated (%)
+      mem_usage_absolute_average_avg_over_time_period: Memeory Usage Absolute Average Avg Over Time Period
+      mem_usage_absolute_average_high_over_time_period: Memeory Usage Absolute Average High Over Time Period
+      mem_usage_absolute_average_low_over_time_period: Memeory Usage Absolute Average Low Over Time Period
       mem_vmmemctl_absolute_average: Memory - Balloon Average
       mem_vmmemctltarget_absolute_average: Memory - Balloon Target Average
+      memory: Memory
+      memory_exceeds_current_host_headroom: Memory Exceeds Current Host Headroom
+      memory_hot_add_enabled: Memory Hot Add Enabled
+      memory_hot_add_increment: Memory Hot Add Increment
+      memory_hot_add_limit: Memory Hot Add Limit
+      memory_limit: Memory Limit
       memory_mb: RAM
+      memory_reserve_expand: Memory Reserve Expand
+      memory_reserve: Memory Reserve
+      memory_shares_level: Memory Shares Level
+      memory_shares: Memory Shares
       memory_size: Memory Usage
+      message: Message
+      metadata: Metadata
+      metering_allocated_cpu_cores_metric: Metering Allocated CPU Cores Metric
+      metering_allocated_cpu_metric: Metering Allocated CPU Metric
+      metering_allocated_memory_metric: Metering Allocated Memory Metric
+      metering_used_metric: Metering Used Metric
       min_cpu_usage_rate_average: CPU - Min Usage Rate for Collected Intervals (%)
       min_cpu_usagemhz_rate_average: CPU - Min Usage for Collected Intervals (MHz)
       min_derived_host_count_off: State - Min Number of Hosts Powered Off  - Hourly Count / Daily Avg
       min_derived_host_count_on: State - Min Number of Hosts Powered On  - Hourly Count / Daily Avg
+      min_derived_host_count_total: Min Derived Host Count Total
+      min_derived_host_sockets: Min Derived Host Sockets
       min_derived_memory_used: Memory - Minimum Aggregate Avg Used for Child VMs for Collected Intervals (MB)
       min_derived_storage_free: Disk Space Min Free
       min_derived_vm_count_off: State - Min Number of VMs Powered Off  - Hourly Count / Daily Avg
       min_derived_vm_count_on: State - Min Number of VMs Powered On  - Hourly Count / Daily Avg
+      min_derived_vm_allocated_disk_storage: Min Derived Vm Allocated Disk Storage
+      min_derived_vm_count_total: Min Derived Vm Count Total
+      min_derived_vm_numvcpus: Min Derived Vm Numvcpus
+      min_derived_vm_used_disk_storage: Min Derived Vm Used Disk Storage
+      min_disk_devicelatency_absolute_average: Min Disk Device Latency Absolute Average
+      min_disk_kernellatency_absolute_average: Min Disk Kernel Latency Absolute Average
+      min_disk_queuelatency_absolute_average: Min Disk Queue Latency Absolute Average
       min_disk_usage_rate_average: Disk I/O - Min Avg for Collected Intervals (KBps)
       min_mem_swapin_absolute_average: Memory - Swap In Min Average
       min_mem_swapout_absolute_average: Memory - Swap Out Min Average
@@ -337,12 +763,27 @@ en:
       min_mem_vmmemctl_absolute_average: Memory - Balloon Min Average
       min_mem_vmmemctltarget_absolute_average: Memory - Balloon Target Min Average
       min_net_usage_rate_average: Network I/O - Min Avg for Collected Intervals (KBps)
+      min_stat_container_group_create_rate: Min Stat Container Group Create Rate
+      min_stat_container_group_delete_rate: Min Stat Container Group Delete Rate
+      min_stat_container_image_registration_rate: Min Stat Container Image Registration Rate
       min_sys_uptime_absolute_latest: Uptime - Minimum Time Between Startups for Collected Intervals (Seconds)
       min_trend_value: Min
       min_v_derived_storage_used: Disk Space Min Used
+      miq_event_definition_description: Miq Event Definition Description
+      miq_group_description: Miq Group Description
+      miq_policy_description: Miq Policy Description
+      miq_user_role_name: Miq User Role Name
       mode: Type
+      model: Model
+      mtime: Mtime
+      mtu: Mtu
+      multi_attachment: Multi Attachment
       multiplehostaccess: Multiple Host Access
+      my_zone: My Zone
+      name: Name
+      namespace: Namespace
       net_usage_rate_average: Network I/O - Avg (KBps)
+      next_available_vnc_port: Next Available Vnc Port
       nfs_other_latency: Usage (NFS) - Time for Other Operations Avg
       nfs_other_latency_max: Usage (NFS) - Time for Other Operations Avg Max
       nfs_other_latency_min: Usage (NFS) - Time for Other Operations Avg Min
@@ -358,6 +799,7 @@ en:
       nfs_read_ops: Usage (NFS) - Number of Reads per Second
       nfs_read_ops_max: Usage (NFS) - Number of Reads per Second Max
       nfs_read_ops_min: Usage (NFS) - Number of Reads per Second Min
+      nfs_server: NFS Servert
       nfs_write_data: Usage (NFS) - Bytes Written per Second
       nfs_write_data_max: Usage (NFS) - Bytes Written per Second Max
       nfs_write_data_min: Usage (NFS) - Bytes Written per Second Min
@@ -367,6 +809,7 @@ en:
       nfs_write_ops: Usage (NFS) - Number of Writes per Second
       nfs_write_ops_max: Usage (NFS) - Number of Writes per Second Max
       nfs_write_ops_min: Usage (NFS) - Number of Writes per Second Min
+      normalized_state: Normalized State
       notify_automate: Management Event Raised
       notify_email: Email
       notify_evm_event: Event on Timeline
@@ -375,20 +818,36 @@ en:
       num_disks: Number of Disks
       num_hard_disks: Number of Hard Disks
       cpu_sockets: Number of CPUs
+      object_labels: Object Labels
+      objects: Objects
+      open_id_authorization_endpoint: Open Id Authorization Endpoint
+      open_id_extra_authorize_parameters: Open Id Extra Authorize Parameters
+      open_id_extra_scopes: Open Id Extra Scopes
+      open_id_sub_claim: Open Id Sub Claim
+      open_id_token_endpoint: Open Id Token Endpoint
+      open_id_user_info: Open Id User Info
+      operating_system_flavor_name: Operating System Flavor Name
       operational_status: Operational Status Code
       operational_status_str: Operational Status
+      orderable: Orderable
+      orphaned: Orphaned
       os_image_name: OS Name
+      os_priority: Os Priority
       other_latency: Usage (Other) - Time for Other Operations Avg
       other_latency_max: Usage (Other) - Time for Other Operations Avg Max
       other_latency_min: Usage (Other) - Time for Other Operations Avg Min
       other_ops: Usage (Other) - Number of Other Operations per Second
       other_ops_max: Usage (Other) - Number of Other Operations per Second Max
       other_ops_min: Usage (Other) - Number of Other Operations per Second Miin
+      output_name: Output Name
+      overall_health_state: Overall Health State
       overallocated_mem_pct: Memory - % Overallocated
       overallocated_vcpus_pct: CPU - % Overallocated
       owned_by_current_ldap_group: In My LDAP Group?
       owned_by_current_user: Owned by Me?
       owning_ldap_group: LDAP Group
+      package_name: Package Name
+      paravirtualization: Paravirtualization
       parent_blue_folder_1_name: Folder Name (VMs & Templates) 1
       parent_blue_folder_2_name: Folder Name (VMs & Templates) 2
       parent_blue_folder_3_name: Folder Name (VMs & Templates) 3
@@ -398,32 +857,274 @@ en:
       parent_blue_folder_7_name: Folder Name (VMs & Templates) 7
       parent_blue_folder_8_name: Folder Name (VMs & Templates) 8
       parent_blue_folder_9_name: Folder Name (VMs & Templates) 9
+      parent_name: Parent Name
+      parent_type: Parent Type
       partitions_aligned: Partitions Aligned
+      path: Path
       percent_cpu: CPU %
       percent_memory: Memory %
+      phase: Phase
       pid: PID
+      platform: Platform
+      port: Port
+      port_security_enabled: Port Security Enabled
+      portal_ip: Portal Ip
+      ports: Ports
+      power_state: Power State
+      power_status: Power Status
+      powersupply_slot_count: Powersupply Slot Count
+      previous_state: Previous State
+      price: Price
+      privileged: Privileged
+      process: Process
+      product_key: Product Key
+      product_name: Product Name
+      project: Project
+      proportional_set_size: Proportional Set Size
+      prov_type: Prov Type
+      provider_network_type: Provider Network Type
+      provider_physical_network: Provider Physical Network
+      provider_region: Provider Region
+      provider_services_supported: Provider Services Supported
+      provision_cost: Provision Cost
       provisioned_storage: Total Provisioned Space
+      public_key: Public Key
+      publicly_available: Publicly Available
+      puppet_status: Puppet Status
+      queue_name: Queue Name
       ram_size: RAM Size (MB)
+      ram_size_in_bytes: Ram Size In Bytes
+      raw_disk_mappings_supported: Raw Disk Mappings Supported
+      raw_power_state: Raw Power State
+      rbd_ceph_monitors: Rbd Ceph Monitors
+      rbd_image: Rbd Image
+      rbd_keyring: Rbd Keyring
+      rbd_pool: Rbd Pool
+      rbd_rados_user: Rbd Rados User
       read_data: Usage (Other) - Bytes Read per Second
       read_data_max: Usage (Other) - Bytes Read per Second Max
       read_data_min: Usage (Other) - Bytes Read per Second Min
       read_latency: Usage (Other) - Time for Reads Avg
       read_latency_max: Usage (Other) - Time for Reads Avg Max
       read_latency_min: Usage (Other) - Time for Reads Avg Min
+      read_only: Read Only
       read_ops: Usage (Other) - Number of Reads per Second
       read_ops_max: Usage (Other) - Number of Reads per Second Max
       read_ops_min: Usage (Other) - Number of Reads per Second Min
+      ready_condition_status: Ready Condition Status
+      realm: Realm
+      reason: Reason
+      reclaim_policy: Reclaim Policy
+      region: Region
+      region_description: Region Description
+      region_number: Region Number
+      registered: Registered
+      registered_on: Registered On
+      release: Release
+      replicas: Replicas
+      replicators_count: Replicators Count
+      request_cpu_cores: Request CPU Cores
+      request_header_email_headers: Request Header Email Headers
+      request_header_headers: Request Header Headers
+      request_header_login_url: Request Header Login Url
+      request_header_name_headers: Request Header Name Headers
+      request_header_preferred_username_headers: Request Header Preferred Username Headers
+      request_memory_bytes: Request Memory Bytes
+      request_state: Request State
+      request_type_display: Request Type Display
+      request_type: Request Type
+      requester_name: Requester Name
+      resource_group: Resource Group
       resource_name: Asset Name
+      resource_type: Resource Type
+      resource_version: Resource Version
+      restart_count: Restart Count
+      restart_needed: Restart Needed
+      restart_policy: Restart Policy
+      result: Result
+      retired: Retired
+      retirement_last_warn: Retirement Last Warn
+      retirement_requester: Retirement Requester
+      retirement_state: Retirement State
+      retirement_warn: Retirement Warn
+      retires_on: Retires On
+      rh_registered: Rh Registered
+      rh_subscribed: Rh Subscribed
+      rhsm_server: Rhsm Server
+      rhsm_sku: Rhsm Sku
+      root_disk_size: Root Disk Size
+      routes_count: Routes Count
+      rsc_type: Rsc Type
+      run_as_non_root: Run As Non Root
+      run_as_user: Run As User
+      running_containers_summary: Running Containers Summary
+      security_protocol: Security Protocol
+      sequence: Sequence
+      serial_number: Serial Number
+      service_account: Service Account
+      service_name: Service Name
+      service_names: Service Names
+      service_tag: Service Tag
+      service_type: Service Type
+      services_count: Services Count
+      session_affinity: Session Affinity
+      severity: Severity
+      shared: Shared
+      signal: Signal
+      size: Size
+      smart: Smart
+      snapshot_size: Snapshot Size
+      source: Source
+      source_binary: Source Binary
+      source_context_dir: Source Context Dir
+      source_dockerfile: Source Dockerfile
+      source_git: Source Git
+      source_secret: Source Secret
+      source_type: Source Type
+      sql_spid: Sql Spid
+      standby_action: Standby Action
+      start_time: Start Time
+      started_at: Started At
+      started_on: Started On
+      stamped_on: Stamped On
+      stat_container_group_create_rate: Stat Container Group Create Rate
+      stat_container_group_delete_rate: Stat Container Group Delete Rate
+      stat_container_image_registration_rate: Stat Container Image Registration Rate
+      state: State
+      state_changed_on: State Changed On
+      status: Status
+      status_details: Status Details
+      status_message: Status Message
+      status_phase: Status Phase
+      status_reason: Status Reason
+      stdout: Stdout
+      stopped_on: Stopped On
+      storage_capacity: Storage Capacity
+      storage_domain_type: Storage Domain Type
+      storage_name: Storage Name
+      store_type: Store Type
+      subdomain: Subdomain
+      subnet_mask: Subnet Mask
+      subscription: Subscription
+      supports_32_bit: Supports 32 Bit
+      supports_64_bit: Supports 64 Bit
+      supports_block_storage: Supports Block Storage
+      supports_cinder_volume_types: Supports Cinder Volume Types
+      supports_cloud_object_store_container_create: Supports Cloud Object Store Container Create
+      supports_create_security_group: Supports Create Security Group
+      supports_hvm: Supports Hvm
+      supports_paravirtual: Supports Paravirtual
+      supports_storage_services: Supports Storage Services
+      supports_volume_availability_zones: Supports Volume Availability Zones
+      supports_volume_multiattachment: Supports Volume Multiattachment
+      supports_volume_resizing: Supports Volume Resizing
+      swap_disk_size: Swap Disk Size
+      switch_slot_count: Switch Slot Count
+      switch_uuid: Switch Uuid
+      system_distribution: System Distribution
+      system_memory_free: System Memory Free
+      system_memory_used: System Memory Used
+      system_swap_free: System Swap Free
+      system_swap_used: System Swap Used
+      tag: Tag
+      target_class: Target Class
+      target_name: Target Name
+      target_type: Target Type
+      template: Template
+      template_valid_error_message: Template Valid Error Message
+      template_valid: Template Valid
+      tenant_mapping_enabled: Tenant Mapping Enabled
+      thin_provisioning_supported: Thin Provisioning Supported
+      tools_status: Tools Status
+      total_cloud_memory: Total Cloud Memory
+      total_cloud_networks: Total Cloud Networks
+      total_cloud_vcpus: Total Cloud Vcpus
+      total_clusters: Total Clusters
+      total_configuration_profiles: Total Configuration Profiles
+      total_configured_systems: Total Configured Systems
+      total_containers: Total Containers
+      total_direct_miq_templates: Total Direct Miq Templates
+      total_direct_vms: Total Direct Vms
+      total_hosts: Total Hosts
+      total_managed_registered_vms: Total Managed Registered Vms
+      total_managed_unregistered_vms: Total Managed Unregistered Vms
+      total_memory: Total Memory
+      total_miq_templates: Total Miq Templates
+      total_security_groups: Total Security Groups
+      total_security_policy_rules_as_destination: Total Security Policy Rules As Destination
+      total_security_policy_rules_as_source: Total Security Policy Rules As Source
+      total_space: Total Space
+      total_storages: Total Storages
+      total_subnets: Total Subnets
+      total_unmanaged_vms: Total Unmanaged Vms
+      total_vcpus: Total Vcpus
+      total_vms: Total Vms
+      total_vms_and_templates: Total Vms and Templates
       total_vms_never: Total VMs Powered Never
       total_vms_off: Total VMs Powered Off
       total_vms_on: Total VMs Powered On
       total_vms_suspended: Total VMs Power Suspended
       total_vms_unknown: Total VMs Powered Unknown
+      transform: Transform
+      type: Type
+      type_display: Type Display
+      uid_ems: Uid Ems
+      uncommitted: Uncommitted
+      unique_set_size: Unique Set Size
+      updates_available: Updates Available
+      upgrade_message: Upgrade Message
+      upgrade_status: Upgrade Status
+      uri_or_queue_name: Uri Or Queue Name
+      uri: Uri
+      url: URL
+      use_config_for_attributes: Use Config For Attributes
+      used: Used
+      used_storage: Used Storage
+      user_assigned_os: User Assigned Os
+      user_count: User Count
+      username: Username
+      v_allowed_tags: Allowed Tags
+      v_annotation: Annotation
+      v_approved_by_email: Approved By Email
+      v_approved_by: Approved By
+      v_availability: Availability
       v_derived_cpu_reserved_pct: CPU - Available (%)
       v_derived_host_count: State - Number of Hosts  - Hourly Count / Daily Avg
       v_derived_memory_reserved_pct: Memory - Available (%)
       v_derived_vm_count: State - Peak Avg VMs - Hourly Count / Daily Avg
       v_derived_cpu_total_cores_used: CPU - Usage Rate for Collected Intervals (Number of Cores)
+      v_direct_miq_templates: Direct Miq Templates
+      v_host_os: Host Os
+      v_parent_blue_folder_display_path: Parent Blue Folder Display Path
+      v_pct_used_disk_space: Pct Used Disk Space
+      v_snapshot_newest_description: Snapshot Newest Discription
+      v_snapshot_newest_name: Snapshot Newest Name
+      v_snapshot_newest_timestamp: Snapshot Newest Timestamp
+      v_snapshot_newest_total_size: Snapshot Newest Total Size
+      v_snapshot_oldest_description: Snapshot Oldest Discription
+      v_snapshot_oldest_name: Snapshot Oldest Name
+      v_snapshot_oldest_timestamp: Snapshot Oldest Timestamp
+      v_snapshot_oldest_total_size: Snapshot Oldest Total Size
+      v_total_miq_templates: Total Miq Templates
+      v_unique_name: Unique Name
+      v_workflow_class: Workflow Class
+      value: Value
+      vapp: Vapp
+      vendor: Vendor
+      vendor_display: Vendor Display
+      verbosity: Verbosity
+      version: Version
+      virtual_instance_ref: Virtual Instance Ref
+      visible: Visible
+      vm_ems_ref: Vm Ems Ref
+      vm_location: Vm Location
+      vm_misc_size: Vm Misc Size
+      vm_ram_size: Vm Ram Size
+      vmm_vendor_display: Vmm Vendor Display
+      vnc_port: Vnc Port
+      volume_type: Volume Type
+      vlan_transparent: Vlan Transparent
+      zone_description: Zone Description
 
       # Right-Sizing Recommendations
       aggressive_mem_recommended_change: Memory - Aggressive Recommendation Savings
@@ -618,45 +1319,77 @@ en:
       zone_name: EVM Zone
 
       # Chargeback
-      cpu_allocated_cost:       vCPUs Allocated Cost
-      cpu_allocated_metric:     vCPUs Allocated over Time Period
-      cpu_allocated_rate:       vCPUs Allocated Rate
-      cpu_cost:                 CPU Total Cost
-      cpu_metric:               CPU Total
-      cpu_used_cost:            CPU Used Cost
-      cpu_used_metric:          CPU Used
-      cpu_used_rate:            CPU Used Rate
-      disk_io_cost:             Disk I/O Total Cost
-      disk_io_metric:           Disk I/O Total
-      disk_io_used_cost:        Disk I/O Used Cost
-      disk_io_used_metric:      Disk I/O Used
-      disk_io_used_rate:        Disk I/O Used Rate
-      display_range:            Date Range
-      fixed_compute_1_cost:     Fixed Compute Cost 1
-      fixed_compute_2_cost:     Fixed Compute Cost 2
-      fixed_cost:               Fixed Total Cost
-      fixed_storage_1_cost:     Fixed Storage Cost 1
-      fixed_storage_2_cost:     Fixed Storage Cost 2
-      memory_allocated_cost:    Memory Allocated Cost
-      memory_allocated_metric:  Memory Allocated over Time Period
-      memory_cost:              Memory Total Cost
-      memory_metric:            Memory Total
-      memory_used_cost:         Memory Used Cost
-      memory_used_metric:       Memory Used
-      net_io_cost:              Network I/O Total Cost
-      net_io_metric:            Network I/O Total
-      net_io_used_cost:         Network I/O Used Cost
-      net_io_used_metric:       Network I/O Used
-      net_io_used_rate:         Network I/O Used Rate
-      owner_name:               Owner
-      storage_allocated_cost:   Storage Allocated Cost
-      storage_allocated_metric: Storage Allocated
-      storage_cost:             Storage Total Cost
-      storage_metric:           Storage Total
-      storage_used_cost:        Storage Used Cost
-      storage_used_metric:      Storage Used
-      total_cost:               Total Cost
-      vm_name:                  VM Name
+      cpu_allocated_cost:                    vCPUs Allocated Cost
+      cpu_allocated_metric:                  vCPUs Allocated over Time Period
+      cpu_allocated_rate:                    vCPUs Allocated Rate
+      cpu_cores_allocated_cost:              CPU Cores Allocated Cost
+      cpu_cores_allocated_metric:            CPU Cores Allocated Metric
+      cpu_cores_allocated_rate:              CPU Cores Allocated Rate
+      cpu_cores_used_cost:                   CPU Cores Used Cost
+      cpu_cores_used_metric:                 CPU Cores Used Metric
+      cpu_cores_used_rate:                   CPU Cores Used Rate
+      cpu_cost:                              CPU Total Cost
+      cpu_metric:                            CPU Total
+      cpu_used_cost:                         CPU Used Cost
+      cpu_used_metric:                       CPU Used
+      cpu_used_rate:                         CPU Used Rate
+      disk_io_cost:                          Disk I/O Total Cost
+      disk_io_metric:                        Disk I/O Total
+      disk_io_used_cost:                     Disk I/O Used Cost
+      disk_io_used_metric:                   Disk I/O Used
+      disk_io_used_rate:                     Disk I/O Used Rate
+      display_range:                         Date Range
+      fixed_compute_1_cost:                  Fixed Compute Cost 1
+      fixed_compute_2_cost:                  Fixed Compute Cost 2
+      fixed_compute_1_rate:                  Fixed Compute Rate 1
+      fixed_compute_2_rate:                  Fixed Compute Rate 2
+      fixed_compute_metric:                  Fixed Compute Metric
+      fixed_compute_1_metric:                Fixed Compute Metric 1
+      fixed_compute_2_metric:                Fixed Compute Metric 2
+      fixed_cost:                            Fixed Total Cost
+      fixed_2_cost:                          Fixed 2 Cost
+      fixed_storage_1_cost:                  Fixed Storage Cost 1
+      fixed_storage_2_cost:                  Fixed Storage Cost 2
+      fixed_storage_1_rate:                  Fixed Storage Rate 1
+      fixed_storage_2_rate:                  Fixed Storage Rate 2
+      memory_allocated_cost:                 Memory Allocated Cost
+      memory_allocated_metric:               Memory Allocated over Time Period
+      memory_allocated_rate:                 Memory Allocated Rate
+      memory_cost:                           Memory Total Cost
+      memory_metric:                         Memory Total
+      memory_used_cost:                      Memory Used Cost
+      memory_used_metric:                    Memory Used
+      memory_used_rate:                      Memory Used Rate
+      net_io_cost:                           Network I/O Total Cost
+      net_io_metric:                         Network I/O Total
+      net_io_used_cost:                      Network I/O Used Cost
+      net_io_used_metric:                    Network I/O Used
+      net_io_used_rate:                      Network I/O Used Rate
+      owner_name:                            Owner
+      project_uid:                           Project Uid
+      provider_name:                         Provider Name
+      provider_uid:                          Provider Uid
+      report_generation_date:                Report Generation Date
+      report_interval_range:                 Report Interval Range
+      storage_allocated_cost:                Storage Allocated Cost
+      storage_allocated_gp2_cost:            Storage Allocated Gp2 Cost
+      storage_allocated_gp2_metric:          Storage Allocated Gp2 Metric
+      storage_allocated_gp2_rate:            Storage Allocated Gp2 Rate
+      storage_allocated_metric:              Storage Allocated
+      storage_allocated_pd:                  Storage Allocated Pd
+      storage_allocated_rate:                Storage Allocated Rate
+      storage_allocated_unclassified_cost:   Storage Allocated Unclassified Cost
+      storage_allocated_unclassified_metric: Storage Allocated Unclassified Metric
+      storage_allocated_unclassified_rate:   Storage Allocated Unclassified Rate
+      storage_cost:                          Storage Total Cost
+      storage_metric:                        Storage Total
+      storage_used_cost:                     Storage Used Cost
+      storage_used_metric:                   Storage Used
+      storage_used_rate:                     Storage Used Rate
+      total_cost:                            Total Cost
+      vm_guid:                               Vm Guid
+      vm_name:                               Vm Name
+      vm_uid:                                Vm Uid
 
       # Storage derived statistic columns
       avg_read_size:               Average Read Size
@@ -683,200 +1416,212 @@ en:
       write_ios_per_sec:           Write (IOPS)
 
     model:
-      AuditEvent:               EVM Audit Event
-      AvailabilityZone:         Availability Zone
-      HostAggregate:            Host Aggregate
-      ChargebackVm:             Chargeback for Vms
-      ChargebackContainerImage: Chargeback for Image
-      ChargebackContainerProject: Chargeback for Projects
-      ChargebackRate:           Chargeback Rate
-      Classification:           Category
-      CloudNetwork:             Cloud Network
-      CloudResourceQuota:       Cloud Resource Quota
-      CloudSubnet:              Cloud Subnet
-      CloudTenant:              Cloud Tenant
-      CloudVolume:              Cloud Volume
-      CloudVolumeBackup:        Cloud Volume Backup
-      CloudVolumeSnapshot:      Cloud Volume Snapshot
-      Compliance:               Compliance History
-      Compliances:              Compliance History
-      Condition:                Condition
-      ContainerBuild:           Container Build
-      ContainerQuota:           Container Quota
-      CustomButton:             Button
-      CustomButtonSet:          Button Group
-      ConfigurationScript:      Template (Ansible Tower)
-      ConfigurationScriptSource: Repository
-      Container:                Container
-      ContainerPerformance:     Performance - Container
-      ContainerGroup:           Container Pod
-      ContainerGroupPerformance: Performance - Pod
-      ContainerImageRegistry:   Container Image Registry
-      ContainerImage:           Container Image
-      ContainerNode:            Container Node
-      ContainerNodePerformance: Performance - Container Node
-      ContainerProject:         Container Project
-      ContainerProjectPerformance: Performance - Container Project
-      ContainerRoute:           Container Route
-      ContainerReplicator:      Container Replicator
-      ContainerService:         Container Service
-      ContainerTemplate:        Container Template
-      EmsCluster:               Cluster
-      EmsClusterPerformance:    Performance - Cluster
-      EmsEvent:                 Management Event
-      EmsFolder:                Folder
-      ExtManagementSystem:      Provider
+      AuditEvent:                     EVM Audit Event
+      AvailabilityZone:               Availability Zone
+      BottleneckEvent:                Bottleneck Event
+      HostAggregate:                  Host Aggregate
+      ChargebackVm:                   Chargeback for Vms
+      ChargebackContainerImage:       Chargeback for Image
+      ChargebackContainerProject:     Chargeback for Projects
+      ChargebackRate:                 Chargeback Rate
+      Classification:                 Category
+      CloudNetwork:                   Cloud Network
+      CloudObjectStoreContainer:      Cloud Object Store Container
+      CloudResourceQuota:             Cloud Resource Quota
+      CloudSubnet:                    Cloud Subnet
+      CloudTenant:                    Cloud Tenant
+      CloudVolume:                    Cloud Volume
+      CloudVolumeBackup:              Cloud Volume Backup
+      CloudVolumeSnapshot:            Cloud Volume Snapshot
+      CloudVolumeType:                Cloud Volume Type
+      Compliance:                     Compliance History
+      Compliances:                    Compliance History
+      Condition:                      Condition
+      ContainerBuild:                 Container Build
+      ContainerQuota:                 Container Quota
+      CustomButton:                   Button
+      CustomButtonSet:                Button Group
+      ConfigurationScript:            Template (Ansible Tower)
+      ConfigurationScriptSource:      Repository
+      Container:                      Container
+      ContainerPerformance:           Performance - Container
+      ContainerGroup:                 Container Pod
+      ContainerGroupPerformance:      Performance - Pod
+      ContainerImageRegistry:         Container Image Registry
+      ContainerImage:                 Container Image
+      ContainerNode:                  Container Node
+      ContainerNodePerformance:       Performance - Container Node
+      ContainerProject:               Container Project
+      ContainerProjectPerformance:    Performance - Container Project
+      ContainerRoute:                 Container Route
+      ContainerReplicator:            Container Replicator
+      ContainerService:               Container Service
+      ContainerTemplate:              Container Template
+      ContainerVolume:                Container Volume
+      EmsCluster:                     Cluster
+      EmsClusterPerformance:          Performance - Cluster
+      EmsEvent:                       Management Event
+      EmsFolder:                      Folder
+      ExtManagementSystem:            Provider
       ExtManagementSystemPerformance: Performance - Provider
-      FileDepotFtp:             FTP
-      FileDepotFtpAnonymous:    Anonymous FTP
-      FileDepotNfs:             NFS
-      FileDepotS3:              AWS S3
-      FileDepotSwift:           OpenStack Swift
-      FileDepotSmb:             Samba
-      Filesystem:               File
-      Flavor:                   Flavor
-      FloatingIp:               Floating IP
-      GenericObject:            Generic Object
-      GenericObjectDefinition:  Generic Object Class
-      GuestApplication:         Guest Application
-      GuestDevice:              Guest Device
-      Host:                     Host
-      HostPerformance:          Performance - Host
-      IsoDatastore:             ISO Datastore
-      IsoImage:                 ISO Image
-      LdapDomain:               LDAP Domain
-      LdapRegion:               LDAP Region
-      LdapServer:               LDAP Server
-      LoadBalancer:             Load Balancer
-      ManageIQ::Providers::AutomationManager:                                        Automation Manager
-      ManageIQ::Providers::BaseManager:                                     Provider
-      ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                Credential
-      ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:     Repository
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:     Credential (Amazon)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential:     Credential (Google)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential:    Credential (Machine)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential:    Credential (Network)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential:      Credential (Vault)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:  Credential (OpenStack)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:  Credential (Rackspace)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential:        Credential (RHV)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential: Credential (Satellite)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:        Credential (SCM)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:     Credential (VMware)
-      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:             Playbook (Embedded Ansible)
+      FileDepotFtp:                   FTP
+      FileDepotFtpAnonymous:          Anonymous FTP
+      FileDepotNfs:                   NFS
+      FileDepotS3:                    AWS S3
+      FileDepotSwift:                 OpenStack Swift
+      FileDepotSmb:                   Samba
+      Filesystem:                     File
+      FirmwareRegistry:               Firmware Registry
+      Flavor:                         Flavor
+      FloatingIp:                     Floating IP
+      GenericObject:                  Generic Object
+      GenericObjectDefinition:        Generic Object Class
+      GuestApplication:               Guest Application
+      GuestDevice:                    Guest Device
+      Host:                           Host
+      HostPerformance:                Performance - Host
+      IsoDatastore:                   ISO Datastore
+      IsoImage:                       ISO Image
+      LdapDomain:                     LDAP Domain
+      LdapRegion:                     LDAP Region
+      LdapServer:                     LDAP Server
+      LoadBalancer:                   Load Balancer
+      ManageIQ::Providers::AutomationManager:                                             Automation Manager
+      ManageIQ::Providers::BaseManager:                                                   Provider
+      ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                     Credential
+      ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:          Repository
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:          Credential (Amazon)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential:           Credential (Microsoft Azure)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::GoogleCredential:          Credential (Google)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential:         Credential (Machine)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential:         Credential (Network)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential:           Credential (Vault)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:       Credential (OpenStack)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:       Credential (Rackspace)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential:             Credential (RHV)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential:      Credential (Satellite)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:             Credential (SCM)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:          Credential (VMware)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:                  Playbook (Embedded Ansible)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource: Repository (Embedded Ansible)
-      ManageIQ::Providers::AutomationManager::Authentication:                     Credential
-      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:     Credential (Amazon)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:     Credential (Google)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:    Credential (Machine)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:    Credential (Network)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:  Credential (OpenStack)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:  Credential (Rackspace)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential: Credential (Satellite)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:        Credential (SCM)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
-      ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow: Workflow Template (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
-      ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
-      ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem: Configured System (Ansible Tower)
-      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
-      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:         Ansible Tower Job
-      ManageIQ::Providers::CloudManager:                                    Cloud Provider
-      ManageIQ::Providers::CloudManager::AuthKeyPair:                       Key Pair
-      ManageIQ::Providers::CloudManager::Vm:                                Instance
-      ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
-      ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
-      ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
-      ManageIQ::Providers::Vmware::CloudManager::Vm:                        Instance (VMware vCloud)
-      ManageIQ::Providers::Amazon::CloudManager::Flavor:                    Flavor (Amazon)
-      ManageIQ::Providers::Google::CloudManager::Flavor:                    Flavor (Google)
-      ManageIQ::Providers::Azure::CloudManager::Flavor:                     Flavor (Microsoft Azure)
-      ManageIQ::Providers::Openstack::CloudManager::Flavor:                 Flavor (OpenStack)
-      ManageIQ::Providers::CloudManager::Template:                          Image
-      ManageIQ::Providers::Amazon::CloudManager::Template:                  Image (Amazon)
-      ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
-      ManageIQ::Providers::CloudManager::OrchestrationStack:                Orchestration Stack
-      ManageIQ::Providers::ContainerManager:                                Containers Provider
-      ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
-      ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
-      ManageIQ::Providers::InfraManager::Template:                          Template
-      ManageIQ::Providers::NetworkManager:                                  Network Manager
-      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider
-      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
-      ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
-      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
-      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (VMware)
-      ManageIQ::Providers::Vmware::InfraManager::Vm:                        Virtual Machine (VMware)
-      ManageIQ::Providers::Microsoft::InfraManager::Vm:                     Virtual Machine (Microsoft)
-      ManageIQ::Providers::Redhat::InfraManager::Vm:                        Virtual Machine (Red Hat)
-      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private: Cloud Network (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public: External Cloud Network (OpenStack)
-      ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
-      ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
-      ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud)
-      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
-      ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
-      ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
-      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift)
-      ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate:  Container Template (OpenShift)
-      ManageIQ::Providers::Amazon::NetworkManager:                          Network Provider (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:            Cloud Network (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:             Cloud Subnet (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::LoadBalancer:            Load Balancer (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:           Security Group (Amazon)
-      ManageIQ::Providers::Amazon::StorageManager::Ebs:                     Elastic Block Storage Manager (Amazon)
-      ManageIQ::Providers::Google::NetworkManager:                          Network Provider (Google)
-      ManageIQ::Providers::Google::NetworkManager::SecurityGroup:           Security Group (Google)
-      ManageIQ::Providers::Google::NetworkManager::LoadBalancer:            Load Balancer (Google)
-      ManageIQ::Providers::Google::NetworkManager::NetworkPort:             Network Port (Google)
-      ManageIQ::Providers::Google::NetworkManager::FloatingIp:              Floating Ip (Google)
-      ManageIQ::Providers::Google::NetworkManager::NetworkRouter:           Network Router (Google)
-      ManageIQ::Providers::Google::NetworkManager::CloudSubnet:             Cloud Subnet (Google)
-      ManageIQ::Providers::Google::NetworkManager::CloudNetwork:            Cloud Network (Google)
-      ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
-      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer:             LoadBalancer (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:              Cloud Subnet (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::SecurityGroup:            Security Group (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::NetworkRouter:            Network Router (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
-      ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:              Floating IP (Amazon)
-      ManageIQ::Providers::Azure::NetworkManager::FloatingIp:               Floating IP (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
-      ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
-      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
-      ManageIQ::Providers::Openstack::CloudManager::CloudTenant:            Cloud Tenant (OpenStack)
-      ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
-      ManageIQ::Providers::Openstack::StorageManager::CinderManager:        Cinder Block Storage Manager (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
-      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
-      ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter:           Network Router (Amazon)
-      ManageIQ::Providers::Azure::NetworkManager:                           Network Manager (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
-      ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
-      ManageIQ::Providers::StorageManager:                                  Storage Manager
-      ManageIQ::Providers::StorageManager::CinderManager:                   Storage Manager (Cinder)
-      ManageIQ::Providers::StorageManager::SwiftManager:                    Storage Manager (Swift)
-      ManageIQ::Providers::Microsoft::InfraManager::Host:                   Host (Microsoft)
-      ManageIQ::Providers::Openstack::InfraManager::Host:                   Host (OpenStack)
-      ManageIQ::Providers::Redhat::InfraManager::Host:                      Host (Redhat)
-      ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
-      ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:      Physical Rack (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:   Physical Chassis (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:    Physical Storage (Lenovo)
-      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
-      ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:   Physical Server (Redfish)
+      ManageIQ::Providers::AutomationManager::Authentication:                             Credential
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:              Credential (Microsoft Azure)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:             Credential (Google)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:            Credential (Machine)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:            Credential (Network)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:          Credential (OpenStack)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:          Credential (Rackspace)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential:         Credential (Satellite)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:                Credential (SCM)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:             Credential (VMware)
+      ManageIQ::Providers::AnsibleTower::AutomationManager:                               Automation Manager (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript:          Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow:        Workflow Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
+      ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
+      ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System (Ansible Tower)
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem:               Configured System (Foreman)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:                          Ansible Tower Job
+      ManageIQ::Providers::CloudManager:                                                  Cloud Provider
+      ManageIQ::Providers::CloudManager::AuthKeyPair:                                     Key Pair
+      ManageIQ::Providers::CloudManager::Vm:                                              Instance
+      ManageIQ::Providers::Google::CloudManager::Vm:                                      Instance (Google)
+      ManageIQ::Providers::Openstack::CloudManager::Vm:                                   Instance (OpenStack)
+      ManageIQ::Providers::IbmCloud::VPC::CloudManager::Vm:                               Instance (IBM)
+      ManageIQ::Providers::Azure::CloudManager::Vm:                                       Instance (Microsoft Azure)
+      ManageIQ::Providers::Amazon::CloudManager::Vm:                                      Instance (Amazon)
+      ManageIQ::Providers::Vmware::CloudManager::Vm:                                      Instance (VMware vCloud)
+      ManageIQ::Providers::Amazon::CloudManager::Flavor:                                  Flavor (Amazon)
+      ManageIQ::Providers::Google::CloudManager::Flavor:                                  Flavor (Google)
+      ManageIQ::Providers::Azure::CloudManager::Flavor:                                   Flavor (Microsoft Azure)
+      ManageIQ::Providers::Openstack::CloudManager::Flavor:                               Flavor (OpenStack)
+      ManageIQ::Providers::CloudManager::Template:                                        Image
+      ManageIQ::Providers::Amazon::CloudManager::Template:                                Image (Amazon)
+      ManageIQ::Providers::Openstack::CloudManager::Template:                             Image (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::Template:                                 Image (Microsoft Azure)
+      ManageIQ::Providers::Google::CloudManager::Template:                                Image (Google)
+      ManageIQ::Providers::Vmware::CloudManager::Template:                                Image (VMware vCloud)
+      ManageIQ::Providers::CloudManager::VirtualTemplate:                                 Resourceless Server Template
+      ManageIQ::Providers::CloudManager::OrchestrationStack:                              Orchestration Stack
+      ManageIQ::Providers::ContainerManager:                                              Containers Provider
+      ManageIQ::Providers::InfraManager:                                                  Infrastructure Provider
+      ManageIQ::Providers::InfraManager::Vm:                                              Virtual Machine
+      ManageIQ::Providers::InfraManager::Template:                                        Template
+      ManageIQ::Providers::NetworkManager:                                                Network Manager
+      ManageIQ::Providers::PhysicalInfraManager:                                          Physical Infrastructure Provider
+      ManageIQ::Providers::Openstack::InfraManager:                                       Infrastructure Provider (OpenStack)
+      ManageIQ::Providers::Microsoft::InfraManager:                                       Infrastructure Provider (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager:                                          Infrastructure Provider (Red Hat)
+      ManageIQ::Providers::Vmware::InfraManager:                                          Infrastructure Provider (VMware)
+      ManageIQ::Providers::Vmware::InfraManager::Vm:                                      Virtual Machine (VMware)
+      ManageIQ::Providers::Microsoft::InfraManager::Vm:                                   Virtual Machine (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager::Vm:                                      Virtual Machine (Red Hat)
+      ManageIQ::Providers::Openstack::CloudManager:                                       Cloud Provider (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager:                                     Network Provider (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:                       Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private:              Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public:               External Cloud Network (OpenStack)
+      ManageIQ::Providers::Amazon::CloudManager:                                          Cloud Provider (Amazon)
+      ManageIQ::Providers::Azure::CloudManager:                                           Cloud Provider (Microsoft Azure)
+      ManageIQ::Providers::Vmware::CloudManager:                                          Cloud Provider (VMware vCloud)
+      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:                           Cloud Network (Microsoft Azure)
+      ManageIQ::Providers::Kubernetes::ContainerManager:                                  Container Provider (Kubernetes)
+      ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:                  Pod (Kubernetes)
+      ManageIQ::Providers::Openshift::ContainerManager:                                   Container Provider (OpenShift)
+      ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate:                Container Template (OpenShift)
+      ManageIQ::Providers::Amazon::NetworkManager:                                        Network Provider (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:                          Cloud Network (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:                           Cloud Subnet (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::LoadBalancer:                          Load Balancer (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:                         Security Group (Amazon)
+      ManageIQ::Providers::Amazon::StorageManager::Ebs:                                   Elastic Block Storage Manager (Amazon)
+      ManageIQ::Providers::Google::NetworkManager:                                        Network Provider (Google)
+      ManageIQ::Providers::Google::NetworkManager::SecurityGroup:                         Security Group (Google)
+      ManageIQ::Providers::Google::NetworkManager::LoadBalancer:                          Load Balancer (Google)
+      ManageIQ::Providers::Google::NetworkManager::NetworkPort:                           Network Port (Google)
+      ManageIQ::Providers::Google::NetworkManager::FloatingIp:                            Floating Ip (Google)
+      ManageIQ::Providers::Google::NetworkManager::NetworkRouter:                         Network Router (Google)
+      ManageIQ::Providers::Google::NetworkManager::CloudSubnet:                           Cloud Subnet (Google)
+      ManageIQ::Providers::Google::NetworkManager::CloudNetwork:                          Cloud Network (Google)
+      ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:                      Security Group (OpenStack)
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer:                           LoadBalancer (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:                            Cloud Subnet (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::SecurityGroup:                          Security Group (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkRouter:                          Network Router (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:                         Floating IP (OpenStack)
+      ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:                            Floating IP (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager::FloatingIp:                             Floating IP (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:                        Cloud Subnet (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:                      Network Router (OpenStack)
+      ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:                   Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::CloudManager::CloudTenant:                          Cloud Tenant (OpenStack)
+      ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:                   Orchestration Stack (OpenStack)
+      ManageIQ::Providers::Openstack::StorageManager::CinderManager:                      Cinder Block Storage Manager (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:                       Orchestration Stack (Microsoft Azure)
+      ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:                      Orchestration Stack (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:                           Network Port (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter:                         Network Router (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager:                                         Network Manager (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:                            Network Port (Microsoft Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:                        Network Port (OpenStack)
+      ManageIQ::Providers::StorageManager:                                                Storage Manager
+      ManageIQ::Providers::StorageManager::CinderManager:                                 Storage Manager (Cinder)
+      ManageIQ::Providers::StorageManager::SwiftManager:                                  Storage Manager (Swift)
+      ManageIQ::Providers::Microsoft::InfraManager::Host:                                 Host (Microsoft)
+      ManageIQ::Providers::Openstack::InfraManager::Host:                                 Host (OpenStack)
+      ManageIQ::Providers::Redhat::InfraManager::Host:                                    Host (Redhat)
+      ManageIQ::Providers::Vmware::InfraManager::Host:                                    Host (Vmware)
+      ManageIQ::Providers::Vmware::InfraManager::HostEsx:                                 Host (Vmware)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:                    Physical Rack (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:                 Physical Chassis (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:                  Physical Server (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:                 Physical Storage (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:                  Physical Switch (Lenovo)
+      ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:                 Physical Server (Redfish)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate:               Volume Snapshot Template (Openstack)
+      ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate:                       Volume Template (Openstack)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM
@@ -910,6 +1655,8 @@ en:
       MiqWorker:                EVM Worker
       NetworkPort:              Network Port
       NetworkRouter:            Network Router
+      Network:                  Network
+      NetworkService:           Network Service
       OrchestrationStack:       Orchestration Stack
       OrchestrationTemplate:    Orchestration Template
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate:    CloudFormation Template
@@ -917,7 +1664,10 @@ en:
       ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate:     Azure Template
       ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate:          VNF Template
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
+      ManageIQ::Providers::Vmware::InfraManager::OrchestrationTemplate:    OVF Template
       PersistentVolume:         Persistent Volume
+      PhysicalChassis:          Physical Chassis
+      PhysicalRack:             Physical Rack
       PhysicalServer:           Physical Server
       PhysicalSwitch:           Physical Switch
       PolicyEvent:              Policy Event
@@ -929,6 +1679,8 @@ en:
       Repository:               Repository
       ResourcePool:             Resource Pool
       SecurityGroup:            Security Group
+      SecurityPolicy:           Security Policy
+      SecurityPolicyRule:       Security Policy Rule
       ScanItem:                 Scan Item
       ScanItemSet:              Analysis Profile
       Service:                  Service

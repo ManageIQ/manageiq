@@ -1,11 +1,9 @@
-dist: xenial
+---
 language: ruby
 rvm:
-- 2.5.7
-- 2.6.5
-sudo: false
-cache:
-  bundler: true
+- 2.5.8
+- 2.6.6
+cache: bundler
 env:
   global:
   - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000

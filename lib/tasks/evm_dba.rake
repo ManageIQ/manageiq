@@ -271,16 +271,8 @@ namespace :evm do
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end
     end
-
-    # loads the v1 key into the enviroment
-    task :environmentlegacykey => :environment do
-      ManageIQ::Password.add_legacy_key('v0_key', :v0)
-      ManageIQ::Password.add_legacy_key('v1_key', :v1)
-    end
   end
 end
-
-Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
 
 Rake::Task["db:setup"].prerequisites.unshift("evm:db:db_setup_not_supported")
 Rake::Task["db:reset"].prerequisites.unshift("evm:db:db_setup_not_supported")

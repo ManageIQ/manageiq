@@ -47,7 +47,6 @@
 
 # vmware_refresh_<id>:      ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
 # vmware_event_<id>:        ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::Vmware::InfraManager::EventCatcher
-# vmware_refresh_core_<id>: ruby lib/workers/bin/run_single_worker.rb --ems-id <id> MiqEmsRefreshCoreWorker
 
 # Logs
 #

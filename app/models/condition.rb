@@ -30,14 +30,10 @@ class Condition < ApplicationRecord
     pluck(:expression)
   end
 
-  def self.evaluate(cond, rec, inputs = {}, attr = :expression)
+  def self.evaluate(cond, rec, _inputs = {}, attr = :expression)
     expression = cond.send(attr)
     name = cond.try(:description) || cond.try(:name)
-    if expression.kind_of?(MiqExpression)
-      mode = "object"
-    else
-      mode = expression["mode"]
-    end
+    mode = expression.kind_of?(MiqExpression) ? "object" : expression["mode"]
 
     case mode
     when "script"
@@ -58,14 +54,14 @@ class Condition < ApplicationRecord
         end
       end
     when "tag_expr", "tag_expr_v2", "object"
-      case mode
-      when "tag_expr"
-        expr = expression["expr"]
-      when "tag_expr_v2"
-        expr = MiqExpression.new(expression["expr"]).to_ruby
-      when "object"
-        expr = expression.to_ruby
-      end
+      expr = case mode
+             when "tag_expr"
+               expression["expr"]
+             when "tag_expr_v2"
+               MiqExpression.new(expression["expr"]).to_ruby
+             when "object"
+               expression.to_ruby
+             end
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression before substitution: [#{expr.gsub(/\n/, " ")}]")
 
@@ -196,7 +192,7 @@ class Condition < ApplicationRecord
 
     result = true
     list.each do |obj|
-      opts, ref, object = options2hash(raw_opts, obj)
+      opts, _ref, _object = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
@@ -266,7 +262,8 @@ class Condition < ApplicationRecord
     condition.delete("modifier")
 
     status = {:class => name, :description => condition["description"]}
-    c = Condition.find_by(:guid => condition["guid"])
+    c = Condition.find_by(:guid => condition["guid"]) || Condition.find_by(:name => condition["name"]) ||
+        Condition.find_by(:description => condition["description"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 
     if c.nil?

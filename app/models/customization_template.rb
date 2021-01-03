@@ -5,7 +5,7 @@ class CustomizationTemplate < ApplicationRecord
   has_many   :pxe_images, :through => :pxe_image_type
 
   validates :pxe_image_type, :presence => true, :unless => :system?
-  validates :name, :uniqueness => {:scope => :pxe_image_type }, :unless => :seeding?
+  validates :name, :uniqueness_when_changed => {:scope => :pxe_image_type}, :unless => :seeding?
 
   scope :with_pxe_image_type_id, ->(pxe_image_type_id) { where(:pxe_image_type_id => pxe_image_type_id) }
   scope :with_system,            ->(bool = true)       { where(:system => bool) }

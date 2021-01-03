@@ -17,6 +17,11 @@ RSpec.describe Tenant do
     Tenant.seed
   end
 
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create!(:parent => described_class.create!)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   describe "#default_tenant" do
     it "has a default tenant" do
       expect(default_tenant).to be_truthy
@@ -250,6 +255,49 @@ RSpec.describe Tenant do
       tenant.source = cloud_tenant
       expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
       expect(tenant.errors.full_messages[0]).to eq("A tenant created by tenant mapping cannot be deleted.")
+    end
+
+    it "wouldn't delete tenant with subtenants" do
+      parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant, :name => "Tenant")
+      FactoryBot.create(:tenant, :parent => parent_tenant, :name => "Subtenant")
+      expect { parent_tenant.destroy! }.to raise_error(Ancestry::AncestryException)
+    end
+
+    it "wouldn't delete tenant with subprojects" do
+      parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant, :name => "Tenant")
+      FactoryBot.create(:tenant, :parent => parent_tenant, :name => "Subtenant", :divisible => false)
+      expect { parent_tenant.destroy! }.to raise_error(Ancestry::AncestryException)
+    end
+  end
+
+  describe "#destroy_with_subtree" do
+    before do
+      root_tenant = Tenant.seed
+      @parent_tenant = FactoryBot.create(:tenant, :parent => root_tenant)
+      @sub_tenant = FactoryBot.create(:tenant, :parent => @parent_tenant)
+      FactoryBot.create(:tenant, :parent => @sub_tenant)
+      sub_sub_tenant = FactoryBot.create(:tenant, :parent => @sub_tenant)
+      FactoryBot.create(:tenant, :parent =>sub_sub_tenant)
+
+      @sub_project = FactoryBot.create(:tenant, :parent => @parent_tenant, :divisible => false)
+      FactoryBot.create(:tenant, :parent => @sub_project, :divisible => false)
+      FactoryBot.create(:tenant, :parent => @sub_project, :divisible => false)
+    end
+
+    it "deletes tenant with all sub-tenants" do
+      expect(Tenant.count).to eq(9)
+      @sub_tenant.destroy_with_subtree
+      expect(Tenant.count).to eq(5)
+    end
+
+    it "deletes project with all sub-projects" do
+      @sub_project.destroy_with_subtree
+      expect(Tenant.count).to eq(6)
+    end
+
+    it "deletes tenant with all sub-projects and sub-tenants" do
+      @parent_tenant.destroy_with_subtree
+      expect(Tenant.count).to eq(1)
     end
   end
 
@@ -885,13 +933,13 @@ RSpec.describe Tenant do
   end
 
   context "using more regions with factory" do
-    let!(:other_region) { FactoryGirl.create(:miq_region) }
+    let!(:other_region) { FactoryBot.create(:miq_region) }
 
     context "without MiqRegion.seed" do
       it "uses other region" do
         expect(MiqRegion.count).to eq(1)
         exception_message = "You need to seed default MiqRegion with MiqRegion.seed"
-        expect { FactoryGirl.create(:tenant, :in_other_region,  :other_region => other_region) }.to raise_error(exception_message)
+        expect { FactoryBot.create(:tenant, :in_other_region, :other_region => other_region) }.to raise_error(exception_message)
       end
     end
 
@@ -900,7 +948,7 @@ RSpec.describe Tenant do
         MiqRegion.seed
       end
 
-      let!(:tenant) { FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region) }
+      let!(:tenant) { FactoryBot.create(:tenant, :in_other_region, :other_region => other_region) }
 
       it "uses other region" do
         expect(MiqRegion.count).to eq(2)
@@ -910,12 +958,12 @@ RSpec.describe Tenant do
 
       it "raises error when region is not passed" do
         exception_message = "You need to pass specific region  with :other_region: \n"\
-                            "FactoryGirl.create(:tenant, :in_other_region, :other_region => <region>) "
-        expect { FactoryGirl.create(:tenant, :in_other_region) }.to raise_error(exception_message)
+                            "FactoryBot.create(:tenant, :in_other_region, :other_region => <region>) "
+        expect { FactoryBot.create(:tenant, :in_other_region) }.to raise_error(exception_message)
       end
 
       let!(:root_tenant_other_region) do
-        tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region)
+        tenant_other_region = FactoryBot.create(:tenant, :in_other_region, :other_region => other_region)
         tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
         tenant_other_region
       end

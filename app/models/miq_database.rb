@@ -7,8 +7,8 @@ class MiqDatabase < ApplicationRecord
   }.freeze
 
   include AuthenticationMixin
-  include PasswordMixin
 
+  include ManageIQ::Password::PasswordMixin
   encrypt_column  :csrf_secret_token
   encrypt_column  :session_secret_token
 

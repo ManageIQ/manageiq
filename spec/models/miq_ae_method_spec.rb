@@ -38,6 +38,18 @@ RSpec.describe MiqAeMethod do
     expect(MiqAeMethod.lookup_by_class_id_and_name(c1.id, "foo_method")).to eq(f1)
   end
 
+  it "doesn’t access database when unchanged model is saved" do
+    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    f1 = FactoryBot.create(:miq_ae_method,
+                           :class_id => c1.id,
+                           :name     => "foo_method",
+                           :scope    => "instance",
+                           :language => "ruby",
+                           :location => "inline")
+    expect { f1.valid? }.not_to make_database_queries
+  end
+
   context "#copy" do
     let(:d2) { FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
     let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1) }

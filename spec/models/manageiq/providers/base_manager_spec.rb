@@ -19,7 +19,7 @@ RSpec.describe ManageIQ::Providers::BaseManager do
 
   context ".url" do
     it 'delegates to the provider' do
-      mgr = FactoryGirl.create(:configuration_manager_foreman, :provider => FactoryGirl.create(:provider_foreman, :url => 'example.com'))
+      mgr = FactoryBot.create(:configuration_manager_foreman, :provider => FactoryBot.create(:provider_foreman, :url => 'example.com'))
       expect(mgr.url).to eq('example.com')
     end
   end

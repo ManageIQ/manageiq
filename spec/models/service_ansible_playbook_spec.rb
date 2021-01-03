@@ -248,6 +248,26 @@ RSpec.describe(ServiceAnsiblePlaybook) do
     end
   end
 
+  describe '#launch_ansible_job_queue' do
+    it "delivers to the queue" do
+      task = double("miq_task", :status_ok? => true)
+      request = double("miq_request", :my_zone => 'test')
+      allow(loaded_service).to receive(:miq_request).and_return(request)
+      q_options = {
+        :args        => [action],
+        :class_name  => described_class.name,
+        :instance_id => loaded_service.id,
+        :method_name => "launch_ansible_job",
+        :role        => "embedded_ansible",
+        :zone        => request.my_zone
+      }
+
+      expect(MiqQueue).to receive(:put).with(hash_including(q_options))
+      expect(MiqTask).to receive(:wait_for_taskid).and_return(task)
+      loaded_service.launch_ansible_job_queue(action)
+    end
+  end
+
   describe '#check_completed' do
     shared_examples 'checking progress for job execution' do |raw_status, expected_return|
       before do

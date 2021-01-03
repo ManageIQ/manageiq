@@ -8,6 +8,11 @@ RSpec.describe TransformationMappingItem, :v2v do
   let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
   let(:openstack_cluster) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => ems_openstack) }
 
+  it "doesn't access database when unchanged model is saved" do
+    m = FactoryBot.create(:transformation_mapping_item)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   # ---------------------------------------------------------------------------
   # Cluster Validation
   # ---------------------------------------------------------------------------
@@ -106,10 +111,10 @@ RSpec.describe TransformationMappingItem, :v2v do
   context "Network validation" do
     let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
     let(:other_cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
-    let(:public_cloud_network) { FactoryBot.create(:cloud_network_public_openstack, :cloud_tenant => other_cloud_tenant) }
+    let(:shared_cloud_network) { FactoryBot.create(:cloud_network_private_openstack, :cloud_tenant => other_cloud_tenant, :shared => true) }
 
     before do
-      ems_openstack.network_manager.public_networks << public_cloud_network
+      ems_openstack.network_manager.private_networks << shared_cloud_network
     end
 
     # source network
@@ -129,8 +134,8 @@ RSpec.describe TransformationMappingItem, :v2v do
           tmi = FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_cloud_network, :transformation_mapping_id => osp_mapping.id)
           expect(tmi.valid?).to be(true)
         end
-        it "valid mapping with public network" do
-          tmi = FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => public_cloud_network, :transformation_mapping_id => osp_mapping.id)
+        it "valid mapping with shared network" do
+          tmi = FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => shared_cloud_network, :transformation_mapping_id => osp_mapping.id)
           expect(tmi.valid?).to be(true)
         end
         it "invalid source" do

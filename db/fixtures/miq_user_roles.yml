@@ -22,7 +22,7 @@
   - cloud_network
   - cloud_object_store_container
   - cloud_object_store_object
-  - control_explorer
+  - control
   - dashboard
   - storage
   - storage_pod
@@ -91,6 +91,7 @@
   - vm_infra_explorer
   - sui_services
   - sui_notifications
+  - revoke_user_sessions
 
 - :name: EvmRole-approver
   :read_only: true
@@ -101,7 +102,7 @@
   - chargeback_reports
   - customization_template_view
   - iso_datastore_view
-  - control_explorer
+  - control
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -195,7 +196,7 @@
   - chargeback_reports
   - customization_template_view
   - iso_datastore_view
-  - control_explorer
+  - control
   - dashboard
   - ems_cluster_view
   - ems_cluster_tag
@@ -489,7 +490,7 @@
   - all_vm_rules
   - chargeback
   - chargeback_reports
-  - control_explorer
+  - control
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -574,7 +575,7 @@
   - all_vm_rules
   - chargeback
   - chargeback_reports
-  - control_explorer
+  - control
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -1030,7 +1031,7 @@
   - ems_configuration
   - configuration_profile
   - configured_system
-  - control_explorer
+  - control
   - dashboard
   - storage
   - ems_cloud
@@ -1091,7 +1092,7 @@
   - ems_configuration
   - configuration_profile
   - configured_system
-  - control_explorer
+  - control
   - dashboard
   - storage
   - ems_cloud
@@ -1150,7 +1151,7 @@
   - consumption
   - chargeback
   - pictures
-  - control_explorer
+  - control
   - generic_object
   - generic_object_definition
   - my_settings

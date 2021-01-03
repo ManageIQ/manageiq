@@ -2,7 +2,7 @@ AllCops:
   Exclude:
   - lib/generators/**/templates/**/*
   - db/schema.rb
-GlobalVars:
+Style/GlobalVars:
   AllowedVariables:
   # Loggers
   - $api_log
@@ -14,6 +14,8 @@ GlobalVars:
   - $datawarehouse_log
   - $fog_log
   - $gce_log
+  - $ibm_cloud_log
+  - $ibm_terraform_log
   - $kube_log
   - $lenovo_log
   - $log

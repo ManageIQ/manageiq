@@ -17,7 +17,7 @@ class Chargeback
     end
 
     def tag_names
-      resource.tags.collect(&:name)
+      resource ? resource.tags.collect(&:name).map { |x| x.gsub("/managed/", "") } : []
     end
 
     def hash_features_affecting_rate
@@ -25,7 +25,7 @@ class Chargeback
     end
 
     def tag_list_with_prefix
-      tag_names.map { |t| "vm/tag#{t}" }
+      tag_names.map { |t| "vm/tag/managed/#{t}" }
     end
 
     def parents_determining_rate

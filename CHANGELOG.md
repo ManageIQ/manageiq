@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 151 ending 2020-12-07
+
+### Added
+
+* Cleanup a useless next unless in worker monitor [(#20862)](https://github.com/ManageIQ/manageiq/pull/20862)
+
+### Fixed
+
+* EmbeddedAnsible Ensure newline for auth_key in MachineCredential [(#20845)](https://github.com/ManageIQ/manageiq/pull/20845)
+
+# Unreleased as of Sprint 150 ending 2020-11-23
+
+### Added
+
+* Tenant changes changes miq product features on all servers [(#20772)](https://github.com/ManageIQ/manageiq/pull/20772)
+
+### Fixed
+
+* Auto-restart systemd workers results in duplicates [(#20824)](https://github.com/ManageIQ/manageiq/pull/20824)
+* Call ResetFailedUnit when cleaning up failed services [(#20810)](https://github.com/ManageIQ/manageiq/pull/20810)
+* Ensure that options[:ems\_id] is an Array when passed as an ENV var [(#20809)](https://github.com/ManageIQ/manageiq/pull/20809)
+
+# Unreleased as of Sprint 149 ending 2020-11-09
+
+### Fixed
+
+* Ensure newline for :ssh\_key\_data [(#20771)](https://github.com/ManageIQ/manageiq/pull/20771)
+* Add check for invalid roles in server\_role\_names= [(#20731)](https://github.com/ManageIQ/manageiq/pull/20731)
+
+# Unreleased as of Sprint 147 ending 2020-10-12
+
+### Added
+
+* Prefer ManageIQ::Password over legacy MiqPassword constant [(#20631)](https://github.com/ManageIQ/manageiq/pull/20631)
+* Remove NTP from core [(#20623)](https://github.com/ManageIQ/manageiq/pull/20623)
+
+### Fixed
+
+* Use inotify to wait for ansible-runner pid file creation [(#20666)](https://github.com/ManageIQ/manageiq/pull/20666)
+* Filtered the auth key in api.log [(#20632)](https://github.com/ManageIQ/manageiq/pull/20632)
+* Delegate queue\_name for refresh to parent manager instead of queue_name arrays [(#20345)](https://github.com/ManageIQ/manageiq/pull/20345)
+* Update the Ansible::Runner wait_for timeout [(#20674)](https://github.com/ManageIQ/manageiq/pull/20674)
+
+# Unreleased as of Sprint 146 ending 2020-09-28
+
+### Added
+
+* Remove MiqWorker supports\_container? method, as most workers now support podified [(#20583)](https://github.com/ManageIQ/manageiq/pull/20583)
+
+# Unreleased as of Sprint 145 ending 2020-09-14
+
+### Fixed
+
+* Fixed embedded ansible edit credentials [(#20524)](https://github.com/ManageIQ/manageiq/pull/20524)
+
 # Unreleased as of Sprint 144 ending 2020-08-31
 
 ### Fixed

@@ -68,7 +68,7 @@ RSpec.describe "Service Filter" do
       end
     end
 
-    context "dont allow" do
+    context "do not allow" do
       let(:options) { {'include_service' => false} }
       it "check false value" do
         allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(workspace)

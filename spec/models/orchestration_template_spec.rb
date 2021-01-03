@@ -1,4 +1,9 @@
 RSpec.describe OrchestrationTemplate do
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   describe ".find_or_create_by_contents" do
     context "when the template does not exist" do
       let(:query_hash) { FactoryBot.build(:orchestration_template).as_json.symbolize_keys }

@@ -1,5 +1,7 @@
 class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
+  include SupportsFeatureMixin
+
   acts_as_miq_taggable
   belongs_to :configuration_location
   belongs_to :configuration_organization
@@ -10,6 +12,7 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :inventory_root_group, :class_name => "EmsFolder"
   belongs_to :manager,              :class_name => "ExtManagementSystem"
   belongs_to :operating_system_flavor
+  belongs_to :orchestration_stack
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   has_and_belongs_to_many :configuration_tags
 
@@ -28,6 +31,7 @@ class ConfiguredSystem < ApplicationRecord
   delegate :name, :to => :customization_script_ptable,   :prefix => true, :allow_nil => true
   delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
   delegate :name, :to => :provider,                      :prefix => true, :allow_nil => true
+  delegate :name, :to => :orchestration_stack,           :prefix => true, :allow_nil => true
   delegate :my_zone, :provider, :zone, :to => :manager
   delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
 
@@ -41,6 +45,7 @@ class ConfiguredSystem < ApplicationRecord
   virtual_column  :operating_system_flavor_name,       :type => :string
   virtual_column  :customization_script_medium_name,   :type => :string
   virtual_column  :customization_script_ptable_name,   :type => :string
+  virtual_column  :orchestration_stack_name,           :type => :string
 
   scope :with_inventory_root_group,     ->(group_id)   { where(:inventory_root_group_id => group_id) }
   scope :with_manager,                  ->(manager_id) { where(:manager_id => manager_id) }

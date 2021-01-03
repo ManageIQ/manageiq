@@ -30,15 +30,19 @@ module ManageIQ::Providers
     has_many :key_pairs,                     :class_name  => "AuthKeyPair", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
     has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
+
     has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
     # Only taggings mapped from labels, excluding user-assigned tags.
-    has_many :vm_and_template_taggings,      -> { joins(:tag).merge(Tag.controlled_by_mapping) },
-                                             :through     => :vms_and_templates, :source => :taggings
+    has_many :vm_and_template_taggings,
+             -> { joins(:tag).merge(Tag.controlled_by_mapping) },
+             :through => :vms_and_templates,
+             :source  => :taggings
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
     validates_presence_of :zone
 
+    # TODO: remove and have each manager include this
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 
@@ -161,9 +165,7 @@ module ManageIQ::Providers
       if source_tenant
         # We just destroyed ourself, reload the source_tenant association
         source_tenant.reload
-        source_tenant.all_subtenants.destroy_all
-        source_tenant.all_subprojects.destroy_all
-        source_tenant.destroy
+        source_tenant.destroy_with_subtree
       end
     end
 

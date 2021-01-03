@@ -3,18 +3,21 @@ require 'pg/logical_replication'
 
 class MiqPglogical
   include Vmdb::Logging
+  include ConnectionHandling
 
   PUBLICATION_NAME = 'miq'.freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
-  def initialize
-    @pg_connection = ApplicationRecord.connection.raw_connection
+  # :nodoc:
+  #
+  # Note:  Don't use a delegate with this method, since we want the
+  # .with_connection_error_handling to wrap this methods
+  def subscriber?
+    self.class.with_connection_error_handling { pglogical.subscriber? }
   end
 
-  delegate :subscriber?, :to => :pglogical
-
   def provider?
-    pglogical.publishes?(PUBLICATION_NAME)
+    self.class.with_connection_error_handling { pglogical.publishes?(PUBLICATION_NAME) }
   end
 
   def configure_provider
@@ -24,33 +27,35 @@ class MiqPglogical
 
   def destroy_provider
     return unless provider?
-    pglogical.drop_publication(PUBLICATION_NAME)
+    self.class.with_connection_error_handling { pglogical.drop_publication(PUBLICATION_NAME) }
   end
 
   # Lists the tables currently being replicated
   # @return Array<String> the table list
   def included_tables
-    pglogical.tables_in_publication(PUBLICATION_NAME)
+    self.class.with_connection_error_handling { pglogical.tables_in_publication(PUBLICATION_NAME) }
   end
 
   # Creates the 'miq' publication and refreshes the excluded tables
   def create_replication_set
-    pglogical.create_publication(PUBLICATION_NAME)
+    self.class.with_connection_error_handling { pglogical.create_publication(PUBLICATION_NAME) }
     refresh_excludes
   end
 
   # Aligns the contents of the 'miq' publication with the excludes file
   def refresh_excludes
-    tables = ApplicationRecord.connection.tables - excludes
-    pglogical.set_publication_tables(PUBLICATION_NAME, tables)
+    self.class.with_connection_error_handling do
+      tables = ApplicationRecord.connection.tables - excludes
+      pglogical.set_publication_tables(PUBLICATION_NAME, tables)
+    end
   end
 
   def replication_lag
-    pglogical.lag_bytes
+    self.class.with_connection_error_handling { pglogical.lag_bytes }
   end
 
   def replication_wal_retained
-    pglogical.wal_retained_bytes
+    self.class.with_connection_error_handling { pglogical.wal_retained_bytes }
   end
 
   def excludes
@@ -67,10 +72,8 @@ class MiqPglogical
     PglogicalSubscription.save_all!(subscriptions_to_save)
   end
 
-  private
-
-  def pglogical(refresh = false)
-    @pglogical = nil if refresh
-    @pglogical ||= PG::LogicalReplication::Client.new(@pg_connection)
+  def self.pg_connection
+    ApplicationRecord.connection.raw_connection
   end
+  private_class_method :pg_connection
 end

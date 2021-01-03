@@ -16,6 +16,7 @@ module MiqCockpit
 
     def self.can_start_cockpit_ws?
       MiqEnvironment::Command.is_linux? &&
+        !MiqEnvironment::Command.is_podified? &&
         File.exist?(COCKPIT_WS_PATH) &&
         File.exist?(COCKPIT_SSH_PATH)
     end

@@ -477,7 +477,7 @@ RSpec.describe MiqGroup do
 
       FactoryBot.create(:miq_group, :description => "want 1", :sequence => 999)
       FactoryBot.create(:miq_group, :description => "want 2", :sequence => 1000)
-      FactoryBot.create(:miq_group, :description => "dont want", :sequence => 1009)
+      FactoryBot.create(:miq_group, :description => "do not want", :sequence => 1009)
 
       expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
     end

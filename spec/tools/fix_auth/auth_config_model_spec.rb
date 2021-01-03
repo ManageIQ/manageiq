@@ -5,12 +5,15 @@ require "fix_auth/auth_config_model"
 require "fix_auth/models"
 
 RSpec.describe FixAuth::AuthConfigModel do
-  let(:v1_key)  { ManageIQ::Password.generate_symmetric }
   let(:pass)    { "password" }
-  let(:enc_v1)  { ManageIQ::Password.new.encrypt(pass, "v1", v1_key) }
+  let(:enc_old) { ManageIQ::Password.new.encrypt(pass, "v2", legacy_key) }
+  let(:enc_new) { ManageIQ::Password.encrypt(pass) }
+
+  let(:legacy_key) { ManageIQ::Password::Key.new }
+  let(:options)    { {:legacy_key => legacy_key} }
 
   before do
-    ManageIQ::Password.add_legacy_key(v1_key, :v1)
+    ManageIQ::Password.keys["alt"] = legacy_key
   end
 
   after do
@@ -24,28 +27,24 @@ RSpec.describe FixAuth::AuthConfigModel do
         :type    => 'MiqProvisionRequest',
         :options => YAML.dump(
           :dialog                  => {
-            :'password::special' => enc_v1,
+            :'password::special' => enc_old,
           },
-          :root_password           => enc_v1,
-          :sysprep_password        => enc_v1,
-          :sysprep_domain_password => enc_v1
+          :root_password           => enc_old,
+          :sysprep_password        => enc_old,
+          :sysprep_domain_password => enc_new
         )
       )
     end
 
-    it "upgrades request (find with prefix, dont stringify keys)" do
+    it "upgrades request (find with prefix, do not stringify keys)" do
       subject.fix_passwords(request)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
       expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
-      expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted_version(2)
 
       expect(new_options[:root_password]).to be_encrypted(pass)
-      expect(new_options[:root_password]).to be_encrypted_version(2)
       expect(new_options[:sysprep_password]).to be_encrypted(pass)
-      expect(new_options[:sysprep_password]).to be_encrypted_version(2)
       expect(new_options[:sysprep_domain_password]).to be_encrypted(pass)
-      expect(new_options[:sysprep_domain_password]).to be_encrypted_version(2)
     end
   end
 
@@ -56,28 +55,24 @@ RSpec.describe FixAuth::AuthConfigModel do
         :type    => 'MiqProvisionRequest',
         :options => YAML.dump(
           :dialog                  => {
-            :'password::special' => enc_v1,
+            :'password::special' => enc_old,
           },
-          :root_password           => enc_v1,
-          :sysprep_password        => enc_v1,
-          :sysprep_domain_password => enc_v1
+          :root_password           => enc_old,
+          :sysprep_password        => enc_old,
+          :sysprep_domain_password => enc_new
         )
       )
     end
 
-    it "upgrades request (find with prefix, dont stringify keys)" do
+    it "upgrades request (find with prefix, do not stringify keys)" do
       subject.fix_passwords(request)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
       expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
-      expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted_version(2)
 
       expect(new_options[:root_password]).to be_encrypted(pass)
-      expect(new_options[:root_password]).to be_encrypted_version(2)
       expect(new_options[:sysprep_password]).to be_encrypted(pass)
-      expect(new_options[:sysprep_password]).to be_encrypted_version(2)
       expect(new_options[:sysprep_domain_password]).to be_encrypted(pass)
-      expect(new_options[:sysprep_domain_password]).to be_encrypted_version(2)
     end
   end
 end

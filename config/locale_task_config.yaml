@@ -1,5 +1,9 @@
 ---
 yaml_strings_to_extract:
+  db/fixtures/chargeable_fields.yml:
+  - description
+  db/fixtures/chargeback_rates.yml:
+  - description
   db/fixtures/miq_product_features{.yml,.yaml,/*.yml,/*.yaml}:
   - name
   - description
@@ -25,6 +29,10 @@ yaml_strings_to_extract:
   - menu_name
   - title
   product/timelines/miq_reports/*.*:
+  - title
+  - name
+  - headers
+  product/charts/miq_reports/*.yaml:
   - title
   - name
   - headers

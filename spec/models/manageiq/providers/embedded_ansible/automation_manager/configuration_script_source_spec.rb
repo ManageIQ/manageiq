@@ -429,7 +429,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
   end
 
   describe "git_repository interaction" do
-    let(:auth) { FactoryGirl.create(:embedded_ansible_scm_credential) }
+    let(:auth) { FactoryBot.create(:embedded_ansible_scm_credential) }
     let(:configuration_script_source) do
       described_class.create!(
         :name           => "foo",

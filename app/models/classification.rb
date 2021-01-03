@@ -6,15 +6,13 @@ class Classification < ApplicationRecord
   virtual_column :name, :type => :string
   virtual_column :ns, :type => :string
 
-  before_save    :save_tag
-  before_destroy :delete_tags_and_entries
+  # from acts_as_tree
+  alias entries children
 
-  validates :description, :presence => true, :length => {:maximum => 255}
-  validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
-    cond = c.class.in_region(region_id).where(:parent_id => c.parent_id, :description => c.description)
-    cond = cond.where.not(:id => c.id) unless c.new_record?
-    cond.exists?
-  }
+  before_save    :save_tag
+  before_destroy :validate_tag_mapping, :delete_tags_and_entries
+
+  validates :description, :presence => true, :length => {:maximum => 255}, :unique_within_region => {:scope => :parent_id}
 
   NAME_MAX_LENGTH = 50
   validates :name, :presence => true, :length => {:maximum => NAME_MAX_LENGTH}
@@ -274,10 +272,6 @@ class Classification < ApplicationRecord
     children.create!(options)
   end
 
-  def entries
-    children
-  end
-
   def lookup_by_entry(type)
     raise _("method is only available for an entry") if category?
     klass = type.constantize
@@ -337,6 +331,10 @@ class Classification < ApplicationRecord
   end
 
   attr_writer :name
+
+  def self.lookup_category_by_description(description, region_id = my_region_number)
+    is_category.in_region(region_id).find_by(:description => description)
+  end
 
   def find_entry_by_name(name, region_id = my_region_number)
     self.class.lookup_by_name(name, region_id, ns, self)
@@ -577,6 +575,13 @@ class Classification < ApplicationRecord
     end
 
     delete_tag_and_taggings
+  end
+
+  def validate_tag_mapping
+    if tag&.provider_tag_mappings&.any?
+      errors.add("", _("A Tag Mapping exists for this category and must be removed before deleting"))
+      throw :abort
+    end
   end
 
   # rubocop:enable Style/NumericPredicate

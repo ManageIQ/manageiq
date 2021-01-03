@@ -50,7 +50,6 @@ module ManageIQ::Providers
 
         def container_nodes
           add_properties(
-            :model_class    => ::ContainerNode,
             :secondary_refs => {:by_name => %i(name)},
             :delete_method  => :disconnect_inv
           )
@@ -105,7 +104,6 @@ module ManageIQ::Providers
 
         def container_groups
           add_properties(
-            :model_class            => ContainerGroup,
             :secondary_refs         => {:by_container_project_and_name => %i(container_project name)},
             :attributes_blacklist   => %i(namespace),
             :delete_method          => :disconnect_inv,
@@ -123,7 +121,6 @@ module ManageIQ::Providers
 
         def containers
           add_properties(
-            :model_class            => Container,
             # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
@@ -186,7 +183,6 @@ module ManageIQ::Providers
 
         def container_templates
           add_properties(
-            :model_class          => ::ContainerTemplate,
             :attributes_blacklist => %i(namespace)
           )
           add_common_default_values

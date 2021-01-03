@@ -6,7 +6,7 @@ class Endpoint < ApplicationRecord
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
   validates :port, :numericality => {:only_integer => true, :allow_nil => true, :greater_than => 0}
-  validates :url, :uniqueness => true, :allow_blank => true, :unless => :allow_duplicate_url?
+  validates :url, :uniqueness_when_changed => true, :allow_blank => true, :unless => :allow_duplicate_url?
   validate :validate_certificate_authority
 
   after_create  :endpoint_created

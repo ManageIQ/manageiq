@@ -15,7 +15,8 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
     let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager => manager) }
     let(:playbook)              { FactoryBot.create(:embedded_playbook, :configuration_script_source => ansible_script_source, :manager => manager) }
-    let(:manager)               { FactoryBot.create(:embedded_automation_manager_ansible, :provider) }
+    let(:manager)               { provider.automation_manager }
+    let(:provider)              { FactoryBot.create(:provider_embedded_ansible) }
 
     let(:machine_credential)    { FactoryBot.create(:ansible_machine_credential, :manager_ref => "1", :resource => manager) }
     let(:cloud_credential)      { FactoryBot.create(:ansible_cloud_credential,   :manager_ref => "2", :resource => manager) }
@@ -201,7 +202,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
     context "when miq_task present" do
       before do
-        job.miq_task = FactoryGirl.create(:miq_task, :context_data => {:ansible_runner_stdout => ansible_runner_stdout})
+        job.miq_task = FactoryBot.create(:miq_task, :context_data => {:ansible_runner_stdout => ansible_runner_stdout})
       end
 
       it "json" do
@@ -256,13 +257,13 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
     end
 
     context "when miq_task present, but without context data" do
-      before { job.miq_task = FactoryGirl.create(:miq_task) }
+      before { job.miq_task = FactoryBot.create(:miq_task) }
 
       it_behaves_like "ansible runner stdout not valid in miq_task"
     end
 
     context "when miq_task present with context_data, but missing ansible_runner_stdout" do
-      before { job.miq_task = FactoryGirl.create(:miq_task, :context_data => {}) }
+      before { job.miq_task = FactoryBot.create(:miq_task, :context_data => {}) }
 
       it_behaves_like "ansible runner stdout not valid in miq_task"
     end

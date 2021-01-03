@@ -72,7 +72,7 @@ class EvmApplication
     duplicate_columns.delete("Status") # always show status
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
 
-    # dont give headsup for empty values
+    # do not give heads-up for empty values
     heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
     if heads_up.present?
       puts "", "All rows have the values: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
@@ -151,6 +151,7 @@ class EvmApplication
           "Queue"     => compact_queue_uri(w.queue_name, w.uri),
           "Started"   => compact_date(w.started_on),
           "Heartbeat" => compact_date(w.last_heartbeat),
+          "System UID" => w.system_uid,
           "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
@@ -202,7 +203,7 @@ class EvmApplication
   end
 
   def self.deployment_status
-    context = ActiveRecord::MigrationContext.new('db/migrate')
+    context = ActiveRecord::MigrationContext.new(Rails.application.config.paths["db/migrate"])
     return "new_deployment" if context.current_version.zero?
     return "new_replica"    if MiqServer.my_server.nil?
     return "upgrade"        if context.needs_migration?

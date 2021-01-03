@@ -1,4 +1,8 @@
 RSpec.describe ExtManagementSystem do
+  it "supports label mapping for provider subclasses" do
+    expect(ExtManagementSystem.entities_for_label_mapping.keys).to include("VmOpenstack", "VmIBM")
+  end
+
   subject { FactoryBot.create(:ext_management_system) }
 
   include_examples "AggregationMixin"
@@ -49,56 +53,13 @@ RSpec.describe ExtManagementSystem do
     described_class.create_discovered_ems(ost)
   end
 
-  let(:all_types_and_descriptions) do
-    {
-      "ansible_tower_automation"        => "Ansible Tower Automation",
-      "azure"                           => "Azure",
-      "azure_network"                   => "Azure Network",
-      "azure_stack"                     => "Azure Stack",
-      "azure_stack_network"             => "Azure Stack Network",
-      "ec2"                             => "Amazon EC2",
-      "ec2_network"                     => "Amazon EC2 Network",
-      "ec2_ebs_storage"                 => "Amazon EBS",
-      "embedded_ansible_automation"     => "Embedded Ansible Automation",
-      "s3"                              => "Amazon S3",
-      "foreman_configuration"           => "Foreman Configuration",
-      "foreman_provisioning"            => "Foreman Provisioning",
-      "gce"                             => "Google Compute Engine",
-      "gce_network"                     => "Google Network",
-      "ibm_cloud_network"               => "IBM Cloud Networks",
-      "ibm_cloud_power_virtual_servers" => "IBM Power Systems Virtual Servers",
-      "ibm_cloud_storage"               => "IBM Cloud Storage",
-      "ibm_terraform_configuration"     => "IBM Terraform Configuration",
-      "kubernetes"                      => "Kubernetes",
-      "kubernetes_monitor"              => "Kubernetes Monitor",
-      "kubevirt"                        => "KubeVirt",
-      "openshift"                       => "OpenShift",
-      "openshift_monitor"               => "Openshift Monitor",
-      "openstack"                       => "OpenStack",
-      "openstack_infra"                 => "OpenStack Platform Director",
-      "openstack_network"               => "OpenStack Network",
-      "lenovo_ph_infra"                 => "Lenovo XClarity",
-      "nsxt"                            => "VMware NSX-T Network Manager",
-      "nuage_network"                   => "Nuage Network Manager",
-      "redfish_ph_infra"                => "Redfish",
-      "redhat_network"                  => "Redhat Network",
-      "rhevm"                           => "Red Hat Virtualization",
-      "scvmm"                           => "Microsoft System Center VMM",
-      "vmwarews"                        => "VMware vCenter",
-      "vmware_cloud"                    => "VMware vCloud",
-      "vmware_cloud_network"            => "VMware Cloud Network",
-      "cinder"                          => "Cinder ",
-      "swift"                           => "Swift ",
-    }
-  end
-
   it ".types" do
-    expect(described_class.types).to match_array(all_types_and_descriptions.keys)
+    expect(described_class.types).to include("ec2", "vmwarews")
   end
 
   describe ".supported_types" do
     it "with default permissions" do
-      expect(described_class.supported_types).to match_array(all_types_and_descriptions.keys)
+      expect(described_class.supported_types).to include("ec2", "vmwarews")
     end
 
     it "with removed permissions" do
@@ -110,7 +71,7 @@ RSpec.describe ExtManagementSystem do
 
   describe ".supported_types_and_descriptions_hash" do
     it "with default permissions" do
-      expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
+      expect(described_class.supported_types_and_descriptions_hash).to include("vmwarews" => "VMware vCenter")
     end
 
     it "with removed permissions" do
@@ -118,6 +79,11 @@ RSpec.describe ExtManagementSystem do
       allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).with("vmwarews").and_return(false)
       expect(described_class.supported_types_and_descriptions_hash).to_not include("vmwarews")
     end
+  end
+
+  it "does access database when unchanged model is saved" do
+    r = FactoryBot.create(:ems_vmware)
+    expect { r.valid? }.to make_database_queries(:count => 3)
   end
 
   it ".ems_infra_discovery_types" do
@@ -502,9 +468,9 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'disables an ems with child managers and moves them to maintenance zone' do
-      zone  = FactoryGirl.create(:zone)
-      ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
-      child = FactoryGirl.create(:ext_management_system, :zone => zone)
+      zone  = FactoryBot.create(:zone)
+      ems   = FactoryBot.create(:ext_management_system, :zone => zone)
+      child = FactoryBot.create(:ext_management_system, :zone => zone)
       ems.child_managers << child
 
       2.times do
@@ -522,14 +488,14 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'disables an ems and moves child managers created by ensure_managers() to maintenance zone' do
-      zone  = FactoryGirl.create(:zone)
+      zone  = FactoryBot.create(:zone)
       emses = {
-        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
-        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
-        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
-        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
-        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
-        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+        :amazon_cloud    => FactoryBot.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryBot.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryBot.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryBot.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryBot.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryBot.create(:ems_vmware_cloud,    :zone => zone),
       }
 
       2.times do
@@ -561,13 +527,13 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "enables an ems with child managers and move them from maintenance zone" do
-      zone = FactoryGirl.create(:zone)
-      ems = FactoryGirl.create(:ext_management_system,
+      zone = FactoryBot.create(:zone)
+      ems = FactoryBot.create(:ext_management_system,
                                :zone_before_pause => zone,
                                :zone              => Zone.maintenance_zone,
                                :enabled           => false)
 
-      child = FactoryGirl.create(:ext_management_system,
+      child = FactoryBot.create(:ext_management_system,
                                  :zone_before_pause => zone,
                                  :zone              => Zone.maintenance_zone,
                                  :enabled           => false)
@@ -586,8 +552,8 @@ RSpec.describe ExtManagementSystem do
     end
 
     it "doesn't change zone when ems was disabled before" do
-      zone = FactoryGirl.create(:zone)
-      ems = FactoryGirl.create(:ext_management_system,
+      zone = FactoryBot.create(:zone)
+      ems = FactoryBot.create(:ext_management_system,
                                :zone_before_pause => nil,
                                :zone              => zone,
                                :enabled           => false)
@@ -599,15 +565,15 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'enables an ems and moves child managers created by ensure_managers() to original zone' do
-      zone  = FactoryGirl.create(:zone)
+      zone  = FactoryBot.create(:zone)
       # Cannot create paused child managers this way, so we first pause! (tested yet) and then resume!
       emses = {
-        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
-        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
-        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
-        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
-        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
-        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+        :amazon_cloud    => FactoryBot.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryBot.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryBot.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryBot.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryBot.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryBot.create(:ems_vmware_cloud,    :zone => zone),
       }
 
       # managers with child managers created with ensure_managers() callback has own callback to change zone
@@ -640,16 +606,16 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'is allowed when enabled' do
-      zone = FactoryGirl.create(:zone)
-      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone)
+      zone = FactoryBot.create(:zone)
+      ems  = FactoryBot.create(:ext_management_system, :zone => Zone.default_zone)
 
       ems.zone = zone
       expect(ems.save).to eq(true)
     end
 
     it 'is denied when disabled' do
-      zone = FactoryGirl.create(:zone)
-      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
+      zone = FactoryBot.create(:zone)
+      ems  = FactoryBot.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
 
       ems.zone = zone
       expect(ems.save).to eq(false)
@@ -657,9 +623,9 @@ RSpec.describe ExtManagementSystem do
     end
 
     it 'to maintenance is not possible when provider enabled' do
-      zone_visible = FactoryGirl.create(:zone)
+      zone_visible = FactoryBot.create(:zone)
 
-      ems = FactoryGirl.create(:ext_management_system, :zone => zone_visible, :enabled => true)
+      ems = FactoryBot.create(:ext_management_system, :zone => zone_visible, :enabled => true)
 
       ems.zone = Zone.maintenance_zone
       expect(ems.save).to eq(false)
@@ -747,6 +713,40 @@ RSpec.describe ExtManagementSystem do
     def deliver_queue_message(queue_message = MiqQueue.order(:id).first)
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
+    end
+  end
+
+  describe ".create_from_params" do
+    let(:zone)   { EvmSpecHelper.create_guid_miq_server_zone.last }
+    let(:params) { {"name" => "My Provider", "zone_id" => zone.id.to_s, "type" => "ManageIQ::Providers::Amazon::CloudManager", "provider_region" => "us-east-1"} }
+    let(:endpoints) { [{"role" => "default"}] }
+
+    context "with a userid/password type authentication" do
+      let(:authentications) { [{"authtype" => "default", "userid" => "user", "password" => "password"}] }
+
+      it "creates an AuthUseridPassword type authentication record" do
+        ems = described_class.create_from_params(params, endpoints, authentications)
+        expect(ems.authentications.first.class.name).to eq("AuthUseridPassword")
+      end
+
+      it "queues an initial authentication check" do
+        described_class.create_from_params(params, endpoints, authentications)
+        expect(MiqQueue.pluck(:class_name, :method_name)).to include(["ExtManagementSystem", "authentication_check_types"])
+      end
+    end
+
+    context "with an auth_token type authentication" do
+      let(:authentications) { [{"authtype" => "default", "auth_key" => "abcdefg"}] }
+
+      it "creates an AuthToken type authentication record" do
+        ems = described_class.create_from_params(params, endpoints, authentications)
+        expect(ems.authentications.first.class.name).to eq("AuthToken")
+      end
+
+      it "queues an initial authentication check" do
+        described_class.create_from_params(params, endpoints, authentications)
+        expect(MiqQueue.pluck(:class_name, :method_name)).to include(["ExtManagementSystem", "authentication_check_types"])
+      end
     end
   end
 

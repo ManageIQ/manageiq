@@ -37663,12 +37663,6 @@ msgstr ""
 msgid "SmartProxy Server IP"
 msgstr ""
 
-#: ../app/views/ops/_settings_evm_servers_tab.html.haml:25
-#: ../app/views/ops/_settings_server_tab.html.haml:123
-#: ../app/views/ops/_zone_form.html.haml:43
-msgid "NTP Servers"
-msgstr ""
-
 #: ../app/views/ops/_settings_evm_servers_tab.html.haml:32
 msgid "Max active VM Scans"
 msgstr ""
@@ -37885,10 +37879,6 @@ msgstr ""
 msgid "None Available"
 msgstr ""
 
-#: ../app/views/ops/_settings_server_tab.html.haml:147
-msgid "Specified NTP settings applied here will override Zone NTP settings."
-msgstr ""
-
 #: ../app/views/ops/_settings_server_tab.html.haml:150
 msgid "Outgoing SMTP E-mail Server"
 msgstr ""
@@ -37977,10 +37967,6 @@ msgstr ""
 
 #: ../app/views/ops/_zone_form.html.haml:5
 msgid "Zone Information"
-msgstr ""
-
-#: ../app/views/ops/_zone_form.html.haml:66
-msgid "* Specified NTP settings apply to this zone only and are not global."
 msgstr ""
 
 #: ../app/views/ops/_zone_form.html.haml:70

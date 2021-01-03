@@ -24,7 +24,7 @@ end
 manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
-gem "activerecord-virtual_attributes", "~>2.0.0"
+gem "activerecord-virtual_attributes", "~>3.0.0"
 gem "activerecord-session_store",     "~>1.1"
 gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>3.0.7",       :require => false
@@ -33,7 +33,7 @@ gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        "~> 2.1.4",      :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
-gem "config",                         "~>2.2", ">=2.2.1", :require => false
+gem "config",                         "~>2.2", ">=2.2.3", :require => false
 gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
@@ -41,19 +41,20 @@ gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>2.0.1"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.3.0"
-gem "hamlit",                         "~>2.8.5"
+gem "hamlit",                         "~>2.11.0"
 gem "inifile",                        "~>3.0",         :require => false
 gem "inventory_refresh",              "~>0.2.0",       :require => false
 gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>2.0", ">=2.0.1", :require => false
+gem "listen",                         "~>3.2",         :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
 gem "manageiq-api-client",            "~>0.3.4",       :require => false
 gem "manageiq-loggers",               "~>0.5.0",       :require => false
-gem "manageiq-messaging",             "~>0.1.4",       :require => false
+gem "manageiq-messaging",             "~>1.0",         :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
 gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
 gem "manageiq-ssh-util",              "~>0.1.1",       :require => false
-gem "memoist",                        "~>0.15.0",      :require => false
+gem "memoist",                        "~>0.16.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
 gem "money",                          "~>6.13.5",      :require => false
 gem "more_core_extensions"                                               # min version should be set in manageiq-gems-pending, not here
@@ -65,13 +66,14 @@ gem "pg",                                              :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "psych",                          "~>3.1",         :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.2.4", ">=5.2.4.3"
+gem "rails",                          "~>5.2.4", ">=5.2.4.4"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=12.3.3",      :require => false
 gem "rest-client",                    "~>2.1.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>2.0.0",       :require => false
+gem "rugged",                         "~>1.1",         :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sprockets",                      "~>3.7.2",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
@@ -80,7 +82,6 @@ gem "sys-filesystem",                 "~>1.3.4"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
-gem "rugged",                         "=0.28.2.2", :source => "https://rubygems.manageiq.org", :require => false
 gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
@@ -100,6 +101,10 @@ end
 
 group :ansible_tower, :manageiq_default do
   manageiq_plugin "manageiq-providers-ansible_tower"
+end
+
+group :autosde, :manageiq_default do
+  manageiq_plugin "manageiq-providers-autosde"
 end
 
 group :azure, :manageiq_default do
@@ -216,7 +221,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.6.0",       :require => false
+  gem "manageiq-smartstate",            "~>0.6.2",       :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -254,7 +259,7 @@ unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
     gem "PoParser"
-    gem "rubocop-performance", "~>1.3",    :require => false
+    gem "manageiq-style",               :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                     :require => false
     gem "yard"
@@ -277,6 +282,6 @@ unless ENV["APPLIANCE"]
 
   group :development, :test do
     gem "parallel_tests"
-    gem "rspec-rails", "~>3.9.0"
+    gem "rspec-rails", "~>4.0.1"
   end
 end

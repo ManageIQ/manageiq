@@ -11,7 +11,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
       raise msg
     end
 
-    if postgresql_version < 100000 || postgresql_version >= 110000
+    if postgresql_version < 100000 || postgresql_version >= 130000
       raise msg if Rails.env.production? && !ENV["UNSAFE_PG_VERSION"]
       $stderr.puts msg
     end

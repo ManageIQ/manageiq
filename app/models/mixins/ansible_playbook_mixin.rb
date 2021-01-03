@@ -32,12 +32,17 @@ module AnsiblePlaybookMixin
   end
 
   def playbook_log_stdout(log_option, job)
+    raise ArgumentError, "invalid job object" if job.nil?
     return unless %(on_error always).include?(log_option)
     return if log_option == 'on_error' && job.raw_status.succeeded?
 
     $log.info("Stdout from ansible job #{job.name}: #{job.raw_stdout('txt_download')}")
   rescue StandardError => err
-    $log.error("Failed to get stdout from ansible job #{job.name}")
+    if job.nil?
+      $log.error("Job was nil, must pass a valid job")
+    else
+      $log.error("Failed to get stdout from ansible job #{job.name}")
+    end
     $log.log_backtrace(err)
   end
 end

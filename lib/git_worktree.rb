@@ -186,7 +186,7 @@ class GitWorktree
   def file_attributes(fname)
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
-    walker.push(@repo.ref(local_ref).target)
+    walker.push(@repo.ref(local_ref).target.oid)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
@@ -446,7 +446,7 @@ class GitWorktree
 
   def create_commit(message, tree, parents)
     author = {:email => @email, :name => @username || @email, :time => Time.now}
-    # Create the actual commit but dont update the reference
+    # Create the actual commit but do not update the reference
     Rugged::Commit.create(@repo, :author  => author,  :committer  => author,
                                  :message => message, :parents    => parents,
                                  :tree    => tree)

@@ -1,6 +1,11 @@
 RSpec.describe TenantQuota do
   let(:tenant) { FactoryBot.create(:tenant) }
 
+  it "doesn't access database when unchanged model is saved" do
+    m = described_class.create(:tenant => tenant, :name => :cpu_allocated, :value => 16)
+    expect { m.valid? }.not_to make_database_queries
+  end
+
   describe "#valid?" do
     it "rejects invalid name" do
       expect(described_class.new(:name => "XXX")).not_to be_valid

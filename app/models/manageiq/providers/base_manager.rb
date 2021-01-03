@@ -29,6 +29,19 @@ module ManageIQ::Providers
       self.class.http_proxy_uri
     end
 
+    # copy my attributes to a child manager
+    # child managers need to be in lock step with this manager
+    def propagate_child_manager_attributes(child, name = nil)
+      child.name                 = name if name
+      child.zone_id              = zone_id
+      child.zone_before_pause_id = zone_before_pause_id
+      child.enabled              = enabled
+      child.provider_region      = provider_region
+      child.tenant_id            = tenant_id
+
+      child
+    end
+
     def self.http_proxy_uri
       VMDB::Util.http_proxy_uri(ems_type.try(:to_sym)) || VMDB::Util.http_proxy_uri
     end
