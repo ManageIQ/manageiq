@@ -1126,9 +1126,6 @@ class MiqExpression
     else
       return false
     end
-
-    _("Value '%{value}' must be in the form of %{format_type}") % {:value       => value,
-                                                                   :format_type => FORMAT_SUB_TYPES[dt][:short_name]}
   end
 
   def self.categories
