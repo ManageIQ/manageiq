@@ -300,7 +300,7 @@ RSpec.describe GenericObjectDefinition do
     it "returns the custom actions in a hash grouped by buttons and button groups" do
       FactoryBot.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
       generic_group = FactoryBot.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
-      generic_group_set = FactoryBot.create(:custom_button_set, :name => "generic_group_set", :set_data => {:button_order => [generic_group.id]})
+      FactoryBot.create(:custom_button_set, :name => "generic_group_set", :set_data => {:button_order => [generic_group.id]})
 
       FactoryBot.create(
         :custom_button,
