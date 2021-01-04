@@ -67,9 +67,30 @@ RSpec.describe MiqScheduleWorker::Jobs do
     let(:zone) { guid_server_zone.last }
 
     context "queues for miq_server process" do
+      it "#vmdb_database_connection_log_statistics" do
+        described_class.new.vmdb_database_connection_log_statistics
+        expect(MiqQueue.where(:method_name => "log_statistics").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+      end
+
+      it "#miq_server_audit_managed_resources" do
+        described_class.new.miq_server_audit_managed_resources
+        expect(MiqQueue.where(:method_name => "audit_managed_resources").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+      end
+
       it "#miq_server_status_update" do
         described_class.new.miq_server_status_update
         expect(MiqQueue.where(:method_name => "status_update").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+      end
+
+      it "#miq_server_worker_log_status" do
+        described_class.new.miq_server_worker_log_status
+        expect(MiqQueue.where(:method_name => "log_status").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+        expect(MiqQueue.where(:method_name => "log_status_all").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
+      end
+
+      it "#vmdb_appliance_log_config" do
+        described_class.new.vmdb_appliance_log_config
+        expect(MiqQueue.where(:method_name => "log_config").first).to have_attributes(:queue_name => "miq_server", :server_guid => guid, :zone => zone.name)
       end
     end
   end
