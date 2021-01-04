@@ -1,5 +1,4 @@
 require 'miq-process'
-require 'thread'
 
 class MiqWorker::Runner
   class TemporaryFailure < RuntimeError
