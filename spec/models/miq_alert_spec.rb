@@ -52,7 +52,7 @@ RSpec.describe MiqAlert do
         messages = MiqQueue.order("id")
         expect(messages.length).to eq(@events_to_alerts.length)
 
-        messages.each_with_index do |msg, i|
+        messages.each_with_index do |msg, _i|
           alert = MiqAlert.find_by(:id => msg.instance_id)
           expect(alert).not_to be_nil
 
