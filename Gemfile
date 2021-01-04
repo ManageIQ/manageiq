@@ -161,6 +161,7 @@ end
 
 group :systemd, :optional => true do
   gem "dbus-systemd",    "~>1.1.0", :require => false
+  gem "sd_notify",       "~>0.1.0", :require => false
   gem "systemd-journal", "~>1.4.2", :require => false
 end
 

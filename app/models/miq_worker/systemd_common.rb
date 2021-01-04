@@ -70,6 +70,7 @@ class MiqWorker
           Environment=BUNDLER_GROUPS=#{bundler_groups.join(",")}
           ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=no
+          Type=notify
           Slice=#{slice_name}
         UNIT_FILE
       end
@@ -115,12 +116,36 @@ class MiqWorker
       systemd.StopUnit(unit_name, mode)
     end
 
+    def sd_notify_started
+      sd_notify.ready
+    end
+
+    def sd_notify_stopping
+      sd_notify.stopping
+    end
+
+    def sd_notify_watchdog
+      sd_notify.watchdog
+    end
+
+    def sd_notify_watchdog_usec(timeout_in_seconds)
+      usec = timeout_in_seconds * 1_000_000
+      sd_notify.notify("WATCHDOG_USEC=#{usec}", false)
+    end
+
     private
 
     def systemd
       @systemd ||= begin
         require "dbus/systemd"
         DBus::Systemd::Manager.new
+      end
+    end
+
+    def sd_notify
+      @sd_notify ||= begin
+        require "sd_notify"
+        SdNotify
       end
     end
 
@@ -166,6 +191,7 @@ class MiqWorker
         MemoryHigh=#{worker_settings[:memory_threshold].bytes}
         TimeoutStartSec=#{worker_settings[:starting_timeout]}
         TimeoutStopSec=#{worker_settings[:stopping_timeout]}
+        WatchdogSec=#{worker_settings[:heartbeat_timeout]}
         #{unit_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
       UNIT_CONFIG_FILE
     end

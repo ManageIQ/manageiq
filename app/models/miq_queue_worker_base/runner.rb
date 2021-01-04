@@ -144,7 +144,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   def heartbeat_message_timeout(message)
     if message.msg_timeout
       timeout = worker_settings[:poll] + message.msg_timeout
-      heartbeat_to_file(timeout)
+      systemd_worker? ? worker.sd_notify_watchdog_usec(timeout) : heartbeat_to_file(timeout)
     end
   end
 end
