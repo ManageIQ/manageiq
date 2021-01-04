@@ -275,7 +275,7 @@ RSpec.describe MiqReport::Generator do
     it "handles sort columns with nil values properly, when column is string" do
       MiqReport.seed_report(name = "Vendor and Guest OS")
       vm = vms.first
-      vm.update_attributes(:operating_system => FactoryBot.create(:operating_system, :name => "Linux", :product_name => "Linux"))
+      vm.update(:operating_system => FactoryBot.create(:operating_system, :name => "Linux", :product_name => "Linux"))
 
       expect(vm_amazon.operating_system).to be_nil
 
