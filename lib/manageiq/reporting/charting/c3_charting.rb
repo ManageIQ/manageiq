@@ -40,7 +40,7 @@ module ManageIQ
         false
       end
 
-      def sample_chart(_options, _report_theme)
+      def sample_chart(options, _report_theme)
         sample = {
           :data => {
             :axis    => {},
@@ -51,10 +51,10 @@ module ManageIQ
               ['data3', 10, 25, 10, 250, 10, 30]
             ],
           },
-          :miqChart => _options[:graph_type],
+          :miqChart => options[:graph_type],
           :miq      => { :zoomed => false }
         }
-        sample[:data][:groups] = [['data1','data2', 'data3']] if _options[:graph_type].include? 'Stacked'
+        sample[:data][:groups] = [['data1', 'data2', 'data3']] if options[:graph_type].include?('Stacked')
         sample
       end
 
