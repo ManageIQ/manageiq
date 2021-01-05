@@ -11,7 +11,7 @@ class MiqPolicy < ApplicationRecord
                                  PhysicalServer
                                  Vm).freeze
 
-  POLICY_TOWHAT_APPLIES_TO_CLASSES = TOWHAT_APPLIES_TO_CLASSES.inject({}) { |hsh, (key)| hsh[key] = ui_lookup(:model => key); hsh }.freeze
+  POLICY_TOWHAT_APPLIES_TO_CLASSES = TOWHAT_APPLIES_TO_CLASSES.inject({}) { |hsh, key| hsh[key] = ui_lookup(:model => key); hsh }.freeze
 
   POLICY_MODES = {
     "control" => _("Control"),

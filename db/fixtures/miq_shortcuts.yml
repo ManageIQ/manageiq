@@ -416,8 +416,8 @@
   :startup: true
 - :name: miq_policy
   :description: Control / Policies
-  :url: /miq_policy/explorer
-  :rbac_feature_name: miq_policy
+  :url: /miq_policy/show_list
+  :rbac_feature_name: miq_policy_show_list
   :startup: true
 - :name: miq_event
   :description: Control / Events
