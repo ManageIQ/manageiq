@@ -1,5 +1,6 @@
 class SanAddress < ApplicationRecord
   include ProviderObjectMixin
+  include NewWithTypeStiMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :owner, :polymorphic => true
