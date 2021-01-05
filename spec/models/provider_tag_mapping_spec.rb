@@ -543,7 +543,7 @@ RSpec.describe ProviderTagMapping do
     end
 
     it "preserves user tags" do
-      user_tag = FactoryBot.create(:tag, :name => '/managed/mycat/mytag')
+      FactoryBot.create(:tag, :name => '/managed/mycat/mytag')
       expect(Tag.controlled_by_mapping).to contain_exactly(tag1, tag2, tag3)
       node.tags = [tag1, user_tag1, user_tag2, tag2]
       expect(node.tags.controlled_by_mapping).to contain_exactly(tag1, tag2)
