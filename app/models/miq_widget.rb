@@ -60,8 +60,9 @@ class MiqWidget < ApplicationRecord
 
   def status
     if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete"
+      return N_("None") if last_run_on.nil?
+
+      return N_("Complete")
     end
     miq_task.human_status
   end

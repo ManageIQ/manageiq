@@ -2,26 +2,26 @@ class MiqTask < ApplicationRecord
   include_concern 'Purging'
 
   serialize :context_data
-  STATE_INITIALIZED = 'Initialized'.freeze
-  STATE_QUEUED      = 'Queued'.freeze
-  STATE_ACTIVE      = 'Active'.freeze
-  STATE_FINISHED    = 'Finished'.freeze
+  STATE_INITIALIZED = N_('Initialized').freeze
+  STATE_QUEUED      = N_('Queued').freeze
+  STATE_ACTIVE      = N_('Active').freeze
+  STATE_FINISHED    = N_('Finished').freeze
 
-  STATUS_OK         = 'Ok'.freeze
-  STATUS_WARNING    = 'Warn'.freeze
-  STATUS_ERROR      = 'Error'.freeze
-  STATUS_TIMEOUT    = 'Timeout'.freeze
-  STATUS_EXPIRED    = 'Expired'.freeze
-  STATUS_UNKNOWN    = 'Unknown'.freeze
+  STATUS_OK         = N_('Ok').freeze
+  STATUS_WARNING    = N_('Warn').freeze
+  STATUS_ERROR      = N_('Error').freeze
+  STATUS_TIMEOUT    = N_('Timeout').freeze
+  STATUS_EXPIRED    = N_('Expired').freeze
+  STATUS_UNKNOWN    = N_('Unknown').freeze
 
   HUMAN_STATUS      = {
     STATE_INITIALIZED => STATE_INITIALIZED,
     STATE_QUEUED      => STATE_QUEUED,
-    STATE_ACTIVE      => 'Running'.freeze,
-    STATUS_OK         => 'Complete'.freeze,
-    STATUS_WARNING    => 'Finished with Warnings'.freeze,
+    STATE_ACTIVE      => N_('Running').freeze,
+    STATUS_OK         => N_('Complete').freeze,
+    STATUS_WARNING    => N_('Finished with Warnings').freeze,
     STATUS_ERROR      => STATUS_ERROR,
-    STATUS_TIMEOUT    => 'Timed Out'.freeze
+    STATUS_TIMEOUT    => N_('Timed Out').freeze
   }.freeze
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
