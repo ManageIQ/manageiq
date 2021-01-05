@@ -1837,6 +1837,15 @@
       :description: View Policy Profiles
       :feature_type: view
       :identifier: miq_policy_set_view
+      :children:
+      - :name: List
+        :description: Display All Policy Profiles
+        :feature_type: view
+        :identifier: miq_policy_set_show_list
+      - :name: Show
+        :description: Show Policy Profile
+        :feature_type: view
+        :identifier: miq_policy_set_show
     - :name: Modify
       :description: Modify Policy Profiles
       :feature_type: admin

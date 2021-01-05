@@ -406,8 +406,8 @@
   :startup: true
 - :name: miq_policy_set
   :description: Control / Policy Profiles
-  :url: /miq_policy_set/explorer
-  :rbac_feature_name: miq_policy_set
+  :url: /miq_policy_set/show_list
+  :rbac_feature_name: miq_policy_set_show_list
   :startup: true
 - :name: miq_policy
   :description: Control / Policies
