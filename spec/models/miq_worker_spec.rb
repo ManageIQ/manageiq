@@ -275,11 +275,11 @@ RSpec.describe MiqWorker do
         {
           :workers => {
             :worker_base => {
-              :defaults          => {:memory_threshold => "100.megabytes"},
+              :defaults          => {:memory_threshold => "550.megabytes"},
               :queue_worker_base => {
-                :defaults           => {:memory_threshold => "300.megabytes"},
+                :defaults           => {:memory_threshold => "570.megabytes"},
                 :ems_refresh_worker => {
-                  :defaults                  => {:memory_threshold => "500.megabytes"},
+                  :defaults                  => {:memory_threshold => "600.megabytes"},
                   :ems_refresh_worker_amazon => {
                     :memory_threshold => "700.megabytes"
                   }
@@ -294,13 +294,13 @@ RSpec.describe MiqWorker do
         {
           :workers => {
             :worker_base => {
-              :defaults          => {:memory_threshold => "200.megabytes"},
+              :defaults          => {:memory_threshold => "555.megabytes"},
               :queue_worker_base => {
-                :defaults           => {:memory_threshold => "400.megabytes"},
+                :defaults           => {:memory_threshold => "575.megabytes"},
                 :ems_refresh_worker => {
-                  :defaults                  => {:memory_threshold => "600.megabytes"},
+                  :defaults                  => {:memory_threshold => "605.megabytes"},
                   :ems_refresh_worker_amazon => {
-                    :memory_threshold => "800.megabytes"
+                    :memory_threshold => "805.megabytes"
                   }
                 }
               }
@@ -316,11 +316,11 @@ RSpec.describe MiqWorker do
 
       it "uses the worker's miq_server" do
         expect(@worker.worker_settings[:memory_threshold]).to  eq(700.megabytes)
-        expect(@worker2.worker_settings[:memory_threshold]).to eq(800.megabytes)
+        expect(@worker2.worker_settings[:memory_threshold]).to eq(805.megabytes)
       end
 
       it "uses passed in config" do
-        expect(@worker.worker_settings(:config => config2)[:memory_threshold]).to  eq(800.megabytes)
+        expect(@worker.worker_settings(:config => config2)[:memory_threshold]).to  eq(805.megabytes)
         expect(@worker2.worker_settings(:config => config1)[:memory_threshold]).to eq(700.megabytes)
       end
 
@@ -328,8 +328,8 @@ RSpec.describe MiqWorker do
         @server.settings_changes.where(
           :key => "/workers/worker_base/queue_worker_base/ems_refresh_worker/ems_refresh_worker_amazon/memory_threshold"
         ).delete_all
-        expect(@worker.worker_settings[:memory_threshold]).to  eq(500.megabytes)
-        expect(@worker2.worker_settings[:memory_threshold]).to eq(800.megabytes)
+        expect(@worker.worker_settings[:memory_threshold]).to  eq(600.megabytes)
+        expect(@worker2.worker_settings[:memory_threshold]).to eq(805.megabytes)
       end
     end
   end
