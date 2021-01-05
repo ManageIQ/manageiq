@@ -50,7 +50,7 @@ module ManageIQ
           if chart_is_2d?
             category_labels = categories.collect { |c| c.kind_of?(Array) ? c.first : c }
             limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
-            mri.chart[:axis][:x][:categories] = category_labels.collect { |c| slice_legend(c, limit) }
+            mri.chart[:axis][:x][:categories] = category_labels.collect { |c| slice_legend(_(c), limit) }
             mri.chart[:miq][:category_table] = category_labels
           end
         end

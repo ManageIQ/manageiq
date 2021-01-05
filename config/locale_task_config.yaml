@@ -36,3 +36,4 @@ yaml_strings_to_extract:
   - title
   - name
   - headers
+  - generate_rows
