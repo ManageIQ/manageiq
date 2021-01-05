@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 152 ending 2021-01-04
+
+### Added
+
+* Hide deprecated and duplicate attributes [(#20664)](https://github.com/ManageIQ/manageiq/pull/20664)
+* Use systemd-notify for worker heartbeating [(#20840)](https://github.com/ManageIQ/manageiq/pull/20840)
+* Add display names for FileDepot models [(#20863)](https://github.com/ManageIQ/manageiq/pull/20863)
+
+### Fixed
+
+* Run MiqServer.status_update in server process [(#20904)](https://github.com/ManageIQ/manageiq/pull/20904)
+* Fix EmbeddedAnsible manager validation [(#20880)](https://github.com/ManageIQ/manageiq/pull/20880)
+* Remove unused assignments [(#20879)](https://github.com/ManageIQ/manageiq/pull/20879)
+
 # Unreleased as of Sprint 151 ending 2020-12-07
 
 ### Added
