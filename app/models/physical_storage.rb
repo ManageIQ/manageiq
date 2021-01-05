@@ -11,7 +11,11 @@ class PhysicalStorage < ApplicationRecord
 
   has_many :storage_resources, :dependent => :destroy
   has_many :host_initiators, :dependent => :destroy
-  has_many :san_addresses, :through => :host_initiators
+
+  # The physical-storage is expected to have san_addresses of its own in the future (The real addresses through which it actually connects to the SAN).
+  # Therefore, the name san_addresses is reserved for the physical-storages actual san-addresses, and for all of the san_addresses configured in the physical-storage's host_initiators we refer as registered_initiator_addresses.
+  has_many :registered_initiator_addresses, :through => :host_initiators, :source => :san_addresses
+
   belongs_to :physical_storage_family, :inverse_of => :physical_storages
 
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
