@@ -83,7 +83,7 @@ RSpec.describe Vmdb::Settings::Validator do
       stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {:cpu_request_percent => 50, :cpu_threshold_percent => 40}}})
       result, errors = subject.validate
       expect(result).to eql(false)
-      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
       expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
     end
 
@@ -91,7 +91,7 @@ RSpec.describe Vmdb::Settings::Validator do
       stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {:memory_request => 600.megabytes, :memory_threshold => 500.megabytes}}})
       result, errors = subject.validate
       expect(result).to eql(false)
-      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.first).to eql("workers-memory_request")
       expect(errors.first.last).to include("cannot exceed memory_threshold")
     end
 
@@ -99,7 +99,7 @@ RSpec.describe Vmdb::Settings::Validator do
       stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 10}}})
       result, errors = subject.validate
       expect(result).to eql(false)
-      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
       expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
     end
 
@@ -107,7 +107,7 @@ RSpec.describe Vmdb::Settings::Validator do
       stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 20}, :schedule_worker => {:cpu_threshold_percent => 10}}})
       result, errors = subject.validate
       expect(result).to eql(false)
-      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
       expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
     end
 

@@ -195,12 +195,12 @@ module Vmdb
 
         if cpu_request > cpu_limit
           valid = false
-          errors << [:invalid_value, "#{worker_class.settings_name}: cpu_request_percent: #{cpu_request} cannot exceed cpu_threshold_percent: #{cpu_limit}"]
+          errors << [:cpu_request_percent, "#{worker_class.settings_name}: cpu_request_percent: #{cpu_request} cannot exceed cpu_threshold_percent: #{cpu_limit}"]
         end
 
         if memory_request > memory_limit
           valid = false
-          errors << [:invalid_value, "#{worker_class.settings_name}: memory_request: #{memory_request} cannot exceed memory_threshold: #{memory_limit}"]
+          errors << [:memory_request, "#{worker_class.settings_name}: memory_request: #{memory_request} cannot exceed memory_threshold: #{memory_limit}"]
         end
         return valid, errors
       end
