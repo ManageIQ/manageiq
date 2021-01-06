@@ -33,6 +33,7 @@ module Vmdb
         end
         if q
           puts "\e[33;1m\n** Delivering #{MiqQueue.format_full_log_msg(q)}\n\e[0;m"
+          q.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => MiqServer.my_server)
           status, message, result = q.deliver
           q.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
         else
