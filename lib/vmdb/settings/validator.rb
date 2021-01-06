@@ -186,7 +186,8 @@ module Vmdb
       def validate_worker_request_limit(worker_class, data)
         valid = true
         errors = []
-        worker_settings = worker_class.worker_settings(data)
+        worker_settings = worker_class.fetch_worker_settings_from_server(true, data)
+
         cpu_request     = worker_settings.fetch(:cpu_request_percent, 0)
         cpu_limit       = worker_settings.fetch(:cpu_threshold_percent, Float::INFINITY)
         memory_request  = worker_settings.fetch(:memory_request, 0.bytes)
