@@ -112,8 +112,8 @@ RSpec.describe Vmdb::Settings::Validator do
     end
 
     [:memory_request, 500.megabytes, :memory_threshold, 500.megabytes, :cpu_request, 50, :cpu_threshold_percent, 50].each_slice(2) do |key, value|
-      it "is valid when specifying only: #{key}" do
-        stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {key => value}}})
+      it "is valid with nil values replaced with default values, when specifying only: #{key}" do
+        stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => nil, :cpu_threshold_percent => nil}, :schedule_worker => {key => value}}})
         result, errors = subject.validate
         expect(result).to eql(true)
         expect(errors.empty?).to eql(true)
