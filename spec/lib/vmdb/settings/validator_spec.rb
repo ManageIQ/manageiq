@@ -95,6 +95,22 @@ RSpec.describe Vmdb::Settings::Validator do
       expect(errors.first.last).to include("cannot exceed memory_threshold")
     end
 
+    it "is invalid with inherited setting" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 10}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
+    it "is invalid with overridden worker setting" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 20}, :schedule_worker => {:cpu_threshold_percent => 10}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-invalid_value")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
     [:memory_request, 500.megabytes, :memory_threshold, 500.megabytes, :cpu_request, 50, :cpu_threshold_percent, 50].each_slice(2) do |key, value|
       it "is valid when specifying only: #{key}" do
         stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {key => value}}})
