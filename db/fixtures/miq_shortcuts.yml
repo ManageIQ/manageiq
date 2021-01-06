@@ -441,7 +441,7 @@
   :startup: true
 - :name: policy_simulation
   :description: Control / Simulation
-  :url: /miq_policy/rsop
+  :url: /miq_policy_rsop
   :rbac_feature_name: policy_simulation
   :startup: true
 - :name: policy_import_export
