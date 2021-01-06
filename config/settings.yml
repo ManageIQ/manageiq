@@ -963,13 +963,13 @@
   :worker_monitor:
     :enforce_resource_constraints: false
     :kill_algorithm:
-      :name: :used_swap_percent_gt_value
+      :name: used_swap_percent_gt_value
       :value: 80
     :miq_server_time_threshold: 2.minutes
     :nice_delta: 1
     :poll: 2.seconds
     :start_algorithm:
-      :name: :used_swap_percent_lt_value
+      :name: used_swap_percent_lt_value
       :value: 60
     :sync_interval: 30.minutes
     :wait_for_started_timeout: 10.minutes
@@ -1064,7 +1064,7 @@
       :parent_time_threshold: 3.minutes
       :poll: 3.seconds
       :poll_escalate_max: 30.seconds
-      :poll_method: :normal
+      :poll_method: normal
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
       :systemd_enabled: true
@@ -1083,28 +1083,28 @@
         :poll: 10.seconds
     :queue_worker_base:
       :defaults:
-        :dequeue_method: :drb
-        :poll_method: :normal
+        :dequeue_method: drb
+        :poll_method: normal
         :queue_timeout: 10.minutes
       :ems_metrics_collector_worker:
         :defaults:
           :count: 2
           :nice_delta: 3
-          :poll_method: :escalate
+          :poll_method: escalate
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 800.megabytes
         :nice_delta: 7
-        :poll_method: :escalate
+        :poll_method: escalate
       :ems_operations_worker: {}
       :ems_refresh_worker:
         :defaults:
           :memory_threshold: 2.gigabytes
           :nice_delta: 7
           :poll: 10.seconds
-          :poll_method: :normal
+          :poll_method: normal
           :queue_timeout: 120.minutes
-          :dequeue_method: :sql
+          :dequeue_method: sql
       :event_handler:
         :nice_delta: 7
       :generic_worker:

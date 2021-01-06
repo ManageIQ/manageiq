@@ -4,10 +4,10 @@ RSpec.describe MiqServer do
       _, @server, = EvmSpecHelper.create_guid_miq_server_zone
       @monitor_settings = YAML.load(<<-EOS
         :kill_algorithm:
-          :name: :used_swap_percent_gt_value
+          :name: used_swap_percent_gt_value
           :value: 80
         :start_algorithm:
-          :name: :used_swap_percent_lt_value
+          :name: used_swap_percent_lt_value
           :value: 60
         EOS
                                    )
