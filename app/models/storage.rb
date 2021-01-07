@@ -576,17 +576,17 @@ class Storage < ApplicationRecord
   end
 
   def used_space
-    total_space.to_i == 0 ? 0 : total_space.to_i - free_space.to_i
+    total_space.to_i.zero? ? 0 : total_space.to_i - free_space.to_i
   end
   alias_method :v_used_space, :used_space
 
   def used_space_percent_of_total
-    total_space.zero? ? 0.0 : (used_space.to_f / total_space * 1000.0).round / 10.0
+    total_space.to_i.zero? ? 0.0 : (used_space.to_f / total_space * 1000.0).round / 10.0
   end
   alias_method :v_used_space_percent_of_total, :used_space_percent_of_total
 
   def free_space_percent_of_total
-    total_space.zero? ? 0.0 : (free_space.to_f / total_space * 1000.0).round / 10.0
+    total_space.to_i.zero? ? 0.0 : (free_space.to_f / total_space * 1000.0).round / 10.0
   end
   alias_method :v_free_space_percent_of_total, :free_space_percent_of_total
 
@@ -618,23 +618,23 @@ class Storage < ApplicationRecord
   alias_method :v_total_disk_size,     :disk_size
 
   def v_debris_percent_of_used
-    used_space.zero? ? 0.0 : (debris_size.to_f / used_space * 1000.0).round / 10.0
+    used_space.to_i.zero? ? 0.0 : (debris_size.to_f / used_space * 1000.0).round / 10.0
   end
 
   def v_snapshot_percent_of_used
-    used_space.zero? ? 0.0 : (snapshot_size.to_f / used_space * 1000.0).round / 10.0
+    used_space.to_i.zero? ? 0.0 : (snapshot_size.to_f / used_space * 1000.0).round / 10.0
   end
 
   def v_memory_percent_of_used
-    used_space.zero? ? 0.0 : (vm_ram_size.to_f / used_space * 1000.0).round / 10.0
+    used_space.to_i.zero? ? 0.0 : (vm_ram_size.to_f / used_space * 1000.0).round / 10.0
   end
 
   def v_vm_misc_percent_of_used
-    used_space.zero? ? 0.0 : (vm_misc_size.to_f / used_space * 1000.0).round / 10.0
+    used_space.to_i.zero? ? 0.0 : (vm_misc_size.to_f / used_space * 1000.0).round / 10.0
   end
 
   def v_disk_percent_of_used
-    used_space.zero? ? 0.0 : (disk_size.to_f / used_space * 1000.0).round / 10.0
+    used_space.to_i.zero? ? 0.0 : (disk_size.to_f / used_space * 1000.0).round / 10.0
   end
 
   def v_total_provisioned
@@ -642,7 +642,7 @@ class Storage < ApplicationRecord
   end
 
   def v_provisioned_percent_of_total
-    total_space.zero? ? 0.0 : (v_total_provisioned.to_f / total_space * 1000.0).round / 10.0
+    total_space.to_i.zero? ? 0.0 : (v_total_provisioned.to_f / total_space * 1000.0).round / 10.0
   end
 
   #
