@@ -85,7 +85,7 @@ class Chargeback
       grouped_rollups = @rollup_array.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
 
       @grouped_values[metric] ||= grouped_rollups.map do |_, rollups|
-        rollups.map { |x| x[ChargeableField.col_index(metric)] }.compact.max
+        rollups.map { |x| rollup_field(x, metric) }.compact.max
       end.compact.sum
     end
 
@@ -113,14 +113,14 @@ class Chargeback
 
     def chargeback_fields_present?(rollup_record)
       MetricRollup::CHARGEBACK_METRIC_FIELDS.any? do |field|
-        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup = rollup_field(rollup_record, field)
         rollup.present? && rollup.nonzero?
       end
     end
 
     def metering_used_fields_present?(rollup_record)
       MetricRollup::METERING_USED_METRIC_FIELDS.any? do |field|
-        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup = rollup_field(rollup_record, field)
         rollup.present? && rollup.nonzero?
       end
     end
@@ -132,7 +132,7 @@ class Chargeback
     def metering_allocated_for(metric)
       @metering_allocated_metric ||= {}
       @metering_allocated_metric[metric] ||= @rollup_array.count do |rollup|
-        rollup_record = rollup[ChargeableField.col_index(metric)]
+        rollup_record = rollup_field(rollup, metric)
         rollup_record.present? && rollup_record.nonzero?
       end
     end
@@ -161,8 +161,25 @@ class Chargeback
     def values(metric, sub_metric = nil)
       @values ||= {}
       @values["#{metric}#{sub_metric}"] ||= begin
-        sub_metric ? sub_metric_rollups(sub_metric) : @rollup_array.collect { |x| x[ChargeableField.col_index(metric)] }.compact
+        sub_metric ? sub_metric_rollups(sub_metric) : @rollup_array.collect { |x| rollup_field(x, metric) }.compact
       end
+    end
+
+    def rollup_field(rollup, metric)
+      if metric == "v_derived_cpu_total_cores_used"
+        return v_derived_cpu_total_cores_used_for(rollup)
+      end
+
+      rollup[ChargeableField.col_index(metric)]
+    end
+
+    def v_derived_cpu_total_cores_used_for(rollup)
+      cpu_usage_rate_average = rollup[ChargeableField.col_index("cpu_usage_rate_average")]
+      derived_vm_numvcpus    = rollup[ChargeableField.col_index("derived_vm_numvcpus")]
+
+      return nil if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
+
+      (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
     end
 
     def first_metric_rollup_record
