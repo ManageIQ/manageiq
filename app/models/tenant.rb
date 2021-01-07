@@ -20,6 +20,7 @@ class Tenant < ApplicationRecord
   before_destroy :ensure_can_be_destroyed
 
   has_ancestry(:orphan_strategy => :restrict)
+  hide_attribute :ancestry
 
   has_many :providers
   has_many :ext_management_systems
