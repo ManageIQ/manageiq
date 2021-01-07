@@ -28,6 +28,13 @@ RSpec.describe ChargebackContainerProject do
 
   let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
+  def cpu_cores_used_metric_for(project, hours)
+    metric_used = used_average_for(:cpu_usage_rate_average, hours, project)
+    derived_vm_numvcpus = used_average_for(:derived_vm_numvcpus, project.metric_rollups.count, project)
+
+    (metric_used * derived_vm_numvcpus) / 100.00
+  end
+
   before do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
@@ -73,14 +80,14 @@ RSpec.describe ChargebackContainerProject do
       end
 
       it "cpu" do
-        metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day, @project)
+        metric_used = cpu_cores_used_metric_for(@project, hours_in_day)
         expect(subject.cpu_cores_used_metric).to eq(metric_used)
         expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
       end
     end
 
     it "cpu" do
-      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day, @project)
+      metric_used = cpu_cores_used_metric_for(@project, hours_in_day)
       expect(subject.cpu_cores_used_metric).to eq(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
     end
@@ -113,7 +120,7 @@ RSpec.describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month, @project)
+      metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
@@ -147,7 +154,7 @@ RSpec.describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month, @project)
+      metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
@@ -165,7 +172,7 @@ RSpec.describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month, @project)
+      metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
       expect(subject.tag_name).to eq('Production')
