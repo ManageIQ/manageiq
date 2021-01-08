@@ -27,6 +27,7 @@ certs/v2_key
 config/secrets.yml*
 coverage/
 Gemfile.lock*
+!Gemfile.lock.release
 GUID
 openstack_environments.yml
 nbproject/
