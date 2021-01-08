@@ -19,11 +19,6 @@ class FileDepot < ApplicationRecord
     @supported_protocols ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
   end
 
-  def self.depot_description_to_class(description)
-    class_name = supported_depots.key(description)
-    class_name.try(:constantize)
-  end
-
   def self.requires_credentials?
     true
   end
