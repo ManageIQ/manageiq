@@ -389,6 +389,11 @@
   :url: /cloud_volume_type/show_list
   :rbac_feature_name: cloud_volume_type_show_list
   :startup: true
+- :name: host_initiators
+  :description: Storage / Block Storage / Host Initiators
+  :url: /host_initiator/show_list
+  :rbac_feature_name: host_initiator_show_list
+  :startup: true
 - :name: ems_object_storage
   :description: Storage / Object Storage / Managers
   :url: /ems_object_storage/show_list
