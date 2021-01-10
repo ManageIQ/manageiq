@@ -1,5 +1,9 @@
 class IscsiAddress < SanAddress
-  def get_address_info
-    [_("iqn"), iqn]
+  def address_value
+    iqn
+  end
+
+  def self.display_name(number = 1)
+    n_('iqn', 'iqn', number)
   end
 end

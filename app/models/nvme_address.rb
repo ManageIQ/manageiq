@@ -1,5 +1,9 @@
 class NvmeAddress < SanAddress
-  def get_address_info
-    [_("wwpn"), wwpn]
+  def address_value
+    wwpn
+  end
+
+  def self.display_name(number = 1)
+    n_('wwpn', 'wwpn', number)
   end
 end

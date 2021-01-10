@@ -7,7 +7,7 @@ class SanAddress < ApplicationRecord
 
   acts_as_miq_taggable
 
-  def get_address_info
+  def address_value
     raise NotImplementedError, _("must be implemented in subclass")
   end
 end
