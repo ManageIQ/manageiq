@@ -83,17 +83,17 @@ RSpec.describe MiqWidgetSet do
     end
   end
 
-  context ".find_with_same_order" do
+  context ".with_array_order" do
     it "returns in index order" do
       g1 = FactoryBot.create(:miq_widget_set)
       g2 = FactoryBot.create(:miq_widget_set)
-      expect(MiqWidgetSet.find_with_same_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
+      expect(MiqWidgetSet.where(:id => [g1.id, g2.id]).with_array_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
     end
 
     it "returns in non index order" do
       g1 = FactoryBot.create(:miq_widget_set)
       g2 = FactoryBot.create(:miq_widget_set)
-      expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
+      expect(MiqWidgetSet.where(:id => [g1.id, g2.id]).with_array_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
     end
   end
 
