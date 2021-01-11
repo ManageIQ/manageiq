@@ -451,7 +451,7 @@
   :startup: true
 - :name: policy_import_export
   :description: Control / Import / Export
-  :url: /miq_policy/export
+  :url: /miq_policy_export
   :rbac_feature_name: policy_import_export
   :startup: true
 - :name: policy_logs
