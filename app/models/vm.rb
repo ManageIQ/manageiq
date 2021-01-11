@@ -18,7 +18,7 @@ class Vm < VmOrTemplate
     if self == Vm
       MiqTemplate
     else
-      parent::Template
+      module_parent::Template
     end
   end
   class << self; alias_method :corresponding_template_model, :corresponding_model; end

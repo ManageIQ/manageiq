@@ -17,7 +17,7 @@ class MiqTemplate < VmOrTemplate
   end
 
   def self.corresponding_model
-    parent::Vm
+    module_parent::Vm
   end
   class << self; alias_method :corresponding_vm_model, :corresponding_model; end
 

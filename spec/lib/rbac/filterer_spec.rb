@@ -2082,8 +2082,8 @@ RSpec.describe Rbac::Filterer do
           vm.tag_with(@tags.values.join(" "), :ns => "*") if i > 0
         end
 
-        Vm.scope :group_scope,    ->(group_num) { Vm.where("name LIKE ?", "Test Group #{group_num}%") }
-        Vm.scope :is_on,          ->            { Vm.where(:power_state => "on") }
+        Vm.scope :group_scope,    ->(group_num) { Vm.default_scoped.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :is_on,          ->            { Vm.default_scoped.where(:power_state => "on") }
       end
 
       context ".search" do

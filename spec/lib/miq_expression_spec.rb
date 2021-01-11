@@ -362,7 +362,7 @@ RSpec.describe MiqExpression do
     it "generates the SQL for an INCLUDES ANY with expression method" do
       sql, * = MiqExpression.new("INCLUDES ANY" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
       expected_sql = <<-EXPECTED.strip_heredoc.split("\n").join(" ")
-        1 = (SELECT  1
+        1 = (SELECT 1
         FROM "hardwares"
         INNER JOIN "networks" ON "networks"."hardware_id" = "hardwares"."id"
         WHERE "hardwares"."vm_or_template_id" = "vms"."id"
@@ -510,7 +510,7 @@ RSpec.describe MiqExpression do
     it "generates the SQL for multi level contains with a scope" do
       sql, _ = MiqExpression.new("CONTAINS" => {"field" => "ExtManagementSystem.clustered_hosts.operating_system-name", "value" => "RHEL"}).to_sql
       rslt = "\"ext_management_systems\".\"id\" IN (SELECT \"ext_management_systems\".\"id\" FROM \"ext_management_systems\" " \
-             "INNER JOIN \"hosts\" ON \"hosts\".\"ems_id\" = \"ext_management_systems\".\"id\" AND \"hosts\".\"ems_cluster_id\" IS NOT NULL " \
+             "INNER JOIN \"hosts\" ON \"hosts\".\"ems_cluster_id\" IS NOT NULL AND \"hosts\".\"ems_id\" = \"ext_management_systems\".\"id\" " \
              "INNER JOIN \"operating_systems\" ON \"operating_systems\".\"host_id\" = \"hosts\".\"id\" " \
              "WHERE \"operating_systems\".\"name\" = 'RHEL')"
       expect(sql).to eq(rslt)
@@ -542,8 +542,13 @@ RSpec.describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with field containing a scope" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
-      expected = "\"vms\".\"id\" IN (SELECT \"vms\".\"id\" FROM \"vms\" INNER JOIN \"accounts\" ON \"accounts\".\"vm_or_template_id\" = "\
-                 "\"vms\".\"id\" AND \"accounts\".\"accttype\" = 'user' WHERE \"accounts\".\"name\" = 'foo')"
+      expected = <<-EXPECTED.split("\n").map(&:strip).join(" ")
+        "vms"."id" IN (SELECT "vms"."id"
+                       FROM "vms"
+                       INNER JOIN "accounts" ON "accounts"."accttype" = 'user'
+                              AND "accounts"."vm_or_template_id" = "vms"."id"
+                       WHERE "accounts"."name" = 'foo')
+      EXPECTED
       expect(sql).to eq(expected)
     end
 

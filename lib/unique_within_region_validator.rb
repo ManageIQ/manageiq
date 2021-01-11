@@ -16,7 +16,7 @@ class UniqueWithinRegionValidator < ActiveModel::EachValidator
     return if value.nil? || !record.send("#{attribute}_changed?")
 
     match_case = options.key?(:match_case) ? options[:match_case] : true
-    record_base_class = record.class.base_class
+    record_base_class = record.class.base_class.default_scoped
     matches =
       if match_case
         record_base_class.where(attribute => value)
