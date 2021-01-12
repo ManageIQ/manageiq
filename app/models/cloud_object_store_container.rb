@@ -1,4 +1,6 @@
 class CloudObjectStoreContainer < ApplicationRecord
+  require 'net/http'
+
   include CloudTenancyMixin
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :cloud_tenant
@@ -47,7 +49,8 @@ class CloudObjectStoreContainer < ApplicationRecord
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class::CloudObjectStoreContainer
+    # klass = ext_management_system.class::CloudObjectStoreContainer
+    klass = ManageIQ::Providers::Openstack::StorageManager::SwiftManager::CloudObjectStoreContainer
     created_container = klass.raw_cloud_object_store_container_create(ext_management_system, options)
 
     klass.create(created_container)
