@@ -27,4 +27,6 @@ class MiqEventDefinitionSet < ApplicationRecord
   def self.display_name(number = 1)
     n_('Event Definition Set', 'Event Definition Sets', number)
   end
+
+  alias_method :events, :miq_event_definitions
 end
