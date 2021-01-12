@@ -59,7 +59,7 @@ module MiqServer::WorkerManagement::Monitor
 
   def sync_from_system
     if podified?
-      ensure_pod_monitor_started
+      ensure_kube_monitors_started
     end
 
     cleanup_orphaned_worker_rows
