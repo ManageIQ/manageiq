@@ -99,14 +99,14 @@ FactoryBot.define do
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
-          :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
+          :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
 
   factory :ems_cinder,
           :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
-          :class   => "ManageIQ::Providers::StorageManager::CinderManager",
+          :class   => "ManageIQ::Providers::Openstack::StorageManager::CinderManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
@@ -120,7 +120,7 @@ FactoryBot.define do
 
   factory :ems_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
-          :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
+          :class   => "ManageIQ::Providers::Openstack::StorageManager::SwiftManager",
           :parent  => :ext_management_system do
     parent_manager { FactoryBot.create(:ext_management_system) }
   end
