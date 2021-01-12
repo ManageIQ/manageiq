@@ -25,6 +25,7 @@ module Vmdb
 
     def init
       load_inflections
+      init_loggers
       register_models
     end
 
@@ -86,6 +87,12 @@ module Vmdb
       each do |engine|
         file = engine.root.join("config", "initializers", "inflections.rb")
         load file if file.exist?
+      end
+    end
+
+    def init_loggers
+      each do |engine|
+        engine.try(:init_loggers)
       end
     end
 
