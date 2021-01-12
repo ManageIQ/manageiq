@@ -93,6 +93,11 @@ class VmScan < Job
     signal(:start_scan)
   end
 
+  def start_scan
+    scanning
+    call_scan
+  end
+
   def call_scan
     _log.info("Enter")
 
@@ -129,6 +134,9 @@ class VmScan < Job
     # Check if Policy returned scan profiles to use, otherwise use the default profile if available.
     scan_args["vmScanProfiles"] = options[:scan_profiles] || vm.scan_profile_list
     scan_args
+  end
+
+  def after_scan
   end
 
   def call_synchronize
