@@ -389,6 +389,11 @@
   :url: /cloud_volume_type/show_list
   :rbac_feature_name: cloud_volume_type_show_list
   :startup: true
+- :name: host_initiators
+  :description: Storage / Block Storage / Host Initiators
+  :url: /host_initiator/show_list
+  :rbac_feature_name: host_initiator_show_list
+  :startup: true
 - :name: ems_object_storage
   :description: Storage / Object Storage / Managers
   :url: /ems_object_storage/show_list
@@ -406,8 +411,8 @@
   :startup: true
 - :name: miq_policy_set
   :description: Control / Policy Profiles
-  :url: /miq_policy_set/explorer
-  :rbac_feature_name: miq_policy_set
+  :url: /miq_policy_set/show_list
+  :rbac_feature_name: miq_policy_set_show_list
   :startup: true
 - :name: miq_policy
   :description: Control / Policies
@@ -446,7 +451,7 @@
   :startup: true
 - :name: policy_import_export
   :description: Control / Import / Export
-  :url: /miq_policy/export
+  :url: /miq_policy_export
   :rbac_feature_name: policy_import_export
   :startup: true
 - :name: policy_logs

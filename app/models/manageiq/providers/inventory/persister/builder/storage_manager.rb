@@ -17,6 +17,11 @@ module ManageIQ::Providers
         def cloud_object_store_containers
           add_common_default_values
         end
+
+        def host_initiators
+          add_properties(:parent_inventory_collections => [:physical_storages])
+          add_common_default_values
+        end
       end
     end
   end

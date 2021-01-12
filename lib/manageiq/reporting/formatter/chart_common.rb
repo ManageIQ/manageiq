@@ -88,7 +88,6 @@ module ManageIQ
           categories = [] # Store categories and series counts in an array of arrays
           series = series_class.new
           cat_cnt = 0
-          cat_total = mri.table.size
           mri.table.data.each do |r|
             cat = cat_cnt > 6 ? 'Others' : r["resource_name"]
             val = rounded_value(r[col])

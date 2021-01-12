@@ -17,6 +17,6 @@ module ManageIQ::Providers::Inflector
       raise ObjectNotNamespacedError, "Cannot get provider module from non namespaced object #{original_object}"
     end
 
-    klass.parent == ManageIQ::Providers ? klass : provider_module(klass.parent, klass)
+    klass.module_parent == ManageIQ::Providers ? klass : provider_module(klass.module_parent, klass)
   end
 end

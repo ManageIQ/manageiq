@@ -1,5 +1,4 @@
 require 'miq-process'
-require 'thread'
 
 class MiqWorker::Runner
   class TemporaryFailure < RuntimeError
@@ -8,6 +7,8 @@ class MiqWorker::Runner
   include Vmdb::Logging
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :active_roles, :server
+
+  delegate :systemd_worker?, :to => :worker
 
   INTERRUPT_SIGNALS = %w[SIGINT SIGTERM].freeze
 
@@ -19,7 +20,7 @@ class MiqWorker::Runner
 
   def poll_method
     return @poll_method unless @poll_method.nil?
-    self.poll_method = worker_settings[:poll_method]
+    self.poll_method = worker_settings[:poll_method]&.to_sym
   end
 
   def poll_method=(val)
@@ -29,7 +30,7 @@ class MiqWorker::Runner
   end
 
   def self.corresponding_model
-    parent
+    module_parent
   end
 
   def initialize(cfg = {})
@@ -142,6 +143,7 @@ class MiqWorker::Runner
 
   def started_worker_record
     reload_worker_record
+    @worker.sd_notify_started if systemd_worker?
     @worker.status         = "started"
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
@@ -191,6 +193,7 @@ class MiqWorker::Runner
     @worker.stopped_on = Time.now.utc
     @worker.save
 
+    @worker.sd_notify_stopping if systemd_worker?
     @worker.status_update
     @worker.log_status
   end
@@ -288,7 +291,7 @@ class MiqWorker::Runner
     # Heartbeats can be expensive, so do them only when needed
     return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
 
-    heartbeat_to_file
+    systemd_worker? ? @worker.sd_notify_watchdog : heartbeat_to_file
 
     if config_out_of_date?
       _log.info("#{log_prefix} Synchronizing configuration...")

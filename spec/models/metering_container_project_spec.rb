@@ -56,7 +56,13 @@ RSpec.describe MeteringContainerProject do
     end
 
     it 'calculates metering values' do
-      expect(subject.cpu_cores_used_metric).to eq(cpu_usage_rate_average * count_of_metric_rollup)
+      # we are using sum instead of avg for metering
+      cpu_usage_rate_average = MetricRollup.where(:timestamp => month_beginning...month_end).sum(&:cpu_usage_rate_average)
+      derived_vm_numvcpus = MetricRollup.where(:timestamp => month_beginning...month_end).sum(&:derived_vm_numvcpus)
+      v_derived_cpu_total_cores_used_sum = (cpu_usage_rate_average * derived_vm_numvcpus) / 100
+      v_derived_cpu_total_cores_used = v_derived_cpu_total_cores_used_sum / count_of_metric_rollup
+
+      expect(subject.cpu_cores_used_metric).to eq(v_derived_cpu_total_cores_used)
       expect(subject.fixed_compute_metric).to eq(count_of_metric_rollup)
       expect(subject.memory_used_metric).to eq(derived_memory_used * count_of_metric_rollup)
       expect(subject.metering_used_metric).to eq(count_of_metric_rollup)

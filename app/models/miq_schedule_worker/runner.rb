@@ -1,5 +1,3 @@
-require 'thread'
-
 class MiqScheduleWorker::Runner < MiqWorker::Runner
   include ActiveSupport::Callbacks
   define_callbacks(:dst_change)

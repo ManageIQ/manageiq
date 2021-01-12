@@ -11,7 +11,7 @@ module PerEmsWorkerMixin
 
   module ClassMethods
     def ems_class
-      parent
+      module_parent
     end
 
     def all_ems_in_zone

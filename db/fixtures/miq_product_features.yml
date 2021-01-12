@@ -1837,6 +1837,15 @@
       :description: View Policy Profiles
       :feature_type: view
       :identifier: miq_policy_set_view
+      :children:
+      - :name: List
+        :description: Display All Policy Profiles
+        :feature_type: view
+        :identifier: miq_policy_set_show_list
+      - :name: Show
+        :description: Show Policy Profile
+        :feature_type: view
+        :identifier: miq_policy_set_show
     - :name: Modify
       :description: Modify Policy Profiles
       :feature_type: admin
@@ -6032,6 +6041,35 @@
       :description: Edit Tags of Storage Resources
       :feature_type: control
       :identifier: storage_resource_tag
+
+  # host_initiator
+- :name: Host Initiator
+  :description: Everything under Host Initiators
+  :feature_type: node
+  :identifier: host_initiator
+  :children:
+  - :name: View
+    :description: View Host Initiators
+    :feature_type: view
+    :identifier: host_initiator_view
+    :children:
+    - :name: List
+      :description: Display Lists of Host Initiators
+      :feature_type: view
+      :identifier: host_initiator_show_list
+    - :name: Show
+      :description: Display Individual Host Initiators
+      :feature_type: view
+      :identifier: host_initiator_show
+  - :name: Operate
+    :description: Perform Operations on Host Initiators
+    :feature_type: control
+    :identifier: host_initiator_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Host Initiators
+      :feature_type: control
+      :identifier: host_initiator_tag
 
 
 # EmsPhysicalInfra

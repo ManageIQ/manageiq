@@ -508,7 +508,10 @@ class Classification < ApplicationRecord
 
   def validate_uniqueness_on_tag_name
     tag_name = Classification.name2tag(name, parent, ns)
-    exist_scope = Classification.includes(:tag).where(:tags => {:name => tag_name}).merge(Tag.in_region(region_id))
+    exist_scope = Classification.default_scoped
+                                .includes(:tag)
+                                .where(:tags => {:name => tag_name})
+                                .merge(Tag.in_region(region_id))
     exist_scope = exist_scope.where.not(:id => id) unless new_record?
 
     errors.add("name", "has already been taken") if exist_scope.exists?

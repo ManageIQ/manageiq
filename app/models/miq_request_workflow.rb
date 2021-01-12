@@ -1,4 +1,3 @@
-require 'enumerator'
 require 'ostruct'
 
 class MiqRequestWorkflow

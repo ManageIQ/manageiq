@@ -161,27 +161,36 @@ class MiqSchedule < ApplicationRecord
   def run_at_to_human(timezone)
     start_time = run_at[:start_time].in_time_zone(timezone)
     start_time = start_time.strftime("%a %b %d %H:%M:%S %Z %Y")
+
+    case run_at[:interval][:unit]
+    when "minutely"
+      unit = _("minutes")
+      interval = _("minutely")
+    when "hourly"
+      unit = _("hours")
+      interval = _("hourly")
+    when "daily"
+      unit = _("days")
+      interval = _("daily")
+    when "weekly"
+      unit = _("weeks")
+      interval = _("weekly")
+    when "monthly"
+      unit = _("months")
+      interval = _("monthly")
+    else
+      interval = run_at[:interval][:unit]
+    end
+
     if run_at[:interval][:unit].downcase == "once"
-      return _("Run %{interval} on %{start_time}") % {:interval => run_at[:interval][:unit], :start_time => start_time}
+      _("Run %{interval} on %{start_time}") % {:interval => interval, :start_time => start_time}
     else
       if run_at[:interval][:value].to_i == 1
-        return _("Run %{interval} starting on %{start_time}") % {:interval   => run_at[:interval][:unit],
+        _("Run %{interval} starting on %{start_time}") % {:interval   => interval,
                                                                  :start_time => start_time}
       else
-        case run_at[:interval][:unit]
-        when "minutely"
-          unit = _("minutes")
-        when "hourly"
-          unit = _("hours")
-        when "daily"
-          unit = _("days")
-        when "weekly"
-          unit = _("weeks")
-        when "monthly"
-          unit = _("months")
-        end
         return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
-                 {:interval   => run_at[:interval][:unit],
+                 {:interval   => interval,
                   :value      => run_at[:interval][:value],
                   :unit       => unit,
                   :start_time => start_time}

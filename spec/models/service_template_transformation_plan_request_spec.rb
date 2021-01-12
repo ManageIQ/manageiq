@@ -66,7 +66,7 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
 
       it 'returns false' do
         host = FactoryBot.create(:host_redhat, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone), :api_version => '4.2.4'))
-        conversion_host = FactoryBot.create(:conversion_host, :resource => host)
+        FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be false
       end
     end
@@ -103,7 +103,7 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
 
       it 'returns true' do
         host = FactoryBot.create(:host_redhat, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
-        conversion_host = FactoryBot.create(:conversion_host, :resource => host)
+        FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be true
       end
     end
@@ -140,7 +140,7 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
 
       it 'returns true' do
         vm = FactoryBot.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
-        conversion_host = FactoryBot.create(:conversion_host, :resource => vm)
+        FactoryBot.create(:conversion_host, :resource => vm)
         expect(request.validate_conversion_hosts).to be true
       end
     end

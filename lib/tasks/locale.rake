@@ -72,24 +72,25 @@ namespace :locale do
       end
     end
 
-    config_file = args[:root].join('config/locale_task_config.yaml')
-    config_file = Rails.root.join('config/locale_task_config.yaml') unless config_file.exist?
+    root_path = args[:root] || Rails.root
+
+    config_file = root_path.join('config/locale_task_config.yaml')
     next unless config_file.exist?
 
     yamls = YAML.load_file(config_file)['yaml_strings_to_extract']
     output = {}
 
     yamls.each_key do |yaml_glob|
-      yaml_glob_full = args[:root].join(yaml_glob)
+      yaml_glob_full = root_path.join(yaml_glob)
       Dir.glob(yaml_glob_full).each do |file|
         yml = YAML.load_file(file)
-        parse_object(yml, yamls[yaml_glob], file, output, args[:root].to_s)
+        parse_object(yml, yamls[yaml_glob], file, output, root_path.to_s)
       end
     end
 
     next if output.empty? # no yaml strings were found
 
-    File.open(args[:root].join("config/yaml_strings.rb"), "w+") do |f|
+    File.open(root_path.join("config/yaml_strings.rb"), "w+") do |f|
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
       output.each_key do |key|
