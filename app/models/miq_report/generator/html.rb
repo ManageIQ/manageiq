@@ -116,14 +116,14 @@ module MiqReport::Generator::Html
       title = data_row['name'] ?
         "View #{ui_lookup(:model => db)} \"#{data_row['name']}\"" :
         "View this #{ui_lookup(:model => db)}"
-      onclick = "onclick=\"#{donav}\" style='cursor:hand' title='#{title}'"
+      onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
     # Handle CI performance report rows
     if db.ends_with?("Performance")
       if data_row['resource_id'] && data_row['resource_type'] # Base click thru on the related resource
         donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
-        onclick = "onclick=\"#{donav}\" style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
+        onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
       end
     end
 
