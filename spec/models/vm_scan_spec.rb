@@ -1,4 +1,107 @@
 RSpec.describe VmScan do
+  context "A single VM Scan Job," do
+    let(:server) { EvmSpecHelper.local_miq_server(:has_vix_disk_lib => true) }
+    let(:user) { FactoryBot.create(:user_with_group, :userid => "tester") }
+    let(:ems) { FactoryBot.create(:ems_infra, :zone => server.zone) }
+    let(:vm) { FactoryBot.create(:vm_infra, :ext_management_system => ems, :host => host, :miq_group => user.current_group, :evm_owner => user) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
+    let(:job) { described_class.first }
+
+    describe "#scan" do
+      before do
+        allow(MiqEventDefinition).to receive_messages(:find_by => true)
+        allow(server).to receive(:has_active_role?).with('automate').and_return(true)
+
+        vm.scan
+
+        job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
+        job_item.delivered(*job_item.deliver)
+
+        # Allow the use of allow(job) and expect(job) instead of having to use
+        # [allow/expect]_any_instance_of(VmScan) due to some signals being
+        # queued.
+        allow(Job).to receive(:find).with(job.id).and_return(job)
+      end
+
+      it "should start in a state of waiting_to_start" do
+        expect(job.state).to eq("waiting_to_start")
+      end
+
+      context "waiting_to_start" do
+        before { job.update!(:state => "waiting_to_start") }
+
+        it "#start should transit to state checking_policy" do
+          job.signal(:start)
+          expect(job.reload.state).to eq("checking_policy")
+        end
+
+        it "#start should call before_start after checking policy" do
+          job.signal(:start)
+
+          # check_policy raises an miq_event, deliver the raise_evm_job_event
+          job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
+          job_item.delivered(*job_item.deliver)
+
+          expect(job).to receive(:before_scan)
+
+          # Then deliver the signal from that event
+          queue_item = MiqQueue.find_by(:class_name => job.class.name, :method_name => "signal")
+          queue_item.delivered(*queue_item.deliver)
+        end
+      end
+
+      context "checking_policy" do
+        before { job.update!(:state => "checking_policy") }
+
+        it "#before_scan should transit to state before_scan" do
+          allow(job).to receive(:before_scan)
+
+          job.signal(:before_scan)
+          expect(job.reload.state).to eq("before_scan")
+        end
+
+        it "#before_scan should call start_scan" do
+          expect(job).to receive(:start_scan)
+
+          job.signal(:before_scan)
+          expect(job.reload.state).to eq("scanning")
+        end
+      end
+
+      context "scanning" do
+        before { job.update!(:state => "scanning") }
+
+        it "#after_scan transits to state after_scan" do
+          allow(job).to receive(:after_scan)
+
+          job.signal(:after_scan)
+          expect(job.reload.state).to eq("after_scan")
+        end
+
+        it "#data should call process_data and stay in state scanning" do
+          expect(job).to receive(:process_data)
+
+          job.signal(:data)
+          expect(job.reload.state).to eq("scanning")
+        end
+
+        it "#after_scan should call synchronize" do
+          expect(job).to receive(:synchronize)
+          job.signal(:after_scan)
+        end
+      end
+
+      context "synchronizing" do
+        before { job.update!(:state => "synchronizing") }
+
+        it "#finish from process_data transits to state finished" do
+          job.signal(:finish)
+          expect(job.reload.state).to eq("finished")
+        end
+      end
+    end
+  end
+
   # test cases for BZ #1454936
   context "A VM Scan job in multiple zones" do
     before do
