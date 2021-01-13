@@ -137,6 +137,7 @@ class VmScan < Job
   end
 
   def after_scan
+    signal(:synchronize)
   end
 
   def call_synchronize
@@ -328,6 +329,7 @@ class VmScan < Job
   # All other signals
   alias_method :initializing,       :dispatch_start
   alias_method :start,              :call_check_policy
+  alias_method :synchronize,        :call_synchronize
   alias_method :abort_job,          :process_abort
   alias_method :cancel,             :process_cancel
   alias_method :finish,             :process_finished
