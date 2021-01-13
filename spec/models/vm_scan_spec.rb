@@ -16,6 +16,11 @@ RSpec.describe VmScan do
 
         job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
         job_item.delivered(*job_item.deliver)
+
+        # Allow the use of allow(job) and expect(job) instead of having to use
+        # [allow/expect]_any_instance_of(VmScan) due to some signals being
+        # queued.
+        allow(Job).to receive(:find).with(job.id).and_return(job)
       end
 
       it "should start in a state of waiting_to_start" do
@@ -37,7 +42,7 @@ RSpec.describe VmScan do
           job_item = MiqQueue.find_by(:class_name => "MiqAeEngine", :method_name => "deliver")
           job_item.delivered(*job_item.deliver)
 
-          expect_any_instance_of(described_class).to receive(:before_scan)
+          expect(job).to receive(:before_scan)
 
           # Then deliver the signal from that event
           queue_item = MiqQueue.find_by(:class_name => job.class.name, :method_name => "signal")
@@ -49,14 +54,14 @@ RSpec.describe VmScan do
         before { job.update!(:state => "checking_policy") }
 
         it "#before_scan should transit to state before_scan" do
-          allow_any_instance_of(described_class).to receive(:before_scan)
+          allow(job).to receive(:before_scan)
 
           job.signal(:before_scan)
           expect(job.reload.state).to eq("before_scan")
         end
 
         it "#before_scan should call start_scan" do
-          expect_any_instance_of(described_class).to receive(:start_scan)
+          expect(job).to receive(:start_scan)
 
           job.signal(:before_scan)
           expect(job.reload.state).to eq("scanning")
@@ -67,21 +72,21 @@ RSpec.describe VmScan do
         before { job.update!(:state => "scanning") }
 
         it "#after_scan transits to state after_scan" do
-          allow_any_instance_of(described_class).to receive(:after_scan)
+          allow(job).to receive(:after_scan)
 
           job.signal(:after_scan)
           expect(job.reload.state).to eq("after_scan")
         end
 
         it "#data should call process_data and stay in state scanning" do
-          expect_any_instance_of(described_class).to receive(:process_data)
+          expect(job).to receive(:process_data)
 
           job.signal(:data)
           expect(job.reload.state).to eq("scanning")
         end
 
         it "#after_scan should call synchronize" do
-          expect_any_instance_of(described_class).to receive(:synchronize)
+          expect(job).to receive(:synchronize)
           job.signal(:after_scan)
         end
       end
