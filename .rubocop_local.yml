@@ -5,10 +5,12 @@ AllCops:
 Style/GlobalVars:
   AllowedVariables:
   # Loggers
+  - $ansible_tower_log
   - $api_log
   - $audit_log
   - $aws_log
   - $azure_log
+  - $azure_stack_log
   - $cn_monitoring_log
   - $container_log
   - $datawarehouse_log
@@ -16,20 +18,21 @@ Style/GlobalVars:
   - $gce_log
   - $ibm_cloud_log
   - $ibm_terraform_log
+  - $journald_log
   - $kube_log
   - $lenovo_log
   - $log
   - $miq_ae_logger
+  - $nsxt_log
+  - $nuage_log
   - $policy_log
   - $rails_log
+  - $redfish_log
+  - $remote_console_log
   - $rhevm_log
   - $scvmm_log
   - $vcloud_log
   - $vim_log
-  - $remote_console_log
-  - $nuage_log
-  - $nsxt_log
-  - $redfish_log
 Rails/Exit:
   Exclude:
   - lib/workers/bin/*
