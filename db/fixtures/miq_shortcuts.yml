@@ -456,7 +456,7 @@
   :startup: true
 - :name: policy_logs
   :description: Control / Log
-  :url: /miq_policy/log
+  :url: /miq_policy_log
   :rbac_feature_name: policy_log
   :startup: true
 - :name: embedded_configuration_script_payload
