@@ -30,25 +30,6 @@ module Vmdb
       apply_config_value(config, $api_log,            :level_api)
       # TODO: Move this into the manageiq-automation_engine plugin
       apply_config_value(config, $miq_ae_logger,      :level_automation)
-      # TODO: Move these to their respective provider plugins
-      apply_config_value(config, $ansible_tower_log,  :level_ansible_tower)
-      apply_config_value(config, $azure_log,          :level_azure)
-      apply_config_value(config, $azure_stack_log,    :level_azure_stack)
-      apply_config_value(config, $cn_monitoring_log,  :level_cn_monitoring)
-      apply_config_value(config, $datawarehouse_log,  :level_datawarehouse)
-      apply_config_value(config, $fog_log,            :level_fog)
-      apply_config_value(config, $gce_log,            :level_gce)
-      apply_config_value(config, $ibm_cloud_log,      :level_ibm_cloud)
-      apply_config_value(config, $ibm_terraform_log,  :level_ibm_terraform)
-      apply_config_value(config, $kube_log,           :level_kube)
-      apply_config_value(config, $lenovo_log,         :level_lenovo)
-      apply_config_value(config, $nsxt_log,           :level_nsxt)
-      apply_config_value(config, $nuage_log,          :level_nuage)
-      apply_config_value(config, $redfish_log,        :level_redfish)
-      apply_config_value(config, $rhevm_log,          :level_rhevm)
-      apply_config_value(config, $scvmm_log,          :level_scvmm)
-      apply_config_value(config, $vcloud_log,         :level_vcloud)
-      apply_config_value(config, $vim_log,            :level_vim)
 
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
@@ -74,25 +55,6 @@ module Vmdb
       $api_log            = create_logger("api.log")
       # TODO: Move this into the manageiq-automation_engine plugin
       $miq_ae_logger      = create_logger("automation.log")
-      # TODO: Move these to their respective provider plugins
-      $ansible_tower_log  = create_logger("ansible_tower.log")
-      $azure_log          = create_logger("azure.log", ProviderSdkLogger)
-      $azure_stack_log    = create_logger("azure_stack.log")
-      $cn_monitoring_log  = create_logger("container_monitoring.log")
-      $datawarehouse_log  = create_logger("datawarehouse.log")
-      $fog_log            = create_logger("fog.log", FogLogger)
-      $gce_log            = create_logger("gce.log")
-      $ibm_cloud_log      = create_logger("ibm_cloud.log", ProviderSdkLogger)
-      $ibm_terraform_log  = create_logger("ibm_terraform.log", ProviderSdkLogger)
-      $kube_log           = create_logger("kubernetes.log")
-      $lenovo_log         = create_logger("lenovo.log")
-      $nsxt_log           = create_logger("nsxt.log")
-      $nuage_log          = create_logger("nuage.log")
-      $redfish_log        = create_logger("redfish.log")
-      $rhevm_log          = create_logger("rhevm.log")
-      $scvmm_log          = create_logger("scvmm.log")
-      $vcloud_log         = create_logger("vcloud.log")
-      $vim_log            = create_logger("vim.log")
 
       configure_external_loggers
     end
