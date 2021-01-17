@@ -6066,11 +6066,23 @@
     :feature_type: control
     :identifier: host_initiator_control
     :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Host Initiators
+      :feature_type: control
+      :identifier: host_initiator_refresh
     - :name: Edit Tags
       :description: Edit Tags of Host Initiators
       :feature_type: control
       :identifier: host_initiator_tag
-
+  - :name: Modify
+    :description: Modify Host Initiator
+    :feature_type: admin
+    :identifier: host_initiator_admin
+    :children:
+    - :name: Add
+      :description: Add a Host Initiator
+      :feature_type: admin
+      :identifier: host_initiator_new
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
