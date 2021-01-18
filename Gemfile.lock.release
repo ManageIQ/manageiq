@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: 81e5aa96658a859fbe1c78ebde77d656f4808820
-  tag: jansa-2
+  revision: cc39b13e1b445ec2c2c5ff60ee96b5572f414086
+  tag: jansa-3
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: 915333f2077b83bd22c0bbcfae33d4622148aca5
-  tag: jansa-2
+  revision: 6d2e5cc72573f401be948a6a796b1ddb4f40bcd5
+  tag: jansa-3
   specs:
     manageiq-api (4.2.0)
       config
@@ -22,16 +22,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: f0185addb172cbdbb1b24951b611bfb41224c4c7
-  tag: jansa-2
+  revision: adfb7d591b341b0468f2654b538f0d8cdd24b50b
+  tag: jansa-3
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
-  revision: 17200c151daeac285b840c5ef76b3e4b98afce7b
-  tag: jansa-2
+  revision: afca1058f7e7b6026be296780982a6569c38fd8f
+  tag: jansa-3
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,23 +39,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: 796481d99f326537c21395d4bb3fe97c93d38258
-  tag: jansa-2
+  revision: 7b8814c797a3441f4666f4f3324900be84283126
+  tag: jansa-3
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: 99057dd8323e81904f5ac9d39bb4aae6d61e2088
-  tag: jansa-2
+  revision: ba4a882ee843b800a31f623451edc8a83b007e55
+  tag: jansa-3
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: 4ced08bb22dddab4b7620b3f0a6969f36734a748
-  tag: jansa-2
+  revision: 4026507c32b70f2fa88ab97dfd3c8220110ff789
+  tag: jansa-3
   specs:
     manageiq-gems-pending (0.1.0)
       activerecord (< 5.3)
@@ -84,8 +84,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-graphql
-  revision: 79d5cc8535547de06d225143a9b66f13dc74a56d
-  tag: jansa-2
+  revision: 9b77d1c049371ae1f5d7de61409b68ce86ea72f6
+  tag: jansa-3
   specs:
     manageiq-graphql (0.1.0)
       graphql (~> 1.7, < 1.10.6)
@@ -94,8 +94,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: aa8ce32a2c0182057f063bca22265400ae79ca24
-  tag: jansa-2
+  revision: a6512e1059b2f73391f84b88071e731de3508317
+  tag: jansa-3
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -111,24 +111,24 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: 4752923e1d7fa793becb4d3984d96b7d5d4561cf
-  tag: jansa-2
+  revision: ede481b5066ae281cbdfcd12f639c2da8a9ed806
+  tag: jansa-3
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 7451d272f78a7705f904e7a7f2fa48223f246c70
-  tag: jansa-2
+  revision: e7914f85e845fb587b7c4a52bbf0638536349014
+  tag: jansa-3
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.9.15)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
-  revision: 7aea5775e52f1907b184ddb6505322ec6ff53442
-  tag: jansa-2
+  revision: 0230a8c2d30ef79fa0ba868743fcdf2647e2dd8d
+  tag: jansa-3
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (= 0.18.3)
@@ -139,24 +139,24 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: 12e8797c1eaafee88ff4f814f1fa77e0b3caeb3a
-  tag: jansa-2
+  revision: 99b2ea21b4261212af5cf2a43de2f3e1595c4015
+  tag: jansa-3
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: 5b40c430d191b25be6bc91c44fcf4007de5b125b
-  tag: jansa-2
+  revision: 96ab585c4609487dfef1380675d40d1fcd1b4434
+  tag: jansa-3
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.9.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: aa5a4f45a247bfc4b407750d9e5d0b0b2d61249e
-  tag: jansa-2
+  revision: 67a920daddec52d4eab3e5ac2e5e487041e4f307
+  tag: jansa-3
   specs:
     manageiq-providers-kubernetes (0.1.0)
       hawkular-client (~> 4.1)
@@ -168,8 +168,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: 45d4b13928e9c9b21ab315e38a74058a8c8f3f3b
-  tag: jansa-2
+  revision: 48c1989d1b3290cdfe5a5f0439404326018ab02f
+  tag: jansa-3
   specs:
     manageiq-providers-kubevirt (0.0.1)
       fog-kubevirt (~> 1.0)
@@ -177,32 +177,32 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 0fc0bacb8a67eace5f165ad356610ac9f09b896a
-  tag: jansa-2
+  revision: 4017aad8bd5a96e9b19b1561301bedfbc9f73b1f
+  tag: jansa-3
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: cc324ef04e85e928f25c01db9861c38ce42e8599
-  tag: jansa-2
+  revision: 83373fa0cbe3e7567773ea6ace894a4a30b96f82
+  tag: jansa-3
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: 814ce3c562dfdc29e7a58065a319bfd5651590ac
-  tag: jansa-2
+  revision: 3aad53285823952f82b27364b8acd5095e91a373
+  tag: jansa-3
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: 27cd5ab541f547c95d79d01a893eaab090df673d
-  tag: jansa-2
+  revision: ee94ffc7b7d8036222ad84e36a55ae907c4f9b3c
+  tag: jansa-3
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (>= 5.0, < 5.3)
@@ -214,32 +214,32 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: d45edfdca71e651880a2b2bd51d23050891baec2
-  tag: jansa-2
+  revision: f0b449f4a30f57d161d26aa426bf6399860859b7
+  tag: jansa-3
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.3.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: 3e24f856ab74c54173400caf72a3b0b1121a6a50
-  tag: jansa-2
+  revision: 3628884001c121c9fac8a3a26c1b70a0d09e0ad0
+  tag: jansa-3
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
-  revision: f07d645db71e0365d8017600df356c8a6dd0fff8
-  tag: jansa-2
+  revision: 6a40c87c3035d0b21e6dab0c169a541259d33096
+  tag: jansa-3
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 70f087a9f7bfb4f8d1bf6ce497b6d3fe4b66a91e
-  tag: jansa-2
+  revision: a166551455c207971c1fb439e3d71c6369997355
+  tag: jansa-3
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -250,8 +250,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: a800fbb786e464c873220ccaf210124ea286012c
-  tag: jansa-2
+  revision: 00cc330d4511755d91318ad299d110313b1c5a3e
+  tag: jansa-3
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.0)
@@ -265,8 +265,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: f99a1763003656b30540a6982c8747bfc8b83256
-  tag: jansa-2
+  revision: 288ffa804e090632a03798097d69a57c5a3fe32f
+  tag: jansa-3
   specs:
     manageiq-ui-classic (0.1.0)
       coffee-rails
@@ -283,7 +283,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-v2v
   revision: 0b260939952fb855317fa4b640316439196edfc5
-  tag: jansa-2
+  tag: jansa-3
   specs:
     manageiq-v2v (0.0.1)
 
@@ -1064,7 +1064,7 @@ DEPENDENCIES
   bundler (>= 1.15)
   byebug
   color (~> 1.8)
-  config (~> 2.2, >= 2.2.1)
+  config (= 2.2.1)
   dalli (= 2.7.6)
   dbus-systemd (~> 1.1.0)
   default_value_for (~> 3.3)
