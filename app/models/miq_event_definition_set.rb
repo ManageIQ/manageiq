@@ -1,10 +1,13 @@
 class MiqEventDefinitionSet < ApplicationRecord
   acts_as_miq_set
 
+  def self.set_definitions_from_path(path)
+    YAML.load_file(path)
+  end
+
   def self.seed
     existing = all.group_by(&:name)
-    CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
-      set = csv_row.to_hash
+    set_definitions_from_path(fixture_path).each do |set|
 
       rec = existing[set['name']].try(:first)
       if rec.nil?
@@ -21,7 +24,7 @@ class MiqEventDefinitionSet < ApplicationRecord
   end
 
   def self.fixture_path
-    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
+    FIXTURE_DIR.join("#{to_s.pluralize.underscore}.yml")
   end
 
   def self.display_name(number = 1)
