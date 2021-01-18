@@ -26,8 +26,6 @@ module Vmdb
       apply_config_value(config, $policy_log,         :level_policy)
       apply_config_value(config, $remote_console_log, :level_remote_console)
 
-      # TODO: Move this into the manageiq-api plugin
-      apply_config_value(config, $api_log,            :level_api)
       # TODO: Move this into the manageiq-automation_engine plugin
       apply_config_value(config, $miq_ae_logger,      :level_automation)
 
@@ -51,8 +49,6 @@ module Vmdb
       $policy_log         = create_logger("policy.log")
       $remote_console_log = create_logger("remote_console.log")
 
-      # TODO: Move this into the manageiq-api plugin
-      $api_log            = create_logger("api.log")
       # TODO: Move this into the manageiq-automation_engine plugin
       $miq_ae_logger      = create_logger("automation.log")
 
