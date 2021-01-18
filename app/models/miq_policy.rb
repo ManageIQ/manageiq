@@ -355,6 +355,22 @@ class MiqPolicy < ApplicationRecord
     MiqEventDefinition.all_events.select { |e| !e.memberof.empty? && !EVENT_GROUPS_EXCLUDED.include?(e.memberof.first.name) }
   end
 
+  def self.all_policy_events_filter
+    # Todo Convert to SQL if possible
+    filter_hash = {
+       "AND" => [
+           {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
+           {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
+          ]
+        }
+        EVENT_GROUPS_EXCLUDED.each do |e|
+          filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
+        end
+
+        MiqExpression.new(filter_hash)
+  end
+
+
   def self.logger
     $policy_log
   end

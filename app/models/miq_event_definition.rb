@@ -14,6 +14,11 @@ class MiqEventDefinition < ApplicationRecord
   has_many :miq_policy_contents
   has_many :policy_events
 
+  virtual_column :event_group_name, :type => :string
+  def event_group_name
+    memberof.first.name unless memberof.empty?
+  end
+
   serialize :definition
 
   attr_accessor :reserved
