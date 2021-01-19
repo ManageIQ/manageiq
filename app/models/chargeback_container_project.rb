@@ -28,7 +28,7 @@ class ChargebackContainerProject < Chargeback
 
     @projects = if filter_tag.present?
                   # Get all ids of tagged projects
-                  ContainerProject.find_tagged_with(:all => filter_tag, :ns => "*")
+                  ContainerProject.find_tagged_with(:any => filter_tag, :ns => "*")
                 elsif provider_id == "all"
                   ContainerProject.all
                 elsif provider_id.present? && project_id == "all"

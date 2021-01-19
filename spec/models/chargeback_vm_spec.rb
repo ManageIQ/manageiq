@@ -372,6 +372,58 @@ RSpec.describe ChargebackVm do
           expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
         end
       end
+
+      context "filter by multiple tags" do
+        let(:base_filter_options) do
+          base_options.delete(:tag)
+          base_options.merge(:interval => 'daily', :tenant_id => Tenant.root_tenant.id)
+        end
+
+        let(:options) { base_filter_options }
+
+        let(:development_vm) { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
+        let(:other_vm)       { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
+
+        before do
+          environment_category = Classification.find_by(:description => "Environment")
+          tag_development = FactoryBot.create(:classification, :name => "dev", :description => "Development", :parent_id => environment_category.id)
+
+          development_vm.tag_with(tag_development.tag.name, :ns => '*')
+
+          metric_rollup_params.delete(:tag_names)
+          add_metric_rollups_for(other_vm, start_time...finish_time, 1.hour, metric_rollup_params)
+          metric_rollup_params[:tag_names] = "environment/dev"
+          add_metric_rollups_for(development_vm, start_time...finish_time, 1.hour, metric_rollup_params)
+        end
+
+        subject do
+          ChargebackVm.build_results_for_report_ChargebackVm(options).first.map { |x| x.entity.id }
+        end
+
+        it "doesn't filter resources without filter" do
+          expect(subject).to match_array([@vm1.id, development_vm.id, other_vm.id])
+        end
+
+        context "with filter" do
+          let(:options) do
+            base_options
+          end
+
+          it "filters resources according to tag" do
+            expect(subject).to eq([@vm1.id])
+          end
+
+          context "with multiple tags filter" do
+            let(:options) do
+              base_filter_options.merge(:tag => ['/managed/environment/prod', '/managed/environment/dev'])
+            end
+
+            it "filters resources according to multiple tags" do
+              expect(subject).to eq([@vm1.id, development_vm.id])
+            end
+          end
+        end
+      end
     end
 
     context "Report a chargeback of a tenant" do
