@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 153 ending 2021-01-18
+
+### Added
+
+* Add Kasparov Beta1 Gemfile.lock [(#20949)](https://github.com/ManageIQ/manageiq/pull/20949)
+* settings.yml support string settings values [(#20908)](https://github.com/ManageIQ/manageiq/pull/20908)
+* introduce User.lower\_userid to remove some arel across a few repos [(#20532)](https://github.com/ManageIQ/manageiq/pull/20532)
+* Rails 6.0 [(#20778)](https://github.com/ManageIQ/manageiq/pull/20778)
+
+### Fixed
+
+* VmScan transitions from before\_scan -> start\_scan [(#20953)](https://github.com/ManageIQ/manageiq/pull/20953)
+
 # Unreleased as of Sprint 152 ending 2021-01-04
 
 ### Added
