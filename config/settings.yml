@@ -854,7 +854,6 @@
     :ping_depot_timeout: 20
   :level: info
   :level_rails: info
-  :level_automation: info
   :level_fog: info
   :level_policy: info
   :level_remote_console: info

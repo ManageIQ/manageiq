@@ -26,9 +26,6 @@ module Vmdb
       apply_config_value(config, $policy_log,         :level_policy)
       apply_config_value(config, $remote_console_log, :level_remote_console)
 
-      # TODO: Move this into the manageiq-automation_engine plugin
-      apply_config_value(config, $miq_ae_logger,      :level_automation)
-
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
@@ -48,9 +45,6 @@ module Vmdb
       $audit_log          = create_logger("audit.log", AuditLogger)
       $policy_log         = create_logger("policy.log")
       $remote_console_log = create_logger("remote_console.log")
-
-      # TODO: Move this into the manageiq-automation_engine plugin
-      $miq_ae_logger      = create_logger("automation.log")
 
       configure_external_loggers
     end
