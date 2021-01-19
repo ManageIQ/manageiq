@@ -25,14 +25,12 @@ class Provider < ApplicationRecord
 
   supports :refresh_ems
 
-  def self.leaf_subclasses
-    descendants.select { |d| d.subclasses.empty? }
+  def self.concrete_subclasses
+    leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
   def self.supported_subclasses
-    subclasses.flat_map do |s|
-      s.subclasses.empty? ? s : s.supported_subclasses
-    end
+    concrete_subclasses
   end
 
   def self.short_token
