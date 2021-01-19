@@ -26,15 +26,18 @@ module GettextI18nRailsJs
 
     # remove footer asset pipeline references; generate index.js
     def print_footer
-      langs = files_list.map { |f| lang_for(f) }
+      langs =
+        files_list
+          .map { |f| lang_for(f) }
+          .sort
+          .map { |lang| "  '#{lang}': require('./#{lang}.json')," }
+          .join("\n")
 
-      output_path.join('index.js').open("w") do |f|
-        f.write "window.locales = {\n"
-        langs.sort.each do |lang|
-          f.write "  '#{lang}': require('./#{lang}.json'),\n"
-        end
-        f.write "};\n"
-      end
+      output_path.join('index.js').write(<<~EOF)
+        window.locales = {
+        #{langs}
+        };
+      EOF
 
       puts
       puts "All files created, make sure to bin/webpack"
