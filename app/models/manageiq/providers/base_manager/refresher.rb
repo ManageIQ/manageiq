@@ -161,7 +161,7 @@ module ManageIQ
       private
 
       def self.ems_type
-        @ems_type ||= parent.ems_type.to_sym
+        @ems_type ||= module_parent.ems_type.to_sym
       end
 
       def inventory_class_for(klass)
