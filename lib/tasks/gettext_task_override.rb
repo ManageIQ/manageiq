@@ -28,16 +28,16 @@ module GettextI18nRailsJs
     def print_footer
       langs =
         files_list
-          .map { |f| lang_for(f) }
-          .sort
-          .map { |lang| "  '#{lang}': require('./#{lang}.json')," }
-          .join("\n")
+        .map { |f| lang_for(f) }
+        .sort
+        .map { |lang| "  '#{lang}': require('./#{lang}.json')," }
+        .join("\n")
 
-      output_path.join('index.js').write(<<~EOF)
+      output_path.join('index.js').write(<<~JS)
         window.locales = {
         #{langs}
         };
-      EOF
+      JS
 
       puts
       puts "All files created, make sure to bin/webpack"
