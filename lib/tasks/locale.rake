@@ -260,6 +260,7 @@ namespace :locale do
   task "po_to_json" => :environment do
     begin
       require_relative 'gettext_task_override.rb'
+      require_relative 'po_to_json_override.rb'
       require Rails.root.join('lib/manageiq/environment')
       require Rails.root.join("lib/vmdb/gettext/domains")
 
