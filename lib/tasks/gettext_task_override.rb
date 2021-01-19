@@ -18,7 +18,6 @@ module GettextI18nRailsJs
 
       path = output_path.join("#{lang}.json")
       path.open("w") do |f|
-        f.rewind
         f.write yield
       end
 
@@ -30,8 +29,6 @@ module GettextI18nRailsJs
       langs = files_list.map { |f| lang_for(f) }
 
       output_path.join('index.js').open("w") do |f|
-        f.rewind
-
         f.write "window.locales = {\n"
         langs.sort.each do |lang|
           f.write "  '#{lang}': require('./#{lang}.json'),\n"
