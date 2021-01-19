@@ -411,7 +411,7 @@ RSpec.describe EmsEvent do
       end
 
       let(:provider_event) { 'SomeSpecialProviderEvent' }
-      let(:provider_regex) { /Some.+Event/ }
+      let(:provider_regex) { "/Some.+Event/" }
 
       it 'returns the provider event if configured' do
         expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
