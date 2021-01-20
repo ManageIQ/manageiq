@@ -36,16 +36,15 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def add_to_dashboard_order
-    return unless group_id
+    return unless group
 
     group.add_to_dashboard_order(id)
     group.save
   end
 
   def delete_from_dashboard_order
-    return unless group_id
+    return unless group
 
-    group = MiqGroup.find(group_id)
     group.delete_from_dashboard_order(id)
     group.save
   end
