@@ -7,7 +7,7 @@ RSpec.describe RequestStartedOnMiddleware do
     let(:fake_threads) { [@fake_thread] }
 
     it "returns request, duration and thread" do
-      @fake_thread = {:current_request => "/api/ping", :current_request_started_on => 3.minutes.ago}
+      @fake_thread = {:current_request_path_info => "/api/ping", :current_request_started_on => 3.minutes.ago}
       long_requests = described_class.long_running_requests.first
       expect(long_requests[0]).to eql "/api/ping"
       expect(long_requests[1]).to be_within(0.1).of(Time.now.utc - 3.minutes.ago)
@@ -15,7 +15,7 @@ RSpec.describe RequestStartedOnMiddleware do
     end
 
     it "skips threads that haven't timed out yet" do
-      @fake_thread = {:current_request => "/api/ping", :current_request_started_on => 30.seconds.ago}
+      @fake_thread = {:current_request_path_info => "/api/ping", :current_request_started_on => 30.seconds.ago}
       expect(described_class.long_running_requests).to be_empty
     end
 

@@ -14,13 +14,13 @@ class RequestStartedOnMiddleware
     complete_request
   end
 
-  def start_request(path, started_on)
-    Thread.current[:current_request] = path
+  def start_request(path_info, started_on)
+    Thread.current[:current_request_path_info]  = path_info
     Thread.current[:current_request_started_on] = started_on
   end
 
   def complete_request
-    Thread.current[:current_request] = nil
+    Thread.current[:current_request_path_info]  = nil
     Thread.current[:current_request_started_on] = nil
   end
 
@@ -29,7 +29,7 @@ class RequestStartedOnMiddleware
     allowable_request_start_time = long_request.ago
 
     relevant_thread_list.each do |thread|
-      request    = thread[:current_request]
+      request    = thread[:current_request_path_info]
       started_on = thread[:current_request_started_on]
 
       # There's a race condition where the complete_request method runs in another
