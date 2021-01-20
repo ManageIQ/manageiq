@@ -491,7 +491,8 @@ RSpec.describe RelationshipMixin do
 
     before do
       group = FactoryBot.create(:miq_group)
-      @ws = FactoryBot.create(:miq_widget_set, :set_data => set_data, :owner => group)
+      # NOTE: widget_sets are created with one widget
+      @ws = FactoryBot.create(:miq_widget_set, :owner => group)
       @widget = FactoryBot.create(:miq_widget)
 
       @ws.add_member(@widget)
