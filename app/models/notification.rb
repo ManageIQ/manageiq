@@ -18,6 +18,8 @@ class Notification < ApplicationRecord
   serialize :options, Hash
   default_value_for(:options) { Hash.new }
 
+  validate :complete_bindings
+
   scope :of_type, ->(notification_type) { joins(:notification_type).where(:notification_types => {:name => notification_type}) }
 
   def type=(typ)
@@ -53,6 +55,15 @@ class Notification < ApplicationRecord
   end
 
   private
+
+  def complete_bindings
+    notification_type.message % to_h[:bindings]
+  rescue ArgumentError, KeyError => e
+    # 1. Deprecate now
+    # 2. Fail validation going forward via errors.add(error_args)
+    error_args = [:options, "text bindings for notification_type: '#{notification_type.name}' failed with error: '#{e.message}' with options: '#{options.inspect}' and message #{notification_type.message.inspect}. Next release will not allow a notification without complete bindings."]
+    ActiveSupport::Deprecation.warn(error_args.join(' '), caller_locations[1..-1].reject {|location| location.label.include?("emit_for_event") })
+  end
 
   def emit_message
     return unless ::Settings.server.asynchronous_notifications
