@@ -481,9 +481,17 @@ RSpec.describe RelationshipMixin do
   end
 
   context ".alias_with_relationship_type" do
+    let(:miq_widget) { FactoryBot.create(:miq_widget) }
+
+    let(:set_data) do
+      {:col1             => [miq_widget.id],
+       :reset_upon_login => false,
+       :locked           => false}
+    end
+
     before do
       group = FactoryBot.create(:miq_group)
-      @ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :owner => group)
+      @ws = FactoryBot.create(:miq_widget_set, :set_data => set_data, :owner => group)
       @widget = FactoryBot.create(:miq_widget)
 
       @ws.add_member(@widget)
