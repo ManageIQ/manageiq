@@ -35,7 +35,7 @@ module MiqWidgetSet::SetData
     end
 
     def widget_ids
-      SET_DATA_COLS.map { |x| set_data[x] }.flatten.compact
+      SET_DATA_COLS.flat_map { |x| set_data[x] }.compact
     end
   end
 end
