@@ -50,7 +50,10 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def ensure_can_be_destroyed
-    errors.add(:base, _("Unable to delete read-only WidgetSet")) if read_only?
+    if read_only?
+      errors.add(:base, _("Unable to delete read-only WidgetSet"))
+      throw(:abort)
+    end
   end
 
   def destroy_user_versions
