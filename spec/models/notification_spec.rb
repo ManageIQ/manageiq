@@ -6,14 +6,13 @@ RSpec.describe Notification, :type => :model do
 
   describe '.of_type' do
     it "only returns notification of the given type" do
-      types = NotificationType.all
-      type_name_one   = types[0].name
-      type_name_two   = types[1].name
-      type_name_three = types[2].name
+      type_name_one   = "request_approved"
+      type_name_two   = "request_denied"
+      type_name_three = "vm_retired"
 
-      Notification.create(:type => type_name_one, :initiator => user)
-      Notification.create(:type => type_name_one, :initiator => user)
-      Notification.create(:type => type_name_two, :initiator => user)
+      Notification.create(:type => type_name_one, :initiator => user, :options => {:subject => "Request 1"})
+      Notification.create(:type => type_name_one, :initiator => user, :options => {:subject => "Request 2"})
+      Notification.create(:type => type_name_two, :initiator => user, :options => {:subject => "Request 3"})
 
       expect(Notification.of_type(type_name_one).count).to eq(2)
       expect(Notification.of_type(type_name_two).count).to eq(1)
@@ -95,7 +94,7 @@ RSpec.describe Notification, :type => :model do
         let!(:peer) { FactoryBot.create(:user_with_group, :tenant => tenant) }
         let!(:non_peer) { FactoryBot.create(:user) }
 
-        subject { Notification.create(:initiator => user, :type => 'automate_tenant_info') }
+        subject { Notification.create(:initiator => user, :type => 'automate_tenant_info', :options => {:message => "This is not the message you are looking for."}) }
 
         it 'sends notification to the tenant of initiator' do
           expect(subject.recipients).to match_array([user, peer])
