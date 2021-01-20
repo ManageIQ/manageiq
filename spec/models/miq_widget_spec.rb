@@ -130,18 +130,18 @@ RSpec.describe MiqWidget do
       end
 
       it "ignores the legacy format admin|db_name" do
-        expect { FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :set_data_with_one_widget, :name => "#{@user1.userid}|Home", :owner => @user1.current_group) }.to raise_error(ActiveRecord::RecordInvalid)
+        expect { FactoryBot.create(:miq_widget_set, :name => "#{@user1.userid}|Home", :owner => @user1.current_group) }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       context 'with subscribers' do
         before do
-          ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "Home", :userid => @user1.userid, :group_id => @group1.id)
+          ws = FactoryBot.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group => @group1)
           @widget_report_vendor_and_guest_os.make_memberof(ws)
         end
 
         it "returns non-empty array when widget has subscribers" do
           user_temp = add_user(@group1)
-          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1)
           @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
           result = @widget_report_vendor_and_guest_os.grouped_subscribers
 
@@ -153,7 +153,7 @@ RSpec.describe MiqWidget do
           users = []
           (1..3).each do |_i|
             user_i = add_user(@group2)
-            ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2.id)
+            ws_i   = add_dashboard_for_user("Home", user_i.userid, @group2)
             @widget_report_vendor_and_guest_os.make_memberof(ws_i)
             users << user_i
           end
@@ -167,7 +167,7 @@ RSpec.describe MiqWidget do
 
         it 'ignores the user that does not exist any more' do
           user_temp = add_user(@group1)
-          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1.id)
+          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1)
           @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
 
           user_temp.delete
@@ -196,7 +196,7 @@ RSpec.describe MiqWidget do
       end
 
       def add_dashboard_for_user(db_name, userid, group)
-        FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => db_name, :userid => userid, :group_id => group)
+        FactoryBot.create(:miq_widget_set, :name => db_name, :userid => userid, :owner => group)
       end
     end
 
@@ -303,8 +303,8 @@ RSpec.describe MiqWidget do
         read_only: true
       ')
 
-      ws1 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "default", :userid => user1.userid, :group_id => group1.id)
-      ws2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "default", :userid => @user2.userid, :group_id => @group2.id)
+      ws1 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user1.userid, :owner => group1)
+      ws2 = FactoryBot.create(:miq_widget_set, :name => "default", :userid => @user2.userid, :owner => @group2)
       @widget = MiqWidget.sync_from_hash(attrs)
       ws1.add_member(@widget)
       ws2.add_member(@widget)
@@ -481,8 +481,7 @@ RSpec.describe MiqWidget do
     it "with multiple timezones in one group" do
       user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
-      ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "default", :userid => "user_est", :group_id => @group2.id)
-      ws.add_member(@widget)
+      ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)
 
       expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil, ["Eastern Time (US & Canada)", "UTC"])
       @widget.queue_generate_content
@@ -494,8 +493,7 @@ RSpec.describe MiqWidget do
     it "with report_sync" do
       user_est =  FactoryBot.create(:user, :userid => 'user_est', :miq_groups => [@group2], :settings => {:display => {:timezone => "Eastern Time (US & Canada)"}})
       expect(user_est.get_timezone).to eq("Eastern Time (US & Canada)")
-      ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "default", :userid => "user_est", :group_id => @group2.id)
-      ws.add_member(@widget)
+      ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => "user_est", :owner => @group2, :widget_id => @widget.id)
 
       expect_any_instance_of(MiqWidget).to receive(:generate_content).with("MiqGroup", @group2.name, nil,
                                                                            ["Eastern Time (US & Canada)"])
@@ -516,17 +514,16 @@ RSpec.describe MiqWidget do
         @widget.visibility[:roles] = "_ALL_"
         new_group1 = FactoryBot.create(:miq_group, :role => "operator")
         new_ws1 = FactoryBot.create(:miq_widget_set,
-                                    :set_data_with_one_widget,
                                     :name     => "default",
                                     :userid   => @user2.userid,
-                                    :group_id => new_group1.id)
+                                    :owner    => new_group1)
         new_ws1.add_member(@widget)
 
         new_group2 = FactoryBot.create(:miq_group, :role => "approver")
-        new_ws2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget,
+        new_ws2 = FactoryBot.create(:miq_widget_set,
                                     :name     => "default",
                                     :userid   => @user2.userid,
-                                    :group_id => new_group2.id)
+                                    :owner    => new_group2)
         new_ws2.add_member(@widget)
 
         call_count = 0
@@ -539,8 +536,7 @@ RSpec.describe MiqWidget do
         @widget.visibility[:roles] = "_ALL_"
         MiqWidgetSet.destroy_all
         user = FactoryBot.create(:user, :userid => 'alone', :miq_groups => [@group2])
-        ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => "default", :userid => user.userid, :read_only => true)
-        ws.add_member(@widget)
+        ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user.userid, :read_only => true, :widget_id => @widget.id)
 
         expect(@widget).to receive(:generate_content_options).never
         @widget.queue_generate_content
@@ -665,15 +661,13 @@ RSpec.describe MiqWidget do
                                    :miq_groups => [@group])
 
       @ws1 = FactoryBot.create(:miq_widget_set,
-                               :set_data_with_one_widget,
                                :name     => "HOME",
                                :userid   => @user1.userid,
-                               :group_id => @group.id)
+                               :owner    => @group)
       @ws2 = FactoryBot.create(:miq_widget_set,
-                               :set_data_with_one_widget,
                                :name     => "HOME",
                                :userid   => @user2.userid,
-                               :group_id => @group.id)
+                               :owner    => @group)
     end
 
     context "for non-self service user" do
@@ -756,10 +750,10 @@ RSpec.describe MiqWidget do
       before do
         @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
         @group2 = FactoryBot.create(:miq_group, :miq_user_role => @role)
-        @ws3    = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget,
+        @ws3    = FactoryBot.create(:miq_widget_set,
                                      :name     => "HOME",
                                      :userid   => @user1.userid,
-                                     :group_id => @group2.id
+                                     :owner    => @group2
                                     )
         widget.make_memberof(@ws3)
 

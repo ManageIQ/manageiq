@@ -483,7 +483,8 @@ RSpec.describe RelationshipMixin do
   context ".alias_with_relationship_type" do
     before do
       group = FactoryBot.create(:miq_group)
-      @ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :owner => group)
+      # NOTE: widget_sets are created with one widget
+      @ws = FactoryBot.create(:miq_widget_set, :owner => group)
       @widget = FactoryBot.create(:miq_widget)
 
       @ws.add_member(@widget)
