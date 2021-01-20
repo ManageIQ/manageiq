@@ -482,15 +482,15 @@ RSpec.describe RelationshipMixin do
 
   context ".alias_with_relationship_type" do
     before do
-      @ws = FactoryBot.create(:miq_widget_set)
-      @w1 = FactoryBot.create(:miq_widget)
-      @w2 = FactoryBot.create(:miq_widget)
-      @ws.add_member(@w1)
-      @ws.add_member(@w2)
+      group = FactoryBot.create(:miq_group)
+      @ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :owner => group)
+      @widget = FactoryBot.create(:miq_widget)
+
+      @ws.add_member(@widget)
     end
 
     it "of a method with arguments" do
-      @ws.remove_member(@w1)
+      @ws.remove_member(@widget)
       expect(@ws.members.length).to eq(1)
     end
 

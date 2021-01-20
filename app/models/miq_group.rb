@@ -307,6 +307,18 @@ class MiqGroup < ApplicationRecord
     n_('Group', 'Groups', number)
   end
 
+  def delete_from_dashboard_order(widget_set_id)
+    return if settings.blank?
+
+    settings[:dashboard_order]&.delete(widget_set_id)
+  end
+
+  def add_to_dashboard_order(widget_set_id)
+    self.settings ||= {:dashboard_order => []}
+    self.settings[:dashboard_order] ||= []
+    self.settings[:dashboard_order] |= [widget_set_id]
+  end
+
   private
 
   # if this tenant is changing, make sure this is not a default group
