@@ -30,7 +30,7 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def update_members
-    replace_children(Array(set_data_widgets)) if members.map(&:id) != set_data_widgets.ids
+    replace_children(Array(set_data_widgets)) if members.map(&:id).sort != set_data_widgets.ids.sort
     current_user = User.current_user
     members.each { |w| w.create_initial_content_for_user(current_user.userid) } if current_user # Generate content if not there
   end
