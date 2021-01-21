@@ -188,6 +188,7 @@ module Vmdb
         errors = []
         worker_settings = worker_class.fetch_worker_settings_from_server(true, data)
 
+        # add assertions that these keys exist - remove defaults
         cpu_request     = worker_settings[:cpu_request_percent] || 0
         cpu_limit       = worker_settings[:cpu_threshold_percent] || Float::INFINITY
         memory_request  = worker_settings[:memory_request] || 0.bytes

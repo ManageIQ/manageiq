@@ -179,8 +179,12 @@ class MiqWorker < ApplicationRecord
   def self.fetch_worker_settings_from_server(miq_server, options = {})
     settings = {}
 
+    # figure out why/if this guard is needed.. it's weird to have miq_server required here but also accept options
     unless miq_server.nil?
       server_config = options[:config] || miq_server.settings
+
+      # extract a method to flatten the ancestry of worker settings into a single key value pair for this worker
+
       # Get the configuration values
       section = server_config[:workers]
       unless section.nil?
