@@ -67,6 +67,10 @@ RSpec.describe Vmdb::Settings::Validator do
 
     {:smtp => {:from => "a@example.com"}}, true,
     {:smtp => {:from => "xxx"}},           false,
+
+    {:workers => {:worker_base => {:inherits_from => "xxx"}}},         false,
+    {:workers => {:ui_worker   => {:inherits_from => "worker_base"}}}, true,
+    {:workers => {:ui_worker   => {:inherits_from => "xxx"}}},         false,
   ].freeze
 
   VALIDATOR_CASES.each_slice(2) do |c, expected|

@@ -22,13 +22,10 @@
   :level_<%= provider_name %>: info
 <% if options[:scaffolding] -%>
 :workers:
-  :worker_base:
-    :event_catcher:
-      :event_catcher_<%= provider_name %>:
-        :poll: 20.seconds
-    :queue_worker_base:
-      :ems_metrics_collector_worker:
-        :ems_metrics_collector_worker_<%= provider_name %>: {}
-      :ems_refresh_worker:
-        :ems_refresh_worker_<%= provider_name %>: {}
+  :event_catcher_<%= provider_name %>:
+    :inherits_from: event_catcher
+  :ems_metrics_collector_worker_<%= provider_name %>:
+    :inherits_from: ems_metrics_collector_worker
+  :ems_refresh_worker_<%= provider_name %>:
+    :inherits_from: ems_refresh_worker
 <% end -%>

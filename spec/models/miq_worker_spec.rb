@@ -135,20 +135,25 @@ RSpec.describe MiqWorker do
     let(:settings) do
       {
         :workers => {
-          :worker_base => {
-            :defaults          => {:memory_threshold => "100.megabytes"},
-            :queue_worker_base => {
-              :defaults           => {:memory_threshold => "300.megabytes"},
-              :ems_refresh_worker => {
-                :defaults                  => {:memory_threshold => "500.megabytes"},
-                :ems_refresh_worker_amazon => {
-                  :memory_threshold => "700.megabytes"
-                }
-              }
-            }
+          :worker_base               => {
+            :memory_threshold => "100.megabytes"
+          },
+          :queue_worker_base         => {
+            :inherits_from    => "worker_base",
+            :memory_threshold => "300.megabytes"
+          },
+          :ems_refresh_worker        => {
+            :inherits_from    => "queue_worker_base",
+            :memory_threshold => "500.megabytes"
+          },
+          :ems_refresh_worker_amazon => {
+            :inherits_from    => "ems_refresh_worker",
+            :memory_threshold => "700.megabytes"
           }
         },
-        :ems     => {:ems_amazon => {}}
+        :ems     => {
+          :ems_amazon => {}
+        }
       }
     end
 
@@ -165,7 +170,7 @@ RSpec.describe MiqWorker do
       end
 
       it "without overrides" do
-        settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :ems_refresh_worker_amazon, {})
+        settings.delete_path(:workers, :ems_refresh_worker_amazon, :memory_threshold)
         stub_settings(settings)
 
         expect(actual).to eq(500.megabytes)
@@ -179,7 +184,8 @@ RSpec.describe MiqWorker do
       end
 
       it "without overrides" do
-        settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :defaults, {})
+        settings.delete_path(:workers, :ems_refresh_worker_amazon, :memory_threshold)
+        settings.delete_path(:workers, :ems_refresh_worker, :memory_threshold)
         stub_settings(settings)
 
         expect(actual).to eq(300.megabytes)
@@ -193,7 +199,9 @@ RSpec.describe MiqWorker do
       end
 
       it "without overrides" do
-        settings.store_path(:workers, :worker_base, :queue_worker_base, :defaults, {})
+        settings.delete_path(:workers, :ems_refresh_worker_amazon, :memory_threshold)
+        settings.delete_path(:workers, :ems_refresh_worker, :memory_threshold)
+        settings.delete_path(:workers, :queue_worker_base, :memory_threshold)
         stub_settings(settings)
 
         expect(actual).to eq(100.megabytes)
@@ -205,20 +213,25 @@ RSpec.describe MiqWorker do
       let(:settings) do
         {
           :workers => {
-            :worker_base => {
-              :defaults          => {:memory_threshold => "100.megabytes"},
-              :queue_worker_base => {
-                :defaults           => {:memory_threshold => 314_572_800}, # 300.megabytes
-                :ems_refresh_worker => {
-                  :defaults                  => {:memory_threshold => "524288000"}, # 500.megabytes
-                  :ems_refresh_worker_amazon => {
-                    :memory_threshold => "1181116006.4" # 1.1.gigabtye
-                  }
-                }
-              }
+            :worker_base               => {
+              :memory_threshold => "100.megabytes"
+            },
+            :queue_worker_base         => {
+              :inherits_from    => "worker_base",
+              :memory_threshold => 314_572_800           # 300.megabytes
+            },
+            :ems_refresh_worker        => {
+              :inherits_from    => "queue_worker_base",
+              :memory_threshold => "524288000"           # 500.megabytes
+            },
+            :ems_refresh_worker_amazon => {
+              :inherits_from    => "ems_refresh_worker",
+              :memory_threshold => "1181116006.4"        # 1.1.gigabtyes
             }
           },
-          :ems     => {:ems_amazon => {}}
+          :ems     => {
+            :ems_amazon => {}
+          }
         }
       end
 
@@ -241,12 +254,10 @@ RSpec.describe MiqWorker do
     end
 
     it "uses passed in config" do
-      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
-                          :ems_refresh_worker_amazon, :memory_threshold, "5.terabyte")
+      settings.store_path(:workers, :ems_refresh_worker_amazon, :memory_threshold, "5.terabyte")
       stub_settings(settings)
 
-      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
-                          :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      settings.store_path(:workers, :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
       actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
                .worker_settings(:config => settings)[:memory_threshold]
       expect(actual).to eq(1.terabyte)
@@ -274,17 +285,20 @@ RSpec.describe MiqWorker do
       let(:config1) do
         {
           :workers => {
-            :worker_base => {
-              :defaults          => {:memory_threshold => "100.megabytes"},
-              :queue_worker_base => {
-                :defaults           => {:memory_threshold => "300.megabytes"},
-                :ems_refresh_worker => {
-                  :defaults                  => {:memory_threshold => "500.megabytes"},
-                  :ems_refresh_worker_amazon => {
-                    :memory_threshold => "700.megabytes"
-                  }
-                }
-              }
+            :worker_base               => {
+              :memory_threshold => "100.megabytes"
+            },
+            :queue_worker_base         => {
+              :inherits_from    => "worker_base",
+              :memory_threshold => "300.megabytes"
+            },
+            :ems_refresh_worker        => {
+              :inherits_from    => "queue_worker_base",
+              :memory_threshold => "500.megabytes"
+            },
+            :ems_refresh_worker_amazon => {
+              :inherits_from    => "ems_refresh_worker",
+              :memory_threshold => "700.megabytes"
             }
           }
         }
@@ -293,17 +307,20 @@ RSpec.describe MiqWorker do
       let(:config2) do
         {
           :workers => {
-            :worker_base => {
-              :defaults          => {:memory_threshold => "200.megabytes"},
-              :queue_worker_base => {
-                :defaults           => {:memory_threshold => "400.megabytes"},
-                :ems_refresh_worker => {
-                  :defaults                  => {:memory_threshold => "600.megabytes"},
-                  :ems_refresh_worker_amazon => {
-                    :memory_threshold => "800.megabytes"
-                  }
-                }
-              }
+            :worker_base               => {
+              :memory_threshold => "200.megabytes"
+            },
+            :queue_worker_base         => {
+              :inherits_from    => "worker_base",
+              :memory_threshold => "400.megabytes"
+            },
+            :ems_refresh_worker        => {
+              :inherits_from    => "queue_worker_base",
+              :memory_threshold => "600.megabytes"
+            },
+            :ems_refresh_worker_amazon => {
+              :inherits_from    => "ems_refresh_worker",
+              :memory_threshold => "800.megabytes"
             }
           }
         }
@@ -326,29 +343,11 @@ RSpec.describe MiqWorker do
 
       it "without overrides" do
         @server.settings_changes.where(
-          :key => "/workers/worker_base/queue_worker_base/ems_refresh_worker/ems_refresh_worker_amazon/memory_threshold"
+          :key => "/workers/ems_refresh_worker_amazon/memory_threshold"
         ).delete_all
         expect(@worker.worker_settings[:memory_threshold]).to  eq(500.megabytes)
         expect(@worker2.worker_settings[:memory_threshold]).to eq(800.megabytes)
       end
-    end
-  end
-
-  describe ".config_settings_path" do
-    let(:capu_worker) do
-      ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
-    end
-
-    it "include parent entries" do
-      expect(capu_worker.config_settings_path).to eq(
-        %i(workers worker_base queue_worker_base ems_metrics_collector_worker ems_metrics_collector_worker_amazon)
-      )
-    end
-
-    it "works for high level entries" do
-      expect(MiqEmsMetricsCollectorWorker.config_settings_path).to eq(
-        %i(workers worker_base queue_worker_base ems_metrics_collector_worker)
-      )
     end
   end
 

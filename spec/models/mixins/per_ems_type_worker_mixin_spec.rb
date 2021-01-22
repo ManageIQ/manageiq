@@ -29,14 +29,14 @@ RSpec.describe PerEmsTypeWorkerMixin do
           configured = worker_class.workers_configured_count
           expect(worker_class.workers).to eq(configured)
 
-          stub_settings(:workers => {:worker_base => {:queue_worker_base => {:ems_metrics_collector_worker => {:count => configured + 1}}}})
+          stub_settings_merge(:workers => {:ems_metrics_collector_worker => {:count => configured + 1}})
           expect(worker_class.workers).to eq(configured + 1)
         end
 
         it "is 0 with the provider in the wrong zone" do
           other_zone = FactoryBot.create(:zone)
           provider.update(:zone => other_zone)
-          stub_settings(:workers => {:worker_base => {:queue_worker_base => {:ems_metrics_collector_worker => {:count => 5}}}})
+          stub_settings_merge(:workers => {:ems_metrics_collector_worker => {:count => 5}})
 
           expect(worker_class.workers).to eq(0)
         end
