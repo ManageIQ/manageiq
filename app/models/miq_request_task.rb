@@ -22,6 +22,7 @@ class MiqRequestTask < ApplicationRecord
 
   validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
 
+  include DialogOptionMixin
   include MiqRequestMixin
   include TenancyMixin
 

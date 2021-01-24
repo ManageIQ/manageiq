@@ -9,6 +9,21 @@ module MiqRequestMixin
     MiqRequestMixin.get_option(key, value, options)
   end
 
+  def get_option_decrypted(key, value = nil)
+    raise ArgumentError, "#{key} cannot be decrypted" unless option_encrypted?(key)
+
+    enc_value = MiqRequestMixin.get_option(password_prefixed_symbol_key(key), value, options)
+    MiqPassword.decrypt(enc_value)
+  end
+
+  def option_encrypted?(key)
+    options.key?(password_prefixed_symbol_key(key))
+  end
+
+  def password_prefixed_symbol_key(key)
+    key.to_s.start_with?("password::") ? key : "password::#{key}".to_sym
+  end
+
   def display_message(default_msg = nil)
     MiqRequestMixin.get_option(:user_message, nil, options) || default_msg
   end

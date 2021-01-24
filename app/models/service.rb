@@ -62,6 +62,7 @@ class Service < ApplicationRecord
   include CiFeatureMixin
   include CustomActionsMixin
   include CustomAttributeMixin
+  include DialogOptionMixin
   include ExternalUrlMixin
   include DeprecationMixin
   include LifecycleMixin
