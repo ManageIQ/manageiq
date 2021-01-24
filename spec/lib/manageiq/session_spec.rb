@@ -5,7 +5,7 @@ RSpec.describe ManageIQ::Session do
     def create_session
       sid, data = ManageIQ::Session.store.send(:find_session, request, nil)
       data["my_data"] = "stuff and things"
-      ManageIQ::Session.store.send(:write_session, request, sid, data)
+      ManageIQ::Session.store.send(:write_session, request, sid, data, {})
 
       [sid, data]
     end
