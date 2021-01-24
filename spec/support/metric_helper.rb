@@ -31,16 +31,30 @@ module Spec
           messages[interval_name] ||= {}
           (messages[interval_name][obj] ||= []) << q.args
         end
-        messages["historical"]&.transform_values!(&:sort!)
+        messages["historical"]&.transform_values! { |v| combine_consecutive(v) }
 
         messages
       end
 
+      def combine_consecutive(array)
+        x = array.sort!.shift
+        array.each_with_object([]) do |i, ac|
+          if i.first == x.last
+            x[1] = i.last
+          else
+            ac << x
+            x = i
+          end
+        end << x
+      end
+
       # sorry, stole from the code - not really testing
       def arg_day_range(start_time, end_time, threshold = 1.day)
-        (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
-          [s_time, e_time]
-        end
+        combine_consecutive(
+          (start_time.utc..end_time.utc).step_value(threshold).each_cons(2).collect do |s_time, e_time|
+            [s_time, e_time]
+          end
+        )
       end
 
       def stub_performance_settings(hash)
