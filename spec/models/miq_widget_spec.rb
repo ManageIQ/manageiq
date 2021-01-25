@@ -1,12 +1,6 @@
 RSpec.describe MiqWidget do
   let(:miq_widget) { FactoryBot.create(:miq_widget) }
 
-  let(:set_data) do
-    {:col1             => [miq_widget.id],
-     :reset_upon_login => false,
-     :locked           => false}
-  end
-
   before do
     EvmSpecHelper.local_miq_server
   end
@@ -143,19 +137,16 @@ RSpec.describe MiqWidget do
 
       context 'with subscribers' do
         before do
-          ws = FactoryBot.create(:miq_widget_set, :name => "Home", :userid => @user1.userid, :group => @group1)
+          ws = FactoryBot.create(:miq_widget_set, :name => "Home", :owner => @user1, :userid => @user1.userid, :group => @group1)
 
           @widget_report_vendor_and_guest_os.make_memberof(ws)
         end
 
         it "returns non-empty array when widget has subscribers" do
-          user_temp = add_user(@group1)
-          ws_temp   = add_dashboard_for_user("Home", user_temp.userid, @group1)
-          @widget_report_vendor_and_guest_os.make_memberof(ws_temp)
           result = @widget_report_vendor_and_guest_os.grouped_subscribers
 
           expect(result.size).to eq(1)
-          expect(result[@group1]).to match_array([@user1, user_temp])
+          expect(result[@group1]).to match_array([@user1])
         end
 
         it "with multiple groups and users" do
@@ -527,18 +518,16 @@ RSpec.describe MiqWidget do
       it "multiple" do
         @widget.visibility[:roles] = "_ALL_"
         new_group1 = FactoryBot.create(:miq_group, :role => "operator")
-        new_ws1 = FactoryBot.create(:miq_widget_set,
-                                    :name     => "default",
-                                    :userid   => @user2.userid,
-                                    :owner    => new_group1)
+        new_ws1 = FactoryBot.create(:miq_widget_set, :name   => "default",
+                                                     :userid => @user2.userid,
+                                                     :owner  => new_group1)
         new_ws1.add_member(@widget)
 
         new_group2 = FactoryBot.create(:miq_group, :role => "approver")
 
-        new_ws2 = FactoryBot.create(:miq_widget_set,
-                                    :name     => "default",
-                                    :userid   => @user2.userid,
-                                    :owner    => new_group2)
+        new_ws2 = FactoryBot.create(:miq_widget_set, :name   => "default",
+                                                     :userid => @user2.userid,
+                                                     :owner  => new_group2)
         new_ws2.add_member(@widget)
 
         call_count = 0
@@ -552,7 +541,7 @@ RSpec.describe MiqWidget do
         MiqWidgetSet.destroy_all
         user = FactoryBot.create(:user, :userid => 'alone', :miq_groups => [@group2])
 
-        ws = FactoryBot.create(:miq_widget_set, :name => "default", :userid => user.userid, :read_only => true, :widget_id => @widget.id)
+        ws = FactoryBot.create(:miq_widget_set, :name => "default", :read_only => true, :widget_id => @widget.id)
         ws.add_member(@widget)
 
         expect(@widget).to receive(:generate_content_options).never
@@ -677,14 +666,12 @@ RSpec.describe MiqWidget do
                                    :settings   => {:display => {:timezone => "Pacific Time (US & Canada)"}},
                                    :miq_groups => [@group])
 
-      @ws1 = FactoryBot.create(:miq_widget_set,
-                               :name     => "HOME",
-                               :userid   => @user1.userid,
-                               :owner    => @group)
-      @ws2 = FactoryBot.create(:miq_widget_set,
-                               :name     => "HOME",
-                               :userid   => @user2.userid,
-                               :owner    => @group)
+      @ws1 = FactoryBot.create(:miq_widget_set, :name   => "HOME",
+                                                :userid => @user1.userid,
+                                                :owner  => @group)
+      @ws2 = FactoryBot.create(:miq_widget_set, :name   => "HOME",
+                                                :userid => @user2.userid,
+                                                :owner  => @group)
     end
 
     context "for non-self service user" do
@@ -768,11 +755,9 @@ RSpec.describe MiqWidget do
         @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
         @group2 = FactoryBot.create(:miq_group, :miq_user_role => @role)
 
-        @ws3    = FactoryBot.create(:miq_widget_set,
-                                     :name     => "HOME",
-                                     :userid   => @user1.userid,
-                                     :owner    => @group2
-                                    )
+        @ws3 = FactoryBot.create(:miq_widget_set, :name   => "HOME",
+                                                  :userid => @user1.userid,
+                                                  :owner  => @group2)
         widget.make_memberof(@ws3)
 
         @user1.miq_groups = [@group, @group2]

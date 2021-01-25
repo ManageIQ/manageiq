@@ -324,8 +324,8 @@ RSpec.describe MiqGroup do
 
   context "#ordered_widget_sets" do
     let(:group) { FactoryBot.create(:miq_group) }
-    it "uses dashboard_order if present" do
 
+    it "uses dashboard_order if present" do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
