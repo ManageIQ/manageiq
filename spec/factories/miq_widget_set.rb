@@ -3,16 +3,20 @@ FactoryBot.define do
     sequence(:name)         { |n| "widget_set_#{seq_padded_for_sorting(n)}" }
     sequence(:description)  { |n| "widget_set_#{seq_padded_for_sorting(n)}" }
 
-    trait :set_data_with_one_widget do
-      set_data do
-        {:col1             => [FactoryBot.create(:miq_widget).id],
-         :reset_upon_login => false,
-         :locked           => false}
-      end
+    transient do
+      widget_id             { nil }
+      last_group_db_updated { nil }
     end
 
-    before(:create) do |x|
-      x.group_id = x.owner_id if x.owner_id
+    after(:build) do |widget_set, env|
+      unless widget_set.set_data
+        widget_set.valid?
+        widget_set.set_data[:col1] << (env.widget_id || FactoryBot.create(:miq_widget).id)
+      end
+
+      unless widget_set.owner_id
+        widget_set.owner = User.current_user || FactoryBot.create(:miq_group)
+      end
     end
   end
 end

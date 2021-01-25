@@ -1,8 +1,11 @@
 RSpec.describe MiqWidgetSet do
   let(:group) { user.current_group }
   let(:user)  { FactoryBot.create(:user_with_group) }
+
+  let(:miq_widget) { FactoryBot.create(:miq_widget) }
+
   before do
-    @ws_group = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :owner => group)
+    @ws_group = FactoryBot.create(:miq_widget_set, :name => 'Home', :owner => group)
   end
 
   describe "validate" do
@@ -64,7 +67,7 @@ RSpec.describe MiqWidgetSet do
 
   context "with a user" do
     before do
-      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id)
+      FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
     end
 
     it "initial state" do
@@ -84,7 +87,7 @@ RSpec.describe MiqWidgetSet do
 
   describe ".destroy_user_versions" do
     before do
-      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'User_Home', :userid => user.userid, :owner => group)
+      FactoryBot.create(:miq_widget_set, :name => 'User_Home', :userid => user.userid, :owner => group)
     end
 
     it "destroys all user's versions of dashboards (dashboards been customized by user)" do
@@ -97,12 +100,12 @@ RSpec.describe MiqWidgetSet do
 
   describe "#where_unique_on" do
     let(:group2) { FactoryBot.create(:miq_group, :description => 'dev group2') }
-    let(:ws_1)   { FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id) }
+    let(:ws_1)   { FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :owner => group, :group_id => group.id) }
 
     before do
       user.miq_groups << group2
       ws_1
-      FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group2.id)
+      FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :owner => group2, :group_id => group2.id)
     end
 
     it "initial state" do
@@ -120,21 +123,21 @@ RSpec.describe MiqWidgetSet do
 
   describe "#with_users" do
     it "brings back records with users" do
-      ws = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :name => 'Home', :userid => user.userid, :group_id => group.id)
+      ws = FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id)
       expect(described_class.with_users).to eq([ws])
     end
   end
 
   context ".find_with_same_order" do
     it "returns in index order" do
-      g1 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
-      g2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
+      g1 = FactoryBot.create(:miq_widget_set, :read_only => true)
+      g2 = FactoryBot.create(:miq_widget_set, :read_only => true)
       expect(MiqWidgetSet.find_with_same_order([g1.id.to_s, g2.id.to_s])).to eq([g1, g2])
     end
 
     it "returns in non index order" do
-      g1 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
-      g2 = FactoryBot.create(:miq_widget_set, :set_data_with_one_widget, :read_only => true)
+      g1 = FactoryBot.create(:miq_widget_set, :read_only => true)
+      g2 = FactoryBot.create(:miq_widget_set, :read_only => true)
       expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
     end
   end
