@@ -17,15 +17,27 @@ RSpec.describe MiqWidgetSet do
 
     let(:other_group) { FactoryBot.create(:miq_group) }
 
-    it "validates that MiqWidgetSet has unique description inside group" do
+    it "validates that MiqWidgetSet has unique description per group and userid" do
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => group)
-      expect(widget_set.errors.messages).to include(:description => ["Description (Tab Title) must be unique for this group"])
+
+      expect(widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => nil)
-      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
-      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+
+      widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+
+      FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "x")
+      FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "y")
+      other_userids = MiqWidgetSet.where(:description => @ws_group.description, :owner => other_group).map(&:userid)
+      expect(other_userids).to match_array(%w[x y])
+
+      other_widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group, :userid => "x")
+      expect(other_widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
     end
 
     it "validates that there is at least one widget in set_data" do

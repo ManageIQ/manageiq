@@ -15,8 +15,8 @@ class MiqWidgetSet < ApplicationRecord
 
   validates :name, :format => {:with => /\A[^|]*\z/, :on => :create, :message => "cannot contain \"|\""}
 
-  validates :description, :uniqueness_when_changed => {:scope   => :owner_id,
-                                                       :message => _("Description (Tab Title) must be unique for this group")}
+  validates :description, :uniqueness_when_changed => {:scope   => [:owner_id, :userid],
+                                                       :message => _("must be unique for this group and userid")}
   belongs_to :group, :class_name => 'MiqGroup'
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
