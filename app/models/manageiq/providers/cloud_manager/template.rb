@@ -1,4 +1,6 @@
 class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
+  supports_not :import_image
+
   default_value_for :cloud, true
 
   virtual_column :image?, :type => :boolean
@@ -53,6 +55,41 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
 
     klass = class_by_ems(ext_management_system)
     klass.raw_create_image(ext_management_system, options)
+  end
+
+  # Queue import of image with an id 'options[:image_id]' from a provider
+  # with an id 'options[:provider_id]' into current provider
+  #
+  def self.import_image_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "Importing Cloud Template for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => name,
+      :method_name => 'import_image',
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :args        => [ext_management_system.id, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.raw_import_image(_ext_management_system, _options = {})
+    raise NotImplementedError, "raw_import_image must be implemented in a subclass"
+  end
+
+  def self.import_image(ems_id, options)
+    raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+
+    ext_management_system = ExtManagementSystem.find(ems_id)
+    raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
+
+    klass = class_by_ems(ext_management_system)
+    klass.raw_import_image(ext_management_system, options)
   end
 
   # Update a cloud template as a queued task and return the task id. The queue
