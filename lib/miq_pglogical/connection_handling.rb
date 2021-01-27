@@ -15,8 +15,15 @@ class MiqPglogical
       end
 
       def pglogical(refresh = false)
-        @pglogical = nil if refresh
-        @pglogical ||= PG::LogicalReplication::Client.new(pg_connection)
+        # TODO: Review if the reasons behind the previous caching / refreshing
+        # of the PG::LogicalReplication::Client
+        #
+        #    @pglogical = nil if refresh
+        #    @pglogical ||= PG::LogicalReplication::Client.new(pg_connection)
+        #
+        # is still relevant as it caused segfaults with rails 6 when the
+        # caching was in place.
+        PG::LogicalReplication::Client.new(pg_connection)
       end
     end
 
