@@ -36,10 +36,17 @@ namespace :test do
   end
 
   task :spec_deps => [:initialize, 'evm:compile_sti_loader']
+
+  task :setup do
+    test_suite = ENV["TEST_SUITE"] || "vmdb"
+    Rake::Task["test:#{test_suite}:setup"].invoke
+  end
 end
 
-task :default => 'test:vmdb'
+task :default => :test
 
-desc "Alias of 'test:vmdb'"
-task :test => 'test:vmdb' # TODO: Run all test suites?
+task :test do
+  test_suite = ENV["TEST_SUITE"] || "vmdb"
+  Rake::Task["test:#{test_suite}"].invoke
+end
 end # ifdef

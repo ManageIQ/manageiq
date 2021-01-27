@@ -17,14 +17,9 @@ matrix:
   fast_finish: true
 addons:
   postgresql: '10'
-before_install:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
-before_script:
-- bundle exec rake test:$TEST_SUITE:setup
-script:
-- bundle exec rake test:$TEST_SUITE
-after_failure:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
+before_install: source ${TRAVIS_BUILD_DIR}/bin/ci/before_install.sh
+before_script: source ${TRAVIS_BUILD_DIR}/bin/ci/before_script.sh
+after_failure: source ${TRAVIS_BUILD_DIR}/bin/ci/after_failure.sh
 notifications:
   webhooks:
     urls:
