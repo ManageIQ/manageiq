@@ -1,4 +1,3 @@
-require 'util/runcmd'
 RSpec.describe EvmDatabaseOps do
   let(:file_storage) { double("MiqSmbSession", :disconnect => nil) }
   let(:local_backup) { "/tmp/backup_1" }
@@ -95,7 +94,6 @@ RSpec.describe EvmDatabaseOps do
       allow(file_storage).to  receive(:uri_to_local_path).and_return(tmpdir.join("share").to_s)
       allow(file_storage).to  receive(:add).and_yield(input_path)
 
-      allow(MiqUtil).to        receive(:runcmd)
       allow(PostgresAdmin).to  receive(:runcmd_with_logging)
       allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)

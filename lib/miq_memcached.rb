@@ -1,4 +1,3 @@
-require 'runcmd'
 require 'linux_admin'
 
 module MiqMemcached
@@ -134,14 +133,14 @@ END_OF_CONFIG
     end
 
     def self.killall
-      MiqUtil.runcmd("killall -9 memcached")
+      AwesomeSpawn.run!("killall", :params => ["-9", "memcached"], :combined_output => true)
     rescue AwesomeSpawn::CommandResultError => err
       raise unless err.result.output =~ /memcached: no process/
     end
 
     def self.status
       begin
-        res = MiqUtil.runcmd('service memcached status').to_s.chomp
+        res = AwesomeSpawn.run!("service", :params => ["memcached", "status"], :combined_output => true).output.to_s.chomp
       rescue AwesomeSpawn::CommandResultError => err
         return false, err.result.output.chomp
       rescue => err
