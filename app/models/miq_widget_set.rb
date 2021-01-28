@@ -91,7 +91,12 @@ class MiqWidgetSet < ApplicationRecord
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = find_by(:name => attrs["name"])
+    lookup_attributes = {}
+    lookup_attributes[:name] = attrs["name"]
+    lookup_attributes[:userid] = nil
+    lookup_attributes[:group_id] = nil
+
+    ws = find_by(lookup_attributes)
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
