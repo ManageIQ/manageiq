@@ -15,7 +15,7 @@ RSpec.describe MiqEnvironment do
       end
 
       example "local_ip_address" do
-        expect(described_class.local_ip_address).to eq(`hostname -i`.chomp.split.first)
+        expect(described_class.local_ip_address).to be_in(Socket.ip_address_list.map(&:ip_address))
       end
     end
 
