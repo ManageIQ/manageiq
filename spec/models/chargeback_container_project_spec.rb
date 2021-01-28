@@ -161,21 +161,52 @@ RSpec.describe ChargebackContainerProject do
   end
 
   context "group results by tag" do
-    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
+    let(:options) do
+      base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment')
+    end
+
+    let(:development_project) do
+      FactoryBot.create(:container_project, :name                  => "Development Project",
+                                            :ext_management_system => ems,
+                                            :created_on            => month_beginning)
+    end
+
+    let(:other_development_project) do
+      FactoryBot.create(:container_project, :name                  => "Other Development Project",
+                                            :ext_management_system => ems,
+                                            :created_on            => month_beginning)
+    end
 
     before do
-      metric_rollup_params[:tag_names] = "environment/prod"
+      environment_category = Classification.find_by(:description => "Environment")
+      FactoryBot.create(:classification, :name => "dev", :description => "Development", :parent_id => environment_category.id)
 
+      metric_rollup_params[:tag_names] = "environment/dev"
+      add_metric_rollups_for(development_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+
+      metric_rollup_params[:tag_names] = "environment/dev"
+      add_metric_rollups_for(other_development_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+
+      metric_rollup_params[:tag_names] = "environment/prod"
       add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first }
 
     it "cpu" do
-      metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
-      expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
-      expect(subject.tag_name).to eq('Production')
+      cpu_cores_metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
+
+      expect(subject.first.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+      expect(subject.first.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      expect(subject.first.tag_name).to eq('Production')
+
+      metric_used_for_development_project = cpu_cores_used_metric_for(development_project, hours_in_month)
+      metric_used_for_other_development_project = cpu_cores_used_metric_for(other_development_project, hours_in_month)
+      cpu_cores_metric_used = metric_used_for_development_project + metric_used_for_other_development_project
+
+      expect(subject.second.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+      expect(subject.second.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      expect(subject.second.tag_name).to eq('Development')
     end
   end
 
