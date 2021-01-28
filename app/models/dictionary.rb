@@ -34,6 +34,22 @@ class Dictionary
     opts[:plural] ? col.send(opts[:notfound]).send(:pluralize) : col.send(opts[:notfound])
   end
 
+  def self.ui_lookup(options = {})
+    if options[:table]
+      gettext(options[:table], :type => :table, :notfound => :titleize, :plural => false)
+    elsif options[:tables]
+      gettext(options[:tables], :type => :table, :notfound => :titleize, :plural => true)
+    elsif options[:model]
+      gettext(options[:model], :type => :model, :notfound => :titleize, :plural => false)
+    elsif options[:models]
+      gettext(options[:models], :type => :model, :notfound => :titleize, :plural => true)
+    elsif options[:ui_title]
+      gettext(options[:ui_title], :type => :ui_title)
+    else
+      ''
+    end
+  end
+
   def self.i18n_lookup(type, text)
     result = I18n.t("dictionary.#{type}.#{text}", :locale => "en")
     result.start_with?("translation missing:") ? nil : result

@@ -64,19 +64,7 @@ module Vmdb
 
     # Get dictionary name with default settings
     def ui_lookup(options = {})
-      if options[:table]
-        Dictionary.gettext(options[:table], :type => :table, :notfound => :titleize, :plural => false)
-      elsif options[:tables]
-        Dictionary.gettext(options[:tables], :type => :table, :notfound => :titleize, :plural => true)
-      elsif options[:model]
-        Dictionary.gettext(options[:model], :type => :model, :notfound => :titleize, :plural => false)
-      elsif options[:models]
-        Dictionary.gettext(options[:models], :type => :model, :notfound => :titleize, :plural => true)
-      elsif options[:ui_title]
-        Dictionary.gettext(options[:ui_title], :type => :ui_title)
-      else
-        ''
-      end
+      Dictionary.ui_lookup(options)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
