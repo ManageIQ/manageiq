@@ -15,8 +15,8 @@ class MiqWidgetSet < ApplicationRecord
 
   validates :name, :format => {:with => /\A[^|]*\z/, :on => :create, :message => "cannot contain \"|\""}
 
-  validates :description, :uniqueness_when_changed => {:scope   => :owner_id,
-                                                       :message => _("Description (Tab Title) must be unique for this group")}
+  validates :description, :uniqueness_when_changed => {:scope   => [:owner_id, :userid],
+                                                       :message => _("must be unique for this group and userid")}
   belongs_to :group, :class_name => 'MiqGroup'
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
@@ -91,7 +91,12 @@ class MiqWidgetSet < ApplicationRecord
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = find_by(:name => attrs["name"])
+    lookup_attributes = {}
+    lookup_attributes[:name] = attrs["name"]
+    lookup_attributes[:userid] = nil
+    lookup_attributes[:group_id] = nil
+
+    ws = find_by(lookup_attributes)
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data

@@ -8,6 +8,49 @@ RSpec.describe MiqWidgetSet do
     @ws_group = FactoryBot.create(:miq_widget_set, :name => 'Home', :owner => group)
   end
 
+  context ".seed" do
+    include_examples ".seed called multiple times"
+
+    let(:yaml_attributes) do
+      {
+        "name"                    => "default",
+        "read_only"               => "t",
+        "set_type"                => "MiqWidgetSet",
+        "description"             => "Default Dashboard",
+        "set_data_by_description" => {
+          'col1' => [
+            miq_widget.description
+          ]
+        }
+      }
+    end
+
+    let(:default_yaml_file_path) do
+      default_yaml_file = Tempfile.new('default.yml')
+      default_yaml_file.write(yaml_attributes.to_yaml)
+      default_yaml_file.close
+      default_yaml_file.path
+    end
+
+    let!(:miq_widget_set) do
+      FactoryBot.create(:miq_widget_set, :name => "default", :updated_on => File.mtime(default_yaml_file_path).utc - 1.day)
+    end
+
+    def default_widget_set
+      MiqWidgetSet.find_by(:name => 'default', :userid => nil, :group_id => nil)
+    end
+
+    it "creates widget set from yaml even when other widget set with same name exist" do
+      expect(default_widget_set).to be_nil
+
+      expect do
+        MiqWidgetSet.sync_from_file(default_yaml_file_path)
+      end.to change(MiqWidgetSet, :count).by(1)
+
+      expect(default_widget_set).not_to be_nil
+    end
+  end
+
   describe "validate" do
     it "validates that MiqWidgetSet#name cannot contain \"|\" " do
       widget_set = MiqWidgetSet.create(:name => 'TEST|TEST')
@@ -17,15 +60,27 @@ RSpec.describe MiqWidgetSet do
 
     let(:other_group) { FactoryBot.create(:miq_group) }
 
-    it "validates that MiqWidgetSet has unique description inside group" do
+    it "validates that MiqWidgetSet has unique description per group and userid" do
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => group)
-      expect(widget_set.errors.messages).to include(:description => ["Description (Tab Title) must be unique for this group"])
+
+      expect(widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => nil)
-      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
-      expect(widget_set.errors.messages).not_to include(:description => ["Description (Tab Title) must be unique for this group"])
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+
+      widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
+      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+
+      FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "x")
+      FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "y")
+      other_userids = MiqWidgetSet.where(:description => @ws_group.description, :owner => other_group).map(&:userid)
+      expect(other_userids).to match_array(%w[x y])
+
+      other_widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group, :userid => "x")
+      expect(other_widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
     end
 
     it "validates that there is at least one widget in set_data" do
