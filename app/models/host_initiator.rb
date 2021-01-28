@@ -14,6 +14,11 @@ class HostInitiator < ApplicationRecord
   supports_not :create
   acts_as_miq_taggable
 
+  def my_zone
+    ems = ext_management_system
+    ems ? ems.my_zone : MiqServer.my_zone
+  end
+
   def self.class_by_ems(ext_management_system)
     # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
