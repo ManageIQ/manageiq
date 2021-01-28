@@ -356,6 +356,36 @@ RSpec.describe RelationshipMixin do
         service2.save!
         expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
       end
+
+      context "#replace_children" do
+        it "with one child to keep and one to add" do
+          service = ancestry_class.create
+          service1.with_relationship_type("custom") { service1.replace_children(service, service4) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to contain_exactly(service, service4)
+        end
+
+        it "with all to remove" do
+          service1.with_relationship_type("custom") { service1.replace_children }
+          expect(service1.with_relationship_type("custom") { service1.replace_children }).to eq([])
+        end
+
+        it "with one child to keep" do
+          service1.with_relationship_type("custom") { service1.replace_children(service4) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to contain_exactly(service4)
+        end
+
+        it "with one child to remove" do
+          service = ancestry_class.create
+          service1.with_relationship_type("custom") { service1.replace_children(service) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to eq([service])
+        end
+
+        it "with no children to start adds them all" do
+          service = ancestry_class.create
+          service.with_relationship_type("custom") { service.replace_children(service4) }
+          expect(service.with_relationship_type("custom") { service.reload.children }).to eq([service4])
+        end
+      end
     end
 
     describe "#add_parent" do
