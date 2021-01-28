@@ -586,7 +586,7 @@ module RelationshipMixin
   end
 
   def add_children(*child_objs)
-    return child_objs.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => self) } } if use_ancestry?
+    return child_objs.flatten.each { |child| child.with_relationship_type(relationship_type) { child.update!(:parent => self) } } if use_ancestry?
 
     options = child_objs.extract_options!
     child_objs = child_objs.flatten
@@ -653,6 +653,14 @@ module RelationshipMixin
     child_objs = child_objs.flatten
     return remove_all_children if child_objs.empty?
 
+    if use_ancestry?
+      ids_to_add = child_objs.collect(&:id) - children.collect(&:id)
+      to_add, to_keep = child_objs.partition { |c| ids_to_add.include?(c.id) }
+      remove_children(children - to_keep)
+      add_children(to_add)
+      return
+    end
+
     # Determine which child relationships should be destroyed, already exist, or should be added
     child_rels = self.child_rels
 
@@ -706,6 +714,8 @@ module RelationshipMixin
   end
 
   def remove_all_children(*args)
+    return children.each { |child| remove_children(child) } if use_ancestry?
+
     # Determine if we are removing all or some children
     options = args.last.kind_of?(Hash) ? args.last : {}
     of_type = Array.wrap(options[:of_type])
