@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'logger'
 require 'active_support/core_ext/class/attribute_accessors'
-require 'util/runcmd'
 
 module MiqApache
   # Abstract Apache Error Class
@@ -60,7 +59,7 @@ module MiqApache
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin
-        res = MiqUtil.runcmd("apachectl", :params => [[command]])
+        res = AwesomeSpawn.run!("apachectl", :params => [command], :combined_output => true).output
       rescue => err
         $log.warn("MIQ(MiqApache::Control.run_apache_cmd) Apache command #{command} with result: #{res} failed with error: #{err}") if $log
       end

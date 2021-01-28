@@ -83,11 +83,10 @@ module MiqEnvironment
 
     def self.supports_command?(cmd)
       return false unless EVM_KNOWN_COMMANDS.include?(cmd)
-      require "runcmd"
 
       begin
         # If 'which apachectl' returns non-zero, it wasn't found
-        MiqUtil.runcmd(which, :params => [[cmd]])
+        AwesomeSpawn.run!(which, :params => [cmd])
       rescue
         false
       else
