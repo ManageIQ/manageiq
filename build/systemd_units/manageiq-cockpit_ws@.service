@@ -8,4 +8,4 @@ Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
 ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqCockpitWsWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
-Slice=miq-cockpit_ws.slice
+Slice=manageiq-cockpit_ws.slice

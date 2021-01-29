@@ -8,4 +8,4 @@ Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
 ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqRemoteConsoleWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
-Slice=miq-remote_console.slice
+Slice=manageiq-remote_console.slice

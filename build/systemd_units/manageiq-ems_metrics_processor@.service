@@ -8,4 +8,4 @@ Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
 ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqEmsMetricsProcessorWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
-Slice=miq-ems_metrics_processor.slice
+Slice=manageiq-ems_metrics_processor.slice

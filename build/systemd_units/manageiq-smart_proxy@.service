@@ -8,4 +8,4 @@ Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
 ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqSmartProxyWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
-Slice=miq-smart_proxy.slice
+Slice=manageiq-smart_proxy.slice

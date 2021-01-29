@@ -8,4 +8,4 @@ Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies,graphql_api
 ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqUiWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
-Slice=miq-ui.slice
+Slice=manageiq-ui.slice
