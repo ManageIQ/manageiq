@@ -1,14 +1,20 @@
 require 'socket'
 
 RSpec.describe "Server Environment Management" do
-  let(:mac_address) { 'a:1:b:2:c:3:d:4' }
-  let(:hostname) { Socket.gethostbyname(Socket.gethostname).first }
-  let(:ip_address) { Socket.ip_address_list.select(&:ipv4?).sort_by(&:ip_address).detect(&:ipv4_private?)&.ip_address }
-
   context ".get_network_information" do
-    it "when in non-production mode" do
+    let(:mac_address) { 'a:1:b:2:c:3:d:4' }
+    let(:hostname)    { "localhost.localdomain" }
+    let(:ip_address)  { "10.1.2.3" }
+
+    before do
       require "uuidtools"
       allow(UUIDTools::UUID).to receive(:mac_address).and_return(mac_address)
+      allow(Socket).to receive(:gethostname).and_return("localhost")
+      allow(Socket).to receive(:gethostbyname).with("localhost").and_return([hostname])
+      allow(Socket).to receive(:ip_address_list).and_return([Addrinfo.ip(ip_address)])
+    end
+
+    it "when in non-production mode" do
       expect(MiqServer.get_network_information).to eq([ip_address, hostname, mac_address])
     end
   end
