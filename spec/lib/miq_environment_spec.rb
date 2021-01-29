@@ -17,6 +17,15 @@ RSpec.describe MiqEnvironment do
       example "local_ip_address" do
         expect(described_class.local_ip_address).to be_in(Socket.ip_address_list.map(&:ip_address))
       end
+
+      context "multiple private addresses" do
+        it "always returns the same address" do
+          allow(Socket).to receive(:ip_address_list).and_return([Addrinfo.ip("192.168.1.10"), Addrinfo.ip("10.1.2.3")])
+          expect(described_class.local_ip_address).to eq("10.1.2.3")
+          allow(Socket).to receive(:ip_address_list).and_return([Addrinfo.ip("10.1.2.3"), Addrinfo.ip("192.168.1.10")])
+          expect(described_class.local_ip_address).to eq("10.1.2.3")
+        end
+      end
     end
 
     context "Command" do
