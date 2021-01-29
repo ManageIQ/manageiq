@@ -11,7 +11,7 @@ module MiqEnvironment
   # Return the local IP v4 address of the local host
   #
   def self.local_ip_address
-    ipv4_addrs = Socket.ip_address_list.select(&:ipv4?)
+    ipv4_addrs = Socket.ip_address_list.select(&:ipv4?).sort_by(&:ip_address)
 
     # Prioritize "public" aka non-loopback non-private addresses first, then
     # prefer private addresses, then take whatever we can get
