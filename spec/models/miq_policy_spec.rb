@@ -56,6 +56,13 @@ RSpec.describe MiqPolicy do
       end
     end
 
+    describe "#display_name" do
+      it "renders a combination of towhat, mode, and description" do
+        expected = "VM and Instance Control: #{policy.description}"
+        expect(policy.display_name).to eq(expected)
+      end
+    end
+
     describe "#events" do
       it "lists miq_event_definition assigned to the policy" do
         expect(policy.events).to eq([event])

@@ -47,6 +47,8 @@ class MiqPolicy < ApplicationRecord
 
   serialize :expression
 
+  virtual_column :display_name, :type => :string
+
   @@associations_to_get_policies = [:parent_enterprise, :ext_management_system, :parent_datacenter, :ems_cluster, :parent_resource_pool, :host]
 
   attr_accessor :reserved
@@ -93,6 +95,10 @@ class MiqPolicy < ApplicationRecord
   def self.clean_attrs(attrs)
     CLEAN_ATTRS.each { |a| attrs.delete(a) }
     attrs
+  end
+
+  def display_name
+    "#{towhat.constantize.display_name} #{mode.capitalize}: #{description}"
   end
 
   def copy(new_fields)
