@@ -29,8 +29,8 @@ class MiqWidget < ApplicationRecord
 
   include_concern 'ImportExport'
   include UuidMixin
+  include MiqSetMemberMixin
   include YAMLImportExportMixin
-  acts_as_miq_set_member
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/widgets"))
   WIDGET_REPORT_SOURCE = "Generated for widget".freeze

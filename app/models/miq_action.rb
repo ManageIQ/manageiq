@@ -2,6 +2,8 @@ require 'awesome_spawn'
 
 class MiqAction < ApplicationRecord
   include UuidMixin
+  include MiqSetMemberMixin
+
   before_validation :default_name_to_guid, :on => :create
   before_destroy    :check_policy_contents_empty_on_destroy
   before_save       :round_if_memory_reconfigured
@@ -31,7 +33,6 @@ class MiqAction < ApplicationRecord
     :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen chatacters without spaces"
 
   acts_as_miq_taggable
-  acts_as_miq_set_member
 
   has_many :miq_policy_contents
 

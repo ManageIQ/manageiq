@@ -1,6 +1,4 @@
-class MiqActionSet < ApplicationRecord
-  acts_as_miq_set
-
+class MiqActionSet < MiqSet
   def self.display_name(number = 1)
     n_('Action Set', 'Action Sets', number)
   end

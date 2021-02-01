@@ -2,8 +2,8 @@ class ScanItem < ApplicationRecord
   include_concern "Seeding"
 
   serialize :definition
-  acts_as_miq_set_member
   include UuidMixin
+  include MiqSetMemberMixin
 
   def self.get_default_profiles
     get_profile('default')

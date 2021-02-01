@@ -1,6 +1,4 @@
-class MiqEventDefinitionSet < ApplicationRecord
-  acts_as_miq_set
-
+class MiqEventDefinitionSet < MiqSet
   def self.seed
     existing = all.group_by(&:name)
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|

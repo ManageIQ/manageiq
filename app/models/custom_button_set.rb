@@ -1,5 +1,4 @@
-class CustomButtonSet < ApplicationRecord
-  acts_as_miq_set
+class CustomButtonSet < MiqSet
 
   before_save :update_button_order
   after_save :update_children
