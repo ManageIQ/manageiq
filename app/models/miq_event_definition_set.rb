@@ -1,6 +1,4 @@
-class MiqEventDefinitionSet < ApplicationRecord
-  acts_as_miq_set
-
+class MiqEventDefinitionSet < MiqSet
   def self.set_definitions_from_path(path)
     YAML.load_file(path)
   end

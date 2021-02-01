@@ -23,11 +23,12 @@ class MiqPolicy < ApplicationRecord
   end
 
   acts_as_miq_taggable
-  acts_as_miq_set_member
   include_concern 'ImportExport'
 
   include UuidMixin
+  include MiqSetMemberMixin
   include YAMLImportExportMixin
+
   before_validation :default_name_to_guid, :on => :create
 
   default_value_for :towhat, 'Vm'

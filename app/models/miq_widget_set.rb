@@ -1,4 +1,4 @@
-class MiqWidgetSet < ApplicationRecord
+class MiqWidgetSet < MiqSet
   include_concern 'SetData'
 
   acts_as_miq_set

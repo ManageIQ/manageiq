@@ -1,6 +1,4 @@
-class MiqAlertSet < ApplicationRecord
-  acts_as_miq_set
-
+class MiqAlertSet < MiqSet
   before_validation :default_name_to_description, :on => :create
 
   include AssignmentMixin

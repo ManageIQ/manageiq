@@ -1,5 +1,6 @@
 class MiqEventDefinition < ApplicationRecord
   include UuidMixin
+  include MiqSetMemberMixin
 
   validates :name, :uniqueness_when_changed => true,
                    :presence                => true,
@@ -8,7 +9,6 @@ class MiqEventDefinition < ApplicationRecord
                                                 :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"}
   validates_presence_of     :description
 
-  acts_as_miq_set_member
   acts_as_miq_taggable
 
   has_many :miq_policy_contents
@@ -150,7 +150,7 @@ class MiqEventDefinition < ApplicationRecord
       end
 
       es = event_sets[set_type]
-      rec.memberof.each { |old_set| rec.make_not_memberof(old_set) unless old_set == es } # handle changes in set membership
+      rec.memberof.each { |old_set| old_set.remove_member(rec) unless old_set == es } # handle changes in set membership
       es.add_member(rec) if es && !es.members.include?(rec)
     end
   end

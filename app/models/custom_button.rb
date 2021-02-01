@@ -17,7 +17,7 @@ class CustomButton < ApplicationRecord
   virtual_attribute :uri_attributes, :string
 
   include UuidMixin
-  acts_as_miq_set_member
+  include MiqSetMemberMixin
 
   TYPES = {"default"          => N_("Default"),
            "ansible_playbook" => N_("Ansible Playbook")}.freeze

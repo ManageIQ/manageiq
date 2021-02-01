@@ -1,6 +1,4 @@
-class MiqPolicySet < ApplicationRecord
-  acts_as_miq_set
-
+class MiqPolicySet < MiqSet
   before_validation :default_name_to_description, :on => :create
   before_destroy    :destroy_policy_tags
 
