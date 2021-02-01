@@ -260,8 +260,8 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
+    gem "manageiq-style",               "~>1.2.0",           :require => false
     gem "PoParser"
-    gem "manageiq-style",                                    :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                                       :require => false
     gem "yard"
