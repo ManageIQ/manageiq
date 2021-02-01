@@ -21,69 +21,69 @@ end
 manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
-gem "activerecord-virtual_attributes", "~>3.0.0"
-gem "activerecord-session_store",     "~>1.1"
-gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
-gem "ancestry",                       "~>3.0.7",       :require => false
-gem "aws-sdk-s3",                     "~>1.0",         :require => false # For FileDepotS3
-gem "bcrypt",                         "~> 3.1.10",     :require => false
-gem "bundler",                        "~> 2.1", ">=2.1.4", :require => false
-gem "byebug",                                          :require => false
-gem "color",                          "~>1.8"
-gem "config",                         "~>2.2", ">=2.2.3", :require => false
-gem "dalli",                          "=2.7.6",        :require => false
-gem "default_value_for",              "~>3.3"
-gem "docker-api",                     "~>1.33.6",      :require => false
-gem "elif",                           "=0.1.0",        :require => false
-gem "fast_gettext",                   "~>2.0.1"
-gem "gettext_i18n_rails",             "~>1.7.2"
-gem "gettext_i18n_rails_js",          "~>1.3.0"
-gem "hamlit",                         "~>2.11.0"
-gem "inifile",                        "~>3.0",         :require => false
-gem "inventory_refresh",              "~>0.2.0",       :require => false
-gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
-gem "linux_admin",                    "~>2.0", ">=2.0.1", :require => false
-gem "listen",                         "~>3.2",         :require => false
-gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.3.4",       :require => false
-gem "manageiq-loggers",               "~>0.6.0",       :require => false
-gem "manageiq-messaging",             "~>1.0",         :require => false
-gem "manageiq-password",              "~>0.3",         :require => false
-gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
-gem "manageiq-ssh-util",              "~>0.1.1",       :require => false
-gem "memoist",                        "~>0.16.0",      :require => false
-gem "money",                          "~>6.13.5",      :require => false
-gem "more_core_extensions"                                               # min version should be set in manageiq-gems-pending, not here
-gem "net-ldap",                       "~>0.16.1",      :require => false
-gem "net-ping",                       "~>1.7.4",       :require => false
-gem "openscap",                       "~>0.4.8",       :require => false
-gem "optimist",                       "~>3.0",         :require => false
-gem "pg",                                              :require => false
-gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
-gem "psych",                          "~>3.1",         :require => false # This can be dropped once we drop ruby 2.5
-gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>6.0.0"
-gem "rails-i18n",                     "~>6.x"
-gem "rake",                           ">=12.3.3",      :require => false
-gem "rest-client",                    "~>2.1.0",       :require => false
-gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
-gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "rubyzip",                        "~>2.0.0",       :require => false
-gem "rugged",                         "~>1.1",         :require => false
-gem "snmp",                           "~>1.2.0",       :require => false
-gem "sprockets",                      "~>3.7.2",       :require => false
-gem "sqlite3",                        "~>1.4.0",       :require => false
-gem "sync",                           "~>0.5",         :require => false
-gem "sys-filesystem",                 "~>1.3.4"
-gem "terminal",                                        :require => false
+gem "activerecord-session_store",       "~>1.1"
+gem "activerecord-virtual_attributes",  "~>3.0.0"
+gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
+gem "ancestry",                         "~>3.0.7",           :require => false
+gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
+gem "bcrypt",                           "~> 3.1.10",         :require => false
+gem "bundler",                          "~> 2.1", ">=2.1.4", :require => false
+gem "byebug",                                                :require => false
+gem "color",                            "~>1.8"
+gem "config",                           "~>2.2", ">=2.2.3",  :require => false
+gem "dalli",                            "=2.7.6",            :require => false
+gem "default_value_for",                "~>3.3"
+gem "docker-api",                       "~>1.33.6",          :require => false
+gem "elif",                             "=0.1.0",            :require => false
+gem "fast_gettext",                     "~>2.0.1"
+gem "gettext_i18n_rails",               "~>1.7.2"
+gem "gettext_i18n_rails_js",            "~>1.3.0"
+gem "hamlit",                           "~>2.11.0"
+gem "inifile",                          "~>3.0",             :require => false
+gem "inventory_refresh",                "~>0.2.0",           :require => false
+gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
+gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
+gem "listen",                           "~>3.2",             :require => false
+gem "log_decorator",                    "~>0.1",             :require => false
+gem "manageiq-api-client",              "~>0.3.4",           :require => false
+gem "manageiq-loggers",                 "~>0.6.0",           :require => false
+gem "manageiq-messaging",               "~>1.0",             :require => false
+gem "manageiq-password",                "~>0.3",             :require => false
+gem "manageiq-postgres_ha_admin",       "~>3.1",             :require => false
+gem "manageiq-ssh-util",                "~>0.1.1",           :require => false
+gem "memoist",                          "~>0.16.0",          :require => false
+gem "money",                            "~>6.13.5",          :require => false
+gem "more_core_extensions"                                                     # min version should be set in manageiq-gems-pending, not here
+gem "net-ldap",                         "~>0.16.1",          :require => false
+gem "net-ping",                         "~>1.7.4",           :require => false
+gem "openscap",                         "~>0.4.8",           :require => false
+gem "optimist",                         "~>3.0",             :require => false
+gem "pg",                                                    :require => false
+gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
+gem "psych",                            "~>3.1",             :require => false # This can be dropped once we drop ruby 2.5
+gem "query_relation",                   "~>0.1.0",           :require => false
+gem "rails",                            "~>6.0.0"
+gem "rails-i18n",                       "~>6.x"
+gem "rake",                             ">=12.3.3",          :require => false
+gem "rest-client",                      "~>2.1.0",           :require => false
+gem "ripper_ruby_parser",               "~>1.5.1",           :require => false
+gem "ruby-progressbar",                 "~>1.7.0",           :require => false
+gem "rubyzip",                          "~>2.0.0",           :require => false
+gem "rugged",                           "~>1.1",             :require => false
+gem "snmp",                             "~>1.2.0",           :require => false
+gem "sprockets",                        "~>3.7.2",           :require => false
+gem "sqlite3",                          "~>1.4.0",           :require => false
+gem "sync",                             "~>0.5",             :require => false
+gem "sys-filesystem",                   "~>1.3.4"
+gem "terminal",                                              :require => false
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
-gem "mime-types",                     "~>3.0",     :source => "https://rubygems.manageiq.org", :require => false
+gem "mime-types",                       "~>3.0",             :require => false, :source => "https://rubygems.manageiq.org"
 
 # Modified gems (forked on Github)
-gem "handsoap",                       "=0.2.5.5",  :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
-gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
+gem "handsoap",                         "=0.2.5.5",          :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
+gem "ruport",                           "=1.7.0.3",                             :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
@@ -97,7 +97,7 @@ gem "american_date"
 ### providers
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
-  gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+  gem "amazon_ssa_support",                                  :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 end
 
 group :ansible_tower, :manageiq_default do
@@ -157,13 +157,13 @@ group :redfish, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.30.0",      :require => false
+  gem "qpid_proton",                    "~>0.30.0",          :require => false
 end
 
 group :systemd, :optional => true do
-  gem "dbus-systemd",    "~>1.1.0", :require => false
-  gem "sd_notify",       "~>0.1.0", :require => false
-  gem "systemd-journal", "~>1.4.2", :require => false
+  gem "dbus-systemd",                   "~>1.1.0",           :require => false
+  gem "sd_notify",                      "~>0.1.0",           :require => false
+  gem "systemd-journal",                "~>1.4.2",           :require => false
 end
 
 group :openshift, :manageiq_default do
@@ -176,7 +176,7 @@ end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt_metrics",                  "~>3.0.1",       :require => false
+  gem "ovirt_metrics",                  "~>3.0.1",           :require => false
 end
 
 group :scvmm, :manageiq_default do
@@ -189,7 +189,7 @@ end
 
 ### shared dependencies
 group :google, :openshift, :manageiq_default do
-  gem "sshkey",                         "~>1.8.0",       :require => false
+  gem "sshkey",                         "~>1.8.0",           :require => false
 end
 
 ### end of provider bundler groups
@@ -199,7 +199,7 @@ group :automate, :seed, :manageiq_default do
 end
 
 group :replication, :manageiq_default do
-  gem "pg-logical_replication", "~>1.0", :require => false
+  gem "pg-logical_replication",         "~>1.0",             :require => false
 end
 
 group :rest_api, :manageiq_default do
@@ -223,7 +223,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.6.2",       :require => false
+  gem "manageiq-smartstate",            "~>0.6.2",           :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -234,7 +234,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "jquery-rjs",                     "=0.1.1.2", :source => "https://rubygems.manageiq.org"
+  gem "jquery-rjs",                     "=0.1.1.2",          :source => "https://rubygems.manageiq.org"
 end
 
 group :v2v, :ui_dependencies do
@@ -249,8 +249,8 @@ group :web_server, :manageiq_default do
 end
 
 group :web_socket, :manageiq_default do
-  gem "surro-gate",                     "~>1.0.5", :require => false
-  gem "websocket-driver",               "~>0.6.3", :require => false
+  gem "surro-gate",                     "~>1.0.5",           :require => false
+  gem "websocket-driver",               "~>0.6.3",           :require => false
 end
 
 ### Start of gems excluded from the appliances.
@@ -261,29 +261,29 @@ unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
     gem "PoParser"
-    gem "manageiq-style",               :require => false
+    gem "manageiq-style",                                    :require => false
     # ruby_parser is required for i18n string extraction
-    gem "ruby_parser",                     :require => false
+    gem "ruby_parser",                                       :require => false
     gem "yard"
   end
 
   group :test do
-    gem "brakeman",          "~>4.8",    :require => false
-    gem "capybara",          "~>2.5.0",  :require => false
-    gem "coveralls",         "~>0.8.23", :require => false
-    gem "db-query-matchers", "~>0.10.0"
-    gem "factory_bot",       "~>5.1",    :require => false
+    gem "brakeman",                     "~>4.8",             :require => false
+    gem "capybara",                     "~>2.5.0",           :require => false
+    gem "coveralls",                    "~>0.8.23",          :require => false
+    gem "db-query-matchers",            "~>0.10.0"
+    gem "factory_bot",                  "~>5.1",             :require => false
 
     # TODO: faker is used for url generation in git repository factory and the lenovo
     # provider, via a xclarity_client dependency
-    gem "faker",             "~>1.8",    :require => false
-    gem "timecop",           "~>0.9",    :require => false
-    gem "vcr",               "~>5.0",    :require => false
-    gem "webmock",           "~>3.7",    :require => false
+    gem "faker",                        "~>1.8",             :require => false
+    gem "timecop",                      "~>0.9",             :require => false
+    gem "vcr",                          "~>5.0",             :require => false
+    gem "webmock",                      "~>3.7",             :require => false
   end
 
   group :development, :test do
     gem "parallel_tests"
-    gem "rspec-rails", "~>4.0.1"
+    gem "rspec-rails",                  "~>4.0.1"
   end
 end
