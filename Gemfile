@@ -11,9 +11,6 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
 
-# Modified gems for gems-pending.  Setting sources here since they are git references
-gem "handsoap", "=0.2.5.5", :require => false, :source => "https://rubygems.manageiq.org"
-
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
@@ -85,6 +82,7 @@ gem "terminal",                                        :require => false
 gem "mime-types",                     "~>3.0",     :source => "https://rubygems.manageiq.org", :require => false
 
 # Modified gems (forked on Github)
+gem "handsoap",                       "=0.2.5.5",  :require => false, :source => "https://rubygems.manageiq.org" # for manageiq-gems-pending only
 gem "ruport",                         "=1.7.0.3",  :source => "https://rubygems.manageiq.org"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
