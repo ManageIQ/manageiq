@@ -8,10 +8,18 @@ module MiqEnvironment
     Socket.gethostbyname(Socket.gethostname).first
   end
 
-  # Return the local IP v4 address of the local host, ignoring private addresses.
+  # Return the local IP v4 address of the local host
   #
   def self.local_ip_address
-    Socket.ip_address_list.detect { |addr| addr.ipv4? && !addr.ipv4_private? }&.ip_address
+    ipv4_addrs = Socket.ip_address_list.select(&:ipv4?).sort_by(&:ip_address)
+
+    # Prioritize "public" aka non-loopback non-private addresses first, then
+    # prefer private addresses, then take whatever we can get
+    local_addr   = ipv4_addrs.detect { |ip| !ip.ipv4_loopback? && !ip.ipv4_private? }
+    local_addr ||= ipv4_addrs.detect { |ip| !ip.ipv4_loopback? }
+    local_addr ||= ipv4_addrs.first
+
+    local_addr&.ip_address
   end
 
   class Command
