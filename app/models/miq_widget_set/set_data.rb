@@ -22,15 +22,15 @@ module MiqWidgetSet::SetData
     private
 
     def init_set_data
-      self.set_data ||= {}
-      new_set_data ||= {}
-      self.set_data.symbolize_keys!
+      old_set_data = self.set_data&.symbolize_keys || {}
+      new_set_data = {}
+
       SET_DATA_COLS.each do |col_key|
-        new_set_data[col_key] = self.set_data[col_key] || []
+        new_set_data[col_key] = old_set_data[col_key] || []
       end
 
-      new_set_data[:reset_upon_login] = !!set_data[:reset_upon_login]
-      new_set_data[:locked] = !!set_data[:locked]
+      new_set_data[:reset_upon_login] = !!old_set_data[:reset_upon_login]
+      new_set_data[:locked] = !!old_set_data[:locked]
       self.set_data = new_set_data
     end
 
