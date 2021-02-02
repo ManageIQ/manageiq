@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 8b3bdab32a4f5f47a0c3d4101a0f77335530b141
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -14,7 +14,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
   revision: cbb97d42648a5f08db75e955aea4487c89e5f587
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-api (4.3.0)
       config
@@ -23,7 +23,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: c798cda01ffc0cb03f8634242006ed02e810a6af
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -31,7 +31,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 9348fe0dbfcd3533bf66c7bf89d96cf517e3ab7b
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,8 +39,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: 5c1a70e6371ca2f10e8131adb9f87d5aee802267
-  tag: kasparov-1-beta1.1
+  revision: 695fd93d05b4242a6bdd13bdc8537ee8862e263a
+  tag: kasparov-1
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -48,14 +48,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: c965a897c69501d1e03be7e16123f621e39ce6d7
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: a9ae2342967d6913479f15678b2e6e2c7874de9b
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-gems-pending (0.1.0)
       activerecord (< 5.3)
@@ -85,7 +85,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-graphql
   revision: f6cfe42626d1b6a9735ddeece908973cce45926c
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-graphql (0.1.0)
       graphql (~> 1.7, < 1.10.6)
@@ -95,7 +95,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
   revision: 466122b03dbb39c5f38d13ee0cbee64864919697
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -113,7 +113,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 0d9d0ccb08821a2851cc2b7ddce31a03b278c508
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -121,7 +121,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
   revision: 4ae97c88dd64e57ca8c949c2d36f0a01e237015f
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-autosde (0.1.0)
       typhoeus (~> 1.4)
@@ -129,7 +129,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: e483ca2543bf8ddf703f0da79ac6cdca8ab2281b
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.9)
@@ -137,7 +137,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: fc9284d7b278f5c5d502cbfc36a657ea843993cf
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -148,7 +148,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: 35a74b1f66efe3ed52dd65f8adc7486667f178a0
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
@@ -156,7 +156,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: 1eb2806851a82545f9afdcd2dd235bbba0d467b3
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.10)
@@ -165,7 +165,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
   revision: 3ae63c2789b46ea19c62bb9f9b5b06def672b1c0
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -173,14 +173,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: f63004293aa9dbdd9a7d334fb9d237f0e0192253
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
   revision: f49418b54ce278b6f76462b305e34c4fcafe4c14
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-kubernetes (0.1.0)
       hawkular-client (~> 5.0)
@@ -193,7 +193,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: b74bf16ea77c4458bd8a20e7ee2707c42dc31cbd
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0)
@@ -201,8 +201,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: a5004d6f6b5d7cebb71ba5abe724c89bd5053d12
-  tag: kasparov-1-beta1.1
+  revision: 2b0a3dc2b5530eb2c64ab572c7a4394d98c975ff
+  tag: kasparov-1
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -210,14 +210,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: b203c8bcd1b01ee8e159234b70282a83dac3253b
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
   revision: 477c8ce8446605d131750fdb131e60843644da04
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -225,7 +225,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: 82dcce7a44e871874d5f18cf79ace10678c6a84f
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
@@ -233,7 +233,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
   revision: 71d83a8744e175076082a197086e8fe10c079f34
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 5.2.4, >= 5.2.4.3)
@@ -246,7 +246,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
   revision: 6a12846d932f22515841d7016e8c7dbdfef12df5
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.3.0)
@@ -254,7 +254,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: 8d3c7152ef7d191aecd7eed3c95159cb3d460a18
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -262,27 +262,27 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
   revision: 1e5b840475e61f16577e67d1f31a9cecc4a38468
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 040616ffb899a3b062b94c385f1fce2e3f7ad161
-  tag: kasparov-1-beta1.1
+  revision: eb218a96aad18694d83a004625da9f7aa44382e6
+  tag: kasparov-1
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
       fog-vcloud-director (~> 0.3.0)
       rbvmomi (~> 3.0)
-      vmware_web_service (~> 2.0.2)
+      vmware_web_service (~> 2.1.0)
       vsphere-automation-sdk (~> 0.4.7)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: cc5c6983a27ce8c28461773f1b030ec240e2bb0f
-  tag: kasparov-1-beta1.1
+  tag: kasparov-1
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.0)
@@ -296,8 +296,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: eef9ea45aab693dc8a8258f53c13fd98ec400544
-  tag: kasparov-1-beta1.1
+  revision: 701df99728ebb757dcc2eaa8e20efc21da5c109d
+  tag: kasparov-1
   specs:
     manageiq-ui-classic (0.1.0)
       coffee-rails
@@ -313,8 +313,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-v2v
-  revision: 2664f215c0fa689603cf8b20cedf874724f0fc85
-  tag: kasparov-1-beta1.1
+  revision: 9ce11038fc5f9a13e31df3c0a524cc50958c6ce7
+  tag: kasparov-1
   specs:
     manageiq-v2v (0.1.0)
 
@@ -1031,7 +1031,7 @@ GEM
     uuid (2.3.9)
       macaddr (~> 1.0)
     uuidtools (2.1.5)
-    vmware_web_service (2.0.3)
+    vmware_web_service (2.1.0)
       activesupport (>= 5.2.4.3, < 6.1)
       ffi-vix_disk_lib (~> 1.1)
       handsoap (~> 0.2.5)
