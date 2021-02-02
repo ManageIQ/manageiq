@@ -1,7 +1,7 @@
 [Unit]
-PartOf=web_service.target
+PartOf=manageiq-web_service.target
 [Install]
-WantedBy=web_service.target
+WantedBy=manageiq-web_service.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies,graphql_api

@@ -1,7 +1,7 @@
 [Unit]
-PartOf=cockpit_ws.target
+PartOf=manageiq-cockpit_ws.target
 [Install]
-WantedBy=cockpit_ws.target
+WantedBy=manageiq-cockpit_ws.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies

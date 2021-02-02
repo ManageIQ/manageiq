@@ -1,2 +1,2 @@
 [Unit]
-PartOf=miq.target
+PartOf=manageiq.target

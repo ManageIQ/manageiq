@@ -1,7 +1,7 @@
 [Unit]
-PartOf=reporting.target
+PartOf=manageiq-reporting.target
 [Install]
-WantedBy=reporting.target
+WantedBy=manageiq-reporting.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies

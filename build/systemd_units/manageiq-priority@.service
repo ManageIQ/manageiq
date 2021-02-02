@@ -1,7 +1,7 @@
 [Unit]
-PartOf=priority.target
+PartOf=manageiq-priority.target
 [Install]
-WantedBy=priority.target
+WantedBy=manageiq-priority.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
