@@ -22,7 +22,7 @@ module MiqWidgetSet::SetData
     private
 
     def init_set_data
-      old_set_data = self.set_data&.symbolize_keys || {}
+      old_set_data = self.set_data.to_h.symbolize_keys
       new_set_data = {}
 
       SET_DATA_COLS.each do |col_key|
