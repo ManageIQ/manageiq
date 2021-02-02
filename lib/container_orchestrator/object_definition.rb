@@ -72,6 +72,7 @@ class ContainerOrchestrator
     def database_environment
       [
         {:name => "DATABASE_PORT",     :value => ENV["DATABASE_PORT"]},
+        {:name => "DATABASE_SSL_MODE", :value => ENV["DATABASE_SSL_MODE"]},
         {:name => "DATABASE_HOSTNAME", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "hostname"}}},
         {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "dbname"}}},
         {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "password"}}},
