@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 154 ending 2020-02-01
+
+### Fixed
+
+* Fix MiqEnvironment.local\_ip\_address to not prefer loopback [(#20992)](https://github.com/ManageIQ/manageiq/pull/20992)
+* Fix notification missing substituted values, log deprecation if other places do this [(#20978)](https://github.com/ManageIQ/manageiq/pull/20978)
+* Fix key collision with Thread :current\_request [(#20973)](https://github.com/ManageIQ/manageiq/pull/20973)
+
 # Unreleased as of Sprint 153 ending 2021-01-18
 
 ### Added
