@@ -24,7 +24,30 @@ class ContainerOrchestrator
             }
           }
         }
-      }
+      }.tap do |deployment|
+        if File.file?("/.postgresql/root.crt")
+          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] = [
+            {
+              :mountPath => "/.postgresql",
+              :name      => "pg-root-certificate",
+              :readOnly  => true,
+            }
+          ]
+
+          deployment[:spec][:template][:spec][:volumes] = [
+            {
+              :name   => "pg-root-certificate",
+              :secret => {
+                :secretName => "postgresql-secrets",
+                :items      => [
+                  :key  => "rootcertificate",
+                  :path => "postgresql.crt",
+                ],
+              }
+            }
+          ]
+        end
+      end
     end
 
     def service_definition(name, selector, port)

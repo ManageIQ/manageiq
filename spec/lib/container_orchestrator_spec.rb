@@ -104,6 +104,40 @@ RSpec.describe ContainerOrchestrator do
       )
     end
   end
+
+  context "#deployment_definition (private)" do
+    it "skips the database root certificate if the orchestrator doesn't have it" do
+      expect(File).to receive(:file?).with("/.postgresql/root.crt").and_return(false)
+      allow(File).to receive(:file?).and_call_original # allow other calls to .file? to still work
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to be_nil
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to be_nil
+    end
+
+    it "mounts the database root certificate" do
+      expect(File).to receive(:file?).with("/.postgresql/root.crt").and_return(true)
+      allow(File).to receive(:file?).and_call_original
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+        :mountPath => "/.postgresql",
+        :name      => "pg-root-certificate",
+        :readOnly  => true
+      )
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+        :name   => "pg-root-certificate",
+        :secret => {
+          :secretName => "postgresql-secrets",
+          :items      => [
+            :key  => "rootcertificate",
+            :path => "postgresql.crt",
+          ],
+        }
+      )
+    end
   end
 
   context "with stub connections" do
