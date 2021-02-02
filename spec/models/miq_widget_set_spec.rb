@@ -103,6 +103,12 @@ RSpec.describe MiqWidgetSet do
       widget_set = MiqWidgetSet.create(:read_only => true)
       expect(widget_set.errors.messages).not_to include(:set_data => ["can't be blank"])
     end
+
+    it "works with HashWithIndifferentAccess set_data" do
+      widget_set = MiqWidgetSet.create(:set_data => HashWithIndifferentAccess.new({:col1 => []}))
+
+      expect(widget_set.errors.messages).to include(:set_data => ["One widget must be selected(set_data)"])
+    end
   end
 
   it "when a group dashboard is deleted" do

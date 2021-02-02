@@ -94,7 +94,7 @@ class MiqWidgetSet < ApplicationRecord
     lookup_attributes = {}
     lookup_attributes[:name] = attrs["name"]
     lookup_attributes[:userid] = nil
-    lookup_attributes[:group_id] = nil
+    lookup_attributes[:read_only] = true
 
     ws = find_by(lookup_attributes)
 
@@ -111,8 +111,12 @@ class MiqWidgetSet < ApplicationRecord
         h
       end
 
-      owner = attrs.delete("owner_description")
-      attrs["owner_id"] = MiqGroup.find_by(:description => owner).try(:id) if owner
+      owner_description = attrs.delete("owner_description")
+      owner = MiqGroup.find_by(:description => owner_description) if owner_description
+      if owner
+        attrs["owner_type"] = "MiqGroup"
+        attrs["owner_id"] = owner.id
+      end
     end
 
     if ws
