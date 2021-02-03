@@ -1803,6 +1803,7 @@ en:
       linux_initprocesses:         Linux Init Processes
       miq_approval_stamps:         Stamped Approvals
       miq_approvals:               Approvals
+      miq_alert_set:               Alert Profile
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event:                   Event
