@@ -1873,6 +1873,15 @@
       :description: View Policies
       :feature_type: view
       :identifier: miq_policy_view
+      :children:
+      - :name: List
+        :description: Display Lists of Policies
+        :feature_type: view
+        :identifier: miq_policy_show_list
+      - :name: Show
+        :description: Display Individual Policies
+        :feature_type: view
+        :identifier: miq_policy_show
     - :name: Modify
       :description: Modify Policies
       :feature_type: admin

@@ -11,6 +11,13 @@ class MiqPolicy < ApplicationRecord
                                  PhysicalServer
                                  Vm).freeze
 
+  POLICY_TOWHAT_APPLIES_TO_CLASSES = TOWHAT_APPLIES_TO_CLASSES.inject({}) { |hsh, key| hsh[key] = ui_lookup(:model => key); hsh }.freeze
+
+  POLICY_MODES = {
+    "control" => _("Control"),
+    "compliance" => _("Compliance")
+  }.freeze
+
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
