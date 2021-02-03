@@ -94,7 +94,7 @@ RSpec.describe EvmDatabaseOps do
       allow(file_storage).to  receive(:uri_to_local_path).and_return(tmpdir.join("share").to_s)
       allow(file_storage).to  receive(:add).and_yield(input_path)
 
-      allow(PostgresAdmin).to  receive(:runcmd_with_logging)
+      allow(PostgresAdmin).to  receive(:run_command_with_logging)
       allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
@@ -155,7 +155,7 @@ RSpec.describe EvmDatabaseOps do
       allow(file_storage).to  receive(:magic_number_for).and_return(:pgdump)
       allow(file_storage).to  receive(:download).and_yield(input_path)
 
-      allow(PostgresAdmin).to receive(:runcmd_with_logging)
+      allow(PostgresAdmin).to receive(:run_command_with_logging)
 
       allow(VmdbDatabaseConnection).to receive(:count).and_return(1)
     end
