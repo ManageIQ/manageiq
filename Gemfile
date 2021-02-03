@@ -76,6 +76,7 @@ gem "sqlite3",                          "~>1.4.0",           :require => false
 gem "sync",                             "~>0.5",             :require => false
 gem "sys-filesystem",                   "~>1.3.4"
 gem "terminal",                                              :require => false
+gem "wim_parser",                       "~>1.0",             :require => false
 
 # Custom gem that replaces mime-types in order to redirect mime-types calls to mini_mime
 #   Source is located at https://github.com/ManageIQ/mime-types-redirector
