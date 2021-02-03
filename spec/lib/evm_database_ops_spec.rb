@@ -20,6 +20,8 @@ RSpec.describe EvmDatabaseOps do
       allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
+
+      MiqEvent # ensure the MiqEvent class is defined so we can verify raised events
     end
 
     it "locally" do
@@ -98,6 +100,8 @@ RSpec.describe EvmDatabaseOps do
       allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
+
+      MiqEvent # ensure the MiqEvent class is defined so we can verify raised events
     end
 
     it "locally" do
