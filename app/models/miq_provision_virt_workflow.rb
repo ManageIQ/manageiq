@@ -5,13 +5,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     get_value(@values[:placement_auto])
   end
 
+  def initial_pass?(values, options)
+    (options[:initial_pass] == true) || values.blank?
+  end
+
   def initialize(values, requester, options = {})
-    initial_pass = values.blank?
-    initial_pass = true if options[:initial_pass] == true
     instance_var_init(values, requester, options)
 
     # Check if the caller passed the source VM as part of the initial call
-    if initial_pass == true
+    if initial_pass?(values, options)
       src_vm_id = get_value(@values[:src_vm_id])
       if src_vm_id.present?
         vm = VmOrTemplate.find_by(:id => src_vm_id)
@@ -22,7 +24,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless options[:skip_dialog_load] == true
       # If this is the first time we are called the values hash will be empty
       # Also skip if we are being called from a web-service
-      @dialogs = get_pre_dialogs if initial_pass && options[:use_pre_dialog] != false
+      @dialogs = get_pre_dialogs if initial_pass?(values, options) && options[:use_pre_dialog] != false
       if @dialogs.nil?
         @dialogs = get_dialogs
       else
@@ -32,7 +34,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
-    @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass == true
+    @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass?(values, options)
 
     return if options[:skip_dialog_load] == true
 
