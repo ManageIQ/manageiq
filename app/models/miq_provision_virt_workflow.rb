@@ -9,17 +9,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     (options[:initial_pass] == true) || values.blank?
   end
 
+  def load_source_object
+    src_vm_id = get_value(@values[:src_vm_id])
+    if src_vm_id.present?
+      vm = VmOrTemplate.find_by(:id => src_vm_id)
+      @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
+    end
+  end
+
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
-
     # Check if the caller passed the source VM as part of the initial call
-    if initial_pass?(values, options)
-      src_vm_id = get_value(@values[:src_vm_id])
-      if src_vm_id.present?
-        vm = VmOrTemplate.find_by(:id => src_vm_id)
-        @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
-      end
-    end
+    load_source_object if initial_pass?(values, options)
 
     unless options[:skip_dialog_load] == true
       # If this is the first time we are called the values hash will be empty
