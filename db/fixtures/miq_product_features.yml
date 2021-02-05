@@ -1921,6 +1921,19 @@
     :feature_type: node
     :identifier: condition
     :children:
+    - :name: View
+      :description: View Conditions
+      :feature_type: view
+      :identifier: condition_view
+      :children:
+      - :name: List
+        :description: Display List of Conditions
+        :feature_type: view
+        :identifier: condition_show_list
+      - :name: Show
+        :description: Display Individual Conditions
+        :feature_type: view
+        :identifier: condition_show
     - :name: Modify
       :description: Modify Conditions
       :feature_type: admin

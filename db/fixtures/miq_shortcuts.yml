@@ -426,8 +426,8 @@
   :startup: true
 - :name: consdition
   :description: Control / Conditions
-  :url: /condition/explorer
-  :rbac_feature_name: condition
+  :url: /condition/show_list
+  :rbac_feature_name: condition_show_list
   :startup: true
 - :name: miq_action
   :description: Control / Actions
