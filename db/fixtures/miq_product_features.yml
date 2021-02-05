@@ -1967,16 +1967,16 @@
     :description: Everything under Policy Events
     :protected: true
     :feature_type: node
-    :identifier: miq_event
+    :identifier: miq_event_definition
     :children:
     - :name: List
       :description: Display All Policy Events
       :feature_type: view
-      :identifier: miq_event_show_list
+      :identifier: miq_event_definition_show_list
     - :name: Show
       :description: Show Policy Event
       :feature_type: view
-      :identifier: miq_event_show
+      :identifier: miq_event_definition_show
   - :name: Actions
     :description: Everything under Policy Actions
     :protected: true

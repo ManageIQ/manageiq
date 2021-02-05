@@ -419,9 +419,9 @@
   :url: /miq_policy/show_list
   :rbac_feature_name: miq_policy_show_list
   :startup: true
-- :name: miq_event
+- :name: miq_event_definition
   :description: Control / Events
-  :url: /miq_event/explorer
+  :url: /miq_event_definition/show_list
   :rbac_feature_name: miq_event
   :startup: true
 - :name: consdition
