@@ -61,15 +61,17 @@ class MiqRequestWorkflow
     normalize_numeric_fields unless @dialogs.nil?
   end
 
+  def configure_dialogs(values, options)
+    return if options[:skip_dialog_load] == true
+
+    set_default_values
+    update_field_visibility
+  end
+
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
-
     initialize_dialogs(values, options)
-
-    unless options[:skip_dialog_load] == true
-      set_default_values
-      update_field_visibility
-    end
+    configure_dialogs(values, options)
   end
 
   def instance_var_init(values, requester, options)

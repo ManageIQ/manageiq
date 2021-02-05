@@ -14,30 +14,12 @@ class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
     # Check if the caller passed the source VM as part of the initial call
     load_source_object if initial_pass?(values, options)
 
-    unless options[:skip_dialog_load] == true
-      # If this is the first time we are called the values hash will be empty
-      # Also skip if we are being called from a web-service
-      @dialogs = get_pre_dialogs if initial_pass?(values, options) && options[:use_pre_dialog] != false
-      if @dialogs.nil?
-        @dialogs = get_dialogs
-      else
-        @running_pre_dialog = true if options[:use_pre_dialog] != false
-      end
-      normalize_numeric_fields unless @dialogs.nil?
-    end
+    initialize_dialogs(values, options)
 
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
     @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass?(values, options)
 
-    return if options[:skip_dialog_load] == true
-
-    set_default_values
-    update_field_visibility
-
-    if get_value(values[:service_template_request])
-      show_dialog(:requester, :hide, "disabled")
-      show_dialog(:purpose,   :hide, "disabled")
-    end
+    configure_dialogs(values, options)
   end
 
   def get_source_and_targets(refresh = false)

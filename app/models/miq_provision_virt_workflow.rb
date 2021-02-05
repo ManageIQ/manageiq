@@ -23,6 +23,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     super
   end
 
+  def configure_dialogs(values, options)
+    return if options[:skip_dialog_load] == true
+
+    super
+
+    if get_value(values[:service_template_request])
+      show_dialog(:requester, :hide, "disabled")
+      show_dialog(:purpose,   :hide, "disabled")
+    end
+  end
+
+
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
     # Check if the caller passed the source VM as part of the initial call
@@ -33,15 +45,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
     @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass?(values, options)
 
-    return if options[:skip_dialog_load] == true
-
-    set_default_values
-    update_field_visibility
-
-    if get_value(values[:service_template_request])
-      show_dialog(:requester, :hide, "disabled")
-      show_dialog(:purpose,   :hide, "disabled")
-    end
+    configure_dialogs(values, options)
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', extra_attrs = {})
