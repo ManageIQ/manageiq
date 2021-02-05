@@ -35,16 +35,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def initialize(values, requester, options = {})
-    instance_var_init(values, requester, options)
-    # Check if the caller passed the source VM as part of the initial call
+    super
+
     load_source_object if initial_pass?(values, options)
-
-    initialize_dialogs(values, options)
-
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
     @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass?(values, options)
-
-    configure_dialogs(values, options)
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', extra_attrs = {})
