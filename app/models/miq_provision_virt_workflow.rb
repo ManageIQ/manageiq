@@ -5,39 +5,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     get_value(@values[:placement_auto])
   end
 
-  def initial_pass?(values, options)
-    (options[:initial_pass] == true) || values.blank?
-  end
-
-  private_class_method def self.source_object_class
-    VmOrTemplate
-  end
-
-  def load_source_object
-    src_vm_id = get_value(@values[:src_vm_id])
-    if src_vm_id.present?
-      vm = self.class.source_object_class.find_by(:id => src_vm_id)
-      @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
-    end
-  end
-
-  def initialize_dialogs(values, options)
-    @dialogs = get_pre_dialogs if options[:skip_dialog_load] != true && initial_pass?(values, options) && options[:use_pre_dialog] != false
-
-    super
-  end
-
-  def configure_dialogs(values, options)
-    return if options[:skip_dialog_load] == true
-
-    super
-
-    if get_value(values[:service_template_request])
-      show_dialog(:requester, :hide, "disabled")
-      show_dialog(:purpose,   :hide, "disabled")
-    end
-  end
-
   def initialize(values, requester, options = {})
     super
 
@@ -1144,6 +1111,39 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
         end
       end
+    end
+  end
+
+  private_class_method def self.source_object_class
+    VmOrTemplate
+  end
+
+  def initial_pass?(values, options)
+    (options[:initial_pass] == true) || values.blank?
+  end
+
+  def load_source_object
+    src_vm_id = get_value(@values[:src_vm_id])
+    if src_vm_id.present?
+      vm = self.class.source_object_class.find_by(:id => src_vm_id)
+      @values[:src_vm_id] = [vm.id, vm.name] if vm.present?
+    end
+  end
+
+  def initialize_dialogs(values, options)
+    @dialogs = get_pre_dialogs if options[:skip_dialog_load] != true && initial_pass?(values, options) && options[:use_pre_dialog] != false
+
+    super
+  end
+
+  def configure_dialogs(values, options)
+    return if options[:skip_dialog_load] == true
+
+    super
+
+    if get_value(values[:service_template_request])
+      show_dialog(:requester, :hide, "disabled")
+      show_dialog(:purpose,   :hide, "disabled")
     end
   end
 end
