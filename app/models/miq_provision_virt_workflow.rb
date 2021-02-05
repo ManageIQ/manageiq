@@ -34,7 +34,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
     # Check if the caller passed the source VM as part of the initial call
