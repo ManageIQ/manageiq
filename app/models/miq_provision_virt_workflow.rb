@@ -1131,14 +1131,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def initialize_dialogs(values, options)
-    @dialogs = get_pre_dialogs if options[:skip_dialog_load] != true && initial_pass?(values, options) && options[:use_pre_dialog] != false
+    @dialogs = get_pre_dialogs if initial_pass?(values, options) && options[:use_pre_dialog] != false
 
     super
   end
 
   def configure_dialogs(values, options)
-    return if options[:skip_dialog_load] == true
-
     super
 
     if get_value(values[:service_template_request])

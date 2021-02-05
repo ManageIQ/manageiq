@@ -50,8 +50,8 @@ class MiqRequestWorkflow
 
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
-    initialize_dialogs(values, options)
-    configure_dialogs(values, options)
+    initialize_dialogs(values, options) unless options[:skip_dialog_load] == true
+    configure_dialogs(values, options) unless options[:skip_dialog_load] == true
   end
 
   def instance_var_init(values, requester, options)
@@ -1522,8 +1522,6 @@ class MiqRequestWorkflow
   end
 
   def initialize_dialogs(values, options)
-    return if options[:skip_dialog_load] == true
-
     # If this is the first time we are called the values hash will be empty
     # Also skip if we are being called from a web-service
     if @dialogs.nil?
@@ -1535,8 +1533,6 @@ class MiqRequestWorkflow
   end
 
   def configure_dialogs(values, options)
-    return if options[:skip_dialog_load] == true
-
     set_default_values
     update_field_visibility
   end
