@@ -1542,10 +1542,6 @@ class Host < ApplicationRecord
     services.order(:name).uniq.pluck(:name)
   end
 
-  def control_supported?
-    !(is_vmware? && vmm_product == "Workstation")
-  end
-
   def event_where_clause(assoc = :ems_events)
     case assoc.to_sym
     when :ems_events, :event_streams
