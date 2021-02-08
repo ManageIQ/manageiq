@@ -24,7 +24,30 @@ class ContainerOrchestrator
             }
           }
         }
-      }
+      }.tap do |deployment|
+        if File.file?("/.postgresql/root.crt")
+          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] = [
+            {
+              :mountPath => "/.postgresql",
+              :name      => "pg-root-certificate",
+              :readOnly  => true,
+            }
+          ]
+
+          deployment[:spec][:template][:spec][:volumes] = [
+            {
+              :name   => "pg-root-certificate",
+              :secret => {
+                :secretName => "postgresql-secrets",
+                :items      => [
+                  :key  => "rootcertificate",
+                  :path => "postgresql.crt",
+                ],
+              }
+            }
+          ]
+        end
+      end
     end
 
     def service_definition(name, selector, port)
@@ -60,23 +83,24 @@ class ContainerOrchestrator
 
     def default_environment
       [
-        {:name => "DATABASE_PORT",           :value => ENV["DATABASE_PORT"]},
         {:name => "GUID",                    :value => MiqServer.my_guid},
         {:name => "MEMCACHED_SERVER",        :value => ENV["MEMCACHED_SERVER"]},
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
-        {:name      => "DATABASE_HOSTNAME",
-         :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "hostname"}}},
-        {:name      => "DATABASE_NAME",
-         :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "dbname"}}},
-        {:name      => "DATABASE_PASSWORD",
-         :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "password"}}},
-        {:name      => "DATABASE_USER",
-         :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
-        {:name      => "ENCRYPTION_KEY",
-         :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
-      ] + messaging_environment
+        {:name => "ENCRYPTION_KEY",          :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
+      ] + database_environment + messaging_environment
+    end
+
+    def database_environment
+      [
+        {:name => "DATABASE_PORT",     :value => ENV["DATABASE_PORT"]},
+        {:name => "DATABASE_SSL_MODE", :value => ENV["DATABASE_SSL_MODE"]},
+        {:name => "DATABASE_HOSTNAME", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "hostname"}}},
+        {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "dbname"}}},
+        {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "password"}}},
+        {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
+      ]
     end
 
     def messaging_environment
