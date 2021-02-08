@@ -1219,21 +1219,6 @@ class VmOrTemplate < ApplicationRecord
     return storage_id, location
   end
 
-  # TODO: Vmware specific
-  # Finds a Vm by a full path of the Storage and location
-  def self.lookup_by_path(path)
-    begin
-      storage_id, location = parse_path(path)
-    rescue
-      _log.warn("Invalid path specified [#{path}]")
-      return nil
-    end
-    VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
-  end
-
-  singleton_class.send(:alias_method, :find_by_path, :lookup_by_path)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_path => :lookup_by_path)
-
   def state
     (power_state || "unknown").downcase
   end
