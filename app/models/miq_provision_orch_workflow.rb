@@ -1,5 +1,5 @@
 class MiqProvisionOrchWorkflow < MiqProvisionVirtWorkflow
-  private_class_method def self.source_object_class
+  def self.source_object_class
     OrchestrationTemplate
   end
 
