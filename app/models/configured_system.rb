@@ -1,6 +1,7 @@
 class ConfiguredSystem < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
+  include CustomAttributeMixin
 
   acts_as_miq_taggable
   belongs_to :configuration_location
@@ -14,8 +15,10 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :operating_system_flavor
   belongs_to :orchestration_stack
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
+  has_one    :hardware, :through => :computer_system
   has_and_belongs_to_many :configuration_tags
 
+  alias ext_management_system manager
   alias_attribute :name,    :hostname
   alias_method    :configuration_manager, :manager
 

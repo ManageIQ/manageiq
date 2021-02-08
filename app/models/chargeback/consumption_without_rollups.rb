@@ -24,12 +24,21 @@ class Chargeback
       resource.id
     end
 
+    def tag_prefix
+      klass_prefix = case resource
+                     when VmOrTemplate     then 'vm'
+                     when ConfiguredSystem then 'configured_system'
+                     end
+
+      "#{klass_prefix}/tag/managed/"
+    end
+
     def tag_list_with_prefix
-      tag_names.map { |t| "vm/tag/managed/#{t}" }
+      tag_names.map { |t| "#{tag_prefix}#{t}" }
     end
 
     def parents_determining_rate
-      [resource.host, resource.ems_cluster, resource.storage, resource.try(:cloud_volumes), parent_ems, resource.tenant,
+      [resource.try(:host), resource.try(:ems_cluster), resource.try(:storage), resource.try(:cloud_volumes), parent_ems, resource.try(:tenant),
        MiqEnterprise.my_enterprise].flatten.compact
     end
 
