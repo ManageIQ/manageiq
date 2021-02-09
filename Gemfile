@@ -260,7 +260,6 @@ end
 #
 unless ENV["APPLIANCE"]
   group :development do
-    gem "foreman"
     gem "manageiq-style",               "~>1.2.0",           :require => false
     gem "PoParser"
     # ruby_parser is required for i18n string extraction
