@@ -267,6 +267,39 @@ RSpec.describe ChargebackContainerProject do
       expect(subject.second.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
       expect(subject.second.tag_name).to eq('Development')
     end
+
+    context "group by multiple tags" do
+      let(:options) do
+        base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => ['environment', 'department'])
+      end
+
+      let(:accounting_project) do
+        FactoryBot.create(:container_project, :name => "Department Project", :ext_management_system => ems, :created_on => month_beginning)
+      end
+
+      let(:department_tag_category) { FactoryBot.create(:classification_department_with_tags) }
+      let!(:accounting_tag)         { department_tag_category.entries.find_by(:description => "Accounting").tag }
+
+      let(:production_result_part)  { subject.detect { |x| x.tag_name == "Production" } }
+      let(:development_result_part) { subject.detect { |x| x.tag_name == "Development" } }
+      let(:accounting_result_part)  { subject.detect { |x| x.tag_name == "Accounting" } }
+
+      before do
+        metric_rollup_params[:tag_names] = "department/accounting"
+        add_metric_rollups_for(accounting_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+      end
+
+      it "generates results for multiple tags categories" do
+        cpu_cores_metric_used = cpu_cores_used_metric_for(accounting_project, hours_in_month)
+
+        expect(accounting_result_part.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+        expect(accounting_result_part.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+
+        cpu_cores_metric_used = production_result_part.cpu_cores_used_metric * 2
+        expect(development_result_part.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+        expect(development_result_part.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      end
+    end
   end
 
   context "ignore empty metrics in fixed_compute" do
