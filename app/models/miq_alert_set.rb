@@ -7,6 +7,18 @@ class MiqAlertSet < ApplicationRecord
 
   virtual_has_one :get_assigned_tos
 
+  ALERT_SET_MODES = {
+    "ContainerGroup"      => ui_lookup(:model => "ContainerGroup"),
+    "ContainerImage"      => ui_lookup(:model => "ContainerImage"),
+    "ContainerNode"       => ui_lookup(:model => "ContainerNode"),
+    "ContainerProject"    => ui_lookup(:model => "ContainerProject"),
+    "ContainerReplicator" => ui_lookup(:model => "ContainerReplicator"),
+    "ExtManagementSystem" => ui_lookup(:model => "ExtManagementSystem"),
+    "Host"                => ui_lookup(:model => "Host"),
+    "PhysicalServer"      => ui_lookup(:model => "PhysicalServer"),
+    "Vm"                  => ui_lookup(:model => "Vm")
+  }.freeze
+
   def self.assigned_to_target(target, options = {})
     get_assigned_for_target(target, options)
   end

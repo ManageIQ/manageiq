@@ -2014,6 +2014,19 @@
     :feature_type: node
     :identifier: miq_alert_set
     :children:
+    - :name: View
+      :description: View Policy Alert Profiles
+      :feature_type: view
+      :identifier: miq_alert_set_view
+      :children:
+      - :name: List
+        :description: Display Lists of Policy Alert Profiles
+        :feature_type: view
+        :identifier: miq_alert_set_show_list
+      - :name: Show
+        :description: Display Individual Policy Alert Profile
+        :feature_type: view
+        :identifier: miq_alert_set_show
     - :name: Modify
       :description: Modify Policy Alert Profiles
       :feature_type: admin
