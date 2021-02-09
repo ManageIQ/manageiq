@@ -185,6 +185,7 @@ class Host < ApplicationRecord
     end
   end
   supports :refresh_ems
+  supports_not :refresh_firewall_rules
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -1171,9 +1172,6 @@ class Host < ApplicationRecord
   def refresh_logs
   end
 
-  def refresh_firewall_rules
-  end
-
   def refresh_advanced_settings
   end
 
@@ -1313,10 +1311,12 @@ class Host < ApplicationRecord
     task.update_status("Active", "Ok", "Scanning") if task
 
     _dummy, t = Benchmark.realtime_block(:total_time) do
-      # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
-      _log.info("Refreshing Firewall Rules for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
-      Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
+      if supports?(:refresh_firewall_rules)
+        # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
+        _log.info("Refreshing Firewall Rules for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
+        Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
+      end
 
       _log.info("Refreshing Advanced Settings for #{log_target}")
       task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
