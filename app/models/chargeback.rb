@@ -57,10 +57,12 @@ class Chargeback < ActsAsArModel
 
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
         rates_to_apply = rates.get(consumption)
-        key = report_row_key(consumption).first[:key]
+
+        result_key = report_row_key(consumption).first
+        key = result_key[:key]
         _log.debug("Report row key #{key}")
 
-        data[key] ||= new(options, consumption, region.region)
+        data[key] ||= new(options, consumption, region.region, result_key)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -110,12 +112,11 @@ class Chargeback < ActsAsArModel
     nil
   end
 
-  def initialize(options, consumption, region)
+  def initialize(options, consumption, region, result_key)
     @options = options
     super()
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption).first
-      self.tag_name = classification.present? ? classification.description : _('<Empty>')
+      self.tag_name = result_key[:key_object] ? result_key[:key_object].description : _('<Empty>')
     elsif @options[:groupby_label].present?
       label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
       self.label_name = label_value.present? ? label_value : _('<Empty>')

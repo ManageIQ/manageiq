@@ -988,7 +988,13 @@ RSpec.describe ChargebackVm do
         {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
          'vm_id' => @vm1.id}
       end
-      subject { ChargebackVm.new(report_options, consumption, MiqRegion.my_region_number).attributes }
+
+      let!(:result_key) do
+        ChargebackVm.instance_variable_set(:@options, report_options)
+        ChargebackVm.report_row_key(consumption)
+      end
+
+      subject { ChargebackVm.new(report_options, consumption, MiqRegion.my_region_number, result_key.first).attributes }
 
       before do
         ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
