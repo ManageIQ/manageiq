@@ -185,6 +185,7 @@ class Host < ApplicationRecord
     end
   end
   supports :refresh_ems
+  supports_not :refresh_advanced_settings
   supports_not :refresh_firewall_rules
 
   def self.non_clustered
@@ -1172,9 +1173,6 @@ class Host < ApplicationRecord
   def refresh_logs
   end
 
-  def refresh_advanced_settings
-  end
-
   def refresh_ipmi_power_state
     if ipmi_config_valid?
       require 'miq-ipmi'
@@ -1318,9 +1316,11 @@ class Host < ApplicationRecord
         Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
       end
 
-      _log.info("Refreshing Advanced Settings for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
-      Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
+      if supports?(:refresh_advanced_settings)
+        _log.info("Refreshing Advanced Settings for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
+        Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
+      end
 
       if ext_management_system.nil?
         _log.info("Refreshing IPMI information for #{log_target}")
