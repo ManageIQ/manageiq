@@ -86,16 +86,6 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  describe ".lookup_by_path" do
-    it "should lookup vm by path" do
-      storage = Storage.new(:name => "//test/storage")
-      vm = FactoryBot.create(:vm_vmware, :name => 'vm', :vendor => 'vmware', :storage => storage, :location => 'test_location')
-
-      expect(storage.save!).to be_truthy
-      expect(VmOrTemplate.lookup_by_path("#{storage.name}/#{vm.location}")).to eq(vm)
-    end
-  end
-
   describe "save_genealogy_information" do
     let(:vm) { FactoryBot.create(:vm_vmware) }
     let(:parent) { FactoryBot.create(:vm_vmware) }
