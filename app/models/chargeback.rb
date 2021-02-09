@@ -101,7 +101,7 @@ class Chargeback < ActsAsArModel
     elsif @options.group_by_date_only?
       [{:key => ts_key.to_s}]
     else
-      [{:key => default_key(consumption, ts_key) }]
+      [{:key => default_key(consumption, ts_key)}]
     end
   end
 

@@ -138,7 +138,7 @@ class Chargeback
 
     def classification_for(consumption)
       tags = consumption.tag_names.select do |x|
-        Array(groupby_tag).detect { |group_by_tag| x.starts_with?(group_by_tag)  }
+        Array(groupby_tag).detect { |group_by_tag| x.starts_with?(group_by_tag) }
       end.compact
 
       tags.map { |x| tag_hash[x.split("/").second] } if tags.present?
