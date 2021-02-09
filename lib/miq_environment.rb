@@ -96,7 +96,7 @@ module MiqEnvironment
         # If 'which apachectl' returns non-zero, it wasn't found
         require "awesome_spawn"
         AwesomeSpawn.run!(which, :params => [cmd])
-      rescue
+      rescue AwesomeSpawn::CommandResultError
         false
       else
         true
