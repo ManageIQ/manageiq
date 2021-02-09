@@ -83,7 +83,7 @@ class Chargeback < ActsAsArModel
   def self.report_row_key(consumption)
     ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption)
+      classification = @options.classification_for(consumption).first
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
     elsif @options[:groupby_label].present?
@@ -110,7 +110,7 @@ class Chargeback < ActsAsArModel
     @options = options
     super()
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption)
+      classification = @options.classification_for(consumption).first
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
     elsif @options[:groupby_label].present?
       label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
