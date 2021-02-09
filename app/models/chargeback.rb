@@ -58,20 +58,21 @@ class Chargeback < ActsAsArModel
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
         rates_to_apply = rates.get(consumption)
 
-        result_key = report_row_key(consumption).first
-        key = result_key[:key]
-        _log.debug("Report row key #{key}")
+        Array(report_row_key(consumption)).each do |result_key|
+          key = result_key[:key]
+          _log.debug("Report row key #{key}")
 
-        data[key] ||= new(options, consumption, region.region, result_key)
+          data[key] ||= new(options, consumption, region.region, result_key)
 
-        chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
-        data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
+          chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
+          data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
-        # we are getting hash with metrics and costs for metrics defined for chargeback
-        if Settings[:new_chargeback]
-          data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
-        else
-          data[key].calculate_costs(consumption, rates_to_apply)
+          # we are getting hash with metrics and costs for metrics defined for chargeback
+          if Settings[:new_chargeback]
+            data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
+          else
+            data[key].calculate_costs(consumption, rates_to_apply)
+          end
         end
       end
     end

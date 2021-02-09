@@ -1235,7 +1235,68 @@ RSpec.describe ChargebackVm do
 
     context "Group by tags" do
       context "Group by multiple tag categories" do
+        let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => %w[department cc]) }
 
+        let(:department_tag_category)  { FactoryBot.create(:classification_department_with_tags) }
+        let(:accounting_tag)           { department_tag_category.entries.find_by(:description => "Accounting").tag }
+        let(:financial_services_tag)   { department_tag_category.entries.find_by(:description => "Financial Services").tag }
+
+        let(:cost_center_tag_category) { FactoryBot.create(:classification_cost_center_with_tags) }
+        let(:cost_center_001_tag)      { cost_center_tag_category.entries.find_by(:description => "Cost Center 001").tag }
+
+        let(:production_tag)           { @tag }
+
+        let(:vms) do
+          FactoryBot.create_list(:vm_vmware, 5, :evm_owner => admin, :created_on => month_beginning) do |vm, i|
+            vm.name = "test_vm_#{i}"
+          end
+        end
+
+        before do
+          # category Department
+          department_tag_category.entries.find_by(:description => "Accounting").tag.name
+
+          vms[0].tag_with(accounting_tag.name, :ns => '*')
+          vms[1].tag_with(accounting_tag.name, :ns => '*')
+          vms[2].tag_with(financial_services_tag.name, :ns => '*')
+
+          # category Cost Center
+          vms[3].tag_with(cost_center_001_tag.name, :ns => '*')
+
+          # category Environment
+          vms[4].tag_with(production_tag.name, :ns => '*')
+
+          vms.each do |vm|
+            add_metric_rollups_for(vm, month_beginning...month_end, 12.hours, metric_rollup_params)
+          end
+        end
+
+        subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
+
+        let(:accounting_result_part)      { subject.detect { |x| x.tag_name == "Accounting" } }
+        let(:cost_center_001_result_part) { subject.detect { |x| x.tag_name == "Cost Center 001" } }
+        let(:production_result_part)      { subject.detect { |x| x.tag_name == "<Empty>" } }
+
+        it "generates results for multiple tags categories" do
+          expect(accounting_result_part.cpu_used_cost).to be_within(0.01).of(2 * cost_center_001_result_part.cpu_used_cost)
+          expect(accounting_result_part.cpu_used_metric).to be_within(0.01).of(2 * cost_center_001_result_part.cpu_used_metric)
+
+          expect(accounting_result_part.cpu_allocated_cost).to be_within(0.01).of(2 * cost_center_001_result_part.cpu_allocated_cost)
+          expect(accounting_result_part.cpu_allocated_metric).to be_within(0.01).of(2 * cost_center_001_result_part.cpu_allocated_metric)
+
+          cpu_used_metric_vm1 = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vms[0])
+          cpu_used_metric_vm2 = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vms[1])
+
+          expect(accounting_result_part.cpu_used_metric).to eq(cpu_used_metric_vm1 + cpu_used_metric_vm2)
+          expect(accounting_result_part.cpu_used_cost).to eq((cpu_used_metric_vm1 + cpu_used_metric_vm2) * hourly_rate * hours_in_month)
+
+          expect(accounting_result_part.cpu_allocated_metric).to eq(2 * cpu_count)
+          expect(accounting_result_part.cpu_allocated_cost).to eq(2 * cpu_count * count_hourly_rate * hours_in_month)
+          cpu_used_metric_vm5 = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vms[4])
+
+          expect(production_result_part.cpu_used_metric).to be_within(0.01).of(cpu_used_metric_vm5)
+          expect(production_result_part.cpu_used_cost).to be_within(0.01).of(cpu_used_metric_vm5 * hourly_rate * hours_in_month)
+        end
       end
 
       context "Group by single tag category" do
