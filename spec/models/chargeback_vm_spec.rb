@@ -977,7 +977,7 @@ RSpec.describe ChargebackVm do
         described_class.instance_variable_set(:@options, report_options)
       end
 
-      it { is_expected.to eq("#{metric_rollup.resource_id}_#{beginning_of_day}") }
+      it { is_expected.to eq([{:key=> "#{metric_rollup.resource_id}_#{beginning_of_day}"}]) }
     end
 
     describe '#initialize' do

@@ -57,8 +57,7 @@ class Chargeback < ActsAsArModel
 
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
         rates_to_apply = rates.get(consumption)
-
-        key = report_row_key(consumption)
+        key = report_row_key(consumption).first[:key]
         _log.debug("Report row key #{key}")
 
         data[key] ||= new(options, consumption, region.region)
@@ -83,18 +82,23 @@ class Chargeback < ActsAsArModel
   def self.report_row_key(consumption)
     ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption).first
-      classification_id = classification.present? ? classification.id : 'none'
-      "#{classification_id}_#{ts_key}"
+      classifications = @options.classification_for(consumption)
+      if classifications.present?
+        Array(classifications).map do |x|
+          {:key => "#{x.id}_#{ts_key}", :key_object => x}
+        end
+      else
+        [{:key => "none"}]
+      end
     elsif @options[:groupby_label].present?
-      "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
+      [{:key => "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"}]
     elsif @options.group_by_tenant?
       tenant = @options.tenant_for(consumption)
-      "#{tenant ? tenant.id : 'none'}_#{ts_key}"
+      [{:key => "#{tenant ? tenant.id : 'none'}_#{ts_key}"}]
     elsif @options.group_by_date_only?
-      ts_key
+      [{:key => ts_key.to_s}]
     else
-      default_key(consumption, ts_key)
+      [{:key => default_key(consumption, ts_key) }]
     end
   end
 
