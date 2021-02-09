@@ -14,6 +14,7 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :operating_system_flavor
   belongs_to :orchestration_stack
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
+  has_one    :hardware, :through => :computer_system
   has_and_belongs_to_many :configuration_tags
 
   alias_attribute :name,    :hostname
@@ -34,6 +35,9 @@ class ConfiguredSystem < ApplicationRecord
   delegate :name, :to => :orchestration_stack,           :prefix => true, :allow_nil => true
   delegate :my_zone, :provider, :zone, :to => :manager
   delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
+
+  virtual_delegate :cpu_total_cores, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :ram_size_mb,     :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
 
   virtual_column  :my_zone,                            :type => :string
   virtual_column  :configuration_architecture_name,    :type => :string
