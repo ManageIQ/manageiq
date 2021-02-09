@@ -650,25 +650,6 @@ class VmOrTemplate < ApplicationRecord
     result
   end
 
-  # TODO: Vmware specific
-  def self.lookup_by_full_location(path)
-    return nil if path.blank?
-    vm_hash = {}
-    begin
-      vm_hash[:name], vm_hash[:location] = repository_parse_path(path)
-    rescue => err
-      _log.warn("Warning: [#{err.message}]")
-      vm_hash[:location] = location2uri(path)
-    end
-    _log.info("vm_hash [#{vm_hash.inspect}]")
-    store = Storage.find_by(:name => vm_hash[:name])
-    return nil unless store
-    VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
-  end
-
-  singleton_class.send(:alias_method, :find_by_full_location, :lookup_by_full_location)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_full_location => :lookup_by_full_location)
-
   def self.repository_parse_path(path)
     path.gsub!(/\\/, "/")
     #it's empty string for local type
