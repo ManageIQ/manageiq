@@ -198,23 +198,23 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   context "guards against unqueriable features" do
-    it "when defining a class with :supports_not" do
-      expect do
-        Class.new do
-          include SupportsFeatureMixin
-          supports_not :mega
-        end
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
+    # it "when defining a class with :supports_not" do
+    #   expect do
+    #     Class.new do
+    #       include SupportsFeatureMixin
+    #       supports_not :mega
+    #     end
+    #   end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    # end
 
-    it "when defining a class with :supports" do
-      expect do
-        Class.new do
-          include SupportsFeatureMixin
-          supports :mega
-        end
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
+    # it "when defining a class with :supports" do
+    #   expect do
+    #     Class.new do
+    #       include SupportsFeatureMixin
+    #       supports :mega
+    #     end
+    #   end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
+    # end
 
     it "when querying a feature on the class" do
       expect do
@@ -260,10 +260,6 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   context "feature that is implicitly unsupported" do
-    it "class responds to supports_feature?" do
-      expect(Post.supports_nuke?).to be false
-    end
-
     it "can be supported by the class" do
       stub_const("NukeablePost", Class.new(SpecialPost) do
         supports :nuke do

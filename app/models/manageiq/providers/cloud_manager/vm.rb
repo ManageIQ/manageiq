@@ -42,6 +42,10 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
                  :type => :string_set,
                  :uses => {:load_balancer_pool_members => :load_balancer_health_check_states_with_reason}
 
+  supports_not :add_security_group
+  supports_not :associate_floating_ip
+  supports_not :disassociate_floating_ip
+
   def load_balancer_health_check_state
     return @health_check_state if @health_check_state
     return (@health_check_state = nil) if load_balancer_pool_members.blank?

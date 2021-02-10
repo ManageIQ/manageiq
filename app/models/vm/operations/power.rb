@@ -17,6 +17,8 @@ module Vm::Operations::Power
       msg ||= _('The VM is powered on') if vm_powered_on?
       unsupported_reason_add(:start, msg) if msg
     end
+
+    supports_not :pause
   end
 
   def vm_powered_on?
