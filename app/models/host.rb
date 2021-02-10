@@ -187,6 +187,7 @@ class Host < ApplicationRecord
   supports :refresh_ems
   supports_not :refresh_advanced_settings
   supports_not :refresh_firewall_rules
+  supports_not :refresh_logs
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -1170,9 +1171,6 @@ class Host < ApplicationRecord
     # _log.log_backtrace($!)
   end
 
-  def refresh_logs
-  end
-
   def refresh_ipmi_power_state
     if ipmi_config_valid?
       require 'miq-ipmi'
@@ -1394,9 +1392,11 @@ class Host < ApplicationRecord
         end
       end
 
-      _log.info("Refreshing Log information for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Log Information") if task
-      Benchmark.realtime_block(:refresh_logs) { refresh_logs }
+      if supports?(:refresh_logs)
+        _log.info("Refreshing Log information for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Log Information") if task
+        Benchmark.realtime_block(:refresh_logs) { refresh_logs }
+      end
 
       _log.info("Saving state for #{log_target}")
       task.update_status("Active", "Ok", "Saving Drift State") if task
