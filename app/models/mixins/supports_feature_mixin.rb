@@ -122,6 +122,7 @@ module SupportsFeatureMixin
     :reconfigure_cdroms                  => 'Reconfigure Virtual Machines CD/DVDs',
     :refresh_advanced_settings           => 'Refresh Advanced Settings',
     :refresh_ems                         => 'Refresh Relationships and Power States',
+    :refresh_logs                        => 'Refresh Logs',
     :refresh_network_interfaces          => 'Refresh Network Interfaces for a Host',
     :refresh_new_target                  => 'Refresh non-existing record',
     :refresh_firewall_rules              => 'Refresh Firewall Rules',
