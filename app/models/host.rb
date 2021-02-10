@@ -1171,24 +1171,6 @@ class Host < ApplicationRecord
     # _log.log_backtrace($!)
   end
 
-  def refresh_ipmi_power_state
-    if ipmi_config_valid?
-      require 'miq-ipmi'
-      address = ipmi_address
-
-      if MiqIPMI.is_available?(address)
-        ipmi = MiqIPMI.new(address, *auth_user_pwd(:ipmi))
-        if ipmi.connected?
-          self.power_state = ipmi.power_state
-        else
-          _log.warn("IPMI Login failed due to a bad username or password.")
-        end
-      else
-        _log.info("IPMI is not available on this Host")
-      end
-    end
-  end
-
   def refresh_ipmi
     if ipmi_config_valid?
       require 'miq-ipmi'
