@@ -441,8 +441,8 @@
   :startup: true
 - :name: miq_alert
   :description: Control / Alerts
-  :url: /miq_alert/explorer
-  :rbac_feature_name: miq_alert
+  :url: /miq_alert/show_list
+  :rbac_feature_name: miq_alert_show_list
   :startup: true
 - :name: policy_simulation
   :description: Control / Simulation

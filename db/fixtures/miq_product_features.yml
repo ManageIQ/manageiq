@@ -2054,6 +2054,19 @@
     :feature_type: node
     :identifier: miq_alert
     :children:
+    - :name: View
+      :description: View Policy Alerts
+      :feature_type: view
+      :identifier: miq_alert_view
+      :children:
+      - :name: List
+        :description: Display All Policy Alerts
+        :feature_type: view
+        :identifier: miq_alert_show_list
+      - :name: Show
+        :description: Show Policy Alert
+        :feature_type: view
+        :identifier: miq_alert_show
     - :name: Modify
       :description: Modify Policy Alerts
       :feature_type: admin
