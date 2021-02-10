@@ -3,7 +3,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     select_value("SELECT pg_database_size(#{quote(name)})").to_i
   end
 
-  def database_version
+  def database_version_details
     select_value("SELECT version()")
   end
 
