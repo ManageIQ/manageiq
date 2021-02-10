@@ -382,7 +382,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.miq_custom_get('TransformationIPAddress') || source.host.ipaddress,
-        :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
+        :path     => "/vmfs/volumes/#{URI::Parser.new.escape(storage.name)}/#{URI::Parser.new.escape(source.location)}"
       ).to_s,
       :vm_uuid              => source.uid_ems,
       :conversion_host_uuid => conversion_host.resource.ems_ref,
