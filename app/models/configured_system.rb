@@ -38,6 +38,9 @@ class ConfiguredSystem < ApplicationRecord
   delegate :my_zone, :provider, :zone, :to => :manager
   delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
 
+  virtual_delegate :cpu_total_cores, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :ram_size, :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
+
   virtual_column  :my_zone,                            :type => :string
   virtual_column  :configuration_architecture_name,    :type => :string
   virtual_column  :configuration_compute_profile_name, :type => :string
