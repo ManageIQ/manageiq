@@ -2,74 +2,84 @@ module AuthenticationMixin
   extend ActiveSupport::Concern
 
   included do
-    # There are some dirty, dirty Ruby/Rails reasons why this method needs to
-    # exist like this, and I will try and explain:
-    #
-    # First, we need the extra +.where+ here because if this is used in a
-    # nested SELECT statement (aka: virtual_delegate), the +resource_type+
-    # check is dropped on the floor and not included in the subquery.  As a
-    # result, it will just pickup the first record to match the
-    # relationship_id column and that could be associated with any OTHER object
-    # with an Authentication record.
-    #
-    # For example, you get back an Authentication record for an EMS record when
-    # you are looking up one for a Host.
-    #
-    # Secondly, the reason this method exists, and is FIRST (prior to the
-    # +has_one+ that uses it) is it needs to be defined prior to the
-    # ActiveRecord::Relation method that calls it.  Also, it needs to be a
-    # method so the proper local variable, +authentication_mixin_relation+, can
-    # be defined with the class that the +resource_type+ needs to match and
-    # remain in scope for the Proc below.  If it is a class variable or done in
-    # other fashion, it will be overwritten whenever this module is included
-    # elsewhere, or is called against ActiveRecord::Relation, and not the class
-    # we are mixing into.
-    #
-    # Finally, the use of a prepared statement is also for some reason required
-    # over the Hash syntax since otherwise the following is ERROR is produced
-    # when doing a nested SELECT:
-    #
-    #     PG::ProtocolViolation: ERROR:  bind message supplies 0 parameters,
-    #     but prepared statement "" requires 1 (ActiveRecord::StatementInvalid)
-    #
-    # FIXME:  If we handle this in `virtual_attributes`, then this can be
-    # deleted and returned to the following proc on the has one:
-    #
-    #     has_one :authentication_status_severity_level,
-    #             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) }
-    #             # ...
-    #
-    # But keep the test that was added ;)
-    #
-    def self.authentication_status_severity_level_filter
-      # required to be done here so it is in scope of the Proc below
-      authentication_mixin_relation = name
+    if respond_to?(:has_one_type)
+      has_one :authentication, :as         => :resource,
+                               :inverse_of => :resource,
+                               :autosave   => true,
+                               :dependent  => :destroy
 
-      proc do
-        where('"authentications"."resource_type" = ?', authentication_mixin_relation)
-          .order(Authentication::STATUS_SEVERITY_AREL.desc)
+      accepts_nested_attributes_for :authentication, :allow_destroy => true, :update_only => true
+      before_save                   :set_authentication_for_has_one_type
+    else
+      # There are some dirty, dirty Ruby/Rails reasons why this method needs to
+      # exist like this, and I will try and explain:
+      #
+      # First, we need the extra +.where+ here because if this is used in a
+      # nested SELECT statement (aka: virtual_delegate), the +resource_type+
+      # check is dropped on the floor and not included in the subquery.  As a
+      # result, it will just pickup the first record to match the
+      # relationship_id column and that could be associated with any OTHER object
+      # with an Authentication record.
+      #
+      # For example, you get back an Authentication record for an EMS record when
+      # you are looking up one for a Host.
+      #
+      # Secondly, the reason this method exists, and is FIRST (prior to the
+      # +has_one+ that uses it) is it needs to be defined prior to the
+      # ActiveRecord::Relation method that calls it.  Also, it needs to be a
+      # method so the proper local variable, +authentication_mixin_relation+, can
+      # be defined with the class that the +resource_type+ needs to match and
+      # remain in scope for the Proc below.  If it is a class variable or done in
+      # other fashion, it will be overwritten whenever this module is included
+      # elsewhere, or is called against ActiveRecord::Relation, and not the class
+      # we are mixing into.
+      #
+      # Finally, the use of a prepared statement is also for some reason required
+      # over the Hash syntax since otherwise the following is ERROR is produced
+      # when doing a nested SELECT:
+      #
+      #     PG::ProtocolViolation: ERROR:  bind message supplies 0 parameters,
+      #     but prepared statement "" requires 1 (ActiveRecord::StatementInvalid)
+      #
+      # FIXME:  If we handle this in `virtual_attributes`, then this can be
+      # deleted and returned to the following proc on the has one:
+      #
+      #     has_one :authentication_status_severity_level,
+      #             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) }
+      #             # ...
+      #
+      # But keep the test that was added ;)
+      #
+      def self.authentication_status_severity_level_filter
+        # required to be done here so it is in scope of the Proc below
+        authentication_mixin_relation = name
+
+        proc do
+          where('"authentications"."resource_type" = ?', authentication_mixin_relation)
+            .order(Authentication::STATUS_SEVERITY_AREL.desc)
+        end
       end
-    end
 
-    has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
+      has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
 
-    has_one  :authentication_status_severity_level,
-             authentication_status_severity_level_filter,
-             :as         => :resource,
-             :inverse_of => :resource,
-             :class_name => "Authentication"
+      has_one  :authentication_status_severity_level,
+               authentication_status_severity_level_filter,
+               :as         => :resource,
+               :inverse_of => :resource,
+               :class_name => "Authentication"
 
-    virtual_delegate :authentication_status,
-                     :to        => "authentication_status_severity_level.status",
-                     :default   => "None",
-                     :type      => :string,
-                     :allow_nil => true
+      virtual_delegate :authentication_status,
+                       :to        => "authentication_status_severity_level.status",
+                       :default   => "None",
+                       :type      => :string,
+                       :allow_nil => true
 
-    def self.authentication_check_schedule
-      zone = MiqServer.my_server.zone
-      assoc = name.tableize
-      assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
-      assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
+      def self.authentication_check_schedule
+        zone = MiqServer.my_server.zone
+        assoc = name.tableize
+        assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
+        assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
+      end
     end
   end
 
@@ -154,9 +164,11 @@ module AuthenticationMixin
   end
 
   def auth_user_pwd(type = nil)
-    cred = authentication_best_fit(type)
-    return nil if cred.nil? || cred.userid.blank?
-    [cred.userid, cred.password]
+    userid = authentication_userid(type)
+
+    return nil if userid.nil?
+
+    [userid, authentication_password(type).to_s]
   end
 
   def auth_user_token(type = nil)
@@ -451,6 +463,25 @@ module AuthenticationMixin
 
   private
 
+  def set_authentication_for_has_one_type
+    auth_attrs = attributes[:authentication_attributes]
+    if auth_attrs && auth_attrs[:userid] && auth_attrs[:password]
+      attributes[:type]          = self.class.has_one_type
+      attributes[:resource_type] = resource_type_for_has_one
+    end
+  end
+
+  def resource_type_for_has_one
+    auth_key = attributes[:authentication_attributes] && attributes[:authentication_attributes][:auth_key]
+    if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && auth_key
+      "ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair"
+    elsif auth_key
+      "AuthToken"
+    else
+      "AuthUseridPassword"
+    end
+  end
+
   def authentication_check_no_validation(type, options)
     header  = "type: [#{type.inspect}] for [#{id}] [#{name}]"
     status, details =
@@ -480,7 +511,12 @@ module AuthenticationMixin
   end
 
   def authentication_component(type, method)
-    cred = authentication_best_fit(type)
+    cred = if self.class.respond_to?(:has_one_type)
+             authentication
+           else
+             authentication_best_fit(type)
+           end
+
     return nil if cred.nil?
 
     value = cred.public_send(method)
