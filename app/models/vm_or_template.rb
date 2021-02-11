@@ -1064,11 +1064,6 @@ class VmOrTemplate < ApplicationRecord
     host_id.present? && current_state != "never"
   end
 
-  # TODO: Vmware specfic
-  def is_controllable?
-    runnable? && !template? && host && host.control_supported?
-  end
-
   def self.refresh_ems(vm_ids)
     vm_ids = [vm_ids] unless vm_ids.kind_of?(Array)
     vm_ids = vm_ids.collect { |id| [base_class, id] }
