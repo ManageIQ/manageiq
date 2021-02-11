@@ -1201,24 +1201,6 @@ class VmOrTemplate < ApplicationRecord
     File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
 
-  # TODO: Vmware specific
-  # Parses a full path into the Storage and location
-  def self.parse_path(path)
-    # TODO: Review the name of this method such that the return types don't conflict with those of self.repository_parse_path
-    storage_name, relative_path = repository_parse_path(path)
-
-    storage = Storage.find_by(:name => storage_name)
-    if storage.nil?
-      storage_id = nil
-      location   = location2uri(relative_path)
-    else
-      storage_id = storage.id
-      location   = relative_path
-    end
-
-    return storage_id, location
-  end
-
   def state
     (power_state || "unknown").downcase
   end
