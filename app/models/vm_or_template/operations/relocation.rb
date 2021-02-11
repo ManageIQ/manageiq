@@ -1,4 +1,6 @@
 module VmOrTemplate::Operations::Relocation
+  extend ActiveSupport::Concern
+
   included do
     supports_not :live_migrate
     supports_not :warm_migrate
