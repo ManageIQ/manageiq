@@ -35,8 +35,6 @@ class Zone < ApplicationRecord
   before_destroy :check_zone_in_use_on_destroy
   after_create :create_server_if_podified
 
-  include AuthenticationMixin
-
   include SupportsFeatureMixin
   include Metric::CiMixin
   include AggregationMixin
@@ -44,6 +42,12 @@ class Zone < ApplicationRecord
 
   scope :visible, -> { where(:visible => true) }
   default_value_for :visible, true
+
+  def self.has_one_type
+    :windows_domain
+  end
+
+  include AuthenticationMixin
 
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)

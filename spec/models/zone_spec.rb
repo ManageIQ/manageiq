@@ -6,6 +6,65 @@ RSpec.describe Zone do
     include_examples ".seed called multiple times", 2
   end
 
+  context ".create" do
+    let(:zone_attributes) { FactoryBot.attributes_for(:zone) }
+
+    context "with an :windows_domain authentication in the attributes hash" do
+      before do
+        EvmSpecHelper.local_miq_server
+        zone_attributes[:authentication_attributes] = {:userid => "foo", :password => "bar"}
+      end
+
+      it "creates a new zone with an authentication record" do
+        zone = Zone.create(zone_attributes)
+
+        expect(zone.id).to_not be_nil
+        expect(zone.authentication).to_not be_nil
+        expect(zone.authentication.userid).to eq("foo")
+        expect(zone.authentication.password).to eq("bar")
+      end
+    end
+  end
+
+  context ".update" do
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    context "with a new :windows_domain authentication in the attributes hash" do
+      it "creates a new zone with an authentication record" do
+        zone            = Zone.last
+        zone_attributes = {:authentication_attributes => {:userid => "foo", :password => "bar"}}
+
+        expect(zone.authentication).to be_nil
+
+        zone.update(zone_attributes)
+
+        expect(zone.authentication).to_not be_nil
+        expect(zone.authentication.userid).to eq("foo")
+        expect(zone.authentication.password).to eq("bar")
+      end
+    end
+
+    context "with an existing :windows_domain and an empty authentication hash" do
+      it "creates a new zone with an authentication record" do
+        zone            = Zone.last
+        zone_attributes = {:authentication_attributes => {:userid => "foo", :password => "bar"}}
+
+        zone.update(zone_attributes)
+
+        zone_auth_id = zone.authentication.id
+
+        expect(zone.authentication.userid).to eq("foo")
+        expect(zone.authentication.password).to eq("bar")
+
+        zone.update(:authentication_attributes => {:id => zone_auth_id, :_destroy => true})
+
+        expect(zone.reload.authentication).to be_nil
+      end
+    end
+  end
+
   context "with two small envs" do
     before do
       @zone1 = FactoryBot.create(:small_environment)
