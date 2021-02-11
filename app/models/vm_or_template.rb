@@ -625,17 +625,6 @@ class VmOrTemplate < ApplicationRecord
     location
   end
 
-  def self.uri2location(location)
-    uri = URI.parse(location)
-    location = URI.decode(uri.path)
-    location = location[1..-1] if location[2..2] == ':'
-    location
-  end
-
-  def uri2location
-    self.class.uri2location(location)
-  end
-
   def save_scan_history(datahash)
     result = scan_histories.build(
       :status      => datahash['status'],
