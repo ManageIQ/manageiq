@@ -3,6 +3,7 @@
 - AuditEvent
 - AvailabilityZone
 - BottleneckEvent
+- ChargebackConfiguredSystem
 - ChargebackVm
 - ChargebackContainerProject
 - ChargebackContainerImage

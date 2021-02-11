@@ -1420,6 +1420,7 @@ en:
       AvailabilityZone:               Availability Zone
       BottleneckEvent:                Bottleneck Event
       HostAggregate:                  Host Aggregate
+      ChargebackConfiguredSystem:     Chargeback for Configured Systems
       ChargebackVm:                   Chargeback for Vms
       ChargebackContainerImage:       Chargeback for Image
       ChargebackContainerProject:     Chargeback for Projects
