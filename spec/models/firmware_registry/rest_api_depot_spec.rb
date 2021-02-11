@@ -33,9 +33,8 @@ RSpec.describe FirmwareRegistry::RestApiDepot do
 
     context 'when bad host' do
       it 'managed error is raised' do
-        with_vcr('when-bad-host') do
-          expect { described_class.fetch_from_remote('http://bad.host', 'user', 'pass') }.to raise_error(MiqException::Error)
-        end
+        stub_request(:get, "example.invalid").to_raise(SocketError)
+        expect { described_class.fetch_from_remote('http://example.invalid', 'user', 'pass') }.to raise_error(MiqException::Error)
       end
     end
 
