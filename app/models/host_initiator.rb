@@ -1,4 +1,5 @@
 class HostInitiator < ApplicationRecord
+  include NewWithTypeStiMixin
   include ProviderObjectMixin
   include SupportsFeatureMixin
   include CustomActionsMixin
