@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://bad.host/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+      Authorization:
+      - Basic dXNlcjpwYXNz
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Thu, 11 Feb 2021 16:32:25 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Expires:
+      - Thu, 11 Feb 2021 16:42:25 GMT
+      Cache-Control:
+      - max-age=600
+      X-Frame-Options:
+      - DENY
+    body:
+      encoding: UTF-8
+      string: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><meta
+        http-equiv="refresh" content="0;url=https://searchassist.verizon.com/main?ParticipantID=euekiz39ksg8nwp7iqj2fp5wzfwi5q76&FailedURI=http%3A%2F%2Fbad.host%2F&FailureMode=1&Implementation=&AddInType=4&Version=pywr1.0&ClientLocation=us"/><script
+        type="text/javascript">url="https://searchassist.verizon.com/main?ParticipantID=euekiz39ksg8nwp7iqj2fp5wzfwi5q76&FailedURI=http%3A%2F%2Fbad.host%2F&FailureMode=1&Implementation=&AddInType=4&Version=pywr1.0&ClientLocation=us";if(top.location!=location){var
+        w=window,d=document,e=d.documentElement,b=d.body,x=w.innerWidth||e.clientWidth||b.clientWidth,y=w.innerHeight||e.clientHeight||b.clientHeight;url+="&w="+x+"&h="+y;}window.location.replace(url);</script></head><body></body></html>
+    http_version:
+  recorded_at: Thu, 11 Feb 2021 16:32:25 GMT
+recorded_with: VCR 5.1.0
