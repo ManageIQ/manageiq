@@ -25,6 +25,13 @@ class CloudVolume < ApplicationRecord
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
+  supports_not :safe_delete
+  virtual_column :supports_safe_delete, :type => :boolean
+
+  def supports_safe_delete
+    supports_safe_delete?
+  end
+
   acts_as_miq_taggable
 
   def self.volume_types
@@ -159,6 +166,33 @@ class CloudVolume < ApplicationRecord
 
   def raw_delete_volume
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
+  end
+
+  def safe_delete_volume_queue(userid)
+    task_opts = {
+      :action => "Safe deleting Cloud Volume for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'safe_delete_volume',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def safe_delete_volume
+    raw_safe_delete_volume
+  end
+
+  def raw_safe_delete_volume
+    raise NotImplementedError, _("raw_safe_delete_volume must be implemented in a subclass")
   end
 
   def available_vms
