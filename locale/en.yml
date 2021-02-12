@@ -1810,6 +1810,8 @@ en:
       miq_custom_attributes:       EVM Custom Attributes
       miq_event:                   Event
       miq_event_definition:        Event
+      miq_policy:                  Policy
+      miq_policy_set:              Policy Profile
       manageiq_providers_cloud_manager: Cloud Manager
       manageiq_providers_cloud_manager_vms: Instances
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
