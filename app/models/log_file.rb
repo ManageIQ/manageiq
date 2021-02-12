@@ -28,7 +28,7 @@ class LogFile < ApplicationRecord
   # Base is the URI defined by the user
   # loc_file is the name of the original file
   def build_log_uri(base_uri, loc_file)
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI::Parser.new.escape(base_uri))
+    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(URI::DEFAULT_PARSER.escape(base_uri))
 
     # Convert encoded spaces back to spaces
     path.gsub!('%20', ' ')
@@ -212,7 +212,7 @@ class LogFile < ApplicationRecord
     # Strip any leading and trailing whitespace
     uri.strip!
 
-    URI.split(URI::Parser.new.escape(uri))[0]
+    URI.split(URI::DEFAULT_PARSER.escape(uri))[0]
   end
 
   def legacy_depot_hash
