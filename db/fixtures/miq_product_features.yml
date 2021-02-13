@@ -5142,28 +5142,38 @@
         :description: Edit Configured Systems Tags
         :feature_type: control
         :identifier: automation_manager_configured_system_tag
-  - :name: Templates
-    :description: Everything under Templates accordion
-    :feature_type: node
-    :identifier: automation_manager_configuration_scripts_accord
+
+- :name: Templates
+  :description: Everything under Templates accordion
+  :feature_type: node
+  :identifier: configuration_script
+  :children:
+  - :name: View
+    :description: View Templates
+    :feature_type: view
+    :identifier: configuration_script_view
     :children:
-    - :name: View
-      :description: View Templates
+    - :name: List
+      :description: Display Lists of Configuration Scripts
       :feature_type: view
-      :identifier: automation_manager_configuration_script_view
-    - :name: Operate
-      :description: Perform Operations on Templates
+      :identifier: configuration_script_show_list
+    - :name: Show
+      :description: Display Individual Configuration Scripts
+      :feature_type: view
+      :identifier: configuration_script_show
+  - :name: Operate
+    :description: Perform Operations on Templates
+    :feature_type: control
+    :identifier: configuration_script_control
+    :children:
+    - :name: Create Service Dialog
+      :description: Create Service Dialog
+      :feature_type: admin
+      :identifier: configuration_script_service_dialog
+    - :name: Edit Tags
+      :description: Edit Job Templates Tags
       :feature_type: control
-      :identifier: automation_manager_configuration_script_control
-      :children:
-      - :name: Create Service Dialog
-        :description: Create Service Dialog
-        :feature_type: admin
-        :identifier: automation_manager_configuration_script_service_dialog
-      - :name: Edit Tags
-        :description: Edit Job Templates Tags
-        :feature_type: control
-        :identifier: automation_manager_configuration_script_tag
+      :identifier: configuration_script_tag
 
 # Configuration Jobs
 - :name: Configuration Jobs
