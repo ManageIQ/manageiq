@@ -288,6 +288,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_volume_resizing, :type => :boolean
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
   virtual_column :supports_cinder_volume_types, :type => :boolean
+  virtual_column :supports_cloud_subnet_create, :type => :boolean
   virtual_column :supports_cloud_volume, :type => :boolean
   virtual_column :supports_cloud_volume_create, :type => :boolean
   virtual_column :supports_create_flavor, :type => :boolean
@@ -829,6 +830,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_cinder_volume_types
     supports_cinder_volume_types?
+  end
+
+  def supports_cloud_subnet_create
+    supports_cloud_subnet_create?
   end
 
   def supports_cloud_volume

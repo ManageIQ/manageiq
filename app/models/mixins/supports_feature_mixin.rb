@@ -67,6 +67,7 @@ module SupportsFeatureMixin
     # FIXME: this is just a internal helper and should be refactored
     :control                             => 'Basic control operations',
     :cloud_tenants                       => 'CloudTenant',
+    :cloud_subnet_create                 => 'CloudSubnetCreate',
     :cloud_volume                        => 'Cloud Volume',
     :cloud_volume_create                 => 'Create Cloud Volume',
     :cloud_tenant_mapping                => 'CloudTenant mapping',
