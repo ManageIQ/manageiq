@@ -132,7 +132,13 @@ module ManageIQ
 
     def self.bundler_version
       gemfile = APP_ROOT.join("Gemfile")
-      File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
+
+      require "bundler"
+      gemfile_dependencies = Bundler::Definition.build(gemfile, nil, {}).dependencies
+      bundler_dependency   = gemfile_dependencies.detect { |dep| dep.name == "bundler" }
+
+      version_requirements = bundler_dependency.requirement.requirements
+      version_requirements.map { |req| req.join(" ") }.join(", ")
     end
 
     def self.run_rake_task(task, root: APP_ROOT)
