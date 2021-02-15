@@ -25,29 +25,21 @@ RSpec.describe MiqWidgetSet do
       }
     end
 
-    let(:default_yaml_file_path) do
-      default_yaml_file = Tempfile.new('default.yml')
-      default_yaml_file.write(yaml_attributes.to_yaml)
-      default_yaml_file.close
-      default_yaml_file.path
-    end
+    it "creates widget set from yaml even when another widget set with same name exist" do
+      Tempfile.create do |yml_file|
+        yml_file.write(yaml_attributes.to_yaml)
+        yml_file.flush
 
-    let!(:miq_widget_set) do
-      FactoryBot.create(:miq_widget_set, :name => "default", :updated_on => File.mtime(default_yaml_file_path).utc - 1.day)
-    end
+        FactoryBot.create(:miq_widget_set, :name => "default", :updated_on => File.mtime(yml_file).utc - 1.day)
 
-    def default_widget_set
-      MiqWidgetSet.find_by(:name => 'default', :userid => nil, :group_id => nil)
-    end
+        expect(MiqWidgetSet.find_by(:name => 'default', :userid => nil, :group_id => nil)).to be_nil
 
-    it "creates widget set from yaml even when other widget set with same name exist" do
-      expect(default_widget_set).to be_nil
+        expect do
+          MiqWidgetSet.sync_from_file(yml_file)
+        end.to change(MiqWidgetSet, :count).by(1)
 
-      expect do
-        MiqWidgetSet.sync_from_file(default_yaml_file_path)
-      end.to change(MiqWidgetSet, :count).by(1)
-
-      expect(default_widget_set).not_to be_nil
+        expect(MiqWidgetSet.find_by(:name => 'default', :userid => nil, :group_id => nil)).not_to be_nil
+      end
     end
   end
 
