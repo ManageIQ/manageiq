@@ -59,7 +59,6 @@ config/environments/*.local.yml
 content/ansible_consolidated
 
 # db/
-db/*.sqlite3
 db/schema.rb
 db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
 
