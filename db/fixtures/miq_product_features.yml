@@ -3501,6 +3501,11 @@
       :description: View All ISO Datastores
       :feature_type: view
       :identifier: iso_datastore_view
+      :children:
+      - :name: View
+        :description: View ISO Images on ISO Datastores
+        :feature_type: view
+        :identifier: iso_image_view
     - :name: Operate
       :description: Perform Operations on ISO Datastores
       :feature_type: control
