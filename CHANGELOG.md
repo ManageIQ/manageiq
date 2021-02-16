@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 155 ending 2020-02-15
+
+### Added
+
+* Remove disabling of hash alignment cop [(#21039)](https://github.com/ManageIQ/manageiq/pull/21039)
+
 # Unreleased as of Sprint 154 ending 2020-02-01
 
 ### Fixed
