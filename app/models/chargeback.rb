@@ -62,6 +62,7 @@ class Chargeback < ActsAsArModel
           key = result_key[:key]
           _log.debug("Report row key #{key}")
 
+          consumption.tag_filter_for_rollup_records(result_key[:key_object].tag) if result_key[:key_object]&.tag
           data[key] ||= new(options, consumption, region.region, result_key)
 
           chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)

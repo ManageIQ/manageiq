@@ -45,6 +45,13 @@ class Chargeback
       [Time.current, @end_time].min
     end
 
+    def rollup_records_tag_names
+      tag_names
+    end
+
+    def tag_filter_for_rollup_records(_tag)
+    end
+
     private
 
     def hours_in_interval

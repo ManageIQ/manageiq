@@ -11,10 +11,6 @@ class Chargeback
       @rollup_records = metric_rollup_records
     end
 
-    def rollup_records
-      @rollup_records
-    end
-
     def hash_features_affecting_rate
       @hash_features_affecting_rate ||= begin
         tags = tag_names.reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
@@ -150,6 +146,10 @@ class Chargeback
       resource_current_tag_names | resource_tag_names(rollup)
     end
 
+    def tag_filter_for_rollup_records(tag)
+      @tag_filter_for_rollup_records = tag
+    end
+
     private
 
     def born_at
@@ -187,8 +187,41 @@ class Chargeback
     end
 
     def first_metric_rollup_record
-      first_rollup_id = rollup_records.first[ChargeableField.col_index(:id)]
+      first_rollup_id = @rollup_records.first[ChargeableField.col_index(:id)]
       @fmrr ||= MetricRollup.find(first_rollup_id) if first_rollup_id
+    end
+
+    def tag_name_filter
+      return nil unless @tag_filter_for_rollup_records
+
+      @tag_filter_for_rollup_records.name.split("/").last(2).join("/")
+    end
+
+    def rollup_records_tagged_partially?
+      tag_name_filter && tag_filtered_for_rollup_records.present? && tag_filtered_for_rollup_records.count != @rollup_records.count
+    end
+
+    def current_resource_tags_in_tag_filter?
+      (resource_current_tag_names & [tag_name_filter]).present?
+    end
+
+    def rollup_records
+      if rollup_records_tagged_partially? && !current_resource_tags_in_tag_filter?
+        tag_filtered_for_rollup_records
+      else
+        @rollup_records
+      end
+    end
+
+    def tag_filtered_for_rollup_records
+      return @rollup_records unless tag_name_filter
+
+      @tag_filtered_for_rollup_records ||= {}
+      @tag_filtered_for_rollup_records[tag_name_filter] ||= begin
+        @rollup_records.select do |rollup|
+          (resource_tag_names(rollup) & [tag_name_filter]).present?
+        end
+      end
     end
   end
 end
