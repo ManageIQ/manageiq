@@ -1,6 +1,7 @@
 class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
   require_nested :Runner
 
+  include ProviderWorkerMixin
   include PerEmsWorkerMixin
 
   self.required_roles = %w[ems_operations]
