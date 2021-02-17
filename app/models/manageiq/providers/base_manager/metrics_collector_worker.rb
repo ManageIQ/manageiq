@@ -3,6 +3,7 @@ class ManageIQ::Providers::BaseManager::MetricsCollectorWorker < MiqQueueWorkerB
 
   require_nested :Runner
 
+  include ProviderWorkerMixin
   include PerEmsTypeWorkerMixin
 
   self.required_roles = ["ems_metrics_collector"]
