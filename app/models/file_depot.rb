@@ -12,16 +12,11 @@ class FileDepot < ApplicationRecord
   attr_accessor         :file
 
   def self.supported_depots
-    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize, :translate => false) }.freeze
+    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }
   end
 
   def self.supported_protocols
     @supported_protocols ||= subclasses.each_with_object({}) { |klass, hash| hash[klass.uri_prefix] = klass.name }.freeze
-  end
-
-  def self.depot_description_to_class(description)
-    class_name = supported_depots.key(description)
-    class_name.try(:constantize)
   end
 
   def self.requires_credentials?
