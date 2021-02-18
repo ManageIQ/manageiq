@@ -12,7 +12,7 @@ class FileDepot < ApplicationRecord
   attr_accessor         :file
 
   def self.supported_depots
-    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }.freeze
+    descendants.each_with_object({}) { |klass, hash| hash[klass.name] = klass.display_name }
   end
 
   def self.supported_protocols
