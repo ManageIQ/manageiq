@@ -18,6 +18,7 @@ class HostAggregate < ApplicationRecord
   has_many   :vim_performance_states, :as => :resource
 
   virtual_total :total_vms, :vms
+  virtual_column :availability_zone, :type => :string
 
   PERF_ROLLUP_CHILDREN = [:vms]
 
