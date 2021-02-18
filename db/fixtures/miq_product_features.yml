@@ -823,6 +823,14 @@
       :description: Remove Volumes
       :feature_type: admin
       :identifier: cloud_volume_delete
+    - :name: Safe Remove
+      :description: Safely Remove Volumes
+      :feature_type: admin
+      :identifier: cloud_volume_safe_delete
+    - :name: Reload
+      :description: Reload the current display
+      :feature_type: admin
+      :identifier: cloud_volume_reload
 
 # AuthKeyPair
 - :name: Auth Key Pairs
