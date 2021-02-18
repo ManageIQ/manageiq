@@ -12,6 +12,7 @@ namespace :test do
     ENV['VERBOSE'] ||= "false"
   end
 
+  desc "Verifies that the rails environment does not require DB access"
   task :verify_no_db_access_loading_rails_environment do
     if Rake::Task['environment'].already_invoked
       raise "Failed to verify database access when loading rails because the 'environment' rake task has already been invoked!"
