@@ -41,14 +41,26 @@ module ManageIQ
 
     private
 
-    alias provider_name file_name
+    # The short name of the provider
+    #
+    # Example (with a plugin called ManageIQ::Providers::MyCloud):
+    #   # => "my_cloud"
+    alias provider_name plugin_short_name
 
+    # The name of the plugin for display purposes
+    #
+    # Example (with a plugin called ManageIQ::Providers::MyCloud):
+    #   # => "My Cloud Provider"
     def plugin_human_name
-      @plugin_human_name ||= "#{file_name.titleize} Provider"
+      @plugin_human_name ||= "#{provider_name.titleize} Provider"
     end
 
+    # The description of the plugin
+    #
+    # Example (with a plugin called ManageIQ::Providers::MyCloud):
+    #   # => "ManageIQ plugin for the My Cloud provider."
     def plugin_description
-      @plugin_description ||= "#{Vmdb::Appliance.PRODUCT_NAME} plugin for the #{file_name.titleize} provider."
+      @plugin_description ||= "#{Vmdb::Appliance.PRODUCT_NAME} plugin for the #{provider_name.titleize} provider."
     end
 
     def validate_manager_type!
