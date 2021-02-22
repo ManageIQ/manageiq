@@ -106,12 +106,18 @@ unless options[:dry_run]
     runner_options[:ems_id]     = options[:ems_id].length == 1 ? options[:ems_id].first : options[:ems_id].collect { |id| id }
   end
 
+  update_options = create_options.dup
+  # If a guid is provided, raise if it's not found, update otherwise
+  # Because podified needs to create on the first run_single_worker and update after:
+  #  If system_uid is provided, update if found, create if not found.
+  #  TODO:  This is really inconsistent and confusing.  Why can't GUID follow the same rules?
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
-               update_options = {:pid => Process.pid}
-               update_options[:system_uid] = options[:system_uid] if options[:system_uid]
                wrkr.update(update_options)
              end
+           elsif options[:system_uid] && worker = worker_class.find_by(:system_uid => options[:system_uid])
+             worker.update(update_options)
+             worker
            else
              worker_class.create_worker_record(create_options)
            end
