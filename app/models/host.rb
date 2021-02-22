@@ -177,6 +177,7 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
+  supports :destroy
   supports :reset do
     unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
     unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
@@ -1726,10 +1727,6 @@ class Host < ApplicationRecord
     return 'archived' if archived?
     return power_state unless power_state.nil?
     "unknown"
-  end
-
-  def validate_destroy
-    {:available => true, :message => nil}
   end
 
   def self.display_name(number = 1)
