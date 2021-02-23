@@ -1297,6 +1297,33 @@ RSpec.describe ChargebackVm do
           expect(production_result_part.cpu_used_metric).to be_within(0.01).of(cpu_used_metric_vm5)
           expect(production_result_part.cpu_used_cost).to be_within(0.01).of(cpu_used_metric_vm5 * hourly_rate * hours_in_month)
         end
+
+        context "partial metric rollups in consumption" do
+          let(:vm_6)                        { FactoryBot.create(:vm_vmware, :name => "test_vm_6", :evm_owner => admin, :created_on => month_beginning) }
+          let(:human_resources_tag)         { department_tag_category.entries.find_by(:description => "Human Resources").tag }
+          let(:human_resources_result_part) { subject.detect { |x| x.tag_name == "Human Resources" } }
+          let(:human_resources_tag_name)    { human_resources_tag.name.split("/").last(2).join("/") }
+
+          before do
+            mid_month = month_beginning + 10.days
+
+            add_metric_rollups_for(vm_6, mid_month...month_end, 12.hours, metric_rollup_params)
+
+            metric_rollup_params[:tag_names] = "#{metric_rollup_params[:tag_names]}|#{human_resources_tag_name}"
+            add_metric_rollups_for(vm_6, month_beginning...mid_month, 12.hours, metric_rollup_params)
+          end
+
+          it "calculates consumption based on rollup records with resource's tag_name" do
+            filtered_rollup_records = vm_6.metric_rollups.select { |rollup| rollup.tag_names.include?(human_resources_tag_name) }
+
+            cpu_used_metric_vm6 = filtered_rollup_records.sum(&:cpu_usagemhz_rate_average) / hours_in_month
+
+            expect(human_resources_result_part.fixed_compute_metric).to eq(filtered_rollup_records.count)
+
+            expect(human_resources_result_part.cpu_used_cost).to be_within(0.01).of(cpu_used_metric_vm6 * hourly_rate * hours_in_month)
+            expect(human_resources_result_part.cpu_used_metric).to be_within(0.01).of(cpu_used_metric_vm6)
+          end
+        end
       end
 
       context "Group by single tag category" do
