@@ -1,10 +1,9 @@
-require "active_support/core_ext/numeric/time"
-
 module Workers
   class MiqDefaults
-    HEARTBEAT_TIMEOUT = 2.minutes.freeze
-    STARTING_TIMEOUT  = 10.minutes.freeze
-    STOPPING_TIMEOUT  = 10.minutes.freeze
+    MINUTES           = 60 # seconds in a minute
+    HEARTBEAT_TIMEOUT = 2 * MINUTES
+    STARTING_TIMEOUT  = 10 * MINUTES
+    STOPPING_TIMEOUT  = 10 * MINUTES
 
     def self.heartbeat_timeout
       HEARTBEAT_TIMEOUT
