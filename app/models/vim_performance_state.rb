@@ -6,7 +6,7 @@ class VimPerformanceState < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages, :container_nodes, :container_groups,
-                  :all_container_groups]
+                  :all_container_groups, :containers]
 
   # Define accessors for state_data information
   [
@@ -133,6 +133,11 @@ class VimPerformanceState < ApplicationRecord
   def container_groups
     ids = get_assoc(:container_groups)
     ids.empty? ? [] : ContainerGroup.where(:id => ids).order(:id).to_a
+  end
+
+  def containers
+    ids = get_assoc(:containers)
+    ids.empty? ? [] : Container.where(:id => ids).order(:id).to_a
   end
 
   def all_container_groups

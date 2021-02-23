@@ -34,6 +34,7 @@ class VimPerformanceTagValue
     "ContainerNode"       => [],
     "Container"           => [],
     "ContainerGroup"      => [],
+    "ContainerImage"      => [:containers],
     "ContainerProject"    => [],
     "ContainerService"    => [],
     "ContainerReplicator" => [],
