@@ -1522,7 +1522,7 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem:               Configured System (Foreman)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Job:                          Ansible Tower Job
       ManageIQ::Providers::CloudManager:                                                  Cloud Provider
