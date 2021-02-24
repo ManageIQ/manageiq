@@ -243,7 +243,7 @@ class EvmServer
     #############################################################
     # Start all the configured workers
     #############################################################
-    @current_server.clean_heartbeat_files
+    @current_server.clean_heartbeat_files # Appliance specific
     @current_server.sync_config
     @current_server.start_drb_server
     @current_server.sync_workers
