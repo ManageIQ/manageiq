@@ -313,7 +313,7 @@ class MiqWorker::Runner
     return if skip_heartbeat?
 
     timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
-    File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
+    File.write(@worker.heartbeat_file, (Time.now.to_i + timeout))
   end
 
   def config_out_of_date?
