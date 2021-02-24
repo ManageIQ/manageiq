@@ -484,6 +484,11 @@
   :url: /configuration_job
   :rbac_feature_name: configuration_job_show_list
   :startup: true
+- :name: configuration_script
+  :description: Automation / Ansible Tower / Templates
+  :url: /configuration_script
+  :rbac_feature_name: configuration_script_show_list
+  :startup: true
 - :name: miq_ae_class_explorer
   :description: Automation / Automate / Explorer
   :url: /miq_ae_class/explorer
