@@ -126,5 +126,13 @@ class ContainerImage < ApplicationRecord
     where(:id => ids).update_all(:container_image_registry_id => nil, :deleted_on => Time.now.utc)
   end
 
+  def limit_cpu_cores
+    containers.map(&:limit_cpu_cores).compact.sum
+  end
+
+  def limit_memory_bytes
+    containers.map(&:limit_memory_bytes).compact.sum
+  end
+
   alias_method :perform_metadata_sync, :sync_stashed_metadata
 end

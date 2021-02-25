@@ -23,8 +23,8 @@ RSpec.describe MeteringContainerImage do
 
     EvmSpecHelper.create_guid_miq_server_zone
     @node = FactoryBot.create(:container_node, :name => "node")
-    @image = FactoryBot.create(:container_image, :ext_management_system => ems)
     @label = FactoryBot.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
+    @image = FactoryBot.create(:container_image, :ext_management_system => ems, :docker_labels => [@label])
     @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems)
     @group = FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                 :container_node => @node)
@@ -39,22 +39,21 @@ RSpec.describe MeteringContainerImage do
   end
 
   context "Monthly" do
-    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @image.id, :tag => nil) }
 
     before do
-      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+      add_metric_rollups_for(@image, month_beginning...month_end, 12.hours, metric_rollup_params)
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.vim_performance_states << FactoryBot.create(:vim_performance_state, :timestamp => time, :image_tag_names => "environment/prod")
+        @image.vim_performance_states << FactoryBot.create(:vim_performance_state, :timestamp => time, :image_tag_names => "environment/prod")
       end
     end
 
     subject { MeteringContainerImage.build_results_for_report_MeteringContainerImage(options).first.first }
 
     it "allocated fields" do
-      expect(subject.memory_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
+      expect(subject.memory_allocated_metric).to eq(@image.metric_rollups.average(:derived_memory_available))
+      expect(subject.cpu_cores_allocated_metric).to eq(@image.metric_rollups.average(:derived_vm_numvcpus))
       expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
       expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end

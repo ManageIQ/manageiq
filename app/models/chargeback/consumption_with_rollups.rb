@@ -32,6 +32,7 @@ class Chargeback
     def tag_prefix
       klass_prefix = case resource_type
                      when Container.name        then 'container_image'
+                     when ContainerImage.name   then 'container_image'
                      when VmOrTemplate.name     then 'vm'
                      when ContainerProject.name then 'container_project'
                      end
@@ -40,7 +41,7 @@ class Chargeback
     end
 
     def chargeback_container_labels
-      resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
+      docker_labels.try(:collect_concat) do |l|
         escaped_name = AssignmentMixin.escape(l.name)
         escaped_value = AssignmentMixin.escape(l.value)
         [
@@ -52,7 +53,7 @@ class Chargeback
     end
 
     def container_tag_list_with_prefix
-      if resource.kind_of?(Container)
+      if resource.kind_of?(ContainerImage)
         state = resource.vim_performance_state_for_ts(timestamp.to_s)
         image_tag_name = "#{state.image_tag_names}|" if state
 
@@ -152,6 +153,10 @@ class Chargeback
 
     private
 
+    def docker_labels
+      resource.try(:docker_labels) || resource.try(:container_image).try(:docker_labels)
+    end
+
     def born_at
       # metrics can be older than resource (first capture may go few days back)
       [super, first_metric_rollup_record.timestamp].compact.min
@@ -172,6 +177,10 @@ class Chargeback
     def rollup_field(rollup, metric)
       if metric == "v_derived_cpu_total_cores_used"
         return v_derived_cpu_total_cores_used_for(rollup)
+      end
+
+      if metric == "derived_vm_numvcpu_cores"
+        return rollup[ChargeableField.col_index('derived_vm_numvcpus')]
       end
 
       rollup[ChargeableField.col_index(metric)]
