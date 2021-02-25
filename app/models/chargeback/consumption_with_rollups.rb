@@ -96,7 +96,6 @@ class Chargeback
     end
 
     def current_value(metric, _sub_metric) # used for containers allocated metrics
-      resource = resource_type.classify.constantize.find(resource_id)
       case metric
       when 'derived_vm_numvcpu_cores', 'derived_vm_numvcpus_cores' # Allocated CPU count
         resource.try(:limit_cpu_cores).to_f
