@@ -22,6 +22,7 @@ class CloudVolume < ApplicationRecord
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
   has_many   :volume_mappings, :dependent => :destroy
+  has_many   :host_initiators, :through => :volume_mappings
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
