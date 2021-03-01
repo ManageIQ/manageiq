@@ -5124,24 +5124,32 @@
         :description: Add a Provider
         :feature_type: admin
         :identifier: automation_manager_add_provider
-  - :name: Configured Systems
-    :description: Everything under Configured Systems accordion
-    :feature_type: node
-    :identifier: automation_manager_configured_system
+- :name: Configured Systems
+  :description: Everything under Configured Systems accordion
+  :feature_type: node
+  :identifier: automation_manager_configured_system
+  :children:
+  - :name: View
+    :description: View Configured Systems
+    :feature_type: view
+    :identifier: automation_manager_configured_system_view
     :children:
-    - :name: View
-      :description: View Configured Systems
+    - :name: List
+      :description: Display Lists of Configured Systems
+      :identifier: automation_manager_configured_system_show_list
+    - :name: Show
+      :description: Display Individual Configured Systems
       :feature_type: view
-      :identifier: automation_manager_configured_system_view
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
+      :identifier: automation_manager_configured_system_show
+  - :name: Operate
+    :description: Perform Operations on Configured Systems
+    :feature_type: control
+    :identifier: automation_manager_configured_system_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Configured Systems Tags
       :feature_type: control
-      :identifier: automation_manager_configured_system_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Configured Systems Tags
-        :feature_type: control
-        :identifier: automation_manager_configured_system_tag
+      :identifier: automation_manager_configured_system_tag
 
 - :name: Templates
   :description: Everything under Templates accordion
