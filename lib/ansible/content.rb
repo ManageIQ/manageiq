@@ -11,11 +11,28 @@ module Ansible
     def fetch_galaxy_roles
       return true unless requirements_file.exist?
 
-      params = ["install", :roles_path= => roles_dir, :role_file= => requirements_file]
-      AwesomeSpawn.run!("ansible-galaxy", :params => params)
+      require "awesome_spawn"
+      AwesomeSpawn.run!("ansible-galaxy", :params => ["install", :roles_path= => roles_dir, :role_file= => requirements_file])
     end
 
-    def self.consolidate_plugin_playbooks(dir = PLUGIN_CONTENT_DIR)
+    def self.fetch_plugin_galaxy_roles
+      require "vmdb/plugins"
+
+      Vmdb::Plugins.ansible_runner_content.each do |plugin, content_dir|
+        puts "Fetching ansible galaxy roles for #{plugin.name}..."
+        begin
+          new(content_dir).fetch_galaxy_roles
+          puts "Fetching ansible galaxy roles for #{plugin.name}...Complete"
+        rescue AwesomeSpawn::CommandResultError => err
+          puts "Fetching ansible galaxy roles for #{plugin.name}...Failed - #{err.result.error}"
+          raise
+        end
+      end
+    end
+
+    def self.consolidate_plugin_content(dir = PLUGIN_CONTENT_DIR)
+      require "vmdb/plugins"
+
       FileUtils.rm_rf(dir)
       FileUtils.mkdir_p(dir)
 

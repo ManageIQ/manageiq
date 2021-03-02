@@ -43,6 +43,8 @@ module Vmdb
       details.transform_values { |v| v[:version] }
     end
 
+    # Ansible content (roles) that come out-of-the-box, for use by both Automate
+    #   and ansible-runner
     def ansible_content
       @ansible_content ||= begin
         require_relative 'plugins/ansible_content'
@@ -52,6 +54,8 @@ module Vmdb
       end
     end
 
+    # Ansible content (playbooks and roles) for internal use by provider plugins,
+    #   not exposed to Automate, and to be run by ansible_runner
     def ansible_runner_content
       @ansible_runner_content ||= begin
         map do |engine|
