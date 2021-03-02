@@ -152,6 +152,10 @@ group :nuage, :manageiq_default do
   manageiq_plugin "manageiq-providers-nuage"
 end
 
+group :oracle_cloud, :manageiq_default do
+  manageiq_plugin "manageiq-providers-oracle_cloud"
+end
+
 group :redfish, :manageiq_default do
   manageiq_plugin "manageiq-providers-redfish"
 end
