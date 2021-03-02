@@ -41,8 +41,9 @@ class Container < ApplicationRecord
 
   PERF_ROLLUP_CHILDREN = []
 
-  def perf_rollup_parents(_interval_name = nil)
-    # No rollups: nodes performance are collected separately
+  def perf_rollup_parents(interval_name = nil)
+    # No rollups for nodes performance - they are collected separately
+    [container_image].compact unless interval_name == 'realtime'
   end
 
   def disconnect_inv

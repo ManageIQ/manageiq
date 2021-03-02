@@ -71,4 +71,8 @@ module Metric::CiMixin::StateFinders
   def miq_regions_from_vim_performance_state_for_ts(_ts)
     self.respond_to?(:miq_regions) ? miq_regions : []
   end
+
+  def containers_from_vim_performance_state_for_ts(timestamp)
+    vim_performance_state_for_ts(timestamp).containers
+  end
 end
