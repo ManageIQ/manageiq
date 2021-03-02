@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 156 ending 2021-03-01
+
+### Fixed
+
+* Fix ansible\_runner content seeding [(#21086)](https://github.com/ManageIQ/manageiq/pull/21086)
+* database\_connectivity? should handle not-running database [(#21064)](https://github.com/ManageIQ/manageiq/pull/21064)
+* Prefer rollup records with tags to grouping in chargeback [(#21059)](https://github.com/ManageIQ/manageiq/pull/21059)
+
 # Unreleased as of Sprint 155 ending 2020-02-15
 
 ### Added
