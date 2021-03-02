@@ -9,6 +9,9 @@ class ContainerImage < ApplicationRecord
   include ArchivedMixin
   include NewWithTypeStiMixin
   include CustomActionsMixin
+  include SupportsFeatureMixin
+  include Metric::CiMixin
+
   include_concern 'Purging'
 
   DOCKER_IMAGE_PREFIX = "docker://"
@@ -30,6 +33,10 @@ class ContainerImage < ApplicationRecord
   has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
   has_one :last_scan_result, :class_name => "ScanResult", :as => :resource, :dependent => :destroy, :autosave => true
 
+  has_many :metric_rollups, :as => :resource, :dependent => :nullify, :inverse_of => :resource
+  has_many :metrics, :as => :resource, :dependent => :nullify, :inverse_of => :resource
+  has_many :vim_performance_states, :as => :resource, :dependent => :nullify, :inverse_of => :resource
+
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
 
@@ -39,6 +46,12 @@ class ContainerImage < ApplicationRecord
   after_create :raise_creation_event
 
   delegate :my_zone, :to => :ext_management_system, :allow_nil => true
+
+  PERF_ROLLUP_CHILDREN = [:containers].freeze
+
+  def perf_rollup_parents(interval_name = nil)
+    [] unless interval_name == 'realtime' #  we only process rollups
+  end
 
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
