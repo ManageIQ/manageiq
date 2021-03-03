@@ -10,8 +10,8 @@ module Authenticator
 
     private
 
-    def _authenticate(username, password, _request)
-      user = case_insensitive_find_by_userid(username)
+    def _authenticate(username, password, request: nil, lookup_scope: nil)
+      user = case_insensitive_find_by_userid(username, lookup_scope: lookup_scope)
 
       return [false, _('Your account has been locked due to too many failed login attempts, please contact the administrator.')] if user&.locked?
 
