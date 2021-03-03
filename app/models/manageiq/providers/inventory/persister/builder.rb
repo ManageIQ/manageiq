@@ -43,6 +43,9 @@ module ManageIQ::Providers
         builder
       end
 
+      attr_accessor :name, :persister_class, :properties, :inventory_object_attributes,
+                    :default_values, :dependency_attributes, :options, :adv_settings, :shared_properties
+
       # @see prepare_data()
       def initialize(name, persister_class, options = self.class.default_options)
         @name = name
@@ -59,6 +62,15 @@ module ManageIQ::Providers
 
         @adv_settings = options[:adv_settings] # Configuration/Advanced settings in GUI
         @shared_properties = options[:shared_properties] # From persister
+      end
+
+      def manager_class
+        @manager_class ||= begin
+          provider_module = persister_class.provider_module
+          manager_module = self.class.name.split('::').last
+
+          "#{provider_module}::#{manager_module}".constantize
+        end
       end
 
       # Builds data for InventoryCollection
@@ -208,10 +220,7 @@ module ManageIQ::Providers
       def auto_model_class
         model_class = begin
           # a) Provider specific class
-          provider_module = @persister_class.provider_module
-          manager_module = self.class.name.split('::').last
-
-          class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
+          class_name = "#{manager_class}::#{@name.to_s.classify}"
 
           inferred_class = class_name.safe_constantize
 
@@ -223,12 +232,7 @@ module ManageIQ::Providers
           nil
         end
 
-        if model_class
-          model_class
-        else
-          # b) general class
-          "::#{@name.to_s.classify}".safe_constantize
-        end
+        model_class || "::#{@name.to_s.classify}".safe_constantize
       end
 
       # Enables/disables auto_model_class and exception check
