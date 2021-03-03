@@ -69,7 +69,9 @@ module ManageIQ::Providers
           provider_module = persister_class.provider_module
           manager_module = self.class.name.split('::').last
 
-          "#{provider_module}::#{manager_module}".constantize
+          "#{provider_module}::#{manager_module}".safe_constantize
+        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
+          nil
         end
       end
 
@@ -218,21 +220,14 @@ module ManageIQ::Providers
       #
       # @return [Class | nil] when class doesn't exist, returns nil
       def auto_model_class
-        model_class = begin
-          # a) Provider specific class
-          class_name = "#{manager_class}::#{@name.to_s.classify}"
+        class_name = "#{manager_class}::#{name.to_s.classify}"
+        provider_class = class_name.safe_constantize
 
-          inferred_class = class_name.safe_constantize
-
-          # safe_constantize can return different similar class ( some Rails auto-magic :/ )
-          if inferred_class.to_s == class_name
-            inferred_class
-          end
-        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
-          nil
-        end
-
-        model_class || "::#{@name.to_s.classify}".safe_constantize
+        # Check that safe_constantize returns our expected class_name, if not then
+        # return the base class.
+        #
+        # safe_constantize can return different similar class ( some Rails auto-magic :/ )
+        provider_class.to_s == class_name ? provider_class : "::#{name.to_s.classify}".safe_constantize
       end
 
       # Enables/disables auto_model_class and exception check
