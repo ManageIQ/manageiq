@@ -56,6 +56,9 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       add_default_values(
         :template => true
       )
+
+      template_class = "#{manager_class}::Template".safe_constantize
+      add_properties(:model_class => template_class) if template_class
     end
 
     def vm_template_shared
