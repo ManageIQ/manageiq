@@ -6,6 +6,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_tenants
+          add_common_default_values
+        end
+
+        def cloud_volumes
+          add_common_default_values
+        end
+
         def flavors
           add_common_default_values
         end
