@@ -72,6 +72,15 @@ namespace :locale do
       end
     end
 
+    def key_from_yaml(yaml_key_value)
+      case yaml_key_value
+      when Array
+        yaml_key_value.first
+      else
+        yaml_key_value
+      end
+    end
+
     root_path = args[:root] || Rails.root
 
     config_file = root_path.join('config/locale_task_config.yaml')
@@ -97,7 +106,7 @@ namespace :locale do
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
         end
-        f.puts '_("%{key}")' % {:key => key}
+        f.puts '_("%{key}")' % {:key => key_from_yaml(key)}
       end
     end
   end
