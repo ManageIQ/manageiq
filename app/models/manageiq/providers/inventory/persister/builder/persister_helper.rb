@@ -136,7 +136,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
 
   def add_collection_for_manager(manager_type, collection_name, extra_properties = {}, settings = {}, &block)
     parent_manager = send("#{manager_type}_manager")
-    extra_properties.reverse_merge!(:parent => parent_manager)
+    settings.reverse_merge!(:shared_properties => {:parent => parent_manager})
 
     builder_class = send(manager_type)
     add_collection(builder_class, collection_name, extra_properties, settings, &block)
