@@ -25,7 +25,7 @@ RSpec.describe "MiqServer::ServerSmartProxy" do
     it "is the number of smart proxy workers when the role is active" do
       server.role = "smartproxy"
       server.assigned_server_roles.update(:active => true)
-      stub_settings(:workers => {:worker_base => {:queue_worker_base => {:smart_proxy_worker => {:count => 5}}}})
+      stub_settings_merge(:workers => {:smart_proxy_worker => {:count => 5}})
 
       expect(server.concurrent_job_max).to eq(5)
     end

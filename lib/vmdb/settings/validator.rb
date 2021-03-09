@@ -167,6 +167,19 @@ module Vmdb
 
         return valid, errors
       end
+
+      def workers(data)
+        valid, errors = true, []
+
+        data.each_pair do |worker, worker_settings|
+          if worker_settings.include?(:inherits_from) && worker_settings[:inherits_from] != ::Settings.workers[worker].inherits_from
+            valid = false
+            errors << ["#{worker}-inherits_from", "cannot be modified"]
+          end
+        end
+
+        return valid, errors
+      end
     end
   end
 end

@@ -152,63 +152,59 @@ class MiqWorker < ApplicationRecord
     result
   end
 
-  # Convert the Models name from MiqGenericWorker to :generic_worker
+  # Determine the settings key from a worker's class name
   def self.settings_name
     @settings_name ||=
       if self == MiqWorker
         :worker_base
       elsif module_parent.try(:short_token)
-        # :generic_worker_infra, :generic_worker_vmware
+        # ManageIQ::Providers::Vmware::InfraManager::RefreshWorker => :ems_refresh_worker_vmware
         :"#{normalized_type}_#{module_parent.short_token.underscore}"
       else
-        # :generic_worker
+        # MiqGenericWorker => :generic_worker
         normalized_type.to_sym
       end
   end
 
-  # Grab all the classes in the hierarchy below ActiveRecord::Base
-  def self.path_to_my_worker_settings
-    @path_to_my_worker_settings ||=
-      ancestors.grep(Class).select { |c| c <= MiqWorker }.reverse.collect(&:settings_name)
+  def self.fetch_worker_settings_from_server(miq_server, options = {})
+    return {} if miq_server.nil?
+
+    config = (options[:config] || miq_server.settings)[:workers]
+    return {} if config.nil?
+
+    flatten_worker_settings(config, options[:raw])
   end
 
-  def self.fetch_worker_settings_from_server(miq_server, options = {})
-    settings = {}
-
-    unless miq_server.nil?
-      server_config = options[:config] || miq_server.settings
-      # Get the configuration values
-      section = server_config[:workers]
-      unless section.nil?
-        classes = path_to_my_worker_settings
-        classes.each do |c|
-          section = section[c]
-          raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
-          defaults = section[:defaults]
-          settings.merge!(defaults) unless defaults.nil?
-        end
-
-        settings.merge!(section)
-
-        # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-        raw = options[:raw] == true
-
-        # Clean up the configuration values in a format like "30.seconds"
-        unless raw
-          settings.keys.each do |k|
-            if settings[k].kind_of?(String)
-              if settings[k].number_with_method?
-                settings[k] = settings[k].to_i_with_method
-              elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
-                settings[k] = settings[k].to_i
-              end
-            end
-          end
-        end
-      end
+  def self.flatten_worker_settings(config, raw = false)
+    layers = []
+    key = settings_name
+    while key
+      layer = config[key.to_sym]
+      layers.unshift(layer)
+      key = layer[:inherits_from]
     end
 
-    settings
+    {}.tap do |settings|
+      layers.each { |l| settings.merge!(l) }
+      resolve_worker_settings_values!(settings) if raw != true
+    end
+  end
+
+  # Resolve the settings values stored as strings or in method format into a number
+  #
+  #   "1.megabyte"  => 1_048_576
+  #   "1_048_576"   => 1_048_576
+  #   "1_048_576.0" => 1_048_576
+  private_class_method def self.resolve_worker_settings_values!(settings)
+    settings.keys.each do |k|
+      next unless settings[k].kind_of?(String)
+
+      if settings[k].number_with_method?
+        settings[k] = settings[k].to_i_with_method
+      elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
+        settings[k] = settings[k].to_i
+      end
+    end
   end
 
   def worker_settings(options = {})
@@ -526,14 +522,6 @@ class MiqWorker < ApplicationRecord
 
   def update_heartbeat
     update_attribute(:last_heartbeat, Time.now.utc)
-  end
-
-  def self.config_settings_path
-    @config_settings_path ||= [:workers] + path_to_my_worker_settings
-  end
-
-  class << self
-    attr_writer :config_settings_path
   end
 
   def update_spid(spid = ActiveRecord::Base.connection.spid)

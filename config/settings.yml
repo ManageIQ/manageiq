@@ -1048,127 +1048,138 @@
   :authentication_timeout: 30.seconds
   :url:
 :workers:
+  :cockpit_ws_worker:
+    :count: 1
+    :inherits_from: worker_base
+  :ems_metrics_collector_worker:
+    :count: 2
+    :inherits_from: queue_worker_base
+    :nice_delta: 3
+    :poll_method: escalate
+  :ems_metrics_processor_worker:
+    :count: 2
+    :inherits_from: queue_worker_base
+    :memory_threshold: 800.megabytes
+    :nice_delta: 7
+    :poll_method: escalate
+  :ems_operations_worker:
+    :inherits_from: queue_worker_base
+  :ems_refresh_worker:
+    :dequeue_method: sql
+    :inherits_from: queue_worker_base
+    :memory_threshold: 2.gigabytes
+    :nice_delta: 7
+    :poll: 10.seconds
+    :poll_method: normal
+    :queue_timeout: 120.minutes
+  :event_catcher:
+    :ems_event_page_size: 100
+    :ems_event_thread_shutdown_timeout: 10.seconds
+    :flooding_events_per_minute: 30
+    :flooding_monitor_enabled: false
+    :inherits_from: worker_base
+    :memory_threshold: 2.gigabytes
+    :nice_delta: 1
+    :poll: 1.seconds
+  :event_handler:
+    :inherits_from: queue_worker_base
+    :nice_delta: 7
+  :generic_worker:
+    :count: 2
+    :inherits_from: queue_worker_base
+  :priority_worker:
+    :count: 2
+    :inherits_from: queue_worker_base
+    :nice_delta: 1
+    :poll: 1.seconds
+  :queue_worker_base:
+    :dequeue_method: drb
+    :inherits_from: worker_base
+    :poll_method: normal
+    :queue_timeout: 10.minutes
+  :remote_console_worker:
+    :connection_pool_size: 14
+    :inherits_from: worker_base
+    :memory_threshold: 1.gigabytes
+    :nice_delta: 1
+  :reporting_worker:
+    :count: 2
+    :inherits_from: queue_worker_base
+    :nice_delta: 7
+  :schedule_worker:
+    :audit_managed_resources: 1.days
+    :authentication_check_interval: 1.hour
+    :binary_blob_purge_interval: 1.hour
+    :chargeback_generation_interval: 1.day
+    :chargeback_generation_time_utc: 01:00:00
+    :compliance_purge_interval: 1.day
+    :container_entities_purge_interval: 1.day
+    :db_diagnostics_interval: 30.minutes
+    :drift_state_purge_interval: 1.day
+    :event_streams_purge_interval: 1.day
+    :evm_snapshot_delete_delay_for_job_not_found: 1.hour
+    :evm_snapshot_interval: 1.hour
+    :inherits_from: worker_base
+    :job_proxy_dispatcher_interval: 15.seconds
+    :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
+    :job_proxy_dispatcher_stale_message_timeout: 2.minutes
+    :job_timeout_interval: 60.seconds
+    :log_active_configuration_interval: 1.days
+    :memory_threshold: 500.megabytes
+    :nice_delta: 3
+    :notifications_purge_interval: 1.day
+    :orchestration_stack_retired_interval: 10.minutes
+    :performance_collection_interval: 3.minutes
+    :performance_collection_start_delay: 5.minutes
+    :performance_realtime_purging_interval: 21.minutes
+    :performance_realtime_purging_start_delay: 5.minutes
+    :performance_rollup_purging_interval: 4.hours
+    :performance_rollup_purging_start_delay: 5.minutes
+    :policy_events_purge_interval: 1.day
+    :poll: 15.seconds
+    :queue_timeout_interval: 15.seconds
+    :report_result_purge_interval: 1.week
+    :server_log_stats_interval: 5.minutes
+    :server_stats_interval: 60.seconds
+    :service_retired_interval: 10.minutes
+    :session_timeout_interval: 30.seconds
+    :storage_file_collection_interval: 1.days
+    :storage_file_collection_time_utc: 21600
+    :task_purge_interval: 1.day
+    :task_timeout_check_frequency: 1.hour
+    :vim_performance_states_purge_interval: 1.day
+    :vm_retired_interval: 10.minutes
+    :yum_update_check: 12.hours
+  :smart_proxy_worker:
+    :count: 2
+    :heartbeat_thread_shutdown_timeout: 10.seconds
+    :inherits_from: queue_worker_base
+    :memory_threshold: 2.gigabytes
+    :queue_timeout: 20.minutes
+  :ui_worker:
+    :connection_pool_size: 8
+    :inherits_from: worker_base
+    :memory_threshold: 1.gigabytes
+    :nice_delta: 1
+  :web_service_worker:
+    :connection_pool_size: 8
+    :inherits_from: worker_base
+    :memory_threshold: 1.gigabytes
+    :nice_delta: 1
   :worker_base:
-    :defaults:
-      :count: 1
-      :cpu_request_percent: 15
-      :cpu_threshold_percent: 100
-      :gc_interval: 15.minutes
-      :heartbeat_freq: 10.seconds
-      :heartbeat_timeout: 2.minutes
-      :memory_request: 500.megabytes
-      :memory_threshold: 600.megabytes
-      :nice_delta: 10
-      :parent_time_threshold: 3.minutes
-      :poll: 3.seconds
-      :poll_escalate_max: 30.seconds
-      :poll_method: normal
-      :starting_timeout: 10.minutes
-      :stopping_timeout: 10.minutes
-      :systemd_enabled: true
-    :event_catcher:
-      :defaults:
-        :flooding_events_per_minute: 30
-        :flooding_monitor_enabled: false
-        :ems_event_page_size: 100
-        :ems_event_thread_shutdown_timeout: 10.seconds
-        :memory_threshold: 2.gigabytes
-        :nice_delta: 1
-        :poll: 1.seconds
-    :queue_worker_base:
-      :defaults:
-        :dequeue_method: drb
-        :poll_method: normal
-        :queue_timeout: 10.minutes
-      :ems_metrics_collector_worker:
-        :defaults:
-          :count: 2
-          :nice_delta: 3
-          :poll_method: escalate
-      :ems_metrics_processor_worker:
-        :count: 2
-        :memory_threshold: 800.megabytes
-        :nice_delta: 7
-        :poll_method: escalate
-      :ems_operations_worker: {}
-      :ems_refresh_worker:
-        :defaults:
-          :memory_threshold: 2.gigabytes
-          :nice_delta: 7
-          :poll: 10.seconds
-          :poll_method: normal
-          :queue_timeout: 120.minutes
-          :dequeue_method: sql
-      :event_handler:
-        :nice_delta: 7
-      :generic_worker:
-        :count: 2
-      :priority_worker:
-        :count: 2
-        :nice_delta: 1
-        :poll: 1.seconds
-      :reporting_worker:
-        :count: 2
-        :nice_delta: 7
-      :smart_proxy_worker:
-        :count: 2
-        :memory_threshold: 2.gigabytes
-        :queue_timeout: 20.minutes
-        :heartbeat_thread_shutdown_timeout: 10.seconds
-    :schedule_worker:
-      :audit_managed_resources: 1.days
-      :container_entities_purge_interval: 1.day
-      :binary_blob_purge_interval: 1.hour
-      :authentication_check_interval: 1.hour
-      :chargeback_generation_interval: 1.day
-      :chargeback_generation_time_utc: 01:00:00
-      :compliance_purge_interval: 1.day
-      :db_diagnostics_interval: 30.minutes
-      :drift_state_purge_interval: 1.day
-      :event_streams_purge_interval: 1.day
-      :evm_snapshot_delete_delay_for_job_not_found: 1.hour
-      :evm_snapshot_interval: 1.hour
-      :job_proxy_dispatcher_interval: 15.seconds
-      :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
-      :job_proxy_dispatcher_stale_message_timeout: 2.minutes
-      :job_timeout_interval: 60.seconds
-      :log_active_configuration_interval: 1.days
-      :memory_threshold: 500.megabytes
-      :nice_delta: 3
-      :notifications_purge_interval: 1.day
-      :orchestration_stack_retired_interval: 10.minutes
-      :performance_collection_interval: 3.minutes
-      :performance_collection_start_delay: 5.minutes
-      :performance_realtime_purging_interval: 21.minutes
-      :performance_realtime_purging_start_delay: 5.minutes
-      :performance_rollup_purging_interval: 4.hours
-      :performance_rollup_purging_start_delay: 5.minutes
-      :policy_events_purge_interval: 1.day
-      :poll: 15.seconds
-      :queue_timeout_interval: 15.seconds
-      :report_result_purge_interval: 1.week
-      :server_log_stats_interval: 5.minutes
-      :server_stats_interval: 60.seconds
-      :service_retired_interval: 10.minutes
-      :session_timeout_interval: 30.seconds
-      :storage_file_collection_interval: 1.days
-      :storage_file_collection_time_utc: 21600
-      :task_purge_interval: 1.day
-      :task_timeout_check_frequency: 1.hour
-      :vim_performance_states_purge_interval: 1.day
-      :vm_retired_interval: 10.minutes
-      :yum_update_check: 12.hours
-    :ui_worker:
-      :connection_pool_size: 8
-      :memory_threshold: 1.gigabytes
-      :nice_delta: 1
-    :web_service_worker:
-      :connection_pool_size: 8
-      :memory_threshold: 1.gigabytes
-      :nice_delta: 1
-    :remote_console_worker:
-      :connection_pool_size: 14
-      :memory_threshold: 1.gigabytes
-      :nice_delta: 1
-    :cockpit_ws_worker:
-      :count: 1
+    :count: 1
+    :cpu_request_percent: 15
+    :cpu_threshold_percent: 100
+    :gc_interval: 15.minutes
+    :heartbeat_freq: 10.seconds
+    :heartbeat_timeout: 2.minutes
+    :memory_request: 500.megabytes
+    :memory_threshold: 600.megabytes
+    :nice_delta: 10
+    :parent_time_threshold: 3.minutes
+    :poll: 3.seconds
+    :poll_escalate_max: 30.seconds
+    :poll_method: :normal
+    :starting_timeout: 10.minutes
+    :stopping_timeout: 10.minutes
+    :systemd_enabled: true
