@@ -27,18 +27,19 @@ RSpec.describe MiqEventDefinition do
       let!(:set1) { create_set!('host_operations') }
       let!(:set2) { create_set!('evm_operations') }
 
-      context 'and CSV file with an event definition linked to one of the sets' do
-        let(:csv) do
-          <<-CSV.strip_heredoc
-            name,description,event_type,set_type
-            #
-            evm_server_start,EVM Server Start,Default,host_operations
-          CSV
+      context 'and YAML file with an event definition linked to one of the sets' do
+        let(:event_definitions) do
+          [{
+            "name"        => "evm_server_start",
+            "description" => "EVM Server Start",
+            "event_type"  => "Default",
+            "set_type"    => "host_operations"
+          }]
         end
 
-        context 'seeding default event definitions from that csv' do
+        context 'seeding default event definitions from that yml' do
           before do
-            allow(File).to receive(:open).and_return(StringIO.new(csv))
+            allow(MiqEventDefinition).to receive(:event_definitions_from_path).and_return(event_definitions)
             MiqEventDefinition.seed_default_events(event_defs)
           end
 
@@ -48,18 +49,19 @@ RSpec.describe MiqEventDefinition do
             expect(event_def.memberof).to eq [set1]
           end
 
-          context 'when the CSV was changed and the event is linked to another set now' do
-            let(:csv) do
-              <<-CSV.strip_heredoc
-                name,description,event_type,set_type
-                #
-                evm_server_start,EVM Server Start,Default,evm_operations
-              CSV
+          context 'when the YAML was changed and the event is linked to another set now' do
+            let(:new_event_definitions) do
+              [{
+                "name"        => "evm_server_start",
+                "description" => "EVM Server Start",
+                "event_type"  => "Default",
+                "set_type"    => "evm_operations"
+              }]
             end
 
             context 'seeding again' do
               before do
-                allow(File).to receive(:open).and_return(StringIO.new(csv))
+                allow(MiqEventDefinition).to receive(:event_definitions_from_path).and_return(new_event_definitions)
                 MiqEventDefinition.seed_default_events(event_defs)
               end
 

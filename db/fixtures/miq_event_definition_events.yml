@@ -1,0 +1,800 @@
+---
+#
+# Authentication
+#
+- name: login_failed
+  description: Login failed
+  event_type: Default
+  set_type: authentication
+#
+# Authorization
+#
+- name: user_created
+  description: User created
+  event_type: Default
+  set_type: authorization
+#
+# EVM Server operations
+#
+- name: evm_server_start
+  description: Server Start
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_stop
+  description: Server Stop
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_not_responding
+  description: Server Not Responding
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_memory_exceeded
+  description: Server Exceeded Memory Limit
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_is_master
+  description: Server is Master
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_system_disk_high_usage
+  description: Server High System Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_boot_disk_high_usage
+  description: Server High /boot Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_home_disk_high_usage
+  description: Server High /home Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_var_disk_high_usage
+  description: Server High /var Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_var_log_disk_high_usage
+  description: Server High /var/log Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_var_log_audit_disk_high_usage
+  description: Server High /var/log/audit Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_log_disk_high_usage
+  description: Server High /var/www/miq/vmdb/log Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_miq_tmp_disk_high_usage
+  description: Server High Temp Storage Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_tmp_disk_high_usage
+  description: Server High /tmp Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_db_disk_high_usage
+  description: Server High DB Disk Usage
+  event_type: Default
+  set_type: evm_operations
+- name: evm_server_db_backup_low_space
+  description: Server Database Backup Insufficient Space
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_start
+  description: Worker Started
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_stop
+  description: Worker Stopped
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_killed
+  description: Worker Killed
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_not_responding
+  description: Worker Not Responding
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_memory_exceeded
+  description: Worker Exceeded Memory Limit
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_uptime_exceeded
+  description: Worker Exceeded Uptime Limit
+  event_type: Default
+  set_type: evm_operations
+- name: evm_worker_exit_file
+  description: Worker Exit File
+  event_type: Default
+  set_type: evm_operations
+#
+# External Management System operations
+#
+- name: ems_auth_changed
+  description: Provider Auth Changed
+  event_type: Default
+  set_type: auth_validation
+- name: ems_auth_valid
+  description: Provider Auth Valid
+  event_type: Default
+  set_type: auth_validation
+- name: ems_auth_invalid
+  description: Provider Auth Invalid
+  event_type: Default
+  set_type: auth_validation
+- name: ems_auth_unreachable
+  description: Provider Auth Unreachable
+  event_type: Default
+  set_type: auth_validation
+- name: ems_auth_incomplete
+  description: Provider Auth Incomplete Credentials
+  event_type: Default
+  set_type: auth_validation
+- name: ems_auth_error
+  description: Provider Auth Error
+  event_type: Default
+  set_type: auth_validation
+- name: ems_performance_gap_detected
+  description: C & U Collection Gap Detected
+  event_type: Default
+  set_type: ems_operations
+# Compliance event names are derived from lowercased model name.
+- name: extmanagementsystem_compliance_check
+  description: Provider Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: extmanagementsystem_compliance_passed
+  description: Provider Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: extmanagementsystem_compliance_failed
+  description: Provider Compliance Failed
+  event_type: Default
+  set_type: compliance
+#
+# Host operations
+#
+- name: host_connect
+  description: Host Connect
+  event_type: Default
+  set_type: host_operations
+- name: host_disconnect
+  description: Host Disconnect
+  event_type: Default
+  set_type: host_operations
+- name: host_failure
+  description: Host Failure
+  event_type: Default
+  set_type: host_operations
+- name: request_host_scan
+  description: Host Analysis Request
+  event_type: Default
+  set_type: host_operations
+- name: host_scan_complete
+  description: Host Analysis Complete
+  event_type: Default
+  set_type: host_operations
+- name: host_perf_complete
+  description: Host C & U Processing Complete
+  event_type: Default
+  set_type: host_operations
+- name: host_add_to_cluster
+  description: Host Added to Cluster
+  event_type: Default
+  set_type: host_operations
+- name: host_remove_from_cluster
+  description: Host Removed from Cluster
+  event_type: Default
+  set_type: host_operations
+- name: host_compliance_check
+  description: Host Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: host_compliance_passed
+  description: Host Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: host_compliance_failed
+  description: Host Compliance Failed
+  event_type: Default
+  set_type: compliance
+- name: host_auth_changed
+  description: Host Auth Changed
+  event_type: Default
+  set_type: auth_validation
+- name: host_auth_valid
+  description: Host Auth Valid
+  event_type: Default
+  set_type: auth_validation
+- name: host_auth_invalid
+  description: Host Auth Invalid
+  event_type: Default
+  set_type: auth_validation
+- name: host_auth_unreachable
+  description: Host Auth Unreachable
+  event_type: Default
+  set_type: auth_validation
+- name: host_auth_incomplete
+  description: Host Auth Incomplete Credentials
+  event_type: Default
+  set_type: auth_validation
+- name: host_auth_error
+  description: Host Auth Error
+  event_type: Default
+  set_type: auth_validation
+- name: request_host_reset
+  description: Host Reset Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_start
+  description: Host Start Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_stop
+  description: Host Stop Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_standby
+  description: Host Standby Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_enter_maintenance_mode
+  description: Host Maintenance Enter Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_exit_maintenance_mode
+  description: Host Maintenance Exit Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_shutdown
+  description: Host Shutdown Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_reboot
+  description: Host Reboot Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_enable_vmotion
+  description: Host Vmotion Enable Request
+  event_type: Default
+  set_type: host_operations
+- name: request_host_disable_vmotion
+  description: Host Vmotion Disable Request
+  event_type: Default
+  set_type: host_operations
+#
+# Company tags
+#
+- name: request_assign_company_tag
+  description: Tag Request
+  event_type: Default
+  set_type: tags
+- name: assigned_company_tag
+  description: Tag Complete
+  event_type: Default
+  set_type: tags
+- name: assigned_company_tag_parent_host
+  description: Tag Parent Host Complete
+  event_type: Default
+  set_type: tags
+- name: assigned_company_tag_parent_ems_cluster
+  description: Tag Parent Cluster Complete
+  event_type: Default
+  set_type: tags
+- name: assigned_company_tag_parent_resource_pool
+  description: Tag Parent Resource Pool Complete
+  event_type: Default
+  set_type: tags
+- name: assigned_company_tag_parent_storage
+  description: Tag Parent Datastore Complete
+  event_type: Default
+  set_type: tags
+- name: request_unassign_company_tag
+  description: Un-Tag Request
+  event_type: Default
+  set_type: tags
+- name: unassigned_company_tag
+  description: Un-Tag Complete
+  event_type: Default
+  set_type: tags
+- name: unassigned_company_tag_parent_host
+  description: Un-Tag Parent Host Complete
+  event_type: Default
+  set_type: tags
+- name: unassigned_company_tag_parent_ems_cluster
+  description: Un-Tag Parent Cluster Complete
+  event_type: Default
+  set_type: tags
+- name: unassigned_company_tag_parent_resource_pool
+  description: Un-Tag Parent Resource Pool Complete
+  event_type: Default
+  set_type: tags
+- name: unassigned_company_tag_parent_storage
+  description: Un-Tag Parent Datastore Complete
+  event_type: Default
+  set_type: tags
+#
+# VM configuration
+#
+- name: vm_reconfigure
+  description: VM Settings Change
+  event_type: Default
+  set_type: vm_configurational
+- name: vm_renamed_event
+  description: VM Renamed Event
+  event_type: Default
+  set_type: vm_configurational
+#
+# VM lifecycle
+#
+- name: vm_destroy
+  description: VM Delete (from Disk)
+  event_type: Default
+  set_type: vm_process
+- name: request_vm_destroy
+  description: VM Delete (from Disk) Request
+  event_type: Default
+  set_type: vm_process
+- name: vm_create
+  description: VM Create Complete
+  event_type: Default
+  set_type: vm_process
+#- name: vm_delete
+#  description: VM Deletion
+#  event_type: Default
+#  set_type: vm_process
+#- name: vm_deploy
+#  description: VM Deployment from Template
+#  event_type: Default
+#  set_type: vm_process
+- name: vm_template
+  description: VM Template Create Complete
+  event_type: Default
+  set_type: vm_process
+- name: vm_retired
+  description: VM Retired
+  event_type: Default
+  set_type: vm_process
+- name: request_vm_retire
+  description: VM Retire Request
+  event_type: Default
+  set_type: vm_process
+- name: vm_retire_warn
+  description: VM Retirement Warning
+  event_type: Default
+  set_type: vm_process
+- name: vm_provisioned
+  description: VM Provision Complete
+  event_type: Default
+  set_type: vm_process
+#
+# VM operations
+#
+- name: vm_clone
+  description: VM Clone Complete
+  event_type: Default
+  set_type: vm_operational
+- name: vm_clone_start
+  description: VM Clone Start
+  event_type: Default
+  set_type: vm_operational
+- name: vm_start
+  description: VM Power On
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_start
+  description: VM Power On Request
+  event_type: Default
+  set_type: vm_operational
+#- name: vm_shutdown
+#  description: VM Shutdown
+#  event_type: Default
+#  set_type: vm_operational
+- name: vm_resume
+  description: VM Resume
+  event_type: Default
+  set_type: vm_operational
+- name: vm_migrate
+  description: VM Live Migration (VMOTION)
+  event_type: Default
+  set_type: vm_operational
+#- name: vm_relocate
+#  description: VM Relocation to a New Host
+#  event_type: Default
+#  set_type: vm_operational
+- name: vm_reset
+  description: VM Reset
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_reset
+  description: VM Reset Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_suspend
+  description: VM Suspend
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_suspend
+  description: VM Suspend Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_pause
+  description: VM Pause
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_pause
+  description: VM Pause Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_shelve
+  description: VM Shelve
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_shelve
+  description: VM Shelve Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_shelve_offload
+  description: VM Shelve Offload
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_shelve_offload
+  description: VM Shelve Offload Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_poweroff
+  description: VM Power Off
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_poweroff
+  description: VM Power Off Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_shutdown_guest
+  description: VM Guest Shutdown
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_reboot_guest
+  description: VM Guest Reboot Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_reboot_guest
+  description: VM Guest Reboot
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_shutdown_guest
+  description: VM Guest Shutdown Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_standby_guest
+  description: VM Standby of Guest
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_standby_guest
+  description: VM Standby of Guest Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_unregister
+  description: VM Removal from Inventory
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_unregister
+  description: VM Removal from Inventory Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_snapshot
+  description: VM Snapshot Create Started
+  event_type: Default
+  set_type: vm_operational
+- name: vm_snapshot_complete
+  description: VM Snapshot Create Complete
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_scan
+  description: VM Analysis Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_scan_complete
+  description: VM Analysis Complete
+  event_type: Default
+  set_type: vm_operational
+- name: vm_scan_abort
+  description: VM Analysis Failure
+  event_type: Default
+  set_type: vm_operational
+- name: vm_perf_complete
+  description: VM C & U Processing Complete
+  event_type: Default
+  set_type: vm_operational
+- name: request_vm_create_snapshot
+  description: VM Snapshot Create Request
+  event_type: Default
+  set_type: vm_operational
+- name: vm_scan_start
+  description: VM Analysis Start
+  event_type: Default
+  set_type: vm_operational
+- name: vm_compliance_check
+  description: VM Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: vm_compliance_passed
+  description: VM Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: vm_compliance_failed
+  description: VM Compliance Failed
+  event_type: Default
+  set_type: compliance
+- name: vm_remote_console_connected
+  description: VM Remote Console Connected
+  event_type: Default
+  set_type: vm_operational
+#
+# Storage Operations
+#
+- name: request_storage_scan
+  description: Datastore Analysis Request
+  event_type: Default
+  set_type: storage_operational
+- name: storage_scan_complete
+  description: Datastore Analysis Complete
+  event_type: Default
+  set_type: storage_operational
+- name: db_failover_executed
+  description: Database Failover Executed
+  event_type: Default
+  set_type: storage_operational
+#
+# Service lifecycle
+#
+- name: service_retired
+  description: Service Retired
+  event_type: Default
+  set_type: service_process
+- name: request_service_retire
+  description: Service Retire Request
+  event_type: Default
+  set_type: service_process
+- name: service_retire_warn
+  description: Service Retirement Warning
+  event_type: Default
+  set_type: service_process
+- name: service_provisioned
+  description: Service Provision Complete
+  event_type: Default
+  set_type: service_process
+- name: request_service_start
+  description: Service Start Request
+  event_type: Default
+  set_type: service_process
+- name: service_started
+  description: Service Started
+  event_type: Default
+  set_type: service_process
+- name: request_service_stop
+  description: Service Stop Request
+  event_type: Default
+  set_type: service_process
+- name: service_stopped
+  description: Service Stopped
+  event_type: Default
+  set_type: service_process
+#
+# Orchestration
+#
+- name: request_orchestration_stack_retire
+  description: Orchestration Stack Retire Request
+  event_type: Default
+  set_type: orchestration_process
+#
+# Container Operations
+#
+- name: request_containerimage_scan
+  description: Container Image Analysis Request
+  event_type: Default
+  set_type: container_operations
+- name: containerimage_scan_abort
+  description: Container Image Analysis Failure
+  event_type: Default
+  set_type: container_operations
+- name: containerimage_scan_complete
+  description: Container Image Analysis Complete
+  event_type: Default
+  set_type: container_operations
+- name: containerimage_created
+  description: Container Image Discovered
+  event_type: Default
+  set_type: container_operations
+- name: containerimage_compliance_check
+  description: Container Image Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: containerimage_compliance_passed
+  description: Container Image Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: containerimage_compliance_failed
+  description: Container Image Compliance Failed
+  event_type: Default
+  set_type: compliance
+
+- name: containernode_failedmount
+  description: Container Node Failed Mount
+  event_type: Default
+  set_type: container_operations
+- name: containernode_invaliddiskcapacity
+  description: Container Node Invalid Disk Capacity
+  event_type: Default
+  set_type: container_operations
+- name: containernode_nodenotready
+  description: Container Node Not Ready
+  event_type: Default
+  set_type: container_operations
+- name: containernode_nodenotschedulable
+  description: Container Node Not Schedulable
+  event_type: Default
+  set_type: container_operations
+- name: containernode_nodeready
+  description: Container Node Ready
+  event_type: Default
+  set_type: container_operations
+- name: containernode_nodeschedulable
+  description: Container Node Schedulable
+  event_type: Default
+  set_type: container_operations
+- name: containernode_rebooted
+  description: Container Node Rebooted
+  event_type: Default
+  set_type: container_operations
+- name: containernode_compliance_check
+  description: Container Node Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: containernode_compliance_passed
+  description: Container Node Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: containernode_compliance_failed
+  description: Container Node Compliance Failed
+  event_type: Default
+  set_type: compliance
+
+- name: containergroup_deadlineexceeded
+  description: Pod Deadline Exceeded
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_failedscheduling
+  description: Pod Failed Scheduling
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_failedvalidation
+  description: Pod Failed Validation
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_hostportconflict
+  description: Pod hostPort Conflict
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_insufficientfreecpu
+  description: Pod Insufficient Free CPU
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_insufficientfreememory
+  description: Pod Insufficient Free Memory
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_nodeselectormismatching
+  description: Pod nodeSelector Mismatching
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_outofdisk
+  description: Pod Out of Disk
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_scheduled
+  description: Pod Scheduled
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_compliance_check
+  description: Pod Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: containergroup_compliance_passed
+  description: Pod Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: containergroup_compliance_failed
+  description: Pod Compliance Failed
+  event_type: Default
+  set_type: compliance
+- name: containergroup_created
+  description: Pod Container Created
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_failed
+  description: Pod Container Failed
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_killing
+  description: Pod Container Killing
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_started
+  description: Pod Container Started
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_stopped
+  description: Pod Container Stopped
+  event_type: Default
+  set_type: container_operations
+- name: containergroup_unhealthy
+  description: Pod Container Unhealthy
+  event_type: Default
+  set_type: container_operations
+
+- name: containerreplicator_failedcreate
+  description: Replicator Failed Creating Pod
+  event_type: Default
+  set_type: container_operations
+- name: containerreplicator_successfulcreate
+  description: Replicator Successfully Created Pod
+  event_type: Default
+  set_type: container_operations
+- name: containerreplicator_compliance_check
+  description: Replicator Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: containerreplicator_compliance_passed
+  description: Replicator Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: containerreplicator_compliance_failed
+  description: Replicator Compliance Failed
+  event_type: Default
+  set_type: compliance
+
+- name: containerproject_created
+  description: Container Project Discovered
+  event_type: Default
+  set_type: container_operations
+- name: containerproject_compliance_check
+  description: Container Project Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: containerproject_compliance_passed
+  description: Container Project Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: containerproject_compliance_failed
+  description: Container Project Compliance Failed
+  event_type: Default
+  set_type: compliance
+#
+# Physical Server Operations
+#
+- name: physicalserver_compliance_check
+  description: Physical Server Compliance Check
+  event_type: Default
+  set_type: compliance
+- name: physicalserver_compliance_passed
+  description: Physical Server Compliance Passed
+  event_type: Default
+  set_type: compliance
+- name: physicalserver_compliance_failed
+  description: Physical Server Compliance Failed
+  event_type: Default
+  set_type: compliance
+- name: physical_server_shutdown
+  description: Physical Server Shutdown
+  event_type: Default
+  set_type: physical_server_operations
+- name: physical_server_start
+  description: Physical Server Start
+  event_type: Default
+  set_type: physical_server_operations
+- name: physical_server_reset
+  description: Physical Server Reset
+  event_type: Default
+  set_type: physical_server_operations
