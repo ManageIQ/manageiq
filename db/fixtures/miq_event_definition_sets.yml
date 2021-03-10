@@ -1,0 +1,31 @@
+---
+- name: auth_validation
+  description: Authentication Validation (Provider)
+- name: authentication
+  description: Authentication Validation
+- name: compliance
+  description: Compliance
+- name: container_operations
+  description: Container Operation
+- name: ems_operations
+  description: Provider Operation
+- name: evm_operations
+  description: Appliance Operation
+- name: host_operations
+  description: Host Operation
+- name: orchestration_process
+  description: Orchestration Lifecycle
+- name: physical_server_operations
+  description: Physical Server Operation
+- name: service_process
+  description: Service Lifecycle
+- name: storage_operational
+  description: Datastore Operation
+- name: tags
+  description: Company Tag
+- name: vm_configurational
+  description: VM Configuration
+- name: vm_operational
+  description: VM Operation
+- name: vm_process
+  description: VM Lifecycle
