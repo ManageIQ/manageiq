@@ -60,7 +60,7 @@ class MiqAction < ApplicationRecord
 
   RB_PREAMBLE = "
     RC_HASH = #{RC_HASH.inspect}
-    RC_HASH.each {|k, v| eval(\"\#{v} = \#{k}\")}
+    RC_HASH.each { |k, v| Object.const_set(v, k) }
   "
 
   virtual_column :v_synchronicity,         :type => :string
