@@ -61,17 +61,23 @@ RSpec.describe ChargebackContainerImage do
 
   context "Daily" do
     let(:hours_in_day) { 24 }
-    let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
+    let(:options) { base_options.merge(:interval => 'daily', :entity_id => @image.id, :tag => nil) }
     let(:start_time)  { report_run_time - 17.hours }
     let(:finish_time) { report_run_time - 14.hours }
 
     before do
-      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+      add_metric_rollups_for(@image, month_beginning...month_end, 12.hours, metric_rollup_params)
 
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
                                                                :timestamp       => t,
                                                                :image_tag_names => "environment/prod")
+      end
+
+      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
+        @image.vim_performance_states << FactoryBot.create(:vim_performance_state,
+                                                           :timestamp       => t,
+                                                           :image_tag_names => "environment/prod")
       end
     end
 
@@ -79,7 +85,7 @@ RSpec.describe ChargebackContainerImage do
 
     context 'when first metric rollup has tag_names=nil' do
       before do
-        @container.metric_rollups.first.update(:tag_names => nil)
+        @image.metric_rollups.first.update(:tag_names => nil)
       end
 
       it "fixed_compute" do
@@ -92,17 +98,17 @@ RSpec.describe ChargebackContainerImage do
     end
 
     it "allocated fields" do
-      expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_cpu_cores * count_hourly_rate * hours_in_day)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
-      expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_day)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
+      expect(subject.cpu_cores_allocated_cost).to eq(@image.containers.first.limit_cpu_cores * count_hourly_rate * hours_in_day)
+      expect(subject.cpu_cores_allocated_metric).to eq(@image.containers.first.limit_cpu_cores)
+      expect(subject.cpu_cores_allocated_cost).to eq(@image.containers.first.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_day)
+      expect(subject.cpu_cores_allocated_metric).to eq(@image.containers.first.limit_memory_bytes / 1.megabytes)
     end
   end
 
   context "Monthly" do
-    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @image.id, :tag => nil) }
     before do
-      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+      add_metric_rollups_for(@image, month_beginning...month_end, 12.hours, metric_rollup_params)
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
@@ -119,32 +125,33 @@ RSpec.describe ChargebackContainerImage do
     end
 
     it "allocated fields" do
-      expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_cpu_cores * count_hourly_rate * hours_in_month)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
-      expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_month)
-      expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
+      expect(subject.cpu_cores_allocated_cost).to eq(@image.limit_cpu_cores * count_hourly_rate * hours_in_month)
+      expect(subject.cpu_cores_allocated_metric).to eq(@image.limit_cpu_cores)
+      expect(subject.cpu_cores_allocated_cost).to eq(@image.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_month)
+      expect(subject.cpu_cores_allocated_metric).to eq(@image.limit_memory_bytes / 1.megabytes)
     end
   end
 
   context "Label" do
-    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @image.id, :tag => nil) }
     before do
       @image.docker_labels << @label
+      @image.save
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [@label, "container_image"] }])
 
-      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+      add_metric_rollups_for(@image, month_beginning...month_end, 12.hours, metric_rollup_params)
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
-                                                               :timestamp       => time,
-                                                               :image_tag_names => "")
+        @image.vim_performance_states << FactoryBot.create(:vim_performance_state,
+                                                           :timestamp       => time,
+                                                           :image_tag_names => "")
       end
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
     it "fixed_compute" do
-      # .to be_within(0.01) is used since theres a float error here
+      # .to be_within(0.01) is used since theres a float err here
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
     end
   end

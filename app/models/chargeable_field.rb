@@ -1,6 +1,7 @@
 class ChargeableField < ApplicationRecord
   VIRTUAL_COL_USES = {
-    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
+    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average',
+    'derived_vm_numvcpu_cores'       => 'derived_vm_numvcpu_cores'
   }.freeze
 
   # The following chargeable fields are stored in following units

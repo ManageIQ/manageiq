@@ -67,13 +67,12 @@ RSpec.describe Chargeback::ConsumptionWithRollups do
         let(:timestamp) { Time.parse('2012-09-01 23:59:59Z').utc }
         let(:vim_performance_state) { FactoryBot.create(:vim_performance_state, :timestamp => timestamp, :image_tag_names => "environment/stage") }
 
-        let(:image) { FactoryBot.create(:container_image, :ext_management_system => ems, :docker_labels => [label]) }
+        let(:image) { FactoryBot.create(:container_image, :ext_management_system => ems, :docker_labels => [label], :vim_performance_states => [vim_performance_state]) }
         let(:label) { FactoryBot.create(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels') }
         let(:project) { FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems) }
         let(:node) { FactoryBot.create(:container_node, :name => "node") }
         let(:group) { FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => project, :container_node => node) }
-        let(:container) { FactoryBot.create(:kubernetes_container, :container_group => group, :container_image => image, :vim_performance_states => [vim_performance_state]) }
-        let(:metric_rollup_container) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => timestamp, :resource => container, :tag_names => "environment/cont|environment/cust") }
+        let(:metric_rollup_container) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => timestamp, :resource => image, :tag_names => "environment/cont|environment/cust") }
         let(:consumption) { described_class.new(pluck_rollup([metric_rollup_container]), starting_date, starting_date + 1.day) }
 
         it 'returns array of tags' do

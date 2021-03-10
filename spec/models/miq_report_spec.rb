@@ -1085,14 +1085,14 @@ RSpec.describe MiqReport do
         project_name = "my project"
         project = FactoryBot.create(:container_project, :name => project_name, :ext_management_system => ems)
         group = FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => project)
-        container = FactoryBot.create(:kubernetes_container, :container_group => group, :container_image => image)
-        container.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
-                                                       :with_data,
-                                                       :timestamp     => 1.day.ago.beginning_of_day,
-                                                       :resource_id   => container.id,
-                                                       :resource_name => container.name,
-                                                       :parent_ems_id => ems.id,
-                                                       :tag_names     => "")
+        FactoryBot.create(:kubernetes_container, :container_group => group, :container_image => image)
+
+        image.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
+                                                  :with_data,
+                                                  :timestamp     => 1.day.ago.beginning_of_day,
+                                                  :parent_ems_id => ems.id,
+                                                  :tag_names     => "")
+
         ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [label, "container_image"] }])
         rpt = report.generate_table(:userid => "admin")
         expect(rpt.keys).to contain_exactly(project_name, :_total_)
