@@ -48,8 +48,6 @@ class Condition < ApplicationRecord
     mode = expression.kind_of?(MiqExpression) ? "object" : expression["mode"]
 
     case mode
-    when "script"
-      result = eval(expression["expr"].strip)
     when "tag"
       unless %w(any all none).include?(expression["include"])
         raise _("condition '%{name}', include value \"%{value}\", is invalid. Should be one of \"any, all or none\"") %
