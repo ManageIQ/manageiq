@@ -28,9 +28,13 @@ class ChargebackContainerImage < Chargeback
     # Find Project by id or get all projects
     provider_id = options[:provider_id]
     id = options[:entity_id]
-    raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
 
-    @container_images = if provider_id == "all"
+    tag = options[:tag]
+    raise "must provide option :entity_id, provider_id or tag" if id.nil? && provider_id.nil? && tag.nil?
+
+    @container_images = if tag
+                          ContainerImage.find_tagged_with(:any => tag, :ns => '*')
+                        elsif provider_id == "all"
                           ContainerImage.all
                         elsif id == "all"
                           ContainerImage.where(:ems_id => provider_id)
