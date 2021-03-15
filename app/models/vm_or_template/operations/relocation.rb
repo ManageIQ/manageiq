@@ -1,4 +1,17 @@
 module VmOrTemplate::Operations::Relocation
+  extend ActiveSupport::Concern
+
+  included do
+    supports_not :live_migrate
+    supports_not :warm_migrate
+    supports :migrate do
+      reason   = _("Migrate not supported because VM is blank")    if blank?
+      reason ||= _("Migrate not supported because VM is orphaned") if orphaned?
+      reason ||= _("Migrate not supported because VM is archived") if archived?
+      unsupported_reason_add(:retire, reason) if reason
+    end
+  end
+
   def raw_live_migrate(_options = nil)
     raise NotImplementedError, _("raw_live_migrate must be implemented in a subclass")
   end

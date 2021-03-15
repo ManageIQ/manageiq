@@ -15,6 +15,8 @@ class FloatingIp < ApplicationRecord
   belongs_to :network_router
   alias_attribute :name, :address
 
+  supports_not :delete_floating_ip
+
   def self.available
     where(:vm_id => nil, :network_port_id => nil)
   end

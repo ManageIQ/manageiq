@@ -17,6 +17,11 @@ class HostAggregate < ApplicationRecord
   has_many   :metric_rollups,         :as => :resource
   has_many   :vim_performance_states, :as => :resource
 
+  supports_not :add_host
+  supports_not :delete_aggregate
+  supports_not :remove_host
+  supports_not :update_aggregate
+
   virtual_total :total_vms, :vms
 
   PERF_ROLLUP_CHILDREN = [:vms]

@@ -11,6 +11,8 @@ class CloudVolumeBackup < ApplicationRecord
   belongs_to :cloud_volume
   has_one :cloud_tenant, :through => :cloud_volume
 
+  supports_not :backup_restore
+
   # Restore a cloud volume backup as a queued task and return the task id. The queue
   # name and the queue zone are derived from the EMS. The userid is mandatory, and
   # the volumeid and name are optional.
