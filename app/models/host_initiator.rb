@@ -9,6 +9,7 @@ class HostInitiator < ApplicationRecord
 
   has_many :san_addresses, :as => :owner, :dependent => :destroy
   has_many :volume_mappings, :dependent => :destroy
+  has_many :cloud_volumes, :through => :volume_mappings
 
   virtual_total :v_total_addresses, :san_addresses
 

@@ -22,6 +22,7 @@ class CloudVolume < ApplicationRecord
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
   has_many   :volume_mappings, :dependent => :destroy
+  has_many   :host_initiators, :through => :volume_mappings
 
   supports_not :backup_create
   supports_not :backup_restore
