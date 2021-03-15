@@ -5073,57 +5073,52 @@
 
 # Automation Manager
 - :name: Ansible Tower
-  :description: Everything under Ansible Tower
+  :description: Everything under Providers
   :feature_type: node
-  :identifier: automation_manager
+  :identifier: ems_automation
   :children:
-  - :name: Ansible Tower Providers
-    :description: Everything under the Providers accordion
-    :feature_type: node
-    :identifier: automation_manager_providers
+  - :name: View
+    :description: View Providers, Inventory Groups, Configured Systems
+    :feature_type: view
+    :identifier: ems_automation_view
+  - :name: Operate
+    :description: Perform Operations on Providers and Configured Systems
+    :feature_type: control
+    :identifier: ems_automation_control
     :children:
-    - :name: View
-      :description: View Providers, Inventory Groups, Configured Systems
-      :feature_type: view
-      :identifier: automation_manager_providers_view
-    - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+    - :name: Edit Tags
+      :description: Edit Tags of Ansible Tower Provider
       :feature_type: control
-      :identifier: automation_manager_providers_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Ansible Tower Provider
-        :feature_type: control
-        :identifier: automation_manager_provider_tag
-      - :name: Refresh Providers
-        :description: Refresh relationships for all items related of Provider
-        :feature_type: control
-        :identifier: automation_manager_refresh_provider
-    - :name: Modify
-      :description: Modify Providers
+      :identifier: ems_automation_tag
+    - :name: Refresh Providers
+      :description: Refresh relationships for all items related of Provider
+      :feature_type: control
+      :identifier: ems_automation_refresh_provider
+  - :name: Modify
+    :description: Modify Providers
+    :feature_type: admin
+    :identifier: ems_automation_admin
+    :children:
+    - :name: Remove Providers
+      :description: Remove Provier
       :feature_type: admin
-      :identifier: automation_manager_admin
-      :children:
-      - :name: Remove Providers
-        :description: Remove Provier
-        :feature_type: admin
-        :identifier: automation_manager_delete_provider
-      - :name: Edit Provider
-        :description: Edit a Provider
-        :feature_type: admin
-        :identifier: automation_manager_edit_provider
-      - :name: Pause
-        :description: Pause a Provider
-        :feature_type: admin
-        :identifier: automation_manager_pause
-      - :name: Resume
-        :description: Resume a Provider
-        :feature_type: admin
-        :identifier: automation_manager_resume
-      - :name: Add Provider
-        :description: Add a Provider
-        :feature_type: admin
-        :identifier: automation_manager_add_provider
+      :identifier: ems_automation_delete_provider
+    - :name: Edit Provider
+      :description: Edit a Provider
+      :feature_type: admin
+      :identifier: ems_automation_edit_provider
+    - :name: Pause
+      :description: Pause a Provider
+      :feature_type: admin
+      :identifier: ems_automation_pause
+    - :name: Resume
+      :description: Resume a Provider
+      :feature_type: admin
+      :identifier: ems_automation_resume
+    - :name: Add Provider
+      :description: Add a Provider
+      :feature_type: admin
+      :identifier: ems_automation_add_provider
 - :name: Configured Systems
   :description: Everything under Configured Systems accordion
   :feature_type: node

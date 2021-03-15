@@ -36,4 +36,8 @@ class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   def total_configured_systems
     Rbac.filtered(configured_systems).count
   end
+
+  def total_inventory_groups
+    Rbac.filtered(inventory_groups).count
+  end
 end
