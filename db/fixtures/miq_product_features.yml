@@ -5078,11 +5078,19 @@
   :identifier: ems_automation
   :children:
   - :name: View
-    :description: View Providers, Inventory Groups, Configured Systems
+    :description: View Providers
     :feature_type: view
     :identifier: ems_automation_view
+    :children:
+    - :name: List
+      :description: Display Lists of Providers
+      :identifier: ems_automation_manager_show_list
+    - :name: Show
+      :description: Display Individual Providers
+      :feature_type: view
+      :identifier: ems_automation_manager_show
   - :name: Operate
-    :description: Perform Operations on Providers and Configured Systems
+    :description: Perform Operations on Providers
     :feature_type: control
     :identifier: ems_automation_control
     :children:
@@ -5120,7 +5128,7 @@
       :feature_type: admin
       :identifier: ems_automation_add_provider
 - :name: Configured Systems
-  :description: Everything under Configured Systems accordion
+  :description: Everything under Configured Systems
   :feature_type: node
   :identifier: automation_manager_configured_system
   :children:
@@ -5147,7 +5155,7 @@
       :identifier: automation_manager_configured_system_tag
 
 - :name: Templates
-  :description: Everything under Templates accordion
+  :description: Everything under Templates
   :feature_type: node
   :identifier: configuration_script
   :children:
