@@ -63,10 +63,7 @@ module ManageIQ::Providers
       end
     end
 
-    # TODO: move this to supports_feature_mixin
-    def supports_metrics?
-      true
-    end
+    supports :metrics
 
     class << model_name
       define_method(:route_key) { "ems_containers" }

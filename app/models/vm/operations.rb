@@ -46,6 +46,15 @@ module Vm::Operations
         unsupported_reason_add(:collect_running_processes, _(check[:message]))
       end
     end
+
+    supports_not :conversion_host
+    supports_not :evacuate
+    supports_not :reconfigure_disks
+    supports_not :reconfigure_disksize
+    supports_not :reconfigure_network_adapters
+    supports_not :reconfigure_cdroms
+    supports_not :remove_security_group
+    supports_not :resize
   end
 
   def cockpit_url
