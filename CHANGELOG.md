@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 157 ending 2021-03-15
+
+### Added
+
+* Avoid seeding ansible content in production [(#21089)](https://github.com/ManageIQ/manageiq/pull/21089)
+
 # Unreleased as of Sprint 156 ending 2021-03-01
 
 ### Fixed
