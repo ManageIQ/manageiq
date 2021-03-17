@@ -36,6 +36,18 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
     collections[collection_name] = builder.to_inventory_collection
   end
 
+  def add_cloud_collection(collection_name, extra_properties = {}, settings = {}, &block)
+    add_collection_for_manager("cloud", collection_name, extra_properties, settings, &block)
+  end
+
+  def add_network_collection(collection_name, extra_properties = {}, settings = {}, &block)
+    add_collection_for_manager("network", collection_name, extra_properties, settings, &block)
+  end
+
+  def add_storage_collection(collection_name, extra_properties = {}, settings = {}, &block)
+    add_collection_for_manager("storage", collection_name, extra_properties, settings, &block)
+  end
+
   # builder_class for add_collection()
   def cloud
     ::ManageIQ::Providers::Inventory::Persister::Builder::CloudManager
@@ -118,5 +130,15 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   # @return [Array<String>]
   def name_references(collection)
     target.try(:manager_refs_by_association).try(:[], collection).try(:[], :name).try(:to_a) || []
+  end
+
+  private
+
+  def add_collection_for_manager(manager_type, collection_name, extra_properties = {}, settings = {}, &block)
+    parent_manager = send("#{manager_type}_manager")
+    settings.reverse_merge!(:shared_properties => {:parent => parent_manager})
+
+    builder_class = send(manager_type)
+    add_collection(builder_class, collection_name, extra_properties, settings, &block)
   end
 end

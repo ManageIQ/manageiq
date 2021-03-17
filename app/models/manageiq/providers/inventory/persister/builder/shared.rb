@@ -68,9 +68,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
         :custom_reconnect_block => INVENTORY_RECONNECT_BLOCK
       )
 
-      add_default_values(
-        :ems_id => ->(persister) { persister.manager.id }
-      )
+      add_common_default_values
     end
 
     def vm_and_template_labels
@@ -183,7 +181,8 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     protected
 
     def add_common_default_values
-      add_default_values(:ems_id => ->(persister) { persister.manager.id })
+      ems = shared_properties[:parent]&.id || ->(persister) { persister.manager.id }
+      add_default_values(:ems_id => ems)
     end
 
     def relationship_save_block(relationship_key:, relationship_type: :ems_metadata, parent_type: nil)
