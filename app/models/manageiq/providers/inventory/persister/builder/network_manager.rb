@@ -216,11 +216,7 @@ module ManageIQ::Providers
         protected
 
         def add_common_default_values
-          add_default_values(:ems_id => default_ems_id)
-        end
-
-        def default_ems_id
-          ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id }
+          add_default_values(:ext_management_system => ->(persister) { persister.network_manager })
         end
       end
     end
