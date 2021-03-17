@@ -69,6 +69,18 @@ class ManageIQ::Providers::Inventory::Persister
     manager.presence
   end
 
+  def cloud_manager
+    manager.kind_of?(EmsCloud) ? manager : manager.parent_manager
+  end
+
+  def network_manager
+    manager.kind_of?(EmsNetwork) ? manager : manager.network_manager
+  end
+
+  def storage_manager
+    manager.kind_of?(EmsStorage) ? manager : manager.storage_manager
+  end
+
   def assert_graph_integrity?
     !Rails.env.production?
   end

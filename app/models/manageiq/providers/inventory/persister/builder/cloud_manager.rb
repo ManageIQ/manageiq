@@ -6,6 +6,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_tenants
+          add_common_default_values
+        end
+
+        def cloud_volumes
+          add_common_default_values
+        end
+
         def flavors
           add_common_default_values
         end
@@ -17,8 +25,8 @@ module ManageIQ::Providers
             :manager_ref => %i(name)
           )
           add_default_values(
-            :resource_id   => ->(persister) { persister.manager.id },
-            :resource_type => ->(persister) { persister.manager.class.base_class }
+            :resource_id   => shared_properties[:parent].id,
+            :resource_type => shared_properties[:parent].class.base_class
           )
         end
 
