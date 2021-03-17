@@ -4,6 +4,14 @@ yaml_strings_to_extract:
   - description
   db/fixtures/chargeback_rates.yml:
   - description
+  db/fixtures/miq_event_definition_events.yml:
+  - name
+  - description
+  - event_type
+  - set_type
+  db/fixtures/miq_event_definition_sets.yml:
+  - name
+  - description
   db/fixtures/miq_product_features{.yml,.yaml,/*.yml,/*.yaml}:
   - name
   - description
