@@ -6728,6 +6728,10 @@
     :description: Execute Ansible Playbook
     :feature_type: control
     :identifier: physical_infra_ansible
+  - :name: Import Cloud Template
+    :description: Import Cloud Template
+    :feature_type: control
+    :identifier: import_image
   - :name: Event Streams
     :description: Everything under Event Streams
     :feature_type: node
