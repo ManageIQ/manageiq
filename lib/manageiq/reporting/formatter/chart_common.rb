@@ -227,7 +227,7 @@ module ManageIQ
           sort2_vals.each do |val2|
             series = counts.each_with_object(series_class.new) do |(key1, hash1), a|
               a.push(:value   => hash1[val2[0]],
-                     :tooltip => "#{key1} / #{val2[0]}: #{hash1[val2[0]]}")
+                     :tooltip => "#{key1} / #{val2[0]}")
             end
             val2[0] = val2[0].to_s.gsub(/\\/, ' \ ')
             add_series(val2[0].to_s, series)
@@ -388,11 +388,11 @@ module ManageIQ
               value = subtotals.key?(sub_key) ? subtotals[sub_key][aggreg][raw_column_name] : 0
 
               a.push(:value   => value,
-                     :tooltip => "#{key1} / #{val2}: #{value}")
+                     :tooltip => "#{key1} / #{val2}")
             end
 
             series.push(:value   => other[val2],
-                        :tooltip => "Other / #{val2}: #{other[val2]}") if show_other
+                        :tooltip => "Other / #{val2}") if show_other
             label = val2 if val2.kind_of?(String)
             label = label.to_s.gsub(/\\/, ' \ ')
             label = _('no value') if label.blank?
@@ -431,7 +431,7 @@ module ManageIQ
 
           series = kept_categories.each_with_object(
             series_class.new(pie_type? ? :pie : :flat)) do |cat, a|
-            a.push(:value => cat.last, :tooltip => "#{cat.first}: #{cat.last}")
+            a.push(:value => cat.last, :tooltip => cat.first)
           end
 
           # Pie charts put categories in legend, else in axis labels
