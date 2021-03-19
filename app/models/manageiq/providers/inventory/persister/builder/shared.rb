@@ -184,7 +184,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     protected
 
     def add_common_default_values
-      ems = shared_properties[:parent]&.id || ->(persister) { persister.manager.id }
+      ems = parent&.id || ->(persister) { persister.manager.id }
       add_default_values(:ems_id => ems)
     end
 
