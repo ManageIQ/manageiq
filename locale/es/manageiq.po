@@ -10943,7 +10943,7 @@ msgstr "La creación de la copia de seguridad %{backup_name} del volumen %{subje
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3881
 msgid "Creating Backup %{backup_name} of Volume %{subject} failed: %{error_message}"
-msgstr "Error al crear la copia de seguridad %{backup_name} del volumen %{subject}:\n%{error_message}"
+msgstr "Error al crear la copia de seguridad %{backup_name} del volumen %{subject}: %{error_message}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3891
@@ -59865,7 +59865,7 @@ msgstr "La acción Copiar no se aplica a la función seleccionada Automatizar es
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:16
 #: ../app/views/layouts/angular/_ansible_form_options_angular.html.haml:17
 msgid "Copy from Provisioning"
-msgstr "Copiar desde Aprovisionamiento\\n"
+msgstr "Copiar desde Aprovisionamiento"
 
 #: ../app/views/catalog/_confirmation_modal.html.haml:35
 msgid "Copy from provisioning"
@@ -67156,11 +67156,11 @@ msgstr "La modalidad es necesaria"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Modification of Cloud Tenant %s has been successfully queued"
-msgstr "La modificación del inquilino de nube %s se ha puesto en cola correctamente.\n"
+msgstr "La modificación del inquilino de nube %s se ha puesto en cola correctamente."
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:38
 msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
-msgstr "La modificación del volumen de nube \"%s\" se ha puesto en cola correctamente.\n"
+msgstr "La modificación del volumen de nube \"%s\" se ha puesto en cola correctamente."
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:56
 msgid "Modification of Credential \"%s\" has been successfully queued."
@@ -76549,7 +76549,7 @@ msgstr "El dominio seleccionado está vacío"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:20
 msgid "The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"
-msgstr "La instantánea seleccionada se suprimirá de forma permanente. ¿Está seguro de que desea suprimir la instantánea seleccionada?\n"
+msgstr "La instantánea seleccionada se suprimirá de forma permanente. ¿Está seguro de que desea suprimir la instantánea seleccionada?"
 
 #: ../app/controllers/miq_task_controller.rb:146
 msgid "The selected task no longer exists, Delete all older Tasks was not completed"
