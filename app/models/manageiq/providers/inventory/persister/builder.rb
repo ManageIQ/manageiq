@@ -43,7 +43,7 @@ module ManageIQ::Providers
         builder
       end
 
-      attr_accessor :name, :persister_class, :properties, :inventory_object_attributes,
+      attr_accessor :name, :parent, :persister_class, :properties, :inventory_object_attributes,
                     :default_values, :dependency_attributes, :options, :adv_settings, :shared_properties
 
       # @see prepare_data()
@@ -62,6 +62,7 @@ module ManageIQ::Providers
 
         @adv_settings = options[:adv_settings] # Configuration/Advanced settings in GUI
         @shared_properties = options[:shared_properties] # From persister
+        @parent = options[:parent]
       end
 
       def manager_class
@@ -80,7 +81,7 @@ module ManageIQ::Providers
       # Yields for overwriting provider-specific properties
       def construct_data
         add_properties(:association => @name)
-
+        add_properties(:parent => parent)
         add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)
 

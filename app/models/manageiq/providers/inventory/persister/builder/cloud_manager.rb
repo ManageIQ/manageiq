@@ -25,8 +25,8 @@ module ManageIQ::Providers
             :manager_ref => %i(name)
           )
           add_default_values(
-            :resource_id   => shared_properties[:parent].id,
-            :resource_type => shared_properties[:parent].class.base_class
+            :resource_id   => parent.id,
+            :resource_type => parent.class.base_class
           )
         end
 

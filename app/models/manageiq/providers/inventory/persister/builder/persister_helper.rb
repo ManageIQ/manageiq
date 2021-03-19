@@ -103,6 +103,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
 
     opts[:adv_settings] = options.try(:[], :inventory_collections).try(:to_hash) || {}
     opts[:shared_properties] = shared_options
+    opts[:parent] = parent
     opts[:auto_inventory_attributes] = true
     opts[:without_model_class] = false
 
@@ -115,7 +116,6 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
       :strategy               => strategy,
       :saver_strategy         => saver_strategy,
       :targeted               => targeted?,
-      :parent                 => parent,
       :assert_graph_integrity => assert_graph_integrity?,
     }
   end
@@ -135,8 +135,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   private
 
   def add_collection_for_manager(manager_type, collection_name, extra_properties = {}, settings = {}, &block)
-    parent_manager = send("#{manager_type}_manager")
-    settings.reverse_merge!(:shared_properties => {:parent => parent_manager})
+    settings[:parent] ||= send("#{manager_type}_manager")
 
     builder_class = send(manager_type)
     add_collection(builder_class, collection_name, extra_properties, settings, &block)
