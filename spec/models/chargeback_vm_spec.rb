@@ -383,6 +383,7 @@ RSpec.describe ChargebackVm do
 
         let(:development_vm) { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
         let(:other_vm)       { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
+        let(:another_vm)     { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
 
         before do
           environment_category = Classification.find_by(:description => "Environment")
@@ -390,8 +391,10 @@ RSpec.describe ChargebackVm do
 
           development_vm.tag_with(tag_development.tag.name, :ns => '*')
 
-          metric_rollup_params.delete(:tag_names)
+          metric_rollup_params[:tag_names] = ""
           add_metric_rollups_for(other_vm, start_time...finish_time, 1.hour, metric_rollup_params)
+          metric_rollup_params.delete(:tag_names)
+          add_metric_rollups_for(another_vm, start_time...finish_time, 1.hour, metric_rollup_params)
           metric_rollup_params[:tag_names] = "environment/dev"
           add_metric_rollups_for(development_vm, start_time...finish_time, 1.hour, metric_rollup_params)
         end
@@ -401,7 +404,7 @@ RSpec.describe ChargebackVm do
         end
 
         it "doesn't filter resources without filter" do
-          expect(subject).to match_array([@vm1.id, development_vm.id, other_vm.id])
+          expect(subject).to match_array([@vm1.id, development_vm.id, other_vm.id, another_vm.id])
         end
 
         context "with filter" do

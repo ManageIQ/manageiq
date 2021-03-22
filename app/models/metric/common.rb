@@ -151,7 +151,7 @@ module Metric::Common
 
   class_methods do
     def for_tag_names(*args)
-      where("tag_names like ?", "%" + args.join("/") + "%")
+      where("tag_names like ?", args.flat_map { |t| "%" + t.join("/") + "%" })
     end
 
     def for_time_range(start_time, end_time)
