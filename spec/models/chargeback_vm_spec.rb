@@ -384,6 +384,7 @@ RSpec.describe ChargebackVm do
         let(:development_vm) { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
         let(:other_vm)       { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
         let(:another_vm)     { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
+        let(:yet_another_vm) { FactoryBot.create(:vm_vmware, :created_on => month_beginning) }
 
         before do
           environment_category = Classification.find_by(:description => "Environment")
@@ -391,12 +392,14 @@ RSpec.describe ChargebackVm do
 
           development_vm.tag_with(tag_development.tag.name, :ns => '*')
 
-          metric_rollup_params[:tag_names] = ""
-          add_metric_rollups_for(other_vm, start_time...finish_time, 1.hour, metric_rollup_params)
           metric_rollup_params.delete(:tag_names)
+          add_metric_rollups_for(other_vm, start_time...finish_time, 1.hour, metric_rollup_params)
+          metric_rollup_params[:tag_names] = ""
           add_metric_rollups_for(another_vm, start_time...finish_time, 1.hour, metric_rollup_params)
           metric_rollup_params[:tag_names] = "environment/dev"
           add_metric_rollups_for(development_vm, start_time...finish_time, 1.hour, metric_rollup_params)
+          metric_rollup_params[:tag_names] = "department/accounting|department/engineering"
+          add_metric_rollups_for(yet_another_vm, start_time...finish_time, 1.hour, metric_rollup_params)
         end
 
         subject do
@@ -404,7 +407,7 @@ RSpec.describe ChargebackVm do
         end
 
         it "doesn't filter resources without filter" do
-          expect(subject).to match_array([@vm1.id, development_vm.id, other_vm.id, another_vm.id])
+          expect(subject).to match_array([@vm1.id, development_vm.id, other_vm.id, another_vm.id, yet_another_vm.id])
         end
 
         context "with filter" do
@@ -423,6 +426,16 @@ RSpec.describe ChargebackVm do
 
             it "filters resources according to multiple tags" do
               expect(subject).to eq([@vm1.id, development_vm.id])
+            end
+          end
+
+          context "with multiple tags assigned to metric rollups, only" do
+            let(:options) do
+              base_filter_options.merge(:tag => ['/managed/department/accounting', '/managed/department/engineering'])
+            end
+
+            it "filters according to multiple tags assigned on metric rollups only" do
+              expect(subject).to eq([yet_another_vm.id])
             end
           end
         end

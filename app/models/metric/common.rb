@@ -150,8 +150,8 @@ module Metric::Common
   end
 
   class_methods do
-    def for_tag_names(*args)
-      where("tag_names like ?", args.flat_map { |t| "%" + t.join("/") + "%" })
+    def for_tag_names(args)
+      where(args.map { |t| "tag_names like ?" }.join(" OR "), *(args.map { |t| "%" + t.join("/") + "%" }))
     end
 
     def for_time_range(start_time, end_time)

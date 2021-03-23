@@ -91,7 +91,7 @@ class ChargebackVm < Chargeback
     scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope_with_current_tags = scope.where(:resource => Vm.find_tagged_with(:any => @options[:tag], :ns => '*'))
-      scope.for_tag_names(Array(options[:tag]).flatten.flat_map { |t| t.split("/")[2..-1] }).or(scope_with_current_tags)
+      scope.for_tag_names(Array(options[:tag]).flatten.map { |t| t.split("/")[2..-1] }).or(scope_with_current_tags)
     else
       scope.where(:resource => vms(region))
     end
