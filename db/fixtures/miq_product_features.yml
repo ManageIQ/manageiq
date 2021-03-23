@@ -6731,7 +6731,7 @@
   - :name: Import Cloud Template
     :description: Import Cloud Template
     :feature_type: control
-    :identifier: import_image
+    :identifier: image_import
   - :name: Event Streams
     :description: Everything under Event Streams
     :feature_type: node
