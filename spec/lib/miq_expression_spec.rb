@@ -1319,9 +1319,34 @@ describe MiqExpression do
       expect { exp.to_ruby }.to raise_error(/operator 'RUBY' is not supported/)
     end
 
-    it "tests numeric set expressions" do
-      exp = MiqExpression.new("=" => {"field" => "Host-enabled_inbound_ports", "value" => "22,427,5988,5989"})
-      expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
+    it "ignores invalid values for a numeric_set in an = expression" do
+      actual = described_class.new("=" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, foo, `echo 1000`.to_i, abc..123, 1..4"}).to_ruby
+      expected = "<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [1,2,3,4,22,427,5988,5989]"
+      expect(actual).to eq(expected)
+    end
+
+    it "ignores invalid values for a numeric_set in an INCLUDES ALL expression" do
+      actual = described_class.new("INCLUDES ALL" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, foo, `echo 1000`.to_i, abc..123, 1..4"}).to_ruby
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]"
+      expect(actual).to eq(expected)
+    end
+
+    it "ignores invalid values for a numeric_set in an INCLUDES ANY expression" do
+      actual = described_class.new("INCLUDES ANY" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, foo, `echo 1000`.to_i, abc..123, 1..4"}).to_ruby
+      expected = "([1,2,3,4,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,4,22,427,5988,5989]"
+      expect(actual).to eq(expected)
+    end
+
+    it "ignores invalid values for a numeric_set in an INCLUDES ONLY expression" do
+      actual = described_class.new("INCLUDES ONLY" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, foo, `echo 1000`.to_i, abc..123, 1..4"}).to_ruby
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
+      expect(actual).to eq(expected)
+    end
+
+    it "ignores invalid values for a numeric_set in an LIMITED TO expression" do
+      actual = described_class.new("LIMITED TO" => {"field" => "Host-enabled_inbound_ports", "value" => "22, 427, 5988, 5989, foo, `echo 1000`.to_i, abc..123, 1..4"}).to_ruby
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
+      expect(actual).to eq(expected)
     end
 
     it "escapes forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
@@ -1429,10 +1454,10 @@ describe MiqExpression do
       exp:
         INCLUDES ANY:
           field: Host-enabled_inbound_ports
-          value: 22, 427, 5988, 5989, 1..3
+          value: 22, 427, 5988, 5989, 1..4
       '
 
-      expected = "([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]"
+      expected = "([1,2,3,4,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,4,22,427,5988,5989]"
       expect(filter.to_ruby).to eq(expected)
     end
 
@@ -1441,10 +1466,10 @@ describe MiqExpression do
       exp:
         INCLUDES ONLY:
           field: Host-enabled_inbound_ports
-          value: 22
+          value: 22, 427, 5988, 5989, 1..4
       '
 
-      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
       expect(filter.to_ruby).to eq(expected)
     end
 
@@ -1453,10 +1478,10 @@ describe MiqExpression do
       exp:
         LIMITED TO:
           field: Host-enabled_inbound_ports
-          value: 22
+          value: 22, 427, 5988, 5989, 1..4
       '
 
-      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [1,2,3,4,22,427,5988,5989]) == []"
       expect(filter.to_ruby).to eq(expected)
     end
 
