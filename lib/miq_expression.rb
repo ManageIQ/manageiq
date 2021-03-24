@@ -683,16 +683,7 @@ class MiqExpression
       val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.flat_map do |v|
-        if v.kind_of?(String)
-          v = begin
-                eval(v)
-              rescue
-                nil
-              end
-        end
-        v.kind_of?(Range) ? v.to_a : v
-      end.compact.uniq.sort
+      v_arr = Array.wrap(val).flat_map { |v| quote_numeric_set_atom(v) }.compact.uniq.sort
       "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
@@ -701,6 +692,32 @@ class MiqExpression
     else
       val
     end
+  end
+
+  private_class_method def self.quote_numeric_set_atom(val)
+    val = val.to_s unless val.kind_of?(Numeric) || val.kind_of?(Range)
+
+    if val.kind_of?(String)
+      val = val.strip
+      val =
+        if val.include?("..") # Parse Ranges
+          b, e = val.split("..", 2).map do |i|
+            if integer?(i)
+              i.to_i_with_method
+            elsif numeric?(i)
+              i.to_f_with_method
+            end
+          end
+
+          Range.new(b, e) if b && e
+        elsif integer?(val) # Parse Integers
+          val.to_i_with_method
+        elsif numeric?(val) # Parse Floats
+          val.to_f_with_method
+        end
+    end
+
+    val.kind_of?(Range) ? val.to_a : val
   end
 
   def self.quote_human(val, typ)
