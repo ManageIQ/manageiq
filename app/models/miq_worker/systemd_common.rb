@@ -3,14 +3,6 @@ class MiqWorker
     extend ActiveSupport::Concern
 
     class_methods do
-      def supports_systemd?
-        return unless worker_settings[:systemd_enabled]
-        require "dbus/systemd"
-        true
-      rescue LoadError
-        false
-      end
-
       def service_base_name
         minimal_class_name.underscore.tr("/", "_")
       end

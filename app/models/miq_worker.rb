@@ -283,7 +283,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.systemd_worker?
-    MiqEnvironment::Command.supports_systemd? && supports_systemd?
+    MiqEnvironment::Command.supports_systemd?
   end
 
   def systemd_worker?
