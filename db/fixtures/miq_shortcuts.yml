@@ -31,7 +31,7 @@
   :startup: true
 - :name: services
   :description: Services / My Services
-  :url: /service/explorer
+  :url: /service/show_list
   :rbac_feature_name: service
   :startup: true
 - :name: catalogs
