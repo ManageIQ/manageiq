@@ -5,7 +5,7 @@ WantedBy=manageiq-reporting.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
-ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqReportingWorker --heartbeat --guid=%i'
+ExecStart=/bin/bash -c '. /etc/default/evm && exec ruby lib/workers/bin/run_single_worker.rb MiqReportingWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
 Slice=manageiq-reporting.slice

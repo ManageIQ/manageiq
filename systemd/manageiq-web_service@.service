@@ -5,7 +5,7 @@ WantedBy=manageiq-web_service.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies,graphql_api
-ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqWebServiceWorker --heartbeat --guid=%i'
+ExecStart=/bin/bash -c '. /etc/default/evm && exec ruby lib/workers/bin/run_single_worker.rb MiqWebServiceWorker --heartbeat --guid=%i'
 Restart=no
 Type=notify
 Slice=manageiq-web_service.slice
