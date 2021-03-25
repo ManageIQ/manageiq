@@ -1,0 +1,11 @@
+[Unit]
+PartOf=manageiq-remote_console.target
+[Install]
+WantedBy=manageiq-remote_console.target
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
+ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqRemoteConsoleWorker --heartbeat --guid=%i'
+Restart=no
+Type=notify
+Slice=manageiq-remote_console.slice

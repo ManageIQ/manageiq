@@ -1,0 +1,11 @@
+[Unit]
+PartOf=manageiq-smart_proxy.target
+[Install]
+WantedBy=manageiq-smart_proxy.target
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
+ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqSmartProxyWorker --heartbeat --guid=%i'
+Restart=no
+Type=notify
+Slice=manageiq-smart_proxy.slice

@@ -79,6 +79,12 @@ module ManageIQ
 
     def create_scaffolding
       validate_manager_type!
+      template "build/systemd_units/%plugin_name%_%manager_path%_event_catcher@.service"
+      template "build/systemd_units/%plugin_name%_%manager_path%_event_catcher.target"
+      template "build/systemd_units/%plugin_name%_%manager_path%_refresh@.service"
+      template "build/systemd_units/%plugin_name%_%manager_path%_refresh.target"
+      template "build/systemd_units/%plugin_name%_%manager_path%_metrics_collector@.service"
+      template "build/systemd_units/%plugin_name%_%manager_path%_metrics_collector.target"
       template "app/models/%plugin_path%/%manager_path%/event_catcher/runner.rb"
       template "app/models/%plugin_path%/%manager_path%/event_catcher/stream.rb"
       template "app/models/%plugin_path%/%manager_path%/metrics_collector_worker/runner.rb"

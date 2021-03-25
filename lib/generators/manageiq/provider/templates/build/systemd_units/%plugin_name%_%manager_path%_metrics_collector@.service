@@ -1,0 +1,11 @@
+[Unit]
+PartOf=<%= plugin_name %>_<%= manager_path %>_metrics_collector.target
+[Install]
+WantedBy=<%= plugin_name %>_<%= manager_path %>_metrics_collector.target
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
+ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb <%= class_name %>::<%= manager_type %>::MetricsCollectorWorker --heartbeat --guid=%i'
+Restart=no
+Type=notify
+Slice=<%= plugin_name %>_<%= manager_path %>_metrics_collector.slice
