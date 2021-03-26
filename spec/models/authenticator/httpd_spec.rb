@@ -30,8 +30,6 @@ RSpec.describe Authenticator::Httpd do
   before do
     FactoryBot.create(:miq_group, :description => 'wibble')
     FactoryBot.create(:miq_group, :description => 'wobble')
-
-    allow(MiqLdap).to receive(:using_ldap?) { false }
   end
 
   describe '#uses_stored_password?' do

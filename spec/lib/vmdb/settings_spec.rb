@@ -208,7 +208,7 @@ RSpec.describe Vmdb::Settings do
 
       described_class.save!(miq_server,
         :authentication => {
-          :mode         => "ldap",
+          :mode         => "none",
           :ldaphost     => "localhost",
           :bind_pwd     => password,
           :user_proxies => [{:bind_pwd => password}]
