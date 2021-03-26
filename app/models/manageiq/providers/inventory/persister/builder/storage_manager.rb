@@ -10,6 +10,10 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_volume_types
+          add_common_default_values
+        end
+
         def cloud_object_store_objects
           add_common_default_values
         end
