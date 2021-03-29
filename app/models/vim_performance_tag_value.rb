@@ -127,7 +127,7 @@ class VimPerformanceTagValue
   def self.get_metrics(resources, timestamp, capture_interval_name, vim_performance_daily, category)
     if vim_performance_daily
       MetricRollup.with_interval_and_time_range("hourly", (timestamp)..(timestamp+1.day)).where(:resource => resources)
-          .for_tag_names(category, "") # append trailing slash
+          .for_tag_names([[category, ""]]) # append trailing slash
     else
       Metric::Helper.class_for_interval_name(capture_interval_name).where(:resource => resources)
           .with_interval_and_time_range(capture_interval_name, timestamp)
