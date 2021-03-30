@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 158 ending 2020-03-31
+
+### Added
+
+* Don't dynamically write systemd unit files [(#21120)](https://github.com/ManageIQ/manageiq/pull/21120)
+* Add static systemd unit files for workers [(#20983)](https://github.com/ManageIQ/manageiq/pull/20983)
+
+### Fixed
+
+* Move the provider generator systemd files to ./systemd [(#21125)](https://github.com/ManageIQ/manageiq/pull/21125)
+* Move build/systemd\_units/ -> systemd/ due to BUILD file conflict [(#21122)](https://github.com/ManageIQ/manageiq/pull/21122)
+
 # Unreleased as of Sprint 157 ending 2021-03-15
 
 ### Added
