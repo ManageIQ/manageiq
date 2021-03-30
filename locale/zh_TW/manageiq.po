@@ -4645,36 +4645,36 @@ msgstr[0] "計費層級"
 #: ../config/dictionary_strings.rb:2748
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
-msgstr[0] "已配置系統的記帳"
+msgstr[0] "已配置系統的計費"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage
 #: ../app/models/chargeback_container_image.rb:115
 #: ../config/dictionary_strings.rb:2752
 msgid "Chargeback for Image"
 msgid_plural "Chargebacks for Image"
-msgstr[0] "映像檔記帳"
+msgstr[0] "映像檔計費"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage (plural form)
 #: ../config/dictionary_strings.rb:2754
 msgid "Chargeback for Images"
-msgstr "映像檔的記帳"
+msgstr "映像檔的計費"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
 #: ../app/models/chargeback_container_project.rb:74
 #: ../config/dictionary_strings.rb:2756
 msgid "Chargeback for Projects"
 msgid_plural "Chargebacks for Projects"
-msgstr[0] "專案記帳"
+msgstr[0] "專案計費"
 
 #: ../app/models/chargeback_vm.rb:205
 msgid "Chargeback for VMs"
 msgid_plural "Chargebacks for VMs"
-msgstr[0] "VM 記帳"
+msgstr[0] "VM 計費"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
 #: ../config/dictionary_strings.rb:2750
 msgid "Chargeback for Vms"
-msgstr "VM 的記帳"
+msgstr "VM 的計費"
 
 #: ../config/model_attributes.rb:237
 msgid "Chargeback rate"
@@ -4694,7 +4694,7 @@ msgstr "計費費率詳細資料測量"
 
 #: ../config/model_attributes.rb:280
 msgid "Chargeback tier"
-msgstr "記帳層級"
+msgstr "計費層級"
 
 #: ../config/model_attributes.rb:264
 msgid "ChargebackRateDetailCurrency|Code"
@@ -29970,7 +29970,7 @@ msgstr "作業遺漏或無效：%{task_id}，保存庫 ID：%{depot_id}"
 #: ../app/views/miq_alert_set/show.html.haml:12
 #: ../app/views/miq_alert_set/_form.html.haml:20 ../config/yaml_strings.rb:1870
 msgid "Mode"
-msgstr "Mode"
+msgstr "模式"
 
 #. TRANSLATORS: file: product/views/FirmwareTarget.yaml
 #: ../app/helpers/physical_storage_helper/textual_summary.rb:78
@@ -40438,7 +40438,7 @@ msgstr "顯示虛擬機器的容量與使用率資料"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2924
 msgid "Show Chargeback Preview for a VM"
-msgstr "顯示虛擬機器的記帳預覽"
+msgstr "顯示虛擬機器的計費預覽"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1091
@@ -45559,7 +45559,7 @@ msgstr "虛擬機器安全群組無法使用；沒有該安全群組則無法繼
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2922
 msgid "VM's Chargeback"
-msgstr "虛擬機器記帳"
+msgstr "虛擬機器計費"
 
 #: ../app/models/vm_or_template.rb:345
 msgid "VM/Template <%{name}> with Id: <%{id}> is not associated with a provider."
@@ -53199,15 +53199,15 @@ msgstr "* 當此警示屬於警示設定檔時無法變更。"
 
 #: ../app/controllers/report_controller/reports/editor.rb:142
 msgid "* Caution: CPU Allocated Metric, CPU Used Metric, CPU Cores Allocated Metric, Disk I/O Used Metric, Memory Allocated Metric, Fixed Storage Metric, Storage Allocated Metric, Storage Used Metric are not supported for Chargeback for Projects."
-msgstr "* 警告：針對專案的記帳，不支援「CPU 配置的度量」、「CPU 使用的度量」、「CPU 核心配置的度量」、「磁碟 I/O 使用的度量」、「記憶體配置的度量」、「固定儲存體度量」、「儲存體配置的度量」、「儲存體使用的度量」。"
+msgstr "* 警告：針對專案的計費，不支援「CPU 配置的度量」、「CPU 使用的度量」、「CPU 核心配置的度量」、「磁碟 I/O 使用的度量」、「記憶體配置的度量」、「固定儲存體度量」、「儲存體配置的度量」、「儲存體使用的度量」。"
 
 #: ../app/controllers/report_controller/reports/editor.rb:140
 msgid "* Caution: CPU Allocated Metric, CPU Used Metric, Disk I/O Used Metric, Fixed Storage Metric, Storage Allocated Metric, Storage Used Metric are not supported for Chargeback for Images."
-msgstr "* 警告：針對映像檔的記帳，不支援「CPU 配置的度量」、「CPU 使用的度量」、「磁碟 I/O 使用的度量」、「固定儲存體度量」、「儲存體配置的度量」、「儲存體使用的度量」。"
+msgstr "* 警告：針對映像檔的計費，不支援「CPU 配置的度量」、「CPU 使用的度量」、「磁碟 I/O 使用的度量」、「固定儲存體度量」、「儲存體配置的度量」、「儲存體使用的度量」。"
 
 #: ../app/controllers/report_controller/reports/editor.rb:138
 msgid "* Caution: CPU Cores Allocated Metric, CPU Cores Used Metric are not supported for Chargeback for Vms."
-msgstr "* 警告：針對 Vms 的記帳，不支援「CPU 核心配置的度量」、「CPU 核心使用的度量」。"
+msgstr "* 警告：針對 Vms 的計費，不支援「CPU 核心配置的度量」、「CPU 核心使用的度量」。"
 
 #: ../app/views/report/_form_columns.html.haml:27
 msgid "* Caution: Changing these fields will clear all selected values below them!"
@@ -57754,11 +57754,11 @@ msgstr "計費指派"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:43
 msgid "Chargeback Filters"
-msgstr "記帳過濾器"
+msgstr "計費過濾器"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:196
 msgid "Chargeback Interval"
-msgstr "記帳間隔"
+msgstr "計費間隔"
 
 #: ../app/controllers/chargeback_rate_controller.rb:226
 msgid "Chargeback Rate \"%{name}\" was added"
@@ -57775,7 +57775,7 @@ msgstr "「計費費率」已不再存在"
 #: ../app/views/report/_form_filter_chargeback.html.haml:4
 #: ../app/views/report/_form_filter_chargeback.html.haml:30
 msgid "Chargeback Resources"
-msgstr "記帳資源"
+msgstr "計費資源"
 
 #: ../app/controllers/chargeback_report_controller.rb:34
 msgid "Chargeback Saved Reports"
@@ -59462,11 +59462,11 @@ msgstr "將選取的對話框複製到新對話框"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:29
 msgid "Copy the selected Policy"
-msgstr "複製所選取的原則"
+msgstr "複製選取的原則"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:29
 msgid "Copy the selected Policy Alert"
-msgstr "複製所選取的原則警示"
+msgstr "複製選取的原則警示"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:27
 msgid "Copy the selected Role to a new Role"
@@ -60410,7 +60410,7 @@ msgstr "定義表示式"
 #: ../app/controllers/volume_mapping_controller.rb:17
 #: ../app/controllers/host_initiator_controller.rb:18
 msgid "Define New %{table}"
-msgstr "定義新的 %{table}"
+msgstr "定義新的%{table}"
 
 #: ../app/views/condition/_form_scope.html.haml:17
 #: ../app/views/miq_policy/_form_scope.html.haml:17
@@ -60688,11 +60688,11 @@ msgstr "刪除選取的「協議」及其內容"
 
 #: ../app/helpers/application_helper/toolbar/miq_actions_center.rb:29
 msgid "Delete selected Actions"
-msgstr "刪除所選取的動作"
+msgstr "刪除選取的動作"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_sets_center.rb:31
 msgid "Delete selected Alert Profiles"
-msgstr "刪除所選取的警示設定檔"
+msgstr "刪除選取的警示設定檔"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:23
 msgid "Delete selected Backups"
@@ -60712,7 +60712,7 @@ msgstr "刪除選取的雲端磁區"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:29
 msgid "Delete selected Conditions"
-msgstr "刪除所選取的條件"
+msgstr "刪除選取的條件"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:28
 msgid "Delete selected Groups"
@@ -60725,11 +60725,11 @@ msgstr "刪除選取的主機聚集"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:39
 msgid "Delete selected Policy Alerts"
-msgstr "刪除所選取的原則警示"
+msgstr "刪除選取的原則警示"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:29
 msgid "Delete selected Policy Profiles"
-msgstr "刪除所選取的原則設定檔"
+msgstr "刪除選取的原則設定檔"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:36
 msgid "Delete selected Roles"

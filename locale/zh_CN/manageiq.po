@@ -656,7 +656,7 @@ msgstr "操作被至少一个策略引用，不能删除"
 
 #: ../app/models/storage.rb:351
 msgid "Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%{id}]"
-msgstr "类型为 [%{store_type}] 的数据存储区，标识为 [%{id}] 的 [%{name}] 不支持这个操作"
+msgstr "类型为 [%{store_type}] 的数据存储区，标识为 [%{id}] 的 [%{name}] 不支持此操作"
 
 #: ../app/models/miq_action.rb:481
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
@@ -4645,40 +4645,40 @@ msgstr[0] "计费层"
 #: ../config/dictionary_strings.rb:2748
 msgid "Chargeback for Configured Systems"
 msgid_plural "Chargebacks for Configured Systems"
-msgstr[0] "配置的系统的费率"
+msgstr[0] "配置系统的计费"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage
 #: ../app/models/chargeback_container_image.rb:115
 #: ../config/dictionary_strings.rb:2752
 msgid "Chargeback for Image"
 msgid_plural "Chargebacks for Image"
-msgstr[0] "镜像费率"
+msgstr[0] "镜像计费"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage (plural form)
 #: ../config/dictionary_strings.rb:2754
 msgid "Chargeback for Images"
-msgstr "镜像费率"
+msgstr "镜像计费"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
 #: ../app/models/chargeback_container_project.rb:74
 #: ../config/dictionary_strings.rb:2756
 msgid "Chargeback for Projects"
 msgid_plural "Chargebacks for Projects"
-msgstr[0] "项目费率"
+msgstr[0] "项目计费"
 
 #: ../app/models/chargeback_vm.rb:205
 msgid "Chargeback for VMs"
 msgid_plural "Chargebacks for VMs"
-msgstr[0] "虚拟机费率"
+msgstr[0] "虚拟机计费"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
 #: ../config/dictionary_strings.rb:2750
 msgid "Chargeback for Vms"
-msgstr "虚拟机费率"
+msgstr "虚拟机计费"
 
 #: ../config/model_attributes.rb:237
 msgid "Chargeback rate"
-msgstr "费率"
+msgstr "计费费率"
 
 #: ../config/model_attributes.rb:248
 msgid "Chargeback rate detail"
@@ -22106,11 +22106,11 @@ msgstr "IPMI 存在"
 
 #: ../app/models/host.rb:820
 msgid "IPMI address is not configured for this Host"
-msgstr "IPMI 地址没有为这个主机配置"
+msgstr "IPMI 地址没有为此主机配置"
 
 #: ../app/models/host.rb:828
 msgid "IPMI is not available on this Host"
-msgstr "IPMI 在这个主机上无效"
+msgstr "IPMI 在此主机上无效"
 
 #: ../app/helpers/physical_server_helper/textual_summary.rb:164
 #: ../app/views/vm_common/_config.html.haml:101
@@ -22750,7 +22750,7 @@ msgstr "是 EVM 设备吗?"
 #. TRANSLATORS: en.yml key: dictionary.column.iscsi_iqn
 #: ../config/dictionary_strings.rb:1060
 msgid "Iscsi Iqn"
-msgstr "Iscsi Iqn"
+msgstr "ISCSI IQN"
 
 #. TRANSLATORS: en.yml key: dictionary.column.iscsi_lun
 #: ../config/dictionary_strings.rb:1062
@@ -24167,7 +24167,7 @@ msgstr "维护原因"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:308
 msgid "Make Orchestration Template orderable"
-msgstr "使这个编排模板为可订购"
+msgstr "使此编排模板为可订购"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:306
@@ -38390,7 +38390,7 @@ msgstr "Href slug"
 
 #: ../config/model_attributes.rb:3943
 msgid "SanAddress|Iqn"
-msgstr "Iqn"
+msgstr "IQN"
 
 #: ../config/model_attributes.rb:3944
 msgid "SanAddress|Owner type"
@@ -48991,7 +48991,7 @@ msgstr "标记无效：%{tag}"
 #: ../app/models/iscsi_address.rb:7
 msgid "iqn"
 msgid_plural "iqn"
-msgstr[0] "iqn"
+msgstr[0] "IQN"
 
 #: ../app/models/service_ansible_tower.rb:50
 msgid "job template was not set"
@@ -49681,11 +49681,11 @@ msgstr "对象更新失败 - 找不到 [service_var__%{key} = %{value}] 的服�
 
 #: ../app/models/miq_ae_yaml_import.rb:302
 msgid "Playbook '%{playbook_name}' not found in repository '%{repository_name}', you  can refresh the repo or change the branch or tag and retry the import, if the playbook doesn't exist in the repo this import will never succeed, you can try importing by skiping this playbook using --skip_playbook pb1, pb2."
-msgstr "未在存储库“%{repository_name}”中找到 Playbook“%{playbook_name}”，您可以刷新存储库或更改分支或标签，然后重新尝试导入，如果存储库中不包含 Playbook，此导入绝不会成功。您可以使用 --skip_playbook pb1, pb2 跳过这个 Playbook，尝试进行导入。"
+msgstr "未在存储库“%{repository_name}”中找到 Playbook“%{playbook_name}”，您可以刷新存储库或更改分支或标签，然后重新尝试导入，如果存储库中不包含 Playbook，此导入绝不会成功。您可以使用 --skip_playbook pb1, pb2 跳过此 Playbook，尝试进行导入。"
 
 #: ../app/models/miq_ae_yaml_import.rb:298
 msgid "Repository '%{repository_name}' not found in database. Please try and import this repo into this appliance and retry the import. If the repository has been deleted this import will never succeed."
-msgstr "在数据库中找不到存储库“%{repository_name}”。请尝试并将这个存储库导入到这个设备中，然后重新尝试导入。如果存储库已被删除，此导入绝不会成功。"
+msgstr "在数据库中找不到存储库“%{repository_name}”。请尝试并将此存储库导入到此设备中，然后重新尝试导入。如果存储库已被删除，此导入绝不会成功。"
 
 #: ../app/models/miq_ae_yaml_import.rb:84
 msgid "System domain import is not supported."
@@ -49827,7 +49827,7 @@ msgstr "正常的运行状态"
 
 #: ../app/decorators/service_template_decorator.rb:23
 msgid "Order this Service"
-msgstr "订购这个服务"
+msgstr "订购此服务"
 
 #: ../app/helpers/quadicon_helper.rb:90
 msgid "Policy simulation failed with: %{error}"
@@ -50854,7 +50854,7 @@ msgstr[0] "云租户 (NSX-T)"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:24
 msgid "Delete this Cloud Network"
-msgstr "删除这个云网络"
+msgstr "删除此云网络"
 
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:72
@@ -50929,7 +50929,7 @@ msgstr "管理员角色"
 #: ../app/controllers/catalog_controller.rb:418
 #: ../app/controllers/catalog_controller.rb:930
 msgid "Name is required"
-msgstr "名称是必需的"
+msgstr "名称为必填项"
 
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:60
@@ -51128,7 +51128,7 @@ msgstr "Nuage 供应商"
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:29
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:40
 msgid "Required"
-msgstr "必需的"
+msgstr "必填"
 
 #: ../app/views/static/cloud_subnet/cloud-subnet-form.html.haml:80
 msgid "Subnet Name"
@@ -51419,7 +51419,7 @@ msgstr "在此处粘贴 PEM 格式的受信 CA 证书。"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:19
 msgid "Perform SmartState Analysis on this VM"
-msgstr "在这个虚拟机中执行智能状态分析"
+msgstr "在此虚拟机中执行智能状态分析"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm/operations/snapshot.rb:21
@@ -53169,7 +53169,7 @@ msgstr "（远程）"
 
 #: ../app/helpers/network_router_helper/textual_summary.rb:35
 msgid "(Subnets not explicitely assigned to a route table are assigned to this main route table, for this VPC)"
-msgstr "(对于这个 VPC，没有被明确分配到一个路由表的子网会被分配到这个主路由表)"
+msgstr "(对于此 VPC，没有被明确分配到一个路由表的子网会被分配到此主路由表)"
 
 #: ../app/views/ops/_diagnostics_zones_tab.html.haml:18
 msgid "(current)"
@@ -53224,11 +53224,11 @@ msgstr "* 修改时区会重置下面的“开始日期”和“开始时间”�
 
 #: ../app/views/ops/_settings_server_tab.html.haml:92
 msgid "* Changing the Zone will reset all of this Server's priorities to secondary."
-msgstr "* 修改区将重置这个服务器的所有优先级为次要等级。"
+msgstr "* 修改区将重置此服务器的所有优先级为次要等级。"
 
 #: ../app/views/pxe/_pxe_img_form.html.haml:25
 msgid "* Checking this box will remove this setting from all other PXE Images on this PXE Server"
-msgstr "* 选中这个复选框将将移除这个 PXE 服务器上所有其他的 PXE 镜像"
+msgstr "* 选中此复选框将将移除此 PXE 服务器上所有其他的 PXE 镜像"
 
 #: ../app/views/layouts/_perf_options.html.haml:148
 msgid "* Daily charts only include days for which all 24 hours of data has been collected."
@@ -53280,7 +53280,7 @@ msgstr "* <font color=\"red\"><i>红色斜体字</i></font> 的项没有更改�
 
 #: ../app/views/miq_policy/show.html.haml:104
 msgid "* No Actions are configured for this Event."
-msgstr "* 没有为这个事件配置操作。"
+msgstr "* 没有为此事件配置操作。"
 
 #: ../app/views/report/_form_columns_performance.html.haml:4
 msgid "* Performance Interval"
@@ -53897,7 +53897,7 @@ msgstr "<无图表>"
 
 #: ../app/helpers/textual_mixins/textual_vmm_info.rb:33
 msgid "<No notes have been entered for this VM>"
-msgstr "<没有为这个虚拟机输入注记>"
+msgstr "<没有为此虚拟机输入注记>"
 
 #: ../app/views/layouts/_perf_options.html.haml:137
 msgid "<Nothing>"
@@ -53972,7 +53972,7 @@ msgstr "用户必须分配到允许的组"
 
 #: ../app/controllers/application_controller/filter.rb:617
 msgid "A check field must be chosen to commit this expression element"
-msgstr "必须选择一个检查字段来提交这个表达式元素"
+msgstr "必须选择一个检查字段来提交此表达式元素"
 
 #: ../app/views/condition/show.html.haml:53
 msgid "A condition must contain a valid expression."
@@ -53980,11 +53980,11 @@ msgstr "条件必须包含有效的表达式"
 
 #: ../app/controllers/application_controller/filter.rb:536
 msgid "A field must be chosen to commit this expression element"
-msgstr "必须选择一个字段来提交这个表达式元素"
+msgstr "必须选择一个字段来提交此表达式元素"
 
 #: ../app/controllers/application_controller/filter.rb:614
 msgid "A find field must be chosen to commit this expression element"
-msgstr "必须选择一个查找字段来提交这个表达式元素"
+msgstr "必须选择一个查找字段来提交此表达式元素"
 
 #: ../app/controllers/ems_cloud_controller.rb:75
 msgid "A member role must be selected."
@@ -53992,11 +53992,11 @@ msgstr "必须选择一个成员角色。"
 
 #: ../app/controllers/application_controller/filter.rb:592
 msgid "A registry key name must be entered to commit this expression element"
-msgstr "必须输入注册表键名称来提交这个表达式元素"
+msgstr "必须输入注册表键名称来提交此表达式元素"
 
 #: ../app/controllers/application_controller/filter.rb:594
 msgid "A registry value name must be entered to commit this expression element"
-msgstr "必须输入注册表值名称来提交这个表达式元素"
+msgstr "必须输入注册表值名称来提交此表达式元素"
 
 #: ../app/controllers/mixins/containers_external_logging_support_mixin.rb:47
 #: ../app/helpers/application_helper/button/ems_container_launch_external_logging_support.rb:13
@@ -54033,11 +54033,11 @@ msgstr "必须选择特定的 %{chargeback}，或者全选"
 
 #: ../app/controllers/application_controller/filter.rb:578
 msgid "A tag category must be chosen to commit this expression element"
-msgstr "必须选择一个标签类别来提交这个表达式元素"
+msgstr "必须选择一个标签类别来提交此表达式元素"
 
 #: ../app/controllers/application_controller/filter.rb:580
 msgid "A tag value must be chosen to commit this expression element"
-msgstr "必须选择一个标签值来提交这个表达式元素"
+msgstr "必须选择一个标签值来提交此表达式元素"
 
 #: ../app/controllers/miq_alert_controller.rb:600
 #: ../app/controllers/condition_controller.rb:94
@@ -54398,7 +54398,7 @@ msgstr "添加注释"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:20
 msgid "Add Project to this Tenant"
-msgstr "添加项目到这个租户"
+msgstr "添加项目到此租户"
 
 #: ../app/views/static/generic_object/generic_object_table.html.haml:3
 msgid "Add Row"
@@ -54744,7 +54744,7 @@ msgstr "添加窗口小部件"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:12
 msgid "Add child Tenant to this Tenant"
-msgstr "添加子租户到这个租户"
+msgstr "添加子租户到此租户"
 
 #: ../app/controllers/report_controller.rb:755
 msgid "Add folder to selected Accordion"
@@ -54883,7 +54883,7 @@ msgstr "用户取消了添加新类别"
 
 #: ../app/controllers/chargeback_rate_controller.rb:192
 msgid "Add of new Chargeback Rate was cancelled by the user"
-msgstr "用户取消了添加新计费率"
+msgstr "用户已取消新增计费费率"
 
 #: ../app/controllers/cloud_network_controller.rb:43
 msgid "Add of new Cloud Network was cancelled by the user"
@@ -55003,7 +55003,7 @@ msgstr "添加此报告窗口窗口小部件"
 #: ../app/views/ops/_ap_form_file.html.haml:27
 #: ../app/views/ops/_ap_form_registry.html.haml:42
 msgid "Add this entry"
-msgstr "添加这个条目"
+msgstr "添加此条目"
 
 #: ../app/javascript/components/dashboard_toolbar.jsx:53
 msgid "Add widget"
@@ -55182,7 +55182,7 @@ msgstr "管理员角色"
 
 #: ../app/controllers/ems_infra_controller.rb:191
 msgid "Admin UI feature is not supported for this infrastructure provider"
-msgstr "管理 UI 不支持这个基础架构供应商"
+msgstr "管理 UI 不支持此基础架构供应商"
 
 #: ../app/views/network_router/_common_new_edit.haml:75
 #: ../app/javascript/components/cloud-network-form/cloud-network-form.schema.js:216
@@ -56019,7 +56019,7 @@ msgstr "应用所选的过滤器"
 #: ../app/views/layouts/listnav/_show_list.html.haml:13
 #: ../app/views/layouts/listnav/_show_list.html.haml:27
 msgid "Apply this filter"
-msgstr "应用这个过滤器"
+msgstr "应用此过滤器"
 
 #: ../app/views/static/miq-request-options.html.haml:18
 msgid "Approval State:"
@@ -56027,7 +56027,7 @@ msgstr "批准状态："
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:39
 msgid "Approve this Request"
-msgstr "批准这个请求"
+msgstr "批准此请求"
 
 #: ../app/controllers/miq_request_controller.rb:14
 msgid "Approved"
@@ -56079,7 +56079,7 @@ msgstr "您确定现在运行数据库备份？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:21
 msgid "Are you sure you want to copy this Alert?"
-msgstr "您确定要复制这个警报吗？"
+msgstr "您确定要复制此警报吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:30
 msgid "Are you sure you want to create Policy [%{new_policy_description}] from this Policy?"
@@ -56176,55 +56176,55 @@ msgstr "您确定要删除这些卷吗？"
 
 #: ../app/helpers/application_helper/button/condition_delete.rb:7
 msgid "Are you sure you want to delete this %{condition_type} Condition?"
-msgstr "确认是否想要删除该 %{condition_type} 条件？"
+msgstr "确定要删除此%{condition_type}条件吗？"
 
 #: ../app/helpers/application_helper/button/policy_delete.rb:7
 msgid "Are you sure you want to delete this %{policy_type} Policy?"
-msgstr "确认是否想要删除该 %{policy_type} 策略？"
+msgstr "确定要删除此%{policy_type}策略吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_action_center.rb:29
 msgid "Are you sure you want to delete this Action?"
-msgstr "您确定要删除这个操作吗？"
+msgstr "您确定要删除此操作吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_set_center.rb:34
 msgid "Are you sure you want to delete this Alert Profile?"
-msgstr "您确定要删除这个警报概要文件吗？"
+msgstr "您确定要删除此警报概要文件吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:35
 msgid "Are you sure you want to delete this Alert?"
-msgstr "您确定要删除这个警报吗？"
+msgstr "您确定要删除此警报吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:21
 msgid "Are you sure you want to delete this Group?"
-msgstr "您确定要删除这个组吗？"
+msgstr "您确定要删除此组吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:49
 msgid "Are you sure you want to delete this Policy Alerts?"
-msgstr "您确定要删除这个策略警报吗？"
+msgstr "您确定要删除此策略警报吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_set_center.rb:28
 msgid "Are you sure you want to delete this Policy Profile?"
-msgstr "您确定要删除这个策略概要文件吗？"
+msgstr "您确定要删除此策略概要文件吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:38
 msgid "Are you sure you want to delete this Policy Profiles?"
-msgstr "您确定要删除这个策略概要文件吗？"
+msgstr "您确定要删除此策略概要文件吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:23
 msgid "Are you sure you want to delete this Request?"
-msgstr "您确定要删除这个请求吗？"
+msgstr "您确定要删除此请求吗？"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:26
 msgid "Are you sure you want to delete this Role?"
-msgstr "您确定要删除这个角色吗？"
+msgstr "您确定要删除此角色吗？"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:26
 msgid "Are you sure you want to delete this User?"
-msgstr "您确定要删除这个用户吗？"
+msgstr "您确定要删除此用户吗？"
 
 #: ../app/helpers/application_helper/toolbar/zone_center.rb:20
 msgid "Are you sure you want to delete this Zone?"
-msgstr "您确定要删除这个区吗？"
+msgstr "您确定要删除此区吗？"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:42
 msgid "Are you sure you want to delete this item and all of it's children?"
@@ -56233,11 +56233,11 @@ msgstr "您确定要删除这一项以及它的子项吗？"
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:34
 msgid "Are you sure you want to delete this physical storage?\nNote that all of the attached services (e.g. volumes) will be unmapped."
-msgstr "您确定要删除这个物理存储器吗？\n请注意，将取消映射所有连接的服务（例如，卷）。"
+msgstr "您确定要删除此物理存储器吗？\n请注意，将取消映射所有连接的服务（例如，卷）。"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:76
 msgid "Are you sure you want to delete this volume?"
-msgstr "您确定要删除这个卷吗？"
+msgstr "您确定要删除此卷吗？"
 
 #: ../app/javascript/components/remove-catalog-item-modal.jsx:123
 msgid "Are you sure you want to permanently delete the following catalog bundle?"
@@ -56272,27 +56272,27 @@ msgstr "您确定要移除所选的名称空间吗？"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:27
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:27
 msgid "Are you sure you want to remove this Class?"
-msgstr "您确定要移除这个类吗？"
+msgstr "您确定要移除此类吗？"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:204
 msgid "Are you sure you want to remove this Custom Image?"
-msgstr "您确定要移除这个定制镜像吗？"
+msgstr "您确定要移除此定制镜像吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:20
 msgid "Are you sure you want to remove this Domain?"
-msgstr "您确定你要移除这个域吗？"
+msgstr "您确定你要移除此域吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instance_center.rb:27
 msgid "Are you sure you want to remove this Instance?"
-msgstr "您确定你要移除这个实例吗？"
+msgstr "您确定你要移除此实例吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_method_center.rb:23
 msgid "Are you sure you want to remove this Method?"
-msgstr "您确定你要移除这个方法吗？"
+msgstr "您确定你要移除此方法吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:20
 msgid "Are you sure you want to remove this Namespace?"
-msgstr "您确定要移除这个名称空间吗？"
+msgstr "您确定要移除此名称空间吗？"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:179
 msgid "Are you sure you want to remove this Provisioning Entry Point?"
@@ -56393,7 +56393,7 @@ msgstr "将浮动 IP 与实例“%{name}”相关联"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "关联浮动 IP 和这个实例"
+msgstr "关联浮动 IP 和此实例"
 
 #: ../app/views/floating_ip/_common_new_edit.html.haml:111
 msgid "Associated Port ID (blank to disassociate)"
@@ -57312,7 +57312,7 @@ msgstr "此镜像的 CPU/内存推荐"
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:66
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:100
 msgid "CPU/Memory Recommendations of this VM"
-msgstr "这个虚拟机的 CPU/内存推荐"
+msgstr "此虚拟机的 CPU/内存推荐"
 
 #: ../app/views/report/_schedule_email_options.html.haml:27
 msgid "CSV"
@@ -57338,7 +57338,7 @@ msgstr "无法删除文件夹，您的组不拥有所选文件夹里一个或多
 
 #: ../app/controllers/catalog_controller.rb:204
 msgid "Can not edit selected item, Request is missing"
-msgstr "无法编辑所选的项目，请求已丢失"
+msgstr "无法编辑选中的项目，请求已丢失"
 
 #: ../app/helpers/application_helper/button/transform_vm_button.rb:10
 msgid "Can only transform VMs in down state"
@@ -57505,7 +57505,7 @@ msgstr "无法重定向到“%{record}”提供程序。"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:481
 msgid "Cannot start log collection, a log collection is already in progress within this scope"
-msgstr "无法启动日志收集，这个作用域里已在进行日志收集。"
+msgstr "无法启动日志收集，此作用域里已在进行日志收集。"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:479
 msgid "Cannot start log collection, requires a started server"
@@ -57559,11 +57559,11 @@ msgstr "获取已选容器供应商的指标？"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:24
 msgid "Capture metrics related to this Containers Provider"
-msgstr "获取与这个容器供应商有关的指标"
+msgstr "获取与此容器供应商有关的指标"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:26
 msgid "Capture metrics related to this Containers Provider?"
-msgstr "获取与这个容器供应商有关的指标？"
+msgstr "获取与此容器供应商有关的指标？"
 
 #: ../app/controllers/catalog_controller.rb:719
 msgid "Catalog \"%{name}\" was saved"
@@ -57762,15 +57762,15 @@ msgstr "计费间隔"
 
 #: ../app/controllers/chargeback_rate_controller.rb:226
 msgid "Chargeback Rate \"%{name}\" was added"
-msgstr "已添加计费率“%{name}”"
+msgstr "已添加计费费率“%{name}”"
 
 #: ../app/controllers/chargeback_rate_controller.rb:229
 msgid "Chargeback Rate \"%{name}\" was saved"
-msgstr "已保存计费率“%{name}”"
+msgstr "已保存计费费率“%{name}”"
 
 #: ../app/controllers/chargeback_rate_controller.rb:122
 msgid "Chargeback Rate no longer exists"
-msgstr "计费率不再存在"
+msgstr "计费费率不再存在"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:4
 #: ../app/views/report/_form_filter_chargeback.html.haml:30
@@ -58198,7 +58198,7 @@ msgstr "清除所选的对象存储容器"
 
 #: ../app/javascript/oldjs/services/topology_service.js:309
 msgid "Click here to show/hide entities of this type"
-msgstr "点这里显示/隐藏这个类型的项"
+msgstr "点这里显示/隐藏此类型的项"
 
 #: ../app/views/host/_form.html.haml:96
 msgid "Click on a Host to fetch its settings"
@@ -58245,22 +58245,22 @@ msgstr "点击以修改为专有的日期/时间格式"
 
 #: ../app/views/ops/_diagnostics_savedreports.html.haml:20
 msgid "Click to delete Orphaned Records for this user"
-msgstr "点击以删除这个用户的孤立的记录"
+msgstr "点击以删除此用户的孤立的记录"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:49
 msgid "Click to delete this category"
-msgstr "点击以删除这个类别"
+msgstr "点击以删除此类别"
 
 #: ../app/views/ops/_ap_form_nteventlog.html.haml:122
 #: ../app/views/ops/_classification_entry.html.haml:56
 #: ../app/views/ops/_ap_form_file.html.haml:42
 #: ../app/views/ops/_ap_form_registry.html.haml:100
 msgid "Click to delete this entry"
-msgstr "点击以删除这个条目"
+msgstr "点击以删除此条目"
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:63
 msgid "Click to delete this field from schema"
-msgstr "单击以从模式中删除这个字段"
+msgstr "单击以从模式中删除此字段"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:76
 msgid "Click to delete this forest"
@@ -58269,15 +58269,15 @@ msgstr "点击以删除此森林"
 #: ../app/views/miq_ae_class/_inputs.html.haml:17
 #: ../app/views/miq_ae_class/_embedded_methods.html.haml:40
 msgid "Click to delete this input field from method"
-msgstr "点击以从方法里删除这个输入字段"
+msgstr "点击以从方法里删除此输入字段"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:35
 msgid "Click to delete this mapping"
-msgstr "点击删除这个映射"
+msgstr "点击删除此映射"
 
 #: ../app/views/ops/_settings_co_categories_tab.html.haml:26
 msgid "Click to edit this category"
-msgstr "点击以编辑这个类别"
+msgstr "点击以编辑此类别"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:78
 #: ../app/views/ops/_ldap_forest_entries.html.haml:80
@@ -58290,11 +58290,11 @@ msgstr "单击以编辑此森林"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:25
 msgid "Click to edit this mapping rule"
-msgstr "点击以编辑这个映射规则"
+msgstr "点击以编辑此映射规则"
 
 #: ../app/javascript/angular/dashboard/widget-menu.js:22
 msgid "Click to go this location"
-msgstr "点击以进入这个位置"
+msgstr "点击以进入此位置"
 
 #: ../app/views/dashboard/login.html.haml:18
 msgid "Click to remove message"
@@ -58302,11 +58302,11 @@ msgstr "点击以移除消息"
 
 #: ../app/views/catalog/_form_resources_info.html.haml:50
 msgid "Click to remove this Resource from the Catalog Item"
-msgstr "点击以从目录条目移除这个资源"
+msgstr "点击以从目录条目移除此资源"
 
 #: ../app/views/layouts/_policy_sim.html.haml:41
 msgid "Click to remove this policy"
-msgstr "点击以移除这个策略"
+msgstr "点击以移除此策略"
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:71
 #: ../app/views/catalog/_form_basic_info.html.haml:174
@@ -58339,7 +58339,7 @@ msgstr "单击此目录项"
 #: ../app/views/ops/_ap_form_registry.html.haml:94
 #: ../app/views/ops/_ap_form_registry.html.haml:96
 msgid "Click to update this entry"
-msgstr "点击以更新这个条目"
+msgstr "点击以更新此条目"
 
 #: ../app/views/report/_db_list.html.haml:30
 msgid "Click to view %{group} "
@@ -58394,7 +58394,7 @@ msgstr "单击以在“%{domain_name}”域中查看此 %{model}"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:25
 msgid "Click to view this VM"
-msgstr "点击以查看这个虚拟机"
+msgstr "点击以查看此虚拟机"
 
 #: ../app/views/configuration/_ui_4.html.haml:20
 msgid "Click to view/edit Time Profile"
@@ -58423,15 +58423,15 @@ msgstr "克隆选择的项"
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:141
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:95
 msgid "Clone this Template"
-msgstr "克隆这个模板"
+msgstr "克隆此模板"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:128
 msgid "Clone this VM"
-msgstr "克隆这个虚拟机"
+msgstr "克隆此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:177
 msgid "Clone this item"
-msgstr "克隆这个项"
+msgstr "克隆此项"
 
 #: ./src/dialog-user/components/dialog-user/dialogField.html:148
 #: ./src/dialog-user/components/dialog-user/dialogField.html:168
@@ -59182,7 +59182,7 @@ msgstr "在它的区域内连接到虚拟机"
 
 #: ../app/helpers/textual_mixins/textual_region.rb:14
 msgid "Connect to this VM in its Region"
-msgstr "在它的区域内连接到这个虚拟机"
+msgstr "在它的区域内连接到此虚拟机"
 
 #: ../app/javascript/packs/remote_consoles_spice.js:52
 #: ../app/javascript/packs/remote_consoles_vnc.js:28
@@ -59348,16 +59348,16 @@ msgstr "用户已取消复制 %{record} 的操作"
 #:
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:19
 msgid "Copy Selected Customization Templates"
-msgstr "复制选择的定制模板"
+msgstr "复制选中的定制模板"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:18
 msgid "Copy Selected Dashboard"
-msgstr "复制选定的仪表板"
+msgstr "复制选中的仪表板"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:34
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:39
 msgid "Copy Selected Item"
-msgstr "复制选择的项目"
+msgstr "复制选中的项目"
 
 #:
 #: ../app/javascript/components/copy-catalog-form/copy-catalog-form.schema.js:36
@@ -59424,49 +59424,49 @@ msgstr "复制原始请求"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1953
 msgid "Copy selected %{record} was saved"
-msgstr "复制选定的 %{record} 已保存"
+msgstr "复制选中的 %{record} 已保存"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:49
 msgid "Copy selected Classes"
-msgstr "复制选择的类"
+msgstr "复制选中的类"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:50
 msgid "Copy selected Instances"
-msgstr "复制选择的实例"
+msgstr "复制选中的实例"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_methods_center.rb:45
 msgid "Copy selected Methods"
-msgstr "复制选择的方法"
+msgstr "复制选中的方法"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb:27
 msgid "Copy selected Orchestration Template"
-msgstr "复制选择的编排模板"
+msgstr "复制选中的编排模板"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:29
 msgid "Copy selected Time Profile"
-msgstr "复制选择的时间概要文件"
+msgstr "复制选中的时间概要文件"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:31
 msgid "Copy the selected Analysis Profiles"
-msgstr "复制选择的分析概要文件"
+msgstr "复制选中的分析概要文件"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rates_center.rb:30
 msgid "Copy the selected Chargeback Rate to a new Chargeback Rate"
-msgstr "把所选费率复制到一个新费率"
+msgstr "将所选计费费率复制到新的计费费率"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:28
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:28
 msgid "Copy the selected Dialog to a new Dialog"
-msgstr "把所选对话框复制到一个新对话框"
+msgstr "将所选对话框复制到新的对话框"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:29
 msgid "Copy the selected Policy"
-msgstr "复制选择的策略"
+msgstr "复制选中的策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:29
 msgid "Copy the selected Policy Alert"
-msgstr "复制选择的策略警报"
+msgstr "复制选中的策略警报"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:27
 msgid "Copy the selected Role to a new Role"
@@ -59478,11 +59478,11 @@ msgstr "把所选的用户复制到一个新用户"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:27
 msgid "Copy this %{policy_type} Policy"
-msgstr "复制该 %{policy_type} 策略"
+msgstr "复制此%{policy_type}策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:19
 msgid "Copy this Alert"
-msgstr "复制这个提示"
+msgstr "复制此提示"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rate_center.rb:19
 msgid "Copy this Chargeback Rate"
@@ -59493,39 +59493,39 @@ msgstr "复制此计费费率"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:18
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:18
 msgid "Copy this Class"
-msgstr "复制这个类"
+msgstr "复制此类"
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:19
 msgid "Copy this Condition to a new Condition"
-msgstr "把这个条件复制为一个新条件"
+msgstr "把此条件复制为一个新条件"
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:12
 msgid "Copy this Customization Template"
-msgstr "复制这个定制模板"
+msgstr "复制此定制模板"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:18
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:20
 msgid "Copy this Dialog"
-msgstr "复制这个对话框"
+msgstr "复制此对话框"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instance_center.rb:18
 msgid "Copy this Instance"
-msgstr "复制这个实例"
+msgstr "复制此实例"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_method_center.rb:16
 msgid "Copy this Method"
-msgstr "复制这个方法"
+msgstr "复制此方法"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_template_center.rb:25
 msgid "Copy this Orchestration Template"
-msgstr "复制这个编排模板"
+msgstr "复制此编排模板"
 
 #:
 #: ../app/helpers/application_helper/toolbar/stack_orchestration_template_center.rb:18
 msgid "Copy this Orchestration Template as orderable"
-msgstr "复制这个编排模板为可订购"
+msgstr "复制此编排模板为可订购"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:22
 msgid "Copy this Policy to new Policy [%{new_policy_description}]"
@@ -59533,15 +59533,15 @@ msgstr "复制该策略到新策略 [%{new_policy_description}]"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:32
 msgid "Copy this Report"
-msgstr "复制这个报告"
+msgstr "复制此报告"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:18
 msgid "Copy this Role to a new Role"
-msgstr "复制这个角色到一个新角色"
+msgstr "复制此角色到一个新角色"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:17
 msgid "Copy this User to a new User"
-msgstr "把这个用户复制到一个新用户"
+msgstr "把此用户复制到一个新用户"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:17
 msgid "Copy this Widget"
@@ -59549,7 +59549,7 @@ msgstr "复制此窗口小部件"
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:18
 msgid "Copy this selected Analysis Profile"
-msgstr "复制这个选择的分析概要文件"
+msgstr "复制此选择的分析概要文件"
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:42
 msgid "Copy to same path"
@@ -59663,7 +59663,7 @@ msgstr "为选定的云卷创建备份"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:12
 msgid "Create a Backup of this Cloud Volume"
-msgstr "创建这个云卷的备份"
+msgstr "创建此云卷的备份"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:46
 msgid "Create a Snapshot of selected Cloud Volume"
@@ -59671,16 +59671,16 @@ msgstr "为选定的云卷创建快照"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:32
 msgid "Create a Snapshot of this Cloud Volume"
-msgstr "创建这个云卷的快照"
+msgstr "创建此云卷的快照"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:113
 msgid "Create a new snapshot for this Instance"
-msgstr "为这个实例创建一个新快照"
+msgstr "为此实例创建一个新快照"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:77
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:6
 msgid "Create a new snapshot for this VM"
-msgstr "为这个虚拟机创建一个新快照"
+msgstr "为此虚拟机创建一个新快照"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb:12
@@ -60286,7 +60286,7 @@ msgstr "缺省认证"
 
 #: ../app/controllers/chargeback_rate_controller.rb:255
 msgid "Default Chargeback Rate \"%{name}\" cannot be edited."
-msgstr "无法编辑缺省计费率“%{name}”。"
+msgstr "无法编辑缺省计费费率“%{name}”。"
 
 #: ../app/helpers/application_helper/button/chargeback_rate_edit.rb:5
 msgid "Default Chargeback Rate cannot be edited."
@@ -60567,7 +60567,7 @@ msgstr "删除行"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:18
 msgid "Delete Selected Snapshot"
-msgstr "删除选择的快照"
+msgstr "删除选中的快照"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:23
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:23
@@ -60592,7 +60592,7 @@ msgstr "删除所有已完成的任务"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:30
 msgid "Delete all of this VMs existing snapshots?"
-msgstr "删除这个虚拟机现有的所有快照？"
+msgstr "删除此虚拟机现有的所有快照？"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:31
 msgid "Delete all selected Groups?"
@@ -60684,23 +60684,23 @@ msgstr "启动删除风格“%{name}”的操作成功。"
 
 #: ../app/controllers/report_controller.rb:756
 msgid "Delete selected Accordion and its contents"
-msgstr "删除所选的折叠菜单和其内容"
+msgstr "删除选中的折叠菜单和其内容"
 
 #: ../app/helpers/application_helper/toolbar/miq_actions_center.rb:29
 msgid "Delete selected Actions"
-msgstr "删除选择的操作"
+msgstr "删除选中的操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_sets_center.rb:31
 msgid "Delete selected Alert Profiles"
-msgstr "删除选择的警报概要文件"
+msgstr "删除选中的警报概要文件"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:23
 msgid "Delete selected Backups"
-msgstr "删除所选的备份"
+msgstr "删除选中的备份"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:42
 msgid "Delete selected Catalog Items"
-msgstr "删除选择的目录项"
+msgstr "删除选中的目录项"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:27
 msgid "Delete selected Cloud Tenants"
@@ -60712,7 +60712,7 @@ msgstr "删除所选云卷"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:29
 msgid "Delete selected Conditions"
-msgstr "删除选择的条件"
+msgstr "删除选中的条件"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:28
 msgid "Delete selected Groups"
@@ -60725,15 +60725,15 @@ msgstr "删除所选主机聚集"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:39
 msgid "Delete selected Policy Alerts"
-msgstr "删除选择的策略警报"
+msgstr "删除选中的策略警报"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:29
 msgid "Delete selected Policy Profiles"
-msgstr "删除选择的策略概要文件"
+msgstr "删除选中的策略概要文件"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:36
 msgid "Delete selected Roles"
-msgstr "删除选择的角色"
+msgstr "删除选中的角色"
 
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:21
 msgid "Delete selected Routers"
@@ -60741,15 +60741,15 @@ msgstr "删除所选路由器"
 
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb:21
 msgid "Delete selected Saved Reports"
-msgstr "删除选择的已保存报告"
+msgstr "删除选中的已保存报告"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:37
 msgid "Delete selected Time Profiles"
-msgstr "删除选择的时间概要文件"
+msgstr "删除选中的时间概要文件"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:36
 msgid "Delete selected Users"
-msgstr "删除选择的用户"
+msgstr "删除选中的用户"
 
 #: ../app/controllers/report_controller.rb:766
 #: ../app/views/report/_menu_form1.html.haml:23
@@ -60758,11 +60758,11 @@ msgstr "删除所选文件夹及其内容"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:22
 msgid "Delete selected items"
-msgstr "删除选择的项目"
+msgstr "删除选中的项目"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:22
 msgid "Delete selected tasks"
-msgstr "删除所选的任务"
+msgstr "删除选中的任务"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:32
 msgid "Delete tasks older than the selected task"
@@ -60783,44 +60783,44 @@ msgstr "删除名为 %{filter_name} 的过滤器"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:40
 msgid "Delete the selected Analysis Profiles"
-msgstr "删除所选的分析概要文件"
+msgstr "删除选中的分析概要文件"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:35
 msgid "Delete the selected Roles from the VMDB"
-msgstr "从 VMDB 删除所选的角色"
+msgstr "从 VMDB 删除选中的角色"
 
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:26
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:27
 msgid "Delete the selected Schedules"
-msgstr "删除所选的调度"
+msgstr "删除选中的调度"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:285
 msgid "Delete the selected items"
-msgstr "删除所选的项"
+msgstr "删除选中的项"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:290
 msgid "Delete the selected items?"
-msgstr "删除所选的项?"
+msgstr "删除选中的项?"
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:27
 msgid "Delete this %{condition_type} Condition"
-msgstr "删除该条件 %{condition_type} "
+msgstr "删除此%{condition_type}条件"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:40
 msgid "Delete this %{policy_type} Policy"
-msgstr "删除该 %{policy_type} 策略"
+msgstr "删除此%{policy_type}策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_action_center.rb:20
 msgid "Delete this Action"
-msgstr "删除这个操作"
+msgstr "删除此操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:26
 msgid "Delete this Alert"
-msgstr "删除这个警报"
+msgstr "删除此警报"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_set_center.rb:26
 msgid "Delete this Alert Profile"
-msgstr "删除这个警报概要文件"
+msgstr "删除此警报概要文件"
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:24
 msgid "Delete this Analysis Profile"
@@ -60832,7 +60832,7 @@ msgstr "删除此目录项"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:22
 msgid "Delete this Cloud Subnet"
-msgstr "删除这个云子网"
+msgstr "删除此云子网"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:69
 msgid "Delete this Cloud Volume"
@@ -60840,15 +60840,15 @@ msgstr "删除该云卷"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:25
 msgid "Delete this Dashboard from the Database"
-msgstr "从数据库删除这个仪表板"
+msgstr "从数据库删除此仪表板"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:24
 msgid "Delete this Floating IP"
-msgstr "删除这个浮动 IP"
+msgstr "删除此浮动 IP"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:18
 msgid "Delete this Group"
-msgstr "删除这个组"
+msgstr "删除此组"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:85
@@ -60862,32 +60862,32 @@ msgstr "删除该实例?"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:49
 msgid "Delete this Report from the Database"
-msgstr "从数据库删除这个报告"
+msgstr "从数据库删除此报告"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:20
 msgid "Delete this Request"
-msgstr "删除这个请求"
+msgstr "删除此请求"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:23
 msgid "Delete this Role"
-msgstr "删除这个角色"
+msgstr "删除此角色"
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:44
 msgid "Delete this Router"
-msgstr "删除这个路由器"
+msgstr "删除此路由器"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:38
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:21
 msgid "Delete this Saved Report from the Database"
-msgstr "从数据库删除这个保存的报告"
+msgstr "从数据库删除此保存的报告"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:17
 msgid "Delete this Schedule"
-msgstr "删除这个调度"
+msgstr "删除此调度"
 
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:17
 msgid "Delete this Schedule from the Database"
-msgstr "从数据库删除这个调度"
+msgstr "从数据库删除此调度"
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:24
 msgid "Delete this Security Group"
@@ -60903,7 +60903,7 @@ msgstr "删除此安全策略规则"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:23
 msgid "Delete this User"
-msgstr "删除这个用户"
+msgstr "删除此用户"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:22
 msgid "Delete this Widget from the Database"
@@ -60911,11 +60911,11 @@ msgstr "从数据库删除此窗口小部件"
 
 #: ../app/helpers/application_helper/toolbar/zone_center.rb:17
 msgid "Delete this Zone"
-msgstr "删除这个区"
+msgstr "删除此区"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:39
 msgid "Delete this item"
-msgstr "删除这个项"
+msgstr "删除此项"
 
 #: ../app/javascript/oldjs/controllers/mixins/charts-mixin.js:140
 #: ../app/javascript/oldjs/controllers/mixins/charts-mixin.js:156
@@ -60934,7 +60934,7 @@ msgstr "已启动从 %{product} 数据库删除超过 %{date} 的所有任务"
 
 #: ../app/views/ops/_classification_entry.html.haml:55
 msgid "Deleting the '%{entry_name}' entry will also unassign it from all items, are you sure?"
-msgstr "删除“%{entry_name}”条目也会从所有项目里取消分配这个条目，您确定吗？"
+msgstr "删除“%{entry_name}”条目也会从所有项目里取消分配此条目，您确定吗？"
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:31
 msgid "Deletion of item %s has been successfully initiated"
@@ -60951,7 +60951,7 @@ msgstr "已拒绝"
 
 #: ../app/helpers/application_helper/toolbar/miq_request_center.rb:48
 msgid "Deny this Request"
-msgstr "拒绝这个请求"
+msgstr "拒绝此请求"
 
 #. TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
@@ -61242,7 +61242,7 @@ msgstr "已禁用运行级别"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "取消浮动 IP 和这个实例的关联"
+msgstr "取消浮动 IP 和此实例的关联"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:92
 msgid "Disassociating Floating IP %{address} from Instance \"%{name}\""
@@ -61401,12 +61401,12 @@ msgstr "您要删除服务器 %{server_name} [%{server_id}] 吗？"
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:53
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:55
 msgid "Do you want to demote this Server to secondary?  This will leave no primary Server for this Role."
-msgstr "您要将这个服务器降为二级服务器吗？这会使这个角色没有主要服务器。"
+msgstr "您要将此服务器降为二级服务器吗？这会使此角色没有主要服务器。"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:60
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:63
 msgid "Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role."
-msgstr "您要将这个服务器提升为主服务器吗？这将替换这个角色的任何现有主服务器。"
+msgstr "您要将此服务器提升为主服务器吗？这将替换此角色的任何现有主服务器。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:195
 msgid "Docker Registry User Name and Password for SmartState Analysis on AWS"
@@ -61485,33 +61485,33 @@ msgstr "下载整个 EVM 日志文件"
 
 #: ../app/helpers/application_helper/toolbar/timeline_center.rb:13
 msgid "Download this Timeline data in CSV format"
-msgstr "以 CSV 格式下载这个时间线数据"
+msgstr "以 CSV 格式下载此时间线数据"
 
 #: ../app/helpers/application_helper/toolbar/timeline_center.rb:20
 msgid "Download this Timeline data in PDF format"
-msgstr "以 PDF 格式下载这个时间线数据"
+msgstr "以 PDF 格式下载此时间线数据"
 
 #: ../app/helpers/application_helper/toolbar/timeline_center.rb:6
 msgid "Download this Timeline data in text format"
-msgstr "以文本格式下载这个时间线数据"
+msgstr "以文本格式下载此时间线数据"
 
 #: ../app/helpers/application_helper/toolbar/download_view.rb:19
 #: ../app/helpers/application_helper/toolbar/miq_capacity_view.rb:21
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:19
 #: ../app/helpers/application_helper/toolbar/report_view.rb:55
 msgid "Download this report in CSV format"
-msgstr "以 CSV 格式下载这个报告"
+msgstr "以 CSV 格式下载此报告"
 
 #: ../app/helpers/application_helper/toolbar/download_view.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_capacity_view.rb:13
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:13
 #: ../app/helpers/application_helper/toolbar/report_view.rb:47
 msgid "Download this report in text format"
-msgstr "以文本格式下载这个报告"
+msgstr "以文本格式下载此报告"
 
 #: ../app/views/report/_widget_form_menu.html.haml:15
 msgid "Drag this Shortcut to a new location"
-msgstr "将这个快捷键拖至新位置"
+msgstr "将此快捷键拖至新位置"
 
 #: ../app/views/report/_db_widget.html.haml:5
 msgid "Drag/drop Widget \"%{widget_title}\""
@@ -61647,15 +61647,15 @@ msgstr "编辑选定用户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:37
 msgid "Edit '%{customer_name}' Tags for this Group"
-msgstr "编辑这个组的“%{customer_name}”标记"
+msgstr "编辑此组的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:58
 msgid "Edit '%{customer_name}' Tags for this Tenant"
-msgstr "编辑这个租户的“%{customer_name}”标记"
+msgstr "编辑此租户的“%{customer_name}”标记"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:42
 msgid "Edit '%{customer_name}' Tags for this User"
-msgstr "编辑这个用户的“%{customer_name}”标记"
+msgstr "编辑此用户的“%{customer_name}”标记"
 
 #: ../app/controllers/configuration_controller.rb:343
 msgid "Edit '%{description}'"
@@ -61667,11 +61667,11 @@ msgstr "编辑事件的操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_event_center.rb:12
 msgid "Edit Actions for this Policy Event"
-msgstr "为这个策略事件编辑操作"
+msgstr "编辑此策略事件的操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:72
 msgid "Edit Actions for this Policy's Event"
-msgstr "为这个策略事件编辑操作"
+msgstr "编辑此策略事件的操作"
 
 #: ../app/controllers/miq_alert_set_controller.rb:130
 msgid "Edit Alert Profile assignments cancelled by user"
@@ -61796,11 +61796,11 @@ msgstr "编辑所选定制模板"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domains_center.rb:19
 msgid "Edit Selected Domain"
-msgstr "编辑所选的域"
+msgstr "编辑选中的域"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:17
 msgid "Edit Selected Element"
-msgstr "编辑所选的元素"
+msgstr "编辑选中的元素"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:20
 msgid "Edit Selected Host Aggregate"
@@ -61835,15 +61835,15 @@ msgstr "编辑所选网络供应商"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:19
 msgid "Edit Selected PXE Servers"
-msgstr "编辑所选的 PXE 服务器"
+msgstr "编辑选中的 PXE 服务器"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:30
 msgid "Edit Selected Physical Infrastructure Providers"
-msgstr "编辑选定的物理基础架构供应商"
+msgstr "编辑选中的物理基础架构供应商"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:16
 msgid "Edit Selected Service"
-msgstr "编辑所选的服务"
+msgstr "编辑选中的服务"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:32
 msgid "Edit Selected Storage Manager"
@@ -61852,7 +61852,7 @@ msgstr "编辑所选存储管理器"
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:45
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:35
 msgid "Edit Selected Template"
-msgstr "编辑所选的模板"
+msgstr "编辑选中的模板"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:55
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:35
@@ -61865,7 +61865,7 @@ msgstr "编辑所选项"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:79
 msgid "Edit Selected items"
-msgstr "编辑所选的项目"
+msgstr "编辑选中的项目"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_sets_center.rb:19
 msgid "Edit Sequence of Dashboards"
@@ -62053,27 +62053,27 @@ msgstr "为这些服务编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ansible_credential_center.rb:43
 msgid "Edit Tags for this Ansible Credential"
-msgstr "为这个 Ansible 凭证编辑标签"
+msgstr "为此 Ansible 凭证编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ansible_playbook_center.rb:12
 msgid "Edit Tags for this Ansible Playbook"
-msgstr "为这个 Ansible Playbook 编辑标签"
+msgstr "为此 Ansible Playbook 编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb:64
 msgid "Edit Tags for this Ansible Repository"
-msgstr "为这个 Ansible 存储库编辑标签"
+msgstr "为此 Ansible 存储库编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/availability_zone_center.rb:12
 msgid "Edit Tags for this Availability Zone"
-msgstr "为这个可用性区域编辑标签"
+msgstr "为此可用性区域编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:73
 msgid "Edit Tags for this Catalog Item"
-msgstr "为这个目录项编辑标签"
+msgstr "为此目录项编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:48
 msgid "Edit Tags for this Cloud Network"
-msgstr "为这个云网络编辑标签"
+msgstr "为此云网络编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:60
 msgid "Edit Tags for this Cloud Provider"
@@ -62081,7 +62081,7 @@ msgstr "编辑此云供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:43
 msgid "Edit Tags for this Cloud Subnet"
-msgstr "为这个云子网编辑标签"
+msgstr "为此云子网编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:49
 msgid "Edit Tags for this Configuration Manager"
@@ -62096,27 +62096,27 @@ msgstr "编辑此配置管理器提供程序的标签"
 #: ../app/helpers/application_helper/toolbar/configured_systems_center.rb:30
 #: ../app/helpers/application_helper/toolbar/configured_system/automation/policy_mixin.rb:13
 msgid "Edit Tags for this Configured System"
-msgstr "为这个已配置系统编辑标签"
+msgstr "为此已配置系统编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/container_center.rb:42
 msgid "Edit Tags for this Container"
-msgstr "为这个容器编辑标签"
+msgstr "为此容器编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/container_build_center.rb:12
 msgid "Edit Tags for this Container Build"
-msgstr "为这个容器构建编辑标签"
+msgstr "为此容器构建编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/container_template_center.rb:30
 msgid "Edit Tags for this Container Template"
-msgstr "为这个模板编辑标签"
+msgstr "为此模板编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:98
 msgid "Edit Tags for this Containers Provider"
-msgstr "编辑这个容器供应商的标签"
+msgstr "编辑此容器供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:39
 msgid "Edit Tags for this Datastore"
-msgstr "编辑这个数据库的标签"
+msgstr "编辑此数据库的标签"
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:30
 msgid "Edit Tags for this Flavor"
@@ -62124,7 +62124,7 @@ msgstr "编辑此风格的标签"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:48
 msgid "Edit Tags for this Floating IP"
-msgstr "编辑这个浮动 IP 的标签"
+msgstr "编辑此浮动 IP 的标签"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_center.rb:12
 msgid "Edit Tags for this Generic Object Instance"
@@ -62132,12 +62132,12 @@ msgstr "编辑此通用对象实例的标签"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:63
 msgid "Edit Tags for this Host Aggregate"
-msgstr "编辑这个主机聚集的标签"
+msgstr "编辑此主机聚集的标签"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:88
 #: ../app/helpers/application_helper/toolbar/container_image_center.rb:30
 msgid "Edit Tags for this Image"
-msgstr "编辑这个镜像的标签"
+msgstr "编辑此镜像的标签"
 
 #:
 #: ../app/helpers/application_helper/toolbar/container_image_registry_center.rb:12
@@ -62146,7 +62146,7 @@ msgstr "编辑此镜像注册表的标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:73
 msgid "Edit Tags for this Infrastructure Provider"
-msgstr "编辑这个基础架构供应商的标签"
+msgstr "编辑此基础架构供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:140
 msgid "Edit Tags for this Instance"
@@ -62154,16 +62154,16 @@ msgstr "编辑此实例的标签"
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:29
 msgid "Edit Tags for this Job"
-msgstr "编辑这个作业的标签"
+msgstr "编辑此作业的标签"
 
 #:
 #: ../app/helpers/application_helper/toolbar/configuration_scripts/policy_mixin.rb:12
 msgid "Edit Tags for this Job Template"
-msgstr "编辑这个作业模板的标签"
+msgstr "编辑此作业模板的标签"
 
 #: ../app/helpers/application_helper/toolbar/network_port_center.rb:12
 msgid "Edit Tags for this Network Port"
-msgstr "编辑这个网络端口的标签"
+msgstr "编辑此网络端口的标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:53
 msgid "Edit Tags for this Network Provider"
@@ -62171,7 +62171,7 @@ msgstr "编辑此网络供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:82
 msgid "Edit Tags for this Network Router"
-msgstr "编辑这个网络路由器的标签"
+msgstr "编辑此网络路由器的标签"
 
 #: ../app/helpers/application_helper/toolbar/network_service_center.rb:14
 msgid "Edit Tags for this Network Service"
@@ -62180,16 +62180,16 @@ msgstr "编辑此网络服务的标签"
 #: ../app/helpers/application_helper/toolbar/container_project_center.rb:41
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:58
 msgid "Edit Tags for this Node"
-msgstr "编辑这个节点的标签"
+msgstr "编辑此节点的标签"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:29
 msgid "Edit Tags for this Orchestration Stack"
-msgstr "编辑这个编排堆栈的标签"
+msgstr "编辑此编排堆栈的标签"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_template_center.rb:47
 msgid "Edit Tags for this Orchestration Template"
-msgstr "编辑这个编排模板的标签"
+msgstr "编辑此编排模板的标签"
 
 #: ../app/helpers/application_helper/toolbar/persistent_volume_center.rb:12
 msgid "Edit Tags for this Persistent Volume"
@@ -62197,11 +62197,11 @@ msgstr "为该持久卷编辑标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:52
 msgid "Edit Tags for this Physical Infrastructure Provider"
-msgstr "编辑这个物理基础架构供应商的标签"
+msgstr "编辑此物理基础架构供应商的标签"
 
 #: ../app/helpers/application_helper/toolbar/container_group_center.rb:41
 msgid "Edit Tags for this Pod"
-msgstr "编辑这个容器舱的标签"
+msgstr "编辑此容器舱的标签"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_center.rb:27
 msgid "Edit Tags for this Pxe Image"
@@ -62221,11 +62221,11 @@ msgstr "编辑此资源池的标签"
 
 #: ../app/helpers/application_helper/toolbar/container_route_center.rb:12
 msgid "Edit Tags for this Route"
-msgstr "编辑这个路由的标签"
+msgstr "编辑此路由的标签"
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:46
 msgid "Edit Tags for this Security Group"
-msgstr "编辑这个安全组的标签"
+msgstr "编辑此安全组的标签"
 
 #: ../app/helpers/application_helper/toolbar/security_policy_center.rb:34
 msgid "Edit Tags for this Security Policy"
@@ -62243,12 +62243,12 @@ msgstr "编辑此服务的标签"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:52
 msgid "Edit Tags for this Storage Manager"
-msgstr "编辑这个存储管理者的标签"
+msgstr "编辑此存储管理者的标签"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:66
 #: ../app/helpers/application_helper/toolbar/configuration_script_center.rb:26
 msgid "Edit Tags for this Template"
-msgstr "编辑这个模板的标签"
+msgstr "编辑此模板的标签"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:106
 msgid "Edit Tags for this VM"
@@ -62261,7 +62261,7 @@ msgstr "编辑此 Windows 映像的标签"
 #: ../app/helpers/application_helper/toolbar/host_center.rb:84
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:40
 msgid "Edit Tags for this item"
-msgstr "编辑这个项目的标签"
+msgstr "编辑此项目的标签"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:58
 msgid "Edit Tags selected Pxe Servers"
@@ -62293,7 +62293,7 @@ msgstr "编辑中止！%{product} 不支持浏览器的“返回”按钮或从�
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_set_center.rb:19
 msgid "Edit assignments for this Alert Profile"
-msgstr "编辑这个警报概要文件的分配"
+msgstr "编辑此警报概要文件的分配"
 
 #:
 #: ../app/javascript/oldjs/components/generic_object/generic-object-definition.js:77
@@ -62385,7 +62385,7 @@ msgstr "用户已取消针对类别“%{name}”的编辑"
 
 #: ../app/controllers/chargeback_rate_controller.rb:190
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
-msgstr "用户已取消针对计费率“%{name}”的编辑"
+msgstr "用户已取消针对计费费率“%{name}”的编辑"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2521
 msgid "Edit of Class Schema Sequence '%{name}'"
@@ -62653,36 +62653,36 @@ msgstr "编辑所选项的标签"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:36
 msgid "Edit tags for this Cloud Object"
-msgstr "编辑这个云对象的标签"
+msgstr "编辑此云对象的标签"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:49
 msgid "Edit tags for this Cloud Object Store"
-msgstr "编辑这个云对象存储库的标签"
+msgstr "编辑此云对象存储库的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenant_center.rb:32
 msgid "Edit tags for this Cloud Tenant"
-msgstr "编辑这个云租户的标签"
+msgstr "编辑此云租户的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:97
 msgid "Edit tags for this Cloud Volume"
-msgstr "编辑这个云卷的标签"
+msgstr "编辑此云卷的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backup_center.rb:30
 msgid "Edit tags for this Cloud Volume Backup"
-msgstr "编辑这个云卷备份的标签"
+msgstr "编辑此云卷备份的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb:28
 msgid "Edit tags for this Cloud Volume Snapshot"
-msgstr "编辑这个云卷快照的标签"
+msgstr "编辑此云卷快照的标签"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_type_center.rb:12
 msgid "Edit tags for this Cloud Volume Type"
-msgstr "编辑这个云卷类型的标签"
+msgstr "编辑此云卷类型的标签"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:48
 msgid "Edit tags for this Key Pair"
-msgstr "编辑这个密钥对的标签"
+msgstr "编辑此密钥对的标签"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:85
 msgid "Edit the Log Depot settings for the selected Server"
@@ -62698,77 +62698,77 @@ msgstr "编辑原始请求"
 
 #: ../app/helpers/application_helper/toolbar/miq_actions_center.rb:19
 msgid "Edit the selected Action"
-msgstr "编辑选择的操作"
+msgstr "编辑选中的操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_sets_center.rb:21
 msgid "Edit the selected Alert Profile"
-msgstr "编辑选择的警报概要文件"
+msgstr "编辑选中的警报概要文件"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:22
 msgid "Edit the selected Analysis Profiles"
-msgstr "编辑选择的分析概要文件"
+msgstr "编辑选中的分析概要文件"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rates_center.rb:19
 msgid "Edit the selected Chargeback Rate"
-msgstr "编辑选择的计费费率"
+msgstr "编辑选中的计费费率"
 
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:19
 msgid "Edit the selected Condition"
-msgstr "编辑选择的条件"
+msgstr "编辑选中的条件"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:18
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:18
 msgid "Edit the selected Dialog"
-msgstr "编辑所选的对话框"
+msgstr "编辑选中的对话框"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:18
 msgid "Edit the selected Group"
-msgstr "编辑选择的组"
+msgstr "编辑选中的组"
 
 #: ../app/helpers/application_helper/toolbar/miq_policies_center.rb:19
 msgid "Edit the selected Policy"
-msgstr "编辑选择的策略"
+msgstr "编辑选中的策略"
 
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:19
 msgid "Edit the selected Policy Alert"
-msgstr "编辑选择的策略警报"
+msgstr "编辑选中的策略警报"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:19
 msgid "Edit the selected Policy Profile"
-msgstr "编辑选择的策略概要文件"
+msgstr "编辑选中的策略概要文件"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:18
 msgid "Edit the selected Role"
-msgstr "编辑选择的角色"
+msgstr "编辑选中的角色"
 
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:17
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:18
 msgid "Edit the selected Schedule"
-msgstr "编辑选择的调度"
+msgstr "编辑选中的调度"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:19
 msgid "Edit the selected System Image Type"
-msgstr "编辑选择的系统镜像类型"
+msgstr "编辑选中的系统镜像类型"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:18
 msgid "Edit the selected User"
-msgstr "编辑选择的用户"
+msgstr "编辑选中的用户"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:13
 msgid "Edit the selected item"
-msgstr "编辑所选的项目"
+msgstr "编辑选中的项目"
 
 #: ../app/helpers/application_helper/toolbar/miq_action_center.rb:12
 msgid "Edit this Action"
-msgstr "编辑这个操作"
+msgstr "编辑此操作"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:12
 msgid "Edit this Alert"
-msgstr "编辑这个警报"
+msgstr "编辑此警报"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_set_center.rb:12
 msgid "Edit this Alert Profile"
-msgstr "编辑这个警报概要文件"
+msgstr "编辑此警报概要文件"
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:12
 msgid "Edit this Analysis Profile"
@@ -62795,11 +62795,11 @@ msgstr "编辑此计费费率"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:12
 msgid "Edit this Class"
-msgstr "编辑这个类"
+msgstr "编辑此类"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:14
 msgid "Edit this Cloud Network"
-msgstr "编辑这个云网络"
+msgstr "编辑此云网络"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:32
 msgid "Edit this Cloud Provider"
@@ -62807,15 +62807,15 @@ msgstr "编辑此云供应商"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:12
 msgid "Edit this Cloud Subnet"
-msgstr "编辑这个云子网"
+msgstr "编辑此云子网"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:61
 msgid "Edit this Cloud Volume"
-msgstr "编辑这个云卷"
+msgstr "编辑此云卷"
 
 #: ../app/helpers/application_helper/toolbar/condition_center.rb:12
 msgid "Edit this Condition"
-msgstr "编辑这个条件"
+msgstr "编辑此条件"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:33
 msgid "Edit this Containers Provider"
@@ -62829,20 +62829,20 @@ msgstr "编辑此凭证"
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:18
 msgid "Edit this Customization Template"
-msgstr "编辑这个定制模板"
+msgstr "编辑此定制模板"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:12
 msgid "Edit this Dashboard"
-msgstr "编辑这个仪表板"
+msgstr "编辑此仪表板"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:12
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:12
 msgid "Edit this Dialog"
-msgstr "编辑这个对话框"
+msgstr "编辑此对话框"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:12
 msgid "Edit this Domain"
-msgstr "编辑这个域"
+msgstr "编辑此域"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:11
@@ -62851,15 +62851,15 @@ msgstr "编辑此通用对象定义"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:12
 msgid "Edit this Group"
-msgstr "编辑这个组"
+msgstr "编辑此组"
 
 #: ../app/helpers/application_helper/toolbar/iso_image_center.rb:12
 msgid "Edit this ISO Image"
-msgstr "编辑这个 ISO 镜像"
+msgstr "编辑此 ISO 镜像"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:26
 msgid "Edit this Image"
-msgstr "编辑这个镜像"
+msgstr "编辑此镜像"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:25
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:32
@@ -62869,66 +62869,66 @@ msgstr "编辑此基础架构供应商"
 #: ../app/helpers/application_helper/toolbar/miq_ae_instance_center.rb:12
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:26
 msgid "Edit this Instance"
-msgstr "编辑这个实例"
+msgstr "编辑此实例"
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:13
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:32
 msgid "Edit this Item"
-msgstr "编辑这个项目"
+msgstr "编辑此项目"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_method_center.rb:11
 msgid "Edit this Method"
-msgstr "编辑这个方法"
+msgstr "编辑此方法"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:12
 msgid "Edit this Namespace"
-msgstr "编辑这个名称空间"
+msgstr "编辑此名称空间"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:25
 msgid "Edit this Network Provider"
-msgstr "编辑这个网络供应商"
+msgstr "编辑此网络供应商"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_template_center.rb:18
 msgid "Edit this Orchestration Template"
-msgstr "编辑这个编排模板"
+msgstr "编辑此编排模板"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_center.rb:12
 msgid "Edit this PXE Image"
-msgstr "编辑这个 PXE 镜像"
+msgstr "编辑此 PXE 镜像"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:12
 msgid "Edit this PXE Server"
-msgstr "编辑这个 PXE 服务器"
+msgstr "编辑此 PXE 服务器"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_set_center.rb:12
 msgid "Edit this Policy Profile"
-msgstr "编辑这个策略概要文件"
+msgstr "编辑此策略概要文件"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:54
 msgid "Edit this Policy's Condition assignments"
-msgstr "编辑这个策略的条件分配"
+msgstr "编辑此策略的条件分配"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:63
 msgid "Edit this Policy's Event assignments"
-msgstr "编辑这个策略的事件分配"
+msgstr "编辑此策略的事件分配"
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_provider_center.rb:23
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:21
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:21
 msgid "Edit this Provider"
-msgstr "编辑这个供应商"
+msgstr "编辑此供应商"
 
 #: ../app/views/ops/_settings_details_tab.html.haml:14
 #: ../app/views/ops/_settings_details_tab.html.haml:18
 msgid "Edit this Region"
-msgstr "编辑这个区域"
+msgstr "编辑此区域"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:26
 msgid "Edit this Report"
-msgstr "编辑这个报告"
+msgstr "编辑此报告"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:43
 #: ../app/helpers/application_helper/toolbar/ansible_repository_center.rb:33
@@ -62937,20 +62937,20 @@ msgstr "编辑此存储库"
 
 #: ../app/helpers/application_helper/toolbar/user_role_center.rb:12
 msgid "Edit this Role"
-msgstr "编辑这个角色"
+msgstr "编辑此角色"
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:14
 msgid "Edit this Router"
-msgstr "编辑这个路由器"
+msgstr "编辑此路由器"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:12
 msgid "Edit this Schedule"
-msgstr "编辑这个调度"
+msgstr "编辑此调度"
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:14
 msgid "Edit this Security Group"
-msgstr "编辑这个安全组"
+msgstr "编辑此安全组"
 
 #: ../app/helpers/application_helper/toolbar/security_policies_center.rb:14
 msgid "Edit this Security Policy"
@@ -62962,7 +62962,7 @@ msgstr "编辑此安全策略规则"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:12
 msgid "Edit this Service"
-msgstr "编辑这个服务"
+msgstr "编辑此服务"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:24
 msgid "Edit this Storage Manager"
@@ -62970,19 +62970,19 @@ msgstr "编辑此存储管理器"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:12
 msgid "Edit this System Image Type"
-msgstr "编辑这个系统镜像类型"
+msgstr "编辑此系统镜像类型"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:27
 msgid "Edit this Template"
-msgstr "编辑这个模板"
+msgstr "编辑此模板"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:12
 msgid "Edit this User"
-msgstr "编辑这个用户"
+msgstr "编辑此用户"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:35
 msgid "Edit this VM"
-msgstr "编辑这个虚拟机"
+msgstr "编辑此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:12
 msgid "Edit this Widget"
@@ -62994,16 +62994,16 @@ msgstr "编辑此窗口小部件以配置定时器。"
 
 #: ../app/helpers/application_helper/toolbar/windows_image_center.rb:12
 msgid "Edit this Windows Image"
-msgstr "编辑这个 Windows 镜像"
+msgstr "编辑此 Windows 镜像"
 
 #: ../app/helpers/application_helper/toolbar/zone_center.rb:12
 msgid "Edit this Zone"
-msgstr "编辑这个区"
+msgstr "编辑此区"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:28
 #: ../app/helpers/application_helper/toolbar/host_center.rb:48
 msgid "Edit this item"
-msgstr "编辑这个项目"
+msgstr "编辑此项目"
 
 #: ../app/controllers/ops_controller.rb:656
 #: ../app/controllers/ops_controller.rb:720
@@ -63888,15 +63888,15 @@ msgstr "导出"
 
 #: ../app/views/miq_policy_export/_export.html.haml:67
 msgid "Export Selected Alerts"
-msgstr "导出选择的警报"
+msgstr "导出选中的警报"
 
 #: ../app/views/miq_policy_export/_export.html.haml:64
 msgid "Export Selected Policies"
-msgstr "导出选择的策略"
+msgstr "导出选中的策略"
 
 #: ../app/views/miq_policy_export/_export.html.haml:61
 msgid "Export Selected Profiles"
-msgstr "导出选择的配置文件"
+msgstr "导出选中的配置文件"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:67
 msgid "Export all classes and instances"
@@ -63995,11 +63995,11 @@ msgstr "为选择的项目抽取运行的进程吗？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:26
 msgid "Extract Running Processes for this VM"
-msgstr "为这个虚拟机上抽取运行的进程"
+msgstr "为此虚拟机上抽取运行的进程"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:28
 msgid "Extract Running Processes for this VM?"
-msgstr "为这个虚拟机上抽取运行的进程吗？"
+msgstr "为此虚拟机上抽取运行的进程吗？"
 
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:5
@@ -64601,7 +64601,7 @@ msgstr "组 (%{groups_count})"
 
 #: ../app/views/ops/_rbac_role_details.html.haml:52
 msgid "Groups Using this Role"
-msgstr "使用这个角色的组"
+msgstr "使用此角色的组"
 
 #: ../app/views/ops/_ap_form_registry.html.haml:25
 #: ../app/views/ops/_ap_form_registry.html.haml:55
@@ -64646,12 +64646,12 @@ msgstr "在所选项上硬重启访客操作系统？"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:77
 msgid "Hard Reboot the Guest OS on this Instance"
-msgstr "在这个实例上硬重启访客操作系统"
+msgstr "在此实例上硬重启访客操作系统"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:80
 msgid "Hard Reboot the Guest OS on this Instance?"
-msgstr "在这个实例上硬重启访客操作系统？"
+msgstr "在此实例上硬重启访客操作系统？"
 
 #: src/report-editor/formatting-table.jsx:62
 msgid "Header"
@@ -64780,7 +64780,7 @@ msgstr "主机发起者定义"
 
 #: ../app/controllers/mixins/policy_mixin.rb:93
 msgid "Host is required"
-msgstr "需要主机"
+msgstr "主机为必填项"
 
 #: ../app/views/host/_form.html.haml:45
 msgid "Host platform"
@@ -65246,19 +65246,19 @@ msgstr "为选择的项启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:95
 msgid "Initiate Check Compliance of the last known configuration for this Image?"
-msgstr "为这个镜像启动对最后已知配置的合规性检查?"
+msgstr "为此镜像启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:147
 msgid "Initiate Check Compliance of the last known configuration for this Instance?"
-msgstr "为这个实例启动对最后已知配置的合规性检查?"
+msgstr "为此实例启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:73
 msgid "Initiate Check Compliance of the last known configuration for this Template?"
-msgstr "为这个模板启动对最后已知配置的合规性检查?"
+msgstr "为此模板启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:113
 msgid "Initiate Check Compliance of the last known configuration for this VM?"
-msgstr "为这个虚拟机启动对最后已知配置的合规性检查?"
+msgstr "为此虚拟机启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:110
 #: ../app/helpers/application_helper/toolbar/container_image_center.rb:42
@@ -65270,7 +65270,7 @@ msgstr "为这个虚拟机启动对最后已知配置的合规性检查?"
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:67
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:80
 msgid "Initiate Check Compliance of the last known configuration for this item?"
-msgstr "为这个项启动对最后已知配置的合规性检查?"
+msgstr "为此项启动对最后已知配置的合规性检查?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_performance.rb:8
 #: ../app/helpers/application_helper/toolbar/vm_performance.rb:8
@@ -65373,11 +65373,11 @@ msgstr "是否要检视所选项目？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:33
 msgid "Introspect this item"
-msgstr "检视这个项目"
+msgstr "检视此项目"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:35
 msgid "Introspect this item?"
-msgstr "是否要检视这个项目？"
+msgstr "是否要检视此项目？"
 
 #: ../app/helpers/host_helper/textual_summary.rb:507
 msgid "Introspected"
@@ -65923,7 +65923,7 @@ msgstr "指定并上传文件以启动导入过程"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:31
 msgid "Lock this Domain"
-msgstr "锁定这个域"
+msgstr "锁定此域"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2676
 #: ../app/views/report/_db_form.html.haml:33
@@ -66022,7 +66022,7 @@ msgstr "注销"
 #: ../app/controllers/ops_controller/diagnostics.rb:744
 #: ../app/controllers/ops_controller/diagnostics.rb:750
 msgid "Logs for this %{product} Server are not available for viewing"
-msgstr "无法查看这个 %{product} 服务器的日志"
+msgstr "无法查看此 %{product} 服务器的日志"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:66
 msgid "Long Description is required"
@@ -66108,7 +66108,7 @@ msgstr "维护模式"
 
 #: ../app/helpers/application_helper/button/host_toggle_maintenance.rb:4
 msgid "Maintenance mode is not supported for this host"
-msgstr "这个主机不支持维护模式"
+msgstr "此主机不支持维护模式"
 
 #: ../app/controllers/application_controller/compare.rb:1265
 #: ../app/views/shared/_compare_header_expanded.html.haml:7
@@ -66236,7 +66236,7 @@ msgstr "管理此物理基础架构供应商的策略"
 
 #: ../app/helpers/application_helper/toolbar/container_group_center.rb:46
 msgid "Manage Policies for this Pod"
-msgstr "管理这个 Pod 的策略"
+msgstr "管理此 Pod 的策略"
 
 #: ../app/helpers/application_helper/toolbar/container_replicator_center.rb:43
 msgid "Manage Policies for this Replicator"
@@ -66579,11 +66579,11 @@ msgstr "把选择的项迁移到另外的主机/数据存储区"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:143
 msgid "Migrate this VM"
-msgstr "迁移这个虚拟机"
+msgstr "迁移此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:142
 msgid "Migrate this VM to another Host/Datastore"
-msgstr "把这个虚拟机迁移到另外的主机/数据存储区"
+msgstr "把此虚拟机迁移到另外的主机/数据存储区"
 
 #: ../app/helpers/textual_mixins/textual_os_info.rb:43
 msgid "Min Password Age"
@@ -66643,7 +66643,7 @@ msgstr "模态"
 
 #: ../app/controllers/miq_alert_set_controller.rb:46
 msgid "Mode is required"
-msgstr "模式是必需的"
+msgstr "模式为必填项"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Modification of Cloud Tenant %s has been successfully queued"
@@ -66751,7 +66751,7 @@ msgstr "上移所选的操作"
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
 msgid "Move selected Actions into this Event"
-msgstr "移动所选的操作至这个事件"
+msgstr "移动所选的操作至此事件"
 
 #: ../app/views/miq_action/_action_options.html.haml:153
 msgid "Move selected Alerts into this Action"
@@ -66759,16 +66759,16 @@ msgstr "移动所选的警报至此操作"
 
 #: ../app/views/miq_alert_set/_form.html.haml:45
 msgid "Move selected Alerts into this Profile"
-msgstr "移动所选的警报至这个概要文件"
+msgstr "移动所选的警报至此概要文件"
 
 #: ../app/views/miq_policy/_miq_policy_edit_conditions.haml:30
 #: ../app/views/miq_policy/_form.html.haml:86
 msgid "Move selected Conditions into this Policy"
-msgstr "移动所选的条件至这个策略"
+msgstr "移动所选的条件至此策略"
 
 #: ../app/views/miq_policy_set/_form.html.haml:36
 msgid "Move selected Policies into this Profile"
-msgstr "移动所选的策略至这个概要文件"
+msgstr "移动所选的策略至此概要文件"
 
 #: ../app/views/vm_common/_form.html.haml:88
 msgid "Move selected VMs to left"
@@ -67446,7 +67446,7 @@ msgstr "每日数据不可用"
 
 #: ../app/views/report/_db_list.html.haml:38
 msgid "No Dashboards are defined for this group. Default dashboard will be shown."
-msgstr "没有为这个组定义仪表板。将显示缺省的仪表板。"
+msgstr "没有为此组定义仪表板。将显示缺省的仪表板。"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:55
 msgid "No Datastores found in the current region."
@@ -67538,7 +67538,7 @@ msgstr "没有可用的策略概要文件。"
 
 #: ../app/views/miq_policy/show.html.haml:44
 msgid "No Policy scope defined, the scope of this policy includes all elements."
-msgstr "没有定义策略作用域，这个策略的作用域包含所有元素。"
+msgstr "没有定义策略作用域，此策略的作用域包含所有元素。"
 
 #: ../app/helpers/application_helper/button/iso_datastore_new.rb:4
 msgid "No Providers are available to create an ISO Datastore on"
@@ -67664,7 +67664,7 @@ msgstr "没有可用的利用率数据"
 
 #: ../app/views/ops/_diagnostics_utilization_tab.html.haml:8
 msgid "No Utilization data available for this Server's Virtual Machine."
-msgstr "这个服务器的虚拟机没有可用的利用率数据。"
+msgstr "此服务器的虚拟机没有可用的利用率数据。"
 
 #: ../app/controllers/miq_policy_rsop_controller.rb:63
 msgid "No VMs match the selection criteria"
@@ -67775,7 +67775,7 @@ msgstr "没有选择计算节点进行缩减"
 
 #: ../app/views/miq_policy/show.html.haml:50
 msgid "No conditions defined. This policy is unconditional and will ALWAYS return true."
-msgstr "没有定义条件。这个策略是无条件的且总是返回 true。"
+msgstr "没有定义条件。此策略是无条件的且总是返回 true。"
 
 #: ../app/views/ops/_settings_custom_logos_tab.html.haml:99
 msgid "No custom favicon has been uploaded yet."
@@ -67817,11 +67817,11 @@ msgstr "此 %{model} 没有可用的事件"
 #: ../app/controllers/application_controller/performance.rb:346
 #: ../app/controllers/application_controller/performance.rb:387
 msgid "No events available for this Cluster"
-msgstr "这个集群没有可用的事件"
+msgstr "此集群没有可用的事件"
 
 #: ../app/controllers/application_controller/timelines.rb:24
 msgid "No events available for this timeline"
-msgstr "这个时间线没有可用的事件"
+msgstr "此时间线没有可用的事件"
 
 #: ../app/controllers/report_controller/reports/editor.rb:807
 msgid "No fields were moved up"
@@ -67956,11 +67956,11 @@ msgstr "没有为 %{task} 选择供应商"
 #: ../app/helpers/application_helper/button/chargeback_report_only.rb:3
 #: ../app/views/report/_report_list.html.haml:98
 msgid "No records found for this report"
-msgstr "没有找到这个报告的记录"
+msgstr "没有找到此报告的记录"
 
 #: ../app/controllers/application_controller/timelines.rb:175
 msgid "No records found for this timeline"
-msgstr "没有找到这个时间线的记录"
+msgstr "没有找到此时间线的记录"
 
 #:
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js:81
@@ -67987,7 +67987,7 @@ msgstr "未找到模式"
 
 #: ../app/views/condition/show.html.haml:36
 msgid "No scope defined, the scope of this condition includes all elements."
-msgstr "没有定义作用域，这个条件的作用域涵盖所有元素。"
+msgstr "没有定义作用域，此条件的作用域涵盖所有元素。"
 
 #: ../app/views/layouts/_tl_options.html.haml:42
 msgid "No severity selected"
@@ -67995,7 +67995,7 @@ msgstr "未选择严重性"
 
 #: ../app/javascript/angular/dashboard/widget-menu.js:18
 msgid "No shortcuts are authorized for this user, contact your Administrator"
-msgstr "没有为这个用户授权快捷键，请联系您的管理员。"
+msgstr "没有为此用户授权快捷键，请联系您的管理员。"
 
 #:
 #: ../app/helpers/application_helper/button/cloud_object_store_container_new.rb:5
@@ -68559,7 +68559,7 @@ msgstr "仅可重新排序大于一个定制按钮组"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:128
 msgid "Open Admin UI for this Infrastructure Provider"
-msgstr "为这个基础架构供应商打开管理 UI"
+msgstr "为此基础架构供应商打开管理 UI"
 
 #: ../app/views/shared/buttons/_ab_show.html.haml:51
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:74
@@ -68568,7 +68568,7 @@ msgstr "打开 URL"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:276
 msgid "Open a VMRC console for this VM.  This requires that VMRC is installed and pre-configured to work in your browser."
-msgstr "打开这个虚拟机的 VMRC 控制台。要在您的浏览器里使用它，您需要对 VMRC 进行预配置。"
+msgstr "打开此虚拟机的 VMRC 控制台。要在您的浏览器里使用它，您需要对 VMRC 进行预配置。"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:286
 msgid "Open a native console for this VM"
@@ -68578,7 +68578,7 @@ msgstr "为此 VM 打开本机控制台"
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:78
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:112
 msgid "Open a new browser window with Cockpit for this VM.  This requires that Cockpit is pre-configured on the VM."
-msgstr "使用 Cockpit 在这个 VM 中打开新浏览器窗口。这要求在该 VM 中预先配置 Cockpit。"
+msgstr "使用 Cockpit 在此 VM 中打开新浏览器窗口。这要求在该 VM 中预先配置 Cockpit。"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:79
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:39
@@ -68587,16 +68587,16 @@ msgstr "利用外部日志记录表示 UI 打开一个新的浏览器窗口。�
 
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb:120
 msgid "Open a remote console for this Physical Server"
-msgstr "为这个物理服务器打开远程控制台"
+msgstr "为此物理服务器打开远程控制台"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:267
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:104
 msgid "Open a web-based HTML5 console for this VM"
-msgstr "打开这个虚拟机的基于 web 的 HTML5 控制台"
+msgstr "打开此虚拟机的基于 web 的 HTML5 控制台"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:90
 msgid "Open a web-based console for this provider"
-msgstr "为这个供应商打开基于 Web 的控制台"
+msgstr "为此供应商打开基于 Web 的控制台"
 
 #: ../app/views/ops/_settings_help_menu_tab.html.haml:17
 msgid "Open in"
@@ -68604,7 +68604,7 @@ msgstr "打开于"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:94
 msgid "Open management console for this provider"
-msgstr "为这个供应商打开管理控制台"
+msgstr "为此供应商打开管理控制台"
 
 #: ../app/helpers/application_helper/toolbar/configuration_profile_center.rb:12
 msgid "Open the Configuration Profile console"
@@ -69160,51 +69160,51 @@ msgstr "在所选的项中执行智能状态分析?"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:12
 msgid "Perform SmartState Analysis on this Datastore"
-msgstr "在这个数据存储区中执行智能状态分析"
+msgstr "在此数据存储区中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:14
 msgid "Perform SmartState Analysis on this Datastore?"
-msgstr "在这个数据存储区中执行智能状态分析？"
+msgstr "在此数据存储区中执行智能状态分析？"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:18
 msgid "Perform SmartState Analysis on this Image"
-msgstr "在这个镜像中执行智能状态分析"
+msgstr "在此镜像中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:20
 msgid "Perform SmartState Analysis on this Image?"
-msgstr "在这个镜像中执行智能状态分析?"
+msgstr "在此镜像中执行智能状态分析?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:18
 msgid "Perform SmartState Analysis on this Instance"
-msgstr "在这个实例中执行智能状态分析"
+msgstr "在此实例中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:20
 msgid "Perform SmartState Analysis on this Instance?"
-msgstr "在这个实例中执行智能状态分析?"
+msgstr "在此实例中执行智能状态分析?"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:19
 msgid "Perform SmartState Analysis on this Template"
-msgstr "在这个模板中执行智能状态分析"
+msgstr "在此模板中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:21
 msgid "Perform SmartState Analysis on this Template?"
-msgstr "在这个模板中执行智能状态分析？"
+msgstr "在此模板中执行智能状态分析？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:21
 msgid "Perform SmartState Analysis on this VM?"
-msgstr "在这个虚拟机中执行智能状态分析？"
+msgstr "在此虚拟机中执行智能状态分析？"
 
 #: ../app/helpers/application_helper/toolbar/container_image_center.rb:12
 #: ../app/helpers/application_helper/toolbar/host_center.rb:19
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:12
 msgid "Perform SmartState Analysis on this item"
-msgstr "在这个项中执行智能状态分析"
+msgstr "在此项中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/container_image_center.rb:14
 #: ../app/helpers/application_helper/toolbar/host_center.rb:21
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:14
 msgid "Perform SmartState Analysis on this item?"
-msgstr "在这个项中执行智能状态分析？"
+msgstr "在此项中执行智能状态分析？"
 
 #: ../app/views/report/_form_columns_performance.html.haml:20
 msgid "Performance Interval"
@@ -69532,19 +69532,19 @@ msgstr "关闭选择的项?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:230
 msgid "Power Off this VM"
-msgstr "关闭这个虚拟机"
+msgstr "关闭此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:233
 msgid "Power Off this VM?"
-msgstr "关闭这个虚拟机?"
+msgstr "关闭此虚拟机?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:194
 msgid "Power Off this item"
-msgstr "关闭这个项"
+msgstr "关闭此项"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:197
 msgid "Power Off this item?"
-msgstr "关闭这个项?"
+msgstr "关闭此项?"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:262
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:200
@@ -69558,19 +69558,19 @@ msgstr "打开选择的项?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:221
 msgid "Power On this VM"
-msgstr "打开这个虚拟机"
+msgstr "打开此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:224
 msgid "Power On this VM?"
-msgstr "打开这个虚拟机?"
+msgstr "打开此虚拟机?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:185
 msgid "Power On this item"
-msgstr "打开这个项"
+msgstr "打开此项"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:188
 msgid "Power On this item?"
-msgstr "打开这个项?"
+msgstr "打开此项?"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:231
 #: ../app/helpers/application_helper/toolbar/physical_servers_center.rb:36
@@ -69752,7 +69752,7 @@ msgstr "打印或导出摘要"
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:25
 #: ../app/helpers/application_helper/toolbar/report_view.rb:63
 msgid "Print or export this report in PDF format"
-msgstr "以 PDF 格式打印或导出这个报告"
+msgstr "以 PDF 格式打印或导出此报告"
 
 #: ../app/presenters/widget_presenter.rb:70
 msgid "Print or export to PDF"
@@ -69891,11 +69891,11 @@ msgstr "是否提供所选项？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:40
 msgid "Provide this item"
-msgstr "提供这个项目"
+msgstr "提供此项目"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:42
 msgid "Provide this item?"
-msgstr "是否提供这个项目？"
+msgstr "是否提供此项目？"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:277
 msgid "Provider Tag Mapping \"%{name}\" was added"
@@ -69924,7 +69924,7 @@ msgstr "需要供应商，请从列表中选择一位"
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml:199
 msgid "Provider no longer exists, this alert must be reconfigured"
-msgstr "供应商不再存在，必须重新配置这个警报。"
+msgstr "供应商不再存在，必须重新配置此警报。"
 
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:29
@@ -70055,7 +70055,7 @@ msgstr "发布选择的虚拟机为一个模板"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:135
 msgid "Publish this VM to a Template"
-msgstr "发布这个虚拟机为一个模板"
+msgstr "发布此虚拟机为一个模板"
 
 #: ../app/helpers/report_helper.rb:16
 msgid "Purple Background"
@@ -70067,11 +70067,11 @@ msgstr "紫色文本"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:139
 msgid "Put this item into Maintenance Mode"
-msgstr "把这个项设置为维护模式"
+msgstr "把此项设置为维护模式"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:142
 msgid "Put this item into Maintenance Mode?"
-msgstr "把这个项设置为维护模式?"
+msgstr "把此项设置为维护模式?"
 
 #. TRANSLATORS: file: product/views/PxeImage.yaml
 #: ../config/yaml_strings.rb:770
@@ -70096,7 +70096,7 @@ msgstr "队列报告"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:6
 msgid "Queue this Report to be generated"
-msgstr "把这个报告放入产生队列"
+msgstr "把此报告放入产生队列"
 
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:55
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:56
@@ -70243,19 +70243,19 @@ msgstr "重新检查所选块存储器管理器的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:98
 msgid "Re-check Authentication Status for this Cloud Provider"
-msgstr "重新检查这个云供应商的认证状态"
+msgstr "重新检查此云供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:124
 msgid "Re-check Authentication Status for this Containers Provider"
-msgstr "重新检查这个容器供应商的认证状态"
+msgstr "重新检查此容器供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:111
 msgid "Re-check Authentication Status for this Infrastructure Provider"
-msgstr "重新检查这个基础架构供应商的认证状态"
+msgstr "重新检查此基础架构供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:110
 msgid "Re-check Authentication Status for this Physical Infrastructure Provider"
-msgstr "重新检查这个物理基础架构供应商的认证状态"
+msgstr "重新检查此物理基础架构供应商的认证状态"
 
 #: ../app/controllers/mixins/ems_common.rb:419
 msgid "Re-checking Authentication status for the selected %{controller_name} %{name} was not successful: %{details}"
@@ -70381,7 +70381,7 @@ msgstr "重新配置选择的实例"
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:71
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:106
 msgid "Reconfigure the Memory/CPU of this VM"
-msgstr "重新配置这个虚拟机的内存/CPU"
+msgstr "重新配置此虚拟机的内存/CPU"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:101
 msgid "Reconfigure the Memory/CPUs of selected items"
@@ -70389,7 +70389,7 @@ msgstr "重新配置所选项的内存/CPU"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:32
 msgid "Reconfigure the options of this Service"
-msgstr "重新配置这个服务的选项"
+msgstr "重新配置此服务的选项"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:92
 msgid "Reconfigure this Instance"
@@ -70397,12 +70397,12 @@ msgstr "重新配置此实例"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:33
 msgid "Reconfigure this Service"
-msgstr "重新配置这个服务"
+msgstr "重新配置此服务"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:72
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:107
 msgid "Reconfigure this VM"
-msgstr "重新配置这个虚拟机"
+msgstr "重新配置此虚拟机"
 
 #: ../app/controllers/vm_common.rb:1412
 msgid "Reconfiguring %{vm_or_template} \"%{name}\""
@@ -70528,19 +70528,19 @@ msgstr "为所选 PXE 服务器刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:20
 msgid "Refresh Relationships for this ISO Datastore"
-msgstr "为这个 ISO 数据存储区刷新关系"
+msgstr "为此 ISO 数据存储区刷新关系"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:22
 msgid "Refresh Relationships for this ISO Datastore?"
-msgstr "为这个 ISO 数据存储区刷新关系?"
+msgstr "为此 ISO 数据存储区刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:25
 msgid "Refresh Relationships for this PXE Server"
-msgstr "为这个 PXE 服务器刷新关系"
+msgstr "为此 PXE 服务器刷新关系"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:27
 msgid "Refresh Relationships for this PXE Server?"
-msgstr "为这个 PXE 服务器刷新关系?"
+msgstr "为此 PXE 服务器刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:22
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:23
@@ -70557,7 +70557,7 @@ msgstr "刷新与此容器供应商有关的项和关系"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:19
 msgid "Refresh items and relationships related to this Containers Provider?"
-msgstr "为这个容器供应商刷新项和关系？"
+msgstr "为此容器供应商刷新项和关系？"
 
 #: ../app/controllers/ansible_repository_controller.rb:104
 msgid "Refresh of Repository \"%{name}\" was successfully initiated."
@@ -70701,115 +70701,115 @@ msgstr "是否刷新与这些卷映射相关的所有项的关系和电源状态
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Cloud Provider"
-msgstr "刷新与这个云供应商相关的所有项的关系和电源状态"
+msgstr "刷新与此云供应商相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Cloud Provider?"
-msgstr "是否刷新与这个云供应商相关的所有项的关系和电源状态？"
+msgstr "是否刷新与此云供应商相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Host Initiator"
-msgstr "刷新与这个主机发起者相关的所有项的关系和电源状态"
+msgstr "刷新与此主机发起者相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Host Initiator?"
-msgstr "是否刷新与这个主机发起者相关的所有项的关系和电源状态？"
+msgstr "是否刷新与此主机发起者相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:12
 msgid "Refresh relationships and power states for all items related to this Image"
-msgstr "刷新与这个镜像相关的所有项的关系和电源状态"
+msgstr "刷新与此镜像相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Image?"
-msgstr "是否刷新与这个镜像相关的所有项的关系和电源状态?"
+msgstr "是否刷新与此镜像相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/physical_racks_center.rb:13
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:17
 #: ../app/helpers/application_helper/toolbar/physical_rack_center.rb:13
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Infrastructure Provider"
-msgstr "刷新与这个基础架构供应商相关的所有项的关系和电源状态"
+msgstr "刷新与此基础架构供应商相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:19
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Infrastructure Provider?"
-msgstr "刷新与这个基础架构供应商相关的所有项的关系和电源状态？"
+msgstr "刷新与此基础架构供应商相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:12
 msgid "Refresh relationships and power states for all items related to this Instance"
-msgstr "刷新与这个实例相关的所有项的关系和电源状态"
+msgstr "刷新与此实例相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Instance?"
-msgstr "是否刷新与这个实例相关的所有项的关系和电源状态?"
+msgstr "是否刷新与此实例相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Network Provider"
-msgstr "刷新与这个网络架构供应商相关的所有项的关系和电源状态"
+msgstr "刷新与此网络架构供应商相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Network Provider?"
-msgstr "是否刷新与这个网络架构供应商相关的所有项的关系和电源状态？"
+msgstr "是否刷新与此网络架构供应商相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/physical_rack_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Physical Rack?"
-msgstr "刷新与这个物理机架相关的所有项的关系和电源状态?"
+msgstr "刷新与此物理机架相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Physical Storage"
-msgstr "刷新与这个物理存储相关的所有项目的关系和电源状态"
+msgstr "刷新与此物理存储相关的所有项目的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Physical Storage?"
-msgstr "刷新与这个物理存储相关的所有项的关系和电源状态"
+msgstr "刷新与此物理存储相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Physical Switch"
-msgstr "刷新与这个物理交换机相关的所有项的关系和电源状态"
+msgstr "刷新与此物理交换机相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb:20
 msgid "Refresh relationships and power states for all items related to this Physical Switch?"
-msgstr "刷新与这个物理交换机相关的所有项的关系和电源状态?"
+msgstr "刷新与此物理交换机相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Storage Manager"
-msgstr "刷新与这个存储管理者相关的所有项目的关系和电源状态"
+msgstr "刷新与此存储管理者相关的所有项目的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Storage Manager?"
-msgstr "是否刷新与这个存储管理者相关的所有项目的关系和电源状态？"
+msgstr "是否刷新与此存储管理者相关的所有项目的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:12
 msgid "Refresh relationships and power states for all items related to this Template"
-msgstr "刷新与这个模板相关的所有项的关系和电源状态"
+msgstr "刷新与此模板相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Template?"
-msgstr "刷新与这个模板相关的所有项的关系和电源状态?"
+msgstr "刷新与此模板相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:12
 msgid "Refresh relationships and power states for all items related to this VM"
-msgstr "刷新与这个虚拟机相关的所有项的关系和电源状态"
+msgstr "刷新与此虚拟机相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:14
 msgid "Refresh relationships and power states for all items related to this VM?"
-msgstr "刷新与这个虚拟机相关的所有项的关系和电源状态?"
+msgstr "刷新与此虚拟机相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Volume Mapping"
-msgstr "刷新与这个卷映射相关的所有项的关系和电源状态"
+msgstr "刷新与此卷映射相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Volume Mapping?"
-msgstr "是否刷新与这个卷映射相关的所有项的关系和电源状态？"
+msgstr "是否刷新与此卷映射相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:12
 msgid "Refresh relationships and power states for all items related to this item"
-msgstr "刷新与这个项相关的所有项的关系和电源状态"
+msgstr "刷新与此项相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:14
 msgid "Refresh relationships and power states for all items related to this item?"
-msgstr "刷新与这个项相关的所有项的关系和电源状态?"
+msgstr "刷新与此项相关的所有项的关系和电源状态?"
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_providers_center.rb:13
@@ -70828,14 +70828,14 @@ msgstr "刷新与所选项相关的所有项的关系?"
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:13
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:13
 msgid "Refresh relationships for all items related to this Provider"
-msgstr "刷新与这个供应商相关的所有项的关系"
+msgstr "刷新与此供应商相关的所有项的关系"
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_provider_center.rb:16
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:16
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:15
 msgid "Refresh relationships for all items related to this Provider?"
-msgstr "刷新与这个供应商相关的所有项的关系？"
+msgstr "刷新与此供应商相关的所有项的关系？"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:26
 msgid "Refresh selected Ansible Repositories?"
@@ -70887,7 +70887,7 @@ msgstr "刷新此窗口小部件"
 #: ../app/helpers/application_helper/toolbar/diagnostics_zone_center.rb:8
 #: ../app/javascript/components/topology_toolbar.jsx:26
 msgid "Refresh this page"
-msgstr "刷新这个页面"
+msgstr "刷新此页面"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:37
 msgid "Refresh with a new branch or tag"
@@ -71103,7 +71103,7 @@ msgstr "从路由器“%{name}”移除接口"
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:34
 msgid "Remove Interface from this Router"
-msgstr "将接口从这个路由器中移除"
+msgstr "将接口从此路由器中移除"
 
 #: ../app/controllers/network_router_controller.rb:299
 msgid "Remove Interface not supported by Router \"%{name}\""
@@ -71242,20 +71242,20 @@ msgstr "从该实例移除安全组"
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
 msgid "Remove all Actions from this Event"
-msgstr "从这个事件里移除所有操作"
+msgstr "从此事件里移除所有操作"
 
 #: ../app/views/miq_alert_set/_form.html.haml:45
 msgid "Remove all Alerts from this Profile"
-msgstr "从这个概要文件里移除所有警报"
+msgstr "从此概要文件里移除所有警报"
 
 #: ../app/views/miq_policy/_miq_policy_edit_conditions.haml:30
 #: ../app/views/miq_policy/_form.html.haml:86
 msgid "Remove all Conditions from this Policy"
-msgstr "从这个概要文件里移除所有条件"
+msgstr "从此概要文件里移除所有条件"
 
 #: ../app/views/miq_policy_set/_form.html.haml:36
 msgid "Remove all Policies from this Profile"
-msgstr "从这个概要文件里移除所有策略"
+msgstr "从此概要文件里移除所有策略"
 
 #: ../app/presenters/widget_presenter.rb:28
 msgid "Remove from Dashboard"
@@ -71281,7 +71281,7 @@ msgstr "要移除资源吗？"
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
 msgid "Remove selected Actions from this Event"
-msgstr "从这个事件移除所选的操作"
+msgstr "从此事件移除所选的操作"
 
 #: ../app/views/miq_action/_action_options.html.haml:153
 msgid "Remove selected Alerts from this Action"
@@ -71289,7 +71289,7 @@ msgstr "从此操作移除所选的警报"
 
 #: ../app/views/miq_alert_set/_form.html.haml:45
 msgid "Remove selected Alerts from this Profile"
-msgstr "从这个概要文件移除所选的警报"
+msgstr "从此概要文件移除所选的警报"
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:41
 msgid "Remove selected Block Storage Managers from Inventory"
@@ -71311,7 +71311,7 @@ msgstr "从库存移除所选的云供应商"
 #: ../app/views/miq_policy/_miq_policy_edit_conditions.haml:30
 #: ../app/views/miq_policy/_form.html.haml:86
 msgid "Remove selected Conditions from this Policy"
-msgstr "从这个策略移除所选的条件"
+msgstr "从此策略移除所选的条件"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:51
 msgid "Remove selected Containers Providers from Inventory"
@@ -71426,7 +71426,7 @@ msgstr "从库存移除所选的物理基础架构供应商"
 
 #: ../app/views/miq_policy_set/_form.html.haml:36
 msgid "Remove selected Policies from this Profile"
-msgstr "从这个配置移除所选的策略"
+msgstr "从此配置移除所选的策略"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:53
 msgid "Remove selected Repositories from Inventory"
@@ -71473,11 +71473,11 @@ msgstr "移除当前过滤器"
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml:70
 #: ../app/views/chargeback_rate/_tier_row.haml:9
 msgid "Remove the tier"
-msgstr "移除这个阶层"
+msgstr "移除此阶层"
 
 #: ../app/controllers/application_controller/compare.rb:1297
 msgid "Remove this %{title} from the comparison"
-msgstr "从比较中移除这个 %{title}"
+msgstr "从比较中移除此 %{title}"
 
 #: ../app/helpers/application_helper/toolbar/catalogitem_button_center.rb:20
 #: ../app/helpers/application_helper/toolbar/custom_button_center.rb:19
@@ -71502,7 +71502,7 @@ msgstr "从库存中移除此按钮"
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:20
 msgid "Remove this Catalog"
-msgstr "移除这个目录"
+msgstr "移除此目录"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rate_center.rb:26
 msgid "Remove this Chargeback Rate from the VMDB"
@@ -71513,7 +71513,7 @@ msgstr "从 VMDB 移除此计费费率"
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:24
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:24
 msgid "Remove this Class"
-msgstr "移除这个类"
+msgstr "移除此类"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:38
 msgid "Remove this Cloud Provider from Inventory"
@@ -71529,12 +71529,12 @@ msgstr "从库存移除此凭证"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:204
 msgid "Remove this Custom Image"
-msgstr "移除这个定制图像"
+msgstr "移除此定制图像"
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:24
 msgid "Remove this Customization Template"
-msgstr "移除这个定制模板"
+msgstr "移除此定制模板"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:21
 msgid "Remove this Datastore from Inventory"
@@ -71543,11 +71543,11 @@ msgstr "从库存移除此数据存储区"
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:25
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:28
 msgid "Remove this Dialog"
-msgstr "移除这个对话框"
+msgstr "移除此对话框"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:18
 msgid "Remove this Domain"
-msgstr "移除这个域"
+msgstr "移除此域"
 
 #: ../app/helpers/application_helper/toolbar/firmware_registry_center.rb:48
 msgid "Remove this Firmware Registry from Inventory?"
@@ -71573,7 +71573,7 @@ msgstr "从库存移除此基础架构供应商"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_instance_center.rb:24
 msgid "Remove this Instance"
-msgstr "移除这个实例"
+msgstr "移除此实例"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:39
 msgid "Remove this Instance from Inventory"
@@ -71581,7 +71581,7 @@ msgstr "从库存移除此实例"
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:12
 msgid "Remove this Job"
-msgstr "移除这个作业"
+msgstr "移除此作业"
 
 #: ../app/helpers/application_helper/toolbar/auth_key_pair_cloud_center.rb:12
 msgid "Remove this Key Pair from Inventory"
@@ -71589,12 +71589,12 @@ msgstr "从库存移除此密钥对"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_method_center.rb:21
 msgid "Remove this Method"
-msgstr "移除这个方法"
+msgstr "移除此方法"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:18
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:75
 msgid "Remove this Namespace"
-msgstr "移除这个名称空间"
+msgstr "移除此名称空间"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:31
 msgid "Remove this Network Provider from Inventory"
@@ -71620,7 +71620,7 @@ msgstr "从库存移除此 PXE 服务器"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_set_center.rb:20
 msgid "Remove this Policy Profile"
-msgstr "移除这个策略概要文件"
+msgstr "移除此策略概要文件"
 
 #:
 #: ../app/helpers/application_helper/toolbar/automation_manager_provider_center.rb:30
@@ -71655,7 +71655,7 @@ msgstr "从库存移除此服务"
 
 #: ../app/views/report/_widget_form_menu.html.haml:20
 msgid "Remove this Shortcut"
-msgstr "移除这个快捷键"
+msgstr "移除此快捷键"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:30
 msgid "Remove this Storage Manager from Inventory"
@@ -71663,7 +71663,7 @@ msgstr "从库存移除此存储管理者"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:17
 msgid "Remove this System Image Type"
-msgstr "移除这个系统镜像"
+msgstr "移除此系统镜像"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:37
 msgid "Remove this Template from Inventory"
@@ -71675,7 +71675,7 @@ msgstr "从库存移除此虚拟机"
 
 #: ../app/views/layouts/_exp_editor.html.haml:40
 msgid "Remove this expression element"
-msgstr "移除这个表达式元素"
+msgstr "移除此表达式元素"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:61
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:18
@@ -71704,7 +71704,7 @@ msgstr "重命名所选的项目"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:40
 msgid "Rename this VM"
-msgstr "重命名这个虚拟机"
+msgstr "重命名此虚拟机"
 
 #: ../app/controllers/vm_common.rb:1408
 msgid "Renaming VM \"%{name}\""
@@ -71745,7 +71745,7 @@ msgstr "已启动复制配置保存。在“我的任务”屏幕上，检查任
 #:
 #: ../app/javascript/oldjs/controllers/ops/pglogical_replication_form_controller.js:83
 msgid "Replication will be disabled for this region"
-msgstr "这个区域的复制将被禁用"
+msgstr "此区域的复制将被禁用"
 
 #: ../app/controllers/report_controller/reports.rb:147
 msgid "Report \"%{name}\""
@@ -71994,7 +71994,7 @@ msgstr "必要信息缺失"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:189
 msgid "Required. Used to gather Utilization data."
-msgstr "必需。用于采集利用率数据。"
+msgstr "必填。用于采集利用率数据。"
 
 #: ../app/views/layouts/_x_edit_buttons.html.haml:114
 #: ../app/views/layouts/_x_edit_buttons.html.haml:145
@@ -72056,23 +72056,23 @@ msgstr "重置所选的项？"
 
 #: ../app/views/report/_widget_form_menu.html.haml:28
 msgid "Reset this Shortcut's text"
-msgstr "重置这个快捷键的文本"
+msgstr "重置此快捷键的文本"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:248
 msgid "Reset this VM"
-msgstr "重置这个虚拟机"
+msgstr "重置此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:251
 msgid "Reset this VM?"
-msgstr "重置这个虚拟机?"
+msgstr "重置此虚拟机?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:203
 msgid "Reset this item"
-msgstr "重置这个项"
+msgstr "重置此项"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:206
 msgid "Reset this item?"
-msgstr "重置这个项?"
+msgstr "重置此项?"
 
 #: ../app/views/report/_form_formatting.html.haml:43
 #: ../app/views/report/_form_sort.html.haml:70
@@ -72215,11 +72215,11 @@ msgstr "在所选项上重启访客操作系统?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:211
 msgid "Restart the Guest OS on this VM"
-msgstr "在这个虚拟机上重启访客操作系统"
+msgstr "在此虚拟机上重启访客操作系统"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:214
 msgid "Restart the Guest OS on this VM?"
-msgstr "在这个虚拟机上重启访客操作系统?"
+msgstr "在此虚拟机上重启访客操作系统?"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:186
 msgid "Restart the selected items"
@@ -72283,11 +72283,11 @@ msgstr "重启该交换机？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:175
 msgid "Restart this item"
-msgstr "重启这个项"
+msgstr "重启此项"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:178
 msgid "Restart this item?"
-msgstr "重启这个项?"
+msgstr "重启此项?"
 
 #:
 #: ../app/helpers/application_helper/toolbar/physical_infrastructure/operations_button_group_mixin.rb:83
@@ -72314,7 +72314,7 @@ msgstr "从所选云卷的备份恢复"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:22
 msgid "Restore from a Backup of this Cloud Volume"
-msgstr "从这个云卷的备份复原"
+msgstr "从此云卷的备份复原"
 
 #: ../app/controllers/cloud_volume_controller.rb:420
 msgid "Restore of Cloud Volume \"%{name}\" was cancelled by the user"
@@ -72383,32 +72383,32 @@ msgstr "退订所选的项?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:167
 msgid "Retire this Instance"
-msgstr "退订这个实例"
+msgstr "退订此实例"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:169
 msgid "Retire this Instance?"
-msgstr "退订这个实例?"
+msgstr "退订此实例?"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:49
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:51
 msgid "Retire this Orchestration Stack"
-msgstr "退订这个编排堆栈"
+msgstr "退订此编排堆栈"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:73
 msgid "Retire this Service"
-msgstr "退订这个服务"
+msgstr "退订此服务"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:75
 msgid "Retire this Service?"
-msgstr "退订这个服务?"
+msgstr "退订此服务?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:155
 msgid "Retire this VM"
-msgstr "退订这个虚拟机"
+msgstr "退订此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:157
 msgid "Retire this VM?"
-msgstr "退订这个虚拟机?"
+msgstr "退订此虚拟机?"
 
 #: ../app/presenters/tree_builder_services.rb:24
 #: ../app/controllers/service_controller.rb:348
@@ -72805,7 +72805,7 @@ msgstr "保存当前的搜索"
 
 #: ../app/views/layouts/_adv_search_body.html.haml:71
 msgid "Save this %{model} search as:"
-msgstr "保存这个 %{model} 搜索为："
+msgstr "保存此 %{model} 搜索为："
 
 #: ../app/controllers/chargeback_report_controller.rb:50
 msgid "Saved Chargeback Report [%{name}]"
@@ -72854,11 +72854,11 @@ msgstr "缩减基础架构供应商"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:37
 msgid "Scale this Infrastructure Provider"
-msgstr "缩放这个基础架构供应商"
+msgstr "缩放此基础架构供应商"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:44
 msgid "Scale this Infrastructure Provider down"
-msgstr "缩减这个基础架构供应商"
+msgstr "缩减此基础架构供应商"
 
 #: ../app/controllers/ems_infra_controller.rb:76
 msgid "Scaling"
@@ -73379,7 +73379,7 @@ msgstr "在上面选择要应用语法突出显示的格式类型来改善可读
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:22
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:32
 msgid "Select this Host Aggregate"
-msgstr "选择这个主机聚集"
+msgstr "选择此主机聚集"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:34
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:24
@@ -73414,11 +73414,11 @@ msgstr "所选集群"
 
 #: ../app/helpers/application_helper/button/ab_group_delete.rb:3
 msgid "Selected Custom Button Group cannot be deleted"
-msgstr "不能删除所选的定制按钮组"
+msgstr "不能删除选中的定制按钮组"
 
 #: ../app/helpers/application_helper/button/ab_group_edit.rb:3
 msgid "Selected Custom Button Group cannot be edited"
-msgstr "不能编辑所选的定制按钮组"
+msgstr "不能编辑选中的定制按钮组"
 
 #: ../app/helpers/term_of_service_helper.rb:25
 msgid "Selected Datastores"
@@ -73769,27 +73769,27 @@ msgstr "为所选的项设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:58
 msgid "Set Ownership for this Catalog Item"
-msgstr "为这个目录项设置所有权"
+msgstr "为此目录项设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:31
 msgid "Set Ownership for this Image"
-msgstr "为这个镜像设置所有权"
+msgstr "为此镜像设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:31
 msgid "Set Ownership for this Instance"
-msgstr "为这个实例设置所有权"
+msgstr "为此实例设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:26
 msgid "Set Ownership for this Service"
-msgstr "为这个服务设置所有权"
+msgstr "为此服务设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:32
 msgid "Set Ownership for this Template"
-msgstr "为这个模板设置所有权"
+msgstr "为此模板设置所有权"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:48
 msgid "Set Ownership for this VM"
-msgstr "为这个虚拟机设置所有权"
+msgstr "为此虚拟机设置所有权"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:164
 msgid "Set Ownership was cancelled by the user"
@@ -73818,7 +73818,7 @@ msgstr "为所选的项设置退订日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:162
 msgid "Set Retirement Dates for this Instance"
-msgstr "为这个实例设置退订日期"
+msgstr "为此实例设置退订日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:44
 msgid "Set Retirement Dates for this Orchestration Stack"
@@ -73830,7 +73830,7 @@ msgstr "为此服务设置退订日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:149
 msgid "Set Retirement Dates for this VM"
-msgstr "为这个虚拟机设置退订日期"
+msgstr "为此虚拟机设置退订日期"
 
 #: ../app/views/miq_policy/_event_edit.html.haml:76
 #: ../app/views/miq_policy/_event_edit.html.haml:146
@@ -73989,39 +73989,39 @@ msgstr "显示 %{plural_linked_name}"
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:71
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:31
 msgid "Show Ad hoc Metrics for this Provider"
-msgstr "显示这个供应商的临时指标"
+msgstr "显示此供应商的临时指标"
 
 #: ../app/helpers/application_helper/toolbar/availability_zone_center.rb:27
 msgid "Show Capacity & Utilization data for this Availability Zone"
-msgstr "显示这个可用性区域的容量和利用率数据"
+msgstr "显示此可用性区域的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_center.rb:22
 msgid "Show Capacity & Utilization data for this Container"
-msgstr "显示这个容器的容量和利用率数据"
+msgstr "显示此容器的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:54
 msgid "Show Capacity & Utilization data for this Datastore"
-msgstr "显示这个数据存储区的容量和利用率数据"
+msgstr "显示此数据存储区的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:202
 msgid "Show Capacity & Utilization data for this Instance"
-msgstr "显示这个实例的容量和利用率数据"
+msgstr "显示此实例的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:21
 msgid "Show Capacity & Utilization data for this Node"
-msgstr "显示这个节点的容量和利用率数据"
+msgstr "显示此节点的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_group_center.rb:21
 msgid "Show Capacity & Utilization data for this Pod"
-msgstr "显示这个 Pod 的容量和利用率数据"
+msgstr "显示此 Pod 的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_project_center.rb:21
 msgid "Show Capacity & Utilization data for this Project"
-msgstr "显示这个项目的容量和利用率数据"
+msgstr "显示此项目的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:63
 msgid "Show Capacity & Utilization data for this Provider"
-msgstr "显示这个供应商的容量和利用率数据"
+msgstr "显示此供应商的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_replicator_center.rb:21
 msgid "Show Capacity & Utilization data for this Replicator"
@@ -74029,15 +74029,15 @@ msgstr "显示此复制器的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/container_service_center.rb:12
 msgid "Show Capacity & Utilization data for this Service"
-msgstr "显示这个服务的容量和利用率数据"
+msgstr "显示此服务的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:112
 msgid "Show Capacity & Utilization data for this Template"
-msgstr "显示这个模板的容量和利用率数据"
+msgstr "显示此模板的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:172
 msgid "Show Capacity & Utilization data for this VM"
-msgstr "显示这个虚拟机的容量和利用率数据"
+msgstr "显示此虚拟机的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:113
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:55
@@ -74058,32 +74058,32 @@ msgstr "显示集群偏移历史记录"
 
 #: ../app/helpers/compliance_summary_helper.rb:40
 msgid "Show Compliance History of this %{model} (Last 10 Checks)"
-msgstr "显示这个 %{model} 的合规性历史（最近 10 次检查）"
+msgstr "显示此 %{model} 的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/container_image_helper/textual_summary.rb:84
 msgid "Show Compliance History of this Container Image (Last 10 Checks)"
-msgstr "显示这个容器镜像的合规性历史（最近 10 次检查）"
+msgstr "显示此容器镜像的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/host_helper/textual_summary.rb:370
 msgid "Show Compliance History of this Host (Last 10 Checks)"
-msgstr "显示这个主机的合规性历史（最近 10 次检查）"
+msgstr "显示此主机的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/container_node_helper/textual_summary.rb:129
 msgid "Show Compliance History of this Node (Last 10 Checks)"
-msgstr "显示这个节点的合规性历史（最近 10 次检查）"
+msgstr "显示此节点的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/textual_mixins/ems_common.rb:3
 msgid "Show Compliance History of this Provider (Last 10 Checks)"
-msgstr "显示这个供应商的合规性历史（最近 10 次检查）"
+msgstr "显示此供应商的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/container_replicator_helper/textual_summary.rb:34
 #: ../app/helpers/container_group_helper/textual_summary.rb:128
 msgid "Show Compliance History of this Replicator (Last 10 Checks)"
-msgstr "显示这个复制器的合规性历史（最近 10 次检查）"
+msgstr "显示此复制器的合规性历史（最近 10 次检查）"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:239
 msgid "Show Compliance History of this VM (Last 10 Checks)"
-msgstr "显示这个虚拟机的合规性历史（最近 10 次检查）"
+msgstr "显示此虚拟机的合规性历史（最近 10 次检查）"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:51
 #: ../app/views/report/_form_filter_chargeback.html.haml:203
@@ -74113,7 +74113,7 @@ msgstr "显示 %{date} 进行的合规性检查的详细信息"
 #: ../app/helpers/textual_mixins/vm_common.rb:173
 msgid "Show Event Log on this VM"
 msgid_plural "Show Event Logs on this VM"
-msgstr[0] "显示这个虚拟机上的事件日志"
+msgstr[0] "显示此虚拟机上的事件日志"
 
 #: ../app/helpers/service_helper/textual_summary.rb:289
 msgid "Show Generic Object Instances for this Service"
@@ -74147,7 +74147,7 @@ msgstr "显示操作系统信息"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:211
 msgid "Show Other VM Files installed on this Datastore"
-msgstr "显示这个数据存储区上安装的其他虚拟机文件"
+msgstr "显示此数据存储区上安装的其他虚拟机文件"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:84
 msgid "Show Parent Cluster '%{name}'"
@@ -74163,7 +74163,7 @@ msgstr "显示存储库"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:194
 msgid "Show Running Processes on this VM"
-msgstr "显示这个虚拟机上运行的进程"
+msgstr "显示此虚拟机上运行的进程"
 
 #: src/report-editor/sort-criteria.jsx:127
 msgid "Show Sort Breaks"
@@ -74177,27 +74177,27 @@ msgstr "显示总结"
 
 #: ../app/helpers/application_helper/toolbar/availability_zone_center.rb:35
 msgid "Show Timelines for this Availability Zone"
-msgstr "显示这个可用性区域的时间线"
+msgstr "显示此可用性区域的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:81
 msgid "Show Timelines for this Cloud Provider"
-msgstr "显示这个云供应商的时间线"
+msgstr "显示此云供应商的时间线"
 
 #: ../app/helpers/application_helper/toolbar/container_center.rb:12
 msgid "Show Timelines for this Container"
-msgstr "显示这个容器的时间线"
+msgstr "显示此容器的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:55
 msgid "Show Timelines for this Containers Provider"
-msgstr "显示这个容器供应商的时间线"
+msgstr "显示此容器供应商的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:94
 msgid "Show Timelines for this Infrastructure Provider"
-msgstr "显示这个基础架构供应商的时间线"
+msgstr "显示此基础架构供应商的时间线"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:209
 msgid "Show Timelines for this Instance"
-msgstr "显示这个实例的时间线"
+msgstr "显示此实例的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:68
 msgid "Show Timelines for this Network Provider"
@@ -74205,11 +74205,11 @@ msgstr "显示此网络供应商的时间线"
 
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:12
 msgid "Show Timelines for this Node"
-msgstr "显示这个节点的时间线"
+msgstr "显示此节点的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:73
 msgid "Show Timelines for this Physical Infrastructure Provider"
-msgstr "显示这个物理基础架构供应商的时间线"
+msgstr "显示此物理基础架构供应商的时间线"
 
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb:97
 msgid "Show Timelines for this Physical Server"
@@ -74217,11 +74217,11 @@ msgstr "显示此物理服务器的时间线"
 
 #: ../app/helpers/application_helper/toolbar/container_group_center.rb:12
 msgid "Show Timelines for this Pod"
-msgstr "显示这个 Pod 的时间线"
+msgstr "显示此 Pod 的时间线"
 
 #: ../app/helpers/application_helper/toolbar/container_project_center.rb:12
 msgid "Show Timelines for this Project"
-msgstr "显示这个项目的时间线"
+msgstr "显示此项目的时间线"
 
 #: ../app/helpers/application_helper/toolbar/container_replicator_center.rb:12
 msgid "Show Timelines for this Replicator"
@@ -74229,20 +74229,20 @@ msgstr "显示此复制器的时间线"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:67
 msgid "Show Timelines for this Storage Manager"
-msgstr "显示这个存储管理者的时间线"
+msgstr "显示此存储管理者的时间线"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:119
 msgid "Show Timelines for this Template"
-msgstr "显示这个模板的时间线"
+msgstr "显示此模板的时间线"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:179
 msgid "Show Timelines for this VM"
-msgstr "显示这个虚拟机的时间线"
+msgstr "显示此虚拟机的时间线"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:121
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:63
 msgid "Show Timelines for this item"
-msgstr "显示这个项的时间线"
+msgstr "显示此项的时间线"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:197
 msgid "Show VM Memory Files installed on this Datastore"
@@ -74274,11 +74274,11 @@ msgstr "显示虚拟机设备"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:153
 msgid "Show VMs in this Cluster, but not in Resource Pools below"
-msgstr "显示在这个集群里但不在下面的资源池里的 VM"
+msgstr "显示在此集群里但不在下面的资源池里的 VM"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:106
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
-msgstr "显示这个资源池但非下面的资源池里的虚拟机"
+msgstr "显示此资源池但非下面的资源池里的虚拟机"
 
 #: ../app/helpers/generic_object_helper/textual_summary.rb:50
 msgid "Show all %{associated_models}"
@@ -74438,7 +74438,7 @@ msgstr "显示此集群中的所有 VM"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:116
 msgid "Show all VMs in this Resource Pool"
-msgstr "显示这个资源池里所有虚拟机"
+msgstr "显示此资源池里所有虚拟机"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:89
 msgid "Show all Volumes"
@@ -74472,7 +74472,7 @@ msgstr "显示每日数据："
 #: ../app/helpers/vm_helper/textual_summary.rb:468
 msgid "Show disk on this VM"
 msgid_plural "Show disks on this VM"
-msgstr[0] "显示这个虚拟机上的磁盘"
+msgstr[0] "显示此虚拟机上的磁盘"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:34
 msgid "Show full screen report"
@@ -74703,33 +74703,33 @@ msgstr "显示此主机的集群"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:329
 msgid "Show this Image's parent"
-msgstr "显示这个镜像的父镜像"
+msgstr "显示此镜像的父镜像"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:84
 msgid "Show this Orchestration Template"
-msgstr "显示这个编排模板"
+msgstr "显示此编排模板"
 
 #: ../app/helpers/configuration_job_helper/textual_summary.rb:52
 msgid "Show this Parent Provider"
-msgstr "显示这个父供应商"
+msgstr "显示此父供应商"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:354
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:57
 #: ../app/helpers/configuration_job_helper/textual_summary.rb:39
 msgid "Show this Service"
-msgstr "显示这个服务"
+msgstr "显示此服务"
 
 #: ../app/helpers/service_helper/textual_summary.rb:196
 msgid "Show this Service's Job"
-msgstr "显示这个服务的作业"
+msgstr "显示此服务的作业"
 
 #: ../app/helpers/service_helper/textual_summary.rb:171
 msgid "Show this Service's Parent Service"
-msgstr "显示这个服务的父服务"
+msgstr "显示此服务的父服务"
 
 #: ../app/helpers/service_helper/textual_summary.rb:157
 msgid "Show this Service's Parent Service Catalog"
-msgstr "显示这个服务的父服务目录"
+msgstr "显示此服务的父服务目录"
 
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb:44
 msgid "Show this Snapshot's Cloud Tenants"
@@ -74766,7 +74766,7 @@ msgstr "显示此虚拟机的编排堆栈“%{name}”"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:252
 msgid "Show this VM's Resource Pool"
-msgstr "显示这个虚拟机的资源池"
+msgstr "显示此虚拟机的资源池"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:315
 msgid "Show this VM's Template"
@@ -74833,11 +74833,11 @@ msgstr "关闭所选项上的访客操作系统？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:202
 msgid "Shutdown the Guest OS on this VM"
-msgstr "关闭这个虚拟机上的访客操作系统"
+msgstr "关闭此虚拟机上的访客操作系统"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:205
 msgid "Shutdown the Guest OS on this VM?"
-msgstr "关闭这个虚拟机上的访客操作系统？"
+msgstr "关闭此虚拟机上的访客操作系统？"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:173
 msgid "Shutdown the selected items"
@@ -74857,19 +74857,19 @@ msgstr "关闭所选的项？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:166
 msgid "Shutdown this item"
-msgstr "关闭这个项"
+msgstr "关闭此项"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:157
 msgid "Shutdown this item to Standby Mode"
-msgstr "关闭这个项至待机模式"
+msgstr "关闭此项至待机模式"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:160
 msgid "Shutdown this item to Standby Mode?"
-msgstr "关闭这个项至待机模式？"
+msgstr "关闭此项至待机模式？"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:169
 msgid "Shutdown this item?"
-msgstr "关闭这个项？"
+msgstr "关闭此项？"
 
 #: ../app/controllers/mixins/actions/host_actions/power.rb:12
 msgid "Shutdown to Standby Mode"
@@ -75022,12 +75022,12 @@ msgstr "软重启所选的项？"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:68
 msgid "Soft Reboot this Instance"
-msgstr "软重启这个实例"
+msgstr "软重启此实例"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:71
 msgid "Soft Reboot this Instance?"
-msgstr "软重启这个实例？"
+msgstr "软重启此实例？"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:7
 msgid "Software"
@@ -75192,7 +75192,7 @@ msgstr "启动此实例"
 #:
 #: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:25
 msgid "Start this Instance?"
-msgstr "启动这个实例？"
+msgstr "启动此实例？"
 
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
@@ -75392,7 +75392,7 @@ msgstr "子网 CIDR"
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #: ../config/yaml_strings.rb:1679
 msgid "Subnet Required"
-msgstr "子网是必需的"
+msgstr "子网为必填项"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 #. TRANSLATORS: file: product/views/NetworkPort.yaml
@@ -75536,11 +75536,11 @@ msgstr "暂挂此实例？"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:239
 msgid "Suspend this VM"
-msgstr "暂挂这个虚拟机"
+msgstr "暂挂此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:242
 msgid "Suspend this VM?"
-msgstr "暂挂这个虚拟机？"
+msgstr "暂挂此虚拟机？"
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:79
 msgid "Swap size (in MB)"
@@ -75743,11 +75743,11 @@ msgstr "基于表达式的标签"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:148
 msgid "Take this item out of Maintenance Mode"
-msgstr "使这个项离开维护模式"
+msgstr "使此项离开维护模式"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:151
 msgid "Take this item out of Maintenance Mode?"
-msgstr "要使这个项离开维护模式吗？"
+msgstr "要使此项离开维护模式吗？"
 
 #: ../app/views/shared/_playbook_options.html.haml:29
 #: ../app/views/static/generic_object/main_custom_button_form.html.haml:47
@@ -75898,7 +75898,7 @@ msgstr "已成功删除目录项“%s”。"
 
 #: ../app/controllers/application_controller/filter.rb:620
 msgid "The check count value must be an integer to commit this expression element"
-msgstr "检查计数值必须是一个整数，才能提交这个表达式元素"
+msgstr "检查计数值必须是一个整数，才能提交此表达式元素"
 
 #: ../app/javascript/components/copy-catalog-form/copy-catalog-form.jsx:17
 msgid "The copied item will not be displayed in the catalog by default"
@@ -76009,7 +76009,7 @@ msgstr "所选的域为空"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:20
 msgid "The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"
-msgstr "所选的快照将被永久删除。您确定要删除所选的快照吗 ?"
+msgstr "所选的快照将被永久删除。您确定要删除选中的快照吗 ?"
 
 #: ../app/controllers/miq_task_controller.rb:146
 msgid "The selected task no longer exists, Delete all older Tasks was not completed"
@@ -76035,7 +76035,7 @@ msgstr "正在递送测试电子邮件，请检查“%{email}”来验证是否�
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:50
 #: ../app/controllers/dashboard_controller.rb:595
 msgid "The user is not authorized for this task or item."
-msgstr "这个任务或项目没有对用户授权。"
+msgstr "此任务或项目没有对用户授权。"
 
 #: ../app/services/user_validation_service.rb:57
 msgid "The user's role is not authorized for any access, please contact the administrator!"
@@ -76068,11 +76068,11 @@ msgstr "没有云卷可以附加至此实例。"
 #:
 #: ../app/helpers/application_helper/button/instance_associate_floating_ip.rb:10
 msgid "There are no Floating IPs available to this Instance."
-msgstr "这个实例没有可用的浮动 IP。"
+msgstr "此实例没有可用的浮动 IP。"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:31
 msgid "There are not tags assigned to this group."
-msgstr "没有为这个组分配标签。"
+msgstr "没有为此组分配标签。"
 
 #: ../app/controllers/application_controller/filter.rb:95
 msgid "There is an error in the selected expression element, perhaps it was imported or edited manually."
@@ -76111,31 +76111,31 @@ msgstr "已使用精简配置"
 
 #: ../app/helpers/application_helper/button/read_only.rb:5
 msgid "This %{klass} is read only and cannot be modified"
-msgstr "这个 %{klass} 是只读的且不能被修改"
+msgstr "此 %{klass} 是只读的且不能被修改"
 
 #: ../app/views/miq_action/show.html.haml:239
 msgid "This Action is not assigned to any Policies."
-msgstr "这个操作没有分配给任何策略。"
+msgstr "此操作没有分配给任何策略。"
 
 #: ../app/views/miq_alert/show.html.haml:188
 msgid "This Alert is not assigned to any Alert Profiles."
-msgstr "这个警报没有分配给任何警报策略。"
+msgstr "此警报没有分配给任何警报策略。"
 
 #: ../app/views/miq_alert/show.html.haml:206
 msgid "This Alert is not referenced by any Actions."
-msgstr "这个警报没有被任何操作所引用。"
+msgstr "此警报没有被任何操作所引用。"
 
 #: ../app/views/condition/show.html.haml:67
 msgid "This Condition is not assigned to any Policies."
-msgstr "这个条件没有分配给任何策略。"
+msgstr "此条件没有分配给任何策略。"
 
 #: ../app/helpers/application_helper/button/miq_action_modify.rb:12
 msgid "This Event belongs to a read only Policy and cannot be modified"
-msgstr "这个事件属于只读的策略且不能被修改"
+msgstr "此事件属于只读的策略且不能被修改"
 
 #: ../app/views/miq_event_definition/show.html.haml:18
 msgid "This Event is not assigned to any Policies."
-msgstr "这个事件没有分配给任何策略。"
+msgstr "此事件没有分配给任何策略。"
 
 #: ../app/helpers/application_helper/button/rbac_group_delete.rb:5
 msgid "This Group is Read Only and can not be deleted"
@@ -76147,11 +76147,11 @@ msgstr "该组只读且不能编辑"
 
 #: ../app/helpers/view_helper.rb:51
 msgid "This Hour"
-msgstr "这个小时"
+msgstr "此小时"
 
 #: ../app/helpers/application_helper/button/instance_detach.rb:9
 msgid "This Instance has no attached Cloud Volumes."
-msgstr "这个实例没有已附加的云卷。"
+msgstr "此实例没有已附加的云卷。"
 
 #: ../app/helpers/application_helper/button/catalog_item_copy_button.rb:3
 msgid "This Item cannot be copied"
@@ -76167,7 +76167,7 @@ msgstr "本月（部分）"
 
 #: ../app/views/miq_policy/show.html.haml:134
 msgid "This Policy is not assigned to any Profiles."
-msgstr "这个策略没有分配给任何概要文件。"
+msgstr "此策略没有分配给任何概要文件。"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:21
 msgid "This Policy is read only and cannot be modified"
@@ -76196,21 +76196,21 @@ msgstr "该角色被一个或多个组使用，不能删除"
 #: ../app/views/ops/_diagnostics_timelines_tab.html.haml:11
 #: ../app/views/ops/_diagnostics_utilization_tab.html.haml:10
 msgid "This Server's Virtual Machine has not been identified."
-msgstr "这个服务器的虚拟机还未确定。"
+msgstr "此服务器的虚拟机还未确定。"
 
 #:
 #: ../app/helpers/application_helper/button/orchestration_template_orderable.rb:3
 msgid "This Template is already orderable"
-msgstr "这个模板已经是可排序的"
+msgstr "此模板已经是可排序的"
 
 #:
 #: ../app/helpers/application_helper/button/orchestration_template_view_in_catalog.rb:3
 msgid "This Template is not orderable"
-msgstr "这个模板不是可排序的"
+msgstr "此模板不是可排序的"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:40
 msgid "This VM will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?"
-msgstr "这个虚拟机将还原到所选的快照。您确定要还原到所选的快照吗？"
+msgstr "此虚拟机将还原到所选的快照。您确定要还原到所选的快照吗？"
 
 #: ../app/helpers/view_helper.rb:90
 msgid "This Week"
@@ -76234,7 +76234,7 @@ msgstr "该区域没有配置日志库设置，不允许收集"
 
 #: ../app/controllers/application_controller/filter.rb:96
 msgid "This element should be removed and recreated or you can report the error to your %{product} administrator."
-msgstr "这个元素应移除并重新创建，或者您可以将这个错误报告给 %{product} 管理员。"
+msgstr "此元素应移除并重新创建，或者您可以将此错误报告给 %{product} 管理员。"
 
 #: ../app/helpers/automate_tree_helper.rb:4
 msgid "This embedded method is already selected"
@@ -76258,7 +76258,7 @@ msgstr "具有相同名称的对象已存在于数据库里"
 
 #: ../app/views/miq_policy/show.html.haml:83
 msgid "This policy does not currently respond to any Events."
-msgstr "这个策略目前没有响应任何事件。"
+msgstr "此策略目前没有响应任何事件。"
 
 #: ../app/controllers/application_controller.rb:410
 msgid "This report isn't generated yet. It cannot be rendered."
@@ -76277,15 +76277,15 @@ msgstr "此用户受限于"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:27
 msgid "This user is limited to items with the selected tags."
-msgstr "这个用户受限于具有所选标签的项目。"
+msgstr "此用户受限于具有所选标签的项目。"
 
 #: ../app/views/ops/rbac_group/_vms_templates.html.haml:3
 msgid "This user is limited to the selected folders and their children."
-msgstr "这个用户受限于所选的文件夹和子文件夹。"
+msgstr "此用户受限于所选的文件夹和子文件夹。"
 
 #: ../app/views/ops/rbac_group/_hosts_clusters.html.haml:3
 msgid "This user is limited to the selected items and their children."
-msgstr "这个用户受限于所选的项目及子项目。"
+msgstr "此用户受限于所选的项目及子项目。"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:37
 msgid "This virtual machine requires restart."
@@ -76473,11 +76473,11 @@ msgstr "为该云服务切换调度?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:54
 msgid "Toggle maintenance mode for this item"
-msgstr "为这个项切换维护模式"
+msgstr "为此项切换维护模式"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:57
 msgid "Toggle maintenance mode for this item?"
-msgstr "为这个项切换维护模式？"
+msgstr "为此项切换维护模式？"
 
 #: ../app/views/layouts/_auth_bearer_token.html.haml:8
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:138
@@ -76794,7 +76794,7 @@ msgstr "打开识别 LED？"
 
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:112
 msgid "Type is required"
-msgstr "类型是必需的"
+msgstr "类型为必填项"
 
 #: ../app/controllers/mixins/policy_mixin.rb:111
 msgid "Type missing for %{field}"
@@ -77190,7 +77190,7 @@ msgstr "无限制"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:25
 msgid "Unlock this Domain"
-msgstr "解锁这个域"
+msgstr "解锁此域"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2676
 msgid "Unlocked"
@@ -77243,7 +77243,7 @@ msgstr "更新密码"
 #: ../app/views/ops/_ap_form_file.html.haml:56
 #: ../app/views/ops/_ap_form_registry.html.haml:72
 msgid "Update this entry"
-msgstr "更新这个条目"
+msgstr "更新此条目"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #. TRANSLATORS: file: product/views/GenericObjectDefinition.yaml
@@ -77429,7 +77429,7 @@ msgstr "已用大小"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:341
 msgid "Used for VMRC connections to all VMs on this provider. If not set, the VMRC console access will be disabled for this provider."
-msgstr "用于这个供应商中的所有虚拟机的 VMRC 连接。如果没有设置，则会禁止此供应商访问 VMRC 控制台。"
+msgstr "用于此供应商中的所有虚拟机的 VMRC 连接。如果没有设置，则会禁止此供应商访问 VMRC 控制台。"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:492
 msgid "Used for access to IPMI."
@@ -77529,7 +77529,7 @@ msgstr "查找的用户"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:48
 msgid "User will input the value"
-msgstr "用户将输入这个值"
+msgstr "用户将输入此值"
 
 #:
 #: ../app/javascript/components/physical-storage-form/physical-storage-form.schema.js:65
@@ -77562,7 +77562,7 @@ msgstr "用户只被允许删除自己的请求"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:118
 msgid "Users in this Group"
-msgstr "这个组里的用户"
+msgstr "此组里的用户"
 
 #:
 #: ../app/javascript/oldjs/controllers/ems_container_dashboard/heatmap_controller.js:24
@@ -77979,7 +77979,7 @@ msgstr "查看所选项的策略模拟"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:83
 msgid "View Policy Simulation for this Image"
-msgstr "查看这个镜像的策略模拟"
+msgstr "查看此镜像的策略模拟"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:135
 msgid "View Policy Simulation for this Instance"
@@ -78004,7 +78004,7 @@ msgstr "查看存储费率"
 
 #: ../app/views/miq_action/show.html.haml:196
 msgid "View This Alert"
-msgstr "查看这个警报"
+msgstr "查看此警报"
 
 #: ../app/views/ops/_settings_details_tab.html.haml:28
 #: ../app/views/ops/_settings_details_tab.html.haml:30
@@ -78042,44 +78042,44 @@ msgstr "查看表"
 #: ../app/views/miq_policy_set/show.html.haml:22
 #: ../app/views/miq_action/show.html.haml:233
 msgid "View this %{model} Policy"
-msgstr "查看这个 %{model} 策略"
+msgstr "查看此 %{model} 策略"
 
 #: ../app/views/miq_policy/show.html.haml:111
 #: ../app/views/miq_policy/show.html.haml:119
 #: ../app/views/miq_alert/show.html.haml:211
 msgid "View this Action"
-msgstr "查看这个操作"
+msgstr "查看此操作"
 
 #: ../app/views/miq_alert_set/show.html.haml:24
 msgid "View this Alert"
-msgstr "查看这个警报"
+msgstr "查看此警报"
 
 #: ../app/views/miq_alert/show.html.haml:193
 msgid "View this Alert Profile"
-msgstr "查看这个警报概要文件"
+msgstr "查看此警报概要文件"
 
 #: ../app/views/miq_policy/show.html.haml:60
 msgid "View this Condition"
-msgstr "查看这个条件"
+msgstr "查看此条件"
 
 #: ../app/views/miq_policy/show.html.haml:94
 #: ../app/views/miq_policy/show.html.haml:97
 msgid "View this Event"
-msgstr "查看这个事件"
+msgstr "查看此事件"
 
 #: ../app/views/ops/_rbac_user_details.html.haml:117
 #: ../app/views/ops/_rbac_user_details.html.haml:133
 #: ../app/views/ops/_rbac_role_details.html.haml:56
 msgid "View this Group"
-msgstr "查看这个组"
+msgstr "查看此组"
 
 #: ../app/views/pxe/_iso_datastore_details.html.haml:19
 msgid "View this ISO Image"
-msgstr "查看这个 ISO 镜像"
+msgstr "查看此 ISO 镜像"
 
 #: ../app/views/ops/_settings_evm_servers_tab.html.haml:59
 msgid "View this MiqServer"
-msgstr "查看这个 MiqServer"
+msgstr "查看此 MiqServer"
 
 #:
 #: ../app/helpers/application_helper/toolbar/stack_orchestration_template_center.rb:24
@@ -78088,32 +78088,32 @@ msgstr "在目录中查看编排模板"
 
 #: ../app/views/pxe/_pxe_server_details.html.haml:25
 msgid "View this PXE Image"
-msgstr "查看这个 PXE 镜像"
+msgstr "查看此 PXE 镜像"
 
 #: ../app/views/miq_policy/show.html.haml:139
 msgid "View this Policy Profile"
-msgstr "查看这个策略概要文件"
+msgstr "查看此策略概要文件"
 
 #: ../app/views/report/_role_list.html.haml:20
 msgid "View this Profile"
-msgstr "查看这个概要文件"
+msgstr "查看此概要文件"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:105
 msgid "View this Project"
-msgstr "查看这个项目"
+msgstr "查看此项目"
 
 #: ../app/views/chargeback_report/_reports_list.html.haml:16
 msgid "View this Report"
-msgstr "查看这个报告"
+msgstr "查看此报告"
 
 #: ../app/views/ops/_rbac_user_details.html.haml:174
 #: ../app/views/ops/_rbac_group_details.html.haml:78
 msgid "View this Role"
-msgstr "查看这个角色"
+msgstr "查看此角色"
 
 #: ../app/views/report/_report_info.html.haml:82
 msgid "View this Schedule"
-msgstr "查看这个时间线"
+msgstr "查看此时间线"
 
 #: ../app/views/service/_svcs_show.html.haml:30
 msgid "View this Service"
@@ -78121,11 +78121,11 @@ msgstr "查看此服务"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:105
 msgid "View this Tenant"
-msgstr "查看这个租户"
+msgstr "查看此租户"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:122
 msgid "View this User"
-msgstr "查看这个用户"
+msgstr "查看此用户"
 
 #: ../app/views/report/_db_widget.html.haml:8
 msgid "View this Widget"
@@ -78133,19 +78133,19 @@ msgstr "查看此窗口小部件"
 
 #: ../app/views/pxe/_pxe_server_details.html.haml:46
 msgid "View this Windows Image"
-msgstr "查看这个 Windows 镜像"
+msgstr "查看此 Windows 镜像"
 
 #: ../app/views/ops/_diagnostics_zones_tab.html.haml:10
 msgid "View this Zone"
-msgstr "查看这个区"
+msgstr "查看此区"
 
 #: ../app/views/ops/_settings_list_tab.html.haml:11
 msgid "View this Zone's settings"
-msgstr "查看这个区的设置"
+msgstr "查看此区的设置"
 
 #: ../lib/gtl_formatter.rb:129
 msgid "View this item"
-msgstr "查看这个项"
+msgstr "查看此项"
 
 #: ../app/controllers/application_controller/ci_processing.rb:342
 msgid "Virtual Black Box synchronization"
@@ -78293,7 +78293,7 @@ msgstr "警告：所选目录将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rates_center.rb:46
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
-msgstr "警告：所选的费率将被永久移除！"
+msgstr "警告：所选的计费费率将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:43
 msgid "Warning: The selected Cloud Providers and ALL related components will be permanently removed!"
@@ -78455,7 +78455,7 @@ msgstr "警告：所选的任务将永久从数据库中移除！"
 #: ../app/controllers/report_controller/schedules.rb:289
 #: ../app/controllers/ops_controller/settings/schedules.rb:472
 msgid "Warning: This 'Run Once' timer is in the past and will never run as currently configured"
-msgstr "警告：这个“运行一次”定时器已过时，无法作为当前配置运行。"
+msgstr "警告：此“运行一次”定时器已过时，无法作为当前配置运行。"
 
 #: ../app/helpers/application_helper/toolbar/scan_profile_center.rb:27
 msgid "Warning: This Analysis Profile and ALL of its components will be permanently removed!"
@@ -78469,7 +78469,7 @@ msgstr "警告：此按钮将被永久移除！"
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:24
 msgid "Warning: This Catalog will be permanently removed!"
-msgstr "警告：这个项目将被永久移除！"
+msgstr "警告：此项目将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rate_center.rb:29
 msgid "Warning: This Chargeback Rate will be permanently removed!"
@@ -78477,7 +78477,7 @@ msgstr "警告：此计费费率将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:28
 msgid "Warning: This Cloud Network and ALL of its components will be removed!"
-msgstr "警告：这个云网络及其所有组件都将被移除！"
+msgstr "警告：此云网络及其所有组件都将被移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:41
 msgid "Warning: This Cloud Provider and ALL of its components will be permanently removed!"
@@ -78485,11 +78485,11 @@ msgstr "警告：此云供应商及其全部组件将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:26
 msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
-msgstr "警告：这个云子网及其全部组件都将被移除！"
+msgstr "警告：此云子网及其全部组件都将被移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:41
 msgid "Warning: This Containers Provider and ALL of its components will be permanently removed!"
-msgstr "警告：这个容器供应商及其全部组件都将被永久移除！"
+msgstr "警告：此容器供应商及其全部组件都将被永久移除！"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:24
@@ -78499,27 +78499,27 @@ msgstr "警告：此定制按钮组将被永久移除！"
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:27
 msgid "Warning: This Customization Template will be permanently removed!"
-msgstr "警告：这个定制模板将被永久移除！"
+msgstr "警告：此定制模板将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:28
 msgid "Warning: This Dashboard and ALL of its components will be permanently removed!"
-msgstr "警告：这个仪表板及其全部组件都将被永久移除！"
+msgstr "警告：此仪表板及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:24
 msgid "Warning: This Datastore and ALL of its components will be permanently removed!"
-msgstr "警告：这个数据存储区及其全部组件都将被永久移除！"
+msgstr "警告：此数据存储区及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:29
 msgid "Warning: This Dialog will be permanently removed from the Virtual Management Database!"
-msgstr "警告：这个对话框将从虚拟管理数据库中永久移除！"
+msgstr "警告：此对话框将从虚拟管理数据库中永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:32
 msgid "Warning: This Dialog will be permanently removed!"
-msgstr "警告：这个对话框将被永久移除！"
+msgstr "警告：此对话框将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:28
 msgid "Warning: This Floating IP and ALL of its components will be removed!"
-msgstr "警告：这个浮动 IP 及其全部组件都将被移除！"
+msgstr "警告：此浮动 IP 及其全部组件都将被移除！"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
@@ -78529,24 +78529,24 @@ msgstr "警告：此通用对象定义将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
 msgid "Warning: This ISO Datastore and ALL of its components will be permanently removed!"
-msgstr "警告：这个 ISO 数据存储区及其全部组件都将被永久移除！"
+msgstr "警告：此 ISO 数据存储区及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:41
 msgid "Warning: This Image and ALL of its components will be permanently removed!"
-msgstr "警告：这个镜像及其全部组件都将被永久移除！"
+msgstr "警告：此镜像及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:33
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:54
 msgid "Warning: This Infrastructure Provider and ALL of its components will be permanently removed!"
-msgstr "警告：这个基础架构供应商及其全部组件都将被永久移除！"
+msgstr "警告：此基础架构供应商及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:42
 msgid "Warning: This Instance and ALL of its components will be permanently removed!"
-msgstr "警告：这个实例及其全部组件都将被永久移除！"
+msgstr "警告：此实例及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:15
 msgid "Warning: This Job and ALL of its components will be permanently removed!"
-msgstr "警告：这个作业及其全部组件都将被永久移除！"
+msgstr "警告：此作业及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:34
 msgid "Warning: This Network Provider and ALL of its components will be permanently removed!"
@@ -78554,11 +78554,11 @@ msgstr "警告：此网络供应商及其全部组件将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:15
 msgid "Warning: This Orchestration Stack and ALL of its components will be permanently removed!"
-msgstr "警告：这个编排堆栈及其全部组件都将被永久移除！"
+msgstr "警告：此编排堆栈及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:20
 msgid "Warning: This PXE Server and ALL of its components will be permanently removed!"
-msgstr "警告：这个 PXE 服务器及其全部组件都将被永久移除！"
+msgstr "警告：此 PXE 服务器及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:15
 msgid "Warning: This Resource Pool and ALL of its components will be permanently removed!"
@@ -78567,20 +78567,20 @@ msgstr "警告：此资源池及其全部组件将被永久移除！"
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:48
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:25
 msgid "Warning: This Router and ALL of its components will be removed!"
-msgstr "警告：将移除这个路由器及其全部组件！"
+msgstr "警告：将移除此路由器及其全部组件！"
 
 #: ../app/helpers/application_helper/toolbar/saved_report_center.rb:24
 msgid "Warning: This Saved Report and ALL of its components will be permanently removed!"
-msgstr "警告：这个已保存的报告及其全部组件都将被永久移除！"
+msgstr "警告：此已保存的报告及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:20
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:20
 msgid "Warning: This Schedule and ALL of its components will be permanently removed!"
-msgstr "警告：这个调度及其全部组件都将被永久移除！"
+msgstr "警告：此调度及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:28
 msgid "Warning: This Security Group and ALL of its components will be removed!"
-msgstr "警告：这个安全组及其全部组件都将被移除！"
+msgstr "警告：此安全组及其全部组件都将被移除！"
 
 #: ../app/helpers/application_helper/toolbar/security_policy_rules_center.rb:28
 msgid "Warning: This Security Policy Rule and ALL of its components will be removed!"
@@ -78592,15 +78592,15 @@ msgstr "警告：此安全策略及其全部组件都将被移除！"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:21
 msgid "Warning: This Service and ALL of their components will be permanently removed!"
-msgstr "警告：这个服务及其全部组件都将被永久移除！"
+msgstr "警告：此服务及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:33
 msgid "Warning: This Storage Manager and ALL of its components will be permanently removed!"
-msgstr "警告：这个存储管理者及其全部组件都将被永久移除！"
+msgstr "警告：此存储管理者及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:20
 msgid "Warning: This System Image Type will be permanently removed!"
-msgstr "警告：这个系统镜像类型将被永久移除！"
+msgstr "警告：此系统镜像类型将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:40
 msgid "Warning: This Template and ALL of its components will be permanently removed!"
@@ -78608,7 +78608,7 @@ msgstr "警告：此模板及其全部组件将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:56
 msgid "Warning: This Virtual Machine and ALL of its components will be permanently removed!"
-msgstr "警告：这个虚拟机及其全部组件都将被永久移除！"
+msgstr "警告：此虚拟机及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:25
 msgid "Warning: This Widget and ALL of its components will be permanently removed!"
@@ -78616,11 +78616,11 @@ msgstr "警告：此窗口小部件及其全部组件将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:21
 msgid "Warning: This item and ALL of its components will be permanently removed!"
-msgstr "警告：这个项及其全部组件都将被永久移除！"
+msgstr "警告：此项及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:64
 msgid "Warning: This item and ALL of its components will be permanently removed!?"
-msgstr "警告：这个项及其全部组件都将被永久移除！"
+msgstr "警告：此项及其全部组件都将被永久移除！"
 
 #: ../app/controllers/mixins/dashboard_view_mixin.rb:17
 #: ../app/views/shared/_provider_paused.html.haml:5
@@ -78747,7 +78747,7 @@ msgstr "工作组信息"
 
 #: ../app/views/layouts/_exp_editor.html.haml:97
 msgid "Wrap this expression element with a NOT"
-msgstr "用 NOT 包裹这个表达式元素"
+msgstr "用 NOT 包裹此表达式元素"
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:96
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:131
@@ -78822,7 +78822,7 @@ msgstr "放大"
 
 #: ../app/presenters/widget_presenter.rb:78
 msgid "Zoom in on this chart"
-msgstr "放大显示这个图表"
+msgstr "放大显示此图表"
 
 #: ../app/controllers/ops_controller.rb:570
 msgid "[Region: %{description} [%{region}]]"
@@ -78869,12 +78869,12 @@ msgstr "中间日期"
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:83
 msgid "chap_name:"
-msgstr "chap_name："
+msgstr "Chap 名称："
 
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:94
 msgid "chap_secret:"
-msgstr "chap_secret："
+msgstr "Chap 密钥："
 
 #: ../app/views/layouts/_content.html.haml:25
 msgid "clear"
@@ -78983,7 +78983,7 @@ msgstr "调用"
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:71
 msgid "iqn:"
-msgstr "iqn："
+msgstr "IQN："
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:113
 msgid "kubevirt"
@@ -80459,7 +80459,7 @@ msgstr "正在移除..."
 
 #: ../app/javascript/common/constants.js:5
 msgid "Required. Maximum length is %s characters."
-msgstr "必需。最大长度为 %s 个字符。"
+msgstr "必填。最大长度为 %s 个字符。"
 
 #:
 #: ../app/javascript/react/screens/App/Settings/screens/GeneralSettings/GeneralSettings.js:120
