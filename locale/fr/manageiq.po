@@ -12282,7 +12282,7 @@ msgstr "Supprimer une boîte de dialogue"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:664
 msgid "Delete Flavor"
-msgstr "Supprimer une version"
+msgstr "Supprimer la version"
 
 #: ../app/models/flavor.rb:114
 msgid "Delete Flavor Operation"
@@ -12325,7 +12325,7 @@ msgstr "Supprimer les demandes"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1779
 msgid "Delete Server"
-msgstr "Supprimer un serveur"
+msgstr "Supprimer le serveur"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_snapshot_center.rb:12
 msgid "Delete Snapshots"
@@ -42991,7 +42991,7 @@ msgstr "Mappage de locataires activé"
 #:
 #: ../app/javascript/components/cloud-tenant-form/cloud-tenant-form.schema.js:22
 msgid "Tenant Name"
-msgstr "Nom du client"
+msgstr "Nom du locataire"
 
 #: ../app/helpers/ops_helper/textual_summary.rb:165
 msgid "Tenant Quota"
@@ -60946,7 +60946,7 @@ msgstr "Supprimer une action"
 #: ../app/helpers/application_helper/toolbar/miq_actions_center.rb:30
 #: ../app/helpers/application_helper/toolbar/miq_actions_center.rb:40
 msgid "Delete Actions"
-msgstr "Supprimer des actions"
+msgstr "Supprimer les actions"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:36
 msgid "Delete Alert"
@@ -60958,7 +60958,7 @@ msgstr "Supprimer un profil d'alerte"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_sets_center.rb:32
 msgid "Delete Alert Profiles"
-msgstr "Supprimer des profils d'alerte"
+msgstr "Supprimer les profils d'alerte"
 
 #: ../app/controllers/application_controller/ci_processing.rb:504
 msgid "Delete All Snapshots"
@@ -61008,7 +61008,7 @@ msgstr "Supprimer le cliché de volume de cloud"
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:30
 #: ../app/helpers/application_helper/toolbar/conditions_center.rb:40
 msgid "Delete Conditions"
-msgstr "Supprimer des conditions"
+msgstr "Supprimer les conditions"
 
 #: ../app/helpers/application_helper/toolbar/ems_configuration_center.rb:30
 msgid "Delete Configuration Management Provider"
@@ -61035,7 +61035,7 @@ msgstr "Supprimer une paire de clés"
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:40
 #: ../app/helpers/application_helper/toolbar/miq_alerts_center.rb:50
 msgid "Delete Policy Alerts"
-msgstr "Supprimer des alertes de stratégie"
+msgstr "Supprimer les alertes de stratégie"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_set_center.rb:29
 msgid "Delete Policy Profile"
@@ -61044,7 +61044,7 @@ msgstr "Supprimer un profil de stratégie"
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:30
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:39
 msgid "Delete Policy Profiles"
-msgstr "Supprimer des profils de stratégie"
+msgstr "Supprimer les profils de stratégie"
 
 #: ../app/helpers/application_helper/toolbar/ansible_repositories_center.rb:61
 msgid "Delete Repositories"

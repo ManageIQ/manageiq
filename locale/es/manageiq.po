@@ -1079,7 +1079,7 @@ msgstr "Añadir un perfil de política de alertas"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1143
 msgid "Add a Policy Profile"
-msgstr "Añadir un perfil de políticas"
+msgstr "Añadir un perfil de política"
 
 #: ../app/views/layouts/_empty.html.haml:5
 #: ../app/views/layouts/_empty.html.haml:15
@@ -35300,7 +35300,7 @@ msgstr "Perfil de la política"
 #: ../app/views/miq_policy_export/_export.html.haml:74
 #: ../config/yaml_strings.rb:1894
 msgid "Policy Profiles"
-msgstr "Perfiles de políticas"
+msgstr "Perfiles de política"
 
 #: ../app/controllers/application_controller/policy_support.rb:88
 #: ../app/helpers/application_helper/title.rb:73
@@ -46913,7 +46913,7 @@ msgstr "Ver alertas de política"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1135
 msgid "View Policy Profiles"
-msgstr "Ver perfiles de políticas"
+msgstr "Ver perfiles de política"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2870
@@ -52680,182 +52680,182 @@ msgstr[1] "%{amount} %{objects} se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:7
 msgid "%{amount} Ansible Tower Job Being Tagged"
 msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount} Tarea de Ansible Tower que se está etiquetando"
-msgstr[1] "%{amount} Tareas de Ansible Tower que se están etiquetando"
+msgstr[0] "%{amount} tarea de Ansible Tower que se está etiquetando"
+msgstr[1] "%{amount} tareas de Ansible Tower que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:9
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} Gestor de automatización (Ansible Tower) que se está etiquetando"
-msgstr[1] "%{amount} Gestores de automatización (Ansible Tower) que se están etiquetando"
+msgstr[0] "%{amount} gestor de automatización (Ansible Tower) que se está etiquetando"
+msgstr[1] "%{amount} gestores de automatización (Ansible Tower) que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:11
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
-msgstr[0] "%{amount} Zona de disponibilidad que se está etiquetando"
-msgstr[1] "%{amount} Zonas de disponibilidad que se están etiquetando"
+msgstr[0] "%{amount} zona de disponibilidad que se está etiquetando"
+msgstr[1] "%{amount} zonas de disponibilidad que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:13
 msgid "%{amount} Cloud Network Being Tagged"
 msgid_plural "%{amount} Cloud Networks Being Tagged"
-msgstr[0] "%{amount} Red de nube que se está etiquetando"
-msgstr[1] "%{amount} Redes de nube que se están etiquetando"
+msgstr[0] "%{amount} red de nube que se está etiquetando"
+msgstr[1] "%{amount} redes de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:15
 msgid "%{amount} Cloud Object Store Container Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Containers Being Tagged"
-msgstr[0] "%{amount} Contenedor de almacenamiento de objetos en la nube que se está etiquetando"
-msgstr[1] "%{amount} Contenedores de almacenamiento de objetos en la nube que se están etiquetando"
+msgstr[0] "%{amount} contenedor de almacenamiento de objetos en la nube que se está etiquetando"
+msgstr[1] "%{amount} contenedores de almacenamiento de objetos en la nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:17
 msgid "%{amount} Cloud Object Store Object Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Objects Being Tagged"
-msgstr[0] "%{amount} Objeto del almacén de objetos en la nube que se está etiquetando"
-msgstr[1] "%{amount} Objetos del almacén de objetos en la nube que se están etiquetando"
+msgstr[0] "%{amount} objeto del almacén de objetos en la nube que se está etiquetando"
+msgstr[1] "%{amount} objetos del almacén de objetos en la nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:19
 msgid "%{amount} Cloud Provider Being Tagged"
 msgid_plural "%{amount} Cloud Providers Being Tagged"
-msgstr[0] "%{amount} Proveedor de nube que se está etiquetando"
-msgstr[1] "%{amount} Proveedores de nube que se están etiquetando"
+msgstr[0] "%{amount} proveedor de nube que se está etiquetando"
+msgstr[1] "%{amount} proveedores de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:21
 msgid "%{amount} Cloud Subnet Being Tagged"
 msgid_plural "%{amount} Cloud Subnets Being Tagged"
-msgstr[0] "%{amount} Subred de nube que se está etiquetando"
-msgstr[1] "%{amount} Subredes de nube que se están etiquetando"
+msgstr[0] "%{amount} subred de nube que se está etiquetando"
+msgstr[1] "%{amount} subredes de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:23
 msgid "%{amount} Cloud Tenant Being Tagged"
 msgid_plural "%{amount} Cloud Tenants Being Tagged"
-msgstr[0] "%{amount} Inquilino de nube que se está etiquetando"
-msgstr[1] "%{amount} Inquilinos de nube que se están etiquetando"
+msgstr[0] "%{amount} inquilino de nube que se está etiquetando"
+msgstr[1] "%{amount} inquilinos de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:25
 msgid "%{amount} Cloud Volume Being Tagged"
 msgid_plural "%{amount} Cloud Volumes Being Tagged"
-msgstr[0] "%{amount} Volumen de nube que se está etiquetando"
-msgstr[1] "%{amount} Volúmenes de nube que se están etiquetando"
+msgstr[0] "%{amount} volumen de nube que se está etiquetando"
+msgstr[1] "%{amount} volúmenes de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:27
 msgid "%{amount} Cloud Volume Snapshot Being Tagged"
 msgid_plural "%{amount} Cloud Volume Snapshots Being Tagged"
-msgstr[0] "%{amount} Instantánea del volumen de nube que se está etiquetando"
-msgstr[1] "%{amount} Instantáneas del volumen de nube que se están etiquetando"
+msgstr[0] "%{amount} instantánea del volumen de nube que se está etiquetando"
+msgstr[1] "%{amount} instantáneas del volumen de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:29
 msgid "%{amount} Cloud Volume Type Being Tagged"
 msgid_plural "%{amount} Cloud Volume Types Being Tagged"
-msgstr[0] "%{amount} Tipo de volumen de nube que se está etiquetando"
-msgstr[1] "%{amount} Tipos de volumen de nube que se están etiquetando"
+msgstr[0] "%{amount} tipo de volumen de nube que se está etiquetando"
+msgstr[1] "%{amount} tipos de volumen de nube que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:31
 msgid "%{amount} Cluster Being Tagged"
 msgid_plural "%{amount} Clusters Being Tagged"
-msgstr[0] "%{amount} Clúster que se está etiquetando"
-msgstr[1] "%{amount} Clústeres que se están etiquetando"
+msgstr[0] "%{amount} clúster que se está etiquetando"
+msgstr[1] "%{amount} clústeres que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:33
 msgid "%{amount} Configuration Manager Being Tagged"
 msgid_plural "%{amount} Configuration Managers Being Tagged"
-msgstr[0] "%{amount} Gestor de configuración que se está etiquetando"
-msgstr[1] "%{amount} Gestores de configuración que se están etiquetando"
+msgstr[0] "%{amount} gestor de configuración que se está etiquetando"
+msgstr[1] "%{amount} gestores de configuración que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:35
 msgid "%{amount} Configured System Being Tagged"
 msgid_plural "%{amount} Configured Systems Being Tagged"
-msgstr[0] "%{amount} Sistema configurado que se está etiquetando"
-msgstr[1] "%{amount} Sistemas configurados que se están etiquetando"
+msgstr[0] "%{amount} sistema configurado que se está etiquetando"
+msgstr[1] "%{amount} sistemas configurados que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:37
 msgid "%{amount} Container Being Tagged"
 msgid_plural "%{amount} Containers Being Tagged"
-msgstr[0] "%{amount} Contenedor que se está etiquetando"
-msgstr[1] "%{amount} Contenedores que se están etiquetando"
+msgstr[0] "%{amount} contenedor que se está etiquetando"
+msgstr[1] "%{amount} contenedores que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:39
 msgid "%{amount} Container Build Being Tagged"
 msgid_plural "%{amount} Container Builds Being Tagged"
-msgstr[0] "%{amount} Compilación del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Compilaciones del contenedor que se están etiquetando"
+msgstr[0] "%{amount} compilación del contenedor que se está etiquetando"
+msgstr[1] "%{amount} compilaciones del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
 msgid_plural "%{amount} Container Images Being Tagged"
-msgstr[0] "%{amount} Imagen del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Imágenes de contenedores que se están etiquetando"
+msgstr[0] "%{amount} imagen del contenedor que se está etiquetando"
+msgstr[1] "%{amount} imágenes de contenedores que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
-msgstr[0] "%{amount} Registro de la imagen del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Registros de imagen del contenedor que se están etiquetando"
+msgstr[0] "%{amount} registro de la imagen del contenedor que se está etiquetando"
+msgstr[1] "%{amount} registros de imagen del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
 msgid_plural "%{amount} Container Nodes Being Tagged"
-msgstr[0] "%{amount} Nodo de contenedor que se está etiquetando"
-msgstr[1] "%{amount} Nodos de contenedores que se están etiquetando"
+msgstr[0] "%{amount} nodo de contenedor que se está etiquetando"
+msgstr[1] "%{amount} nodos de contenedores que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:47
 msgid "%{amount} Container Pod Being Tagged"
 msgid_plural "%{amount} Container Pods Being Tagged"
-msgstr[0] "%{amount} Pod del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Pods del contenedor que se están etiquetando"
+msgstr[0] "%{amount} pod del contenedor que se está etiquetando"
+msgstr[1] "%{amount} pods del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:49
 msgid "%{amount} Container Project Being Tagged"
 msgid_plural "%{amount} Container Projects Being Tagged"
-msgstr[0] "%{amount} Proyecto del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Proyectos del contenedor que se están etiquetando"
+msgstr[0] "%{amount} proyecto del contenedor que se está etiquetando"
+msgstr[1] "%{amount} proyectos del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:51
 msgid "%{amount} Container Replicator Being Tagged"
 msgid_plural "%{amount} Container Replicators Being Tagged"
-msgstr[0] "%{amount} Replicador del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Replicadores del contenedor que se están etiquetando"
+msgstr[0] "%{amount} replicador del contenedor que se está etiquetando"
+msgstr[1] "%{amount} replicadores del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:53
 msgid "%{amount} Container Route Being Tagged"
 msgid_plural "%{amount} Container Routes Being Tagged"
-msgstr[0] "%{amount} Ruta del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Rutas del contenedor que se están etiquetando"
+msgstr[0] "%{amount} ruta del contenedor que se está etiquetando"
+msgstr[1] "%{amount} rutas del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:55
 msgid "%{amount} Container Service Being Tagged"
 msgid_plural "%{amount} Container Services Being Tagged"
-msgstr[0] "%{amount} Servicio del contenedor que se está etiquetando"
-msgstr[1] "%{amount} Servicios del contenedor que se están etiquetando"
+msgstr[0] "%{amount} servicio del contenedor que se está etiquetando"
+msgstr[1] "%{amount} servicios del contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:57
 msgid "%{amount} Container Template Being Tagged"
 msgid_plural "%{amount} Container Templates Being Tagged"
-msgstr[0] "%{amount} Plantilla de contenedor que se está etiquetando"
-msgstr[1] "%{amount} Plantillas de contenedor que se están etiquetando"
+msgstr[0] "%{amount} plantilla de contenedor que se está etiquetando"
+msgstr[1] "%{amount} plantillas de contenedor que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:59
 msgid "%{amount} Containers Provider Being Tagged"
 msgid_plural "%{amount} Containers Providers Being Tagged"
-msgstr[0] "%{amount} Proveedor de contenedores que se está etiquetando"
-msgstr[1] "%{amount} Proveedores de contenedores que se están etiquetando"
+msgstr[0] "%{amount} proveedor de contenedores que se está etiquetando"
+msgstr[1] "%{amount} proveedores de contenedores que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:61
 msgid "%{amount} Credential Being Tagged"
 msgid_plural "%{amount} Credentials Being Tagged"
-msgstr[0] "%{amount} Credencial que se está etiquetando"
-msgstr[1] "%{amount} Credenciales que se están etiquetando"
+msgstr[0] "%{amount} credencial que se está etiquetando"
+msgstr[1] "%{amount} credenciales que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:63
 msgid "%{amount} Datastore Being Tagged"
 msgid_plural "%{amount} Datastores Being Tagged"
-msgstr[0] "%{amount} Almacén de datos que se está etiquetando"
-msgstr[1] "%{amount} Almacenes de datos que se están etiquetando"
+msgstr[0] "%{amount} almacén de datos que se está etiquetando"
+msgstr[1] "%{amount} almacenes de datos que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:65
 msgid "%{amount} Flavor Being Tagged"
 msgid_plural "%{amount} Flavors Being Tagged"
-msgstr[0] "%{amount} Clase que se está etiquetando"
-msgstr[1] "%{amount} Clases que se están etiquetando"
+msgstr[0] "%{amount} clase que se está etiquetando"
+msgstr[1] "%{amount} clases que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:67
 msgid "%{amount} Floating IP Being Tagged"
@@ -52866,140 +52866,140 @@ msgstr[1] "%{amount} IP flotantes que se están etiquetando"
 #: ../app/views/layouts/_tag_edit_items.html.haml:71
 msgid "%{amount} Host Aggregate Being Tagged"
 msgid_plural "%{amount} Host Aggregates Being Tagged"
-msgstr[0] "%{amount} Agregado de host que se está etiquetando"
-msgstr[1] "%{amount} Agregados de host que se están etiquetando"
+msgstr[0] "%{amount} agregado de host que se está etiquetando"
+msgstr[1] "%{amount} agregados de host que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:69
 msgid "%{amount} Host Being Tagged"
 msgid_plural "%{amount} Hosts Being Tagged"
-msgstr[0] "%{amount} Host que se está etiquetando"
-msgstr[1] "%{amount} Hosts que se están etiquetando"
+msgstr[0] "%{amount} host que se está etiquetando"
+msgstr[1] "%{amount} hosts que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:73
 msgid "%{amount} Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount} Proveedor de infraestructura que se está etiquetando"
-msgstr[1] "%{amount} Proveedores de infraestructura que se están etiquetando"
+msgstr[0] "%{amount} proveedor de infraestructura que se está etiquetando"
+msgstr[1] "%{amount} proveedores de infraestructura que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:75
 msgid "%{amount} Key Pair Being Tagged"
 msgid_plural "%{amount} Key Pairs Being Tagged"
-msgstr[0] "%{amount} Par de claves que se está etiquetando"
-msgstr[1] "%{amount} Pares de claves que se están etiquetando"
+msgstr[0] "%{amount} par de claves que se está etiquetando"
+msgstr[1] "%{amount} pares de claves que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:77
 msgid "%{amount} Network Manager Being Tagged"
 msgid_plural "%{amount} Network Managers Being Tagged"
-msgstr[0] "%{amount} Gestor de red que se está etiquetando"
-msgstr[1] "%{amount} Gestores de red que se están etiquetando"
+msgstr[0] "%{amount} gestor de red que se está etiquetando"
+msgstr[1] "%{amount} gestores de red que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:79
 msgid "%{amount} Network Port Being Tagged"
 msgid_plural "%{amount} Network Ports Being Tagged"
-msgstr[0] "%{amount} Puerto de red que se está etiquetando"
-msgstr[1] "%{amount} Puertos de red que se están etiquetando"
+msgstr[0] "%{amount} puerto de red que se está etiquetando"
+msgstr[1] "%{amount} puertos de red que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:81
 msgid "%{amount} Network Router Being Tagged"
 msgid_plural "%{amount} Network Routers Being Tagged"
-msgstr[0] "%{amount} Enrutador de red que se está etiquetando"
-msgstr[1] "%{amount} Enrutadores de red que se están etiquetando"
+msgstr[0] "%{amount} enrutador de red que se está etiquetando"
+msgstr[1] "%{amount} enrutadores de red que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:83
 msgid "%{amount} Orchestration Stack Being Tagged"
 msgid_plural "%{amount} Orchestration Stacks Being Tagged"
-msgstr[0] "%{amount} Pila de orquestación que se está etiquetando"
-msgstr[1] "%{amount} Pilas de orquestación que se están etiquetando"
+msgstr[0] "%{amount} pila de orquestación que se está etiquetando"
+msgstr[1] "%{amount} pilas de orquestación que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:85
 msgid "%{amount} Orchestration Template Being Tagged"
 msgid_plural "%{amount} Orchestration Templates Being Tagged"
-msgstr[0] "%{amount} Plantilla de orquestación que se está etiquetando"
-msgstr[1] "%{amount} Plantillas de orquestación que se están etiquetando"
+msgstr[0] "%{amount} plantilla de orquestación que se está etiquetando"
+msgstr[1] "%{amount} plantillas de orquestación que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:87
 msgid "%{amount} PXE Server Being Tagged"
 msgid_plural "%{amount} PXE Servers Being Tagged"
-msgstr[0] "%{amount} Servidor PXE que se está etiquetando"
-msgstr[1] "%{amount} Servidores PXE que se están etiquetando"
+msgstr[0] "%{amount} servidor PXE que se está etiquetando"
+msgstr[1] "%{amount} servidores PXE que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:89
 msgid "%{amount} Persistent Volume Being Tagged"
 msgid_plural "%{amount} Persistent Volumes Being Tagged"
-msgstr[0] "%{amount} Volumen persistente que se está etiquetando"
-msgstr[1] "%{amount} Volúmenes persistentes que se están etiquetando"
+msgstr[0] "%{amount} volumen persistente que se está etiquetando"
+msgstr[1] "%{amount} volúmenes persistentes que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:91
 msgid "%{amount} Physical Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Physical Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount} Proveedor de infraestructura física que se está etiquetando"
-msgstr[1] "%{amount} Proveedores de infraestructura física que se están etiquetando"
+msgstr[0] "%{amount} proveedor de infraestructura física que se está etiquetando"
+msgstr[1] "%{amount} proveedores de infraestructura física que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:93
 msgid "%{amount} Physical Server Being Tagged"
 msgid_plural "%{amount} Physical Servers Being Tagged"
-msgstr[0] "%{amount} Servidor físico que se está etiquetando"
-msgstr[1] "%{amount} Servidores físicos que se están etiquetando"
+msgstr[0] "%{amount} servidor físico que se está etiquetando"
+msgstr[1] "%{amount} servidores físicos que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:95
 msgid "%{amount} Playbook (Embedded Ansible) Being Tagged"
 msgid_plural "%{amount} Playbooks (Embedded Ansible) Being Tagged"
-msgstr[0] "%{amount} Playbook (Ansible incorporado) que se están etiquetando"
-msgstr[1] "%{amount} Playbooks (Ansible incorporado) que se están etiquetando"
+msgstr[0] "%{amount} playbook (Ansible incorporado) que se están etiquetando"
+msgstr[1] "%{amount} playbooks (Ansible incorporado) que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:97
 msgid "%{amount} Repository Being Tagged"
 msgid_plural "%{amount} Repositorys Being Tagged"
-msgstr[0] "%{amount} Repositorio que se está etiquetando"
-msgstr[1] "%{amount} Repositorios que se están etiquetando"
+msgstr[0] "%{amount} repositorio que se está etiquetando"
+msgstr[1] "%{amount} repositorios que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:99
 msgid "%{amount} Resource Pool Being Tagged"
 msgid_plural "%{amount} Resource Pools Being Tagged"
-msgstr[0] "%{amount} Agrupación de recursos que se está etiquetando"
-msgstr[1] "%{amount} Agrupaciones de recursos que se están etiquetando"
+msgstr[0] "%{amount} agrupación de recursos que se está etiquetando"
+msgstr[1] "%{amount} agrupaciones de recursos que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:101
 msgid "%{amount} Security Group Being Tagged"
 msgid_plural "%{amount} Security Groups Being Tagged"
-msgstr[0] "%{amount} Grupo de seguridad que se está etiquetando"
-msgstr[1] "%{amount} Grupos de seguridad que se están etiquetando"
+msgstr[0] "%{amount} grupo de seguridad que se está etiquetando"
+msgstr[1] "%{amount} grupos de seguridad que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:103
 msgid "%{amount} Service Being Tagged"
 msgid_plural "%{amount} Services Being Tagged"
-msgstr[0] "%{amount} Servicio que se está etiquetando"
-msgstr[1] "%{amount} Servicios que se están etiquetando"
+msgstr[0] "%{amount} servicio que se está etiquetando"
+msgstr[1] "%{amount} servicios que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:105
 msgid "%{amount} Service Catalog Item Being Tagged"
 msgid_plural "%{amount} Service Catalog Items Being Tagged"
-msgstr[0] "%{amount} Elemento de catálogo de servicios que se está etiquetando"
-msgstr[1] "%{amount} Elementos de catálogo de servicios que se están etiquetando"
+msgstr[0] "%{amount} elemento de catálogo de servicios que se está etiquetando"
+msgstr[1] "%{amount} elementos de catálogo de servicios que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:107
 msgid "%{amount} Storage Manager Being Tagged"
 msgid_plural "%{amount} Storage Managers Being Tagged"
-msgstr[0] "%{amount} Gestor de almacenamiento que se está etiquetando"
-msgstr[1] "%{amount} Gestores de almacenamiento que se están etiquetando"
+msgstr[0] "%{amount} gestor de almacenamiento que se está etiquetando"
+msgstr[1] "%{amount} gestores de almacenamiento que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:109
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
-msgstr[0] "%{amount} Conmutador que se está etiquetando"
-msgstr[1] "%{amount} Conmutadores que se están etiquetando"
+msgstr[0] "%{amount} conmutador que se está etiquetando"
+msgstr[1] "%{amount} conmutadores que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:111
 msgid "%{amount} Template (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} Plantilla (Ansible Tower) que se está etiquetando"
-msgstr[1] "%{amount} Plantillas (Ansible Tower) que se están etiquetando"
+msgstr[0] "%{amount} plantilla (Ansible Tower) que se está etiquetando"
+msgstr[1] "%{amount} plantillas (Ansible Tower) que se están etiquetando"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:113
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
-msgstr[0] "%{amount} Máquina virtual o plantilla que se está etiquetando"
-msgstr[1] "%{amount} Máquinas virtuales o plantillas que se están etiquetando"
+msgstr[0] "%{amount} máquina virtual o plantilla que se está etiquetando"
+msgstr[1] "%{amount} máquinas virtuales o plantillas que se están etiquetando"
 
 #: ../app/helpers/application_helper/button/miq_request_delete.rb:10
 msgid "%{approval_states} requests cannot be deleted"
@@ -53778,7 +53778,7 @@ msgstr "* Intervalo de rendimiento"
 
 #: ../app/views/report/_form_chart.html.haml:68
 msgid "* Pie and Donut charts are not recommended for small percentages because the labels may overlap."
-msgstr "* No se recomiendan los gráficos circulares y los diagramas de anillo para porcentajes pequeños porque las etiquetas se pueden solapar. "
+msgstr "* No se recomiendan los gráficos circulares y los diagramas de anillo para porcentajes pequeños porque las etiquetas se pueden solapar."
 
 #: ../app/views/layouts/_protect.html.haml:12
 msgid "* Policy Profile is only applied to some of the items below."
@@ -53882,13 +53882,13 @@ msgstr "1 hora"
 msgid "1 Instance to be Evacuated"
 msgid_plural "%{amount} Instances to be Evacuated"
 msgstr[0] "1 Instancia se va a evacuar"
-msgstr[1] "%{amount} Instancias se van a evacuar"
+msgstr[1] "%{amount} instancias se van a evacuar"
 
 #: ../app/views/vm_common/_live_migrate.html.haml:59
 msgid "1 Instance to be Live Migrated"
 msgid_plural "%{amount} Instances to be Live Migrated"
 msgstr[0] "1 Instancia se va a migrar en directo"
-msgstr[1] "%{amount} Instancias se van a migrar en directo"
+msgstr[1] "%{amount} instancias se van a migrar en directo"
 
 #: ../app/controllers/miq_alert_controller.rb:528
 msgid "1 Minute"
@@ -55017,7 +55017,7 @@ msgstr "Añadir una nueva política"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:12
 msgid "Add a New Policy Profile"
-msgstr "Añadir un nuevo perfil de políticas"
+msgstr "Añadir un nuevo perfil de política"
 
 #: ../app/views/catalog/_form_resources_info.html.haml:11
 msgid "Add a Resource"
@@ -55277,7 +55277,7 @@ msgstr "La adición del inquilino de nube \"%s\" se ha puesto en cola correctame
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:39
 msgid "Add of Cloud Volume \"%s\" has been successfully queued."
-msgstr "La adición del volumen en la nube \"%s\" se ha puesto en cola correctamente. "
+msgstr "La adición del volumen en la nube \"%s\" se ha puesto en cola correctamente."
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:57
 msgid "Add of Credential \"%s\" has been successfully queued."
@@ -60759,7 +60759,7 @@ msgstr "Días"
 
 #: ../app/controllers/miq_action_controller.rb:164
 msgid "Default Action \"%{name}\" cannot be edited."
-msgstr "No se puede editar la acción predeterminada \"%{name}\". "
+msgstr "No se puede editar la acción predeterminada \"%{name}\"."
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:106
 msgid "Default Adapter"
@@ -61232,7 +61232,7 @@ msgstr "Suprimir alertas de política seleccionadas"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_sets_center.rb:29
 msgid "Delete selected Policy Profiles"
-msgstr "Suprimir perfiles de políticas seleccionados"
+msgstr "Suprimir perfiles de política seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:36
 msgid "Delete selected Roles"
@@ -62175,7 +62175,7 @@ msgstr "Modificar acciones para este evento de política"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_center.rb:72
 msgid "Edit Actions for this Policy's Event"
-msgstr "Modificar acciones para el evento de esta política"
+msgstr "Modificar acciones para este evento de la política"
 
 #: ../app/controllers/miq_alert_set_controller.rb:130
 msgid "Edit Alert Profile assignments cancelled by user"
@@ -68042,11 +68042,11 @@ msgstr "No hay políticas definidas."
 
 #: ../app/controllers/application_controller/policy_support.rb:241
 msgid "No Policy Profiles are available"
-msgstr "No hay perfiles de políticas disponibles"
+msgstr "No hay perfiles de política disponibles"
 
 #: ../app/views/layouts/_protect.html.haml:5
 msgid "No Policy Profiles available."
-msgstr "Ningún perfil de políticas disponible."
+msgstr "Ningún perfil de política disponible."
 
 #: ../app/views/miq_policy/show.html.haml:44
 msgid "No Policy scope defined, the scope of this policy includes all elements."
@@ -69926,7 +69926,7 @@ msgstr "El Perfil de política debe contener al menos una política"
 
 #: ../app/views/layouts/_policy_sim.html.haml:27
 msgid "Policy Profiles in Effect"
-msgstr "Modelo de políticas en vigor"
+msgstr "Perfil de política en vigor"
 
 #: ../app/views/miq_policy_set/_form.html.haml:21
 msgid "Policy Selection"
@@ -71100,7 +71100,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/ems_block_storages_center.rb:16
 msgid "Refresh relationships and power states for all items related to the selected Block Storage Managers?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con los administradores de almacenamiento por bloques seleccionados?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con los administradores de almacenamiento por bloques seleccionados?"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:12
 msgid "Refresh relationships and power states for all items related to the selected Cloud Providers"
@@ -71132,7 +71132,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:16
 msgid "Refresh relationships and power states for all items related to the selected Object Storage Managers?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con los administradores de almacenamiento por objetos seleccionados?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con los administradores de almacenamiento por objetos seleccionados?"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:12
 msgid "Refresh relationships and power states for all items related to the selected Physical Infrastructure Providers"
@@ -71140,7 +71140,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:16
 msgid "Refresh relationships and power states for all items related to the selected Physical Infrastructure Providers?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con los proveedores de infraestructura física seleccionados?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con los proveedores de infraestructura física seleccionados?"
 
 #: ../app/helpers/application_helper/toolbar/physical_servers_center.rb:14
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb:14
@@ -71158,7 +71158,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:16
 msgid "Refresh relationships and power states for all items related to the selected Storage Managers?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con los administradores de almacenamiento seleccionados?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con los administradores de almacenamiento seleccionados?"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:14
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:14
@@ -71192,7 +71192,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:19
 msgid "Refresh relationships and power states for all items related to these Host Initiators?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con estos iniciadores de host?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con estos iniciadores de host?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:14
 msgid "Refresh relationships and power states for all items related to these Physical Storages"
@@ -71200,7 +71200,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:19
 msgid "Refresh relationships and power states for all items related to these Physical Storages?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con estos almacenamientos físicos?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con estos almacenamientos físicos?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb:14
 msgid "Refresh relationships and power states for all items related to these Physical Switches"
@@ -71208,7 +71208,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb:20
 msgid "Refresh relationships and power states for all items related to these Physical Switches?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con estos switches físicos?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con estos switches físicos?"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:14
 msgid "Refresh relationships and power states for all items related to these Volume Mappings"
@@ -71216,7 +71216,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:19
 msgid "Refresh relationships and power states for all items related to these Volume Mappings?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con estas correlaciones de volúmenes?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con estas correlaciones de volúmenes?"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Cloud Provider"
@@ -71232,7 +71232,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Host Initiator?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este iniciador de host?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este iniciador de host?"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:12
 msgid "Refresh relationships and power states for all items related to this Image"
@@ -71272,23 +71272,23 @@ msgstr "¿Desea actualizar relaciones y estados de energía para todos los ítem
 
 #: ../app/helpers/application_helper/toolbar/physical_rack_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Physical Rack?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este rack físico?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este rack físico?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Physical Storage"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este almacenamiento físico?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este almacenamiento físico?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Physical Storage?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este almacenamiento físico?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este almacenamiento físico?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb:14
 msgid "Refresh relationships and power states for all items related to this Physical Switch"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este switch físico?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este switch físico?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb:20
 msgid "Refresh relationships and power states for all items related to this Physical Switch?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este switch físico?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este switch físico?"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:17
 msgid "Refresh relationships and power states for all items related to this Storage Manager"
@@ -71296,7 +71296,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Storage Manager?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con este administrador de almacenamiento?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con este administrador de almacenamiento?"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:12
 msgid "Refresh relationships and power states for all items related to this Template"
@@ -71320,7 +71320,7 @@ msgstr "Actualizar relaciones y estados de energía para todos los elementos rel
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb:19
 msgid "Refresh relationships and power states for all items related to this Volume Mapping?"
-msgstr "¿Desea actualizar relaciones y estados de energía para todos los elementos relacionados con esta correlación de volúmenes?"
+msgstr "¿Desea actualizar las relaciones y los estados de energía para todos los elementos relacionados con esta correlación de volúmenes?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:12
 msgid "Refresh relationships and power states for all items related to this item"
@@ -73595,7 +73595,7 @@ msgstr "Seleccionar métodos para copiar"
 
 #: ../app/views/layouts/_protect.html.haml:3
 msgid "Select Policy Profiles"
-msgstr "Seleccione los modelos de políticas"
+msgstr "Seleccione los perfiles de política"
 
 #:
 #: ../app/javascript/components/vm-server-relationship-form/vm-server-relationship-form.schema.js:8
@@ -73618,7 +73618,7 @@ msgstr "Seleccionar un grupo:"
 
 #: ../app/views/layouts/_policy_sim.html.haml:16
 msgid "Select a Policy Profile to add:"
-msgstr "Seleccione un modelo de políticas para añadir:"
+msgstr "Seleccione un perfil de política para añadir:"
 
 #: ../app/views/miq_policy_rsop/_rsop_options.html.haml:26
 msgid "Select a VM to Submit the Simulation Options"
@@ -79410,12 +79410,12 @@ msgstr "centrado"
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:83
 msgid "chap_name:"
-msgstr "chap_name:"
+msgstr "Nombre de chap:"
 
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:94
 msgid "chap_secret:"
-msgstr "chap_secret:"
+msgstr "Secreto chap:"
 
 #: ../app/views/layouts/_content.html.haml:25
 msgid "clear"
@@ -79431,11 +79431,11 @@ msgstr "depuración"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:19
 msgid "defining of host initiator was cancelled by the user"
-msgstr "la definición del iniciador de host fue cancelada por el usuario"
+msgstr "El usuario ha cancelado la definición del iniciador de host"
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:22
 msgid "defining of volume mapping was cancelled by the user"
-msgstr "la definición de la correlación de volúmenes fue cancelada por el usuario"
+msgstr "El usuario ha cancelado la definición de la correlación de volúmenes"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:295
 msgid "description:[%{session}] to [%{name}]"

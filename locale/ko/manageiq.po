@@ -52255,277 +52255,277 @@ msgstr "%{type} 태그가 있는 %{alert_profiles}"
 #: ../app/views/layouts/_tag_edit_items.html.haml:115
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] "%{amount}개의 %{objects}에 태그를 지정하는 중입니다."
+msgstr[0] "%{amount}개의 %{objects}에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:7
 msgid "%{amount} Ansible Tower Job Being Tagged"
 msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount}개의 Ansible Tower 작업에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 Ansible Tower 작업에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:9
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}개의 자동화 관리자(Ansible Tower)에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 자동화 관리자(Ansible Tower)에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:11
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
-msgstr[0] "%{amount}개의 가용성 구역에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 가용성 구역에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:13
 msgid "%{amount} Cloud Network Being Tagged"
 msgid_plural "%{amount} Cloud Networks Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 네트워크에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 네트워크에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:15
 msgid "%{amount} Cloud Object Store Container Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Containers Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 오브젝트 저장소 컨테이너에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 오브젝트 저장소 컨테이너에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:17
 msgid "%{amount} Cloud Object Store Object Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Objects Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 오브젝트 저장소 오브젝트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 오브젝트 저장소 오브젝트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:19
 msgid "%{amount} Cloud Provider Being Tagged"
 msgid_plural "%{amount} Cloud Providers Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 제공자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 제공자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:21
 msgid "%{amount} Cloud Subnet Being Tagged"
 msgid_plural "%{amount} Cloud Subnets Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 서브넷에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 서브넷에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:23
 msgid "%{amount} Cloud Tenant Being Tagged"
 msgid_plural "%{amount} Cloud Tenants Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 테넌트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 테넌트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:25
 msgid "%{amount} Cloud Volume Being Tagged"
 msgid_plural "%{amount} Cloud Volumes Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 볼륨에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 볼륨에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:27
 msgid "%{amount} Cloud Volume Snapshot Being Tagged"
 msgid_plural "%{amount} Cloud Volume Snapshots Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 볼륨 스냅샷에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 볼륨 스냅샷에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:29
 msgid "%{amount} Cloud Volume Type Being Tagged"
 msgid_plural "%{amount} Cloud Volume Types Being Tagged"
-msgstr[0] "%{amount}개의 클라우드 볼륨 유형에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클라우드 볼륨 유형에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:31
 msgid "%{amount} Cluster Being Tagged"
 msgid_plural "%{amount} Clusters Being Tagged"
-msgstr[0] "%{amount}개의 클러스터에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 클러스터에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:33
 msgid "%{amount} Configuration Manager Being Tagged"
 msgid_plural "%{amount} Configuration Managers Being Tagged"
-msgstr[0] "%{amount}개의 구성 관리자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 구성 관리자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:35
 msgid "%{amount} Configured System Being Tagged"
 msgid_plural "%{amount} Configured Systems Being Tagged"
-msgstr[0] "%{amount}개의 구성된 시스템에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 구성된 시스템에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:37
 msgid "%{amount} Container Being Tagged"
 msgid_plural "%{amount} Containers Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:39
 msgid "%{amount} Container Build Being Tagged"
 msgid_plural "%{amount} Container Builds Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 빌드에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 빌드에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
 msgid_plural "%{amount} Container Images Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 이미지에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 이미지에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 이미지 레지스트리에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 이미지 레지스트리에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
 msgid_plural "%{amount} Container Nodes Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 노드에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 노드에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:47
 msgid "%{amount} Container Pod Being Tagged"
 msgid_plural "%{amount} Container Pods Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 팟(Pod)에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 팟(Pod)에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:49
 msgid "%{amount} Container Project Being Tagged"
 msgid_plural "%{amount} Container Projects Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 프로젝트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 프로젝트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:51
 msgid "%{amount} Container Replicator Being Tagged"
 msgid_plural "%{amount} Container Replicators Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 복제자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 복제자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:53
 msgid "%{amount} Container Route Being Tagged"
 msgid_plural "%{amount} Container Routes Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 라우트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 라우트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:55
 msgid "%{amount} Container Service Being Tagged"
 msgid_plural "%{amount} Container Services Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 서비스에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 서비스에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:57
 msgid "%{amount} Container Template Being Tagged"
 msgid_plural "%{amount} Container Templates Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 템플리트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 템플리트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:59
 msgid "%{amount} Containers Provider Being Tagged"
 msgid_plural "%{amount} Containers Providers Being Tagged"
-msgstr[0] "%{amount}개의 컨테이너 제공자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 컨테이너 제공자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:61
 msgid "%{amount} Credential Being Tagged"
 msgid_plural "%{amount} Credentials Being Tagged"
-msgstr[0] "%{amount}개의 인증 정보에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 인증 정보에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:63
 msgid "%{amount} Datastore Being Tagged"
 msgid_plural "%{amount} Datastores Being Tagged"
-msgstr[0] "%{amount}개의 데이터 저장소에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 데이터 저장소에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:65
 msgid "%{amount} Flavor Being Tagged"
 msgid_plural "%{amount} Flavors Being Tagged"
-msgstr[0] "%{amount}개의 플레이버에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 플레이버에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:67
 msgid "%{amount} Floating IP Being Tagged"
 msgid_plural "%{amount} Floating IPs Being Tagged"
-msgstr[0] "%{amount}개의 유동 IP에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 유동 IP에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:71
 msgid "%{amount} Host Aggregate Being Tagged"
 msgid_plural "%{amount} Host Aggregates Being Tagged"
-msgstr[0] "%{amount}개의 호스트 집계에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 호스트 집계에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:69
 msgid "%{amount} Host Being Tagged"
 msgid_plural "%{amount} Hosts Being Tagged"
-msgstr[0] "%{amount}개의 호스트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 호스트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:73
 msgid "%{amount} Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount}개의 인프라 제공자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 인프라 제공자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:75
 msgid "%{amount} Key Pair Being Tagged"
 msgid_plural "%{amount} Key Pairs Being Tagged"
-msgstr[0] "%{amount}개의 키 쌍에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 키 쌍에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:77
 msgid "%{amount} Network Manager Being Tagged"
 msgid_plural "%{amount} Network Managers Being Tagged"
-msgstr[0] "%{amount}개의 네트워크 관리자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 네트워크 관리자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:79
 msgid "%{amount} Network Port Being Tagged"
 msgid_plural "%{amount} Network Ports Being Tagged"
-msgstr[0] "%{amount}개의 네트워크 포트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 네트워크 포트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:81
 msgid "%{amount} Network Router Being Tagged"
 msgid_plural "%{amount} Network Routers Being Tagged"
-msgstr[0] "%{amount}개의 네트워크 라우터에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 네트워크 라우터에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:83
 msgid "%{amount} Orchestration Stack Being Tagged"
 msgid_plural "%{amount} Orchestration Stacks Being Tagged"
-msgstr[0] "%{amount}개의 오케스트레이션 스택에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 오케스트레이션 스택에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:85
 msgid "%{amount} Orchestration Template Being Tagged"
 msgid_plural "%{amount} Orchestration Templates Being Tagged"
-msgstr[0] "%{amount}개의 오케스트레이션 템플리트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 오케스트레이션 템플리트에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:87
 msgid "%{amount} PXE Server Being Tagged"
 msgid_plural "%{amount} PXE Servers Being Tagged"
-msgstr[0] "%{amount}개의 Pxe 서버에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 Pxe 서버에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:89
 msgid "%{amount} Persistent Volume Being Tagged"
 msgid_plural "%{amount} Persistent Volumes Being Tagged"
-msgstr[0] "%{amount}개의 지속 볼륨에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 지속 볼륨에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:91
 msgid "%{amount} Physical Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Physical Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount}개의 물리적 인프라 제공자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 물리적 인프라 제공자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:93
 msgid "%{amount} Physical Server Being Tagged"
 msgid_plural "%{amount} Physical Servers Being Tagged"
-msgstr[0] "%{amount}개의 물리적 서버에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 물리적 서버에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:95
 msgid "%{amount} Playbook (Embedded Ansible) Being Tagged"
 msgid_plural "%{amount} Playbooks (Embedded Ansible) Being Tagged"
-msgstr[0] "%{amount}개의 플레이북(임베디드 Ansible)에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 플레이북(임베디드 Ansible)에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:97
 msgid "%{amount} Repository Being Tagged"
 msgid_plural "%{amount} Repositorys Being Tagged"
-msgstr[0] "%{amount}개의 저장소에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 저장소에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:99
 msgid "%{amount} Resource Pool Being Tagged"
 msgid_plural "%{amount} Resource Pools Being Tagged"
-msgstr[0] "%{amount}개의 리소스 풀에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 리소스 풀에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:101
 msgid "%{amount} Security Group Being Tagged"
 msgid_plural "%{amount} Security Groups Being Tagged"
-msgstr[0] "%{amount}개의 보안 그룹에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 보안 그룹에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:103
 msgid "%{amount} Service Being Tagged"
 msgid_plural "%{amount} Services Being Tagged"
-msgstr[0] "%{amount}개의 서비스에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 서비스에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:105
 msgid "%{amount} Service Catalog Item Being Tagged"
 msgid_plural "%{amount} Service Catalog Items Being Tagged"
-msgstr[0] "%{amount}개의 서비스 카탈로그 항목에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 서비스 카탈로그 항목에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:107
 msgid "%{amount} Storage Manager Being Tagged"
 msgid_plural "%{amount} Storage Managers Being Tagged"
-msgstr[0] "%{amount}개의 스토리지 관리자에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 스토리지 관리자에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:109
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
-msgstr[0] "%{amount}개의 스위치에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 스위치에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:111
 msgid "%{amount} Template (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}개의 템플리트(Ansible Tower)에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 템플리트(Ansible Tower)에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:113
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
-msgstr[0] "%{amount}개의 VM 또는 템플리트에 태그를 지정하는 중"
+msgstr[0] "%{amount}개의 VM 또는 템플리트에 태그가 지정됨"
 
 #: ../app/helpers/application_helper/button/miq_request_delete.rb:10
 msgid "%{approval_states} requests cannot be deleted"
@@ -56233,7 +56233,7 @@ msgstr "이 항목과 모든 하위를 삭제하시겠습니까?"
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:34
 msgid "Are you sure you want to delete this physical storage?\nNote that all of the attached services (e.g. volumes) will be unmapped."
-msgstr "이 물리적 스토리지를 삭제하시겠습니까? 접속된 모든 서비스(예: 볼륨)가 맵핑 해제됩니다. "
+msgstr "이 물리적 스토리지를 삭제하시겠습니까?\n접속된 모든 서비스(예: 볼륨)가 맵핑 해제됩니다."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:76
 msgid "Are you sure you want to delete this volume?"
@@ -66890,7 +66890,7 @@ msgstr "정수여야 함"
 
 #: ../app/javascript/components/flavor-form/flavor-form.schema.js:20
 msgid "Must be greater than or equal to %d"
-msgstr "%d보다 크거나 같아야 합니다. "
+msgstr "%d보다 크거나 같아야 합니다."
 
 #: ../app/controllers/report_controller/menus.rb:647
 msgid "My EVM Group"
@@ -81487,7 +81487,7 @@ msgstr "지정된 값"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:166
 msgid "EVM User Being Tagged"
-msgstr "태그를 지정 중인 EVM 사용자"
+msgstr "EVM 사용자에 태그가 지정됨"
 
 #: src/rbac-forms/rbacUserForm.jsx:71
 msgid "Email must be a valid email address"
