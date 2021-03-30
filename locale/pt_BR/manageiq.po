@@ -3275,7 +3275,7 @@ msgstr "Inicializável"
 #: ../config/model_display_names.rb:14 ../config/dictionary_strings.rb:2740
 msgid "Bottleneck Event"
 msgid_plural "Bottleneck Events"
-msgstr[0] "Evento de gargalo"
+msgstr[0] "Evento degargalo"
 msgstr[1] "Eventos de gargalo"
 
 #. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent (plural form)
@@ -18734,7 +18734,7 @@ msgstr "ExtManagementSystem|suporta a criação de roteador de rede"
 
 #: ../config/model_attributes.rb:1698
 msgid "ExtManagementSystem|Supports create security group"
-msgstr "ExtManagementSystem | Suporta a criação de grupo de segurança"
+msgstr "ExtManagementSystem | Suporta a criação de grupo de\nsegurança"
 
 #: ../config/model_attributes.rb:1699
 msgid "ExtManagementSystem|Supports storage services"
@@ -38756,7 +38756,7 @@ msgstr[1] "Histórico de varredura"
 #: ../config/model_display_names.rb:200 ../config/dictionary_strings.rb:3788
 msgid "Scan Item"
 msgid_plural "Scan Items"
-msgstr[0] "Item de varredura"
+msgstr[0] "Item de\nvarredura"
 msgstr[1] "Itens de varredura"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ScanItem (plural form)
@@ -51005,11 +51005,11 @@ msgstr "Detectar"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:50
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\n  example: http://my_file_server.org:3333/xccdf_files/\n  Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir um prefixo de caminho de URL para o arquivo XCCDF em vez de acessar o local padrão.\nPor exemplo: http://my_file_server.org: 3333/xccdf_files/\nEsperando encontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
+msgstr "Permite definir um prefixo de caminho de URL para o arquivo XCCDF em vez de acessar o local padrão.\n  Por exemplo: http://my_file_server.org: 3333/xccdf_files/ Esperando encontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:743
 msgid "Enables defining a URL path prefix for XCCDF file instead of accessing the default location.\nexample: http://my_file_server.org:3333/xccdf_files/\nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
-msgstr "Permite definir um prefixo de caminho de URL para o arquivo XCCDF em vez de acessar o local padrão.\nPor exemplo: http://my_file_server.org: 3333/xccdf_files/\nEsperando encontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
+msgstr "Permite definir um prefixo de caminho de URL para o arquivo XCCDF em vez de acessar o local padrão.\nPor exemplo: http://my_file_server.org: 3333/xccdf_files/ Esperando encontrar o arquivo com.redhat.rhsa-RHEL7.ds.xml.bz2 lá."
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:681
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:697
@@ -51906,7 +51906,7 @@ msgstr "Este recurso não é suportado pela versão da API do provedor"
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm_or_template_shared/scanning.rb:51
 msgid "VMs must be scanned from an EVM server whose host is attached to the same\n  storage as the VM unless overridden via SmartProxy affinity.\n  Please verify that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management Relationship is set for the ManageIQ appliance"
-msgstr "As VMs devem ser escaneadas a partir de um servidor EVM cujo host esteja conectado ao mesmo armazenamento que a VM, a menos que seja substituído por meio da afinidade do SmartProxy.\n  Verifique se:\n1) LUNs diretas estão conectadas ao dispositivo ManageIQ\n2) O relacionamento de gerenciamento está configurado para o dispositivo ManageIQ"
+msgstr "As VMs devem ser escaneadas a partir de um servidor EVM cujo host esteja conectado ao mesmo armazenamento que a VM, a menos que seja substituído por meio da afinidade do SmartProxy.\n  Verifique se: 1) LUNs diretas estão conectadas ao dispositivo ManageIQ\n2) O relacionamento de gerenciamento está configurado para o dispositivo ManageIQ"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow/dialog_field_validation.rb:11
