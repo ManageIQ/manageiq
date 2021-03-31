@@ -53,7 +53,9 @@ class MiqWorker
     end
 
     def zone_selector
-      {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone-#{MiqServer.my_zone}" => "true"}
+      product = Vmdb::Appliance.PRODUCT_NAME.downcase.gsub(/[^-a-z0-9\.]/, "-")
+      zone    = MiqServer.my_zone.chomp.strip.gsub(/[^-A-Za-z0-9_\.\/]/, "-")
+      {"#{product}/zone-#{zone}" => "true"}
     end
 
     def container_image
