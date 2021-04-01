@@ -149,6 +149,11 @@ module AuthenticationMixin
     !has_credentials?(type)
   end
 
+  def provider_authentication_status_ok?(type = nil)
+    authtype = [type, default_authentication_type].compact
+    authentication_for_providers.find_by(:authtype => authtype).try(:status) == "Valid"
+  end
+
   def authentication_status_ok?(type = nil)
     authentication_best_fit(type).try(:status) == "Valid"
   end
