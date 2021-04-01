@@ -11,12 +11,16 @@ class MiqPolicy < ApplicationRecord
                                  PhysicalServer
                                  Vm).freeze
 
-  POLICY_TOWHAT_APPLIES_TO_CLASSES = TOWHAT_APPLIES_TO_CLASSES.inject({}) { |hsh, key| hsh[key] = ui_lookup(:model => key); hsh }.freeze
+  def self.policy_towhat_applies_to_classes
+    TOWHAT_APPLIES_TO_CLASSES.index_with { |key| ui_lookup(:model => key) }
+  end
 
-  POLICY_MODES = {
-    "control" => _("Control"),
-    "compliance" => _("Compliance")
-  }.freeze
+  def self.policy_modes
+    {
+      "control" => _("Control"),
+      "compliance" => _("Compliance")
+    }
+  end
 
   acts_as_miq_taggable
   acts_as_miq_set_member
