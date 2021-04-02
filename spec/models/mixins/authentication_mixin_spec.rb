@@ -847,4 +847,65 @@ RSpec.describe AuthenticationMixin do
       end
     end
   end
+
+  describe "#provider_authentication_status_ok?" do
+    before    { EvmSpecHelper.local_miq_server }
+    let(:ems) { FactoryBot.create(:ext_management_system) }
+
+    context "with no authentications" do
+      it "is falsey" do
+        expect(ems.provider_authentication_status_ok?).to be_falsey
+      end
+    end
+
+    context "with one valid authentication" do
+      before { FactoryBot.create(:authentication, :resource => ems, :status => "Valid", :authtype => "default") }
+
+      it "is truthy" do
+        expect(ems.provider_authentication_status_ok?).to be_truthy
+      end
+    end
+
+    context "with one invalid authentication" do
+      before { FactoryBot.create(:authentication, :resource => ems, :status => "Invalid", :authtype => "default") }
+
+      it "is falsey" do
+        expect(ems.provider_authentication_status_ok?).to be_falsey
+      end
+    end
+
+    context "with one valid and one invalid authentication" do
+      before do
+        FactoryBot.create(:authentication, :resource => ems, :status => "Invalid", :authtype => "default")
+        FactoryBot.create(:authentication, :resource => ems, :status => "Valid", :authtype => "metrics")
+      end
+
+      it "is truthy with metrics authtype" do
+        expect(ems.provider_authentication_status_ok?(:metrics)).to be_truthy
+      end
+
+      it "is falsey with default authtype" do
+        expect(ems.provider_authentication_status_ok?(:default)).to be_falsey
+      end
+
+      it "is falsey without passing authtype" do
+        expect(ems.provider_authentication_status_ok?).to be_falsey
+      end
+    end
+
+    context "with one invalid provider authentication and a valid inventory authentication" do
+      before do
+        FactoryBot.create(:authentication, :resource => ems, :status => "Invalid", :authtype => "default")
+        FactoryBot.create(:authentication, :resource => ems, :status => "Valid", :authtype => nil)
+      end
+
+      it "is falsey with default authtype" do
+        expect(ems.provider_authentication_status_ok?(:default)).to be_falsey
+      end
+
+      it "doesn't find the non-provider authtype" do
+        expect(ems.provider_authentication_status_ok?).to be_falsey
+      end
+    end
+  end
 end
