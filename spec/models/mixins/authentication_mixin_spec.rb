@@ -893,7 +893,7 @@ RSpec.describe AuthenticationMixin do
       end
     end
 
-    context "with one invalid provider authentication and a valid inentory authentication" do
+    context "with one invalid provider authentication and a valid inventory authentication" do
       before do
         FactoryBot.create(:authentication, :resource => ems, :status => "Invalid", :authtype => "default")
         FactoryBot.create(:authentication, :resource => ems, :status => "Valid", :authtype => nil)

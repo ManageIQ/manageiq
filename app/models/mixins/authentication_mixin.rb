@@ -153,7 +153,7 @@ module AuthenticationMixin
     authtype = [type, default_authentication_type].compact
 
     # Prioritize the requested authtype if it exists, otherwise fall back to the default
-    authentication_for_providers.where(:authtype => authtype).min_by { |a| a.authtype == type.to_s ? 0 : 1 }.try(:status) == "Valid"
+    authentication_for_providers.where(:authtype => authtype).order(:id).min_by { |a| a.authtype == type.to_s ? 0 : 1 }.try(:status) == "Valid"
   end
 
   def authentication_status_ok?(type = nil)
