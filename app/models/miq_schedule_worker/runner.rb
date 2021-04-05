@@ -105,18 +105,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:vmdb_database_connection_log_statistics)
     end
 
-    # Schedule - Periodic check for updates on appliances only
-    if MiqEnvironment::Command.is_appliance?
-      scheduler.schedule_every(
-        :miq_server_queue_update_registration_status,
-        worker_settings[:yum_update_check],
-        :first_in => 1.minute,
-        :tags     => [:server_updates, schedule_category]
-      ) do
-        enqueue(:miq_server_queue_update_registration_status)
-      end
-    end
-
     # Schedule - Add audit log entry for total number of vms managed by system.
     scheduler.schedule_every(
       :miq_server_audit_managed_resources,
