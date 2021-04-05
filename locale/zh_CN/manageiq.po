@@ -168,7 +168,7 @@ msgstr "%{description} 保留超过虚拟机内存"
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:51
 #: ../app/models/miq_provision_virt_workflow/dialog_field_validation.rb:58
 msgid "%{description} is required"
-msgstr "%{description} 为必需"
+msgstr "%{description} 为必填项"
 
 #: ../app/models/miq_queue.rb:402
 msgid "%{log_message} \"%{error}\" attempting merge next message"
@@ -238,7 +238,7 @@ msgstr "%{name} 已退订"
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:36
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:47
 msgid "%{name} is required"
-msgstr "%{name} 为必需"
+msgstr "%{name} 为必填项"
 
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:49
 msgid "%{name} may not contain blacklisted value"
@@ -5314,7 +5314,7 @@ msgstr[0] "云子网网络端口"
 
 #: ../app/helpers/flavor_helper/textual_summary.rb:72
 msgid "Cloud Subnet Required"
-msgstr "云子网是必需的"
+msgstr "云子网为必填项"
 
 #: ../app/helpers/ems_network_helper/textual_summary.rb:100
 #: ../app/helpers/network_router_helper/textual_summary.rb:87
@@ -9797,7 +9797,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:1201
 msgid "ContainerTemplateParameter|Required"
-msgstr "必需"
+msgstr "必填"
 
 #: ../config/model_attributes.rb:1202
 msgid "ContainerTemplateParameter|Value"
@@ -12867,15 +12867,15 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:1371
 msgid "DialogField|Required"
-msgstr "必需"
+msgstr "必填"
 
 #: ../config/model_attributes.rb:1372
 msgid "DialogField|Required method"
-msgstr "必需的方法"
+msgstr "必填的方法"
 
 #: ../config/model_attributes.rb:1373
 msgid "DialogField|Required method options"
-msgstr "必需的方法选项"
+msgstr "必填的方法选项"
 
 #: ../config/model_attributes.rb:1374
 msgid "DialogField|Show refresh button"
@@ -19114,7 +19114,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:1781
 msgid "FirewallRule|Required"
-msgstr "必需"
+msgstr "必填"
 
 #: ../config/model_attributes.rb:1782
 msgid "FirewallRule|Resource type"
@@ -37563,7 +37563,7 @@ msgstr "没有指定需要的密钥：[%{key}]"
 
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:19
 msgid "Required tag(s): %{names}"
-msgstr "必需标记：%{names}"
+msgstr "必填标记：%{names}"
 
 #: ../config/model_attributes.rb:3878
 msgid "Reserve"
@@ -48890,7 +48890,7 @@ msgstr "项只能被加入到类中"
 
 #: ../app/models/ems_event.rb:41
 msgid "event_type must be set in event"
-msgstr "event_type 必需在事件中设置"
+msgstr "event_type 必须在事件中设置"
 
 #:
 #: ../lib/miq_automation_engine/engine/miq_ae_engine/miq_ae_ansible_method_base.rb:43
@@ -49189,15 +49189,15 @@ msgstr "选项 :cat_model 必须有一个值"
 
 #: ../app/models/vm_or_template.rb:1380
 msgid "option :event_types is required"
-msgstr "选项 :event_types 是必需的"
+msgstr "选项 :event_types 为必填项"
 
 #: ../app/models/vm_or_template.rb:1382
 msgid "option :freq_threshold is required"
-msgstr "选项 :freq_threshold 是必需的"
+msgstr "选项 :freq_threshold 为必填项"
 
 #: ../app/models/mixins/alert_mixin.rb:6
 msgid "option :message_filter_type is required"
-msgstr "选项 :message_filter_type 是必需的"
+msgstr "选项 :message_filter_type 为必填项"
 
 #: ../app/models/mixins/alert_mixin.rb:11
 msgid "option :message_filter_type: %{options}, invalid, expected one of %{type}"
@@ -49205,11 +49205,11 @@ msgstr "选项：message_filter_type：%{options}，无效，期望为 %{type} �
 
 #: ../app/models/mixins/alert_mixin.rb:7
 msgid "option :message_filter_value is required"
-msgstr "选项 :message_filter_value 是必需的"
+msgstr "选项 :message_filter_value 为必填项"
 
 #: ../app/models/vm_or_template.rb:1381
 msgid "option :time_threshold is required"
-msgstr "选项 :time_threshold 是必需的"
+msgstr "选项 :time_threshold 为必填项"
 
 #: ../app/models/miq_region.rb:286
 msgid "options are invalid, all keys must be one of %{type}"
@@ -49460,7 +49460,7 @@ msgstr "已启动？未针对 %{server_name} 实现"
 #: ../app/models/metric/ci_mixin/rollup.rb:74
 #: ../app/models/metric/ci_mixin/rollup.rb:121
 msgid "time_profile must be passed if interval name is 'daily'"
-msgstr "如果间隔名为“每日”，time_profile 是必需的"
+msgstr "如果间隔名为“每日”，time_profile 为必填项"
 
 #: ../app/views/layouts/exp_atom/_edit_field.html.haml:54
 #: ../app/views/layouts/exp_atom/_edit_find.html.haml:39
@@ -50835,7 +50835,7 @@ msgstr "云网络的子网的 CIDR 子网掩码"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:84
 msgid "CIDR Subnet Mask is required"
-msgstr "CIDR 子网掩码是必需的"
+msgstr "CIDR 子网掩码为必填项"
 
 #: ../app/models/manageiq/providers/nsxt/network_manager/cloud_network.rb:4
 msgid "Cloud Network (NSX-T)"
@@ -51031,7 +51031,7 @@ msgstr "安全区域"
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:99
 msgid "Security Zone is required"
-msgstr "安全区域是必需的"
+msgstr "安全区域为必填项"
 
 #:
 #: ../app/javascript/components/cloud-networks/nsxt-cloud-network-form.schema.js:94
@@ -51515,11 +51515,11 @@ msgstr "应用固件"
 
 #: ../app/javascript/components/server-provision.schema.js:51
 msgid "Customization Template is required"
-msgstr "定制模板是必需的"
+msgstr "定制模板为必填项"
 
 #: ../app/javascript/components/firmware-update.schema.js:14
 msgid "Firmware Binary is required"
-msgstr "固件二进制文件是必需的"
+msgstr "固件二进制文件为必填项"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:53
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:16
@@ -51546,11 +51546,11 @@ msgstr "生命周期"
 
 #: ../app/javascript/components/server-provision.schema.js:33
 msgid "PXE Image is required"
-msgstr "PXE 映像是必需的"
+msgstr "PXE 映像为必填项"
 
 #: ../app/javascript/components/server-provision.schema.js:19
 msgid "PXE Server is required"
-msgstr "PXE 服务器是必需的"
+msgstr "PXE 服务器为必填项"
 
 #:
 #: ../app/models/manageiq/providers/redfish/physical_infra_manager/physical_chassis.rb:4
@@ -52594,7 +52594,7 @@ msgstr "%{entry_point} 入口点（名称空间/类/实例）"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2287
 msgid "%{field} is required"
-msgstr "%{field} 为必需"
+msgstr "%{field} 为必填项"
 
 #: ../app/controllers/ops_controller/settings/upload.rb:38
 msgid "%{image} \"%{name}\" uploaded"
@@ -52633,7 +52633,7 @@ msgstr "%{message}：任务启动失败"
 
 #: ../app/controllers/vm_common.rb:383
 msgid "%{missing_field_name} is required"
-msgstr "%{missing_field_name} 为必需"
+msgstr "%{missing_field_name} 为必填项"
 
 #: ../app/controllers/automation_manager_controller.rb:317
 #: ../app/controllers/mixins/automation_manager_controller_mixin.rb:181
@@ -55868,7 +55868,7 @@ msgstr "分析概要文件“%{name}”：“更新”期间出错：%{message}"
 
 #: ../app/controllers/miq_action_controller.rb:378
 msgid "Analysis Profile is required"
-msgstr "分析概要文件是必需的"
+msgstr "分析概要文件为必填项"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:197
 msgid "Analyze and Compliance Check"
@@ -55981,7 +55981,7 @@ msgstr "应用目标"
 
 #: ../app/controllers/condition_controller.rb:82
 msgid "Applies to is required"
-msgstr "“应用目标”是必需的"
+msgstr "“应用目标”为必填项"
 
 #: ./src/fonticon-picker/components/fonticon-picker/fonticon-modal.html:18
 msgid "Apply"
@@ -56595,7 +56595,7 @@ msgstr "属性名称"
 
 #: ../app/controllers/miq_action_controller.rb:381
 msgid "Attribute Name is required"
-msgstr "属性名是必需的"
+msgstr "属性名为必填项"
 
 #: ../app/controllers/miq_action_controller.rb:384
 msgid "Attribute missing for %{field}"
@@ -57132,7 +57132,7 @@ msgstr "已保存按钮组“%{name}”"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:444
 msgid "Button Group Hover Text is required"
-msgstr "按钮组悬停文本是必需的"
+msgstr "按钮组悬停文本为必填项"
 
 #: ../app/views/shared/buttons/_group_order_form.html.haml:9
 msgid "Button Group Order:"
@@ -57156,7 +57156,7 @@ msgstr "按钮组：%{button_group_description}"
 
 #: ../app/controllers/application_controller/buttons.rb:796
 msgid "Button Hover Text is required"
-msgstr "按钮悬停文本是必需的"
+msgstr "按钮悬停文本为必填项"
 
 #: ../app/controllers/application_controller/buttons.rb:354
 #: ../app/controllers/application_controller/buttons.rb:793
@@ -57170,7 +57170,7 @@ msgstr "按钮名称"
 
 #: ../app/controllers/application_controller/buttons.rb:790
 msgid "Button Text is required"
-msgstr "按钮文本是必需的"
+msgstr "按钮文本为必填项"
 
 #: ../app/views/shared/buttons/_ab_show.html.haml:8
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:8
@@ -61008,7 +61008,7 @@ msgstr "描述已被采用"
 #: ../app/controllers/chargeback_rate_controller.rb:206
 #: ../app/controllers/ops_controller/settings/tags.rb:63
 msgid "Description is required"
-msgstr "描述是必需的"
+msgstr "描述为必填项"
 
 #: ../app/views/layouts/_tl_options.html.haml:29
 #: ../app/views/layouts/_tl_options.html.haml:42
@@ -63811,15 +63811,15 @@ msgstr "事件选择"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:658
 msgid "Event log name is required"
-msgstr "事件日志名称是必需的"
+msgstr "事件日志名称为必填项"
 
 #: ../app/controllers/miq_alert_controller.rb:609
 msgid "Event name is required"
-msgstr "事件名称是必需的"
+msgstr "事件名称为必填项"
 
 #: ../app/controllers/miq_alert_controller.rb:612
 msgid "Event to Check is required"
-msgstr "“检查事件”是必需的"
+msgstr "“检查事件”为必填项"
 
 #: ../app/views/generic_mailer/policy_action_email.text.haml:2
 #: ../app/views/generic_mailer/policy_action_email.html.haml:7
@@ -64080,7 +64080,7 @@ msgstr "文件条目"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:564
 msgid "File Entry is required"
-msgstr "文件条目是必需的"
+msgstr "文件条目为必填项"
 
 #: ../app/views/ops/_ap_show.html.haml:37
 msgid "File Items"
@@ -68165,7 +68165,7 @@ msgstr "注：必须选中“收集所有集群”才能从 Red Hat OpenStack �
 #: ../app/views/catalog/_form_request_info.html.haml:9
 #: ../app/views/miq_request/_prov_edit.html.haml:6
 msgid "Note: Fields marked with * are required."
-msgstr "注：用 * 标记的字段是必需的。"
+msgstr "注：用 * 标记的字段为必填项。"
 
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:41
 msgid "Note: Gap Collection is only available for VMware vSphere Infrastructures"
@@ -68332,7 +68332,7 @@ msgstr "OVF 编排模板"
 
 #: ../app/controllers/catalog_controller.rb:958
 msgid "OVF Template is required, please select one from the list"
-msgstr "OVF 模板是必需的，请从列表中选择一个"
+msgstr "OVF 模板为必填项，请从列表中选择一个"
 
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml:8
 msgid "Object"
@@ -71984,7 +71984,7 @@ msgstr "请求者："
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:463
 msgid "Required if SSH login is disabled for the Default account."
-msgstr "如果缺省帐户禁用 SSH 登录，则为必需。"
+msgstr "如果缺省帐户禁用 SSH 登录，则为必填项。"
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:104
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:139
@@ -72125,7 +72125,7 @@ msgstr "资源池“%{name}”：“%{task}”期间出错：%{error_message}"
 
 #: ../app/controllers/catalog_controller.rb:959
 msgid "Resource Pool is required, please select one from the list"
-msgstr "资源池是必需的，请从列表中选择一个"
+msgstr "资源池为必填项，请从列表中选择一个"
 
 #: ../app/helpers/container_project_helper/textual_summary.rb:27
 msgid "Resource Quota"
@@ -72950,7 +72950,7 @@ msgstr "搜索表达式预览"
 
 #: ../app/controllers/application_controller/advanced_search.rb:48
 msgid "Search Name is required"
-msgstr "搜索名称是必需的"
+msgstr "搜索名称为必填项"
 
 #: ../app/views/layouts/_searchbar.html.haml:11
 #: ../app/views/layouts/_searchbar.html.haml:11
@@ -73966,7 +73966,7 @@ msgstr "搁置此实例？"
 
 #: ../app/controllers/report_controller/widgets.rb:617
 msgid "Shortcut description is required"
-msgstr "简短描述是必需的"
+msgstr "简短描述为必填项"
 
 #: ../app/helpers/textual_summary_helper.rb:137
 msgid "Show %{label} '%{value}'"
@@ -74886,7 +74886,7 @@ msgstr "模拟参数"
 
 #: ../app/controllers/application_controller/buttons.rb:1154
 msgid "Simulation unavailable: Required Class \"System/Process\" is missing"
-msgstr "模拟不可用：缺失必需的类“System/Process”"
+msgstr "模拟不可用：缺失必填的类“System/Process”"
 
 #:
 #: ../app/javascript/oldjs/components/generic_object/main-custom-button-form.js:57
@@ -75219,7 +75219,7 @@ msgstr "启动消息"
 #: ../app/controllers/application_controller/buttons.rb:813
 #: ../app/controllers/miq_ae_tools_controller.rb:417
 msgid "Starting Process is required"
-msgstr "启动进程是必需的"
+msgstr "启动进程为必填项"
 
 #: ../app/views/ops/_schedule_form_timer.html.haml:50
 #: ../app/views/report/_schedule_form_timer.html.haml:72
@@ -75427,7 +75427,7 @@ msgstr "子类型"
 
 #: ../app/controllers/catalog_controller.rb:933
 msgid "Subtype is required."
-msgstr "子类型是必需的。"
+msgstr "子类型为必填项。"
 
 #: ../app/helpers/textual_mixins/textual_metrics_status.rb:17
 msgid "Success"
@@ -76679,7 +76679,7 @@ msgstr "陷阱编号"
 
 #: ../app/controllers/mixins/policy_mixin.rb:98
 msgid "Trap Number is required"
-msgstr "陷阱编号是必需的"
+msgstr "陷阱编号为必填项"
 
 #: ../app/views/miq_alert/_alert_snmp.html.haml:45
 #: ../app/views/miq_alert/show.html.haml:140
@@ -76690,7 +76690,7 @@ msgstr "陷阱对象标识"
 
 #: ../app/controllers/mixins/policy_mixin.rb:100
 msgid "Trap Object ID is required"
-msgstr "陷阱对象标识是必需的"
+msgstr "陷阱对象标识为必填项"
 
 #: ../app/views/miq_ae_tools/_results_tabs.html.haml:4
 msgid "Tree View"
@@ -76731,7 +76731,7 @@ msgstr "趋势"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1567
 msgid "Trending for is required"
-msgstr "“趋势”是必需的"
+msgstr "“趋势”为必填项"
 
 #: ../app/views/utilization/_utilization_options.html.haml:9
 msgid "Trends for past"
@@ -79808,7 +79808,7 @@ msgstr "错误：可能存在空白 .CSV 文件"
 #:
 #: ../app/javascript/react/screens/App/Overview/screens/PlanWizard/components/PlanWizardVMStep/components/CSVDropzoneField.js:29
 msgid "Error: Required column 'Name' does not exist in the .CSV file"
-msgstr "错误：.CSV 文件中不存在必需的列“名”"
+msgstr "错误：.CSV 文件中不存在必填的列“名”"
 
 #: ../app/javascript/react/screens/App/Plan/PlanActions.js:196
 msgid "Failed to download \"%s\". Reason - \"%s\""
@@ -81216,7 +81216,7 @@ msgstr "编辑选项卡详细信息"
 
 #: ./dist/js/ui-components.js:1
 msgid "Entered text does not match required format."
-msgstr "输入的文本不匹配必需的格式。"
+msgstr "输入的文本不匹配必填的格式。"
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:65
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:50
