@@ -1809,7 +1809,6 @@ en:
       last_compliance:             Last Compliance History
       ldap:                        LDAP
       linux_initprocesses:         Linux Init Processes
-      miq_action:                  Action
       miq_alert:                   Alert
       miq_approval_stamps:         Stamped Approvals
       miq_approvals:               Approvals
