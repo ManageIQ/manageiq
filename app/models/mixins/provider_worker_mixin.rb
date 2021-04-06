@@ -17,5 +17,9 @@ module ProviderWorkerMixin
     def any_valid_ems_in_zone?
       all_valid_ems_in_zone.any?
     end
+
+    def service_base_name
+      "manageiq-providers-#{minimal_class_name.underscore.tr("/", "_")}"
+    end
   end
 end

@@ -4,7 +4,7 @@ class MiqWorker
 
     class_methods do
       def service_base_name
-        minimal_class_name.underscore.tr("/", "_")
+        "manageiq-#{minimal_class_name.underscore.tr("/", "_")}"
       end
 
       def systemd_unit_dir
