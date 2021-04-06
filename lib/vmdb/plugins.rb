@@ -87,6 +87,12 @@ module Vmdb
       end
     end
 
+    def systemd_units
+      @systemd_units ||= begin
+        flat_map { |engine| engine.root.join("systemd").glob("*.*") }
+      end
+    end
+
     def load_inflections
       each do |engine|
         file = engine.root.join("config", "initializers", "inflections.rb")
