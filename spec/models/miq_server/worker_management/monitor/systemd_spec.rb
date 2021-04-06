@@ -11,7 +11,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
 
   context "#cleanup_failed_systemd_services" do
     context "with no failed services" do
-      let(:units) { [{:name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "active", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
+      let(:units) { [{:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "active", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
 
       it "doesn't call DisableUnitFiles" do
         expect(systemd_manager).not_to receive(:DisableUnitFiles)
@@ -20,7 +20,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
     end
 
     context "with failed services" do
-      let(:service_name) { "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
+      let(:service_name) { "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service" }
       let(:units) { [{:name => service_name, :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "failed", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
 
       it "calls DisableUnitFiles with the service name" do
@@ -36,8 +36,8 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
   context "#systemd_all_miq_services" do
     let(:units) do
       [
-        {:name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
-        {:name => "ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"},
+        {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
+        {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"},
         {:name => "ssh.service",                                          :active_state => "active"}
       ]
     end
@@ -50,8 +50,8 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
   context "#systemd_failed_miq_services" do
     let(:units) do
       [
-        {:name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
-        {:name => "ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"}
+        {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
+        {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"}
       ]
     end
 
@@ -62,15 +62,15 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
 
   context "#systemd_miq_service_base_names (private)" do
     it "returns the minimal_class_name" do
-      expect(server.send(:systemd_miq_service_base_names)).to include("generic", "ui")
+      expect(server.send(:systemd_miq_service_base_names)).to include("manageiq-generic", "manageiq-ui")
     end
   end
 
   context "#systemd_services (private)" do
     let(:units) do
       [
-        {:name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service"},
-        {:name => "miq.slice"}
+        {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service"},
+        {:name => "manageiq-miq.slice"}
       ]
     end
 
