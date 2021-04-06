@@ -52255,277 +52255,277 @@ msgstr "%{type}タグのある %{alert_profiles} "
 #: ../app/views/layouts/_tag_edit_items.html.haml:115
 msgid "%{amount} %{object} Being Tagged"
 msgid_plural "%{amount} %{objects} Being Tagged"
-msgstr[0] "%{amount} %{objects} タグ付けされます"
+msgstr[0] "%{amount} %{objects} タグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:7
 msgid "%{amount} Ansible Tower Job Being Tagged"
 msgid_plural "%{amount} Ansible Tower Jobs Being Tagged"
-msgstr[0] "%{amount} 個の Ansible Tower ジョブがタグ付けされます"
+msgstr[0] "%{amount} 個の Ansible Tower ジョブがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:9
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} 個の自動化マネージャー (Ansible Tower) がタグ付けされます"
+msgstr[0] "%{amount} 個の自動化マネージャー (Ansible Tower) がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:11
 msgid "%{amount} Availability Zone Being Tagged"
 msgid_plural "%{amount} Availability Zones Being Tagged"
-msgstr[0] "%{amount} 個のアベイラビリティー・ゾーンがタグ付けされます"
+msgstr[0] "%{amount} 個のアベイラビリティー・ゾーンがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:13
 msgid "%{amount} Cloud Network Being Tagged"
 msgid_plural "%{amount} Cloud Networks Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・ネットワークがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・ネットワークがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:15
 msgid "%{amount} Cloud Object Store Container Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Containers Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・オブジェクト・ストア・コンテナーがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・オブジェクト・ストア・コンテナーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:17
 msgid "%{amount} Cloud Object Store Object Being Tagged"
 msgid_plural "%{amount} Cloud Object Store Objects Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・オブジェクト・ストア・オブジェクトがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・オブジェクト・ストア・オブジェクトがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:19
 msgid "%{amount} Cloud Provider Being Tagged"
 msgid_plural "%{amount} Cloud Providers Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・プロバイダーがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・プロバイダーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:21
 msgid "%{amount} Cloud Subnet Being Tagged"
 msgid_plural "%{amount} Cloud Subnets Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・サブネットがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・サブネットがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:23
 msgid "%{amount} Cloud Tenant Being Tagged"
 msgid_plural "%{amount} Cloud Tenants Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・テナントがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・テナントがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:25
 msgid "%{amount} Cloud Volume Being Tagged"
 msgid_plural "%{amount} Cloud Volumes Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・ボリュームがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・ボリュームがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:27
 msgid "%{amount} Cloud Volume Snapshot Being Tagged"
 msgid_plural "%{amount} Cloud Volume Snapshots Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・ボリューム・スナップショットがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・ボリューム・スナップショットがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:29
 msgid "%{amount} Cloud Volume Type Being Tagged"
 msgid_plural "%{amount} Cloud Volume Types Being Tagged"
-msgstr[0] "%{amount} 個のクラウド・ボリュームのタイプがタグ付けされます"
+msgstr[0] "%{amount} 個のクラウド・ボリュームのタイプがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:31
 msgid "%{amount} Cluster Being Tagged"
 msgid_plural "%{amount} Clusters Being Tagged"
-msgstr[0] "%{amount} 個のクラスターがタグ付けされます"
+msgstr[0] "%{amount} 個のクラスターがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:33
 msgid "%{amount} Configuration Manager Being Tagged"
 msgid_plural "%{amount} Configuration Managers Being Tagged"
-msgstr[0] "%{amount} 個の構成マネージャーがタグ付けされます"
+msgstr[0] "%{amount} 個の構成マネージャーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:35
 msgid "%{amount} Configured System Being Tagged"
 msgid_plural "%{amount} Configured Systems Being Tagged"
-msgstr[0] "%{amount} 個の構成済みシステムがタグ付けされます"
+msgstr[0] "%{amount} 個の構成済みシステムがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:37
 msgid "%{amount} Container Being Tagged"
 msgid_plural "%{amount} Containers Being Tagged"
-msgstr[0] "%{amount} 個のコンテナーがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:39
 msgid "%{amount} Container Build Being Tagged"
 msgid_plural "%{amount} Container Builds Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・ビルドがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・ビルドがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:41
 msgid "%{amount} Container Image Being Tagged"
 msgid_plural "%{amount} Container Images Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・イメージがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・イメージがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:43
 msgid "%{amount} Container Image Registry Being Tagged"
 msgid_plural "%{amount} Container Image Registries Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・イメージ・レジストリーがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・イメージ・レジストリーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:45
 msgid "%{amount} Container Node Being Tagged"
 msgid_plural "%{amount} Container Nodes Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・ノードがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・ノードがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:47
 msgid "%{amount} Container Pod Being Tagged"
 msgid_plural "%{amount} Container Pods Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・ポッドがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・ポッドがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:49
 msgid "%{amount} Container Project Being Tagged"
 msgid_plural "%{amount} Container Projects Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・プロジェクトがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・プロジェクトがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:51
 msgid "%{amount} Container Replicator Being Tagged"
 msgid_plural "%{amount} Container Replicators Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・レプリケーターがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・レプリケーターがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:53
 msgid "%{amount} Container Route Being Tagged"
 msgid_plural "%{amount} Container Routes Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・ルートがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・ルートがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:55
 msgid "%{amount} Container Service Being Tagged"
 msgid_plural "%{amount} Container Services Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・サービスがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・サービスがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:57
 msgid "%{amount} Container Template Being Tagged"
 msgid_plural "%{amount} Container Templates Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・テンプレートがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・テンプレートがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:59
 msgid "%{amount} Containers Provider Being Tagged"
 msgid_plural "%{amount} Containers Providers Being Tagged"
-msgstr[0] "%{amount} 個のコンテナー・プロバイダーがタグ付けされます"
+msgstr[0] "%{amount} 個のコンテナー・プロバイダーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:61
 msgid "%{amount} Credential Being Tagged"
 msgid_plural "%{amount} Credentials Being Tagged"
-msgstr[0] "%{amount} 個の資格情報がタグ付けされます"
+msgstr[0] "%{amount} 個の資格情報がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:63
 msgid "%{amount} Datastore Being Tagged"
 msgid_plural "%{amount} Datastores Being Tagged"
-msgstr[0] "%{amount} 個のデータ・ストアがタグ付けされます"
+msgstr[0] "%{amount} 個のデータ・ストアがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:65
 msgid "%{amount} Flavor Being Tagged"
 msgid_plural "%{amount} Flavors Being Tagged"
-msgstr[0] "%{amount} 個のフレーバーがタグ付けされます"
+msgstr[0] "%{amount} 個のフレーバーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:67
 msgid "%{amount} Floating IP Being Tagged"
 msgid_plural "%{amount} Floating IPs Being Tagged"
-msgstr[0] "%{amount} 個のフローティング IP がタグ付けされます"
+msgstr[0] "%{amount} 個のフローティング IP がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:71
 msgid "%{amount} Host Aggregate Being Tagged"
 msgid_plural "%{amount} Host Aggregates Being Tagged"
-msgstr[0] "%{amount} 個のホスト・アグリゲートがタグ付けされます"
+msgstr[0] "%{amount} 個のホスト・アグリゲートがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:69
 msgid "%{amount} Host Being Tagged"
 msgid_plural "%{amount} Hosts Being Tagged"
-msgstr[0] "%{amount} 個のホストがタグ付けされます"
+msgstr[0] "%{amount} 個のホストがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:73
 msgid "%{amount} Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount} 個のインフラストラクチャー・プロバイダーがタグ付けされます"
+msgstr[0] "%{amount} 個のインフラストラクチャー・プロバイダーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:75
 msgid "%{amount} Key Pair Being Tagged"
 msgid_plural "%{amount} Key Pairs Being Tagged"
-msgstr[0] "%{amount} 個の鍵ペアがタグ付けされます"
+msgstr[0] "%{amount} 個の鍵ペアがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:77
 msgid "%{amount} Network Manager Being Tagged"
 msgid_plural "%{amount} Network Managers Being Tagged"
-msgstr[0] "%{amount} 個のネットワーク・マネージャーがタグ付けされます"
+msgstr[0] "%{amount} 個のネットワーク・マネージャーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:79
 msgid "%{amount} Network Port Being Tagged"
 msgid_plural "%{amount} Network Ports Being Tagged"
-msgstr[0] "%{amount} 個のネットワーク・ポートがタグ付けされます"
+msgstr[0] "%{amount} 個のネットワーク・ポートがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:81
 msgid "%{amount} Network Router Being Tagged"
 msgid_plural "%{amount} Network Routers Being Tagged"
-msgstr[0] "%{amount} 個のネットワーク・ルーターがタグ付けされます"
+msgstr[0] "%{amount} 個のネットワーク・ルーターがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:83
 msgid "%{amount} Orchestration Stack Being Tagged"
 msgid_plural "%{amount} Orchestration Stacks Being Tagged"
-msgstr[0] "%{amount} 個のオーケストレーション・スタックがタグ付けされます"
+msgstr[0] "%{amount} 個のオーケストレーション・スタックがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:85
 msgid "%{amount} Orchestration Template Being Tagged"
 msgid_plural "%{amount} Orchestration Templates Being Tagged"
-msgstr[0] "%{amount} 個のオーケストレーション・テンプレートがタグ付けされます"
+msgstr[0] "%{amount} 個のオーケストレーション・テンプレートがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:87
 msgid "%{amount} PXE Server Being Tagged"
 msgid_plural "%{amount} PXE Servers Being Tagged"
-msgstr[0] "%{amount} 個の PXE サーバーがタグ付けされます"
+msgstr[0] "%{amount} 個の PXE サーバーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:89
 msgid "%{amount} Persistent Volume Being Tagged"
 msgid_plural "%{amount} Persistent Volumes Being Tagged"
-msgstr[0] "%{amount} 個の永続ボリュームがタグ付けされます"
+msgstr[0] "%{amount} 個の永続ボリュームがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:91
 msgid "%{amount} Physical Infrastructure Provider Being Tagged"
 msgid_plural "%{amount} Physical Infrastructure Providers Being Tagged"
-msgstr[0] "%{amount} 個の物理インフラストラクチャー・プロバイダーがタグ付けされます"
+msgstr[0] "%{amount} 個の物理インフラストラクチャー・プロバイダーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:93
 msgid "%{amount} Physical Server Being Tagged"
 msgid_plural "%{amount} Physical Servers Being Tagged"
-msgstr[0] "%{amount} 個の物理サーバーがタグ付けされます"
+msgstr[0] "%{amount} 個の物理サーバーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:95
 msgid "%{amount} Playbook (Embedded Ansible) Being Tagged"
 msgid_plural "%{amount} Playbooks (Embedded Ansible) Being Tagged"
-msgstr[0] "%{amount} 個の Playbook (組み込み Ansible) がタグ付けされます"
+msgstr[0] "%{amount} 個の Playbook (組み込み Ansible) がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:97
 msgid "%{amount} Repository Being Tagged"
 msgid_plural "%{amount} Repositorys Being Tagged"
-msgstr[0] "%{amount} 個のリポジトリーがタグ付けされます"
+msgstr[0] "%{amount} 個のリポジトリーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:99
 msgid "%{amount} Resource Pool Being Tagged"
 msgid_plural "%{amount} Resource Pools Being Tagged"
-msgstr[0] "%{amount} 個のリソース・プールがタグ付けされます"
+msgstr[0] "%{amount} 個のリソース・プールがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:101
 msgid "%{amount} Security Group Being Tagged"
 msgid_plural "%{amount} Security Groups Being Tagged"
-msgstr[0] "%{amount} 個のセキュリティー・グループがタグ付けされます"
+msgstr[0] "%{amount} 個のセキュリティー・グループがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:103
 msgid "%{amount} Service Being Tagged"
 msgid_plural "%{amount} Services Being Tagged"
-msgstr[0] "%{amount} 個のサービスがタグ付けされます"
+msgstr[0] "%{amount} 個のサービスがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:105
 msgid "%{amount} Service Catalog Item Being Tagged"
 msgid_plural "%{amount} Service Catalog Items Being Tagged"
-msgstr[0] "%{amount} 個のサービス・カタログ項目がタグ付けされます"
+msgstr[0] "%{amount} 個のサービス・カタログ項目がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:107
 msgid "%{amount} Storage Manager Being Tagged"
 msgid_plural "%{amount} Storage Managers Being Tagged"
-msgstr[0] "%{amount} 個のストレージ・マネージャーがタグ付けされます"
+msgstr[0] "%{amount} 個のストレージ・マネージャーがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:109
 msgid "%{amount} Switch Being Tagged"
 msgid_plural "%{amount} Switches Being Tagged"
-msgstr[0] "%{amount} 個のスイッチがタグ付けされます"
+msgstr[0] "%{amount} 個のスイッチがタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:111
 msgid "%{amount} Template (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Templates (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount} 個のテンプレート (Ansible Tower) がタグ付けされます"
+msgstr[0] "%{amount} 個のテンプレート (Ansible Tower) がタグ付けされています"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:113
 msgid "%{amount} VM or Template Being Tagged"
 msgid_plural "%{amount} VMs or Templates Being Tagged"
-msgstr[0] "%{amount} 個の VM またはテンプレートがタグ付けされます"
+msgstr[0] "%{amount} 個の VM またはテンプレートがタグ付けされています"
 
 #: ../app/helpers/application_helper/button/miq_request_delete.rb:10
 msgid "%{approval_states} requests cannot be deleted"
