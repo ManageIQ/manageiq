@@ -36,6 +36,7 @@ else
   echo "** DB has not been initialized"
 
   echo "** Launching initdb"
+  chown -R postgres:postgres ${APPLIANCE_PG_DATA}
   su postgres -c "initdb -D ${APPLIANCE_PG_DATA}"
   test $? -ne 0 && echo "!! Failed to initdb" && exit 1
 
