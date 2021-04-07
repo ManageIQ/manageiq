@@ -2,7 +2,7 @@ RSpec.describe MiqWorker::SystemdCommon do
   describe ".service_base_name" do
     before { MiqWorkerType.seed }
 
-    it "every worker has a matching systemd target and service file" do
+    it "every worker has a matching systemd target and service file", :providers_common => true do
       expected_units = (Vmdb::Plugins.systemd_units + Rails.root.join("systemd").glob("*.*")).map(&:basename).map(&:to_s)
 
       expected_units.delete("manageiq.target")
@@ -17,7 +17,7 @@ RSpec.describe MiqWorker::SystemdCommon do
         [service_file, target_file]
       end
 
-      expect(expected_units).to match_array(found_units)
+      expect(found_units).to match_array(expected_units)
     end
   end
 end
