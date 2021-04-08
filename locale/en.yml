@@ -1480,6 +1480,7 @@ en:
       GuestApplication:               Guest Application
       GuestDevice:                    Guest Device
       Host:                           Host
+      HostInitiator:                  Host Initiators
       HostPerformance:                Performance - Host
       IsoDatastore:                   ISO Datastore
       IsoImage:                       ISO Image
@@ -1701,6 +1702,7 @@ en:
       VmCloud:                  Instance
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
+      VolumeMapping:            Volume Mappings
       WindowsImage:             Windows Image
       Zone:                     Zone
 
@@ -1795,6 +1797,7 @@ en:
       guest_devices:               Devices
       host:                        Host
       hosts:                       Hosts
+      host_initiator:              Host Initiator
       host_services:               Services
       iso_datastore:               ISO Datastore
       iso_image:                   ISO Image
@@ -1866,6 +1869,7 @@ en:
       vm_or_template:              Virtual Machine
       vms:                         VMs
       volume:                      Volume
+      volume_mapping:              Volume Mapping
       zone:                        Zone
       zones:                       Zones
 
