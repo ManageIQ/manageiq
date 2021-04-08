@@ -62,13 +62,13 @@ class EventStream < ApplicationRecord
 
     group = egroups.detect do |_, value|
       GROUP_LEVELS
-        .detect { |lvl| value[lvl]&.any? { |typ| typ.kind_of?(String) && typ == event_type } }
+        .detect { |lvl| value[lvl]&.any? { |typ| !typ.starts_with?("/") && typ == event_type } }
         .tap { |level_found| level = level_found || level }
     end&.first
 
     group ||= egroups.detect do |_, value|
       GROUP_LEVELS
-        .detect { |lvl| value[lvl]&.any? { |typ| typ.kind_of?(Regexp) && typ.match(event_type) } }
+        .detect { |lvl| value[lvl]&.any? { |typ| typ.starts_with?("/") && Regexp.new(typ[1..-2]).match?(event_type) } }
         .tap { |level_found| level = level_found || level }
     end&.first
 
