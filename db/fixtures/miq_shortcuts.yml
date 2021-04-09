@@ -474,10 +474,10 @@
   :url: /ansible_credential
   :rbac_feature_name: embedded_automation_manager_credentials
   :startup: true
-- :name: automation_manager
-  :description: Automation / Ansible Tower / Explorer
-  :url: /automation_manager/explorer
-  :rbac_feature_name: automation_manager
+- :name: ems_automation
+  :description: Automation / Ansible Tower / Providers
+  :url: /ems_automation/show_list
+  :rbac_feature_name: ems_automation
   :startup: true
 - :name: configuration_job
   :description: Automation / Ansible Tower / Jobs

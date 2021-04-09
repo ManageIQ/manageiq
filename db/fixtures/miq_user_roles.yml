@@ -11,7 +11,9 @@
   - about
   - add_global_filter
   - all_vm_rules
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - embedded_automation_manager
   - availability_zone
   - host_aggregate
@@ -190,7 +192,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
-  - automation_manager
+  - ems_automation
   - embedded_automation_manager
   - chargeback
   - chargeback_reports
@@ -290,7 +292,9 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - ems_configuration
   - configuration_profile
   - configured_system
@@ -363,7 +367,9 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - embedded_automation_manager
   - chargeback
   - chargeback_reports
@@ -888,7 +894,9 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - embedded_automation_manager
   - ems_physical_infra_console
   - catalog_items_view
@@ -950,7 +958,9 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - ems_configuration
   - configuration_profile
   - configured_system
@@ -1016,7 +1026,9 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - embedded_automation_manager
   - availability_zone
   - host_aggregate
@@ -1080,7 +1092,9 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
-  - automation_manager
+  - ems_automation
+  - automation_manager_configured_system
+  - configuration_script
   - embedded_automation_manager
   - availability_zone
   - host_aggregate
