@@ -222,5 +222,8 @@ module Metric::CiMixin::Processing
         :payload => metric
       )
     end
+  rescue => err
+    _log.warn("Failed to publish metrics: #{err}")
+    _log.log_backtrace(err)
   end
 end
