@@ -8,9 +8,10 @@ module Vmdb
     # def info?
     # def warn?
     # def error?
-    # def log_backtrace
+    # def add
     # def level
-    (LEVELS.map { |l| :"#{l}?" } + [:log_backtrace, :level]).each do |method|
+    # def log_backtrace
+    (LEVELS.map { |l| :"#{l}?" } + %i[add level log_backtrace]).each do |method|
       define_method(method) { |*args| logger.send(method, *args) }
     end
 
