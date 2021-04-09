@@ -18,7 +18,7 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
   end
 
   def self.ems_class
-    parent
+    module_parent
   end
 
   def self.normalized_type
