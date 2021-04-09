@@ -17,25 +17,12 @@ class <%= class_name %>::<%= manager_type %>::EventCatcher::Stream
     @stop_polling = true
   end
 
-  def fake_events
-    [
-      OpenStruct.new(:name       => %w(instance_power_on instance_power_off).sample,
-                     :id         => Time.zone.now.to_i,
-                     :timestamp  => Time.zone.now,
-                     :vm_ems_ref => [1, 2].sample),
-      OpenStruct.new(:name       => %w(instance_power_on instance_power_off).sample,
-                     :id         => Time.zone.now.to_i + 1,
-                     :timestamp  => Time.zone.now,
-                     :vm_ems_ref => [1, 2].sample),
-    ]
-  end
-
   def poll
     @ems.with_provider_connection do |connection|
       catch(:stop_polling) do
         begin
           loop do
-            fake_events.each do |activity|
+            connection.events.each do |activity|
               throw :stop_polling if @stop_polling
               yield activity.to_h
             end
