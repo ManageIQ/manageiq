@@ -101,7 +101,6 @@ module ManageIQ
       template "app/models/%plugin_path%/inventory/persister.rb"
       template "app/models/%plugin_path%/inventory/collector/%manager_path%.rb"
       template "app/models/%plugin_path%/inventory/parser/%manager_path%.rb"
-      template "app/models/%plugin_path%/inventory/persister/definitions/cloud_collections.rb"
       template "app/models/%plugin_path%/inventory/persister/%manager_path%.rb"
       template "app/models/%plugin_path%/inventory/persister.rb"
       template "app/models/%plugin_path%/%manager_path%.rb"
