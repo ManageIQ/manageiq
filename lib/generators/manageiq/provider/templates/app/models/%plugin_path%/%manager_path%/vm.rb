@@ -1,10 +1,7 @@
 class <%= class_name %>::<%= manager_type %>::Vm < ManageIQ::Providers::<%= manager_type %>::Vm
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    # find vm instance via connection and return it
-    # connection.find_instance(ems_ref)
-    # but we return just an object for now
-    OpenStruct.new
+    connection.find_vm(ems_ref)
   end
 
   def raw_start
