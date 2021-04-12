@@ -24,6 +24,20 @@ module Vmdb
       caller.select { |path| include_external || path.start_with?(Rails.root.to_s) }
     end
 
+    def set_translation_locale(locale = "en")
+      I18n.locale = locale
+    end
+
+    def set_user_translation_locale(userid: "admin", locale: "en")
+      user = User.find_by_userid(userid)
+
+      user.settings[:display] = {:locale => locale}
+      user.save!
+
+      User.current_user = user
+      set_translation_locale(user.settings[:display][:locale])
+    end
+
     # Development helper method for Rails console for simulating queue workers.
     def simulate_queue_worker(break_on_complete: false, quiet_polling: true)
       raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
