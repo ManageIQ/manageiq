@@ -25,7 +25,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    publish_event(ems_id, event)
+    publish_event(ems_id, event) if syndicate_events?
 
     MiqQueue.submit_job(
       :service     => "event",
@@ -266,8 +266,6 @@ class EmsEvent < EventStream
   private_class_method :create_completed_event
 
   def self.publish_event(ems_id, event)
-    return if MiqQueue.messaging_type == "miq_queue"
-
     ems = ExtManagementSystem.find(ems_id)
     event[:ems_uid]  = ems&.uid_ems
     event[:ems_type] = ems&.class&.ems_type
@@ -284,6 +282,10 @@ class EmsEvent < EventStream
   end
 
   private_class_method :publish_event
+
+  private_class_method def self.syndicate_events?
+    Settings.event_streams.syndicate_events && MiqQueue.messaging_type != "miq_queue"
+  end
 
   def get_refresh_target(target_type)
     m = "#{target_type}_refresh_target"
