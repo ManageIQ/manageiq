@@ -94,6 +94,8 @@ module ManageIQ
           inventory = nil # clear to help GC
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
+          Benchmark.realtime_block(:publish_inventory) { publish_inventory(ems, target, parsed) } if options[:publish_inventory]
+
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
         end
       end
@@ -136,6 +138,22 @@ module ManageIQ
       # @param parsed [Array<Hash> or ManageIQ::Providers::Inventory::Persister]
       def save_inventory(ems, _target, persister)
         InventoryRefresh::SaveInventory.save_inventory(ems, persister.inventory_collections)
+      end
+
+      def publish_inventory(ems, target, persister)
+        return if MiqQueue.messaging_type == "miq_queue"
+
+        log_header = format_ems_for_logging(ems)
+        target_identifier = "#{target.class}__#{target.name}__#{target.id}"
+
+        MiqQueue.messaging_client('event_handler')&.publish_topic(
+          :service => "manageiq.ems-inventory",
+          :sender  => ems.id,
+          :event   => target_identifier,
+          :payload => persister.to_json
+        )
+      rescue => err
+        _log.warn("#{log_header} Failed to publish inventory for target #{target.class} [#{target.name}] id [#{target.id}]: #{err}")
       end
 
       def post_refresh_ems_cleanup(_ems, _targets)
