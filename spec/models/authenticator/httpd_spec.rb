@@ -235,6 +235,79 @@ RSpec.describe Authenticator::Httpd do
       end
     end
 
+    context "with user details with Unicode characters" do
+      let!(:user) { FactoryBot.create(:user, :userid => 'häåğēn.däzş') }
+
+      let(:headers) do
+        super().merge(
+          'X-Remote-User'           => 'häåğēn.däzş',
+          'X-Remote-User-FullName'  => 'Häåğēn Däzş',
+          'X-Remote-User-FirstName' => 'Häåğēn',
+          'X-Remote-User-LastName'  => 'Däzş',
+          'X-Remote-User-Email'     => 'haagen.dazs@example.com'
+        )
+      end
+
+      context "using local authorization" do
+        it "succeeds" do
+          expect(authenticate).to eq(user)
+        end
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "User häåğēn.däzş successfully validated by External httpd",
+          ).and_call_original
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "Authentication successful for user häåğēn.däzş",
+          ).and_call_original
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+
+        it "updates lastlogon" do
+          expect { authenticate }.to(change { user.reload.lastlogon })
+        end
+      end
+
+      context "using external authorization" do
+        let(:config) { {:httpd_role => true} }
+
+        it "enqueues an authorize task" do
+          expect(subject).to receive(:authorize_queue).and_return(123)
+          expect(authenticate).to eq(123)
+        end
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "User häåğēn.däzş successfully validated by External httpd",
+          ).and_call_original
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "Authentication successful for user häåğēn.däzş",
+          ).and_call_original
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+
+        it "updates lastlogon" do
+          expect { authenticate }.to(change { user.reload.lastlogon })
+        end
+
+        it "immediately completes the task" do
+          task_id = authenticate
+          task = MiqTask.find(task_id)
+          expect(User.lookup_by_userid(task.userid)).to eq(user)
+        end
+      end
+    end
+
     context "with missing user" do
       let(:headers) { super().except('X-Remote-User') }
 
@@ -260,6 +333,19 @@ RSpec.describe Authenticator::Httpd do
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : because reasons",
+          ).and_call_original
+          authenticate rescue nil
+        end
+      end
+
+      context "with specific failure message with Unicode characters" do
+        let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
+
+        it "reflects in the audit message" do
+          expect(AuditEvent).to receive(:failure).with(
+            :event   => 'authenticate_httpd',
+            :userid  => '',
+            :message => "Authentication failed for userid : töø dëlıçiouş",
           ).and_call_original
           authenticate rescue nil
         end
@@ -291,6 +377,19 @@ RSpec.describe Authenticator::Httpd do
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : because reasons",
+          ).and_call_original
+          authenticate rescue nil
+        end
+      end
+
+      context "with specific failure message with Unicode characters" do
+        let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
+
+        it "reflects in the audit message" do
+          expect(AuditEvent).to receive(:failure).with(
+            :event   => 'authenticate_httpd',
+            :userid  => '',
+            :message => "Authentication failed for userid : töø dëlıçiouş",
           ).and_call_original
           authenticate rescue nil
         end
