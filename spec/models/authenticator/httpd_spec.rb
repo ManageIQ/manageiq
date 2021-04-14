@@ -1,9 +1,6 @@
 RSpec.describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
 
-  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
-  let!(:cheshire) { FactoryBot.create(:user, :userid => 'cheshire@example.com') }
-  let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
   let(:config) { {:httpd_role => false} }
   let(:request) do
     env = {}
@@ -87,8 +84,9 @@ RSpec.describe Authenticator::Httpd do
   end
 
   describe '#lookup_by_identity' do
-    let(:dn) { 'cn=towmater,ou=people,ou=prod,dc=example,dc=com' }
-    let!(:towmater_dn) { FactoryBot.create(:user, :userid => dn) }
+    let!(:alice)       { FactoryBot.create(:user, :userid => 'alice') }
+    let!(:cheshire)    { FactoryBot.create(:user, :userid => 'cheshire@example.com') }
+    let!(:towmater_dn) { FactoryBot.create(:user, :userid => 'cn=towmater,ou=people,ou=prod,dc=example,dc=com') }
 
     let(:headers) do
       {
@@ -98,7 +96,7 @@ RSpec.describe Authenticator::Httpd do
         'X-Remote-User-LastName'  => 'Cat',
         'X-Remote-User-Email'     => 'cheshire@example.com',
         'X-Remote-User-Domain'    => 'example.com',
-        'X-Remote-User-Groups'    => user_groups,
+        'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
       }
     end
 
@@ -170,11 +168,13 @@ RSpec.describe Authenticator::Httpd do
         'X-Remote-User-LastName'  => 'Aardvark',
         'X-Remote-User-Email'     => 'alice@example.com',
         'X-Remote-User-Domain'    => 'example.com',
-        'X-Remote-User-Groups'    => user_groups,
+        'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
       }
     end
 
     context "with user details" do
+      let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
+
       context "using local authorization" do
         it "succeeds" do
           expect(authenticate).to eq(alice)
