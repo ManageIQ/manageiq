@@ -1058,7 +1058,7 @@
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
       :memory_request: 500.megabytes
-      :memory_threshold: 600.megabytes
+      :memory_threshold: 1.gigabytes
       :nice_delta: 10
       :parent_time_threshold: 3.minutes
       :poll: 3.seconds
@@ -1087,7 +1087,6 @@
           :poll_method: escalate
       :ems_metrics_processor_worker:
         :count: 2
-        :memory_threshold: 800.megabytes
         :nice_delta: 7
         :poll_method: escalate
       :ems_operations_worker: {}
@@ -1133,7 +1132,6 @@
       :job_proxy_dispatcher_stale_message_timeout: 2.minutes
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
-      :memory_threshold: 500.megabytes
       :nice_delta: 3
       :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes
@@ -1160,15 +1158,12 @@
       :yum_update_check: 12.hours
     :ui_worker:
       :connection_pool_size: 8
-      :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :web_service_worker:
       :connection_pool_size: 8
-      :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :remote_console_worker:
       :connection_pool_size: 14
-      :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :cockpit_ws_worker:
       :count: 1
