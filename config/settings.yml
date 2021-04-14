@@ -853,6 +853,7 @@
     :ping_depot: true
     :ping_depot_timeout: 20
   :level: info
+  :level_audit: info
   :level_rails: info
   :level_fog: info
   :level_policy: info

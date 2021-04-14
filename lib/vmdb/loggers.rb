@@ -22,6 +22,7 @@ module Vmdb
     def self.apply_config(config)
       apply_config_value(config, $log,                :level)
       apply_config_value(config, $journald_log,       :level) if $journald_log
+      apply_config_value(config, $audit_log,          :level_audit)
       apply_config_value(config, $rails_log,          :level_rails)
       apply_config_value(config, $policy_log,         :level_policy)
       apply_config_value(config, $remote_console_log, :level_remote_console)
