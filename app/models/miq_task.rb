@@ -368,7 +368,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.human_status(state_or_status)
-    _(HUMAN_STATUS[state_or_status] || STATUS_UNKNOWN)
+    HUMAN_STATUS[state_or_status] || STATUS_UNKNOWN
   end
 
   def process_cancel
