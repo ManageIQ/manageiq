@@ -95,7 +95,7 @@ module Metric::CiMixin::Processing
         resource.perf_rollup_to_parents(interval_orig, start_time, end_time)
       end
 
-      publish_metrics(rt_rows)
+      publish_metrics(rt_rows) if syndicate_metrics?
     end
     _log.info("#{log_header} Processing for #{log_specific_targets(resources)}, for range [#{start_time} - #{end_time}]...Complete - Timings: #{t.inspect}")
 
@@ -201,8 +201,6 @@ module Metric::CiMixin::Processing
   end
 
   def publish_metrics(metrics)
-    return if MiqQueue.messaging_type == "miq_queue"
-
     metrics.each_value do |metric|
       resource = metric.delete(:resource)
 
@@ -225,5 +223,9 @@ module Metric::CiMixin::Processing
   rescue => err
     _log.warn("Failed to publish metrics: #{err}")
     _log.log_backtrace(err)
+  end
+
+  def syndicate_metrics?
+    Settings.performance.syndicate_metrics && MiqQueue.messaging_type != "miq_queue"
   end
 end

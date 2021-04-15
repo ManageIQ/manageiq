@@ -141,6 +141,15 @@ RSpec.describe EmsEvent do
 
           described_class.add_queue('add', ems.id, event_hash)
         end
+
+        context "event_streams.syndicate_events false" do
+          before { stub_settings_merge(:event_streams => {:syndicate_events => false}) }
+
+          it "doesn't add event to Artemis queue" do
+            expect(MiqQueue).not_to receive(:messaging_client)
+            described_class.add_queue('add', ems.id, event_hash)
+          end
+        end
       end
 
       context "messaging_type: kafka" do
@@ -163,6 +172,15 @@ RSpec.describe EmsEvent do
           expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
 
           described_class.add_queue('add', ems.id, event_hash)
+        end
+
+        context "event_streams.syndicate_events false" do
+          before { stub_settings_merge(:event_streams => {:syndicate_events => false}) }
+
+          it "doesn't add event to kafka topic" do
+            expect(MiqQueue).not_to receive(:messaging_client)
+            described_class.add_queue('add', ems.id, event_hash)
+          end
         end
       end
 
