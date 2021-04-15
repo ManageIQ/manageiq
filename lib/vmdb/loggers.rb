@@ -28,22 +28,10 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file, logger_class = ManageIQ::Loggers::Base)
-      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
-      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
-      progname = log_file.try(:basename, ".*").to_s
-
-      logger_class.new(log_file, progname: progname).tap do |logger|
-        broadcast_logger = create_broadcast_logger
-        if broadcast_logger
-          logger.extend(ActiveSupport::Logger.broadcast(broadcast_logger))
-          broadcast_logger.progname = progname
-
-          # HACK: In order to access the broadcast logger in test, we inject it
-          #   as an instance var.
-          logger.instance_variable_set(:@broadcast_logger, broadcast_logger) if Rails.env.test?
-        end
-      end
+    def self.create_logger(log_file_name, logger_class = ManageIQ::Loggers::Base)
+      create_container_logger(log_file_name, logger_class) ||
+        create_journald_logger(log_file_name, logger_class) ||
+        create_file_logger(log_file_name, logger_class)
     end
 
     private_class_method def self.create_loggers
@@ -56,24 +44,70 @@ module Vmdb
       configure_external_loggers
     end
 
-    private_class_method def self.create_broadcast_logger
-      create_container_logger || create_journald_logger
+    private_class_method def self.create_file_logger(log_file_name, logger_class)
+      log_file_name = ManageIQ.root.join("log", log_file_name)
+      progname      = progname_from_file(log_file_name)
+
+      logger_class.new(log_file_name, :progname => progname)
     end
 
-    private_class_method def self.create_container_logger
+    private_class_method def self.create_container_logger(log_file_name, logger_class)
+      return nil unless (logger = create_raw_container_logger)
+
+      create_wrapper_logger(log_file_name, logger_class, logger)
+    end
+
+    private_class_method def self.create_raw_container_logger
       return unless ENV["CONTAINER"]
 
       require "manageiq/loggers/container"
       ManageIQ::Loggers::Container.new
     end
 
-    private_class_method def self.create_journald_logger
+    private_class_method def self.create_journald_logger(log_file_name, logger_class)
+      return nil unless (logger = create_raw_journald_logger)
+
+      create_wrapper_logger(log_file_name, logger_class, logger)
+    end
+
+    private_class_method def self.create_raw_journald_logger
       return unless MiqEnvironment::Command.supports_systemd?
 
       require "manageiq/loggers/journald"
       ManageIQ::Loggers::Journald.new
     rescue LoadError
       nil
+    end
+
+    private_class_method def self.progname_from_file(log_file_name)
+      File.basename(log_file_name, ".*")
+    end
+
+    private_class_method def self.create_wrapper_logger(log_file_name, logger_class, wrapped_logger)
+      log_file_name = Pathname.new(log_file_name) unless log_file_name.kind_of?(Pathname)
+      progname      = progname_from_file(log_file_name)
+
+      logger_class.new(nil, :progname => progname).tap do |logger|
+        # HACK: In order to access the "filename" of the wrapped logger, we inject it as an instance var.
+        logger.instance_variable_set(:@log_file_name, log_file_name)
+
+        def logger.filename
+          @log_file_name
+        end
+
+        # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
+        if Rails.env.test?
+          logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
+
+          def logger.wrapped_logger
+            @wrapped_logger
+          end
+        end
+
+        logger.extend(ActiveSupport::Logger.broadcast(wrapped_logger))
+
+        wrapped_logger.progname = progname
+      end
     end
 
     private_class_method def self.configure_external_loggers

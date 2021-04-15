@@ -23,7 +23,7 @@ RSpec.describe Vmdb::Loggers do
 
       subject { described_class.create_logger(log_file) }
 
-      let(:container_log) { subject.instance_variable_get(:@broadcast_logger) }
+      let(:container_log) { subject.try(:wrapped_logger) }
 
       before do
         # Hide the container logger output to STDOUT
@@ -54,6 +54,18 @@ RSpec.describe Vmdb::Loggers do
         expect(subject).to respond_to(:unknown)
       end
 
+      it "#filename" do
+        expect(subject.filename).to eq Pathname.new(log_file)
+      end
+
+      it "#logdev" do
+        if container_log
+          expect(subject.logdev).to be_nil
+        else
+          expect(subject.logdev).to be_a Logger::LogDevice
+        end
+      end
+
       describe "#datetime_format" do
         it "return nil" do
           expect(subject.datetime_format).to be nil
@@ -81,8 +93,12 @@ RSpec.describe Vmdb::Loggers do
           end
 
           it "only forwards the message if the severity is correct" do
-            expect(subject.logdev).not_to       receive(:write).with("test message")
-            expect(container_log.logdev).not_to receive(:write).with("test message") if container_log
+            if container_log
+              expect(subject.logdev).to           be_nil
+              expect(container_log.logdev).not_to receive(:write).with("test message")
+            else
+              expect(subject.logdev).not_to       receive(:write).with("test message")
+            end
 
             subject.debug("test message")
           end
@@ -191,7 +207,7 @@ RSpec.describe Vmdb::Loggers do
 
       it "will honor the log level in the container logger" do
         log = described_class.create_logger(log_file_name)
-        container_log = log.instance_variable_get(:@broadcast_logger)
+        container_log = log.wrapped_logger
 
         described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
 
