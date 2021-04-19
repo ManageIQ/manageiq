@@ -304,6 +304,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_total  :total_subnets,           :cloud_subnets
   virtual_column :supports_auth_key_pair_create, :type => :boolean
   virtual_column :supports_block_storage,  :type => :boolean
+  virtual_column :supports_object_storage, :type => :boolean
   virtual_column :supports_cloud_tenants,  :type => :boolean
   virtual_column :supports_volume_multiattachment, :type => :boolean
   virtual_column :supports_volume_resizing, :type => :boolean
@@ -819,6 +820,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_block_storage
     supports_block_storage?
+  end
+
+  def supports_object_storage
+    supports_object_storage?
   end
 
   def supports_cloud_tenants
