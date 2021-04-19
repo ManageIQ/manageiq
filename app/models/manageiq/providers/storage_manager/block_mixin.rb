@@ -3,5 +3,6 @@ module ManageIQ::Providers::StorageManager::BlockMixin
 
   included do
     supports :block_storage
+    supports :object_storage
   end
 end
