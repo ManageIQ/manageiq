@@ -133,10 +133,6 @@ class CloudVolume < ApplicationRecord
     raw_update_volume(options)
   end
 
-  def validate_update_volume
-    validate_unsupported("Update Volume Operation")
-  end
-
   def raw_update_volume(_options = {})
     raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
   end
