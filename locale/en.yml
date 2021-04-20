@@ -1444,6 +1444,7 @@ en:
       CustomButtonSet:                Button Group
       ConfigurationScript:            Template (Ansible Tower)
       ConfigurationScriptSource:      Repository
+      ConfiguredSystem:               Configured Systems
       Container:                      Container
       ContainerPerformance:           Performance - Container
       ContainerGroup:                 Container Pod
