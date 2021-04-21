@@ -1442,6 +1442,7 @@ en:
       ContainerQuota:                 Container Quota
       CustomButton:                   Button
       CustomButtonSet:                Button Group
+      ConfigurationProfile:           Configuration Profiles
       ConfigurationScript:            Template (Ansible Tower)
       ConfigurationScriptSource:      Repository
       ConfiguredSystem:               Configured Systems
