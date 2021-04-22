@@ -1,16 +1,15 @@
 RSpec.describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
-  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
-  let!(:cheshire) { FactoryBot.create(:user, :userid => 'cheshire@example.com') }
-  let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
+
   let(:config) { {:httpd_role => false} }
   let(:request) do
     env = {}
     headers.each do |k, v|
-      env["HTTP_#{k.upcase.tr '-', '_'}"] = v if v
+      env["HTTP_#{k.upcase.tr '-', '_'}"] = v.dup.force_encoding("ASCII-8BIT") if v
     end
     ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
   end
+  let(:username) { request.headers["X-Remote-User"] }
 
   before do
     # If anything goes looking for the currently configured
@@ -85,22 +84,21 @@ RSpec.describe Authenticator::Httpd do
   end
 
   describe '#lookup_by_identity' do
-    let(:dn) { 'cn=towmater,ou=people,ou=prod,dc=example,dc=com' }
-    let!(:towmater_dn) { FactoryBot.create(:user, :userid => dn) }
+    let!(:alice)       { FactoryBot.create(:user, :userid => 'alice') }
+    let!(:cheshire)    { FactoryBot.create(:user, :userid => 'cheshire@example.com') }
+    let!(:towmater_dn) { FactoryBot.create(:user, :userid => 'cn=towmater,ou=people,ou=prod,dc=example,dc=com') }
 
     let(:headers) do
       {
-        'X-Remote-User'           => username,
+        'X-Remote-User'           => 'cheshire',
         'X-Remote-User-FullName'  => 'Cheshire Cat',
         'X-Remote-User-FirstName' => 'Chechire',
         'X-Remote-User-LastName'  => 'Cat',
         'X-Remote-User-Email'     => 'cheshire@example.com',
         'X-Remote-User-Domain'    => 'example.com',
-        'X-Remote-User-Groups'    => user_groups,
+        'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
       }
     end
-
-    let(:username) { 'cheshire' }
 
     it "Handles missing request parameter" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
@@ -146,11 +144,7 @@ RSpec.describe Authenticator::Httpd do
 
     let(:identity_upn) { [user_attrs_upn, %w(mumble bumble bee)] }
 
-    let(:upn_sal) { FactoryBot.create(:user, :userid => 'sal@example.com') }
-
-    before do
-      upn_sal
-    end
+    let!(:upn_sal) { FactoryBot.create(:user, :userid => 'sal@example.com') }
 
     it "Returns UPN username when passed UPN username" do
       expect(subject.find_or_initialize_user(identity_upn, 'sal@example.com')).to match_array(["sal@example.com", upn_sal])
@@ -168,19 +162,19 @@ RSpec.describe Authenticator::Httpd do
 
     let(:headers) do
       {
-        'X-Remote-User'           => username,
+        'X-Remote-User'           => 'alice',
         'X-Remote-User-FullName'  => 'Alice Aardvark',
         'X-Remote-User-FirstName' => 'Alice',
         'X-Remote-User-LastName'  => 'Aardvark',
         'X-Remote-User-Email'     => 'alice@example.com',
         'X-Remote-User-Domain'    => 'example.com',
-        'X-Remote-User-Groups'    => user_groups,
+        'X-Remote-User-Groups'    => 'wibble@fqdn:bubble@fqdn',
       }
     end
 
-    let(:username) { 'alice' }
-
     context "with user details" do
+      let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
+
       context "using local authorization" do
         it "succeeds" do
           expect(authenticate).to eq(alice)
@@ -189,14 +183,14 @@ RSpec.describe Authenticator::Httpd do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'alice',
+            :userid  => username,
             :message => "User alice successfully validated by External httpd",
-          )
+          ).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'alice',
+            :userid  => username,
             :message => "Authentication successful for user alice",
-          )
+          ).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -217,14 +211,14 @@ RSpec.describe Authenticator::Httpd do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'alice',
+            :userid  => username,
             :message => "User alice successfully validated by External httpd",
-          )
+          ).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'alice',
+            :userid  => username,
             :message => "Authentication successful for user alice",
-          )
+          ).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -241,26 +235,81 @@ RSpec.describe Authenticator::Httpd do
       end
     end
 
-    context "with invalid user" do
-      let(:headers) { super().except('X-Remote-User') }
+    context "with user details with Unicode characters" do
+      let!(:user) { FactoryBot.create(:user, :userid => 'häåğēn.däzş') }
 
-      it "fails" do
-        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      let(:headers) do
+        super().merge(
+          'X-Remote-User'           => 'häåğēn.däzş',
+          'X-Remote-User-FullName'  => 'Häåğēn Däzş',
+          'X-Remote-User-FirstName' => 'Häåğēn',
+          'X-Remote-User-LastName'  => 'Däzş',
+          'X-Remote-User-Email'     => 'haagen.dazs@example.com'
+        )
       end
 
-      it "puts the right name in a failing audit entry" do
-        expect(AuditEvent).to receive(:failure).with(
-          :event   => 'authenticate_httpd',
-          :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
-        )
-        expect(AuditEvent).not_to receive(:success)
-        authenticate rescue nil
+      context "using local authorization" do
+        it "succeeds" do
+          expect(authenticate).to eq(user)
+        end
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "User häåğēn.däzş successfully validated by External httpd",
+          ).and_call_original
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "Authentication successful for user häåğēn.däzş",
+          ).and_call_original
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+
+        it "updates lastlogon" do
+          expect { authenticate }.to(change { user.reload.lastlogon })
+        end
+      end
+
+      context "using external authorization" do
+        let(:config) { {:httpd_role => true} }
+
+        it "enqueues an authorize task" do
+          expect(subject).to receive(:authorize_queue).and_return(123)
+          expect(authenticate).to eq(123)
+        end
+
+        it "records two successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "User häåğēn.däzş successfully validated by External httpd",
+          ).and_call_original
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authenticate_httpd',
+            :userid  => 'häåğēn.däzş',
+            :message => "Authentication successful for user häåğēn.däzş",
+          ).and_call_original
+          expect(AuditEvent).not_to receive(:failure)
+          authenticate
+        end
+
+        it "updates lastlogon" do
+          expect { authenticate }.to(change { user.reload.lastlogon })
+        end
+
+        it "immediately completes the task" do
+          task_id = authenticate
+          task = MiqTask.find(task_id)
+          expect(User.lookup_by_userid(task.userid)).to eq(user)
+        end
       end
     end
 
-    context "without a user" do
-      let(:username) { '' }
+    context "with missing user" do
+      let(:headers) { super().except('X-Remote-User') }
 
       it "fails" do
         expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
@@ -271,17 +320,9 @@ RSpec.describe Authenticator::Httpd do
           :event   => 'authenticate_httpd',
           :userid  => '',
           :message => "Authentication failed for userid ",
-        )
+        ).and_call_original
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
-      end
-      it "logs the failure" do
-        allow($log).to receive(:warn).with(/Audit/)
-        expect($log).to receive(:warn).with(/Authentication failed$/)
-        authenticate rescue nil
-      end
-      it "doesn't change lastlogon" do
-        expect { authenticate rescue nil }.not_to(change { alice.reload.lastlogon })
       end
 
       context "with specific failure message" do
@@ -292,7 +333,64 @@ RSpec.describe Authenticator::Httpd do
             :event   => 'authenticate_httpd',
             :userid  => '',
             :message => "Authentication failed for userid : because reasons",
-          )
+          ).and_call_original
+          authenticate rescue nil
+        end
+      end
+
+      context "with specific failure message with Unicode characters" do
+        let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
+
+        it "reflects in the audit message" do
+          expect(AuditEvent).to receive(:failure).with(
+            :event   => 'authenticate_httpd',
+            :userid  => '',
+            :message => "Authentication failed for userid : töø dëlıçiouş",
+          ).and_call_original
+          authenticate rescue nil
+        end
+      end
+    end
+
+    context "with a blank user" do
+      let(:headers) { super().merge('X-Remote-User' => '') }
+
+      it "fails" do
+        expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      end
+
+      it "records one failing audit entry" do
+        expect(AuditEvent).to receive(:failure).with(
+          :event   => 'authenticate_httpd',
+          :userid  => '',
+          :message => "Authentication failed for userid ",
+        ).and_call_original
+        expect(AuditEvent).not_to receive(:success)
+        authenticate rescue nil
+      end
+
+      context "with specific failure message" do
+        let(:headers) { super().merge('X-External-Auth-Error' => 'because reasons') }
+
+        it "reflects in the audit message" do
+          expect(AuditEvent).to receive(:failure).with(
+            :event   => 'authenticate_httpd',
+            :userid  => '',
+            :message => "Authentication failed for userid : because reasons",
+          ).and_call_original
+          authenticate rescue nil
+        end
+      end
+
+      context "with specific failure message with Unicode characters" do
+        let(:headers) { super().merge('X-External-Auth-Error' => 'töø dëlıçiouş') }
+
+        it "reflects in the audit message" do
+          expect(AuditEvent).to receive(:failure).with(
+            :event   => 'authenticate_httpd',
+            :userid  => '',
+            :message => "Authentication failed for userid : töø dëlıçiouş",
+          ).and_call_original
           authenticate rescue nil
         end
       end
@@ -302,12 +400,14 @@ RSpec.describe Authenticator::Httpd do
       let(:dn) { 'cn=sally,ou=people,ou=prod,dc=example,dc=com' }
       let(:config) { {:httpd_role => true} }
 
-      let(:username) { 'saLLy' }
       let(:headers) do
-        super().merge('X-Remote-User-FullName'  => 'Sally Porsche',
-                      'X-Remote-User-FirstName' => 'Sally',
-                      'X-Remote-User-LastName'  => 'Porsche',
-                      'X-Remote-User-Email'     => 'Sally@example.com')
+        super().merge(
+          'X-Remote-User'           => 'saLLy',
+          'X-Remote-User-FullName'  => 'Sally Porsche',
+          'X-Remote-User-FirstName' => 'Sally',
+          'X-Remote-User-LastName'  => 'Porsche',
+          'X-Remote-User-Email'     => 'Sally@example.com'
+        )
       end
 
       context "with a race condition on create user" do
@@ -381,10 +481,12 @@ RSpec.describe Authenticator::Httpd do
     end
 
     context "with unknown username in mixed case" do
-      let(:username) { 'bOb' }
       let(:headers) do
-        super().merge('X-Remote-User-FullName' => 'Bob Builderson',
-                      'X-Remote-User-Email'    => 'bob@example.com')
+        super().merge(
+          'X-Remote-User'          => 'bOb',
+          'X-Remote-User-FullName' => 'Bob Builderson',
+          'X-Remote-User-Email'    => 'bob@example.com'
+        )
       end
 
       context "using local authorization" do
@@ -397,12 +499,12 @@ RSpec.describe Authenticator::Httpd do
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
-          )
+          ).and_call_original
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob authenticated but not defined in EVM",
-          )
+          ).and_call_original
           authenticate rescue nil
         end
         it "logs the failure" do
@@ -425,18 +527,18 @@ RSpec.describe Authenticator::Httpd do
             :event   => 'authorize',
             :userid  => 'bob',
             :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
-          )
+          ).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
-          )
+          ).and_call_original
 
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
             :message => "Authentication successful for user bob",
-          )
+          ).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -466,22 +568,22 @@ RSpec.describe Authenticator::Httpd do
               :event   => 'authorize',
               :userid  => 'bob',
               :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
-            )
+            ).and_call_original
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
               :message => "User bob successfully validated by External httpd",
-            )
+            ).and_call_original
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
               :message => "Authentication successful for user bob",
-            )
+            ).and_call_original
             expect(AuditEvent).to receive(:failure).with(
               :event   => 'authorize',
               :userid  => 'bob',
               :message => "Authentication failed for userid bob@example.com, unable to match user's group membership to an EVM role",
-            )
+            ).and_call_original
             authenticate
           end
 
@@ -498,12 +600,14 @@ RSpec.describe Authenticator::Httpd do
         end
 
         context "when fullname is blank" do
-          let(:username) { 'betty' }
           let(:headers) do
-            super().merge('X-Remote-User-FullName'  => '',
-                          'X-Remote-User-FirstName' => 'Betty',
-                          'X-Remote-User-LastName'  => 'Boop',
-                          'X-Remote-User-Email'     => 'betty@example.com')
+            super().merge(
+              'X-Remote-User'           => 'betty',
+              'X-Remote-User-FullName'  => '',
+              'X-Remote-User-FirstName' => 'Betty',
+              'X-Remote-User-LastName'  => 'Boop',
+              'X-Remote-User-Email'     => 'betty@example.com'
+            )
           end
 
           it "creates a new User with name set to FirstName + LastName" do
@@ -512,12 +616,14 @@ RSpec.describe Authenticator::Httpd do
         end
 
         context "when fullname, firstname and lastname are blank" do
-          let(:username) { 'sam' }
           let(:headers) do
-            super().merge('X-Remote-User-FullName'  => '',
-                          'X-Remote-User-FirstName' => '',
-                          'X-Remote-User-LastName'  => '',
-                          'X-Remote-User-Email'     => 'sam@example.com')
+            super().merge(
+              'X-Remote-User'           => 'sam',
+              'X-Remote-User-FullName'  => '',
+              'X-Remote-User-FirstName' => '',
+              'X-Remote-User-LastName'  => '',
+              'X-Remote-User-Email'     => 'sam@example.com'
+            )
           end
 
           it "creates a new User with the userid set to the UPN" do
@@ -569,10 +675,12 @@ RSpec.describe Authenticator::Httpd do
 
     context "with a userid record in mixed case" do
       let!(:testuser_mixedcase) { FactoryBot.create(:user, :userid => 'TestUser') }
-      let(:username) { 'testuser' }
       let(:headers) do
-        super().merge('X-Remote-User-FullName' => 'Test User',
-                      'X-Remote-User-Email'    => 'testuser@example.com')
+        super().merge(
+          'X-Remote-User'          => 'testuser',
+          'X-Remote-User-FullName' => 'Test User',
+          'X-Remote-User-Email'    => 'testuser@example.com'
+        )
       end
 
       context "using external authorization" do
@@ -581,14 +689,14 @@ RSpec.describe Authenticator::Httpd do
         it "records two successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'testuser',
+            :userid  => username,
             :message => "User testuser successfully validated by External httpd",
-          )
+          ).and_call_original
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'testuser',
+            :userid  => username,
             :message => "Authentication successful for user testuser",
-          )
+          ).and_call_original
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
@@ -638,7 +746,7 @@ RSpec.describe Authenticator::Httpd do
         let(:config) { {:httpd_role => true} }
         let(:headers) do
           {
-            'X-Remote-User'           => username,
+            'X-Remote-User'           => 'testuser',
             'X-Remote-User-FullName'  => 'Test User',
             'X-Remote-User-FirstName' => 'Alice',
             'X-Remote-User-LastName'  => 'Aardvark',

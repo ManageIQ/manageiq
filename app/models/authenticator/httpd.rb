@@ -42,12 +42,11 @@ module Authenticator
     end
 
     def _authenticate(_username, _password, request)
-      request.present? &&
-        request.headers['X-REMOTE-USER'].present?
+      request.present? && request.headers['X-REMOTE-USER'].present?
     end
 
     def failure_reason(_username, request)
-      request.headers['X-EXTERNAL-AUTH-ERROR']
+      request.headers['X-EXTERNAL-AUTH-ERROR']&.force_encoding("UTF-8")
     end
 
     def find_external_identity(_username, user_attrs, membership_list)
@@ -97,6 +96,15 @@ module Authenticator
 
     private
 
+    def normalize_username(username)
+      username = super(username)
+
+      # Fix encoding of username from X-Remote-User request header
+      username = username.force_encoding("UTF-8") if username.encoding == Encoding::ASCII_8BIT
+
+      username
+    end
+
     def find_userid_as_upn(upn_username)
       case_insensitive_find_by_userid(upn_username)
     end
@@ -130,22 +138,37 @@ module Authenticator
     end
 
     def user_details_from_headers(username, request)
+      user_headers = user_headers_from_request(request)
+
       if debug_auth?
         log_auth_debug("user_details_from_headers(username=#{username})")
-
-        remote_user_headers = %w[X-REMOTE-USER X-REMOTE-USER-FIRSTNAME X-REMOTE-USER-LASTNAME X-REMOTE-USER-FULLNAME X-REMOTE-USER-EMAIL X-REMOTE-USER-DOMAIN X-REMOTE-USER-GROUPS]
-        logged_headers = remote_user_headers.map { |rh| "  %-24{key} = \"%{val}\"" % {:key => rh, :val => request.headers[rh]} }
-
         log_auth_debug("External-Auth remote user request.headers:")
-        log_auth_debug(logged_headers)
+        user_headers.each { |k, v| log_auth_debug("  %-24{key} = \"%{val}\"" % {:key => k, :val => v}) }
       end
+
+      groups     = CGI.unescape(user_headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:,]/)
       user_attrs = {:username  => username,
-                    :fullname  => request.headers['X-REMOTE-USER-FULLNAME'],
-                    :firstname => request.headers['X-REMOTE-USER-FIRSTNAME'],
-                    :lastname  => request.headers['X-REMOTE-USER-LASTNAME'],
-                    :email     => request.headers['X-REMOTE-USER-EMAIL'],
-                    :domain    => request.headers['X-REMOTE-USER-DOMAIN']}
-      [user_attrs, (CGI.unescape(request.headers['X-REMOTE-USER-GROUPS'] || '')).split(/[;:,]/)]
+                    :fullname  => user_headers['X-REMOTE-USER-FULLNAME'],
+                    :firstname => user_headers['X-REMOTE-USER-FIRSTNAME'],
+                    :lastname  => user_headers['X-REMOTE-USER-LASTNAME'],
+                    :email     => user_headers['X-REMOTE-USER-EMAIL'],
+                    :domain    => user_headers['X-REMOTE-USER-DOMAIN']}
+
+      [user_attrs, groups]
+    end
+
+    private def user_headers_from_request(request)
+      %w[
+        X-REMOTE-USER
+        X-REMOTE-USER-FULLNAME
+        X-REMOTE-USER-FIRSTNAME
+        X-REMOTE-USER-LASTNAME
+        X-REMOTE-USER-EMAIL
+        X-REMOTE-USER-DOMAIN
+        X-REMOTE-USER-GROUPS
+      ].each_with_object({}) do |k, h|
+        h[k] = request.headers[k]&.force_encoding("UTF-8")
+      end.delete_nils
     end
 
     def user_details_from_system_token(username, user_metadata)
