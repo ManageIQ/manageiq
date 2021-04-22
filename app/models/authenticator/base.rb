@@ -324,7 +324,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      username.downcase
+      (username || '').downcase
     end
 
     def debug_auth?
