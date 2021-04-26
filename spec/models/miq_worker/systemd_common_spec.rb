@@ -17,7 +17,7 @@ RSpec.describe MiqWorker::SystemdCommon do
         [service_file, target_file]
       end
 
-      expect(found_units).to match_array(expected_units)
+      expect(expected_units).to match_array(found_units)
     end
   end
 end
