@@ -33,7 +33,7 @@ class MiqWorkerType < ApplicationRecord
   end
 
   private_class_method def self.classes_for_seed
-    @classes_for_seed ||= MiqWorker.descendants.select { |w| w.subclasses.empty? }
+    @classes_for_seed ||= MiqWorker.concrete_subclasses
   end
 
   private_class_method def self.seed_worker(klass)

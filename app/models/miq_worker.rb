@@ -79,6 +79,10 @@ class MiqWorker < ApplicationRecord
     count
   end
 
+  def self.concrete_subclasses
+    leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
+  end
+
   class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
