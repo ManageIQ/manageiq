@@ -177,45 +177,47 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
+    return {} unless miq_server
+
+    # TODO: commit bb15370a2131e5a8f02f63de334959685b68d620 added the conditional here
+    # to prefer the passed in options before using the server settings for bug 998991,
+    # bug 1004455, bug 1004459.  We'll keep this logic for now.
+    server_config = options[:config] || miq_server.settings
+
+    fetch_worker_settings_from_options_hash(server_config, options[:raw])
+  end
+
+  def self.fetch_worker_settings_from_options_hash(options_hash, raw = false)
+    return {} unless options_hash.key?(:workers)
+
     settings = {}
+    # Get the configuration values
+    section = options_hash[:workers]
+    unless section.nil?
+      classes = path_to_my_worker_settings
+      classes.each do |c|
+        section = section[c]
+        raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
+        defaults = section[:defaults]
+        settings.merge!(defaults) unless defaults.nil?
+      end
 
-    # figure out why/if this guard is needed.. it's weird to have miq_server required here but also accept options
-    unless miq_server.nil?
-      server_config = options[:config] || miq_server.settings
+      settings.merge!(section)
 
-      # extract a method to flatten the ancestry of worker settings into a single key value pair for this worker
-
-      # Get the configuration values
-      section = server_config[:workers]
-      unless section.nil?
-        classes = path_to_my_worker_settings
-        classes.each do |c|
-          section = section[c]
-          raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
-          defaults = section[:defaults]
-          settings.merge!(defaults) unless defaults.nil?
-        end
-
-        settings.merge!(section)
-
-        # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-        raw = options[:raw] == true
-
-        # Clean up the configuration values in a format like "30.seconds"
-        unless raw
-          settings.keys.each do |k|
-            if settings[k].kind_of?(String)
-              if settings[k].number_with_method?
-                settings[k] = settings[k].to_i_with_method
-              elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
-                settings[k] = settings[k].to_i
-              end
+      # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
+      # Clean up the configuration values in a format like "30.seconds"
+      unless raw == true
+        settings.keys.each do |k|
+          if settings[k].kind_of?(String)
+            if settings[k].number_with_method?
+              settings[k] = settings[k].to_i_with_method
+            elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
+              settings[k] = settings[k].to_i
             end
           end
         end
       end
     end
-
     settings
   end
 

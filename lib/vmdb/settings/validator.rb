@@ -186,7 +186,7 @@ module Vmdb
       def validate_worker_request_limit(worker_class, data)
         valid = true
         errors = []
-        worker_settings = worker_class.fetch_worker_settings_from_server(true, data)
+        worker_settings = worker_class.worker_settings(data)
 
         # add assertions that these keys exist - remove defaults
         cpu_request     = worker_settings[:cpu_request_percent] || 0
