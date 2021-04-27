@@ -186,13 +186,27 @@ module Vmdb
       def validate_worker_request_limit(worker_class, data)
         valid = true
         errors = []
-        worker_settings = worker_class.worker_settings(data)
+        worker_settings = worker_class.fetch_worker_settings_from_options_hash(data[:config])
 
-        # add assertions that these keys exist - remove defaults
-        cpu_request     = worker_settings[:cpu_request_percent] || 0
-        cpu_limit       = worker_settings[:cpu_threshold_percent] || Float::INFINITY
-        memory_request  = worker_settings[:memory_request] || 0.bytes
-        memory_limit    = worker_settings[:memory_threshold] || Float::INFINITY.megabytes
+        # Only validate request/limits if you specify any of them.  Specifying at least one of these four, requires
+        # all of them to be enumerated. This gets around tests that want to stub some of the worker_settings.
+        worker_settings_keys_with_dependencies = %i[cpu_request_percent cpu_threshold_percent memory_request memory_threshold]
+        return valid, errors if (worker_settings.keys & worker_settings_keys_with_dependencies).empty?
+
+        worker_settings_keys_with_dependencies.each do |key|
+          if !worker_settings.key?(key)
+            errors << [key, "#{worker_class.settings_name} #{key} is missing!"]
+            return false, errors
+          elsif !worker_settings[key].kind_of?(Numeric)
+            errors << [key, "#{worker_class.settings_name} #{key} has non-numeric value: #{worker_settings[key].inspect}"]
+            return false, errors
+          end
+        end
+
+        cpu_request     = worker_settings[:cpu_request_percent]
+        cpu_limit       = worker_settings[:cpu_threshold_percent]
+        memory_request  = worker_settings[:memory_request]
+        memory_limit    = worker_settings[:memory_threshold]
 
         if cpu_request > cpu_limit
           valid = false

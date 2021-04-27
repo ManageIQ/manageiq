@@ -111,13 +111,29 @@ RSpec.describe Vmdb::Settings::Validator do
       expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
     end
 
-    [:memory_request, 500.megabytes, :memory_threshold, 500.megabytes, :cpu_request, 50, :cpu_threshold_percent, 50].each_slice(2) do |key, value|
-      it "is valid with nil values replaced with default values, when specifying only: #{key}" do
-        stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => nil, :cpu_threshold_percent => nil}, :schedule_worker => {key => value}}})
-        result, errors = subject.validate
-        expect(result).to eql(true)
-        expect(errors.empty?).to eql(true)
-      end
+    it "is invalid if one of the request/limit values is nil" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => nil}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
+      expect(errors.first.last).to include("has non-numeric value")
+    end
+
+    it "is invalid if one of the request/limit values is provided but one is missing" do
+      hash = Settings.to_hash
+      hash[:workers][:worker_base][:defaults].delete(:cpu_threshold_percent)
+      stub_settings(hash)
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_threshold_percent")
+      expect(errors.first.last).to include("is missing")
+    end
+
+    it "is valid if none of the request/limit values are provided" do
+      stub_settings({})
+      result, errors = subject.validate
+      expect(result).to eql(true)
+      expect(errors.empty?).to eql(true)
     end
   end
 end
