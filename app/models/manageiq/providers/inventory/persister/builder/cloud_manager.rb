@@ -90,13 +90,7 @@ module ManageIQ::Providers
         end
 
         def resource_groups
-          # NOTE: This model is different in that it isn't namespaced under a specific
-          # manager (e.g. ManageIQ::Providers::Vendor::CloudManager::ResourceGroup) but
-          # rather directly under the vendor.
-          model_class = "#{manager_class&.module_parent}::ResourceGroup".safe_constantize
-
           add_common_default_values
-          add_properties(:model_class => model_class) if model_class
         end
 
         def vm_and_miq_template_ancestry
