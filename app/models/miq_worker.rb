@@ -199,9 +199,13 @@ class MiqWorker < ApplicationRecord
         section = section[c]
         raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
         defaults = section[:defaults]
-        settings.merge!(defaults) unless defaults.nil?
+        unless defaults.nil?
+          defaults.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+          settings.merge!(defaults)
+        end
       end
 
+      section.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
       settings.merge!(section)
 
       # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
