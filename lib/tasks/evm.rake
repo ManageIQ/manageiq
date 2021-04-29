@@ -96,7 +96,13 @@ namespace :evm do
       "redeployment"   => 5,
       "upgrade"        => 6
     }
+
     status = EvmApplication.deployment_status
+    if status == "new_replica"
+      puts "Database contains the following server records:"
+      MiqServer.all.each { |server| puts "  #{server.guid}: id: #{server.id}, name: #{server.name}, zone: #{server.zone.description}" }
+    end
+
     puts "Deployment status is #{status}"
     exit status_to_code[status]
   end
