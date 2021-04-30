@@ -75,4 +75,65 @@ RSpec.describe Vmdb::Settings::Validator do
       expect(validator.valid?).to be expected
     end
   end
+
+  context "workers section" do
+    subject { described_class.new(Settings) }
+
+    it "is invalid with cpu_request_percent > cpu_threshold_percent" do
+      stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {:cpu_request_percent => 50, :cpu_threshold_percent => 40}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
+    it "is invalid with memory_request > memory_threshold" do
+      stub_settings_merge(:workers => {:worker_base => {:schedule_worker => {:memory_request => 600.megabytes, :memory_threshold => 500.megabytes}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-memory_request")
+      expect(errors.first.last).to include("cannot exceed memory_threshold")
+    end
+
+    it "is invalid with inherited setting" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 10}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
+    it "is invalid with overridden worker setting" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => 15, :cpu_threshold_percent => 20}, :schedule_worker => {:cpu_threshold_percent => 10}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
+      expect(errors.first.last).to include("cannot exceed cpu_threshold_percent")
+    end
+
+    it "is invalid if one of the request/limit values is nil" do
+      stub_settings_merge(:workers => {:worker_base => {:defaults => {:cpu_request_percent => nil}}})
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_request_percent")
+      expect(errors.first.last).to include("has non-numeric value")
+    end
+
+    it "is invalid if one of the request/limit values is provided but one is missing" do
+      hash = Settings.to_hash
+      hash[:workers][:worker_base][:defaults].delete(:cpu_threshold_percent)
+      stub_settings(hash)
+      result, errors = subject.validate
+      expect(result).to eql(false)
+      expect(errors.first.first).to eql("workers-cpu_threshold_percent")
+      expect(errors.first.last).to include("is missing")
+    end
+
+    it "is valid if none of the request/limit values are provided" do
+      stub_settings({})
+      result, errors = subject.validate
+      expect(result).to eql(true)
+      expect(errors.empty?).to eql(true)
+    end
+  end
 end
