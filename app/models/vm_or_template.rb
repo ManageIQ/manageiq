@@ -101,7 +101,6 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :files, -> { where("rsc_type = 'file'") },       :as => :resource, :class_name => "Filesystem"
 
   has_many                  :scan_histories,    :dependent => :destroy
-  has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
   has_many                  :advanced_settings, :as => :resource, :dependent => :destroy
 
   # Scan Items
