@@ -25,7 +25,8 @@ RSpec.describe EventStream do
         stub_settings(:event_streams => {:history => {:keep_events => "3.months"}})
 
         # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
-        expect(described_class.purge_date).to be_within(2.days).of(3.months.ago.utc)
+        # 3 days because feb 28, march 31, may 30 days - that is 3 days short of 30.5 days/month
+        expect(described_class.purge_date).to be_within(3.days).of(3.months.ago.utc)
       end
 
       it "defaults to 6 months" do
