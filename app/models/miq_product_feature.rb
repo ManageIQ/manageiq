@@ -29,8 +29,10 @@ class MiqProductFeature < ApplicationRecord
   ]
 
   FEATURE_TYPE_ORDER = %w(view control admin node).freeze
-  REQUIRED_ATTRIBUTES = [:identifier].freeze
-  OPTIONAL_ATTRIBUTES = %i(name feature_type description children hidden protected).freeze
+  validates :feature_type, :inclusion => FEATURE_TYPE_ORDER
+
+  REQUIRED_ATTRIBUTES = [:feature_type, :identifier].freeze
+  OPTIONAL_ATTRIBUTES = %i(name description children hidden protected).freeze
   ALLOWED_ATTRIBUTES = (REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES).freeze
   MY_TENANT_FEATURE_ROOT_IDENTIFIERS = %w(rbac_tenant_manage_quotas).freeze
   TENANT_FEATURE_ROOT_IDENTIFIERS = (%w(dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete) + MY_TENANT_FEATURE_ROOT_IDENTIFIERS).freeze
