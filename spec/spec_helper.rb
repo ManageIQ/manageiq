@@ -88,19 +88,5 @@ VCR.configure do |c|
     :allow_unused_http_interactions => false
   }
 
-  # Set your config/secrets.yml file
-  secrets = Rails.application.secrets
-
-  # Looks for provider subkeys you set in secrets.yml. Replace the values of
-  # those keys (both escaped or unescaped) with some placeholder text.
-  secrets.keys.each do |provider|
-    next if [:secret_key_base, :secret_token].include?(provider) # Defaults
-    cred_hash = secrets.public_send(provider)
-    cred_hash.each do |key, value|
-      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { CGI.escape(value) }
-      c.filter_sensitive_data("#{provider.upcase}_#{key.upcase}") { value }
-    end
-  end
-
   # c.debug_logger = File.open(Rails.root.join("log", "vcr_debug.log"), "w")
 end
