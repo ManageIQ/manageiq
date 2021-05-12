@@ -206,7 +206,7 @@ module ManageIQ
       end
 
       def publish_inventory?
-        options[:publish_inventory] && MiqQueue.messaging_type != "miq_queue"
+        options[:syndicate_inventory] && MiqQueue.messaging_type != "miq_queue"
       end
 
       def group_targets_by_ems(targets)
