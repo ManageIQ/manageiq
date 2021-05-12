@@ -133,7 +133,7 @@ RSpec.describe ContainerOrchestrator do
           :secretName => "postgresql-secrets",
           :items      => [
             :key  => "rootcertificate",
-            :path => "postgresql.crt",
+            :path => "root.crt",
           ],
         }
       )
