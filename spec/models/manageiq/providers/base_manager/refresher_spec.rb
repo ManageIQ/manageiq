@@ -91,16 +91,11 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
 
   context "#publish_inventory" do
     # Create a simple persister class with just two collections
-    class MyPersister < ManageIQ::Providers::Inventory::Persister
-      def initialize_inventory_collections
-        add_collection(infra, :vms)
-        add_collection(infra, :hosts)
-      end
-    end
+    require_relative "test_persister"
 
     let(:ems) { FactoryBot.create(:ext_management_system, :name => "my-ems") }
     let(:messaging_client) { double("ManageIQ::Messaging::Client") }
-    let(:persister) { MyPersister.new(ems) }
+    let(:persister) { ManageIQ::Providers::BaseManager::Refresher::TestPersister.new(ems) }
 
     before do
       stub_settings_merge(:prototype => {:messaging_type => 'kafka'})
@@ -124,8 +119,8 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
           array_including(
             hash_including(
               :service => "manageiq.ems-inventory",
-              :sender  => "#{ems.emstype}__#{ems.name}",
-              :event   => "#{ems.emstype}__#{ems.name}__vms__vm-1",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__vms__vm-1",
               :payload => hash_including(
                 :collection => :vms,
                 :data       => hash_including(
@@ -152,8 +147,8 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
           array_including(
             hash_including(
               :service => "manageiq.ems-inventory",
-              :sender  => "#{ems.emstype}__#{ems.name}",
-              :event   => "#{ems.emstype}__#{ems.name}__vms__vm-1",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__vms__vm-1",
               :payload => hash_including(
                 :collection => :vms,
                 :data       => hash_including(
@@ -172,8 +167,8 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
           array_including(
             hash_including(
               :service => "manageiq.ems-inventory",
-              :sender  => "vmwarews__my-ems",
-              :event   => "#{ems.emstype}__#{ems.name}__hosts__host-1",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__hosts__host-1",
               :payload => hash_including(
                 :collection => :hosts,
                 :data       => hash_including(
