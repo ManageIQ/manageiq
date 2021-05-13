@@ -5,7 +5,8 @@ WantedBy=manageiq-cockpit_ws.target
 [Service]
 WorkingDirectory=/var/www/miq/vmdb
 Environment=BUNDLER_GROUPS=manageiq_default,ui_dependencies
-ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb MiqCockpitWsWorker --heartbeat --guid=%i'
+EnvironmentFile=/etc/default/manageiq*.properties
+ExecStart=/usr/bin/ruby lib/workers/bin/run_single_worker.rb MiqCockpitWsWorker --heartbeat --guid=%i
 Restart=no
 Type=notify
 Slice=manageiq-cockpit_ws.slice
