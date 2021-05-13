@@ -138,7 +138,7 @@ module EvmSpecHelper
     end
 
     filtered = filter_specific_features([hashes], features).first
-    MiqProductFeature.seed_from_hash(filtered)
+    MiqProductFeature.seed_from_hash(filtered) if filtered.present?
     MiqProductFeature.seed_tenant_miq_product_features
   end
 
