@@ -91,11 +91,10 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
 
   context "#publish_inventory" do
     # Create a simple persister class with just two collections
-    require_relative "test_persister"
 
     let(:ems) { FactoryBot.create(:ext_management_system, :name => "my-ems") }
     let(:messaging_client) { double("ManageIQ::Messaging::Client") }
-    let(:persister) { ManageIQ::Providers::BaseManager::Refresher::TestPersister.new(ems) }
+    let(:persister) { Spec::Support::EmsRefreshHelper::TestPersister.new(ems) }
 
     before do
       stub_settings_merge(:ems_refresh => {:syndicate_inventory => true}, :prototype => {:messaging_type => 'kafka'})
