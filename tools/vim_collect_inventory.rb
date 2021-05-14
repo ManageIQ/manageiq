@@ -37,21 +37,11 @@ Dir.mkdir(dir) unless File.directory?(dir)
 puts "Output in #{dir}"
 
 begin
-  require 'VMwareWebService/miq_fault_tolerant_vim'
+  require 'VMwareWebService/MiqVim'
 
-  selector_class = opts[:bypass] ? MiqVimInventory : MiqVimBroker
-  selector_class.setSelector(MiqEmsRefreshWorker::VC_VIM_SELECTOR_SPEC)
-
-  vim = MiqFaultTolerantVim.new(
-    :ip                  => opts[:ip],
-    :user                => opts[:user],
-    :pass                => opts[:pass],
-    :use_broker          => !opts[:bypass],
-    :vim_broker_drb_port => MiqVimBrokerWorker.drb_port
-  )
-
+  vim = MiqVim.new(opts[:ip], opts[:user], opts[:pass])
   VC_ACCESSORS.each do |accessor, type|
-    process(accessor, dir) { vim.send(accessor, :"ems_refresh_#{type}") }
+    process(accessor, dir) { vim.send(accessor) }
   end
 
   process(:storageDevice, dir) do
@@ -59,7 +49,7 @@ begin
     vim.hostSystemsByMor.keys.each do |host_mor|
       begin
         vim_host = vim.getVimHostByMor(host_mor)
-        data[host_mor] = vim_host.storageDevice(:ems_refresh_host_scsi)
+        data[host_mor] = vim_host.storageDevice
       ensure
         vim_host.release if vim_host rescue nil
       end

@@ -69,14 +69,8 @@ Dir.mkdir(dir) unless File.directory?(dir)
 puts "Output in #{dir}"
 
 begin
-  require 'VMwareWebService/miq_fault_tolerant_vim'
-  vim = MiqFaultTolerantVim.new(
-    :ip                  => opts[:ip],
-    :user                => opts[:user],
-    :pass                => opts[:pass],
-    :use_broker          => !opts[:bypass],
-    :vim_broker_drb_port => MiqVimBrokerWorker.drb_port
-  )
+  require 'VMwareWebService/MiqVim'
+  vim = MiqVim.new(opts[:ip], opts[:user], opts[:pass])
 
   ph = vim.getVimPerfHistory
 
