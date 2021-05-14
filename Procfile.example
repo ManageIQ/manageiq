@@ -36,9 +36,8 @@
 # If you are unsure which workers to start, you can run `ruby lib/workers/bin/run_single_worker.rb -l` to list the workers available
 
 # VMware example
-# The following workers should be started to work with a VMware infrastructure EMS
+# The following worker should be started to work with a VMware infrastructure EMS
 
-# vim_broker:     ruby lib/workers/bin/run_single_worker.rb MiqVimBrokerWorker
 # vmware_metrics: ruby lib/workers/bin/run_single_worker.rb ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker
 
 # Per EMS queue workers
