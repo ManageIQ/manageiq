@@ -14,7 +14,7 @@ RSpec.describe TaskHelpers::Imports::Roles do
                                                    host_edit
                                                    host_scan
                                                    host_show_list
-                                                   policy
+                                                   miq_policy
                                                    vm
                                                    about
                                                  ))
