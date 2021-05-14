@@ -268,6 +268,10 @@
         :description: Add a Composite Catalog Item
         :feature_type: admin
         :identifier: catalogitem_new
+      - :name: Copy Composite Catalog Item
+        :description: Copy a Composite Catalog Item
+        :feature_type: admin
+        :identifier: catalogitem_copy
       - :name: Edit Atomic Catalog Item
         :description: Edit an Atomic Catalog Item
         :feature_type: admin
@@ -1493,6 +1497,11 @@
       :description: Modify Saved Reports
       :feature_type: admin
       :identifier: miq_report_saved_reports_admin
+    - :name: Reload
+      :description: Reload Saved Reports
+      :feature_type: view
+      :hidden: true
+      :identifier: miq_report_saved_reports_reload
       :children:
       - :name: Delete
         :description: Delete a Saved Report
@@ -3416,6 +3425,10 @@
         :description: Refresh relationships and power states for all items related of PXE Servers
         :feature_type: control
         :identifier: pxe_server_refresh
+      - :name: Edit Tags
+        :description: Edit Tags of PXE Servers
+        :feature_type: control
+        :identifier: pxe_server_tag
     - :name: Modify
       :description: Modify PXE Servers
       :feature_type: admin
@@ -4707,6 +4720,17 @@
       :description: Edit Tags of Container Routes
       :feature_type: control
       :identifier: container_route_tag
+
+# Container Project Topology
+- :name: Container Project Topology
+  :description: Container Project Topology
+  :feature_type: node
+  :identifier: container_project_topology
+  :children:
+  - :name: View
+    :description: View Container Project Topology
+    :feature_type: view
+    :identifier: container_project_topology_view
 
 # ContainerProject
 - :name: Projects
@@ -6055,6 +6079,14 @@
       :feature_type: admin
       :identifier: ems_block_storage_admin
       :children:
+      - :name: Add
+        :description: Add a Block Storage Manager
+        :feature_type: admin
+        :identifier: ems_block_storage_new
+      - :name: Edit
+        :description: Edit a Block Storage Manager
+        :feature_type: admin
+        :identifier: ems_block_storage_edit
       - :name: Remove
         :description: Remove Block Storage Manager
         :feature_type: admin
