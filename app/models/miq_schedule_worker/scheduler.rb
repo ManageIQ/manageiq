@@ -13,20 +13,28 @@ class MiqScheduleWorker
       @rufus_scheduler = rufus_scheduler
     end
 
-    def schedule_every(duration = nil, callable = nil, opts = {}, &block)
+    def schedule_every(name, duration = nil, opts = {}, &block)
+      log_schedule(name, opts.merge(:duration => duration))
+
       if duration.blank?
-        logger.warn("Duration is empty, scheduling ignored. Called from: #{block}.")
+        logger.warn("Duration is empty, scheduling ignored. Called from: #{caller[1]}.")
         return
       end
 
-      role_schedule << rufus_scheduler.schedule_every(duration, callable, opts, &block)
+      role_schedule << rufus_scheduler.schedule_every(duration, nil, opts, &block)
     rescue ArgumentError => err
       logger.error("#{err.class} for schedule_every with [#{duration}, #{opts.inspect}].  Called from: #{caller[1]}.")
     end
-    alias every schedule_every
 
-    def schedule_cron(cronline, callable = nil, opts = {}, &block)
-      role_schedule << rufus_scheduler.schedule_cron(cronline, callable, opts, &block)
+    def schedule_cron(name, cronline, opts = {}, &block)
+      log_schedule(name, opts.merge(:cronline => cronline))
+
+      role_schedule << rufus_scheduler.schedule_cron(cronline, nil, opts, &block)
+    end
+
+    private def log_schedule(name, opts)
+      opts_message = opts.slice(:duration, :cronline, :first_at, :first_in).map { |k, v| "#{k}: #{v.inspect}" }.join(", ")
+      logger.info("Scheduling #{name} - #{opts_message}")
     end
   end
 end
