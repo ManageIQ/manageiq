@@ -121,12 +121,6 @@ module EvmSpecHelper
     [server.guid, server, server.zone]
   end
 
-  def self.specific_product_features(*features)
-    features.flatten!
-    seed_specific_product_features(*features)
-    MiqProductFeature.find_all_by_identifier(features)
-  end
-
   def self.seed_specific_product_features(*features)
     features.flatten!
 
@@ -140,6 +134,17 @@ module EvmSpecHelper
     filtered = filter_specific_features([hashes], features).first
     MiqProductFeature.seed_from_hash(filtered) if filtered.present?
     MiqProductFeature.seed_tenant_miq_product_features
+
+    MiqProductFeature.where(:identifier => features).tap do |product_features|
+      invalid_features = features - product_features.map(&:identifier)
+      raise ArgumentError, "Expected features were not found: #{invalid_features.join(", ")}" if invalid_features.any?
+    end
+  end
+
+  # Temporary alias until the one caller is removed:
+  #   manageiq-ui-classic/spec/support/controller_helper.rb
+  class << self
+    alias specific_product_features seed_specific_product_features
   end
 
   def self.filter_specific_features(hashes, features)
