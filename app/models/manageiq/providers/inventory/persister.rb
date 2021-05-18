@@ -52,8 +52,16 @@ class ManageIQ::Providers::Inventory::Persister
     collections.keys
   end
 
+  # Defines how inventory objects will be loaded from the database
+  #
+  # Allowed values are:
+  # * nil - Default strategy, InventoryObjects will be saved and only objects in
+  #         an InventoryCollection can be referenced.  Best used for full refreshes.
+  # * :local_db_find_missing_references - InventoryObjects will be saved and
+  #         lazy_find references will be loaded from the database.  Best used
+  #         for targeted refreshes.
   def strategy
-    nil
+    targeted? ? :local_db_find_missing_references : nil
   end
 
   def saver_strategy
