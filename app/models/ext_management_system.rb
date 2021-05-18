@@ -36,6 +36,10 @@ class ExtManagementSystem < ApplicationRecord
     supported_subclasses.each_with_object({}) { |klass, hash| hash[klass.ems_type] = klass.description }
   end
 
+  def self.subclasses_supports?(feature)
+    supported_subclasses.select { |subclass| subclass.supports?(feature) }
+  end
+
   def self.api_allowed_attributes
     %w[]
   end
@@ -176,6 +180,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :ems_network_new
   supports_not :ems_storage_new
   supports_not :label_mapping
+  supports_not :metrics
   supports_not :object_storage
   supports_not :provisioning
   supports_not :publish
