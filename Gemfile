@@ -24,7 +24,7 @@ manageiq_plugin "manageiq-schema"
 gem "activerecord-session_store",       "~>1.1"
 gem "activerecord-virtual_attributes",  "~>3.0.0"
 gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
-gem "ancestry",                         "~>3.0.7",           :require => false
+gem "ancestry",                         "~>4.1.0",           :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
 gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false

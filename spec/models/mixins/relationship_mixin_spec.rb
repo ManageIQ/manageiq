@@ -366,7 +366,8 @@ RSpec.describe RelationshipMixin do
 
         it "with all to remove" do
           service1.with_relationship_type("custom") { service1.replace_children }
-          expect(service1.with_relationship_type("custom") { service1.replace_children }).to eq([])
+
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to eq([])
         end
 
         it "with one child to keep" do

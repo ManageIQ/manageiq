@@ -769,7 +769,12 @@ module RelationshipMixin
 
   # this allows us to call similarly named ancestry or mixin methods
   def call_ancestry_method(method_name, *args)
-    bound_method = ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::InstanceMethods.instance_method(method_name)).bind(self)
+    bound_method = if Ancestry::MaterializedPath::InstanceMethods.public_instance_methods.include?(method_name)
+                     ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::MaterializedPath::InstanceMethods.instance_method(method_name)).bind(self)
+                   else
+                     ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::InstanceMethods.instance_method(method_name)).bind(self)
+                   end
+
     args.empty? ? bound_method.call : bound_method.call(*args)
   end
 end
