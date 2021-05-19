@@ -69,7 +69,32 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.next_sequence
-    maximum(:sequence).to_i + 1
+    # The +(current_scope || self)+ here is a result of a Rails 6.0 deprecation
+    # warning that is added here:
+    #
+    #   https://github.com/rails/rails/pull/35280
+    #
+    # This was an attempt to fix "leaking scopes", however, in our case, we use
+    # this method both for our +default_value_for(:sequence)+, and it will get
+    # used as part of +.create_tenant_group+.
+    #
+    # As such, we need both +.current_scope+ for when we want to scope down the
+    # +.next_sequence+, but also well allow it to be used on a raw +.create+
+    # without scopes.
+    #
+    # Our +.current_scope+ use case can be best described via one our of
+    # +MiqGroup+ specs:
+    #
+    #   expect(MiqGroup.next_sequence).to be < 999 # sanity check
+    #
+    #   FactoryBot.create(:miq_group, :description => "want 1", :sequence => 999)
+    #   FactoryBot.create(:miq_group, :description => "want 2", :sequence => 1000)
+    #   FactoryBot.create(:miq_group, :description => "dont want", :sequence => 1009)
+    #
+    #   expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
+    #
+    #
+    (current_scope || self).maximum(:sequence).to_i + 1
   end
 
   def self.seed
@@ -280,6 +305,18 @@ class MiqGroup < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Group', 'Groups', number)
+  end
+
+  def delete_from_dashboard_order(widget_set_id)
+    return if settings.blank?
+
+    settings[:dashboard_order]&.delete(widget_set_id)
+  end
+
+  def add_to_dashboard_order(widget_set_id)
+    self.settings ||= {:dashboard_order => []}
+    self.settings[:dashboard_order] ||= []
+    self.settings[:dashboard_order] |= [widget_set_id]
   end
 
   private

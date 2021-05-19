@@ -74,7 +74,7 @@ module MiqConfigSssdLdap
 
     def find_user(userid)
       user = User.lookup_by_userid(userid)
-      user || User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
+      user || User.in_my_region.where(:lower_userid => userid).order(:lastlogon).last
     end
   end
 end

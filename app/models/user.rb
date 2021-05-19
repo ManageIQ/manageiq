@@ -109,11 +109,25 @@ class User < ApplicationRecord
   # often we have the most probably user object onhand. so use that if possible
   def self.lookup_by_lower_email(email, cache = [])
     email = email.downcase
-    Array.wrap(cache).detect { |u| u.email.try(:downcase) == email } || find_by(['lower(email) = ?', email])
+    Array.wrap(cache).detect { |u| u.lower_email == email } || find_by(:lower_email => email)
   end
 
   singleton_class.send(:alias_method, :find_by_lower_email, :lookup_by_lower_email)
   Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_lower_email => :lookup_by_lower_email)
+
+  def lower_email
+    email&.downcase
+  end
+
+  virtual_attribute :lower_email, :string, :arel => ->(t) { t.grouping(t[:email].lower) }
+  hide_attribute :lower_email
+
+  def lower_userid
+    userid&.downcase
+  end
+
+  virtual_attribute :lower_userid, :string, :arel => ->(t) { t.grouping(t[:userid].lower) }
+  hide_attribute :lower_userid
 
   virtual_column :ldap_group, :type => :string, :uses => :current_group
   # FIXME: amazon_group too?
@@ -333,7 +347,7 @@ class User < ApplicationRecord
   end
 
   def self.regional_users(user)
-    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:userid)]).eq(user.userid.downcase)))
+    where(:lower_userid => user.userid.downcase)
   end
 
   def self.super_admin

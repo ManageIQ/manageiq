@@ -33,7 +33,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       worker = FactoryBot.create(:miq_generic_worker)
       worker.configure_worker_deployment(test_deployment)
 
-      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone-#{MiqServer.my_zone}" => "true")
+      expect(test_deployment.dig(:spec, :template, :spec, :nodeSelector)).to eq("manageiq/zone-#{MiqServer.my_zone}".gsub(" ", "-") => "true")
     end
 
     it "doesn't add a node selector for the default zone" do
@@ -42,6 +42,15 @@ RSpec.describe MiqWorker::ContainerCommon do
       worker.configure_worker_deployment(test_deployment)
 
       expect(test_deployment.dig(:spec, :template, :spec).keys).not_to include(:nodeSelector)
+    end
+  end
+
+  describe "#zone_selector" do
+    it "is Kubernetes URL safe" do
+      expect(Vmdb::Appliance).to receive(:PRODUCT_NAME).and_return("ABC4DEF.G:IM")
+      expect(MiqServer).to receive(:my_zone).and_return("Something. !@#$%^&*()[]{}Invalid2 \n")
+
+      expect(MiqWorker.new.zone_selector).to eq("abc4def.g-im/zone-Something.---------------Invalid2" => "true")
     end
   end
 
@@ -59,7 +68,7 @@ RSpec.describe MiqWorker::ContainerCommon do
       test_cases.each { |test| expect(test[:subject].worker_deployment_name).to eq(test[:name]) }
     end
 
-    it "no worker deployment names are over 60 characters" do
+    it "no worker deployment names are over 60 characters", :providers_common => true do
       # OpenShift does not allow deployment names over 63 characters
       # We also want to leave some for the ems_id so we compare against 60 to be safe
       MiqWorkerType.seed

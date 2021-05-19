@@ -53,7 +53,9 @@ class MiqWorker
     end
 
     def zone_selector
-      {"#{Vmdb::Appliance.PRODUCT_NAME.downcase}/zone-#{MiqServer.my_zone}" => "true"}
+      product = Vmdb::Appliance.PRODUCT_NAME.downcase.gsub(/[^-a-z0-9\.]/, "-")
+      zone    = MiqServer.my_zone.chomp.strip.gsub(/[^-A-Za-z0-9_\.\/]/, "-")
+      {"#{product}/zone-#{zone}" => "true"}
     end
 
     def container_image
@@ -75,8 +77,8 @@ class MiqWorker
       mem_request   = self.class.worker_settings[:memory_request]
       cpu_request   = self.class.worker_settings[:cpu_request_percent]
 
-      raise ArgumentError, "cpu_request_percent cannot exceed cpu_threshold_percent" if (cpu_request || 0) > (cpu_limit || Float::INFINITY)
-      raise ArgumentError, "memory_request cannot exceed memory_threshold"           if (mem_request || 0) > (mem_limit || Float::INFINITY.megabytes)
+      raise ArgumentError, "#{self.class.name} - cpu_request_percent (#{cpu_request.inspect}) cannot exceed cpu_threshold_percent (#{cpu_limit.inspect})" if (cpu_request || 0) > (cpu_limit || Float::INFINITY)
+      raise ArgumentError, "#{self.class.name} - memory_request (#{mem_request.inspect}) cannot exceed memory_threshold (#{mem_limit.inspect})"           if (mem_request || 0) > (mem_limit || Float::INFINITY.megabytes)
 
       {}.tap do |h|
         h.store_path(:limits, :memory, format_memory_threshold(mem_limit)) if mem_limit

@@ -198,8 +198,8 @@ RSpec.describe ProviderTagMapping do
     let(:vm_inventory_object) { amazon_persister.vms.find_or_build("some_ems_ref") }
 
     let(:taggings_collections) do
-      vm_collection       = amazon_persister.inventory_collections[9]
-      taggings_collection = amazon_persister.inventory_collections[8]
+      vm_collection       = amazon_persister.vms
+      taggings_collection = amazon_persister.vm_and_template_taggings
       tags_collection     = mapper.tags_to_resolve_collection
 
       [tags_collection, vm_collection, taggings_collection]

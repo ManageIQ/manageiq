@@ -27,6 +27,7 @@ certs/v2_key
 config/secrets.yml*
 coverage/
 Gemfile.lock*
+!Gemfile.lock.release
 GUID
 openstack_environments.yml
 nbproject/
@@ -58,7 +59,6 @@ config/environments/*.local.yml
 content/ansible_consolidated
 
 # db/
-db/*.sqlite3
 db/schema.rb
 db/fixtures/ae_datastore/ManageIQ/.manifest.yaml
 

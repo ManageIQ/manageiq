@@ -11,6 +11,17 @@ class MiqPolicy < ApplicationRecord
                                  PhysicalServer
                                  Vm).freeze
 
+  def self.policy_towhat_applies_to_classes
+    TOWHAT_APPLIES_TO_CLASSES.index_with { |key| ui_lookup(:model => key) }
+  end
+
+  def self.policy_modes
+    {
+      "control" => _("Control"),
+      "compliance" => _("Compliance")
+    }
+  end
+
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
@@ -46,6 +57,8 @@ class MiqPolicy < ApplicationRecord
   scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
 
   serialize :expression
+
+  virtual_column :display_name, :type => :string
 
   @@associations_to_get_policies = [:parent_enterprise, :ext_management_system, :parent_datacenter, :ems_cluster, :parent_resource_pool, :host]
 
@@ -93,6 +106,10 @@ class MiqPolicy < ApplicationRecord
   def self.clean_attrs(attrs)
     CLEAN_ATTRS.each { |a| attrs.delete(a) }
     attrs
+  end
+
+  def display_name
+    "#{towhat.constantize.display_name} #{mode.capitalize}: #{description}"
   end
 
   def copy(new_fields)
@@ -354,6 +371,22 @@ class MiqPolicy < ApplicationRecord
   def self.all_policy_events
     MiqEventDefinition.all_events.select { |e| !e.memberof.empty? && !EVENT_GROUPS_EXCLUDED.include?(e.memberof.first.name) }
   end
+
+  def self.all_policy_events_filter
+    # Todo Convert to SQL if possible
+    filter_hash = {
+       "AND" => [
+           {"="  => {"field" => "MiqEventDefinition-event_type",       "value" => "Default"}},
+           {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => ""}}
+          ]
+        }
+        EVENT_GROUPS_EXCLUDED.each do |e|
+          filter_hash["AND"] << {"!=" => {"field" => "MiqEventDefinition-event_group_name", "value" => e}}
+        end
+
+        MiqExpression.new(filter_hash)
+  end
+
 
   def self.logger
     $policy_log

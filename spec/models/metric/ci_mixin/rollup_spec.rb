@@ -343,6 +343,48 @@ RSpec.describe Metric::CiMixin::Rollup do
         end
       end
     end
+
+    context "with Container hourly performace" do
+      let(:container_image) { FactoryBot.create(:container_image) }
+      let(:container_a)       { FactoryBot.create(:container) }
+      let(:container_b)       { FactoryBot.create(:container) }
+
+      let(:metric_rollup_a) do
+        FactoryBot.create(:metric_rollup, :with_data, :timestamp => '2010-04-14T21:00:00Z', :capture_interval_name => "hourly", :resource => container_a)
+      end
+
+      let(:metric_rollup_b) do
+        FactoryBot.create(:metric_rollup, :with_data, :timestamp => '2010-04-14T21:00:00Z', :capture_interval_name => "hourly", :resource => container_b)
+      end
+
+      before do
+        container_a.metric_rollups << [metric_rollup_a]
+        container_a.save
+
+        container_b.metric_rollups << [metric_rollup_b]
+        container_b.save
+
+        container_image.containers << [container_a, container_b]
+        container_image.save
+
+        container_image.perf_rollup("2010-04-14T21:00:00Z", 'hourly')
+      end
+
+      it "creates rollup records for container image" do
+        rollup = container_image.metric_rollups.first
+        expected_cpu_usage_rate_average = metric_rollup_a.cpu_usage_rate_average + metric_rollup_b.cpu_usage_rate_average
+        expect(rollup.cpu_usage_rate_average).to eq(expected_cpu_usage_rate_average / 2)
+
+        expected_derived_vm_numvcpus = metric_rollup_a.derived_vm_numvcpus + metric_rollup_b.derived_vm_numvcpus
+        expect(rollup.derived_vm_numvcpus).to eq(expected_derived_vm_numvcpus)
+
+        expected_derived_derived_memory_used = metric_rollup_a.derived_memory_used + metric_rollup_b.derived_memory_used
+        expect(rollup.derived_memory_used).to eq(expected_derived_derived_memory_used)
+
+        expected_derived_net_usage_rate_average = metric_rollup_a.net_usage_rate_average + metric_rollup_b.net_usage_rate_average
+        expect(rollup.net_usage_rate_average).to eq(expected_derived_net_usage_rate_average)
+      end
+    end
   end
 
   describe "perf_rollup_gap" do

@@ -148,10 +148,11 @@ module MiqReport::Generator::Trend
           if Time.at(result).utc <= Time.now.utc
             return Time.at(result).utc.strftime("%m/%d/%Y")
           else
-            return "#{((Time.at(result).utc - Time.now.utc) / 1.day).round} days, on #{Time.at(result).utc.strftime("%m/%d/%Y")} (#{get_time_zone("UTC")})"
+            options = {:days => ((Time.at(result).utc - Time.now.utc) / 1.day).round, :date => Time.at(result).utc.strftime("%m/%d/%Y"), :timezone => get_time_zone("UTC")}
+            return _("%{days} days, on %{date} (%{timezone})") % options
           end
         else
-          return "after 1 year"
+          return _("after 1 year")
         end
       rescue RangeError
         return unknown

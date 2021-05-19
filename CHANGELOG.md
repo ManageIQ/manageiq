@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+# Unreleased as of Sprint 158 ending 2020-03-31
+
+### Added
+
+* Don't dynamically write systemd unit files [(#21120)](https://github.com/ManageIQ/manageiq/pull/21120)
+* Add static systemd unit files for workers [(#20983)](https://github.com/ManageIQ/manageiq/pull/20983)
+
+### Fixed
+
+* Move the provider generator systemd files to ./systemd [(#21125)](https://github.com/ManageIQ/manageiq/pull/21125)
+* Move build/systemd\_units/ -> systemd/ due to BUILD file conflict [(#21122)](https://github.com/ManageIQ/manageiq/pull/21122)
+
+# Unreleased as of Sprint 157 ending 2021-03-15
+
+### Added
+
+* Avoid seeding ansible content in production [(#21089)](https://github.com/ManageIQ/manageiq/pull/21089)
+
+# Unreleased as of Sprint 156 ending 2021-03-01
+
+### Fixed
+
+* Fix ansible\_runner content seeding [(#21086)](https://github.com/ManageIQ/manageiq/pull/21086)
+* database\_connectivity? should handle not-running database [(#21064)](https://github.com/ManageIQ/manageiq/pull/21064)
+* Prefer rollup records with tags to grouping in chargeback [(#21059)](https://github.com/ManageIQ/manageiq/pull/21059)
+
+# Unreleased as of Sprint 155 ending 2020-02-15
+
+### Added
+
+* Remove disabling of hash alignment cop [(#21039)](https://github.com/ManageIQ/manageiq/pull/21039)
+
+# Unreleased as of Sprint 154 ending 2020-02-01
+
+### Fixed
+
+* Fix MiqEnvironment.local\_ip\_address to not prefer loopback [(#20992)](https://github.com/ManageIQ/manageiq/pull/20992)
+* Fix notification missing substituted values, log deprecation if other places do this [(#20978)](https://github.com/ManageIQ/manageiq/pull/20978)
+* Fix key collision with Thread :current\_request [(#20973)](https://github.com/ManageIQ/manageiq/pull/20973)
+
+# Unreleased as of Sprint 153 ending 2021-01-18
+
+### Added
+
+* Add Kasparov Beta1 Gemfile.lock [(#20949)](https://github.com/ManageIQ/manageiq/pull/20949)
+* settings.yml support string settings values [(#20908)](https://github.com/ManageIQ/manageiq/pull/20908)
+* introduce User.lower\_userid to remove some arel across a few repos [(#20532)](https://github.com/ManageIQ/manageiq/pull/20532)
+* Rails 6.0 [(#20778)](https://github.com/ManageIQ/manageiq/pull/20778)
+
+### Fixed
+
+* VmScan transitions from before\_scan -> start\_scan [(#20953)](https://github.com/ManageIQ/manageiq/pull/20953)
+
 # Unreleased as of Sprint 152 ending 2021-01-04
 
 ### Added

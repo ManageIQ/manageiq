@@ -42,6 +42,7 @@ module ManageIQ
       template "bin/update"
       chmod "bin", 0755 & ~File.umask, :verbose => false
       empty_directory_with_keep_file "bundler.d"
+      template "config/secrets.defaults.yml"
       template "config/settings.yml"
       template "lib/%plugin_name%.rb"
       template "lib/%plugin_path%/engine.rb"
@@ -67,18 +68,40 @@ module ManageIQ
 
     INDENT = "  ".freeze
 
+    # The path to the plugin
+    #
+    # Example (with a plugin called ManageIQ::MyHelper):
+    #   # => "manageiq/my_helper"
     alias plugin_path file_path
 
+    # The name of the plugin
+    #
+    # Example (with a plugin called ManageIQ::MyHelper):
+    #   # => "manageiq-my_helper"
     def plugin_name
       @plugin_name ||= plugin_path.tr("/", "-")
     end
 
+    # The name of the plugin for display purposes
+    #
+    # Example (with a plugin called ManageIQ::MyHelper):
+    #   # => "ManageIQ My Helper"
     def plugin_human_name
       @plugin_human_name ||= class_name.titleize.tr("/", " ")
     end
 
+    # The short name of the plugin
+    #
+    # Example (with a plugin called ManageIQ::MyHelper):
+    #   # => "my_helper"
+    alias plugin_short_name file_name
+
+    # The description of the plugin
+    #
+    # Example (with a plugin called ManageIQ::MyHelper):
+    #   # => "My Helper plugin for ManageIQ."
     def plugin_description
-      @plugin_description ||= "#{file_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
+      @plugin_description ||= "#{plugin_short_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
     end
 
     def empty_directory_with_keep_file(destination, config = {})

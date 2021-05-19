@@ -1,6 +1,7 @@
 class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
   require_nested :Runner
 
+  include ProviderWorkerMixin
   include PerEmsWorkerMixin
 
   self.required_roles = %w[ems_operations]
@@ -17,7 +18,7 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqQueueWorkerBase
   end
 
   def self.ems_class
-    parent
+    module_parent
   end
 
   def self.normalized_type

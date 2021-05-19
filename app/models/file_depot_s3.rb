@@ -17,6 +17,8 @@ class FileDepotS3 < FileDepot
     # Note: The hard-coded aws_region will be removed after manageiq-ui-class implements region selection
     aws_region = options[:region] || "us-east-1"
 
+    $aws_log ||= Vmdb::Loggers.create_logger("aws.log")
+
     Aws::S3::Resource.new(
       :access_key_id     => username,
       :secret_access_key => ManageIQ::Password.try_decrypt(password),

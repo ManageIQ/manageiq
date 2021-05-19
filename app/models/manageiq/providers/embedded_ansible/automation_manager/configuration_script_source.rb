@@ -84,7 +84,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
       current = configuration_script_payloads.index_by(&:name)
 
       playbooks_in_git_repository.each do |f|
-        found = current.delete(f) || self.class.parent::Playbook.new(:configuration_script_source_id => id)
+        found = current.delete(f) || self.class.module_parent::Playbook.new(:configuration_script_source_id => id)
         found.update!(:name => f, :manager_id => manager_id)
       end
 

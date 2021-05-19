@@ -6,6 +6,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_tenants
+          add_common_default_values
+        end
+
+        def cloud_volumes
+          add_common_default_values
+        end
+
         def flavors
           add_common_default_values
         end
@@ -17,8 +25,8 @@ module ManageIQ::Providers
             :manager_ref => %i(name)
           )
           add_default_values(
-            :resource_id   => ->(persister) { persister.manager.id },
-            :resource_type => ->(persister) { persister.manager.class.base_class }
+            :resource_id   => parent.id,
+            :resource_type => parent.class.base_class
           )
         end
 
@@ -79,6 +87,10 @@ module ManageIQ::Providers
             :orchestration_stacks           => ->(persister) { [persister.collections[:orchestration_stacks]] },
             :orchestration_stacks_resources => ->(persister) { [persister.collections[:orchestration_stacks_resources]] }
           )
+        end
+
+        def resource_groups
+          add_common_default_values
         end
 
         def vm_and_miq_template_ancestry

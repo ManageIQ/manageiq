@@ -94,6 +94,23 @@ RSpec.describe Zone do
     end
   end
 
+  describe "#ems_metrics_collectable" do
+    let(:zone)                       { FactoryBot.create(:zone) }
+    let(:ems_supporting_metrics)     { FactoryBot.create(:ems_infra, :zone => zone) }
+    let(:ems_not_supporting_metrics) { FactoryBot.create(:ems_cloud, :zone => zone) }
+
+    before do
+      allow_any_instance_of(ExtManagementSystem).to receive(:supports?).with(:metrics).and_return(true)
+      allow(ems_supporting_metrics.class).to receive(:supports?).with(:metrics).and_return(true)
+      allow(ems_not_supporting_metrics.class).to receive(:supports?).with(:metrics).and_return(false)
+    end
+
+    it "only returns EMSs which support metrics collection" do
+      expect(zone.ems_metrics_collectable).to include(ems_supporting_metrics)
+      expect(zone.ems_metrics_collectable).not_to include(ems_not_supporting_metrics)
+    end
+  end
+
   context ".determine_queue_zone" do
     subject           { described_class }
 

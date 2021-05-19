@@ -47,7 +47,7 @@ class TokenStore
     end
 
     def find_user_by_userid(userid)
-      User.in_my_region.where('lower(userid) = ?', userid.downcase).first
+      User.in_my_region.where(:lower_userid => userid.downcase).first
     end
 
     def find_user_by_id(id)

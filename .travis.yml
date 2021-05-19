@@ -1,8 +1,8 @@
 ---
 language: ruby
 rvm:
-- 2.5.8
 - 2.6.6
+- 2.7.2
 cache: bundler
 env:
   global:
@@ -15,16 +15,24 @@ env:
   - TEST_SUITE=brakeman
 matrix:
   fast_finish: true
+  jobs:
+  - sudo: required
+    group: edge
+    virt: lxd
+    dist: bionic
+    arch: arm64-graviton2
+    rvm: 2.6.6
+    env:
+    - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
+    - RUBY_GC_HEAP_INIT_SLOTS=600000
+    - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
+    - PARALLEL_TEST_PROCESSORS=2
+    - TEST_SUITE=vmdb PARALLEL=true
 addons:
   postgresql: '10'
-before_install:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
-before_script:
-- bundle exec rake test:$TEST_SUITE:setup
-script:
-- bundle exec rake test:$TEST_SUITE
-after_failure:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
+before_install: source ${TRAVIS_BUILD_DIR}/bin/ci/before_install.sh
+before_script: source ${TRAVIS_BUILD_DIR}/bin/ci/before_script.sh
+after_failure: source ${TRAVIS_BUILD_DIR}/bin/ci/after_failure.sh
 notifications:
   webhooks:
     urls:

@@ -43,6 +43,9 @@ module ManageIQ::Providers
         builder
       end
 
+      attr_accessor :name, :parent, :persister_class, :properties, :inventory_object_attributes,
+                    :default_values, :dependency_attributes, :options, :adv_settings, :shared_properties
+
       # @see prepare_data()
       def initialize(name, persister_class, options = self.class.default_options)
         @name = name
@@ -59,6 +62,18 @@ module ManageIQ::Providers
 
         @adv_settings = options[:adv_settings] # Configuration/Advanced settings in GUI
         @shared_properties = options[:shared_properties] # From persister
+        @parent = options[:parent]
+      end
+
+      def manager_class
+        @manager_class ||= begin
+          provider_module = persister_class.provider_module
+          manager_module = self.class.name.split('::').last
+
+          "#{provider_module}::#{manager_module}".safe_constantize
+        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
+          nil
+        end
       end
 
       # Builds data for InventoryCollection
@@ -66,7 +81,7 @@ module ManageIQ::Providers
       # Yields for overwriting provider-specific properties
       def construct_data
         add_properties(:association => @name)
-
+        add_properties(:parent => parent)
         add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)
 
@@ -206,29 +221,14 @@ module ManageIQ::Providers
       #
       # @return [Class | nil] when class doesn't exist, returns nil
       def auto_model_class
-        model_class = begin
-          # a) Provider specific class
-          provider_module = @persister_class.provider_module
-          manager_module = self.class.name.split('::').last
+        class_name = "#{manager_class}::#{name.to_s.classify}"
+        provider_class = class_name.safe_constantize
 
-          class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
-
-          inferred_class = class_name.safe_constantize
-
-          # safe_constantize can return different similar class ( some Rails auto-magic :/ )
-          if inferred_class.to_s == class_name
-            inferred_class
-          end
-        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
-          nil
-        end
-
-        if model_class
-          model_class
-        else
-          # b) general class
-          "::#{@name.to_s.classify}".safe_constantize
-        end
+        # Check that safe_constantize returns our expected class_name, if not then
+        # return the base class.
+        #
+        # safe_constantize can return different similar class ( some Rails auto-magic :/ )
+        provider_class.to_s == class_name ? provider_class : "::#{name.to_s.classify}".safe_constantize
       end
 
       # Enables/disables auto_model_class and exception check

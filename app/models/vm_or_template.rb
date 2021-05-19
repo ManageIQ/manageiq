@@ -1,3 +1,4 @@
+require 'ancestry'
 require 'ostruct'
 require 'cgi'
 require 'uri'
@@ -9,6 +10,7 @@ class VmOrTemplate < ApplicationRecord
   include SupportsFeatureMixin
 
   self.table_name = 'vms'
+  has_ancestry
 
   include_concern 'Operations'
   include_concern 'RetirementManagement'
@@ -42,6 +44,7 @@ class VmOrTemplate < ApplicationRecord
     "amazon"      => "Amazon",
     "redhat"      => "RedHat",
     "openstack"   => "OpenStack",
+    "oracle"      => "Oracle",
     "google"      => "Google",
     "kubevirt"    => "KubeVirt",
     "ibm"         => "IBM",
@@ -285,6 +288,7 @@ class VmOrTemplate < ApplicationRecord
 
   include RelationshipMixin
   self.default_relationship_type = "genealogy"
+  self.skip_relationships += ["genealogy"]
 
   include MiqPolicyMixin
   include AlertMixin
@@ -296,10 +300,10 @@ class VmOrTemplate < ApplicationRecord
   include StorageMixin
 
   def self.manager_class
-    if parent == Object
+    if module_parent == Object
       ExtManagementSystem
     else
-      parent
+      module_parent
     end
   end
 
@@ -622,17 +626,6 @@ class VmOrTemplate < ApplicationRecord
     location
   end
 
-  def self.uri2location(location)
-    uri = URI.parse(location)
-    location = URI.decode(uri.path)
-    location = location[1..-1] if location[2..2] == ':'
-    location
-  end
-
-  def uri2location
-    self.class.uri2location(location)
-  end
-
   def save_scan_history(datahash)
     result = scan_histories.build(
       :status      => datahash['status'],
@@ -646,25 +639,6 @@ class VmOrTemplate < ApplicationRecord
     save
     result
   end
-
-  # TODO: Vmware specific
-  def self.lookup_by_full_location(path)
-    return nil if path.blank?
-    vm_hash = {}
-    begin
-      vm_hash[:name], vm_hash[:location] = repository_parse_path(path)
-    rescue => err
-      _log.warn("Warning: [#{err.message}]")
-      vm_hash[:location] = location2uri(path)
-    end
-    _log.info("vm_hash [#{vm_hash.inspect}]")
-    store = Storage.find_by(:name => vm_hash[:name])
-    return nil unless store
-    VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
-  end
-
-  singleton_class.send(:alias_method, :find_by_full_location, :lookup_by_full_location)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_full_location => :lookup_by_full_location)
 
   def self.repository_parse_path(path)
     path.gsub!(/\\/, "/")
@@ -1080,11 +1054,6 @@ class VmOrTemplate < ApplicationRecord
     host_id.present? && current_state != "never"
   end
 
-  # TODO: Vmware specfic
-  def is_controllable?
-    runnable? && !template? && host && host.control_supported?
-  end
-
   def self.refresh_ems(vm_ids)
     vm_ids = [vm_ids] unless vm_ids.kind_of?(Array)
     vm_ids = vm_ids.collect { |id| [base_class, id] }
@@ -1221,39 +1190,6 @@ class VmOrTemplate < ApplicationRecord
     return location if datacenter.blank?
     File.join('/rhev/data-center', datacenter.uid_ems, 'mastersd/master/vms', uid_ems, location)
   end
-
-  # TODO: Vmware specific
-  # Parses a full path into the Storage and location
-  def self.parse_path(path)
-    # TODO: Review the name of this method such that the return types don't conflict with those of self.repository_parse_path
-    storage_name, relative_path = repository_parse_path(path)
-
-    storage = Storage.find_by(:name => storage_name)
-    if storage.nil?
-      storage_id = nil
-      location   = location2uri(relative_path)
-    else
-      storage_id = storage.id
-      location   = relative_path
-    end
-
-    return storage_id, location
-  end
-
-  # TODO: Vmware specific
-  # Finds a Vm by a full path of the Storage and location
-  def self.lookup_by_path(path)
-    begin
-      storage_id, location = parse_path(path)
-    rescue
-      _log.warn("Invalid path specified [#{path}]")
-      return nil
-    end
-    VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
-  end
-
-  singleton_class.send(:alias_method, :find_by_path, :lookup_by_path)
-  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_path => :lookup_by_path)
 
   def state
     (power_state || "unknown").downcase

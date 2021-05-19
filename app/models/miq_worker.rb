@@ -79,6 +79,10 @@ class MiqWorker < ApplicationRecord
     count
   end
 
+  def self.concrete_subclasses
+    leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
+  end
+
   class_attribute :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
   self.include_stopping_workers_on_synchronize = false
   self.required_roles = []
@@ -157,9 +161,9 @@ class MiqWorker < ApplicationRecord
     @settings_name ||=
       if self == MiqWorker
         :worker_base
-      elsif parent.try(:short_token)
+      elsif module_parent.try(:short_token)
         # :generic_worker_infra, :generic_worker_vmware
-        :"#{normalized_type}_#{parent.short_token.underscore}"
+        :"#{normalized_type}_#{module_parent.short_token.underscore}"
       else
         # :generic_worker
         normalized_type.to_sym
@@ -173,41 +177,51 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.fetch_worker_settings_from_server(miq_server, options = {})
+    return {} unless miq_server
+
+    # TODO: commit bb15370a2131e5a8f02f63de334959685b68d620 added the conditional here
+    # to prefer the passed in options before using the server settings for bug 998991,
+    # bug 1004455, bug 1004459.  We'll keep this logic for now.
+    server_config = options[:config] || miq_server.settings
+
+    fetch_worker_settings_from_options_hash(server_config, options[:raw])
+  end
+
+  def self.fetch_worker_settings_from_options_hash(options_hash, raw = false)
+    return {} unless options_hash.key?(:workers)
+
     settings = {}
-
-    unless miq_server.nil?
-      server_config = options[:config] || miq_server.settings
-      # Get the configuration values
-      section = server_config[:workers]
-      unless section.nil?
-        classes = path_to_my_worker_settings
-        classes.each do |c|
-          section = section[c]
-          raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
-          defaults = section[:defaults]
-          settings.merge!(defaults) unless defaults.nil?
+    # Get the configuration values
+    section = options_hash[:workers]
+    unless section.nil?
+      classes = path_to_my_worker_settings
+      classes.each do |c|
+        section = section[c]
+        raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
+        defaults = section[:defaults]
+        unless defaults.nil?
+          defaults.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+          settings.merge!(defaults)
         end
+      end
 
-        settings.merge!(section)
+      section.delete_if {|k, v| v == Vmdb::Settings::RESET_VALUE }
+      settings.merge!(section)
 
-        # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
-        raw = options[:raw] == true
-
-        # Clean up the configuration values in a format like "30.seconds"
-        unless raw
-          settings.keys.each do |k|
-            if settings[k].kind_of?(String)
-              if settings[k].number_with_method?
-                settings[k] = settings[k].to_i_with_method
-              elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
-                settings[k] = settings[k].to_i
-              end
+      # If not specified, provide the worker_settings cleaned up in fixnums, etc. instead of 1.seconds, 10.megabytes
+      # Clean up the configuration values in a format like "30.seconds"
+      unless raw == true
+        settings.keys.each do |k|
+          if settings[k].kind_of?(String)
+            if settings[k].number_with_method?
+              settings[k] = settings[k].to_i_with_method
+            elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
+              settings[k] = settings[k].to_i
             end
           end
         end
       end
     end
-
     settings
   end
 
@@ -283,7 +297,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.systemd_worker?
-    MiqEnvironment::Command.supports_systemd? && supports_systemd?
+    MiqEnvironment::Command.supports_systemd?
   end
 
   def systemd_worker?
@@ -552,7 +566,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.normalized_type
-    @normalized_type ||= if parent == Object
+    @normalized_type ||= if module_parent == Object
                            name.sub(/^Miq/, '').underscore
                          else
                            name.demodulize.underscore

@@ -158,24 +158,147 @@ RSpec.describe ChargebackContainerProject do
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
+
+    context "multiple tags" do
+      let(:base_filter_options) do
+        base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby => 'date')
+      end
+
+      let(:options) { base_filter_options }
+
+      let(:other_project) do
+        FactoryBot.create(:container_project, :name                  => "Other Project",
+                                              :ext_management_system => ems,
+                                              :created_on            => month_beginning)
+      end
+
+      let(:development_project) do
+        FactoryBot.create(:container_project, :name                  => "Development Project",
+                                              :ext_management_system => ems,
+                                              :created_on            => month_beginning)
+      end
+
+      subject do
+        ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.map { |x| x.entity.id }
+      end
+
+      before do
+        environment_category = Classification.find_by(:description => "Environment")
+        tag_development = FactoryBot.create(:classification, :name => "dev", :description => "Development", :parent_id => environment_category.id)
+
+        development_project.tag_with(tag_development.tag.name, :ns => '*')
+
+        add_metric_rollups_for(other_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+        add_metric_rollups_for(development_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+        add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
+      end
+
+      it "doesn't filter resources without filter" do
+        expect(subject).to match_array(ContainerProject.ids)
+      end
+
+      context "with filter" do
+        let(:options) do
+          base_filter_options.merge(:tag => '/managed/environment/prod')
+        end
+
+        it "filters resources according to tag" do
+          expect(subject).to match_array([@project.id])
+        end
+
+        context "with multiple tags filter" do
+          let(:options) do
+            base_filter_options.merge(:tag => ['/managed/environment/prod', '/managed/environment/dev'])
+          end
+
+          it "filters resources according to multiple tags" do
+            expect(subject).to match_array([@project.id, development_project.id])
+          end
+        end
+      end
+    end
   end
 
   context "group results by tag" do
-    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
+    let(:options) do
+      base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment')
+    end
+
+    let(:development_project) do
+      FactoryBot.create(:container_project, :name                  => "Development Project",
+                                            :ext_management_system => ems,
+                                            :created_on            => month_beginning)
+    end
+
+    let(:other_development_project) do
+      FactoryBot.create(:container_project, :name                  => "Other Development Project",
+                                            :ext_management_system => ems,
+                                            :created_on            => month_beginning)
+    end
 
     before do
-      metric_rollup_params[:tag_names] = "environment/prod"
+      environment_category = Classification.find_by(:description => "Environment")
+      FactoryBot.create(:classification, :name => "dev", :description => "Development", :parent_id => environment_category.id)
 
+      metric_rollup_params[:tag_names] = "environment/dev"
+      add_metric_rollups_for(development_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+
+      metric_rollup_params[:tag_names] = "environment/dev"
+      add_metric_rollups_for(other_development_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+
+      metric_rollup_params[:tag_names] = "environment/prod"
       add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first }
 
     it "cpu" do
-      metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
-      expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
-      expect(subject.tag_name).to eq('Production')
+      cpu_cores_metric_used = cpu_cores_used_metric_for(@project, hours_in_month)
+
+      expect(subject.first.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+      expect(subject.first.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      expect(subject.first.tag_name).to eq('Production')
+
+      metric_used_for_development_project = cpu_cores_used_metric_for(development_project, hours_in_month)
+      metric_used_for_other_development_project = cpu_cores_used_metric_for(other_development_project, hours_in_month)
+      cpu_cores_metric_used = metric_used_for_development_project + metric_used_for_other_development_project
+
+      expect(subject.second.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+      expect(subject.second.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      expect(subject.second.tag_name).to eq('Development')
+    end
+
+    context "group by multiple tags" do
+      let(:options) do
+        base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => ['environment', 'department'])
+      end
+
+      let(:accounting_project) do
+        FactoryBot.create(:container_project, :name => "Department Project", :ext_management_system => ems, :created_on => month_beginning)
+      end
+
+      let(:department_tag_category) { FactoryBot.create(:classification_department_with_tags) }
+      let!(:accounting_tag)         { department_tag_category.entries.find_by(:description => "Accounting").tag }
+
+      let(:production_result_part)  { subject.detect { |x| x.tag_name == "Production" } }
+      let(:development_result_part) { subject.detect { |x| x.tag_name == "Development" } }
+      let(:accounting_result_part)  { subject.detect { |x| x.tag_name == "Accounting" } }
+
+      before do
+        metric_rollup_params[:tag_names] = "department/accounting"
+        add_metric_rollups_for(accounting_project, month_beginning...month_end, 12.hours, metric_rollup_params)
+      end
+
+      it "generates results for multiple tags categories" do
+        cpu_cores_metric_used = cpu_cores_used_metric_for(accounting_project, hours_in_month)
+
+        expect(accounting_result_part.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+        expect(accounting_result_part.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+
+        cpu_cores_metric_used = production_result_part.cpu_cores_used_metric * 2
+        expect(development_result_part.cpu_cores_used_metric).to be_within(0.01).of(cpu_cores_metric_used)
+        expect(development_result_part.cpu_cores_used_cost).to be_within(0.01).of(cpu_cores_metric_used * hourly_rate * hours_in_month)
+      end
     end
   end
 

@@ -9,7 +9,8 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       postgresql-server       \
       mod_ssl                 \
       &&                      \
-    dnf clean all
+    dnf clean all && \
+    rm -rf /var/cache/dnf
 
 ## Copy/link the appliance files again so that we get ssl
 RUN source /etc/default/evm && \

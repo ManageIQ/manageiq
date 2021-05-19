@@ -21,10 +21,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
     },
   ].freeze
 
-  # rubocop:disable Layout/AlignHash
-  #
-  # looks better to align the nested keys to the same distance, instead of
-  # scope just for the hash in question (which is what rubocop does).
   EXTRA_ATTRIBUTES = [
     {
       :component  => 'switch',
@@ -63,7 +59,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
       :maxLength  => 1024,
     },
   ].freeze
-  # rubocop:enable Layout/AlignHash
 
   API_ATTRIBUTES = (COMMON_ATTRIBUTES + EXTRA_ATTRIBUTES).freeze
 

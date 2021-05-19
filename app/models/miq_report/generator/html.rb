@@ -93,7 +93,7 @@ module MiqReport::Generator::Html
 
   def build_html_col(output, col_name, col_format, row_data, time_zone)
     style = get_style_class(col_name, row_data, time_zone)
-    style_class = !style.nil? ? " class='#{style}'" : nil
+    style_class = style.present? ? " class='#{style}'" : nil
     alignment_style = if db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name']) || row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
                         :right
                       elsif row_data[col_name].kind_of?(Time)
@@ -116,14 +116,14 @@ module MiqReport::Generator::Html
       title = data_row['name'] ?
         "View #{ui_lookup(:model => db)} \"#{data_row['name']}\"" :
         "View this #{ui_lookup(:model => db)}"
-      onclick = "onclick=\"#{donav}\" style='cursor:hand' title='#{title}'"
+      onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='#{title}'"
     end
 
     # Handle CI performance report rows
     if db.ends_with?("Performance")
       if data_row['resource_id'] && data_row['resource_type'] # Base click thru on the related resource
         donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
-        onclick = "onclick=\"#{donav}\" style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
+        onclick = "onclick=\"#{donav}\" onKeyPress=\"#{donav}\" tabindex='0' style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
       end
     end
 

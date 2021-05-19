@@ -1,8 +1,23 @@
 class MiqWidgetSet < ApplicationRecord
+  include_concern 'SetData'
+
   acts_as_miq_set
 
+  before_destroy :ensure_can_be_destroyed
   before_destroy :destroy_user_versions
-  before_save    :keep_group_when_saving
+  before_destroy :delete_from_dashboard_order
+
+  before_validation :keep_group_when_saving
+  after_save        :add_to_dashboard_order
+  after_save        :update_members
+
+  validates :group_id, :presence => true, :unless => :read_only?
+
+  validates :name, :format => {:with => /\A[^|]*\z/, :on => :create, :message => "cannot contain \"|\""}
+
+  validates :description, :uniqueness_when_changed => {:scope   => [:owner_id, :userid],
+                                                       :message => _("must be unique for this group and userid")}
+  belongs_to :group, :class_name => 'MiqGroup'
 
   scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
     order = sanitize_sql_array(["array_position(ARRAY[?]::#{column_type}[], #{table_name}.#{column}::#{column_type})", ids])
@@ -17,6 +32,33 @@ class MiqWidgetSet < ApplicationRecord
 
   def self.with_users
     where.not(:userid => nil)
+  end
+
+  def update_members
+    replace_children(Array(set_data_widgets)) if members.map(&:id).sort != set_data_widgets.ids.sort
+    current_user = User.current_user
+    members.each { |w| w.create_initial_content_for_user(current_user.userid) } if current_user # Generate content if not there
+  end
+
+  def add_to_dashboard_order
+    return unless group
+
+    group.add_to_dashboard_order(id)
+    group.save
+  end
+
+  def delete_from_dashboard_order
+    return unless group
+
+    group.delete_from_dashboard_order(id)
+    group.save
+  end
+
+  def ensure_can_be_destroyed
+    if read_only?
+      errors.add(:base, _("Unable to delete read-only WidgetSet"))
+      throw(:abort)
+    end
   end
 
   def destroy_user_versions
@@ -54,7 +96,12 @@ class MiqWidgetSet < ApplicationRecord
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = find_by(:name => attrs["name"])
+    lookup_attributes = {}
+    lookup_attributes[:name] = attrs["name"]
+    lookup_attributes[:userid] = nil
+    lookup_attributes[:read_only] = true
+
+    ws = find_by(lookup_attributes)
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
@@ -69,8 +116,12 @@ class MiqWidgetSet < ApplicationRecord
         h
       end
 
-      owner = attrs.delete("owner_description")
-      attrs["owner_id"] = MiqGroup.find_by(:description => owner).try(:id) if owner
+      owner_description = attrs.delete("owner_description")
+      owner = MiqGroup.find_by(:description => owner_description) if owner_description
+      if owner
+        attrs["owner_type"] = "MiqGroup"
+        attrs["owner_id"] = owner.id
+      end
     end
 
     if ws

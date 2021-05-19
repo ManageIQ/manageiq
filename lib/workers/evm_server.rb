@@ -140,8 +140,7 @@ class EvmServer
     ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
 
     # Log the Versions
-    _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)
-    _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]") if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
+    _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version_details}]") if ActiveRecord::Base.connection.respond_to?(:database_version_details)
   end
 
   def check_migrations_up_to_date
@@ -244,7 +243,7 @@ class EvmServer
     #############################################################
     # Start all the configured workers
     #############################################################
-    @current_server.clean_heartbeat_files
+    @current_server.clean_heartbeat_files # Appliance specific
     @current_server.sync_config
     @current_server.start_drb_server
     @current_server.sync_workers

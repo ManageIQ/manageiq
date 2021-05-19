@@ -15,13 +15,29 @@ class CloudVolume < ApplicationRecord
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
   belongs_to :storage_resource, :inverse_of => :cloud_volumes
   belongs_to :storage_service, :inverse_of => :cloud_volumes
+  has_one    :physical_storage, :through => :storage_resource
   has_many   :cloud_volume_backups
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
+  has_many   :volume_mappings, :dependent => :destroy
+  has_many   :host_initiators, :through => :volume_mappings
+
+  supports_not :backup_create
+  supports_not :backup_restore
+  supports_not :create
+  supports_not :snapshot_create
+  supports_not :update
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
+
+  supports_not :safe_delete
+  virtual_column :supports_safe_delete, :type => :boolean
+
+  def supports_safe_delete
+    supports_safe_delete?
+  end
 
   acts_as_miq_taggable
 
@@ -117,10 +133,6 @@ class CloudVolume < ApplicationRecord
     raw_update_volume(options)
   end
 
-  def validate_update_volume
-    validate_unsupported("Update Volume Operation")
-  end
-
   def raw_update_volume(_options = {})
     raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
   end
@@ -157,6 +169,33 @@ class CloudVolume < ApplicationRecord
 
   def raw_delete_volume
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
+  end
+
+  def safe_delete_volume_queue(userid)
+    task_opts = {
+      :action => "Safe deleting Cloud Volume for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'safe_delete_volume',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def safe_delete_volume
+    raw_safe_delete_volume
+  end
+
+  def raw_safe_delete_volume
+    raise NotImplementedError, _("raw_safe_delete_volume must be implemented in a subclass")
   end
 
   def available_vms

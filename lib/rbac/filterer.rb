@@ -59,6 +59,8 @@ module Rbac
       PxeServer
       ResourcePool
       SecurityGroup
+      SecurityPolicy
+      SecurityPolicyRule
       Service
       ServiceTemplate
       Storage
@@ -127,18 +129,28 @@ module Rbac
     TENANT_ACCESS_STRATEGY = {
       'CloudSnapshot'          => :descendant_ids,
       'CloudTenant'            => :descendant_ids,
+      'CloudNetwork'           => :descendant_ids,
+      'CloudSubnet'            => :descendant_ids,
       'CloudVolume'            => :descendant_ids,
       'ExtManagementSystem'    => :ancestor_ids,
+      'FloatingIp'             => :descendant_ids,
       'MiqAeNamespace'         => :ancestor_ids,
       'MiqGroup'               => :descendant_ids,
       'MiqRequest'             => :descendant_ids,
       'MiqRequestTask'         => nil, # tenant only
       'MiqTemplate'            => :ancestor_ids,
+      'NetworkPort'            => :descendant_ids,
+      'NetworkRouter'          => :descendant_ids,
+      'NetworkService'         => :descendant_ids,
+      'NetworkServiceEntry'    => :descendant_ids,
       'OrchestrationStack'     => nil,
       'Provider'               => :ancestor_ids,
       'Service'                => :descendant_ids,
       'ServiceTemplate'        => :ancestor_ids,
       'ServiceTemplateCatalog' => :ancestor_ids,
+      'SecurityGroup'          => :descendant_ids,
+      'SecurityPolicy'         => :descendant_ids,
+      'SecurityPolicyRule'     => :descendant_ids,
       'Tenant'                 => :descendant_ids,
       'User'                   => :descendant_ids,
       'Vm'                     => :descendant_ids

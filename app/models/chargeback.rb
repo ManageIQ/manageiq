@@ -58,19 +58,22 @@ class Chargeback < ActsAsArModel
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
         rates_to_apply = rates.get(consumption)
 
-        key = report_row_key(consumption)
-        _log.debug("Report row key #{key}")
+        Array(report_row_key(consumption)).each do |result_key|
+          key = result_key[:key]
+          _log.debug("Report row key #{key}")
 
-        data[key] ||= new(options, consumption, region.region)
+          consumption.tag_filter_for_rollup_records(result_key[:key_object].tag) if result_key[:key_object]&.tag
+          data[key] ||= new(options, consumption, region.region, result_key)
 
-        chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
-        data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
+          chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
+          data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
-        # we are getting hash with metrics and costs for metrics defined for chargeback
-        if Settings[:new_chargeback]
-          data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
-        else
-          data[key].calculate_costs(consumption, rates_to_apply)
+          # we are getting hash with metrics and costs for metrics defined for chargeback
+          if Settings[:new_chargeback]
+            data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
+          else
+            data[key].calculate_costs(consumption, rates_to_apply)
+          end
         end
       end
     end
@@ -83,18 +86,23 @@ class Chargeback < ActsAsArModel
   def self.report_row_key(consumption)
     ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption)
-      classification_id = classification.present? ? classification.id : 'none'
-      "#{classification_id}_#{ts_key}"
+      classifications = @options.classification_for(consumption)
+      if classifications.present?
+        Array(classifications).map do |x|
+          {:key => "#{x.id}_#{ts_key}", :key_object => x}
+        end
+      else
+        [{:key => "none"}]
+      end
     elsif @options[:groupby_label].present?
-      "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
+      [{:key => "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"}]
     elsif @options.group_by_tenant?
       tenant = @options.tenant_for(consumption)
-      "#{tenant ? tenant.id : 'none'}_#{ts_key}"
+      [{:key => "#{tenant ? tenant.id : 'none'}_#{ts_key}"}]
     elsif @options.group_by_date_only?
-      ts_key
+      [{:key => ts_key.to_s}]
     else
-      default_key(consumption, ts_key)
+      [{:key => default_key(consumption, ts_key)}]
     end
   end
 
@@ -106,12 +114,11 @@ class Chargeback < ActsAsArModel
     nil
   end
 
-  def initialize(options, consumption, region)
+  def initialize(options, consumption, region, result_key)
     @options = options
     super()
     if @options[:groupby_tag].present?
-      classification = @options.classification_for(consumption)
-      self.tag_name = classification.present? ? classification.description : _('<Empty>')
+      self.tag_name = result_key[:key_object] ? result_key[:key_object].description : _('<Empty>')
     elsif @options[:groupby_label].present?
       label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
       self.label_name = label_value.present? ? label_value : _('<Empty>')

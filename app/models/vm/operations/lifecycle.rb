@@ -3,19 +3,16 @@ module Vm::Operations::Lifecycle
 
   included do
     supports :retire do
-      unsupported_reason_add(:retire, "VM orphaned or archived already") if orphaned? || archived?
-    end
-
-    supports :migrate do
-      if blank? || orphaned? || archived?
-        unsupported_reason_add(:migrate, "Migrate operation in not supported.")
-      end
+      reason   = _("Retire not supported because VM is orphaned") if orphaned?
+      reason ||= _("Retire not supported because VM is archived") if archived?
+      unsupported_reason_add(:retire, reason) if reason
     end
 
     supports :publish do
-      if blank? || orphaned? || archived?
-        unsupported_reason_add(:publish, _('Publish operation in not supported'))
-      end
+      reason   = _("Publish not supported because VM is blank")    if blank?
+      reason ||= _("Publish not supported because VM is orphaned") if orphaned?
+      reason ||= _("Publish not supported because VM is archived") if archived?
+      unsupported_reason_add(:retire, reason) if reason
     end
 
     api_relay_method :retire do |options|

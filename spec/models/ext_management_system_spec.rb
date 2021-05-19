@@ -37,7 +37,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   it ".model_name_from_emstype" do
-    described_class.leaf_subclasses.each do |klass|
+    described_class.concrete_subclasses.each do |klass|
       expect(described_class.model_name_from_emstype(klass.ems_type)).to eq(klass.name)
     end
     expect(described_class.model_name_from_emstype('foo')).to be_nil
@@ -53,8 +53,50 @@ RSpec.describe ExtManagementSystem do
     described_class.create_discovered_ems(ost)
   end
 
-  it ".types" do
-    expect(described_class.types).to include("ec2", "vmwarews")
+  describe ".types" do
+    context "on the base ExtManagementSystem class" do
+      it "returns both cloud and infra types" do
+        expect(described_class.types).to include("ec2", "vmwarews")
+      end
+    end
+
+    context "on the EmsCloud subclass" do
+      it "only returns cloud types" do
+        cloud_types = EmsCloud.types
+
+        expect(cloud_types).to     include("ec2")
+        expect(cloud_types).not_to include("vmwarews")
+      end
+    end
+
+    context "on the EmsInfra subclass" do
+      it "only returns infra types" do
+        infra_types = EmsInfra.types
+
+        expect(infra_types).to     include("vmwarews")
+        expect(infra_types).not_to include("ec2")
+      end
+    end
+  end
+
+  describe ".supported_subclasses" do
+    context "on the EmsCloud subclass" do
+      it "only returns cloud types" do
+        cloud_supported_subclasses = EmsCloud.supported_subclasses
+
+        expect(cloud_supported_subclasses).to     include(ManageIQ::Providers::Amazon::CloudManager)
+        expect(cloud_supported_subclasses).not_to include(ManageIQ::Providers::Vmware::InfraManager)
+      end
+    end
+
+    context "on the EmsInfra subclass" do
+      it "only returns infra types" do
+        infra_supported_subclasses = EmsInfra.supported_subclasses
+
+        expect(infra_supported_subclasses).to     include(ManageIQ::Providers::Vmware::InfraManager)
+        expect(infra_supported_subclasses).not_to include(ManageIQ::Providers::Amazon::CloudManager)
+      end
+    end
   end
 
   describe ".supported_types" do
@@ -66,6 +108,24 @@ RSpec.describe ExtManagementSystem do
       allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).and_return(true)
       allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).with("vmwarews").and_return(false)
       expect(described_class.supported_types).not_to include("vmwarews")
+    end
+
+    context "on the EmsCloud subclass" do
+      it "only returns cloud types" do
+        cloud_supported_types = EmsCloud.supported_types
+
+        expect(cloud_supported_types).to     include("ec2")
+        expect(cloud_supported_types).not_to include("vmwarews")
+      end
+    end
+
+    context "on the EmsInfra subclass" do
+      it "only returns infra types" do
+        infra_supported_types = EmsInfra.supported_types
+
+        expect(infra_supported_types).to     include("vmwarews")
+        expect(infra_supported_types).not_to include("ec2")
+      end
     end
   end
 

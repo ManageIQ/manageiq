@@ -73,7 +73,7 @@ class MiqReportResult < ApplicationRecord
     if miq_task
       miq_task.human_status
     else
-      report_results_blank? ? "Error" : "Complete"
+      report_results_blank? ? N_("Error") : N_("Complete")
     end
   end
 

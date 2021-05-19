@@ -5,6 +5,10 @@ module Vm::Operations::Guest
     api_relay_method :shutdown_guest
     api_relay_method :reboot_guest
     api_relay_method :reset
+
+    supports_not :reboot_guest
+    supports_not :reset
+    supports_not :shutdown_guest
   end
 
   def validate_standby_guest

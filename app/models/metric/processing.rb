@@ -28,6 +28,7 @@ module Metric::Processing
     ContainerProject,
     ContainerReplicator,
     ContainerService,
+    ContainerImage,
     Host,
     AvailabilityZone,
     HostAggregate,

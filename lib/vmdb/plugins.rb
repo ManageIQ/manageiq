@@ -25,6 +25,7 @@ module Vmdb
 
     def init
       load_inflections
+      init_loggers
       register_models
     end
 
@@ -42,6 +43,8 @@ module Vmdb
       details.transform_values { |v| v[:version] }
     end
 
+    # Ansible content (roles) that come out-of-the-box, for use by both Automate
+    #   and ansible-runner
     def ansible_content
       @ansible_content ||= begin
         require_relative 'plugins/ansible_content'
@@ -51,11 +54,13 @@ module Vmdb
       end
     end
 
+    # Ansible content (playbooks and roles) for internal use by provider plugins,
+    #   not exposed to Automate, and to be run by ansible_runner
     def ansible_runner_content
       @ansible_runner_content ||= begin
         map do |engine|
           content_dir = engine.root.join("content", "ansible_runner")
-          next unless File.exist?(content_dir.join("requirements.yml"))
+          next unless File.exist?(content_dir.join("roles/requirements.yml"))
 
           [engine, content_dir]
         end.compact
@@ -82,10 +87,22 @@ module Vmdb
       end
     end
 
+    def systemd_units
+      @systemd_units ||= begin
+        flat_map { |engine| engine.root.join("systemd").glob("*.*") }
+      end
+    end
+
     def load_inflections
       each do |engine|
         file = engine.root.join("config", "initializers", "inflections.rb")
         load file if file.exist?
+      end
+    end
+
+    def init_loggers
+      each do |engine|
+        engine.try(:init_loggers)
       end
     end
 

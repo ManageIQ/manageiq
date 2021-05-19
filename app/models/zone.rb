@@ -201,7 +201,8 @@ class Zone < ApplicationRecord
 
   # @return [Array<ExtManagementSystem>] All emses that can collect Capacity and Utilization metrics
   def ems_metrics_collectable
-    ext_management_systems.select { |e| e.kind_of?(EmsCloud) || e.kind_of?(EmsInfra) || e.kind_of?(ManageIQ::Providers::ContainerManager) }
+    supported_ems_types = ExtManagementSystem.subclasses_supports?(:metrics).map(&:name)
+    ext_management_systems.where(:type => supported_ems_types).select { |e| e.supports?(:metrics) }
   end
 
   def ems_networks

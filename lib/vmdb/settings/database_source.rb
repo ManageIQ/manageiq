@@ -76,8 +76,9 @@ module Vmdb
       end
 
       def database_connectivity?
-        conn = ActiveRecord::Base.connection rescue nil
-        conn && ActiveRecord::Base.connected?
+        ActiveRecord::Base.connection && ActiveRecord::Base.connected?
+      rescue ActiveRecord::NoDatabaseError, PG::ConnectionBad
+        false
       end
     end
   end

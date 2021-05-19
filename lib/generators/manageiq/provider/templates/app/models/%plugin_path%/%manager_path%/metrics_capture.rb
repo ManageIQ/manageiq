@@ -53,7 +53,7 @@ class <%= class_name %>::<%= manager_type %>::MetricsCapture < ManageIQ::Provide
     begin
       target.ext_management_system.with_provider_connection do |connection|
         [{target.ems_ref => VIM_STYLE_COUNTERS},
-         {target.ems_ref => fake_metrics(start_time, end_time)}]
+         {target.ems_ref => connection.metrics(start_time, end_time)}]
       end
     rescue Exception => err
       _log.error("#{log_header} Unhandled exception during perf data collection: [#{err}], class: [#{err.class}]")
@@ -61,22 +61,5 @@ class <%= class_name %>::<%= manager_type %>::MetricsCapture < ManageIQ::Provide
       _log.log_backtrace(err)
       raise
     end
-  end
-
-  private
-
-  def fake_metrics(start_time, end_time)
-    timestamp = start_time
-    metrics = {}
-    while (timestamp < end_time)
-      metrics[timestamp] = {
-        'cpu_usage_rate_average'  => rand(100).to_f,
-        'disk_usage_rate_average' => rand(100).to_f,
-        'mem_usage_rate_average'  => rand(100).to_f,
-        'net_usage_rate_average'  => rand(100).to_f,
-      }
-      timestamp += 20.seconds
-    end
-    metrics
   end
 end

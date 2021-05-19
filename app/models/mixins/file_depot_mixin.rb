@@ -19,9 +19,26 @@ module FileDepotMixin
     def verify_depot_settings(settings)
       return true unless MiqEnvironment::Command.is_appliance?
 
+      settings["password"] ||= find(settings["id"]).authentication_password if settings["id"]
       res = mnt_instance(settings).verify
       raise _("Connection Settings validation failed with error: %{error}") % {:error => res.last} unless res.first
       res
+    end
+
+    def verify_depot_settings_queue(userid, zone, options)
+      task_opts = {
+        :action => "Verify #{display_name} Credentials",
+        :userid => userid
+      }
+
+      queue_opts = {
+        :class_name  => name,
+        :method_name => "verify_depot_settings",
+        :args        => [options],
+        :zone        => zone
+      }
+
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
     end
 
     def mnt_instance(settings)
@@ -39,7 +56,7 @@ module FileDepotMixin
       # Strip any leading and trailing whitespace
       uri_str.strip!
 
-      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI.encode(uri_str))
+      scheme, _userinfo, _host, _port, _registry, _path, _opaque, _query, _fragment = URI.split(URI::DEFAULT_PARSER.escape(uri_str))
       scheme
     end
   end

@@ -2,6 +2,8 @@ class ResourceGroup < ApplicationRecord
   acts_as_miq_taggable
   alias_attribute :images, :templates
 
+  belongs_to :ext_management_system, :foreign_key => :ems_id
+
   has_many :vm_or_templates
 
   # Rely on default scopes to get expected information

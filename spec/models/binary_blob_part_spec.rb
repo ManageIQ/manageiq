@@ -21,4 +21,14 @@ RSpec.describe BinaryBlobPart do
       expect(subject.bytes.to_a).to eq(@data.bytes.to_a)
     end
   end
+
+  it "#inspect has data filtered out" do
+    str = "REALLY LONG STRING"
+    part = FactoryBot.create(:binary_blob_part, :data => str)
+    expect(part.inspect).to_not include(str)
+
+    # Also check for how str is stored as raw binary in the database (as in
+    # data_before_type_cast), in case that leaks through to inspect
+    expect(part.inspect).to_not include(str.unpack1("H*"))
+  end
 end

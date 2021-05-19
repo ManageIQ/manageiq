@@ -14,6 +14,11 @@ class MiqEventDefinition < ApplicationRecord
   has_many :miq_policy_contents
   has_many :policy_events
 
+  virtual_column :event_group_name, :type => :string
+  def event_group_name
+    memberof.first.name unless memberof.empty?
+  end
+
   serialize :definition
 
   attr_accessor :reserved
@@ -115,6 +120,10 @@ class MiqEventDefinition < ApplicationRecord
   rescue
   end
 
+  def self.event_definitions_from_path(path)
+    YAML.load_file(path)
+  end
+
   def self.seed
     event_defs = all.group_by(&:name)
     seed_default_events(event_defs)
@@ -123,9 +132,8 @@ class MiqEventDefinition < ApplicationRecord
 
   def self.seed_default_events(event_defs)
     event_sets = MiqEventDefinitionSet.all.index_by(&:name)
-    fname = File.join(FIXTURE_DIR, "#{to_s.pluralize.underscore}.csv")
-    CSV.foreach(fname, :headers => true, :skip_lines => /^#/, :skip_blanks => true) do |csv_row|
-      event = csv_row.to_hash
+    fname = File.join(FIXTURE_DIR, "miq_event_definition_events.yml")
+    event_definitions_from_path(fname).each do |event|
       set_type = event.delete('set_type')
 
       rec = event_defs[event['name']].try(:first)

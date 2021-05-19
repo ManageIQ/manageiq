@@ -1,6 +1,7 @@
 class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   require_nested :Runner
 
+  include ProviderWorkerMixin
   include PerEmsWorkerMixin
 
   # Don't allow multiple refresh workers to run at once

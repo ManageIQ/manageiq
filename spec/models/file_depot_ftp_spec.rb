@@ -117,6 +117,18 @@ RSpec.describe FileDepotFtp do
     end
   end
 
+  context "#base_path" do
+    it "escaped characters" do
+      file_depot_ftp.uri = "ftp://ftpserver.com/path/abc 123 %^{}|\"<>\\.csv"
+      expect(file_depot_ftp.send(:base_path).to_s).to eq "path/abc%20123%20%25%5E%7B%7D%7C%22%3C%3E%5C.csv"
+    end
+
+    it "not escaped characters" do
+      file_depot_ftp.uri = "ftp://ftpserver.com/path/abc&$!@*()_+:-=;',./.csv"
+      expect(file_depot_ftp.send(:base_path).to_s).to eq "path/abc&$!@*()_+:-=;',./.csv"
+    end
+  end
+
   context "#merged_uri" do
     before do
       file_depot_ftp.uri = uri

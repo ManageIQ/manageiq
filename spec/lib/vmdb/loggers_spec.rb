@@ -13,9 +13,9 @@ RSpec.describe Vmdb::Loggers do
     $container_log = nil
   end
 
-  describe "#create_multicast_logger (private)" do
+  describe ".create_logger" do
     shared_examples "has basic logging functionality" do
-      subject { described_class.send(:create_multicast_logger, log_file) }
+      subject { described_class.create_logger(log_file) }
 
       before do
         # Hide the container logger output to STDOUT
@@ -121,14 +121,14 @@ RSpec.describe Vmdb::Loggers do
     end
   end
 
-  describe "#apply_config_value (private)" do
+  describe ".apply_config_value" do
     before do
       allow($log).to receive(:info)
     end
 
     it "will update the main lower level logger instance" do
-      log = described_class.send(:create_multicast_logger, log_file)
-      described_class.send(:apply_config_value, {:foo => :info}, log, :foo)
+      log = described_class.create_logger(log_file)
+      described_class.apply_config_value({:foo => :info}, log, :foo)
 
       expect(log.level).to eq(Logger::INFO)
     end
@@ -137,8 +137,8 @@ RSpec.describe Vmdb::Loggers do
       around { |example| in_container_env(example) }
 
       it "will always keep $container_log as DEBUG" do
-        log = described_class.send(:create_multicast_logger, log_file)
-        described_class.send(:apply_config_value, {:foo => :info}, log, :foo)
+        log = described_class.create_logger(log_file)
+        described_class.apply_config_value({:foo => :info}, log, :foo)
 
         expect(log.level).to            eq(Logger::INFO)
         expect($container_log.level).to eq(Logger::DEBUG)

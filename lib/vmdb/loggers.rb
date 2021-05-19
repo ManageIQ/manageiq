@@ -22,72 +22,32 @@ module Vmdb
     def self.apply_config(config)
       apply_config_value(config, $log,                :level)
       apply_config_value(config, $journald_log,       :level) if $journald_log
+      apply_config_value(config, $audit_log,          :level_audit)
       apply_config_value(config, $rails_log,          :level_rails)
-      apply_config_value(config, $ansible_tower_log,  :level_ansible_tower)
-      apply_config_value(config, $api_log,            :level_api)
-      apply_config_value(config, $miq_ae_logger,      :level_automation)
-      apply_config_value(config, $aws_log,            :level_aws)
-      apply_config_value(config, $azure_log,          :level_azure)
-      apply_config_value(config, $azure_stack_log,    :level_azure_stack)
-      apply_config_value(config, $cn_monitoring_log,  :level_cn_monitoring)
-      apply_config_value(config, $datawarehouse_log,  :level_datawarehouse)
-      apply_config_value(config, $fog_log,            :level_fog)
-      apply_config_value(config, $gce_log,            :level_gce)
-      apply_config_value(config, $ibm_cloud_log,      :level_ibm_cloud)
-      apply_config_value(config, $ibm_terraform_log,  :level_ibm_terraform)
-      apply_config_value(config, $kube_log,           :level_kube)
-      apply_config_value(config, $lenovo_log,         :level_lenovo)
-      apply_config_value(config, $nsxt_log,           :level_nsxt)
-      apply_config_value(config, $nuage_log,          :level_nuage)
       apply_config_value(config, $policy_log,         :level_policy)
-      apply_config_value(config, $redfish_log,        :level_redfish)
-      apply_config_value(config, $rhevm_log,          :level_rhevm)
-      apply_config_value(config, $scvmm_log,          :level_scvmm)
-      apply_config_value(config, $vcloud_log,         :level_vcloud)
-      apply_config_value(config, $vim_log,            :level_vim)
       apply_config_value(config, $remote_console_log, :level_remote_console)
+
+      Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    private_class_method def self.create_loggers
-      path_dir = ManageIQ.root.join("log")
-
-      $container_log      = create_container_logger
-      $journald_log       = create_journald_logger
-      $log                = create_multicast_logger(path_dir.join("evm.log"))
-      $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
-      $audit_log          = create_multicast_logger(path_dir.join("audit.log"), AuditLogger)
-      $api_log            = create_multicast_logger(path_dir.join("api.log"))
-      $ansible_tower_log  = create_multicast_logger(path_dir.join("ansible_tower.log"))
-      $miq_ae_logger      = create_multicast_logger(path_dir.join("automation.log"))
-      $aws_log            = create_multicast_logger(path_dir.join("aws.log"))
-      $azure_log          = create_multicast_logger(path_dir.join("azure.log"), ProviderSdkLogger)
-      $azure_stack_log    = create_multicast_logger(path_dir.join("azure_stack.log"))
-      $cn_monitoring_log  = create_multicast_logger(path_dir.join("container_monitoring.log"))
-      $datawarehouse_log  = create_multicast_logger(path_dir.join("datawarehouse.log"))
-      $fog_log            = create_multicast_logger(path_dir.join("fog.log"), FogLogger)
-      $gce_log            = create_multicast_logger(path_dir.join("gce.log"))
-      $ibm_cloud_log      = create_multicast_logger(path_dir.join("ibm_cloud.log"), ProviderSdkLogger)
-      $ibm_terraform_log  = create_multicast_logger(path_dir.join("ibm_terraform.log"), ProviderSdkLogger)
-      $kube_log           = create_multicast_logger(path_dir.join("kubernetes.log"))
-      $lenovo_log         = create_multicast_logger(path_dir.join("lenovo.log"))
-      $nsxt_log           = create_multicast_logger(path_dir.join("nsxt.log"))
-      $nuage_log          = create_multicast_logger(path_dir.join("nuage.log"))
-      $policy_log         = create_multicast_logger(path_dir.join("policy.log"))
-      $redfish_log        = create_multicast_logger(path_dir.join("redfish.log"))
-      $rhevm_log          = create_multicast_logger(path_dir.join("rhevm.log"))
-      $scvmm_log          = create_multicast_logger(path_dir.join("scvmm.log"))
-      $vcloud_log         = create_multicast_logger(path_dir.join("vcloud.log"))
-      $vim_log            = create_multicast_logger(path_dir.join("vim.log"))
-      $remote_console_log = create_multicast_logger(path_dir.join("remote_console.log"))
-
-      configure_external_loggers
-    end
-
-    private_class_method def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
-      logger_class.new(log_file_path).tap do |logger|
+    def self.create_logger(log_file_name, logger_class = VMDBLogger)
+      log_file = ManageIQ.root.join("log", log_file_name)
+      logger_class.new(log_file).tap do |logger|
         logger.extend(ActiveSupport::Logger.broadcast($container_log)) if $container_log
         logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
       end
+    end
+
+    private_class_method def self.create_loggers
+      $container_log      = create_container_logger
+      $journald_log       = create_journald_logger
+      $log                = create_logger("evm.log")
+      $rails_log          = create_logger("#{Rails.env}.log")
+      $audit_log          = create_logger("audit.log", AuditLogger)
+      $policy_log         = create_logger("policy.log")
+      $remote_console_log = create_logger("remote_console.log")
+
+      configure_external_loggers
     end
 
     private_class_method def self.create_container_logger
@@ -106,7 +66,7 @@ module Vmdb
       nil
     end
 
-    def self.configure_external_loggers
+    private_class_method def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
 
@@ -116,7 +76,6 @@ module Vmdb
       require 'inventory_refresh'
       InventoryRefresh.logger = $log
     end
-    private_class_method :configure_external_loggers
 
     def self.apply_config_value(config, logger, key)
       old_level      = logger.level
@@ -127,7 +86,6 @@ module Vmdb
         logger.level = new_level
       end
     end
-    private_class_method :apply_config_value
   end
 end
 

@@ -244,7 +244,7 @@ module Authenticator
 
     def case_insensitive_find_by_userid(username)
       user =  User.lookup_by_userid(username)
-      user || User.in_my_region.where('lower(userid) = ?', username.downcase).order(:lastlogon).last
+      user || User.in_my_region.where(:lower_userid => username.downcase).order(:lastlogon).last
     end
 
     def userid_for(_identity, username)
@@ -324,7 +324,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      username.downcase
+      (username || '').downcase
     end
 
     def debug_auth?

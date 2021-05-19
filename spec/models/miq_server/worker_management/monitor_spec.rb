@@ -35,17 +35,17 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
     end
 
     context "#sync_from_system" do
-      context "#ensure_pod_monitor_started" do
+      context "#ensure_kube_monitors_started" do
         it "podified, ensures pod monitor started and orphaned rows are removed" do
           allow(server).to receive(:podified?).and_return(true)
-          expect(server).to receive(:ensure_pod_monitor_started)
+          expect(server).to receive(:ensure_kube_monitors_started)
           expect(server).to receive(:cleanup_orphaned_worker_rows)
           server.sync_from_system
         end
 
         it "non-podified, orphaned rows are removed" do
           allow(server).to receive(:podified?).and_return(false)
-          expect(server).to receive(:ensure_pod_monitor_started).never
+          expect(server).to receive(:ensure_kube_monitors_started).never
           expect(server).to receive(:cleanup_orphaned_worker_rows)
           server.sync_from_system
         end

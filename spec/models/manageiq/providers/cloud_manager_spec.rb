@@ -1,40 +1,4 @@
 RSpec.describe EmsCloud do
-  it ".types" do
-    expected_types = [ManageIQ::Providers::Amazon::CloudManager,
-                      ManageIQ::Providers::Azure::CloudManager,
-                      ManageIQ::Providers::AzureStack::CloudManager,
-                      ManageIQ::Providers::Openstack::CloudManager,
-                      ManageIQ::Providers::Google::CloudManager,
-                      ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
-                      ManageIQ::Providers::IbmCloud::VPC::CloudManager,
-                      ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)
-    expect(described_class.types).to match_array(expected_types)
-  end
-
-  it ".supported_subclasses" do
-    expected_subclasses = [ManageIQ::Providers::Amazon::CloudManager,
-                           ManageIQ::Providers::Azure::CloudManager,
-                           ManageIQ::Providers::AzureStack::CloudManager,
-                           ManageIQ::Providers::Openstack::CloudManager,
-                           ManageIQ::Providers::Google::CloudManager,
-                           ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
-                           ManageIQ::Providers::IbmCloud::VPC::CloudManager,
-                           ManageIQ::Providers::Vmware::CloudManager]
-    expect(described_class.supported_subclasses).to match_array(expected_subclasses)
-  end
-
-  it ".supported_types" do
-    expected_types = [ManageIQ::Providers::Amazon::CloudManager,
-                      ManageIQ::Providers::Azure::CloudManager,
-                      ManageIQ::Providers::AzureStack::CloudManager,
-                      ManageIQ::Providers::Openstack::CloudManager,
-                      ManageIQ::Providers::Google::CloudManager,
-                      ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager,
-                      ManageIQ::Providers::IbmCloud::VPC::CloudManager,
-                      ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)
-    expect(described_class.supported_types).to match_array(expected_types)
-  end
-
   context "OpenStack CloudTenant Mapping" do
     let(:ems_cloud) { FactoryBot.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true) }
     let(:ems_infra) { FactoryBot.create(:ext_management_system) }

@@ -7,29 +7,12 @@ Style/GlobalVars:
   # Loggers
   - $api_log
   - $audit_log
-  - $aws_log
-  - $azure_log
-  - $cn_monitoring_log
   - $container_log
-  - $datawarehouse_log
-  - $fog_log
-  - $gce_log
-  - $ibm_cloud_log
-  - $ibm_terraform_log
-  - $kube_log
-  - $lenovo_log
+  - $journald_log
   - $log
-  - $miq_ae_logger
   - $policy_log
   - $rails_log
-  - $rhevm_log
-  - $scvmm_log
-  - $vcloud_log
-  - $vim_log
   - $remote_console_log
-  - $nuage_log
-  - $nsxt_log
-  - $redfish_log
 Rails/Exit:
   Exclude:
   - lib/workers/bin/*

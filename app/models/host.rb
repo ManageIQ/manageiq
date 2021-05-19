@@ -177,14 +177,22 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
-  supports :reset do
+  supports_not :conversion_host
+  supports     :destroy
+  supports_not :quick_stats
+  supports     :reset do
     unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
     unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
     if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
       unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
     end
   end
-  supports :refresh_ems
+  supports     :refresh_ems
+  supports_not :refresh_advanced_settings
+  supports_not :refresh_firewall_rules
+  supports_not :refresh_logs
+  supports_not :refresh_network_interfaces
+  supports_not :smartstate_analysis
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -1168,33 +1176,6 @@ class Host < ApplicationRecord
     # _log.log_backtrace($!)
   end
 
-  def refresh_logs
-  end
-
-  def refresh_firewall_rules
-  end
-
-  def refresh_advanced_settings
-  end
-
-  def refresh_ipmi_power_state
-    if ipmi_config_valid?
-      require 'miq-ipmi'
-      address = ipmi_address
-
-      if MiqIPMI.is_available?(address)
-        ipmi = MiqIPMI.new(address, *auth_user_pwd(:ipmi))
-        if ipmi.connected?
-          self.power_state = ipmi.power_state
-        else
-          _log.warn("IPMI Login failed due to a bad username or password.")
-        end
-      else
-        _log.info("IPMI is not available on this Host")
-      end
-    end
-  end
-
   def refresh_ipmi
     if ipmi_config_valid?
       require 'miq-ipmi'
@@ -1313,14 +1294,18 @@ class Host < ApplicationRecord
     task.update_status("Active", "Ok", "Scanning") if task
 
     _dummy, t = Benchmark.realtime_block(:total_time) do
-      # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
-      _log.info("Refreshing Firewall Rules for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
-      Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
+      if supports?(:refresh_firewall_rules)
+        # Firewall Rules and Advanced Settings go through EMS so we don't need Host credentials
+        _log.info("Refreshing Firewall Rules for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Firewall Rules") if task
+        Benchmark.realtime_block(:refresh_firewall_rules) { refresh_firewall_rules }
+      end
 
-      _log.info("Refreshing Advanced Settings for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
-      Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
+      if supports?(:refresh_advanced_settings)
+        _log.info("Refreshing Advanced Settings for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Advanced Settings") if task
+        Benchmark.realtime_block(:refresh_advanced_settings) { refresh_advanced_settings }
+      end
 
       if ext_management_system.nil?
         _log.info("Refreshing IPMI information for #{log_target}")
@@ -1394,9 +1379,11 @@ class Host < ApplicationRecord
         end
       end
 
-      _log.info("Refreshing Log information for #{log_target}")
-      task.update_status("Active", "Ok", "Refreshing Log Information") if task
-      Benchmark.realtime_block(:refresh_logs) { refresh_logs }
+      if supports?(:refresh_logs)
+        _log.info("Refreshing Log information for #{log_target}")
+        task.update_status("Active", "Ok", "Refreshing Log Information") if task
+        Benchmark.realtime_block(:refresh_logs) { refresh_logs }
+      end
 
       _log.info("Saving state for #{log_target}")
       task.update_status("Active", "Ok", "Saving Drift State") if task
@@ -1540,10 +1527,6 @@ class Host < ApplicationRecord
       services = host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
     end
     services.order(:name).uniq.pluck(:name)
-  end
-
-  def control_supported?
-    !(is_vmware? && vmm_product == "Workstation")
   end
 
   def event_where_clause(assoc = :ems_events)
@@ -1748,10 +1731,6 @@ class Host < ApplicationRecord
     return 'archived' if archived?
     return power_state unless power_state.nil?
     "unknown"
-  end
-
-  def validate_destroy
-    {:available => true, :message => nil}
   end
 
   def self.display_name(number = 1)

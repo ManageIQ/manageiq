@@ -29,6 +29,7 @@ module ManageIQ::Providers
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
     has_many :key_pairs,                     :class_name  => "AuthKeyPair", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
+    has_many :resource_groups,               :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
     has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
 
     has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
@@ -39,6 +40,13 @@ module ManageIQ::Providers
              :source  => :taggings
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
+
+    supports_not :auth_key_pair_create
+    supports_not :cinder_service
+    supports_not :cloud_tenants
+    supports_not :cloud_volume
+    supports_not :cloud_tenant_mapping
+    supports_not :create_flavor
 
     validates_presence_of :zone
 

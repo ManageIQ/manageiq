@@ -1,13 +1,5 @@
 RSpec.describe SupportsFeatureMixin do
   before do
-    stub_const('SupportsFeatureMixin::QUERYABLE_FEATURES',
-               SupportsFeatureMixin::QUERYABLE_FEATURES.merge(
-                 :publish => 'publish the post',
-                 :archive => 'archive the post',
-                 :fake    => 'fake it',
-                 :nuke    => 'nuke it'
-               ))
-
     stub_const('Post::Operations::Publishing', Module.new do
       extend ActiveSupport::Concern
 
@@ -197,73 +189,7 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
-  context "guards against unqueriable features" do
-    it "when defining a class with :supports_not" do
-      expect do
-        Class.new do
-          include SupportsFeatureMixin
-          supports_not :mega
-        end
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-
-    it "when defining a class with :supports" do
-      expect do
-        Class.new do
-          include SupportsFeatureMixin
-          supports :mega
-        end
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-
-    it "when querying a feature on the class" do
-      expect do
-        SpecialPost.supports?('mega')
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-
-    it "when querying a feature on the instance" do
-      expect do
-        SpecialPost.new.supports?('mega')
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-
-    it "when querying a reason on the class" do
-      expect do
-        SpecialPost.unsupported_reason(:mega)
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-
-    it "when querying a reason on the instance" do
-      expect do
-        SpecialPost.new.unsupported_reason(:mega)
-      end.to raise_error(SupportsFeatureMixin::UnknownFeatureError)
-    end
-  end
-
-  context "can be queried for features" do
-    it "that are known on the class" do
-      expect(Post.feature_known?("fake")).to be true
-    end
-
-    it "that are unknown on the class" do
-      expect(Post.feature_known?("lobotomize")).to be false
-    end
-
-    it "that are known on the instance" do
-      expect(Post.new.feature_known?("fake")).to be true
-    end
-
-    it "that are unknown on the instance" do
-      expect(Post.new.feature_known?("lobotomize")).to be false
-    end
-  end
-
   context "feature that is implicitly unsupported" do
-    it "class responds to supports_feature?" do
-      expect(Post.supports_nuke?).to be false
-    end
-
     it "can be supported by the class" do
       stub_const("NukeablePost", Class.new(SpecialPost) do
         supports :nuke do

@@ -1420,6 +1420,7 @@ en:
       AvailabilityZone:               Availability Zone
       BottleneckEvent:                Bottleneck Event
       HostAggregate:                  Host Aggregate
+      ChargebackConfiguredSystem:     Chargeback for Configured Systems
       ChargebackVm:                   Chargeback for Vms
       ChargebackContainerImage:       Chargeback for Image
       ChargebackContainerProject:     Chargeback for Projects
@@ -1441,8 +1442,10 @@ en:
       ContainerQuota:                 Container Quota
       CustomButton:                   Button
       CustomButtonSet:                Button Group
+      ConfigurationProfile:           Configuration Profiles
       ConfigurationScript:            Template (Ansible Tower)
       ConfigurationScriptSource:      Repository
+      ConfiguredSystem:               Configured Systems
       Container:                      Container
       ContainerPerformance:           Performance - Container
       ContainerGroup:                 Container Pod
@@ -1479,6 +1482,7 @@ en:
       GuestApplication:               Guest Application
       GuestDevice:                    Guest Device
       Host:                           Host
+      HostInitiator:                  Host Initiators
       HostPerformance:                Performance - Host
       IsoDatastore:                   ISO Datastore
       IsoImage:                       ISO Image
@@ -1521,7 +1525,7 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook:                     Playbook (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                                 Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                                          Configuration Manager
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem:             Configured System
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem:               Configured System (Foreman)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Job:                          Ansible Tower Job
       ManageIQ::Providers::CloudManager:                                                  Cloud Provider
@@ -1635,6 +1639,7 @@ en:
       MiqAlertSet:              Alert Profile
       MiqDialog:                Dialog
       MiqEnterprise:            Enterprise
+      MiqEvent:                 Event
       MiqEventDefinition:       Event
       MiqGroup:                 EVM Group
       MiqPolicy:                Policy
@@ -1699,6 +1704,7 @@ en:
       VmCloud:                  Instance
       VmOrTemplate:             VM or Template
       VmPerformance:            Performance - VM
+      VolumeMapping:            Volume Mappings
       WindowsImage:             Windows Image
       Zone:                     Zone
 
@@ -1751,6 +1757,8 @@ en:
       container_templates:         Templates
       custom_button:               Button
       custom_button_set:           Button Group
+      ems_automation:              Automation Manager
+      ems_automations:             Automation Managers
       ems_block_storage:           Block Storage Manager
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
@@ -1793,6 +1801,7 @@ en:
       guest_devices:               Devices
       host:                        Host
       hosts:                       Hosts
+      host_initiator:              Host Initiator
       host_services:               Services
       iso_datastore:               ISO Datastore
       iso_image:                   ISO Image
@@ -1800,11 +1809,17 @@ en:
       last_compliance:             Last Compliance History
       ldap:                        LDAP
       linux_initprocesses:         Linux Init Processes
+      miq_action:                  Action
+      miq_alert:                   Alert
       miq_approval_stamps:         Stamped Approvals
       miq_approvals:               Approvals
+      miq_alert_set:               Alert Profile
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
+      miq_event:                   Event
       miq_event_definition:        Event
+      miq_policy:                  Policy
+      miq_policy_set:              Policy Profile
       manageiq_providers_cloud_manager: Cloud Manager
       manageiq_providers_cloud_manager_vms: Instances
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
@@ -1858,6 +1873,7 @@ en:
       vm_or_template:              Virtual Machine
       vms:                         VMs
       volume:                      Volume
+      volume_mapping:              Volume Mapping
       zone:                        Zone
       zones:                       Zones
 

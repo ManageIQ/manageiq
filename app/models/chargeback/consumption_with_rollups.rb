@@ -8,7 +8,7 @@ class Chargeback
 
     def initialize(metric_rollup_records, start_time, end_time)
       super(start_time, end_time)
-      @rollup_array = metric_rollup_records
+      @rollup_records = metric_rollup_records
     end
 
     def hash_features_affecting_rate
@@ -21,7 +21,7 @@ class Chargeback
     end
 
     def tag_names
-      @tag_names ||= @rollup_array.inject([]) do |memo, rollup|
+      @tag_names ||= rollup_records.inject([]) do |memo, rollup|
         memo |= all_tag_names(rollup)
         memo
       end
@@ -32,6 +32,7 @@ class Chargeback
     def tag_prefix
       klass_prefix = case resource_type
                      when Container.name        then 'container_image'
+                     when ContainerImage.name   then 'container_image'
                      when VmOrTemplate.name     then 'vm'
                      when ContainerProject.name then 'container_project'
                      end
@@ -40,7 +41,7 @@ class Chargeback
     end
 
     def chargeback_container_labels
-      resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
+      docker_labels.try(:collect_concat) do |l|
         escaped_name = AssignmentMixin.escape(l.name)
         escaped_value = AssignmentMixin.escape(l.value)
         [
@@ -52,7 +53,7 @@ class Chargeback
     end
 
     def container_tag_list_with_prefix
-      if resource.kind_of?(Container)
+      if resource.kind_of?(ContainerImage)
         state = resource.vim_performance_state_for_ts(timestamp.to_s)
         image_tag_name = "#{state.image_tag_names}|" if state
 
@@ -67,7 +68,7 @@ class Chargeback
     end
 
     def tag_list_with_prefix
-      @tag_list_with_prefix ||= @rollup_array.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.uniq
+      @tag_list_with_prefix ||= rollup_records.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.uniq
     end
 
     def sum(metric, sub_metric = nil)
@@ -82,7 +83,7 @@ class Chargeback
     def sum_of_maxes_from_grouped_values(metric, sub_metric = nil)
       return max(metric, sub_metric) if sub_metric
       @grouped_values ||= {}
-      grouped_rollups = @rollup_array.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
+      grouped_rollups = rollup_records.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
 
       @grouped_values[metric] ||= grouped_rollups.map do |_, rollups|
         rollups.map { |x| rollup_field(x, metric) }.compact.max
@@ -108,7 +109,7 @@ class Chargeback
     end
 
     def chargeback_fields_present
-      @chargeback_fields_present ||= @rollup_array.count { |rollup| chargeback_fields_present?(rollup) }
+      @chargeback_fields_present ||= rollup_records.count { |rollup| chargeback_fields_present?(rollup) }
     end
 
     def chargeback_fields_present?(rollup_record)
@@ -126,12 +127,12 @@ class Chargeback
     end
 
     def metering_used_fields_present
-      @metering_used_fields_present ||= @rollup_array.count { |rollup| metering_used_fields_present?(rollup) }
+      @metering_used_fields_present ||= rollup_records.count { |rollup| metering_used_fields_present?(rollup) }
     end
 
     def metering_allocated_for(metric)
       @metering_allocated_metric ||= {}
-      @metering_allocated_metric[metric] ||= @rollup_array.count do |rollup|
+      @metering_allocated_metric[metric] ||= rollup_records.count do |rollup|
         rollup_record = rollup_field(rollup, metric)
         rollup_record.present? && rollup_record.nonzero?
       end
@@ -146,7 +147,15 @@ class Chargeback
       resource_current_tag_names | resource_tag_names(rollup)
     end
 
+    def tag_filter_for_rollup_records(tag)
+      @tag_filter_for_rollup_records = tag
+    end
+
     private
+
+    def docker_labels
+      resource.try(:docker_labels) || resource.try(:container_image).try(:docker_labels)
+    end
 
     def born_at
       # metrics can be older than resource (first capture may go few days back)
@@ -161,13 +170,17 @@ class Chargeback
     def values(metric, sub_metric = nil)
       @values ||= {}
       @values["#{metric}#{sub_metric}"] ||= begin
-        sub_metric ? sub_metric_rollups(sub_metric) : @rollup_array.collect { |x| rollup_field(x, metric) }.compact
+        sub_metric ? sub_metric_rollups(sub_metric) : rollup_records.collect { |x| rollup_field(x, metric) }.compact
       end
     end
 
     def rollup_field(rollup, metric)
       if metric == "v_derived_cpu_total_cores_used"
         return v_derived_cpu_total_cores_used_for(rollup)
+      end
+
+      if metric == "derived_vm_numvcpu_cores"
+        return rollup[ChargeableField.col_index('derived_vm_numvcpus')]
       end
 
       rollup[ChargeableField.col_index(metric)]
@@ -183,8 +196,41 @@ class Chargeback
     end
 
     def first_metric_rollup_record
-      first_rollup_id = @rollup_array.first[ChargeableField.col_index(:id)]
+      first_rollup_id = @rollup_records.first[ChargeableField.col_index(:id)]
       @fmrr ||= MetricRollup.find(first_rollup_id) if first_rollup_id
+    end
+
+    def tag_name_filter
+      return nil unless @tag_filter_for_rollup_records
+
+      @tag_filter_for_rollup_records.name.split("/").last(2).join("/")
+    end
+
+    def rollup_records_tagged_partially?
+      tag_name_filter && tag_filtered_for_rollup_records.present? && tag_filtered_for_rollup_records.count != @rollup_records.count
+    end
+
+    def current_resource_tags_in_tag_filter?
+      (resource_current_tag_names & [tag_name_filter]).present?
+    end
+
+    def rollup_records
+      if rollup_records_tagged_partially? && !current_resource_tags_in_tag_filter?
+        tag_filtered_for_rollup_records
+      else
+        @rollup_records
+      end
+    end
+
+    def tag_filtered_for_rollup_records
+      return @rollup_records unless tag_name_filter
+
+      @tag_filtered_for_rollup_records ||= {}
+      @tag_filtered_for_rollup_records[tag_name_filter] ||= begin
+        @rollup_records.select do |rollup|
+          (resource_tag_names(rollup) & [tag_name_filter]).present?
+        end
+      end
     end
   end
 end

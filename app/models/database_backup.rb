@@ -1,13 +1,8 @@
 class DatabaseBackup < ApplicationRecord
-  SUPPORTED_DEPOTS = {
-    'smb'   => 'Samba',
-    'nfs'   => 'Network File System',
-    's3'    => 'AWS S3',
-    'swift' => 'OpenStack Swift'
-  }.freeze
+  SUPPORTED_DEPOTS = %w[FileDepotSmb FileDepotNfs FileDepotS3 FileDepotSwift].freeze
 
   def self.supported_depots
-    SUPPORTED_DEPOTS
+    SUPPORTED_DEPOTS.map { |model| [model, model.constantize.display_name] }.to_h
   end
 
   def self.backup(options)

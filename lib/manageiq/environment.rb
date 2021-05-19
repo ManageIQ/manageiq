@@ -25,7 +25,7 @@ module ManageIQ
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
 
-      prepare_codeclimate_test_reporter if ENV["CI"]
+      prepare_codeclimate_test_reporter(plugin_root) if ENV["CI"]
     end
 
     def self.ensure_config_files
@@ -120,10 +120,10 @@ module ManageIQ
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
 
-    def self.prepare_codeclimate_test_reporter
-      system!("curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter")
-      system!("chmod +x ./cc-test-reporter")
-      system!("./cc-test-reporter before-build")
+    def self.prepare_codeclimate_test_reporter(root = APP_ROOT)
+      system!("curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter", :chdir => root)
+      system!("chmod +x ./cc-test-reporter", :chdir => root)
+      system!("./cc-test-reporter before-build", :chdir => root)
     end
 
     def self.update_ui
@@ -132,7 +132,13 @@ module ManageIQ
 
     def self.bundler_version
       gemfile = APP_ROOT.join("Gemfile")
-      File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
+
+      require "bundler"
+      gemfile_dependencies = Bundler::Definition.build(gemfile, nil, {}).dependencies
+      bundler_dependency   = gemfile_dependencies.detect { |dep| dep.name == "bundler" }
+
+      version_requirements = bundler_dependency.requirement.requirements
+      version_requirements.map { |req| req.join(" ") }.join(", ")
     end
 
     def self.run_rake_task(task, root: APP_ROOT)

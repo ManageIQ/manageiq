@@ -1,6 +1,14 @@
 RSpec.describe MiqGroup do
   include Spec::Support::ArelHelper
 
+  let(:miq_widget) { FactoryBot.create(:miq_widget) }
+
+  let(:set_data) do
+    {:col1             => [miq_widget.id],
+     :reset_upon_login => false,
+     :locked           => false}
+  end
+
   describe "#settings" do
     subject { FactoryBot.create(:miq_group) }
 
@@ -316,10 +324,12 @@ RSpec.describe MiqGroup do
 
   context "#ordered_widget_sets" do
     let(:group) { FactoryBot.create(:miq_group) }
+
     it "uses dashboard_order if present" do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
+
       group.update(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
@@ -329,6 +339,7 @@ RSpec.describe MiqGroup do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       ws2 = FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
+
       expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
     end
 
@@ -336,6 +347,7 @@ RSpec.describe MiqGroup do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       _ws2 = FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
+
       group.update(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])

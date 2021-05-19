@@ -1,0 +1,2 @@
+:log:
+  :level_<%= plugin_short_name %>: info

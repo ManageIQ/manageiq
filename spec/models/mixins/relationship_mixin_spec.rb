@@ -356,6 +356,36 @@ RSpec.describe RelationshipMixin do
         service2.save!
         expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
       end
+
+      context "#replace_children" do
+        it "with one child to keep and one to add" do
+          service = ancestry_class.create
+          service1.with_relationship_type("custom") { service1.replace_children(service, service4) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to contain_exactly(service, service4)
+        end
+
+        it "with all to remove" do
+          service1.with_relationship_type("custom") { service1.replace_children }
+          expect(service1.with_relationship_type("custom") { service1.replace_children }).to eq([])
+        end
+
+        it "with one child to keep" do
+          service1.with_relationship_type("custom") { service1.replace_children(service4) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to contain_exactly(service4)
+        end
+
+        it "with one child to remove" do
+          service = ancestry_class.create
+          service1.with_relationship_type("custom") { service1.replace_children(service) }
+          expect(service1.with_relationship_type("custom") { service1.reload.children }).to eq([service])
+        end
+
+        it "with no children to start adds them all" do
+          service = ancestry_class.create
+          service.with_relationship_type("custom") { service.replace_children(service4) }
+          expect(service.with_relationship_type("custom") { service.reload.children }).to eq([service4])
+        end
+      end
     end
 
     describe "#add_parent" do
@@ -481,16 +511,25 @@ RSpec.describe RelationshipMixin do
   end
 
   context ".alias_with_relationship_type" do
+    let(:miq_widget) { FactoryBot.create(:miq_widget) }
+
+    let(:set_data) do
+      {:col1             => [miq_widget.id],
+       :reset_upon_login => false,
+       :locked           => false}
+    end
+
     before do
-      @ws = FactoryBot.create(:miq_widget_set)
-      @w1 = FactoryBot.create(:miq_widget)
-      @w2 = FactoryBot.create(:miq_widget)
-      @ws.add_member(@w1)
-      @ws.add_member(@w2)
+      group = FactoryBot.create(:miq_group)
+      # NOTE: widget_sets are created with one widget
+      @ws = FactoryBot.create(:miq_widget_set, :owner => group)
+      @widget = FactoryBot.create(:miq_widget)
+
+      @ws.add_member(@widget)
     end
 
     it "of a method with arguments" do
-      @ws.remove_member(@w1)
+      @ws.remove_member(@widget)
       expect(@ws.members.length).to eq(1)
     end
 

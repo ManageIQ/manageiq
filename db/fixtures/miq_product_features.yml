@@ -268,6 +268,10 @@
         :description: Add a Composite Catalog Item
         :feature_type: admin
         :identifier: catalogitem_new
+      - :name: Copy Composite Catalog Item
+        :description: Copy a Composite Catalog Item
+        :feature_type: admin
+        :identifier: catalogitem_copy
       - :name: Edit Atomic Catalog Item
         :description: Edit an Atomic Catalog Item
         :feature_type: admin
@@ -823,6 +827,14 @@
       :description: Remove Volumes
       :feature_type: admin
       :identifier: cloud_volume_delete
+    - :name: Safe Remove
+      :description: Safely Remove Volumes
+      :feature_type: admin
+      :identifier: cloud_volume_safe_delete
+    - :name: Reload
+      :description: Reload the current display
+      :feature_type: admin
+      :identifier: cloud_volume_reload
 
 # AuthKeyPair
 - :name: Auth Key Pairs
@@ -1485,6 +1497,11 @@
       :description: Modify Saved Reports
       :feature_type: admin
       :identifier: miq_report_saved_reports_admin
+    - :name: Reload
+      :description: Reload Saved Reports
+      :feature_type: view
+      :hidden: true
+      :identifier: miq_report_saved_reports_reload
       :children:
       - :name: Delete
         :description: Delete a Saved Report
@@ -1873,6 +1890,15 @@
       :description: View Policies
       :feature_type: view
       :identifier: miq_policy_view
+      :children:
+      - :name: List
+        :description: Display Lists of Policies
+        :feature_type: view
+        :identifier: miq_policy_show_list
+      - :name: Show
+        :description: Display Individual Policies
+        :feature_type: view
+        :identifier: miq_policy_show
     - :name: Modify
       :description: Modify Policies
       :feature_type: admin
@@ -1912,6 +1938,19 @@
     :feature_type: node
     :identifier: condition
     :children:
+    - :name: View
+      :description: View Conditions
+      :feature_type: view
+      :identifier: condition_view
+      :children:
+      - :name: List
+        :description: Display List of Conditions
+        :feature_type: view
+        :identifier: condition_show_list
+      - :name: Show
+        :description: Display Individual Conditions
+        :feature_type: view
+        :identifier: condition_show
     - :name: Modify
       :description: Modify Conditions
       :feature_type: admin
@@ -1945,17 +1984,26 @@
     :description: Everything under Policy Events
     :protected: true
     :feature_type: node
-    :identifier: miq_event
+    :identifier: miq_event_definition
+    :children:
+    - :name: List
+      :description: Display All Policy Events
+      :feature_type: view
+      :identifier: miq_event_definition_show_list
+    - :name: Show
+      :description: Show Policy Event
+      :feature_type: view
+      :identifier: miq_event_definition_show
   - :name: Actions
     :description: Everything under Policy Actions
     :protected: true
     :feature_type: node
     :identifier: miq_action
     :children:
-    - :name: Modify
-      :description: Modify Policy Actions
-      :feature_type: admin
-      :identifier: miq_action_admin
+    - :name: View
+      :description: View Policy Actions
+      :feature_type: view
+      :identifier: miq_action_view
       :children:
       - :name: List
         :description: Display All Policy Actions
@@ -1965,6 +2013,11 @@
         :description: Show MiqAction
         :feature_type: view
         :identifier: miq_action_show
+    - :name: Modify
+      :description: Modify Policy Actions
+      :feature_type: admin
+      :identifier: miq_action_admin
+      :children:
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin
@@ -1983,6 +2036,19 @@
     :feature_type: node
     :identifier: miq_alert_set
     :children:
+    - :name: View
+      :description: View Policy Alert Profiles
+      :feature_type: view
+      :identifier: miq_alert_set_view
+      :children:
+      - :name: List
+        :description: Display Lists of Policy Alert Profiles
+        :feature_type: view
+        :identifier: miq_alert_set_show_list
+      - :name: Show
+        :description: Display Individual Policy Alert Profile
+        :feature_type: view
+        :identifier: miq_alert_set_show
     - :name: Modify
       :description: Modify Policy Alert Profiles
       :feature_type: admin
@@ -2010,6 +2076,19 @@
     :feature_type: node
     :identifier: miq_alert
     :children:
+    - :name: View
+      :description: View Policy Alerts
+      :feature_type: view
+      :identifier: miq_alert_view
+      :children:
+      - :name: List
+        :description: Display All Policy Alerts
+        :feature_type: view
+        :identifier: miq_alert_show_list
+      - :name: Show
+        :description: Show Policy Alert
+        :feature_type: view
+        :identifier: miq_alert_show
     - :name: Modify
       :description: Modify Policy Alerts
       :feature_type: admin
@@ -3346,6 +3425,10 @@
         :description: Refresh relationships and power states for all items related of PXE Servers
         :feature_type: control
         :identifier: pxe_server_refresh
+      - :name: Edit Tags
+        :description: Edit Tags of PXE Servers
+        :feature_type: control
+        :identifier: pxe_server_tag
     - :name: Modify
       :description: Modify PXE Servers
       :feature_type: admin
@@ -3439,6 +3522,11 @@
       :description: View All ISO Datastores
       :feature_type: view
       :identifier: iso_datastore_view
+      :children:
+      - :name: View
+        :description: View ISO Images on ISO Datastores
+        :feature_type: view
+        :identifier: iso_image_view
     - :name: Operate
       :description: Perform Operations on ISO Datastores
       :feature_type: control
@@ -4633,6 +4721,17 @@
       :feature_type: control
       :identifier: container_route_tag
 
+# Container Project Topology
+- :name: Container Project Topology
+  :description: Container Project Topology
+  :feature_type: node
+  :identifier: container_project_topology
+  :children:
+  - :name: View
+    :description: View Container Project Topology
+    :feature_type: view
+    :identifier: container_project_topology_view
+
 # ContainerProject
 - :name: Projects
   :description: Everything under Container Projects
@@ -4998,97 +5097,120 @@
 
 # Automation Manager
 - :name: Ansible Tower
-  :description: Everything under Ansible Tower
+  :description: Everything under Providers
   :feature_type: node
-  :identifier: automation_manager
+  :identifier: ems_automation
   :children:
-  - :name: Ansible Tower Providers
-    :description: Everything under the Providers accordion
-    :feature_type: node
-    :identifier: automation_manager_providers
+  - :name: View
+    :description: View Providers
+    :feature_type: view
+    :identifier: ems_automation_view
     :children:
-    - :name: View
-      :description: View Providers, Inventory Groups, Configured Systems
+    - :name: List
+      :description: Display Lists of Providers
       :feature_type: view
-      :identifier: automation_manager_providers_view
-    - :name: Operate
-      :description: Perform Operations on Providers and Configured Systems
+      :identifier: ems_automation_manager_show_list
+    - :name: Show
+      :description: Display Individual Providers
+      :feature_type: view
+      :identifier: ems_automation_manager_show
+  - :name: Operate
+    :description: Perform Operations on Providers
+    :feature_type: control
+    :identifier: ems_automation_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Ansible Tower Provider
       :feature_type: control
-      :identifier: automation_manager_providers_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Ansible Tower Provider
-        :feature_type: control
-        :identifier: automation_manager_provider_tag
-      - :name: Refresh Providers
-        :description: Refresh relationships for all items related of Provider
-        :feature_type: control
-        :identifier: automation_manager_refresh_provider
-    - :name: Modify
-      :description: Modify Providers
+      :identifier: ems_automation_tag
+    - :name: Refresh Providers
+      :description: Refresh relationships for all items related of Provider
+      :feature_type: control
+      :identifier: ems_automation_refresh_provider
+  - :name: Modify
+    :description: Modify Providers
+    :feature_type: admin
+    :identifier: ems_automation_admin
+    :children:
+    - :name: Remove Providers
+      :description: Remove Provier
       :feature_type: admin
-      :identifier: automation_manager_admin
-      :children:
-      - :name: Remove Providers
-        :description: Remove Provier
-        :feature_type: admin
-        :identifier: automation_manager_delete_provider
-      - :name: Edit Provider
-        :description: Edit a Provider
-        :feature_type: admin
-        :identifier: automation_manager_edit_provider
-      - :name: Pause
-        :description: Pause a Provider
-        :feature_type: admin
-        :identifier: automation_manager_pause
-      - :name: Resume
-        :description: Resume a Provider
-        :feature_type: admin
-        :identifier: automation_manager_resume
-      - :name: Add Provider
-        :description: Add a Provider
-        :feature_type: admin
-        :identifier: automation_manager_add_provider
-  - :name: Configured Systems
-    :description: Everything under Configured Systems accordion
-    :feature_type: node
-    :identifier: automation_manager_configured_system
+      :identifier: ems_automation_delete_provider
+    - :name: Edit Provider
+      :description: Edit a Provider
+      :feature_type: admin
+      :identifier: ems_automation_edit_provider
+    - :name: Pause
+      :description: Pause a Provider
+      :feature_type: admin
+      :identifier: ems_automation_pause
+    - :name: Resume
+      :description: Resume a Provider
+      :feature_type: admin
+      :identifier: ems_automation_resume
+    - :name: Add Provider
+      :description: Add a Provider
+      :feature_type: admin
+      :identifier: ems_automation_add_provider
+- :name: Configured Systems
+  :description: Everything under Configured Systems
+  :feature_type: node
+  :identifier: automation_manager_configured_system
+  :children:
+  - :name: View
+    :description: View Configured Systems
+    :feature_type: view
+    :identifier: automation_manager_configured_system_view
     :children:
-    - :name: View
-      :description: View Configured Systems
+    - :name: List
+      :description: Display Lists of Configured Systems
       :feature_type: view
-      :identifier: automation_manager_configured_system_view
-    - :name: Operate
-      :description: Perform Operations on Configured Systems
-      :feature_type: control
-      :identifier: automation_manager_configured_system_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Configured Systems Tags
-        :feature_type: control
-        :identifier: automation_manager_configured_system_tag
-  - :name: Templates
-    :description: Everything under Templates accordion
-    :feature_type: node
-    :identifier: automation_manager_configuration_scripts_accord
+      :identifier: automation_manager_configured_system_show_list
+    - :name: Show
+      :description: Display Individual Configured Systems
+      :feature_type: view
+      :identifier: automation_manager_configured_system_show
+  - :name: Operate
+    :description: Perform Operations on Configured Systems
+    :feature_type: control
+    :identifier: automation_manager_configured_system_control
     :children:
-    - :name: View
-      :description: View Templates
-      :feature_type: view
-      :identifier: automation_manager_configuration_script_view
-    - :name: Operate
-      :description: Perform Operations on Templates
+    - :name: Edit Tags
+      :description: Edit Configured Systems Tags
       :feature_type: control
-      :identifier: automation_manager_configuration_script_control
-      :children:
-      - :name: Create Service Dialog
-        :description: Create Service Dialog
-        :feature_type: admin
-        :identifier: automation_manager_configuration_script_service_dialog
-      - :name: Edit Tags
-        :description: Edit Job Templates Tags
-        :feature_type: control
-        :identifier: automation_manager_configuration_script_tag
+      :identifier: automation_manager_configured_system_tag
+
+- :name: Templates
+  :description: Everything under Templates
+  :feature_type: node
+  :identifier: configuration_script
+  :children:
+  - :name: View
+    :description: View Templates
+    :feature_type: view
+    :identifier: configuration_script_view
+    :children:
+    - :name: List
+      :description: Display Lists of Configuration Scripts
+      :feature_type: view
+      :identifier: configuration_script_show_list
+    - :name: Show
+      :description: Display Individual Configuration Scripts
+      :feature_type: view
+      :identifier: configuration_script_show
+  - :name: Operate
+    :description: Perform Operations on Templates
+    :feature_type: control
+    :identifier: configuration_script_control
+    :children:
+    - :name: Create Service Dialog
+      :description: Create Service Dialog
+      :feature_type: admin
+      :identifier: configuration_script_service_dialog
+    - :name: Edit Tags
+      :description: Edit Job Templates Tags
+      :feature_type: control
+      :identifier: configuration_script_tag
 
 # Configuration Jobs
 - :name: Configuration Jobs
@@ -5957,6 +6079,14 @@
       :feature_type: admin
       :identifier: ems_block_storage_admin
       :children:
+      - :name: Add
+        :description: Add a Block Storage Manager
+        :feature_type: admin
+        :identifier: ems_block_storage_new
+      - :name: Edit
+        :description: Edit a Block Storage Manager
+        :feature_type: admin
+        :identifier: ems_block_storage_edit
       - :name: Remove
         :description: Remove Block Storage Manager
         :feature_type: admin
@@ -6042,6 +6172,90 @@
       :feature_type: control
       :identifier: storage_resource_tag
 
+
+  # Volume Mapping
+- :name: Volume Mapping
+  :description: Everything under Volume Mapping
+  :feature_type: node
+  :identifier: volume_mapping
+  :children:
+  - :name: View
+    :description: View Volume Mappings
+    :feature_type: view
+    :identifier: volume_mapping_view
+    :children:
+    - :name: List
+      :description: Display Lists of Volume Mappings
+      :feature_type: view
+      :identifier: volume_mapping_show_list
+    - :name: Show
+      :description: Display Individual Volume Mappings
+      :feature_type: view
+      :identifier: volume_mapping_show
+  - :name: Operate
+    :description: Perform Operations on Volume Mappings
+    :feature_type: control
+    :identifier: volume_mapping_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Volume Mapping
+      :feature_type: control
+      :identifier: volume_mapping_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Volume Mappings
+      :feature_type: control
+      :identifier: volume_mapping_tag
+  - :name: Modify
+    :description: Modify Volume Mapping
+    :feature_type: admin
+    :identifier: volume_mapping_admin
+    :children:
+    - :name: Add
+      :description: Add a Volume Mapping
+      :feature_type: admin
+      :identifier: volume_mapping_new
+
+  # host_initiator
+- :name: Host Initiator
+  :description: Everything under Host Initiators
+  :feature_type: node
+  :identifier: host_initiator
+  :children:
+  - :name: View
+    :description: View Host Initiators
+    :feature_type: view
+    :identifier: host_initiator_view
+    :children:
+    - :name: List
+      :description: Display Lists of Host Initiators
+      :feature_type: view
+      :identifier: host_initiator_show_list
+    - :name: Show
+      :description: Display Individual Host Initiators
+      :feature_type: view
+      :identifier: host_initiator_show
+  - :name: Operate
+    :description: Perform Operations on Host Initiators
+    :feature_type: control
+    :identifier: host_initiator_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Host Initiators
+      :feature_type: control
+      :identifier: host_initiator_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Host Initiators
+      :feature_type: control
+      :identifier: host_initiator_tag
+  - :name: Modify
+    :description: Modify Host Initiator
+    :feature_type: admin
+    :identifier: host_initiator_admin
+    :children:
+    - :name: Add
+      :description: Add a Host Initiator
+      :feature_type: admin
+      :identifier: host_initiator_new
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
@@ -6551,6 +6765,10 @@
     :description: Execute Ansible Playbook
     :feature_type: control
     :identifier: physical_infra_ansible
+  - :name: Import Cloud Template
+    :description: Import Cloud Template
+    :feature_type: control
+    :identifier: image_import
   - :name: Event Streams
     :description: Everything under Event Streams
     :feature_type: node

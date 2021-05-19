@@ -9,7 +9,6 @@ opts = Optimist.options(ARGV) do
          "Example (String):  #{__FILE__} -s 1 -p reporting/history/keep_reports -v 3.months\n" \
          "Example (Integer): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 1 -t integer\n" \
          "Example (Boolean): #{__FILE__} -s 1 -p ui/mark_translated_strings -v true -t boolean\n" \
-         "Example (Symbol):  #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/poll_method -v escalate -t symbol\n" \
          "Example (Float):   #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float" \
 
   opt :dry_run,         "Dry Run",                                  :short => "d"
@@ -42,7 +41,8 @@ newval =
       false
     end
   when "symbol"
-    opts[:value].to_sym
+    warn("DEPRECATION: 'symbol' type is no longer support and will be removed in the next version.  Use 'string' instead.")
+    opts[:value].to_s
   when "float"
     opts[:value].to_f
   when "array"

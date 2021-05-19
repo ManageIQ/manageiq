@@ -18,14 +18,14 @@ RSpec.describe MiqApache::Control do
   it "should make the apache control log's directory if missing when calling run_apache_cmd" do
     allow(File).to receive(:exist?).and_return(false)
     expect(Dir).to receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG))
-    allow(MiqUtil).to receive(:runcmd)
+    allow(AwesomeSpawn).to receive(:run!)
     MiqApache::Control.start
   end
 
   it "should not make the apache control log's directory if it exists when calling run_apache_cmd" do
     allow(File).to receive(:exist?).and_return(true)
     expect(Dir).to receive(:mkdir).with(File.dirname(MiqApache::Control::APACHE_CONTROL_LOG)).never
-    allow(MiqUtil).to receive(:runcmd)
+    allow(AwesomeSpawn).to receive(:run!)
     MiqApache::Control.start
   end
 
@@ -34,7 +34,7 @@ RSpec.describe MiqApache::Control do
     allow(File).to receive(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(false)
-    expect(MiqUtil).to receive(:runcmd).with("apachectl", :params => [[cmd]])
+    expect(AwesomeSpawn).to receive(:run!).with("apachectl", a_hash_including(:params => [cmd]))
     MiqApache::Control.start
   end
 
@@ -43,7 +43,7 @@ RSpec.describe MiqApache::Control do
     allow(File).to receive(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(true)
-    expect(MiqUtil).to receive(:runcmd).with("apachectl", :params => [[cmd]])
+    expect(AwesomeSpawn).to receive(:run!).with("apachectl", a_hash_including(:params => [cmd]))
     MiqApache::Control.start
   end
 
@@ -51,7 +51,7 @@ RSpec.describe MiqApache::Control do
     allow(File).to receive(:exist?).and_return(true)
     $log = Logger.new(STDOUT) unless $log
     allow($log).to receive(:debug?).and_return(false)
-    allow(MiqUtil).to receive(:runcmd).and_raise("warn")
+    expect(AwesomeSpawn).to receive(:run!).and_raise("warn")
     expect($log).to receive(:warn)
     MiqApache::Control.start
   end

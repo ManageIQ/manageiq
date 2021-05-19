@@ -82,6 +82,62 @@ RSpec.describe ContainerOrchestrator do
         )
       end
     end
+
+    it "sets database environment variables" do
+      stub_const("ENV", ENV.to_h.merge(
+        "DATABASE_HOSTNAME" => "postgres",
+        "DATABASE_NAME"     => "vmdb_production",
+        "DATABASE_PASSWORD" => "password",
+        "DATABASE_PORT"     => "5432",
+        "DATABASE_REGION"   => "0",
+        "DATABASE_SSL_MODE" => "verify-full",
+        "DATABASE_USER"     => "postgres",
+      ))
+
+      expect(subject.send(:default_environment)).to include(
+        {:name => "DATABASE_PORT",     :value => "5432"},
+        {:name => "DATABASE_SSL_MODE", :value => "verify-full"},
+        {:name => "DATABASE_HOSTNAME", :valueFrom => {:secretKeyRef => {:key => "hostname", :name => "postgresql-secrets"}}},
+        {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef => {:key => "dbname",   :name => "postgresql-secrets"}}},
+        {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef => {:key => "password", :name => "postgresql-secrets"}}},
+        {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef => {:key => "username", :name => "postgresql-secrets"}}},
+      )
+    end
+  end
+
+  context "#deployment_definition (private)" do
+    it "skips the database root certificate if the orchestrator doesn't have it" do
+      expect(File).to receive(:file?).with("/.postgresql/root.crt").and_return(false)
+      allow(File).to receive(:file?).and_call_original # allow other calls to .file? to still work
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to be_nil
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to be_nil
+    end
+
+    it "mounts the database root certificate" do
+      expect(File).to receive(:file?).with("/.postgresql/root.crt").and_return(true)
+      allow(File).to receive(:file?).and_call_original
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+        :mountPath => "/.postgresql",
+        :name      => "pg-root-certificate",
+        :readOnly  => true
+      )
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+        :name   => "pg-root-certificate",
+        :secret => {
+          :secretName => "postgresql-secrets",
+          :items      => [
+            :key  => "rootcertificate",
+            :path => "root.crt",
+          ],
+        }
+      )
+    end
   end
 
   context "with stub connections" do

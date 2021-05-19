@@ -1,7 +1,7 @@
 class TimeProfile < ApplicationRecord
   ALL_DAYS  = (0...7).to_a.freeze
   ALL_HOURS = (0...24).to_a.freeze
-  DEFAULT_TZ = "UTC"
+  DEFAULT_TZ = "UTC".freeze
 
   serialize :profile
   default_value_for :days,  ALL_DAYS
@@ -20,7 +20,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def self.all_timezones
-    select(%w(id profile)).collect(&:tz).uniq
+    select(%w[id profile]).collect(&:tz).uniq
   end
 
   def self.seed
@@ -28,7 +28,8 @@ class TimeProfile < ApplicationRecord
       :description          => DEFAULT_TZ,
       :tz                   => DEFAULT_TZ,
       :profile_type         => "global",
-      :rollup_daily_metrics => true) do |_|
+      :rollup_daily_metrics => true
+    ) do |_|
       _log.info("Creating global time profile")
     end
   end
@@ -39,7 +40,7 @@ class TimeProfile < ApplicationRecord
 
   def ts_in_profile?(ts, default_tz = DEFAULT_TZ)
     ts = Time.parse(ts) if ts.kind_of?(String)
-    self.ts_day_in_profile?(ts, default_tz) && self.ts_hour_in_profile?(ts, default_tz)
+    ts_day_in_profile?(ts, default_tz) && ts_hour_in_profile?(ts, default_tz)
   end
 
   def ts_hour_in_profile?(ts, default_tz = DEFAULT_TZ)
@@ -53,7 +54,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def profile
-    read_attribute(:profile) || (self.profile = {})
+    super || (self.profile = {})
   end
 
   def tz
@@ -61,7 +62,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def tz=(val)
-    self.profile_will_change! if profile[:tz] != val
+    profile_will_change! if profile[:tz] != val
     profile[:tz] = val
   end
 
@@ -75,7 +76,7 @@ class TimeProfile < ApplicationRecord
 
   def days=(arr)
     arr = arr.collect(&:to_i)
-    self.profile_will_change! if profile[:days] != arr
+    profile_will_change! if profile[:days] != arr
     profile[:days] = arr
   end
 
@@ -85,7 +86,7 @@ class TimeProfile < ApplicationRecord
 
   def hours=(arr)
     arr = arr.collect(&:to_i)
-    self.profile_will_change! if profile[:hours] != arr
+    profile_will_change! if profile[:hours] != arr
     profile[:hours] = arr
   end
 
@@ -136,7 +137,7 @@ class TimeProfile < ApplicationRecord
   def profile_for_each_region
     if rollup_daily_metrics
       TimeProfile.rollup_daily_metrics.select { |p| p.profile == profile }
-        .group_by(&:region_id).values.map(&:first)
+                 .group_by(&:region_id).values.map(&:first)
     else
       TimeProfile.none
     end
@@ -189,6 +190,7 @@ class TimeProfile < ApplicationRecord
   # @return [TimeProfile] time profile that uses this time zone
   def self.default_time_profile(tz = DEFAULT_TZ)
     return tz if tz.kind_of?(TimeProfile)
+
     tz ||= DEFAULT_TZ
     rollup_daily_metrics.find_all_with_entire_tz.detect { |tp| tp.tz_or_default == tz }
   end
