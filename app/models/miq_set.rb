@@ -1,5 +1,5 @@
 class MiqSet < ApplicationRecord
-  # self.abstract_class = true
+  self.abstract_class = true
   self.inheritance_column = :set_type
 
   include UuidMixin
@@ -26,6 +26,10 @@ class MiqSet < ApplicationRecord
 
   def self.model_table_name
     @model_table_name ||= model_class.table_name
+  end
+
+  def self.inherited(subclass)
+    # subclass.has_many subclass.model_table_name.to_sym, :through => :miq_set_memberships
   end
 
   def members=(*members)
