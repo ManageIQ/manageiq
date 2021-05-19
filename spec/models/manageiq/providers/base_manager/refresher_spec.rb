@@ -88,4 +88,99 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
       end
     end
   end
+
+  context "#publish_inventory" do
+    # Create a simple persister class with just two collections
+
+    let(:ems) { FactoryBot.create(:ext_management_system, :name => "my-ems") }
+    let(:messaging_client) { double("ManageIQ::Messaging::Client") }
+    let(:persister) { Spec::Support::EmsRefreshHelper::TestPersister.new(ems) }
+
+    before do
+      stub_settings_merge(:ems_refresh => {:syndicate_inventory => true}, :prototype => {:messaging_type => 'kafka'})
+      allow(MiqQueue).to receive(:messaging_client).and_return(messaging_client)
+    end
+
+    context "with no inventory" do
+      it "doesn't publish anything" do
+        expect(messaging_client).not_to receive(:publish_topic)
+
+        refresher = described_class.new([ems])
+        refresher.publish_inventory(ems, ems, persister)
+      end
+    end
+
+    context "with a single inventory object" do
+      before { persister.vms.build(:ems_ref => "vm-1") }
+
+      it "publishes inventory to kafka" do
+        expect(messaging_client).to receive(:publish_topic).once.with(
+          array_including(
+            hash_including(
+              :service => "manageiq.ems-inventory",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__vms__vm-1",
+              :payload => hash_including(
+                :collection => :vms,
+                :data       => hash_including(
+                  :ems_ref => "vm-1"
+                )
+              )
+            )
+          )
+        )
+
+        refresher = described_class.new([ems])
+        refresher.publish_inventory(ems, ems, persister)
+      end
+    end
+
+    context "with lazy references between objects" do
+      before do
+        persister.vms.build(:ems_ref => "vm-1", :host => persister.hosts.lazy_find("host-1"))
+        persister.hosts.build(:ems_ref => "host-1")
+      end
+
+      it "publishes inventory to kafka" do
+        expect(messaging_client).to receive(:publish_topic).once.with(
+          array_including(
+            hash_including(
+              :service => "manageiq.ems-inventory",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__vms__vm-1",
+              :payload => hash_including(
+                :collection => :vms,
+                :data       => hash_including(
+                  :ems_ref => "vm-1",
+                  :host    => hash_including(
+                    :inventory_collection_name => :hosts,
+                    :ref                       => :manager_ref,
+                    :reference                 => {:ems_ref => "host-1"}
+                  )
+                )
+              )
+            )
+          )
+        )
+        expect(messaging_client).to receive(:publish_topic).once.with(
+          array_including(
+            hash_including(
+              :service => "manageiq.ems-inventory",
+              :sender  => "#{ems.emstype}__#{ems.id}",
+              :event   => "#{ems.emstype}__#{ems.id}__hosts__host-1",
+              :payload => hash_including(
+                :collection => :hosts,
+                :data       => hash_including(
+                  :ems_ref => "host-1"
+                )
+              )
+            )
+          )
+        )
+
+        refresher = described_class.new([ems])
+        refresher.publish_inventory(ems, ems, persister)
+      end
+    end
+  end
 end

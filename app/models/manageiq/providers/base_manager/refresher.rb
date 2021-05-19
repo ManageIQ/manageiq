@@ -94,6 +94,8 @@ module ManageIQ
           inventory = nil # clear to help GC
 
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
+          Benchmark.realtime_block(:publish_inventory) { publish_inventory(ems, target, parsed) }
+
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
         end
       end
@@ -138,6 +140,40 @@ module ManageIQ
         InventoryRefresh::SaveInventory.save_inventory(ems, persister.inventory_collections)
       end
 
+      def publish_inventory(ems, target, persister)
+        return unless publish_inventory?
+
+        ems_identifier = "#{ems.emstype}__#{ems.id}"
+
+        messaging_client = MiqQueue.messaging_client(ems_identifier)
+        return if messaging_client.nil?
+
+        persister.collections.each_value do |collection|
+          inventory_objects = collection.to_hash[:data].to_a
+
+          payloads = inventory_objects.map do |inventory_object_hash|
+            reference         = inventory_object_hash.values_at(*collection.manager_ref).join("__")
+            target_identifier = "#{ems_identifier}__#{collection.name}__#{reference}"
+
+            {
+              :service => "manageiq.ems-inventory",
+              :sender  => ems_identifier,
+              :event   => target_identifier,
+              :payload => {
+                :ems_id         => ems.id,
+                :ems_identifier => ems_identifier,
+                :collection     => collection.name,
+                :data           => inventory_object_hash
+              }
+            }
+          end
+
+          messaging_client.publish_topic(payloads) if payloads.present?
+        end
+      rescue => err
+        _log.warn("Failed to publish inventory for target #{target.class} [#{target.name}] id [#{target.id}]: #{err}")
+      end
+
       def post_refresh_ems_cleanup(_ems, _targets)
         # Clean up any resources opened during inventory collection
       end
@@ -167,6 +203,10 @@ module ManageIQ
       def inventory_class_for(klass)
         provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
         "#{provider_module}::Inventory".constantize
+      end
+
+      def publish_inventory?
+        options[:syndicate_inventory] && MiqQueue.messaging_type != "miq_queue"
       end
 
       def group_targets_by_ems(targets)
