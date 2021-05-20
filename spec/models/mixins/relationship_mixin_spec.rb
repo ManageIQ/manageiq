@@ -217,10 +217,20 @@ RSpec.describe RelationshipMixin do
           self.table_name = "services"
           include RelationshipMixin
           self.skip_relationships += ["custom"]
+          self.default_relationship_type = "ems_metadata"
         end
       end
 
+      # ems_metadata:
+      #   1
+      #  2
+      # custom:
+      #   2
+      #  1
+      # 3 4
+
       before do
+        service2.update!(:parent => service1)
         service1.with_relationship_type("custom") { service1.update!(:parent => service2) }
         service3.with_relationship_type("custom") { service3.update!(:parent => service1) }
         service4.with_relationship_type("custom") { service4.update!(:parent => service1) }
@@ -352,6 +362,7 @@ RSpec.describe RelationshipMixin do
 
       it "#parent=" do
         service6 = ancestry_class.create
+        service6.update(:parent => service1)
         expect(service2.with_relationship_type("custom") { service2.parent=(service6) }).to eq(service6)
         service2.save!
         expect(service6.with_relationship_type("custom") { service6.child_ids }).to eq([service2.id])
