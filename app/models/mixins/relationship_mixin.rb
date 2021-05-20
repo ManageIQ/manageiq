@@ -580,9 +580,13 @@ module RelationshipMixin
   end
 
   def add_parent(parent)
-    return update(:parent => parent) if use_ancestry?
-
-    parent.with_relationship_type(relationship_type) { parent.add_child(self) }
+    parent.with_relationship_type(relationship_type) do
+      if use_ancestry?
+        update(:parent => parent)
+      else
+        parent.add_child(self)
+      end
+    end
   end
 
   def add_children(*child_objs)
@@ -621,6 +625,7 @@ module RelationshipMixin
   end
   alias_method :add_child, :add_children
 
+  # for ancestry, make sure the parent also has the proper with_relationship_type set
   def parent=(parent)
     if use_ancestry?
       call_ancestry_method(:parent=, parent)
