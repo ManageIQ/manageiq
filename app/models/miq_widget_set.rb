@@ -1,8 +1,6 @@
 class MiqWidgetSet < MiqSet
   include_concern 'SetData'
 
-  acts_as_miq_set
-
   before_destroy :ensure_can_be_destroyed
   before_destroy :destroy_user_versions
   before_destroy :delete_from_dashboard_order
