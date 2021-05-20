@@ -1,5 +1,4 @@
 class MiqSet < ApplicationRecord
-  self.abstract_class = true
   self.inheritance_column = :set_type
 
   include UuidMixin
@@ -12,9 +11,6 @@ class MiqSet < ApplicationRecord
   validates :description, :presence => true
 
   has_many :miq_set_memberships, :dependent => :delete_all
-  has_many :members, :through => :miq_set_memberships
-  alias miq_sets members
-  alias children members
 
   belongs_to :owner, :polymorphic => true
 
@@ -29,7 +25,16 @@ class MiqSet < ApplicationRecord
   end
 
   def self.inherited(subclass)
-    # subclass.has_many subclass.model_table_name.to_sym, :through => :miq_set_memberships
+    super # required for ActiveRecord::Base
+
+    subclass.instance_eval do
+      [:members, :miq_sets, :children, model_table_name.to_sym].each do |hm_relation|
+        has_many hm_relation,
+                 :through     => :miq_set_memberships,
+                 :source      => :member,
+                 :source_type => model_class.name.to_s
+      end
+    end
   end
 
   def members=(*members)
