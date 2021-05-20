@@ -5208,6 +5208,11 @@
       :description: Display Individual Configuration Jobs
       :feature_type: view
       :identifier: configuration_job_show
+    - :name: Reload
+      :description: Reload Configuration jobs
+      :feature_type: view
+      :hidden: true
+      :identifier: configuration_job_reload
   - :name: Modify
     :description: Modify Configuration Job
     :feature_type: admin

@@ -422,9 +422,9 @@
 - :name: miq_event_definition
   :description: Control / Events
   :url: /miq_event_definition/show_list
-  :rbac_feature_name: miq_event
+  :rbac_feature_name: miq_event_definition_show_list
   :startup: true
-- :name: consdition
+- :name: condition
   :description: Control / Conditions
   :url: /condition/show_list
   :rbac_feature_name: condition_show_list
