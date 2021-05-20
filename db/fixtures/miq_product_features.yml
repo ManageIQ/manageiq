@@ -3406,6 +3406,15 @@
   :feature_type: node
   :identifier: pxe
   :children:
+  - :name: Operate
+    :description: Perform Operations on PXE
+    :feature_type: control
+    :identifier: pxe_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of PXE
+      :feature_type: control
+      :identifier: pxe_tag
   # Pxe Servers
   - :name: PXE Servers
     :description: Everything under PXE Servers
