@@ -1,8 +1,3 @@
-#
-# StorageManager (hsong)
-#
-#
-
 module ManageIQ::Providers
   class StorageManager < ManageIQ::Providers::BaseManager
     include SupportsFeatureMixin
@@ -21,13 +16,6 @@ module ManageIQ::Providers
 
     has_many :cloud_tenants, :foreign_key => :ems_id, :dependent => :destroy
     has_many :volume_availability_zones, :class_name => "AvailabilityZone", :foreign_key => :ems_id, :dependent => :destroy
-
-    belongs_to :parent_manager,
-               :foreign_key => :parent_ems_id,
-               :class_name  => "ManageIQ::Providers::BaseManager",
-               :autosave    => true
-
-    delegate :queue_name_for_ems_refresh, :to => :parent_manager
 
     def self.display_name(number = 1)
       n_('Storage Manager', 'Storage Managers', number)
