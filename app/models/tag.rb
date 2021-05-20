@@ -15,6 +15,8 @@ class Tag < ApplicationRecord
   scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
   scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
 
+  validates :name, :unique_within_region => true
+
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
