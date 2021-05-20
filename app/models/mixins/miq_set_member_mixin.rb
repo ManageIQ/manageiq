@@ -3,6 +3,11 @@ module MiqSetMemberMixin
   included do
     has_many :miq_set_memberships, :dependent => :delete_all, :as => :member
     has_many :miq_sets, :through => :miq_set_memberships
+
+    has_many miq_set_class.name.underscore.pluralize.to_sym,
+            :through => :miq_set_memberships,
+            :source  => :miq_set
+
     alias memberof miq_sets
   end
 
