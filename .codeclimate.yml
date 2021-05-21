@@ -32,6 +32,8 @@ plugins:
     enabled: true
     config: ".rubocop_cc.yml"
     channel: rubocop-0-82
+  bundler-audit:
+    enabled: true
 exclude_patterns:
 - lib/generators/**/templates/
 - node_modules/
