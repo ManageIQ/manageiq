@@ -19,7 +19,6 @@ module Vmdb
     end
 
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
-    DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
     # Magic value to reset a resource's setting to the parent's value
     RESET_COMMAND = "<<reset>>".freeze
@@ -29,7 +28,6 @@ module Vmdb
       ::Config.overwrite_arrays = true
       ::Config.merge_nil_values = false
       reset_settings_constant(for_resource(:my_server))
-      dump_to_log_directory(::Settings)
     end
 
     def self.reload!
@@ -101,10 +99,6 @@ module Vmdb
 
     def self.template_settings
       build_template.load!
-    end
-
-    def self.dump_to_log_directory(settings)
-      DUMP_LOG_FILE.write(mask_passwords!(settings.to_hash).to_yaml)
     end
 
     # This is a near copy of Config.load_and_set_settings, but we can't use that

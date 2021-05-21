@@ -1,28 +1,4 @@
 RSpec.describe Vmdb::Settings do
-  describe ".dump_to_log_directory" do
-    it "is called on top-level ::Settings.reload!" do
-      expect(described_class).to receive(:dump_to_log_directory)
-
-      ::Settings.reload!
-    end
-
-    it "writes them" do
-      ::Settings.api.token_ttl = "1.minute"
-      described_class.dump_to_log_directory(::Settings)
-
-      dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
-      expect(dumped_yaml.fetch_path(:api, :token_ttl)).to eq "1.minute"
-    end
-
-    it "masks passwords" do
-      ::Settings.authentication.bind_pwd = "pa$$w0rd"
-      described_class.dump_to_log_directory(::Settings)
-
-      dumped_yaml = YAML.load_file(described_class::DUMP_LOG_FILE)
-      expect(dumped_yaml.fetch_path(:authentication, :bind_pwd)).to eq "********"
-    end
-  end
-
   describe ".walk" do
     it "traverses tree properly" do
       stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])
