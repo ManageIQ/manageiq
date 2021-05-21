@@ -3743,6 +3743,10 @@
       :description: Show Ad hoc Metrics of Providers
       :feature_type: view
       :identifier: ems_container_ad_hoc_metrics
+    - :name: Capture Metrics
+      :description: Capture metrics related to this Containers Provider
+      :feature_type: view
+      :identifier: ems_container_capture_metrics
     - :name: Timeline
       :description: Display Timelines for Containers Providers
       :feature_type: view
@@ -6088,6 +6092,10 @@
         :description: Refresh Block Storage Managers
         :feature_type: control
         :identifier: ems_block_storage_refresh
+      - :name: Re-check Authentication Status
+        :description: Re-check Authentication Status of storage manager
+        :feature_type: control
+        :identifier: ems_storage_recheck_auth_status
     - :name: Modify
       :description: Modify Block Storage Managers
       :feature_type: admin
