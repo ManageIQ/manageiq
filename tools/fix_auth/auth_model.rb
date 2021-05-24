@@ -34,7 +34,7 @@ module FixAuth
         if options[:hardcode]
           hardcode(old_value, options[:hardcode])
         else
-          ManageIQ::Password.new.recrypt(old_value)
+          recrypt_password(old_value)
         end
       rescue
         if options[:invalid]
@@ -42,6 +42,18 @@ module FixAuth
         else
           raise
         end
+      end
+
+      private def recrypt_password(old_value)
+        new_value = ManageIQ::Password.new.recrypt(old_value)
+
+        # Handle rare case where, when the old_value is already encrypted with
+        #   the new key, during recrypt, the decryption with the legacy key
+        #   doesn't raise an Exception as expected, but instead successfully
+        #   decrypts and returns garbage.
+        new_value = old_value unless ManageIQ::Password.try_decrypt(new_value)&.valid_encoding?
+
+        new_value
       end
 
       def fix_passwords(obj, options = {})
