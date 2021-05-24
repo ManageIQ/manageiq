@@ -88,6 +88,21 @@ RSpec.describe FixAuth::AuthModel do
         subject.fix_passwords(bad, :invalid => "other")
         expect(bad.password).to be_encrypted("other")
       end
+
+      context "with the rare case where recryption succeeds but returns garbage" do
+        # NOTE: This legacy key only returns garbage specifically with the
+        #   built-in v2_key.dev and the plaintext string "password", which is
+        #   why it is redeclared here.  If this password is changed, a new
+        #   colliding legacy key will need to be found.
+        let(:pass)       { "password" }
+        let(:legacy_key) { ManageIQ::Password::Key.new(nil, "XamduEwrkgMSeLjl+LQeutAWsLgKi3tR1mdEtclDPyM=") }
+
+        it "should upgrade the column" do
+          subject.fix_passwords(old_new)
+          expect(old_new.password).to be_encrypted(pass)
+          expect(old_new.auth_key).to be_encrypted(pass)
+        end
+      end
     end
 
     context "#hardcode" do
