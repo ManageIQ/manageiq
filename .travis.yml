@@ -12,7 +12,7 @@ env:
   - PARALLEL_TEST_PROCESSORS=2
   matrix:
   - TEST_SUITE=vmdb PARALLEL=true
-  - TEST_SUITE=brakeman
+  - TEST_SUITE=security
 matrix:
   fast_finish: true
   jobs:
