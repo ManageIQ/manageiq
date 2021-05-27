@@ -1468,6 +1468,10 @@
     :description: Modify Dashboard
     :feature_type: admin
     :identifier: dashboard_admin
+  - :name: Tag
+    :description: Tag in Dashboard
+    :feature_type: control
+    :identifier: dashboard_tag
     :children:
     - :name: Add and Remove a Widget
       :description: Add and Remove Dashboard Widgets
