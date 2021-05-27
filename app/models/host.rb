@@ -1347,6 +1347,7 @@ class Host < ApplicationRecord
       return false
     end
 
+    # defined in ManageIQ::Providers::Openstack::InfraManager::Host
     update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
 
     if missing_credentials?
