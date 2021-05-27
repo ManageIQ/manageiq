@@ -1343,7 +1343,7 @@ class Host < ApplicationRecord
   def scan_via_ssh(task)
     if hostname.blank?
       _log.warn("No hostname defined for #{log_target}")
-      task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
+      task&.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")
       return false
     end
 
@@ -1351,46 +1351,46 @@ class Host < ApplicationRecord
 
     if missing_credentials?
       _log.warn("No credentials defined for #{log_target}")
-      task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
+      task&.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")
       return false
     end
 
     begin
       connect_ssh do |ssu|
         _log.info("Refreshing Patches for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing Patches") if task
+        task&.update_status("Active", "Ok", "Refreshing Patches")
         Benchmark.realtime_block(:refresh_patches) { refresh_patches(ssu) }
 
         _log.info("Refreshing Services for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing Services") if task
+        task&.update_status("Active", "Ok", "Refreshing Services")
         Benchmark.realtime_block(:refresh_services) { refresh_services(ssu) }
 
         _log.info("Refreshing Linux Packages for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing Linux Packages") if task
+        task&.update_status("Active", "Ok", "Refreshing Linux Packages")
         Benchmark.realtime_block(:refresh_linux_packages) { refresh_linux_packages(ssu) }
 
         _log.info("Refreshing User Groups for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing User Groups") if task
+        task&.update_status("Active", "Ok", "Refreshing User Groups")
         Benchmark.realtime_block(:refresh_user_groups) { refresh_user_groups(ssu) }
 
         _log.info("Refreshing SSH Config for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing SSH Config") if task
+        task&.update_status("Active", "Ok", "Refreshing SSH Config")
         Benchmark.realtime_block(:refresh_ssh_config) { refresh_ssh_config(ssu) }
 
         _log.info("Refreshing FS Files for #{log_target}")
-        task.update_status("Active", "Ok", "Refreshing FS Files") if task
+        task&.update_status("Active", "Ok", "Refreshing FS Files")
         Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
 
         if supports?(:refresh_network_interfaces)
           _log.info("Refreshing network interfaces for #{log_target}")
-          task.update_status("Active", "Ok", "Refreshing network interfaces") if task
+          task&.update_status("Active", "Ok", "Refreshing network interfaces")
           Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
         end
 
         # refresh_openstack_services should run after refresh_services and refresh_fs_files
         if respond_to?(:refresh_openstack_services)
           _log.info("Refreshing OpenStack Services for #{log_target}")
-          task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
+          task&.update_status("Active", "Ok", "Refreshing OpenStack Services")
           Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
         end
 
@@ -1402,7 +1402,7 @@ class Host < ApplicationRecord
       _log.log_backtrace(err)
     end
 
-    return true
+    true
   end
 
   def validate_task(task)
