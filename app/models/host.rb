@@ -1315,7 +1315,9 @@ class Host < ApplicationRecord
 
       save
 
-      scan_via_ssh(task) unless is_vmware_esxi?
+      unless is_vmware_esxi?
+        return if !scan_via_ssh(task)
+      end
 
       if supports?(:refresh_logs)
         _log.info("Refreshing Log information for #{log_target}")
@@ -1342,7 +1344,7 @@ class Host < ApplicationRecord
     if hostname.blank?
       _log.warn("No hostname defined for #{log_target}")
       task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
-      return
+      return false
     end
 
     update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
@@ -1350,7 +1352,7 @@ class Host < ApplicationRecord
     if missing_credentials?
       _log.warn("No credentials defined for #{log_target}")
       task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
-      return
+      return false
     end
 
     begin
@@ -1399,6 +1401,8 @@ class Host < ApplicationRecord
     rescue => err
       _log.log_backtrace(err)
     end
+
+    return true
   end
 
   def validate_task(task)
