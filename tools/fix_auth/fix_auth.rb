@@ -39,11 +39,11 @@ module FixAuth
     end
 
     def generate_password
-      ManageIQ::Password.generate_symmetric("#{cert_dir}/v2_key")
+      ManageIQ::Password.generate_symmetric("#{cert_dir}/v2_key", ENV["APPLIANCE"] ? "manageiq" : nil)
     rescue Errno::EEXIST => e
       $stderr.puts
       $stderr.puts "Only generate one encryption_key (v2_key) per installation."
-      $stderr.puts "Chances are you did not want to overwrite this file."
+      $stderr.puts "Chances are you do not want to overwrite this file."
       $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
       $stderr.puts "Please backup your key and run again."
       $stderr.puts
