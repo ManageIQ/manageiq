@@ -1,13 +1,12 @@
 RSpec.describe MiqFilter do
   let(:ems)             { FactoryBot.create(:ems_vmware, :name => 'ems') }
-  let(:datacenter)      { FactoryBot.create(:ems_folder, :name => "Datacenters").tap { |dc| dc.parent = ems } }
-  let(:mtc)             { FactoryBot.create(:datacenter, :name => "MTC").tap { |mtc| mtc.parent = datacenter } }
+  let(:datacenter)      { FactoryBot.create(:ems_folder, :name => "Datacenters", :ext_management_system => ems).tap { |dc| dc.parent = ems } }
+  let(:mtc)             { FactoryBot.create(:datacenter, :name => "MTC", :ext_management_system => ems).tap { |mtc| mtc.parent = datacenter } }
   let(:ems_folder_path) { "/belongsto/ExtManagementSystem|#{ems.name}" }
   let(:mtc_folder_path) { "#{ems_folder_path}/EmsFolder|#{datacenter.name}/EmsFolder|#{mtc.name}" }
-  let(:host_folder)     { FactoryBot.create(:ems_folder, :name => "host").tap { |hf| hf.parent = mtc } }
+  let(:host_folder)     { FactoryBot.create(:ems_folder, :name => "host", :ext_management_system => ems).tap { |hf| hf.parent = mtc } }
   let(:host_1)          { FactoryBot.create(:host_vmware, :name => "Host_1", :ext_management_system => ems).tap { |h| h.parent = host_folder } }
   let(:host_2)          { FactoryBot.create(:host_vmware, :name => "Host_2", :ext_management_system => ems).tap { |h| h.parent = host_folder } }
-  let(:host_3)          { FactoryBot.create(:host_vmware, :name => "Host_3") }
 
   let(:mtc_folder_path_with_host_folder) { "#{mtc_folder_path}/EmsFolder|host" }
   let(:mtc_folder_path_with_host_1)      { "#{mtc_folder_path_with_host_folder}/Host|#{host_1.name}" }
@@ -35,17 +34,42 @@ RSpec.describe MiqFilter do
       MiqFilter.belongsto2object_list(*args)
     end
 
-    it "converts met_folder_path" do
-      expect(belongsto2object_list(mtc_folder_path)).to match_array([ems, datacenter, mtc])
+    it "converts path" do
+      mtc_folder_object_path = [ems, datacenter, mtc]
+      expect(belongsto2object_list(mtc_folder_path)).to match_array(mtc_folder_object_path)
     end
 
-    it "converts met_folder with host_folder" do
+    it "converts path with 'host'" do
       host_folder_object_path = [ems, datacenter, mtc, host_folder]
       expect(belongsto2object_list(mtc_folder_path_with_host_folder)).to match_array(host_folder_object_path)
     end
 
-    it "converts met_folder with host_1" do
+    it "converts path with 'Host_1'" do
       host_object_path = [ems, datacenter, mtc, host_folder, host_1]
+      expect(belongsto2object_list(mtc_folder_path_with_host_1)).to match_array(host_object_path)
+    end
+
+    it "converts path with 'Host_1' when another 'Host_1' exists on another EMS" do
+      host_object_path = [ems, datacenter, mtc, host_folder, host_1]
+      FactoryBot.create(:host_vmware, :name => "Host_1")
+
+      expect(belongsto2object_list(mtc_folder_path_with_host_1)).to match_array(host_object_path)
+    end
+
+    it "converts path with 'Host_1' when another 'Host_1' exists on the same EMS at a different depth" do
+      host_object_path = [ems, datacenter, mtc, host_folder, host_1]
+      mtc2 = FactoryBot.create(:datacenter, :name => "MTC2", :ext_management_system => ems).tap { |mtc| mtc.parent = datacenter }
+      FactoryBot.create(:host_vmware, :name => "Host_1", :ext_management_system => ems).tap { |h| h.parent = mtc2 }
+
+      expect(belongsto2object_list(mtc_folder_path_with_host_1)).to match_array(host_object_path)
+    end
+
+    it "converts path with 'Host_1' when another 'Host_1' exists on the same EMS at the same depth" do
+      host_object_path = [ems, datacenter, mtc, host_folder, host_1]
+      mtc2 = FactoryBot.create(:datacenter, :name => "MTC2", :ext_management_system => ems).tap { |mtc| mtc.parent = datacenter }
+      hf2 = FactoryBot.create(:ems_folder, :name => "host", :ext_management_system => ems).tap { |hf| hf.parent = mtc2 }
+      FactoryBot.create(:host_vmware, :name => "Host_1", :ext_management_system => ems).tap { |h| h.parent = hf2 }
+
       expect(belongsto2object_list(mtc_folder_path_with_host_1)).to match_array(host_object_path)
     end
 

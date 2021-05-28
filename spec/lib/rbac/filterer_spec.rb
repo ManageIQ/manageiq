@@ -1464,7 +1464,7 @@ RSpec.describe Rbac::Filterer do
           @host1.update(:ext_management_system => @ems)
           @host2.update(:ext_management_system => @ems)
 
-          @vfolder        = FactoryBot.create(:ems_folder, :name => "vm")
+          @vfolder        = FactoryBot.create(:ems_folder, :name => "vm", :ext_management_system => @ems)
           @vfolder.parent = dc
           @host1.parent   = hfolder
           @vm_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{root.name}/EmsFolder|#{dc.name}/EmsFolder|#{@vfolder.name}"
@@ -1532,8 +1532,8 @@ RSpec.describe Rbac::Filterer do
           context "deleted cluster from belongsto filter" do
             let!(:group)   { FactoryBot.create(:miq_group, :tenant => default_tenant) }
             let!(:user)    { FactoryBot.create(:user, :miq_groups => [group]) }
-            let(:cluster_1) { FactoryBot.create(:ems_cluster, :name => "MTC Development 1").tap { |cluster| cluster.parent = hfolder } }
-            let(:cluster_2) { FactoryBot.create(:ems_cluster, :name => "MTC Development 2").tap { |cluster| cluster.parent = hfolder } }
+            let(:cluster_1) { FactoryBot.create(:ems_cluster, :name => "MTC Development 1", :ext_management_system => @ems).tap { |cluster| cluster.parent = hfolder } }
+            let(:cluster_2) { FactoryBot.create(:ems_cluster, :name => "MTC Development 2", :ext_management_system => @ems).tap { |cluster| cluster.parent = hfolder } }
             let(:vm_folder_path) { "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{root.name}/EmsFolder|#{dc.name}/EmsFolder|#{hfolder.name}/EmsCluster|#{cluster_1.name}" }
 
             it "honors ems_id conditions" do
@@ -1667,21 +1667,21 @@ RSpec.describe Rbac::Filterer do
         before do
           @ems = FactoryBot.create(:ems_vmware, :name => 'ems')
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
-          @root = FactoryBot.create(:ems_folder, :name => "Datacenters")
+          @root = FactoryBot.create(:ems_folder, :name => "Datacenters", :ext_management_system => @ems)
           @root.parent = @ems
-          @mtc = FactoryBot.create(:datacenter, :name => "MTC")
+          @mtc = FactoryBot.create(:datacenter, :name => "MTC", :ext_management_system => @ems)
           @mtc.parent = @root
           @mtc_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{@root.name}/EmsFolder|#{@mtc.name}"
 
-          @hfolder         = FactoryBot.create(:ems_folder, :name => "host")
+          @hfolder         = FactoryBot.create(:ems_folder, :name => "host", :ext_management_system => @ems)
           @hfolder.parent  = @mtc
 
-          @cluster = FactoryBot.create(:ems_cluster, :name => "MTC Development")
+          @cluster = FactoryBot.create(:ems_cluster, :name => "MTC Development", :ext_management_system => @ems)
           @cluster.parent = @hfolder
 
           @cluster_folder_path = "#{@mtc_folder_path}/EmsFolder|#{@hfolder.name}/EmsCluster|#{@cluster.name}"
 
-          @rp = FactoryBot.create(:resource_pool, :name => "Default for MTC Development")
+          @rp = FactoryBot.create(:resource_pool, :name => "Default for MTC Development", :ext_management_system => @ems)
           @rp.parent = @cluster
 
           @host_1 = FactoryBot.create(:host, :name => "Host_1", :ems_cluster => @cluster, :ext_management_system => @ems)

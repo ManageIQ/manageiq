@@ -43,28 +43,43 @@ module MiqFilter
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
     parts = tag.split("/")[2..-1]
+    depth = parts.size - 1 # ancestry uses 0 based depth
 
-    # root object
-    klass, name = parts.shift.split("|")
-    obj = find_object_by_name(klass, name)
+    # Get the root EMS object
+    # TODO: For tree queries deeper than 1, we don't actually need the ems object,
+    #       so find a way to just get the id
+    ems_class, ems_name = parts.first.split("|", 2)
+    ems = find_object_by_name(ems_class, ems_name)
 
-    if obj.nil?
-      _log.warn("lookup for klass=#{klass.to_s.inspect} with name=#{name.inspect} failed in tag=#{tag.inspect}")
+    if ems.nil?
+      _log.warn("lookup for klass=#{ems_class.to_s.inspect} with name=#{ems_name.inspect} failed in tag=#{tag.inspect}")
       return []
     end
 
-    # traverse the tree
-    parts.each_with_object([obj]) do |p, result|
-      tag_part_klass, name = p.split("|")
-      tag_part_klass = tag_part_klass.constantize
+    return [ems] if depth == 0
 
-      obj = obj.with_relationship_type('ems_metadata') do
-        obj.children.grep(tag_part_klass).detect { |c| c.name == name }
-      end
+    # Get the leaf node object for this EMS
+    leaf_class, leaf_name = parts.last.split("|", 2)
+    leaves = leaf_class.constantize
+      .includes(:all_relationships)
+      .where(:name => leaf_name, :ems_id => ems.id)
 
-      return [] unless obj
-      result.push(obj)
+    # If multiple leaves come back, filter by depth, and then find which one has
+    #   the valid path. It's possible multiple leaves could be at the same depth.
+    leaves.each do |leaf|
+      next unless leaf.depth == depth
+
+      # Get the full path from the leaf object to the root
+      result = leaf.with_relationship_type("ems_metadata") { leaf.path }
+
+      # Verify that the records match what's in the provided tag
+      result_parts = result&.map { |o| "#{o.class.base_model.name}|#{o.name}" }
+      return result if result_parts == parts
     end
+
+    # Nothing was found from any of the candidates
+    _log.warn("lookup failed for tag=#{tag.inspect}")
+    []
   end
 
   def self.object2belongsto(obj)
