@@ -26,8 +26,10 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
-    @col_details = nil
-    @ruby = nil
+  end
+
+  def self.columns_hash
+    {}
   end
 
   def valid?(component = exp)
@@ -98,7 +100,7 @@ class MiqExpression
   end
 
   def to_human
-    self.class._to_human(exp)
+    self.class._to_human(@exp)
   end
 
   def self._to_human(exp, options = {})
@@ -158,7 +160,7 @@ class MiqExpression
   def to_ruby(tz = nil)
     return "" unless valid?
     tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(exp.deep_clone, context_type, tz)
+    @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
     @ruby.dup
   end
 
@@ -295,8 +297,8 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    pexp, attrs = preprocess_for_sql(exp.deep_clone)
-    sql = to_arel(pexp, tz).to_sql if pexp.present?
+    @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
+    sql = to_arel(@pexp, tz).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
@@ -337,10 +339,16 @@ class MiqExpression
     operator = exp.keys.first
     case operator.downcase
     when "contains"
-      if exp[operator].key?("tag")
-        Tag.parse(exp[operator]["tag"]).reflection_supported_by_sql?
-      elsif exp[operator].key?("field")
-        Field.parse(exp[operator]["field"]).attribute_supported_by_sql?
+      if exp[operator].keys.include?("tag") && exp[operator]["tag"].split(".").length == 2 # Only support for tags of the main model
+        return true
+      elsif exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 2
+        db, field = exp[operator]["field"].split(".")
+        assoc, _column = field.split("-")
+        ref = db.constantize.reflect_on_association(assoc.to_sym)
+        return false unless ref
+        return false unless ref.macro == :has_many || ref.macro == :has_one
+        return false if ref.options && ref.options.key?(:as)
+        return field_in_sql?(exp[operator]["field"])
       else
         return false
       end
@@ -400,11 +408,34 @@ class MiqExpression
   end
 
   def col_details
-    @col_details ||= self.class.get_cols_from_expression(exp, preprocess_options)
+    @col_details ||= self.class.get_cols_from_expression(@exp, @preprocess_options)
   end
 
   def includes_for_sql
     col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
+  end
+
+  def self.expand_conditional_clause(klass, cond)
+    return klass.send(:sanitize_sql_for_conditions, cond) unless cond.kind_of?(Hash)
+
+    cond = klass.predicate_builder.resolve_column_aliases(cond)
+    cond = klass.send(:expand_hash_conditions_for_aggregates, cond)
+
+    klass.predicate_builder.build_from_hash(cond).map { |b| klass.connection.visitor.compile(b) }.join(' AND ')
+  end
+
+  def self.merge_where_clauses(*list)
+    list = list.compact.collect do |s|
+      expand_conditional_clause(MiqReport, s)
+    end.compact
+
+    if list.empty?
+      nil
+    elsif list.size == 1
+      list.first
+    else
+      "(#{list.join(") AND (")})"
+    end
   end
 
   def self.get_cols_from_expression(exp, options = {})
@@ -640,7 +671,7 @@ class MiqExpression
       val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = Array.wrap(val).flat_map do |v|
+      v_arr = val.to_miq_a.flat_map do |v|
         if v.kind_of?(String)
           v = begin
                 eval(v)
@@ -653,7 +684,7 @@ class MiqExpression
       "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = Array.wrap(val).flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
+      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
       "[#{v_arr.join(",")}]"
     else
       val
@@ -805,7 +836,7 @@ class MiqExpression
     custom_attributes_details = []
 
     klass.custom_keys.each do |custom_key|
-      custom_detail_column = [options[:model_for_column] || model, CustomAttributeMixin.column_name(custom_key)].join("-")
+      custom_detail_column = [model, CustomAttributeMixin.column_name(custom_key)].join("-")
       custom_detail_name = CustomAttributeMixin.to_human(custom_key)
 
       if options[:include_model]
@@ -895,10 +926,44 @@ class MiqExpression
            else
              []
            end
-      md + td + _custom_details_for(cb_model, :model_for_column => model)
+      md + td + _custom_details_for(cb_model, {})
     else
       model_details(model, :include_model => false, :include_tags => true)
     end
+  end
+
+  def self.expression_reflections_for(model, parent = {})
+    model = model_class(model)
+
+    reflections = []
+
+    model.reflections_with_virtual.each do |association, ref|
+      next unless INCLUDE_TABLES.include?(association.to_s.pluralize)
+      next if association.to_s.pluralize == "event_logs" && model.name == "Host" && !proto?
+      next if association.to_s.pluralize == "processes" && model.name == "Host" # Process data not available yet for Host
+
+      # REMOVE ME: workaround to temporarily exclude certain models from the relationships
+      next if EXCLUDE_FROM_RELATS[model.name]&.include?(association.to_s)
+
+      next if ref.macro == :belongs_to && model.name != parent[:root]
+
+      association_klass = ref.klass.name
+
+      next if association_klass == parent[:root] ||
+              parent[:assoc_path].include?(association.to_s) ||
+              parent[:assoc_path].include?(association.to_s.singularize) ||
+              parent[:macro] == :belongs_to ||
+              parent[:multivalue]
+
+      if block_given?
+        yield(ref, association, association_klass)
+      else
+        human_value = value2human("#{parent[:assoc_path]}.#{association.to_s}").strip.split(".").last
+        reflections << {:association => association, :association_klass => association_klass, :human_name => human_value}
+      end
+    end
+
+    reflections
   end
 
   def self.build_relats(model, parent = {}, seen = [])
@@ -909,41 +974,24 @@ class MiqExpression
     parent[:class_path] ||= model.name
     parent[:assoc_path] ||= model.name
     parent[:root] ||= model.name
-    result = {:columns => model.visible_attribute_names, :parent => parent}
+    result = {:columns => model.attribute_names, :parent => parent}
     result[:reflections] = {}
 
-    model.reflections_with_virtual.each do |assoc, ref|
-      next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
-      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
-      next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
-
-      next if ref.macro == :belongs_to && model.name != parent[:root]
-
-      # REMOVE ME: workaround to temporarily exclude certain models from the relationships
-      next if EXCLUDE_FROM_RELATS[model.name]&.include?(assoc.to_s)
-
-      assoc_class = ref.klass.name
+    expression_reflections_for(model, parent) do |ref, association, association_klass|
+      seen_key = [model.name, association].join("_")
+      next if seen.include?(seen_key)
 
       new_parent = {
         :macro       => ref.macro,
         :class_path  => [parent[:class_path], determine_relat_path(ref)].join("."),
-        :assoc_path  => [parent[:assoc_path], assoc.to_s].join("."),
-        :assoc       => assoc,
-        :assoc_class => assoc_class,
-        :root        => parent[:root]
+        :assoc_path  => [parent[:assoc_path], association.to_s].join("."),
+        :assoc       => association,
+        :assoc_class => association_klass,
+        :root        => parent[:root],
+        :multivalue  => [:has_many, :has_and_belongs_to_many].include?(ref.macro)
       }
-      new_parent[:direction] = new_parent[:macro] == :belongs_to ? :up : :down
-      new_parent[:multivalue] = [:has_many, :has_and_belongs_to_many].include?(new_parent[:macro])
 
-      seen_key = [model.name, assoc].join("_")
-      next if seen.include?(seen_key) ||
-              assoc_class == parent[:root] ||
-              parent[:assoc_path].include?(assoc.to_s) ||
-              parent[:assoc_path].include?(assoc.to_s.singularize) ||
-              parent[:direction] == :up ||
-              parent[:multivalue]
-      seen.push(seen_key)
-      result[:reflections][assoc] = build_relats(assoc_class, new_parent, seen)
+      result[:reflections][association] = build_relats(association_klass, new_parent, seen)
     end
     result
   end
@@ -1091,7 +1139,7 @@ class MiqExpression
     when :date, :datetime
       return false if operator.downcase.include?("empty")
 
-      values = value.kind_of?(String) ? value.lines : Array.wrap(value)
+      values = value.to_miq_a
       return _("No Date/Time value specified") if values.empty? || values.include?(nil)
       return _("Two Date/Time values must be specified") if operator.downcase == "from" && values.length < 2
 
@@ -1126,6 +1174,9 @@ class MiqExpression
     else
       return false
     end
+
+    _("Value '%{value}' must be in the form of %{format_type}") % {:value       => value,
+                                                                   :format_type => FORMAT_SUB_TYPES[dt][:short_name]}
   end
 
   def self.categories
@@ -1366,10 +1417,16 @@ class MiqExpression
       # Only support for tags of the main model
       if exp[operator].key?("tag")
         tag = Tag.parse(exp[operator]["tag"])
-        ids = tag.target.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
-        subquery_for_contains(tag, tag.arel_attribute.in(ids))
+        ids = tag.model.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
+        tag.model.arel_attribute(:id).in(ids)
       else
-        subquery_for_contains(field, arel_attribute.eq(parsed_value))
+        raise unless field.associations.one?
+        reflection = field.reflections.first
+        arel = arel_attribute.eq(parsed_value)
+        arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
+        field.model.arel_attribute(:id).in(
+          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
+        )
       end
     when "is"
       value = parsed_value
@@ -1391,21 +1448,24 @@ class MiqExpression
     end
   end
 
-  def subquery_for_contains(field, limiter_query)
-    return limiter_query if field.reflections.empty?
+  def extract_where_values(klass, scope)
+    relation = ActiveRecord::Relation.new(klass, klass.arel_table, klass.predicate_builder)
+    relation = relation.instance_eval(&scope)
 
-    # Remove the default scopes via `base_class`. The scope is already in the main query and not needed in the subquery
-    main_model = field.model.base_class
-    primary_attribute = main_model.arel_table[main_model.primary_key]
+    begin
+      # This is basically ActiveRecord::Relation#to_sql, only using our
+      # custom visitor instance
 
-    includes_associations = field.reflections.reverse.inject({}) { |i, k| {k.name => i} }
-    relation_query = main_model.select(primary_attribute)
-                               .joins(includes_associations)
-                               .where(limiter_query)
+      connection = klass.connection
+      visitor    = WhereExtractionVisitor.new(connection)
 
-    conn = main_model.connection
-    sql  = conn.unprepared_statement { conn.to_sql(relation_query.arel) }
-    Arel::Nodes::In.new(primary_attribute, Arel::Nodes::SqlLiteral.new(sql))
+      arel  = relation.arel
+      binds = relation.bound_attributes
+      binds = binds.collect(&:value_for_database)
+      binds.map! { |value| connection.quote(value) }
+      collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
+      collect.substitute_binds(binds).join
+    end
   end
 
   def self.determine_relat_path(ref)
