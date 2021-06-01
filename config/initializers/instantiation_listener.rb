@@ -1,6 +1,6 @@
 ActiveSupport::Notifications.subscribe('instantiation.active_record') do |name, start, finish, _id, payload|
   logger = ActiveRecord::Base.logger
-  if logger.debug?
+  if logger&.debug?
     elapsed = finish - start
     name = payload[:class_name]
     count = payload[:record_count]
