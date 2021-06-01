@@ -48,15 +48,19 @@ module ActsAsMiqSet
     self.table_name         = "miq_sets"
     self.inheritance_column = :set_type
 
-    serialize :set_data
+    serialize  :set_data
 
-    validates_presence_of     :name
-    validates_uniqueness_of   :name,
-                              :scope => [:set_type, :userid, :group_id],
-                              :if    => proc { |c| c.class.in_my_region.exists?(:name => c.name) }
-    validates_presence_of     :description
+    validates  :name,
+               :presence                => true,
+               :uniqueness_when_changed => {
+                 :scope => [:set_type, :userid, :group_id],
+                 :if    => proc { |c| c.class.in_my_region.exists?(:name => c.name) }
+               }
+    validates  :description,
+               :presence => true
 
-    belongs_to  :owner, :polymorphic => true
+    belongs_to :owner,
+               :polymorphic => true
 
     acts_as_miq_taggable
 
