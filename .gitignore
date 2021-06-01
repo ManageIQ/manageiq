@@ -93,3 +93,6 @@ bundler.d/*
 # yardoc
 /doc/
 .yardoc
+
+# byebug
+.byebug_history
