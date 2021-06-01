@@ -620,7 +620,7 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     it 'rejects invalid datetime for warm migration' do
       service_template = described_class.create_catalog_item(updated_catalog_item_options_with_warm_migration)
       service_template.miq_requests = []
-      expect { service_template.update_catalog_item(:config_info => {:warm_migration_cutover_datetime => 'nonsense'}) }.to raise_exception(StandardError, 'Error parsing datetime: invalid date: "nonsense"')
+      expect { service_template.update_catalog_item(:config_info => {:warm_migration_cutover_datetime => 'nonsense'}) }.to raise_exception(RuntimeError, /Error parsing datetime.+"nonsense"/)
     end
   end
 end
