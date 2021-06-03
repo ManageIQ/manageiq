@@ -1,6 +1,14 @@
 module ArPglogicalMigrationHelper
-  def self.discover_schema_migrations_ran_class
-    return unless ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+  def self.discover_schema_migrations_ran_class(version)
+    # Schema versions less than 20171031010000 certainly don't have the table, so we can
+    # avoid excessive queries but since this method is called both before AND after a migration
+    # from the ArPglogicalMigration prepended module, 20171031010000 is different based on direction:
+    #   migrate up   - before: missing, after: exists
+    #   migrate down - before: exists,  after: missing
+    # Therefore, we need to query the table for that migration.
+    return if version < "20171031010000"
+    return if version == "20171031010000" && !ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
       include ActiveRecord::IdRegions
@@ -10,7 +18,7 @@ module ArPglogicalMigrationHelper
   end
 
   def self.update_local_migrations_ran(version, direction)
-    return unless schema_migrations_ran_class = discover_schema_migrations_ran_class
+    return unless schema_migrations_ran_class = discover_schema_migrations_ran_class(version)
 
     if direction == :up
       if version == "20171031010000"
@@ -36,7 +44,7 @@ module ArPglogicalMigrationHelper
     attr_reader :subscription, :version, :schema_migrations_ran_class
 
     def initialize(subscription, version)
-      @schema_migrations_ran_class = ArPglogicalMigrationHelper.discover_schema_migrations_ran_class
+      @schema_migrations_ran_class = ArPglogicalMigrationHelper.discover_schema_migrations_ran_class(version)
       @subscription                = subscription
       @version                     = version
     end
