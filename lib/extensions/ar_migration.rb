@@ -12,17 +12,22 @@ module ArPglogicalMigrationHelper
   def self.update_local_migrations_ran(version, direction)
     return unless schema_migrations_ran_class = discover_schema_migrations_ran_class
 
-    new_migrations = ActiveRecord::SchemaMigration.normalized_versions
-    new_migrations << version if direction == :up
+    if direction == :up
+      if version == "20171031010000"
+        new_migrations = ActiveRecord::SchemaMigration.normalized_versions
+        new_migrations << version
+        to_add = (new_migrations - schema_migrations_ran_class.pluck(:version))
+        puts "Seeding :schema_migrations_ran table..."
+      else
+        to_add = [version]
+      end
 
-    to_add = (new_migrations - schema_migrations_ran_class.pluck(:version))
-    puts "Seeding :schema_migrations_ran table..." if to_add.size > 1
-
-    to_add.each do |v|
-      schema_migrations_ran_class.find_or_create_by(:version => v)
+      to_add.each do |v|
+        schema_migrations_ran_class.create!(:version => v)
+      end
+    else
+      schema_migrations_ran_class.where(:version => version).delete_all
     end
-
-    schema_migrations_ran_class.where(:version => version).delete_all if direction == :down
   end
 
   class RemoteRegionMigrationWatcher
