@@ -101,11 +101,14 @@ module MiqFilter
     return []     if inputs.nil?
     return inputs if bfilters.empty?
 
+    vcmeta_index = bfilters.index_with { |tag| belongsto2object_list(tag) }
+
     filtered = []
     inputs.each do |p|
       bfilters.each do |tag|
+        vcmeta_list = vcmeta_index[tag]
+
         if p.kind_of?(Storage)
-          vcmeta_list = belongsto2object_list(tag)
           vcmeta_list.reverse_each do |vcmeta|
             if vcmeta.respond_to?(:storages) && vcmeta.storages.include?(p)
               filtered.push(p)
@@ -114,8 +117,7 @@ module MiqFilter
           end
           break if filtered.last == p
         else
-          vcmeta_list = belongsto2object_list(tag)
-          vcmeta_list.pop if vcmeta_list.last.kind_of?(Host)
+          vcmeta_list = vcmeta_list[0..-2] if vcmeta_list.last.kind_of?(Host)
           vcmeta = vcmeta_list.last
 
           next if vcmeta.nil?
