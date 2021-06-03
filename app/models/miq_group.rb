@@ -244,7 +244,7 @@ class MiqGroup < ApplicationRecord
 
   def ordered_widget_sets
     if settings && settings[:dashboard_order]
-      MiqWidgetSet.find_with_same_order(settings[:dashboard_order]).to_a
+      MiqWidgetSet.where(:id => settings[:dashboard_order]).with_array_order(settings[:dashboard_order]).to_a
     else
       miq_widget_sets.sort_by { |a| a.name.downcase }
     end
