@@ -22,9 +22,7 @@ module ArPglogicalMigrationHelper
 
     if direction == :up
       if version == "20171031010000"
-        new_migrations = ActiveRecord::SchemaMigration.normalized_versions
-        new_migrations << version
-        to_add = (new_migrations - schema_migrations_ran_class.pluck(:version))
+        to_add = ActiveRecord::SchemaMigration.normalized_versions << version
         puts "Seeding :schema_migrations_ran table..."
       else
         to_add = [version]
