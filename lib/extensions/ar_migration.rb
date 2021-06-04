@@ -1,13 +1,19 @@
 module ArPglogicalMigrationHelper
-  def self.discover_schema_migrations_ran_class(version)
+  SCHEMA_MIGRATIONS_RAN_MIGRATION = "20171031010000".freeze
+  def self.schema_migrations_ran_exists?(version)
     # Schema versions less than 20171031010000 certainly don't have the table, so we can
     # avoid excessive queries but since this method is called both before AND after a migration
     # from the ArPglogicalMigration prepended module, 20171031010000 is different based on direction:
     #   migrate up   - before: missing, after: exists
     #   migrate down - before: exists,  after: missing
     # Therefore, we need to query the table for that migration.
-    return if version < "20171031010000"
-    return if version == "20171031010000" && !ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+    return false if version < SCHEMA_MIGRATIONS_RAN_MIGRATION
+    return false if version == SCHEMA_MIGRATIONS_RAN_MIGRATION && !ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+    true
+  end
+
+  def self.discover_schema_migrations_ran_class(version)
+    return unless schema_migrations_ran_exists?(version)
 
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
@@ -18,10 +24,10 @@ module ArPglogicalMigrationHelper
   end
 
   def self.update_local_migrations_ran(version, direction)
-    return unless schema_migrations_ran_class = discover_schema_migrations_ran_class(version)
+    return unless schema_migrations_ran_exists?(version)
 
     if direction == :up
-      if version == "20171031010000"
+      if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
         to_add = ActiveRecord::SchemaMigration.normalized_versions << version
         puts "Seeding :schema_migrations_ran table..."
       else
