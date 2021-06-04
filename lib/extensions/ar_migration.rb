@@ -27,7 +27,7 @@ module ArPglogicalMigrationHelper
       end
 
       to_add.each do |v|
-        ActiveRecord::Base.connection.execute("INSERT INTO schema_migrations_ran (version, created_at) VALUES ('#{v}', '#{Time.now.utc.iso8601}')")
+        ActiveRecord::Base.connection.execute("INSERT INTO schema_migrations_ran (version, created_at) VALUES ('#{v}', '#{Time.now.utc.iso8601(6)}')")
       end
     else
       ActiveRecord::Base.connection.execute("DELETE FROM schema_migrations_ran WHERE version = '#{version}'")
