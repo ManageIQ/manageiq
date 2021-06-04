@@ -21,7 +21,6 @@ module ArPglogicalMigrationHelper
     if direction == :up
       if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
         to_add = ActiveRecord::SchemaMigration.normalized_versions << version
-        puts "Seeding :schema_migrations_ran table..."
       else
         to_add = [version]
       end
