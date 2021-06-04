@@ -1,5 +1,10 @@
 module ArPglogicalMigrationHelper
   SCHEMA_MIGRATIONS_RAN_MIGRATION = "20171031010000".freeze
+
+  def self.subscriptions
+    @subscriptions ||= PglogicalSubscription.all
+  end
+
   def self.schema_migrations_ran_exists?
     ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
   end
@@ -90,7 +95,7 @@ end
 
 module ArPglogicalMigration
   def migrate(direction)
-    PglogicalSubscription.all.each do |s|
+    ArPglogicalMigrationHelper.subscriptions.each do |s|
       ArPglogicalMigrationHelper::RemoteRegionMigrationWatcher.new(s, version.to_s).wait_for_remote_region_migration
     end
     ret = super
