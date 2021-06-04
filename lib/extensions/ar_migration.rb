@@ -1,11 +1,11 @@
 module ArPglogicalMigrationHelper
   SCHEMA_MIGRATIONS_RAN_MIGRATION = "20171031010000".freeze
-  def self.schema_migrations_ran_exists?(version)
+  def self.schema_migrations_ran_exists?
     ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
   end
 
-  def self.discover_schema_migrations_ran_class(version)
-    return unless schema_migrations_ran_exists?(version)
+  def self.discover_schema_migrations_ran_class
+    return unless schema_migrations_ran_exists?
 
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
@@ -16,7 +16,7 @@ module ArPglogicalMigrationHelper
   end
 
   def self.update_local_migrations_ran(version, direction)
-    return unless schema_migrations_ran_exists?(version)
+    return unless schema_migrations_ran_exists?
 
     if direction == :up
       if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
@@ -40,7 +40,7 @@ module ArPglogicalMigrationHelper
     attr_reader :subscription, :version, :schema_migrations_ran_class
 
     def initialize(subscription, version)
-      @schema_migrations_ran_class = ArPglogicalMigrationHelper.discover_schema_migrations_ran_class(version)
+      @schema_migrations_ran_class = ArPglogicalMigrationHelper.discover_schema_migrations_ran_class
       @subscription                = subscription
       @version                     = version
     end
