@@ -1,15 +1,7 @@
 module ArPglogicalMigrationHelper
   SCHEMA_MIGRATIONS_RAN_MIGRATION = "20171031010000".freeze
   def self.schema_migrations_ran_exists?(version)
-    # Schema versions less than 20171031010000 certainly don't have the table, so we can
-    # avoid excessive queries but since this method is called both before AND after a migration
-    # from the ArPglogicalMigration prepended module, 20171031010000 is different based on direction:
-    #   migrate up   - before: missing, after: exists
-    #   migrate down - before: exists,  after: missing
-    # Therefore, we need to query the table for that migration.
-    return false if version < SCHEMA_MIGRATIONS_RAN_MIGRATION
-    return false if version == SCHEMA_MIGRATIONS_RAN_MIGRATION && !ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
-    true
+    ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
   end
 
   def self.discover_schema_migrations_ran_class(version)
