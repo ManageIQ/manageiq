@@ -13,6 +13,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     @dequeue_method == :drb && drb_dequeue_available?
   end
 
+  def dequeue_method_via_kafka?
+    @dequeue_method == :kafka && kafka_dequeue_available?
+  end
+
   def get_message_via_drb
     loop do
       begin
@@ -62,9 +66,23 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     end
   end
 
+  def get_message_via_kafka
+    @kafka_message_queue ||= Queue.new
+    @kafka_listener_thread = nil if @kafka_listener_thread && !@kafka_listener_thread.alive?
+    @kafka_listener_thread ||= Thread.new do
+      MiqQueue.messaging_client(self.class.name)
+              .subscribe_topic(:service => self.class.kafka_service, :persist_ref => @worker.guid) do |msg|
+        @kafka_message_queue << msg.message
+      end
+    end
+    @kafka_message_queue.pop unless @kafka_message_queue.empty?
+  end
+
   def get_message
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
+    elsif dequeue_method_via_kafka?
+      get_message_via_kafka
     else
       get_message_via_sql
     end
@@ -138,6 +156,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       rescue DRb::DRbError
         false
       end
+  end
+
+  def kafka_dequeue_available?
+    MiqQueue.messaging_type == "kafka" && MiqQueue.messaging_client(self.class.name).present?
   end
 
   # Only for file based heartbeating
