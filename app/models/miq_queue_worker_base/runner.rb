@@ -13,8 +13,8 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     @dequeue_method == :drb && drb_dequeue_available?
   end
 
-  def dequeue_method_via_kafka?
-    @dequeue_method == :kafka && kafka_dequeue_available?
+  def dequeue_method_via_miq_messaging?
+    @dequeue_method != :miq_queue && miq_messaging_dequeue_available?
   end
 
   def get_message_via_drb
@@ -66,23 +66,23 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     end
   end
 
-  def get_message_via_kafka
-    @kafka_message_queue ||= Queue.new
-    @kafka_listener_thread = nil if @kafka_listener_thread && !@kafka_listener_thread.alive?
-    @kafka_listener_thread ||= Thread.new do
+  def get_message_via_miq_messaging
+    @message_queue ||= Queue.new
+    @listener_thread = nil if @listener_thread && !@listener_thread.alive?
+    @listener_thread ||= Thread.new do
       MiqQueue.messaging_client(self.class.name)
-              .subscribe_topic(:service => self.class.kafka_service, :persist_ref => @worker.guid) do |msg|
-        @kafka_message_queue << msg.message
+              .subscribe_topic(:service => self.class.miq_messaging_service, :persist_ref => @worker.guid) do |msg|
+        @message_queue << msg
       end
     end
-    @kafka_message_queue.pop unless @kafka_message_queue.empty?
+    @message_queue.pop unless @message_queue.empty?
   end
 
   def get_message
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
-    elsif dequeue_method_via_kafka?
-      get_message_via_kafka
+    elsif dequeue_method_via_miq_messaging?
+      get_message_via_miq_messaging
     else
       get_message_via_sql
     end
@@ -158,8 +158,8 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       end
   end
 
-  def kafka_dequeue_available?
-    MiqQueue.messaging_type == "kafka" && MiqQueue.messaging_client(self.class.name).present?
+  def miq_messaging_dequeue_available?
+    MiqQueue.messaging_type != "miq_queue" && MiqQueue.messaging_client(self.class.name).present?
   end
 
   # Only for file based heartbeating
