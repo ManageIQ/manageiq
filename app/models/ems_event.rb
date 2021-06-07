@@ -25,15 +25,17 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    publish_event(ems_id, event) if syndicate_events?
-
-    MiqQueue.submit_job(
-      :service     => "event",
-      :target_id   => ems_id,
-      :class_name  => "EmsEvent",
-      :method_name => meth,
-      :args        => [event]
-    )
+    if MiqQueue.messaging_type == "miq_queue" && !syndicate_events?
+      MiqQueue.submit_job(
+        :service     => "event",
+        :target_id   => ems_id,
+        :class_name  => "EmsEvent",
+        :method_name => meth,
+        :args        => [event]
+      )
+    else
+      publish_event(ems_id, event)
+    end
   end
 
   def self.add(ems_id, event_hash)
@@ -266,10 +268,6 @@ class EmsEvent < EventStream
   private_class_method :create_completed_event
 
   def self.publish_event(ems_id, event)
-    ems = ExtManagementSystem.find(ems_id)
-    event[:ems_uid]  = ems&.uid_ems
-    event[:ems_type] = ems&.class&.ems_type
-
     MiqQueue.messaging_client('event_handler')&.publish_topic(
       :service => "manageiq.ems-events",
       :sender  => ems_id,
