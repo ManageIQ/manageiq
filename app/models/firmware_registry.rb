@@ -32,7 +32,10 @@ class FirmwareRegistry < ApplicationRecord
   end
 
   def self.create_firmware_registry(options)
-    klass = options.delete(:type).constantize
+    type = options.delete(:type)
+    raise ArgumentError, _("Invalid firmware registry type [#{type}]") unless descendants.map(&:name).include?(type)
+
+    klass = type.constantize
     options = klass.validate_options(options.deep_symbolize_keys)
     klass.do_create_firmware_registry(options).tap(&:sync_fw_binaries_queue)
   end
