@@ -2,6 +2,7 @@ require 'ancestry'
 
 class Relationship < ApplicationRecord
   has_ancestry
+  hide_attribute :ancestry
 
   belongs_to :resource, :polymorphic => true
 

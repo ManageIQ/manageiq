@@ -17,6 +17,7 @@ class OrchestrationStack < ApplicationRecord
   acts_as_miq_taggable
 
   has_ancestry
+  hide_attribute :ancestry
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :tenant
