@@ -197,7 +197,7 @@ class EmsEvent < EventStream
   private_class_method :event_blacklisted_keys
 
   def self.create_event(event)
-    event.delete_if { |k,| event.event_blacklisted_keys.include?(k) || (k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s)) }
+    event.delete_if { |k,| event_blacklisted_keys.include?(k) || (k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s)) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       :event_type  => event[:event_type],

@@ -14,7 +14,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def dequeue_method_via_miq_messaging?
-    @dequeue_method != :miq_queue && miq_messaging_dequeue_available?
+    @dequeue_method == :miq_messaging && miq_messaging_dequeue_available?
   end
 
   def get_message_via_drb
