@@ -119,8 +119,9 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def deliver_message(msg)
-    return deliver_queue_message(msg) if msg.kind_of?(MiqQueue)
-    return process_message(msg)       if msg.kind_of?(String)
+    return deliver_queue_message(msg)         if msg.kind_of?(MiqQueue)
+    return process_miq_messaging_message(msg) if msg.kind_of?(ManageIQ::Messaging::ReceivedMessage)
+    return process_message(msg)               if msg.kind_of?(String)
 
     _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
     raise _("%{log} Message <%{message}> is of unknown type <%{type}>") % {:log     => log_prefix,
@@ -160,6 +161,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def miq_messaging_dequeue_available?
     MiqQueue.messaging_type != "miq_queue" && MiqQueue.messaging_client(self.class.name).present?
+  end
+
+  def process_miq_messaging_message(_msg)
+    raise NotImplementedError, 'Must be implemented in subclass'
   end
 
   # Only for file based heartbeating

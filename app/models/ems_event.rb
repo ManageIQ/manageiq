@@ -191,8 +191,13 @@ class EmsEvent < EventStream
   end
   private_class_method :event_allowed_ems_ref_keys
 
+  def self.event_blacklisted_keys
+    %w[ems_uid ems_type]
+  end
+  private_class_method :event_blacklisted_keys
+
   def self.create_event(event)
-    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
+    event.delete_if { |k,| event.event_blacklisted_keys.include?(k) || (k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s)) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       :event_type  => event[:event_type],
@@ -268,6 +273,10 @@ class EmsEvent < EventStream
   private_class_method :create_completed_event
 
   def self.publish_event(ems_id, event)
+    ems = ExtManagementSystem.find(ems_id)
+    event[:ems_uid]  = ems&.uid_ems
+    event[:ems_type] = ems&.class&.ems_type
+
     MiqQueue.messaging_client('event_handler')&.publish_topic(
       :service => "manageiq.ems-events",
       :sender  => ems_id,
