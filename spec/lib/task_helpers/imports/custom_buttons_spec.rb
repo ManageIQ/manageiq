@@ -78,6 +78,65 @@ RSpec.describe TaskHelpers::Imports::CustomButtons do
         end
       end
     end
+
+    # This is a sort of "integration test" where we test that the export format
+    # works with the import format directly, instead of with a saved copy.
+    #
+    # That way, if something changes with the export, we will know if the
+    # import works correctly still.
+    #
+    describe "imports and export properly" do
+      let(:export_dir)          { Dir.mktmpdir }
+      let(:source)              { File.join(export_dir, "CustomButtons.yaml") }
+      let!(:custom_button1)     { FactoryBot.create(:custom_button,     :name => "button1", :description => "Button One", :applies_to_class => "Vm", :resource_action => resource_action1) }
+      let!(:custom_button2)     { FactoryBot.create(:custom_button,     :name => "button2", :description => "Button Two", :applies_to_class => "Vm", :resource_action => resource_action2) }
+      let!(:custom_button_set1) { FactoryBot.create(:custom_button_set, :name => "set1",    :description => "Set One") }
+
+      let(:resource_action1) do
+        FactoryBot.build(:resource_action,
+                         :ae_namespace => "NAMESPACE",
+                         :ae_class     => "CLASS",
+                         :ae_instance  => "INSTANCE")
+      end
+
+      let(:resource_action2) do
+        FactoryBot.build(:resource_action,
+                         :ae_namespace => "SYSTEM",
+                         :ae_class     => "PROCESS",
+                         :ae_instance  => "Request",
+                         :dialog       => FactoryBot.create(:dialog, :name => "label1"))
+      end
+
+      after do
+        FileUtils.remove_entry export_dir
+      end
+
+      it 'exports custom buttons to a given directory' do
+        expect(CustomButton.count).to                     eq(2)
+        expect(CustomButtonSet.count).to                  eq(1)
+        expect(Dialog.where(:label => "label1").count).to eq(1)
+        expect(ResourceAction.count).to                   eq(2)
+
+        TaskHelpers::Exports::CustomButtons.new.export(:directory => export_dir)
+
+        custom_button1.destroy
+        custom_button2.destroy
+        custom_button_set1.destroy
+        resource_action1.destroy
+        resource_action2.destroy
+
+        expect(CustomButton.count).to                     eq(0)
+        expect(CustomButtonSet.count).to                  eq(0)
+        expect(ResourceAction.count).to                   eq(0)
+
+        TaskHelpers::Imports::CustomButtons.new.import(options)
+
+        expect(CustomButton.count).to                     eq(2)
+        expect(CustomButtonSet.count).to                  eq(1)
+        expect(Dialog.where(:label => "label1").count).to eq(1)
+        expect(ResourceAction.count).to                   eq(2)
+      end
+    end
   end
 
   def assert_dialog_is_set(connect)
