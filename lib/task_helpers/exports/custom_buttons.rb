@@ -1,7 +1,7 @@
 module TaskHelpers
   class Exports
     class CustomButtons
-      EXCLUDE_ATTRS = %w[id created_on updated_on created_at updated_at dialog_id resource_id].freeze
+      EXCLUDE_ATTRS = %w[id miq_set_id created_on updated_on created_at updated_at dialog_id resource_id].freeze
 
       def initialize
         @export_hash = {}
@@ -40,9 +40,9 @@ module TaskHelpers
       private
 
       def direct_custom_buttons
-        CustomButton.select("custom_buttons.*, relationships.resource_id")
-                    .left_outer_joins(:all_relationships)
-                    .where(:relationships => {:resource_id => nil})
+        CustomButton.select("custom_buttons.*, miq_set_memberships.miq_set_id")
+                    .left_outer_joins(:miq_set_memberships)
+                    .where(:miq_set_memberships => {:miq_set_id => nil})
       end
 
       def attrs_for(object, children = nil)
