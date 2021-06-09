@@ -34,14 +34,6 @@ module RelationshipMixin
     memoize(*MEMOIZED_METHODS)
   end
 
-  module ClassMethods
-    def alias_with_relationship_type(m_new, m_old, rel_type = nil)
-      define_method(m_new) do |*args|
-        with_relationship_type(rel_type || default_relationship_type) { send(m_old, *args) }
-      end
-    end
-  end
-
   def reload(*args)
     clear_relationships_cache
     super
