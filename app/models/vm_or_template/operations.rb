@@ -106,22 +106,6 @@ module VmOrTemplate::Operations
   # UI button validation methods
   #
 
-  def validate_vm_control_shelve_action
-    unless supports_control?
-      return {:available => false, :message => unsupported_reason(:control)}
-    end
-    return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(current_state)
-    {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
-  end
-
-  def validate_vm_control_shelve_offload_action
-    unless supports_control?
-      return {:available => false, :message => unsupported_reason(:control)}
-    end
-    return {:available => true,   :message => nil}  if %w(shelved).include?(current_state)
-    {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
-  end
-
   included do
     supports :control do
       msg = if retired?
