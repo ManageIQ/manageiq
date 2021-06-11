@@ -31,8 +31,13 @@ RSpec.describe SupportsFeatureMixin do
         supports :fake do
           unsupported_reason_add(:fake, 'Need more money') unless bribe
         end
+
+        supports :fake_with_block_syntax do |reason|
+          reason ||= 'Need more money' unless bribe
+        end
       end
     end)
+
 
     stub_const('SpecialPost', Class.new(Post) do
       include SupportsFeatureMixin
@@ -150,18 +155,22 @@ RSpec.describe SupportsFeatureMixin do
     context "when the condition is met" do
       it "is supported on the class" do
         expect(SpecialPost.supports_fake?).to be true
+        expect(SpecialPost.supports_fake_with_block_syntax?).to be true
       end
 
       it "is supported on the instance" do
         expect(SpecialPost.new(:bribe => true).supports_fake?).to be true
+        expect(SpecialPost.new(:bribe => true).supports_fake_with_block_syntax?).to be true
       end
 
       it "gives no reason on the class" do
         expect(SpecialPost.unsupported_reason(:fake)).to be nil
+        expect(SpecialPost.unsupported_reason(:fake_with_block_syntax)).to be nil
       end
 
       it "gives no reason on the instance" do
         expect(SpecialPost.new(:bribe => true).unsupported_reason(:fake)).to be nil
+        expect(SpecialPost.new(:bribe => true).unsupported_reason(:fake_with_block_syntax)).to be nil
       end
     end
 
@@ -170,10 +179,12 @@ RSpec.describe SupportsFeatureMixin do
         special_post = SpecialPost.new
         expect(special_post.supports_fake?).to be false
         expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
+        expect(special_post.unsupported_reason(:fake_with_block_syntax)).to eq "Need more money"
       end
 
       it "gives a reason without calling supports_feature? first" do
         expect(SpecialPost.new.unsupported_reason(:fake)).to eq "Need more money"
+        expect(SpecialPost.new.unsupported_reason(:fake_with_block_syntax)).to eq "Need more money"
       end
     end
 
@@ -182,9 +193,12 @@ RSpec.describe SupportsFeatureMixin do
         special_post = SpecialPost.new
         expect(special_post.supports_fake?).to be false
         expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
+        expect(special_post.unsupported_reason(:fake_with_block_syntax)).to eq "Need more money"
         special_post.bribe = true
         expect(special_post.supports_fake?).to be true
+        expect(special_post.supports_fake_with_block_syntax?).to be true
         expect(special_post.unsupported_reason(:fake)).to be nil
+        expect(special_post.unsupported_reason(:fake_with_block_syntax)).to be nil
       end
     end
   end
