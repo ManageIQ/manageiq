@@ -51,6 +51,27 @@ RSpec.describe Vmdb::Settings::Validator do
     {:server => {:listening_port => nil}},   true,
     {:server => {:listening_port => "xxx"}}, false,
 
+    {:server => {:rate_limiting => {:api_login => {:limit => 5, :period => 5.minutes}}}}, true,
+    {:server => {:rate_limiting => {:api_login => {:limit => 5, :period => "30.seconds"}}}}, true,
+    {:server => {:rate_limiting => {:api_login => {:limit => "Five", :period => 30.seconds}}}}, false,
+    {:server => {:rate_limiting => {:api_login => {:limit => 5, :period => "Five minutes"}}}}, false,
+    {:server => {:rate_limiting => {:api_login => {:limit => 5, :period => nil}}}}, false,
+    {:server => {:rate_limiting => {:api_login => {:limit => nil, :period => 5}}}}, false,
+
+    {:server => {:rate_limiting => {:request => {:limit => 5, :period => 5.minutes}}}}, true,
+    {:server => {:rate_limiting => {:request => {:limit => 5, :period => "30.seconds"}}}}, true,
+    {:server => {:rate_limiting => {:request => {:limit => "Five", :period => 30.seconds}}}}, false,
+    {:server => {:rate_limiting => {:request => {:limit => 5, :period => "Five minutes"}}}}, false,
+    {:server => {:rate_limiting => {:request => {:limit => 5, :period => nil}}}}, false,
+    {:server => {:rate_limiting => {:request => {:limit => nil, :period => 5}}}}, false,
+
+    {:server => {:rate_limiting => {:ui_login => {:limit => 5, :period => 5.minutes}}}}, true,
+    {:server => {:rate_limiting => {:ui_login => {:limit => 5, :period => "30.seconds"}}}}, true,
+    {:server => {:rate_limiting => {:ui_login => {:limit => "Five", :period => 30.seconds}}}}, false,
+    {:server => {:rate_limiting => {:ui_login => {:limit => 5, :period => "Five minutes"}}}}, false,
+    {:server => {:rate_limiting => {:ui_login => {:limit => 5, :period => nil}}}}, false,
+    {:server => {:rate_limiting => {:ui_login => {:limit => nil, :period => 5}}}}, false,
+
     {:server => {:session_store => "cache"}}, true,
     {:server => {:session_store => "xxx"}},   false,
 

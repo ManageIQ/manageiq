@@ -31,23 +31,6 @@ module Vmdb
 
       private
 
-      def integer_with_method?(num)
-        if is_integer?(num.to_i_with_method) && num.present?
-          # handling the "Five".to_i == 0 case
-          #
-          # Allows:
-          #
-          #   - 0
-          #   - 0.minutes (always will be zero)
-          #   - any integer
-          #   - any integer + method
-          #
-          num.to_i_with_method != 0 || num.to_s.match?(/^0(?=\..*|$)/)
-        else
-          num.blank?
-        end
-      end
-
       def webservices(data)
         valid, errors = true, []
 
@@ -151,6 +134,25 @@ module Vmdb
           unless Zone.in_my_region.find_by(:name => data.zone)
             valid = false
             errors << [:zone, "zone, \"#{data.zone}\", invalid. Should be a valid Zone"]
+          end
+        end
+
+        if keys.include?(:rate_limiting)
+          %i[api_login request ui_login].each do |limiting_section|
+            next if data.rate_limiting[limiting_section].blank?
+
+            limit  = data.rate_limiting[limiting_section][:limit]
+            period = data.rate_limiting[limiting_section][:period]
+
+            unless is_integer?(limit)
+              valid = false
+              errors << [:rate_limiting, "rate_limiting.#{limiting_section}.limit, \"#{limit}\", invalid. Should be an integer"]
+            end
+
+            unless is_integer?(period) || period.number_with_method?
+              valid = false
+              errors << [:rate_limiting, "rate_limiting.#{limiting_section}.period, \"#{period}\", invalid. Should be an integer"]
+            end
           end
         end
 
