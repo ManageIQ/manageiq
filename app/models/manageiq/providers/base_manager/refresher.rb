@@ -251,7 +251,8 @@ module ManageIQ
             if ems.allow_targeted_refresh?
               # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
               ems_event_collection = InventoryRefresh::TargetCollection.new(:targets    => sub_ems_targets,
-                                                                            :manager_id => ems_id)
+                                                                            :manager_id => ems_id,
+                                                                            :manager    => ems)
               all_targets << ems_event_collection
             else
               all_targets << @ems_by_ems_id[ems_id]
