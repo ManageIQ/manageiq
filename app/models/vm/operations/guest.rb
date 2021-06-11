@@ -9,10 +9,7 @@ module Vm::Operations::Guest
     supports_not :reboot_guest
     supports_not :reset
     supports_not :shutdown_guest
-  end
-
-  def validate_standby_guest
-    validate_unsupported("Standby Guest Operation")
+    supports_not :standby_guest
   end
 
   def raw_shutdown_guest
