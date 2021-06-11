@@ -12,7 +12,7 @@ module Vm::Operations::Lifecycle
       reason   = _("Publish not supported because VM is blank")    if blank?
       reason ||= _("Publish not supported because VM is orphaned") if orphaned?
       reason ||= _("Publish not supported because VM is archived") if archived?
-      unsupported_reason_add(:retire, reason) if reason
+      unsupported_reason_add(:publish, reason) if reason
     end
 
     api_relay_method :retire do |options|

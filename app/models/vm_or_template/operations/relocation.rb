@@ -8,7 +8,7 @@ module VmOrTemplate::Operations::Relocation
       reason   = _("Migrate not supported because VM is blank")    if blank?
       reason ||= _("Migrate not supported because VM is orphaned") if orphaned?
       reason ||= _("Migrate not supported because VM is archived") if archived?
-      unsupported_reason_add(:retire, reason) if reason
+      unsupported_reason_add(:migrate, reason) if reason
     end
   end
 
