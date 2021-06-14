@@ -728,8 +728,8 @@ RSpec.describe ExtManagementSystem do
     it "queues up destroy" do
       described_class.destroy_queue([ems.id, ems2.id])
 
-      expect(MiqQueue.count).to eq(2)
-      expect(MiqQueue.pluck(:instance_id)).to match_array([ems.id, ems2.id])
+      expect(MiqQueue.where(:method_name => "destroy").count).to eq(2)
+      expect(MiqQueue.where(:method_name => "destroy").pluck(:instance_id)).to match_array([ems.id, ems2.id])
     end
   end
 
@@ -741,20 +741,22 @@ RSpec.describe ExtManagementSystem do
     it "returns a task" do
       task_id = ems.destroy_queue
 
-      deliver_queue_message
+      deliver_queue_message # Deliver the `#pause!` queue item
+      deliver_queue_message # Deliver the `#destroy` queue item
 
       expect(MiqTask.find(task_id)).to have_attributes(
         :state  => "Finished",
-        :status => "Ok",
+        :status => "Ok"
       )
     end
 
     it "destroys the ems when no active worker exists" do
       ems.destroy_queue
 
-      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.count).to eq(2)
 
-      deliver_queue_message
+      deliver_queue_message # Deliver the `#pause!` queue item
+      deliver_queue_message # Deliver the `#destroy` queue item
 
       expect(MiqQueue.count).to eq(0)
       expect(ExtManagementSystem.count).to eq(0)
@@ -764,9 +766,10 @@ RSpec.describe ExtManagementSystem do
       FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
       ems.destroy_queue
 
-      expect(MiqQueue.count).to eq(1)
-      deliver_queue_message #  ems destroy message
-      deliver_queue_message #  worker kill message
+      expect(MiqQueue.count).to eq(2)
+      deliver_queue_message # ems pause! message
+      deliver_queue_message # ems destroy message
+      deliver_queue_message # worker kill message
 
       expect(MiqQueue.count).to eq(0)
       expect(ExtManagementSystem.count).to eq(0)

@@ -360,6 +360,16 @@ class ExtManagementSystem < ApplicationRecord
     _log.info("Pausing EMS [#{name}] id [#{id}] successful.")
   end
 
+  def pause_queue!(priority: MiqQueue::NORMAL_PRIORITY)
+    MiqQueue.put(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "pause!",
+      :priority    => priority,
+      :zone        => my_zone
+    )
+  end
+
   # Move ems to original zone, reschedule task/jobs/.. collected during maintenance
   def resume!
     _log.info("Resuming EMS [#{name}] id [#{id}].")
@@ -689,6 +699,12 @@ class ExtManagementSystem < ApplicationRecord
     msg = "Queuing destroy of #{self.class.name} with id: #{id}"
 
     _log.info(msg)
+
+    # Before we queue the `#destroy` pause the provider to prevent a provider in
+    # a bad state from filling up the queue preventing the `#destroy` from being
+    # processed.
+    pause_queue!(:priority => MiqQueue::HIGH_PRIORITY)
+
     task = MiqTask.create(
       :name    => "Destroying #{self.class.name} with id: #{id}",
       :state   => MiqTask::STATE_QUEUED,
