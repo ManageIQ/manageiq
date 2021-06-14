@@ -53,4 +53,7 @@ Vmdb::Application.configure do
   config.colorize_logging = true
 
   config.action_controller.allow_forgery_protection = true
+
+  # Allow nip.io for development with external auth where hostnames are required
+  config.hosts << "127.0.0.1.nip.io"
 end
