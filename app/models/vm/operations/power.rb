@@ -30,8 +30,4 @@ module Vm::Operations::Power
   def validate_stop
     validate_vm_control_powered_on
   end
-
-  def validate_pause
-    validate_vm_control_powered_on
-  end
 end
