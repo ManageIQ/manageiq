@@ -41,10 +41,13 @@ module Vm::Operations
     end
 
     supports :collect_running_processes do
-      check = validate_collect_running_processes
-      unless check[:message].nil?
-        unsupported_reason_add(:collect_running_processes, _(check[:message]))
-      end
+      reason   = N_('VM Process collection is only available for Windows VMs.') unless ['windows'].include?(platform)
+      reason ||= N_('VM Process collection is only available for Runnable VMs.') unless self.runnable?
+      reason ||= N_('VM Process collection is only available while the VM is powered on.') unless state == "on"
+      reason ||= N_('VM Process collection requires credentials set at the Zone level.') if my_zone.nil? || my_zone_obj.auth_user_pwd(:windows_domain).nil?
+      reason ||= N_('VM Process collection requires an IP address for the VM.') if ipaddresses.blank?
+
+      unsupported_reason_add(:collect_running_processes, reason) if reason
     end
 
     supports_not :conversion_host
@@ -69,38 +72,5 @@ module Vm::Operations
 
   def public_address
     ipaddresses.find { |ip| !Addrinfo.tcp(ip, 80).ipv4_private? && IPAddr.new(ip).ipv4? }
-  end
-
-  def validate_collect_running_processes
-    s = {:available => false, :message => nil}
-
-    # Report reasons why collection is not available for this VM
-    unless ['windows'].include?(platform)
-      s[:message] = N_('VM Process collection is only available for Windows VMs.')
-      return s
-    end
-    unless self.runnable?
-      s[:message] = N_('VM Process collection is only available for Runnable VMs.')
-      return s
-    end
-
-    # From here on out collection is possible, but may not be currently available.
-    s[:available] = true
-    unless state == "on"
-      s[:message] = N_('VM Process collection is only available while the VM is powered on.')
-      return s
-    end
-
-    if my_zone.nil? || my_zone_obj.auth_user_pwd(:windows_domain).nil?
-      s[:message] = N_('VM Process collection requires credentials set at the Zone level.')
-      return s
-    end
-
-    if ipaddresses.blank?
-      s[:message] = N_('VM Process collection requires an IP address for the VM.')
-      return s
-    end
-
-    s
   end
 end
