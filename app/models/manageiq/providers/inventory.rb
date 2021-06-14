@@ -90,7 +90,7 @@ module ManageIQ::Providers
       ems_class = ems.class == Class ? ems : ems.class
       provider_module = ManageIQ::Providers::Inflector.provider_module(ems_class)
 
-      manager_name = parsed_manager_name(target) if manager_name.nil?
+      manager_name ||= parsed_manager_name(ems, target)
 
       klass = "#{provider_module}::Inventory::#{type}::#{manager_name}".safe_constantize
       # if class for given target doesn't exist, try to use class for default_manager (if defined)
@@ -110,7 +110,7 @@ module ManageIQ::Providers
 
     # Last part of persister/parser/collector class name
     # For example 'CloudManager' or 'StorageManager::Ebs'
-    def self.parsed_manager_name(target)
+    def self.parsed_manager_name(_ems, target)
       case target
       when InventoryRefresh::TargetCollection
         'TargetCollection'
