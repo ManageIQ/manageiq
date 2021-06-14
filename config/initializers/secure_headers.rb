@@ -8,6 +8,7 @@ if defined?(SecureHeaders)
       :report_only => false,
       :default_src => ["'self'"],
       :frame_src   => ["'self'"],
+      :font_src    => ["'self'", 'https://fonts.gstatic.com'],
       :connect_src => ["'self'"],
       :style_src   => ["'unsafe-inline'", "'self'"],
       :script_src  => ["'unsafe-eval'", "'unsafe-inline'", "'self'"],
