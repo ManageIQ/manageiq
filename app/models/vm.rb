@@ -78,10 +78,9 @@ class Vm < VmOrTemplate
 
   def running_processes
     pl = {}
-    check = validate_collect_running_processes
-    unless check[:message].nil?
-      _log.warn(check[:message].to_s)
-      raise check[:message].to_s
+    unless supports?(:collect_running_processes)
+      _log.warn(unsupported_reason(:collect_running_processes))
+      raise unsupported_reason(:collect_running_processes)
     end
 
     begin
