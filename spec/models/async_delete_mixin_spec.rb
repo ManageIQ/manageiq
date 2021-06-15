@@ -125,12 +125,16 @@ RSpec.describe AsyncDeleteMixin do
     context "with 3 ems" do
       before do
         @objects, @obj = common_setup(:ems_vmware)
+
+        # Simplify destroying the EMSs so the pause record doesn't have to be
+        # delivered for the common tests to pass
+        @objects.each { |obj| obj.update!(:enabled => false) }
       end
 
       should_define_destroy_queue_instance_method
       should_define_destroy_queue_class_method
-      should_queue_destroy_on_instance
-      should_queue_destroy_on_class_with_many_ids
+      should_queue_destroy_on_instance("orchestrate_destroy")
+      should_queue_destroy_on_class_with_many_ids("orchestrate_destroy")
 
       should_define_delete_queue_instance_method
       should_define_delete_queue_class_method
