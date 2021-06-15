@@ -392,57 +392,61 @@
   :feature_type: node
   :identifier: service
   :children:
-  - :name: All Services
-    :description: Everything under All Services Accordion
-    :feature_type: node
-    :identifier: service_accord
+  - :name: View All Services
+    :description: View Services
+    :feature_type: view
+    :identifier: service_view
     :children:
-    - :name: View All Services
-      :description: View Services
+    - :name: List
+      :description: Display Lists of Services
       :feature_type: view
-      :identifier: service_view
-    - :name: Modify
-      :description: Modify Services
+      :identifier: service_show_list
+    - :name: Show
+      :description: Display Individual Cloud Providers
+      :feature_type: view
+      :identifier: service_show
+  - :name: Modify
+    :description: Modify Services
+    :feature_type: admin
+    :identifier: service_admin
+    :children:
+    - :name: Edit Services
+      :description: Edit Services
       :feature_type: admin
-      :identifier: service_admin
-      :children:
-      - :name: Edit Services
-        :description: Edit Services
-        :feature_type: admin
-        :identifier: service_edit
-      - :name: Remove Services
-        :description: Remove Services
-        :feature_type: admin
-        :identifier: service_delete
-      - :name: Set Ownership
-        :description: Set Ownership of Services
-        :feature_type: control
-        :identifier: service_ownership
-      - :name: Reconfigure Services
-        :description: Reconfigure Services Options
-        :feature_type: admin
-        :identifier: service_reconfigure
-    - :name: Operate
-      :description: Perform Operations on Services
+      :identifier: service_edit
+    - :name: Remove Services
+      :description: Remove Services
+      :feature_type: admin
+      :identifier: service_delete
+    - :name: Set Ownership
+      :description: Set Ownership of Services
       :feature_type: control
-      :identifier: service_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Services
-        :feature_type: control
-        :identifier: service_tag
-      - :name: Set Retirement Date
-        :description: Set Retirement Date for Services
-        :feature_type: control
-        :identifier: service_retire
-      - :name: Create Services
-        :description: Create Services
-        :feature_type: control
-        :identifier: service_create
-      - :name: Retire Services
-        :description: Retire Services
-        :feature_type: control
-        :identifier: service_retire_now
+      :identifier: service_ownership
+    - :name: Reconfigure Services
+      :description: Reconfigure Services Options
+      :feature_type: admin
+      :identifier: service_reconfigure
+  - :name: Operate
+    :description: Perform Operations on Services
+    :feature_type: control
+    :identifier: service_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Services
+      :feature_type: control
+      :identifier: service_tag
+    - :name: Set Retirement Date
+      :description: Set Retirement Date for Services
+      :feature_type: control
+      :identifier: service_retire
+    - :name: Create Services
+      :description: Create Services
+      :feature_type: control
+      :identifier: service_create
+    - :name: Retire Services
+      :description: Retire Services
+      :feature_type: control
+      :identifier: service_retire_now
 
 # EmsCloud
 - :name: Cloud Providers
