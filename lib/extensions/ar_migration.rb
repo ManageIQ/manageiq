@@ -1,6 +1,17 @@
 module ArPglogicalMigrationHelper
+  SCHEMA_MIGRATIONS_RAN_MIGRATION = "20171031010000".freeze
+
+  def self.subscriptions
+    @subscriptions ||= PglogicalSubscription.all
+  end
+
+  def self.schema_migrations_ran_exists?
+    ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+  end
+
   def self.discover_schema_migrations_ran_class
-    return unless ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+    return unless schema_migrations_ran_exists?
+
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
       include ActiveRecord::IdRegions
@@ -10,19 +21,21 @@ module ArPglogicalMigrationHelper
   end
 
   def self.update_local_migrations_ran(version, direction)
-    return unless schema_migrations_ran_class = discover_schema_migrations_ran_class
+    return unless schema_migrations_ran_exists?
 
-    new_migrations = ActiveRecord::SchemaMigration.normalized_versions
-    new_migrations << version if direction == :up
+    if direction == :up
+      if version == SCHEMA_MIGRATIONS_RAN_MIGRATION
+        to_add = ActiveRecord::SchemaMigration.normalized_versions << version
+      else
+        to_add = [version]
+      end
 
-    to_add = (new_migrations - schema_migrations_ran_class.pluck(:version))
-    puts "Seeding :schema_migrations_ran table..." if to_add.size > 1
-
-    to_add.each do |v|
-      schema_migrations_ran_class.find_or_create_by(:version => v)
+      to_add.each do |v|
+        ActiveRecord::Base.connection.exec_insert("INSERT INTO schema_migrations_ran (version, created_at) VALUES ($1, $2)", "SQL", [[nil, v], [nil, Time.now.utc.iso8601(6)]])
+      end
+    else
+      ActiveRecord::Base.connection.exec_delete("DELETE FROM schema_migrations_ran WHERE version = $1", "SQL", [[nil, version]])
     end
-
-    schema_migrations_ran_class.where(:version => version).delete_all if direction == :down
   end
 
   class RemoteRegionMigrationWatcher
@@ -82,7 +95,7 @@ end
 
 module ArPglogicalMigration
   def migrate(direction)
-    PglogicalSubscription.all.each do |s|
+    ArPglogicalMigrationHelper.subscriptions.each do |s|
       ArPglogicalMigrationHelper::RemoteRegionMigrationWatcher.new(s, version.to_s).wait_for_remote_region_migration
     end
     ret = super
