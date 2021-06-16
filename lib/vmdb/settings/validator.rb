@@ -31,6 +31,23 @@ module Vmdb
 
       private
 
+      def integer_with_method?(num)
+        if is_integer?(num.to_i_with_method) && num.present?
+          # handling the "Five".to_i == 0 case
+          #
+          # Allows:
+          #
+          #   - 0
+          #   - 0.minutes (always will be zero)
+          #   - any integer
+          #   - any integer + method
+          #
+          num.to_i_with_method != 0 || num.to_s.match?(/^0(?=\..*|$)/)
+        else
+          num.blank?
+        end
+      end
+
       def webservices(data)
         valid, errors = true, []
 
