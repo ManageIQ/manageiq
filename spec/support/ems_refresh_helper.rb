@@ -20,7 +20,17 @@ module Spec
         end
       end
 
-      def assert_inventory_not_changed(before, after)
+      def assert_inventory_not_changed(before = nil, after = nil)
+        if block_given?
+          before ||= serialize_inventory
+
+          yield
+
+          after ||= serialize_inventory
+        elsif before.nil? || after.nil?
+          raise ArgumentError, "You must pass before and after without a block"
+        end
+
         expect(before.keys).to match_array(after.keys)
 
         before.each_key do |model|
@@ -39,6 +49,13 @@ module Spec
             SPEC_FAILURE
           end
         end
+      end
+
+      def with_vcr(suffix = nil, &block)
+        path = described_class.name.dup
+        path << "::#{suffix}" if suffix
+
+        VCR.use_cassette(path.underscore, &block)
       end
     end
   end
