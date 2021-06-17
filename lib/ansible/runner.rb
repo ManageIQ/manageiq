@@ -205,7 +205,7 @@ module Ansible
         end
         command_line_hash.merge!(cred_command_line)
 
-        env_vars_hash   = env_vars.merge(cred_env_vars).merge(python_env)
+        env_vars_hash   = env_vars.merge(cred_env_vars).merge(ansible_runner_env)
         extra_vars_hash = extra_vars.merge(cred_extra_vars)
 
         create_hosts_file(base_dir, hosts)
@@ -303,14 +303,19 @@ module Ansible
         Ansible::Content.new(playbook_dir).fetch_galaxy_roles
       end
 
-      def python_env
+      def ansible_runner_env
+        env = {}
+
         if python3_modules_path.present?
-          { "PYTHONPATH" => python3_modules_path }
+          env["PYTHONPATH"] = python3_modules_path
         elsif python2_modules_path.present?
-          { "PYTHONPATH" => python2_modules_path }
-        else
-          {}
+          env["PYTHONPATH"] = python2_modules_path
         end
+
+        env["ANSIBLE_LOCAL_TEMP"] = "/tmp/.ansible_local_tmp"
+        env["ANSIBLE_REMOTE_TEMP"] = "/tmp/.ansible_remote_tmp"
+
+        env
       end
 
       def credentials_info(credentials, base_dir)
