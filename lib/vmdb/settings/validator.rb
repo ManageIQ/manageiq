@@ -137,6 +137,25 @@ module Vmdb
           end
         end
 
+        if keys.include?(:rate_limiting)
+          %i[api_login request ui_login].each do |limiting_section|
+            next if data.rate_limiting[limiting_section].blank?
+
+            limit  = data.rate_limiting[limiting_section][:limit]
+            period = data.rate_limiting[limiting_section][:period]
+
+            unless is_integer?(limit)
+              valid = false
+              errors << [:rate_limiting, "rate_limiting.#{limiting_section}.limit, \"#{limit}\", invalid. Should be an integer"]
+            end
+
+            unless is_integer?(period) || period.number_with_method?
+              valid = false
+              errors << [:rate_limiting, "rate_limiting.#{limiting_section}.period, \"#{period}\", invalid. Should be an integer"]
+            end
+          end
+        end
+
         return valid, errors
       end
 

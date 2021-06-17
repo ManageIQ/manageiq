@@ -950,6 +950,16 @@
   :prefetch_max_per_worker_dequeue: 100
   :prefetch_min_per_worker_dequeue: 10
   :prefetch_stale_threshold: 30.seconds
+  :rate_limiting:
+    :api_login:
+      :limit: 5
+      :period: 20.seconds
+    :request:
+      :limit: 300
+      :period: 5.minutes
+    :ui_login:
+      :limit: 5
+      :period: 20.seconds
   :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,remote_console,web_services,automate
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
