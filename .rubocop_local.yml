@@ -7,8 +7,6 @@ Style/GlobalVars:
   # Loggers
   - $api_log
   - $audit_log
-  - $container_log
-  - $journald_log
   - $log
   - $policy_log
   - $rails_log
