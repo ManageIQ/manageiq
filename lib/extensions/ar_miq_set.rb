@@ -62,8 +62,10 @@ module ActsAsMiqSet
 
     validates :name,
               :presence                => true,
-              :uniqueness_when_changed => [:set_type, :userid, :group_id],
-              :if                      => proc { |c| c.class.in_my_region.exists?(:name => c.name) }
+              :uniqueness_when_changed => {
+                :scope => [:set_type, :userid, :group_id],
+                :if    => proc { |c| c.class.in_my_region.exists?(:name => c.name) }
+              }
     validates :description,
               :presence => true
 
