@@ -88,6 +88,13 @@ RSpec.describe MiqRegion do
       expect(described_class.replication_type).to eq(:remote)
     end
 
+    it "returns :remote when configured as both a provider and a subscriber since subscriptions are shared across all databases of a cluster" do
+      pgl = double(:provider? => true, :subscriber? => true, :node? => true)
+      allow(MiqPglogical).to receive(:new).and_return(pgl)
+
+      expect(described_class.replication_type).to eq(:remote)
+    end
+
     it "returns :none if pglogical is not configured" do
       pgl = double(:provider? => false, :subscriber? => false, :node? => false)
       allow(MiqPglogical).to receive(:new).and_return(pgl)
