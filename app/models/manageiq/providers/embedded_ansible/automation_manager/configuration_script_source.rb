@@ -50,8 +50,32 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     (super || (ensure_git_repository && super)).tap { |r| sync_git_repository(r) }
   end
 
+  def verify_ssl=(val)
+    @verify_ssl = case val
+                  when 0, false then OpenSSL::SSL::VERIFY_NONE
+                  when 1, true  then OpenSSL::SSL::VERIFY_PEER
+                  else
+                    OpenSSL::SSL::VERIFY_NONE
+                  end
+
+    if git_repository_id && git_repository.verify_ssl != @verify_ssl
+      @verify_ssl_changed = true
+    end
+  end
+
+  def verify_ssl
+    if @verify_ssl
+      @verify_ssl
+    elsif git_repository_id
+      git_repository.verify_ssl
+    else
+      @verify_ssl ||= OpenSSL::SSL::VERIFY_NONE
+    end
+  end
+
   private def ensure_git_repository
     transaction do
+      # puts attrs_for_sync_git_repository.inspect
       repo = GitRepository.create!(attrs_for_sync_git_repository)
       if new_record?
         self.git_repository_id = repo.id
@@ -63,7 +87,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   private def sync_git_repository(git_repository = nil)
-    return unless name_changed? || scm_url_changed? || authentication_id_changed?
+    return unless name_changed? || scm_url_changed? || authentication_id_changed? || @verify_ssl_changed
 
     git_repository ||= self.git_repository
     git_repository.attributes = attrs_for_sync_git_repository
@@ -74,7 +98,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
       :name              => name,
       :url               => scm_url,
       :authentication_id => authentication_id,
-      :verify_ssl        => OpenSSL::SSL::VERIFY_NONE
+      :verify_ssl        => verify_ssl
     }
   end
 
