@@ -556,6 +556,7 @@ RSpec.describe ExtManagementSystem do
         :openstack_cloud => FactoryBot.create(:ems_openstack,       :zone => zone),
         :openstack_infra => FactoryBot.create(:ems_openstack_infra, :zone => zone),
         :vmware_cloud    => FactoryBot.create(:ems_vmware_cloud,    :zone => zone),
+        :vpc_cloud       => FactoryBot.create(:ems_ibm_cloud_vpc,   :zone => zone)
       }
 
       2.times do
@@ -565,6 +566,7 @@ RSpec.describe ExtManagementSystem do
           manager.pause!
 
           manager.reload
+          expect(manager.network_manager.enabled).to be_falsey
           expect(manager.network_manager.zone_before_pause).to eq(zone)
           expect(manager.network_manager.zone).to eq(Zone.maintenance_zone)
         end
@@ -572,6 +574,7 @@ RSpec.describe ExtManagementSystem do
         # The same for storage managers, i.e. amazon
         %i[amazon_cloud openstack_cloud].each do |manager_type|
           emses[manager_type].storage_managers.each do |storage_manager|
+            expect(storage_manager.enabled).to be_falsey
             expect(storage_manager.zone_before_pause).to eq(zone)
             expect(storage_manager.zone).to eq(Zone.maintenance_zone)
           end
