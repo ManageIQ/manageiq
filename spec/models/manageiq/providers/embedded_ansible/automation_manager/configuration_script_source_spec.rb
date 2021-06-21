@@ -157,6 +157,51 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Configur
       end
     end
 
+    describe "#verify_ssl" do
+      it "defaults to OpenSSL::SSL::VERIFY_NONE" do
+        expect(subject.verify_ssl).to eq(OpenSSL::SSL::VERIFY_NONE)
+      end
+
+      it "can be updated to OpenSSL::SSL::VERIFY_PEER" do
+        subject.verify_ssl = OpenSSL::SSL::VERIFY_PEER
+        expect(subject.verify_ssl).to eq(OpenSSL::SSL::VERIFY_PEER)
+      end
+
+      context "with a created record" do
+        subject             { described_class.last }
+        let(:create_params) { params.merge(:verify_ssl => OpenSSL::SSL::VERIFY_PEER) }
+
+        before do
+          allow(Notification).to receive(:create!)
+
+          described_class.create_in_provider(manager.id, create_params)
+        end
+
+        it "pulls from the created record" do
+          expect(subject.verify_ssl).to eq(OpenSSL::SSL::VERIFY_PEER)
+        end
+
+        it "pushes updates from the ConfigurationScriptSource to the GitRepository" do
+          subject.update(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+
+          expect(described_class.last.verify_ssl).to eq(OpenSSL::SSL::VERIFY_NONE)
+          expect(GitRepository.last.verify_ssl).to   eq(OpenSSL::SSL::VERIFY_NONE)
+        end
+
+        it "converts true/false values instead of integers" do
+          subject.update(:verify_ssl => false)
+
+          expect(described_class.last.verify_ssl).to eq(OpenSSL::SSL::VERIFY_NONE)
+          expect(GitRepository.last.verify_ssl).to   eq(OpenSSL::SSL::VERIFY_NONE)
+
+          subject.update(:verify_ssl => true)
+
+          expect(described_class.last.verify_ssl).to eq(OpenSSL::SSL::VERIFY_PEER)
+          expect(GitRepository.last.verify_ssl).to   eq(OpenSSL::SSL::VERIFY_PEER)
+        end
+      end
+    end
+
     describe "#playbooks_in_git_repository" do
       def playbooks_for(repo)
         repo.configuration_script_payloads.pluck(:name)
