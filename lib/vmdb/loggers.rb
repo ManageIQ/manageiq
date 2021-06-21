@@ -21,7 +21,6 @@ module Vmdb
 
     def self.apply_config(config)
       apply_config_value(config, $log,                :level)
-      apply_config_value(config, $journald_log,       :level) if $journald_log
       apply_config_value(config, $audit_log,          :level_audit)
       apply_config_value(config, $rails_log,          :level_rails)
       apply_config_value(config, $policy_log,         :level_policy)
@@ -32,15 +31,22 @@ module Vmdb
 
     def self.create_logger(log_file_name, logger_class = VMDBLogger)
       log_file = ManageIQ.root.join("log", log_file_name)
-      logger_class.new(log_file).tap do |logger|
-        logger.extend(ActiveSupport::Logger.broadcast($container_log)) if $container_log
-        logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
+      progname = File.basename(log_file_name, ".*")
+
+      logger_class.new(log_file, progname: progname).tap do |logger|
+        broadcast_logger = create_broadcast_logger
+        if broadcast_logger
+          logger.extend(ActiveSupport::Logger.broadcast(broadcast_logger))
+          broadcast_logger.progname = progname
+
+          # HACK: In order to access the broadcast logger in test, we inject it
+          #   as an instance var.
+          logger.instance_variable_set(:@broadcast_logger, broadcast_logger) if Rails.env.test?
+        end
       end
     end
 
     private_class_method def self.create_loggers
-      $container_log      = create_container_logger
-      $journald_log       = create_journald_logger
       $log                = create_logger("evm.log")
       $rails_log          = create_logger("#{Rails.env}.log")
       $audit_log          = create_logger("audit.log", AuditLogger)
@@ -48,6 +54,10 @@ module Vmdb
       $remote_console_log = create_logger("remote_console.log")
 
       configure_external_loggers
+    end
+
+    private_class_method def self.create_broadcast_logger
+      create_container_logger || create_journald_logger
     end
 
     private_class_method def self.create_container_logger
