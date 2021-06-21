@@ -13,12 +13,15 @@ module ActsAsMiqSetMember
              :source     => miq_set_class.name.underscore.to_sym,
              :through    => :miq_set_memberships
 
-    has_many miq_set_class.name.underscore.pluralize.to_sym,
+    has_many :memberof,
              :class_name => miq_set_class.to_s, # rubocop:disable Rails/ReflectionClassName
              :source     => miq_set_class.name.underscore.to_sym,
              :through    => :miq_set_memberships
 
-    alias memberof miq_sets
+    has_many miq_set_class.name.underscore.pluralize.to_sym,
+             :class_name => miq_set_class.to_s, # rubocop:disable Rails/ReflectionClassName
+             :source     => miq_set_class.name.underscore.to_sym,
+             :through    => :miq_set_memberships
   end
 
   module ClassMethods
@@ -33,6 +36,10 @@ module ActsAsMiqSetMember
 
   def make_memberof(set)
     set.add_member(self)
+  end
+
+  def make_not_memberof(set)
+    set.remove_member(self)
   end
 end # module ActsAsMiqSetMember
 
