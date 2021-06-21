@@ -743,7 +743,7 @@ RSpec.describe ExtManagementSystem do
       task_id = ems.destroy_queue
 
       deliver_queue_message # Deliver the `#pause!` queue item
-      deliver_queue_message # Deliver the `#destroy` queue item
+      deliver_queue_message # Deliver the `#orchestrate_destroy` queue item
 
       expect(MiqTask.find(task_id)).to have_attributes(
         :state  => "Finished",
@@ -757,7 +757,7 @@ RSpec.describe ExtManagementSystem do
       expect(MiqQueue.count).to eq(2)
 
       deliver_queue_message # Deliver the `#pause!` queue item
-      deliver_queue_message # Deliver the `#destroy` queue item
+      deliver_queue_message # Deliver the `#orchestrate_destroy` queue item
 
       expect(MiqQueue.count).to eq(0)
       expect(ExtManagementSystem.count).to eq(0)
@@ -769,7 +769,7 @@ RSpec.describe ExtManagementSystem do
 
       expect(MiqQueue.count).to eq(2)
       deliver_queue_message # ems pause! message
-      deliver_queue_message # ems destroy message
+      deliver_queue_message # ems orchestrate_destroy message
       deliver_queue_message # worker kill message
 
       expect(MiqQueue.count).to eq(0)

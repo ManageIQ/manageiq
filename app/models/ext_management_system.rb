@@ -712,7 +712,7 @@ class ExtManagementSystem < ApplicationRecord
       :message => msg
     )
 
-    self.class._queue_task('orchestrate_destroy', [id], task.id, queue_options)
+    orchestrate_destroy_queue(task.id, queue_options)
 
     task.id
   end
@@ -737,10 +737,14 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def orchestrate_destroy_queue(task_id, queue_options = {})
+    self.class._queue_task('orchestrate_destroy', [id], task_id, queue_options)
+  end
+
   def orchestrate_destroy(task_id = nil)
     # If the provider hasn't been disabled yet by the high-priority pause! queue method
     # requeue the destroy operation to be run later.
-    return self.class._queue_task('orchestrate_destroy', [id], task_id, :deliver_on => 1.minute.from_now.utc) if enabled?
+    return orchestrate_destroy_queue(task_id, :deliver_on => 1.minute.from_now.utc) if enabled?
 
     # Async kill each ems worker and wait until their row is removed before we delete
     # the ems/managers to ensure a worker doesn't recreate the ems/manager.
