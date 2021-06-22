@@ -32,16 +32,6 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.parse(field).column).to eq("name")
     end
 
-    it "can parse the virtual custom attribute" do
-      field = "ChargebackVm-virtual_custom_attribute_Application"
-      expect(described_class.parse(field).column).to eq("virtual_custom_attribute_Application")
-    end
-
-    it "can parse the virtual custom attribute which represents label" do
-      field = "ChargebackVm-virtual_custom_attribute_Application:SECTION:labels"
-      expect(described_class.parse(field).column).to eq("virtual_custom_attribute_Application:SECTION:labels")
-    end
-
     it "can parse the column name with associations present" do
       field = "Vm.host-name"
       expect(described_class.parse(field).column).to eq("name")
@@ -150,11 +140,6 @@ RSpec.describe MiqExpression::Field do
 
     it "returns false for non-attribute public methods" do
       field = described_class.new(Vm, [], "destroy")
-      expect(field).not_to be_valid
-    end
-
-    it "returns false for non-valid associations" do
-      field = described_class.new(Vm, %w[bogus association], "foo")
       expect(field).not_to be_valid
     end
   end
@@ -315,10 +300,6 @@ RSpec.describe MiqExpression::Field do
     it "detects if column is supported by sql through virtual association" do
       expect(MiqExpression::Field.parse("Vm.service-name").attribute_supported_by_sql?).to be_falsey
     end
-
-    it "returns false if the associations are bogus" do
-      expect(MiqExpression::Field.parse("Vm.bogus.service-name").attribute_supported_by_sql?).to be_falsey
-    end
   end
 
   describe "#virtual_attribute?" do
@@ -395,6 +376,74 @@ RSpec.describe MiqExpression::Field do
 
     it "handles regular expression" do
       expect(MiqExpression::Field.is_field?(/x/)).to be_falsey
+    end
+  end
+
+  describe "#column_values" do
+    before do
+      Tenant.seed
+      EvmSpecHelper.create_guid_miq_server_zone
+      User.current_user = admin_user
+    end
+
+    let(:root_tenant)                    { Tenant.root_tenant }
+    let(:miq_product_feature_everything) { FactoryBot.create(:miq_product_feature_everything) }
+    let(:admin_role)                     { FactoryBot.create(:miq_user_role, :miq_product_features => [miq_product_feature_everything]) }
+    let(:admin_group)                    { FactoryBot.create(:miq_group, :tenant => root_tenant, :miq_user_role => admin_role) }
+    let(:admin_user)                     { FactoryBot.create(:user, :miq_groups => [admin_group]) }
+    let(:custom_attribute_name)          { 'virtual_custom_attribute_attr_1' }
+
+    let!(:custom_attribute_1) { FactoryBot.create(:custom_attribute, :name => "attr_1", :value => 'value_1') }
+    let(:custom_attribute_2)  { FactoryBot.create(:custom_attribute, :name => "attr_1", :value => 'value_2') }
+    let!(:ems_cloud_1)        { FactoryBot.create(:ems_cloud, :name => "nameXXX", :tenant => root_tenant, :custom_attributes => [custom_attribute_1]) }
+    let!(:ems_cloud_2)        { FactoryBot.create(:ems_azure, :name => "nameYYY", :tenant => root_tenant, :custom_attributes => [custom_attribute_2]) }
+
+    it "returns values of database attributes" do
+      expect(MiqExpression::Field.parse("EmsCloud-name").column_values).to match_array(%w[nameXXX nameYYY])
+    end
+
+    it "returns empty array for virtual attributes" do
+      expect(MiqExpression::Field.parse("EmsCloud-emstype").column_values).to be_empty
+    end
+
+    it "returns values of virtual custom attribute" do
+      expect(MiqExpression::Field.parse("EmsCloud-#{custom_attribute_name}").column_values).to match_array(%w[value_1 value_2])
+    end
+
+    context "with restricted user" do
+      let(:root_tenant_vm) { FactoryBot.create(:vm_openstack, :tenant => root_tenant, :miq_group => admin_group) }
+      let(:child_tenant)   { FactoryBot.create(:tenant, :divisible => false, :parent => root_tenant) }
+      let(:child_group)    { FactoryBot.create(:miq_group, :tenant => child_tenant) }
+      let(:child_user)     { FactoryBot.create(:user, :miq_groups => [child_group]) }
+
+      let(:custom_attribute_name)     { 'virtual_custom_attribute_attr_vm' }
+      let(:custom_attribute_root_vm)  { FactoryBot.create(:custom_attribute, :name => "attr_vm", :value => 'value_root') }
+      let(:custom_attribute_child_vm) { FactoryBot.create(:custom_attribute, :name => "attr_vm", :value => 'value_child') }
+
+      let!(:root_vm)  { FactoryBot.create(:vm_openstack, :tenant => root_tenant, :miq_group => admin_group, :custom_attributes => [custom_attribute_root_vm]) }
+      let!(:child_vm) { FactoryBot.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group, :custom_attributes => [custom_attribute_child_vm]) }
+
+      before do
+        Tenant.seed
+        EvmSpecHelper.create_guid_miq_server_zone
+        User.current_user = child_user
+      end
+
+      it "returns values of database attributes" do
+        expect(MiqExpression::Field.parse("Vm-name").column_values).to match_array([child_vm.name])
+
+        User.with_user(admin_user) do
+          expect(MiqExpression::Field.parse("Vm-name").column_values).to match_array([root_vm.name, child_vm.name])
+        end
+      end
+
+      it "returns values of virtual custom attribute" do
+        expect(MiqExpression::Field.parse("Vm-#{custom_attribute_name}").column_values).to match_array(%w[value_child])
+
+        User.with_user(admin_user) do
+          expect(MiqExpression::Field.parse("Vm-#{custom_attribute_name}").column_values).to match_array(%w[value_child value_root])
+        end
+      end
     end
   end
 end
