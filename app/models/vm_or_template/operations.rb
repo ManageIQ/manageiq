@@ -5,7 +5,6 @@ module VmOrTemplate::Operations
   include_concern 'Power'
   include_concern 'Relocation'
   include_concern 'Snapshot'
-  include_concern 'SmartState'
 
   alias_method :ruby_clone, :clone
 
