@@ -335,23 +335,28 @@ class ExtManagementSystem < ApplicationRecord
 
   default_value_for :enabled, true
 
-  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.saved_change_to_enabled? }
-
   # Move ems to maintenance zone and backup current one
   # @param orig_zone [Integer] because of zone of child manager can be changed by parent manager's ensure_managers() callback
   #                            we need to specify original zone for children explicitly
   def pause!(orig_zone = nil)
-    if (orig_zone || zone) == Zone.maintenance_zone
+    previous_zone = orig_zone || zone
+    if previous_zone == Zone.maintenance_zone
       _log.warn("Trying to pause paused EMS [#{name}] id [#{id}]. Skipping.")
       return
     end
 
     _log.info("Pausing EMS [#{name}] id [#{id}].")
-    update!(
-      :zone_before_pause => orig_zone || zone,
-      :zone              => Zone.maintenance_zone,
-      :enabled           => false
-    )
+
+    transaction do
+      all_managers = [self] + child_managers
+      all_managers.each do |ems|
+        ems.update!(
+          :zone_before_pause => previous_zone,
+          :zone              => Zone.maintenance_zone,
+          :enabled           => false
+        )
+      end
+    end
     _log.info("Pausing EMS [#{name}] id [#{id}] successful.")
   end
 
@@ -365,11 +370,17 @@ class ExtManagementSystem < ApplicationRecord
                  zone_before_pause
                end
 
-    update!(
-      :zone_before_pause => nil,
-      :zone              => new_zone,
-      :enabled           => true
-    )
+    transaction do
+      all_managers = [self] + child_managers
+      all_managers.each do |ems|
+        ems.update!(
+          :zone_before_pause => nil,
+          :zone              => new_zone,
+          :enabled           => true
+        )
+      end
+    end
+
     _log.info("Resuming EMS [#{name}] id [#{id}] successful.")
   end
 
@@ -1042,17 +1053,6 @@ class ExtManagementSystem < ApplicationRecord
     self.enabled = false
     save(:validate => validate)
     _log.info("Disabling EMS [#{name}] id [#{id}] successful.")
-  end
-
-  # Child managers went to/from maintenance mode with parent
-  def change_maintenance_for_child_managers
-    child_managers.each do |child_manager|
-      if enabled?
-        child_manager.resume!
-      else
-        child_manager.pause!(zone_before_pause)
-      end
-    end
   end
 
   def build_connection(options = {})
