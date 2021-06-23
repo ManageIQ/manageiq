@@ -253,9 +253,8 @@ class PglogicalSubscription < ActsAsArModel
     # 2) In the global subscriber, create the subscription without a slot but reference the slot name in the prior step.
     # From: https://www.postgresql.org/docs/10/sql-createsubscription.html
     with_remote_connection(5.seconds) do |conn|
-      # TODO: Move this down into logical replication code, perhaps: https://github.com/ManageIQ/pg-logical_replication/blob/master/lib/pg/logical_replication/client.rb
-      # Note, it needs to be aware we're running this against the remote raw_connection and not the configured rails one.
-      conn.exec_query("select pg_create_logical_replication_slot($1, 'pgoutput')", "SQL", [[nil, subscription]])
+      client = PG::LogicalReplication::Client.new(conn.raw_connection)
+      client.create_logical_replication_slot(subscription)
     end
 
     self.class.with_connection_error_handling do
