@@ -13,7 +13,18 @@ class MiqPglogical
   # Note:  Don't use a delegate with this method, since we want the
   # .with_connection_error_handling to wrap this methods
   def subscriber?
-    self.class.with_connection_error_handling { pglogical.subscriber? }
+    # From: https://www.postgresql.org/docs/10/catalog-pg-subscription.html
+    # "Unlike most system catalogs, pg_subscription is shared across all databases of a cluster:
+    # There is only one copy of pg_subscription per cluster, not one per database."
+    #
+    # pglogical.subscriber? defaults to seeing ALL subscriptions in the cluster:
+    #
+    #   This is confusing if the publisher and subscriber db are in the same cluster such as in dev:
+    #     On publisher:  pglogical.subscriber? => true (unexpected)
+    #     On subscriber: pglogical.subscriber? => true (expected)
+    #
+    # Therefore, pass the database_name to ensure only subscrptions created in database_name count for subscriber?
+    self.class.with_connection_error_handling { pglogical.subscriber?(self.class.database_name) }
   end
 
   def provider?
@@ -70,6 +81,10 @@ class MiqPglogical
     MiqRegion.replication_type = :global
     PglogicalSubscription.delete_all(subscriptions_to_remove)
     PglogicalSubscription.save_all!(subscriptions_to_save)
+  end
+
+  def self.database_name
+    pg_connection.db
   end
 
   def self.pg_connection
