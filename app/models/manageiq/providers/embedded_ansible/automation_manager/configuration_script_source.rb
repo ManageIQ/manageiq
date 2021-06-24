@@ -1,6 +1,8 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
   FRIENDLY_NAME = "Embedded Ansible Project".freeze
 
+  virtual_attribute :verify_ssl, :integer
+
   validates :name,       :presence => true # TODO: unique within region?
   validates :scm_type,   :presence => true, :inclusion => { :in => %w[git] }
   validates :scm_branch, :presence => true
@@ -75,7 +77,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   private def ensure_git_repository
     transaction do
-      # puts attrs_for_sync_git_repository.inspect
       repo = GitRepository.create!(attrs_for_sync_git_repository)
       if new_record?
         self.git_repository_id = repo.id
