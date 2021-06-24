@@ -77,7 +77,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   private def ensure_git_repository
     transaction do
-      # puts attrs_for_sync_git_repository.inspect
       repo = GitRepository.create!(attrs_for_sync_git_repository)
       if new_record?
         self.git_repository_id = repo.id
