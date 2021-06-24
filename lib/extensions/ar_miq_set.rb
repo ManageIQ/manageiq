@@ -132,6 +132,8 @@ module ActsAsMiqSet
   alias remove_all_children remove_all_members
 
   def add_members(*members)
+    added = []
+
     transaction do
       existing = miq_set_memberships.index_by { |ms| [ms.member_type, ms.member_id] }
 
@@ -140,8 +142,11 @@ module ActsAsMiqSet
         next if existing.include?([member.class.base_class.name, member.id])
 
         miq_set_memberships.create!(:member => member)
+        added << member
       end
     end
+
+    added
   end
   alias add_children add_members
   alias add_member add_members
