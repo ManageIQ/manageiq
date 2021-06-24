@@ -1,6 +1,8 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
   FRIENDLY_NAME = "Embedded Ansible Project".freeze
 
+  virtual_attribute :verify_ssl, :integer
+
   validates :name,       :presence => true # TODO: unique within region?
   validates :scm_type,   :presence => true, :inclusion => { :in => %w[git] }
   validates :scm_branch, :presence => true
