@@ -355,6 +355,16 @@ class ExtManagementSystem < ApplicationRecord
     _log.info("Pausing EMS [#{name}] id [#{id}] successful.")
   end
 
+  def pause_queue!(priority: MiqQueue::NORMAL_PRIORITY)
+    MiqQueue.put(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "pause!",
+      :priority    => priority,
+      :zone        => my_zone
+    )
+  end
+
   # Move ems to original zone, reschedule task/jobs/.. collected during maintenance
   def resume!
     _log.info("Resuming EMS [#{name}] id [#{id}].")
@@ -686,17 +696,25 @@ class ExtManagementSystem < ApplicationRecord
     find(Array.wrap(ids)).map(&:destroy_queue)
   end
 
-  def destroy_queue
+  def destroy_queue(queue_options = {})
     msg = "Queuing destroy of #{self.class.name} with id: #{id}"
 
     _log.info(msg)
+
+    # Before we queue the `#destroy` pause the provider to prevent a provider in
+    # a bad state from filling up the queue preventing the `#destroy` from being
+    # processed.
+    pause_queue!(:priority => MiqQueue::HIGH_PRIORITY)
+
     task = MiqTask.create(
       :name    => "Destroying #{self.class.name} with id: #{id}",
       :state   => MiqTask::STATE_QUEUED,
       :status  => MiqTask::STATUS_OK,
-      :message => msg,
+      :message => msg
     )
-    self.class._queue_task('destroy', [id], task.id)
+
+    orchestrate_destroy_queue(task.id, queue_options)
+
     task.id
   end
 
@@ -720,8 +738,14 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  def destroy(task_id = nil)
-    disable!(:validate => false) if enabled?
+  def orchestrate_destroy_queue(task_id, queue_options = {})
+    self.class._queue_task('orchestrate_destroy', [id], task_id, queue_options)
+  end
+
+  def orchestrate_destroy(task_id = nil)
+    # If the provider hasn't been disabled yet by the high-priority pause! queue method
+    # requeue the destroy operation to be run later.
+    return orchestrate_destroy_queue(task_id, :deliver_on => 1.minute.from_now.utc) if enabled?
 
     # Async kill each ems worker and wait until their row is removed before we delete
     # the ems/managers to ensure a worker doesn't recreate the ems/manager.
@@ -729,15 +753,15 @@ class ExtManagementSystem < ApplicationRecord
     wait_for_ems_workers_removal
 
     _log.info("Destroying #{child_managers.count} child_managers")
-    child_managers.destroy_all
+    child_managers.each(&:orchestrate_destroy)
 
-    super().tap do
-      if task_id
-        msg = "#{self.class.name} with id: #{id} destroyed"
-        MiqTask.update_status(task_id, MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, msg)
-        _log.info(msg)
-      end
-    end
+    destroy
+
+    return if task_id.blank?
+
+    msg = "#{self.class.name} with id: #{id} destroyed"
+    MiqTask.update_status(task_id, MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, msg)
+    _log.info(msg)
   end
 
   def disconnect_inv
