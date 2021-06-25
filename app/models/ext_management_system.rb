@@ -955,13 +955,16 @@ class ExtManagementSystem < ApplicationRecord
   alias_method :perf_capture_enabled, :perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
-  ###################################
-  # Event Monitor
-  ###################################
-
+  # Some workers hold open a connection to the provider and thus do not
+  # automatically pick up authentication changes.  These workers have to be
+  # restarted manually for the new credentials to be used.
   def after_update_authentication
     stop_event_monitor_queue_on_credential_change
   end
+
+  ###################################
+  # Event Monitor
+  ###################################
 
   def self.event_monitor_class
     nil
@@ -1018,6 +1021,59 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.blacklisted_events
     BlacklistedEvent.where(:provider_model => name, :ems_id => nil)
+  end
+
+  ###################################
+  # Refresh Worker
+  ###################################
+
+  def self.refresh_worker_class
+    nil
+  end
+  delegate :refresh_worker_class, :to => :class
+
+  def refresh_worker
+    return if refresh_worker_class.nil?
+
+    refresh_worker_class.find_by_ems(self).first
+  end
+
+  def start_refresh_worker
+    return if refresh_worker_class.nil?
+
+    refresh_worker_class.start_worker_for_ems(self)
+  end
+
+  def stop_refresh_worker
+    return if refresh_worker_class.nil?
+
+    _log.info("EMS [#{name}] id [#{id}]: Stopping Refresh Worker.")
+    refresh_worker_class.stop_worker_for_ems(self)
+  end
+
+  def stop_refresh_worker_queue
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :method_name => "stop_refresh_worker",
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :zone        => my_zone,
+      :role        => "event"
+    )
+  end
+
+  def stop_refresh_worker_queue_on_change
+    if refresh_worker_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+      _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Refresh Worker.  It will be restarted by the WorkerMonitor.")
+      stop_refresh_worker_queue
+    end
+  end
+
+  def stop_refresh_worker_queue_on_credential_change
+    if refresh_worker_class && !self.new_record? && self.credentials_changed?
+      _log.info("EMS: [#{name}], Credentials have changed, stopping Refresh Worker.  It will be restarted by the WorkerMonitor.")
+      stop_refresh_worker_queue
+    end
   end
 
   # @return [Boolean] true if a datastore exists for this type of ems
