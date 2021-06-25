@@ -1,0 +1,21 @@
+[Unit]
+Description=ManageIQ
+After=syslog.target memcached.service
+Wants=memcached.service
+PartOf=manageiq.target
+
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+EnvironmentFile=/etc/default/manageiq*.properties
+ExecStart=/bin/sh -c "/bin/evmserver.sh start"
+ExecStop=/bin/sh -c "/bin/evmserver.sh stop"
+Group=manageiq
+UMask=0002
+Type=forking
+Restart=on-failure
+KillMode=process
+Slice=manageiq.slice
+
+[Install]
+WantedBy=multi-user.target
+Alias=evmserverd.service
