@@ -63,7 +63,7 @@ class CloudSubnet < ApplicationRecord
 
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'raw_delete_cloud_subnet',
+      :method_name => 'delete_cloud_subnet',
       :instance_id => id,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
