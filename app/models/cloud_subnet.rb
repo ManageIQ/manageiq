@@ -55,6 +55,24 @@ class CloudSubnet < ApplicationRecord
     ext_management_system && ext_management_system.class::CloudSubnet
   end
 
+  def delete_cloud_subnet_queue(userid)
+    task_opts = {
+      :action => "deleting Cloud Subnet for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'raw_delete_cloud_subnet',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def delete_cloud_subnet
     raw_delete_cloud_subnet
   end
