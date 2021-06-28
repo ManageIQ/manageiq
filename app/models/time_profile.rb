@@ -71,7 +71,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def days
-    profile[:days]
+    profile["days"] || profile[:days]
   end
 
   def days=(arr)
@@ -81,7 +81,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def hours
-    profile[:hours]
+    profile["hours"] || profile[:hours]
   end
 
   def hours=(arr)
@@ -91,7 +91,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def entire_tz?
-    days.sort == ALL_DAYS && hours.sort == ALL_HOURS
+    days.sort == ALL_DAYS && hours.sort == ALL_HOURS if !days.nil? && !hours.nil?
   end
 
   def default?
