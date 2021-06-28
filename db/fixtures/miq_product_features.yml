@@ -1537,6 +1537,11 @@
         :feature_type: admin
         :hidden: true
         :identifier: view_tabular
+      - :name: View Data
+        :description: Show Report Data
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_data
       - :name: Download CSV Format
         :description: Download Report in CSV Format
         :feature_type: admin
