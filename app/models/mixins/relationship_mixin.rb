@@ -622,19 +622,22 @@ module RelationshipMixin
   alias_method :add_child, :add_children
 
   def parent=(parent)
-    if use_ancestry?
-      call_ancestry_method(:parent=, parent)
-      return
-    end
-
     if parent.nil?
-      remove_all_parents
+      if use_ancestry?
+        call_ancestry_method(:parent=, parent)
+      else
+        remove_all_parents
+      end
     else
       parent.with_relationship_type(relationship_type) do
-        parent_rel = parent.init_relationship
-        init_relationship(parent_rel)  # TODO: Deal with any multi-instances
+        if use_ancestry?
+          call_ancestry_method(:parent=, parent)
+        else
+          parent_rel = parent.init_relationship
+          init_relationship(parent_rel) # TODO: Deal with any multi-instances
 
-        parent.clear_relationships_cache
+          parent.clear_relationships_cache
+        end
       end
     end
 
@@ -769,7 +772,12 @@ module RelationshipMixin
 
   # this allows us to call similarly named ancestry or mixin methods
   def call_ancestry_method(method_name, *args)
-    bound_method = ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::InstanceMethods.instance_method(method_name)).bind(self)
+    bound_method = if Ancestry::MaterializedPath::InstanceMethods.public_instance_methods.include?(method_name)
+                     ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::MaterializedPath::InstanceMethods.instance_method(method_name)).bind(self)
+                   else
+                     ((@ancestry_method ||= {})[method_name] ||= ::Ancestry::InstanceMethods.instance_method(method_name)).bind(self)
+                   end
+
     args.empty? ? bound_method.call : bound_method.call(*args)
   end
 end
