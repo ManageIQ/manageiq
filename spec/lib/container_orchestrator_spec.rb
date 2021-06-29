@@ -103,6 +103,24 @@ RSpec.describe ContainerOrchestrator do
         {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef => {:key => "username", :name => "postgresql-secrets"}}},
       )
     end
+
+    it "doesn't include memcached env vars by default" do
+      env = subject.send(:default_environment)
+
+      expect(env).not_to include(hash_including(:name => "MEMCACHED_ENABLE_SSL"))
+      expect(env).not_to include(hash_including(:name => "MEMCACHED_SSL_CA"))
+    end
+
+    context "when MESSAGING_TYPE is set" do
+      before { stub_const("ENV", ENV.to_h.merge("MEMCACHED_ENABLE_SSL" => "true", "MEMCACHED_SSL_CA" => "/etc/pki/ca-trust/source/anchors/root.crt")) }
+
+      it "sets the messaging env vars" do
+        expect(subject.send(:default_environment)).to include(
+          {:name => "MEMCACHED_ENABLE_SSL", :value => "true"},
+          {:name => "MEMCACHED_SSL_CA",     :value => "/etc/pki/ca-trust/source/anchors/root.crt"},
+        )
+      end
+    end
   end
 
   context "#deployment_definition (private)" do
@@ -133,6 +151,28 @@ RSpec.describe ContainerOrchestrator do
           :secretName => "postgresql-secrets",
           :items      => [
             :key  => "rootcertificate",
+            :path => "root.crt",
+          ],
+        }
+      )
+    end
+
+    it "mounts the root CA certificate for memcached" do
+      stub_const("ENV", ENV.to_h.merge("MEMCACHED_SSL_CA" => "/etc/pki/ca-trust/source/anchors/root.crt"))
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+        :mountPath => "/etc/pki/ca-trust/source/anchors",
+        :name      => "internal-root-certificate",
+        :readOnly  => true
+      )
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+        :name   => "internal-root-certificate",
+        :secret => {
+          :secretName => "internal-certificates-secret",
+          :items      => [
+            :key  => "root_crt",
             :path => "root.crt",
           ],
         }
