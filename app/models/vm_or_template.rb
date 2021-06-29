@@ -234,6 +234,8 @@ class VmOrTemplate < ApplicationRecord
     'vmsafe.failOpen'     => [:vmsafe_fail_open,     :boolean],
     'vmsafe.immutableVM'  => [:vmsafe_immutable_vm,  :boolean],
     'vmsafe.timeoutMS'    => [:vmsafe_timeout_ms,    :integer],
+    'entitled_processors' => [:entitled_processors,  :float],
+    'processor_type'      => [:processor_share_type, :string],
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|
     define_method(m) do
@@ -243,6 +245,7 @@ class VmOrTemplate < ApplicationRecord
       return case t
              when :boolean then ActiveRecord::ConnectionAdapters::Column.value_to_boolean(as.value)
              when :integer then as.value.to_i
+             when :float then as.value.to_f
              else as.value.to_s
              end
     end
