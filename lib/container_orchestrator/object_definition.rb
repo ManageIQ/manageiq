@@ -110,7 +110,7 @@ class ContainerOrchestrator
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "ENCRYPTION_KEY",          :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}
-      ] + database_environment + messaging_environment
+      ] + database_environment + memcached_environment + messaging_environment
     end
 
     def database_environment
@@ -121,6 +121,15 @@ class ContainerOrchestrator
         {:name => "DATABASE_NAME",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "dbname"}}},
         {:name => "DATABASE_PASSWORD", :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "password"}}},
         {:name => "DATABASE_USER",     :valueFrom => {:secretKeyRef=>{:name => "postgresql-secrets", :key => "username"}}},
+      ]
+    end
+
+    def memcached_environment
+      return [] unless ENV["MEMCACHED_ENABLE_SSL"].present?
+
+      [
+        {:name => "MEMCACHED_ENABLE_SSL", :value => ENV["MEMCACHED_ENABLE_SSL"]},
+        {:name => "MEMCACHED_SSL_CA",     :value => ENV["MEMCACHED_SSL_CA"]},
       ]
     end
 
