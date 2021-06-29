@@ -47,6 +47,27 @@ class ContainerOrchestrator
             }
           ]
         end
+      end.tap do |deployment|
+        if ENV["SSL_SECRET_NAME"].present?
+          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] ||= []
+          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] << {
+            :mountPath => "/etc/pki/ca-trust/source/anchors",
+            :name      => "internal-root-certificate",
+            :readOnly  => true,
+          }
+
+          deployment[:spec][:template][:spec][:volumes] ||= []
+          deployment[:spec][:template][:spec][:volumes] << {
+            :name   => "internal-root-certificate",
+            :secret => {
+              :secretName => ENV["SSL_SECRET_NAME"],
+              :items      => [
+                :key  => "root_crt",
+                :path => "root.crt",
+              ],
+            }
+          }
+        end
       end
     end
 
