@@ -234,8 +234,8 @@ class VmOrTemplate < ApplicationRecord
     'vmsafe.failOpen'     => [:vmsafe_fail_open,     :boolean],
     'vmsafe.immutableVM'  => [:vmsafe_immutable_vm,  :boolean],
     'vmsafe.timeoutMS'    => [:vmsafe_timeout_ms,    :integer],
+    'entitled_processors' => [:entitled_processors,  :float],
     'processor_type'      => [:processor_share_type, :string],
-    'entitled_processors' => [:entitled_processors, :float],
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|
     define_method(m) do
