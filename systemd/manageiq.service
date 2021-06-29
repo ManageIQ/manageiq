@@ -1,0 +1,16 @@
+[Unit]
+Description=ManageIQ
+After=syslog.target
+PartOf=manageiq.target
+
+[Service]
+ExecStart=/bin/sh -c "/bin/evmserver.sh start"
+ExecStop=/bin/sh -c "/bin/evmserver.sh stop"
+Type=forking
+Restart=on-failure
+KillMode=process
+Slice=manageiq.slice
+
+[Install]
+WantedBy=multi-user.target
+Alias=evmserverd.service

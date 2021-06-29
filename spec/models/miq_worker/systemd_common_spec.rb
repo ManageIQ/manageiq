@@ -3,9 +3,8 @@ RSpec.describe MiqWorker::SystemdCommon do
     before { MiqWorkerType.seed }
 
     it "every worker has a matching systemd target and service file", :providers_common => true do
-      expected_units = (Vmdb::Plugins.systemd_units + Rails.root.join("systemd").glob("*.*")).map(&:basename).map(&:to_s)
-
-      expected_units.delete("manageiq.target")
+      all_systemd_unit_files = Vmdb::Plugins.systemd_units + Rails.root.join("systemd").glob("*.*")
+      expected_units         = all_systemd_unit_files.map(&:basename).map(&:to_s) - %w[manageiq.service manageiq.target]
 
       found_units = MiqWorkerType.worker_class_names.flat_map do |klass_name|
         klass = klass_name.constantize
