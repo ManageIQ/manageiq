@@ -119,14 +119,18 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def deliver_message(msg)
-    return deliver_queue_message(msg)         if msg.kind_of?(MiqQueue)
-    return process_miq_messaging_message(msg) if msg.kind_of?(ManageIQ::Messaging::ReceivedMessage)
-    return process_message(msg)               if msg.kind_of?(String)
-
-    _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
-    raise _("%{log} Message <%{message}> is of unknown type <%{type}>") % {:log     => log_prefix,
-                                                                           :message => msg.inspect,
-                                                                           :type    => msg.class}
+    case msg
+    when MiqQueue
+      deliver_queue_message(msg)
+    when ManageIQ::Messaging::ReceivedMessage
+      process_miq_messaging_message(msg)
+    when String
+      process_message(msg)
+    else
+      _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
+      raise _("%{log} Message <%{message}> is of unknown type <%{type}>") %
+            {:log => log_prefix, :message => msg.inspect, :type => msg.class}
+    end
   end
 
   def do_work
