@@ -6,7 +6,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def sync_dequeue_method
+    previous_dequeue_method = @dequeue_method
     @dequeue_method = (worker_settings[:dequeue_method] || :sql).to_sym
+
+    dequeue_method_changed(previous_dequeue_method) if @dequeue_method != previous_dequeue_method
   end
 
   def dequeue_method_via_drb?
@@ -15,6 +18,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def dequeue_method_via_miq_messaging?
     @dequeue_method == :miq_messaging && miq_messaging_dequeue_available?
+  end
+
+  def dequeue_method_changed(previous_dequeue_method)
+    @listener_thread&.kill if previous_dequeue_method == :miq_messaging
   end
 
   def get_message_via_drb
