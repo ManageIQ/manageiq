@@ -7,8 +7,6 @@ class TimeProfile < ApplicationRecord
   default_value_for :days,  ALL_DAYS
   default_value_for :hours, ALL_HOURS
 
-  validates :description, :presence => true, :uniqueness_when_changed => true
-
   has_many  :miq_reports
   has_many  :metric_rollups
 

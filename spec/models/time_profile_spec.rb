@@ -4,11 +4,6 @@ RSpec.describe TimeProfile do
     @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)
   end
 
-  it 'requires description attribute to be unique' do
-    FactoryBot.create(:time_profile, :description => 'Name')
-    expect(FactoryBot.create(:time_profile, :description => 'Name')).to raise_error(ActiveRecord::RecordInvalid)
-  end
-
   it "will default to the correct profile values" do
     t = TimeProfile.new
     expect(t.days).to eq(TimeProfile::ALL_DAYS)
