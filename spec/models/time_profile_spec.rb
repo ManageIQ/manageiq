@@ -4,11 +4,113 @@ RSpec.describe TimeProfile do
     @ems    = FactoryBot.create(:ems_vmware, :zone => @server.zone)
   end
 
+  it 'requires description attribute to be unique' do
+    FactoryBot.create(:time_profile, :description => 'Name')
+    expect(FactoryBot.create(:time_profile, :description => 'Name')).to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it "will default to the correct profile values" do
     t = TimeProfile.new
     expect(t.days).to eq(TimeProfile::ALL_DAYS)
     expect(t.hours).to eq(TimeProfile::ALL_HOURS)
     expect(t.tz).to be_nil
+  end
+
+  describe "Test profile= with days" do
+    let(:time_profile) { FactoryBot.create(:time_profile) }
+    before { time_profile.profile = data }
+
+    context "with symbol keys" do
+      let(:data) { {:days => [0, 1, 2, 3]} }
+      it "returns the correct days" do
+        expect(time_profile.days).to eq([0, 1, 2, 3])
+      end
+    end
+
+    context "with string keys" do
+      let(:data) { {"days" => [0, 1, 2, 3]} }
+      it "returns the correct days" do
+        expect(time_profile.days).to eq([0, 1, 2, 3])
+      end
+    end
+  end
+
+  describe "Test profile= with hours" do
+    let(:time_profile) { FactoryBot.create(:time_profile) }
+    before { time_profile.profile = data }
+
+    context "with symbol keys" do
+      let(:data) { {:hours => [0, 1, 2, 3]} }
+      it "returns the correct days" do
+        expect(time_profile.hours).to eq([0, 1, 2, 3])
+      end
+    end
+
+    context "with string keys" do
+      let(:data) { {"hours" => [0, 1, 2, 3]} }
+      it "returns the correct days" do
+        expect(time_profile.hours).to eq([0, 1, 2, 3])
+      end
+    end
+  end
+
+  describe "Test profile=" do
+    let(:time_profile) { FactoryBot.create(:time_profile) }
+    before { time_profile.profile = data }
+
+    context "with symbol keys" do
+      let(:data) do
+        {
+          :days  => [0, 1, 2, 3, 4],
+          :hours => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23]
+        }
+      end
+      it "returns the correct profile" do
+        expect(time_profile.days).to eq([0, 1, 2, 3, 4])
+        expect(time_profile.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+      end
+    end
+
+    context "with string keys" do
+      let(:data) do
+        {
+          "days"  => [0, 1, 2, 3, 4],
+          "hours" => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23]
+        }
+      end
+      it "returns the correct profile" do
+        expect(time_profile.days).to eq([0, 1, 2, 3, 4])
+        expect(time_profile.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+      end
+    end
+  end
+
+  it "will correctly read the non default initial values" do
+    tp = FactoryBot.create(
+      :time_profile,
+      :description => 'Test1',
+      :days        => [0, 1, 2, 3, 4],
+      :hours       => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23],
+      :tz          => 'Alaska'
+    )
+    expect(tp.description).to eq('Test1')
+    expect(tp.days).to eq([0, 1, 2, 3, 4])
+    expect(tp.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+    expect(tp.tz).to eq('Alaska')
+  end
+
+  it "will correctly read the non default edited values" do
+    tp = FactoryBot.create(:time_profile)
+    tp.update(
+      :description => 'Test2',
+      :days        => [0, 1, 2, 3, 4],
+      :hours       => [0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23],
+      :tz          => 'Hawaii'
+    )
+    expect(tp.description).to eq('Test2')
+    expect(tp.days).to eq([0, 1, 2, 3, 4])
+    expect(tp.hours).to eq([0, 1, 2, 5, 6, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23])
+    expect(tp.tz).to eq('Hawaii')
   end
 
   describe "#default?" do
