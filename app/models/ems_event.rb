@@ -25,7 +25,7 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    if MiqQueue.messaging_type == "miq_queue" && !syndicate_events?
+    if MiqQueue.messaging_type == "miq_queue"
       MiqQueue.submit_job(
         :service     => "event",
         :target_id   => ems_id,
@@ -34,7 +34,12 @@ class EmsEvent < EventStream
         :args        => [event]
       )
     else
-      publish_event(ems_id, event)
+      MiqQueue.messaging_client('event_handler')&.publish_topic(
+        :service => MiqEventHandler.default_queue_name,
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
     end
   end
 
@@ -55,6 +60,9 @@ class EmsEvent < EventStream
     new_event = create_event(event_hash)
     # Create a 'completed task' event if this is the last in a series of events
     create_completed_event(event_hash) if task_final_events.key?(event_type.to_sym)
+
+    syndicate_event(ems_id, event_hash) if syndicate_events?
+
     new_event
   end
 
@@ -191,13 +199,8 @@ class EmsEvent < EventStream
   end
   private_class_method :event_allowed_ems_ref_keys
 
-  def self.event_blacklisted_keys
-    %w[ems_uid ems_type]
-  end
-  private_class_method :event_blacklisted_keys
-
   def self.create_event(event)
-    event.delete_if { |k,| event_blacklisted_keys.include?(k) || (k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s)) }
+    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       :event_type  => event[:event_type],
@@ -272,7 +275,7 @@ class EmsEvent < EventStream
 
   private_class_method :create_completed_event
 
-  def self.publish_event(ems_id, event)
+  private_class_method def self.syndicate_event(ems_id, event)
     ems = ExtManagementSystem.find(ems_id)
     event[:ems_uid]  = ems&.uid_ems
     event[:ems_type] = ems&.class&.ems_type
@@ -287,8 +290,6 @@ class EmsEvent < EventStream
     _log.warn("Failed to publish event [#{ems_id}] [#{event[:event_type]}]: #{err}")
     _log.log_backtrace(err)
   end
-
-  private_class_method :publish_event
 
   private_class_method def self.syndicate_events?
     Settings.event_streams.syndicate_events && MiqQueue.messaging_type != "miq_queue"

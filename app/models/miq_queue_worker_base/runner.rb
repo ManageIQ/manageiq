@@ -78,7 +78,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     @listener_thread = nil if @listener_thread && !@listener_thread.alive?
     @listener_thread ||= Thread.new do
       MiqQueue.messaging_client(self.class.name)
-              .subscribe_topic(:service => self.class.miq_messaging_service, :persist_ref => @worker.guid) do |msg|
+              .subscribe_topic(:service => @worker.queue_name, :persist_ref => @worker.guid) do |msg|
         @message_queue << msg
       end
     end
