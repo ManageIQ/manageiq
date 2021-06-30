@@ -96,5 +96,21 @@ module ManageIQ::Providers
       name.gsub!(" #{self::PROVIDER_NAME}", "")
       includes(:parent_manager).find_by(:parent_managers_ext_management_systems => {:name => name})
     end
+
+    def create_cloud_subnet_queue(userid, options = {})
+      task_opts = {
+        :action => "creating Cloud Subnet for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'create_cloud_subnet',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :zone        => my_zone,
+        :args        => [options]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
   end
 end
