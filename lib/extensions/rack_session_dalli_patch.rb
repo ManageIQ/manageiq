@@ -4,7 +4,7 @@ require "rack/session/dalli"
 module RackSessionDalliPatch
   def delete_sessions(session_ids)
     session_ids.each do |session_id|
-      destroy_session(ManageIQ::Session.fake_request, session_id, :drop => true)
+      destroy_session(ManageIQ::Session.fake_request.env, session_id, :drop => true)
     end
   end
 

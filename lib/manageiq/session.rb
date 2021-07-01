@@ -68,7 +68,7 @@ module ManageIQ
     # Create a new one each time instead of memoizing to avoid data getting
     # attached to the request hash (env).
     def self.fake_request
-      FakeRequest.new({})
+      FakeRequest.new({'rack.multithread' => true})
     end
 
     # :nodoc:
