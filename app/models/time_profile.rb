@@ -57,6 +57,10 @@ class TimeProfile < ApplicationRecord
     super || (self.profile = {})
   end
 
+  def profile=(value)
+    super(value&.symbolize_keys)
+  end
+
   def tz
     profile[:tz]
   end
@@ -68,10 +72,6 @@ class TimeProfile < ApplicationRecord
 
   def tz_or_default(default_tz = DEFAULT_TZ)
     tz || default_tz
-  end
-
-  def profile=(value)
-    super(value&.symbolize_keys)
   end
 
   def days
