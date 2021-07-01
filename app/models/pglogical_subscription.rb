@@ -252,8 +252,7 @@ class PglogicalSubscription < ActsAsArModel
     # 1) In the remote publisher, create a logical replication slot with unique slot name and 'pgoutput' plugin name.
     # 2) In the global subscriber, create the subscription without a slot but reference the slot name in the prior step.
     # From: https://www.postgresql.org/docs/10/sql-createsubscription.html
-    with_remote_connection(5.seconds) do |conn|
-      client = PG::LogicalReplication::Client.new(conn.raw_connection)
+    with_remote_pglogical_client do |client|
       client.create_logical_replication_slot(subscription)
     end
 
@@ -291,6 +290,12 @@ class PglogicalSubscription < ActsAsArModel
     find_password
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout) do |conn|
       yield conn
+    end
+  end
+
+  def with_remote_pglogical_client(connect_timeout = 0)
+    with_remote_connection(connect_timeout) do |conn|
+      yield PG::LogicalReplication::Client.new(conn.raw_connection)
     end
   end
 
