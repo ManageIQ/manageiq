@@ -70,6 +70,10 @@ class TimeProfile < ApplicationRecord
     tz || default_tz
   end
 
+  def profile=(value)
+    super(value&.symbolize_keys)
+  end
+
   def days
     profile[:days]
   end
@@ -91,7 +95,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def entire_tz?
-    days.sort == ALL_DAYS && hours.sort == ALL_HOURS
+    days&.sort == ALL_DAYS && hours&.sort == ALL_HOURS
   end
 
   def default?
