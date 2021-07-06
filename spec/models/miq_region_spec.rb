@@ -286,4 +286,19 @@ RSpec.describe MiqRegion do
       expect(region.remote_ws_miq_server).to be_nil
     end
   end
+
+  context ".destroy_region" do
+    let!(:regionA)      { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number + 1) }
+    let!(:regionB)      { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number + 2) }
+    let!(:vm_regionA)   { FactoryBot.create(:vm_vmware, :id => ApplicationRecord.id_in_region(1, regionA.region)) }
+    let!(:vm_regionB)   { FactoryBot.create(:vm_vmware, :id => ApplicationRecord.id_in_region(1, regionB.region)) }
+    let!(:host_regionA) { FactoryBot.create(:host_vmware, :id => ApplicationRecord.id_in_region(1, regionA.region)) }
+    let!(:host_regionB) { FactoryBot.create(:host_vmware, :id => ApplicationRecord.id_in_region(1, regionB.region)) }
+
+    it "removes target region's rows" do
+      described_class.destroy_region(ApplicationRecord.connection, regionB.region, %w[hosts vms])
+      expect(Host.all.pluck(:id)).to match_array([vm_regionA.id])
+      expect(Vm.all.pluck(:id)).to match_array([vm_regionA.id])
+    end
+  end
 end
