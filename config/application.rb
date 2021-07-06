@@ -103,9 +103,6 @@ module Vmdb
     #
     config.autoload_paths << Rails.root.join("app", "models", "aliases").to_s
     config.autoload_paths << Rails.root.join("app", "models", "mixins").to_s
-    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models").to_s
-    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models", "mixins").to_s
-    config.autoload_paths << Rails.root.join("app", "controllers", "mixins").to_s
     config.autoload_paths << Rails.root.join("lib").to_s
     config.autoload_paths << Rails.root.join("lib", "services").to_s
 
