@@ -193,6 +193,8 @@ RSpec.describe PglogicalSubscription do
         allow(pglogical).to receive(:create_subscription).and_return(double(:check => nil))
         allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
         allow(sub).to receive(:remote_region_number).and_return(remote_region1)
+        expect(MiqRegion).to receive(:destroy_region)
+          .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
       end
 
       it "doesn't queue a message to restart the failover monitor service when passed 'false'" do
@@ -218,6 +220,8 @@ RSpec.describe PglogicalSubscription do
       with_no_records
       allow(pglogical).to receive(:create_subscription).and_return(double(:check => nil))
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      expect(MiqRegion).to receive(:destroy_region)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       allow(sub).to receive(:remote_region_number).and_return(remote_region1)
@@ -229,6 +233,8 @@ RSpec.describe PglogicalSubscription do
       with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
+      expect(MiqRegion).to receive(:destroy_region)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), 2)
 
       dsn = {
         :host     => "test-2.example.com",
@@ -295,6 +301,7 @@ RSpec.describe PglogicalSubscription do
       with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3)
+      expect(MiqRegion).to receive(:destroy_region).exactly(2).times
 
       dsn2 = {
         :host     => "test-2.example.com",
@@ -322,6 +329,7 @@ RSpec.describe PglogicalSubscription do
       with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3, 4, 4)
+      expect(MiqRegion).to receive(:destroy_region).exactly(3).times
 
       expect(pglogical).to receive(:create_subscription).ordered.and_raise(PG::Error.new("Error one"))
       dsn3 = {
@@ -358,6 +366,8 @@ RSpec.describe PglogicalSubscription do
 
     it "doesn't queue a failover monitor restart when passed false" do
       allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
+      expect(MiqRegion).to receive(:destroy_region)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
 
       expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true)
       expect(MiqQueue.where(:method_name => "restart_failover_monitor_service")).to be_empty
