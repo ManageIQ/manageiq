@@ -178,9 +178,15 @@ class DescendantLoader
 
     def save_cache!
       return unless @cache_dirty
-      cache_path.parent.mkpath
-      cache_path.open('w') do |f|
-        YAML.dump(cache, f)
+
+      # Don't write sti_loader.yml in production, this shouldn't change from what is in the RPM
+      if Rails.env.production?
+        $stderr.puts "\nSTI cache is out of date in production, check that source files haven't been modified"
+      else
+        cache_path.parent.mkpath
+        cache_path.open('w') do |f|
+          YAML.dump(cache, f)
+        end
       end
     end
 
