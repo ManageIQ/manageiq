@@ -242,8 +242,22 @@ class PglogicalSubscription < ActsAsArModel
 
   def create_subscription
     MiqRegion.destroy_region(connection, remote_region_number)
+
+    # new_subscription_name also queries the remote, so we fetch it early to avoid a nested remote query
+    subscription = new_subscription_name
+
+    # Unless specified, CREATE subscription will create the subscription in the local database and use the subscription information to create the replication slot automatically in the publisher.
+    # This works great for publisher and subscriber databases in different clusters but hangs if they are in the same cluster.
+    # To workaround this for all situations:
+    # 1) In the remote publisher, create a logical replication slot with unique slot name and 'pgoutput' plugin name.
+    # 2) In the global subscriber, create the subscription without a slot but reference the slot name in the prior step.
+    # From: https://www.postgresql.org/docs/10/sql-createsubscription.html
+    with_remote_pglogical_client do |client|
+      client.create_logical_replication_slot(subscription)
+    end
+
     self.class.with_connection_error_handling do
-      pglogical.create_subscription(new_subscription_name, conn_info_hash, [MiqPglogical::PUBLICATION_NAME]).check
+      pglogical.create_subscription(subscription, conn_info_hash, [MiqPglogical::PUBLICATION_NAME], {'enabled' => true, 'create_slot' => false, 'slot_name' => subscription}).check
     end
     self
   end
@@ -276,6 +290,12 @@ class PglogicalSubscription < ActsAsArModel
     find_password
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql", connect_timeout) do |conn|
       yield conn
+    end
+  end
+
+  def with_remote_pglogical_client(connect_timeout = 0)
+    with_remote_connection(connect_timeout) do |conn|
+      yield PG::LogicalReplication::Client.new(conn.raw_connection)
     end
   end
 
