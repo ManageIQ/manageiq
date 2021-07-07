@@ -144,13 +144,6 @@ class MiqRegion < ApplicationRecord
   end
 
   def self.replication_type
-    # From: https://www.postgresql.org/docs/10/catalog-pg-subscription.html
-    # "Unlike most system catalogs, pg_subscription is shared across all databases of a cluster:
-    # There is only one copy of pg_subscription per cluster, not one per database."
-    #
-    # If replication is enabled between databases in the same cluster, such as in development, we
-    # need to check if the current database has a publication first as global_replication_type?
-    # will be true in each database of the cluster.
     if remote_replication_type?
       :remote
     elsif global_replication_type?

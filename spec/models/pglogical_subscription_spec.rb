@@ -187,7 +187,12 @@ RSpec.describe PglogicalSubscription do
 
   describe "#save!" do
     context "failover monitor reloading" do
-      let(:sub) { described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234") }
+      let(:sub) do
+        s = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+        allow(s).to receive(:with_remote_pglogical_client).and_yield(double(:client).as_null_object)
+        s
+      end
+
       before do
         with_no_records
         allow(pglogical).to receive(:create_subscription).and_return(double(:check => nil))
@@ -225,6 +230,7 @@ RSpec.describe PglogicalSubscription do
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       allow(sub).to receive(:remote_region_number).and_return(remote_region1)
+      allow(sub).to receive(:with_remote_pglogical_client).and_yield(double(:client).as_null_object)
 
       expect { sub.save! }.not_to raise_error
     end
@@ -241,9 +247,13 @@ RSpec.describe PglogicalSubscription do
         :user     => "root",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq']).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn, ['miq'], {"create_slot" => false, "enabled" => true, "slot_name" => "region_2_subscription"}).and_return(double(:check => nil))
 
       sub = described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+
+      client = double(:client)
+      expect(client).to receive(:create_logical_replication_slot)
+      allow(sub).to receive(:with_remote_pglogical_client).and_yield(client)
       allow(sub).to receive(:assert_different_region!)
 
       sub.save!
@@ -308,19 +318,22 @@ RSpec.describe PglogicalSubscription do
         :user     => "root",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn2, ['miq']).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_2_subscription", dsn2, ['miq'], {"create_slot" => false, "enabled" => true, "slot_name" => "region_2_subscription"}).and_return(double(:check => nil))
 
       dsn3 = {
         :host     => "test-3.example.com",
         :user     => "miq",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).with("region_3_subscription", dsn3, ['miq']).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).with("region_3_subscription", dsn3, ['miq'], {"create_slot" => false, "enabled" => true, "slot_name" => "region_3_subscription"}).and_return(double(:check => nil))
 
       to_save = []
       to_save << described_class.new(dsn2)
       to_save << described_class.new(dsn3)
-      to_save.each { |s| allow(s).to receive(:assert_different_region!) }
+      to_save.each do |s|
+        allow(s).to receive(:assert_different_region!)
+        allow(s).to receive(:with_remote_pglogical_client).and_yield(double(:client).as_null_object)
+      end
 
       described_class.save_all!(to_save)
     end
@@ -337,14 +350,17 @@ RSpec.describe PglogicalSubscription do
         :user     => "miq",
         :password => "1234"
       }
-      expect(pglogical).to receive(:create_subscription).ordered.with("region_3_subscription", dsn3, ['miq']).and_return(double(:check => nil))
+      expect(pglogical).to receive(:create_subscription).ordered.with("region_3_subscription", dsn3, ['miq'], {"create_slot" => false, "enabled" => true, "slot_name" => "region_3_subscription"}).and_return(double(:check => nil))
       expect(pglogical).to receive(:create_subscription).ordered.and_raise("Error two")
 
       to_save = []
       to_save << described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
       to_save << described_class.new(:host => "test-3.example.com", :user => "miq", :password => "1234")
       to_save << described_class.new(:host => "test-4.example.com", :user => "miq", :password => "1234")
-      to_save.each { |s| allow(s).to receive(:assert_different_region!) }
+      to_save.each do |s|
+        allow(s).to receive(:assert_different_region!)
+        allow(s).to receive(:with_remote_pglogical_client).and_yield(double(:client).as_null_object)
+      end
 
       expect { described_class.save_all!(to_save) }.to raise_error("Failed to save subscription " \
         "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
