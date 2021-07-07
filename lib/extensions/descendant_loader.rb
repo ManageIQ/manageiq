@@ -74,7 +74,7 @@ class DescendantLoader
       begin
         parsed = RipperRubyParser::Parser.new.parse(content, filename)
       rescue => e
-        $stderr.puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
+        warn "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
         raise
       end
 
@@ -181,7 +181,7 @@ class DescendantLoader
 
       # Don't write sti_loader.yml in production, this shouldn't change from what is in the RPM
       if Rails.env.production?
-        $stderr.puts "\nSTI cache is out of date in production, check that source files haven't been modified"
+        warn "\nSTI cache is out of date in production, check that source files haven't been modified"
       else
         cache_path.parent.mkpath
         cache_path.open('w') do |f|
