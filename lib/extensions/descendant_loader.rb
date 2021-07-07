@@ -165,8 +165,14 @@ class DescendantLoader
 
     def load_cache
       return unless cache_path.exist?
-      data = YAML.load_file(cache_path)
+
+      data = File.open(cache_path, "r") do |f|
+        f.flock(File::LOCK_SH)
+        YAML.load(f.read)
+      end
+
       return unless data && data.kind_of?(Hash) && data['@version'].to_i == CACHE_VERSION
+
       data
     rescue
       nil
@@ -180,6 +186,7 @@ class DescendantLoader
       return unless @cache_dirty
       cache_path.parent.mkpath
       cache_path.open('w') do |f|
+        f.flock(File::LOCK_EX)
         YAML.dump(cache, f)
       end
     end
