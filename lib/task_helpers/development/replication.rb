@@ -18,9 +18,17 @@ module TaskHelpers
       end
 
       def self.setup
-        [1, 2, 99].each do |region|
-          setup_one_region(region)
-        end
+        setup_remotes
+        setup_global
+      end
+
+      def self.setup_remotes
+        setup_one_region(1)
+        setup_one_region(2)
+      end
+
+      def self.setup_global
+        setup_one_region(99)
       end
 
       def self.setup_one_region(region)
