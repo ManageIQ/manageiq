@@ -3,6 +3,11 @@ require 'awesome_spawn'
 module TaskHelpers
   module Development
     module Replication
+      REMOTES = [1, 2]
+      GLOBAL  = 99
+      GUID_FILE   = Rails.root.join("GUID")
+      BACKUP_GUID = Rails.root.join("GUID.backup")
+
       def self.backup
         if File.exist?(guid_file)
           FileUtils.rm_f(backup_guid)
@@ -18,9 +23,8 @@ module TaskHelpers
       end
 
       def self.setup
-        setup_remote(1)
-        setup_remote(2)
-        setup_global(99)
+        REMOTES.each {|r| setup_remote(r) }
+        setup_global(GLOBAL)
       end
 
       def self.setup_remote(region)
@@ -58,11 +62,11 @@ module TaskHelpers
       end
 
       def self.guid_file
-        Rails.root.join("GUID")
+        GUID_FILE
       end
 
       def self.backup_guid
-        Rails.root.join("GUID.backup")
+        BACKUP_GUID
       end
     end
   end
