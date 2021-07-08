@@ -18,26 +18,43 @@ module TaskHelpers
       end
 
       def self.setup
-        setup_remotes
-        setup_global
+        setup_remote(1)
+        setup_remote(2)
+        setup_global(99)
       end
 
-      def self.setup_remotes
-        setup_one_region(1)
-        setup_one_region(2)
+      def self.setup_remote(region)
+        setup_one_region(region)
+        setup_remote_region(region)
       end
 
-      def self.setup_global
-        setup_one_region(99)
+      def self.setup_global(region)
+        setup_one_region(region)
+      end
+
+      def self.setup_remote_region(region)
+        cmd = "RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' bin/rails r 'MiqRegion.replication_type= :remote; puts MiqRegion.replication_type'"
+        puts "Setting up publication #{cmd.inspect}..."
+        puts AwesomeSpawn.run!(cmd).output
+
+        psql_cmd = "psql -U root #{database(region)} -c 'select * from pg_publication;'"
+        puts AwesomeSpawn.run!(psql_cmd).output
       end
 
       def self.setup_one_region(region)
-        database_url = "postgres://root:smartvm@localhost:5432/development_replication_#{region}"
-        cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rails evm:db:region db:seed"
+        cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rails evm:db:region db:seed"
         puts "Running #{cmd.inspect}..."
         puts AwesomeSpawn.run!(cmd).output
       ensure
         FileUtils.rm_f(guid_file)
+      end
+
+      def self.database(region)
+        "development_replication_#{region}"
+      end
+
+      def self.database_url(region)
+        "postgres://root:smartvm@localhost:5432/#{database(region)}"
       end
 
       def self.guid_file
