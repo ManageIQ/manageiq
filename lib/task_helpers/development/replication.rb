@@ -34,6 +34,26 @@ module TaskHelpers
 
       def self.setup_global(region)
         setup_one_region(region)
+        setup_global_region(region)
+      end
+
+      def self.setup_global_region(region)
+        cmd = "RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'"
+        puts "Setting up global including subscriptions #{cmd.inspect}..."
+        puts AwesomeSpawn.run!(cmd).output
+      end
+
+      def self.setup_global_region_script
+        host = '127.0.0.1'
+        port = '5432'
+        user = 'root'
+        password = 'smartvm'
+
+        subs = []
+        REMOTES.each do |r|
+          subs << PglogicalSubscription.new(:host => host, :port => port, :user => user, :dbname => database(r), :password => password)
+        end
+        MiqPglogical.save_global_region(subs, [])
       end
 
       def self.setup_remote_region(region)
