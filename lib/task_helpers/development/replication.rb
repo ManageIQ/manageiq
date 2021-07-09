@@ -84,10 +84,11 @@ module TaskHelpers
 
         def setup_global_region(region)
           run_command("#{command_environment(region)} bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'")
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'")
         end
 
         def setup_remote_region(region)
-          run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote; puts MiqRegion.replication_type'")
+          run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote'")
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
         end
 
