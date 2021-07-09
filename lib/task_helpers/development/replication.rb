@@ -97,17 +97,20 @@ module TaskHelpers
           FileUtils.rm_f(guid_file)
         end
 
-        def run_command(command)
+        def run_command(command, raise_on_error: true)
           puts "Running #{command.inspect}..."
           puts AwesomeSpawn.run!(command).output
+        rescue AwesomeSpawn::CommandResultError => err
+          raise if raise_on_error
+          puts "Error skipped: #{err.to_s}"
         end
 
         def teardown_global_subscription_for_region(region)
-          run_command("psql -U root #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'")
+          run_command("psql -U root #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'", raise_on_error: false)
         end
 
         def teardown_remote_publication(region)
-          run_command("psql -U root #{database(region)} -c 'drop publication miq;'")
+          run_command("psql -U root #{database(region)} -c 'drop publication miq;'", raise_on_error: false)
         end
       end
     end
