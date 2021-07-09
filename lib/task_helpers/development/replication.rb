@@ -46,7 +46,11 @@ module TaskHelpers
       end
 
       def self.setup_one_region(region)
-        cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rails evm:db:region db:seed"
+        cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region"
+        puts "Running #{cmd.inspect}..."
+        puts AwesomeSpawn.run!(cmd).output
+
+        cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake db:seed"
         puts "Running #{cmd.inspect}..."
         puts AwesomeSpawn.run!(cmd).output
       ensure
