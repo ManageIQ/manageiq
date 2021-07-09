@@ -8,6 +8,12 @@ module TaskHelpers
       GUID_FILE   = Rails.root.join("GUID")
       BACKUP_GUID = Rails.root.join("GUID.backup")
 
+      PG_USER   = "root"
+      PG_PASS   = "smartvm"
+      PG_HOST   = "localhost"
+      PG_PORT   = "5432"
+      DB_PREFIX = "development_replication"
+
       class << self
         def backup
           if File.exist?(guid_file)
@@ -47,11 +53,11 @@ module TaskHelpers
 
 
         def database(region)
-          "development_replication_#{region}"
+          "#{DB_PREFIX}_#{region}"
         end
 
         def database_url(region)
-          "postgres://root:smartvm@localhost:5432/#{database(region)}"
+          "postgres://#{PG_USER}:#{PG_PASS}@#{PG_HOST}:#{PG_PORT}/#{database(region)}"
         end
 
         def guid_file
@@ -63,14 +69,9 @@ module TaskHelpers
         end
 
         def setup_global_region_script
-          host = '127.0.0.1'
-          port = '5432'
-          user = 'root'
-          password = 'smartvm'
-
           subs = []
           REMOTES.each do |r|
-            subs << PglogicalSubscription.new(:host => host, :port => port, :user => user, :dbname => database(r), :password => password)
+            subs << PglogicalSubscription.new(:host => PG_HOST, :port => PG_PORT, :user => PG_USER, :dbname => database(r), :password => PG_PASS)
           end
           MiqPglogical.save_global_region(subs, [])
         end
@@ -87,7 +88,7 @@ module TaskHelpers
 
         def setup_remote_region(region)
           run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote; puts MiqRegion.replication_type'")
-          run_command("psql -U root #{database(region)} -c 'select * from pg_publication;'")
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
         end
 
         def setup_one_region(region)
@@ -106,11 +107,11 @@ module TaskHelpers
         end
 
         def teardown_global_subscription_for_region(region)
-          run_command("psql -U root #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'", raise_on_error: false)
+          run_command("psql -U #{PG_USER} #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'", raise_on_error: false)
         end
 
         def teardown_remote_publication(region)
-          run_command("psql -U root #{database(region)} -c 'drop publication miq;'", raise_on_error: false)
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'drop publication miq;'", raise_on_error: false)
         end
       end
     end
