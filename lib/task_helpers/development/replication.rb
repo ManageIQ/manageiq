@@ -32,6 +32,9 @@ module TaskHelpers
         def setup
           REMOTES.each {|r| setup_remote(r) }
           setup_global(GLOBAL)
+
+          # TODO: We have the technology to watch for this and report when it's all good or bad
+          puts "Local replication is setup... try checking for users in all regions: psql -U root development_replication_99 -c \"select id from users;\""
         end
 
         def teardown
