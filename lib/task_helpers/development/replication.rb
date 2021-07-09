@@ -54,11 +54,11 @@ module TaskHelpers
           setup_global_region(region)
         end
 
-
         def database(region)
           "#{DB_PREFIX}_#{region}"
         end
 
+        # Example: DATABASE_URL='postgres://root:smartvm@localhost:5432/development_replication_99'
         def database_url(region)
           "postgres://#{PG_USER}:#{PG_PASS}@#{PG_HOST}:#{PG_PORT}/#{database(region)}"
         end
