@@ -92,7 +92,7 @@ module TaskHelpers
 
         def setup_one_region(region)
           run_command("#{command_environment(region)} DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region")
-          run_command("#{command_environment(region)} bin/rake db:seed")
+          run_command("#{command_environment(region)} bin/rails r 'EvmDatabase.seed_primordial'")
         ensure
           FileUtils.rm_f(guid_file)
         end
