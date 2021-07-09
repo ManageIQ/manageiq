@@ -100,11 +100,14 @@ module TaskHelpers
         end
 
         def run_command(command, raise_on_error: true)
-          puts "Running #{command.inspect}..."
+          puts "+" * 50
+          puts "Running: #{command.inspect}..."
           puts AwesomeSpawn.run!(command).output
         rescue AwesomeSpawn::CommandResultError => err
           raise if raise_on_error
           puts "Error skipped: #{err.to_s}"
+        ensure
+          puts "-" * 50
         end
 
         def teardown_global_subscription_for_region(region)
