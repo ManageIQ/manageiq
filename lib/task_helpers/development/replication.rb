@@ -53,6 +53,21 @@ module TaskHelpers
         FileUtils.rm_f(guid_file)
       end
 
+      def self.teardown
+        REMOTES.each do |r|
+          teardown_global_subscription_for_region(r)
+          teardown_remote_publication(r)
+        end
+      end
+
+      def self.teardown_global_subscription_for_region(region)
+        puts `psql -U root #{database(GLOBAL)} -c "drop subscription region_#{region}_subscription;"`
+      end
+
+      def self.teardown_remote_publication(region)
+        puts `psql -U root #{database(region)} -c "drop publication miq;"`
+      end
+
       def self.database(region)
         "development_replication_#{region}"
       end
