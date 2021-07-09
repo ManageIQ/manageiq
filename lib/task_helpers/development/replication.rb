@@ -77,39 +77,37 @@ module TaskHelpers
 
         private
 
+        def command_environment(region)
+          "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}'"
+        end
+
         def setup_global_region(region)
-          cmd = "RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'"
-          puts "Setting up global including subscriptions #{cmd.inspect}..."
-          puts AwesomeSpawn.run!(cmd).output
+          run_command("#{command_environment(region)} bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'")
         end
 
         def setup_remote_region(region)
-          cmd = "RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' bin/rails r 'MiqRegion.replication_type= :remote; puts MiqRegion.replication_type'"
-          puts "Setting up publication #{cmd.inspect}..."
-          puts AwesomeSpawn.run!(cmd).output
-
-          psql_cmd = "psql -U root #{database(region)} -c 'select * from pg_publication;'"
-          puts AwesomeSpawn.run!(psql_cmd).output
+          run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote; puts MiqRegion.replication_type'")
+          run_command("psql -U root #{database(region)} -c 'select * from pg_publication;'")
         end
 
         def setup_one_region(region)
-          cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region"
-          puts "Running #{cmd.inspect}..."
-          puts AwesomeSpawn.run!(cmd).output
-
-          cmd = "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}' DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake db:seed"
-          puts "Running #{cmd.inspect}..."
-          puts AwesomeSpawn.run!(cmd).output
+          run_command("#{command_environment(region)} DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region")
+          run_command("#{command_environment(region)} bin/rake db:seed")
         ensure
           FileUtils.rm_f(guid_file)
         end
 
+        def run_command(command)
+          puts "Running #{command.inspect}..."
+          puts AwesomeSpawn.run!(command).output
+        end
+
         def teardown_global_subscription_for_region(region)
-          puts `psql -U root #{database(GLOBAL)} -c "drop subscription region_#{region}_subscription;"`
+          run_command("psql -U root #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'")
         end
 
         def teardown_remote_publication(region)
-          puts `psql -U root #{database(region)} -c "drop publication miq;"`
+          run_command("psql -U root #{database(region)} -c 'drop publication miq;'")
         end
       end
     end
