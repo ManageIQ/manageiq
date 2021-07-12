@@ -75,13 +75,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def get_message_via_miq_messaging
     @message_queue ||= Queue.new
-    @listener_thread = nil if @listener_thread && !@listener_thread.alive?
-    @listener_thread ||= Thread.new do
-      MiqQueue.messaging_client(self.class.name)
-              .subscribe_topic(:service => @worker.queue_name, :persist_ref => @worker.guid) do |msg|
-        @message_queue << msg
-      end
-    end
+
+    @listener_thread   = nil if @listener_thread && !@listener_thread.alive?
+    @listener_thread ||= Thread.new { miq_messaging_listener_thread }
+
     @message_queue.pop unless @message_queue.empty?
   end
 
@@ -176,6 +173,28 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def process_miq_messaging_message(_msg)
     raise NotImplementedError, 'Must be implemented in subclass'
+  end
+
+  def miq_messaging_listener_thread
+    loop do
+      send("miq_messaging_subscribe_#{@worker.class.miq_messaging_subscribe_mode}") do |msg|
+        @message_queue << msg
+      end
+    rescue => err
+      _log.warn("miq_messaging_listener_thread error [#{err}]")
+    end
+  end
+
+  def miq_messaging_subscribe_topic(&block)
+    messaging_client = MiqQueue.messaging_client(self.class.name)
+    messaging_client.subscribe_topic(:service => @worker.queue_name, :persist_ref => @worker.guid, &block)
+  end
+
+  def miq_messaging_subscribe_queue(&block)
+    messaging_client = MiqQueue.messaging_client(self.class.name)
+    messaging_client.subscribe_messages(:service => @worker.queue_name) do |messages|
+      messages.each(&block)
+    end
   end
 
   # Only for file based heartbeating
