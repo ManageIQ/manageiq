@@ -36,21 +36,6 @@ module MiqServer::EnvironmentManagement
     end
   end
 
-  #
-  # Apache
-  #
-  def start_apache
-    return unless MiqEnvironment::Command.is_appliance?
-
-    MiqApache::Control.start
-  end
-
-  def stop_apache
-    return unless MiqEnvironment::Command.is_appliance?
-
-    MiqApache::Control.stop
-  end
-
   def disk_usage_threshold
     ::Settings.server.events.disk_usage_gt_percent
   end

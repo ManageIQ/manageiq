@@ -1,5 +1,6 @@
 [Unit]
 PartOf=manageiq-cockpit_ws.target
+Wants=httpd.service
 [Install]
 WantedBy=manageiq-cockpit_ws.target
 [Service]

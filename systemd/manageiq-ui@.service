@@ -1,5 +1,6 @@
 [Unit]
 PartOf=manageiq-ui.target
+Wants=httpd.service
 [Install]
 WantedBy=manageiq-ui.target
 [Service]

@@ -8,34 +8,6 @@ RSpec.describe "Server Role Management" do
       @miq_server.deactivate_all_roles
     end
 
-    context "#apache_needed?" do
-      it "false with neither webservices or user_interface active" do
-        allow(@miq_server).to receive_messages(:active_role_names => ["reporting"])
-        expect(@miq_server.apache_needed?).to be_falsey
-      end
-
-      it "true with only cockpit_ws active" do
-        allow(@miq_server).to receive_messages(:active_role_names => ["cockpit_ws"])
-        expect(@miq_server.apache_needed?).to be_truthy
-      end
-
-      it "true with web_services active" do
-        allow(@miq_server).to receive_messages(:active_role_names => ["web_services"])
-        expect(@miq_server.apache_needed?).to be_truthy
-      end
-
-      it "true with both web_services and user_interface active" do
-        allow(@miq_server).to receive_messages(:active_role_names => ["web_services", "user_interface"])
-        expect(@miq_server.apache_needed?).to be_truthy
-      end
-
-      it "true with all three active" do
-        roles = %w("web_services user_interface cockpit_ws")
-        allow(@miq_server).to receive_messages(:active_role_names => roles)
-        expect(@miq_server.apache_needed?).to be_truthy
-      end
-    end
-
     context "role=" do
       it "normal case" do
         @miq_server.assign_role(ServerRole.find_by(:name => 'ems_operations'), 1)
