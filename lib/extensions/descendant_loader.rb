@@ -182,12 +182,14 @@ class DescendantLoader
       # Don't write sti_loader.yml in production, this shouldn't change from what is in the RPM
       if Rails.env.production?
         warn "\nSTI cache is out of date in production, check that source files haven't been modified"
+        warn "One file that was dirty was: #{@cache_dirty}"
       else
         cache_path.parent.mkpath
         cache_path.open('w') do |f|
           YAML.dump(cache, f)
         end
       end
+      @cache_dirty = nil
     end
 
     def classes_in(filename)
@@ -198,7 +200,7 @@ class DescendantLoader
       end
 
       super.tap do |data|
-        @cache_dirty = true
+        @cache_dirty = filename
         cache[filename] = {:mtime => t, :parsed => data}
       end
     end
