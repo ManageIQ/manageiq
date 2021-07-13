@@ -29,7 +29,7 @@ module RollupRadarMixin
     end
   end
 
-  def date_trunc(by, attribute)
+  private def date_trunc(by, attribute)
     Arel::Nodes::NamedFunction.new(
       'DATE_TRUNC', [Arel.sql("'#{by}'"), attribute]
     )
