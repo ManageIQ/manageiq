@@ -30,7 +30,10 @@ module Vmdb
     end
 
     def self.create_logger(log_file_name, logger_class = VMDBLogger)
-      log_file = ManageIQ.root.join("log", log_file_name)
+      log_dir = ManageIQ.root.join("log")
+      log_dir.mkpath unless log_dir.exist?
+
+      log_file = log_dir.join(log_file_name)
       progname = File.basename(log_file_name, ".*")
 
       logger_class.new(log_file, progname: progname).tap do |logger|
