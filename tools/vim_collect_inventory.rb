@@ -39,7 +39,7 @@ puts "Output in #{dir}"
 begin
   require 'VMwareWebService/MiqVim'
 
-  vim = MiqVim.new(opts[:ip], opts[:user], opts[:pass])
+  vim = MiqVim.new(:server => opts[:ip], :username => opts[:user], :password => opts[:pass])
   VC_ACCESSORS.each do |accessor, type|
     process(accessor, dir) { vim.send(accessor) }
   end

@@ -70,7 +70,7 @@ puts "Output in #{dir}"
 
 begin
   require 'VMwareWebService/MiqVim'
-  vim = MiqVim.new(opts[:ip], opts[:user], opts[:pass])
+  vim = MiqVim.new(:server => opts[:ip], :username => opts[:user], :password => opts[:pass])
 
   ph = vim.getVimPerfHistory
 

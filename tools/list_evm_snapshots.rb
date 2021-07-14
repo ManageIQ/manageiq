@@ -15,10 +15,9 @@ ems_name  = ARGV[0]
 
 begin
   ems = ExtManagementSystem.find_by(:name => ems_name)
-  username, password = ems.auth_user_pwd(:ws)
 
   puts "Connecting to #{ems.hostname}..."
-  vim = MiqVim.new(ems.hostname, username, password)
+  vim = ems.connect
   puts "Done."
 
   puts "vim.class: #{vim.class}"
