@@ -17,6 +17,9 @@ class Flavor < ApplicationRecord
   alias_attribute :cpus, :cpu_total_cores
   alias_attribute :cpu_cores, :cpu_cores_per_socket
 
+  virtual_column :cpus, :type => :integer
+  virtual_column :cpu_cores, :type => :integer
+
   def name_with_details
     details = if cpus == 1
                 if root_disk_size.nil?
