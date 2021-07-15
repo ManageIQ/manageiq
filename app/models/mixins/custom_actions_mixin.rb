@@ -25,19 +25,22 @@ module CustomActionsMixin
   end
 
   def generic_button_group
-    generic_custom_buttons.select { |button| !button.parent.nil? }
+    generic_custom_buttons.includes(:custom_button_sets)
+                          .select { |button| button.custom_button_sets.present? }
   end
 
   def custom_button_sets_with_generics
-    custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
+    custom_button_sets + generic_button_group.flat_map(&:custom_button_sets).uniq
   end
 
   def custom_buttons
-    generic_custom_buttons.select { |button| button.parent.nil? } + direct_custom_buttons
+    generic_custom_buttons.includes(:custom_button_sets)
+                          .select { |b| b.custom_button_sets.blank? } + direct_custom_buttons
   end
 
   def direct_custom_buttons
-    CustomButton.buttons_for(self).select { |b| b.parent.nil? }
+    CustomButton.buttons_for(self).includes(:custom_button_sets)
+                .select { |b| b.custom_button_sets.blank? }
   end
 
   def filter_by_visibility(buttons, applies_to = self)

@@ -1,5 +1,7 @@
 RSpec.describe MiqEventDefinition do
-  let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
+  def event_defs
+    MiqEventDefinition.all.group_by(&:name)
+  end
 
   it "doesn't access database when unchanged model is saved" do
     m = FactoryBot.create(:miq_event_definition)

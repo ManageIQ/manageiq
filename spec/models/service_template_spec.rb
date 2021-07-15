@@ -99,7 +99,8 @@ RSpec.describe ServiceTemplate do
           )
         ]
       }
-      expect(service_template.custom_actions(service)).to match(expected)
+      actual = service_template.custom_actions(service)
+      expect(actual).to match(expected)
     end
 
     context "expression evaluation" do
@@ -183,7 +184,8 @@ RSpec.describe ServiceTemplate do
           )
         ]
       }
-      expect(service_template.custom_actions(service)).to match(expected)
+      actual = service_template.custom_actions(service)
+      expect(actual).to match(expected)
     end
   end
 
