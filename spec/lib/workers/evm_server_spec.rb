@@ -117,6 +117,7 @@ describe EvmServer do
       before do
         4.times { FactoryBot.create(:miq_server) }
         allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+        allow(Vmdb::Settings::Validator).to receive(:new).and_return(double(:valid? => true, :validate => [true, {}]))
       end
 
       it "sets the server variable to each server" do
