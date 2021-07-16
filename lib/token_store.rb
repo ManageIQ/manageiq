@@ -49,11 +49,13 @@ class TokenStore
   end
 
   def self.cache_store_options(namespace, token_ttl)
-    {
-      :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
-      :threadsafe => true,
-      :expires_in => token_ttl
-    }
+    MiqMemcached.default_client_options.merge(
+      {
+        :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
+        :threadsafe => true,
+        :expires_in => token_ttl
+      }
+    )
   end
   private_class_method :cache_store_options
 end

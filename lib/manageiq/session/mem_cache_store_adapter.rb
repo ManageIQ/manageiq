@@ -8,12 +8,13 @@ module ManageIQ
       end
 
       def session_options
-        opts  = super
-        cache = MiqMemcached.client(:namespace => "MIQ:VMDB", :value_max_bytes => 10.megabytes)
+        opts  = super.merge(MiqMemcached.default_client_options)
         opts.merge(
-          :cache        => cache,
-          :expire_after => 24.hours,
-          :key          => "_vmdb_session"
+          :expire_after    => 24.hours,
+          :key             => "_vmdb_session",
+          :memcache_server => MiqMemcached.server_address,
+          :namespace       => "MIQ:VMDB",
+          :value_max_bytes => 10.megabytes,
         )
       end
     end
