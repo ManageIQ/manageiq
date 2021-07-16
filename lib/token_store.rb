@@ -38,8 +38,8 @@ class TokenStore
           store.extend KeyValueHelpers
         end
       when "cache"
-        require 'active_support/cache/dalli_store'
-        ActiveSupport::Cache::DalliStore.new(MiqMemcached.server_address, options).tap do |store|
+        require 'active_support/cache/mem_cache_store'
+        ActiveSupport::Cache::MemCacheStore.new(MiqMemcached.server_address, options).tap do |store|
           store.extend KeyValueHelpers
         end
       else
