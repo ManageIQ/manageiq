@@ -60,7 +60,6 @@ gem "openscap",                         "~>0.4.8",           :require => false
 gem "optimist",                         "~>3.0",             :require => false
 gem "pg",                                                    :require => false
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
-gem "psych",                            "~>3.1",             :require => false # This can be dropped once we drop ruby 2.5
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>6.0.3", ">=6.0.3.7"
