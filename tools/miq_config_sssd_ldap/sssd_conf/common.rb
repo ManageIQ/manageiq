@@ -1,5 +1,3 @@
-require 'miqldap_configuration'
-
 module MiqConfigSssdLdap
   class Common
     USER_ATTRS = %w[mail givenname sn displayname domainname].freeze

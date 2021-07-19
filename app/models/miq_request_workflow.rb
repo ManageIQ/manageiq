@@ -503,21 +503,6 @@ class MiqRequestWorkflow
     end
   end
 
-  def retrieve_ldap(_options = {})
-    email = get_value(@values[:owner_email])
-    unless email.blank?
-      l = MiqLdap.new
-      if l.bind_with_default == true
-        raise _("No information returned for %{email}") % {:email => email} if (d = l.get_user_info(email, "mail")).nil?
-        [:first_name, :last_name, :address, :city, :state, :zip, :country, :title, :company,
-         :department, :office, :phone, :phone_mobile, :manager, :manager_mail, :manager_phone].each do |prop|
-          @values["owner_#{prop}".to_sym] = d[prop].try(:dup)
-        end
-        @values[:sysprep_organization] = d[:company].try(:dup)
-      end
-    end
-  end
-
   def default_schedule_time(options = {})
     # TODO: Added support for "default_from", like values_from, that gets called once after dialog creation
     # Update VM description
@@ -742,11 +727,9 @@ class MiqRequestWorkflow
 
     if get_value(@values[:owner_email]).blank? && @requester.email.present?
       @values[:owner_email] = @requester.email
-      retrieve_ldap if MiqLdap.using_ldap?
     end
 
-    show_flag = MiqLdap.using_ldap? ? :show : :hide
-    show_fields(show_flag, [:owner_load_ldap])
+    show_fields(:hide, [:owner_load_ldap])
   end
 
   def set_request_values(values)
@@ -1429,16 +1412,6 @@ class MiqRequestWorkflow
     _log.info("data:<#{data.inspect}>")
     values[:auto_approve] = data.delete(:auto_approve) == 'true'
     data.delete(:user_name)
-
-    # get owner values from LDAP if configured
-    if data[:owner_email].present? && MiqLdap.using_ldap?
-      email = data[:owner_email]
-      unless email.include?('@')
-        email = "#{email}@#{::Settings.authentication.user_suffix}"
-      end
-      values[:owner_email] = email
-      retrieve_ldap rescue nil
-    end
 
     dlg_keys = dlg_fields.keys
     data.keys.each do |key|

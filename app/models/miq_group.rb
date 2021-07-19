@@ -150,19 +150,6 @@ class MiqGroup < ApplicationRecord
     group_list.collect { |group| group.gsub(/@.*/, '') }
   end
 
-  def self.get_ldap_groups_by_user(user, bind_dn, bind_pwd)
-    username = user.kind_of?(self) ? user.userid : user
-    ldap = MiqLdap.new
-
-    unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
-      raise _("Bind failed for user %{user_name}") % {:user_name => bind_dn}
-    end
-    user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
-    raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
-
-    ldap.get_memberships(user_obj, ::Settings.authentication.group_memberships_max_depth)
-  end
-
   def self.get_httpd_groups_by_user(user)
     if MiqEnvironment::Command.is_podified?
       get_httpd_groups_by_user_via_dbus_api_service(user)

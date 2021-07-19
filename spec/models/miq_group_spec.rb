@@ -69,7 +69,6 @@ RSpec.describe MiqGroup do
       end
     end
 
-
     it "should set group type to 'system' " do
       expect(subject.group_type).to eq("system")
     end
@@ -85,7 +84,7 @@ RSpec.describe MiqGroup do
     end
   end
 
-  describe "#get_ldap_groups_by_user_with_ext_auth" do
+  describe "#get_httpd_groups_by_user_with_ext_auth" do
     before do
       require "dbus"
       sysbus = double('sysbus')
@@ -115,41 +114,6 @@ RSpec.describe MiqGroup do
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
 
       expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
-    end
-  end
-
-  describe "#get_ldap_groups_by_user" do
-    before do
-      stub_settings(:authentication => {:group_memberships_max_depth => 1})
-
-      miq_ldap = double('miq_ldap',
-                        :fqusername      => 'fred',
-                        :normalize       => 'fred flintstone',
-                        :bind            => true,
-                        :get_user_object => 'user object',
-                        :get_memberships => %w(foo bar))
-      allow(MiqLdap).to receive(:new).and_return(miq_ldap)
-    end
-
-    it "should return LDAP groups by user name" do
-      expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w(foo bar))
-    end
-
-    it "should issue an error message when user name could not be bound to LDAP" do
-      allow(MiqLdap.new).to receive_messages(:bind => false)
-      # darn, wanted a MiqException::MiqEVMLoginError
-      expect do
-        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      end.to raise_error(RuntimeError, "Bind failed for user bind_dn")
-    end
-
-    it "should issue an error message when user name does not exist in LDAP directory" do
-      allow(MiqLdap.new).to receive_messages(:get_user_object => nil)
-
-      # darn, wanted a MiqException::MiqEVMLoginError
-      expect do
-        MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      end.to raise_error(RuntimeError, "Unable to find user fred in directory")
     end
   end
 

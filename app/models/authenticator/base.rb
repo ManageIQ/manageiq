@@ -120,7 +120,6 @@ module Authenticator
 
     def authorize(taskid, username, *args)
       audit = {:event => "authorize", :userid => username}
-      decrypt_ldap_password(config) if MiqLdap.using_ldap?
 
       run_task(taskid, "Authorizing") do |task|
         begin
@@ -210,9 +209,6 @@ module Authenticator
         if username.include?('\\')
           parts = username.split('\\')
           username = "#{parts.last}@#{parts.first}"
-        elsif !username.include?('@') && MiqLdap.using_ldap?
-          suffix = config[:user_suffix]
-          username = "#{username}@#{suffix}"
         end
         user = case_insensitive_find_by_userid(username)
       end
@@ -266,7 +262,6 @@ module Authenticator
     def authorize_queue(username, _request, _options, *args)
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
       if authorize_queue?
-        encrypt_ldap_password(config) if MiqLdap.using_ldap?
         MiqQueue.submit_job(
           :class_name   => self.class.to_s,
           :method_name  => "authorize",
