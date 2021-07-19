@@ -3,16 +3,16 @@ require 'awesome_spawn'
 module TaskHelpers
   module Development
     class Replication
-      REMOTES = [1, 2]
+      REMOTES = [1, 2].freeze
       GLOBAL  = 99
       GUID_FILE   = Rails.root.join("GUID")
       BACKUP_GUID = Rails.root.join("GUID.backup")
 
-      PG_USER   = "root"
-      PG_PASS   = "smartvm"
-      PG_HOST   = "localhost"
-      PG_PORT   = "5432"
-      DB_PREFIX = "development_replication"
+      PG_USER   = "root".freeze
+      PG_PASS   = "smartvm".freeze
+      PG_HOST   = "localhost".freeze
+      PG_PORT   = "5432".freeze
+      DB_PREFIX = "development_replication".freeze
 
       class << self
         def backup
@@ -30,7 +30,7 @@ module TaskHelpers
         end
 
         def setup
-          REMOTES.each {|r| setup_remote(r) }
+          REMOTES.each { |r| setup_remote(r) }
           setup_global(GLOBAL)
 
           # TODO: We have the technology to watch for this and report when it's all good or bad
@@ -74,9 +74,8 @@ module TaskHelpers
         end
 
         def configure_global_region_script
-          subs = []
-          REMOTES.each do |r|
-            subs << PglogicalSubscription.new(:host => PG_HOST, :port => PG_PORT, :user => PG_USER, :dbname => database(r), :password => PG_PASS)
+          subs = REMOTES.collect do |r|
+            PglogicalSubscription.new(:host => PG_HOST, :port => PG_PORT, :user => PG_USER, :dbname => database(r), :password => PG_PASS)
           end
           MiqPglogical.save_global_region(subs, [])
         end
@@ -93,7 +92,7 @@ module TaskHelpers
         end
 
         def configure_remote_region(region)
-          run_command("bin/rails r 'MiqRegion.replication_type= :remote'", env: command_environment(region))
+          run_command("bin/rails r 'MiqRegion.replication_type = :remote'", env: command_environment(region))
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
         end
 
@@ -110,7 +109,8 @@ module TaskHelpers
           puts AwesomeSpawn.run!(command, env: env).output
         rescue AwesomeSpawn::CommandResultError => err
           raise if raise_on_error
-          puts "Error skipped: #{err.to_s}"
+
+          puts "Error skipped: #{err}"
         ensure
           puts "-" * 50
         end
