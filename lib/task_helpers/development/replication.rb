@@ -84,30 +84,30 @@ module TaskHelpers
         private
 
         def command_environment(region)
-          "REGION='#{region}' RAILS_ENV='development' DATABASE_URL='#{database_url(region)}'"
+          {"REGION" => region.to_s, "RAILS_ENV" => "development", "DATABASE_URL" => database_url(region)}
         end
 
         def setup_global_region(region)
-          run_command("#{command_environment(region)} bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'")
+          run_command("bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'", env: command_environment(region))
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'")
         end
 
         def configure_remote_region(region)
-          run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote'")
+          run_command("bin/rails r 'MiqRegion.replication_type= :remote'", env: command_environment(region))
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
         end
 
         def create_region(region)
-          run_command("#{command_environment(region)} DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region")
-          run_command("#{command_environment(region)} bin/rails r 'EvmDatabase.seed_primordial'")
+          run_command("DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region", env: command_environment(region))
+          run_command("bin/rails r 'EvmDatabase.seed_primordial'", env: command_environment(region))
         ensure
           FileUtils.rm_f(guid_file)
         end
 
-        def run_command(command, raise_on_error: true)
+        def run_command(command, raise_on_error: true, env: {})
           puts "+" * 50
-          puts "Running: #{command.inspect}..."
-          puts AwesomeSpawn.run!(command).output
+          puts "Running: #{command.inspect} with env: #{env.inspect}..."
+          puts AwesomeSpawn.run!(command, env: env).output
         rescue AwesomeSpawn::CommandResultError => err
           raise if raise_on_error
           puts "Error skipped: #{err.to_s}"
