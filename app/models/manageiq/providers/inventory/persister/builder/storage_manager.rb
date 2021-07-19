@@ -30,6 +30,10 @@ module ManageIQ::Providers
         def volume_mappings
           add_common_default_values
         end
+
+        def wwpn_candidates
+          add_common_default_values
+        end
       end
     end
   end

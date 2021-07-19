@@ -29,6 +29,8 @@ class PhysicalStorage < ApplicationRecord
   has_many :canister_computer_systems, :through => :canisters, :source => :computer_system
   has_many :guest_devices, :through => :hardware
 
+  has_many :wwpn_candidates, :dependent => :destroy
+
   supports :refresh_ems
   supports_not :create
   supports_not :delete
