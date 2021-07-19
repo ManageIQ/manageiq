@@ -53,7 +53,7 @@ module TaskHelpers
 
         def setup_global(region)
           create_region(region)
-          setup_global_region(region)
+          configure_global_region(region)
         end
 
         def database(region)
@@ -73,7 +73,7 @@ module TaskHelpers
           BACKUP_GUID
         end
 
-        def setup_global_region_script
+        def configure_global_region_script
           subs = []
           REMOTES.each do |r|
             subs << PglogicalSubscription.new(:host => PG_HOST, :port => PG_PORT, :user => PG_USER, :dbname => database(r), :password => PG_PASS)
@@ -87,8 +87,8 @@ module TaskHelpers
           {"REGION" => region.to_s, "RAILS_ENV" => "development", "DATABASE_URL" => database_url(region)}
         end
 
-        def setup_global_region(region)
-          run_command("bin/rails r 'TaskHelpers::Development::Replication.setup_global_region_script'", env: command_environment(region))
+        def configure_global_region(region)
+          run_command("bin/rails r 'TaskHelpers::Development::Replication.configure_global_region_script'", env: command_environment(region))
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'")
         end
 
