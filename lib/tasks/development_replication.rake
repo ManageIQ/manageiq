@@ -4,7 +4,6 @@ namespace :development do
     task :setup => :environment do
       TaskHelpers::Development::Replication.backup
       TaskHelpers::Development::Replication.setup
-      TaskHelpers::Development::Replication.restore
     end
 
     task :teardown => :environment do
