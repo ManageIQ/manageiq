@@ -45,12 +45,12 @@ module TaskHelpers
         end
 
         def setup_remote(region)
-          setup_one_region(region)
-          setup_remote_region(region)
+          create_region(region)
+          configure_remote_region(region)
         end
 
         def setup_global(region)
-          setup_one_region(region)
+          create_region(region)
           setup_global_region(region)
         end
 
@@ -90,12 +90,12 @@ module TaskHelpers
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'")
         end
 
-        def setup_remote_region(region)
+        def configure_remote_region(region)
           run_command("#{command_environment(region)} bin/rails r 'MiqRegion.replication_type= :remote'")
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
         end
 
-        def setup_one_region(region)
+        def create_region(region)
           run_command("#{command_environment(region)} DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region")
           run_command("#{command_environment(region)} bin/rails r 'EvmDatabase.seed_primordial'")
         ensure
