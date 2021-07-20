@@ -17,13 +17,13 @@ class VmScan
                         .includes(:ext_management_system => :zone, :storage => :hosts)
                         .order(:id)
           end
-          zone = Zone.find_by(:name => @zone)
+
           concurrent_vm_scans_limit = zone.settings.blank? ? 0 : zone.settings[:concurrent_vm_scans].to_i
 
           jobs_to_dispatch.each do |job|
-            if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[@zone] >= concurrent_vm_scans_limit
+            if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[zone_name] >= concurrent_vm_scans_limit
               _log.warn("SKIPPING remaining Vm Or Template jobs in dispatch since there are [%d] active scans in the zone [%s]" %
-                        [active_vm_scans_by_zone[@zone], @zone])
+                        [active_vm_scans_by_zone[zone_name], zone_name])
               break
             end
             @vm = @vms_for_dispatch_jobs.detect { |v| v.id == job.target_id }
@@ -159,9 +159,9 @@ class VmScan
 
     def active_scans_by_zone(job_class, count = true)
       actives = Hash.new(0)
-      jobs = job_class.where(:zone => @zone, :dispatch_status => "active")
+      jobs = job_class.where(:zone => zone_name, :dispatch_status => "active")
                       .where.not(:state => "finished")
-      actives[@zone] = count ? jobs.count : jobs
+      actives[zone_name] = count ? jobs.count : jobs
       actives
     end
 
