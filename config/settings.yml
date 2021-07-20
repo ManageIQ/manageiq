@@ -1168,6 +1168,7 @@
       :task_timeout_check_frequency: 1.hour
       :vim_performance_states_purge_interval: 1.day
       :vm_retired_interval: 10.minutes
+      :vm_scan_dispatcher_interval: 15.seconds
     :ui_worker:
       :connection_pool_size: 8
       :nice_delta: 1
