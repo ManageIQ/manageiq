@@ -1315,68 +1315,8 @@ class Host < ApplicationRecord
 
       save
 
-      # Skip SSH for ESXi hosts
       unless is_vmware_esxi?
-        if hostname.blank?
-          _log.warn("No hostname defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
-          return
-        end
-
-        update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
-
-        if missing_credentials?
-          _log.warn("No credentials defined for #{log_target}")
-          task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
-          return
-        end
-
-        begin
-          connect_ssh do |ssu|
-            _log.info("Refreshing Patches for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Patches") if task
-            Benchmark.realtime_block(:refresh_patches) { refresh_patches(ssu) }
-
-            _log.info("Refreshing Services for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Services") if task
-            Benchmark.realtime_block(:refresh_services) { refresh_services(ssu) }
-
-            _log.info("Refreshing Linux Packages for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing Linux Packages") if task
-            Benchmark.realtime_block(:refresh_linux_packages) { refresh_linux_packages(ssu) }
-
-            _log.info("Refreshing User Groups for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing User Groups") if task
-            Benchmark.realtime_block(:refresh_user_groups) { refresh_user_groups(ssu) }
-
-            _log.info("Refreshing SSH Config for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing SSH Config") if task
-            Benchmark.realtime_block(:refresh_ssh_config) { refresh_ssh_config(ssu) }
-
-            _log.info("Refreshing FS Files for #{log_target}")
-            task.update_status("Active", "Ok", "Refreshing FS Files") if task
-            Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
-
-            if supports?(:refresh_network_interfaces)
-              _log.info("Refreshing network interfaces for #{log_target}")
-              task.update_status("Active", "Ok", "Refreshing network interfaces") if task
-              Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
-            end
-
-            # refresh_openstack_services should run after refresh_services and refresh_fs_files
-            if respond_to?(:refresh_openstack_services)
-              _log.info("Refreshing OpenStack Services for #{log_target}")
-              task.update_status("Active", "Ok", "Refreshing OpenStack Services") if task
-              Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
-            end
-
-            save
-          end
-        rescue Net::SSH::HostKeyMismatch
-          # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
-        rescue => err
-          _log.log_backtrace(err)
-        end
+        return if !scan_via_ssh(task)
       end
 
       if supports?(:refresh_logs)
@@ -1398,6 +1338,72 @@ class Host < ApplicationRecord
 
     task.update_status("Finished", "Ok", "Scanning Complete") if task
     _log.info("Scanning #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def scan_via_ssh(task)
+    if hostname.blank?
+      _log.warn("No hostname defined for #{log_target}")
+      task&.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")
+      return false
+    end
+
+    # defined in ManageIQ::Providers::Openstack::InfraManager::Host
+    update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
+
+    if missing_credentials?
+      _log.warn("No credentials defined for #{log_target}")
+      task&.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")
+      return false
+    end
+
+    begin
+      connect_ssh do |ssu|
+        _log.info("Refreshing Patches for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing Patches")
+        Benchmark.realtime_block(:refresh_patches) { refresh_patches(ssu) }
+
+        _log.info("Refreshing Services for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing Services")
+        Benchmark.realtime_block(:refresh_services) { refresh_services(ssu) }
+
+        _log.info("Refreshing Linux Packages for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing Linux Packages")
+        Benchmark.realtime_block(:refresh_linux_packages) { refresh_linux_packages(ssu) }
+
+        _log.info("Refreshing User Groups for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing User Groups")
+        Benchmark.realtime_block(:refresh_user_groups) { refresh_user_groups(ssu) }
+
+        _log.info("Refreshing SSH Config for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing SSH Config")
+        Benchmark.realtime_block(:refresh_ssh_config) { refresh_ssh_config(ssu) }
+
+        _log.info("Refreshing FS Files for #{log_target}")
+        task&.update_status("Active", "Ok", "Refreshing FS Files")
+        Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
+
+        if supports?(:refresh_network_interfaces)
+          _log.info("Refreshing network interfaces for #{log_target}")
+          task&.update_status("Active", "Ok", "Refreshing network interfaces")
+          Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
+        end
+
+        # refresh_openstack_services should run after refresh_services and refresh_fs_files
+        if respond_to?(:refresh_openstack_services)
+          _log.info("Refreshing OpenStack Services for #{log_target}")
+          task&.update_status("Active", "Ok", "Refreshing OpenStack Services")
+          Benchmark.realtime_block(:refresh_openstack_services) { refresh_openstack_services(ssu) }
+        end
+
+        save
+      end
+    rescue Net::SSH::HostKeyMismatch
+      # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
+    rescue => err
+      _log.log_backtrace(err)
+    end
+
+    true
   end
 
   def validate_task(task)
