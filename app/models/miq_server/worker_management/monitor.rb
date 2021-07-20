@@ -196,9 +196,6 @@ module MiqServer::WorkerManagement::Monitor
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
 
-      stop_apache                if roles_changed && !apache_needed?
-      start_apache               if roles_changed &&  apache_needed?
-
       EvmDatabase.restart_failover_monitor_service if (roles_added | roles_deleted).include?("database_operations")
 
       reset_queue_messages       if roles_changed

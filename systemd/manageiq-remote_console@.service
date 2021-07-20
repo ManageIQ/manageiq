@@ -1,5 +1,6 @@
 [Unit]
 PartOf=manageiq-remote_console.target
+Wants=httpd.service
 [Install]
 WantedBy=manageiq-remote_console.target
 [Service]
