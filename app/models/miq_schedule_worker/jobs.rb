@@ -52,9 +52,9 @@ class MiqScheduleWorker::Jobs
     end
   end
 
-  def vm_scan_dispatcher_dispatch
-    if VmScan::Dispatcher.waiting?
-      queue_work_on_each_zone(:class_name => "VmScan::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
+  def infra_conversion_dispatcher_dispatch
+    if InfraConversionJob::Dispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "InfraConversionJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
     end
   end
 

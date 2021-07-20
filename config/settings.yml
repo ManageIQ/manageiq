@@ -1140,6 +1140,7 @@
       :event_streams_purge_interval: 1.day
       :evm_snapshot_delete_delay_for_job_not_found: 1.hour
       :evm_snapshot_interval: 1.hour
+      :infra_conversion_dispatcher_interval: 30.seconds
       :job_proxy_dispatcher_interval: 15.seconds
       :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
       :job_proxy_dispatcher_stale_message_timeout: 2.minutes

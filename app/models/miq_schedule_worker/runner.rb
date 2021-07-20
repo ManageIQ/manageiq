@@ -185,6 +185,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:vm_scan_dispatcher_dispatch)
     end
 
+    scheduler.schedule_every(:infra_conversion_dispatcher_dispatch, worker_settings[:infra_conversion_dispatcher_interval]) do
+      enqueue(:infra_conversion_dispatcher_dispatch)
+    end
+
     # Schedule - Check for a stuck JobProxyDispatcher#dispatch
     stuck_dispatch_threshold = worker_settings[:job_proxy_dispatcher_stale_message_timeout]
     scheduler.schedule_every(
