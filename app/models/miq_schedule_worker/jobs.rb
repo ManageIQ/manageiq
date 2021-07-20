@@ -52,6 +52,12 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def vm_scan_dispatcher_dispatch
+    if VmScan::Dispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "VmScan::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
+    end
+  end
+
   def ems_refresh_timer(klass)
     queue_work_on_each_zone(:class_name  => klass.name, :method_name => "refresh_all_ems_timer") if klass.any?
   end
