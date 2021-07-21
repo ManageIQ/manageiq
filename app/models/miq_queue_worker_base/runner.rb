@@ -75,10 +75,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def get_message_via_miq_messaging
     @message_queue ||= Queue.new
-
-    @listener_thread   = nil if @listener_thread && !@listener_thread.alive?
-    @listener_thread ||= Thread.new { miq_messaging_listener_thread }
-
     @message_queue.pop unless @message_queue.empty?
   end
 
@@ -139,6 +135,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def do_work
     register_worker_with_worker_monitor if dequeue_method_via_drb?
+    ensure_miq_listener_thread!         if dequeue_method_via_miq_messaging?
 
     # Keep collecting messages from the queue until the queue is empty,
     #   so we don't sleep in between messages
@@ -173,6 +170,16 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def process_miq_messaging_message(_msg)
     raise NotImplementedError, 'Must be implemented in subclass'
+  end
+
+  def ensure_miq_listener_thread!
+    @miq_listener_thread = nil if @miq_listener_thread && !@miq_listener_thread.alive?
+
+    miq_listener_thread
+  end
+
+  def miq_listener_thread
+    @miq_listener_thread ||= Thread.new { miq_messaging_listener_thread }
   end
 
   def miq_messaging_listener_thread
