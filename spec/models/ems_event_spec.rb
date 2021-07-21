@@ -127,28 +127,16 @@ RSpec.describe EmsEvent do
           messaging_client = double("ManageIQ::Messaging")
 
           expected_queue_payload = {
-            :service => "manageiq.ems-events",
+            :service => "manageiq.ems",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
-            :payload => event_hash.merge(
-              :ems_type => ems.class.ems_type,
-              :ems_uid  => ems.uid_ems
-            )
+            :payload => event_hash
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
           expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
 
           described_class.add_queue('add', ems.id, event_hash)
-        end
-
-        context "event_streams.syndicate_events false" do
-          before { stub_settings_merge(:event_streams => {:syndicate_events => false}) }
-
-          it "doesn't add event to Artemis queue" do
-            expect(MiqQueue).not_to receive(:messaging_client)
-            described_class.add_queue('add', ems.id, event_hash)
-          end
         end
       end
 
@@ -159,28 +147,16 @@ RSpec.describe EmsEvent do
           messaging_client = double("ManageIQ::Messaging")
 
           expected_queue_payload = {
-            :service => "manageiq.ems-events",
+            :service => "manageiq.ems",
             :sender  => ems.id,
             :event   => event_hash[:event_type],
-            :payload => event_hash.merge(
-              :ems_type => ems.class.ems_type,
-              :ems_uid  => ems.uid_ems
-            )
+            :payload => event_hash
           }
 
           expect(messaging_client).to receive(:publish_topic).with(expected_queue_payload)
           expect(MiqQueue).to receive(:messaging_client).with('event_handler').and_return(messaging_client)
 
           described_class.add_queue('add', ems.id, event_hash)
-        end
-
-        context "event_streams.syndicate_events false" do
-          before { stub_settings_merge(:event_streams => {:syndicate_events => false}) }
-
-          it "doesn't add event to kafka topic" do
-            expect(MiqQueue).not_to receive(:messaging_client)
-            described_class.add_queue('add', ems.id, event_hash)
-          end
         end
       end
 
