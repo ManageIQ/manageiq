@@ -605,8 +605,6 @@ en:
       last_state: Last State
       last_sync_on: Last Sync Time
       last_update_check: Last Update Check
-      last_update_status: Last Update Status Code
-      last_update_status_str: Last Update Status
       last_valid_on: Last Valid On
       lastlogoff: Last Logoff
       lastlogon: Last Logon
