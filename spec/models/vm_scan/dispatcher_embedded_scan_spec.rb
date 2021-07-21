@@ -1,4 +1,4 @@
-RSpec.describe "VmScan::DispatcherEmbeddedScanSpec" do
+RSpec.describe "JobProxyDispatcherEmbeddedScanSpec" do
   describe "dispatch embedded" do
     include Spec::Support::JobProxyDispatcherHelper
 
