@@ -6,9 +6,6 @@ class JobProxyDispatcher
   end
 
   def initialize
-    @vm = nil
-    @all_busy_by_host_id_storage_id = {}
-    @active_vm_scans_by_zone = nil
     @active_container_scans_by_zone_and_ems = nil
     @zone = nil
   end

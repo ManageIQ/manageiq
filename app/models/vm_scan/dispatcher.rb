@@ -1,5 +1,12 @@
 class VmScan
   class Dispatcher < Job::Dispatcher
+    def initialize
+      @vm = nil
+      @all_busy_by_host_id_storage_id = {}
+      @active_vm_scans_by_zone = nil
+      @zone = nil
+    end
+
     def dispatch
       _, total_time = Benchmark.realtime_block(:total_time) do
         jobs_to_dispatch, = Benchmark.realtime_block(:pending_vm_jobs) { pending_jobs }
