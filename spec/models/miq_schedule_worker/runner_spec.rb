@@ -381,28 +381,6 @@ RSpec.describe MiqScheduleWorker::Runner do
                 end
               end
             end
-
-            context "#do_work appliance_specific" do
-              it "on an appliance" do
-                allow(MiqEnvironment::Command).to receive_messages(:is_appliance? => true)
-
-                Timecop.freeze(@start_time) do
-                  @schedule_worker.schedules_for_all_roles
-
-                  expect(@system.jobs(:tag => :server_updates).first.next_time).to eq(@start_time + 1.minute)
-                end
-              end
-
-              it "not an appliance" do
-                allow(MiqEnvironment::Command).to receive_messages(:is_appliance? => false)
-
-                Timecop.freeze(@start_time) do
-                  @schedule_worker.schedules_for_all_roles
-
-                  expect(@system.jobs(:tag => :server_updates).first).to be_nil
-                end
-              end
-            end
           end
         end
 

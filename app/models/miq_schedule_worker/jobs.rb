@@ -21,10 +21,6 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name  => "VmdbDatabaseConnection", :method_name => "log_statistics", :queue_name => 'miq_server', :server_guid => MiqServer.my_guid)
   end
 
-  def miq_server_queue_update_registration_status
-    queue_work(:class_name  => "MiqServer", :method_name => "queue_update_registration_status", :server_guid => MiqServer.my_guid)
-  end
-
   def job_check_jobs_for_timeout
     queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_jobs_for_timeout")
   end

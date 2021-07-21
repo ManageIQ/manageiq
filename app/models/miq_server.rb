@@ -11,7 +11,6 @@ class MiqServer < ApplicationRecord
   include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
-  include_concern 'UpdateManagement'
 
   include UuidMixin
   acts_as_miq_taggable
