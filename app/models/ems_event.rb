@@ -35,7 +35,7 @@ class EmsEvent < EventStream
       )
     else
       MiqQueue.messaging_client('event_handler')&.publish_topic(
-        :service => MiqEventHandler.default_queue_name,
+        :service => "manageiq.#{MiqEventHandler.default_queue_name}",
         :sender  => ems_id,
         :event   => event[:event_type],
         :payload => event

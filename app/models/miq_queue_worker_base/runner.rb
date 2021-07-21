@@ -187,12 +187,12 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
   def miq_messaging_subscribe_topic(&block)
     messaging_client = MiqQueue.messaging_client(self.class.name)
-    messaging_client.subscribe_topic(:service => @worker.queue_name, :persist_ref => @worker.guid, &block)
+    messaging_client.subscribe_topic(:service => "manageiq.#{@worker.queue_name}", :persist_ref => @worker.guid, &block)
   end
 
   def miq_messaging_subscribe_queue(&block)
     messaging_client = MiqQueue.messaging_client(self.class.name)
-    messaging_client.subscribe_messages(:service => @worker.queue_name) do |messages|
+    messaging_client.subscribe_messages(:service => "manageiq.#{@worker.queue_name}") do |messages|
       messages.each(&block)
     end
   end
