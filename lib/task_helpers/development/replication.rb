@@ -1,5 +1,3 @@
-require 'awesome_spawn'
-
 module TaskHelpers
   module Development
     class Replication
@@ -97,22 +95,25 @@ module TaskHelpers
         end
 
         def create_region(region)
-          run_command("DISABLE_DATABASE_ENVIRONMENT_CHECK='true' bin/rake evm:db:region", env: command_environment(region))
+          run_command("bin/rake evm:db:region", env: command_environment(region).merge("DISABLE_DATABASE_ENVIRONMENT_CHECK" => "true"))
           run_command("bin/rails r 'EvmDatabase.seed_primordial'", env: command_environment(region))
         ensure
           FileUtils.rm_f(guid_file)
         end
 
         def run_command(command, raise_on_error: true, env: {})
-          puts "+" * 50
-          puts "Running: #{command.inspect} with env: #{env.inspect}..."
-          puts AwesomeSpawn.run!(command, env: env).output
-        rescue AwesomeSpawn::CommandResultError => err
-          raise if raise_on_error
-
-          puts "Error skipped: #{err}"
-        ensure
-          puts "-" * 50
+          puts "\e[32m** #{command.inspect} with env: #{env.inspect}...\e[0m"
+          success = system(env, command)
+          puts
+          unless success
+            if raise_on_error
+              puts "\e[31mAn error occurred during execution!\e[0m"
+              raise
+            else
+              puts "\e[33mAn error occurred during execution...skipping\e[0m"
+            end
+            puts
+          end
         end
 
         def teardown_global_subscription_for_region(region)
