@@ -15,17 +15,17 @@ RSpec.describe InfraConversionJob::Dispatcher do
 
     it 'returns true if InfraConversionJob state is waiting_to_start' do
       infra_conversion_job.update!(:state => 'waiting_to_start')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_truthy
     end
 
     it 'returns true if InfraConversionJob state is restoring_vm_attributes' do
       infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_truthy
     end
 
     it 'returns false if no InfraConversionJob state is finished' do
       infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_truthy
     end
   end
 end

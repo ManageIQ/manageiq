@@ -170,17 +170,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue([:job_check_for_evm_snapshots, job_not_found_delay])
     end
 
-    # Schedule - JobProxyDispatcher#dispatch
-    # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
-    # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
-    # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time
-    scheduler.schedule_every(
-      :job_proxy_dispatcher_dispatch,
-      worker_settings[:job_proxy_dispatcher_interval]
-    ) do
-      enqueue(:job_proxy_dispatcher_dispatch)
-    end
-
     scheduler.schedule_every(:container_scan_dispatcher_dispatch, worker_settings[:container_scan_dispatcher_interval]) do
       enqueue(:container_scan_dispatcher_dispatch)
     end
@@ -193,13 +182,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:infra_conversion_dispatcher_dispatch)
     end
 
-    # Schedule - Check for a stuck JobProxyDispatcher#dispatch
+    # Schedule - Check for a stuck VmScan::Dispatcher#dispatch
     stuck_dispatch_threshold = worker_settings[:job_proxy_dispatcher_stale_message_timeout]
     scheduler.schedule_every(
       :check_for_stuck_dispatch,
       worker_settings[:job_proxy_dispatcher_stale_message_check_interval]
     ) do
-      enqueue([:check_for_stuck_dispatch, stuck_dispatch_threshold])
+      enqueue([:check_for_stuck_vm_scan_dispatch, stuck_dispatch_threshold])
     end
 
     # Schedule - Hourly Alert Evaluation Timer

@@ -46,12 +46,6 @@ class MiqScheduleWorker::Jobs
     queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_for_evm_snapshots", :args => [job_not_found_delay])
   end
 
-  def job_proxy_dispatcher_dispatch
-    if JobProxyDispatcher.waiting?
-      queue_work_on_each_zone(:class_name => "JobProxyDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
-    end
-  end
-
   def vm_scan_dispatcher_dispatch
     if VmScan::Dispatcher.waiting?
       queue_work_on_each_zone(:class_name => "VmScan::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
@@ -169,8 +163,8 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "MiqQueue", :method_name => "check_for_timeout", :zone => nil)
   end
 
-  def check_for_stuck_dispatch(threshold_seconds)
-    class_n = "JobProxyDispatcher"
+  def check_for_stuck_vm_scan_dispatch(threshold_seconds)
+    class_n = "VmScan::Dispatcher"
     method_n = "dispatch"
     Zone.in_my_region.each do |z|
       zone = z.name
