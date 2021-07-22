@@ -34,6 +34,11 @@ module MiqMemcached
       File.open(fname, "w") { |f| f.write(@config) }
     end
 
+    def changed?(fname)
+      current_config = File.read(fname)
+      current_config == @config
+    end
+
     def update(opts = {})
       port = opts[:port] || DEFAULT_PORT
       user = opts[:user] || DEFAULT_USER
@@ -41,13 +46,14 @@ module MiqMemcached
       maxconn = opts[:maxconn] || DEFAULT_MAXCONN
       options = opts[:options] || DEFAULT_OPTIONS
 
-      @config = <<-END_OF_CONFIG
-PORT="#{port}"
-USER="#{user}"
-MAXCONN="#{maxconn}"
-CACHESIZE="#{memory}"
-OPTIONS="#{options}"
-END_OF_CONFIG
+      @config = <<~END_OF_CONFIG
+        PORT="#{port}"
+        USER="#{user}"
+        MAXCONN="#{maxconn}"
+        CACHESIZE="#{memory}"
+        OPTIONS="#{options}"
+      END_OF_CONFIG
+
       @config
     end
   end
