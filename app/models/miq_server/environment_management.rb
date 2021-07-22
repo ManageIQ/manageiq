@@ -26,16 +26,15 @@ module MiqServer::EnvironmentManagement
 
     def start_memcached
       # TODO: Need to periodically check the memcached instance to see if it's up, and bounce it and notify the UiWorkers to re-connect
-      return if !::Settings.server.session_store.to_s == 'cache' || !MiqEnvironment::Command.supports_memcached?
+      return unless ::Settings.server.session_store.to_s == 'cache'
+      return unless MiqEnvironment::Command.supports_memcached?
 
       require Rails.root.join("lib/miq_memcached").to_s unless Object.const_defined?(:MiqMemcached)
 
       _svr, port = MiqMemcached.server_address.to_s.split(":")
       opts = ::Settings.session.memcache_server_opts.to_s
 
-      if MiqMemcached::Config.new(opts).changed?(MiqMemcached::Control::CONF_FILE)
-        MiqMemcached::Control.restart!(:port => port, :options => opts)
-      end
+      MiqMemcached::Control.restart!(:port => port, :options => opts) if MiqMemcached::Config.new(:port => port, :options => opts).changed?
 
       _log.info("Status: #{MiqMemcached::Control.status[1]}")
     end
