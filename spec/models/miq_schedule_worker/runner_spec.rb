@@ -16,7 +16,7 @@ RSpec.describe MiqScheduleWorker::Runner do
 
     context "with a stuck dispatch in each zone" do
       before do
-        @cond = {:class_name => 'JobProxyDispatcher', :method_name => 'dispatch'}
+        @cond = {:class_name => 'VmScan::Dispatcher', :method_name => 'dispatch'}
         @opts = @cond.merge(:state => 'dequeue', :updated_on => Time.now.utc)
         @stale_timeout = 2.minutes
         allow(@schedule_worker).to receive(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
