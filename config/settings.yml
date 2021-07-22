@@ -1135,6 +1135,7 @@
       :chargeback_generation_interval: 1.day
       :chargeback_generation_time_utc: 01:00:00
       :compliance_purge_interval: 1.day
+      :container_scan_dispatcher_interval: 15.seconds
       :db_diagnostics_interval: 30.minutes
       :drift_state_purge_interval: 1.day
       :event_streams_purge_interval: 1.day

@@ -181,6 +181,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:job_proxy_dispatcher_dispatch)
     end
 
+    scheduler.schedule_every(:container_scan_dispatcher_dispatch, worker_settings[:container_scan_dispatcher_interval]) do
+      enqueue(:container_scan_dispatcher_dispatch)
+    end
+
     scheduler.schedule_every(:vm_scan_dispatcher_dispatch, worker_settings[:vm_scan_dispatcher_interval]) do
       enqueue(:vm_scan_dispatcher_dispatch)
     end
