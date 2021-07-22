@@ -945,8 +945,6 @@ en:
       retirement_state: Retirement State
       retirement_warn: Retirement Warn
       retires_on: Retires On
-      rhsm_server: Rhsm Server
-      rhsm_sku: Rhsm Sku
       root_disk_size: Root Disk Size
       routes_count: Routes Count
       rsc_type: Rsc Type
