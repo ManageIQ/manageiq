@@ -45,7 +45,7 @@ module FixAuth
       end
 
       private def recrypt_password(old_value)
-        new_value = ManageIQ::Password.new.recrypt(old_value)
+        new_value = ManageIQ::Password.recrypt(old_value, options[:legacy_key])
 
         # Handle rare case where, when the old_value is already encrypted with
         #   the new key, during recrypt, the decryption with the legacy key
