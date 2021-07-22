@@ -28,7 +28,7 @@ RSpec.describe VmScan::Dispatcher do
 
     it 'returns false if VmScan state is fake_state' do
       vm_scan_job.update!(:state => 'fake_state')
-      expect(described_class.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_falsey
     end
   end
 

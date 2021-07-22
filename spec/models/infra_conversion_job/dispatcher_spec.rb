@@ -25,7 +25,7 @@ RSpec.describe InfraConversionJob::Dispatcher do
 
     it 'returns false if no InfraConversionJob state is finished' do
       infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(described_class.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_falsey
     end
   end
 end

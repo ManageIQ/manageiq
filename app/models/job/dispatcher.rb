@@ -12,7 +12,7 @@ class Job
     delegate :job_class, :to => :class
 
     def self.waiting?
-      job_class.where(:state => "waiting_to_start")
+      job_class.where(:state => "waiting_to_start").any?
     end
 
     def dispatch
