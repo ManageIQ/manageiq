@@ -6814,6 +6814,14 @@
         :description: Display Individual Event Streams
         :feature_type: view
         :identifier: event_streams_show
+  - :name: Delete
+    :description: Delete Custom Button
+    :feature_type: view
+    :identifier: custom_button_delete
+  - :name: Set Delete
+    :description: Delete Custom Button Set
+    :feature_type: view
+    :identifier: custom_button_set_delete
   - :name: Custom Button Events
     :description: Everything under Custom Button Events
     :hidden: true
