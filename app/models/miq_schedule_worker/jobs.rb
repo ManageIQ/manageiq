@@ -58,6 +58,12 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def container_scan_dispatcher_dispatch
+    if ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::Dispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY, :role => "smartstate")
+    end
+  end
+
   def infra_conversion_dispatcher_dispatch
     if InfraConversionJob::Dispatcher.waiting?
       queue_work_on_each_zone(:class_name => "InfraConversionJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
