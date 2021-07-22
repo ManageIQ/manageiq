@@ -1,3 +1,5 @@
+require 'uri'
+
 module TaskHelpers
   module Development
     class Replication
@@ -60,7 +62,7 @@ module TaskHelpers
 
         # Example: DATABASE_URL='postgres://root:smartvm@localhost:5432/development_replication_99'
         def database_url(region)
-          "postgres://#{PG_USER}:#{PG_PASS}@#{PG_HOST}:#{PG_PORT}/#{database(region)}"
+          URI::Generic.build(:scheme => "postgres", :host => PG_HOST, :userinfo => "#{PG_USER}:#{PG_PASS}", :port => PG_PORT, :path => "/#{database(region)}").to_s
         end
 
         def guid_file
