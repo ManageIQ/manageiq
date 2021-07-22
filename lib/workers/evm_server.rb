@@ -62,6 +62,8 @@ class EvmServer
   end
 
   def refresh_servers_to_monitor
+    @servers_to_monitor = servers_from_db if servers_to_monitor.empty?
+
     servers_to_start    = servers_from_db    - servers_to_monitor
     servers_to_shutdown = servers_to_monitor - servers_from_db
 
