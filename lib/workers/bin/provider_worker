@@ -6,7 +6,13 @@ ems_id = ENV["EMS_ID"]
 
 ems = ExtManagementSystem.find(ems_id)
 
-connection_config = {:endpoints => ems.endpoints, :authentications => ems.authentications}
+connection_config = {
+  :ems_id          => ems_id,
+  :ems_name        => ems.name,
+  :endpoints       => ems.endpoints,
+  :authentications => ems.authentications,
+  :messaging_opts  => MiqQueue.send(:messaging_client_options)
+}
 
 stdin_rd, stdin_wr = IO.pipe
 stdin_wr.write(connection_config.to_json)
