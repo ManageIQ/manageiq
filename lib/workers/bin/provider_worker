@@ -12,6 +12,10 @@ provider_opts = {
   :connection_config => ems.connection_configurations
 }
 
+# Send the connection information to the child process via STDIN by creating a
+# pipe, writing the config to our end of the pipe, and replacing STDIN with the
+# read end of the pipe.  This allows the child to simply read from STDIN to get
+# the credentials and other config in a secure way.
 stdin_rd, stdin_wr = IO.pipe
 stdin_wr.write(provider_opts.to_json)
 stdin_wr.close
