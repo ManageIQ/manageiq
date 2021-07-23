@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require "manageiq-password"
+
+ManageIQ::Password.key_root = File.expand_path("../certs", __dir__)
+decrypted_env_vars = ENV.to_hash.transform_values { |val| ManageIQ::Password.try_decrypt(val) }
+
+puts decrypted_env_vars.to_yaml
