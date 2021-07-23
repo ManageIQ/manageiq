@@ -1,4 +1,4 @@
-RSpec.describe "JobProxyDispatcherGetEligibleProxiesForJob" do
+RSpec.describe "VmScan::DispatcherGetEligibleProxiesForJob" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do
@@ -8,7 +8,7 @@ RSpec.describe "JobProxyDispatcherGetEligibleProxiesForJob" do
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
 
       # Support old style class methods or new instance style
-      @jpd = JobProxyDispatcher.respond_to?(:get_eligible_proxies_for_job) ? JobProxyDispatcher : JobProxyDispatcher.new
+      @jpd = VmScan::Dispatcher.respond_to?(:get_eligible_proxies_for_job) ? VmScan::Dispatcher : VmScan::Dispatcher.new
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
@@ -20,13 +20,13 @@ RSpec.describe "JobProxyDispatcherGetEligibleProxiesForJob" do
       context "with a vm scan job, " do
         before do
           @job = @vm.raw_scan
-          @jpd.instance_of?(JobProxyDispatcher) ? @jpd.instance_variable_set(:@vm, @vm) : @jpd.send(:class_variable_set, :@@vm, @vm)
+          @jpd.instance_of?(VmScan::Dispatcher) ? @jpd.instance_variable_set(:@vm, @vm) : @jpd.send(:class_variable_set, :@@vm, @vm)
           @jpd.instance_variable_set(:@vm, @vm)
         end
 
         context "and the vm attached to the job was not found, so @vm is nil, " do
           before do
-            @jpd.instance_of?(JobProxyDispatcher) ? @jpd.instance_variable_set(:@vm, nil) : @jpd.send(:class_variable_set, :@@vm, nil)
+            @jpd.instance_of?(VmScan::Dispatcher) ? @jpd.instance_variable_set(:@vm, nil) : @jpd.send(:class_variable_set, :@@vm, nil)
           end
 
           it "should return an empty array" do

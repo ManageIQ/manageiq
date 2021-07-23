@@ -16,7 +16,7 @@ RSpec.describe MiqScheduleWorker::Runner do
 
     context "with a stuck dispatch in each zone" do
       before do
-        @cond = {:class_name => 'JobProxyDispatcher', :method_name => 'dispatch'}
+        @cond = {:class_name => 'VmScan::Dispatcher', :method_name => 'dispatch'}
         @opts = @cond.merge(:state => 'dequeue', :updated_on => Time.now.utc)
         @stale_timeout = 2.minutes
         allow(@schedule_worker).to receive(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
@@ -42,7 +42,7 @@ RSpec.describe MiqScheduleWorker::Runner do
         @dispatch2 = FactoryBot.create(:miq_queue, attrs.merge(@opts))
 
         expect(MiqQueue.where(@cond).count).to eq(2)
-        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_vm_scan_dispatch(@stale_timeout.to_i)
         expect(MiqQueue.where(@cond).count).to eq(0)
       end
 
@@ -52,7 +52,7 @@ RSpec.describe MiqScheduleWorker::Runner do
         @dispatch2 = FactoryBot.create(:miq_queue, attrs.merge(@opts))
 
         expect(MiqQueue.where(@cond).count).to eq(2)
-        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_vm_scan_dispatch(@stale_timeout)
         expect(MiqQueue.where(@cond).count).to eq(0)
       end
 
@@ -61,14 +61,14 @@ RSpec.describe MiqScheduleWorker::Runner do
         expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
           expect(timeout).to eq(@stale_timeout * 3)
         end
-        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_vm_scan_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout with threshold for inactive worker" do
         expect_any_instance_of(MiqQueue).to receive(:check_for_timeout).once do |_instance, _prefix, _grace, timeout|
           expect(timeout).to eq(@stale_timeout)
         end
-        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_vm_scan_dispatch(@stale_timeout)
       end
 
       it "check_for_dispatch calls check_for_timeout which deletes for in-active worker" do
@@ -78,7 +78,7 @@ RSpec.describe MiqScheduleWorker::Runner do
         cond_active = @cond.dup
         cond_active[:handler_id] = @worker1.id
         expect(MiqQueue.where(@cond).count).to eq(2)
-        MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
+        MiqScheduleWorker::Jobs.new.check_for_stuck_vm_scan_dispatch(@stale_timeout)
         expect(MiqQueue.where(@cond).count).to eq(1)
         expect(MiqQueue.where(cond_active).count).to eq(1)
       end

@@ -1,4 +1,4 @@
-RSpec.describe "JobProxyDispatcherVmStorage2Proxies" do
+RSpec.describe "VmScanDispatcherVmStorage2Proxies" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "two vix disk enabled servers," do
