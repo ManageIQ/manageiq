@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require File.expand_path("../../../config/environment", __dir__)
+
+ems_id = ENV["EMS_ID"]
+
+ems = ExtManagementSystem.find(ems_id)
+
+connection_config = {:endpoints => ems.endpoints, :authentications => ems.authentications}
+
+stdin_rd, stdin_wr = IO.pipe
+stdin_wr.write(connection_config.to_json)
+stdin_wr.close
+
+$stdin.reopen(stdin_rd)
+
+Kernel.exec(ARGV.join(" "))
