@@ -1,11 +1,6 @@
 require 'util/postgres_admin'
 
 class MiqDatabase < ApplicationRecord
-  REGISTRATION_DEFAULT_VALUES = {
-    :registration_type   => "sm_hosted",
-    :registration_server => "subscription.rhn.redhat.com"
-  }.freeze
-
   include AuthenticationMixin
 
   include ManageIQ::Password::PasswordMixin
@@ -14,8 +9,6 @@ class MiqDatabase < ApplicationRecord
 
   validates_presence_of :session_secret_token, :csrf_secret_token
 
-  default_values REGISTRATION_DEFAULT_VALUES
-
   # TODO: move hard-coded update information
   def self.cfme_package_name
     "cfme-appliance"
@@ -23,10 +16,6 @@ class MiqDatabase < ApplicationRecord
 
   def self.postgres_package_name
     PostgresAdmin.package_name
-  end
-
-  def self.registration_default_values
-    REGISTRATION_DEFAULT_VALUES
   end
 
   def self.registration_default_value_for_update_repo_name
@@ -72,14 +61,8 @@ class MiqDatabase < ApplicationRecord
   end
 
   def verify_credentials(auth_type = nil, _options = {})
-    return true if auth_type == :registration_http_proxy
-
-    MiqTask.wait_for_taskid(RegistrationSystem.verify_credentials_queue).task_results if auth_type == :registration
   end
 
-  def registration_organization_name
-    registration_organization_display_name || registration_organization
-  end
 
   def self.display_name(number = 1)
     n_('Database', 'Databases', number)
