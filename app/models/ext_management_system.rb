@@ -557,22 +557,14 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def connection_configurations
-    roles = endpoints.map(&:role)
-    options = {}
-
-    roles.each do |role|
-      conn = connection_configuration_by_role(role)
-      options[role] = OpenStruct.new(conn)
-    end
-
-    connections = OpenStruct.new(options)
-    connections.roles = roles
-    connections
+    connections = connection_configurations_hash.transform_values { |conn| OpenStruct.new(conn) }
+    connections[:roles] = connections.keys
+    OpenStruct.new(connections)
   end
 
   def connection_configurations_hash
     endpoints.map(&:role).each_with_object({}) do |role, options|
-      options[role] = connection_configuration_by_role(role)
+      options[role] = connection_configuration_hash_by_role(role)
     end
   end
 
@@ -598,6 +590,10 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def connection_configuration_by_role(role = "default")
+    OpenStruct.new(connection_configuration_hash_by_role(role))
+  end
+
+  def connection_configuration_hash_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
 
     if endpoint
