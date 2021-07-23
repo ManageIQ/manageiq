@@ -557,17 +557,15 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def connection_configurations
-    roles = endpoints.map(&:role)
-    options = {}
+    connections = connection_configurations_hash.transform_values { |conn| OpenStruct.new(conn) }
+    connections[:roles] = connections.keys
+    OpenStruct.new(connections)
+  end
 
-    roles.each do |role|
-      conn = connection_configuration_by_role(role)
-      options[role] = conn
+  def connection_configurations_hash
+    endpoints.map(&:role).each_with_object({}) do |role, options|
+      options[role] = connection_configuration_hash_by_role(role)
     end
-
-    connections = OpenStruct.new(options)
-    connections.roles = roles
-    connections
   end
 
   # Takes a hash of connection data
@@ -592,14 +590,17 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def connection_configuration_by_role(role = "default")
+    OpenStruct.new(connection_configuration_hash_by_role(role))
+  end
+
+  def connection_configuration_hash_by_role(role = "default")
     endpoint = endpoints.detect { |e| e.role == role }
 
     if endpoint
       authtype = endpoint.role == "default" ? default_authentication_type.to_s : endpoint.role
       auth = authentications.detect { |a| a.authtype == authtype }
 
-      options = {:endpoint => endpoint, :authentication => auth}
-      OpenStruct.new(options)
+      {:endpoint => endpoint, :authentication => auth}
     end
   end
 
