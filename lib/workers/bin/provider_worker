@@ -18,4 +18,4 @@ stdin_wr.close
 
 $stdin.reopen(stdin_rd)
 
-Kernel.exec(ARGV.join(" "))
+Kernel.exec(ARGV.shelljoin)
