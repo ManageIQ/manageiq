@@ -4,14 +4,11 @@ require File.expand_path("../../../config/environment", __dir__)
 
 ems_id = ENV["EMS_ID"]
 
-ems = ExtManagementSystem.find(ems_id)
+connection_config = ExtManagementSystem.find(ems_id).connection_configurations_hash
 
-connection_config = {
-  :ems_id          => ems_id,
-  :ems_name        => ems.name,
-  :endpoints       => ems.endpoints,
-  :authentications => ems.authentications,
-  :messaging_opts  => MiqQueue.send(:messaging_client_options)
+provider_opts = {
+  "connection_config" => connection_config,
+  "messaging_opts"    => MiqQueue.send(:messaging_client_options)
 }
 
 # Send the connection information to the child process via STDIN by creating a
@@ -19,7 +16,7 @@ connection_config = {
 # read end of the pipe.  This allows the child to simply read from STDIN to get
 # the credentials and other config in a secure way.
 stdin_rd, stdin_wr = IO.pipe
-stdin_wr.write(connection_config.to_json)
+stdin_wr.write(provider_opts.to_json)
 stdin_wr.close
 
 $stdin.reopen(stdin_rd)
