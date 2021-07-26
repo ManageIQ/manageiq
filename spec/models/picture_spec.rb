@@ -22,14 +22,14 @@ RSpec.describe Picture do
     it 'is required' do
       subject.extension = nil
       expect(subject.valid?).to be_falsey
-      expect(subject.errors.messages).to eq(:extension => ["can't be blank", "must be a png, jpg, or svg"])
+      expect(subject.errors.messages).to eq(:extension => ["can't be blank", "must be a png, jpg/jpeg, or svg"])
     end
 
-    it "accepts only png, jpg, or svg" do
+    it "accepts only specific file extensions" do
       subject.extension = "foo"
 
       expect(subject.valid?).to be_falsey
-      expect(subject.errors.messages).to eq(:extension =>['must be a png, jpg, or svg'])
+      expect(subject.errors.messages).to eq(:extension => ["must be a png, jpg/jpeg, or svg"])
 
       subject.extension = "png"
       expect(subject.valid?).to be_truthy
