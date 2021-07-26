@@ -6,11 +6,22 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def sync_dequeue_method
+    previous_dequeue_method = @dequeue_method
     @dequeue_method = (worker_settings[:dequeue_method] || :sql).to_sym
+
+    dequeue_method_changed(previous_dequeue_method) if @dequeue_method != previous_dequeue_method
   end
 
   def dequeue_method_via_drb?
     @dequeue_method == :drb && drb_dequeue_available?
+  end
+
+  def dequeue_method_via_miq_messaging?
+    @dequeue_method == :miq_messaging && miq_messaging_dequeue_available?
+  end
+
+  def dequeue_method_changed(previous_dequeue_method)
+    @listener_thread&.kill if previous_dequeue_method == :miq_messaging
   end
 
   def get_message_via_drb
@@ -62,9 +73,16 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     end
   end
 
+  def get_message_via_miq_messaging
+    @message_queue ||= Queue.new
+    @message_queue.pop unless @message_queue.empty?
+  end
+
   def get_message
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
+    elsif dequeue_method_via_miq_messaging?
+      get_message_via_miq_messaging
     else
       get_message_via_sql
     end
@@ -101,17 +119,23 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def deliver_message(msg)
-    return deliver_queue_message(msg) if msg.kind_of?(MiqQueue)
-    return process_message(msg)       if msg.kind_of?(String)
-
-    _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
-    raise _("%{log} Message <%{message}> is of unknown type <%{type}>") % {:log     => log_prefix,
-                                                                           :message => msg.inspect,
-                                                                           :type    => msg.class}
+    case msg
+    when MiqQueue
+      deliver_queue_message(msg)
+    when ManageIQ::Messaging::ReceivedMessage
+      process_miq_messaging_message(msg)
+    when String
+      process_message(msg)
+    else
+      _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
+      raise _("%{log} Message <%{message}> is of unknown type <%{type}>") %
+            {:log => log_prefix, :message => msg.inspect, :type => msg.class}
+    end
   end
 
   def do_work
     register_worker_with_worker_monitor if dequeue_method_via_drb?
+    ensure_miq_listener_thread!         if dequeue_method_via_miq_messaging?
 
     # Keep collecting messages from the queue until the queue is empty,
     #   so we don't sleep in between messages
@@ -138,6 +162,46 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       rescue DRb::DRbError
         false
       end
+  end
+
+  def miq_messaging_dequeue_available?
+    MiqQueue.messaging_type != "miq_queue" && MiqQueue.messaging_client(self.class.name).present?
+  end
+
+  def process_miq_messaging_message(_msg)
+    raise NotImplementedError, 'Must be implemented in subclass'
+  end
+
+  def ensure_miq_listener_thread!
+    @miq_listener_thread = nil if @miq_listener_thread && !@miq_listener_thread.alive?
+
+    miq_listener_thread
+  end
+
+  def miq_listener_thread
+    @miq_listener_thread ||= Thread.new { miq_messaging_listener_thread }
+  end
+
+  def miq_messaging_listener_thread
+    loop do
+      send("miq_messaging_subscribe_#{@worker.class.miq_messaging_subscribe_mode}") do |msg|
+        @message_queue << msg
+      end
+    rescue => err
+      _log.warn("miq_messaging_listener_thread error [#{err}]")
+    end
+  end
+
+  def miq_messaging_subscribe_topic(&block)
+    messaging_client = MiqQueue.messaging_client(self.class.name)
+    messaging_client.subscribe_topic(:service => "manageiq.#{@worker.queue_name}", :persist_ref => @worker.guid, &block)
+  end
+
+  def miq_messaging_subscribe_queue(&block)
+    messaging_client = MiqQueue.messaging_client(self.class.name)
+    messaging_client.subscribe_messages(:service => "manageiq.#{@worker.queue_name}") do |messages|
+      messages.each(&block)
+    end
   end
 
   # Only for file based heartbeating

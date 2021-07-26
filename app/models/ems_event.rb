@@ -25,15 +25,22 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    publish_event(ems_id, event) if syndicate_events?
-
-    MiqQueue.submit_job(
-      :service     => "event",
-      :target_id   => ems_id,
-      :class_name  => "EmsEvent",
-      :method_name => meth,
-      :args        => [event]
-    )
+    if MiqQueue.messaging_type == "miq_queue"
+      MiqQueue.submit_job(
+        :service     => "event",
+        :target_id   => ems_id,
+        :class_name  => "EmsEvent",
+        :method_name => meth,
+        :args        => [event]
+      )
+    else
+      MiqQueue.messaging_client('event_handler')&.publish_topic(
+        :service => "manageiq.#{MiqEventHandler.default_queue_name}",
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
+    end
   end
 
   def self.add(ems_id, event_hash)
@@ -53,6 +60,9 @@ class EmsEvent < EventStream
     new_event = create_event(event_hash)
     # Create a 'completed task' event if this is the last in a series of events
     create_completed_event(event_hash) if task_final_events.key?(event_type.to_sym)
+
+    syndicate_event(ems_id, event_hash) if syndicate_events?
+
     new_event
   end
 
@@ -265,7 +275,7 @@ class EmsEvent < EventStream
 
   private_class_method :create_completed_event
 
-  def self.publish_event(ems_id, event)
+  private_class_method def self.syndicate_event(ems_id, event)
     ems = ExtManagementSystem.find(ems_id)
     event[:ems_uid]  = ems&.uid_ems
     event[:ems_type] = ems&.class&.ems_type
@@ -280,8 +290,6 @@ class EmsEvent < EventStream
     _log.warn("Failed to publish event [#{ems_id}] [#{event[:event_type]}]: #{err}")
     _log.log_backtrace(err)
   end
-
-  private_class_method :publish_event
 
   private_class_method def self.syndicate_events?
     Settings.event_streams.syndicate_events && MiqQueue.messaging_type != "miq_queue"
