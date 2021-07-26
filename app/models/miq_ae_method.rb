@@ -56,6 +56,12 @@ class MiqAeMethod < ApplicationRecord
     fqname.split("/")[0..-3].join("/")
   end
 
+  def data_for_expression
+    raise "method is not an expression" if location != "expression"
+
+    YAML.load(data)
+  end
+
   def self.default_method_text
     <<-DEFAULT_METHOD_TEXT
 #

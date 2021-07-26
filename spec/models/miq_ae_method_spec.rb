@@ -50,6 +50,40 @@ RSpec.describe MiqAeMethod do
     expect { f1.valid? }.not_to make_database_queries
   end
 
+  describe "#data_for_expression" do
+    it "when the method has an embedded expression" do
+      yaml_data = <<~YAML
+        ---
+        :db: OrchestrationTemplate
+        :expression:
+          and:
+          - "=":
+              field: OrchestrationTemplate-orderable
+              value: 'true'
+            :token: 1
+          - INCLUDES:
+              field: OrchestrationTemplate-type
+              value: :user_input
+            :token: 2
+      YAML
+
+      f1 = FactoryBot.create(:miq_ae_method,
+                             :scope    => "instance",
+                             :location => "expression",
+                             :data     => yaml_data)
+
+      expect(f1.data_for_expression).to eq YAML.load(yaml_data)
+    end
+
+    it "when the method is not an expression" do
+      f1 = FactoryBot.create(:miq_ae_method,
+                             :scope    => "instance",
+                             :location => "inline")
+
+      expect { f1.data_for_expression }.to raise_error(/is not an expression/)
+    end
+  end
+
   context "#copy" do
     let(:d2) { FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
     let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent => @d1) }
