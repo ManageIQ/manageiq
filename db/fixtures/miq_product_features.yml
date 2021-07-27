@@ -4055,6 +4055,47 @@
       :feature_type: admin
       :identifier: floating_ip_delete
 
+# Cloud Database
+- :name: Cloud Databases
+  :description: Everything under Cloud Databases
+  :feature_type: node
+  :identifier: cloud_database
+  :children:
+  - :name: View
+    :description: View Cloud Databases
+    :feature_type: view
+    :identifier: cloud_database_view
+    :children:
+    - :name: List
+      :description: Display Lists of Cloud Databases
+      :feature_type: view
+      :identifier: cloud_database_show_list
+    - :name: Show
+      :description: Display Individual Cloud Databases
+      :feature_type: view
+      :identifier: cloud_database_show
+
+# Cloud Database Flavor
+- :name: Cloud Database Flavors
+  :description: Everything under Cloud Database Flavors
+  :feature_type: node
+  :identifier: cloud_database_flavor
+  :children:
+  - :name: View
+    :description: View Cloud Database Flavors
+    :feature_type: view
+    :identifier: cloud_database_flavor_view
+    :children:
+    - :name: List
+      :description: Display Lists of Cloud Database Flavors
+      :feature_type: view
+      :identifier: cloud_database_flavor_show_list
+    - :name: Show
+      :description: Display Individual Cloud Database Flavors
+      :feature_type: view
+      :identifier: cloud_database_flavor_show
+
+
 # Cloud Network
 - :name: Cloud Networks
   :description: Everything under Cloud Networks
