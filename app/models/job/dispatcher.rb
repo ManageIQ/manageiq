@@ -40,5 +40,18 @@ class Job
                       (zone is null or zone = ?) and
                       sync_key is not NULL)", zone_name)
     end
+
+    def running_jobs
+      job_class.order(:id)
+               .where.not(:state => %w[finished waiting_to_start])
+               .where("zone is null or zone = ?", zone_name)
+               .where("sync_key is NULL or
+                  sync_key not in (
+                    select sync_key from jobs where
+                      dispatch_status = 'active' and
+                      state != 'finished' and
+                      (zone is null or zone = ?) and
+                      sync_key is not NULL)", zone_name)
+    end
   end
 end
