@@ -1,2 +1,4 @@
 ---
 :table_width: 400
+:safe_methods:
+- :report_build_html_table # Defined in lib/vmdb/global_methods.rb

@@ -68,6 +68,8 @@ module Vmdb
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
+    #
+    # NOTE: This method is ignored by brakeman in the config/brakeman.yml
     def report_build_html_table(report, table_body, breakable = true)
       html = ''
       html << "<table class=\"table table-striped table-bordered #{breakable ? '' : 'non-breakable'}\">"
@@ -87,6 +89,7 @@ module Vmdb
       end
       html << '<tbody>'
       html << table_body << '</tbody></table>'
+      html.html_safe
     end
   end
 end

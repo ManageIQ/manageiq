@@ -4,12 +4,14 @@ namespace :test do
 
     desc "Run Brakeman"
     task :brakeman do
+      require "vmdb/plugins"
       require "brakeman"
 
       # See all possible options here:
-      #   http://www.rubydoc.info/gems/brakeman/Brakeman#run-class_method
+      #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
       tracker = Brakeman.run(
-        :app_path     => ".",
+        :app_path     => Rails.root.to_s,
+        :engine_paths => Vmdb::Plugins.paths.values,
         :quiet        => false,
         :print_report => true
       )
