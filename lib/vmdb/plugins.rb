@@ -39,6 +39,10 @@ module Vmdb
       end
     end
 
+    def paths
+      details.transform_values { |v| v[:path] }
+    end
+
     def versions
       details.transform_values { |v| v[:version] }
     end
