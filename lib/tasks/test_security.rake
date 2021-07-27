@@ -2,30 +2,58 @@ namespace :test do
   namespace :security do
     task :setup # NOOP - Stub for consistent CI testing
 
-    desc "Run Brakeman"
-    task :brakeman do
+    desc "Run Brakeman with the specified report format ('human' or 'json')"
+    task :brakeman, :format do |_, args|
+      format = args.fetch(:format, "human")
+
       require "vmdb/plugins"
       require "brakeman"
 
       # See all possible options here:
       #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
-      tracker = Brakeman.run(
+      options = {
         :app_path     => Rails.root.to_s,
         :engine_paths => Vmdb::Plugins.paths.values,
         :quiet        => false,
         :print_report => true
-      )
+      }
+      if format == "json"
+        options[:output_files] = [
+          Rails.root.join("log/brakeman.json").to_s,
+          Rails.root.join("log/brakeman.log").to_s
+        ]
+      end
 
-      # Exit 1 on any warnings so CI can report the project as red.
-      exit tracker.filtered_warnings.empty? ? 0 : 1
+      tracker = Brakeman.run(options)
+
+      exit 1 unless tracker.filtered_warnings.empty?
     end
 
-    desc "Run bundler audit"
-    task :bundler_audit do
-      exit $?.exitstatus unless system("bundle-audit check --update --verbose")
+    desc "Run bundler audit with the specified report format ('human' or 'json')"
+    task :bundler_audit, :format do |_, args|
+      format = args.fetch(:format, "human")
+
+      options = [:update, :verbose]
+      if format == "json"
+        options << {
+          :format => "json",
+          :output => Rails.root.join("log/bundle-audit.json").to_s
+        }
+      end
+
+      require "awesome_spawn"
+      cmd = AwesomeSpawn.build_command_line("bundle-audit check", options)
+
+      exit $?.exitstatus unless system(cmd)
     end
   end
 
-  desc "Run security tests"
-  task :security => %w[security:bundler_audit security:brakeman]
+  desc "Run all security tests with the specified report format ('human' or 'json')"
+  task :security, :format do |_, args|
+    format = args.fetch(:format, "human")
+    ns = defined?(ENGINE_ROOT) ? "app:test:security" : "test:security"
+
+    Rake::Task["#{ns}:bundler_audit"].invoke(format)
+    Rake::Task["#{ns}:brakeman"].invoke(format)
+  end
 end
