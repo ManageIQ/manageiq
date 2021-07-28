@@ -17,6 +17,13 @@ class MiqWorker
         container[:env] << {:name => "PORT", :value => container_port.to_s}
         container[:env] << {:name => "BINDING_ADDRESS", :value => "0.0.0.0"}
         add_readiness_probe(container)
+        container[:volumeMounts] ||= []
+        definition[:spec][:template][:spec][:volumes] ||= []
+
+        if kind_of?(MiqUiWorker)
+          container[:volumeMounts] << {:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"}
+          definition[:spec][:template][:spec][:volumes] << {:name=>"ui-httpd-configs", :configMap=>{:name=>"ui-httpd-configs", :defaultMode=>420}}
+        end
       end
 
       scale_deployment
