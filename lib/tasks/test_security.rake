@@ -9,11 +9,18 @@ namespace :test do
       require "vmdb/plugins"
       require "brakeman"
 
+      app_path = Rails.root.to_s
+      engine_paths = Vmdb::Plugins.paths.values
+
+      puts "** Running brakeman in #{app_path}"
+      puts "** with engines:"
+      puts "- #{engine_paths.join("\n- ")}"
+
       # See all possible options here:
       #   https://brakemanscanner.org/docs/brakeman_as_a_library/#using-options
       options = {
-        :app_path     => Rails.root.to_s,
-        :engine_paths => Vmdb::Plugins.paths.values,
+        :app_path     => app_path,
+        :engine_paths => engine_paths,
         :quiet        => false,
         :print_report => true
       }
@@ -32,6 +39,8 @@ namespace :test do
     desc "Run bundle-audit with the specified report format ('human' or 'json')"
     task :bundle_audit, :format do |_, args|
       format = args.fetch(:format, "human")
+
+      puts "** Running bundle-audit in #{Dir.pwd}"
 
       options = [:update, :verbose]
       if format == "json"
@@ -54,6 +63,7 @@ namespace :test do
     ns = defined?(ENGINE_ROOT) ? "app:test:security" : "test:security"
 
     Rake::Task["#{ns}:bundle_audit"].invoke(format)
+    puts
     Rake::Task["#{ns}:brakeman"].invoke(format)
   end
 end
