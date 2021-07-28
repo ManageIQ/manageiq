@@ -27,4 +27,15 @@ class MiqWebServiceWorker < MiqWorker
     super
     Api::ApiConfig.collections.each { |_k, v| v.klass.try(:constantize).try(:descendants) }
   end
+
+  def container_port
+    3001
+  end
+
+  def configure_service_worker_deployment(definition)
+    super
+
+    definition[:spec][:template][:spec][:containers].first[:volumeMounts] << {:name => "api-httpd-config", :mountPath => "/etc/httpd/conf.d"}
+    definition[:spec][:template][:spec][:volumes] << {:name => "api-httpd-config", :configMap => {:name => "api-httpd-configs", :defaultMode => 420}}
+  end
 end
