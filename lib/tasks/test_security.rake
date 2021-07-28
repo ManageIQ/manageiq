@@ -29,8 +29,8 @@ namespace :test do
       exit 1 unless tracker.filtered_warnings.empty?
     end
 
-    desc "Run bundler audit with the specified report format ('human' or 'json')"
-    task :bundler_audit, :format do |_, args|
+    desc "Run bundle-audit with the specified report format ('human' or 'json')"
+    task :bundle_audit, :format do |_, args|
       format = args.fetch(:format, "human")
 
       options = [:update, :verbose]
@@ -53,7 +53,7 @@ namespace :test do
     format = args.fetch(:format, "human")
     ns = defined?(ENGINE_ROOT) ? "app:test:security" : "test:security"
 
-    Rake::Task["#{ns}:bundler_audit"].invoke(format)
+    Rake::Task["#{ns}:bundle_audit"].invoke(format)
     Rake::Task["#{ns}:brakeman"].invoke(format)
   end
 end
