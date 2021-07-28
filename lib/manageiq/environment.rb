@@ -23,7 +23,7 @@ module ManageIQ
 
       create_database_user if ENV["CI"]
 
-      setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
+      setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
 
       prepare_codeclimate_test_reporter(plugin_root) if ENV["CI"]
     end
@@ -56,13 +56,6 @@ module ManageIQ
       ui_thread
     end
 
-    def self.while_updating_ui
-      # Run update:ui in a thread and continue to do the non-js stuff
-      ui_thread = update_ui_thread
-      yield
-      ui_thread.join
-    end
-
     def self.install_bundler(root = APP_ROOT)
       system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
       system!("gem install bundler -v '#{bundler_version}' --conservative")
@@ -92,8 +85,6 @@ module ManageIQ
     end
 
     def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
-      return if ENV["SKIP_TEST_RESET"]
-
       puts "\n== Resetting tests =="
       run_rake_task("#{task_prefix}test:vmdb:setup", :root => root)
     end
