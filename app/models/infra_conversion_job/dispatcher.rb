@@ -1,7 +1,7 @@
 class InfraConversionJob
   class Dispatcher < Job::Dispatcher
     def self.waiting?
-      job_class.where.not(:state => %w[finished waiting_to_start]).any?
+      job_class.where.not(:state => "finished").any?
     end
 
     def dispatch
