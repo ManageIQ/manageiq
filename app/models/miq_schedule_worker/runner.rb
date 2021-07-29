@@ -170,14 +170,20 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue([:job_check_for_evm_snapshots, job_not_found_delay])
     end
 
+    # Schedule - ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::Dispatcher
+    # Queue a ContainerManager::Scanning::Job::Dispatcher task unless there's already one on the queue
     scheduler.schedule_every(:container_scan_dispatcher_dispatch, worker_settings[:container_scan_dispatcher_interval]) do
       enqueue(:container_scan_dispatcher_dispatch)
     end
 
+    # Schedule - VmScan::Dispatcher
+    # Queue a VmScan::Dispatcher task unless there's already one on the queue
     scheduler.schedule_every(:vm_scan_dispatcher_dispatch, worker_settings[:vm_scan_dispatcher_interval]) do
       enqueue(:vm_scan_dispatcher_dispatch)
     end
 
+    # Schedule - InfraConversionJob::Dispatcher
+    # Queue a InfraConversionJob::Dispatcher task unless there's already one on the queue
     scheduler.schedule_every(:infra_conversion_dispatcher_dispatch, worker_settings[:infra_conversion_dispatcher_interval]) do
       enqueue(:infra_conversion_dispatcher_dispatch)
     end
