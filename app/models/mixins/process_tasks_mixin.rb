@@ -8,7 +8,7 @@ module ProcessTasksMixin
       raise _("No ids given to process_tasks") if options[:ids].blank?
       if options[:task] == 'retire_now'
         options[:ids].each do |id|
-          $log.info("Creating retire request for id #{id} with #{User.current_user}")
+          $log.info("Creating retire request for id [#{id}] with user [#{User.current_user.userid}]")
           name.constantize.make_retire_request(id, User.current_user)
         end
       elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
