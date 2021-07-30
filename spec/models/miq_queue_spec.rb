@@ -210,30 +210,22 @@ RSpec.describe MiqQueue do
   end
 
   it "should validate formatting of message for logging" do
-    # Add various key/value combos as needs arise...
-    message_parms = [{
-      :target_id    => nil,
+    msg = FactoryBot.build(
+      :miq_queue,
       :priority     => 20,
       :method_name  => 'perf_rollup_gap',
       :state        => 'ready',
-      :task_id      => nil,
       :queue_name   => 'ems_metrics_processor',
       :class_name   => 'Metric::Rollup',
-      :instance_id  => nil,
-      :args         => [],
       :zone         => 'default',
       :role         => 'ems_metrics_processor',
-      :server_guid  => nil,
       :msg_timeout  => 600,
-      :handler_type => nil
-    }]
+      :handler_type => "Vm",
+      :handler_id   => 1
+    )
 
-    message_parms.each do |mparms|
-      msg = FactoryBot.create(:miq_queue)
-      mparms.each { |k, v| msg.send("#{k}=", v) }
-      expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
-      expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{msg.args.inspect}")
-    end
+    expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
+    expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], Zone: [default], Role: [ems_metrics_processor], Server: [], MiqTask id: [], Handler id: [Vm 1], Ident: [ems_metrics_processor], Target id: [], Instance id: [], Task id: [], Command: [Metric::Rollup.perf_rollup_gap], Timeout: [600], Priority: [20], State: [ready], Deliver On: [], Data: [], Args: []")
   end
 
   it "should validate formatting of message with encrypted password in args for logging" do
@@ -248,28 +240,23 @@ RSpec.describe MiqQueue do
       "---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false"
     ]
 
-    message_parms = [{
-      :target_id    => nil,
+    msg = FactoryBot.build(
+      :miq_queue,
       :priority     => 20,
       :method_name  => 'perf_rollup_gap',
       :state        => 'ready',
-      :task_id      => nil,
       :queue_name   => 'ems_metrics_processor',
       :class_name   => 'Metric::Rollup',
-      :instance_id  => nil,
       :args         => args_test,
       :zone         => 'default',
       :role         => 'ems_metrics_processor',
-      :server_guid  => nil,
       :msg_timeout  => 600,
-      :handler_type => nil
-    }]
+      :handler_type => "Vm",
+      :handler_id   => 1
+    )
 
-    message_parms.each do |mparms|
-      msg = FactoryBot.build(:miq_queue, mparms)
-      expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
-      expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{args_cleaned_password.inspect}")
-    end
+    expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
+    expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], Zone: [default], Role: [ems_metrics_processor], Server: [], MiqTask id: [], Handler id: [Vm 1], Ident: [ems_metrics_processor], Target id: [], Instance id: [], Task id: [], Command: [Metric::Rollup.perf_rollup_gap], Timeout: [600], Priority: [20], State: [ready], Deliver On: [], Data: [], Args: #{args_cleaned_password.inspect}")
   end
 
   context "executing priority" do
