@@ -108,7 +108,7 @@ module ProcessTasksMixin
     def invoke_api_tasks(api_client, remote_options)
       collection_name = Api::CollectionConfig.new.name_for_klass(self)
       unless collection_name
-        _log.error("No API entpoint found for class #{name}")
+        _log.error("No API endpoint found for class #{name}")
         raise NotImplementedError
       end
 
@@ -130,7 +130,7 @@ module ProcessTasksMixin
       post_args = remote_options[:args] || {}
       begin
         if id.present?
-          msg_desination = "remote object: #{id} for collection #{collection_name},  with args #{post_args}"
+          msg_desination = "remote object: #{id} for collection #{collection_name}, with args #{post_args}"
           destination = collection.find(id)
         else
           msg_desination = "remote collection #{collection_name}, with args #{post_args}"
