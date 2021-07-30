@@ -189,12 +189,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     end
 
     # Schedule - Check for a stuck VmScan::Dispatcher#dispatch
-    stuck_dispatch_threshold = worker_settings[:job_proxy_dispatcher_stale_message_timeout]
+    stuck_vm_scan_dispatch_threshold = worker_settings[:vm_scan_dispatcher_stale_message_timeout]
     scheduler.schedule_every(
       :check_for_stuck_dispatch,
-      worker_settings[:job_proxy_dispatcher_stale_message_check_interval]
+      worker_settings[:vm_scan_dispatcher_stale_message_check_interval]
     ) do
-      enqueue([:check_for_stuck_vm_scan_dispatch, stuck_dispatch_threshold])
+      enqueue([:check_for_stuck_vm_scan_dispatch, stuck_vm_scan_dispatch_threshold])
     end
 
     # Schedule - Hourly Alert Evaluation Timer
