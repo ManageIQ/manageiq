@@ -1,8 +1,6 @@
 class PxeServer < ApplicationRecord
   autoload :WimParser, "wim_parser"
 
-  include FileDepotMixin
-
   alias_attribute :description, :name
 
   default_value_for :customization_directory, ""

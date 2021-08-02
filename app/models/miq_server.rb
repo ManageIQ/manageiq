@@ -7,7 +7,6 @@ class MiqServer < ApplicationRecord
   include_concern 'ServerSmartProxy'
   include_concern 'ConfigurationManagement'
   include_concern 'EnvironmentManagement'
-  include_concern 'LogManagement'
   include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'

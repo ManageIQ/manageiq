@@ -8,7 +8,7 @@ class MiqSchedule < ApplicationRecord
 
   validates :name, :uniqueness_when_changed => {:scope => [:userid, :resource_type]}
   validates :name, :description, :resource_type, :run_at, :presence => true
-  validate  :validate_run_at, :validate_file_depot
+  validate  :validate_run_at
 
   before_save :set_start_time_and_prod_default
 
@@ -16,7 +16,6 @@ class MiqSchedule < ApplicationRecord
   virtual_column :v_zone_name,     :type => :string, :uses => :zone
   virtual_column :next_run_on,     :type => :datetime
 
-  belongs_to :file_depot
   belongs_to :miq_search
   belongs_to :resource, :polymorphic => true
   belongs_to :zone
@@ -41,7 +40,7 @@ class MiqSchedule < ApplicationRecord
 
   SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
   VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
-  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request).freeze
+  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_gc automation_request).freeze
   IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
   default_value_for :userid,  "system"
@@ -247,19 +246,6 @@ class MiqSchedule < ApplicationRecord
     AutomationRequest.create_from_scheduled_task(user, filter[:uri_parts], parameters)
   end
 
-  def action_db_backup(klass, _at)
-    self.sched_action ||= {}
-    self.sched_action[:options] ||= {}
-    self.sched_action[:options][:userid] = userid
-    opts = self.sched_action[:options]
-    opts[:file_depot_id]   = file_depot.id
-    opts[:miq_schedule_id] = id
-    queue_opts = {:class_name  => klass.name, :method_name => "backup", :args => [opts], :role => "database_operations",
-                  :msg_timeout => ::Settings.task.active_task_timeout.to_i_with_method}
-    task_opts  = {:action => "Database backup", :userid => self.sched_action[:options][:userid]}
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
-  end
-
   def action_db_gc(klass, _at)
     self.sched_action ||= {}
     self.sched_action[:options] ||= {}
@@ -272,10 +258,6 @@ class MiqSchedule < ApplicationRecord
 
   def run_automation_request
     action_automation_request(AutomationRequest, nil)
-  end
-
-  def run_adhoc_db_backup
-    action_db_backup(DatabaseBackup, nil)
   end
 
   def action_evaluate_alert(obj, _at)
@@ -322,33 +304,6 @@ class MiqSchedule < ApplicationRecord
         errors.add(:run_at, "run_at is missing :value, run_at: [#{run_at.inspect}]") if run_at[:interval][:unit].to_s.downcase != "once" && run_at[:interval][:value].nil?
         errors.add(:run_at, "run_at interval: [#{run_at[:interval][:unit]}] is not a valid interval") unless VALID_INTERVAL_UNITS.include?(run_at[:interval][:unit])
       end
-    end
-  end
-
-  def validate_file_depot  # TODO: Do we need this if the validations are on the FileDepot classes?
-    if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == "db_backup" && file_depot
-      errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.missing_credentials?
-      errors.add(:file_depot, "is missing uri") if file_depot.uri.blank?
-    end
-  end
-
-  def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
-    depot_class                = FileDepot.supported_protocols[params[:uri_prefix]]
-    depot                      = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
-    depot.name                 = params[:name]
-    uri                        = params[:uri]
-    api_port                   = params[:swift_api_port]
-    depot.aws_region           = params[:aws_region]
-    depot.openstack_region     = params[:openstack_region]
-    depot.keystone_api_version = params[:keystone_api_version]
-    depot.v3_domain_ident      = params[:v3_domain_ident]
-    depot.security_protocol    = params[:security_protocol]
-    depot.uri                  = api_port.blank? ? uri : depot.merged_uri(URI(uri), api_port)
-    if params[:save]
-      file_depot.save!
-      file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
-    elsif depot.class.requires_credentials?
-      depot.verify_credentials(nil, params)
     end
   end
 

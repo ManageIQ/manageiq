@@ -19,8 +19,6 @@ module MiqSchedule::ImportExport
 
     export_attributes['MiqSearchContent'] = MiqSearch.find_by(:id => export_attributes['miq_search_id']).export_to_array if export_attributes['miq_search_id']
 
-    export_attributes['FileDepotContent'] = FileDepot.find_by(:id => export_attributes['file_depot_id']).export_to_array if export_attributes['file_depot_id']
-
     if export_attributes['resource_id']
       schedule_resource = export_attributes["resource_type"].safe_constantize.find_by(:id => export_attributes['resource_id'])
       export_attributes['resource_name'] = schedule_resource&.name
@@ -71,7 +69,6 @@ module MiqSchedule::ImportExport
       filter_resource_name = miq_schedule.delete("filter_resource_name")
 
       miq_search = miq_schedule.delete("MiqSearchContent")
-      file_depot = miq_schedule.delete("FileDepotContent")
       resource_name = miq_schedule.delete("resource_name")
 
       was_new_record = new_or_existing_schedule.new_record?
@@ -93,27 +90,6 @@ module MiqSchedule::ImportExport
         if miq_search
           search = MiqSearch.where(miq_search[0]['MiqSearch']).first_or_create
           schedule_attributes[:miq_search_id] = search.id
-        end
-
-        if file_depot
-          authentication_content = file_depot[0].values[0].delete("AuthenticationsContent")
-          fd = FileDepot.where(file_depot[0].values[0]).first_or_create
-
-          authentication_content[0].each do |auth|
-            x = auth.values[0]
-            x['resource'] = fd
-
-            group_description = x.delete('miq_group_description')
-            miq_group = MiqGroup.find_by(:description => group_description) || User.find_by(:userid=>'admin').current_group
-            x['miq_group_id'] = miq_group.id
-
-            tenant_name = x.delete('tenant_name')
-            tenant = Tenant.find_by(:name => tenant_name) || Tenant.tenant_root
-            x['tenant_id'] = tenant.id
-
-            Authentication.where(x).first_or_create
-          end
-          new_or_existing_schedule.file_depot_id = fd.id
         end
 
         if resource_name

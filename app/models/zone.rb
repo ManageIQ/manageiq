@@ -4,8 +4,6 @@ class Zone < ApplicationRecord
 
   serialize :settings, Hash
 
-  belongs_to :log_file_depot, :class_name => "FileDepot"
-
   has_many :miq_servers
   has_many :ext_management_systems
   has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :foreign_key => :zone_before_pause_id
