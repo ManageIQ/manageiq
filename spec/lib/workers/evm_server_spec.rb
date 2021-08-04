@@ -102,6 +102,49 @@ describe EvmServer do
     end
   end
 
+  describe "#start_servers" do
+    context "when podified" do
+      before do
+        allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+      end
+
+      it "impersonates and starts just created servers in region" do
+        subject
+        2.times { FactoryBot.create(:miq_server_in_default_zone) }
+        expect(subject).to receive(:impersonate_server).twice
+        expect(subject).to receive(:start_server).twice
+        subject.start_servers
+      end
+
+      it "impersonates and starts previously created servers in region" do
+        2.times { FactoryBot.create(:miq_server_in_default_zone) }
+        expect(subject).to receive(:impersonate_server).twice
+        expect(subject).to receive(:start_server).twice
+        subject.start_servers
+      end
+    end
+
+    context "when appliances" do
+      it "impersonates and starts just created my_server" do
+        subject
+        EvmSpecHelper.local_miq_server
+        2.times { FactoryBot.create(:miq_server_in_default_zone) }
+        expect(subject).to receive(:impersonate_server).once
+        expect(subject).to receive(:start_server).once
+        subject.start_servers
+      end
+
+      it "impersonates and starts previously created my_server" do
+        EvmSpecHelper.local_miq_server
+        2.times { FactoryBot.create(:miq_server_in_default_zone) }
+
+        expect(subject).to receive(:impersonate_server).once
+        expect(subject).to receive(:start_server).once
+        subject.start_servers
+      end
+    end
+  end
+
   describe "#as_each_server (private)" do
     it "yields the local server when not podified" do
       server = EvmSpecHelper.local_miq_server

@@ -38,7 +38,8 @@ class EvmServer
   end
 
   def start_servers
-    refresh_servers_to_monitor
+    @servers_to_monitor = servers_from_db if servers_to_monitor.empty?
+
     as_each_server { start_server }
   end
 
