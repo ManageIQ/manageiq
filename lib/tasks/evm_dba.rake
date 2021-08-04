@@ -104,25 +104,6 @@ namespace :evm do
       Rake::Task['db:seed'].invoke
     end
 
-    desc "clean up database"
-    task :gc do
-      opts = EvmDba.with_options(:db_credentials) do
-        opt :aggressive, "Aggressive gc: vaccume with all options and reindexing"
-        opt :vacuum,     "Vacuum database"
-        opt :reindex,    "Reindex database (or table if --table specified)"
-        opt :analyze,    "Vacuum with analyze"
-        opt :full,       "Vacuum full"
-        opt :verbose,    "Vacuum with verbose information printed"
-
-        opt :table,      "Tablename to reindex (if only perorm on one)", :type => :string
-      end
-
-      opts = opts.delete_if { |_, v| v == false }
-      EvmDatabaseOps.gc(opts)
-
-      exit # exit so that parameters to the first rake task are not run as rake tasks
-    end
-
     desc "Destroys the ManageIQ EVM Database (VMDB) of all tables, views and indices"
     task :destroy do
       begin
@@ -187,89 +168,6 @@ namespace :evm do
       end
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
-    end
-
-    # Example usage:
-    #   bin/rake evm:db:backup:local -- --local-file /tmp/db_backup_test --dbname vmdb_production
-    #   bin/rake evm:db:backup:remote -- --uri smb://dev005.manageiq.com/share1 --uri-username samba_one --uri-password "abc" --remote-file-name region1
-    #   bin/rake evm:db:restore:local -- --local-file /tmp/db_backup_test
-    #   bin/rake evm:db:restore:remote -- --uri smb://dev005.manageiq.com/share1/db_backup/region1 --uri-username samba_one --uri-password "abc"
-
-    namespace :backup do
-      require File.expand_path(File.join(Rails.root, "lib", "evm_database_ops"))
-      desc 'Backup the local ManageIQ EVM Database (VMDB) to a local file'
-      task :local do
-        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials)
-
-        EvmDatabaseOps.backup(opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
-
-      desc 'Backup the local ManageIQ EVM Database (VMDB) to a remote file'
-      task :remote do
-        opts = EvmDba.with_options(:remote_uri, :aws, :remote_file, :splitable, :db_credentials)
-
-        db_opts      = EvmDba.collect_db_opts(opts)
-        connect_opts = EvmDba.collect_connect_opts(opts)
-
-        EvmDatabaseOps.backup(db_opts, connect_opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
-    end
-
-    namespace :dump do
-      require Rails.root.join("lib", "evm_database_ops").expand_path.to_s
-      desc 'Dump the local ManageIQ EVM Database (VMDB) to a local file'
-      task :local do
-        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials, :exclude_table_data)
-
-        EvmDatabaseOps.dump(opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
-
-      desc 'Dump the local ManageIQ EVM Database (VMDB) to a remote file'
-      task :remote do
-        opts = EvmDba.with_options(:remote_uri, :aws, :remote_file, :splitable, :db_credentials, :exclude_table_data)
-
-        db_opts      = EvmDba.collect_db_opts(opts)
-        connect_opts = EvmDba.collect_connect_opts(opts)
-
-        EvmDatabaseOps.dump(db_opts, connect_opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
-    end
-
-    namespace :restore do
-      desc 'Restore the local ManageIQ EVM Database (VMDB) from a local backup file'
-      task :local => :environment do
-        opts = EvmDba.with_options(:local_file, :db_credentials)
-
-        # If running through runner, disconnect any local connections
-        ActiveRecord::Base.clear_all_connections! if ActiveRecord && ActiveRecord::Base
-
-        EvmDatabaseOps.restore(opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
-
-      desc 'Restore the local ManageIQ EVM Database (VMDB) from a remote backup file'
-      task :remote => :environment do
-        opts = EvmDba.with_options(:remote_uri, :aws, :db_credentials)
-
-        db_opts      = EvmDba.collect_db_opts(opts)
-        connect_opts = EvmDba.collect_connect_opts(opts)
-
-        # If running through runner, disconnect any local connections
-        ActiveRecord::Base.clear_all_connections! if ActiveRecord && ActiveRecord::Base
-
-        EvmDatabaseOps.restore(db_opts, connect_opts)
-
-        exit # exit so that parameters to the first rake task are not run as rake tasks
-      end
     end
   end
 end
