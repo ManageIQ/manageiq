@@ -1,4 +1,4 @@
-RSpec.describe "JobProxyDispatcherEmbeddedScanSpec" do
+RSpec.describe "VmScanDispatcherEmbeddedScanSpec" do
   describe "dispatch embedded" do
     include Spec::Support::JobProxyDispatcherHelper
 
@@ -71,28 +71,28 @@ RSpec.describe "JobProxyDispatcherEmbeddedScanSpec" do
           context "and scans against ems limited to 2 and up to 10 scans per miqserver" do
             it "should dispatch only 2 scan jobs per ems"  do
               allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:scan_via_ems?).and_return(true)
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(2, :ems)
             end
 
             it "should signal 2 jobs to start" do
               stub_settings(:coresident_miqproxy => {:concurrent_per_ems => 2},
                             :ems                 => {:ems_amazon => {}})
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               expect(MiqQueue.count).to eq(2)
             end
           end
 
           context "and scans against ems limited to 4 and up to 10 scans per miqserver" do
             it "should dispatch only 4 scan jobs per ems"  do
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
             end
           end
 
           context "and scans against ems limited to 4 and up to 2 scans per miqserver" do
             it "should dispatch up to 4 per ems and 2 per miqserver"  do
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :ems)
               assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
             end
@@ -106,21 +106,21 @@ RSpec.describe "JobProxyDispatcherEmbeddedScanSpec" do
 
           context "and scans against host limited to 2 and up to 10 scans per miqserver" do
             it "should dispatch only 2 scan jobs per host"  do
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(2, :host)
             end
           end
 
           context "and scans against host limited to 4 and up to 10 scans per miqserver" do
             it "should dispatch only 4 scan jobs per host"  do
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :host)
             end
           end
 
           context "and scans against host limited to 4 and up to 2 scans per miqserver" do
             it "should dispatch up to 4 per host and 2 per miqserver"  do
-              JobProxyDispatcher.dispatch
+              VmScan::Dispatcher.dispatch
               assert_at_most_x_scan_jobs_per_y_resource(4, :host)
               assert_at_most_x_scan_jobs_per_y_resource(2, :miq_server)
             end

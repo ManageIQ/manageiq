@@ -1,4 +1,6 @@
 class VmScan < Job
+  require_nested :Dispatcher
+
   #
   # TODO: until we get location/offset read capability for OpenStack
   # image data, OpenStack fleecing is prone to timeout (based on image size).

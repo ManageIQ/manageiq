@@ -1,4 +1,6 @@
 class InfraConversionJob < Job
+  require_nested :Dispatcher
+
   #
   # State-transition diagram:
   #                              :poll_conversion                         :poll_post_stage

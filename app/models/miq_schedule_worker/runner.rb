@@ -170,24 +170,31 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue([:job_check_for_evm_snapshots, job_not_found_delay])
     end
 
-    # Schedule - JobProxyDispatcher#dispatch
-    # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
-    # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
-    # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time
-    scheduler.schedule_every(
-      :job_proxy_dispatcher_dispatch,
-      worker_settings[:job_proxy_dispatcher_interval]
-    ) do
-      enqueue(:job_proxy_dispatcher_dispatch)
+    # Schedule - ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job::Dispatcher
+    # Queue a ContainerManager::Scanning::Job::Dispatcher task unless there's already one on the queue
+    scheduler.schedule_every(:container_scan_dispatcher_dispatch, worker_settings[:container_scan_dispatcher_interval]) do
+      enqueue(:container_scan_dispatcher_dispatch)
     end
 
-    # Schedule - Check for a stuck JobProxyDispatcher#dispatch
-    stuck_dispatch_threshold = worker_settings[:job_proxy_dispatcher_stale_message_timeout]
+    # Schedule - VmScan::Dispatcher
+    # Queue a VmScan::Dispatcher task unless there's already one on the queue
+    scheduler.schedule_every(:vm_scan_dispatcher_dispatch, worker_settings[:vm_scan_dispatcher_interval]) do
+      enqueue(:vm_scan_dispatcher_dispatch)
+    end
+
+    # Schedule - InfraConversionJob::Dispatcher
+    # Queue a InfraConversionJob::Dispatcher task unless there's already one on the queue
+    scheduler.schedule_every(:infra_conversion_dispatcher_dispatch, worker_settings[:infra_conversion_dispatcher_interval]) do
+      enqueue(:infra_conversion_dispatcher_dispatch)
+    end
+
+    # Schedule - Check for a stuck VmScan::Dispatcher#dispatch
+    stuck_vm_scan_dispatch_threshold = worker_settings[:vm_scan_dispatcher_stale_message_timeout]
     scheduler.schedule_every(
       :check_for_stuck_dispatch,
-      worker_settings[:job_proxy_dispatcher_stale_message_check_interval]
+      worker_settings[:vm_scan_dispatcher_stale_message_check_interval]
     ) do
-      enqueue([:check_for_stuck_dispatch, stuck_dispatch_threshold])
+      enqueue([:check_for_stuck_vm_scan_dispatch, stuck_vm_scan_dispatch_threshold])
     end
 
     # Schedule - Hourly Alert Evaluation Timer

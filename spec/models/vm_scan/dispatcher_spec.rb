@@ -1,4 +1,4 @@
-RSpec.describe JobProxyDispatcher do
+RSpec.describe VmScan::Dispatcher do
   include Spec::Support::JobProxyDispatcherHelper
 
   NUM_VMS = 3
@@ -9,8 +9,8 @@ RSpec.describe JobProxyDispatcher do
 
   let(:zone) { FactoryBot.create(:zone) }
   let(:dispatcher) do
-    JobProxyDispatcher.new.tap do |dispatcher|
-      dispatcher.instance_variable_set(:@zone, zone.name)
+    described_class.new.tap do |dispatcher|
+      dispatcher.instance_variable_set(:@zone_name, zone.name)
     end
   end
 
@@ -20,30 +20,15 @@ RSpec.describe JobProxyDispatcher do
 
   describe '.waiting?' do
     let(:vm_scan_job) { VmScan.create_job }
-    let(:infra_conversion_job) { InfraConversionJob.create_job }
 
-    it 'returns true if VmScan state is waiting to start and InfraConversionJob state is finished' do
+    it 'returns true if VmScan state is waiting' do
       vm_scan_job.update!(:state => 'waiting_to_start')
-      infra_conversion_job.update!(:state => 'finished')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_truthy
     end
 
-    it 'returns true if VmScan state is fake_state and InfraConversionJob state is waiting_to_start' do
+    it 'returns false if VmScan state is fake_state' do
       vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'waiting_to_start')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
-    end
-
-    it 'returns true if VmScan state is fake_state and InfraConversionJob state is restoring_vm_attributes' do
-      vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
-    end
-
-    it 'returns false if VmScan state is fake_state and no InfraConversionJob state is finished' do
-      vm_scan_job.update!(:state => 'fake_state')
-      infra_conversion_job.update!(:state => 'restoring_vm_attributes')
-      expect(JobProxyDispatcher.waiting?).to be_truthy
+      expect(described_class.waiting?).to be_falsey
     end
   end
 
@@ -171,119 +156,32 @@ RSpec.describe JobProxyDispatcher do
         end
 
         it "should run dispatch" do
-          expect { JobProxyDispatcher.dispatch }.not_to raise_error
+          expect { described_class.dispatch }.not_to raise_error
         end
 
         it "dispatch should handle a job with a deleted target VM" do
           @job = Job.first
           @job.target_id = 999999
           @job.save!
-          expect { JobProxyDispatcher.dispatch }.not_to raise_error
+          expect { described_class.dispatch }.not_to raise_error
           @job.reload
           expect(@job.state).to eq("finished")
           expect(@job.status).to eq("warn")
         end
       end
-    end
 
-    context "with container and vms jobs" do
-      let (:container_image_classes) { ContainerImage.descendants.collect(&:name).append('ContainerImage') }
-      before do
-        @jobs = (@vms + @repo_vms).collect(&:raw_scan)
-        User.current_user = FactoryBot.create(:user)
-        @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
-      end
-
-      describe "#pending_jobs" do
-        it "returns only vm jobs by default" do
-          jobs = dispatcher.pending_jobs
-          expect(jobs.count).to eq(@vms.count + @repo_vms.count)
-          jobs.each do |x|
-            expect(x.target_class).to eq 'VmOrTemplate'
-          end
-          expect(jobs.count).to be > 0 # in case something unexpected goes wrong
-        end
-
-        it "returns only container images jobs when requested" do
-          jobs = dispatcher.pending_jobs(dispatcher.container_image_scan_class)
-          expect(jobs.count).to eq(@container_images.count)
-          jobs.each do |x|
-            expect(container_image_classes).to include x.target_class
-          end
-          expect(jobs.count).to be > 0 # in case something unexpected goes wrong
-        end
-      end
-
-      describe "#pending_container_jobs" do
-        it "returns container jobs by provider" do
-          jobs_by_ems, = dispatcher.pending_container_jobs
-          expect(jobs_by_ems.keys).to match_array(@container_providers.map(&:id))
-
-          expect(jobs_by_ems[@container_providers.first.id].count).to eq(1 * container_image_classes.count)
-          expect(jobs_by_ems[@container_providers.second.id].count).to eq(2 * container_image_classes.count)
-        end
-      end
-
-      describe "#active_container_scans_by_zone_and_ems" do
-        it "returns active container acans for zone" do
-          job = @jobs.find { |j| container_image_classes.include?(j.target_class) }
+      describe "#active_vm_scans_by_zone" do
+        it "returns active vm scans for this zone" do
+          job = @vms.first.raw_scan
           job.update(:dispatch_status => "active")
-          provider = ExtManagementSystem.find(job.options[:ems_id])
-          expect(dispatcher.active_container_scans_by_zone_and_ems).to eq(
-            job.zone => {provider.id => 1}
-          )
-        end
-      end
-
-      describe "#dispatch_container_scan_jobs" do
-        it "dispatches jobs until reaching limit" do
-          stub_settings(:container_scanning => {:concurrent_per_ems => 1})
-          dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
-            (3 * container_image_classes.count) - 2)
-          # 1 per ems, one ems has 1* job and the other 2*
-          # initial number of images per ems is multiplied by container_image_classes.count
+          expect(dispatcher.active_vm_scans_by_zone[job.zone]).to eq(1)
         end
 
-        it "does not dispach if limit is already reached" do
-          stub_settings(:container_scanning => {:concurrent_per_ems => 1})
-          dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
-            (3 * container_image_classes.count) - 2)
-          dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
-            (3 * container_image_classes.count) - 2)
+        it "returns 0 for active vm scan for other zones" do
+          job = @vms.first.raw_scan
+          job.update(:dispatch_status => "active")
+          expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
         end
-
-        it "does not apply limit when concurrent_per_ems is 0" do
-          stub_settings(:container_scanning => {:concurrent_per_ems => 0})
-          dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1* job and the other 2*
-          # initial number of images per ems is multiplied by container_image_classes.count
-        end
-
-        it "does not apply limit when concurrent_per_ems is -1" do
-          stub_settings(:container_scanning => {:concurrent_per_ems => -1})
-          dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1* job and the other 2*
-          # initial number of images per ems is multiplied by container_image_classes.count
-        end
-      end
-    end
-
-    describe "#active_vm_scans_by_zone" do
-      it "returns active vm scans for this zone" do
-        job = @vms.first.raw_scan
-        job.update(:dispatch_status => "active")
-        expect(dispatcher.active_vm_scans_by_zone[job.zone]).to eq(1)
-      end
-
-      it "returns 0 for active vm scan for other zones" do
-        job = @vms.first.raw_scan
-        job.update(:dispatch_status => "active")
-        expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
       end
     end
   end
@@ -337,50 +235,6 @@ RSpec.describe JobProxyDispatcher do
     end
   end
 
-  describe "#do_dispatch" do
-    let(:ems_id) { 1 }
-    let(:job) { VmScan.create_job(:name => "Hello, World") }
-
-    before do
-      dispatcher.instance_variable_set(:@active_container_scans_by_zone_and_ems, @server.my_zone => {ems_id => 0})
-    end
-
-    it "updates 'dispatch_status' attribute of job record to 'active'" do
-      expect(job.dispatch_status).not_to eq "active"
-      dispatcher.do_dispatch(job, ems_id)
-      expect(job.dispatch_status).to eq "active"
-    end
-
-    it "updates ':started_on' attribute of job record" do
-      expect(job.started_on).to be nil
-      Timecop.freeze do
-        timestamp = Time.now.utc
-        dispatcher.do_dispatch(job, ems_id)
-        expect(job.started_on).to eq timestamp
-      end
-    end
-
-    it "increases counter of active container scans by zone and ems by 1" do
-      counter_by_zone_ems = dispatcher.instance_variable_get(:@active_container_scans_by_zone_and_ems)
-      expect(counter_by_zone_ems[@server.my_zone][ems_id]).to eq 0
-
-      dispatcher.do_dispatch(job, ems_id)
-
-      counter_by_zone_ems = dispatcher.instance_variable_get(:@active_container_scans_by_zone_and_ems)
-      expect(counter_by_zone_ems[@server.my_zone][ems_id]).to eq 1
-    end
-
-    it "queues call to Job::StateMachine#signal with argument 'start'" do
-      expect(MiqQueue.count).to eq 0
-
-      dispatcher.do_dispatch(job, ems_id)
-
-      queue_record = MiqQueue.where(:instance_id => job.id)[0]
-      expect(queue_record.method_name).to eq "signal"
-      expect(queue_record.class_name).to eq "Job"
-    end
-  end
-
   describe "#queue_signal" do
     let(:job) { VmScan.create_job(:name => "Hello, World") }
 
@@ -403,24 +257,6 @@ RSpec.describe JobProxyDispatcher do
       expect(queue_record.method_name).to eq "signal"
       expect(queue_record.class_name).to eq "Job"
       expect(queue_record.args[0]).to eq :start_snapshot
-    end
-  end
-
-  describe "#dispatch_to_ems" do
-    let(:ems_id) { 1 }
-    let(:jobs) do
-      [VmScan.create_job(:name => "Hello, World 1"), VmScan.create_job(:name => "Hello, World 2")]
-    end
-
-    it "dispatches all supplied jobs if supplied concurency limit is 0" do
-      dispatcher.dispatch_to_ems(ems_id, jobs, 0)
-      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq 2
-    end
-
-    it "limits dispatching supplied jobs if supplied concurrency limit > 0" do
-      concurrency_limit = 1
-      dispatcher.dispatch_to_ems(ems_id, jobs, concurrency_limit)
-      expect(MiqQueue.where(:class_name => "Job", :method_name => "signal").count).to eq concurrency_limit
     end
   end
 end
