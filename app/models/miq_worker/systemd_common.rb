@@ -123,7 +123,6 @@ class MiqWorker
     def unit_environment_variables
       # Override this in a child class to add env vars
       [
-        "HOME=/root"
       ]
     end
   end
