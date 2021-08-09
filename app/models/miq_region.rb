@@ -136,10 +136,14 @@ class MiqRegion < ApplicationRecord
   end
 
   def self.remote_replication_type?
+    return false unless PglogicalSubscription.logical_replication_supported?
+
     MiqPglogical.new.provider?
   end
 
   def self.global_replication_type?
+    return false unless PglogicalSubscription.logical_replication_supported?
+
     MiqPglogical.new.subscriber?
   end
 
@@ -154,6 +158,8 @@ class MiqRegion < ApplicationRecord
   end
 
   def self.replication_type=(desired_type)
+    return unless PglogicalSubscription.logical_replication_supported?
+
     current_type = replication_type
     return desired_type if desired_type == current_type
 

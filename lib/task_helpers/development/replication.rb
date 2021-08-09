@@ -87,6 +87,7 @@ module TaskHelpers
         end
 
         def configure_global_region(region)
+          return unless PglogicalSubscription.logical_replication_supported?
           run_command("bin/rails r 'TaskHelpers::Development::Replication.configure_global_region_script'", env: command_environment(region))
           run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'")
         end
