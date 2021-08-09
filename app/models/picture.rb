@@ -6,9 +6,8 @@ class Picture < ApplicationRecord
 
   virtual_has_one :image_href, :class_name => "String"
 
-  URL_ROOT          = Rails.root.join("public").to_s
-  DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
-  FileUtils.mkdir_p(DEFAULT_DIRECTORY)
+  URL_ROOT          = Rails.root.join("public").to_s.freeze
+  DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures").freeze
 
   def self.directory
     @directory || DEFAULT_DIRECTORY
