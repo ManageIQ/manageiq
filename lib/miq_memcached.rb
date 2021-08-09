@@ -20,6 +20,8 @@ module MiqMemcached
   class ControlError < Error; end
 
   class Config
+    # TODO: Expose all of the constants and get them from the config
+    DEFAULT_CONF_FILE = '/etc/sysconfig/memcached'
     DEFAULT_PORT = 11211
     DEFAULT_USER = 'memcached'
     DEFAULT_MEMORY = 64
@@ -30,8 +32,13 @@ module MiqMemcached
       update(opts)
     end
 
-    def save(fname)
+    def save(fname = DEFAULT_CONF_FILE)
       File.open(fname, "w") { |f| f.write(@config) }
+    end
+
+    def changed?(fname = DEFAULT_CONF_FILE)
+      current_config = File.read(fname)
+      current_config == @config
     end
 
     def update(opts = {})
@@ -41,13 +48,14 @@ module MiqMemcached
       maxconn = opts[:maxconn] || DEFAULT_MAXCONN
       options = opts[:options] || DEFAULT_OPTIONS
 
-      @config = <<-END_OF_CONFIG
-PORT="#{port}"
-USER="#{user}"
-MAXCONN="#{maxconn}"
-CACHESIZE="#{memory}"
-OPTIONS="#{options}"
-END_OF_CONFIG
+      @config = <<~END_OF_CONFIG
+        PORT="#{port}"
+        USER="#{user}"
+        MAXCONN="#{maxconn}"
+        CACHESIZE="#{memory}"
+        OPTIONS="#{options}"
+      END_OF_CONFIG
+
       @config
     end
   end
@@ -102,11 +110,8 @@ END_OF_CONFIG
     #                (default: 1mb, min: 1k, max: 128m)
     #  -S            Turn on Sasl authentication
 
-    # TODO: Expose all of the constants and get them from the config
-    CONF_FILE = '/etc/sysconfig/memcached'
-
     def self.start(opts = {})
-      MiqMemcached::Config.new(opts).save(CONF_FILE)
+      MiqMemcached::Config.new(opts).save
       LinuxAdmin::Service.new("memcached").start
       _log.info("started memcached with options: #{opts.inspect}")
       true
