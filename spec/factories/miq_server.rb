@@ -7,5 +7,9 @@ FactoryBot.define do
     started_on      { Time.now.utc }
     stopped_on      { "" }
     version         { '9.9.9.9' }
+
+    factory :miq_server_in_default_zone do
+      zone          { FactoryBot.build(:zone, :name => "default") }
+    end
   end
 end
