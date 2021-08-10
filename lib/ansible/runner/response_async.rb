@@ -3,7 +3,7 @@ module Ansible
     class ResponseAsync
       include Vmdb::Logging
 
-      attr_reader :base_dir, :ident
+      attr_reader :base_dir, :debug, :ident
 
       # Response object designed for holding full response from ansible-runner
       #
@@ -12,9 +12,11 @@ module Ansible
       # @param ident [String] An identifier that will be used when generating the artifacts directory and can be used to
       #        uniquely identify a playbook run. We use unique base dir per run, so this identifier can be static for
       #        most cases.
-      def initialize(base_dir:, ident: "result")
+      # @param debug [Boolean] whether or not to delete base_dir after run (for debugging)
+      def initialize(base_dir:, ident: "result", debug: false)
         @base_dir = base_dir
         @ident    = ident
+        @debug    = debug
       end
 
       # @return [Boolean] true if the ansible job is still running, false when it's finished
@@ -33,7 +35,7 @@ module Ansible
         return if running?
         return @response if @response
 
-        @response = Ansible::Runner::Response.new(:base_dir => base_dir, :ident => ident)
+        @response = Ansible::Runner::Response.new(:base_dir => base_dir, :ident => ident, :debug => debug)
         @response.cleanup_filesystem!
 
         @response
@@ -45,6 +47,7 @@ module Ansible
       def dump
         {
           :base_dir => base_dir,
+          :debug    => debug,
           :ident    => ident
         }
       end

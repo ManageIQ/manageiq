@@ -73,7 +73,7 @@ RSpec.describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :tags => tags)
     end
 
-    it "calls run with the correct verbosity" do
+    it "calls run with the correct verbosity (and triggers debug mode)" do
       expect(AwesomeSpawn).to receive(:run) do |command, options|
         expect(command).to eq("ansible-runner")
 
@@ -81,7 +81,8 @@ RSpec.describe Ansible::Runner do
         expect(args).to eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my", "-vvvvv" => nil)
       end.and_return(result)
 
-      described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
+      response = described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
+      expect(response.debug).to eq(true)
     end
 
     it "calls run with become options" do
