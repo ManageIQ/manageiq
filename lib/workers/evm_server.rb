@@ -107,7 +107,6 @@ class EvmServer
     EvmDatabase.seed_rest
 
     MiqServer.start_memcached
-    MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
 
     MiqEvent.raise_evm_event(@current_server, "evm_server_start")
 
