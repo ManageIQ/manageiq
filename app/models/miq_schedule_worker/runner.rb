@@ -230,7 +230,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:archived_entities_purge_timer)
     end
 
-    # Schedule - Purging of binery blobs
+    # Schedule - Purging of binary blobs
     scheduler.schedule_every(
       :binary_blob_purge_timer,
       worker_settings[:binary_blob_purge_interval]
