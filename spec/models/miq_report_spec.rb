@@ -973,6 +973,35 @@ RSpec.describe MiqReport do
       expect(report.column_is_hidden?(:vendor)).to be_falsey
     end
 
+    describe "conditions=" do
+      let(:exp) do
+        {
+          "starts with" => {
+            "field" => "Vm-host_name",
+            "value" => "HA"
+          }
+        }
+      end
+
+      let(:miq_expression) { MiqExpression.new(exp) }
+
+      it "takes nil" do
+        rpt = MiqReport.new(:conditions => nil)
+
+        expect(rpt.conditions).to be_nil
+      end
+
+      it "takes an miq expression" do
+        rpt = MiqReport.new(:conditions => exp)
+        expect(rpt.conditions.exp).to eq(miq_expression.exp)
+      end
+
+      it "takes an expression hash" do
+        rpt = MiqReport.new(:conditions => miq_expression)
+        expect(rpt.conditions.exp).to eq(miq_expression.exp)
+      end
+    end
+
     context "columns are hidden thanks to method" do
       let(:report) do
         MiqReport.new(

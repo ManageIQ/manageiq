@@ -97,6 +97,11 @@ class MiqReport < ApplicationRecord
     end
   end
 
+  def conditions=(exp)
+    exp = MiqExpression.new(exp) if exp && !exp.kind_of?(MiqExpression)
+    super
+  end
+
   # NOTE: this can by dynamically manipulated
   def cols
     self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
