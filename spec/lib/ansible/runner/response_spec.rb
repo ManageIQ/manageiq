@@ -95,4 +95,32 @@ RSpec.describe Ansible::Runner::Response do
       end
     end
   end
+
+  describe "cleanup_filesystem!" do
+    before do
+      expect(subject).to receive(:return_code)
+      expect(subject).to receive(:stdout)
+    end
+
+    # Required so top level `after` can call `.rm_rf` properly
+    after { allow(FileUtils).to receive(:remove_entry).and_call_original }
+
+    context "without debug" do
+      it "calls FileUtils.remove_entry" do
+        expect(FileUtils).to receive(:remove_entry).with(base_dir)
+
+        subject.cleanup_filesystem!
+      end
+    end
+
+    context "with debug" do
+      subject { described_class.new(:base_dir => base_dir, :ident => ident, :debug => true) }
+
+      it "does not call FileUtils.remove_entry" do
+        expect(FileUtils).to receive(:remove_entry).with(base_dir).never
+
+        subject.cleanup_filesystem!
+      end
+    end
+  end
 end
