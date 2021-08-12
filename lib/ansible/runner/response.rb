@@ -3,7 +3,7 @@ module Ansible
     class Response
       include Vmdb::Logging
 
-      attr_reader :base_dir, :ident
+      attr_reader :base_dir, :debug, :ident
 
       # Response object designed for holding full response from ansible-runner
       #
@@ -12,13 +12,15 @@ module Ansible
       # @param stdout [String] Stdout from ansible-runner run
       # @param stderr [String] Stderr from ansible-runner run
       # @param ident [String] ansible-runner ident parameter
-      def initialize(base_dir:, return_code: nil, stdout: nil, stderr: nil, ident: "result")
+      # @param debug [Boolean] whether or not to delete base_dir after run (for debugging)
+      def initialize(base_dir:, return_code: nil, stdout: nil, stderr: nil, ident: "result", debug: false)
         @base_dir      = base_dir
         @ident         = ident
         @return_code   = return_code
         @stdout        = stdout
         @parsed_stdout = parse_stdout(stdout) if stdout
         @stderr        = stderr
+        @debug         = debug
       end
 
       # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
@@ -41,6 +43,8 @@ module Ansible
         # Load all needed files, before we cleanup the dir
         return_code
         stdout
+
+        return if debug
 
         FileUtils.remove_entry(base_dir)
       end

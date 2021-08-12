@@ -196,6 +196,7 @@ module Ansible
         validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
+        debug    = verbosity.to_i >= 5 || env_vars["ANSIBLE_KEEP_REMOTE_FILES"]
 
         cred_command_line, cred_env_vars, cred_extra_vars = credentials_info(credentials, base_dir)
 
@@ -221,7 +222,7 @@ module Ansible
             AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
           end
 
-          res = response(base_dir, ansible_runner_method, result)
+          res = response(base_dir, ansible_runner_method, result, debug)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
           # read the output, that will be written into this directory.
@@ -235,13 +236,14 @@ module Ansible
       # @param result [AwesomeSpawn::CommandResult] Result object of AwesomeSpawn.run
       # @return [Ansible::Runner::ResponseAsync, Ansible::Runner::Response] response or ResponseAsync based on the
       #         ansible_runner_method
-      def response(base_dir, ansible_runner_method, result)
+      def response(base_dir, ansible_runner_method, result, debug)
         if async?(ansible_runner_method)
-          Ansible::Runner::ResponseAsync.new(:base_dir => base_dir)
+          Ansible::Runner::ResponseAsync.new(:base_dir => base_dir, :debug => debug)
         else
           Ansible::Runner::Response.new(:base_dir => base_dir,
                                         :stdout   => result.output,
-                                        :stderr   => result.error)
+                                        :stderr   => result.error,
+                                        :debug    => debug)
         end
       end
 
