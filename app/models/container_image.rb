@@ -1,6 +1,7 @@
 class ContainerImage < ApplicationRecord
   acts_as_miq_taggable
 
+  include SupportsFeatureMixin
   include ComplianceMixin
   include MiqPolicyMixin
   include ScanningMixin
@@ -9,7 +10,6 @@ class ContainerImage < ApplicationRecord
   include ArchivedMixin
   include NewWithTypeStiMixin
   include CustomActionsMixin
-  include SupportsFeatureMixin
   include Metric::CiMixin
 
   include_concern 'Purging'
