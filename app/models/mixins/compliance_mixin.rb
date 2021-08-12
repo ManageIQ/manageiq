@@ -9,6 +9,8 @@ module ComplianceMixin
              :inverse_of => :resource,
              :class_name => "Compliance"
 
+    supports :check_compliance
+
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",
                      :type      => :boolean,
