@@ -64,6 +64,12 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def image_import_pvc_to_pvs_dispatcher_dispatch
+    if ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher.waiting?
+      queue_work_on_each_zone(:class_name => "ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
+    end
+  end
+
   def ems_refresh_timer(klass)
     queue_work_on_each_zone(:class_name  => klass.name, :method_name => "refresh_all_ems_timer") if klass.any?
   end
