@@ -212,6 +212,8 @@ class EmsCluster < ApplicationRecord
     EmsEvent.where(ewc).order("timestamp").to_a
   end
 
+  supports :smartstate_analysis
+
   def scan(_userid = "system")
     MiqQueue.submit_job(
       :service     => "smartstate",
