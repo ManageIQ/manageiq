@@ -188,6 +188,7 @@ class ExtManagementSystem < ApplicationRecord
   supports     :refresh_ems
   supports_not :regions
   supports_not :smartstate_analysis
+  supports_not :storage_manager
   supports_not :streaming_refresh
   supports_not :swift_service
   supports_not :vm_import
