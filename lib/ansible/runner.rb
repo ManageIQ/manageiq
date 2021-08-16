@@ -206,7 +206,7 @@ module Ansible
         end
         command_line_hash.merge!(cred_command_line)
 
-        env_vars_hash   = env_vars.merge(cred_env_vars).merge(python_env)
+        env_vars_hash   = env_vars.merge(cred_env_vars).merge(runner_env)
         extra_vars_hash = extra_vars.merge(cred_extra_vars)
 
         create_hosts_file(base_dir, hosts)
@@ -305,14 +305,11 @@ module Ansible
         Ansible::Content.new(playbook_dir).fetch_galaxy_roles
       end
 
-      def python_env
-        if python3_modules_path.present?
-          { "PYTHONPATH" => python3_modules_path }
-        elsif python2_modules_path.present?
-          { "PYTHONPATH" => python2_modules_path }
-        else
-          {}
-        end
+      def runner_env
+        {
+          "ANSIBLE_STDOUT_CALLBACK" => "json",
+          "PYTHONPATH"              => python_path
+        }.delete_nils
       end
 
       def credentials_info(credentials, base_dir)
@@ -385,6 +382,14 @@ module Ansible
         end
 
         res
+      end
+
+      def python_path
+        if python3_modules_path.present?
+          python3_modules_path
+        else
+          python2_modules_path
+        end
       end
 
       PYTHON2_MODULE_PATHS = %w[
