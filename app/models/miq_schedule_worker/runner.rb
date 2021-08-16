@@ -182,6 +182,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:vm_scan_dispatcher_dispatch)
     end
 
+    # Schedule - ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher
+    # Queue a ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher task unless there's already one on the queue
+    scheduler.schedule_every(:image_import_pvc_to_pvs_dispatcher_dispatch, worker_settings[:image_import_pvc_to_pvs_dispatcher_interval]) do
+      enqueue(:image_import_pvc_to_pvs_dispatcher_dispatch)
+    end
+
     # Schedule - InfraConversionJob::Dispatcher
     # Queue a InfraConversionJob::Dispatcher task unless there's already one on the queue
     scheduler.schedule_every(:infra_conversion_dispatcher_dispatch, worker_settings[:infra_conversion_dispatcher_interval]) do
