@@ -266,11 +266,11 @@ RSpec.describe GitWorktree do
 
     describe "#branches" do
       it "all branches" do
-        expect(test_repo.branches).to match_array(%w(master branch1 branch2))
+        expect(test_repo.branches).to match_array(%w(master branch1 branch2 symbolic))
       end
 
       it "local branches only" do
-        expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2))
+        expect(test_repo.branches(:local)).to match_array(%w(master branch1 branch2 symbolic))
       end
 
       it "remote branches only" do
@@ -289,6 +289,9 @@ RSpec.describe GitWorktree do
     describe "#branch_info" do
       it "get branch info" do
         expect(test_repo.branch_info('branch2').keys).to match_array([:time, :message, :commit_sha])
+      end
+      it "get branch info symbolic ref" do
+        expect(test_repo.branch_info('symbolic').keys).to match_array([:time, :message, :commit_sha])
       end
     end
 
