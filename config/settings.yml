@@ -20,6 +20,7 @@
   :amazon_key:
   :amazon_secret:
 :binary_blob:
+  :keep_state_var_hashes: 1.month
   :purge_window_size: 100
 :capacity:
   :profile:
