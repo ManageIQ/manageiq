@@ -106,8 +106,6 @@ class EvmServer
 
     EvmDatabase.seed_rest
 
-    MiqServer.start_memcached
-
     MiqEvent.raise_evm_event(@current_server, "evm_server_start")
 
     _log.info("Server starting...")
