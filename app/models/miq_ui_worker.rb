@@ -36,4 +36,11 @@ class MiqUiWorker < MiqWorker
   def container_image
     ENV["UI_WORKER_IMAGE"] || default_image
   end
+
+  def configure_service_worker_deployment(definition)
+    super
+
+    definition[:spec][:template][:spec][:containers].first[:volumeMounts] << {:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"}
+    definition[:spec][:template][:spec][:volumes] << {:name=>"ui-httpd-configs", :configMap=>{:name=>"ui-httpd-configs", :defaultMode=>420}}
+  end
 end
