@@ -138,6 +138,28 @@ RSpec.describe ContainerOrchestrator do
         }
       )
     end
+
+    it "mounts the root CA certificate" do
+      stub_const("ENV", ENV.to_h.merge("SSL_SECRET_NAME" => "some-secret-name"))
+
+      deployment_definition = subject.send(:deployment_definition, "test")
+
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts, 0)).to eq(
+        :mountPath => "/etc/pki/ca-trust/source/anchors",
+        :name      => "internal-root-certificate",
+        :readOnly  => true
+      )
+      expect(deployment_definition.fetch_path(:spec, :template, :spec, :volumes, 0)).to eq(
+        :name   => "internal-root-certificate",
+        :secret => {
+          :secretName => "some-secret-name",
+          :items      => [
+            :key  => "root_crt",
+            :path => "root.crt",
+          ],
+        }
+      )
+    end
   end
 
   context "with stub connections" do
