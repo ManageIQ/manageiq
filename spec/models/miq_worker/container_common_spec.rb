@@ -43,6 +43,24 @@ RSpec.describe MiqWorker::ContainerCommon do
 
       expect(test_deployment.dig(:spec, :template, :spec).keys).not_to include(:nodeSelector)
     end
+
+    it "MiqUiWorker adds the ui_httpd_configs volume mount" do
+      container_orchestrator = ContainerOrchestrator.new
+      kubeclient = double("Kubeclient::Client")
+
+      expect(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
+      expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
+
+      expect(kubeclient).to receive(:create_deployment) do |deployment|
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :volumeMounts)).to match_array([{:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"}])
+        expect(deployment.fetch_path(:spec, :template, :spec, :volumes)).to match_array([{:name=>"ui-httpd-configs", :configMap=>{:name=>"ui-httpd-configs", :defaultMode=>420}}])
+      end
+
+      ui_worker = MiqUiWorker.new
+      expect(ui_worker).to receive(:scale_deployment)
+      ui_worker.create_container_objects
+    end
   end
 
   describe "#zone_selector" do
