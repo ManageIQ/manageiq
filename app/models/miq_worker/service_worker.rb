@@ -9,21 +9,9 @@ class MiqWorker
 
       orchestrator.create_deployment(worker_deployment_name) do |definition|
         configure_worker_deployment(definition)
+        configure_service_worker_deployment(definition)
 
-        definition[:spec][:template][:metadata][:labels].merge!(service_label)
-
-        container = definition[:spec][:template][:spec][:containers].first
-        container[:ports] = [{:containerPort => SERVICE_PORT}]
-        container[:env] << {:name => "PORT", :value => container_port.to_s}
-        container[:env] << {:name => "BINDING_ADDRESS", :value => "0.0.0.0"}
-        add_readiness_probe(container)
-        container[:volumeMounts] ||= []
-        definition[:spec][:template][:spec][:volumes] ||= []
-
-        if kind_of?(MiqUiWorker)
-          container[:volumeMounts] << {:name => "ui-httpd-configs", :mountPath => "/etc/httpd/conf.d"}
-          definition[:spec][:template][:spec][:volumes] << {:name=>"ui-httpd-configs", :configMap=>{:name=>"ui-httpd-configs", :defaultMode=>420}}
-        end
+        add_readiness_probe(definition[:spec][:template][:spec][:containers].first)
       end
 
       scale_deployment
@@ -44,6 +32,17 @@ class MiqWorker
         :initialDelaySeconds => 60,
         :timeoutSeconds      => 3
       }
+    end
+
+    def configure_service_worker_deployment(definition)
+      definition[:spec][:template][:metadata][:labels].merge!(service_label)
+
+      container = definition[:spec][:template][:spec][:containers].first
+      container[:ports] = [{:containerPort => SERVICE_PORT}]
+      container[:env] << {:name => "PORT", :value => container_port.to_s}
+      container[:env] << {:name => "BINDING_ADDRESS", :value => "0.0.0.0"}
+      container[:volumeMounts] ||= []
+      definition[:spec][:template][:spec][:volumes] ||= []
     end
 
     def service_label
