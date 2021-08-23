@@ -83,7 +83,8 @@ class GitWorktree
   def branch_info(name)
     branch = find_branch(name)
     raise GitWorktreeException::BranchMissing, name unless branch
-    {:time => branch.target.time, :message => branch.target.message, :commit_sha => branch.target.oid}
+    ref = branch.resolve
+    {:time => ref.target.time, :message => ref.target.message, :commit_sha => ref.target.oid}
   end
 
   def tags
