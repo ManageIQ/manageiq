@@ -11,7 +11,16 @@ class MiqPglogical
         return @logical_replication_supported if defined?(@logical_replication_supported)
 
         is_superuser = ActiveRecord::Base.connection.select_value("SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;", "SQL")
-        warn "\e[33mWARNING: Current user is NOT a superuser, logical replication will not function.\e[0m" unless is_superuser
+        unless is_superuser
+          warn_bookends = ["\e[33m", "\e[0m"]
+          msg = "WARNING: Current user is NOT a superuser, logical replication will not function."
+          if $stderr.tty?
+            warn(warn_bookends.join(msg).to_s)
+          else
+            warn msg
+          end
+          _log.warn msg
+        end
 
         @logical_replication_supported = is_superuser
       end
