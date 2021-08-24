@@ -18,7 +18,12 @@ class MiqPglogical
 
       def with_connection_error_handling
         retry_attempted ||= false
-        yield
+        if logical_replication_supported?
+          yield
+        else
+          # Silently do no harm since logical replication is not supported.
+          nil
+        end
       rescue PG::ConnectionBad
         raise if retry_attempted
 

@@ -78,12 +78,10 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def disable
-    return unless logical_replication_supported?
     self.class.with_connection_error_handling { pglogical.disable_subscription(id).check }
   end
 
   def enable
-    return unless logical_replication_supported?
     self.class.with_connection_error_handling { pglogical.enable_subscription(id).check }
   end
 
@@ -111,7 +109,6 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def sync_tables
-    return unless logical_replication_supported?
     self.class.with_connection_error_handling { pglogical.sync_subscription(id) }
   end
 
@@ -170,10 +167,9 @@ class PglogicalSubscription < ActsAsArModel
   private_class_method :remote_region_attributes
 
   def self.subscriptions
-    return [] unless logical_replication_supported?
     with_connection_error_handling do
       pglogical.subscriptions(connection.current_database)
-    end
+    end || []
   end
   private_class_method :subscriptions
 
@@ -204,7 +200,6 @@ class PglogicalSubscription < ActsAsArModel
   private
 
   def safe_delete
-    return unless logical_replication_supported?
     self.class.with_connection_error_handling { pglogical.drop_subscription(id, true) }
   rescue PG::InternalError => e
     raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
@@ -228,7 +223,6 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def update_subscription
-    return unless logical_replication_supported?
     find_password if password.nil?
 
     self.class.with_connection_error_handling do
@@ -247,6 +241,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def create_subscription
+    # Don't even start into this method if logical replication is not supported (not superuser)
     return unless logical_replication_supported?
 
     MiqRegion.destroy_region(connection, remote_region_number)
@@ -308,9 +303,8 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def subscription_attributes
-    return {} unless logical_replication_supported?
     self.class.with_connection_error_handling do
       pglogical.subscriptions.find { |s| s["subscription_name"] == id }
-    end
+    end || {}
   end
 end

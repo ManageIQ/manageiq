@@ -13,8 +13,6 @@ class MiqPglogical
   # Note:  Don't use a delegate with this method, since we want the
   # .with_connection_error_handling to wrap this methods
   def subscriber?
-    return false unless PglogicalSubscription.logical_replication_supported?
-
     # From: https://www.postgresql.org/docs/10/catalog-pg-subscription.html
     # "Unlike most system catalogs, pg_subscription is shared across all databases of a cluster:
     # There is only one copy of pg_subscription per cluster, not one per database."
@@ -30,8 +28,6 @@ class MiqPglogical
   end
 
   def provider?
-    return false unless PglogicalSubscription.logical_replication_supported?
-
     self.class.with_connection_error_handling { pglogical.publishes?(PUBLICATION_NAME) }
   end
 
