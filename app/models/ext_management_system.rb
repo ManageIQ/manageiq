@@ -158,6 +158,9 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
+  supports_not :add_host_initiator
+  supports_not :add_storage
+  supports_not :add_volume_mapping
   supports_not :admin_ui
   supports_not :assume_role
   supports_not :block_storage
@@ -318,6 +321,9 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_create_host_aggregate, :type => :boolean
   virtual_column :supports_create_network_router, :type => :boolean
   virtual_column :supports_storage_services, :type => :boolean
+  virtual_column :supports_add_storage, :type => :boolean
+  virtual_column :supports_add_host_initiator, :type => :boolean
+  virtual_column :supports_add_volume_mapping, :type => :boolean
 
   virtual_sum :total_vcpus,        :hosts, :total_vcpus
   virtual_sum :total_memory,       :hosts, :ram_size
@@ -480,6 +486,18 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   # UI methods for determining availability of fields
+  def supports_add_storage
+    supports_add_storage?
+  end
+
+  def supports_add_host_initiator
+    supports_add_host_initiator?
+  end
+
+  def supports_add_volume_mapping
+    supports_add_volume_mapping?
+  end
+
   def supports_port?
     false
   end
