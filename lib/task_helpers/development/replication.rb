@@ -34,7 +34,7 @@ module TaskHelpers
           setup_global(GLOBAL)
 
           # TODO: We have the technology to watch for this and report when it's all good or bad
-          puts "Local replication is setup... try checking for users in all regions: psql -U root development_replication_99 -c \"select id from users;\""
+          puts "Local replication is setup... try checking for users in all regions: psql -U root development_replication_99 -c \"SELECT id FROM users;\""
         ensure
           restore
         end
@@ -88,12 +88,12 @@ module TaskHelpers
 
         def configure_global_region(region)
           run_command("bin/rails r 'TaskHelpers::Development::Replication.configure_global_region_script'", env: command_environment(region))
-          run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_subscription;'", raise_on_error: false)
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'SELECT * FROM pg_subscription;'", raise_on_error: false)
         end
 
         def configure_remote_region(region)
           run_command("bin/rails r 'MiqRegion.replication_type = :remote'", env: command_environment(region))
-          run_command("psql -U #{PG_USER} #{database(region)} -c 'select * from pg_publication;'")
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'SELECT * FROM pg_publication;'")
         end
 
         def create_region(region)
@@ -119,11 +119,11 @@ module TaskHelpers
         end
 
         def teardown_global_subscription_for_region(region)
-          run_command("psql -U #{PG_USER} #{database(GLOBAL)} -c 'drop subscription region_#{region}_subscription;'", raise_on_error: false)
+          run_command("psql -U #{PG_USER} #{database(GLOBAL)} -c 'DROP SUBSCRIPTION region_#{region}_subscription;'", raise_on_error: false)
         end
 
         def teardown_remote_publication(region)
-          run_command("psql -U #{PG_USER} #{database(region)} -c 'drop publication miq;'", raise_on_error: false)
+          run_command("psql -U #{PG_USER} #{database(region)} -c 'DROP PUBLICATION miq;'", raise_on_error: false)
         end
       end
     end
