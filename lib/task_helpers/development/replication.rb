@@ -44,6 +44,11 @@ module TaskHelpers
             teardown_global_subscription_for_region(r)
             teardown_remote_publication(r)
           end
+
+          regions = REMOTES + [GLOBAL]
+          regions.each do |r|
+            run_command("dropdb -U #{PG_USER} #{database(r)}", raise_on_error: false)
+          end
         end
 
         def setup_remote(region)
