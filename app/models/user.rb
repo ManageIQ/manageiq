@@ -41,8 +41,8 @@ class User < ApplicationRecord
   delegate   :super_admin_user?, :request_admin_user?, :self_service?, :limited_self_service?, :report_admin_user?, :only_my_user_tasks?,
              :to => :miq_user_role, :allow_nil => true
 
-  validates_presence_of   :name, :userid
-  validates :userid, :unique_within_region => {:match_case => false}
+  validates :name, :presence => true, :length => {:maximum => 100}
+  validates :userid, :presence => true, :unique_within_region => {:match_case => false}
   validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
                                 :allow_nil => true, :message => "must be a valid email address"}
   validates :current_group, :inclusion => {:in => proc { |u| u.miq_groups }, :allow_nil => true, :if => :current_group_id_changed?}

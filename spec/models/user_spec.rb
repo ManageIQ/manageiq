@@ -1,7 +1,15 @@
 RSpec.describe User do
   context "validations" do
+    it "should ensure good sized name works" do
+      expect(FactoryBot.build(:user, :name => "x" * 4)).to be_valid
+    end
+
     it "should ensure presence of name" do
       expect(FactoryBot.build(:user, :name => nil)).not_to be_valid
+    end
+
+    it "should ensure name is not too long" do
+      expect(FactoryBot.build(:user, :name => "x" * 101)).not_to be_valid
     end
 
     it "should ensure presence of user id" do
