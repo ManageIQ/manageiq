@@ -83,8 +83,7 @@ class MiqPglogical
     PglogicalSubscription.delete_all if current_type == :global
     configure_provider if desired_type == :remote
 
-    # Do nothing to add a global
-    desired_type
+    # When adding a global (desired_type == :global), we do nothing here
   end
 
   def replication_wal_retained
