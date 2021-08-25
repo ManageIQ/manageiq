@@ -65,6 +65,28 @@ class MiqPglogical
     self.class.with_connection_error_handling { pglogical.lag_bytes }
   end
 
+  def replication_type
+    if provider?
+      :remote
+    elsif subscriber?
+      :global
+    else
+      :none
+    end
+  end
+
+  def replication_type=(desired_type)
+    return unless PglogicalSubscription.logical_replication_supported?
+
+    current_type = replication_type
+    destroy_provider if current_type == :remote
+    PglogicalSubscription.delete_all if current_type == :global
+    configure_provider if desired_type == :remote
+
+    # Do nothing to add a global
+    desired_type
+  end
+
   def replication_wal_retained
     self.class.with_connection_error_handling { pglogical.wal_retained_bytes }
   end

@@ -144,24 +144,13 @@ class MiqRegion < ApplicationRecord
   end
 
   def self.replication_type
-    if remote_replication_type?
-      :remote
-    elsif global_replication_type?
-      :global
-    else
-      :none
-    end
+    MiqPglogical.new.replication_type
   end
 
   def self.replication_type=(desired_type)
-    current_type = replication_type
-    return desired_type if desired_type == current_type
+    return desired_type if desired_type == replication_type
 
-    MiqPglogical.new.destroy_provider   if current_type == :remote
-    PglogicalSubscription.delete_all    if current_type == :global
-    MiqPglogical.new.configure_provider if desired_type == :remote
-    # Do nothing to add a global
-    desired_type
+    MiqPglogical.new.replication_type = desired_type
   end
 
   def ems_clouds
