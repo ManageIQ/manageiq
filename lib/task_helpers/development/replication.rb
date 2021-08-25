@@ -47,7 +47,7 @@ module TaskHelpers
 
           regions = REMOTES + [GLOBAL]
           regions.each do |r|
-            run_command("dropdb -U #{PG_USER} #{database(r)}", raise_on_error: false)
+            run_command("dropdb -U '#{PG_USER}' -h #{PG_HOST} #{database(r)}", env: {"PGPASSWORD" => PG_PASS}, raise_on_error: false)
           end
         end
 
