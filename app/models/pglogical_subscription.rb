@@ -169,7 +169,7 @@ class PglogicalSubscription < ActsAsArModel
   def self.subscriptions
     with_connection_error_handling do
       pglogical.subscriptions(connection.current_database)
-    end
+    end || []
   end
   private_class_method :subscriptions
 
@@ -241,6 +241,9 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def create_subscription
+    # Don't even start into this method if logical replication is not supported (not superuser)
+    return unless logical_replication_supported?
+
     MiqRegion.destroy_region(connection, remote_region_number)
 
     # new_subscription_name also queries the remote, so we fetch it early to avoid a nested remote query
@@ -302,6 +305,6 @@ class PglogicalSubscription < ActsAsArModel
   def subscription_attributes
     self.class.with_connection_error_handling do
       pglogical.subscriptions.find { |s| s["subscription_name"] == id }
-    end
+    end || {}
   end
 end

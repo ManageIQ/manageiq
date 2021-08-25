@@ -2,10 +2,37 @@ class MiqPglogical
   module ConnectionHandling
     extend ActiveSupport::Concern
 
+    included do
+      delegate :logical_replication_supported?, :to => :class
+    end
+
     module ClassMethods
+      def logical_replication_supported?
+        return @logical_replication_supported if defined?(@logical_replication_supported)
+
+        is_superuser = ActiveRecord::Base.connection.select_value("SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;", "SQL")
+        unless is_superuser
+          warn_bookends = ["\e[33m", "\e[0m"]
+          msg = "WARNING: Current user is NOT a superuser, logical replication will not function."
+          if $stderr.tty?
+            warn(warn_bookends.join(msg).to_s)
+          else
+            warn msg
+          end
+          _log.warn msg
+        end
+
+        @logical_replication_supported = is_superuser
+      end
+
       def with_connection_error_handling
         retry_attempted ||= false
-        yield
+        if logical_replication_supported?
+          yield
+        else
+          # Silently do no harm since logical replication is not supported.
+          nil
+        end
       rescue PG::ConnectionBad
         raise if retry_attempted
 

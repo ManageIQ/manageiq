@@ -62,6 +62,78 @@ RSpec.describe MiqPglogical do
     end
   end
 
+  describe "#replication_type" do
+    it "returns :global when configured as a pglogical subscriber" do
+      allow(subject).to receive(:provider?).and_return(false)
+      allow(subject).to receive(:subscriber?).and_return(true)
+      expect(subject.replication_type).to eq(:global)
+    end
+
+    it "returns :remote when configured as a pglogical provider" do
+      allow(subject).to receive(:provider?).and_return(true)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject.replication_type).to eq(:remote)
+    end
+
+    it "returns :remote when configured as both a provider and a subscriber since subscriptions are shared across all databases of a cluster" do
+      allow(subject).to receive(:provider?).and_return(true)
+      allow(subject).to receive(:subscriber?).and_return(true)
+      expect(subject.replication_type).to eq(:remote)
+    end
+
+    it "returns :none if pglogical is not configured" do
+      allow(subject).to receive(:provider?).and_return(false)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject.replication_type).to eq(:none)
+    end
+  end
+
+  describe "#replication_type=" do
+    it "returns the replication_type, even when unchanged" do
+      allow(subject).to receive(:provider?).and_return(true)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject).to receive(:destroy_provider)
+      expect(subject).to receive(:configure_provider)
+      expect(subject.replication_type = :remote).to eq :remote
+    end
+
+    it "destroys the provider when transition is :remote -> :none" do
+      allow(subject).to receive(:provider?).and_return(true)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject).to receive(:destroy_provider)
+      expect(subject.replication_type = :none).to eq :none
+    end
+
+    it "deletes all subscriptions when transition is :global -> :none" do
+      allow(subject).to receive(:provider?).and_return(false)
+      allow(subject).to receive(:subscriber?).and_return(true)
+      expect(PglogicalSubscription).to receive(:delete_all)
+      expect(subject.replication_type = :none).to eq :none
+    end
+
+    it "creates a new provider when transition is :none -> :remote" do
+      allow(subject).to receive(:provider?).and_return(false)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject).to receive(:configure_provider)
+      expect(subject.replication_type = :remote).to eq :remote
+    end
+
+    it "deletes all subscriptions and creates a new provider when transition is :global -> :remote" do
+      allow(subject).to receive(:provider?).and_return(false)
+      allow(subject).to receive(:subscriber?).and_return(true)
+      expect(PglogicalSubscription).to receive(:delete_all)
+      expect(subject).to receive(:configure_provider)
+      expect(subject.replication_type = :remote).to eq :remote
+    end
+
+    it "destroys the provider when transition is :remote -> :global" do
+      allow(subject).to receive(:provider?).and_return(true)
+      allow(subject).to receive(:subscriber?).and_return(false)
+      expect(subject).to receive(:destroy_provider)
+      expect(subject.replication_type = :global).to eq :global
+    end
+  end
+
   describe ".save_global_region" do
     let(:subscription) { double }
     it "sets replication type for this region to 'global'" do

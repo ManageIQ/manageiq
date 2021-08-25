@@ -95,6 +95,8 @@ end
 
 module ArPglogicalMigration
   def migrate(direction)
+    return super unless PglogicalSubscription.logical_replication_supported?
+
     ArPglogicalMigrationHelper.subscriptions.each do |s|
       ArPglogicalMigrationHelper::RemoteRegionMigrationWatcher.new(s, version.to_s).wait_for_remote_region_migration
     end
