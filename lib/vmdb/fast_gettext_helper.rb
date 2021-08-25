@@ -18,7 +18,7 @@ module Vmdb
     end
 
     def self.find_available_locales_via_directories
-      Dir.entries(locale_path).select { |entry| File.directory?(File.join(locale_path, entry)) && entry != '.' && entry != '..' }.sort
+      locale_path.children.select(&:directory?).map { |p| p.basename.to_s }.sort
     end
 
     def self.supported_locales
@@ -46,11 +46,11 @@ module Vmdb
     end
 
     def self.locale_path
-      @locale_path ||= Rails.root.join("locale").to_s
+      @locale_path ||= Rails.root.join("locale")
     end
 
     def self.register_locales
-      Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path, :po) # Default ManageIQ domain
+      Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path.to_s, :po) # Default ManageIQ domain
       Vmdb::Gettext::Domains.initialize_chain_repo
 
       available_locales = find_available_locales
