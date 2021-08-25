@@ -17,13 +17,7 @@ class BinaryBlob < ApplicationRecord
       end
 
       def purge_scope(older_than = nil)
-        where(:resource => nil).or(
-          where(
-            arel_table[:resource_type].eq("StateVarHash").and(
-              arel_table[:resource_id].gt(- older_than.to_i)
-            )
-          )
-        )
+        where(:resource_id => nil).where(arel_table[:created_at].lteq(older_than))
       end
 
       def purge_associated_records(ids)
