@@ -15,7 +15,7 @@ class MiqPglogical
           warn_bookends = ["\e[33m", "\e[0m"]
           msg = "WARNING: Current user is NOT a superuser, logical replication will not function."
           if $stderr.tty?
-            warn(warn_bookends.join(msg).to_s)
+            warn(warn_bookends.join(msg))
           else
             warn msg
           end
