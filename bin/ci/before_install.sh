@@ -1,5 +1,5 @@
 #!/bin/bash
-set -v
+set -ev
 
 if [ -n "$CI" ]; then
   git config --global user.name "ManageIQ"
@@ -13,4 +13,4 @@ fi
 source $TRAVIS_BUILD_DIR/bin/ci/setup_vmdb_configs.sh
 source $TRAVIS_BUILD_DIR/bin/ci/setup_ruby_env.sh
 
-set +v
+set +ev
