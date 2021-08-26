@@ -72,13 +72,7 @@ module Vmdb
       end
 
       def resource_queryable?
-        database_connectivity? && ::SettingsChange.table_exists?
-      end
-
-      def database_connectivity?
-        ActiveRecord::Base.connection && ActiveRecord::Base.connected?
-      rescue ActiveRecord::NoDatabaseError, PG::ConnectionBad
-        false
+        ActiveRecord::Base.connectable? && ::SettingsChange.table_exists?
       end
     end
   end
