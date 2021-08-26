@@ -5,38 +5,38 @@ class EvmApplication
 
   def self.start
     if server_state == :no_db
-      puts "EVM has no Database connection"
+      puts "ManageIQ has no Database connection"
       File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
       exit
     end
 
     if pid = MiqServer.running?
-      puts "EVM is already running (PID=#{pid})"
+      puts "ManageIQ is already running (PID=#{pid})"
       exit
     end
 
-    puts "Starting EVM..."
-    _log.info("EVM Startup initiated")
+    puts "Starting ManageIQ..."
+    _log.info("ManageIQ Startup initiated")
 
     MiqServer.kill_all_workers
     command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
-    puts "Running EVM in background..."
+    puts "Running ManageIQ in background..."
     pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Rails.root.join("log/evm.log"), "a"])
     Process.detach(pid)
   end
 
   def self.stop
-    puts "Stopping EVM gracefully..."
-    _log.info("EVM Shutdown initiated")
+    puts "Stopping ManageIQ gracefully..."
+    _log.info("ManageIQ Shutdown initiated")
     MiqServer.stop(true)
   end
 
   def self.kill
-    puts "Killing EVM..."
-    _log.info("EVM Kill initiated")
+    puts "Killing ManageIQ..."
+    _log.info("ManageIQ Kill initiated")
     MiqServer.kill
   end
 
@@ -47,7 +47,7 @@ class EvmApplication
   end
 
   def self.status(include_remotes = false)
-    puts "Checking EVM status..."
+    puts "Checking ManageIQ status..."
 
     server = MiqServer.my_server(true)
     servers =
@@ -58,7 +58,7 @@ class EvmApplication
       end
 
     if servers.empty?
-      puts "Local EVM Server not Found"
+      puts "Local ManageIQ Server not Found"
     else
       output_status(servers_status(servers), "* marks a master appliance")
       puts "\n"
