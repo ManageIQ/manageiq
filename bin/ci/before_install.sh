@@ -9,8 +9,9 @@ fi
 if [ $TRAVIS_BRANCH != "master" ]; then
   cp $TRAVIS_BUILD_DIR/Gemfile.lock{.release,}
 fi
+./bin/ci/before_install.rb
 
-source $TRAVIS_BUILD_DIR/bin/ci/setup_vmdb_configs.sh
-source $TRAVIS_BUILD_DIR/bin/ci/setup_ruby_env.sh
+export BUNDLE_WITHOUT=development
+export BUNDLE_GEMFILE=${PWD}/Gemfile
 
 set +ev
