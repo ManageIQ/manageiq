@@ -63,7 +63,13 @@ module ManageIQ
     end
 
     def self.bundle_update(root = APP_ROOT)
-      system!("bundle update --jobs=3", :chdir => root)
+      if ENV["CI"] && ENV["TRAVIS_BRANCH"] != "master"
+        raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
+        FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
+      end
+
+      command = ENV["TRAVIS_BRANCH"] == "master" ? "update" : "install"
+      system!("bundle #{command} --jobs=3", :chdir => root)
       return unless ENV["CI"]
       lockfile_contents = File.read(root.join("Gemfile.lock"))
       puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
