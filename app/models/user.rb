@@ -42,6 +42,8 @@ class User < ApplicationRecord
              :to => :miq_user_role, :allow_nil => true
 
   validates :name, :presence => true, :length => {:maximum => 100}
+  validates :first_name, :length => {:maximum => 100}
+  validates :last_name, :length => {:maximum => 100}
   validates :userid, :presence => true, :unique_within_region => {:match_case => false}
   validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
                                 :allow_nil => true, :message => "must be a valid email address"}
