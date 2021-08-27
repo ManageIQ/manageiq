@@ -601,7 +601,6 @@ en:
       last_started_at: Last Started At
       last_state: Last State
       last_sync_on: Last Sync Time
-      last_update_check: Last Update Check
       last_update_status: Last Update Status Code
       last_update_status_str: Last Update Status
       last_valid_on: Last Valid On
@@ -928,8 +927,6 @@ en:
       retirement_state: Retirement State
       retirement_warn: Retirement Warn
       retires_on: Retires On
-      rh_registered: Rh Registered
-      rh_subscribed: Rh Subscribed
       root_disk_size: Root Disk Size
       routes_count: Routes Count
       rsc_type: Rsc Type
@@ -1049,9 +1046,6 @@ en:
       uid_ems: Uid Ems
       uncommitted: Uncommitted
       unique_set_size: Unique Set Size
-      updates_available: Updates Available
-      upgrade_message: Upgrade Message
-      upgrade_status: Upgrade Status
       uri_or_queue_name: Uri Or Queue Name
       uri: Uri
       url: URL
