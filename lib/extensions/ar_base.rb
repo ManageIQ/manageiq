@@ -26,5 +26,11 @@ module ActiveRecord
       result = connection.vacuum_analyze_table(table_name)
       _log.info("Completed Vacuuming of table #{table_name} with result #{result.result_status}")
     end
+
+    def self.connectable?
+      connection && connected?
+    rescue ActiveRecord::NoDatabaseError, PG::ConnectionBad
+      false
+    end
   end
 end
