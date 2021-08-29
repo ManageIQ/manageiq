@@ -1,14 +1,14 @@
-class HostInitiator < ApplicationRecord
+class HostInitiatorGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include ProviderObjectMixin
   include SupportsFeatureMixin
   include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
-  belongs_to :physical_storage, :inverse_of => :host_initiators
-  belongs_to :host_initiator_group
+  belongs_to :physical_storage, :inverse_of => :host_initiator_groups
 
-  has_many :san_addresses, :as => :owner, :dependent => :destroy
+  has_many :host_initiators, :dependent => :nullify
+  has_many :san_addresses, :through => :host_initiators
   has_many :volume_mappings, :dependent => :destroy
   has_many :cloud_volumes, :through => :volume_mappings
 
@@ -26,7 +26,7 @@ class HostInitiator < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
     # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::HostInitiator
+    ext_management_system && ext_management_system.class::HostInitiatorGroup
   end
 
   def refresh_ems
@@ -43,15 +43,15 @@ class HostInitiator < ApplicationRecord
     EmsRefresh.queue_refresh(ext_management_system)
   end
 
-  def self.create_host_initiator_queue(userid, ext_management_system, options = {})
+  def self.create_host_initiator_group_queue(userid, ext_management_system, options = {})
     task_opts = {
-      :action => "creating HostInitiator for user #{userid}",
+      :action => "creating HostInitiatorGroup for user #{userid}",
       :userid => userid
     }
 
     queue_opts = {
-      :class_name  => 'HostInitiator',
-      :method_name => 'create_host_initiator',
+      :class_name  => 'HostInitiatorGroup',
+      :method_name => 'create_host_initiator_group',
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
@@ -61,17 +61,17 @@ class HostInitiator < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def self.create_host_initiator(ems_id, options = {})
+  def self.create_host_initiator_group(ems_id, options = {})
     raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
 
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
-    klass.raw_create_host_initiator(ext_management_system, options)
+    klass.raw_create_host_initiator_group(ext_management_system, options)
   end
 
-  def self.raw_create_host_initiator(_ext_management_system, _options = {})
-    raise NotImplementedError, _("raw_create_host_initiator must be implemented in a subclass")
+  def self.raw_create_host_initiator_group(_ext_management_system, _options = {})
+    raise NotImplementedError, _("raw_create_host_initiator_group must be implemented in a subclass")
   end
 end
