@@ -1,7 +1,4 @@
 ---
-authentications:
-- ldap_id
-- rhsm_pool_id
 cloud_networks:
 - provider_segmentation_id
 container_volumes:
