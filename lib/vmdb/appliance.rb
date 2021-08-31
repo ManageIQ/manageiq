@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Morphy".freeze
+      "Najdorf".freeze
     end
 
     def self.RELEASE
