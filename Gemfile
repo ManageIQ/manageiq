@@ -9,12 +9,12 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "lasker"
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "morphy"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "lasker"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "morphy"
   end
 end
 
@@ -98,7 +98,7 @@ gem "american_date"
 ### providers
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
-  gem "amazon_ssa_support",                                  :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "lasker" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+  gem "amazon_ssa_support",                                  :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "morphy" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 end
 
 group :ansible_tower, :manageiq_default do
@@ -130,7 +130,7 @@ group :ibm_cloud, :manageiq_default do
 end
 
 group :ibm_power_vc, :manageiq_default do
-  gem "manageiq-providers-ibm_power_vc", :git => "https://github.com/ManageIQ/manageiq-providers-ibm_power_vc", :branch => "master"
+  gem "manageiq-providers-ibm_power_vc", :git => "https://github.com/ManageIQ/manageiq-providers-ibm_power_vc", :branch => "morphy"
 end
 
 group :ibm_terraform, :manageiq_default do
@@ -158,7 +158,7 @@ group :nuage, :manageiq_default do
 end
 
 group :oracle_cloud, :manageiq_default do
-  gem "manageiq-providers-oracle_cloud", :git => "https://github.com/ManageIQ/manageiq-providers-oracle_cloud", :branch => "master"
+  gem "manageiq-providers-oracle_cloud", :git => "https://github.com/ManageIQ/manageiq-providers-oracle_cloud", :branch => "morphy"
 end
 
 group :redfish, :manageiq_default do

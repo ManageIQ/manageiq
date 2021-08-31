@@ -1,4 +1,4 @@
-ARG IMAGE_REF=latest-lasker
+ARG IMAGE_REF=latest-morphy
 FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
