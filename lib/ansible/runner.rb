@@ -371,7 +371,15 @@ module Ansible
           path_created.set if added.include?(path) || modified.include?(path)
         end
 
-        thread = Thread.new { listener.start }
+        thread = Thread.new do
+          listener.start
+        rescue ArgumentError => err
+          # If the main thread raises an exception immediately it is possible
+          # for the ensure block to call `listener.stop` before this thread
+          # begins its execution resulting in an ArgumentError due to the state
+          # being `:stopped`
+          raise unless err.message.include?("cannot start from state :stopped")
+        end
 
         begin
           res = yield
