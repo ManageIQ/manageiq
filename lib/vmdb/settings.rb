@@ -26,7 +26,7 @@ module Vmdb
 
     def self.init
       ::Config.overwrite_arrays = true
-      ::Config.merge_nil_values = false
+      ::Config.merge_nil_values = true
       reset_settings_constant(for_resource(:my_server))
     end
 
