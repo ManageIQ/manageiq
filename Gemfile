@@ -130,7 +130,7 @@ group :ibm_cloud, :manageiq_default do
 end
 
 group :ibm_power_vc, :manageiq_default do
-  gem "manageiq-providers-ibm_power_vc", :git => "https://github.com/ManageIQ/manageiq-providers-ibm_power_vc", :branch => "morphy"
+  manageiq_plugin "manageiq-providers-ibm_power_vc"
 end
 
 group :ibm_terraform, :manageiq_default do
@@ -158,7 +158,7 @@ group :nuage, :manageiq_default do
 end
 
 group :oracle_cloud, :manageiq_default do
-  gem "manageiq-providers-oracle_cloud", :git => "https://github.com/ManageIQ/manageiq-providers-oracle_cloud", :branch => "morphy"
+  manageiq_plugin "manageiq-providers-oracle_cloud"
 end
 
 group :redfish, :manageiq_default do
