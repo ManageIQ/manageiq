@@ -5,7 +5,6 @@ class MiqRegion < ApplicationRecord
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
-  virtual_has_many :database_backups,       :class_name => "DatabaseBackup"
   virtual_has_many :ext_management_systems, :class_name => "ExtManagementSystem"
   virtual_has_many :hosts,                  :class_name => "Host"
   virtual_has_many :storages,               :class_name => "Storage"
@@ -33,10 +32,6 @@ class MiqRegion < ApplicationRecord
   alias_method :all_storages,           :storages
 
   PERF_ROLLUP_CHILDREN = [:ext_management_systems, :storages]
-
-  def database_backups
-    DatabaseBackup.in_region(region_number)
-  end
 
   def ext_management_systems
     ExtManagementSystem.in_region(region_number)

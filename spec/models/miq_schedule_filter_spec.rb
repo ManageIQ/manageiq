@@ -31,12 +31,6 @@ RSpec.describe "MiqSchedule Filter" do
                                                :sched_action  => {:method => "vm_scan"},
                                                :miq_search_id => @search.id
                                               )
-
-      # DB Baskup Schedule
-      @db_backup = FactoryBot.create(:miq_schedule,
-                                      :resource_type => "DatabaseBackup",
-                                      :sched_action  => {:method => "db_backup"}
-                                     )
     end
 
     context "for a scheduled report" do
@@ -87,12 +81,6 @@ RSpec.describe "MiqSchedule Filter" do
       targets = @vm_search_schedule.get_targets
       expect(targets.length).to eq(1)
       expect(targets.first.name).to eq("Test VM 2")
-    end
-
-    it "should get the the DatabaseBackup class for a scheduled DB Backup" do
-      targets = @db_backup.get_targets
-      expect(targets.length).to eq(1)
-      expect(targets.first.name).to eq("DatabaseBackup")
     end
   end
 end
