@@ -50,6 +50,8 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
 
       route_signal(:poll_runner)
     end
+  rescue => err
+    route_signal(:abort, "Failed to run ansible #{execution_type}: #{err}", "error")
   end
 
   def poll_runner
