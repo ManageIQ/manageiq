@@ -44,7 +44,7 @@ module ManageIQ
     # Configures the session store to be used by the Rails application
     # (Vmdb::Application) and logs what is being used.
     def self.configure_session_store(adapter)
-      Vmdb::Application.config.session_store(*adapter.session_store_config_args)
+      Vmdb::Application.config.session_store(adapter.type, **adapter.session_options)
       msg = "Using session_store: #{Vmdb::Application.config.session_store}"
       _log.info(msg)
       puts "** #{msg}" if !Rails.env.production? && adapter.type != :mem_cache_store
