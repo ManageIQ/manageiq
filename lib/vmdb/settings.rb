@@ -101,6 +101,10 @@ module Vmdb
       build_template.load!
     end
 
+    def self.secret_filter
+      (Array(::Settings.log.secret_filter) + PASSWORD_FIELDS.to_a).uniq
+    end
+
     # This is a near copy of Config.load_and_set_settings, but we can't use that
     # method as it also calls Config.load_files, which enforces specific file
     # sources and doesn't allow you insert new sources into the middle of the

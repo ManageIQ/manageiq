@@ -71,7 +71,7 @@ module Vmdb
       check_automate_disk_version_against_db(fh)
 
       fh.info("VMDB settings:")
-      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
+      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings.secret_filter)
       fh.info("VMDB settings END")
       fh.info("---")
 
