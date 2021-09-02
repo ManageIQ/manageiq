@@ -858,6 +858,7 @@
   :level_fog: info
   :level_policy: info
   :level_remote_console: info
+  :secret_filter: []
 :notifications:
   :history:
     :purge_window_size: 1000
