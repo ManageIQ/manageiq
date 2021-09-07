@@ -1425,6 +1425,7 @@ en:
       ChargebackContainerImage:       Chargeback for Image
       ChargebackContainerProject:     Chargeback for Projects
       ChargebackRate:                 Chargeback Rate
+      CloudDatabase:                  Cloud Databases
       Classification:                 Category
       CloudNetwork:                   Cloud Network
       CloudObjectStoreContainer:      Cloud Object Store Container
@@ -1717,6 +1718,7 @@ en:
       base_snapshot:               Base Snapshot
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
+      cloud_database:              Cloud Databases
       cloud_object_store_container: Cloud Object Store Container
       cloud_object_store_object:   Cloud Object Store Object
       cloud_network:               Cloud Network
