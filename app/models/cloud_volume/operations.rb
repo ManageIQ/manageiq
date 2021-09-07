@@ -33,10 +33,6 @@ module CloudVolume::Operations
     raw_attach_volume(server_ems_ref, device)
   end
 
-  def validate_attach_volume
-    validate_unsupported(_("Attach Volume Operation"))
-  end
-
   # Detach a cloud volume as a queued task and return the task id. The queue
   # name and the queue zone are derived from the server EMS, and both a userid
   # and server EMS ref are mandatory.
@@ -62,42 +58,6 @@ module CloudVolume::Operations
 
   def detach_volume(server_ems_ref)
     raw_detach_volume(server_ems_ref)
-  end
-
-  def validate_detach_volume
-    validate_unsupported(_("Detach Volume Operation"))
-  end
-
-  private
-
-  def validate_unsupported(message_prefix)
-    self.class.validate_unsupported(message_prefix)
-  end
-
-  def validation_failed(operation, reason)
-    self.class.validation_failed(operation, reason)
-  end
-
-  def validate_volume
-    self.class.validate_volume(ext_management_system)
-  end
-
-  def validate_volume_available
-    msg = validate_volume
-
-    return {:available => msg[:available], :message => msg[:message]} unless msg.nil?
-    return {:available => true, :message => nil} if status == "available"
-
-    {:available => false, :message => _("The volume can't be attached, status has to be 'available'")}
-  end
-
-  def validate_volume_in_use
-    msg = validate_volume
-
-    return {:available => msg[:available], :message => msg[:message]} unless msg[:available]
-    return {:available => true, :message => nil} if status == "in-use"
-
-    {:available => false, :message => _("The volume can't be detached, status has to be 'in-use'")}
   end
 
   class_methods do
