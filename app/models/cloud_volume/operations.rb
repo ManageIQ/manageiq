@@ -59,26 +59,4 @@ module CloudVolume::Operations
   def detach_volume(server_ems_ref)
     raw_detach_volume(server_ems_ref)
   end
-
-  class_methods do
-    def validate_volume(ext_management_system)
-      if ext_management_system.nil?
-        return {:available => false,
-                :message   => _("The Volume is not connected to an active Provider")}
-      end
-      {:available => true, :message => nil}
-    end
-
-    def validate_unsupported(message_prefix)
-      {:available => false, :message => _("%{message} is not available for %{name}.") % {:message => message_prefix,
-                                                                                         :name    => name}}
-    end
-
-    def validation_failed(operation, reason)
-      {:available => false,
-       :message   => _("Validation failed for %{name} operation %{operation}. %{reason}") % {:name      => name,
-                                                                                             :operation => operation,
-                                                                                             :reason    => reason}}
-    end
-  end
 end

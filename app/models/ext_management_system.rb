@@ -172,6 +172,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_object_store_container_create
   supports_not :cloud_subnet_create
   supports_not :cloud_tenant_mapping
+  supports_not :cloud_volume_create
   supports_not :console
   supports_not :create_host_aggregate
   supports     :create_security_group do
