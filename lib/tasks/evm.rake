@@ -73,21 +73,6 @@ namespace :evm do
     EvmApplication.set_region_file(Rails.root.join("REGION"), configured_region)
   end
 
-  # update_start can be called in an environment where the database configuration is
-  # not set, so we need to give it a dummy config
-  desc "Start updating the appliance"
-  task :update_start do
-    EvmRakeHelper.with_dummy_database_url_configuration do
-      Rake::Task["environment"].invoke
-      EvmApplication.update_start
-    end
-  end
-
-  desc "Stop updating the appliance"
-  task :update_stop => :environment do
-    EvmApplication.update_stop
-  end
-
   desc "Determine the deployment scenario"
   task :deployment_status => :environment do
     status_to_code = {
