@@ -39,9 +39,9 @@ class MiqSchedule < ApplicationRecord
   serialize :filter
   serialize :run_at
 
-  SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
-  VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
-  ALLOWED_CLASS_METHOD_ACTIONS = %w(automation_request).freeze
+  SYSTEM_SCHEDULE_CLASSES = %w[MiqReport MiqAlert MiqWidget].freeze
+  VALID_INTERVAL_UNITS = %w[minutely hourly daily weekly monthly once].freeze
+  ALLOWED_CLASS_METHOD_ACTIONS = %w[automation_request].freeze
   IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
   default_value_for :userid,  "system"
