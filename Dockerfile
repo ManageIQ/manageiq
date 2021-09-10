@@ -1,5 +1,5 @@
 ARG IMAGE_REF=latest
-FROM manageiq/manageiq-ui-worker:${IMAGE_REF}
+FROM docker.io/manageiq/manageiq-ui-worker:${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
