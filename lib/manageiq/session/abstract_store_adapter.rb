@@ -11,10 +11,6 @@ module ManageIQ
 
         session_options
       end
-
-      def session_store_config_args
-        [type, session_options]
-      end
     end
   end
 end
