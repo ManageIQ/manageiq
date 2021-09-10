@@ -26,6 +26,8 @@ class CloudVolume < ApplicationRecord
   supports_not :backup_create
   supports_not :backup_restore
   supports_not :update
+  supports_not :create
+  supports_not :snapshot_create
 
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
