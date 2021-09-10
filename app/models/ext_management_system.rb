@@ -158,14 +158,35 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
-  supports :refresh_ems
+  supports_not :admin_ui
   supports_not :assume_role
-
-  supports :create_security_group do
-    unless SecurityGroup.class_by_ems(self).supports_create?
+  supports_not :block_storage
+  supports_not :change_password
+  supports_not :cloud_object_store_container_create
+  supports_not :cloud_subnet_create
+  supports_not :cloud_tenant_mapping
+  supports_not :console
+  supports_not :create_host_aggregate
+  supports     :create_security_group do
+    unless SecurityGroup.class_by_ems(self).supports?(:create)
       unsupported_reason_add(:create_security_group, _('Security Group creation is not supported'))
     end
   end
+  supports_not :discovery
+  supports_not :ems_network_new
+  supports_not :ems_storage_new
+  supports_not :label_mapping
+  supports_not :object_storage
+  supports_not :provisioning
+  supports_not :publish
+  supports_not :reconfigure_disks
+  supports     :refresh_ems
+  supports_not :regions
+  supports_not :smartstate_analysis
+  supports_not :streaming_refresh
+  supports_not :swift_service
+  supports_not :vm_import
+  supports_not :volume_availability_zones
 
   def edit_with_params(params, endpoints, authentications)
     tap do |ems|
