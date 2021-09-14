@@ -285,7 +285,7 @@ unless ENV["APPLIANCE"]
 
     # TODO: faker is used for url generation in git repository factory and the lenovo
     # provider, via a xclarity_client dependency
-    gem "faker",                        "~>1.8",             :require => false
+    gem "faker",                        ">1.8",             :require => false
     gem "timecop",                      "~>0.9",             :require => false
     gem "vcr",                          "~>5.0",             :require => false
     gem "webmock",                      "~>3.7",             :require => false
