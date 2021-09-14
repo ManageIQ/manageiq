@@ -228,17 +228,18 @@ class VmOrTemplate < ApplicationRecord
 
   # Add virtual columns/methods for specific things derived from advanced_settings
   REQUIRED_ADVANCED_SETTINGS = {
-    'vmi.present'          => [:paravirtualization,   :boolean],
-    'vmsafe.enable'        => [:vmsafe_enable,        :boolean],
-    'vmsafe.agentAddress'  => [:vmsafe_agent_address, :string],
-    'vmsafe.agentPort'     => [:vmsafe_agent_port,    :integer],
-    'vmsafe.failOpen'      => [:vmsafe_fail_open,     :boolean],
-    'vmsafe.immutableVM'   => [:vmsafe_immutable_vm,  :boolean],
-    'vmsafe.timeoutMS'     => [:vmsafe_timeout_ms,    :integer],
-    'entitled_processors'  => [:entitled_processors,  :float],
-    'processor_type'       => [:processor_share_type, :string],
-    'pin_policy'           => [:processor_pin_policy, :string],
-    'software_licenses'    => [:software_licenses,    :string],
+    'vmi.present'         => [:paravirtualization,   :boolean],
+    'vmsafe.enable'       => [:vmsafe_enable,        :boolean],
+    'vmsafe.agentAddress' => [:vmsafe_agent_address, :string],
+    'vmsafe.agentPort'    => [:vmsafe_agent_port,    :integer],
+    'vmsafe.failOpen'     => [:vmsafe_fail_open,     :boolean],
+    'vmsafe.immutableVM'  => [:vmsafe_immutable_vm,  :boolean],
+    'vmsafe.timeoutMS'    => [:vmsafe_timeout_ms,    :integer],
+    'entitled_processors' => [:entitled_processors,  :float],
+    'processor_type'      => [:processor_share_type, :string],
+    'pin_policy'          => [:processor_pin_policy, :string],
+    'placement_group'     => [:placement_group,      :string],
+    'software_licenses'   => [:software_licenses,    :string],
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|
     define_method(m) do
