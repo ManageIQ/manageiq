@@ -26,6 +26,33 @@ class VolumeMapping < ApplicationRecord
     ext_management_system && ext_management_system.class::VolumeMapping
   end
 
+  def raw_delete_volume_mapping
+    raise NotImplementedError, _("raw_delete_volume_mapping must be implemented in a subclass")
+  end
+
+  def delete_volume_mapping
+    raw_delete_volume_mapping
+  end
+
+  # Delete a volume mapping as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  def delete_volume_mapping_queue(userid)
+    task_opts = {
+      :action => "deleting VolumeMapping for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_volume_mapping',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def self.create_volume_mapping_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "creating VolumeMapping for user #{userid}",
