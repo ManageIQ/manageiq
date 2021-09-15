@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
-  revision: 79d6748535aba0215e16d393905e7341fcaf6fa5
-  tag: lasker-1
+  revision: 6427ca1dcbe033a4e3d835d528e9e0a3437c78a4
+  branch: morphy
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -13,8 +13,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
-  revision: 03d1d7c657bc0663e31ef90e8d08393d0ab9285b
-  tag: lasker-1
+  revision: d762bdf1ac80bdc6b5cf54d9d3509ea51e13024b
+  branch: morphy
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,16 +22,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 5eeb6aaf0106910ae5eeb5c80d95d3f68ed6e06a
-  tag: lasker-1
+  revision: 00bf5cc73958013bb38eed0a411ff73f66d702de
+  branch: morphy
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
-  revision: ebd2d28febf2d4f8e70e64460bfe319f2650b7c5
-  tag: lasker-1
+  revision: 656fbd1cb973906cc2c3af4798fc4583a427c000
+  branch: morphy
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,23 +39,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: ffb416bfa886caa4c7f4455aed66fd885dd8035a
-  tag: lasker-1
+  revision: 0bd5677903d9ebb95412d8e4f0f508eaeeefd41e
+  branch: morphy
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: 830213efbc7d63c4fa286fbc2a45b5cfb8823e3b
-  tag: lasker-1
+  revision: 3a7dcad52986deb7c52152add2e137b91841ed63
+  branch: morphy
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: 1b3a1b506351e6a9fb4b4544028a4ca288eb3933
-  tag: lasker-1
+  revision: 82b998e41506235594dbd893a9bf5c944b516ca5
+  branch: morphy
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -82,8 +82,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-graphql
-  revision: 28751abfbeb0375e229afbe821ba16ce46a56fb6
-  tag: lasker-1
+  revision: fa06a3505b78df6d1f9276834b98af5b968e0941
+  branch: morphy
   specs:
     manageiq-graphql (0.1.0)
       graphql (~> 1.7, < 1.10.6)
@@ -92,8 +92,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
-  revision: 08cd3ed57886dda0aab71ce3fb25c912a819533c
-  tag: lasker-1
+  revision: ea57883e9dc116be566a683bf809459397fe445f
+  branch: morphy
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -110,16 +110,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
-  revision: d5ec9817e49c1be6b4a153bc8b70701d89c07f45
-  tag: lasker-1
+  revision: 564aa156d0d6cda9878e1928b00a5d987c5387ea
+  branch: morphy
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 712baaa127331c6a8a0f17eaa15bcbd14b526507
-  tag: lasker-1
+  revision: 9c51f1b7efe991aa2e923e50b939efe61a12b19c
+  branch: morphy
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 1.0)
@@ -127,16 +127,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: fdfc9374c85392019f7307c4ec5078aca6160e38
-  tag: lasker-1
+  revision: 9e1681b16374c472e664611e71d28b1e823451c6
+  branch: morphy
   specs:
     manageiq-providers-azure (0.1.0)
-      azure-armrest (~> 0.9)
+      azure-armrest (~> 0.13)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
-  revision: 87879a01257fc57f9c69a01673176a59cb602bc2
-  tag: lasker-1
+  revision: 4d4966fad1fec43143fe178b02996d6038e59770
+  branch: morphy
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -146,16 +146,16 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
-  revision: cb7ced771ebd4343465a254a44c5cb9a40925fc1
-  tag: lasker-1
+  revision: c1f7f9de9fae28d6d760db7e6e5aa3b62c59bee6
+  branch: morphy
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
-  revision: 26374631779a068df4866a1571ce5e436725818e
-  tag: lasker-1
+  revision: 69b5ac081e610dced3371a9481adac6f9e4be50b
+  branch: morphy
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.10)
@@ -163,28 +163,37 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: 81b8e8bcba88d4a1f2ebae7ed57e3df0095ea94a
-  tag: lasker-1
+  revision: ff656ebd3fb26ef651c81accc1e5d62ff85fb9b2
+  branch: morphy
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
+      ibm_cloud_activity_tracker (~> 0.1)
+      ibm_cloud_databases (~> 0.1)
       ibm_cloud_global_tagging (~> 0.1)
       ibm_cloud_iam (~> 1.0)
       ibm_cloud_power (~> 1.0)
-      ibm_cloud_resource_controller (~> 1.0)
+      ibm_cloud_resource_controller (~> 2.0)
       ibm_vpc (~> 0.1)
 
 GIT
+  remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
+  revision: 7571dad409f89feb3f466f0783f738b2983c57e1
+  branch: morphy
+  specs:
+    manageiq-providers-ibm_power_vc (0.1.0)
+
+GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
-  revision: e6811b4160ee9a9ce734c25b187d88824edd4052
-  tag: lasker-1
+  revision: 72d4c54b5257a17a823202048e7857cd4814e7a4
+  branch: morphy
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
-  revision: ec92d5f4eb2379884b231efc776a7fd5364c201c
-  tag: lasker-1
+  revision: 1d50fa39dad46c619210012bdb8316674eebb99e
+  branch: morphy
   specs:
     manageiq-providers-kubernetes (0.1.0)
       hawkular-client (~> 5.0)
@@ -196,8 +205,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: 74ecfa86fb9dc0377f4d80015053f2898f0c6ba2
-  tag: lasker-1
+  revision: 657bea94252c7fa1a8d154b810d26109f82fd5c3
+  branch: morphy
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0)
@@ -205,39 +214,39 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
-  revision: 26c0428bf2f9887ae2ec065122f71c2a03dd1b9a
-  tag: lasker-1
+  revision: 71fe7171d2e252ad4139a13e9847da10573da464
+  branch: morphy
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
-  revision: f07531f05f79632357d9dcce5e411aedf5ed90b4
-  tag: lasker-1
+  revision: d4004f9f3e5aa73676019f5ebd8c540a5cc79ad6
+  branch: morphy
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
-  revision: 1865907492ccc15c3b589c827070fa39d594924f
-  tag: lasker-1
+  revision: 8ed5d801aeb401987275ae15d4553ce3d00cfedc
+  branch: morphy
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
-  revision: 6b98f48d5d17bcf91ac6b0dc1b54de09bc9374c5
-  tag: lasker-1
+  revision: 90761a108f373a55b45e8f7d77a0f004b24e797a
+  branch: morphy
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
-  revision: bf52478a3522d95be6849e7dd63ce17357c0e469
-  tag: lasker-1
+  revision: 058582c1de2b2ed4072e264942a379aac56b6d53
+  branch: morphy
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -248,33 +257,41 @@ GIT
       parallel (~> 1.12.0)
 
 GIT
+  remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
+  revision: db0a01596ee96e6c1618c72c5e028dea6b479621
+  branch: morphy
+  specs:
+    manageiq-providers-oracle_cloud (0.1.0)
+      oci
+
+GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 518101a9aaeea5666ca6b22de380e87c13a4153b
-  tag: lasker-1
+  revision: 27244e788019938c81ed60f39f0744e9778eddba
+  branch: morphy
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
-  revision: f0b6445b41fe674823892286fc672d53f4542d1c
-  tag: lasker-1
+  revision: 4227848d8a81534dbbdb1c8601c25dbc33a3f8bd
+  branch: morphy
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
-  revision: 462ed3d539d95956b0d9ea447059df86a2a7b36e
-  tag: lasker-1
+  revision: d84f6b0142544eb64b57aa5b61807493bacd83a9
+  branch: morphy
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: cd973ac721f7a7771c2093a765a4dcfe9767f73d
-  tag: lasker-1
+  revision: aae90c229b30ca6087ed462587bc22db430e4790
+  branch: morphy
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -285,8 +302,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
-  revision: 957e26d0989c899d6df8c1bf6dbf956e6c3ec196
-  tag: lasker-1
+  revision: 53498719c7da64382d266039e3567bfcddb2f6bd
+  branch: morphy
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.0)
@@ -300,24 +317,25 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: a3025406b60d0336110eb4e5d6520b1f1a63f05e
-  tag: lasker-1
+  revision: 61c6abe9d695015a4fbf7fa7e89d8680be76df92
+  branch: morphy
   specs:
     manageiq-ui-classic (0.1.0)
       coffee-rails
+      execjs (= 2.8.1)
       font-fabulous (~> 1.0.5)
       high_voltage (~> 3.0.0)
       more_core_extensions (>= 3.2, < 5)
       patternfly-sass (~> 3.59.1)
       rails (~> 6.0.0)
       sass-rails
-      uglifier (~> 3.0.0)
+      uglifier (~> 4.2.0)
       webpacker (~> 2.0.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-v2v
-  revision: be9e430215a34051c16e0985ab84fc983d7a6763
-  tag: lasker-1
+  revision: 2d34135cd45b0111d005e8d8a551e0593c64d0cf
+  branch: morphy
   specs:
     manageiq-v2v (0.1.0)
 
@@ -325,50 +343,50 @@ GEM
   remote: https://rubygems.org/
   remote: https://rubygems.manageiq.org/
   specs:
-    actioncable (6.0.4)
-      actionpack (= 6.0.4)
+    actioncable (6.0.4.1)
+      actionpack (= 6.0.4.1)
       nio4r (~> 2.0)
       websocket-driver (>= 0.6.1)
-    actionmailbox (6.0.4)
-      actionpack (= 6.0.4)
-      activejob (= 6.0.4)
-      activerecord (= 6.0.4)
-      activestorage (= 6.0.4)
-      activesupport (= 6.0.4)
+    actionmailbox (6.0.4.1)
+      actionpack (= 6.0.4.1)
+      activejob (= 6.0.4.1)
+      activerecord (= 6.0.4.1)
+      activestorage (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
       mail (>= 2.7.1)
-    actionmailer (6.0.4)
-      actionpack (= 6.0.4)
-      actionview (= 6.0.4)
-      activejob (= 6.0.4)
+    actionmailer (6.0.4.1)
+      actionpack (= 6.0.4.1)
+      actionview (= 6.0.4.1)
+      activejob (= 6.0.4.1)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (6.0.4)
-      actionview (= 6.0.4)
-      activesupport (= 6.0.4)
+    actionpack (6.0.4.1)
+      actionview (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
       rack (~> 2.0, >= 2.0.8)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actiontext (6.0.4)
-      actionpack (= 6.0.4)
-      activerecord (= 6.0.4)
-      activestorage (= 6.0.4)
-      activesupport (= 6.0.4)
+    actiontext (6.0.4.1)
+      actionpack (= 6.0.4.1)
+      activerecord (= 6.0.4.1)
+      activestorage (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
       nokogiri (>= 1.8.5)
-    actionview (6.0.4)
-      activesupport (= 6.0.4)
+    actionview (6.0.4.1)
+      activesupport (= 6.0.4.1)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activejob (6.0.4)
-      activesupport (= 6.0.4)
+    activejob (6.0.4.1)
+      activesupport (= 6.0.4.1)
       globalid (>= 0.3.6)
-    activemodel (6.0.4)
-      activesupport (= 6.0.4)
-    activerecord (6.0.4)
-      activemodel (= 6.0.4)
-      activesupport (= 6.0.4)
+    activemodel (6.0.4.1)
+      activesupport (= 6.0.4.1)
+    activerecord (6.0.4.1)
+      activemodel (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
     activerecord-id_regions (0.3.1)
       activerecord (>= 5.0, < 6.1)
       activesupport (>= 5.0, < 6.1)
@@ -381,12 +399,12 @@ GEM
       railties (>= 5.2.4.1)
     activerecord-virtual_attributes (3.0.0)
       activerecord (>= 5.0)
-    activestorage (6.0.4)
-      actionpack (= 6.0.4)
-      activejob (= 6.0.4)
-      activerecord (= 6.0.4)
+    activestorage (6.0.4.1)
+      actionpack (= 6.0.4.1)
+      activejob (= 6.0.4.1)
+      activerecord (= 6.0.4.1)
       marcel (~> 1.0.0)
-    activesupport (6.0.4)
+    activesupport (6.0.4.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -412,55 +430,55 @@ GEM
       json (>= 1.2.1)
       oauth
       rest-client (>= 1.6.5)
-    autoprefixer-rails (10.2.5.1)
-      execjs (> 0)
-    autosde_openapi_client (1.0.25)
+    autoprefixer-rails (10.3.3.0)
+      execjs (~> 2)
+    autosde_openapi_client (1.0.50)
       typhoeus (~> 1.0, >= 1.0.1)
     awesome_spawn (1.5.0)
-    aws-eventstream (1.1.1)
-    aws-partitions (1.477.0)
-    aws-sdk-cloudformation (1.53.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-eventstream (1.2.0)
+    aws-partitions (1.501.0)
+    aws-sdk-cloudformation (1.58.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-cloudwatch (1.51.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-cloudwatch (1.55.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.117.0)
+    aws-sdk-core (3.121.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-ec2 (1.248.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-ec2 (1.263.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-elasticloadbalancing (1.31.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-elasticloadbalancing (1.34.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-iam (1.56.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-iam (1.60.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-kms (1.44.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-kms (1.48.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-rds (1.121.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-rds (1.127.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.96.1)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-s3 (1.102.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.4)
+    aws-sdk-servicecatalog (1.63.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-servicecatalog (1.60.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-sns (1.45.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sns (1.42.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
+    aws-sdk-sqs (1.44.0)
+      aws-sdk-core (~> 3, >= 3.120.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sqs (1.40.0)
-      aws-sdk-core (~> 3, >= 3.112.0)
-      aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.2.4)
+    aws-sigv4 (1.4.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    azure-armrest (0.12.0)
+    azure-armrest (0.13.0)
       activesupport (>= 4.2.2)
       addressable (~> 2.8)
       azure-signature (~> 0.3.0)
@@ -502,7 +520,6 @@ GEM
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
     crass (1.0.6)
-    csv (3.2.0)
     dalli (2.7.6)
     dbus-systemd (1.1.2)
       ruby-dbus (~> 0.14)
@@ -515,23 +532,22 @@ GEM
       json
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dry-configurable (0.12.1)
+    dry-configurable (0.13.0)
       concurrent-ruby (~> 1.0)
-      dry-core (~> 0.5, >= 0.5.0)
-    dry-container (0.8.0)
+      dry-core (~> 0.6)
+    dry-container (0.9.0)
       concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.1, >= 0.1.3)
+      dry-configurable (~> 0.13, >= 0.13.0)
     dry-core (0.7.1)
       concurrent-ruby (~> 1.0)
-    dry-equalizer (0.3.0)
     dry-inflector (0.2.1)
     dry-initializer (3.0.4)
     dry-logic (1.2.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.5, >= 0.5)
-    dry-schema (1.7.0)
+    dry-schema (1.8.0)
       concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.8, >= 0.8.3)
+      dry-configurable (~> 0.13, >= 0.13.0)
       dry-core (~> 0.5, >= 0.5)
       dry-initializer (~> 3.0)
       dry-logic (~> 1.0)
@@ -542,13 +558,12 @@ GEM
       dry-core (~> 0.5, >= 0.5)
       dry-inflector (~> 0.1, >= 0.1.2)
       dry-logic (~> 1.0, >= 1.0.2)
-    dry-validation (1.6.0)
+    dry-validation (1.7.0)
       concurrent-ruby (~> 1.0)
       dry-container (~> 0.7, >= 0.7.1)
-      dry-core (~> 0.4)
-      dry-equalizer (~> 0.2)
+      dry-core (~> 0.5, >= 0.5)
       dry-initializer (~> 3.0)
-      dry-schema (~> 1.5, >= 1.5.2)
+      dry-schema (~> 1.8, >= 1.8.0)
     elif (0.1.0)
     erubi (1.10.0)
     erubis (2.7.0)
@@ -558,7 +573,7 @@ GEM
     ethon (0.14.0)
       ffi (>= 1.15.0)
     event_emitter (0.2.6)
-    excon (0.84.0)
+    excon (0.85.0)
     execjs (2.8.1)
     faker (1.8.7)
       i18n (>= 0.7)
@@ -570,7 +585,10 @@ GEM
     faraday_middleware (0.10.1)
       faraday (>= 0.7.4, < 1.0)
     fast_gettext (2.0.3)
-    ffi (1.15.3)
+    ffi (1.15.4)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
     ffi-vix_disk_lib (1.2.0)
       ffi
     fog-core (2.1.0)
@@ -607,12 +625,11 @@ GEM
       apipie-bindings (= 0.0.15)
       rest-client (~> 2.0)
     formatador (0.3.0)
-    fugit (1.5.0)
+    fugit (1.5.1)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
-    gettext (3.3.8)
+    gettext (3.4.1)
       locale (>= 2.0.5)
-      red-datasets
       text (>= 1.3.0)
     gettext_i18n_rails (1.7.2)
       fast_gettext (>= 0.9.0)
@@ -621,8 +638,8 @@ GEM
       gettext_i18n_rails (>= 0.7.1)
       po_to_json (>= 1.0.0)
       rails (>= 3.2.0)
-    globalid (0.4.2)
-      activesupport (>= 4.2.0)
+    globalid (0.5.2)
+      activesupport (>= 5.0)
     google-api-client (0.50.0)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (~> 0.9)
@@ -667,17 +684,18 @@ GEM
       websocket-client-simple (~> 0.3.0)
     high_voltage (3.0.0)
     highline (1.6.21)
-    http (4.1.1)
+    http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
-      http-form_data (~> 2.0)
-      http_parser.rb (~> 0.6.0)
+      http-form_data (~> 2.2)
+      http-parser (~> 1.2.0)
     http-accept (1.7.0)
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    http_parser.rb (0.6.0)
-    httparty (0.18.1)
+    http-parser (1.2.3)
+      ffi-compiler (>= 1.0, < 2.0)
+    httparty (0.19.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     httpclient (2.8.3)
@@ -689,25 +707,32 @@ GEM
     ibm-cloud-sdk (0.1.11)
       httparty
       rest-client
-    ibm_cloud_global_tagging (0.1.0)
+    ibm_cloud_activity_tracker (0.1.0)
       concurrent-ruby (~> 1.0)
-      http (~> 4.1.0)
+      http (~> 4.4.1)
       ibm_cloud_sdk_core (~> 1.1.1)
       jwt (~> 2.2.1)
-    ibm_cloud_iam (1.0.1)
+    ibm_cloud_databases (0.1.0)
+      concurrent-ruby (~> 1.0)
+      http (~> 4.4.1)
+      ibm_cloud_sdk_core (~> 1.1.1)
+      jwt (~> 2.2.1)
+    ibm_cloud_global_tagging (0.1.1)
+      ibm_cloud_sdk_core (~> 1.1.3)
+    ibm_cloud_iam (1.0.2)
       typhoeus (~> 1.0, >= 1.0.1)
     ibm_cloud_power (1.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
-    ibm_cloud_resource_controller (1.0.1)
-      typhoeus (~> 1.0, >= 1.0.1)
-    ibm_cloud_sdk_core (1.1.2)
-      concurrent-ruby (~> 1.0)
-      http (~> 4.1.0)
-      jwt (~> 2.2.1)
-    ibm_vpc (0.1.0)
-      concurrent-ruby (~> 1.0)
-      http (~> 4.1.0)
+    ibm_cloud_resource_controller (2.0.1)
       ibm_cloud_sdk_core (~> 1.1.1)
+    ibm_cloud_sdk_core (1.1.3)
+      concurrent-ruby (~> 1.0)
+      http (~> 4.4.0)
+      jwt (~> 2.2.1)
+    ibm_vpc (0.3.0)
+      concurrent-ruby (~> 1.0)
+      http (~> 4.4.1)
+      ibm_cloud_sdk_core (~> 1.1.3)
       jwt (~> 2.2.1)
     image-inspector-client (2.0.0)
       json
@@ -749,7 +774,7 @@ GEM
       nokogiri (>= 1.8.5, < 2, != 1.10.2, != 1.10.1, != 1.10.0)
       openscap
     linux_block_device (0.2.1)
-    listen (3.5.1)
+    listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     little-plugger (1.1.4)
@@ -758,7 +783,7 @@ GEM
     logging (2.3.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.14)
-    loofah (2.10.0)
+    loofah (2.12.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     macaddr (1.7.2)
@@ -772,9 +797,9 @@ GEM
       json (~> 2.3)
       more_core_extensions
       query_relation
-    manageiq-appliance_console (6.0.0)
-      activerecord (>= 4.2.2)
-      activesupport (>= 4.2.2)
+    manageiq-appliance_console (7.0.1)
+      activerecord (~> 6.0.4, >= 6.0.4.1)
+      activesupport (~> 6.0.4, >= 6.0.4.1)
       awesome_spawn (~> 1.4)
       bcrypt (~> 3.1.10)
       bcrypt_pbkdf (>= 1.0, < 2.0)
@@ -785,6 +810,7 @@ GEM
       net-scp (~> 1.2.1)
       optimist (~> 3.0)
       pg
+      pg-logical_replication
       rbnacl (>= 3.2, < 5.0)
     manageiq-loggers (0.6.0)
       activesupport (>= 5.0)
@@ -823,8 +849,8 @@ GEM
     method_source (1.0.0)
     mime-types (3.0.0)
       mini_mime (>= 0.1.1)
-    mini_mime (1.1.0)
-    mini_portile2 (2.5.3)
+    mini_mime (1.1.1)
+    mini_portile2 (2.6.1)
     minitest (5.14.4)
     monetize (1.9.4)
       money (~> 6.12)
@@ -858,12 +884,16 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
     netrc (0.11.0)
-    nio4r (2.5.7)
-    nokogiri (1.11.7)
-      mini_portile2 (~> 2.5.0)
+    nio4r (2.5.8)
+    nokogiri (1.12.4)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     nori (2.6.0)
     oauth (0.5.6)
+    oci (2.15.0)
+      inifile (~> 3.0, >= 3.0.0)
+      json (>= 1.4.6, < 3.0.0)
+      jwt (~> 2.1)
     openscap (0.4.9)
       ffi (>= 1.0.9)
     optimist (3.0.1)
@@ -906,34 +936,36 @@ GEM
     raabro (1.4.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-attack (6.5.0)
+      rack (>= 1.0, < 3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rails (6.0.4)
-      actioncable (= 6.0.4)
-      actionmailbox (= 6.0.4)
-      actionmailer (= 6.0.4)
-      actionpack (= 6.0.4)
-      actiontext (= 6.0.4)
-      actionview (= 6.0.4)
-      activejob (= 6.0.4)
-      activemodel (= 6.0.4)
-      activerecord (= 6.0.4)
-      activestorage (= 6.0.4)
-      activesupport (= 6.0.4)
+    rails (6.0.4.1)
+      actioncable (= 6.0.4.1)
+      actionmailbox (= 6.0.4.1)
+      actionmailer (= 6.0.4.1)
+      actionpack (= 6.0.4.1)
+      actiontext (= 6.0.4.1)
+      actionview (= 6.0.4.1)
+      activejob (= 6.0.4.1)
+      activemodel (= 6.0.4.1)
+      activerecord (= 6.0.4.1)
+      activestorage (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
       bundler (>= 1.3.0)
-      railties (= 6.0.4)
+      railties (= 6.0.4.1)
       sprockets-rails (>= 2.0.0)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.3.0)
+    rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
     rails-i18n (6.0.0)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 7)
-    railties (6.0.4)
-      actionpack (= 6.0.4)
-      activesupport (= 6.0.4)
+    railties (6.0.4.1)
+      actionpack (= 6.0.4.1)
+      activesupport (= 6.0.4.1)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.20.3, < 2.0)
@@ -948,16 +980,12 @@ GEM
       json (~> 2.3)
       nokogiri (~> 1.10)
       optimist (~> 3.0)
-    rdkafka (0.9.0)
+    rdkafka (0.10.0)
       ffi (~> 1.9)
       mini_portile2 (~> 2.1)
       rake (>= 12.3)
     recursive-open-struct (1.1.3)
-    red-datasets (0.1.4)
-      csv (>= 3.0.5)
-      rexml
-      rubyzip
-    redfish_client (0.5.3)
+    redfish_client (0.5.4)
       excon (~> 0.71)
       server_sent_events (~> 0.1)
     representable (3.1.1)
@@ -981,9 +1009,9 @@ GEM
     rubyntlm (0.6.3)
     rubyzip (2.0.0)
     rufus-lru (1.0.7)
-    rufus-scheduler (3.7.0)
+    rufus-scheduler (3.8.0)
       fugit (~> 1.1, >= 1.1.6)
-    rugged (1.1.1)
+    rugged (1.2.0)
     ruport (1.7.0.3)
       pdf-writer (= 1.1.8)
     sass (3.7.4)
@@ -1014,8 +1042,8 @@ GEM
       useragent
     server_sent_events (0.1.3)
     sexp_processor (4.15.3)
-    signet (0.15.0)
-      addressable (~> 2.3)
+    signet (0.16.0)
+      addressable (~> 2.8)
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
@@ -1057,11 +1085,11 @@ GEM
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     uber (0.1.0)
-    uglifier (3.0.4)
+    uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
@@ -1174,7 +1202,7 @@ DEPENDENCIES
   log_decorator (~> 0.1)
   manageiq-api!
   manageiq-api-client (~> 0.3.4)
-  manageiq-appliance_console (~> 6.0)
+  manageiq-appliance_console (~> 7.0)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
@@ -1193,6 +1221,7 @@ DEPENDENCIES
   manageiq-providers-foreman!
   manageiq-providers-google!
   manageiq-providers-ibm_cloud!
+  manageiq-providers-ibm_power_vc!
   manageiq-providers-ibm_terraform!
   manageiq-providers-kubernetes!
   manageiq-providers-kubevirt!
@@ -1201,6 +1230,7 @@ DEPENDENCIES
   manageiq-providers-nuage!
   manageiq-providers-openshift!
   manageiq-providers-openstack!
+  manageiq-providers-oracle_cloud!
   manageiq-providers-ovirt!
   manageiq-providers-redfish!
   manageiq-providers-scvmm!
@@ -1221,12 +1251,13 @@ DEPENDENCIES
   ovirt_metrics (~> 3.0.1)
   pg
   pg-dsn_parser (~> 0.1.0)
-  pg-logical_replication (~> 1.0)
+  pg-logical_replication (~> 1.2)
   psych (~> 3.1)
   puma (~> 4.2)
   qpid_proton (~> 0.30.0)
   query_relation (~> 0.1.0)
-  rails (~> 6.0.3, >= 6.0.3.7)
+  rack-attack (~> 6.5.0)
+  rails (~> 6.0.4, >= 6.0.4.1)
   rails-i18n (~> 6.x)
   rake (>= 12.3.3)
   responders (~> 3.0)
