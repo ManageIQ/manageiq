@@ -39,7 +39,7 @@ module MiqServer::WorkerManagement::Monitor::Systemd
   end
 
   def systemd_unit_dir
-    Pathname.new("/etc/systemd/system")
+    Pathname.new("/lib/systemd/system")
   end
 
   def miq_services(services)
