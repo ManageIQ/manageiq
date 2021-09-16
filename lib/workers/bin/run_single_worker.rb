@@ -99,20 +99,21 @@ unless options[:dry_run]
   worker_options = {:pid => Process.pid}
   runner_options = {}
 
-  worker_options[:system_uid] = options[:system_uid] if options[:system_uid]
+  # If we're given a GUID (systemd) then build the system_uid, otherwise (podified)
+  # we're given a system_uid already
+  options[:system_uid]      ||= worker_class.system_uid(options[:guid]) if options[:guid]
+  worker_options[:system_uid] = options[:system_uid]
 
   if options[:ems_id]
     worker_options[:queue_name] = "ems_#{options[:ems_id]}"
     runner_options[:ems_id]     = options[:ems_id]
   end
 
-  find_options = options.slice(:guid, :system_uid)
-
   # If a guid or system_uid is provided, update if found, create if not found.
   #
   # Podified needs to create on the first run_single_worker and update after since
   # the GUID can't be predetermined for each replica
-  worker = worker_class.find_by(find_options) if find_options.present?
+  worker = worker_class.find_by(:system_uid => options[:system_uid])
   worker&.update(worker_options)
   worker ||= worker_class.create_worker_record(worker_options)
 
