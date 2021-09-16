@@ -162,7 +162,7 @@ module RetirementMixin
           event_name = "request_#{retirement_event_prefix}_retire"
           _log.info("calling #{event_name}")
           begin
-            raise_retirement_event(event_name, requester ||= current_user)
+            raise_retirement_event(event_name, requester || User.current_user)
           rescue => err
             _log.log_backtrace(err)
           end
@@ -273,10 +273,6 @@ module RetirementMixin
     end
     $log.info("Setting retirement requester of id:<#{id}>, name:<#{name}> to #{evm_owner_id}.")
     evm_owner
-  end
-
-  def current_user
-    User.find_by(:userid => User.current_user.try(:userid))
   end
 
   def q_user_info(q_options, requester)
