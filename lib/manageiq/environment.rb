@@ -16,7 +16,6 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      setup_gemfile_lock if ENV["CI"]
       install_bundler(plugin_root)
       bundle_update(plugin_root)
 
@@ -67,7 +66,6 @@ module ManageIQ
       return if ENV["TRAVIS_BRANCH"] == "master"
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
-      FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 
     def self.bundle_update(root = APP_ROOT)
