@@ -6,6 +6,12 @@ module MiqServer::WorkerManagement::Monitor::Settings
     attr_reader :worker_monitor_settings
   end
 
+  def sync_config
+    sync_worker_monitor_settings
+    sync_child_worker_settings
+    $log.log_hashes(@worker_monitor_settings)
+  end
+
   def sync_child_worker_settings
     @child_worker_settings = {}
     MiqWorkerType.worker_classes.each do |worker_class|

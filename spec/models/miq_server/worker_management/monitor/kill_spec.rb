@@ -9,15 +9,14 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
     end
 
     before do
-      server.setup_drb_variables
-      server.worker_add(worker.pid)
+      server.worker_manager.worker_add(worker.pid)
       allow(server).to receive(:is_local?).and_return(is_local)
     end
 
     def assert_worker_record_deleted_and_not_monitored
       expect(MiqWorker.count).to eq(0)
       expect(server.reload.miq_workers.count).to eq(0)
-      expect(server.instance_variable_get(:@workers).keys.length).to eq(0)
+      expect(server.worker_manager.instance_variable_get(:@workers).keys.length).to eq(0)
     end
 
     context "local" do
@@ -25,7 +24,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
         MiqWorker.all.update_all(:status => MiqWorker::STATUS_STOPPED)
         expect(Process).to_not receive(:kill)
 
-        server.kill_all_workers
+        server.worker_manager.kill_all_workers
 
         assert_worker_record_deleted_and_not_monitored
       end
@@ -34,7 +33,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
         MiqWorker.all.update_all(:status => MiqWorker::STATUS_STARTED)
         expect(Process).to receive(:kill).with(9, worker.pid)
 
-        server.kill_all_workers
+        server.worker_manager.kill_all_workers
 
         assert_worker_record_deleted_and_not_monitored
       end
@@ -46,11 +45,11 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
       it "starting worker untouched" do
         expect(Process).to_not receive(:kill)
 
-        server.kill_all_workers
+        server.worker_manager.kill_all_workers
 
         expect(MiqWorker.count).to eq(1)
         expect(server.reload.miq_workers.count).to eq(1)
-        expect(server.instance_variable_get(:@workers).keys).to eq([worker.pid])
+        expect(server.worker_manager.instance_variable_get(:@workers).keys).to eq([worker.pid])
       end
     end
   end
