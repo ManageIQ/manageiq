@@ -12,8 +12,8 @@ RSpec.describe MiqServer do
         EOS
                                    )
 
-      allow(@server).to receive_messages(:worker_monitor_settings => @monitor_settings)
-      allow(@server).to receive_messages(:child_worker_settings => {:generic_worker => {}})
+      allow(@server.worker_management).to receive_messages(:worker_monitor_settings => @monitor_settings)
+      allow(@server.worker_management).to receive_messages(:child_worker_settings => {:generic_worker => {}})
       @memory_usage = {:MemFree => 0.megabytes, :SwapTotal => 10.gigabytes, :SwapFree => 3.gigabytes}
     end
 
@@ -37,7 +37,7 @@ RSpec.describe MiqServer do
                 :value: 20
             EOS
                            )
-          allow(@server).to receive_messages(:child_worker_settings => child)
+          allow(@server.worker_management).to receive_messages(:child_worker_settings => child)
 
           allow(MiqSystem).to receive_messages(:memory => @memory_usage.merge(:SwapFree => 7.gigabytes))
           expect(@server.enough_resource_to_start_worker?(MiqGenericWorker)).to be_falsey
@@ -47,12 +47,12 @@ RSpec.describe MiqServer do
       context "#kill_workers_due_to_resources_exhausted?" do
         it "90% swap used" do
           allow(MiqSystem).to receive_messages(:memory => @memory_usage.merge(:SwapFree => 1.gigabytes))
-          expect(@server.kill_workers_due_to_resources_exhausted?).to be_truthy
+          expect(@server.worker_management.kill_workers_due_to_resources_exhausted?).to be_truthy
         end
 
         it "70% swap used" do
           allow(MiqSystem).to receive_messages(:memory => @memory_usage.merge(:SwapFree => 3.gigabytes))
-          expect(@server.kill_workers_due_to_resources_exhausted?).to be_falsey
+          expect(@server.worker_management.kill_workers_due_to_resources_exhausted?).to be_falsey
         end
       end
     end

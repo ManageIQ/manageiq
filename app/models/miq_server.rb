@@ -2,7 +2,6 @@ require 'resolv'
 
 class MiqServer < ApplicationRecord
   include_concern 'AtStartup'
-  include_concern 'WorkerManagement'
   include_concern 'ServerMonitor'
   include_concern 'ServerSmartProxy'
   include_concern 'ConfigurationManagement'
@@ -11,6 +10,8 @@ class MiqServer < ApplicationRecord
   include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
+
+  require_nested :WorkerManagement
 
   include UuidMixin
   acts_as_miq_taggable
@@ -23,6 +24,7 @@ class MiqServer < ApplicationRecord
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target
+  has_many                :miq_workers, :dependent => :destroy
 
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
@@ -88,6 +90,11 @@ class MiqServer < ApplicationRecord
     EventStream.where(:target_id => server_id, :target_type => "MiqServer").destroy_all
   end
 
+  def self.kill_all_workers
+    svr = my_server(true)
+    svr&.worker_management&.kill_all_workers
+  end
+
   def self.pidfile
     @pidfile ||= "#{Rails.root}/tmp/pids/evm.pid"
   end
@@ -114,6 +121,12 @@ class MiqServer < ApplicationRecord
       throw :abort
     end
   end
+
+  def worker_management
+    @worker_management ||= WorkerManagement.new(self)
+  end
+
+  delegate :start_workers, :enough_resource_to_start_worker?, :to => :worker_management
 
   def heartbeat
     # Heartbeat the server
@@ -179,17 +192,17 @@ class MiqServer < ApplicationRecord
 
   def monitor
     now = Time.now.utc
-    Benchmark.realtime_block(:heartbeat)               { heartbeat }                        if threshold_exceeded?(:heartbeat_frequency, now)
-    Benchmark.realtime_block(:server_dequeue)          { process_miq_queue }                if threshold_exceeded?(:server_dequeue_frequency, now)
+    Benchmark.realtime_block(:heartbeat)               { heartbeat }         if threshold_exceeded?(:heartbeat_frequency, now)
+    Benchmark.realtime_block(:server_dequeue)          { process_miq_queue } if threshold_exceeded?(:server_dequeue_frequency, now)
 
     Benchmark.realtime_block(:server_monitor) do
       monitor_servers
       monitor_server_roles if self.is_master?
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
-    Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
-    Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
-    Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
+    Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                        if threshold_exceeded?(:server_log_frequency, now)
+    Benchmark.realtime_block(:worker_monitor)          { worker_management.monitor_workers }         if threshold_exceeded?(:worker_monitor_frequency, now)
+    Benchmark.realtime_block(:worker_dequeue)          { worker_management.populate_queue_messages } if threshold_exceeded?(:worker_dequeue_frequency, now)
     monitor_myself
   rescue SystemExit, SignalException
     # TODO: We're rescuing Exception below. WHY? :bomb:
@@ -250,7 +263,7 @@ class MiqServer < ApplicationRecord
 
   def kill
     # Kill all the workers of this server
-    kill_all_workers
+    worker_management.kill_all_workers
 
     # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
@@ -279,7 +292,7 @@ class MiqServer < ApplicationRecord
   def quiesce
     update_attribute(:status, 'quiesce')
     deactivate_all_roles
-    quiesce_all_workers
+    worker_management.quiesce_all_workers
     update(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
   end
 

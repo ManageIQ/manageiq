@@ -37,14 +37,16 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
   end
 
   describe "#reload_settings" do
-    let(:miq_server) { EvmSpecHelper.local_miq_server.tap(&:setup_drb_variables) }
+    let(:miq_server) do
+      EvmSpecHelper.local_miq_server.tap { |svr| svr.worker_management.setup_drb_variables }
+    end
 
     it "reloads the new changes into the settings for the resource" do
       ServerRole.seed
 
       Vmdb::Settings.save!(miq_server, :some_test_setting => 2)
       expect(Settings.some_test_setting).to be_nil
-      expect(miq_server).to receive(:notify_workers_of_config_change)
+      expect(miq_server.worker_management).to receive(:notify_workers_of_config_change)
 
       miq_server.reload_settings
 

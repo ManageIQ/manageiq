@@ -59,7 +59,7 @@ class EvmServer
 
   def kill_servers
     as_each_server do
-      @current_server.kill_all_workers
+      @current_server.worker_management.kill_all_workers
       @current_server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     end
   end
@@ -243,11 +243,7 @@ class EvmServer
     #############################################################
     # Start all the configured workers
     #############################################################
-    @current_server.clean_heartbeat_files # Appliance specific
-    @current_server.sync_config
-    @current_server.start_drb_server
-    @current_server.sync_workers
-    @current_server.wait_for_started_workers
+    @current_server.start_workers
   end
 
   ######################################################################

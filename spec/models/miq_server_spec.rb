@@ -189,49 +189,49 @@ RSpec.describe MiqServer do
       before do
         MiqWorkerType.seed
         @worker = FactoryBot.create(:miq_generic_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
-        allow(@miq_server).to receive(:validate_worker).and_return(true)
-        @miq_server.setup_drb_variables
-        @miq_server.worker_add(@worker.pid)
+        allow(@miq_server.worker_management).to receive(:validate_worker).and_return(true)
+        @miq_server.worker_management.setup_drb_variables
+        @miq_server.worker_management.worker_add(@worker.pid)
       end
 
       it "quiesce will update status to quiesce, deactivate_roles, quiesce workers, clean active messages, and set status to stopped" do
         expect(@miq_server).to receive(:status=).with('quiesce')
         expect(@miq_server).to receive(:deactivate_roles)
-        expect(@miq_server).to receive(:quiesce_workers_loop)
+        expect(@miq_server.worker_management).to receive(:quiesce_workers_loop)
         expect_any_instance_of(MiqWorker).to receive(:clean_active_messages)
         expect(@miq_server).to receive(:status=).with('stopped')
         @miq_server.quiesce
       end
 
       it "quiesce_workers_loop will initiate shutdown of workers" do
-        expect(@miq_server).to receive(:stop_worker)
-        @miq_server.instance_variable_set(:@worker_monitor_settings, :quiesce_loop_timeout => 15.minutes)
-        expect(@miq_server).to receive(:workers_quiesced?).and_return(true)
-        @miq_server.quiesce_workers_loop
+        expect(@miq_server.worker_management).to receive(:stop_worker)
+        @miq_server.worker_management.instance_variable_set(:@worker_monitor_settings, :quiesce_loop_timeout => 15.minutes)
+        expect(@miq_server.worker_management).to receive(:workers_quiesced?).and_return(true)
+        @miq_server.worker_management.quiesce_workers_loop
       end
 
       it "quiesce_workers do mini-monitor_workers loop" do
         expect(@miq_server).to receive(:heartbeat)
-        expect(@miq_server).to receive(:quiesce_workers_loop_timeout?).never
+        expect(@miq_server.worker_management).to receive(:quiesce_workers_loop_timeout?).never
         @worker.update(:status => MiqWorker::STATUS_STOPPED)
-        @miq_server.workers_quiesced?
+        @miq_server.worker_management.workers_quiesced?
       end
 
       it "quiesce_workers_loop_timeout? will return true if timeout reached" do
-        @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
-        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
+        @miq_server.worker_management.instance_variable_set(:@quiesce_started_on, Time.now.utc)
+        @miq_server.worker_management.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
+        expect(@miq_server.worker_management.quiesce_workers_loop_timeout?).not_to be_truthy
 
         Timecop.travel 10.minutes do
-          expect(@miq_server.quiesce_workers_loop_timeout?).to be_truthy
+          expect(@miq_server.worker_management.quiesce_workers_loop_timeout?).to be_truthy
         end
       end
 
       it "quiesce_workers_loop_timeout? will return false if timeout is not reached" do
-        @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
-        @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
+        @miq_server.worker_management.instance_variable_set(:@quiesce_started_on, Time.now.utc)
+        @miq_server.worker_management.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
         expect_any_instance_of(MiqWorker).to receive(:kill).never
-        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_truthy
+        expect(@miq_server.worker_management.quiesce_workers_loop_timeout?).not_to be_truthy
       end
 
       context "#server_timezone" do

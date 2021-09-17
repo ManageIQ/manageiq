@@ -5,7 +5,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
 
   before do
     MiqWorkerType.seed
-    allow(server).to receive(:systemd_manager).and_return(systemd_manager)
+    allow(server.worker_management).to receive(:systemd_manager).and_return(systemd_manager)
     allow(systemd_manager).to receive(:units).and_return(units)
   end
 
@@ -15,7 +15,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
 
       it "doesn't call DisableUnitFiles" do
         expect(systemd_manager).not_to receive(:DisableUnitFiles)
-        server.cleanup_failed_systemd_services
+        server.worker_management.cleanup_failed_systemd_services
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
         expect(systemd_manager).to receive(:ResetFailedUnit).with(service_name)
         expect(systemd_manager).to receive(:DisableUnitFiles).with([service_name], false)
 
-        server.cleanup_failed_systemd_services
+        server.worker_management.cleanup_failed_systemd_services
       end
     end
   end
@@ -43,7 +43,7 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
     end
 
     it "filters out non-miq services" do
-      expect(server.systemd_all_miq_services.count).to eq(2)
+      expect(server.worker_management.systemd_all_miq_services.count).to eq(2)
     end
   end
 
@@ -56,13 +56,13 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
     end
 
     it "filters out only failed services" do
-      expect(server.systemd_failed_miq_services.count).to eq(1)
+      expect(server.worker_management.systemd_failed_miq_services.count).to eq(1)
     end
   end
 
   context "#systemd_miq_service_base_names (private)" do
     it "returns the minimal_class_name" do
-      expect(server.send(:systemd_miq_service_base_names)).to include("manageiq-generic", "manageiq-ui")
+      expect(server.worker_management.send(:systemd_miq_service_base_names)).to include("manageiq-generic", "manageiq-ui")
     end
   end
 
@@ -75,21 +75,21 @@ RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
     end
 
     it "filters out non-service files" do
-      expect(server.send(:systemd_services).count).to eq(1)
+      expect(server.worker_management.send(:systemd_services).count).to eq(1)
     end
   end
 
   context "#systemd_service_base_name (private)" do
     it "with a non-templated service" do
-      expect(server.send(:systemd_service_base_name, :name => "miq.slice")).to eq("miq")
+      expect(server.worker_management.send(:systemd_service_base_name, :name => "miq.slice")).to eq("miq")
     end
 
     it "with a template service" do
-      expect(server.send(:systemd_service_base_name, :name => "generic@.service")).to eq("generic")
+      expect(server.worker_management.send(:systemd_service_base_name, :name => "generic@.service")).to eq("generic")
     end
 
     it "with a templated service instance" do
-      expect(server.send(:systemd_service_base_name, :name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service")).to eq("generic")
+      expect(server.worker_management.send(:systemd_service_base_name, :name => "generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service")).to eq("generic")
     end
   end
 end

@@ -15,7 +15,7 @@ module MiqServer::WorkerManagement::Monitor
 
   def monitor_workers
     # Clear the my_server cache so we can detect role and possibly other changes faster
-    self.class.my_server_clear_cache
+    my_server.class.my_server_clear_cache
 
     sync_from_system
     sync_monitor
@@ -149,7 +149,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def monitor_reason_not_responding?(w)
-    [MiqServer::NOT_RESPONDING, MiqServer::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
+    [MiqServer::WorkerManagement::NOT_RESPONDING, MiqServer::WorkerManagement::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
   end
 
   def do_system_limit_exceeded
@@ -163,14 +163,14 @@ module MiqServer::WorkerManagement::Monitor
       _log.warn(msg)
 
       notification_options = {
-        :name             => name,
-        :memory_usage     => memory_usage.to_i,
-        :memory_threshold => memory_threshold,
-        :pid              => pid
+        :name             => my_server.name,
+        :memory_usage     => my_server.memory_usage.to_i,
+        :memory_threshold => my_server.memory_threshold,
+        :pid              => my_server.pid
       }
 
       MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name, :full_data => notification_options)
-      stop_worker(w, MiqServer::MEMORY_EXCEEDED)
+      stop_worker(w, MiqServer::WorkerManagement::MEMORY_EXCEEDED)
       break
     end
   end
@@ -179,10 +179,10 @@ module MiqServer::WorkerManagement::Monitor
     @last_sync ||= Time.now.utc
     sync_interval         = @worker_monitor_settings[:sync_interval] || 30.minutes
     sync_interval_reached = sync_interval.seconds.ago.utc > @last_sync
-    roles_changed         = self.active_roles_changed?
+    roles_changed         = my_server.active_roles_changed?
     resync_needed         = roles_changed || sync_interval_reached
 
-    roles_added, roles_deleted, _roles_unchanged = role_changes
+    roles_added, roles_deleted, _roles_unchanged = my_server.role_changes
 
     if resync_needed
       log_role_changes           if roles_changed

@@ -1,19 +1,24 @@
-module MiqServer::WorkerManagement
-  extend ActiveSupport::Concern
+class MiqServer::WorkerManagement
+  include Vmdb::Logging
 
   include_concern 'Dequeue'
   include_concern 'Heartbeat'
   include_concern 'Monitor'
 
-  included do
-    has_many :miq_workers
+  attr_reader :my_server
+
+  def initialize(my_server)
+    @my_server = my_server
   end
 
-  module ClassMethods
-    def kill_all_workers
-      svr = my_server(true)
-      svr.kill_all_workers unless svr.nil?
-    end
+  delegate :miq_workers, :to => :my_server
+
+  def start_workers
+    clean_heartbeat_files # Appliance specific
+    sync_config
+    start_drb_server
+    sync_workers
+    wait_for_started_workers
   end
 
   def setup_drb_variables
@@ -37,7 +42,7 @@ module MiqServer::WorkerManagement
     Dir::Tmpname.create("worker_monitor", nil) do |path|
       drb = DRb.start_service("drbunix://#{path}", self)
       FileUtils.chmod(0o750, path)
-      update(:drb_uri => drb.uri)
+      my_server.update(:drb_uri => drb.uri)
     end
   end
 

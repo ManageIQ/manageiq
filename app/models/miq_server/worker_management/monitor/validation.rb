@@ -5,7 +5,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
     return true if MiqEnvironment::Command.is_podified?
 
     if exceeded_heartbeat_threshold?(w)
-      stop_worker(w, MiqServer::NOT_RESPONDING)
+      stop_worker(w, MiqServer::WorkerManagement::NOT_RESPONDING)
       return false
     end
 

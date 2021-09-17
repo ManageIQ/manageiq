@@ -2,7 +2,7 @@ module MiqServer::WorkerManagement::Monitor::Kill
   extend ActiveSupport::Concern
 
   def kill_all_workers
-    return unless self.is_local?
+    return unless my_server.is_local?
 
     remove_unknown_workers
     remove_workers
