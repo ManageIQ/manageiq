@@ -76,6 +76,12 @@ namespace :release do
       exit 1
     end
 
+    next_branch = ENV["RELEASE_BRANCH_NEXT"]
+    if next_branch.nil? || next_branch.empty?
+      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH_NEXT to the proper value."
+      exit 1
+    end
+
     current_branch = `git rev-parse --abbrev-ref HEAD`.chomp
     if current_branch == "master"
       STDERR.puts "ERROR: You cannot do new branch tasks from the master branch."
@@ -103,8 +109,18 @@ namespace :release do
     version_file = root.join("VERSION")
     version_file.write("#{branch}-pre")
 
+    # Modify CODENAME
+    vmdb_appliance = root.join("lib", "vmdb", "appliance.rb")
+    content = vmdb_appliance.read
+    vmdb_appliance.write(content.sub(/(CODENAME\n\s+")[^"]+(")/, "\\1#{branch.capitalize}\\2"))
+
+    # Modify Deprecation version
+    deprecation = root.join("lib", "vmdb", "deprecation.rb")
+    content = deprecation.read
+    deprecation.write(content.sub(/(ActiveSupport::Deprecation.new\(")[^"]+(")/, "\\1#{next_branch.capitalize}\\2"))
+
     # Commit
-    files_to_update = [gemfile, dockerfile, docker_readme, version_file]
+    files_to_update = [gemfile, dockerfile, docker_readme, version_file, vmdb_appliance, deprecation]
     exit $?.exitstatus unless system("git add #{files_to_update.join(" ")}")
     exit $?.exitstatus unless system("git commit -m 'Changes for new branch #{branch}'")
 
