@@ -18,3 +18,5 @@ EvmGroup-container_administrator: container_administrator
 EvmGroup-container_operator: container_operator
 EvmGroup-reader: reader
 EvmGroup-physical_infrastructure: physical_infrastructure
+EvmGroup-physical_storages_administrator: physical_storages_administrator
+EvmGroup-physical_storages_user: physical_storages_user

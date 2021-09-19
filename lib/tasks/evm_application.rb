@@ -159,25 +159,6 @@ class EvmApplication
     data.sort_by { |w| [w["Region"], w["Zone"], w["Server"], w["Type"], w["PID"]] }
   end
 
-  def self.update_start
-    require 'fileutils'
-    filename = MiqServer.pidfile
-    tempfile = "#{filename}.yum"
-    FileUtils.mkdir_p(File.dirname(filename))
-    File.write(filename, "no_db") if File.file?(tempfile)
-    FileUtils.rm_f(tempfile)
-  end
-
-  def self.update_stop
-    return if MiqServer.my_server.status != "started"
-
-    require 'fileutils'
-    tempfile = "#{MiqServer.pidfile}.yum"
-    FileUtils.mkdir_p(File.dirname(tempfile))
-    File.write(tempfile, " ")
-    stop
-  end
-
   def self.set_region_file(region_file, new_region)
     old_region = region_file.read.to_i if region_file.exist?
 

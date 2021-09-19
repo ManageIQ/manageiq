@@ -62,7 +62,7 @@ gem "pg",                                                    :require => false
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
 gem "query_relation",                   "~>0.1.0",           :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
-gem "rails",                            "~>6.0.3", ">=6.0.3.7"
+gem "rails",                            "~>6.0.4", ">=6.0.4.1"
 gem "rails-i18n",                       "~>6.x"
 gem "rake",                             ">=12.3.3",          :require => false
 gem "rest-client",                      "~>2.1.0",           :require => false
@@ -285,7 +285,7 @@ unless ENV["APPLIANCE"]
 
     # TODO: faker is used for url generation in git repository factory and the lenovo
     # provider, via a xclarity_client dependency
-    gem "faker",                        "~>1.8",             :require => false
+    gem "faker",                        ">1.8",             :require => false
     gem "timecop",                      "~>0.9",             :require => false
     gem "vcr",                          "~>5.0",             :require => false
     gem "webmock",                      "~>3.7",             :require => false

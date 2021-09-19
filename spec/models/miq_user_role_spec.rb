@@ -1,6 +1,6 @@
 RSpec.describe MiqUserRole do
   before do
-    @expected_user_role_count = 20
+    @expected_user_role_count = 22
   end
 
   it "doesn't access database when unchanged model is saved" do

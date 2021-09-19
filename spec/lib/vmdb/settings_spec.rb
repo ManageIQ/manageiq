@@ -654,4 +654,8 @@ RSpec.describe Vmdb::Settings do
 
     expect(::Settings.api.token_ttl).to eq("2.minutes")
   end
+
+  it ".validate", :providers_common => true do
+    expect { described_class.validate }.not_to raise_exception
+  end
 end

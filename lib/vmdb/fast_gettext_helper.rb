@@ -51,6 +51,7 @@ module Vmdb
 
     def self.register_locales
       Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path.to_s, :po) # Default ManageIQ domain
+      Vmdb::Gettext::Domains.add_domain(Vmdb::Gettext::Domains::TEXT_DOMAIN, locale_path.to_s, :mo)
       Vmdb::Gettext::Domains.initialize_chain_repo
 
       available_locales = find_available_locales
