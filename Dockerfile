@@ -14,7 +14,6 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
 
 ## Copy/link the appliance files again so that we get ssl
 RUN source /etc/default/evm && \
-    $APPLIANCE_SOURCE_DIRECTORY/setup && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf
 
 ## Overwrite entrypoint from pods repo
