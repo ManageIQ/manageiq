@@ -5,7 +5,7 @@ class MiqWorker < ApplicationRecord
   include_concern 'SystemdCommon'
   include UuidMixin
 
-  before_destroy :log_destroy_of_worker_messages
+  before_destroy :error_out_tasks_with_active_queue_message, :log_destroy_of_worker_messages
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
@@ -452,6 +452,15 @@ class MiqWorker < ApplicationRecord
     active_messages.each do |m|
       _log.warn("Message id: [#{m.id}] Setting state to 'error'")
       m.delivered_in_error('Clean Active Messages')
+    end
+  end
+
+  private def error_out_tasks_with_active_queue_message
+    message = "Task Handler: [#{friendly_name}] ID [#{id}] has been deleted!"
+    processed_messages.includes(:miq_task).where.not(:miq_task_id => nil).each do |m|
+      # Note, this is done synchronously from destroy because workers have 1 message they're currently "handling"
+      # and each message can only have 1 task, so this should be very fast even for many workers.
+      m.miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, message)
     end
   end
 

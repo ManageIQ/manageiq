@@ -362,6 +362,39 @@ RSpec.describe MiqWorker do
       expect(@worker.worker_options).to eq(:guid => @worker.guid)
     end
 
+    context "#destroy" do
+      context "where it has messages it's handling" do
+        before { EvmSpecHelper.local_guid_miq_server_zone }
+        let(:miq_task) do
+          queue_opts = {:class_name => "MiqServer", :method_name => "my_server", :args => []}
+          task_opts  = {:name => "Thing1", :userid => "admin"}
+          MiqTask.generic_action_with_callback(task_opts, queue_opts, true)
+        end
+
+        let(:message_linked_to_task) { miq_task.miq_queue }
+
+        it "synchronously errors out tasks linked to these soon to be deleted active messages" do
+          miq_task.state_active
+          message_linked_to_task.update!(:handler => @worker, :state => MiqQueue::STATE_DEQUEUE)
+          @worker.destroy
+
+          expect(miq_task.reload.active?).to be_falsey
+          expect(miq_task.status_error?).to be_truthy
+          expect { message_linked_to_task.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        it "let's other handlers pick up tasks and messages not yet started" do
+          miq_task.state_queued
+          message_linked_to_task.update!(:handler => @worker, :state => MiqQueue::STATE_READY)
+          @worker.destroy
+
+          expect(miq_task.reload.active?).to be_falsey
+          expect(miq_task.status_ok?).to be_truthy
+          expect(message_linked_to_task.reload.handler).to be_nil
+        end
+      end
+    end
+
     context "#command_line" do
       it "without guid in worker_options" do
         allow(@worker).to receive(:worker_options).and_return({})
