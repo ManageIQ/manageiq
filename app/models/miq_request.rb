@@ -624,13 +624,8 @@ class MiqRequest < ApplicationRecord
   private
 
   def do_cancel
-    update(:cancelation_status => CANCEL_STATUS_PROCESSING)
-    cancel_cleanup
     update(:cancelation_status => CANCEL_STATUS_FINISHED, :request_state => "finished", :status => "Error", :message => "Request is canceled by user.")
     _log.info("Request #{description} is canceled by user.")
-  end
-
-  def cancel_cleanup
   end
 
   def clean_up_keys_for_request_task
