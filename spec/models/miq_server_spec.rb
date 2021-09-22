@@ -190,7 +190,6 @@ RSpec.describe MiqServer do
         MiqWorkerType.seed
         @worker = FactoryBot.create(:miq_generic_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
         allow(@miq_server.worker_management).to receive(:validate_worker).and_return(true)
-        @miq_server.worker_management.setup_drb_variables
         @miq_server.worker_management.worker_add(@worker.pid)
       end
 

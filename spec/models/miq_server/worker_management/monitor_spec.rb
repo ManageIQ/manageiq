@@ -10,7 +10,6 @@ RSpec.describe MiqServer::WorkerManagement::Monitor do
     end
 
     before do
-      server.worker_management.setup_drb_variables
       server.worker_management.worker_add(worker.pid)
     end
 

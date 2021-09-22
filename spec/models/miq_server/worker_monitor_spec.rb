@@ -150,7 +150,6 @@ RSpec.describe "MiqWorker Monitor" do
           @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
           allow(@miq_server.worker_management).to receive(:get_time_threshold).and_return(2.minutes)
           allow(@miq_server.worker_management).to receive(:get_memory_threshold).and_return(500.megabytes)
-          @miq_server.worker_management.setup_drb_variables
           @miq_server.worker_management.worker_add(@worker1.pid)
         end
 
@@ -213,7 +212,6 @@ RSpec.describe "MiqWorker Monitor" do
         before do
           allow(server.worker_management).to receive(:get_time_threshold).and_return(2.minutes)
           allow(server.worker_management).to receive(:get_memory_threshold).and_return(500.megabytes)
-          server.worker_management.setup_drb_variables
         end
 
         context "for heartbeat" do

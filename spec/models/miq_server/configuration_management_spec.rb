@@ -37,9 +37,7 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
   end
 
   describe "#reload_settings" do
-    let(:miq_server) do
-      EvmSpecHelper.local_miq_server.tap { |svr| svr.worker_management.setup_drb_variables }
-    end
+    let(:miq_server) { EvmSpecHelper.local_miq_server }
 
     it "reloads the new changes into the settings for the resource" do
       ServerRole.seed

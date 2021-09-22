@@ -8,7 +8,11 @@ class MiqServer::WorkerManagement
   attr_reader :my_server
 
   def initialize(my_server)
-    @my_server = my_server
+    @my_server           = my_server
+    @workers_lock        = Sync.new
+    @workers             = {}
+    @queue_messages_lock = Sync.new
+    @queue_messages      = {}
   end
 
   delegate :miq_workers, :to => :my_server
@@ -21,19 +25,9 @@ class MiqServer::WorkerManagement
     wait_for_started_workers
   end
 
-  def setup_drb_variables
-    @workers_lock        = Sync.new
-    @workers             = {}
-
-    @queue_messages_lock = Sync.new
-    @queue_messages      = {}
-  end
-
   def start_drb_server
     require 'drb'
     require 'drb/acl'
-
-    setup_drb_variables
 
     acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
     DRb.install_acl(acl)
@@ -47,10 +41,10 @@ class MiqServer::WorkerManagement
   end
 
   def worker_add(worker_pid)
-    @workers_lock.synchronize(:EX) { @workers[worker_pid] ||= {} } unless @workers_lock.nil?
+    @workers_lock.synchronize(:EX) { @workers[worker_pid] ||= {} }
   end
 
   def worker_delete(worker_pid)
-    @workers_lock.synchronize(:EX) { @workers.delete(worker_pid) } unless @workers_lock.nil?
+    @workers_lock.synchronize(:EX) { @workers.delete(worker_pid) }
   end
 end
