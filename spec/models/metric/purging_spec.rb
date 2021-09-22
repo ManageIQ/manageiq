@@ -24,18 +24,13 @@ RSpec.describe Metric::Purging do
       Timecop.freeze(Time.now) do
         described_class.purge_all_timer
 
-        q = MiqQueue.all
-        expect(q.length).to eq(3)
-
-        q.each do |qi|
-          expect(qi).to have_attributes(
-            :class_name  => described_class.name,
-            :msg_timeout => 1200
-          )
-        end
-
-        modes = q.collect { |qi| qi[:method_name] }
-        expect(modes).to match_array %w(purge_daily purge_hourly purge_realtime)
+        q = MiqQueue.all.map { |item| item.attributes.slice("class_name", "method_name") }
+        expect(q).to match_array([
+          {"class_name" => described_class.name, "method_name" => "purge_daily"},
+          {"class_name" => described_class.name, "method_name" => "purge_hourly"},
+          {"class_name" => described_class.name, "method_name" => "purge_realtime"},
+          {"class_name" => "MiqTask", "method_name"=>"destroy_older_by_condition"}
+        ])
       end
     end
 
