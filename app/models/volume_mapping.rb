@@ -13,6 +13,7 @@ class VolumeMapping < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id
 
   supports_not :create
+  supports_not :delete
   acts_as_miq_taggable
 
   def my_zone
