@@ -4,26 +4,13 @@ class EvmApplication
   include Vmdb::Logging
 
   def self.start
-    if server_state == :no_db
-      puts "EVM has no Database connection"
-      File.open(Rails.root.join("tmp", "pids", "evm.pid"), "w") { |f| f.write("no_db") }
-      exit
-    end
+    puts "Running EVM in background..."
 
-    if pid = MiqServer.running?
-      puts "EVM is already running (PID=#{pid})"
-      exit
-    end
-
-    puts "Starting EVM..."
-    _log.info("EVM Startup initiated")
-
-    MiqServer.kill_all_workers
     command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
 
     env_options = {}
     env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
-    puts "Running EVM in background..."
+
     pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Rails.root.join("log/evm.log"), "a"])
     Process.detach(pid)
   end

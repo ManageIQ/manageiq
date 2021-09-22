@@ -19,6 +19,8 @@ class EvmServer
       exit
     end
 
+    MiqServer.kill_all_workers
+
     PidFile.create(MiqServer.pidfile)
     set_process_title
     validate_database
