@@ -20,4 +20,10 @@ class MiqServer::WorkerManagement
 
     klass.new(my_server)
   end
+
+  attr_reader :my_server
+
+  def initialize(my_server)
+    @my_server = my_server
+  end
 end

@@ -1,12 +1,9 @@
 class MiqServer::WorkerManagement::Base < MiqServer::WorkerManagement
   include_concern 'Dequeue'
-  include_concern 'Heartbeat'
   include_concern 'Monitor'
 
-  attr_reader :my_server
-
   def initialize(my_server)
-    @my_server           = my_server
+    super
     @workers_lock        = Sync.new
     @workers             = {}
     @queue_messages_lock = Sync.new
@@ -27,7 +24,7 @@ class MiqServer::WorkerManagement::Base < MiqServer::WorkerManagement
     require 'drb'
     require 'drb/acl'
 
-    acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
+    acl = ACL.new(%w[deny all allow 127.0.0.1/32])
     DRb.install_acl(acl)
 
     require 'tmpdir'

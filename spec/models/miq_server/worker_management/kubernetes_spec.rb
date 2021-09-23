@@ -1,15 +1,16 @@
 require 'recursive-open-struct'
 
-RSpec.describe MiqServer::WorkerManagement do
+RSpec.describe MiqServer::WorkerManagement::Kubernetes do
   let(:server)          { EvmSpecHelper.create_guid_miq_server_zone.second }
   let(:orchestrator)    { double("ContainerOrchestrator") }
   let(:deployment_name) { '1-generic-79bb8b8bb5-8ggbg' }
   let(:pod_label)       { '1-generic' }
-
   before do
-    # MiqWorkerType.seed
-    allow(server.worker_management).to receive(:orchestrator).and_return(orchestrator)
+    allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
+    allow(MiqEnvironment::Command).to receive(:supports_systemd?).and_return(false)
   end
+
+  before { allow(server.worker_management).to receive(:orchestrator).and_return(orchestrator) }
 
   after do
     server.worker_management.current_pods.clear
@@ -114,7 +115,7 @@ RSpec.describe MiqServer::WorkerManagement do
         :metadata => {
           :name => pod_name
         },
-        :spec => {
+        :spec     => {
           :replicas => 2,
           :template => {
             :spec => {
@@ -122,7 +123,7 @@ RSpec.describe MiqServer::WorkerManagement do
             }
           }
         },
-        :status => {
+        :status   => {
           :readyReplicas => 2
         }
       )
@@ -404,6 +405,59 @@ RSpec.describe MiqServer::WorkerManagement do
       current = constraint_one.deep_merge(:limits => {:cpu => "1"})
       desired = constraint_one.deep_merge(:limits => {:cpu => "1000m"})
       expect(server.worker_management.constraints_changed?(current, desired)).to eq(false)
+    end
+  end
+
+  describe "#sync_from_system" do
+    let(:worker) do
+      FactoryBot.create(:miq_worker,
+                        :type           => "MiqGenericWorker",
+                        :miq_server     => server,
+                        :last_heartbeat => 5.minutes.ago)
+    end
+
+    before do
+      server.worker_management.worker_add(worker.pid)
+    end
+
+    describe "#ensure_kube_monitors_started" do
+      it "podified, ensures pod monitor started and orphaned rows are removed" do
+        expect(server.worker_management).to receive(:ensure_kube_monitors_started)
+        expect(server.worker_management).to receive(:cleanup_orphaned_worker_rows)
+        server.worker_management.sync_from_system
+      end
+    end
+
+    describe "#cleanup_orphaned_worker_rows" do
+      let(:server2) { EvmSpecHelper.remote_miq_server }
+
+      before do
+        server.worker_management.current_pods = {"1-generic-active" => {}}
+      end
+
+      after do
+        server.worker_management.current_pods.clear
+      end
+
+      it "removes this server's orphaned rows" do
+        worker.update(:system_uid => "1-generic-orphan")
+        FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server, :system_uid => "1-generic-active")
+        server.worker_management.cleanup_orphaned_worker_rows
+        expect(MiqWorker.count).to eq(1)
+      end
+
+      it "skips orphaned rows for other servers" do
+        worker.update(:miq_server => server2, :system_uid => "1-generic-orphan")
+        FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server2, :system_uid => "1-generic-active")
+        server.worker_management.cleanup_orphaned_worker_rows
+        expect(MiqWorker.count).to eq(2)
+      end
+
+      it "skips MiqCockpitWsWorker rows" do
+        worker.update(:system_uid => "an_actual_guid", :type => "MiqCockpitWsWorker")
+        server.worker_management.cleanup_orphaned_worker_rows
+        expect(MiqCockpitWsWorker.count).to eq(1)
+      end
     end
   end
 end
