@@ -123,7 +123,7 @@ class MiqServer < ApplicationRecord
   end
 
   def worker_management
-    @worker_management ||= WorkerManagement.new(self)
+    @worker_management ||= WorkerManagement.build(self)
   end
 
   delegate :start_workers, :enough_resource_to_start_worker?, :to => :worker_management

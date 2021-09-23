@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Heartbeat
+module MiqServer::WorkerManagement::Base::Heartbeat
   extend ActiveSupport::Concern
 
   # Note, this entire file assumes the server process is running on the same filesystem as the workers

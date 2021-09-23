@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Kill
+module MiqServer::WorkerManagement::Base::Monitor::Kill
   extend ActiveSupport::Concern
 
   def kill_all_workers

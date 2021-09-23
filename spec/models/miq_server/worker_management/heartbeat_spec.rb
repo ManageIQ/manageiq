@@ -1,4 +1,4 @@
-RSpec.describe MiqServer::WorkerManagement::Heartbeat do
+RSpec.describe MiqServer::WorkerManagement do
   context "#persist_last_heartbeat" do
     let(:miq_server) { EvmSpecHelper.local_miq_server }
     let(:worker)     { FactoryBot.create(:miq_worker, :miq_server_id => miq_server.id) }

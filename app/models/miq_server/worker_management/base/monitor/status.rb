@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Status
+module MiqServer::WorkerManagement::Base::Monitor::Status
   extend ActiveSupport::Concern
 
   def worker_set_monitor_status(pid, status)

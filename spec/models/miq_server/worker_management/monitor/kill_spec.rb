@@ -1,4 +1,4 @@
-RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
+RSpec.describe MiqServer::WorkerManagement do
   context "#kill_all_workers" do
     let(:server)   { EvmSpecHelper.create_guid_miq_server_zone.second }
     let(:is_local) { true }

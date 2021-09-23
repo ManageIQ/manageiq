@@ -1,6 +1,6 @@
 require 'miq-system'
 
-module MiqServer::WorkerManagement::Monitor::SystemLimits
+module MiqServer::WorkerManagement::Base::Monitor::SystemLimits
   extend ActiveSupport::Concern
 
   TYPE_TO_DEFAULT_ALGORITHM = {

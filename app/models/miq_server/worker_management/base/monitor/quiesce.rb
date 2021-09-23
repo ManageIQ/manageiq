@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Quiesce
+module MiqServer::WorkerManagement::Base::Monitor::Quiesce
   extend ActiveSupport::Concern
 
   def workers_quiesced?

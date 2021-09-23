@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Validation
+module MiqServer::WorkerManagement::Base::Monitor::Validation
   extend ActiveSupport::Concern
 
   def validate_worker(w)

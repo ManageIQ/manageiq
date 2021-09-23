@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor
+module MiqServer::WorkerManagement::Base::Monitor
   extend ActiveSupport::Concern
 
   include_concern 'Kill'

@@ -1,4 +1,4 @@
-RSpec.describe MiqServer::WorkerManagement::Monitor::Systemd do
+RSpec.describe MiqServer::WorkerManagement do
   let(:units)           { [] }
   let(:server)          { EvmSpecHelper.create_guid_miq_server_zone.second }
   let(:systemd_manager) { double("DBus::Systemd::Manager") }

@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Settings
+module MiqServer::WorkerManagement::Base::Monitor::Settings
   extend ActiveSupport::Concern
 
   included do

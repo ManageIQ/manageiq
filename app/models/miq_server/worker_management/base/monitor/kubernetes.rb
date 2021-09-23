@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Kubernetes
+module MiqServer::WorkerManagement::Base::Monitor::Kubernetes
   extend ActiveSupport::Concern
 
   included do

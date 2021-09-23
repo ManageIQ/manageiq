@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Monitor::Systemd
+module MiqServer::WorkerManagement::Base::Monitor::Systemd
   extend ActiveSupport::Concern
 
   def cleanup_failed_systemd_services
