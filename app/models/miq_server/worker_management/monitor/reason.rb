@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Base::Monitor::Reason
+module MiqServer::WorkerManagement::Monitor::Reason
   extend ActiveSupport::Concern
 
   def worker_set_monitor_reason(pid, reason)

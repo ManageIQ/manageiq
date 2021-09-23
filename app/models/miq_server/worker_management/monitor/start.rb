@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Base::Monitor::Start
+module MiqServer::WorkerManagement::Monitor::Start
   extend ActiveSupport::Concern
 
   def wait_for_started_poll

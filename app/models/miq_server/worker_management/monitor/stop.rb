@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Base::Monitor::Stop
+module MiqServer::WorkerManagement::Monitor::Stop
   extend ActiveSupport::Concern
 
   def stop_worker_queue(worker, monitor_reason = nil)

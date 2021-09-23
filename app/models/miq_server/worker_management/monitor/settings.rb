@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Base::Monitor::Settings
+module MiqServer::WorkerManagement::Monitor::Settings
   extend ActiveSupport::Concern
 
   included do
@@ -14,8 +14,9 @@ module MiqServer::WorkerManagement::Base::Monitor::Settings
 
   def sync_child_worker_settings
     @child_worker_settings = {}
-    MiqWorkerType.worker_classes.each do |worker_class|
-      @child_worker_settings[worker_class.settings_name] = worker_class.worker_settings
+    MiqWorkerType.worker_class_names.each do |class_name|
+      c = class_name.constantize
+      @child_worker_settings[c.settings_name] = c.worker_settings
     end
     @child_worker_settings
   end

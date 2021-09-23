@@ -1,4 +1,4 @@
-class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement::Base
+class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   class_attribute :current_pods
   self.current_pods = Concurrent::Hash.new
 

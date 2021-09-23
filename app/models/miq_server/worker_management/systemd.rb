@@ -1,4 +1,4 @@
-class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement::Base
+class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   def cleanup_failed_workers
     super
     cleanup_failed_systemd_services

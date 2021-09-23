@@ -1,4 +1,4 @@
-class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement::Base
+class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   def cleanup_failed_workers
     check_not_responding
     super

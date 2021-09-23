@@ -1,4 +1,4 @@
-module MiqServer::WorkerManagement::Base::Dequeue
+module MiqServer::WorkerManagement::Dequeue
   extend ActiveSupport::Concern
 
   def peek(queue_name, priority, limit)
