@@ -10,6 +10,14 @@ class MiqServer::WorkerManagement
   require_nested :Systemd
 
   def self.build(my_server)
-    Base.new(my_server)
+    klass = if MiqEnvironment::Command.is_podified?
+              Kubernetes
+            elsif MiqEnvironment::Command.supports_systemd?
+              Systemd
+            else
+              Process
+            end
+
+    klass.new(my_server)
   end
 end

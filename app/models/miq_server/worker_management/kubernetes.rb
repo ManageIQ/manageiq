@@ -1,2 +1,2 @@
-class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
+class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement::Base
 end

@@ -1,2 +1,2 @@
-class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
+class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement::Base
 end
