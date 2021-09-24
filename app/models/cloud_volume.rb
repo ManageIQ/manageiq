@@ -1,6 +1,4 @@
 class CloudVolume < ApplicationRecord
-  include_concern 'Operations'
-
   include NewWithTypeStiMixin
   include ProviderObjectMixin
   include AsyncDeleteMixin
@@ -8,6 +6,8 @@ class CloudVolume < ApplicationRecord
   include SupportsFeatureMixin
   include CloudTenancyMixin
   include CustomActionsMixin
+
+  include_concern 'Operations'
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -96,13 +96,6 @@ class CloudVolume < ApplicationRecord
     klass.raw_create_volume(ext_management_system, options)
   end
 
-  def self.validate_create_volume(ext_management_system)
-    klass = class_by_ems(ext_management_system)
-    return klass.validate_create_volume(ext_management_system) if ext_management_system &&
-                                                                  klass.respond_to?(:validate_create_volume)
-    validate_unsupported("Create Volume Operation")
-  end
-
   def self.raw_create_volume(_ext_management_system, _options = {})
     raise NotImplementedError, _("raw_create_volume must be implemented in a subclass")
   end
@@ -161,10 +154,6 @@ class CloudVolume < ApplicationRecord
 
   def delete_volume
     raw_delete_volume
-  end
-
-  def validate_delete_volume
-    validate_unsupported("Delete Volume Operation")
   end
 
   def raw_delete_volume
