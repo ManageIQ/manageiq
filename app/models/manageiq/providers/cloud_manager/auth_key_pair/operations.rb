@@ -9,14 +9,5 @@ module ManageIQ::Providers::CloudManager::AuthKeyPair::Operations
     def raw_create_key_pair(_ext_management_system, _options = {})
       raise NotImplementedError, "raw_create_key_pair must be implemented in a subclass"
     end
-
-    def validate_create_key_pair(_ext_management_system, _options = {})
-      validate_unsupported(_("Create KeyPair Operation"))
-    end
-
-    def validate_unsupported(message_prefix)
-      {:available => false,
-       :message   => _("%{message} is not available for %{name}.") % {:message => message_prefix, :name => name}}
-    end
   end
 end

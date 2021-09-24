@@ -63,14 +63,8 @@ RSpec.describe ManageIQ::Providers::CloudManager::AuthKeyPair do
   end
 
   context 'validations' do
-    it "has methods" do
-      expect(subject.class.respond_to? :validate_create_key_pair).to be true
-    end
-
     it "fails by default" do
-      expect(subject.class.validate_create_key_pair ems, {}).to eq(
-        :available => false,
-        :message   => "Create KeyPair Operation is not available for ManageIQ::Providers::CloudManager::AuthKeyPair.")
+      expect(ems.supports?(:auth_key_pair_create)).to eq(false)
       expect(subject.supports?(:delete)).to eq(false)
     end
   end
