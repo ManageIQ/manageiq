@@ -348,7 +348,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_templates', 1)
     log_allowed_template_list(allowed_templates_list)
 
-    MiqPreloader.preload(allowed_templates_list, [:operating_system])
+    MiqPreloader.preload(allowed_templates_list, [:hardware, :operating_system])
     @_ems_allowed_templates_cache = {}
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
