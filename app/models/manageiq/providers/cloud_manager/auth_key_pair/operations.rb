@@ -1,26 +1,21 @@
 module ManageIQ::Providers::CloudManager::AuthKeyPair::Operations
-  def self.included(base)
-    base.send(:include, InstanceMethods)
-    base.extend ClassMethods
+  extend ActiveSupport::Concern
+
+  def raw_delete_key_pair
+    raise NotImplementedError, _("raw_delete_key_pair must be implemented in a subclass")
   end
 
-  module InstanceMethods
-    def raw_delete_key_pair
-      raise NotImplementedError, _("raw_delete_key_pair must be implemented in a subclass")
-    end
-
-    def validate_delete_key_pair
-      validate_unsupported(_("Delete KeyPair Operation"))
-    end
-
-    private
-
-    def validate_unsupported(message_prefix)
-      self.class.validate_unsupported(message_prefix)
-    end
+  def validate_delete_key_pair
+    validate_unsupported(_("Delete KeyPair Operation"))
   end
 
-  module ClassMethods
+  private
+
+  def validate_unsupported(message_prefix)
+    self.class.validate_unsupported(message_prefix)
+  end
+
+  class_methods do
     def raw_create_key_pair(_ext_management_system, _options = {})
       raise NotImplementedError, "raw_create_key_pair must be implemented in a subclass"
     end
