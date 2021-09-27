@@ -363,7 +363,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_template_condition
     return ["vms.ems_id IS NOT NULL"] unless self.class.respond_to?(:provider_model)
 
-    ["vms.ems_id in (?)", self.class.provider_model.pluck(:id)]
+    {"vms.ems_id" => self.class.provider_model.pluck(:id)}
   end
 
   def source_vm_rbac_filter(vms, condition = nil, *extra_cols)
