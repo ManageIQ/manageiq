@@ -320,7 +320,7 @@ class GitWorktree
 
   def fetch
     with_remote_options do |remote_options|
-      @repo.fetch(@remote_name, remote_options)
+      @repo.fetch(@remote_name, **remote_options)
     end
   end
 
