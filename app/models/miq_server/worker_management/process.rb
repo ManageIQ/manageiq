@@ -1,4 +1,11 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
+  def monitor_workers
+    super
+
+    monitor_active_workers
+    do_system_limit_exceeded if kill_workers_due_to_resources_exhausted?
+  end
+
   def cleanup_failed_workers
     check_not_responding
     super
@@ -37,6 +44,29 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts
       validate_worker(worker)
+    end
+  end
+
+  def do_system_limit_exceeded
+    MiqWorkerType.worker_classes_in_kill_order.each do |worker_class|
+      workers = worker_class.find_current.to_a
+      next if workers.empty?
+
+      worker = workers.max_by { |w| [w.memory_usage || -1, w.id] }
+
+      msg = "#{worker.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
+      _log.warn(msg)
+
+      notification_options = {
+        :name             => my_server.name,
+        :memory_usage     => my_server.memory_usage.to_i,
+        :memory_threshold => my_server.memory_threshold,
+        :pid              => my_server.pid
+      }
+
+      MiqEvent.raise_evm_event_queue_in_region(worker.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => worker.class.name, :full_data => notification_options)
+      stop_worker(worker, MiqServer::WorkerManagement::MEMORY_EXCEEDED)
+      break
     end
   end
 

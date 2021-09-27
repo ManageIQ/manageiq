@@ -7,6 +7,12 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   attr_accessor :deployments_monitor_thread, :pods_monitor_thread
 
+  def sync_workers
+    sync_from_system
+
+    super
+  end
+
   def sync_from_system
     ensure_kube_monitors_started
     cleanup_orphaned_worker_rows
