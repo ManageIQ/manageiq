@@ -18,6 +18,7 @@ module Metric::Purging
   def self.purge_rollup_timer
     purge_hourly_timer
     purge_daily_timer
+    purge_rollup_task_timer
   end
 
   def self.purge_daily_timer(ts = nil)
@@ -33,6 +34,10 @@ module Metric::Purging
   def self.purge_realtime_timer(ts = nil)
     ts ||= purge_date(:keep_realtime_performances)
     purge_timer(ts, "realtime")
+  end
+
+  def self.purge_rollup_task_timer
+    MiqTask.delete_older(4.hours.ago.beginning_of_hour.utc, "name LIKE 'Performance rollup for %'")
   end
 
   def self.purge_timer(ts, interval)

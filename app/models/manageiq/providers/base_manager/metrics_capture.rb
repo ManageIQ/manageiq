@@ -74,9 +74,6 @@ class ManageIQ::Providers::BaseManager::MetricsCapture
         end
       end
     end
-
-    # Purge tasks older than 4 hours
-    MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'") if rollups
   end
 
   def perf_capture_queue_targets_hist(targets, interval, start_time: nil, end_time: nil)
