@@ -23,7 +23,7 @@ RSpec.describe MiqServer::WorkerManagement do
 
         [0, 5].each do |i|
           Timecop.freeze(first_heartbeat) do
-            miq_server.worker_management.persist_last_heartbeat(worker)
+            miq_server.worker_manager.persist_last_heartbeat(worker)
           end
 
           expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat + i)
@@ -45,7 +45,7 @@ RSpec.describe MiqServer::WorkerManagement do
         # iteration of the loop
         [0, 5, 10, 15].each do |i|
           Timecop.freeze(first_heartbeat + i) do
-            miq_server.worker_management.persist_last_heartbeat(worker)
+            miq_server.worker_manager.persist_last_heartbeat(worker)
           end
 
           expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat)
@@ -60,7 +60,7 @@ RSpec.describe MiqServer::WorkerManagement do
 
         [0, 5].each do |i|
           Timecop.freeze(first_heartbeat) do
-            miq_server.worker_management.persist_last_heartbeat(worker)
+            miq_server.worker_manager.persist_last_heartbeat(worker)
           end
 
           expect(worker.reload.last_heartbeat).to be_within(1.second).of(first_heartbeat + i)

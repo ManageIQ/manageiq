@@ -364,7 +364,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def stop
-    miq_server.worker_management.stop_worker_queue(self)
+    miq_server.worker_manager.stop_worker_queue(self)
   end
 
   # Let the worker monitor start a new worker

@@ -44,7 +44,7 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
 
       Vmdb::Settings.save!(miq_server, :some_test_setting => 2)
       expect(Settings.some_test_setting).to be_nil
-      expect(miq_server.worker_management).to receive(:notify_workers_of_config_change)
+      expect(miq_server.worker_manager).to receive(:notify_workers_of_config_change)
 
       miq_server.reload_settings
 

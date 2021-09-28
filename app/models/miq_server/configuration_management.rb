@@ -12,7 +12,7 @@ module MiqServer::ConfigurationManagement
     Vmdb::Settings.reload!
 
     reset_server_caches
-    worker_management.notify_workers_of_config_change(Time.now.utc)
+    worker_manager.notify_workers_of_config_change(Time.now.utc)
   end
 
   def servers_for_settings_reload
@@ -38,8 +38,8 @@ module MiqServer::ConfigurationManagement
   end
 
   def reset_server_caches
-    worker_management.sync_config
+    worker_manager.sync_config
     sync_assigned_roles
-    worker_management.reset_queue_messages
+    worker_manager.reset_queue_messages
   end
 end

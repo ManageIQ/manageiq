@@ -92,7 +92,7 @@ class MiqServer < ApplicationRecord
 
   def self.kill_all_workers
     svr = my_server(true)
-    svr&.worker_management&.kill_all_workers
+    svr&.worker_manager&.kill_all_workers
   end
 
   def self.pidfile
@@ -122,11 +122,11 @@ class MiqServer < ApplicationRecord
     end
   end
 
-  def worker_management
-    @worker_management ||= WorkerManagement.build(self)
+  def worker_manager
+    @worker_manager ||= WorkerManagement.build(self)
   end
 
-  delegate :start_workers, :enough_resource_to_start_worker?, :to => :worker_management
+  delegate :start_workers, :enough_resource_to_start_worker?, :to => :worker_manager
 
   def heartbeat
     # Heartbeat the server
@@ -200,9 +200,9 @@ class MiqServer < ApplicationRecord
       monitor_server_roles if self.is_master?
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
-    Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                        if threshold_exceeded?(:server_log_frequency, now)
-    Benchmark.realtime_block(:worker_monitor)          { worker_management.monitor_workers }         if threshold_exceeded?(:worker_monitor_frequency, now)
-    Benchmark.realtime_block(:worker_dequeue)          { worker_management.populate_queue_messages } if threshold_exceeded?(:worker_dequeue_frequency, now)
+    Benchmark.realtime_block(:log_active_servers)      { log_active_servers }                     if threshold_exceeded?(:server_log_frequency, now)
+    Benchmark.realtime_block(:worker_monitor)          { worker_manager.monitor_workers }         if threshold_exceeded?(:worker_monitor_frequency, now)
+    Benchmark.realtime_block(:worker_dequeue)          { worker_manager.populate_queue_messages } if threshold_exceeded?(:worker_dequeue_frequency, now)
     monitor_myself
   rescue SystemExit, SignalException
     # TODO: We're rescuing Exception below. WHY? :bomb:
@@ -263,7 +263,7 @@ class MiqServer < ApplicationRecord
 
   def kill
     # Kill all the workers of this server
-    worker_management.kill_all_workers
+    worker_manager.kill_all_workers
 
     # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
@@ -292,7 +292,7 @@ class MiqServer < ApplicationRecord
   def quiesce
     update_attribute(:status, 'quiesce')
     deactivate_all_roles
-    worker_management.quiesce_all_workers
+    worker_manager.quiesce_all_workers
     update(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
   end
 

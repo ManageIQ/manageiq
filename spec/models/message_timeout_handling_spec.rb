@@ -48,13 +48,13 @@ RSpec.describe "Message Timeout Handling" do
         :handler_type => 'MiqWorker'
       )
       MiqWorkerType.seed
-      @miq_server.worker_management.sync_child_worker_settings
+      @miq_server.worker_manager.sync_child_worker_settings
     end
 
     it "should not be timed out after 15 minutes when in dequeue state" do
       @msg.update_attribute(:state, "dequeue")
       Timecop.travel(15.minutes) do
-        time_threshold = @miq_server.worker_management.get_time_threshold(@worker)
+        time_threshold = @miq_server.worker_manager.get_time_threshold(@worker)
         expect(time_threshold).to eq(3610)
         expect(time_threshold.seconds.ago.utc).not_to be > @worker.last_heartbeat
       end
@@ -63,7 +63,7 @@ RSpec.describe "Message Timeout Handling" do
     it "should be timed out after 15 minutes when in error state" do
       @msg.update_attribute(:state, "error")
       Timecop.travel(15.minutes) do
-        time_threshold = @miq_server.worker_management.get_time_threshold(@worker)
+        time_threshold = @miq_server.worker_manager.get_time_threshold(@worker)
         expect(time_threshold).to eq(120)
         expect(time_threshold.seconds.ago.utc).to be > @worker.last_heartbeat
       end

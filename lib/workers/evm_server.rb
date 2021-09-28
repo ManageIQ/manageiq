@@ -59,7 +59,7 @@ class EvmServer
 
   def kill_servers
     as_each_server do
-      @current_server.worker_management.kill_all_workers
+      @current_server.worker_manager.kill_all_workers
       @current_server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     end
   end
