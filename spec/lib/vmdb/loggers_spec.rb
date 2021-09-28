@@ -83,19 +83,16 @@ RSpec.describe Vmdb::Loggers do
       context "#level" do
         it "defaults the loggers to their default levels" do
           expect(subject.level).to       eq(Logger::INFO)
-          expect(container_log.level).to eq(Logger::DEBUG) if container_log # container_log is always DEBUG
         end
       end
 
       context "#level=" do
         it "updates the log level on all backing devices" do
-          expect(subject.level).to       eq(Logger::INFO)
-          expect(container_log.level).to eq(Logger::DEBUG) if container_log # container_log is always DEBUG
+          expect(subject.level).to eq(Logger::INFO)
 
           subject.level = Logger::WARN
 
-          expect(subject.level).to       eq(Logger::WARN)
-          expect(container_log.level).to eq(Logger::DEBUG) if container_log # container_log is always DEBUG
+          expect(subject.level).to eq(Logger::WARN)
         end
       end
 
@@ -149,7 +146,7 @@ RSpec.describe Vmdb::Loggers do
         described_class.apply_config_value({:foo => :info}, log, :foo)
 
         expect(log.level).to           eq(Logger::INFO)
-        expect(container_log.level).to eq(Logger::DEBUG)
+        expect(container_log.level).to eq(Logger::INFO)
       end
     end
   end
