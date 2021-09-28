@@ -64,8 +64,10 @@ RSpec.describe ManageIQ::Providers::CloudManager::AuthKeyPair do
 
   context 'validations' do
     it "fails by default" do
-      expect(ems.supports?(:auth_key_pair_create)).to eq(false)
-      expect(subject.supports?(:delete)).to eq(false)
+      dummy_cloud_manager = ManageIQ::Providers::CloudManager.new
+      dummy_auth_keypair  = ManageIQ::Providers::CloudManager::AuthKeyPair.new
+      expect(dummy_cloud_manager.supports?(:auth_key_pair_create)).to eq(false)
+      expect(dummy_auth_keypair.supports?(:delete)).to eq(false)
     end
   end
 end
