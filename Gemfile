@@ -46,7 +46,7 @@ gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
 gem "log_decorator",                    "~>0.1",             :require => false
 gem "manageiq-api-client",              "~>0.3.4",           :require => false
-gem "manageiq-loggers",                 "~>0.6.0",           :require => false
+gem "manageiq-loggers",                 "~>0.7.0",           :require => false
 gem "manageiq-messaging",               "~>1.0", ">=1.0.3",  :require => false
 gem "manageiq-password",                "~>0.3",             :require => false
 gem "manageiq-postgres_ha_admin",       "~>3.1",             :require => false
