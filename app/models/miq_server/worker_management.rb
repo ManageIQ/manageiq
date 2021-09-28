@@ -35,7 +35,6 @@ class MiqServer::WorkerManagement
   end
 
   def start_workers
-    clean_heartbeat_files # Appliance specific
     sync_config
     start_drb_server
     sync_workers

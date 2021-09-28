@@ -1,4 +1,10 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
+  def start_workers
+    clean_heartbeat_files # Appliance specific
+
+    super
+  end
+
   def monitor_workers
     super
 
