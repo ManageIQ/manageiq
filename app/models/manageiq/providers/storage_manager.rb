@@ -42,6 +42,9 @@ module ManageIQ::Providers
     has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_objects,    :foreign_key => :ems_id
 
+    has_many :wwpn_candidates, :foreign_key => :ems_id, :dependent => :destroy,
+             :inverse_of => :ext_management_system
+
     belongs_to :parent_manager,
                :foreign_key => :parent_ems_id,
                :class_name  => "ManageIQ::Providers::BaseManager",

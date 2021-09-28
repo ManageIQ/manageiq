@@ -6319,6 +6319,10 @@
       :description: Edit Tags of Host Initiators
       :feature_type: control
       :identifier: host_initiator_tag
+    - :name: WWPN Candidates
+      :description: Retrieve fc wwpn candidate for parent storage
+      :feature_type: control
+      :identifier: wwpn_candidates
   - :name: Modify
     :description: Modify Host Initiator
     :feature_type: admin
