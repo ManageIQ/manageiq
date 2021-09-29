@@ -314,7 +314,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('allowed_templates', 0)
-    vms = VmOrTemplate.in_my_region.all
+
+    # Select only the non-deprecated templates as some providers retain templates even if not currently in use
+    templates = MiqTemplate.non_deprecated.in_my_region
     condition = allowed_template_condition
 
     unless options[:tag_filters].blank?
@@ -335,14 +337,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       unless tag_conditions.blank?
         _log.info("Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>")
-        vms = MiqTemplate.in_my_region.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
+        templates = templates.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
     end
 
-    # Only select the colums we need
-    vms = vms.select(:id, :type, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
+    # Only select the columns we need
+    templates = templates.select(:id, :type, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
 
-    allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
+    allowed_templates_list = source_vm_rbac_filter(templates, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
@@ -359,9 +361,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_template_condition
-    return ["vms.template = ? AND vms.ems_id IS NOT NULL", true] unless self.class.respond_to?(:provider_model)
+    return ["vms.ems_id IS NOT NULL"] unless self.class.respond_to?(:provider_model)
 
-    ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
+    ["vms.ems_id in (?)", self.class.provider_model.pluck(:id)]
   end
 
   def source_vm_rbac_filter(vms, condition = nil, *extra_cols)

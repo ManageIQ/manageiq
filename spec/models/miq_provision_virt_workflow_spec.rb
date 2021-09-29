@@ -226,7 +226,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
 
   context "#allowed_template_condition" do
     it "without a provider model defined" do
-      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id IS NOT NULL", true])
+      expect(workflow.allowed_template_condition).to eq(["vms.ems_id IS NOT NULL"])
     end
 
     it "with a provider model defined" do
@@ -234,7 +234,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
       workflow = FactoryBot.create(:miq_provision_virt_workflow_vmware)
 
       expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
-      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
+      expect(workflow.allowed_template_condition).to eq(["vms.ems_id in (?)", [ems.id]])
     end
   end
 
@@ -368,6 +368,10 @@ RSpec.describe MiqProvisionVirtWorkflow do
   end
 
   context "#allowed_templates" do
+    before do
+      EvmSpecHelper.local_miq_server # Because there is no default timezone in settings
+    end
+
     let(:external_region_id) do
       remote_region_number = ApplicationRecord.my_region_number + 1
       ApplicationRecord.region_to_range(remote_region_number).first
@@ -377,12 +381,31 @@ RSpec.describe MiqProvisionVirtWorkflow do
     let(:local_vmware)  { FactoryBot.create(:ems_vmware_with_authentication) }
 
     it "only returns records from its region" do
-      EvmSpecHelper.local_miq_server # Because there is no default timezone in settings
       FactoryBot.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
       FactoryBot.create(:template_vmware, :ext_management_system => local_vmware)
 
       expect(MiqTemplate.count).to eq(2)
       expect(workflow.allowed_templates.count).to eq(1)
+    end
+
+    it "includes non-deprecated templates" do
+      FactoryBot.create(:template_vmware, :ext_management_system => local_vmware, :deprecated => false)
+      expect(workflow.allowed_templates.count).to eq(1)
+    end
+
+    it "excludes deprecated templates" do
+      FactoryBot.create(:template_vmware, :ext_management_system => local_vmware, :deprecated => true)
+      expect(workflow.allowed_templates.count).to eq(0)
+    end
+
+    it "includes templates where deprecated is not specified" do
+      FactoryBot.create(:template_vmware, :ext_management_system => local_vmware, :deprecated => nil)
+      expect(workflow.allowed_templates.count).to eq(1)
+    end
+
+    it "excludes templates without an ems" do
+      FactoryBot.create(:template_vmware, :ext_management_system => nil, :deprecated => false)
+      expect(workflow.allowed_templates.count).to eq(0)
     end
   end
 end
