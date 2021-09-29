@@ -18,6 +18,30 @@ class MiqWorker
         container[:imagePullPolicy] = "IfNotPresent"
       end
 
+      if instance_of?(MiqRemoteConsoleWorker)
+        container[:volumeMounts] << {
+          :name      => "vol-server-tls-secret",
+          :mountPath => "/var/www/miq/vmdb/certs/server.cer",
+          :readOnly  => true,
+          :subPath   => "tls.crt"
+        }
+
+        container[:volumeMounts] << {
+          :name      => "vol-server-tls-secret",
+          :mountPath => "/var/www/miq/vmdb/certs/server.cer.key",
+          :readOnly  => true,
+          :subPath   => "tls.key"
+        }
+
+        definition[:spec][:template][:spec][:volumes] << {
+          :name   => "vol-server-tls-secret",
+          :secret => {
+            :defaultMode => 420,
+            :secretName  => "server-tls-secret"
+          }
+        }
+      end
+
       container[:image] = container_image
       container[:env] << {:name => "WORKER_CLASS_NAME", :value => self.class.name}
       container[:env] << {:name => "BUNDLER_GROUPS", :value => self.class.bundler_groups.join(",")}
