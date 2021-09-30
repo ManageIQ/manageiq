@@ -1,5 +1,6 @@
 ---
 language: ruby
+dist: bionic
 rvm:
 - 2.6.6
 - 2.7.2
@@ -16,10 +17,8 @@ env:
 matrix:
   fast_finish: true
   jobs:
-  - sudo: required
-    group: edge
+  - group: edge
     virt: lxd
-    dist: bionic
     arch: arm64-graviton2
     rvm: 2.6.6
     env:
