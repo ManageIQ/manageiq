@@ -26,4 +26,15 @@ RSpec.describe MiqWorkerType do
       expect(described_class.find_by(:worker_type => old_worker_name)).to be_nil
     end
   end
+
+  describe ".worker_class_names" do
+    before { described_class.seed }
+
+    it "contains properly subclassed workers", :providers_common => true do
+      described_class.worker_class_names.each do |class_name|
+        klass = class_name.constantize
+        raise NameError, "Constant problem: expected: #{class_name}, constantized: #{klass.name}" unless klass.name == class_name
+      end
+    end
+  end
 end
