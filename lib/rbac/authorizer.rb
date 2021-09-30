@@ -40,7 +40,7 @@ module Rbac
 
     def user_role_allows?(user, options = {})
       return false if user.miq_user_role.nil?
-      return true if user.miq_user_role.allows?(options)
+      return true if user.miq_user_role.allows?(**options)
 
       ident = options[:identifier]
       parent = MiqProductFeature.feature_parent(ident)
