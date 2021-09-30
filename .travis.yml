@@ -1,5 +1,6 @@
 ---
 language: ruby
+dist: bionic
 rvm:
 - 2.6.6
 cache: bundler
