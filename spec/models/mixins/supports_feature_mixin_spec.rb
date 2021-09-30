@@ -22,6 +22,9 @@ RSpec.describe SupportsFeatureMixin do
     stub_const('Post', Class.new do
       include SupportsFeatureMixin
       include Post::Operations
+
+      delegate_supports :author_create, "Author", :create
+      delegate_supports :author_delete, "Author", :delete
     end)
 
     stub_const('SpecialPost::Operations', Module.new do
@@ -43,6 +46,12 @@ RSpec.describe SupportsFeatureMixin do
       def initialize(options = {})
         self.bribe = options[:bribe]
       end
+    end)
+
+    stub_const('Post::Author', Class.new do
+      include SupportsFeatureMixin
+      supports :create
+      supports_not :delete, :reason => "Keep them around"
     end)
   end
 
@@ -198,6 +207,51 @@ RSpec.describe SupportsFeatureMixin do
       end)
       expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
       expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
+    end
+  end
+
+  context "delegate supports" do
+    it "supports base implementation" do
+      expect(Post::Author.supports?(:create)).to be true # FYI
+      expect(Post.supports?(:author_create)).to be true
+      expect(Post.new.supports?(:author_create)).to be true
+    end
+
+    it "detects non supported base implementation" do
+      expect(Post::Author.supports?(:delete)).to be false # FYI
+      expect(Post.supports?(:author_delete)).to be false
+      expect(Post.unsupported_reason(:author_delete)).to eq("Keep them around")
+      expect(Post.new.supports?(:author_delete)).to be false
+      expect(Post.new.unsupported_reason(:author_delete)).to eq("Keep them around")
+    end
+
+    it "choose the correct child subclass" do
+      stub_const('Child::Post', Class.new(Post))
+
+      stub_const('Child::Post::Author', Class.new(Child::Post) do
+        include SupportsFeatureMixin
+        # supports :create # note: create supports is not inherited
+        supports :delete
+      end)
+
+      expect(Child::Post::Author.supports?(:create)).to be false # FYI
+      expect(Child::Post.supports?(:author_create)).to be false
+      expect(Child::Post.new.supports?(:author_create)).to be false
+
+      expect(Child::Post::Author.supports?(:delete)).to be true # FYI
+      expect(Child::Post.supports?(:author_delete)).to be true
+      expect(Child::Post.new.supports?(:author_delete)).to be true
+    end
+
+    it "handles cases where there is no child subclass defined" do
+      stub_const('Child::Post', Class.new(Post))
+
+      # Child::Post::Author is not defined, it returns Post::Author in some cases
+      expect(Child::Post::Author).to be(Post::Author) # FYI
+      expect(Child::Post.supports?(:author_create)).to be false
+      expect(Child::Post.unsupported_reason(:author_delete)).to eq("Author not implemented")
+      expect(Child::Post.new.supports?(:author_create)).to be false
+      expect(Child::Post.new.unsupported_reason(:author_delete)).to eq("Author not implemented")
     end
   end
 end

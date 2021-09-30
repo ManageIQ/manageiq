@@ -105,6 +105,38 @@ module SupportsFeatureMixin
       define_supports_feature_methods(feature, &block)
     end
 
+    # delegate to a child class whether a feature is supported
+    # Author => Author::Post
+    # will only delegate to a class level supports
+    def delegate_supports(feature, target_name, target_feature)
+      method_name = "supports_#{feature}?"
+      feature = feature.to_sym
+      target_feature = target_feature.to_sym
+
+      silence_warnings do
+        define_method(method_name) do
+          unsupported.delete(feature)
+          target = self.class.const_get(target_name, false)
+          is_supported = target.supports?(target_feature)
+          unsupported_reason_add(feature, target.unsupported_reason(target_feature)) unless is_supported
+          !unsupported.key?(feature)
+        rescue NameError
+          unsupported_reason_add(feature, "#{target_name} not implemented")
+          false
+        end
+
+        define_singleton_method(method_name) do
+          unsupported.delete(feature)
+          target = const_get(target_name, false)
+          is_supported = target.supports?(target_feature)
+          unsupported_reason_add(feature, target.unsupported_reason(target_feature)) unless is_supported
+          !unsupported.key?(feature)
+        rescue NameError
+          unsupported_reason_add(feature, "#{target_name} not implemented")
+          false
+        end
+      end
+    end
     # supports_not does not take a block, because its never supported
     # and not conditionally supported
     def supports_not(feature, reason: nil)

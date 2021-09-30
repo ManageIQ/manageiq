@@ -41,7 +41,7 @@ module ManageIQ::Providers
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
-    supports_not :auth_key_pair_create
+    delegate_supports :auth_key_pair_create, "AuthKeyPair", :create
     supports_not :cinder_service
     supports_not :cloud_tenants
     supports_not :cloud_volume
