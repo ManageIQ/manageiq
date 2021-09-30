@@ -17,8 +17,7 @@ env:
 matrix:
   fast_finish: true
   jobs:
-  - sudo: required
-    group: edge
+  - group: edge
     virt: lxd
     arch: arm64-graviton2
     rvm: 2.6.6
