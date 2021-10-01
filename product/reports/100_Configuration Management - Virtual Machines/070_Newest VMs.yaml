@@ -24,7 +24,7 @@ headers:
 - Vendor Display
 - Location
 - Href Slug
-- Created on Time
+- Discovered on
 - Description
 conditions:
 order: Descending
