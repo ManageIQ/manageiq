@@ -128,6 +128,10 @@ group :ibm_cloud, :manageiq_default do
   manageiq_plugin "manageiq-providers-ibm_cloud"
 end
 
+group :ibm_power_hmc, :manageiq_default do
+  manageiq_plugin "manageiq-providers-ibm_power_hmc"
+end
+
 group :ibm_power_vc, :manageiq_default do
   manageiq_plugin "manageiq-providers-ibm_power_vc"
 end
