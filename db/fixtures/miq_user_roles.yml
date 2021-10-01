@@ -113,10 +113,7 @@
   - ems_cluster_perf
   - ems_cluster_tag
   - ems_cluster_timeline
-  - ems_infra_show
-  - ems_infra_show_list
-  - ems_infra_tag
-  - ems_infra_timeline
+  - ems_infra
   - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
@@ -156,6 +153,12 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage
+  - rbac_role_view
+  - rbac_user_view
+  - rbac_user_operate
+  - rbac_group_view
+  - rbac_group_operate
+  - rbac_tenant_view
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -166,6 +169,7 @@
   - storage_perf
   - storage_resource
   - storage_tag
+  - tasks_view
   - timeline
   - vm_check_compliance
   - vm_cloud_explorer
@@ -988,6 +992,10 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - catalog_items_view
+  - catalogitem_edit
+  - catalogitem_tag
+  - cloud_tenant
   - cloud_volume
   - cloud_volume_backup
   - cloud_volume_snapshot
@@ -1049,20 +1057,29 @@
   - physical_chassis_view
   - physical_switch_view
   - physical_server_view
-  - physical_storage_refresh
-  - physical_storage_show
   - physical_storage_show_list
+  - physical_storage_show
+  - physical_storage_refresh
   - physical_storage_tag
+  - rbac_role_view
+  - rbac_user_view
+  - rbac_user_operate
+  - rbac_group_view
+  - rbac_group_operate
+  - rbac_tenant_view
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
   - rss
   - service_view
+  - st_catalog_view
+  - st_catalog_edit
   - storage_show
   - storage_show_list
   - storage_perf
   - storage_resource
   - storage_tag
+  - tasks_view
   - timeline
   - vm_check_compliance
   - vm_cloud_explorer
