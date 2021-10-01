@@ -9,7 +9,7 @@ cols:
 - vendor_display
 - location
 - href_slug
-- ems_created_on
+- created_on
 - description
 include: {}
 col_order:
@@ -17,7 +17,7 @@ col_order:
 - vendor_display
 - location
 - href_slug
-- ems_created_on
+- created_on
 - description
 headers:
 - Name
@@ -29,7 +29,7 @@ headers:
 conditions:
 order: Descending
 sortby:
-- ems_created_on
+- created_on
 - description
 group:
 graph:
