@@ -59,17 +59,17 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   def self.cloud_object_store_container_delete_queue(userid, options = {})
     task_opts = {
-        :action => "deleting Cloud Object Store Container for user #{userid}",
-        :userid => userid
+      :action => "deleting Cloud Object Store Container for user #{userid}",
+      :userid => userid
     }
 
     queue_opts = {
-        :class_name  => 'CloudObjectStoreContainer',
-        :method_name => 'cloud_object_store_container_delete',
-        :role        => 'ems_operations',
-        :queue_name  => ext_management_system.queue_name_for_ems_operations,
-        :zone        => ext_management_system.my_zone,
-        :args        => [options]
+      :class_name  => 'CloudObjectStoreContainer',
+      :method_name => 'cloud_object_store_container_delete',
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
