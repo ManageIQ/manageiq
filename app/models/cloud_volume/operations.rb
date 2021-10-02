@@ -1,11 +1,6 @@
 module CloudVolume::Operations
   extend ActiveSupport::Concern
 
-  included do
-    supports_not :attach_volume
-    supports_not :detach_volume
-  end
-
   # Attach a cloud volume as a queued task and return the task id. The queue
   # name and the queue zone are derived from the server EMS, and both a userid
   # and server EMS ref are mandatory. The device is optional.

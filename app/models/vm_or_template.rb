@@ -1624,7 +1624,6 @@ class VmOrTemplate < ApplicationRecord
     MiqTemplate.where(:id => ids).exists?
   end
 
-  supports_not :snapshots
   supports :destroy
 
   # Stop showing Reconfigure VM task unless the subclass allows

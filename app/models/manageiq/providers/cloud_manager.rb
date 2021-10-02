@@ -41,13 +41,6 @@ module ManageIQ::Providers
 
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
-    supports_not :auth_key_pair_create
-    supports_not :cinder_service
-    supports_not :cloud_tenants
-    supports_not :cloud_volume
-    supports_not :cloud_tenant_mapping
-    supports_not :create_flavor
-
     validates_presence_of :zone
 
     # TODO: remove and have each manager include this

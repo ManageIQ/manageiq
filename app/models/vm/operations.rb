@@ -46,14 +46,6 @@ module Vm::Operations
 
       unsupported_reason_add(:collect_running_processes, reason) if reason
     end
-
-    supports_not :evacuate
-    supports_not :reconfigure_disks
-    supports_not :reconfigure_disksize
-    supports_not :reconfigure_network_adapters
-    supports_not :reconfigure_cdroms
-    supports_not :remove_security_group
-    supports_not :resize
   end
 
   def ipv4_address

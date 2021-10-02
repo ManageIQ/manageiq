@@ -5,11 +5,6 @@ module Vm::Operations::Guest
     api_relay_method :shutdown_guest
     api_relay_method :reboot_guest
     api_relay_method :reset
-
-    supports_not :reboot_guest
-    supports_not :reset
-    supports_not :shutdown_guest
-    supports_not :standby_guest
   end
 
   def raw_shutdown_guest

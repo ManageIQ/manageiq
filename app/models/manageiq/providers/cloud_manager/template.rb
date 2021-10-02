@@ -1,6 +1,4 @@
 class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
-  supports_not :import_image
-
   default_value_for :cloud, true
 
   virtual_column :image?, :type => :boolean

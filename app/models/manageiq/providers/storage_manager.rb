@@ -1,17 +1,6 @@
 module ManageIQ::Providers
   class StorageManager < ManageIQ::Providers::BaseManager
     include SupportsFeatureMixin
-    supports_not :block_storage
-    supports_not :cinder_volume_types
-    supports_not :cloud_object_store_container_clear
-    supports_not :cloud_object_store_container_create
-    supports_not :cloud_volume
-    supports_not :cloud_volume_create
-    supports_not :object_storage
-    supports_not :smartstate_analysis
-    supports_not :storage_services
-    supports_not :volume_multiattachment
-    supports_not :volume_resizing
 
     has_many :cloud_tenants, :foreign_key => :ems_id, :dependent => :destroy
     has_many :volume_availability_zones, :class_name => "AvailabilityZone", :foreign_key => :ems_id, :dependent => :destroy

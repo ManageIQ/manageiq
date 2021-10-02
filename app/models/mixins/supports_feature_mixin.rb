@@ -56,10 +56,6 @@ module SupportsFeatureMixin
   # Whenever this mixin is included we define all features as unsupported by default.
   # This way we can query for every feature
   included do
-    COMMON_FEATURES.each do |feature|
-      supports_not(feature)
-    end
-
     private_class_method :unsupported
     private_class_method :unsupported_reason_add
     private_class_method :define_supports_feature_methods
@@ -72,13 +68,13 @@ module SupportsFeatureMixin
   # query instance for the reason why the feature is unsupported
   def unsupported_reason(feature)
     feature = feature.to_sym
-    public_send("supports_#{feature}?") unless unsupported.key?(feature)
+    supports?(feature) unless unsupported.key?(feature)
     unsupported[feature]
   end
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    public_send("supports_#{feature}?")
+    try("supports_#{feature}?") || false
   end
 
   # query the instance if a feature is generally known
@@ -113,7 +109,7 @@ module SupportsFeatureMixin
 
     # query the class if the feature is supported or not
     def supports?(feature)
-      public_send("supports_#{feature}?")
+      try("supports_#{feature}?") || false
     end
 
     # all subclasses that are considered for supporting features
@@ -146,7 +142,7 @@ module SupportsFeatureMixin
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       feature = feature.to_sym
-      public_send("supports_#{feature}?") unless unsupported.key?(feature)
+      supports?(feature) unless unsupported.key?(feature)
       unsupported[feature]
     end
 

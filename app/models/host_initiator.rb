@@ -15,7 +15,6 @@ class HostInitiator < ApplicationRecord
 
   virtual_total :v_total_addresses, :san_addresses
 
-  supports_not :create
   acts_as_miq_taggable
 
   def my_zone

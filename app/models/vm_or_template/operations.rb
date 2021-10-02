@@ -141,10 +141,6 @@ module VmOrTemplate::Operations
             end
       unsupported_reason_add(:control, msg) if msg
     end
-    supports_not :clone
-    supports_not :quick_stats
-    supports_not :rename
-    supports_not :terminate
   end
 
   def validate_vm_control_powered_on

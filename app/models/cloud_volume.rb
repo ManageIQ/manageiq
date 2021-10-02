@@ -25,15 +25,7 @@ class CloudVolume < ApplicationRecord
   has_many   :volume_mappings, :dependent => :destroy
   has_many   :host_initiators, :through => :volume_mappings
 
-  supports_not :backup_create
-  supports_not :backup_restore
-  supports_not :create
-  supports_not :snapshot_create
-  supports_not :update
-
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
-
-  supports_not :safe_delete
   virtual_column :supports_safe_delete, :type => :boolean
 
   def supports_safe_delete

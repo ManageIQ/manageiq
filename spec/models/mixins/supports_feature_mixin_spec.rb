@@ -132,6 +132,24 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
+  context "for an undeclared feature" do
+    it ".supports defaults to false" do
+      expect(Post.supports?(:unstated)).to be false
+    end
+
+    it "#supports? defaults to false" do
+      expect(Post.new.supports?(:unstated)).to be false
+    end
+
+    it "#unsupported_reason(:feature) defaults to no reason" do
+      expect(Post.new.unsupported_reason(:unstated)).to be nil
+    end
+
+    it ".unsupported_reason(:feature) defaults to no reason" do
+      expect(Post.unsupported_reason(:unstated)).to be nil
+    end
+  end
+
   context "definition in nested modules" do
     it "defines a class method on the model" do
       expect(Post.respond_to?(:supports_archive?)).to be true

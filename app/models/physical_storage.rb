@@ -33,8 +33,6 @@ class PhysicalStorage < ApplicationRecord
 
   has_many :wwpn_candidates, :dependent => :destroy
 
-  supports_not :create
-  supports_not :delete
   acts_as_miq_taggable
 
   def my_zone

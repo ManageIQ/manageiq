@@ -179,7 +179,6 @@ class Host < ApplicationRecord
   after_save    :process_events
 
   supports     :destroy
-  supports_not :quick_stats
   supports     :reset do
     unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
     unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
@@ -187,13 +186,6 @@ class Host < ApplicationRecord
       unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
     end
   end
-  supports_not :refresh_advanced_settings
-  supports_not :refresh_firewall_rules
-  supports_not :refresh_logs
-  supports_not :refresh_network_interfaces
-  supports_not :set_node_maintenance
-  supports_not :smartstate_analysis
-  supports_not :unset_node_maintenance
 
   def self.non_clustered
     where(:ems_cluster_id => nil)

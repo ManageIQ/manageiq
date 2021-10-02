@@ -84,8 +84,6 @@ class Storage < ApplicationRecord
     end
   end
 
-  supports_not :evacuate
-
   def to_s
     name
   end
