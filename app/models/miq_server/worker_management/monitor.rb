@@ -71,13 +71,15 @@ module MiqServer::WorkerManagement::Monitor
     roles_added, roles_deleted, _roles_unchanged = my_server.role_changes
 
     if resync_needed
-      log_role_changes           if roles_changed
-      sync_active_roles          if roles_changed
-      set_active_role_flags      if roles_changed
+      if roles_changed
+        my_server.log_role_changes
+        my_server.sync_active_roles
+        my_server.set_active_role_flags
+      end
 
       EvmDatabase.restart_failover_monitor_service if (roles_added | roles_deleted).include?("database_operations")
 
-      reset_queue_messages       if roles_changed
+      reset_queue_messages if roles_changed
 
       @last_sync = Time.now.utc
       notify_workers_of_config_change(@last_sync)
