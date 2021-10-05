@@ -48,7 +48,7 @@ module MiqServer::WorkerManagement::Monitor::Systemd
 
   def systemd_miq_service_base_names
     @systemd_miq_service_base_names ||= begin
-      MiqWorkerType.worker_class_names.map(&:constantize).map(&:service_base_name)
+      MiqWorkerType.worker_classes.map(&:service_base_name)
     end
   end
 

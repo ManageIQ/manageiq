@@ -40,7 +40,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def sync_workers
-    MiqWorkerType.worker_class_names.map(&:constantize).each_with_object({}) do |klass, result|
+    MiqWorkerType.worker_classes.each_with_object({}) do |klass, result|
       result[klass.name] = klass.sync_workers
       result[klass.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
     rescue => error
@@ -153,8 +153,8 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def do_system_limit_exceeded
-    MiqWorkerType.worker_class_names_in_kill_order.each do |class_name|
-      workers = class_name.constantize.find_current.to_a
+    MiqWorkerType.worker_classes_in_kill_order.each do |worker_class|
+      workers = worker_class.find_current.to_a
       next if workers.empty?
 
       w = workers.sort_by { |w| [w.memory_usage || -1, w.id] }.last
