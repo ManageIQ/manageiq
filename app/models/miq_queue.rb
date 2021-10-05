@@ -606,6 +606,32 @@ class MiqQueue < ApplicationRecord
     n_('Queue', 'Queues', number)
   end
 
+  def parse_tracking_label
+    return unless tracking_label.kind_of?(String)
+
+    parts = tracking_label.split("_")
+
+    # tracking_label should have at least 3 parts separated by underscores:
+    # "r99000000000003_service_template_provision_request_99000000000003"
+    # "r99000000000003_service_template_provision_task_99000000000004"
+    return if parts.length < 3
+
+    # the first part should start with 'r' or we stop parsing it
+    request_id = parts[0]
+    return unless request_id.delete_prefix!("r")
+
+    # the first part should be all numbers once removing the leading 'r'
+    return unless request_id.match?(/\d+/)
+
+    # the request_id or request_task_id is the last part if all numbers
+    request_or_task_id = parts.last
+    return unless request_or_task_id.match?(/\d+/)
+
+    # the class of the request or request task is the middle part
+    class_name = parts[1..-2].join("_").classify
+    return request_id.to_i, class_name, request_or_task_id.to_i
+  end
+
   private
 
   def activate_miq_task(args)

@@ -960,6 +960,63 @@ RSpec.describe MiqQueue do
     end
   end
 
+  context "#parse_tracking_label" do
+    it "nil tracking_label" do
+      message = MiqQueue.new(:tracking_label => nil)
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "incorrect format: no underscores" do
+      message = MiqQueue.new(:tracking_label => nil)
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "incorrect format: less than 3 parts" do
+      message = MiqQueue.new(:tracking_label => "r1_service_template_provision_task")
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "incorrect format: missing leading 'r'" do
+      message = MiqQueue.new(:tracking_label => "1_service_template_provision_task_1")
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "incorrect format: missing leading 'r' with number" do
+      message = MiqQueue.new(:tracking_label => "r_service_template_provision_task_1")
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "incorrect format: missing trailing number (request or task)" do
+      message = MiqQueue.new(:tracking_label => "r1_service_template_provision_task_")
+      expect(message.parse_tracking_label).to eql(nil)
+    end
+
+    it "service_template_provision_task" do
+      message = MiqQueue.new(:tracking_label => "r1_service_template_provision_task_10")
+      expect(message.parse_tracking_label).to eql([1, "ServiceTemplateProvisionTask", 10])
+    end
+
+    it "service_retire_task" do
+      message = MiqQueue.new(:tracking_label => "r2_service_retire_task_10")
+      expect(message.parse_tracking_label).to eql([2, "ServiceRetireTask", 10])
+    end
+
+    it "service_template_provision_request" do
+      message = MiqQueue.new(:tracking_label => "r2_service_template_provision_request_2")
+      expect(message.parse_tracking_label).to eql([2, "ServiceTemplateProvisionRequest", 2])
+    end
+
+    it "service_template_provision_task region 99" do
+      message = MiqQueue.new(:tracking_label => "r99000000000003_service_template_provision_task_99000000000004")
+      expect(message.parse_tracking_label).to eql([99000000000003, "ServiceTemplateProvisionTask", 99000000000004])
+    end
+
+    it "service_template_provision_request region 99" do
+      message = MiqQueue.new(:tracking_label => "r99000000000004_service_template_provision_request_99000000000004")
+      expect(message.parse_tracking_label).to eql([99000000000004, "ServiceTemplateProvisionRequest", 99000000000004])
+    end
+  end
+
   context "validates that the zone exists in the current region" do
     it "with a matching region" do
       zone = FactoryBot.create(:zone)
