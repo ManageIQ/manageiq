@@ -6,6 +6,12 @@ FactoryBot.define do
     status      { "Valid" }
   end
 
+  factory :auth_token, :parent => :authentication do
+    authtype { "default" }
+    auth_key { "secret" }
+    type     { "AuthToken" }
+  end
+
   factory :authentication_status_error, :parent => :authentication do
     status      { "Error" }
     authtype    { "bearer" }
