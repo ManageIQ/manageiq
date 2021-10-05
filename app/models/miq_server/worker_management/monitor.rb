@@ -40,21 +40,14 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def sync_workers
-    result = {}
-    MiqWorkerType.worker_class_names.each do |class_name|
-      begin
-        c = class_name.constantize
-        raise NameError, "Constant problem: expected: #{class_name}, constantized: #{c.name}" unless c.name == class_name
-
-        result[c.name] = c.sync_workers
-        result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
-      rescue => error
-        _log.error("Failed to sync_workers for class: #{class_name}")
-        _log.log_backtrace(error)
-        next
-      end
+    MiqWorkerType.worker_class_names.map(&:constantize).each_with_object({}) do |klass, result|
+      result[klass.name] = klass.sync_workers
+      result[klass.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+    rescue => error
+      _log.error("Failed to sync_workers for class: #{klass.name}: #{error}")
+      _log.log_backtrace(error)
+      next
     end
-    result
   end
 
   def sync_from_system
