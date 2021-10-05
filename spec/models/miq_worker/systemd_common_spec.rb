@@ -7,9 +7,8 @@ RSpec.describe MiqWorker::SystemdCommon do
 
       expected_units.delete("manageiq.target")
 
-      found_units = MiqWorkerType.worker_class_names.flat_map do |klass_name|
-        klass = klass_name.constantize
-        service_base_name = klass.service_base_name
+      found_units = MiqWorkerType.worker_classes.flat_map do |worker_class|
+        service_base_name = worker_class.service_base_name
 
         service_file = "#{service_base_name}@.service"
         target_file  = "#{service_base_name}.target"
