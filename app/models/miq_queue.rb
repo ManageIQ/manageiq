@@ -609,7 +609,9 @@ class MiqQueue < ApplicationRecord
   private
 
   def activate_miq_task(args)
-    MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting") if miq_task_id
+    return args unless miq_task_id
+
+    MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting")
     params = args.first
     params[:miq_task_id] = miq_task_id if params.kind_of?(Hash)
     args

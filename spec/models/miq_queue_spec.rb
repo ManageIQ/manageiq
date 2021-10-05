@@ -940,6 +940,26 @@ RSpec.describe MiqQueue do
     end
   end
 
+  context "#activate_miq_task(private)" do
+    let(:miq_task) { FactoryBot.create(:miq_task) }
+    let(:message)  { MiqQueue.create!(:state => "ready", :zone => FactoryBot.create(:zone).name, :args => [{}]) }
+    it "with a task" do
+      message.update(:miq_task => miq_task)
+      result = message.reload.send(:activate_miq_task, message.args)
+
+      expect(result).to eql(message.args)
+      expect(miq_task.reload.state).to eql(MiqTask::STATE_ACTIVE)
+      expect(message.args).to eql([{:miq_task_id => miq_task.id}])
+    end
+
+    it "without a miq_task" do
+      result = message.send(:activate_miq_task, message.args)
+
+      expect(result).to eql(message.args)
+      expect(message.args).to eql([{}])
+    end
+  end
+
   context "validates that the zone exists in the current region" do
     it "with a matching region" do
       zone = FactoryBot.create(:zone)
