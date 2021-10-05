@@ -71,7 +71,7 @@ RSpec.describe MiqProvisionRequestTemplate do
       provision_request_template.create_tasks_for_service(service_task, parent_svc)
     end
 
-    it "request: abort_with_message_queue errors request and all tasks" do
+    it "request: abort_with_message errors request and all tasks" do
       request = service_task.miq_request
       request.abort_with_message("ABORT!")
 
@@ -87,8 +87,8 @@ RSpec.describe MiqProvisionRequestTemplate do
       end
     end
 
-    it "task: abort_with_message_queue errors task and update_and_notify_parent request" do
-      service_task.abort_with_message_queue("ABORT!")
+    it "task: abort_with_message errors task and update_and_notify_parent request" do
+      service_task.abort_with_message("ABORT!")
 
       queue_message = MiqQueue.find_by(:method_name => "update_and_notify_parent")
       status, message, result = queue_message.deliver

@@ -622,7 +622,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def abort_with_message(message)
-    miq_request_tasks.each { |t| t.abort_with_message_queue(message) }
+    miq_request_tasks.each { |t| t.abort_with_message(message) }
 
     update(:request_state => "finished", :status => "Error", :message => message)
     _log.info("Request #{description} is aborted due to #{message}.")

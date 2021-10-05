@@ -234,7 +234,7 @@ class MiqRequestTask < ApplicationRecord
     cancelation_status == MiqRequestTask::CANCEL_STATUS_FINISHED
   end
 
-  def abort_with_message_queue(message)
+  def abort_with_message(message)
     MiqQueue.put(
       :class_name  => "MiqRequestTask",
       :instance_id => id,
