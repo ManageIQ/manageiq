@@ -331,7 +331,9 @@ FactoryBot.define do
 
   factory :ems_google_with_authentication,
           :parent => :ems_google do
-    authtype { "default" }
+    after(:create) do |ems|
+      ems.authentications << FactoryBot.create(:auth_token)
+    end
   end
 
   factory :ems_google_network,
