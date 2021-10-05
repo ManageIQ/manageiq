@@ -462,6 +462,21 @@ class MiqWorker < ApplicationRecord
       # and each message can only have 1 task, so this should be very fast even for many workers.
       m.miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, message)
     end
+
+    processed_messages.where.not(:tracking_label => nil).each do |m|
+      # TODO: This could be moved down into the MiqQueue model too.  MiqRequest and MiqRequesTask and subclasses inject their logic into the queue
+      # with their tracking_label format so this logic doesn't really belong here but possibly not even MiqQueue.  Find a good home for this.
+      # TODO Add tests for wherever this lives.
+      request_id, _class_name, request_or_task_id = m.parse_tracking_label
+
+      if request_id == request_or_task_id
+        # for a request, we abort it all of it's tasks via the queue
+        MiqRequest.find(request_id).abort_with_message(message)
+      else
+        # for a request task, abort it and it's parent request
+        MiqRequestTask.find(request_or_task_id).abort_with_message(message)
+      end
+    end
   end
 
   def log_destroy_of_worker_messages
