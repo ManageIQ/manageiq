@@ -19,27 +19,6 @@ namespace :evm do
     end
   end
 
-  desc "Start the ManageIQ EVM Application"
-  task :start => :environment do
-    EvmApplication.start
-  end
-
-  desc "Restart the ManageIQ EVM Application"
-  task :restart => :environment do
-    EvmApplication.stop
-    EvmApplication.start
-  end
-
-  desc "Stop the ManageIQ EVM Application"
-  task :stop => :environment do
-    EvmApplication.stop
-  end
-
-  desc "Kill the ManageIQ EVM Application"
-  task :kill => :environment do
-    EvmApplication.kill
-  end
-
   desc "Report Status of the ManageIQ EVM Application"
   task :status => :environment do
     EvmApplication.status

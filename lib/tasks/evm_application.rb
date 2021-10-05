@@ -3,30 +3,6 @@ require 'pid_file'
 class EvmApplication
   include Vmdb::Logging
 
-  def self.start
-    puts "Running EVM in background..."
-
-    command_line = "#{Gem.ruby} #{Rails.root.join(*%w(lib workers bin evm_server.rb)).expand_path}"
-
-    env_options = {}
-    env_options["EVMSERVER"] = "true" if MiqEnvironment::Command.is_appliance?
-
-    pid = Kernel.spawn(env_options, command_line, :pgroup => true, [:out, :err] => [Rails.root.join("log/evm.log"), "a"])
-    Process.detach(pid)
-  end
-
-  def self.stop
-    puts "Stopping EVM gracefully..."
-    _log.info("EVM Shutdown initiated")
-    MiqServer.stop(true)
-  end
-
-  def self.kill
-    puts "Killing EVM..."
-    _log.info("EVM Kill initiated")
-    MiqServer.kill
-  end
-
   def self.server_state
     MiqServer.my_server.status
   rescue => error
