@@ -621,6 +621,13 @@ class MiqRequest < ApplicationRecord
     cancelation_status == CANCEL_STATUS_FINISHED
   end
 
+  def abort_with_message(message)
+    miq_request_tasks.each { |t| t.abort_with_message_queue(message) }
+
+    update(:request_state => "finished", :status => "Error", :message => message)
+    _log.info("Request #{description} is aborted due to #{message}.")
+  end
+
   private
 
   def do_cancel
