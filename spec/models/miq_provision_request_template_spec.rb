@@ -61,6 +61,24 @@ RSpec.describe MiqProvisionRequestTemplate do
                        })
   end
 
+  it "abort_with_message_queue errors task and update_and_notify_parent request" do
+    Zone.seed
+
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::Provision).to receive(:get_hostname).and_return('hostname')
+    allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'miq'))
+    allow(MiqServer).to receive(:my_zone).and_return(Zone.default_zone.name)
+    provision_request_template.create_tasks_for_service(service_task, parent_svc)
+
+    service_task.abort_with_message_queue("ABORT!")
+    queue_message = MiqQueue.find_by(:method_name => "update_and_notify_parent")
+    status, message, result = queue_message.deliver
+    queue_message.delivered(status, message, result)
+
+    expect(service_task.reload.state).to eql("finished")
+    expect(service_task.status).to eql("Error")
+    expect(service_task.miq_request.reload.status).to eql("Error")
+  end
+
   describe '#create_tasks_for_service' do
     before do
       MiqRegion.seed
