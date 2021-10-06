@@ -1,6 +1,6 @@
 module Vmdb::Loggers
   class ProviderSdkLogger < VMDBLogger
-    def initialize(*loggers)
+    def initialize(*loggers, **kwargs)
       super
 
       # pulled from Ruby's `Logger::Formatter`, which is what it defaults to when it is `nil`
