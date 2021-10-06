@@ -387,8 +387,8 @@ module Rbac
       end
     end
 
-    def include_references(scope, klass, include_for_find, exp_includes)
-      scope.references(klass.includes_to_references(include_for_find)).references(klass.includes_to_references(exp_includes))
+    def include_references(scope, klass, references, exp_includes)
+      scope.references(klass.includes_to_references(references)).references(klass.includes_to_references(exp_includes))
     end
 
     # @param includes [Array, Hash]
