@@ -2,7 +2,7 @@ module Vmdb
   module Initializer
     def self.init
       _log.info("Initializing Application: Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}")
-      ActiveRecord::Base.connectable? ? log_db_connectable : log_db_not_connectable
+      check_db_connectable if perform_db_connectable_check?
 
       # UiWorker called in Development Mode
       #   * command line(rails server)
@@ -32,6 +32,14 @@ module Vmdb
       else
         warn(msg)
       end
+    end
+
+    def self.check_db_connectable
+      ActiveRecord::Base.connectable? ? log_db_connectable : log_db_not_connectable
+    end
+
+    def self.perform_db_connectable_check?
+      ENV["PERFORM_DB_CONNECTABLE_CHECK"].to_s.downcase != "false"
     end
   end
 end
