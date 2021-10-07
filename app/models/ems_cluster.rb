@@ -62,8 +62,6 @@ class EmsCluster < ApplicationRecord
   #
   # Provider Object methods - to be overwritten by Provider authors
   #
-  supports_not :upgrade_cluster
-
   def provider_object(_connection)
     raise NotImplementedError, _("provider_object must be implemented by a subclass")
   end
