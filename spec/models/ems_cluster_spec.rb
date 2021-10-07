@@ -218,43 +218,6 @@ RSpec.describe EmsCluster do
     end
   end
 
-  context "#upgrade_cluster" do
-    before do
-      @ems = FactoryBot.create(:ems_redhat_with_authentication_with_ca, :skip_validate)
-      @cluster = FactoryBot.create(:ems_cluster_ovirt, :ems_id => @ems.id)
-      my_server = double("my_server", :guid => "guid1")
-      allow(MiqServer).to receive(:my_server).and_return(my_server)
-    end
-
-    it "sends the right parameters to the upgrade" do
-      env_vars = {}
-      extra_args = {:engine_url      => "https://#{@ems.address}/ovirt-engine/api",
-                    :engine_user     => @ems.authentication_userid,
-                    :engine_password => @ems.authentication_password,
-                    :cluster_name    => @cluster.name,
-                    :hostname        => "localhost",
-                    :ca_string       => @ems.default_endpoint.certificate_authority}
-      role_arg = { :role_name => "oVirt.cluster-upgrade" }
-      timeout = { :timeout => 1.year }
-      expect(ManageIQ::Providers::AnsibleRoleWorkflow).to receive(:create_job).with(env_vars, extra_args, role_arg, timeout).and_call_original
-      @cluster.upgrade_cluster
-    end
-
-    it 'supports upgrade_cluster when provider is rhv' do
-      expect(@cluster.supports_upgrade_cluster?).to be_truthy
-    end
-
-    context "non rhv cluster" do
-      before do
-        @cluster = FactoryBot.create(:ems_cluster)
-      end
-
-      it 'does not support upgrade_cluster' do
-        expect(@cluster.supports_upgrade_cluster?).to be_falsey
-      end
-    end
-  end
-
   describe "#event_where_clause" do
     let(:cluster) { FactoryBot.create(:ems_cluster) }
     # just doing one to avoid db random ordering
