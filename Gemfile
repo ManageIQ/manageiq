@@ -27,6 +27,7 @@ gem "acts_as_tree",                     "~>2.7" # acts_as_tree needs to be requi
 gem "ancestry",                         "~>4.1.0",           :require => false
 gem "aws-sdk-s3",                       "~>1.0",             :require => false # For FileDepotS3
 gem "bcrypt",                           "~> 3.1.10",         :require => false
+gem "bootsnap",                         ">= 1.4.2",          :require => false
 gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
