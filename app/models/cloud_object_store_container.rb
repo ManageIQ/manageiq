@@ -69,7 +69,6 @@ class CloudObjectStoreContainer < ApplicationRecord
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
-      :args        => [options]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
