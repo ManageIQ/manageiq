@@ -75,13 +75,6 @@ class CloudObjectStoreContainer < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def cloud_object_store_container_delete(options)
-    raw_cloud_object_store_container_delete(options)
-  end
-
-  def raw_cloud_object_store_container_delete(_options)
-    raise NotImplementedError, _("must be implemented in subclass")
-  end
 
   def self.display_name(number = 1)
     n_('Cloud Object Store Container', 'Cloud Object Store Containers', number)
