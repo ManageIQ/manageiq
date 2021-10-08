@@ -57,7 +57,7 @@ class CloudObjectStoreContainer < ApplicationRecord
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
-  def cloud_object_store_container_delete_queue(userid, options = {})
+  def cloud_object_store_container_delete_queue(userid)
     task_opts = {
       :action => "deleting Cloud Object Store Container for user #{userid}",
       :userid => userid
