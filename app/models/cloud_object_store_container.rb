@@ -66,9 +66,11 @@ class CloudObjectStoreContainer < ApplicationRecord
     queue_opts = {
       :class_name  => 'CloudObjectStoreContainer',
       :method_name => 'cloud_object_store_container_delete',
+      :instance_id => id,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => ext_management_system.my_zone,
+      :args        => []
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
