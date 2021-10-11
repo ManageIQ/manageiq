@@ -664,7 +664,7 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  context "#supports_control?" do
+  context "#supports?(:control)" do
     let(:retired_vm) { FactoryBot.create(:vm, :retired => true, :ext_management_system => ems, :host => host) }
     let(:template) { FactoryBot.create(:miq_template) }
     let(:terminated_vm) { FactoryBot.create(:vm_amazon, :raw_power_state => "terminated") }
@@ -676,37 +676,37 @@ RSpec.describe VmOrTemplate do
     let(:host) { FactoryBot.create(:host) }
 
     it "returns false for a retired vm" do
-      expect(retired_vm.supports_control?).to be_falsey
+      expect(retired_vm.supports?(:control)).to be_falsey
       expect(retired_vm.unsupported_reason(:control)).to eq("The VM is retired")
     end
 
     it "returns false for a template" do
-      expect(template.supports_control?).to be_falsey
+      expect(template.supports?(:control)).to be_falsey
       expect(template.unsupported_reason(:control)).to eq("The VM is a template")
     end
 
     it "returns false for a terminated VM" do
-      expect(terminated_vm.supports_control?).to eq(false)
+      expect(terminated_vm.supports?(:control)).to eq(false)
       expect(terminated_vm.unsupported_reason(:control)).to eq("The VM is terminated")
     end
 
     it "returns false for a vm without a host" do
-      expect(vm_no_host.supports_control?).to be_falsey
+      expect(vm_no_host.supports?(:control)).to be_falsey
       expect(vm_no_host.unsupported_reason(:control)).to eq("The VM is not connected to a Host")
     end
 
     it "returns false for a disconnected vm" do
-      expect(disconnected_vm.supports_control?).to be_falsey
+      expect(disconnected_vm.supports?(:control)).to be_falsey
       expect(disconnected_vm.unsupported_reason(:control)).to eq("The VM does not have a valid connection state")
     end
 
     it "returns false for an archived vm" do
-      expect(archived_vm.supports_control?).to be_falsey
+      expect(archived_vm.supports?(:control)).to be_falsey
       expect(archived_vm.unsupported_reason(:control)).to eq("The VM is not connected to an active Provider")
     end
 
     it "returns true for a valid vm" do
-      expect(vm.supports_control?).to be_truthy
+      expect(vm.supports?(:control)).to be_truthy
     end
   end
 

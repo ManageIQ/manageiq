@@ -4,7 +4,7 @@ module VmOrTemplate::Operations::Snapshot
   included do
     supports :snapshot_create do
       if supports?(:snapshots)
-        unless supports_control?
+        unless supports?(:control)
           unsupported_reason_add(:snapshot_create, unsupported_reason(:control))
         end
       else
@@ -17,7 +17,7 @@ module VmOrTemplate::Operations::Snapshot
         if snapshots.size <= 0
           unsupported_reason_add(:remove_snapshot, _("No snapshots available for this VM"))
         end
-        unless supports_control?
+        unless supports?(:control)
           unsupported_reason_add(:remove_snapshot, unsupported_reason(:control))
         end
       else
