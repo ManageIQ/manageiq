@@ -187,6 +187,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :label_mapping
   supports_not :metrics
   supports_not :object_storage
+  supports_not :port
   supports_not :provisioning
   supports_not :publish
   supports_not :reconfigure_disks
@@ -526,10 +527,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_add_volume_mapping
     supports_add_volume_mapping?
-  end
-
-  def supports_port?
-    false
   end
 
   def supports_api_version?
