@@ -356,7 +356,7 @@ class Service < ApplicationRecord
   end
 
   def reconfigure_dialog
-    return nil unless supports_reconfigure?
+    return nil unless supports?(:reconfigure)
     resource_action = reconfigure_resource_action
     options = {:target => self, :reconfigure => true}
 
