@@ -192,7 +192,9 @@ class Host < ApplicationRecord
   supports_not :refresh_firewall_rules
   supports_not :refresh_logs
   supports_not :refresh_network_interfaces
+  supports_not :set_node_maintenance
   supports_not :smartstate_analysis
+  supports_not :unset_node_maintenance
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -319,14 +321,6 @@ class Host < ApplicationRecord
 
   def validate_check_compliance_queue
     {:available => true, :message => nil}
-  end
-
-  def validate_set_node_maintenance
-    validate_unsupported("Maintenance mode is unavailable")
-  end
-
-  def validate_unset_node_maintenance
-    validate_unsupported("Maintenance mode is unavailable")
   end
 
   def validate_reset
