@@ -33,16 +33,16 @@ RSpec.describe MiqTemplate do
     end
   end
 
-  it ".supports_kickstart_provisioning?" do
-    expect(ManageIQ::Providers::Amazon::CloudManager::Template.supports_kickstart_provisioning?).to be_falsey
-    expect(ManageIQ::Providers::Redhat::InfraManager::Template.supports_kickstart_provisioning?).to be_truthy
-    expect(ManageIQ::Providers::Vmware::InfraManager::Template.supports_kickstart_provisioning?).to be_falsey
+  it ".supports?(:kickstart_provisioning)" do
+    expect(ManageIQ::Providers::Amazon::CloudManager::Template.supports?(:kickstart_provisioning)).to be_falsey
+    expect(ManageIQ::Providers::Redhat::InfraManager::Template.supports?(:kickstart_provisioning)).to be_truthy
+    expect(ManageIQ::Providers::Vmware::InfraManager::Template.supports?(:kickstart_provisioning)).to be_falsey
   end
 
-  it "#supports_kickstart_provisioning?" do
-    expect(ManageIQ::Providers::Amazon::CloudManager::Template.new.supports_kickstart_provisioning?).to be_falsey
-    expect(ManageIQ::Providers::Redhat::InfraManager::Template.new.supports_kickstart_provisioning?).to be_truthy
-    expect(ManageIQ::Providers::Vmware::InfraManager::Template.new.supports_kickstart_provisioning?).to be_falsey
+  it "#supports?(:kickstart_provisioning)" do
+    expect(ManageIQ::Providers::Amazon::CloudManager::Template.new.supports?(:kickstart_provisioning)).to be_falsey
+    expect(ManageIQ::Providers::Redhat::InfraManager::Template.new.supports?(:kickstart_provisioning)).to be_truthy
+    expect(ManageIQ::Providers::Vmware::InfraManager::Template.new.supports?(:kickstart_provisioning)).to be_falsey
   end
 
   it "#supports_provisioning?" do
