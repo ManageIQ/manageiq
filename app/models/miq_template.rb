@@ -3,6 +3,8 @@ class MiqTemplate < VmOrTemplate
 
   default_scope { where(:template => true) }
 
+  supports_not :kickstart_provisioning
+
   virtual_column :display_type,                         :type => :string
   virtual_column :display_operating_system,             :type => :string
   virtual_column :display_platform,                     :type => :string
@@ -27,12 +29,6 @@ class MiqTemplate < VmOrTemplate
   def scan_via_ems?
     true
   end
-
-  def self.supports_kickstart_provisioning?
-    false
-  end
-
-  delegate :supports_kickstart_provisioning?, :to => :class
 
   def self.eligible_for_provisioning
     types = descendants.select(&:supports_provisioning?).map(&:name)
