@@ -17,7 +17,7 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
   # this logic into capture_host_targets
   def only_enabled(hosts)
     hosts.select do |host|
-      host.supports_capture? && (host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?)
+      host.supports?(:capture) && (host.ems_cluster ? host.ems_cluster.perf_capture_enabled? : host.perf_capture_enabled?)
     end
   end
 
@@ -86,6 +86,6 @@ class ManageIQ::Providers::InfraManager::MetricsCapture < ManageIQ::Providers::B
   # we want to work with only enabled_hosts, so hosts needs to be further filtered
   def capture_vm_targets(ems, hosts)
     enabled_host_ids = hosts.select(&:perf_capture_enabled?).index_by(&:id)
-    ems.vms.select { |v| enabled_host_ids.key?(v.host_id) && v.state == 'on' && v.supports_capture? }
+    ems.vms.select { |vm| enabled_host_ids.key?(vm.host_id) && vm.state == 'on' && vm.supports?(:capture) }
   end
 end
