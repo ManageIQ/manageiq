@@ -26,19 +26,19 @@ module VmOrTemplate::Operations::Snapshot
     end
 
     supports :remove_all_snapshots do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:remove_all_snapshots, unsupported_reason(:remove_snapshot))
       end
     end
 
     supports :remove_snapshot_by_description do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:remove_snapshot_by_description, unsupported_reason(:remove_snapshot))
       end
     end
 
     supports :revert_to_snapshot do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:revert_to_snapshot, unsupported_reason(:remove_snapshot))
       end
     end
