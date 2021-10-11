@@ -71,7 +71,7 @@ class Storage < ApplicationRecord
   SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
 
   supports :smartstate_analysis do
-    if !ext_management_system&.class&.supports_smartstate_analysis?
+    if !ext_management_system&.class&.supports?(:smartstate_analysis)
       unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
     elsif !ext_management_system&.authentication_status_ok?
       unsupported_reason_add(:smartstate_analysis, _("There are no EMSs with valid credentials for this Datastore"))

@@ -162,7 +162,7 @@ class TransformationMapping::VmMigrationValidator
           "allocated_size"            => vm.allocated_disk_storage,
           "id"                        => vm.id.to_s,
           "ems_cluster_id"            => vm.ems_cluster_id.to_s,
-          "warm_migration_compatible" => vm.supports_warm_migrate?
+          "warm_migration_compatible" => vm.supports?(:warm_migrate)
         )
       end
 

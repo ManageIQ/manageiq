@@ -394,15 +394,15 @@ RSpec.describe Storage do
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
+  context "#supports?(:smartstate_analysis)" do
     it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
       storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
-      expect(storage.supports_smartstate_analysis?).to eq(true)
+      expect(storage.supports?(:smartstate_analysis)).to eq(true)
     end
 
     it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
       storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
-      expect(storage.supports_smartstate_analysis?).to_not eq(true)
+      expect(storage.supports?(:smartstate_analysis)).to_not eq(true)
     end
   end
 
@@ -438,17 +438,6 @@ RSpec.describe Storage do
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
-    it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
-      expect(storage.supports_smartstate_analysis?).to eq(true)
-    end
-
-    it "returns false for non-vmware Storage when queried whether it supports smartstate analysis" do
-      storage = FactoryBot.create(:storage, :ext_management_system => FactoryBot.create(:ems_microsoft_with_authentication))
-      expect(storage.supports_smartstate_analysis?).to_not eq(true)
-    end
-  end
   describe "#smartstate_analysis_count_for_ems_id" do
     it "returns counts" do
       EvmSpecHelper.local_miq_server

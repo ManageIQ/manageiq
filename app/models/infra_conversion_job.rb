@@ -414,7 +414,7 @@ class InfraConversionJob < Job
   def shutdown_vm
     update_migration_task_progress(:on_entry)
     unless target_vm.power_state == 'off'
-      if target_vm.supports_shutdown_guest?
+      if target_vm.supports?(:shutdown_guest)
         target_vm.shutdown_guest
       else
         target_vm.stop

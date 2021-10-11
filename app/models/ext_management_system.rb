@@ -61,7 +61,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.label_mapping_classes
-    supported_subclasses.select(&:supports_label_mapping?)
+    subclasses_supports?(:label_mapping)
   end
 
   def self.label_mapping_prefixes
@@ -517,15 +517,15 @@ class ExtManagementSystem < ApplicationRecord
 
   # UI methods for determining availability of fields
   def supports_add_storage
-    supports_add_storage?
+    supports?(:add_storage)
   end
 
   def supports_add_host_initiator
-    supports_add_host_initiator?
+    supports?(:add_host_initiator)
   end
 
   def supports_add_volume_mapping
-    supports_add_volume_mapping?
+    supports?(:add_volume_mapping)
   end
 
   def supports_authentication?(authtype)
@@ -860,71 +860,71 @@ class ExtManagementSystem < ApplicationRecord
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
   def supports_auth_key_pair_create
-    supports_auth_key_pair_create?
+    supports?(:auth_key_pair_create)
   end
 
   def supports_block_storage
-    supports_block_storage?
+    supports?(:block_storage)
   end
 
   def supports_object_storage
-    supports_object_storage?
+    supports?(:object_storage)
   end
 
   def supports_cloud_tenants
-    supports_cloud_tenants?
+    supports?(:cloud_tenants)
   end
 
   def supports_volume_multiattachment
-    supports_volume_multiattachment?
+    supports?(:volume_multiattachment)
   end
 
   def supports_volume_resizing
-    supports_volume_resizing?
+    supports?(:volume_resizing)
   end
 
   def supports_create_flavor
-    supports_create_flavor?
+    supports?(:create_flavor)
   end
 
   def supports_cloud_object_store_container_create
-    supports_cloud_object_store_container_create?
+    supports?(:cloud_object_store_container_create)
   end
 
   def supports_create_host_aggregate
-    supports_create_host_aggregate?
+    supports?(:create_host_aggregate)
   end
 
   def supports_create_network_router
-    supports_create_network_router?
+    supports?(:create_network_router)
   end
 
   def supports_cinder_volume_types
-    supports_cinder_volume_types?
+    supports?(:cinder_volume_types)
   end
 
   def supports_cloud_subnet_create
-    supports_cloud_subnet_create?
+    supports?(:cloud_subnet_create)
   end
 
   def supports_cloud_volume
-    supports_cloud_volume?
+    supports?(:cloud_volume)
   end
 
   def supports_cloud_volume_create
-    supports_cloud_volume_create?
+    supports?(:cloud_volume_create)
   end
 
   def supports_volume_availability_zones
-    supports_volume_availability_zones?
+    supports?(:volume_availability_zones)
   end
 
   def supports_create_security_group
-    supports_create_security_group?
+    supports?(:create_security_group)
   end
 
   def supports_storage_services
-    supports_storage_services?
+    supports?(:storage_services)
   end
 
   def get_reserve(field)

@@ -40,8 +40,8 @@ RSpec.describe InfraConversionThrottler, :v2v do
   let(:job_running_2) { FactoryBot.create(:infra_conversion_job, :target_class => 'ServiceTemplateTransformationPlanTask', :target_id => task_running_2.id, :state => 'aborting_virtv2v') }
 
   before do
-    allow(host).to receive(:supports_conversion_host?).and_return(true)
-    allow(vm).to receive(:supports_conversion_host?).and_return(true)
+    allow(host).to receive(:supports?).with(:conversion_host).and_return(true)
+    allow(vm).to receive(:supports?).with(:conversion_host).and_return(true)
   end
 
   context '.start_conversions' do

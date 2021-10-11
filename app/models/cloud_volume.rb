@@ -36,7 +36,7 @@ class CloudVolume < ApplicationRecord
   virtual_column :supports_safe_delete, :type => :boolean
 
   def supports_safe_delete
-    supports_safe_delete?
+    supports?(:safe_delete)
   end
 
   acts_as_miq_taggable

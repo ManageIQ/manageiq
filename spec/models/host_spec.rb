@@ -581,9 +581,9 @@ RSpec.describe Host do
       end
     end
 
-    describe "#supports_reset" do
-      it "returns true for supports_reset?" do
-        expect(host_with_ipmi.supports_reset?).to be_truthy
+    describe "#supports?(:reset)" do
+      it "returns true for supports?(:reset)" do
+        expect(host_with_ipmi.supports?(:reset)).to be_truthy
       end
     end
   end
