@@ -234,7 +234,7 @@ RSpec.describe MiqProvisionVirtWorkflow do
       workflow = FactoryBot.create(:miq_provision_virt_workflow_vmware)
 
       expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
-      expect(workflow.allowed_template_condition).to eq(["vms.ems_id in (?)", [ems.id]])
+      expect(workflow.allowed_template_condition).to eq({"vms.ems_id" => [ems.id]})
     end
   end
 
@@ -406,6 +406,17 @@ RSpec.describe MiqProvisionVirtWorkflow do
     it "excludes templates without an ems" do
       FactoryBot.create(:template_vmware, :ext_management_system => nil, :deprecated => false)
       expect(workflow.allowed_templates.count).to eq(0)
+    end
+
+    it "excludes templates not matching the provider_model" do
+      local_google = FactoryBot.create(:ems_google_with_authentication)
+      allow(workflow.class).to receive(:provider_model).and_return(local_google.class)
+      FactoryBot.create(:template_vmware, :ext_management_system => local_vmware, :deprecated => false)                  # to be excluded
+      cloud_template = FactoryBot.create(:template_google, :ext_management_system => local_google, :deprecated => false) # to be included
+
+      allowed = workflow.allowed_templates
+      expect(allowed.length).to eq(1)
+      expect(allowed.first.id).to eq(cloud_template.id)
     end
   end
 end
