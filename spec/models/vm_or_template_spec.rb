@@ -607,46 +607,46 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  context "#supports_migrate?" do
+  context "#supports?(:migrate)" do
     it "returns true for vmware VM neither orphaned nor archived when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.supports_migrate?).to eq(true)
+      expect(vm.supports?(:migrate)).to eq(true)
     end
 
     it "returns false for SCVMM VM when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_migrate?).to eq(false)
+      expect(vm.supports?(:migrate)).to eq(false)
     end
 
     it "returns false for openstack VM  when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_openstack)
-      expect(vm.supports_migrate?).to eq(false)
+      expect(vm.supports?(:migrate)).to eq(false)
     end
   end
 
-  context "#supports_live_migrate?" do
+  context "#supports?(:live_migrate)" do
     it "returns false for vmware VM" do
       vm = FactoryBot.create(:vm_vmware)
-      expect(vm.supports_live_migrate?).to eq(false)
+      expect(vm.supports?(:live_migrate)).to eq(false)
     end
 
     it "returns false for SCVMM VM" do
       vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_live_migrate?).to eq(false)
+      expect(vm.supports?(:live_migrate)).to eq(false)
     end
   end
 
-  context "#supports_evacuate?" do
+  context "#supports?(:evacuate)" do
     it "returns false for querying vmware VM if it supports evacuate operation" do
       vm =  FactoryBot.create(:vm_vmware)
-      expect(vm.supports_evacuate?).to eq(false)
+      expect(vm.supports?(:evacuate)).to eq(false)
     end
 
     it "returns false for querying SCVMM VM if it supports evacuate operation" do
       vm =  FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_evacuate?).to eq(false)
+      expect(vm.supports?(:evacuate)).to eq(false)
     end
   end
 
