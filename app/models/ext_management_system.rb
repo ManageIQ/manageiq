@@ -528,22 +528,6 @@ class ExtManagementSystem < ApplicationRecord
     supports_add_volume_mapping?
   end
 
-  def supports_port?
-    false
-  end
-
-  def supports_api_version?
-    false
-  end
-
-  def supports_security_protocol?
-    false
-  end
-
-  def supports_provider_id?
-    false
-  end
-
   def supports_authentication?(authtype)
     authtype.to_s == "default"
   end
