@@ -1081,21 +1081,18 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  # Takes a child class (e.g.: "NetworkRouter") and returns the EMS specific version of it
+  # Factory that takes a child class (e.g.: "NetworkRouter")
+  #         and returns the EMS specific version of it
+  # This can be overridden case by case in EMS specific implementations
   #
   # @param [String|Symbol] class_name name of the child class
-  # @param [Boolean] inherit - return the base class if the child does not have a specific one (default: false - return nil if no child)
   # @returns The EMS specific version of the class requested
-  def class_for_ems(class_name, inherit = false)
-    self.class.class_for_ems(class_name, inherit)
-  end
-
-  def self.class_for_ems(class_name, inherit = false)
-    class_name = class_name.name if class_name.kind_of?(Class)
-    const_get(class_name, inherit)
+  def self.class_for_ems(class_name)
+    const_get(class_name, false)
   rescue NameError
     nil
   end
+  delegate :class_for_ems, :to => :class
 
   # @return [Boolean] true if a datastore exists for this type of ems
   def self.datastore?

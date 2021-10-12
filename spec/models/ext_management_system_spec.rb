@@ -666,36 +666,22 @@ RSpec.describe ExtManagementSystem do
     it 'returns a concrete target subclass for a concrete EMS' do
       ems = FactoryBot.create(:ems_openstack)
 
-      expect(ems.class.class_for_ems("Vm", true)).to eq(ems.class::Vm)
-      expect(ems.class_for_ems("Vm", true)).to eq(ems.class::Vm)
       expect(ems.class_for_ems("Vm")).to eq(ems.class::Vm)
       expect(ems.class_for_ems(:Vm)).to eq(ems.class::Vm)
-      expect(ems.class_for_ems(::Vm)).to eq(ems.class::Vm)
-    end
-
-    # this is documenting what NOT to do
-    # it is showing that the results are sporadic
-    it 'expects generic target subclass (not a concrete one)' do
-      ems = FactoryBot.create(:ems_openstack)
-      expect(ems.class_for_ems(ems.class::Vm, true)).to eq(ems.class::Vm)
-      expect(ems.class_for_ems(ems.class::Vm)).to be nil
     end
 
     it 'returns nil for unknown class' do
       ems = FactoryBot.create(:ext_management_system)
-      expect(ems.class_for_ems("RandomSymbol", true)).to be nil
       expect(ems.class_for_ems(:RandomSymbol)).to be nil
     end
 
     it 'returns a concrete target subclass for a concrete EMS subclass' do
       ems = FactoryBot.create(:ems_openstack_network)
-      expect(ems.class_for_ems("NetworkRouter", true)).to eq(ems.class::NetworkRouter)
       expect(ems.class_for_ems("NetworkRouter")).to eq(ems.class::NetworkRouter)
     end
 
     it 'returns the base target class when the EMS does not have a subclass' do
       ems = FactoryBot.create(:ems_infra)
-      expect(ems.class_for_ems("NetworkRouter", true)).to eq(::NetworkRouter)
       expect(ems.class_for_ems("NetworkRouter")).to eq(nil)
     end
   end
