@@ -74,11 +74,11 @@ RSpec.describe EvmDatabase do
   end
 
   def simulate_primordial_seed
-    described_class.seed(["MiqDatabase", "MiqRegion"])
+    described_class.seed(%w[MiqDatabase MiqRegion Zone MiqServer])
   end
 
   def simulate_full_seed
-    described_class.seed(["MiqDatabase", "MiqRegion", "MiqAction"])
+    described_class.seed(%w[MiqDatabase MiqRegion Zone MiqServer MiqAction])
   end
 
   describe ".seeded_primordially?" do
