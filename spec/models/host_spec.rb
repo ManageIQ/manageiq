@@ -461,7 +461,7 @@ RSpec.describe Host do
   context "supported features" do
     it "does not support refresh_network_interfaces" do
       host = FactoryBot.build(:host)
-      expect(host.supports_refresh_network_interfaces?).to be_falsey
+      expect(host.supports?(:refresh_network_interfaces)).to be_falsey
     end
   end
 
