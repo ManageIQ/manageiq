@@ -251,10 +251,6 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   gem "jquery-rjs",                     "=0.1.1.2",          :source => "https://rubygems.manageiq.org"
 end
 
-group :v2v, :ui_dependencies do
-  manageiq_plugin "manageiq-v2v"
-end
-
 group :web_server, :manageiq_default do
   gem "puma",                           "~>4.2"
   gem "responders",                     "~>3.0"
