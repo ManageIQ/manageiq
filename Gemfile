@@ -298,6 +298,7 @@ unless ENV["APPLIANCE"]
 
   group :development, :test do
     gem "parallel_tests"
+    gem "routes_lazy_routes"
     gem "rspec-rails",                  "~>4.0.1"
   end
 end
