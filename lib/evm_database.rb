@@ -88,7 +88,7 @@ class EvmDatabase
     # While not technically accurate, as someone could just insert a record
     # directly, this is the simplest check at the moment to guess whether or not
     # a primordial seed has completed.
-    MiqDatabase.any? && MiqRegion.in_my_region.any?
+    MiqDatabase.any? && MiqRegion.in_my_region.any? && MiqServer.in_my_region.any?
   end
 
   # Returns whether or not a full seed has completed.
