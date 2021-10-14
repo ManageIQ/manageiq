@@ -1087,12 +1087,12 @@ class ExtManagementSystem < ApplicationRecord
   #
   # @param [String|Symbol] class_name name of the child class
   # @returns The EMS specific version of the class requested
-  def self.class_for_ems(class_name)
+  def self.class_by_ems(class_name)
     const_get(class_name, false)
   rescue NameError
     nil
   end
-  delegate :class_for_ems, :to => :class
+  delegate :class_by_ems, :to => :class
 
   # @return [Boolean] true if a datastore exists for this type of ems
   def self.datastore?

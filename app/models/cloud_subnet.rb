@@ -51,7 +51,7 @@ class CloudSubnet < ApplicationRecord
   virtual_total :total_vms, :vms, :uses => :vms
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:CloudSubnet)
+    ext_management_system&.class_by_ems(:CloudSubnet)
   end
 
   def delete_cloud_subnet_queue(userid)

@@ -23,7 +23,7 @@ class VolumeMapping < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:VolumeMapping)
+    ext_management_system&.class_by_ems(:VolumeMapping)
   end
 
   def raw_delete_volume_mapping
@@ -77,7 +77,7 @@ class VolumeMapping < ApplicationRecord
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:VolumeMapping)
+    klass = ext_management_system.class_by_ems(:VolumeMapping)
     klass.raw_create_volume_mapping(ext_management_system, options)
   end
 

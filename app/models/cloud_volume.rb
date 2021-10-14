@@ -50,7 +50,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:CloudVolume)
+    ext_management_system&.class_by_ems(:CloudVolume)
   end
 
   def self.my_zone(ems)
@@ -90,7 +90,7 @@ class CloudVolume < ApplicationRecord
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:CloudVolume)
+    klass = ext_management_system.class_by_ems(:CloudVolume)
     klass.raw_create_volume(ext_management_system, options)
   end
 

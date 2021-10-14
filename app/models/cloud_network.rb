@@ -47,7 +47,7 @@ class CloudNetwork < ApplicationRecord
   virtual_total :total_vms, :vms
 
   def self.class_by_ems(ext_management_system, _external = false)
-    ext_management_system&.class_for_ems(:CloudNetwork)
+    ext_management_system&.class_by_ems(:CloudNetwork)
   end
 
   def self.tenant_id_clause_format(tenant_ids)

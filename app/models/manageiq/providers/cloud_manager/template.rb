@@ -14,7 +14,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:Template)
+    ext_management_system&.class_by_ems(:Template)
   end
 
   # Create a cloud image as a queued task and return the task id. The queue
@@ -53,7 +53,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:Template)
+    klass = ext_management_system.class_by_ems(:Template)
     klass.raw_create_image(ext_management_system, options)
   end
 
@@ -88,7 +88,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:Template)
+    klass = ext_management_system.class_by_ems(:Template)
     klass.raw_import_image(ext_management_system, options)
   end
 

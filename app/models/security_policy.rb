@@ -16,7 +16,7 @@ class SecurityPolicy < ApplicationRecord
   virtual_total :rules_count, :rules
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:SecurityPolicy)
+    ext_management_system&.class_by_ems(:SecurityPolicy)
   end
 
   def update_security_policy_queue(userid, options = {})

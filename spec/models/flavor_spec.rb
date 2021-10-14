@@ -22,7 +22,7 @@ RSpec.describe Flavor do
   context 'when calling create_flavor method' do
     it 'should call raw_create_flavor' do
       flavor_double = class_double('ManageIQ::Providers::Openstack::CloudManager::Flavor')
-      allow(ems.class).to receive(:class_for_ems).and_return(flavor_double)
+      allow(ems.class).to receive(:class_by_ems).and_return(flavor_double)
       expect(flavor_double).to receive(:raw_create_flavor)
       subject.class.create_flavor(ems.id, {})
     end

@@ -20,7 +20,7 @@ class NetworkService < ApplicationRecord
   virtual_total :security_policy_rules_count, :security_policy_rules
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:NetworkService)
+    ext_management_system&.class_by_ems(:NetworkService)
   end
 
   def self.display_name(number = 1)

@@ -14,7 +14,7 @@ class CloudVolumeSnapshot < ApplicationRecord
   virtual_total :total_based_volumes, :based_volumes
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:CloudVolumeSnapshot)
+    ext_management_system&.class_by_ems(:CloudVolumeSnapshot)
   end
 
   def self.my_zone(ems)

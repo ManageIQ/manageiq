@@ -22,7 +22,7 @@ class FloatingIp < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:FloatingIp)
+    ext_management_system&.class_by_ems(:FloatingIp)
   end
 
   def self.display_name(number = 1)

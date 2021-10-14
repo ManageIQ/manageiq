@@ -12,6 +12,6 @@ class NetworkServiceEntry < ApplicationRecord
   has_many :network_service_entries, :foreign_key => :ems_id, :dependent => :destroy
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:NetworkServiceEntry)
+    ext_management_system&.class_by_ems(:NetworkServiceEntry)
   end
 end

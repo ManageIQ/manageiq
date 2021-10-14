@@ -49,7 +49,7 @@ class NetworkRouter < ApplicationRecord
   virtual_total :total_vms, :vms
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:NetworkRouter)
+    ext_management_system&.class_by_ems(:NetworkRouter)
   end
 
   private

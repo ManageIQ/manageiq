@@ -24,7 +24,7 @@ class HostInitiatorGroup < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:HostInitiatorGroup)
+    ext_management_system&.class_by_ems(:HostInitiatorGroup)
   end
 
   def refresh_ems
@@ -65,7 +65,7 @@ class HostInitiatorGroup < ApplicationRecord
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:HostInitiatorGroup)
+    klass = ext_management_system.class_by_ems(:HostInitiatorGroup)
     klass.raw_create_host_initiator_group(ext_management_system, options)
   end
 

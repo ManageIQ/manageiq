@@ -39,14 +39,14 @@ class CloudTenant < ApplicationRecord
   virtual_total :total_vms, :vms
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system&.class_for_ems(:CloudTenant)
+    ext_management_system&.class_by_ems(:CloudTenant)
   end
 
   def self.create_cloud_tenant(ems_id, options = {})
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
-    klass = ext_management_system.class_for_ems(:CloudTenant)
+    klass = ext_management_system.class_by_ems(:CloudTenant)
     klass.raw_create_cloud_tenant(ext_management_system, options)
   end
 
@@ -66,7 +66,7 @@ class CloudTenant < ApplicationRecord
     }
 
     queue_opts = {
-      :class_name  => ext_management_system.class_for_ems(:CloudTenant).name,
+      :class_name  => ext_management_system.class_by_ems(:CloudTenant).name,
       :method_name => 'create_cloud_tenant',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
