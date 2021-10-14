@@ -607,64 +607,64 @@ RSpec.describe VmOrTemplate do
     end
   end
 
-  context "#supports_migrate?" do
+  context "#supports?(:migrate)" do
     it "returns true for vmware VM neither orphaned nor archived when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.supports_migrate?).to eq(true)
+      expect(vm.supports?(:migrate)).to eq(true)
     end
 
     it "returns false for SCVMM VM when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_migrate?).to eq(false)
+      expect(vm.supports?(:migrate)).to eq(false)
     end
 
     it "returns false for openstack VM  when queried if it supports migrate operation" do
       vm = FactoryBot.create(:vm_openstack)
-      expect(vm.supports_migrate?).to eq(false)
+      expect(vm.supports?(:migrate)).to eq(false)
     end
   end
 
-  context "#supports_live_migrate?" do
+  context "#supports?(:live_migrate)" do
     it "returns false for vmware VM" do
       vm = FactoryBot.create(:vm_vmware)
-      expect(vm.supports_live_migrate?).to eq(false)
+      expect(vm.supports?(:live_migrate)).to eq(false)
     end
 
     it "returns false for SCVMM VM" do
       vm = FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_live_migrate?).to eq(false)
+      expect(vm.supports?(:live_migrate)).to eq(false)
     end
   end
 
-  context "#supports_evacuate?" do
+  context "#supports?(:evacuate)" do
     it "returns false for querying vmware VM if it supports evacuate operation" do
       vm =  FactoryBot.create(:vm_vmware)
-      expect(vm.supports_evacuate?).to eq(false)
+      expect(vm.supports?(:evacuate)).to eq(false)
     end
 
     it "returns false for querying SCVMM VM if it supports evacuate operation" do
       vm =  FactoryBot.create(:vm_microsoft)
-      expect(vm.supports_evacuate?).to eq(false)
+      expect(vm.supports?(:evacuate)).to eq(false)
     end
   end
 
-  context "#supports_smartstate_analysis?" do
+  context "#supports?(:smartstate_analysis)" do
     it "returns true for VMware VM" do
       vm =  FactoryBot.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
-      expect(vm.supports_smartstate_analysis?).to eq(true)
+      expect(vm.supports?(:smartstate_analysis)).to eq(true)
     end
 
     it "returns false for Amazon VM" do
       vm =  FactoryBot.create(:vm_amazon)
-      expect(vm.supports_smartstate_analysis?).to_not eq(true)
+      expect(vm.supports?(:smartstate_analysis)).to_not eq(true)
     end
   end
 
-  context "#supports_control?" do
+  context "#supports?(:control)" do
     let(:retired_vm) { FactoryBot.create(:vm, :retired => true, :ext_management_system => ems, :host => host) }
     let(:template) { FactoryBot.create(:miq_template) }
     let(:terminated_vm) { FactoryBot.create(:vm_amazon, :raw_power_state => "terminated") }
@@ -676,37 +676,37 @@ RSpec.describe VmOrTemplate do
     let(:host) { FactoryBot.create(:host) }
 
     it "returns false for a retired vm" do
-      expect(retired_vm.supports_control?).to be_falsey
+      expect(retired_vm.supports?(:control)).to be_falsey
       expect(retired_vm.unsupported_reason(:control)).to eq("The VM is retired")
     end
 
     it "returns false for a template" do
-      expect(template.supports_control?).to be_falsey
+      expect(template.supports?(:control)).to be_falsey
       expect(template.unsupported_reason(:control)).to eq("The VM is a template")
     end
 
     it "returns false for a terminated VM" do
-      expect(terminated_vm.supports_control?).to eq(false)
+      expect(terminated_vm.supports?(:control)).to eq(false)
       expect(terminated_vm.unsupported_reason(:control)).to eq("The VM is terminated")
     end
 
     it "returns false for a vm without a host" do
-      expect(vm_no_host.supports_control?).to be_falsey
+      expect(vm_no_host.supports?(:control)).to be_falsey
       expect(vm_no_host.unsupported_reason(:control)).to eq("The VM is not connected to a Host")
     end
 
     it "returns false for a disconnected vm" do
-      expect(disconnected_vm.supports_control?).to be_falsey
+      expect(disconnected_vm.supports?(:control)).to be_falsey
       expect(disconnected_vm.unsupported_reason(:control)).to eq("The VM does not have a valid connection state")
     end
 
     it "returns false for an archived vm" do
-      expect(archived_vm.supports_control?).to be_falsey
+      expect(archived_vm.supports?(:control)).to be_falsey
       expect(archived_vm.unsupported_reason(:control)).to eq("The VM is not connected to an active Provider")
     end
 
     it "returns true for a valid vm" do
-      expect(vm.supports_control?).to be_truthy
+      expect(vm.supports?(:control)).to be_truthy
     end
   end
 

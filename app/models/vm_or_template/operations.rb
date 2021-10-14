@@ -133,7 +133,7 @@ module VmOrTemplate::Operations
   end
 
   def validate_vm_control_power_state(check_powered_on)
-    unless supports_control?
+    unless supports?(:control)
       return {:available => false, :message => unsupported_reason(:control)}
     end
     return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")

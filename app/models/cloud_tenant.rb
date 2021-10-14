@@ -183,7 +183,7 @@ class CloudTenant < ApplicationRecord
       :instance_id => ems_id,
       :method_name => 'sync_cloud_tenants_with_tenants',
       :zone        => ems.my_zone
-    ) if ems.supports_cloud_tenant_mapping?
+    ) if ems.supports?(:cloud_tenant_mapping)
   end
 
   def self.tenant_joins_clause(scope)

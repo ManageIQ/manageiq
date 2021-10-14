@@ -3,8 +3,8 @@ module VmOrTemplate::Operations::Snapshot
 
   included do
     supports :snapshot_create do
-      if supports_snapshots?
-        unless supports_control?
+      if supports?(:snapshots)
+        unless supports?(:control)
           unsupported_reason_add(:snapshot_create, unsupported_reason(:control))
         end
       else
@@ -13,11 +13,11 @@ module VmOrTemplate::Operations::Snapshot
     end
 
     supports :remove_snapshot do
-      if supports_snapshots?
+      if supports?(:snapshots)
         if snapshots.size <= 0
           unsupported_reason_add(:remove_snapshot, _("No snapshots available for this VM"))
         end
-        unless supports_control?
+        unless supports?(:control)
           unsupported_reason_add(:remove_snapshot, unsupported_reason(:control))
         end
       else
@@ -26,19 +26,19 @@ module VmOrTemplate::Operations::Snapshot
     end
 
     supports :remove_all_snapshots do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:remove_all_snapshots, unsupported_reason(:remove_snapshot))
       end
     end
 
     supports :remove_snapshot_by_description do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:remove_snapshot_by_description, unsupported_reason(:remove_snapshot))
       end
     end
 
     supports :revert_to_snapshot do
-      unless supports_remove_snapshot?
+      unless supports?(:remove_snapshot)
         unsupported_reason_add(:revert_to_snapshot, unsupported_reason(:remove_snapshot))
       end
     end

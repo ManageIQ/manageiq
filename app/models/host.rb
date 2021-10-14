@@ -362,7 +362,7 @@ class Host < ApplicationRecord
   end
 
   def reset
-    if supports_reset?
+    if supports?(:reset)
       check_policy_prevent("request_host_reset", "ipmi_power_reset")
     else
       _log.warn("Cannot stop because <#{unsupported_reason(:reset)}>")
@@ -1212,7 +1212,7 @@ class Host < ApplicationRecord
 
   def quickStats
     return @qs if @qs
-    return {} unless supports_quick_stats?
+    return {} unless supports?(:quick_stats)
 
     begin
       raise _("Host has no EMS, unable to get host statistics") unless ext_management_system

@@ -83,7 +83,7 @@ module ManageIQ::Providers
     end
 
     def self.supported_types_and_descriptions_hash
-      supported_subclasses.select(&:supports_ems_network_new?).each_with_object({}) do |klass, hash|
+      supported_subclasses.select { |k| k.supports?(:ems_network_new) }.each_with_object({}) do |klass, hash|
         hash[klass.ems_type] = klass.description
       end
     end

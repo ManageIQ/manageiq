@@ -146,32 +146,32 @@ class Vm < VmOrTemplate
 
   def html5_support
     {
-      :visible => supports_html5_console?,
-      :enabled => supports_launch_html5_console?,
+      :visible => supports?(:html5_console),
+      :enabled => supports?(:launch_html5_console),
       :message => unsupported_reason(:launch_html5_console)
     }
   end
 
   def vmrc_support
     {
-      :visible => supports_vmrc_console?,
-      :enabled => supports_launch_vmrc_console?,
+      :visible => supports?(:vmrc_console),
+      :enabled => supports?(:launch_vmrc_console),
       :message => unsupported_reason(:launch_vmrc_console)
     }
   end
 
   def cockpit_support
     {
-      :visible => supports_cockpit_console?,
-      :enabled => supports_launch_cockpit?,
+      :visible => supports?(:cockpit_console),
+      :enabled => supports?(:launch_cockpit),
       :message => unsupported_reason(:launch_cockpit)
     }
   end
 
   def native_support
     {
-      :visible => supports_native_console?,
-      :enabled => supports_launch_native_console?,
+      :visible => supports?(:native_console),
+      :enabled => supports?(:launch_native_console),
       :message => unsupported_reason(:launch_native_console)
     }
   end

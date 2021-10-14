@@ -86,7 +86,7 @@ module ManageIQ::Providers
     end
 
     def sync_cloud_tenants_with_tenants
-      return unless supports_cloud_tenant_mapping?
+      return unless supports?(:cloud_tenant_mapping)
       sync_root_tenant
       sync_tenants
       sync_deleted_cloud_tenants

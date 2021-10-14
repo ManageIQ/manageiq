@@ -3,18 +3,18 @@ RSpec.describe EmsCloud do
     let(:ems_cloud) { FactoryBot.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true) }
     let(:ems_infra) { FactoryBot.create(:ext_management_system) }
 
-    describe "#supports_cloud_tenant_mapping" do
+    describe "#supports?(:cloud_tenant_mapping)" do
       it "supports tenant mapping if the provider has CloudTenant relation and mapping is enabled" do
-        expect(ems_cloud.supports_cloud_tenant_mapping?).to be_truthy
+        expect(ems_cloud.supports?(:cloud_tenant_mapping)).to be_truthy
       end
 
       it "doesn't supports tenant mapping if the provider has CloudTenant relation and mapping is disabled" do
         ems_cloud.tenant_mapping_enabled = false
-        expect(ems_cloud.supports_cloud_tenant_mapping?).to be_falsey
+        expect(ems_cloud.supports?(:cloud_tenant_mapping)).to be_falsey
       end
 
       it "doesn't supports tenant mapping if the provider has not CloudTenant relation" do
-        expect(ems_infra.supports_cloud_tenant_mapping?).to be_falsey
+        expect(ems_infra.supports?(:cloud_tenant_mapping)).to be_falsey
       end
     end
 

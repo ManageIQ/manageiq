@@ -45,19 +45,19 @@ RSpec.describe MiqTemplate do
     expect(ManageIQ::Providers::Vmware::InfraManager::Template.new.supports?(:kickstart_provisioning)).to be_falsey
   end
 
-  it "#supports_provisioning?" do
+  it "#supports?(:provisioning)" do
     template = FactoryBot.create(:template_openstack)
     FactoryBot.create(:ems_openstack, :miq_templates => [template])
-    expect(template.supports_provisioning?).to be_truthy
+    expect(template.supports?(:provisioning)).to be_truthy
 
     template = FactoryBot.create(:template_openstack)
-    expect(template.supports_provisioning?).to be_falsey
+    expect(template.supports?(:provisioning)).to be_falsey
 
     template = FactoryBot.create(:template_microsoft)
-    expect(template.supports_provisioning?).to be_falsey
+    expect(template.supports?(:provisioning)).to be_falsey
 
     template = FactoryBot.create(:template_microsoft)
     FactoryBot.create(:ems_openstack, :miq_templates => [template])
-    expect(template.supports_provisioning?).to be_truthy
+    expect(template.supports?(:provisioning)).to be_truthy
   end
 end
