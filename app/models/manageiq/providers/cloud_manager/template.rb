@@ -53,7 +53,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_for_ems(:Template)
     klass.raw_create_image(ext_management_system, options)
   end
 
