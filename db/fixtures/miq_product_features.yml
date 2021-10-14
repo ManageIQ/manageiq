@@ -6337,6 +6337,49 @@
       :feature_type: admin
       :identifier: host_initiator_new
 
+  # host_initiator_group
+- :name: Host Initiator Group
+  :description: Everything under Host Initiator Groups
+  :feature_type: node
+  :identifier: host_initiator_group
+  :children:
+  - :name: View
+    :description: View Host Initiator Groups
+    :feature_type: view
+    :identifier: host_initiator_group_view
+    :children:
+    - :name: List
+      :description: Display Lists of Host Initiator Groups
+      :feature_type: view
+      :identifier: host_initiator_group_show_list
+    - :name: Show
+      :description: Display Individual Host Initiator Groups
+      :feature_type: view
+      :identifier: host_initiator_group_show
+  - :name: Operate
+    :description: Perform Operations on Host Initiator Groups
+    :feature_type: control
+    :identifier: host_initiator_group_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Host Initiator Groups
+      :feature_type: control
+      :identifier: host_initiator_group_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Host Initiator Groups
+      :feature_type: control
+      :identifier: host_initiator_group_tag
+  - :name: Modify
+    :description: Modify Host Initiator Group
+    :feature_type: admin
+    :identifier: host_initiator_group_admin
+    :children:
+    - :name: Add
+      :description: Add a Host Initiator Group
+      :feature_type: admin
+      :identifier: host_initiator_group_new
+
+
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
   :description: Everything under Physical Infrastructure Providers

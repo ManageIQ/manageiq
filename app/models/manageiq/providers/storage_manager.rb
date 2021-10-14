@@ -24,6 +24,8 @@ module ManageIQ::Providers
              :inverse_of => :ext_management_system
     has_many :host_initiators, :foreign_key => "ems_id", :dependent => :destroy,
              :inverse_of => :ext_management_system
+    has_many :host_initiator_groups, :foreign_key => "ems_id", :dependent => :destroy,
+             :inverse_of => :ext_management_system
     has_many :volume_mappings, :foreign_key => "ems_id", :dependent => :destroy,
              :inverse_of => :ext_management_system
     has_many :san_addresses, :foreign_key => "ems_id", :dependent => :destroy,
