@@ -39,7 +39,7 @@ class CloudTenant < ApplicationRecord
   virtual_total :total_vms, :vms
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system && ext_management_system.class::CloudTenant
+    ext_management_system&.class_for_ems(:CloudTenant)
   end
 
   def self.create_cloud_tenant(ems_id, options = {})

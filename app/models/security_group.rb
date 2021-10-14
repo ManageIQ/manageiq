@@ -36,8 +36,7 @@ class SecurityGroup < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
-    ext_management_system && ext_management_system.class::SecurityGroup
+    ext_management_system&.class_for_ems(:SecurityGroup)
   end
 
   def update_security_group_queue(userid, options = {})

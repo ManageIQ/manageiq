@@ -10,7 +10,7 @@ class CloudVolumeType < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system && ext_management_system.class::CloudVolumeType
+    ext_management_system&.class_for_ems(:CloudVolumeType)
   end
 
   def self.display_name(number = 1)

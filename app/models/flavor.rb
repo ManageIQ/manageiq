@@ -43,7 +43,7 @@ class Flavor < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system.class::Flavor
+    ext_management_system&.class_for_ems(:Flavor)
   end
 
   def self.tenant_joins_clause(scope)

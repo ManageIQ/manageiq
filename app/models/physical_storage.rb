@@ -107,7 +107,7 @@ class PhysicalStorage < ApplicationRecord
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_for_ems(:PhysicalStorage)
     klass.raw_create_physical_storage(ext_management_system, options)
   end
 

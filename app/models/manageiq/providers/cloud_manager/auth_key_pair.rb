@@ -7,7 +7,7 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
   include_concern 'Operations'
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system.class::AuthKeyPair
+    ext_management_system&.class_for_ems(:AuthKeyPair)
   end
 
   # Create an auth key pair as a queued task and return the task id. The queue
