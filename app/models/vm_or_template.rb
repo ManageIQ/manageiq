@@ -1740,10 +1740,6 @@ class VmOrTemplate < ApplicationRecord
     self.class.calculate_power_state(raw_power_state)
   end
 
-  def validate_supported
-    {:available => true,   :message => nil}
-  end
-
   def check_feature_support(message_prefix)
     if archived?
       return [false, nil]
