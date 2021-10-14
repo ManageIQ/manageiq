@@ -17,7 +17,6 @@ module MiqMemcached
     if ENV["MEMCACHED_ENABLE_SSL"]
       ssl_context = OpenSSL::SSL::SSLContext.new
       ssl_context.ca_file = ENV["MEMCACHED_SSL_CA"] if ENV["MEMCACHED_SSL_CA"]
-      ssl_context.ssl_version = :SSLv23
       ssl_context.verify_hostname = true
       ssl_context.verify_mode = OpenSSL::SSL::VERIFY_PEER
       options[:ssl_context] = ssl_context
