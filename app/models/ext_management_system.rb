@@ -884,7 +884,9 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def supports_create_flavor
-    supports?(:create_flavor)
+    flavor_class = class_by_ems(:Flavor)
+    return false if flavor_class.nil?
+    flavor_class.supports?(:create)
   end
 
   def supports_cloud_object_store_container_create
