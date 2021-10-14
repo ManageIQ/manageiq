@@ -49,6 +49,7 @@ class VmOrTemplate < ApplicationRecord
     "kubevirt"     => "KubeVirt",
     "ibm_cloud"    => "IBM Cloud",
     "ibm_power_vc" => "IBM PowerVC",
+    "ibm_power_vm" => "IBM PowerVM",
     "unknown"      => "Unknown"
   }
 
