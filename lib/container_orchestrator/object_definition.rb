@@ -3,7 +3,7 @@ class ContainerOrchestrator
     private
 
     def deployment_definition(name)
-      {
+      deployment = {
         :metadata => {
           :name            => name,
           :labels          => common_labels,
@@ -24,51 +24,53 @@ class ContainerOrchestrator
             }
           }
         }
-      }.tap do |deployment|
-        if File.file?("/.postgresql/root.crt")
-          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] = [
-            {
-              :mountPath => "/.postgresql",
-              :name      => "pg-root-certificate",
-              :readOnly  => true,
-            }
-          ]
+      }
 
-          deployment[:spec][:template][:spec][:volumes] = [
-            {
-              :name   => "pg-root-certificate",
-              :secret => {
-                :secretName => "postgresql-secrets",
-                :items      => [
-                  :key  => "rootcertificate",
-                  :path => "root.crt",
-                ],
-              }
-            }
-          ]
-        end
-      end.tap do |deployment|
-        if ENV["SSL_SECRET_NAME"].present?
-          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] ||= []
-          deployment[:spec][:template][:spec][:containers][0][:volumeMounts] << {
-            :mountPath => "/etc/pki/ca-trust/source/anchors",
-            :name      => "internal-root-certificate",
+      if File.file?("/.postgresql/root.crt")
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] = [
+          {
+            :mountPath => "/.postgresql",
+            :name      => "pg-root-certificate",
             :readOnly  => true,
           }
+        ]
 
-          deployment[:spec][:template][:spec][:volumes] ||= []
-          deployment[:spec][:template][:spec][:volumes] << {
-            :name   => "internal-root-certificate",
+        deployment[:spec][:template][:spec][:volumes] = [
+          {
+            :name   => "pg-root-certificate",
             :secret => {
-              :secretName => ENV["SSL_SECRET_NAME"],
+              :secretName => "postgresql-secrets",
               :items      => [
-                :key  => "root_crt",
+                :key  => "rootcertificate",
                 :path => "root.crt",
               ],
             }
           }
-        end
+        ]
       end
+
+      if ENV["SSL_SECRET_NAME"].present?
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] ||= []
+        deployment[:spec][:template][:spec][:containers][0][:volumeMounts] << {
+          :mountPath => "/etc/pki/ca-trust/source/anchors",
+          :name      => "internal-root-certificate",
+          :readOnly  => true,
+        }
+
+        deployment[:spec][:template][:spec][:volumes] ||= []
+        deployment[:spec][:template][:spec][:volumes] << {
+          :name   => "internal-root-certificate",
+          :secret => {
+            :secretName => ENV["SSL_SECRET_NAME"],
+            :items      => [
+              :key  => "root_crt",
+              :path => "root.crt",
+            ],
+          }
+        }
+      end
+
+      deployment
     end
 
     def service_definition(name, selector, port)
