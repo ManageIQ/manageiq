@@ -77,10 +77,6 @@ class Flavor < ApplicationRecord
     raise NotImplementedError, "raw_create_flavor must be implemented in a subclass"
   end
 
-  def validate_create_flavor(_ext_management_system, _options = {})
-    validate_unsupported(_("Create Flavor Operation"))
-  end
-
   def self.create_flavor(ems_id, options)
     raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
     ext_management_system = ExtManagementSystem.find(ems_id)
@@ -116,16 +112,7 @@ class Flavor < ApplicationRecord
     raise NotImplementedError, _("raw_delete_flavor must be implemented in a subclass")
   end
 
-  def validate_delete_flavor
-    validate_unsupported(_("Delete Flavor Operation"))
-  end
-
   def delete_flavor
     raw_delete_flavor
-  end
-
-  def validate_unsupported(message_prefix)
-    {:available => false,
-     :message   => _("%{message} is not available for %{name}.") % {:message => message_prefix, :name => name}}
   end
 end
