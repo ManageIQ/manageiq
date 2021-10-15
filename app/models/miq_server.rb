@@ -126,7 +126,7 @@ class MiqServer < ApplicationRecord
     @worker_manager ||= WorkerManagement.build(self)
   end
 
-  delegate :start_workers, :enough_resource_to_start_worker?, :to => :worker_manager
+  delegate :start_workers, :stop_worker, :enough_resource_to_start_worker?, :to => :worker_manager
 
   def heartbeat
     # Heartbeat the server
