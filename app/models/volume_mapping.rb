@@ -23,9 +23,7 @@ class VolumeMapping < ApplicationRecord
   end
 
   def self.class_by_ems(ext_management_system)
-    # TODO(lsmola) taken from Orchestration stacks, correct approach should be to have a factory on ExtManagementSystem
-    # side, that would return correct class for each provider
-    ext_management_system && ext_management_system.class::VolumeMapping
+    ext_management_system&.class_by_ems(:VolumeMapping)
   end
 
   def raw_delete_volume_mapping
@@ -79,7 +77,7 @@ class VolumeMapping < ApplicationRecord
     ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_by_ems(:VolumeMapping)
     klass.raw_create_volume_mapping(ext_management_system, options)
   end
 

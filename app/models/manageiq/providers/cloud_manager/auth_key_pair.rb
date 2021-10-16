@@ -7,7 +7,7 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
   include_concern 'Operations'
 
   def self.class_by_ems(ext_management_system)
-    ext_management_system.class::AuthKeyPair
+    ext_management_system&.class_by_ems(:AuthKeyPair)
   end
 
   # Create an auth key pair as a queued task and return the task id. The queue
@@ -38,7 +38,7 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
     ext_management_system = ExtManagementSystem.find(ems_id)
     raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 
-    klass = class_by_ems(ext_management_system)
+    klass = ext_management_system.class_by_ems(:AuthKeyPair)
     # TODO(maufart): add cloud_tenant to database table?
     created_key_pair = klass.raw_create_key_pair(ext_management_system, options)
     klass.create(
