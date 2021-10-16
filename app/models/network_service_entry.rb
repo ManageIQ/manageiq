@@ -12,7 +12,6 @@ class NetworkServiceEntry < ApplicationRecord
   has_many :network_service_entries, :foreign_key => :ems_id, :dependent => :destroy
 
   def self.class_by_ems(ext_management_system)
-    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
-    ext_management_system && ext_management_system.class::NetworkServiceEntry
+    ext_management_system&.class_by_ems(:NetworkServiceEntry)
   end
 end

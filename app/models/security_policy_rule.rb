@@ -27,8 +27,7 @@ class SecurityPolicyRule < ApplicationRecord
   virtual_total :network_services_count, :network_services
 
   def self.class_by_ems(ext_management_system)
-    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
-    ext_management_system && ext_management_system.class::SecurityPolicyRule
+    ext_management_system&.class_by_ems(:SecurityPolicyRule)
   end
 
   def update_security_policy_rule_queue(userid, options = {})
