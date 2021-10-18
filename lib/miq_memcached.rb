@@ -2,11 +2,7 @@ require 'linux_admin'
 
 module MiqMemcached
   def self.server_address
-    if ENV["MEMCACHED_SERVICE_HOST"] && ENV["MEMCACHED_SERVICE_PORT"]
-      "memcached:#{ENV["MEMCACHED_SERVICE_PORT"]}"
-    else
-      ::Settings.session.memcache_server
-    end
+    ENV["MEMCACHED_SERVER"] || ::Settings.session.memcache_server
   end
 
   def self.default_client_options
