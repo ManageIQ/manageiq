@@ -1,15 +1,11 @@
-module MiqServer::WorkerManagement::Monitor::Kubernetes
-  extend ActiveSupport::Concern
+class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
+  class_attribute :current_pods
+  self.current_pods = Concurrent::Hash.new
 
-  included do
-    class_attribute :current_pods
-    self.current_pods = Concurrent::Hash.new
+  class_attribute :current_deployments
+  self.current_deployments = Concurrent::Hash.new
 
-    class_attribute :current_deployments
-    self.current_deployments = Concurrent::Hash.new
-
-    attr_accessor :deployments_monitor_thread, :pods_monitor_thread
-  end
+  attr_accessor :deployments_monitor_thread, :pods_monitor_thread
 
   def cleanup_failed_deployments
     delete_failed_deployments
