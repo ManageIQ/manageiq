@@ -14,8 +14,8 @@ module MiqServer::WorkerManagement::Monitor
   include_concern 'Validation'
 
   def monitor_workers
-    # Clear the my_server cache so we can detect role and possibly other changes faster
-    my_server.class.my_server_clear_cache
+    # Reload my_server so we can detect role and possibly other changes faster
+    my_server.reload
 
     sync_from_system
     sync_monitor
