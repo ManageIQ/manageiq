@@ -7,8 +7,8 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
   let(:pod_label)       { '1-generic' }
 
   before do
+    allow(MiqServer::WorkerManagement).to receive(:podified?).and_return(true)
     allow(server.worker_manager).to receive(:orchestrator).and_return(orchestrator)
-    allow(server.worker_manager).to receive(:podified?).and_return(true)
   end
 
   after do
@@ -103,6 +103,53 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
         allow(server.worker_manager).to receive(:current_pods).and_return(current_pods)
         expect(orchestrator).to receive(:delete_deployment).with(pod_label)
         server.worker_manager.cleanup_failed_deployments
+      end
+    end
+  end
+
+  context "#sync_from_system" do
+    context "#ensure_kube_monitors_started" do
+      it "podified, ensures pod monitor started and orphaned rows are removed" do
+        expect(server.worker_manager).to receive(:ensure_kube_monitors_started)
+        expect(server.worker_manager).to receive(:cleanup_orphaned_worker_rows)
+        server.worker_manager.sync_from_system
+      end
+    end
+  end
+
+  context "#cleanup_orphaned_worker_rows" do
+    context "podified" do
+      let(:server2) { EvmSpecHelper.remote_miq_server }
+      let(:worker) do
+        FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server, :last_heartbeat => 5.minutes.ago)
+      end
+
+      before do
+        server.worker_manager.current_pods = {"1-generic-active" => {}}
+      end
+
+      after do
+        server.worker_manager.current_pods.clear
+      end
+
+      it "removes this server's orphaned rows" do
+        worker.update(:system_uid => "1-generic-orphan")
+        FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server, :system_uid => "1-generic-active")
+        server.worker_manager.cleanup_orphaned_worker_rows
+        expect(MiqWorker.count).to eq(1)
+      end
+
+      it "skips orphaned rows for other servers" do
+        worker.update(:miq_server => server2, :system_uid => "1-generic-orphan")
+        FactoryBot.create(:miq_worker, :type => "MiqGenericWorker", :miq_server => server2, :system_uid => "1-generic-active")
+        server.worker_manager.cleanup_orphaned_worker_rows
+        expect(MiqWorker.count).to eq(2)
+      end
+
+      it "skips MiqCockpitWsWorker rows" do
+        worker.update(:system_uid => "an_actual_guid", :type => "MiqCockpitWsWorker")
+        server.worker_manager.cleanup_orphaned_worker_rows
+        expect(MiqCockpitWsWorker.count).to eq(1)
       end
     end
   end

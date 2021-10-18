@@ -2,7 +2,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
   extend ActiveSupport::Concern
 
   def validate_worker(w)
-    return true if MiqEnvironment::Command.is_podified?
+    return true if podified?
 
     if exceeded_heartbeat_threshold?(w)
       stop_worker(w, MiqServer::WorkerManagement::NOT_RESPONDING)

@@ -5,6 +5,8 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
 
   before do
     MiqWorkerType.seed
+    allow(MiqServer::WorkerManagement).to receive(:podified?).and_return(false)
+    allow(MiqServer::WorkerManagement).to receive(:systemd?).and_return(true)
     allow(server.worker_manager).to receive(:systemd_manager).and_return(systemd_manager)
     allow(systemd_manager).to receive(:units).and_return(units)
   end

@@ -35,7 +35,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def deployment_resource_constraints_changed?(worker)
-    return false unless Settings.server.worker_monitor.enforce_resource_constraints
+    return false unless ::Settings.server.worker_monitor.enforce_resource_constraints
 
     container = current_deployments.fetch_path(worker.worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
     current_constraints = container.try(:fetch, :resources, nil) || {}

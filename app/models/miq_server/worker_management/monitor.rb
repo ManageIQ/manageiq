@@ -101,14 +101,6 @@ module MiqServer::WorkerManagement::Monitor
     end
   end
 
-  def podified?
-    MiqEnvironment::Command.is_podified?
-  end
-
-  def systemd?
-    MiqEnvironment::Command.supports_systemd?
-  end
-
   def clean_worker_records
     worker_deleted = false
     miq_workers.each do |w|
