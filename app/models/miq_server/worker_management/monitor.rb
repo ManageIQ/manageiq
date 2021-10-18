@@ -15,7 +15,6 @@ module MiqServer::WorkerManagement::Monitor
     # Clear the my_server cache so we can detect role and possibly other changes faster
     my_server.class.my_server_clear_cache
 
-    sync_from_system
     sync_monitor
 
     # Sync the workers after sync'ing the child worker settings
@@ -24,10 +23,6 @@ module MiqServer::WorkerManagement::Monitor
     MiqWorker.status_update_all
 
     cleanup_failed_workers
-
-    monitor_active_workers
-
-    do_system_limit_exceeded if self.kill_workers_due_to_resources_exhausted?
   end
 
   def worker_not_responding(w)
@@ -48,57 +43,9 @@ module MiqServer::WorkerManagement::Monitor
     end
   end
 
-  def sync_from_system
-    if podified?
-      ensure_kube_monitors_started
-    end
-
-    cleanup_orphaned_worker_rows
-
-    if podified?
-      sync_deployment_settings
-    end
-  end
-
-  def cleanup_orphaned_worker_rows
-    if podified?
-      # TODO: Move to a method in the kubernetes namespace
-      unless current_pods.empty?
-        orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
-        unless orphaned_rows.empty?
-          _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
-          orphaned_rows.destroy_all
-        end
-      end
-    end
-  end
-
-  def monitor_active_workers
-    # When k8s or systemd is operating as the worker monitor then all of the
-    # worker monitoring (liveness, memory threshold) is handled by those
-    # systems.  Only when workers are run as standalone processes does MiqServer
-    # have to monitor the workers itself.
-    return if podified? || systemd?
-
-    # Monitor all remaining current worker records
-    miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
-      # Push the heartbeat into the database
-      persist_last_heartbeat(worker)
-      # Check the worker record for heartbeat timeouts
-      validate_worker(worker)
-    end
-  end
-
   def cleanup_failed_workers
-    check_not_responding
     check_pending_stop
     clean_worker_records
-
-    if podified?
-      cleanup_failed_deployments
-    elsif systemd?
-      cleanup_failed_systemd_services
-    end
   end
 
   def clean_worker_records
@@ -120,22 +67,6 @@ module MiqServer::WorkerManagement::Monitor
       next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
       worker_set_monitor_status(w.pid, nil)
     end
-  end
-
-  def check_not_responding
-    return if MiqEnvironment::Command.is_podified?
-
-    worker_deleted = false
-    miq_workers.each do |w|
-      next unless monitor_reason_not_responding?(w)
-      next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
-      worker_not_responding(w)
-      worker_delete(w.pid)
-      w.destroy
-      worker_deleted = true
-    end
-
-    miq_workers.reload if worker_deleted
   end
 
   def monitor_reason_not_responding?(w)

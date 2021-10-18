@@ -1,4 +1,10 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
+  def cleanup_failed_workers
+    super
+
+    cleanup_failed_systemd_services
+  end
+
   def cleanup_failed_systemd_services
     failed_service_names = systemd_failed_miq_services.map { |service| service[:name] }
     return if failed_service_names.empty?

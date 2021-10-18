@@ -26,12 +26,10 @@ class MiqServer::WorkerManagement
   def self.podified?
     MiqEnvironment::Command.is_podified?
   end
-  delegate :podified?, :to => :class
 
   def self.systemd?
     MiqEnvironment::Command.supports_systemd?
   end
-  delegate :systemd?, :to => :class
 
   def initialize(my_server)
     @my_server           = my_server

@@ -7,7 +7,35 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   attr_accessor :deployments_monitor_thread, :pods_monitor_thread
 
-  def cleanup_failed_deployments
+  def sync_monitor
+    sync_from_system
+
+    super
+  end
+
+  def sync_from_system
+    ensure_kube_monitors_started
+    cleanup_orphaned_worker_rows
+    sync_deployment_settings
+  end
+
+  def enough_resource_to_start_worker?(_worker_class)
+    true
+  end
+
+  def cleanup_orphaned_worker_rows
+    unless current_pods.empty?
+      orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
+      unless orphaned_rows.empty?
+        _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
+        orphaned_rows.destroy_all
+      end
+    end
+  end
+
+  def cleanup_failed_workers
+    super
+
     delete_failed_deployments
   end
 

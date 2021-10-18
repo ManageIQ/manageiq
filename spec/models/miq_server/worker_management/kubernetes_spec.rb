@@ -83,7 +83,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
       it "doesn't call delete_deployment" do
         allow(server.worker_manager).to receive(:current_pods).and_return(Concurrent::Hash.new)
         expect(orchestrator).to receive(:delete_deployment).never
-        server.worker_manager.cleanup_failed_deployments
+        server.worker_manager.cleanup_failed_workers
       end
     end
 
@@ -91,7 +91,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
       it "doesn't call delete_deployment" do
         allow(server.worker_manager).to receive(:current_pods).and_return(current_pods)
         expect(orchestrator).to receive(:delete_deployment).never
-        server.worker_manager.cleanup_failed_deployments
+        server.worker_manager.cleanup_failed_workers
       end
     end
 
@@ -102,7 +102,7 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
 
         allow(server.worker_manager).to receive(:current_pods).and_return(current_pods)
         expect(orchestrator).to receive(:delete_deployment).with(pod_label)
-        server.worker_manager.cleanup_failed_deployments
+        server.worker_manager.cleanup_failed_workers
       end
     end
   end
