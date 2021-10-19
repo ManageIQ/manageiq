@@ -1002,9 +1002,16 @@
   - catalogitem_edit
   - catalogitem_tag
   - cloud_tenant
-  - cloud_volume
-  - cloud_volume_backup
-  - cloud_volume_snapshot
+  - cloud_volume_view
+  - cloud_volume_control
+  - cloud_volume_new
+  - cloud_volume_edit
+  - cloud_volume_backup_create
+  - cloud_volume_backup_restore
+  - cloud_volume_snapshot_create
+  - cloud_volume_attach
+  - cloud_volume_detach
+  - cloud_volume_reload
   - cloud_volume_type
   - chargeback
   - chargeback_reports
@@ -1038,7 +1045,9 @@
   - host_perf
   - host_tag
   - host_timeline
-  - host_initiator
+  - host_initiator_view
+  - host_initiator_control
+  - host_initiator_new
   - miq_task_my_ui
   - my_settings_default_views
   - my_settings_time_profiles
