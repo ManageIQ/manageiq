@@ -2,18 +2,32 @@ require 'linux_admin'
 
 module MiqMemcached
   def self.server_address
-    if ENV["MEMCACHED_SERVICE_HOST"] && ENV["MEMCACHED_SERVICE_PORT"]
-      "#{ENV["MEMCACHED_SERVICE_HOST"]}:#{ENV["MEMCACHED_SERVICE_PORT"]}"
-    else
-      ::Settings.session.memcache_server
+    ENV["MEMCACHED_SERVER"] || ::Settings.session.memcache_server
+  end
+
+  def self.default_client_options
+    options = {
+      :pool_size => 1,
+    }
+
+    if ENV["MEMCACHED_ENABLE_SSL"]
+      ssl_context = OpenSSL::SSL::SSLContext.new
+      ssl_context.ca_file = ENV["MEMCACHED_SSL_CA"] if ENV["MEMCACHED_SSL_CA"]
+      ssl_context.verify_hostname = true
+      ssl_context.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      options[:ssl_context] = ssl_context
     end
+
+    options
   end
 
   # @param options options passed to the memcached client
   # e.g.: :namespace => namespace
   def self.client(options)
     require 'dalli'
-    Dalli::Client.new(MiqMemcached.server_address, options)
+
+    merged_options = default_client_options.merge(options)
+    Dalli::Client.new(MiqMemcached.server_address, merged_options)
   end
 
   class Error < RuntimeError; end

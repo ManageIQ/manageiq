@@ -31,8 +31,9 @@ gem "bootsnap",                         ">= 1.4.2",          :require => false
 gem "bundler",                          "~> 2.1", ">= 2.1.4", "!= 2.2.10", :require => false
 gem "byebug",                                                :require => false
 gem "color",                            "~>1.8"
+gem "connection_pool",                                       :require => false # For Dalli
 gem "config",                           "~>2.2", ">=2.2.3",  :require => false
-gem "dalli",                            "~>2.7", ">=2.7.8",  :require => false
+gem "dalli",                            "~>3.0",             :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
 gem "elif",                             "=0.1.0",            :require => false
