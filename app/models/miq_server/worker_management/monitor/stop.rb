@@ -1,24 +1,15 @@
 module MiqServer::WorkerManagement::Monitor::Stop
   extend ActiveSupport::Concern
 
-  def clean_stop_worker_queue_items
-    MiqQueue.where(
-      :class_name  => self.class.name,
-      :method_name => "stop_worker",
-      :queue_name  => 'miq_server',
-      :server_guid => guid
-    ).destroy_all
-  end
-
   def stop_worker_queue(worker, monitor_reason = nil)
     MiqQueue.put_deprecated(
-      :class_name  => self.class.name,
-      :instance_id => id,
+      :class_name  => my_server.class.name,
+      :instance_id => my_server.id,
       :method_name => 'stop_worker',
       :args        => [worker.id, monitor_reason],
       :queue_name  => 'miq_server',
-      :zone        => zone.name,
-      :server_guid => guid
+      :zone        => my_server.zone.name,
+      :server_guid => my_server.guid
     )
   end
 
@@ -32,7 +23,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
 
     msg = "Stopping #{w.format_full_log_msg}, status [#{w.status}]..."
     _log.info(msg)
-    MiqEvent.raise_evm_event_queue(self, "evm_worker_stop", :event_details => msg, :type => w.type)
+    MiqEvent.raise_evm_event_queue(my_server, "evm_worker_stop", :event_details => msg, :type => w.type)
 
     worker_set_monitor_status(w.pid, :waiting_for_stop)
     worker_set_monitor_reason(w.pid, monitor_reason)

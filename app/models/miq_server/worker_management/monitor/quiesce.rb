@@ -3,7 +3,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
 
   def workers_quiesced?
     # do a subset of the monitor_workers loop to allow for graceful exit
-    heartbeat
+    my_server.heartbeat
 
     check_not_responding
     check_pending_stop
@@ -42,7 +42,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     end
 
     loop do
-      reload # Reload from SQL this MiqServer AND its miq_workers association
+      my_server.reload # Reload from SQL this MiqServer AND its miq_workers association
       break if self.workers_quiesced?
       sleep worker_monitor_poll
     end

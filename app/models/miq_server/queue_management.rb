@@ -11,6 +11,15 @@ module MiqServer::QueueManagement
     end
   end
 
+  def clean_stop_worker_queue_items
+    MiqQueue.where(
+      :class_name  => self.class.name,
+      :method_name => "stop_worker",
+      :queue_name  => 'miq_server',
+      :server_guid => guid
+    ).destroy_all
+  end
+
   def process_miq_queue
     loop do
       msg = MiqQueue.get(:queue_name => 'miq_server', :zone => my_zone)
