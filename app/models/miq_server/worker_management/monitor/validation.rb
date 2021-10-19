@@ -1,24 +1,6 @@
 module MiqServer::WorkerManagement::Monitor::Validation
   extend ActiveSupport::Concern
 
-  def validate_worker(w)
-    return true if MiqEnvironment::Command.is_podified?
-
-    if exceeded_heartbeat_threshold?(w)
-      stop_worker(w, MiqServer::WorkerManagement::NOT_RESPONDING)
-      return false
-    end
-
-    return true if worker_get_monitor_status(w.pid)
-
-    if exceeded_memory_threshold?(w)
-      stop_worker(w)
-      return false
-    end
-
-    true
-  end
-
   def exceeded_heartbeat_threshold?(w)
     time_threshold = get_time_threshold(w)
     if time_threshold.seconds.ago.utc > w.last_heartbeat

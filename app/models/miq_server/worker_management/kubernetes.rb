@@ -1,17 +1,41 @@
-module MiqServer::WorkerManagement::Monitor::Kubernetes
-  extend ActiveSupport::Concern
+class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
+  class_attribute :current_pods
+  self.current_pods = Concurrent::Hash.new
 
-  included do
-    class_attribute :current_pods
-    self.current_pods = Concurrent::Hash.new
+  class_attribute :current_deployments
+  self.current_deployments = Concurrent::Hash.new
 
-    class_attribute :current_deployments
-    self.current_deployments = Concurrent::Hash.new
+  attr_accessor :deployments_monitor_thread, :pods_monitor_thread
 
-    attr_accessor :deployments_monitor_thread, :pods_monitor_thread
+  def sync_monitor
+    sync_from_system
+
+    super
   end
 
-  def cleanup_failed_deployments
+  def sync_from_system
+    ensure_kube_monitors_started
+    cleanup_orphaned_worker_rows
+    sync_deployment_settings
+  end
+
+  def enough_resource_to_start_worker?(_worker_class)
+    true
+  end
+
+  def cleanup_orphaned_worker_rows
+    unless current_pods.empty?
+      orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
+      unless orphaned_rows.empty?
+        _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
+        orphaned_rows.destroy_all
+      end
+    end
+  end
+
+  def cleanup_failed_workers
+    super
+
     delete_failed_deployments
   end
 
@@ -39,7 +63,7 @@ module MiqServer::WorkerManagement::Monitor::Kubernetes
   end
 
   def deployment_resource_constraints_changed?(worker)
-    return false unless Settings.server.worker_monitor.enforce_resource_constraints
+    return false unless ::Settings.server.worker_monitor.enforce_resource_constraints
 
     container = current_deployments.fetch_path(worker.worker_deployment_name, :spec, :template, :spec, :containers).try(:first)
     current_constraints = container.try(:fetch, :resources, nil) || {}

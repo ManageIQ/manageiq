@@ -1,11 +1,35 @@
 class MiqServer::WorkerManagement
   include Vmdb::Logging
 
+  require_nested :Kubernetes
+  require_nested :Process
+  require_nested :Systemd
+
   include_concern 'Dequeue'
   include_concern 'Heartbeat'
   include_concern 'Monitor'
 
   attr_reader :my_server
+
+  def self.build(my_server)
+    klass = if podified?
+              Kubernetes
+            elsif systemd?
+              Systemd
+            else
+              Process
+            end
+
+    klass.new(my_server)
+  end
+
+  def self.podified?
+    MiqEnvironment::Command.is_podified?
+  end
+
+  def self.systemd?
+    MiqEnvironment::Command.supports_systemd?
+  end
 
   def initialize(my_server)
     @my_server           = my_server
