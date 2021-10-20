@@ -288,33 +288,10 @@ RSpec.describe Vm do
     end
   end
 
-  context "#cockpit_url" do
-    before do
-      ServerRole.seed
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryBot.create(:ext_management_system, :zone => @zone)
-    end
-
-    it "is direct when no role" do
-      vm = FactoryBot.create(:vm_openstack)
-      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
-      expect(vm.cockpit_url).to eq(URI::HTTP.build(:host => "10.0.0.1", :port => 9090))
-    end
-
-    it "uses dashboard redirect when cockpit role is active" do
-      vm = FactoryBot.create(:vm_openstack, :ext_management_system => @ems)
-      allow(vm).to receive_messages(:ipaddresses => ["10.0.0.1"])
-      server = FactoryBot.create(:miq_server, :ipaddress => "10.0.0.2", :has_active_cockpit_ws => true, :zone => @zone)
-      server.assign_role(ServerRole.find_by(:name => 'cockpit_ws'), 1)
-      server.activate_roles('cockpit_ws')
-      expect(vm.cockpit_url).to eq(URI.parse("https://10.0.0.2/cws/=10.0.0.1"))
-    end
-  end
-
   context "#supported_consoles" do
     it 'returns all of the console types' do
       vm = FactoryBot.create(:vm)
-      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :cockpit, :native])
+      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :native])
     end
   end
 end

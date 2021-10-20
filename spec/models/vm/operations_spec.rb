@@ -11,13 +11,6 @@ RSpec.describe 'VM::Operations' do
     @hardware.ipaddresses << '35.190.140.48'
   end
 
-  context '#cockpit_url' do
-    it '#returns a valid Cockpit url' do
-      url = @vm.send(:cockpit_url)
-      expect(url).to eq(URI::HTTP.build(:host => "127.0.0.1", :port => 9090))
-    end
-  end
-
   context '#ipv4_address' do
     it 'returns the existing ipv4 address' do
       url = @vm.send(:ipv4_address)

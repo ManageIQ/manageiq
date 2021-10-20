@@ -522,7 +522,6 @@ en:
       ha_admit_control: Ha Admit Control
       ha_enabled: Ha Enabled
       ha_max_failures: Ha Max Failures
-      has_active_cockpit_ws: Has Active Cockpit Ws
       has_active_remote_console: Has Active Remote Console
       has_active_userinterface: Has Active Userinterface
       has_active_webservices: Has Active Webservices

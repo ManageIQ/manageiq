@@ -1,9 +1,6 @@
 module Vm::Operations
   extend ActiveSupport::Concern
 
-  include CockpitMixin
-  include CockpitSupportMixin
-
   include_concern 'Guest'
   include_concern 'Power'
   include_concern 'Lifecycle'
@@ -58,11 +55,6 @@ module Vm::Operations
     supports_not :reconfigure_cdroms
     supports_not :remove_security_group
     supports_not :resize
-  end
-
-  def cockpit_url
-    return if ipaddresses.blank?
-    MiqCockpit::WS.url(cockpit_server, cockpit_worker, ipv4_address || ipaddresses.first)
   end
 
   def ipv4_address

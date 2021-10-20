@@ -145,12 +145,6 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
         server.worker_manager.cleanup_orphaned_worker_rows
         expect(MiqWorker.count).to eq(2)
       end
-
-      it "skips MiqCockpitWsWorker rows" do
-        worker.update(:system_uid => "an_actual_guid", :type => "MiqCockpitWsWorker")
-        server.worker_manager.cleanup_orphaned_worker_rows
-        expect(MiqCockpitWsWorker.count).to eq(1)
-      end
     end
   end
 
@@ -324,21 +318,21 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     let(:worker3) { FactoryBot.create(:miq_priority_worker, :miq_server => server) }
 
     it "calls patch_deployment when changed" do
-      allow(server.worker_manager).to receive(:podified_miq_workers).and_return([worker1])
+      allow(server.worker_manager).to receive(:miq_workers).and_return([worker1])
       allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(true)
       expect(worker1).to receive(:patch_deployment)
       server.worker_manager.sync_deployment_settings
     end
 
     it "doesn't call patch_deployment when unchanged" do
-      allow(server.worker_manager).to receive(:podified_miq_workers).and_return([worker1])
+      allow(server.worker_manager).to receive(:miq_workers).and_return([worker1])
       allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(false)
       expect(worker1).to receive(:patch_deployment).never
       server.worker_manager.sync_deployment_settings
     end
 
     it "calls patch_deployment when changed once per worker class" do
-      allow(server.worker_manager).to receive(:podified_miq_workers).and_return([worker1, worker2, worker3])
+      allow(server.worker_manager).to receive(:miq_workers).and_return([worker1, worker2, worker3])
       allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(true)
       allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker3).and_return(true)
       expect(worker1).to receive(:patch_deployment)

@@ -25,7 +25,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def cleanup_orphaned_worker_rows
     unless current_pods.empty?
-      orphaned_rows = podified_miq_workers.where.not(:system_uid => current_pods.keys)
+      orphaned_rows = miq_workers.where.not(:system_uid => current_pods.keys)
       unless orphaned_rows.empty?
         _log.warn("Removing orphaned worker rows without corresponding pods: #{orphaned_rows.collect(&:system_uid).inspect}")
         orphaned_rows.destroy_all
@@ -46,7 +46,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def sync_deployment_settings
     checked_deployments = Set.new
-    podified_miq_workers.each do |worker|
+    miq_workers.each do |worker|
       next if checked_deployments.include?(worker.worker_deployment_name)
 
       if deployment_resource_constraints_changed?(worker)
@@ -55,11 +55,6 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
       end
       checked_deployments << worker.worker_deployment_name
     end
-  end
-
-  def podified_miq_workers
-    # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
-    miq_workers.where.not(:type => %w[MiqCockpitWsWorker])
   end
 
   def deployment_resource_constraints_changed?(worker)

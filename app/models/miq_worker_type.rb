@@ -13,7 +13,6 @@ class MiqWorkerType < ApplicationRecord
   KILL_PRIORITY_EVENT_CATCHERS            = 120
   KILL_PRIORITY_UI_WORKERS                = 130
   KILL_PRIORITY_REMOTE_CONSOLE_WORKERS    = 140
-  KILL_PRIORITY_COCKPIT_WS_WORKERS        = 150
 
   scope :in_kill_order, -> { order(:kill_priority => :asc) }
 

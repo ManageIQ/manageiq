@@ -1180,5 +1180,3 @@
     :remote_console_worker:
       :connection_pool_size: 14
       :nice_delta: 1
-    :cockpit_ws_worker:
-      :count: 1
