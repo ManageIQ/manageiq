@@ -49,15 +49,11 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_types_for_catalog
-    supported_subclasses.select(&:supported_for_catalog?)
+    subclasses_supports?(:catalog)
   end
 
   def self.supported_for_create?
     !reflections.include?("parent_manager")
-  end
-
-  def self.supported_for_catalog?
-    catalog_types.present?
   end
 
   def self.label_mapping_classes
@@ -162,6 +158,7 @@ class ExtManagementSystem < ApplicationRecord
 
   serialize :options
 
+  supports_not :catalog
   supports_not :add_host_initiator
   supports_not :add_storage
   supports_not :add_volume_mapping

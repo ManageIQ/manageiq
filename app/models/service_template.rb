@@ -102,7 +102,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.catalog_item_types
-    ems_classes = Rbac.filtered(ExtManagementSystem.all).collect(&:class).uniq.select(&:supported_for_catalog?)
+    ems_classes = Rbac.filtered(ExtManagementSystem.all).collect(&:class).uniq.select { |ems| ems.supports?(:catalog) }
     ci_types = Set.new(ems_classes.flat_map(&:catalog_types).reduce({}, :merge).keys)
 
     ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
