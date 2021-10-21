@@ -21,6 +21,7 @@ module ManageIQ::Providers
     has_many :security_policy_rules,              :through => :security_policies
     has_many :firewall_rules,                     :through => :security_groups
     has_many :cloud_networks,                     :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_network_firewall_rules,       :through => :cloud_networks, :class_name => "FirewallRule", :source => :firewall_rules
     has_many :network_ports,                      :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_subnet_network_ports,         :through => :network_ports
     has_many :network_routers,                    :foreign_key => :ems_id, :dependent => :destroy
