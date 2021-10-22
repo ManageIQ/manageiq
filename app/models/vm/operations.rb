@@ -50,7 +50,6 @@ module Vm::Operations
       unsupported_reason_add(:collect_running_processes, reason) if reason
     end
 
-    supports_not :conversion_host
     supports_not :evacuate
     supports_not :reconfigure_disks
     supports_not :reconfigure_disksize

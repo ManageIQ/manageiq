@@ -3,7 +3,6 @@ module VmOrTemplate::Operations::Relocation
 
   included do
     supports_not :live_migrate
-    supports_not :warm_migrate
     supports_not :migrate
   end
 

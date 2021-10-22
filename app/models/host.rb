@@ -176,7 +176,6 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
-  supports_not :conversion_host
   supports     :destroy
   supports_not :quick_stats
   supports     :reset do
