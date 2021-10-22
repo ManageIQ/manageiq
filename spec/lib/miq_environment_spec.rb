@@ -36,13 +36,6 @@ RSpec.describe MiqEnvironment do
         end
       end
 
-      context ".supports_apache?" do
-        it "should run once and cache the result" do
-          expect(MiqEnvironment::Command).to receive(:is_appliance?).once.and_return(false)
-          assert_same_result_every_time(:supports_apache?, false)
-        end
-      end
-
       context ".supports_nohup_and_backgrounding?" do
         it "should run once and cache the result" do
           expect(MiqEnvironment::Command).to receive(:is_appliance?).once.and_return(false)
