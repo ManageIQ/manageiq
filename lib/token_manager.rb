@@ -4,6 +4,9 @@ require 'securerandom'
 # Supporting class for Managing Tokens, i.e. Authentication Tokens for REST API, etc.
 #
 class TokenManager
+  EmptyTokenError    = Class.new(ArgumentError)
+  MissingTokenError  = Class.new(ArgumentError)
+
   RESTRICTED_OPTIONS = [:expires_on]
   DEFAULT_NS         = "default"
 
@@ -44,6 +47,9 @@ class TokenManager
   end
 
   def token_valid?(token)
+    raise MissingTokenError if token.nil?
+    raise EmptyTokenError   if token.length == 0
+
     !token_store.read(token).nil?
   end
 
