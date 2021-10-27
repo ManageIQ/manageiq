@@ -12,7 +12,6 @@ class EmsCluster < ApplicationRecord
   has_many    :vms_and_templates, :dependent => :nullify
   has_many    :miq_templates, :inverse_of => :ems_cluster
   has_many    :vms, :inverse_of => :ems_cluster
-  alias       all_vms vms
 
   has_many    :metrics,                :as => :resource  # Destroy will be handled by purger
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
