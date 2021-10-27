@@ -88,7 +88,6 @@ class Host < ApplicationRecord
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
   has_many :host_hardwares, :class_name => 'Hardware', :source => :hardware, :dependent => :nullify
   has_many :vm_hardwares,   :class_name => 'Hardware', :through => :vms_and_templates, :source => :hardware
-  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   # Physical server reference
   belongs_to :physical_server, :inverse_of => :host
@@ -177,7 +176,6 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
-  supports_not :conversion_host
   supports     :destroy
   supports_not :quick_stats
   supports     :reset do

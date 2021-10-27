@@ -188,12 +188,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:image_import_pvc_to_pvs_dispatcher_dispatch)
     end
 
-    # Schedule - InfraConversionJob::Dispatcher
-    # Queue a InfraConversionJob::Dispatcher task unless there's already one on the queue
-    scheduler.schedule_every(:infra_conversion_dispatcher_dispatch, worker_settings[:infra_conversion_dispatcher_interval]) do
-      enqueue(:infra_conversion_dispatcher_dispatch)
-    end
-
     # Schedule - Check for a stuck VmScan::Dispatcher#dispatch
     stuck_vm_scan_dispatch_threshold = worker_settings[:vm_scan_dispatcher_stale_message_timeout]
     scheduler.schedule_every(

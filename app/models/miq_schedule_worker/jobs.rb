@@ -58,12 +58,6 @@ class MiqScheduleWorker::Jobs
     end
   end
 
-  def infra_conversion_dispatcher_dispatch
-    if InfraConversionJob::Dispatcher.waiting?
-      queue_work_on_each_zone(:class_name => "InfraConversionJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
-    end
-  end
-
   def image_import_pvc_to_pvs_dispatcher_dispatch
     if ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher.waiting?
       queue_work(:class_name => "ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)

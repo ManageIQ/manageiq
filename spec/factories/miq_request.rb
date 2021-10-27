@@ -20,10 +20,6 @@ FactoryBot.define do
     factory :physical_server_provision_request,        :class => "PhysicalServerProvisionRequest"
     factory :physical_server_firmware_update_request,  :class => "PhysicalServerFirmwareUpdateRequest"
 
-    factory :service_template_transformation_plan_request, :class => "ServiceTemplateTransformationPlanRequest" do
-      source { create(:service_template_transformation_plan) }
-    end
-
     trait :with_approval do
       transient do
         reason { "" }

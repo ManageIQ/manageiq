@@ -119,7 +119,6 @@ class MiqRequest < ApplicationRecord
 
   REQUEST_TYPES_BACKEND_ONLY = {
     :MiqProvisionRequestTemplate              => {:template            => "VM Provision Template"},
-    :ServiceTemplateTransformationPlanRequest => {:transformation_plan => "Transformation Plan"}
   }
 
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }

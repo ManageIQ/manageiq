@@ -21,7 +21,7 @@ RSpec.describe VmScan::Dispatcher do
   describe '.waiting?' do
     let(:vm_scan_job) { VmScan.create_job }
 
-    it 'returns true if VmScan state is waiting' do
+    it 'returns true if VmScan state is waiting to start' do
       vm_scan_job.update!(:state => 'waiting_to_start')
       expect(described_class.waiting?).to be_truthy
     end

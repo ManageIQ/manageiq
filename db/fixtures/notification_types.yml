@@ -39,17 +39,6 @@
   :expires_in: 14.days
   :level: :warning
   :audience: group
-- :name: transformation_plan_request_succeeded
-  :message: Plan %{plan_name} has completed successfully
-  :expires_in: 14.days
-  :level: :success
-  :audience: global
-- :name: transformation_plan_request_failed
-  :message: Plan %{plan_name} has completed with errors
-  :expires_in: 14.days
-  :level: :error
-  :audience: global
-  :link_to: "subject"
 - :name: automate_user_success
   :message: '%{message}'
   :expires_in: 24.hours
@@ -187,16 +176,6 @@
   :audience: global
 - :name: vm_destroy_error
   :message: 'Destroying Virtual Machine %{subject} failed: %{error_message}'
-  :expires_in: 24.hours
-  :level: :error
-  :audience: global
-- :name: conversion_host_config_success
-  :message: 'Conversion Host %{op_name} of resource %{op_arg} completed successfully.'
-  :expires_in: 24.hours
-  :level: :success
-  :audience: global
-- :name: conversion_host_config_failure
-  :message: 'Conversion Host %{op_name} of resource %{op_arg} failed. Please check the logs for further details.'
   :expires_in: 24.hours
   :level: :error
   :audience: global

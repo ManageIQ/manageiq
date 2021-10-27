@@ -1035,14 +1035,6 @@
   :history:
     :keep_tasks: 1.week
     :purge_window_size: 1000
-:transformation:
-  :job:
-    :retry_interval: 15 # in seconds
-  :limits:
-    :max_concurrent_tasks_per_ems: 10
-    :max_concurrent_tasks_per_conversion_host: 10
-    :cpu_limit_per_host: unlimited
-    :network_limit_per_host: unlimited
 :ui:
   :mark_translated_strings: false
   :url:
@@ -1141,7 +1133,6 @@
       :event_streams_purge_interval: 1.day
       :evm_snapshot_delete_delay_for_job_not_found: 1.hour
       :evm_snapshot_interval: 1.hour
-      :infra_conversion_dispatcher_interval: 30.seconds
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
       :nice_delta: 3
