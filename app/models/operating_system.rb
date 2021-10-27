@@ -30,7 +30,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_solaris",   %w(solaris)],
     ["linux_oracle",    %w(oracle)],
     ["linux_generic",   %w(linux)],
-    ["unix_aix",        %w(aix)],
+    ["unix_aix",        %w(aix vios)],
     ["ibm_i",           %w(ibmi)]
   ]
 
