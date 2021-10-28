@@ -20,16 +20,6 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     expect(server.worker_manager.current_pods).to_not be_nil
   end
 
-  it ".current_pods initialized" do
-    expect(server.worker_manager.class.current_pods).to_not be_nil
-  end
-
-  it ".current_pods and #current_pods share the same hash" do
-    expect(server.worker_manager.class.current_pods.object_id).to eql(server.worker_manager.current_pods.object_id)
-    server.worker_manager.current_pods[:a] = :b
-    expect(server.worker_manager.class.current_pods[:a]).to eql(:b)
-  end
-
   context "#ensure_kube_monitors_started" do
     it "calls start_kube_monitor if nil monitor thread" do
       expect(server.worker_manager).to receive(:start_kube_monitor).once.with(:deployments)

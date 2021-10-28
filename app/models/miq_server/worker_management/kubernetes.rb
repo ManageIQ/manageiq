@@ -1,11 +1,11 @@
 class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
-  class_attribute :current_pods
-  self.current_pods = Concurrent::Hash.new
+  attr_accessor :current_pods, :current_deployments, :deployments_monitor_thread, :pods_monitor_thread
 
-  class_attribute :current_deployments
-  self.current_deployments = Concurrent::Hash.new
-
-  attr_accessor :deployments_monitor_thread, :pods_monitor_thread
+  def initialize(*)
+    super
+    @current_pods        = Concurrent::Hash.new
+    @current_deployments = Concurrent::Hash.new
+  end
 
   def sync_monitor
     sync_from_system
