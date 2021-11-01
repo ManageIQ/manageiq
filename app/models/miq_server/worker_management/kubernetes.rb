@@ -14,8 +14,15 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_from_system
-    ensure_kube_monitors_started
+    # All miq_server instances have to reside on the same Kubernetes cluster, so
+    # we only have to sync the list of pods and deployments once
+    ensure_kube_monitors_started if my_server.is_master?
+
+    # Before syncing the workers check for any orphaned worker rows that don't have
+    # a current pod and delete them
     cleanup_orphaned_worker_rows
+
+    # Update worker deployments with updated settings such as cpu/memory limits
     sync_deployment_settings
   end
 
@@ -131,6 +138,8 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def delete_failed_deployments
+    return unless my_server.is_master?
+
     failed_deployments.each do |failed|
       orchestrator.delete_deployment(failed)
     end

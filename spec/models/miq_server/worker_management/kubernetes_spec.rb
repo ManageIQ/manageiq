@@ -1,7 +1,7 @@
 require 'recursive-open-struct'
 
 RSpec.describe MiqServer::WorkerManagement::Kubernetes do
-  let(:server)          { EvmSpecHelper.create_guid_miq_server_zone.second }
+  let(:server)          { EvmSpecHelper.local_miq_server(:is_master => true) }
   let(:orchestrator)    { double("ContainerOrchestrator") }
   let(:deployment_name) { '1-generic-79bb8b8bb5-8ggbg' }
   let(:pod_label)       { '1-generic' }
