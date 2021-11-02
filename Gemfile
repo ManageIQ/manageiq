@@ -220,12 +220,6 @@ group :rest_api, :manageiq_default do
   manageiq_plugin "manageiq-api"
 end
 
-group :graphql_api do
-  # Note, you still need to mount the engine in the UI / rest api processes:
-  # mount ManageIQ::GraphQL::Engine, :at => '/graphql'
-  manageiq_plugin "manageiq-graphql"
-end
-
 group :scheduler, :manageiq_default do
   gem "rufus-scheduler"
 end

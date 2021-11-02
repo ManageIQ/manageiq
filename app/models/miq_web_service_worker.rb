@@ -16,7 +16,7 @@ class MiqWebServiceWorker < MiqWorker
     # TODO: The api process now looks at the existing UI session as of: https://github.com/ManageIQ/manageiq-api/pull/543
     # ui-classic should not be but is serialializing its classes into session, so we need to have access to them for deserialization
     # sandboxes;FC:-ActiveSupport::HashWithIndifferentAccess{I"dashboard;FC;q{I"perf_options;FS:0ApplicationController::Performance::Options$typ0:daily_date0:hourly_date0: days0:
-    %w[manageiq_default ui_dependencies graphql_api]
+    %w[manageiq_default ui_dependencies]
   end
 
   def self.kill_priority

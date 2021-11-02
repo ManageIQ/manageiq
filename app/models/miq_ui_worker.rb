@@ -13,7 +13,7 @@ class MiqUiWorker < MiqWorker
   include MiqWorker::ServiceWorker
 
   def self.bundler_groups
-    %w[manageiq_default ui_dependencies graphql_api]
+    %w[manageiq_default ui_dependencies]
   end
 
   def self.kill_priority
