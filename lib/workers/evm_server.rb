@@ -87,7 +87,16 @@ class EvmServer
   private
 
   def servers_from_db
-    MiqEnvironment::Command.is_podified? ? MiqServer.in_my_region.to_a : [MiqServer.my_server(true)].compact
+    my_server = MiqServer.my_server(true)
+
+    if MiqEnvironment::Command.is_podified?
+      # Ensure that the "primary" miq_server is first in the list of servers.
+      # This ensures that any work that is only done on the primary is completed
+      # before processing the rest of the servers.
+      MiqServer.in_my_region.to_a.unshift(my_server).uniq.compact
+    else
+      [my_server].compact
+    end
   end
 
   def set_process_title

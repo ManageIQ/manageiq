@@ -14,8 +14,15 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def sync_from_system
-    ensure_kube_monitors_started
+    # All miq_server instances have to reside on the same Kubernetes cluster, so
+    # we only have to sync the list of pods and deployments once
+    ensure_kube_monitors_started if my_server_is_primary?
+
+    # Before syncing the workers check for any orphaned worker rows that don't have
+    # a current pod and delete them
     cleanup_orphaned_worker_rows
+
+    # Update worker deployments with updated settings such as cpu/memory limits
     sync_deployment_settings
   end
 
@@ -87,6 +94,12 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   private
 
+  # In podified there is only one "primary" miq_server whose zone is "default", the
+  # other miq_server instances are simply to allow for additional zones
+  def my_server_is_primary?
+    my_server.zone&.name == "default"
+  end
+
   def cpu_value_eql?(current, desired)
     # Convert to millicores if not already converted: "1" -> 1000; "1000m" -> 1000
     current = current.to_s[-1] == "m" ? current.to_f : current.to_f * 1000
@@ -131,6 +144,8 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   def delete_failed_deployments
+    return unless my_server_is_primary?
+
     failed_deployments.each do |failed|
       orchestrator.delete_deployment(failed)
     end
