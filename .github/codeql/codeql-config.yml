@@ -3,3 +3,4 @@ name: "Custom CodeQL Config"
 paths-ignore:
 - lib/generators/manageiq/plugin/templates
 - lib/generators/manageiq/provider/templates
+- spec
