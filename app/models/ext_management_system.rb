@@ -522,8 +522,12 @@ class ExtManagementSystem < ApplicationRecord
     supports?(:add_volume_mapping)
   end
 
+  def supported_auth_types
+    %w[default]
+  end
+
   def supports_authentication?(authtype)
-    authtype.to_s == "default"
+    supported_auth_types.include?(authtype.to_s)
   end
 
   # UI method for determining which icon to show for a particular EMS
