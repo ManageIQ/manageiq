@@ -1693,11 +1693,6 @@ class Host < ApplicationRecord
   end
   Vmdb::Deprecation.deprecate_methods(self, :host_create_os_types)
 
-  def has_compliance_policies?
-    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "host_compliance_check")
-    !plist.blank?
-  end
-
   def writable_storages
     if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }
       host_storages.reject(&:read_only).map(&:storage)

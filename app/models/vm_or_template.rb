@@ -1277,12 +1277,6 @@ class VmOrTemplate < ApplicationRecord
     )
   end)
 
-
-  def has_compliance_policies?
-    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
-    !plist.blank?
-  end
-
   def classify_with_parent_folder_path_queue(add = true)
     MiqQueue.submit_job(
       :class_name  => self.class.name,

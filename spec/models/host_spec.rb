@@ -3,6 +3,7 @@ RSpec.describe Host do
 
   include_examples "AggregationMixin"
   include_examples "MiqPolicyMixin"
+  include_examples "ComplianceMixin"
 
   it "groups and users joins" do
     user1  = FactoryBot.create(:account_user)

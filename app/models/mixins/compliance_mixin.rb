@@ -9,7 +9,9 @@ module ComplianceMixin
              :inverse_of => :resource,
              :class_name => "Compliance"
 
-    supports :check_compliance
+    supports :check_compliance do
+      unsupported_reason_add(:check_compliance, "No compliance policies assigned") unless has_compliance_policies?
+    end
 
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",
@@ -36,7 +38,12 @@ module ComplianceMixin
 
   def compliance_policies
     target_class = self.class.base_model.name.downcase
+    target_class = "vm" if target_class.include?("template")
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "#{target_class}_compliance_check")
     plist
+  end
+
+  def has_compliance_policies?
+    compliance_policies.present?
   end
 end
