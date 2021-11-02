@@ -1,6 +1,4 @@
-module MiqServer::ServerMonitor
-  extend ActiveSupport::Concern
-
+class MiqServer::ServerMonitor
   def mark_as_not_responding(seconds = miq_server_time_threshold)
     msg = "#{format_full_log_msg} has not responded in #{seconds} seconds."
     _log.info(msg)

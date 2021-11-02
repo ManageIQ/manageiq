@@ -2,7 +2,6 @@ require 'resolv'
 
 class MiqServer < ApplicationRecord
   include_concern 'AtStartup'
-  include_concern 'ServerMonitor'
   include_concern 'ServerSmartProxy'
   include_concern 'ConfigurationManagement'
   include_concern 'EnvironmentManagement'
@@ -11,6 +10,7 @@ class MiqServer < ApplicationRecord
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
 
+  require_nested :ServerMonitor
   require_nested :WorkerManagement
 
   include UuidMixin
