@@ -16,7 +16,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   def sync_from_system
     # All miq_server instances have to reside on the same Kubernetes cluster, so
     # we only have to sync the list of pods and deployments once
-    ensure_kube_monitors_started if my_server_is_primary?
+    ensure_kube_monitors_started
 
     # Before syncing the workers check for any orphaned worker rows that don't have
     # a current pod and delete them
@@ -66,7 +66,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def podified_miq_workers
     # Cockpit is a threaded worker in the orchestrator that spins off a process it monitors and isn't a pod worker.
-    miq_workers.where.not(:type => %w[MiqCockpitWsWorker])
+    MiqWorker.in_my_region.where.not(:type => %w[MiqCockpitWsWorker])
   end
 
   def deployment_resource_constraints_changed?(worker)
@@ -93,12 +93,6 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
   end
 
   private
-
-  # In podified there is only one "primary" miq_server whose zone is "default", the
-  # other miq_server instances are simply to allow for additional zones
-  def my_server_is_primary?
-    my_server.zone&.name == "default"
-  end
 
   def cpu_value_eql?(current, desired)
     # Convert to millicores if not already converted: "1" -> 1000; "1000m" -> 1000

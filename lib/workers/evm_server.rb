@@ -6,11 +6,8 @@ class EvmServer
 
   SERVER_PROCESS_TITLE = 'MIQ Server'.freeze
 
-  attr_accessor :servers_to_monitor
-
   def initialize
     $log ||= Rails.logger
-    @servers_to_monitor = servers_from_db
   end
 
   def start
@@ -27,57 +24,16 @@ class EvmServer
     EvmDatabase.seed_primordial
     check_migrations_up_to_date
 
-    start_servers
-    monitor_servers
+    start_server
+    monitor
   rescue Interrupt => e
     _log.info("Received #{e.message} signal, killing server")
-    kill_servers
+    kill_server
     exit 1
   rescue SignalException => e
     _log.info("Received #{e.message} signal, shutting down server")
-    stop_servers
+    stop_server
     exit 0
-  end
-
-  def start_servers
-    @servers_to_monitor = servers_from_db if servers_to_monitor.empty?
-
-    as_each_server { start_server }
-  end
-
-  def monitor_servers
-    loop do
-      refresh_servers_to_monitor
-      as_each_server { monitor }
-      sleep ::Settings.server.monitor_poll.to_i_with_method
-    end
-  end
-
-  def stop_servers
-    as_each_server { @current_server.shutdown }
-  end
-
-  def kill_servers
-    as_each_server do
-      @current_server.worker_manager.kill_all_workers
-      @current_server.update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
-    end
-  end
-
-  def refresh_servers_to_monitor
-    servers_to_start    = servers_from_db    - servers_to_monitor
-    servers_to_shutdown = servers_to_monitor - servers_from_db
-
-    servers_to_start.each do |s|
-      servers_to_monitor << s
-      impersonate_server(s)
-      start_server
-    end
-
-    servers_to_shutdown.each do |s|
-      servers_to_monitor.delete(s)
-      s.shutdown
-    end
   end
 
   def self.start(*args)
@@ -86,24 +42,13 @@ class EvmServer
 
   private
 
-  def servers_from_db
-    my_server = MiqServer.my_server(true)
-
-    if MiqEnvironment::Command.is_podified?
-      # Ensure that the "primary" miq_server is first in the list of servers.
-      # This ensures that any work that is only done on the primary is completed
-      # before processing the rest of the servers.
-      MiqServer.in_my_region.to_a.unshift(my_server).uniq.compact
-    else
-      [my_server].compact
-    end
-  end
-
   def set_process_title
     Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
   end
 
   def start_server
+    @current_server = MiqServer.my_server(true)
+
     Vmdb::Settings.activate
 
     save_local_network_info
@@ -253,47 +198,5 @@ class EvmServer
     # Start all the configured workers
     #############################################################
     @current_server.start_workers
-  end
-
-  ######################################################################
-  # Warning:
-  #
-  # The following methods can lead to unexpected (and likely unpleasant)
-  # behavior if used out of the scope of the orchestrator process.
-  #
-  # They change the global state which is used to determine the current
-  # server's identity. This intentionally will alter the values of calls
-  # such as MiqServer.my_server and MiqServer.my_guid, and also the
-  # contents of the global ::Settings constant.
-  ######################################################################
-  def as_each_server
-    initial_server = @current_server
-    servers_to_monitor.each do |s|
-      impersonate_server(s)
-      yield
-    end
-  ensure
-    clear_server_caches if @current_server != initial_server
-  end
-
-  def impersonate_server(s)
-    return if s == @current_server
-
-    _log.info("Impersonating server - id: #{s.id}, guid: #{s.guid}")
-
-    MiqServer.my_server_clear_cache
-    MiqServer.my_guid = s.guid
-
-    # It is important that we continue to use the same server instance here.
-    # A lot of "global" state is stored in instance variables on the server.
-    @current_server = s
-    Vmdb::Settings.reset_settings_constant(s.settings_for_resource)
-  end
-
-  def clear_server_caches
-    MiqServer.my_guid = nil
-    MiqServer.my_server_clear_cache
-    # Use Vmdb::Settings.for_resource(:my_server) here as MiqServer.my_server might be nil
-    Vmdb::Settings.reset_settings_constant(Vmdb::Settings.for_resource(:my_server))
   end
 end
