@@ -1,13 +1,5 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   attr_accessor :miq_services
-  attr_reader :systemd_manager
-
-  def initialize(*)
-    super
-
-    require "dbus/systemd"
-    @systemd_manager = DBus::Systemd::Manager.new
-  end
 
   def sync_from_system
     self.miq_services = systemd_services.select { |unit| manageiq_service?(unit) }
@@ -28,6 +20,13 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   private
+
+  def systemd_manager
+    @systemd_manager ||= begin
+      require "dbus/systemd"
+      DBus::Systemd::Manager.new
+    end
+  end
 
   def systemd_stop_services(service_names)
     service_names.each do |service_name|
