@@ -104,11 +104,6 @@ class ContainerImage < ApplicationRecord
     MiqEvent.raise_evm_event(self, 'containerimage_created', {})
   end
 
-  def has_compliance_policies?
-    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "containerimage_compliance_check")
-    !plist.blank?
-  end
-
   def openscap_failed_rules_summary
     openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
   end

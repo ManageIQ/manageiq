@@ -1,4 +1,8 @@
 RSpec.describe MiqTemplate do
+  subject { FactoryBot.create(:template) }
+
+  include_examples "ComplianceMixin"
+
   it ".corresponding_model" do
     expect(described_class.corresponding_model).to eq(Vm)
     expect(ManageIQ::Providers::Vmware::InfraManager::Template.corresponding_model).to eq(ManageIQ::Providers::Vmware::InfraManager::Vm)

@@ -1,5 +1,8 @@
 RSpec.describe Vm do
+  subject { FactoryBot.create(:vm) }
+
   include_examples "OwnershipMixin"
+  include_examples "ComplianceMixin"
 
   it "#corresponding_model" do
     expect(Vm.corresponding_model).to eq(MiqTemplate)

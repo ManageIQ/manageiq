@@ -7,6 +7,7 @@ RSpec.describe PhysicalServer do
   subject { FactoryBot.create(:physical_server, :with_asset_detail) }
 
   include_examples "MiqPolicyMixin"
+  include_examples "ComplianceMixin"
 
   describe '#compatible_firmware_binaries' do
     before { subject.asset_detail.update(**attrs) }

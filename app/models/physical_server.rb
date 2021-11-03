@@ -7,6 +7,7 @@ class PhysicalServer < ApplicationRecord
   include SupportsFeatureMixin
   include EventMixin
   include ProviderObjectMixin
+  include ComplianceMixin
 
   include_concern 'Operations'
 
@@ -46,11 +47,6 @@ class PhysicalServer < ApplicationRecord
     details % {
       :name => name,
     }
-  end
-
-  def has_compliance_policies?
-    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "physicalserver_compliance_check")
-    !plist.blank?
   end
 
   def label_for_vendor

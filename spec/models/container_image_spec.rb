@@ -2,6 +2,7 @@ RSpec.describe ContainerImage do
   subject { FactoryBot.create(:container_image) }
 
   include_examples "MiqPolicyMixin"
+  include_examples "ComplianceMixin"
 
   it "#full_name" do
     image = ContainerImage.new(:name => "fedora")
