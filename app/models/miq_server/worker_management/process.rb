@@ -1,4 +1,10 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
+  attr_accessor :miq_processes
+
+  def sync_from_system
+    self.miq_processes = miq_workers.pluck(:pid).map { |pid| MiqProcess.processInfo(pid) }
+  end
+
   def monitor_workers
     super
 

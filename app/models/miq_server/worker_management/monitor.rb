@@ -15,6 +15,9 @@ module MiqServer::WorkerManagement::Monitor
     # Reload my_server so we can detect role and possibly other changes faster
     my_server.reload
 
+    # Cache a list of the native objects backing the miq_workers (e.g.: pods, services, or processes)
+    sync_from_system
+
     sync_monitor
 
     # Sync the workers after sync'ing the child worker settings

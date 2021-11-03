@@ -7,12 +7,6 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   attr_accessor :deployments_monitor_thread, :pods_monitor_thread
 
-  def sync_monitor
-    sync_from_system
-
-    super
-  end
-
   def sync_from_system
     # All miq_server instances have to reside on the same Kubernetes cluster, so
     # we only have to sync the list of pods and deployments once
