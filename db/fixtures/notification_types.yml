@@ -179,6 +179,11 @@
   :expires_in: 24.hours
   :level: :error
   :audience: global
+- :name: vm_resize_error
+  :message: 'Resize VM %{subject} failed: %{error}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
 - :name: cloud_volume_attach_success
   :message: 'Attaching Volume %{subject} to Instance %{instance_name} completed successfully.'
   :expires_in: 24.hours
