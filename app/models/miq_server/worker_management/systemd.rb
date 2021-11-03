@@ -65,7 +65,7 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   def failed_miq_service_namees
-    failed_miq_services.map { |service| service[:name] }
+    failed_miq_services.pluck(:name)
   end
 
   def systemd_services
