@@ -234,7 +234,7 @@ class EvmServer
     #############################################################
     @current_server.deactivate_all_roles
     @current_server.set_database_owner_role(EvmDatabase.local?)
-    @current_server.monitor_servers
+    @current_server.server_monitor.monitor_servers
     @current_server.monitor_server_roles if @current_server.is_master?
     @current_server.sync_active_roles
     @current_server.set_active_role_flags

@@ -122,6 +122,10 @@ class MiqServer < ApplicationRecord
     end
   end
 
+  def server_monitor
+    @server_monitor ||= ServerMonitor.new(self)
+  end
+
   def worker_manager
     @worker_manager ||= WorkerManagement.build(self)
   end
@@ -196,7 +200,7 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:server_dequeue)          { process_miq_queue } if threshold_exceeded?(:server_dequeue_frequency, now)
 
     Benchmark.realtime_block(:server_monitor) do
-      monitor_servers
+      server_monitor.monitor_servers
       monitor_server_roles if self.is_master?
     end if threshold_exceeded?(:server_monitor_frequency, now)
 
@@ -470,6 +474,20 @@ class MiqServer < ApplicationRecord
 
   def find_other_servers_in_zone
     self.class.where(:zone_id => zone_id).where.not(:id => id).to_a
+  end
+
+  def mark_as_not_responding(seconds = ::Settings.server.heartbeat_timeout.to_i_with_method)
+    msg = "#{format_full_log_msg} has not responded in #{seconds} seconds."
+    _log.info(msg)
+    update(:status => "not responding")
+    deactivate_all_roles
+
+    # TODO: need to add event for this
+    MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_not_responding", :event_details => msg)
+
+    # Mark all messages currently being worked on by the not responding server's workers as error
+    _log.info("Cleaning all active messages being processed by #{format_full_log_msg}")
+    miq_workers.each(&:clean_active_messages)
   end
 
   def display_name

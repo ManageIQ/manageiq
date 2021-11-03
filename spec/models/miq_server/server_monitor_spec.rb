@@ -20,7 +20,7 @@ RSpec.describe "Server Monitor" do
     context "with 1 Server" do
       before do
         @miq_server = EvmSpecHelper.local_miq_server
-        @miq_server.monitor_servers
+        @miq_server.server_monitor.monitor_servers
 
         @miq_server.deactivate_all_roles
         @miq_server.role = 'event, ems_operations, scheduler, reporting'
@@ -278,7 +278,7 @@ RSpec.describe "Server Monitor" do
             @miq_server2.is_master = false
             @miq_server2.save!
 
-            @miq_server1.monitor_servers
+            @miq_server1.server_monitor.monitor_servers
             @miq_server1.monitor_server_roles
             @miq_server2.reload
           end
@@ -292,9 +292,9 @@ RSpec.describe "Server Monitor" do
 
         context "where Non-Master is not responding" do
           before do
-            @miq_server1.monitor_servers
+            @miq_server1.server_monitor.monitor_servers
             Timecop.travel 5.minutes do
-              @miq_server1.monitor_servers
+              @miq_server1.server_monitor.monitor_servers
             end
           end
 
@@ -339,7 +339,7 @@ RSpec.describe "Server Monitor" do
         @roles2.each { |role, priority| @miq_server2.assign_role(ServerRole.find_by(:name => role), priority) }
         @miq_server2.activate_roles("event", "ems_operations", 'scheduler', 'reporting')
 
-        @miq_server1.monitor_servers
+        @miq_server1.server_monitor.monitor_servers
       end
 
       it "should have all roles active after sync between them" do
@@ -356,7 +356,7 @@ RSpec.describe "Server Monitor" do
           @miq_server2.status = "stopped"
           @miq_server2.is_master = false
           @miq_server2.save!
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
         end
 
         it "should takeover as Master" do
@@ -379,7 +379,7 @@ RSpec.describe "Server Monitor" do
       context "where Master is not responding" do
         before do
           Timecop.travel 5.minutes
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
         end
 
         after do
@@ -430,7 +430,7 @@ RSpec.describe "Server Monitor" do
         @roles3 = [['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1]]
         @roles3.each { |role, priority| @miq_server3.assign_role(ServerRole.find_by(:name => role), priority) }
 
-        @miq_server1.monitor_servers
+        @miq_server1.server_monitor.monitor_servers
         @miq_server1.monitor_server_roles if @miq_server1.is_master?
         @miq_server2.reload
         @miq_server3.reload
@@ -438,11 +438,11 @@ RSpec.describe "Server Monitor" do
 
       it "should support multiple failover transitions from stopped master" do
         # server1 is first to start, becomes master
-        @miq_server1.monitor_servers
+        @miq_server1.server_monitor.monitor_servers
 
         # Initialize the bookkeeping around current and last master
-        @miq_server2.monitor_servers
-        @miq_server3.monitor_servers
+        @miq_server2.server_monitor.monitor_servers
+        @miq_server3.server_monitor.monitor_servers
 
         # server1 is master
         expect(@miq_server1.reload.is_master).to be_truthy
@@ -453,7 +453,7 @@ RSpec.describe "Server Monitor" do
         @miq_server1.update(:status => "stopped")
 
         # server 3 becomes master, server 2 hasn't monitored servers yet
-        @miq_server3.monitor_servers
+        @miq_server3.server_monitor.monitor_servers
         expect(@miq_server1.reload.is_master).to be_falsey
         expect(@miq_server2.reload.is_master).to be_falsey
         expect(@miq_server3.reload.is_master).to be_truthy
@@ -462,7 +462,7 @@ RSpec.describe "Server Monitor" do
         @miq_server3.update(:status => "stopped")
 
         # server 2 finally gets to monitor_servers, takes over
-        @miq_server2.monitor_servers
+        @miq_server2.server_monitor.monitor_servers
         expect(@miq_server1.reload.is_master).to be_falsey
         expect(@miq_server2.reload.is_master).to be_truthy
         expect(@miq_server3.reload.is_master).to be_falsey
@@ -470,7 +470,7 @@ RSpec.describe "Server Monitor" do
 
       it "should failover from stopped master on startup" do
         # server 1 is first to start, becomes master
-        @miq_server1.monitor_servers
+        @miq_server1.server_monitor.monitor_servers
 
         # server 1 shuts down
         @miq_server1.update(:status => "stopped")
@@ -480,7 +480,7 @@ RSpec.describe "Server Monitor" do
         expect(@miq_server3.reload.is_master).to be_falsey
 
         # server 3 runs monitor_servers and becomes master
-        @miq_server3.monitor_servers
+        @miq_server3.server_monitor.monitor_servers
         expect(@miq_server1.reload.is_master).to be_falsey
         expect(@miq_server3.reload.is_master).to be_truthy
       end
@@ -533,7 +533,7 @@ RSpec.describe "Server Monitor" do
           @miq_server3.is_master = false
           @miq_server3.save!
 
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
           @miq_server1.monitor_server_roles if @miq_server1.is_master?
           @miq_server2.reload
           @miq_server3.reload
@@ -560,7 +560,7 @@ RSpec.describe "Server Monitor" do
             @miq_server3.status = "started"
             @miq_server3.save!
 
-            @miq_server1.monitor_servers
+            @miq_server1.server_monitor.monitor_servers
             @miq_server1.monitor_server_roles if @miq_server1.is_master?
             @miq_server2.reload
             @miq_server3.reload
@@ -594,7 +594,7 @@ RSpec.describe "Server Monitor" do
           @miq_server2.is_master = false
           @miq_server2.save!
 
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
           @miq_server1.monitor_server_roles if @miq_server1.is_master?
           @miq_server2.reload
           @miq_server3.reload
@@ -621,7 +621,7 @@ RSpec.describe "Server Monitor" do
             @miq_server2.status = "started"
             @miq_server2.save!
 
-            @miq_server1.monitor_servers
+            @miq_server1.server_monitor.monitor_servers
             @miq_server1.monitor_server_roles if @miq_server1.is_master?
             @miq_server2.reload
             @miq_server3.reload
@@ -665,7 +665,7 @@ RSpec.describe "Server Monitor" do
         @miq_server3.role = 'ems_metrics_coordinator, ems_inventory, ems_operations'
         @miq_server3.activate_roles("ems_operations")
 
-        @miq_server1.monitor_servers
+        @miq_server1.server_monitor.monitor_servers
       end
 
       it "should have the master on Server 2" do
@@ -692,7 +692,7 @@ RSpec.describe "Server Monitor" do
           @miq_server2.is_master = false
           @miq_server2.save!
 
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
         end
 
         it "should takeover as Master" do
@@ -729,7 +729,7 @@ RSpec.describe "Server Monitor" do
       context "where Master is not responding" do
         before do
           Timecop.travel 5.minutes
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
         end
 
         after do
@@ -782,12 +782,12 @@ RSpec.describe "Server Monitor" do
         end
 
         it "should allow only 1 Master in the Region" do
-          @miq_server1.monitor_servers
+          @miq_server1.server_monitor.monitor_servers
           @miq_server2.reload
           expect(@miq_server1.is_master).to be_truthy
           expect(@miq_server2.is_master).to be_falsey
 
-          @miq_server2.monitor_servers
+          @miq_server2.server_monitor.monitor_servers
           @miq_server2.reload
           expect(@miq_server1.is_master).to be_truthy
           expect(@miq_server2.is_master).to be_falsey
@@ -843,7 +843,7 @@ RSpec.describe "Server Monitor" do
           end
 
           it "should resolve 1 Master in the Zone" do
-            @miq_server1.monitor_servers
+            @miq_server1.server_monitor.monitor_servers
             @miq_server2.reload
             expect(@miq_server1.is_master?).to be_truthy
             expect(@miq_server2.is_master?).not_to be_truthy
