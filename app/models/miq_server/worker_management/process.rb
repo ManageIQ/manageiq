@@ -2,7 +2,8 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   attr_accessor :miq_processes
 
   def sync_from_system
-    self.miq_processes = miq_workers.pluck(:pid).map { |pid| MiqProcess.processInfo(pid) }
+    require "sys/proctable"
+    self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == ::Process.pid }
   end
 
   def monitor_workers
