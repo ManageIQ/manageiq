@@ -3,7 +3,7 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   def sync_from_system
     require "sys/proctable"
-    self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == ::Process.pid }
+    self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
   end
 
   def monitor_workers

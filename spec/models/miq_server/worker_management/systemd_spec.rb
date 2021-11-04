@@ -44,7 +44,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
       [
         {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
         {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"},
-        {:name => "ssh.service",                                          :active_state => "active"}
+        {:name => "ssh.service",                                                   :active_state => "active"}
       ]
     end
 
