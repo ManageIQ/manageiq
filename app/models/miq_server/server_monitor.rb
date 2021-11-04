@@ -1,22 +1,20 @@
-module MiqServer::ServerMonitor
-  extend ActiveSupport::Concern
+class MiqServer::ServerMonitor
+  include Vmdb::Logging
 
-  def mark_as_not_responding(seconds = miq_server_time_threshold)
-    msg = "#{format_full_log_msg} has not responded in #{seconds} seconds."
-    _log.info(msg)
-    update(:status => "not responding")
-    deactivate_all_roles
+  attr_reader :my_server
 
-    # TODO: need to add event for this
-    MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_not_responding", :event_details => msg)
-
-    # Mark all messages currently being worked on by the not responding server's workers as error
-    _log.info("Cleaning all active messages being processed by #{format_full_log_msg}")
-    miq_workers.each(&:clean_active_messages)
+  def initialize(my_server)
+    @my_server = my_server
   end
 
+  def monitor_servers
+    my_server.reload.is_master? ? monitor_servers_as_master : monitor_servers_as_non_master
+  end
+
+  private
+
   def make_master_server(last_master)
-    _log.info("Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{name}.")
+    _log.info("Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{my_server.name}.")
     parent = MiqRegion.my_region(true)
     parent.lock do
       # See if an ACTIVE server has already taken over
@@ -29,17 +27,16 @@ module MiqServer::ServerMonitor
         return nil
       end
 
-      _log.debug("Setting this server, #{name}, as master server")
+      _log.debug("Setting this server, #{my_server.name}, as master server")
 
       # Set is_master on self, reset every other server in the region, including
       # inactive ones.
       parent.miq_servers.each do |s|
-        s.is_master = (id == s.id)
+        s.is_master = (my_server.id == s.id)
         s.save!
       end
     end
-    _log.info("This server #{name} is now set as the master server, last_master: #{last_master.try(:name)}")
-    self
+    _log.info("This server #{my_server.name} is now set as the master server, last_master: #{last_master.try(:name)}")
   end
 
   def miq_server_time_threshold
@@ -52,7 +49,7 @@ module MiqServer::ServerMonitor
     @last_servers ||= {}
 
     # Check all of the other servers and see if we have new servers, servers have stopped, or servers have stopped responding
-    all_servers = find_other_started_servers_in_region
+    all_servers = my_server.find_other_started_servers_in_region
 
     current_ids = all_servers.collect(&:id)
     last_ids    = @last_servers.keys
@@ -77,7 +74,7 @@ module MiqServer::ServerMonitor
 
         if s.is_master?
           _log.info("#{s.format_short_log_msg} has been detected as a second master and is being demoted.")
-          update(:is_master => false)
+          my_server.update(:is_master => false)
         end
 
       else # unchanged
@@ -117,7 +114,7 @@ module MiqServer::ServerMonitor
     else
       _log.info("Master #{master.format_full_log_msg} has not responded in #{miq_server_time_threshold} seconds.") unless master.nil?
       make_master_server(@last_master.empty? ? nil : @last_master[:record])
-      if reload.is_master?
+      if my_server.reload.is_master?
         master.mark_as_not_responding unless master.nil?
         @last_master = nil
 
@@ -129,8 +126,8 @@ module MiqServer::ServerMonitor
 
         # Raise miq_server_is_master event
         master_msg = master && " from #{master.format_short_log_msg}"
-        msg = "#{format_short_log_msg} has taken over master#{master_msg}"
-        MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_is_master", :event_details => msg)
+        msg = "#{my_server.format_short_log_msg} has taken over master#{master_msg}"
+        MiqEvent.raise_evm_event_queue_in_region(my_server, "evm_server_is_master", :event_details => msg)
 
         monitor_servers_as_master
       else
@@ -138,9 +135,5 @@ module MiqServer::ServerMonitor
         @last_master[:record] = parent.find_master_server
       end
     end
-  end
-
-  def monitor_servers
-    reload.is_master? ? monitor_servers_as_master : monitor_servers_as_non_master
   end
 end
