@@ -8,7 +8,7 @@ class MiqSchedule < ApplicationRecord
 
   validates :name, :uniqueness_when_changed => {:scope => [:userid, :resource_type]}
   validates :name, :description, :resource_type, :run_at, :presence => true
-  validate  :validate_run_at, :validate_file_depot
+  validate  :validate_run_at
 
   before_save :set_start_time_and_prod_default
 
@@ -39,9 +39,9 @@ class MiqSchedule < ApplicationRecord
   serialize :filter
   serialize :run_at
 
-  SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
-  VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
-  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request).freeze
+  SYSTEM_SCHEDULE_CLASSES = %w[MiqReport MiqAlert MiqWidget].freeze
+  VALID_INTERVAL_UNITS = %w[minutely hourly daily weekly monthly once].freeze
+  ALLOWED_CLASS_METHOD_ACTIONS = %w[automation_request].freeze
   IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
   default_value_for :userid,  "system"
@@ -247,35 +247,8 @@ class MiqSchedule < ApplicationRecord
     AutomationRequest.create_from_scheduled_task(user, filter[:uri_parts], parameters)
   end
 
-  def action_db_backup(klass, _at)
-    self.sched_action ||= {}
-    self.sched_action[:options] ||= {}
-    self.sched_action[:options][:userid] = userid
-    opts = self.sched_action[:options]
-    opts[:file_depot_id]   = file_depot.id
-    opts[:miq_schedule_id] = id
-    queue_opts = {:class_name  => klass.name, :method_name => "backup", :args => [opts], :role => "database_operations",
-                  :msg_timeout => ::Settings.task.active_task_timeout.to_i_with_method}
-    task_opts  = {:action => "Database backup", :userid => self.sched_action[:options][:userid]}
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
-  end
-
-  def action_db_gc(klass, _at)
-    self.sched_action ||= {}
-    self.sched_action[:options] ||= {}
-    self.sched_action[:options][:userid] = userid
-    opts = self.sched_action[:options]
-    queue_opts = {:class_name => klass.name, :method_name => "gc", :args => [opts], :role => "database_operations"}
-    task_opts  = {:action => "Database GC", :userid => self.sched_action[:options][:userid]}
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
-  end
-
   def run_automation_request
     action_automation_request(AutomationRequest, nil)
-  end
-
-  def run_adhoc_db_backup
-    action_db_backup(DatabaseBackup, nil)
   end
 
   def action_evaluate_alert(obj, _at)
@@ -322,13 +295,6 @@ class MiqSchedule < ApplicationRecord
         errors.add(:run_at, "run_at is missing :value, run_at: [#{run_at.inspect}]") if run_at[:interval][:unit].to_s.downcase != "once" && run_at[:interval][:value].nil?
         errors.add(:run_at, "run_at interval: [#{run_at[:interval][:unit]}] is not a valid interval") unless VALID_INTERVAL_UNITS.include?(run_at[:interval][:unit])
       end
-    end
-  end
-
-  def validate_file_depot  # TODO: Do we need this if the validations are on the FileDepot classes?
-    if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == "db_backup" && file_depot
-      errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.missing_credentials?
-      errors.add(:file_depot, "is missing uri") if file_depot.uri.blank?
     end
   end
 
