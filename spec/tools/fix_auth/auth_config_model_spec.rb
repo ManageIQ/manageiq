@@ -6,19 +6,12 @@ require "fix_auth/models"
 
 RSpec.describe FixAuth::AuthConfigModel do
   let(:pass)    { "password" }
-  let(:enc_old) { ManageIQ::Password.new.encrypt(pass, "v2", legacy_key) }
+
+  let(:enc_old) { ManageIQ::Password.encrypt(pass, legacy_key) }
   let(:enc_new) { ManageIQ::Password.encrypt(pass) }
 
   let(:legacy_key) { ManageIQ::Password::Key.new }
   let(:options)    { {:legacy_key => legacy_key} }
-
-  before do
-    ManageIQ::Password.keys["alt"] = legacy_key
-  end
-
-  after do
-    ManageIQ::Password.clear_keys
-  end
 
   context "#recrypt" do
     subject { FixAuth::FixMiqRequest }
@@ -41,7 +34,7 @@ RSpec.describe FixAuth::AuthConfigModel do
       let(:legacy_key) { ManageIQ::Password::Key.new(nil, "XamduEwrkgMSeLjl+LQeutAWsLgKi3tR1mdEtclDPyM=") }
 
       it "should upgrade the column" do
-        subject.fix_passwords(request)
+        subject.fix_passwords(request, options)
         expect(request).to be_changed
         new_options = YAML.load(request.options)
 
@@ -68,7 +61,7 @@ RSpec.describe FixAuth::AuthConfigModel do
     end
 
     it "upgrades request (find with prefix, do not stringify keys)" do
-      subject.fix_passwords(request)
+      subject.fix_passwords(request, options)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
       expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
@@ -96,7 +89,7 @@ RSpec.describe FixAuth::AuthConfigModel do
     end
 
     it "upgrades request (find with prefix, do not stringify keys)" do
-      subject.fix_passwords(request)
+      subject.fix_passwords(request, options)
       expect(request).to be_changed
       new_options = YAML.load(request.options)
       expect(new_options[:dialog]['password::special'.to_sym]).to be_encrypted(pass)
