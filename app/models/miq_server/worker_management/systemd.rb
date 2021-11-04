@@ -1,6 +1,4 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
-  attr_accessor :miq_services
-
   def sync_from_system
     self.miq_services = systemd_services.select { |unit| manageiq_service?(unit) }
   end
@@ -20,6 +18,8 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   private
+
+  attr_accessor :miq_services
 
   def systemd_manager
     @systemd_manager ||= begin

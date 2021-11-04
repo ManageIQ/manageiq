@@ -49,7 +49,7 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
     end
 
     it "filters out non-miq services" do
-      expect(server.worker_manager.miq_services.count).to eq(2)
+      expect(server.worker_manager.send(:miq_services).count).to eq(2)
     end
   end
 

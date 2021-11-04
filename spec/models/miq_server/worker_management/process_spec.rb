@@ -26,7 +26,7 @@ RSpec.describe MiqServer::WorkerManagement::Process do
 
       it "filters out non-workers" do
         server.worker_manager.sync_from_system
-        expect(server.worker_manager.miq_processes).to be_empty
+        expect(server.worker_manager.send(:miq_processes)).to be_empty
       end
     end
 
@@ -48,7 +48,7 @@ RSpec.describe MiqServer::WorkerManagement::Process do
 
       it "filters out non-workers" do
         server.worker_manager.sync_from_system
-        expect(server.worker_manager.miq_processes.count).to eq(1)
+        expect(server.worker_manager.send(:miq_processes).count).to eq(1)
       end
     end
   end

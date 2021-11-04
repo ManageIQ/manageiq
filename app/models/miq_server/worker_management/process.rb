@@ -1,6 +1,4 @@
 class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
-  attr_accessor :miq_processes
-
   def sync_from_system
     require "sys/proctable"
     self.miq_processes = Sys::ProcTable.ps.select { |proc| proc.ppid == my_server.pid }
@@ -64,4 +62,8 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
     true
   end
+
+  private
+
+  attr_accessor :miq_processes
 end
