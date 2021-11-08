@@ -79,10 +79,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def get_message
-    if dequeue_method_via_drb? && @worker_monitor_drb
-      get_message_via_drb
-    elsif dequeue_method_via_miq_messaging?
+    if dequeue_method_via_miq_messaging?
       get_message_via_miq_messaging
+    elsif dequeue_method_via_drb? && @worker_monitor_drb
+      get_message_via_drb
     else
       get_message_via_sql
     end
