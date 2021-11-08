@@ -70,8 +70,7 @@ RSpec.describe FixAuth::AuthModel do
       end
 
       it "should not encrypt plaintext columns" do
-        subject.fix_passwords(plain, options)
-        expect(plain).to_not be_password_changed
+        expect { subject.fix_passwords(plain, options) }.to raise_error(ManageIQ::Password::PasswordError, "cannot decrypt plaintext string")
       end
 
       it "should raise exception for bad encryption" do
