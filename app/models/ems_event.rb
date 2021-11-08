@@ -48,20 +48,20 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    if MiqQueue.messaging_type == "miq_queue"
+    if MiqQueue.messaging_client('event_handler').present?
+      MiqQueue.messaging_client('event_handler').publish_topic(
+        :service => "manageiq.#{MiqEventHandler.default_queue_name}",
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
+    else
       MiqQueue.submit_job(
         :service     => "event",
         :target_id   => ems_id,
         :class_name  => "EmsEvent",
         :method_name => meth,
         :args        => [event]
-      )
-    else
-      MiqQueue.messaging_client('event_handler')&.publish_topic(
-        :service => "manageiq.#{MiqEventHandler.default_queue_name}",
-        :sender  => ems_id,
-        :event   => event[:event_type],
-        :payload => event
       )
     end
   end
