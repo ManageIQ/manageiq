@@ -12,6 +12,8 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
   end
 
   context "#cleanup_failed_systemd_services" do
+    before { server.worker_manager.sync_from_system }
+
     context "with no failed services" do
       let(:units) { [{:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :description => "ManageIQ Generic Worker", :load_state => "loaded", :active_state => "active", :sub_state => "plugged", :job_id => 0, :job_type => "", :job_object_path => "/"}] }
 
@@ -35,21 +37,25 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
     end
   end
 
-  context "#systemd_all_miq_services" do
+  context "#sync_from_system" do
+    before { server.worker_manager.sync_from_system }
+
     let(:units) do
       [
         {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
         {:name => "manageiq-ui@cfe2c489-5c93-4b77-8620-cf6b1d3ec595.service",      :active_state => "active"},
-        {:name => "ssh.service",                                          :active_state => "active"}
+        {:name => "ssh.service",                                                   :active_state => "active"}
       ]
     end
 
     it "filters out non-miq services" do
-      expect(server.worker_manager.systemd_all_miq_services.count).to eq(2)
+      expect(server.worker_manager.send(:miq_services).count).to eq(2)
     end
   end
 
-  context "#systemd_failed_miq_services" do
+  context "#failed_miq_services (private)" do
+    before { server.worker_manager.sync_from_system }
+
     let(:units) do
       [
         {:name => "manageiq-generic@68400a7e-1747-4f10-be2a-d0fc91b705ca.service", :active_state => "failed"},
@@ -58,13 +64,13 @@ RSpec.describe MiqServer::WorkerManagement::Systemd do
     end
 
     it "filters out only failed services" do
-      expect(server.worker_manager.systemd_failed_miq_services.count).to eq(1)
+      expect(server.worker_manager.send(:failed_miq_services).count).to eq(1)
     end
   end
 
-  context "#systemd_miq_service_base_names (private)" do
+  context "#manageiq_service_base_names (private)" do
     it "returns the minimal_class_name" do
-      expect(server.worker_manager.send(:systemd_miq_service_base_names)).to include("manageiq-generic", "manageiq-ui")
+      expect(server.worker_manager.send(:manageiq_service_base_names)).to include("manageiq-generic", "manageiq-ui")
     end
   end
 

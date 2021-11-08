@@ -1,4 +1,8 @@
 class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
+  def sync_from_system
+    self.miq_services = systemd_services.select { |unit| manageiq_service?(unit) }
+  end
+
   def cleanup_failed_workers
     super
 
@@ -6,22 +10,16 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
   end
 
   def cleanup_failed_systemd_services
-    failed_service_names = systemd_failed_miq_services.map { |service| service[:name] }
-    return if failed_service_names.empty?
+    service_names = failed_miq_service_namees
+    return if service_names.empty?
 
-    _log.info("Disabling failed unit files: [#{failed_service_names.join(", ")}]")
-    systemd_stop_services(failed_service_names)
-  end
-
-  def systemd_failed_miq_services
-    miq_services(systemd_failed_services)
-  end
-
-  def systemd_all_miq_services
-    miq_services(systemd_services)
+    _log.info("Disabling failed unit files: [#{service_names.join(", ")}]")
+    systemd_stop_services(service_names)
   end
 
   private
+
+  attr_accessor :miq_services
 
   def systemd_manager
     @systemd_manager ||= begin
@@ -46,14 +44,12 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     Pathname.new("/lib/systemd/system")
   end
 
-  def miq_services(services)
-    services.select { |unit| systemd_miq_service_base_names.include?(systemd_service_base_name(unit)) }
+  def manageiq_service?(unit)
+    manageiq_service_base_names.include?(systemd_service_base_name(unit))
   end
 
-  def systemd_miq_service_base_names
-    @systemd_miq_service_base_names ||= begin
-      MiqWorkerType.worker_classes.map(&:service_base_name)
-    end
+  def manageiq_service_base_names
+    @manageiq_service_base_names ||= MiqWorkerType.worker_classes.map(&:service_base_name)
   end
 
   def systemd_service_name(unit)
@@ -64,8 +60,12 @@ class MiqServer::WorkerManagement::Systemd < MiqServer::WorkerManagement
     systemd_service_name(unit).split("@").first
   end
 
-  def systemd_failed_services
-    systemd_services.select { |service| service[:active_state] == "failed" }
+  def failed_miq_services
+    miq_services.select { |service| service[:active_state] == "failed" }
+  end
+
+  def failed_miq_service_namees
+    failed_miq_services.pluck(:name)
   end
 
   def systemd_services
