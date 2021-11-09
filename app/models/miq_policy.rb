@@ -56,11 +56,9 @@ class MiqPolicy < ApplicationRecord
 
   virtual_column :display_name, :type => :string
 
-  @@associations_to_get_policies = [:parent_enterprise, :ext_management_system, :parent_datacenter, :ems_cluster, :parent_resource_pool, :host]
-
   attr_accessor :reserved
 
-  class_attribute :associations_to_get_policies
+  class_attribute :associations_to_get_policies, :default => [:parent_enterprise, :ext_management_system, :parent_datacenter, :ems_cluster, :parent_resource_pool, :host]
 
   @@built_in_policies = nil
 
@@ -448,7 +446,7 @@ class MiqPolicy < ApplicationRecord
 
     # get profiles and policies from associations
     assoc_policies =
-      @@associations_to_get_policies.collect do |assoc|
+      associations_to_get_policies.collect do |assoc|
         next unless target.respond_to?(assoc)
 
         obj = target.send(assoc)

@@ -1,4 +1,8 @@
 RSpec.describe MiqPolicy do
+  it "associations_to_get_policies have defaults" do
+    expect(described_class.associations_to_get_policies).to include(:ext_management_system)
+  end
+
   it "doesn't access database when unchanged model is saved" do
     m = FactoryBot.create(:miq_policy)
     expect { m.valid? }.not_to make_database_queries
