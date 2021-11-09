@@ -36,9 +36,11 @@ module FixAuth
         else
           recrypt_password(old_value, options[:legacy_key])
         end
-      rescue
+      rescue => err
         if options[:invalid]
           hardcode(old_value, options[:invalid])
+        elsif err.kind_of?(ManageIQ::Password::PasswordError) && err.to_s == "cannot decrypt plaintext string"
+          old_value
         else
           raise
         end
