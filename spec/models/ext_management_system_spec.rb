@@ -922,4 +922,21 @@ RSpec.describe ExtManagementSystem do
       expect(ems_container.queue_name_for_ems_operations).to eql('generic')
     end
   end
+
+  describe '#supports_create_security_group' do
+    it "defaults to false" do
+      ems = ExtManagementSystem.new
+      expect(ems.supports_create_security_group).to be(false)
+    end
+
+    it "defaults to false" do
+      ems = ExtManagementSystem.new
+      expect(ems.supports_block_storage).to be(false)
+    end
+
+    it "detects security group for provider" do
+      ems = FactoryBot.build(:ems_openstack_network)
+      expect(ems.supports_create_security_group).to be(true)
+    end
+  end
 end

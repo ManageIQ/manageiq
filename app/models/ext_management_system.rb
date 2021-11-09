@@ -3,6 +3,7 @@ class ExtManagementSystem < ApplicationRecord
   include SupportsFeatureMixin
   include ExternalUrlMixin
   include VerifyCredentialsMixin
+  include_concern "SupportsAttribute"
 
   hide_attribute "aggregate_memory" # better to use total_memory (coin toss - they're similar)
 
@@ -170,11 +171,6 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_volume_create
   supports_not :console
   supports_not :create_host_aggregate
-  supports     :create_security_group do
-    unless SecurityGroup.class_by_ems(self).supports?(:create)
-      unsupported_reason_add(:create_security_group, _('Security Group creation is not supported'))
-    end
-  end
   supports_not :discovery
   supports_not :ems_network_new
   supports_not :ems_storage_new
@@ -307,26 +303,27 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
-  virtual_column :supports_auth_key_pair_create, :type => :boolean
-  virtual_column :supports_block_storage,  :type => :boolean
-  virtual_column :supports_object_storage, :type => :boolean
-  virtual_column :supports_cloud_tenants,  :type => :boolean
-  virtual_column :supports_volume_multiattachment, :type => :boolean
-  virtual_column :supports_volume_resizing, :type => :boolean
-  virtual_column :supports_cloud_object_store_container_create, :type => :boolean
-  virtual_column :supports_cinder_volume_types, :type => :boolean
-  virtual_column :supports_cloud_subnet_create, :type => :boolean
-  virtual_column :supports_cloud_volume, :type => :boolean
-  virtual_column :supports_cloud_volume_create, :type => :boolean
-  virtual_column :supports_create_flavor, :type => :boolean
-  virtual_column :supports_volume_availability_zones, :type => :boolean
-  virtual_column :supports_create_security_group, :type => :boolean
-  virtual_column :supports_create_host_aggregate, :type => :boolean
-  virtual_column :supports_create_network_router, :type => :boolean
-  virtual_column :supports_storage_services, :type => :boolean
-  virtual_column :supports_add_storage, :type => :boolean
-  virtual_column :supports_add_host_initiator, :type => :boolean
-  virtual_column :supports_add_volume_mapping, :type => :boolean
+
+  supports_attribute :feature => :auth_key_pair_create
+  supports_attribute :feature => :block_storage
+  supports_attribute :feature => :object_storage
+  supports_attribute :feature => :cloud_tenants
+  supports_attribute :feature => :volume_multiattachment
+  supports_attribute :feature => :volume_resizing
+  supports_attribute :feature => :cloud_object_store_container_create
+  supports_attribute :feature => :cinder_volume_types
+  supports_attribute :feature => :cloud_subnet_create
+  supports_attribute :feature => :cloud_volume
+  supports_attribute :feature => :cloud_volume_create
+  supports_attribute :supports_create_flavor, :child_model => "Flavor"
+  supports_attribute :feature => :volume_availability_zones
+  supports_attribute :supports_create_security_group, :child_model => "SecurityGroup"
+  supports_attribute :feature => :create_host_aggregate
+  supports_attribute :feature => :create_network_router
+  supports_attribute :feature => :storage_services
+  supports_attribute :feature => :add_storage
+  supports_attribute :feature => :add_host_initiator
+  supports_attribute :feature => :add_volume_mapping
 
   virtual_sum :total_vcpus,        :hosts, :total_vcpus
   virtual_sum :total_memory,       :hosts, :ram_size
@@ -507,19 +504,6 @@ class ExtManagementSystem < ApplicationRecord
   def self.belongsto_descendant_class(name)
     return unless (descendant = BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME.keys.detect { |x| name.end_with?(x) })
     BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME[descendant]
-  end
-
-  # UI methods for determining availability of fields
-  def supports_add_storage
-    supports?(:add_storage)
-  end
-
-  def supports_add_host_initiator
-    supports?(:add_host_initiator)
-  end
-
-  def supports_add_volume_mapping
-    supports?(:add_volume_mapping)
   end
 
   def supported_auth_types
@@ -856,74 +840,6 @@ class ExtManagementSystem < ApplicationRecord
   def total_vms_never;     vm_count_by_state("never");     end
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
-
-  def supports_auth_key_pair_create
-    supports?(:auth_key_pair_create)
-  end
-
-  def supports_block_storage
-    supports?(:block_storage)
-  end
-
-  def supports_object_storage
-    supports?(:object_storage)
-  end
-
-  def supports_cloud_tenants
-    supports?(:cloud_tenants)
-  end
-
-  def supports_volume_multiattachment
-    supports?(:volume_multiattachment)
-  end
-
-  def supports_volume_resizing
-    supports?(:volume_resizing)
-  end
-
-  def supports_create_flavor
-    class_by_ems(:Flavor)&.supports?(:create) || false
-  end
-
-  def supports_cloud_object_store_container_create
-    supports?(:cloud_object_store_container_create)
-  end
-
-  def supports_create_host_aggregate
-    supports?(:create_host_aggregate)
-  end
-
-  def supports_create_network_router
-    supports?(:create_network_router)
-  end
-
-  def supports_cinder_volume_types
-    supports?(:cinder_volume_types)
-  end
-
-  def supports_cloud_subnet_create
-    supports?(:cloud_subnet_create)
-  end
-
-  def supports_cloud_volume
-    supports?(:cloud_volume)
-  end
-
-  def supports_cloud_volume_create
-    supports?(:cloud_volume_create)
-  end
-
-  def supports_volume_availability_zones
-    supports?(:volume_availability_zones)
-  end
-
-  def supports_create_security_group
-    supports?(:create_security_group)
-  end
-
-  def supports_storage_services
-    supports?(:storage_services)
-  end
 
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
