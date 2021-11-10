@@ -21,4 +21,28 @@ RSpec.describe EventStream do
       end
     end
   end
+
+  context "description" do
+    it "raises NotImplementedError, for subclasses to implement" do
+      expect { described_class.description }.to raise_error(NotImplementedError)
+    end
+  end
+
+  context "timeline_options" do
+    it "has correct structure" do
+      MiqEventDefinitionSet.seed
+      options = described_class.timeline_options
+      expect(options.keys.sort).to eq %i[EmsEvent MiqEvent]
+
+      expect(options[:EmsEvent].keys.sort).to eq %i[description group_levels group_names]
+      expect(options[:EmsEvent][:description]).to eq(EmsEvent.description)
+      expect(options[:EmsEvent][:group_levels].keys.sort).to eq %i[critical detail warning]
+      expect(options[:EmsEvent][:group_names].keys).to include(*%i[addition configuration console deletion devices])
+
+      expect(options[:MiqEvent].keys.sort).to eq %i[description group_levels group_names]
+      expect(options[:MiqEvent][:description]).to eq(MiqEvent.description)
+      expect(options[:MiqEvent][:group_levels].keys.sort).to eq %i[failure success]
+      expect(options[:MiqEvent][:group_names].keys).to include(*%i[auth_validation authentication compliance container_operations ems_operations evm_operations])
+    end
+  end
 end

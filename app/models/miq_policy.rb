@@ -11,6 +11,9 @@ class MiqPolicy < ApplicationRecord
                                  PhysicalServer
                                  Vm).freeze
 
+  CONDITION_SUCCESS = N_("Success")
+  CONDITION_FAILURE = N_("Failure")
+
   def self.policy_towhat_applies_to_classes
     TOWHAT_APPLIES_TO_CLASSES.index_with { |key| ui_lookup(:model => key) }
   end
