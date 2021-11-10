@@ -164,26 +164,6 @@ RSpec.describe Zone do
     expect(described_class.new.settings).to be_kind_of(Hash)
   end
 
-  context "ConfigurationManagementMixin" do
-    describe "#remote_cockpit_ws_miq_server" do
-      before do
-        ServerRole.seed
-        _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      end
-
-      it "none when not enabled" do
-        expect(@zone.remote_cockpit_ws_miq_server).to eq(nil)
-      end
-
-      it "server when enabled" do
-        server = FactoryBot.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
-        server.assign_role(ServerRole.find_by(:name => 'cockpit_ws'), 1)
-        server.activate_roles('cockpit_ws')
-        expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
-      end
-    end
-  end
-
   context "maintenance zone" do
     before { MiqRegion.seed }
 

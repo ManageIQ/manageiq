@@ -8,7 +8,6 @@ class ContainerNode < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include ArchivedMixin
-  include CockpitMixin
   include CustomActionsMixin
   include_concern 'Purging'
 
@@ -81,11 +80,6 @@ class ContainerNode < ApplicationRecord
 
   def kubernetes_hostname
     labels.find_by(:name => "kubernetes.io/hostname").try(:value)
-  end
-
-  def cockpit_url
-    address = kubernetes_hostname || name
-    MiqCockpit::WS.url(cockpit_server, cockpit_worker, address)
   end
 
   def evaluate_alert(_alert_id, _event)

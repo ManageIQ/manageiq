@@ -4260,10 +4260,6 @@ msgstr ""
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr ""
 
-#: ../app/models/miq_cockpit_ws_worker/runner.rb:44
-msgid "Cannot call start_cockpit_ws if a process already exists"
-msgstr ""
-
 #: ../app/models/mixins/service_mixin.rb:17
 msgid "Cannot connect service with nil ID."
 msgstr ""
@@ -6433,11 +6429,6 @@ msgstr ""
 #. TRANSLATORS: file: product/compare/ems_clusters.yaml
 #: ../config/yaml_strings.rb:4494
 msgid "Clusters: Compare Template"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:2970
-msgid "Cockpit Console"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -21093,11 +21084,6 @@ msgstr ""
 msgid "Hardware|Vmotion enabled"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.column.has_active_cockpit_ws
-#: ../config/dictionary_strings.rb:964
-msgid "Has Active Cockpit Ws"
-msgstr ""
-
 #. TRANSLATORS: en.yml key: dictionary.column.has_active_remote_console
 #: ../config/dictionary_strings.rb:966
 msgid "Has Active Remote Console"
@@ -29787,10 +29773,6 @@ msgstr ""
 msgid "MiqServer|Guid"
 msgstr ""
 
-#: ../config/model_attributes.rb:3239
-msgid "MiqServer|Has active cockpit ws"
-msgstr ""
-
 #: ../config/model_attributes.rb:3240
 msgid "MiqServer|Has active remote console"
 msgstr ""
@@ -32574,11 +32556,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2964
 msgid "Open a web-based console for VMs"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:2972
-msgid "Open the Cockpit console for VMs"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -43624,18 +43601,6 @@ msgstr ""
 
 #: ../app/models/vm/operations.rb:14
 msgid "The web-based HTML5 Console is not supported"
-msgstr ""
-
-#: ../app/models/mixins/cockpit_support_mixin.rb:10
-msgid ""
-"The web-based console is not available because the 'Cockpit' role is not enabl"
-"ed"
-msgstr ""
-
-#: ../app/helpers/application_helper/button/cockpit_console.rb:18
-msgid ""
-"The web-based console is not available because the Windows platform is not sup"
-"ported"
 msgstr ""
 
 #: ../app/models/storage.rb:518
@@ -69579,14 +69544,6 @@ msgstr ""
 msgid "Open a native console for this VM"
 msgstr ""
 
-#: ../app/helpers/application_helper/toolbar/x_vm_center.rb:295
-#: ../app/helpers/application_helper/toolbar/container_node_center.rb:78
-#: ../app/helpers/application_helper/toolbar/cloud/instance_operations_button_group_mixin.rb:112
-msgid ""
-"Open a new browser window with Cockpit for this VM.  This requires that Cockpi"
-"t is pre-configured on the VM."
-msgstr ""
-
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:79
 #: ../app/helpers/application_helper/toolbar/container_node_center.rb:39
 msgid ""
@@ -77224,22 +77181,6 @@ msgstr ""
 
 #: ../app/helpers/application_helper/button/vm_html5_console.rb:9
 msgid "The web-based VNC console is not available because the VM is not powered on"
-msgstr ""
-
-#: ../app/helpers/application_helper/button/cockpit_console.rb:6
-msgid ""
-"The web-based console is not available because the 'Cockpit' role is not enabl"
-"ed."
-msgstr ""
-
-#: ../app/helpers/application_helper/button/cockpit_console.rb:13
-msgid ""
-"The web-based console is not available because the Container Node is not power"
-"ed on"
-msgstr ""
-
-#: ../app/helpers/application_helper/button/cockpit_console.rb:11
-msgid "The web-based console is not available because the VM is not powered on"
 msgstr ""
 
 #: ../app/controllers/dashboard_controller.rb:408

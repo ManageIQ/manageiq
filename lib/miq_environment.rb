@@ -30,11 +30,6 @@ module MiqEnvironment
       @supports_memcached = is_linux? && is_appliance? && !is_container? && supports_command?('memcached') && supports_command?('memcached-tool') && supports_command?('service')
     end
 
-    def self.supports_apache?
-      return @supports_apache unless @supports_apache.nil?
-      @supports_apache = is_appliance? && supports_command?('apachectl')
-    end
-
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
       @supports_systemd = is_appliance? && !is_container? && supports_command?('systemctl')

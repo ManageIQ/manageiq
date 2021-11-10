@@ -44,7 +44,6 @@ module MiqServer::RoleManagement
     self.has_active_userinterface  = has_active_role?("user_interface")
     self.has_active_remote_console = has_active_role?("remote_console")
     self.has_active_webservices    = has_active_role?("web_services")
-    self.has_active_cockpit_ws     = has_active_role?("cockpit_ws")
     save
   end
 

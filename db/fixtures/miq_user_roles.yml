@@ -183,7 +183,6 @@
   - volume_mapping_show
   - volume_mapping_show_list
   - volume_mapping_tag
-  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -277,7 +276,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_native_console
   - vm_perf
   - vm_policy_sim
@@ -379,7 +377,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_perf
   - vm_show
   - vm_show_list
@@ -440,7 +437,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_drift
   - vm_edit
   - vm_refresh
@@ -568,7 +564,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_drift
   - vm_edit
   - vm_perf
@@ -751,7 +746,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -838,7 +832,6 @@
   - vm_infra_explorer
   - vm_html5_console
   - vm_vmrc_console
-  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -1103,7 +1096,6 @@
   - vm_html5_console
   - vm_vmrc_console
   - volume_mapping
-  - cockpit_console
   - vm_compare
   - vm_drift
   - vm_perf
@@ -1186,7 +1178,6 @@
   - vm_chargeback
   - vm_vmrc_console
   - vm_html5_console
-  - cockpit_console
   - sui
 
 - :name: EvmRole-vm_user
@@ -1245,7 +1236,6 @@
   - vm_chargeback
   - vm_vmrc_console
   - vm_html5_console
-  - cockpit_console
   - sui_vm_details_view
   - sui_vm_html5_console
   - sui_vm_vmrc_console
