@@ -2459,8 +2459,8 @@ RSpec.describe Rbac::Filterer do
     end
 
     it "support aaarm object" do
-      expect(LiveMetric).to receive(:find).with(:all, :include => {:a => {}}).and_return([:good])
-      expect(described_class.filtered(LiveMetric, :include_for_find => {:a => {}}).to_a).to match_array([:good])
+      expect(VimPerformanceTrend).to receive(:find).with(:all, :include => {:a => {}}).and_return([:good])
+      expect(described_class.filtered(VimPerformanceTrend, :include_for_find => {:a => {}}).to_a).to match_array([:good])
     end
 
     # it returns objects too
