@@ -4,7 +4,7 @@ MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
 
-RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
+RUN dnf -y --setopt=tsflags=nodocs install \
       memcached               \
       postgresql-server       \
       mod_ssl                 \
