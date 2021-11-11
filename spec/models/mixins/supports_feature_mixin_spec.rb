@@ -236,7 +236,58 @@ RSpec.describe SupportsFeatureMixin do
     end
   end
 
+  let(:model) do
+    define_model("Model", ActiveRecord::Base,
+                 :publish => true,
+                 :archive => true,
+                 :delete  => false,
+                 :fake    => 'We keep it real!')
+  end
+
+  describe ".supporting" do
+    it 'detect' do
+      ca = define_subclass("ProviderA", model, :fake => true)
+      cb = define_subclass("ProviderB", model, :publish => false, :delete => true, :fake => true)
+      define_subclass("ProviderC", model, :publish => false, :delete => true, :fake => true)
+
+      ca.create(:name => "a1")
+      ca.create(:name => "a2")
+      cb.create(:name => "b1")
+
+      expect(model.supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
+      expect(model.supporting(:delete).map(&:name)).to eq(%w[b1])
+      expect(model.supporting(:fake).map(&:name)).to match_array(%w[a1 a2 b1])
+    end
+  end
+
+  describe ".providers_supporting" do
+    it 'detect' do
+      providera = define_subclass("ProviderA", ExtManagementSystem)
+      providerb = define_subclass("ProviderB", ExtManagementSystem)
+      providerc = define_subclass("ProviderC", ExtManagementSystem)
+
+      define_subclass(providera.name, model, :fake => true)
+      define_subclass(providerb.name, model, :publish => false, :delete => true, :fake => true)
+      define_subclass(providerc.name, model, :publish => false, :delete => true, :fake => true)
+
+      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a1")
+      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a2")
+      FactoryBot.create(:ext_management_system, :type => providerb.name, :name => "b1")
+
+      expect(model.providers_supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
+      expect(model.providers_supporting(:delete).map(&:name)).to eq(%w[b1])
+      expect(model.providers_supporting(:fake).map(&:name)).to match_array(%w[a1 a2 b1])
+    end
+  end
+
   private
+
+  def define_model(class_name, parent, supporting_values = {})
+    define_supporting_class(class_name, parent, supporting_values) do |r|
+      r.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
+      yield(r) if block_given?
+    end
+  end
 
   def define_subclass(module_name, parent, supports_values = {})
     define_supporting_class("#{module_name}::#{parent.name}", parent, supports_values)
