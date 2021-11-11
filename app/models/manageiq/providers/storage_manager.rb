@@ -62,12 +62,5 @@ module ManageIQ::Providers
       define_method(:route_key) { "ems_storages" }
       define_method(:singular_route_key) { "ems_storage" }
     end
-
-    # Allow only adding supported types. Non-supported types for adding will not be visible in the Type field
-    def self.supported_types_and_descriptions_hash
-      supported_subclasses.select { |k| k.supports?(:ems_storage_new) }.each_with_object({}) do |klass, hash|
-        hash[klass.ems_type] = klass.description
-      end
-    end
   end
 end

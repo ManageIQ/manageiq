@@ -29,7 +29,7 @@ class Provider < ApplicationRecord
     leaf_subclasses | descendants.select { |d| d.try(:acts_as_sti_leaf_class?) }
   end
 
-  def self.supported_subclasses
+  def self.permitted_subclasses
     concrete_subclasses
   end
 

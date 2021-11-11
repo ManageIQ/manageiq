@@ -20,11 +20,11 @@ class ExtManagementSystem < ApplicationRecord
     concrete_subclasses.collect(&:ems_type)
   end
 
-  def self.supported_types
-    supported_subclasses.collect(&:ems_type)
+  def self.permitted_types
+    permitted_subclasses.collect(&:ems_type)
   end
 
-  def self.supported_subclasses
+  def self.permitted_subclasses
     concrete_subclasses.select(&:permitted?)
   end
 
@@ -33,12 +33,8 @@ class ExtManagementSystem < ApplicationRecord
   end
   delegate :permitted?, :to => :class
 
-  def self.supported_types_and_descriptions_hash
-    supported_subclasses.each_with_object({}) { |klass, hash| hash[klass.ems_type] = klass.description }
-  end
-
   def self.subclasses_supports?(feature)
-    supported_subclasses.select { |subclass| subclass.supports?(feature) }
+    permitted_subclasses.select { |subclass| subclass.supports?(feature) }
   end
 
   def self.api_allowed_attributes
@@ -46,7 +42,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_types_for_create
-    supported_subclasses.select(&:supported_for_create?)
+    permitted_subclasses.select(&:supported_for_create?)
   end
 
   def self.supported_types_for_catalog
@@ -70,7 +66,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.provider_create_params
-    supported_types_for_create.each_with_object({}) do |ems_type, create_params|
+    permitted_types_for_create.each_with_object({}) do |ems_type, create_params|
       create_params[ems_type.name] = ems_type.params_for_create if ems_type.respond_to?(:params_for_create)
     end
   end
@@ -1051,7 +1047,7 @@ class ExtManagementSystem < ApplicationRecord
   private
 
   def validate_ems_type
-    errors.add(:base, "emstype #{self.class.name} is not supported for create") unless ExtManagementSystem.supported_types_and_descriptions_hash.key?(emstype)
+    errors.add(:base, "emstype #{self.class.name} is not permitted for create") unless ExtManagementSystem.permitted_types.include?(emstype)
   end
 
   def disable!(validate: true)
