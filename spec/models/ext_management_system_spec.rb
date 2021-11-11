@@ -79,65 +79,53 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
-  describe ".supported_subclasses" do
+  describe ".permitted_subclasses" do
     context "on the EmsCloud subclass" do
       it "only returns cloud types" do
-        cloud_supported_subclasses = EmsCloud.supported_subclasses
+        cloud_permitted_subclasses = EmsCloud.permitted_subclasses
 
-        expect(cloud_supported_subclasses).to     include(ManageIQ::Providers::Amazon::CloudManager)
-        expect(cloud_supported_subclasses).not_to include(ManageIQ::Providers::Vmware::InfraManager)
+        expect(cloud_permitted_subclasses).to     include(ManageIQ::Providers::Amazon::CloudManager)
+        expect(cloud_permitted_subclasses).not_to include(ManageIQ::Providers::Vmware::InfraManager)
       end
     end
 
     context "on the EmsInfra subclass" do
       it "only returns infra types" do
-        infra_supported_subclasses = EmsInfra.supported_subclasses
+        infra_permitted_subclasses = EmsInfra.permitted_subclasses
 
-        expect(infra_supported_subclasses).to     include(ManageIQ::Providers::Vmware::InfraManager)
-        expect(infra_supported_subclasses).not_to include(ManageIQ::Providers::Amazon::CloudManager)
+        expect(infra_permitted_subclasses).to     include(ManageIQ::Providers::Vmware::InfraManager)
+        expect(infra_permitted_subclasses).not_to include(ManageIQ::Providers::Amazon::CloudManager)
       end
     end
   end
 
-  describe ".supported_types" do
+  describe ".permitted_types" do
     it "with default permissions" do
-      expect(described_class.supported_types).to include("ec2", "vmwarews")
+      expect(described_class.permitted_types).to include("ec2", "vmwarews")
     end
 
     it "with removed permissions" do
       allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).and_return(true)
       allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).with("vmwarews").and_return(false)
-      expect(described_class.supported_types).not_to include("vmwarews")
+      expect(described_class.permitted_types).not_to include("vmwarews")
     end
 
     context "on the EmsCloud subclass" do
       it "only returns cloud types" do
-        cloud_supported_types = EmsCloud.supported_types
+        cloud_permitted_types = EmsCloud.permitted_types
 
-        expect(cloud_supported_types).to     include("ec2")
-        expect(cloud_supported_types).not_to include("vmwarews")
+        expect(cloud_permitted_types).to     include("ec2")
+        expect(cloud_permitted_types).not_to include("vmwarews")
       end
     end
 
     context "on the EmsInfra subclass" do
       it "only returns infra types" do
-        infra_supported_types = EmsInfra.supported_types
+        infra_permitted_types = EmsInfra.permitted_types
 
-        expect(infra_supported_types).to     include("vmwarews")
-        expect(infra_supported_types).not_to include("ec2")
+        expect(infra_permitted_types).to     include("vmwarews")
+        expect(infra_permitted_types).not_to include("ec2")
       end
-    end
-  end
-
-  describe ".supported_types_and_descriptions_hash" do
-    it "with default permissions" do
-      expect(described_class.supported_types_and_descriptions_hash).to include("vmwarews" => "VMware vCenter")
-    end
-
-    it "with removed permissions" do
-      allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).and_return(true)
-      allow(Vmdb::PermissionStores.instance).to receive(:supported_ems_type?).with("vmwarews").and_return(false)
-      expect(described_class.supported_types_and_descriptions_hash).to_not include("vmwarews")
     end
   end
 
