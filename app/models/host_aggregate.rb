@@ -18,9 +18,10 @@ class HostAggregate < ApplicationRecord
   has_many   :vim_performance_states, :as => :resource
 
   supports_not :add_host
-  supports_not :delete_aggregate
+  supports_not :create
+  supports_not :delete
   supports_not :remove_host
-  supports_not :update_aggregate
+  supports_not :update
 
   virtual_total :total_vms, :vms
 

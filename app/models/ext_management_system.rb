@@ -162,7 +162,6 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :add_volume_mapping
   supports_not :admin_ui
   supports_not :assume_role
-  supports_not :auth_key_pair_create
   supports_not :block_storage
   supports_not :change_password
   supports_not :cloud_object_store_container_create
@@ -170,7 +169,6 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_tenant_mapping
   supports_not :cloud_volume_create
   supports_not :console
-  supports_not :create_host_aggregate
   supports_not :discovery
   supports_not :ems_network_new
   supports_not :ems_storage_new
@@ -304,7 +302,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
 
-  supports_attribute :feature => :auth_key_pair_create
+  supports_attribute :supports_auth_key_pair_create, :child_model => "AuthKeyPair"
   supports_attribute :feature => :block_storage
   supports_attribute :feature => :object_storage
   supports_attribute :feature => :cloud_tenants
@@ -318,7 +316,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :supports_create_flavor, :child_model => "Flavor"
   supports_attribute :feature => :volume_availability_zones
   supports_attribute :supports_create_security_group, :child_model => "SecurityGroup"
-  supports_attribute :feature => :create_host_aggregate
+  supports_attribute :supports_create_host_aggregate, :child_model => "HostAggregate"
   supports_attribute :feature => :create_network_router
   supports_attribute :feature => :storage_services
   supports_attribute :feature => :add_storage
