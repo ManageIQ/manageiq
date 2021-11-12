@@ -29,9 +29,10 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file_name, logger_class = VMDBLogger)
-      log_file = ManageIQ.root.join("log", log_file_name)
-      progname = File.basename(log_file_name, ".*")
+    def self.create_logger(log_file, logger_class = VMDBLogger)
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      progname = log_file.try(:basename, ".*").to_s
 
       logger_class.new(log_file, progname: progname).tap do |logger|
         broadcast_logger = create_broadcast_logger
@@ -90,7 +91,7 @@ module Vmdb
     def self.apply_config_value(config, logger, key)
       old_level      = logger.level
       new_level_name = (config[key] || "INFO").to_s.upcase
-      new_level      = VMDBLogger.const_get(new_level_name)
+      new_level      = Logger.const_get(new_level_name)
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{logger.progname} has been changed to [#{new_level_name}]")
         logger.level = new_level

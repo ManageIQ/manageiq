@@ -1,5 +1,12 @@
+require "stringio"
+
 RSpec.describe Vmdb::Loggers do
-  let(:log_file) { Rails.root.join("log", "foo.log").to_s }
+  let(:log_file_name) { "foo.log" }
+  let(:log_file_path) { Rails.root.join("log", log_file_name) }
+
+  after do
+    log_file_path.delete if log_file_path.exist?
+  end
 
   def in_container_env(example)
     old_env = ENV.delete('CONTAINER')
@@ -12,6 +19,8 @@ RSpec.describe Vmdb::Loggers do
 
   describe ".create_logger" do
     shared_examples "has basic logging functionality" do
+      let(:log_file) { log_file_name }
+
       subject { described_class.create_logger(log_file) }
 
       let(:container_log) { subject.instance_variable_get(:@broadcast_logger) }
@@ -82,7 +91,7 @@ RSpec.describe Vmdb::Loggers do
 
       context "#level" do
         it "defaults the loggers to their default levels" do
-          expect(subject.level).to       eq(Logger::INFO)
+          expect(subject.level).to eq(Logger::INFO)
         end
       end
 
@@ -102,6 +111,49 @@ RSpec.describe Vmdb::Loggers do
           expect(container_log).to receive(:<<).with("test message").and_call_original if container_log
 
           subject << "test message"
+        end
+      end
+
+      context "with an IO" do
+        let(:log_file) { StringIO.new }
+
+        it "logs correctly" do
+          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
+          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+
+          subject.info("test message")
+
+          expect(log_file.string).to include("test message")
+        end
+      end
+
+      context "with a Pathname" do
+        let(:log_file) { Rails.root.join("tmp/logger_pathname.log") }
+
+        after { log_file.delete if log_file.exist? }
+
+        it "logs correctly" do
+          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
+          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+
+          subject.info("test message")
+
+          expect(log_file.read).to include("test message")
+        end
+      end
+
+      context "with a full path String" do
+        let(:log_file) { Rails.root.join("tmp/logger_string.log").to_s }
+
+        after { File.delete(log_file) if File.exist?(log_file) }
+
+        it "logs correctly" do
+          expect(subject).to       receive(:add).with(1, nil, "test message").and_call_original
+          expect(container_log).to receive(:add).with(1, nil, "test message").and_call_original if container_log
+
+          subject.info("test message")
+
+          expect(File.read(log_file)).to include("test message")
         end
       end
     end
@@ -131,7 +183,7 @@ RSpec.describe Vmdb::Loggers do
     end
 
     it "will update the main lower level logger instance" do
-      log = described_class.create_logger(log_file)
+      log = described_class.create_logger(log_file_name)
       described_class.apply_config_value({:foo => :info}, log, :foo)
 
       expect(log.level).to eq(Logger::INFO)
@@ -141,7 +193,7 @@ RSpec.describe Vmdb::Loggers do
       around { |example| in_container_env(example) }
 
       it "will always keep container logger as DEBUG" do
-        log = described_class.create_logger(log_file)
+        log = described_class.create_logger(log_file_name)
         container_log = log.instance_variable_get(:@broadcast_logger)
         described_class.apply_config_value({:foo => :info}, log, :foo)
 
