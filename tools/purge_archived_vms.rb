@@ -6,8 +6,7 @@ ARCHIVE_CUTOFF = Time.now.utc - 1.month
 # If true, do not delete anything; only report:
 REPORT_ONLY = ActiveModel::Type::Boolean.new.cast(ENV.fetch("REPORT_ONLY", true))
 
-old_logger = $log
-$log = VMDBLogger.new(STDOUT)
+$log = Vmdb::Loggers.create_logger($stdout)
 $log.level = Logger::INFO
 
 query = Vm.where("updated_on < ? or updated_on IS NULL", ARCHIVE_CUTOFF)
@@ -37,6 +36,3 @@ end
 
 $log.info("Completed purging archived VMs. #{REPORT_ONLY ? 'Found' : 'Purged'} #{archived} archived VMs.")
 $log.info("To cleanup archived VMs re-run with REPORT_ONLY=false #{$PROGRAM_NAME}")
-
-$log.close
-$log = old_logger

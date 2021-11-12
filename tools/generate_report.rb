@@ -5,10 +5,12 @@ require 'optimist'
 include ActionDispatch::Routing::UrlFor
 include Rails.application.routes.url_helpers
 
+LOG_LEVELS = Logger::Severity.constants
+
 options = Optimist.options do
   opt :user, "userid", :default => "admin"
   opt :report_name_or_id, "report name or report id", :short => "n", :type => :string
-  opt :log_level, "log level (#{Vmdb::LogProxy::LEVELS.join(", ")})", :type => :string
+  opt :log_level, "log level (#{LOG_LEVELS.join(", ")})", :type => :string
 end
 
 # backward compatibility
@@ -17,9 +19,10 @@ if ARGV[0].present? && options[:report_name_or_id].nil?
 end
 
 if options[:log_level]
-  Optimist.die "Log level #{options[:log_level]} is not supported, supported levels are: #{Vmdb::LogProxy::LEVELS.join(", ")}" unless Vmdb::LogProxy::LEVELS.include?(options[:log_level].to_sym)
-  $log = VMDBLogger.new(STDOUT)
-  $log.level = Vmdb::LogProxy::LEVELS.index(options[:log_level].to_sym)
+  level = options[:log_level].to_s.upcase
+  Optimist.die "Log level #{options[:log_level]} is not supported, supported levels are: #{LOG_LEVELS.join(", ")}" unless LOG_LEVELS.include?(level.to_sym)
+  $log = Vmdb::Loggers.create_logger($stdout)
+  $log.level = Logger.const_get(level)
   puts "Logging on standard output, log level set to: #{options[:log_level]}"
 end
 

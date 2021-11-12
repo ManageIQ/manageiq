@@ -4,8 +4,7 @@ require File.expand_path('../config/environment', __dir__)
 KEEP_EVENTS  = 6.months
 PURGE_WINDOW = 1000
 
-old_logger = $log
-$log = VMDBLogger.new(STDOUT)
+$log = Vmdb::Loggers.create_logger($stdout)
 $log.level = Logger::INFO
 
 begin
@@ -13,6 +12,3 @@ begin
 rescue => err
   $log.log_backtrace(err)
 end
-
-$log.close
-$log = old_logger

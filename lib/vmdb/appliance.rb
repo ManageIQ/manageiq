@@ -71,12 +71,12 @@ module Vmdb
       check_automate_disk_version_against_db(fh)
 
       fh.info("VMDB settings:")
-      VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings.secret_filter)
+      fh.log_hashes(::Settings, :filter => Vmdb::Settings.secret_filter)
       fh.info("VMDB settings END")
       fh.info("---")
 
       fh.info("DATABASE settings:")
-      VMDBLogger.log_hashes(fh, ActiveRecord::Base.connection_config)
+      fh.log_hashes(ActiveRecord::Base.connection_config)
       fh.info("DATABASE settings END")
       fh.info("---")
     end
@@ -87,10 +87,11 @@ module Vmdb
       # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
       # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
 
-      startup_fname = File.join(Rails.root, "log/last_startup.txt")
-      FileUtils.rm_f(startup_fname) if File.exist?(startup_fname)
+      startup_fname = Rails.root.join("log", "last_startup.txt")
+      startup_fname.delete if startup_fname.exist?
+
       begin
-        startup = VMDBLogger.new(startup_fname)
+        startup = ManageIQ::Loggers::Base.new(startup_fname)
         log_config(:logger => startup, :startup => true)
         startup.info("Server GUID: #{MiqServer.my_guid}")
         startup.info("Server Zone: #{MiqServer.my_zone}")
