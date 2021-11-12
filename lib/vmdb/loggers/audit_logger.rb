@@ -1,5 +1,5 @@
 module Vmdb::Loggers
-  class AuditLogger < VMDBLogger
+  class AuditLogger < ManageIQ::Loggers::Base
     def success(msg)
       msg = "<AuditSuccess> #{msg}"
       info(msg)

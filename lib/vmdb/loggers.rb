@@ -1,7 +1,6 @@
 require 'manageiq'
 require 'manageiq-loggers'
 require 'miq_environment'
-require 'util/vmdb-logger'
 
 module Vmdb
   def self.logger
@@ -29,7 +28,7 @@ module Vmdb
       Vmdb::Plugins.each { |p| p.try(:apply_logger_config, config) }
     end
 
-    def self.create_logger(log_file, logger_class = VMDBLogger)
+    def self.create_logger(log_file, logger_class = ManageIQ::Loggers::Base)
       log_file = Pathname.new(log_file) if log_file.kind_of?(String)
       log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
       progname = log_file.try(:basename, ".*").to_s

@@ -1,5 +1,5 @@
 module Vmdb::Loggers
-  class FogLogger < VMDBLogger
+  class FogLogger < ManageIQ::Loggers::Base
     include Instrument
   end
 end
