@@ -35,7 +35,12 @@ class EventStream < ApplicationRecord
 
   after_commit :emit_notifications, :on => :create
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   GROUP_LEVELS = %i(critical detail warning).freeze
+
+  def self.description
+    raise NotImplementedError, "Description must be implemented in a subclass"
+  end
 
   def emit_notifications
     Notification.emit_for_event(self)
@@ -43,6 +48,7 @@ class EventStream < ApplicationRecord
     _log.log_backtrace(err)
   end
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def self.event_groups
     core_event_groups = ::Settings.event_handling.event_groups.to_hash
     Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
@@ -56,6 +62,7 @@ class EventStream < ApplicationRecord
     end
   end
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def self.group_and_level(event_type)
     level = :detail # the level is detail as default
     egroups = event_groups
@@ -82,19 +89,30 @@ class EventStream < ApplicationRecord
     group.nil? ? 'Other' : group[:name]
   end
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group
     return @group unless @group.nil?
     @group, @group_level = self.class.group_and_level(event_type)
     @group
   end
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group_level
     return @group_level unless @group_level.nil?
     @group, @group_level = self.class.group_and_level(event_type)
     @group_level
   end
 
+  # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
   def group_name
     @group_name ||= self.class.group_name(group)
+  end
+
+  def self.timeline_classes
+    EventStream.subclasses.select { |e| e.respond_to?(:group_names_and_levels) }
+  end
+
+  def self.timeline_options
+    timeline_classes.map { |c| [c.name.to_sym, c.group_names_and_levels] }.to_h
   end
 end

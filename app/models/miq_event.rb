@@ -20,6 +20,17 @@ class MiqEvent < EventStream
                                         ContainerReplicator, ContainerGroup, ContainerProject,
                                         ContainerNode, ContainerImage, PhysicalServer].freeze
 
+  def self.description
+    _("Policy Events")
+  end
+
+  def self.group_names_and_levels
+    hash = {:description => description}
+    hash[:group_names] = MiqEventDefinitionSet.all.pluck(:name, :description).to_h.symbolize_keys
+    hash[:group_levels] = [MiqPolicy::CONDITION_SUCCESS, MiqPolicy::CONDITION_FAILURE].index_by { |c| c.downcase.to_sym }
+    hash
+  end
+
   def self.raise_evm_event(target, raw_event, inputs = {}, options = {})
     # Target may have been deleted if it's a worker
     # Target, in that case will be the worker's server.

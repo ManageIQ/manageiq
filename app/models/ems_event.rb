@@ -10,6 +10,25 @@ class EmsEvent < EventStream
     'Rename_Task',
   ]
 
+  def self.description
+    _("Management Events")
+  end
+
+  def self.group_names_and_levels
+    result = {:description => description}
+    event_groups.each_with_object(result) do |(group_name, group_details), hash|
+      hash[:group_names] ||= {}
+      hash[:group_names][group_name] = group_details[:name]
+
+      group_details.each_key do |level|
+        next if level == :name
+
+        hash[:group_levels] ||= {}
+        hash[:group_levels][level] ||= level.to_s.capitalize
+      end
+    end
+  end
+
   def handle_event
     EmsEventHelper.new(self).handle
   rescue => err
