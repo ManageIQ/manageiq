@@ -96,6 +96,35 @@ module Vmdb
         logger.level = new_level
       end
     end
+
+    def self.contents(log, width = nil, last = 1000)
+      return "" unless File.file?(log)
+
+      if last.nil?
+        contents = File.open(log, "rb", &:read).split("\n")
+      else
+        require 'util/miq-system'
+        contents = MiqSystem.tail(log, last)
+      end
+      return "" if contents.nil? || contents.empty?
+
+      results = []
+
+      # Wrap lines at width if passed
+      contents.each do |line|
+        while !width.nil? && line.length > width
+          # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
+          results.push(line[0...width]) if (line[0...width].unpack("U*") rescue nil)
+          line = line[width..line.length]
+        end
+        # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
+        results.push(line) if line.length && (line.unpack("U*") rescue nil)
+      end
+
+      # Put back the utf-8 encoding which is the default for most rails libraries
+      # after opening it as binary and getting rid of the invalid UTF8 byte sequences
+      results.join("\n").force_encoding("utf-8")
+    end
   end
 end
 
