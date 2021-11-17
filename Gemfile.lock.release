@@ -889,7 +889,7 @@ GEM
     net-ssh (4.2.0)
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.12.5-x86_64-linux)
+    nokogiri (1.12.5)
       racc (~> 1.4)
     nori (2.6.0)
     oauth (0.5.8)
@@ -1168,7 +1168,7 @@ GEM
     zeitwerk (2.5.1)
 
 PLATFORMS
-  x86_64-linux
+  ruby
 
 DEPENDENCIES
   activerecord-session_store (~> 2.0)
