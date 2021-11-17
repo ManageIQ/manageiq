@@ -33,9 +33,8 @@ class ExtManagementSystem < ApplicationRecord
   end
   delegate :permitted?, :to => :class
 
-  def self.subclasses_supports?(feature)
-    permitted_subclasses.select { |subclass| subclass.supports?(feature) }
-  end
+  # when looking at supported features, only look at the classes permitted to be used
+  singleton_class.send(:alias_method, :supported_subclasses, :permitted_subclasses)
 
   def self.api_allowed_attributes
     %w[]
@@ -46,7 +45,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_types_for_catalog
-    subclasses_supports?(:catalog)
+    subclasses_supporting(:catalog)
   end
 
   def self.supported_for_create?
@@ -54,7 +53,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.label_mapping_classes
-    subclasses_supports?(:label_mapping)
+    subclasses_supporting(:label_mapping)
   end
 
   def self.label_mapping_prefixes
