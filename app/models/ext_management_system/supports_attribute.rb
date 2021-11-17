@@ -32,7 +32,9 @@ module ExtManagementSystem::SupportsAttribute
           class_by_ems(child_model)&.supports?(feature) || false
         end
       else
-        define_method(colname || "supports_#{feature}") do
+        colname ||= "supports_#{feature}"
+
+        define_method(colname) do
           supports?(feature)
         end
       end
