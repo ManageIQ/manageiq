@@ -154,6 +154,9 @@ RSpec.describe Vmdb::Loggers do
   describe ".contents" do
     let(:logfile) { Pathname.new(__dir__).join("data/miq_ascii.log") }
 
+    let(:ascii_log_content) { logfile.read.chomp }
+    let(:ascii_log_tail)    { ascii_log_content.split("\n").last(2).join("\n") }
+
     it "with no log returns empty string" do
       allow(File).to receive_messages(:file? => false)
 
@@ -168,14 +171,22 @@ RSpec.describe Vmdb::Loggers do
       expect(described_class.contents("mylog.log")).to be_empty
     end
 
-    it "with tail returns only those lines" do
-      expect(described_class.contents(logfile, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+    it "without tail" do
+      expect(described_class.contents(logfile)).to eq(ascii_log_content)
+    end
+
+    it "with tail" do
+      expect(described_class.contents(logfile, 2)).to eq(ascii_log_tail)
+    end
+
+    it "with tail set to nil to return the whole file" do
+      expect(described_class.contents(logfile, nil)).to eq(ascii_log_content)
     end
 
     it "with Logger(file)" do
       log = Logger.new(logfile)
 
-      expect(described_class.contents(log)).to end_with("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
     it "with Logger(IO)" do
@@ -187,7 +198,7 @@ RSpec.describe Vmdb::Loggers do
     it "with ManageIQ::Loggers::Base object" do
       log = ManageIQ::Loggers::Base.new(logfile)
 
-      expect(described_class.contents(log)).to end_with("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(log)).to eq(ascii_log_content)
     end
 
     context "with evm log snippet with invalid utf8 byte sequence data" do
