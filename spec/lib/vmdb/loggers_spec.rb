@@ -152,104 +152,99 @@ RSpec.describe Vmdb::Loggers do
   end
 
   describe ".contents" do
+    let(:logfile) { Pathname.new(__dir__).join("data/miq_ascii.log") }
+
     it "with no log returns empty string" do
       allow(File).to receive_messages(:file? => false)
-      expect(described_class.contents("mylog.log")).to eq("")
+
+      expect(described_class.contents("mylog.log")).to be_empty
     end
 
     it "with empty log returns empty string" do
       require 'util/miq-system'
       allow(MiqSystem).to receive_messages(:tail => "")
-
       allow(File).to receive_messages(:file? => true)
-      expect(described_class.contents("mylog.log")).to eq("")
+
+      expect(described_class.contents("mylog.log")).to be_empty
     end
 
     it "with tail returns only those lines" do
-      log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log"))
-
-      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(logfile, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
     end
 
     it "with Logger(file)" do
-      log = Logger.new(File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log")))
+      log = Logger.new(logfile)
 
-      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(log)).to end_with("file with only ascii texts3\nfile with only ascii texts4")
     end
 
     it "with Logger(IO)" do
       log = Logger.new($stdout)
 
-      expect(described_class.contents(log, 2)).to be_empty
+      expect(described_class.contents(log)).to be_empty
     end
 
     it "with ManageIQ::Loggers::Base object" do
-      log = ManageIQ::Loggers::Base.new(File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log")))
+      log = ManageIQ::Loggers::Base.new(logfile)
 
-      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(log)).to end_with("file with only ascii texts3\nfile with only ascii texts4")
     end
 
     context "with evm log snippet with invalid utf8 byte sequence data" do
-      before(:each) do
-        @log = File.expand_path(File.join(File.dirname(__FILE__), "data/redundant_utf8_byte_sequence.log"))
-      end
+      let(:logfile) { Pathname.new(__dir__).join("data/redundant_utf8_byte_sequence.log") }
 
       context "accessing the invalid data directly" do
-        before(:each) do
-          @data = File.read(@log)
-        end
+        subject { logfile.read }
 
         it "should have content with the invalid utf8 lines" do
-          expect(@data).not_to be_nil
-          expect(@data.kind_of?(String)).to be_truthy
+          expect(subject).not_to be_nil
+          expect(subject).to     be_kind_of(String)
         end
 
         it "should unpack raw data as UTF-8 characters and raise ArgumentError" do
-          expect { @data.unpack("U*") }.to raise_error(ArgumentError)
+          expect { subject.unpack("U*") }.to raise_error(ArgumentError)
         end
       end
 
       context "with line limit" do
-        before(:each) do
-          @contents = described_class.contents(@log, 1000)
-        end
+        subject { described_class.contents(logfile, 1000) }
 
         it "should have content but without the invalid utf8 lines" do
-          expect(@contents).not_to be_nil
-          expect(@contents.kind_of?(String)).to be_truthy
+          expect(subject).not_to be_nil
+          expect(subject).to     be_kind_of(String)
         end
 
         it "should unpack logger contents as UTF-8 characters and raise nothing" do
-          expect { @contents.unpack("U*") }.not_to raise_error
+          expect { subject.unpack("U*") }.not_to raise_error
         end
       end
 
       context "without line limit" do
-        before(:each) do
-          @contents = described_class.contents(@log)
-        end
+        subject { described_class.contents(logfile, nil) }
 
         it "should have content but without the invalid utf8 lines" do
-          expect(@contents).not_to be_nil
-          expect(@contents.kind_of?(String)).to be_truthy
+          expect(subject).not_to be_nil
+          expect(subject).to     be_kind_of(String)
         end
 
         it "should unpack logger contents as UTF-8 characters and raise nothing" do
-          expect { @contents.unpack("U*") }.not_to raise_error
+          expect { subject.unpack("U*") }.not_to raise_error
         end
       end
 
       context "encoding" do
         it "with ascii file" do
-          log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log"))
-          expect(described_class.contents(log).encoding.name).to eq("UTF-8")
-          expect(described_class.contents(log, nil).encoding.name).to eq("UTF-8")
+          logfile = Pathname.new(__dir__).join("data/miq_ascii.log")
+
+          expect(described_class.contents(logfile).encoding.name).to eq("UTF-8")
+          expect(described_class.contents(logfile, nil).encoding.name).to eq("UTF-8")
         end
 
         it "with utf-8 file" do
-          log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_utf8.log"))
-          expect(described_class.contents(log).encoding.name).to eq("UTF-8")
-          expect(described_class.contents(log, nil).encoding.name).to eq("UTF-8")
+          logfile = Pathname.new(__dir__).join("data/miq_utf8.log")
+
+          expect(described_class.contents(logfile).encoding.name).to eq("UTF-8")
+          expect(described_class.contents(logfile, nil).encoding.name).to eq("UTF-8")
         end
       end
     end
