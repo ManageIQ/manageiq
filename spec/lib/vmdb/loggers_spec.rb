@@ -157,18 +157,16 @@ RSpec.describe Vmdb::Loggers do
     let(:ascii_log_content) { logfile.read.chomp }
     let(:ascii_log_tail)    { ascii_log_content.split("\n").last(2).join("\n") }
 
-    it "with no log returns empty string" do
-      allow(File).to receive_messages(:file? => false)
+    it "with missing log" do
+      logfile = Pathname.new(__dir__).join("data/miq_missing.log")
 
-      expect(described_class.contents("mylog.log")).to be_empty
+      expect(described_class.contents(logfile)).to be_empty
     end
 
-    it "with empty log returns empty string" do
-      require 'util/miq-system'
-      allow(MiqSystem).to receive_messages(:tail => "")
-      allow(File).to receive_messages(:file? => true)
+    it "with empty log" do
+      logfile = Pathname.new(__dir__).join("data/miq_empty.log")
 
-      expect(described_class.contents("mylog.log")).to be_empty
+      expect(described_class.contents(logfile)).to be_empty
     end
 
     it "without tail" do
