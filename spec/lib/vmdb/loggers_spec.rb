@@ -168,7 +168,7 @@ RSpec.describe Vmdb::Loggers do
     it "with tail returns only those lines" do
       log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log"))
 
-      expect(described_class.contents(log, nil, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
     end
 
     context "with evm log snippet with invalid utf8 byte sequence data" do
@@ -191,9 +191,9 @@ RSpec.describe Vmdb::Loggers do
         end
       end
 
-      context "without width" do
+      context "with line limit" do
         before(:each) do
-          @contents = described_class.contents(@log, nil, 1000)
+          @contents = described_class.contents(@log, 1000)
         end
 
         it "should have content but without the invalid utf8 lines" do
@@ -201,29 +201,14 @@ RSpec.describe Vmdb::Loggers do
           expect(@contents.kind_of?(String)).to be_truthy
         end
 
-        it "should unpack logger.consents as UTF-8 characters and raise nothing" do
-          expect { @contents.unpack("U*") }.not_to raise_error
-        end
-      end
-
-      context "with width" do
-        before(:each) do
-          @contents = described_class.contents(@log, 120, 5000)
-        end
-
-        it "should have content but without the invalid utf8 lines" do
-          expect(@contents).not_to be_nil
-          expect(@contents.kind_of?(String)).to be_truthy
-        end
-
-        it "should unpack logger.consents as UTF-8 characters and raise nothing" do
+        it "should unpack logger contents as UTF-8 characters and raise nothing" do
           expect { @contents.unpack("U*") }.not_to raise_error
         end
       end
 
       context "without line limit" do
         before(:each) do
-          @contents = described_class.contents(@log, 120, nil)
+          @contents = described_class.contents(@log)
         end
 
         it "should have content but without the invalid utf8 lines" do
@@ -231,7 +216,7 @@ RSpec.describe Vmdb::Loggers do
           expect(@contents.kind_of?(String)).to be_truthy
         end
 
-        it "should unpack logger.consents as UTF-8 characters and raise nothing" do
+        it "should unpack logger contents as UTF-8 characters and raise nothing" do
           expect { @contents.unpack("U*") }.not_to raise_error
         end
       end
@@ -240,13 +225,13 @@ RSpec.describe Vmdb::Loggers do
         it "with ascii file" do
           log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log"))
           expect(described_class.contents(log).encoding.name).to eq("UTF-8")
-          expect(described_class.contents(log, 100, nil).encoding.name).to eq("UTF-8")
+          expect(described_class.contents(log, nil).encoding.name).to eq("UTF-8")
         end
 
         it "with utf-8 file" do
           log = File.expand_path(File.join(File.dirname(__FILE__), "data/miq_utf8.log"))
           expect(described_class.contents(log).encoding.name).to eq("UTF-8")
-          expect(described_class.contents(log, 100, nil).encoding.name).to eq("UTF-8")
+          expect(described_class.contents(log, nil).encoding.name).to eq("UTF-8")
         end
       end
     end

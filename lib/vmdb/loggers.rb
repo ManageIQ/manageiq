@@ -97,7 +97,7 @@ module Vmdb
       end
     end
 
-    def self.contents(log, width = nil, last = 1000)
+    def self.contents(log, last = 1000)
       return "" unless File.file?(log)
 
       if last.nil?
@@ -108,17 +108,9 @@ module Vmdb
       end
       return "" if contents.nil? || contents.empty?
 
-      results = []
-
-      # Wrap lines at width if passed
-      contents.each do |line|
-        while !width.nil? && line.length > width
-          # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
-          results.push(line[0...width]) if (line[0...width].unpack("U*") rescue nil)
-          line = line[width..line.length]
-        end
-        # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
-        results.push(line) if line.length && (line.unpack("U*") rescue nil)
+      # Don't return lines containing invalid UTF8 byte sequences
+      results = contents.select do |line|
+        line&.unpack("U*") rescue nil
       end
 
       # Put back the utf-8 encoding which is the default for most rails libraries
