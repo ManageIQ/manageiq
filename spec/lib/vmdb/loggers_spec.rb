@@ -171,6 +171,24 @@ RSpec.describe Vmdb::Loggers do
       expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
     end
 
+    it "with Logger(file)" do
+      log = Logger.new(File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log")))
+
+      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+    end
+
+    it "with Logger(IO)" do
+      log = Logger.new($stdout)
+
+      expect(described_class.contents(log, 2)).to be_empty
+    end
+
+    it "with ManageIQ::Loggers::Base object" do
+      log = ManageIQ::Loggers::Base.new(File.expand_path(File.join(File.dirname(__FILE__), "data/miq_ascii.log")))
+
+      expect(described_class.contents(log, 2)).to eq("file with only ascii texts3\nfile with only ascii texts4")
+    end
+
     context "with evm log snippet with invalid utf8 byte sequence data" do
       before(:each) do
         @log = File.expand_path(File.join(File.dirname(__FILE__), "data/redundant_utf8_byte_sequence.log"))

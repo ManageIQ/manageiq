@@ -98,6 +98,7 @@ module Vmdb
     end
 
     def self.contents(log, last = 1000)
+      log = log.instance_variable_get(:@logdev)&.filename.to_s if log.kind_of?(Logger)
       return "" unless File.file?(log)
 
       if last.nil?
