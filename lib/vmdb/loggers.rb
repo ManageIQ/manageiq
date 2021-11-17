@@ -102,7 +102,7 @@ module Vmdb
       return "" unless File.file?(log)
 
       if last.nil?
-        contents = File.open(log, "rb", &:read).split("\n")
+        contents = File.readlines(log, :mode => "rb", :chomp => true)
       else
         require 'util/miq-system'
         contents = MiqSystem.tail(log, last)
