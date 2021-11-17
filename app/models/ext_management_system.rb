@@ -44,24 +44,16 @@ class ExtManagementSystem < ApplicationRecord
     permitted_subclasses.select(&:supported_for_create?)
   end
 
-  def self.supported_types_for_catalog
-    subclasses_supporting(:catalog)
-  end
-
   def self.supported_for_create?
     !reflections.include?("parent_manager")
   end
 
-  def self.label_mapping_classes
-    subclasses_supporting(:label_mapping)
-  end
-
   def self.label_mapping_prefixes
-    label_mapping_classes.map(&:label_mapping_prefix).uniq
+    subclasses_supporting(:label_mapping).map(&:label_mapping_prefix).uniq
   end
 
   def self.entities_for_label_mapping
-    label_mapping_classes.reduce({}) { |all_mappings, klass| all_mappings.merge(klass.entities_for_label_mapping) }
+    subclasses_supporting(:label_mapping).reduce({}) { |all_mappings, klass| all_mappings.merge(klass.entities_for_label_mapping) }
   end
 
   def self.provider_create_params
