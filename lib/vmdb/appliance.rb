@@ -87,11 +87,11 @@ module Vmdb
       # the file must not be named ".log" or it will be removed by logrotate, and it must contain the Server GUID (by which the appliance is known in the vmdb,
       # the build identifier of the appliance as it is being started,  the appliance hostname and the name of the appliance as configured from our configuration screen.
 
-      startup_fname = Rails.root.join("log", "last_startup.txt")
-      startup_fname.delete if startup_fname.exist?
+      last_startup_file = Rails.root.join("log", "last_startup.txt")
+      last_startup_file.delete if last_startup_file.exist?
 
       begin
-        startup = ManageIQ::Loggers::Base.new(startup_fname)
+        startup = ManageIQ::Loggers::Base.new(last_startup_file)
         log_config(:logger => startup, :startup => true)
         startup.info("Server GUID: #{MiqServer.my_guid}")
         startup.info("Server Zone: #{MiqServer.my_zone}")
