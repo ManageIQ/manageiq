@@ -178,27 +178,25 @@ RSpec.describe Vmdb::Loggers do
   end
 
   describe ".apply_config_value" do
-    before do
-      allow($log).to receive(:info)
-    end
-
     it "will update the main lower level logger instance" do
       log = described_class.create_logger(log_file_name)
-      described_class.apply_config_value({:foo => :info}, log, :foo)
 
-      expect(log.level).to eq(Logger::INFO)
+      described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
+
+      expect(log.level).to eq(Logger::ERROR)
     end
 
     context "in a container environment" do
       around { |example| in_container_env(example) }
 
-      it "will always keep container logger as DEBUG" do
+      it "will honor the log level in the container logger" do
         log = described_class.create_logger(log_file_name)
         container_log = log.instance_variable_get(:@broadcast_logger)
-        described_class.apply_config_value({:foo => :info}, log, :foo)
 
-        expect(log.level).to           eq(Logger::INFO)
-        expect(container_log.level).to eq(Logger::INFO)
+        described_class.apply_config_value({:level_foo => :error}, log, :level_foo)
+
+        expect(log.level).to           eq(Logger::ERROR)
+        expect(container_log.level).to eq(Logger::ERROR)
       end
     end
   end
