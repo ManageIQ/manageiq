@@ -1,7 +1,7 @@
 require "stringio"
 
 RSpec.describe Vmdb::Loggers do
-  let(:log_file_name) { "foo.log" }
+  let(:log_file_name) { "#{SecureRandom.alphanumeric}.log" }
   let(:log_file_path) { Rails.root.join("log", log_file_name) }
 
   after do
