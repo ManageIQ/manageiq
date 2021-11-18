@@ -121,5 +121,4 @@ module Vmdb
   end
 end
 
-require_relative "loggers/instrument"
 Dir.glob(File.join(File.dirname(__FILE__), "loggers", "*")).each { |f| require f }
