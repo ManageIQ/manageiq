@@ -47,4 +47,12 @@ class Metric < ApplicationRecord
     hour = (time.respond_to?(:strftime) ? time.hour : time) % 24
     "metrics_%02d" % hour
   end
+
+  def self.metrics_in_range(resource_type, resource_ids, start_date, end_date = nil)
+    end_date ||= Time.zone.today
+    metrics = where(:resource_type => resource_type,
+                    :timestamp     => start_date.beginning_of_day...end_date.end_of_day)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics.order(:resource_id, :timestamp => :desc)
+  end
 end
