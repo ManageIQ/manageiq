@@ -10,8 +10,14 @@ class EmsEvent < EventStream
     'Rename_Task',
   ]
 
+  CLASS_GROUP_LEVELS = %i[critical warning].freeze
+
   def self.description
     _("Management Events")
+  end
+
+  def self.class_group_levels
+    CLASS_GROUP_LEVELS
   end
 
   def self.group_names_and_levels

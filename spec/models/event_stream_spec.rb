@@ -1,7 +1,7 @@
 RSpec.describe EventStream do
   describe ".event_groups" do
     EventStream.event_groups.each do |group_name, group_data|
-      EventStream::GROUP_LEVELS.each do |level|
+      (EmsEvent.group_levels + MiqEvent.group_levels).each do |level|
         group_data[level]&.each do |typ|
           it ":#{group_name}/:#{level}/#{typ} is string or regex", :providers_common => true do
             expect(typ.kind_of?(Regexp) || typ.kind_of?(String)).to eq(true)
@@ -41,7 +41,7 @@ RSpec.describe EventStream do
 
       expect(options[:MiqEvent].keys.sort).to eq %i[description group_levels group_names]
       expect(options[:MiqEvent][:description]).to eq(MiqEvent.description)
-      expect(options[:MiqEvent][:group_levels].keys.sort).to eq %i[failure success]
+      expect(options[:MiqEvent][:group_levels].keys.sort).to eq %i[detail failure success]
       expect(options[:MiqEvent][:group_names].keys).to include(*%i[auth_validation authentication compliance container_operations ems_operations evm_operations])
     end
   end
