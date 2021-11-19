@@ -2,7 +2,7 @@ RSpec.describe Vmdb::Loggers::FogLogger do
   before do
     @log_stream = StringIO.new
     @log = described_class.new(@log_stream)
-    @log.level = VMDBLogger::DEBUG
+    @log.level = Logger::DEBUG
   end
 
   context ".instrument" do
