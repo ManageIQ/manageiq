@@ -120,6 +120,14 @@ class EventStream < ApplicationRecord
     EventStream.subclasses.select { |e| e.respond_to?(:group_names_and_levels) }
   end
 
+  def self.default_group_names_and_levels
+    {
+      :description  => description,
+      :group_names  => {DEFAULT_GROUP_NAME => DEFAULT_GROUP_NAME.to_s.capitalize},
+      :group_levels => {}
+    }.freeze
+  end
+
   def self.timeline_options
     timeline_classes.map { |c| [c.name.to_sym, c.group_names_and_levels] }.to_h
   end

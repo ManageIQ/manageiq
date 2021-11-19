@@ -35,12 +35,9 @@ class MiqEvent < EventStream
   end
 
   def self.group_names_and_levels
-    hash = {:description => description}
-    hash[:group_names] = {DEFAULT_GROUP_NAME => DEFAULT_GROUP_NAME.to_s.capitalize}
+    hash = default_group_names_and_levels
     hash[:group_names].merge!(MiqEventDefinitionSet.all.pluck(:name, :description).to_h.symbolize_keys)
-
     group_levels.each do |level|
-      hash[:group_levels] ||= {}
       hash[:group_levels][level] ||= level.to_s.capitalize
     end
     hash

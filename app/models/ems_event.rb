@@ -21,10 +21,7 @@ class EmsEvent < EventStream
   end
 
   def self.group_names_and_levels
-    result = {:description => description}
-    result[:group_names] = {DEFAULT_GROUP_NAME => DEFAULT_GROUP_NAME.to_s.capitalize}
-
-    event_groups.each_with_object(result) do |(group_name, group_details), hash|
+    event_groups.each_with_object(default_group_names_and_levels) do |(group_name, group_details), hash|
       hash[:group_names][group_name] = group_details[:name]
 
       group_details.each_key do |level|
