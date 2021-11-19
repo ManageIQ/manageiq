@@ -35,8 +35,8 @@ class EventStream < ApplicationRecord
 
   after_commit :emit_notifications, :on => :create
 
+  DEFAULT_GROUP_NAME  = :other
   DEFAULT_GROUP_LEVEL = :detail
-  DEFAULT_GROUP = :other
 
   def self.description
     raise NotImplementedError, "Description must be implemented in a subclass"
@@ -87,14 +87,14 @@ class EventStream < ApplicationRecord
         .tap { |level_found| level = level_found || level }
     end&.first
 
-    group ||= DEFAULT_GROUP
+    group ||= DEFAULT_GROUP_NAME
     return group, level
   end
 
   def self.group_name(group)
     return if group.nil?
     group = event_groups[group.to_sym]
-    group.nil? ? 'Other' : group[:name]
+    group.nil? ? DEFAULT_GROUP_NAME.to_s.capitalize : group[:name]
   end
 
   # TODO: Consider moving since this is EmsEvent specific. group, group_level and group_name exposed as a virtual columns for reports/api.
