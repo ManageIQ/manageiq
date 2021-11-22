@@ -20,14 +20,26 @@ class MiqEvent < EventStream
                                         ContainerReplicator, ContainerGroup, ContainerProject,
                                         ContainerNode, ContainerImage, PhysicalServer].freeze
 
+  CLASS_GROUP_LEVELS = [MiqPolicy::CONDITION_SUCCESS, MiqPolicy::CONDITION_FAILURE].collect { |level| level.downcase.to_sym }
+
+  def self.description
+    _("Management Events")
+  end
+
+  def self.class_group_levels
+    CLASS_GROUP_LEVELS
+  end
+
   def self.description
     _("Policy Events")
   end
 
   def self.group_names_and_levels
-    hash = {:description => description}
-    hash[:group_names] = MiqEventDefinitionSet.all.pluck(:name, :description).to_h.symbolize_keys
-    hash[:group_levels] = [MiqPolicy::CONDITION_SUCCESS, MiqPolicy::CONDITION_FAILURE].index_by { |c| c.downcase.to_sym }
+    hash = default_group_names_and_levels
+    hash[:group_names].merge!(MiqEventDefinitionSet.all.pluck(:name, :description).to_h.symbolize_keys)
+    group_levels.each do |level|
+      hash[:group_levels][level] ||= level.to_s.capitalize
+    end
     hash
   end
 
