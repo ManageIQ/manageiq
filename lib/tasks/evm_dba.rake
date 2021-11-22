@@ -73,18 +73,18 @@ namespace :evm do
   namespace :db do
     desc 'Start the local ManageIQ EVM Database (VMDB)'
     task :start do
-      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
     end
 
     desc 'Stop the local ManageIQ EVM Database (VMDB)'
     task :stop do
-      LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
+      LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
     end
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
       begin
-        LinuxAdmin::Service.new(PostgresAdmin.service_name).start
+        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).start
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
@@ -93,7 +93,7 @@ namespace :evm do
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
       begin
-        LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
+        LinuxAdmin::Service.new(ENV.fetch("APPLIANCE_PG_SERVICE")).stop
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
