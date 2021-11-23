@@ -317,6 +317,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :storage_services
   supports_attribute :feature => :add_storage
   supports_attribute :feature => :add_host_initiator
+  supports_attribute :supports_create_host_initiator_group, :child_model => "HostInitiatorGroup"
   supports_attribute :feature => :add_volume_mapping
 
   virtual_sum :total_vcpus,        :hosts, :total_vcpus
