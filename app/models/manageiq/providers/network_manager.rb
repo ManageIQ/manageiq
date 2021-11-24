@@ -9,7 +9,6 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_network" }
     end
 
-    supports_not :ems_network_new
     supports_not :cloud_tenant_mapping
     supports_not :create_floating_ip
     supports_not :create_network_router
