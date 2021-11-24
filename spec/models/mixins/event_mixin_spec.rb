@@ -68,4 +68,49 @@ RSpec.describe EventMixin do
       expect(test_class.new).not_to have_events
     end
   end
+
+  context "event_where_clause" do
+    let(:ems_id)       { 1234 }
+    let(:object_name)  { "object_name" }
+    let(:project_name) { "container_project_name" }
+    let(:known_missing_event_mixin_classes) { [MiqServer, Storage, ResourcePool, ContainerImage] }
+
+    MiqEvent::SUPPORTED_POLICY_AND_ALERT_CLASSES.each do |klass|
+      it "#{klass} includes EventMixin and is correct" do
+        pending("Missing EventMixin means timeline support is likely broken") if known_missing_event_mixin_classes.include?(klass)
+        expect(klass).to include(EventMixin)
+
+        object = FactoryBot.create(klass.name.tableize.singularize.to_sym)
+        expected_event_where_clause_for_ems_events = {
+          EmsCluster          => ["ems_cluster_id = ?", object.id],
+          ExtManagementSystem => ["event_streams.ems_id = ?", object.id],
+          ContainerGroup      => ["container_namespace = ? AND container_group_name = ? AND event_streams.ems_id = ?", project_name, object_name, ems_id],
+          ContainerNode       => ["container_node_name = ? AND event_streams.ems_id = ?", object_name, ems_id],
+          ContainerProject    => ["container_namespace = ? AND event_streams.ems_id = ?", object_name, ems_id],
+          ContainerReplicator => ["container_namespace = ? AND container_replicator_name = ? AND event_streams.ems_id = ?", project_name, object_name, ems_id],
+          Host                => ["host_id = ? OR dest_host_id = ?", object.id, object.id],
+          PhysicalServer      => ["event_streams.physical_server_id = ?", object.id],
+          VmOrTemplate        => ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", object.id, object.id]
+        }
+
+        expected_event_where_clause_for_policy_events = {
+          EmsCluster          => ["ems_cluster_id = ?", object.id],
+          ExtManagementSystem => ["event_streams.ems_id = ?", object.id],
+          ContainerGroup      => ["event_streams.ems_id = ?", ems_id],
+          ContainerNode       => ["event_streams.ems_id = ?", ems_id],
+          ContainerProject    => ["event_streams.ems_id = ?", ems_id],
+          ContainerReplicator => ["event_streams.ems_id = ?", ems_id],
+          Host                => ["host_id = ?", object.id],
+          PhysicalServer      => ["event_streams.physical_server_id = ?", object.id],
+          VmOrTemplate        => ["target_id = ? and target_class = ? ", object.id, "VmOrTemplate"]
+        }
+
+        allow(object).to receive(:ems_id).and_return(ems_id)
+        allow(object).to receive(:name).and_return(object_name)
+        allow(object).to receive(:container_project).and_return(double(:name => project_name))
+        expect(object.event_where_clause(:ems_events)).to eq(expected_event_where_clause_for_ems_events[klass])
+        expect(object.event_where_clause(:policy_events)).to eq(expected_event_where_clause_for_policy_events[klass])
+      end
+    end
+  end
 end
