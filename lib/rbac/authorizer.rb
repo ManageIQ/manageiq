@@ -2,25 +2,19 @@ module Rbac
   class Authorizer
     include Vmdb::Logging
 
-    def self.role_allows?(*args)
-      new.role_allows?(*args)
+    def self.role_allows?(**options)
+      new.role_allows?(**options)
     end
 
-    def role_allows?(options = {})
-      user    = options[:user]
-
-      # 'identifier' comes from the back end (ex: User#role_allows?)
-      # 'feature' comes from the front end (ex: ApplicationHelper#role_allows?)
-      # As this API is a combination of the two, 'feature' is considered
-      # an alias of 'identifier' for legacy purposes.
-      identifier = options[:identifier] || options[:feature]
-
-      # The 'identifiers' option comes from the former User#role_allows_any? API
-      # It should be noted that there may be only ONE caller using 'identifiers'
-      # in Menu::Section, so this option may be changed shortly.
-      identifiers = options[:identifiers]
-
-      any     = options[:any]
+    # @options option any         - any of the identifiers can match (default: false)
+    # @options option identifier  - comes from the back end (ex: User#role_allows?)
+    # @options option feature     - same as identifier, comes from the front end (ex: ApplicationHelper#role_allows?)
+    # @options option identifiers - same as others
+    #                               This comes from the former User#role_allows_any? API
+    #                               there may be only ONE caller using 'identifiers'
+    #                               in Menu::Section, so this option may be changed shortly.
+    def role_allows?(user:, identifier: nil, feature: nil, identifiers: nil, any: false)
+      identifier ||= feature
 
       tenant_identifier = MiqProductFeature.current_tenant_identifier(identifier)
 
@@ -38,7 +32,7 @@ module Rbac
 
     private
 
-    def user_role_allows?(user, options = {})
+    def user_role_allows?(user, **options)
       return false if user.miq_user_role.nil?
       return true if user.miq_user_role.allows?(**options)
 
@@ -57,7 +51,7 @@ module Rbac
       end
     end
 
-    def user_role_allows_any?(user, options = {})
+    def user_role_allows_any?(user, **options)
       return false if user.miq_user_role.nil?
       user.miq_user_role.allows_any?(**options)
     end

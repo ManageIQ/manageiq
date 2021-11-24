@@ -25,7 +25,7 @@ module Rbac
     valid_resources
   end
 
-  def self.role_allows?(*args)
-    Authorizer.role_allows?(*args)
+  def self.role_allows?(**options)
+    Authorizer.role_allows?(**options)
   end
 end
