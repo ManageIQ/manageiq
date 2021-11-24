@@ -13,10 +13,6 @@ module ManageIQ::Providers
         regions.keys
       end
 
-      def find_by_name(name)
-        regions[name]
-      end
-
       private
 
       def from_file
