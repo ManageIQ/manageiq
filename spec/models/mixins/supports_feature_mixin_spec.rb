@@ -1,5 +1,13 @@
 RSpec.describe SupportsFeatureMixin do
-  before do
+  before { define_post }
+
+  after do
+    if defined?(@defined_parent_classes)
+      @defined_parent_classes.each { |klass, children| cleanup_subclass(klass, children) }
+    end
+  end
+
+  def define_post
     stub_const('Post::Operations::Publishing', Module.new do
       extend ActiveSupport::Concern
 
@@ -23,7 +31,9 @@ RSpec.describe SupportsFeatureMixin do
       include SupportsFeatureMixin
       include Post::Operations
     end)
+  end
 
+  def define_special_post
     stub_const('SpecialPost::Operations', Module.new do
       extend ActiveSupport::Concern
 
@@ -133,6 +143,7 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   context "a feature defined on the base class" do
+    before { define_special_post }
     it "defines supports_feature? on the subclass" do
       expect(SpecialPost.respond_to?(:supports_publish?)).to be true
     end
@@ -147,6 +158,7 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   context "conditionally supported feature" do
+    before { define_special_post }
     context "when the condition is met" do
       it "is supported on the class" do
         expect(SpecialPost.supports_fake?).to be true
@@ -190,6 +202,7 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   context "feature that is implicitly unsupported" do
+    before { define_special_post }
     it "can be supported by the class" do
       stub_const("NukeablePost", Class.new(SpecialPost) do
         supports :nuke do
@@ -199,5 +212,117 @@ RSpec.describe SupportsFeatureMixin do
       expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
       expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
     end
+  end
+
+  describe ".subclasses_supporting" do
+    it 'detect' do
+      define_subclass("ProviderA", Post, :fake => true)
+      define_subclass("ProviderB", Post, :publish => false, :delete => true, :fake => true)
+
+      expect(Post.subclasses_supporting(:publish).map(&:name)).to eq(%w[ProviderA::Post])
+      expect(Post.subclasses_supporting(:delete).map(&:name)).to eq(%w[ProviderB::Post])
+      expect(Post.subclasses_supporting(:fake).map(&:name)).to match_array(%w[ProviderA::Post ProviderB::Post])
+    end
+  end
+
+  describe "provider_classes_supporting" do
+    it 'detects' do
+      define_subclass("ProviderA", Post, :fake => true)
+      define_subclass("ProviderB", Post, :publish => false, :delete => true, :fake => true)
+
+      expect(Post.provider_classes_supporting(:publish).map(&:name)).to eq(%w[ProviderA])
+      expect(Post.provider_classes_supporting(:delete).map(&:name)).to eq(%w[ProviderB])
+      expect(Post.provider_classes_supporting(:fake).map(&:name)).to match_array(%w[ProviderA ProviderB])
+    end
+  end
+
+  let(:model) do
+    define_model("Model", ActiveRecord::Base,
+                 :publish => true,
+                 :archive => true,
+                 :delete  => false,
+                 :fake    => 'We keep it real!')
+  end
+
+  describe ".supporting" do
+    it 'detect' do
+      ca = define_subclass("ProviderA", model, :fake => true)
+      cb = define_subclass("ProviderB", model, :publish => false, :delete => true, :fake => true)
+      define_subclass("ProviderC", model, :publish => false, :delete => true, :fake => true)
+
+      ca.create(:name => "a1")
+      ca.create(:name => "a2")
+      cb.create(:name => "b1")
+
+      expect(model.supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
+      expect(model.supporting(:delete).map(&:name)).to eq(%w[b1])
+      expect(model.supporting(:fake).map(&:name)).to match_array(%w[a1 a2 b1])
+    end
+  end
+
+  describe ".providers_supporting" do
+    it 'detect' do
+      providera = define_subclass("ProviderA", ExtManagementSystem)
+      providerb = define_subclass("ProviderB", ExtManagementSystem)
+      providerc = define_subclass("ProviderC", ExtManagementSystem)
+
+      define_subclass(providera.name, model, :fake => true)
+      define_subclass(providerb.name, model, :publish => false, :delete => true, :fake => true)
+      define_subclass(providerc.name, model, :publish => false, :delete => true, :fake => true)
+
+      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a1")
+      FactoryBot.create(:ext_management_system, :type => providera.name, :name => "a2")
+      FactoryBot.create(:ext_management_system, :type => providerb.name, :name => "b1")
+
+      expect(model.providers_supporting(:publish).map(&:name)).to match_array(%w[a1 a2])
+      expect(model.providers_supporting(:delete).map(&:name)).to eq(%w[b1])
+      expect(model.providers_supporting(:fake).map(&:name)).to match_array(%w[a1 a2 b1])
+    end
+  end
+
+  private
+
+  def define_model(class_name, parent, supporting_values = {})
+    define_supporting_class(class_name, parent, supporting_values) do |r|
+      r.table_name = "vms" if parent.ancestors.include?(ActiveRecord::Base)
+      yield(r) if block_given?
+    end
+  end
+
+  def define_subclass(module_name, parent, supports_values = {})
+    define_supporting_class("#{module_name}::#{parent.name}", parent, supports_values)
+  end
+
+  # these descendants are stored in a cache in active support
+  # this cleans out those values so future runs do not have bogus classes
+  # this causes sporadic test failures.
+  def cleanup_subclass(parent, children)
+    tracker = ActiveSupport::DescendantsTracker.class_variable_get(:@@direct_descendants)[parent]
+    tracker&.reject! { |child| children.include?(child) }
+  end
+
+  def define_supporting_class(class_name, parent, supports_values = {})
+    child = stub_const(class_name, Class.new(parent) do
+      include SupportsFeatureMixin
+
+      yield(self) if block_given?
+      supports_values.each do |feature, value|
+        case value
+        when true
+          supports feature
+        when false
+          supports_not feature
+        when String
+          supports_not feature, :reason => value
+        when Callable
+          supports(feature, &value)
+        else
+          raise "trouble defining #{feature} with #{value.class.name}"
+        end
+      end
+    end)
+    # remember what is subclasses so we can clean up the descendant cache
+    ((@defined_parent_classes ||= {})[parent] ||= []) << child
+    child
   end
 end

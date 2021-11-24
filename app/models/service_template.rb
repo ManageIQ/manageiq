@@ -95,7 +95,7 @@ class ServiceTemplate < ApplicationRecord
         "generic_orchestration" => N_("Orchestration"),
       }
 
-      ExtManagementSystem.supported_types_for_catalog
+      ExtManagementSystem.subclasses_supporting(:catalog)
         .flat_map(&:catalog_types)
         .reduce(builtin_catalog_item_types, :merge)
     end

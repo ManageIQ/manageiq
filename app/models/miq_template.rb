@@ -31,8 +31,7 @@ class MiqTemplate < VmOrTemplate
   end
 
   def self.eligible_for_provisioning
-    types = descendants.select { |d| d.supports?(:provisioning) }.map(&:name)
-    where(:type => types).where.not(:ems_id => nil)
+    supporting(:provisioning).active
   end
 
   def self.without_volume_templates

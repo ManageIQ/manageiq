@@ -116,6 +116,33 @@ module SupportsFeatureMixin
       public_send("supports_#{feature}?")
     end
 
+    # all subclasses that are considered for supporting features
+    def supported_subclasses
+      descendants
+    end
+
+    def subclasses_supporting(feature)
+      supported_subclasses.select { |subclass| subclass.supports?(feature) }
+    end
+
+    # Provider classes that support this feature
+    def provider_classes_supporting(feature)
+      subclasses_supporting(feature).map(&:module_parent)
+    end
+
+    # scope to query all those classes that support a particular feature
+    def supporting(feature)
+      where(:type => subclasses_supporting(feature).map(&:name))
+    end
+
+    # Providers that support this feature
+    #
+    # example:
+    #   Host.providers_supporting(feature) # => [Ems]
+    def providers_supporting(feature)
+      ExtManagementSystem.where(:type => provider_classes_supporting(feature).map(&:name))
+    end
+
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       feature = feature.to_sym
