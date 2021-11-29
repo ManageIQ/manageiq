@@ -685,7 +685,7 @@ class ExtManagementSystem < ApplicationRecord
       :message => msg
     )
 
-    orchestrate_destroy_queue(task.id, queue_options)
+    orchestrate_destroy_queue(task.id, queue_options.reverse_merge(:msg_timeout => 3_600))
 
     task.id
   end
