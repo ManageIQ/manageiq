@@ -869,6 +869,10 @@
   :secret_filter: []
 :messaging:
   :type: kafka
+:miq_request:
+  :history:
+    :purge_window_size: 2000
+    :keep_miq_requests: 6.months
 :notifications:
   :history:
     :purge_window_size: 1000
@@ -1143,6 +1147,7 @@
       :evm_snapshot_interval: 1.hour
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
+      :miq_request_purge_interval: 1.week
       :nice_delta: 3
       :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes
