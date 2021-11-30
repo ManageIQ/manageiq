@@ -27,6 +27,32 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def host_initiator_groups
+          add_common_default_values
+        end
+
+        def physical_storages
+          add_common_default_values
+        end
+
+        def physical_storage_families
+          add_common_default_values
+        end
+
+        def san_addresses
+          add_properties(:parent_inventory_collections => %i[host_initiators])
+          add_common_default_values
+        end
+
+        def storage_resources
+          add_properties(:parent_inventory_collections => %i[physical_storages])
+          add_common_default_values
+        end
+
+        def storage_services
+          add_common_default_values
+        end
+
         def volume_mappings
           add_common_default_values
         end
