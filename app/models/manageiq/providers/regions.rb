@@ -2,7 +2,7 @@ module ManageIQ::Providers
   class Regions
     class << self
       def regions
-        from_file.merge(additional_regions).except(*disabled_regions)
+        from_source.merge(additional_regions).except(*disabled_regions)
       end
 
       def all
@@ -15,9 +15,9 @@ module ManageIQ::Providers
 
       private
 
-      def from_file
+      def from_source
         # Memoize the regions file as this should not change at runtime
-        @from_file ||= YAML.load_file(regions_yml).transform_values(&:freeze).freeze
+        @from_source ||= YAML.load_file(regions_yml).transform_values(&:freeze).freeze
       end
 
       def additional_regions
