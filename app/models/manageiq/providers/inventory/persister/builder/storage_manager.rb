@@ -23,7 +23,6 @@ module ManageIQ::Providers
         end
 
         def host_initiators
-          add_properties(:parent_inventory_collections => [:physical_storages])
           add_common_default_values
         end
 
@@ -40,12 +39,10 @@ module ManageIQ::Providers
         end
 
         def san_addresses
-          add_properties(:parent_inventory_collections => %i[host_initiators])
           add_common_default_values
         end
 
         def storage_resources
-          add_properties(:parent_inventory_collections => %i[physical_storages])
           add_common_default_values
         end
 
