@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :container_node do
+    sequence(:name) { |n| "container_node_#{seq_padded_for_sorting(n)}" }
     after(:create) do |x|
       x.computer_system = FactoryBot.create(:computer_system)
     end
