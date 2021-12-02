@@ -35,12 +35,4 @@ class AvailabilityZone < ApplicationRecord
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
   end
-
-  def event_where_clause_ems_events
-    EmsEvent.where(:availability_zone_id => id)
-  end
-
-  def event_where_clause_miq_events
-    MiqEvent.where(:availability_zone_id => id)
-  end
 end

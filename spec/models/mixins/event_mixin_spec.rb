@@ -294,7 +294,7 @@ RSpec.describe EventMixin do
       end
     end
 
-    context "PhysicalChassis" do
+    context "PhysicalSwitch" do
       let(:object)       { FactoryBot.create(:physical_switch) }
       let(:other_object) { FactoryBot.create(:physical_switch) }
 

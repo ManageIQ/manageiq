@@ -1503,12 +1503,7 @@ class Host < ApplicationRecord
   end
 
   def event_where_clause_ems_events
-    EmsEvent.where(:host_id => id)
-      .or(EmsEvent.where(:dest_host_id => id))
-  end
-
-  def event_where_clause_miq_events
-    MiqEvent.where(:host_id => id)
+    super.or(EmsEvent.where(:dest_host_id => id))
   end
 
   def has_vm_scan_affinity?

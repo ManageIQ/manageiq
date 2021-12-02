@@ -25,6 +25,12 @@ class PhysicalSwitch < Switch
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
+  # Must define these methods because EventMixin#belongs_to_column_id uses base class
+  # to guess the column name, which results in: switch_id.
+  def event_where_clause_ems_events
+    EmsEvent.where(:physical_switch_id => id)
+  end
+
   def event_where_clause_miq_events
     MiqEvent.where(:physical_switch_id => id)
   end

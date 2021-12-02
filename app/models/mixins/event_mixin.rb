@@ -52,10 +52,34 @@ module EventMixin
     end
   end
 
+  def event_where_clause_ems_events
+    EmsEvent.where(belongs_to_column_id => id)
+  end
+
+  def event_where_clause_miq_events
+    MiqEvent.where(belongs_to_column_id => id)
+  end
+
   private
 
   def find_one_event(assoc, order)
     ewc = event_where_clause(assoc)
     events_assoc_class(assoc).where(ewc).order(order).first unless ewc.blank?
+  end
+
+  def belongs_to_column_id
+    singular_base_class_name = self.class.base_class.name.tableize.singularize
+    reflection = EventStream.reflections.detect do |name, ref|
+      name.to_s == singular_base_class_name &&
+        ref.kind_of?(ActiveRecord::Reflection::BelongsToReflection)
+    end
+
+    if reflection
+      # Use reflection foreign_key if provided, otherwise reflection name + _id
+      reflection.last.options.fetch(:foreign_key, "#{reflection.last.name}_id")
+    else
+      warn "belongs_to reflection missing in EventStream for #{self.class.base_class.name}, using #{singular_base_class_name}"
+      "#{singular_base_class_name}_id"
+    end
   end
 end

@@ -183,14 +183,10 @@ class EmsCluster < ApplicationRecord
   end
 
   def event_where_clause_ems_events
-    EmsEvent.where(:ems_cluster_id => id)
+    super
       .or(EmsEvent.where(:host_id => host_ids))
       .or(EmsEvent.where(:vm_or_template_id => vm_or_template_ids))
       .or(EmsEvent.where(:dest_vm_or_template_id => vm_or_template_ids))
-  end
-
-  def event_where_clause_miq_events
-    MiqEvent.where(:ems_cluster_id => id)
   end
 
   def ems_events

@@ -804,14 +804,6 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
-  def event_where_clause_ems_events
-    EmsEvent.where("event_streams.ems_id" => id)
-  end
-
-  def event_where_clause_miq_events
-    MiqEvent.where("event_streams.ems_id" => id)
-  end
-
   def vm_count_by_state(state)
     vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
