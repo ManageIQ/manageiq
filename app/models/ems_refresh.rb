@@ -84,7 +84,7 @@ module EmsRefresh
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
 
       if ManageIQ::Providers::Inventory.persister_class_for(target_class).blank? &&
-         [VmOrTemplate, Host, PhysicalServer, ExtManagementSystem, InventoryRefresh::Target].none? { |k| target_class <= k }
+         [VmOrTemplate, Host, PhysicalServer, PhysicalStorage, CloudVolume, ExtManagementSystem, InventoryRefresh::Target].none? { |k| target_class <= k }
         _log.warn("Unknown target type: [#{target_class}].")
         next
       end
