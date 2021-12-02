@@ -60,15 +60,16 @@ class ContainerNode < ApplicationRecord
   include Metric::CiMixin
   include CustomAttributeMixin
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      # TODO: improve relationship using the id
-      ["container_node_name = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
-    when :policy_events
-      # TODO: implement policy events and its relationship
-      ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
-    end
+  def event_where_clause_ems_events
+    # TODO: improve relationship using the id
+    EmsEvent
+      .where(:container_node_name => name)
+      .where(:ems_id => ems_id)
+  end
+
+  def event_where_clause_miq_events
+    # TODO: implement policy events and its relationship
+    MiqEvent.where(:ems_id => ems_id)
   end
 
   # TODO: children will be container groups

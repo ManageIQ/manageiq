@@ -55,15 +55,16 @@ class ContainerProject < ApplicationRecord
     ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
   end
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      # TODO: improve relationship using the id
-      ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
-    when :policy_events
-      # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
-    end
+  def event_where_clause_ems_events
+    # TODO: improve relationship using the id
+    EmsEvent
+      .where(:container_namespace => name)
+      .where(:ems_id => ems_id)
+  end
+
+  def event_where_clause_miq_events
+    # TODO: implement policy events and its relationship
+    MiqEvent.where(:ems_id => ems_id)
   end
 
   def perf_rollup_parents(_interval_name = nil)

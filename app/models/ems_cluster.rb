@@ -182,26 +182,15 @@ class EmsCluster < ApplicationRecord
     detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
   end
 
-  def event_where_clause(assoc = :ems_events)
-    return ["ems_cluster_id = ?", id] if assoc.to_sym == :policy_events
+  def event_where_clause_ems_events
+    EmsEvent.where(:ems_cluster_id => id)
+      .or(EmsEvent.where(:host_id => host_ids))
+      .or(EmsEvent.where(:vm_or_template_id => vm_or_template_ids))
+      .or(EmsEvent.where(:dest_vm_or_template_id => vm_or_template_ids))
+  end
 
-    cond = ["ems_cluster_id = ?"]
-    cond_params = [id]
-
-    ids = host_ids
-    unless ids.empty?
-      cond << "host_id IN (?) OR dest_host_id IN (?)"
-      cond_params += [ids, ids]
-    end
-
-    ids = vm_or_template_ids
-    unless ids.empty?
-      cond << "vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)"
-      cond_params += [ids, ids]
-    end
-
-    cond_params.unshift(cond.join(" OR ")) unless cond.empty?
-    cond_params
+  def event_where_clause_miq_events
+    MiqEvent.where(:ems_cluster_id => id)
   end
 
   def ems_events

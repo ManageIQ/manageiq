@@ -79,8 +79,12 @@ class PhysicalServer < ApplicationRecord
     ems ? ems.my_zone : MiqServer.my_zone
   end
 
-  def event_where_clause(assoc = :ems_events)
-    ["#{events_table_name(assoc)}.physical_server_id = ?", id]
+  def event_where_clause_ems_events
+    EmsEvent.where(:physical_server_id => id)
+  end
+
+  def event_where_clause_miq_events
+    MiqEvent.where(:physical_server_id => id)
   end
 
   def v_availability

@@ -27,16 +27,17 @@ class Container < ApplicationRecord
 
   acts_as_miq_taggable
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      # TODO: improve relationship using the id
-      ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ? AND container_name = ?",
-       container_project.try(:name), ext_management_system.try(:id), name]
-    when :policy_events
-      # TODO: implement policy events and its relationship
-      ["#{events_table_name(assoc)}.ems_id = ?", ext_management_system.try(:id)]
-    end
+  def event_where_clause_ems_events
+    # TODO: improve relationship using the id
+    EmsEvent
+      .where(:container_name => name)
+      .where(:container_namespace => container_project.try(:name))
+      .where(:ems_id => ext_management_system.try(:id))
+  end
+
+  def event_where_clause_miq_events
+    # TODO: implement policy events and its relationship
+    MiqEvent.where(:ems_id => ext_management_system.try(:id))
   end
 
   PERF_ROLLUP_CHILDREN = []

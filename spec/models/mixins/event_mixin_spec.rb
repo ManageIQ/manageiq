@@ -90,13 +90,13 @@ RSpec.describe EventMixin do
       it "ems_events" do
         expected1 = FactoryBot.create(:ems_event, :availability_zone_id => object.id)
         FactoryBot.create(:ems_event, :availability_zone_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :availability_zone_id => object.id)
         FactoryBot.create(:miq_event, :availability_zone_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -111,14 +111,14 @@ RSpec.describe EventMixin do
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_namespace => project_name)
         allow(object).to receive(:container_project).and_return(double(:name => project_name))
         allow(object).to receive(:ext_management_system).and_return(double(:id => ems_id))
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => ems_id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
         allow(object).to receive(:ext_management_system).and_return(double(:id => ems_id))
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -132,13 +132,13 @@ RSpec.describe EventMixin do
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_group_name => object.name)
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_namespace => project_name)
         allow(object).to receive(:container_project).and_return(double(:name => project_name))
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => ems_id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -150,13 +150,13 @@ RSpec.describe EventMixin do
         expected1 = FactoryBot.create(:ems_event, :ems_id => ems_id, :container_node_name => object.name)
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_node_name => other_object.name)
         FactoryBot.create(:ems_event, :ems_id => other_object.id, :container_node_name => object.name)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => ems_id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -167,13 +167,13 @@ RSpec.describe EventMixin do
         expected1 = FactoryBot.create(:ems_event, :ems_id => ems_id, :container_namespace => object.name)
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_namespace => other_object.name)
         FactoryBot.create(:ems_event, :ems_id => other_object.id, :container_namespace => object.name)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => ems_id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -187,13 +187,13 @@ RSpec.describe EventMixin do
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_replicator_name => object.name)
         FactoryBot.create(:ems_event, :ems_id => ems_id, :container_namespace => project_name)
         allow(object).to receive(:container_project).and_return(double(:name => project_name))
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => ems_id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -214,13 +214,13 @@ RSpec.describe EventMixin do
         # Pretend there's hosts and vms for this cluster
         allow(object).to receive(:host_ids).and_return([object.id])
         allow(object).to receive(:vm_or_template_ids).and_return([object.id])
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1, expected2, expected3, expected4])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1, expected2, expected3, expected4])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_cluster_id => object.id)
         FactoryBot.create(:miq_event, :ems_cluster_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -231,13 +231,13 @@ RSpec.describe EventMixin do
       it "ems_events" do
         expected1 = FactoryBot.create(:ems_event, :ems_id => object.id)
         FactoryBot.create(:ems_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :ems_id => object.id)
         FactoryBot.create(:miq_event, :ems_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -250,13 +250,13 @@ RSpec.describe EventMixin do
         expected2 = FactoryBot.create(:ems_event, :dest_host_id => object.id)
         FactoryBot.create(:ems_event, :host_id => other_object.id)
         FactoryBot.create(:ems_event, :dest_host_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1, expected2])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1, expected2])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :host_id => object.id)
         FactoryBot.create(:miq_event, :host_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -267,13 +267,13 @@ RSpec.describe EventMixin do
       it "ems_events" do
         expected1 = FactoryBot.create(:ems_event, :physical_chassis_id => object.id)
         FactoryBot.create(:ems_event, :physical_chassis_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :physical_chassis_id => object.id)
         FactoryBot.create(:miq_event, :physical_chassis_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -284,13 +284,13 @@ RSpec.describe EventMixin do
       it "ems_events" do
         expected1 = FactoryBot.create(:ems_event, :physical_server_id => object.id)
         FactoryBot.create(:ems_event, :physical_server_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :physical_server_id => object.id)
         FactoryBot.create(:miq_event, :physical_server_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -301,13 +301,13 @@ RSpec.describe EventMixin do
       it "ems_events" do
         expected1 = FactoryBot.create(:ems_event, :physical_switch_id => object.id)
         FactoryBot.create(:ems_event, :physical_switch_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :physical_switch_id => object.id)
         FactoryBot.create(:miq_event, :physical_switch_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 
@@ -320,13 +320,13 @@ RSpec.describe EventMixin do
         expected2 = FactoryBot.create(:ems_event, :dest_vm_or_template_id => object.id)
         FactoryBot.create(:ems_event, :vm_or_template_id => other_object.id)
         FactoryBot.create(:ems_event, :dest_vm_or_template_id => other_object.id)
-        expect(EventStream.where(object.event_where_clause(:ems_events))).to match_array([expected1, expected2])
+        expect(object.event_where_clause(:ems_events)).to match_array([expected1, expected2])
       end
 
       it "miq_events" do
         expected1 = FactoryBot.create(:miq_event, :target_id => object.id, :target_type => object.class.name)
         FactoryBot.create(:miq_event, :target_id => other_object.id, :target_type => other_object.class.name)
-        expect(object.class.where(object.event_where_clause(:miq_events))).to match_array([expected1])
+        expect(object.event_where_clause(:miq_events)).to match_array([expected1])
       end
     end
 

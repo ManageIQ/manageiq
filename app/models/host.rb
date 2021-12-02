@@ -1502,13 +1502,13 @@ class Host < ApplicationRecord
     services.order(:name).uniq.pluck(:name)
   end
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      ["host_id = ? OR dest_host_id = ?", id, id]
-    when :policy_events
-      ["host_id = ?", id]
-    end
+  def event_where_clause_ems_events
+    EmsEvent.where(:host_id => id)
+      .or(EmsEvent.where(:dest_host_id => id))
+  end
+
+  def event_where_clause_miq_events
+    MiqEvent.where(:host_id => id)
   end
 
   def has_vm_scan_affinity?

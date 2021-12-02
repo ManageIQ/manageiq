@@ -25,16 +25,16 @@ class ContainerReplicator < ApplicationRecord
 
   PERF_ROLLUP_CHILDREN = [:container_groups]
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      # TODO: improve relationship using the id
-      ["container_namespace = ? AND container_replicator_name = ? AND #{events_table_name(assoc)}.ems_id = ?",
-       container_project.name, name, ems_id]
-    when :policy_events
-      # TODO: implement policy events and its relationship
-      ["#{events_table_name(assoc)}.ems_id = ?", ems_id]
-    end
+  def event_where_clause_ems_events
+    EmsEvent
+      .where(:container_namespace => container_project.name)
+      .where(:container_replicator_name => name)
+      .where(:ems_id => ems_id)
+  end
+
+  def event_where_clause_miq_events
+    # TODO: implement policy events and its relationship
+    MiqEvent.where(:ems_id => ems_id)
   end
 
   def perf_rollup_parents(_interval_name = nil)

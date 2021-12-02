@@ -1288,13 +1288,12 @@ class VmOrTemplate < ApplicationRecord
     ent
   end
 
-  def event_where_clause(assoc = :ems_events)
-    case assoc.to_sym
-    when :ems_events, :event_streams
-      return ["vm_or_template_id = ? OR dest_vm_or_template_id = ? ", id, id]
-    when :policy_events
-      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
-    end
+  def event_where_clause_ems_events
+    EmsEvent.where("event_streams.vm_or_template_id" => id).or(EmsEvent.where("event_streams.dest_vm_or_template_id" => id))
+  end
+
+  def event_where_clause_miq_events
+    MiqEvent.where(["vm_or_template_id= ? OR (target_id = ? AND target_type = ?) ", id, id, self.class.base_class.name])
   end
 
   # Virtual columns for owning resource pool, folder and datacenter

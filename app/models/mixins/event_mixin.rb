@@ -1,4 +1,11 @@
-# EventMixin expects that event_where_clause is defined in the model.
+# EventMixin expects that event_where_clause_ems_events is defined as most
+# classes have specific columns added to event_streams for their type.
+# Alternatively, a model can override event_where_clause for custom logic.
+#
+# event_where_clause_miq_events defaults to automatically lookup policy events via the
+# belongs_to target (target_type, target_id) association.
+# If this isn't how policy events are created for a class, that class would need to be override
+# this method with custom logic.
 module EventMixin
   extend ActiveSupport::Concern
 
@@ -34,6 +41,15 @@ module EventMixin
 
   def events_table_name(assoc)
     events_assoc_class(assoc).table_name
+  end
+
+  def event_where_clause(assoc = :ems_events)
+    case assoc.to_sym
+    when :ems_events, :event_streams
+      event_where_clause_ems_events
+    when :miq_events, :policy_events
+      event_where_clause_miq_events
+    end
   end
 
   private
