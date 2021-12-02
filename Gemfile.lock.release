@@ -266,7 +266,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 674f7e240bec6dc9d4314168b3e44e83342f7178
+  revision: c56085dfa24818b1800e8d387b734cf9ec3890bf
   branch: morphy
   specs:
     manageiq-providers-ovirt (0.1.0)
@@ -317,7 +317,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: b6d88fa65492b34f2305d1506cb254978cda0289
+  revision: 343b56a9263154d0f13552aa81cb97daf7b4708c
   branch: morphy
   specs:
     manageiq-ui-classic (0.1.0)
@@ -434,7 +434,7 @@ GEM
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
-    american_date (1.1.1)
+    american_date (1.2.0)
     amq-protocol (2.3.2)
     ancestry (3.0.7)
       activerecord (>= 3.2.0)
@@ -453,44 +453,44 @@ GEM
       typhoeus (~> 1.0, >= 1.0.1)
     awesome_spawn (1.5.0)
     aws-eventstream (1.2.0)
-    aws-partitions (1.527.0)
-    aws-sdk-cloudformation (1.60.0)
+    aws-partitions (1.538.0)
+    aws-sdk-cloudformation (1.63.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-cloudwatch (1.57.0)
+    aws-sdk-cloudwatch (1.59.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.122.1)
+    aws-sdk-core (3.124.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.525.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-ec2 (1.278.0)
+    aws-sdk-ec2 (1.286.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-elasticloadbalancing (1.36.0)
+    aws-sdk-elasticloadbalancing (1.37.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-iam (1.63.0)
+    aws-sdk-iam (1.64.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-kms (1.51.0)
+    aws-sdk-kms (1.52.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-rds (1.130.0)
+    aws-sdk-rds (1.133.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.105.1)
+    aws-sdk-s3 (1.109.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.4)
-    aws-sdk-servicecatalog (1.65.0)
+    aws-sdk-servicecatalog (1.66.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sns (1.47.0)
+    aws-sdk-sns (1.49.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-sqs (1.46.0)
+    aws-sdk-sqs (1.48.0)
       aws-sdk-core (~> 3, >= 3.122.0)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.4.0)
@@ -655,7 +655,7 @@ GEM
       gettext_i18n_rails (>= 0.7.1)
       po_to_json (>= 1.0.0)
       rails (>= 3.2.0)
-    globalid (0.5.2)
+    globalid (1.0.0)
       activesupport (>= 5.0)
     google-api-client (0.50.0)
       addressable (~> 2.5, >= 2.5.1)
@@ -712,7 +712,7 @@ GEM
     httpi (2.5.0)
       rack
       socksify
-    i18n (0.9.5)
+    i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     ibm-cloud-sdk (0.1.11)
       httparty
@@ -755,7 +755,7 @@ GEM
       more_core_extensions (>= 3.5, < 5)
       pg (> 0)
     ipaddress (0.8.3)
-    jbuilder (2.11.2)
+    jbuilder (2.11.3)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
     jquery-rails (4.4.0)
@@ -988,10 +988,10 @@ GEM
       json (~> 2.3)
       nokogiri (~> 1.12, >= 1.12.5)
       optimist (~> 3.0)
-    rdkafka (0.10.0)
-      ffi (~> 1.9)
-      mini_portile2 (~> 2.1)
-      rake (>= 12.3)
+    rdkafka (0.11.1)
+      ffi (~> 1.15)
+      mini_portile2 (~> 2.6)
+      rake (> 12)
     recursive-open-struct (1.1.3)
     redfish_client (0.5.4)
       excon (~> 0.71)
@@ -1058,7 +1058,7 @@ GEM
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.3.0)
+    sprockets-rails (3.4.1)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
