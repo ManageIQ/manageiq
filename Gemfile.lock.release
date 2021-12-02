@@ -712,7 +712,7 @@ GEM
     httpi (2.5.0)
       rack
       socksify
-    i18n (1.8.11)
+    i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     ibm-cloud-sdk (0.1.11)
       httparty
