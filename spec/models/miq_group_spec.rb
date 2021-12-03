@@ -326,11 +326,15 @@ RSpec.describe MiqGroup do
     let(:group) { FactoryBot.create(:miq_group) }
 
     it "uses dashboard_order if present" do
+      # clear settings out of the group so we don't get surprised in the test
+      group.settings = nil
+
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
-
-      group.update(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+      group.add_to_dashboard_order(ws3.id)
+      group.add_to_dashboard_order(ws1.id)
+      group.save
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end

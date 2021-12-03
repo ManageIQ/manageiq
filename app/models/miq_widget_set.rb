@@ -17,6 +17,11 @@ class MiqWidgetSet < ApplicationRecord
 
   validates :description, :uniqueness_when_changed => {:scope   => [:owner_id, :userid],
                                                        :message => _("must be unique for this group and userid")}
+
+  # group used to be for only group widgets, now it is for all widgets
+  # so if you see conditional logic on group/group_id, chances are it is wrong. change to userid
+  # userid, group_id and name are set for user version
+  # group_id, owner_type and owner_id are set for group version
   belongs_to :group, :class_name => 'MiqGroup'
 
   scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
@@ -40,15 +45,17 @@ class MiqWidgetSet < ApplicationRecord
     members.each { |w| w.create_initial_content_for_user(current_user.userid) } if current_user # Generate content if not there
   end
 
+  # update the group's dashboard (only valid for non user dashboards)
   def add_to_dashboard_order
-    return unless group
+    return if user_version? || group.nil?
 
     group.add_to_dashboard_order(id)
     group.save
   end
 
+  # update the group's dashboard (only valid for non user dashboards)
   def delete_from_dashboard_order
-    return unless group
+    return if user_version? || group.nil?
 
     group.delete_from_dashboard_order(id)
     group.save
@@ -61,10 +68,15 @@ class MiqWidgetSet < ApplicationRecord
     end
   end
 
+  # @return true for user version of a dashboard
+  #         false for group dashboards
+  def user_version?
+    userid.present?
+  end
+
+  # destroy all related user versions (only valid for non user dashboards)
   def destroy_user_versions
-    # userid, group_id and name are set for user version
-    # group_id, owner_type and owner_id are set for group version
-    return if userid
+    return if user_version?
 
     # When we destroy a WidgetSet for a group, we also want to destroy all user-modified versions
     MiqWidgetSet.with_users.where(:name => name, :group_id => owner_id).destroy_all
