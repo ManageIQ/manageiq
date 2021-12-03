@@ -185,7 +185,6 @@ end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt_metrics",                  "~>3.0.1",           :require => false
 end
 
 group :scvmm, :manageiq_default do
