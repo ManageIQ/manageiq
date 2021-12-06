@@ -3,6 +3,7 @@ module ManageIQ::Providers
     # @see test in /spec/models/manager_refresh/inventory_collection/builder_spec.rb
     class Builder
       class MissingModelClassError < StandardError; end
+      class NotSubclassedError < StandardError; end
 
       require_nested :AutomationManager
       require_nested :CloudManager
@@ -227,14 +228,28 @@ module ManageIQ::Providers
         # Check that safe_constantize returns our expected class_name, if not then
         # return the base class.
         #
-        # safe_constantize can return different similar class ( some Rails auto-magic :/ )
-        provider_class.to_s == class_name ? provider_class : "::#{name.to_s.classify}".safe_constantize
+        # safe_constantize can return different similar class (if it is able to resolve the
+        # class in the hierarchy even though it isn't at the same hierarchy depth we are expecting.
+        return provider_class if provider_class.to_s == class_name
+
+        klass = "::#{name.to_s.classify}".constantize
+        raise NotSubclassedError, "#{name} should be subclassed under #{manager_class}" if sti?(klass) && !@options[:without_sti]
+
+        klass
+      end
+
+      def sti?(klass)
+        klass.columns_hash.key?(klass.inheritance_column.to_s)
       end
 
       # Enables/disables auto_model_class and exception check
       # @param skip [Boolean]
       def skip_model_class(skip = true)
         @options[:without_model_class] = skip
+      end
+
+      def skip_sti(skip = true)
+        @options[:without_sti] = skip
       end
 
       # Inventory object attributes are derived from setters

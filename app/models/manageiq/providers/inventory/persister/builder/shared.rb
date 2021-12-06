@@ -38,6 +38,8 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     end
 
     def ext_management_system
+      skip_model_class
+
       add_properties(
         :manager_ref       => %i[guid],
         :custom_save_block => lambda do |ems, inventory_collection|

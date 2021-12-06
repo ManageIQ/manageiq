@@ -85,6 +85,8 @@ module ManageIQ::Providers
         end
 
         def ems_folders
+          skip_sti
+
           add_properties(
             :manager_ref          => %i[uid_ems],
             :attributes_blacklist => %i[parent]
