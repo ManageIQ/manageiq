@@ -25,10 +25,10 @@ class ManageIQ::Providers::Inventory::Collector
     target.manager_refs_by_association&.dig(collection, manager_ref)&.to_a&.compact || []
   end
 
-  def add_target!(association, manager_ref)
+  def add_target!(association, manager_ref, options = {})
     return if manager_ref.blank?
 
     manager_ref = {:ems_ref => manager_ref} unless manager_ref.kind_of?(Hash)
-    target.add_target(:association => association, :manager_ref => manager_ref)
+    target.add_target(:association => association, :manager_ref => manager_ref, :options => options)
   end
 end
