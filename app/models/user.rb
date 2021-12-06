@@ -233,6 +233,11 @@ class User < ApplicationRecord
     return unless request
     return unless (session_id = request.session_options[:id])
 
+    # dalli 3.1 switched to Abstract::PersistedStore from Abstract::Persisted and the resulting session id
+    # changed from a string to a SessionID object that can't be coerced in finders. Convert this object to string via
+    # the private_id method, see: https://github.com/rack/rack/issues/1432#issuecomment-571688819
+    session_id = session_id.private_id if session_id.respond_to?(:private_id)
+
     sessions << Session.find_or_create_by(:session_id => session_id)
   end
 
