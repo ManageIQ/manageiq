@@ -8,6 +8,7 @@ class VmOrTemplate < ApplicationRecord
   include RetirementMixin
   include ScanningMixin
   include SupportsFeatureMixin
+  include EmsRefreshMixin
 
   self.table_name = 'vms'
   has_ancestry
@@ -73,7 +74,7 @@ class VmOrTemplate < ApplicationRecord
 
   belongs_to                :storage
   belongs_to                :storage_profile
-  belongs_to                :ext_management_system, :foreign_key => "ems_id"
+  belongs_to                :ext_management_system, :foreign_key => "ems_id", :inverse_of => :vms_and_templates
   belongs_to                :resource_group
   belongs_to                :tenant
 
@@ -1061,44 +1062,6 @@ class VmOrTemplate < ApplicationRecord
     host_id.present? && current_state != "never"
   end
 
-  def self.refresh_ems(vm_ids)
-    vm_ids = [vm_ids] unless vm_ids.kind_of?(Array)
-    vm_ids = vm_ids.collect { |id| [base_class, id] }
-    EmsRefresh.queue_refresh(vm_ids)
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-    EmsRefresh.queue_refresh(self)
-  end
-
-  def self.refresh_ems_sync(vm_ids)
-    vm_ids = [vm_ids] unless vm_ids.kind_of?(Array)
-    vm_ids = vm_ids.collect { |id| [Vm, id] }
-    EmsRefresh.refresh(vm_ids)
-  end
-
-  def refresh_ems_sync
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-    EmsRefresh.refresh(self)
-  end
-
   def self.post_refresh_ems(ems_id, update_start_time)
     update_start_time = update_start_time.utc
     ems = ExtManagementSystem.find(ems_id)
@@ -1661,7 +1624,6 @@ class VmOrTemplate < ApplicationRecord
 
   supports_not :snapshots
   supports :destroy
-  supports :refresh_ems
 
   # Stop showing Reconfigure VM task unless the subclass allows
   def reconfigurable?

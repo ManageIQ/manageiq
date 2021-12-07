@@ -1,6 +1,7 @@
 class PhysicalChassis < ApplicationRecord
   include SupportsFeatureMixin
   include EventMixin
+  include EmsRefreshMixin
 
   acts_as_miq_taggable
 
@@ -25,8 +26,6 @@ class PhysicalChassis < ApplicationRecord
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
   has_many :guest_devices, :through => :hardware
 
-  supports :refresh_ems
-
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
@@ -34,19 +33,5 @@ class PhysicalChassis < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     ["#{events_table_name(assoc)}.physical_chassis_id = ?", id]
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-
-    EmsRefresh.queue_refresh(ext_management_system)
   end
 end

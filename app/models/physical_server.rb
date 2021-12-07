@@ -8,6 +8,7 @@ class PhysicalServer < ApplicationRecord
   include EventMixin
   include ProviderObjectMixin
   include ComplianceMixin
+  include EmsRefreshMixin
 
   include_concern 'Operations'
 
@@ -40,8 +41,6 @@ class PhysicalServer < ApplicationRecord
   delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
   has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
-
-  supports :refresh_ems
 
   def name_with_details
     details % {
@@ -82,25 +81,6 @@ class PhysicalServer < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     ["#{events_table_name(assoc)}.physical_server_id = ?", id]
-  end
-
-  def self.refresh_ems(physical_server_ids)
-    physical_server_ids = [physical_server_ids] unless physical_server_ids.kind_of?(Array)
-    physical_server_ids = physical_server_ids.collect { |id| [PhysicalServer, id] }
-    EmsRefresh.queue_refresh(physical_server_ids)
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-    EmsRefresh.queue_refresh(self)
   end
 
   def v_availability

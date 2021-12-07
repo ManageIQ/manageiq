@@ -1,6 +1,7 @@
 class PhysicalSwitch < Switch
   include SupportsFeatureMixin
   include EventMixin
+  include EmsRefreshMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_switches,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"
@@ -19,25 +20,9 @@ class PhysicalSwitch < Switch
 
   alias_attribute :physical_servers, :connected_physical_servers
 
-  supports :refresh_ems
-
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-
-    EmsRefresh.queue_refresh(ext_management_system)
   end
 
   def event_where_clause(assoc = :ems_events)

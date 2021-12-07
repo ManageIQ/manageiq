@@ -13,6 +13,7 @@ class OrchestrationStack < ApplicationRecord
   include SupportsFeatureMixin
   include CiFeatureMixin
   include CloudTenancyMixin
+  include EmsRefreshMixin
 
   acts_as_miq_taggable
 
@@ -57,7 +58,6 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
 
-  supports :refresh_ems
   supports :retire
 
   def orchestration_stacks
@@ -152,33 +152,5 @@ class OrchestrationStack < ApplicationRecord
     rstatus && !rstatus.deleted?
   rescue MiqException::MiqOrchestrationStackNotExistError
     false
-  end
-
-  def refresh_ems
-    self.class.refresh_ems(ext_management_system.id, ems_ref)
-  end
-
-  def self.refresh_ems(manager_id, manager_ref)
-    manager = ExtManagementSystem.find_by(:id => manager_id)
-
-    unless manager
-      raise _("No Provider defined")
-    end
-    unless manager.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless manager.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-
-    target = if manager.allow_targeted_refresh?
-               # Queue new targeted refresh if allowed
-               InventoryRefresh::Target.new(:manager => manager, :association => :orchestration_stacks, :manager_ref => {:ems_ref => manager_ref})
-             else
-               # Otherwise queue a full refresh
-               manager
-             end
-
-    EmsRefresh.queue_refresh(target)
   end
 end

@@ -11,6 +11,7 @@ class Host < ApplicationRecord
   include TenantIdentityMixin
   include DeprecationMixin
   include CustomActionsMixin
+  include EmsRefreshMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
@@ -185,7 +186,6 @@ class Host < ApplicationRecord
       unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
     end
   end
-  supports     :refresh_ems
   supports_not :refresh_advanced_settings
   supports_not :refresh_firewall_rules
   supports_not :refresh_logs
@@ -568,25 +568,6 @@ class Host < ApplicationRecord
 
   def is_refreshable_now_error_message
     refreshable_status[:message]
-  end
-
-  def self.refresh_ems(host_ids)
-    host_ids = [host_ids] unless host_ids.kind_of?(Array)
-    host_ids = host_ids.collect { |id| [Host, id] }
-    EmsRefresh.queue_refresh(host_ids)
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Providers defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-    EmsRefresh.queue_refresh(self)
   end
 
   def is_scannable?
