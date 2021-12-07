@@ -5,7 +5,7 @@ class EmsEvent
     def manager_refresh(sync: false)
       refresh_targets = manager_refresh_targets
 
-      return if refresh_targets.empty?
+      return if refresh_targets.blank?
 
       EmsRefresh.queue_refresh(refresh_targets, nil, :create_task => sync)
     end
