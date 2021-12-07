@@ -6,6 +6,7 @@ class CloudVolume < ApplicationRecord
   include SupportsFeatureMixin
   include CloudTenancyMixin
   include CustomActionsMixin
+  include EmsRefreshMixin
 
   include_concern 'Operations'
 

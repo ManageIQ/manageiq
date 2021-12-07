@@ -3,6 +3,7 @@ class HostInitiator < ApplicationRecord
   include ProviderObjectMixin
   include SupportsFeatureMixin
   include CustomActionsMixin
+  include EmsRefreshMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :physical_storage, :inverse_of => :host_initiators
@@ -14,7 +15,6 @@ class HostInitiator < ApplicationRecord
 
   virtual_total :v_total_addresses, :san_addresses
 
-  supports :refresh_ems
   supports_not :create
   acts_as_miq_taggable
 
@@ -25,20 +25,6 @@ class HostInitiator < ApplicationRecord
 
   def self.class_by_ems(ext_management_system)
     ext_management_system&.class_by_ems(:HostInitiator)
-  end
-
-  def refresh_ems
-    unless ext_management_system
-      raise _("No Provider defined")
-    end
-    unless ext_management_system.has_credentials?
-      raise _("No Provider credentials defined")
-    end
-    unless ext_management_system.authentication_status_ok?
-      raise _("Provider failed last authentication check")
-    end
-
-    EmsRefresh.queue_refresh(ext_management_system)
   end
 
   def self.create_host_initiator_queue(userid, ext_management_system, options = {})
