@@ -471,43 +471,52 @@ RSpec.describe EmsEvent do
     end
   end
 
-  context 'manager refresh' do
-    let(:ems_cloud) { FactoryBot.create(:ems_cloud) }
-    let(:ems_event_cloud) {
+  describe '#manager_refresh' do
+    let(:ems)       { FactoryBot.create(:ems_cloud) }
+    let(:ems_event) do
       FactoryBot.create(
         :ems_event,
-        :ext_management_system => ems_cloud,
-        :event_type => "CloneVM_Task",
-        :full_data  => {"info" => {"task" => "task-5324"}}
+        :ext_management_system => ems,
+        :event_type            => "CloneVM_Task",
+        :full_data             => {"info" => {"task" => "task-5324"}}
       )
-    }
-
-    let(:ems_infra) { FactoryBot.create(:ems_infra) }
-    let(:ems_event_infra) {
-      FactoryBot.create(
-        :ems_event,
-        :ext_management_system => ems_infra,
-        :event_type => "CloneVM_Task",
-        :full_data  => {"info" => {"task" => "task-5324"}}
-      )
-    }
-
-    it 'performs a targeted refresh if supported' do
-      klass = ems_cloud.class.const_get('EventTargetParser')
-      target_parser = klass.new(ems_cloud)
-
-      allow(klass).to receive(:new).and_return(target_parser)
-
-      expect(ems_cloud).to receive(:allow_targeted_refresh?).and_return(true)
-      expect(klass).to receive(:new)
-      expect(target_parser).to receive(:parse)
-
-      ems_event_cloud.manager_refresh_targets
     end
 
-    it 'returns the ems if targeted refresh is not supported' do
-      expect(ems_infra).to receive(:allow_targeted_refresh?).and_return(false)
-      expect(ems_event_infra.manager_refresh_targets).to eq(ems_infra)
+    context "targeted refresh supported" do
+      let(:target_parser) { double("EventTargetParser") }
+
+      before do
+        allow(ems).to receive(:allow_targeted_refresh?).and_return(true)
+        allow(ems.class.const_get('EventTargetParser')).to receive(:new).and_return(target_parser)
+        expect(target_parser).to receive(:parse).and_return(targets)
+      end
+
+      context "with no targets" do
+        let(:targets) { [] }
+
+        it "skips queuing the refresh" do
+          expect(EmsRefresh).not_to receive(:queue_refresh)
+          ems_event.manager_refresh
+        end
+      end
+
+      context "with targets" do
+        let(:targets) { [InventoryRefresh::Target.new(:manager => ems, :association => :vms, :manager_ref => {:ems_ref => "1234"})] }
+
+        it "performs a targeted refresh" do
+          expect(EmsRefresh).to receive(:queue_refresh).with(targets, any_args)
+          ems_event.manager_refresh
+        end
+      end
+    end
+
+    context "targeted refresh not supported" do
+      before { allow(ems).to receive(:allow_targeted_refresh?).and_return(false) }
+
+      it "runs a full refresh" do
+        expect(EmsRefresh).to receive(:queue_refresh).with(ems, any_args)
+        ems_event.manager_refresh
+      end
     end
   end
 end
