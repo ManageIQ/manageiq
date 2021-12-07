@@ -29,9 +29,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential 
       :name       => 'security_token',
       :id         => 'security_token',
       :type       => 'password',
-      :maxLength  => 1024,
-      :isRequired => true,
-      :validate   => [{:type => 'required'}],
+      :maxLength  => 1024
     },
   ].freeze
 
