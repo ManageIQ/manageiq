@@ -1,0 +1,16 @@
+[Unit]
+Description=EVM server daemon
+After=memcached.service manageiq-db-ready.service
+Wants=memcached.service manageiq-db-ready.service
+
+[Service]
+WorkingDirectory=/var/www/miq/vmdb
+EnvironmentFile=/etc/default/manageiq*.properties
+Environment=EVMSERVER=true
+ExecStart=/usr/bin/ruby lib/workers/bin/evm_server.rb
+Group=manageiq
+UMask=0002
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
