@@ -178,4 +178,51 @@ namespace :release do
     puts "\tgit push upstream #{current_branch}"
     puts
   end
+
+  desc "Generate the Gemfile.lock.release file"
+  task :generate_lockfile do
+    branch = ENV["RELEASE_BRANCH"]
+    if branch.nil? || branch.empty?
+      STDERR.puts "ERROR: You must set the env var RELEASE_BRANCH to the proper value."
+      exit 1
+    end
+
+    root = Pathname.new(__dir__).join("../..")
+
+    # Ensure that local and global bundler.d is not enabled
+    local_bundler_d  = root.join("bundler.d")
+    global_bundler_d = Pathname.new(Dir.home).join(".bundler.d")
+    if (local_bundler_d.exist? && local_bundler_d.glob("*.rb").any?) ||
+       (global_bundler_d.exist? && global_bundler_d.glob("*.rb").any?)
+      STDERR.puts "ERROR: You cannot run generate_lockfile with bundler-inject files present."
+      exit 1
+    end
+
+    begin
+      require "open-uri"
+      appliance_deps = URI.parse("https://raw.githubusercontent.com/ManageIQ/manageiq-appliance/#{branch}/manageiq-appliance-dependencies.rb").read
+      appliance_deps_file = local_bundler_d.join("manageiq_appliance_dependencies.rb")
+      File.write(appliance_deps_file, appliance_deps)
+
+      FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+
+      platforms = %w[
+        ruby
+        x86_64-linux
+        x86_64-darwin
+        powerpc64le-linux
+      ].sort_by { |p| [RUBY_PLATFORM.start_with?(p) ? 0 : 1, p] }
+
+      Bundler.with_unbundled_env do
+        platforms.each do |p|
+          puts "** #{p}"
+          exit $?.exitstatus unless system({"APPLIANCE" => "true"}, "bundle lock --conservative --add-platform #{p}", :chdir => root)
+        end
+      end
+
+      FileUtils.cp(root.join("Gemfile.lock"), root.join("Gemfile.lock.release"))
+    ensure
+      FileUtils.rm_f(appliance_deps_file)
+    end
+  end
 end
