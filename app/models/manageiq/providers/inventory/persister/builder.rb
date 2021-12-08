@@ -3,6 +3,7 @@ module ManageIQ::Providers
     # @see test in /spec/models/manager_refresh/inventory_collection/builder_spec.rb
     class Builder
       class MissingModelClassError < StandardError; end
+
       class NotSubclassedError < StandardError; end
 
       require_nested :AutomationManager
@@ -244,8 +245,12 @@ module ManageIQ::Providers
         @options[:without_model_class] = skip
       end
 
-      def skip_sti(skip = true)
-        @options[:without_sti] = skip
+      def skip_sti
+        @options[:without_sti] = true
+      end
+
+      def with_sti
+        @options[:without_sti] = false
       end
 
       # Inventory object attributes are derived from setters
