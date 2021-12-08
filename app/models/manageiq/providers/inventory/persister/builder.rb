@@ -233,13 +233,9 @@ module ManageIQ::Providers
         return provider_class if provider_class.to_s == class_name
 
         klass = "::#{name.to_s.classify}".constantize
-        raise NotSubclassedError, "#{name} should be subclassed under #{manager_class}" if sti?(klass) && !@options[:without_sti]
+        raise NotSubclassedError, "#{name} should be subclassed under #{manager_class}" if klass.sti? && !@options[:without_sti]
 
         klass
-      end
-
-      def sti?(klass)
-        klass.columns_hash.key?(klass.inheritance_column.to_s)
       end
 
       # Enables/disables auto_model_class and exception check

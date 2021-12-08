@@ -22,6 +22,10 @@ class ApplicationRecord < ActiveRecord::Base
     include MiqDecorator::Instance
   end
 
+  def self.sti?
+    columns_hash.key?(inheritance_column.to_s)
+  end
+
   def self.display_name(number = 1)
     n_(model_name.singular.titleize, model_name.plural.titleize, number)
   end
