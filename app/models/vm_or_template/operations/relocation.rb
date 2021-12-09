@@ -2,8 +2,11 @@ module VmOrTemplate::Operations::Relocation
   extend ActiveSupport::Concern
 
   included do
+    supports_not :evacuate
     supports_not :live_migrate
     supports_not :migrate
+    supports_not :move_into_folder
+    supports_not :relocate
   end
 
   def raw_live_migrate(_options = nil)
