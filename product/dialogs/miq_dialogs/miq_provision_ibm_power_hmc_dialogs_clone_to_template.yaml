@@ -1,0 +1,44 @@
+---
+:name: miq_provision_ibm_power_hmc_dialogs_clone_to_template
+:description: IBM Power HMC Logical Partition Clone to Template Dialog
+:dialog_type: MiqProvisionWorkflow
+:content:
+  :buttons:
+  - :submit
+  - :cancel
+  :dialogs:
+    :service:
+      :description: Catalog
+      :fields:
+        :number_of_vms:
+          :description: Count
+          :required: false
+          :display: :hide
+          :default: 1
+          :data_type: :integer
+        :vm_prefix:
+          :description: Template Name Prefix/Suffix
+          :required_method: :validate_vm_name
+          :required: false
+          :display: :hide
+          :data_type: :string
+        :src_vm_id:
+          :description: Name
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+        :vm_name:
+          :description: Template Name
+          :required_method: :validate_vm_name
+          :required: true
+          :notes:
+          :display: :edit
+          :data_type: :string
+          :notes_display: :show
+          :min_length:
+          :max_length: 31
+      :display: :show
+  :dialog_order:
+  - :service
