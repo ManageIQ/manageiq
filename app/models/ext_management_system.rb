@@ -295,6 +295,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :feature => :cloud_volume
   supports_attribute :feature => :cloud_volume_create
   supports_attribute :supports_create_flavor, :child_model => "Flavor"
+  supports_attribute :supports_create_floating_ip, :child_model => "FloatingIp"
   supports_attribute :feature => :volume_availability_zones
   supports_attribute :supports_create_security_group, :child_model => "SecurityGroup"
   supports_attribute :supports_create_host_aggregate, :child_model => "HostAggregate"
