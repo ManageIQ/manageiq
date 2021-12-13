@@ -7,7 +7,6 @@ module ManageIQ::Providers
     supports_not :cloud_object_store_container_create
     supports_not :cloud_volume
     supports_not :cloud_volume_create
-    supports_not :ems_storage_new
     supports_not :object_storage
     supports_not :smartstate_analysis
     supports_not :storage_services

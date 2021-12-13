@@ -41,11 +41,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.supported_types_for_create
-    permitted_subclasses.select(&:supported_for_create?)
-  end
-
-  def self.supported_for_create?
-    !reflections.include?("parent_manager")
+    subclasses_supporting(:create)
   end
 
   def self.label_mapping_prefixes
@@ -157,8 +153,6 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_volume_create
   supports_not :console
   supports_not :discovery
-  supports_not :ems_network_new
-  supports_not :ems_storage_new
   supports_not :label_mapping
   supports_not :metrics
   supports_not :object_storage
