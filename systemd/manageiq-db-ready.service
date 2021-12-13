@@ -1,0 +1,14 @@
+[Unit]
+Description=ManageIQ DB Ready
+After=network.target
+Before=evmserverd.service
+ConditionPathExists=/var/www/miq/vmdb/config/database.yml
+
+[Service]
+ExecStart=/usr/bin/manageiq-db-ready
+EnvironmentFile=/etc/default/manageiq*.properties
+TimeoutStartSec=infinity
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
