@@ -85,6 +85,25 @@ module VmOrTemplate::Operations
     run_command_via_task(task_opts, :method_name => "rename", :args => [new_name])
   end
 
+  def raw_set_description(_new_description)
+    raise NotImplementedError, _("must be implemented in a subclass")
+  end
+
+  def set_description(new_description)
+    raise _("VM has no Provider, unable to rename VM") unless ext_management_system
+
+    raw_set_description(new_description)
+  end
+
+  def set_description_queue(userid, new_description)
+    task_opts = {
+      :action => "Setting description for user #{userid}",
+      :userid => userid
+    }
+
+    run_command_via_task(task_opts, :method_name => "set_description", :args => [new_description])
+  end
+
   def raw_set_custom_field(_attribute, _value)
     raise NotImplementedError, _("must be implemented in a subclass")
   end
