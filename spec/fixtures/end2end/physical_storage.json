@@ -1,0 +1,7 @@
+{
+  "name"                       : "svc-178",
+  "password"                   : "<password>",
+  "user"                       : "<user>",
+  "physical_storage_family_id" : 123,
+  "management_ip"              : "9.151.159.178"
+}
