@@ -289,21 +289,6 @@
   :url: /container_topology
   :rbac_feature_name: container_topology_view
   :startup: true
-- :name: migration
-  :description: Migration / Migration Plans
-  :url: /migration/#plans
-  :rbac_feature_name: migration
-  :startup: true
-- :name: mappings
-  :description: Migration / Infrastructure Mappings
-  :url: /migration/#mappings
-  :rbac_feature_name: mappings
-  :startup: true
-- :name: migration_settings
-  :description: Migration / Migration Settings
-  :url: /migration/#settings
-  :rbac_feature_name: migration_settings
-  :startup: true
 - :name: ems_configuration
   :description: Configuration / Providers
   :url: ems_configuration/show_list
