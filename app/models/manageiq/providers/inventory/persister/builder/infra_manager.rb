@@ -74,7 +74,7 @@ module ManageIQ::Providers
         def ems_custom_attributes
           add_properties(
             :model_class                  => ::CustomAttribute,
-            :manager_ref                  => %i(name),
+            :manager_ref                  => %i(resource name),
             :parent_inventory_collections => %i(vms miq_templates),
           )
         end
@@ -84,8 +84,8 @@ module ManageIQ::Providers
 
           add_properties(
             :model_class                  => ::CustomAttribute,
-            :manager_ref                  => %i(name),
-            :parent_inventory_collections => %i(vms)
+            :manager_ref                  => %i(resource name),
+            :parent_inventory_collections => %i(vms miq_templates)
           )
 
           add_inventory_attributes(%i(section name value source resource))
