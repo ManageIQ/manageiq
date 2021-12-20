@@ -4,8 +4,8 @@ module ManageIQ::Providers
       class AutomationManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         def authentication_configuration_script_bases
           add_properties(
-            :manager_ref                  => %i(configuration_script_base authentication),
-            :parent_inventory_collections => %i(configuration_scripts)
+            :manager_ref                  => %i[configuration_script_base authentication],
+            :parent_inventory_collections => %i[configuration_scripts]
           )
         end
 
@@ -16,8 +16,8 @@ module ManageIQ::Providers
 
         def configuration_script_payloads
           add_properties(
-            :manager_ref                  => %i(configuration_script_source manager_ref),
-            :parent_inventory_collections => %i(configuration_script_sources)
+            :manager_ref                  => %i[configuration_script_source manager_ref],
+            :parent_inventory_collections => %i[configuration_script_sources]
           )
           add_common_default_values
         end
@@ -44,13 +44,13 @@ module ManageIQ::Providers
         end
 
         def vms
-          add_properties(:manager_ref => %i(uid_ems))
+          add_properties(:manager_ref => %i[uid_ems])
         end
 
         protected
 
         def default_manager_ref
-          add_properties(:manager_ref => %i(manager_ref))
+          add_properties(:manager_ref => %i[manager_ref])
         end
 
         def add_common_default_values

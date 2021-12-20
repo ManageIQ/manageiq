@@ -5,8 +5,8 @@ module ManageIQ::Providers
         def cloud_subnet_network_ports
           add_properties(
             # :model_class                  => ::CloudSubnetNetworkPort,
-            :manager_ref                  => %i(address cloud_subnet network_port),
-            :parent_inventory_collections => %i(vms network_ports load_balancers)
+            :manager_ref                  => %i[address cloud_subnet network_port],
+            :parent_inventory_collections => %i[vms network_ports load_balancers]
           )
 
           add_targeted_arel(
@@ -75,8 +75,8 @@ module ManageIQ::Providers
 
         def firewall_rules
           add_properties(
-            :manager_ref                  => %i(resource source_security_group direction host_protocol port end_port source_ip_range),
-            :parent_inventory_collections => %i(security_groups)
+            :manager_ref                  => %i[resource source_security_group direction host_protocol port end_port source_ip_range],
+            :parent_inventory_collections => %i[security_groups]
           )
         end
 
@@ -86,7 +86,7 @@ module ManageIQ::Providers
 
         def load_balancer_pools
           add_properties(
-            :parent_inventory_collections => %i(load_balancers)
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -104,7 +104,7 @@ module ManageIQ::Providers
 
         def load_balancer_pool_members
           add_properties(
-            :parent_inventory_collections => %i(load_balancers)
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -127,8 +127,8 @@ module ManageIQ::Providers
 
         def load_balancer_pool_member_pools
           add_properties(
-            :manager_ref                  => %i(load_balancer_pool load_balancer_pool_member),
-            :parent_inventory_collections => %i(load_balancers)
+            :manager_ref                  => %i[load_balancer_pool load_balancer_pool_member],
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -136,7 +136,7 @@ module ManageIQ::Providers
               manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
               inventory_collection.parent.load_balancer_pool_member_pools
                 .joins(:load_balancer_pool => :load_balancers)
-                .where(:load_balancer_pools => { 'load_balancers' => { :ems_ref => manager_uuids } })
+                .where(:load_balancer_pools => {'load_balancers' => {:ems_ref => manager_uuids}})
                 .distinct
             end
           )
@@ -145,7 +145,7 @@ module ManageIQ::Providers
         def load_balancer_listeners
           add_properties(
             :use_ar_object                => true,
-            :parent_inventory_collections => %i(load_balancers),
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -163,8 +163,8 @@ module ManageIQ::Providers
 
         def load_balancer_listener_pools
           add_properties(
-            :manager_ref                  => %i(load_balancer_listener load_balancer_pool),
-            :parent_inventory_collections => %i(load_balancers)
+            :manager_ref                  => %i[load_balancer_listener load_balancer_pool],
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -180,7 +180,7 @@ module ManageIQ::Providers
 
         def load_balancer_health_checks
           add_properties(
-            :parent_inventory_collections => %i(load_balancers)
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(
@@ -198,8 +198,8 @@ module ManageIQ::Providers
 
         def load_balancer_health_check_members
           add_properties(
-            :manager_ref                  => %i(load_balancer_health_check load_balancer_pool_member),
-            :parent_inventory_collections => %i(load_balancers)
+            :manager_ref                  => %i[load_balancer_health_check load_balancer_pool_member],
+            :parent_inventory_collections => %i[load_balancers]
           )
 
           add_targeted_arel(

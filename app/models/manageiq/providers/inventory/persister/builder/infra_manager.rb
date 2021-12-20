@@ -4,78 +4,78 @@ module ManageIQ::Providers
       class InfraManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         def networks
           add_properties(
-            :manager_ref                  => %i(hardware ipaddress ipv6address),
-            :parent_inventory_collections => %i(vms miq_templates),
+            :manager_ref                  => %i[hardware ipaddress ipv6address],
+            :parent_inventory_collections => %i[vms miq_templates]
           )
         end
 
         def host_networks
           add_properties(
             :model_class                  => ::Network,
-            :manager_ref                  => %i(hardware ipaddress),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[hardware ipaddress],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def guest_devices
           add_properties(
-            :manager_ref                  => %i(hardware uid_ems),
-            :parent_inventory_collections => %i(vms miq_templates),
+            :manager_ref                  => %i[hardware uid_ems],
+            :parent_inventory_collections => %i[vms miq_templates]
           )
         end
 
         def host_guest_devices
           add_properties(
             :model_class                  => ::GuestDevice,
-            :manager_ref                  => %i(hardware uid_ems),
-            :parent_inventory_collections => %i(hosts),
+            :manager_ref                  => %i[hardware uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def host_hardwares
           add_properties(
             :model_class                  => ::Hardware,
-            :manager_ref                  => %i(host),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[host],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def host_disks
           add_properties(
             :model_class                  => ::Disk,
-            :manager_ref                  => %i(hardware device_name),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[hardware device_name],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def host_system_services
           add_properties(
             :model_class                  => ::SystemService,
-            :manager_ref                  => %i(host name),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[host name],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def snapshots
           add_properties(
-            :manager_ref                  => %i(vm_or_template uid),
-            :parent_inventory_collections => %i(vms miq_templates),
+            :manager_ref                  => %i[vm_or_template uid],
+            :parent_inventory_collections => %i[vms miq_templates]
           )
         end
 
         def host_operating_systems
           add_properties(
             :model_class                  => ::OperatingSystem,
-            :manager_ref                  => %i(host),
-            :parent_inventory_collections => %i(hosts),
+            :manager_ref                  => %i[host],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def ems_custom_attributes
           add_properties(
             :model_class                  => ::CustomAttribute,
-            :manager_ref                  => %i(resource name),
-            :parent_inventory_collections => %i(vms miq_templates),
+            :manager_ref                  => %i[resource name],
+            :parent_inventory_collections => %i[vms miq_templates]
           )
         end
 
@@ -84,17 +84,17 @@ module ManageIQ::Providers
 
           add_properties(
             :model_class                  => ::CustomAttribute,
-            :manager_ref                  => %i(resource name),
-            :parent_inventory_collections => %i(vms miq_templates)
+            :manager_ref                  => %i[resource name],
+            :parent_inventory_collections => %i[vms miq_templates]
           )
 
-          add_inventory_attributes(%i(section name value source resource))
+          add_inventory_attributes(%i[section name value source resource])
         end
 
         def ems_folders
           add_properties(
             :manager_ref          => %i[uid_ems],
-            :attributes_blacklist => %i[parent],
+            :attributes_blacklist => %i[parent]
           )
           add_common_default_values
         end
@@ -107,7 +107,7 @@ module ManageIQ::Providers
         def resource_pools
           add_properties(
             :manager_ref          => %i[uid_ems],
-            :attributes_blacklist => %i[parent],
+            :attributes_blacklist => %i[parent]
           )
           add_common_default_values
         end
@@ -147,23 +147,23 @@ module ManageIQ::Providers
 
         def host_storages
           add_properties(
-            :manager_ref                  => %i(host storage),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[host storage],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def host_switches
           add_properties(
-            :manager_ref                  => %i(host switch),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[host switch],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def host_virtual_switches
           add_properties(
-            :manager_ref                  => %i(host uid_ems),
+            :manager_ref                  => %i[host uid_ems],
             :model_class                  => Switch,
-            :parent_inventory_collections => %i(hosts)
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
@@ -178,16 +178,16 @@ module ManageIQ::Providers
 
         def lans
           add_properties(
-            :manager_ref                  => %i(switch uid_ems),
-            :parent_inventory_collections => %i(hosts),
+            :manager_ref                  => %i[switch uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def distributed_virtual_lans
           add_properties(
             :model_class                  => Lan,
-            :manager_ref                  => %i(switch uid_ems),
-            :parent_inventory_collections => %i(distributed_virtual_switches),
+            :manager_ref                  => %i[switch uid_ems],
+            :parent_inventory_collections => %i[distributed_virtual_switches]
           )
         end
 
@@ -201,28 +201,28 @@ module ManageIQ::Providers
 
         def subnets
           add_properties(
-            :manager_ref                  => %i(lan ems_ref),
-            :parent_inventory_collections => %i(hosts),
+            :manager_ref                  => %i[lan ems_ref],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def customization_specs
-          add_properties(:manager_ref => %i(name))
+          add_properties(:manager_ref => %i[name])
 
           add_common_default_values
         end
 
         def miq_scsi_luns
           add_properties(
-            :manager_ref                  => %i(miq_scsi_target uid_ems),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[miq_scsi_target uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
         def miq_scsi_targets
           add_properties(
-            :manager_ref                  => %i(guest_device uid_ems),
-            :parent_inventory_collections => %i(hosts)
+            :manager_ref                  => %i[guest_device uid_ems],
+            :parent_inventory_collections => %i[hosts]
           )
         end
 
@@ -258,7 +258,7 @@ module ManageIQ::Providers
           )
 
           add_dependency_attributes(
-            :ems_folders => ->(persister) { [persister.collections[:ems_folders]] },
+            :ems_folders => ->(persister) { [persister.collections[:ems_folders]] }
           )
         end
 
@@ -271,8 +271,8 @@ module ManageIQ::Providers
           )
 
           dependency_collections = %i[clusters ems_folders datacenters hosts resource_pools storages]
-          dependency_attributes = dependency_collections.each_with_object({}) do |collection, hash|
-            hash[collection] = ->(persister) { [persister.collections[collection]].compact }
+          dependency_attributes = dependency_collections.index_with do |collection|
+            ->(persister) { [persister.collections[collection]].compact }
           end
           add_dependency_attributes(dependency_attributes)
         end

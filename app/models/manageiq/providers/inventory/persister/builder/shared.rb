@@ -39,7 +39,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
     def ext_management_system
       add_properties(
-        :manager_ref       => %i(guid),
+        :manager_ref       => %i[guid],
         :custom_save_block => lambda do |ems, inventory_collection|
           ems_attrs = inventory_collection.data.first&.attributes
           ems.update!(ems_attrs) if ems_attrs
@@ -67,7 +67,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
         :attributes_blacklist   => %i[genealogy_parent parent resource_pool],
         :use_ar_object          => true, # Because of raw_power_state setter and hooks are needed for settings user
         :saver_strategy         => :default,
-        :batch_extra_attributes => %i(power_state state_changed_on previous_state),
+        :batch_extra_attributes => %i[power_state state_changed_on previous_state],
         :custom_reconnect_block => INVENTORY_RECONNECT_BLOCK
       )
 
@@ -112,9 +112,9 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
     def hardwares
       add_properties(
-        :manager_ref                  => %i(vm_or_template),
-        :parent_inventory_collections => %i(vms miq_templates),
-        :use_ar_object                => true, # TODO(lsmola) just because of default value on cpu_sockets, this can be fixed by separating instances_hardwares and images_hardwares
+        :manager_ref                  => %i[vm_or_template],
+        :parent_inventory_collections => %i[vms miq_templates],
+        :use_ar_object                => true # TODO(lsmola) just because of default value on cpu_sockets, this can be fixed by separating instances_hardwares and images_hardwares
       )
     end
 
@@ -141,23 +141,23 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       end
 
       add_properties(
-        :manager_ref                  => %i(vm_or_template),
-        :parent_inventory_collections => %i(vms miq_templates),
+        :manager_ref                  => %i[vm_or_template],
+        :parent_inventory_collections => %i[vms miq_templates],
         :custom_save_block            => custom_save_block
       )
     end
 
     def networks
       add_properties(
-        :manager_ref                  => %i(hardware description),
-        :parent_inventory_collections => %i(vms)
+        :manager_ref                  => %i[hardware description],
+        :parent_inventory_collections => %i[vms]
       )
     end
 
     def disks
       add_properties(
-        :manager_ref                  => %i(hardware device_name),
-        :parent_inventory_collections => %i(vms)
+        :manager_ref                  => %i[hardware device_name],
+        :parent_inventory_collections => %i[vms]
       )
     end
 
@@ -175,7 +175,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
     def orchestration_stacks
       add_properties(
-        :attributes_blacklist => %i(parent),
+        :attributes_blacklist => %i[parent]
       )
 
       add_common_default_values
