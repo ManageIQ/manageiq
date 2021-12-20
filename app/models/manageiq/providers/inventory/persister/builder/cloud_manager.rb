@@ -22,7 +22,7 @@ module ManageIQ::Providers
           add_properties(
             :name        => :auth_key_pairs,
             :association => :key_pairs,
-            :manager_ref => %i(name)
+            :manager_ref => %i[name]
           )
           add_default_values(
             :resource_id   => parent.id,
@@ -41,21 +41,21 @@ module ManageIQ::Providers
         def orchestration_stacks_resources
           add_properties(
             :model_class                  => ::OrchestrationStackResource,
-            :parent_inventory_collections => %i(orchestration_stacks)
+            :parent_inventory_collections => %i[orchestration_stacks]
           )
         end
 
         def orchestration_stacks_outputs
           add_properties(
             :model_class                  => ::OrchestrationStackOutput,
-            :parent_inventory_collections => %i(orchestration_stacks)
+            :parent_inventory_collections => %i[orchestration_stacks]
           )
         end
 
         def orchestration_stacks_parameters
           add_properties(
             :model_class                  => ::OrchestrationStackParameter,
-            :parent_inventory_collections => %i(orchestration_stacks)
+            :parent_inventory_collections => %i[orchestration_stacks]
           )
         end
 
@@ -123,11 +123,11 @@ module ManageIQ::Providers
 
           model_class = stacks_inventory_collection.model_class
 
-          stacks_parents_indexed = model_class.select(%i(id ancestry))
+          stacks_parents_indexed = model_class.select(%i[id ancestry])
                                               .where(:id => stacks_parents.values).find_each.index_by(&:id)
 
           ActiveRecord::Base.transaction do
-            model_class.select(%i(id ancestry))
+            model_class.select(%i[id ancestry])
                        .where(:id => stacks_parents.keys).find_each do |stack|
               parent = stacks_parents_indexed[stacks_parents[stack.id]]
               stack.update_attribute(:parent, parent)

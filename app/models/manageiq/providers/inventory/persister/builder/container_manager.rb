@@ -5,7 +5,7 @@ module ManageIQ::Providers
         # TODO: (agrare) Targeted refreshes will require adjusting the associations / arels. (duh)
         def container_projects
           add_properties(
-            :secondary_refs => {:by_name => %i(name)},
+            :secondary_refs => {:by_name => %i[name]},
             :delete_method  => :disconnect_inv
           )
           add_common_default_values
@@ -13,7 +13,7 @@ module ManageIQ::Providers
 
         def container_quotas
           add_properties(
-            :attributes_blacklist => %i(namespace),
+            :attributes_blacklist => %i[namespace],
             :delete_method        => :disconnect_inv
           )
           add_common_default_values
@@ -21,36 +21,36 @@ module ManageIQ::Providers
 
         def container_quota_scopes
           add_properties(
-            :manager_ref                  => %i(container_quota scope),
-            :parent_inventory_collections => %i(container_quotas)
+            :manager_ref                  => %i[container_quota scope],
+            :parent_inventory_collections => %i[container_quotas]
           )
         end
 
         def container_quota_items
           add_properties(
-            :manager_ref                  => %i(container_quota resource quota_desired quota_enforced quota_observed),
+            :manager_ref                  => %i[container_quota resource quota_desired quota_enforced quota_observed],
             :delete_method                => :disconnect_inv,
-            :parent_inventory_collections => %i(container_quotas)
+            :parent_inventory_collections => %i[container_quotas]
           )
         end
 
         def container_limits
           add_properties(
-            :attributes_blacklist => %i(namespace)
+            :attributes_blacklist => %i[namespace]
           )
           add_common_default_values
         end
 
         def container_limit_items
           add_properties(
-            :manager_ref                  => %i(container_limit resource item_type),
-            :parent_inventory_collections => %i(container_limits)
+            :manager_ref                  => %i[container_limit resource item_type],
+            :parent_inventory_collections => %i[container_limits]
           )
         end
 
         def container_nodes
           add_properties(
-            :secondary_refs => {:by_name => %i(name)},
+            :secondary_refs => {:by_name => %i[name]},
             :delete_method  => :disconnect_inv
           )
           add_common_default_values
@@ -58,28 +58,28 @@ module ManageIQ::Providers
 
         def computer_systems
           add_properties(
-            :manager_ref => %i(managed_entity),
+            :manager_ref                  => %i[managed_entity],
             # TODO(lsmola) can we introspect this from the relation? Basically, the
             # :parent_inventory_collections are needed only if :association goes :through other association. Then the
             # parent is actually the root association (if we chain several :through associations). We should be able to
             # create a tree of :through associations of ems and infer the parent_inventory_collections from that?
-            :parent_inventory_collections => %i(container_nodes),
+            :parent_inventory_collections => %i[container_nodes]
           )
         end
 
         def computer_system_hardwares
           add_properties(
             :model_class                  => ::Hardware,
-            :manager_ref                  => %i(computer_system),
-            :parent_inventory_collections => %i(container_nodes),
+            :manager_ref                  => %i[computer_system],
+            :parent_inventory_collections => %i[container_nodes]
           )
         end
 
         def computer_system_operating_systems
           add_properties(
             :model_class                  => ::OperatingSystem,
-            :manager_ref                  => %i(computer_system),
-            :parent_inventory_collections => %i(container_nodes),
+            :manager_ref                  => %i[computer_system],
+            :parent_inventory_collections => %i[container_nodes]
           )
         end
 
@@ -90,7 +90,7 @@ module ManageIQ::Providers
             # TODO: (bpaskinc) should match on digest when available
             # TODO: (mslemr) provider-specific class exists (openshift), but specs fail with them (?)
             :model_class            => ::ContainerImage,
-            :manager_ref            => %i(image_ref),
+            :manager_ref            => %i[image_ref],
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
           )
@@ -98,14 +98,14 @@ module ManageIQ::Providers
         end
 
         def container_image_registries
-          add_properties(:manager_ref => %i(host port))
+          add_properties(:manager_ref => %i[host port])
           add_common_default_values
         end
 
         def container_groups
           add_properties(
-            :secondary_refs         => {:by_container_project_and_name => %i(container_project name)},
-            :attributes_blacklist   => %i(namespace),
+            :secondary_refs         => {:by_container_project_and_name => %i[container_project name]},
+            :attributes_blacklist   => %i[namespace],
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
           )
@@ -114,8 +114,8 @@ module ManageIQ::Providers
 
         def container_volumes
           add_properties(
-            :manager_ref                  => %i(parent name),
-            :parent_inventory_collections => %i(container_groups),
+            :manager_ref                  => %i[parent name],
+            :parent_inventory_collections => %i[container_groups]
           )
         end
 
@@ -131,37 +131,37 @@ module ManageIQ::Providers
         def container_port_configs
           # parser sets :ems_ref => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}"
           add_properties(
-            :parent_inventory_collections => %i(containers)
+            :parent_inventory_collections => %i[containers]
           )
         end
 
         def container_env_vars
           add_properties(
             # TODO: (agrare) old save matches on all :name, :value, :field_path - does this matter?
-            :manager_ref                  => %i(container name),
-            :parent_inventory_collections => %i(containers)
+            :manager_ref                  => %i[container name],
+            :parent_inventory_collections => %i[containers]
           )
         end
 
         def security_contexts
           add_properties(
-            :manager_ref                  => %i(resource),
-            :parent_inventory_collections => %i(containers)
+            :manager_ref                  => %i[resource],
+            :parent_inventory_collections => %i[containers]
           )
         end
 
         def container_replicators
           add_properties(
-            :secondary_refs       => {:by_container_project_and_name => %i(container_project name)},
-            :attributes_blacklist => %i(namespace)
+            :secondary_refs       => {:by_container_project_and_name => %i[container_project name]},
+            :attributes_blacklist => %i[namespace]
           )
           add_common_default_values
         end
 
         def container_services
           add_properties(
-            :secondary_refs       => {:by_container_project_and_name => %i(container_project name)},
-            :attributes_blacklist => %i(namespace),
+            :secondary_refs       => {:by_container_project_and_name => %i[container_project name]},
+            :attributes_blacklist => %i[namespace],
             :saver_strategy       => "default" # TODO: (fryguy) (perf) Can't use batch strategy because of usage of M:N container_groups relation
           )
           add_common_default_values
@@ -169,35 +169,35 @@ module ManageIQ::Providers
 
         def container_service_port_configs
           add_properties(
-            :manager_ref                  => %i(ems_ref protocol), # TODO: (lsmola) make protocol part of the ems_ref?)
-            :parent_inventory_collections => %i(container_services)
+            :manager_ref                  => %i[ems_ref protocol], # TODO: (lsmola) make protocol part of the ems_ref?)
+            :parent_inventory_collections => %i[container_services]
           )
         end
 
         def container_routes
           add_properties(
-            :attributes_blacklist => %i(namespace)
+            :attributes_blacklist => %i[namespace]
           )
           add_common_default_values
         end
 
         def container_templates
           add_properties(
-            :attributes_blacklist => %i(namespace)
+            :attributes_blacklist => %i[namespace]
           )
           add_common_default_values
         end
 
         def container_template_parameters
           add_properties(
-            :manager_ref                  => %i(container_template name),
-            :parent_inventory_collections => %i(container_templates)
+            :manager_ref                  => %i[container_template name],
+            :parent_inventory_collections => %i[container_templates]
           )
         end
 
         def container_builds
           add_properties(
-            :secondary_refs => {:by_namespace_and_name => %i(namespace name)}
+            :secondary_refs => {:by_namespace_and_name => %i[namespace name]}
           )
           add_common_default_values
         end
@@ -205,8 +205,8 @@ module ManageIQ::Providers
         def container_build_pods
           add_properties(
             # TODO: (bpaskinc) convert namespace column -> container_project_id?
-            :manager_ref    => %i(namespace name),
-            :secondary_refs => {:by_namespace_and_name => %i(namespace name)},
+            :manager_ref    => %i[namespace name],
+            :secondary_refs => {:by_namespace_and_name => %i[namespace name]}
           )
           add_common_default_values
         end
@@ -217,8 +217,8 @@ module ManageIQ::Providers
 
         def persistent_volume_claims
           add_properties(
-            :secondary_refs       => {:by_container_project_and_name => %i(container_project name)},
-            :attributes_blacklist => %i(namespace)
+            :secondary_refs       => {:by_container_project_and_name => %i[container_project name]},
+            :attributes_blacklist => %i[namespace]
           )
           add_common_default_values
         end
@@ -245,7 +245,7 @@ module ManageIQ::Providers
 
               batch_size = 100
               saved_collection.created_records.each_slice(batch_size) do |batch|
-                collection_ids = batch.collect { |x| x[:id] }
+                collection_ids = batch.pluck(:id)
                 MiqQueue.submit_job(
                   :class_name  => saved_collection.model_class.to_s,
                   :method_name => 'raise_creation_events',

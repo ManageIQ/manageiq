@@ -87,8 +87,8 @@ module ManageIQ::Providers
 
         send(@name.to_sym) if @name.respond_to?(:to_sym) && respond_to?(@name.to_sym)
 
-        if @properties[:model_class].nil?
-          add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
+        if @properties[:model_class].nil? && !(@options[:without_model_class])
+          add_properties(:model_class => auto_model_class)
         end
       end
 
@@ -244,7 +244,7 @@ module ManageIQ::Providers
       def auto_inventory_attributes
         return if @properties[:model_class].nil?
 
-        (@properties[:model_class].new.methods - ApplicationRecord.methods).grep(/^[\w]+?\=$/).collect do |setter|
+        (@properties[:model_class].new.methods - ApplicationRecord.methods).grep(/^\w+?=$/).collect do |setter|
           setter.to_s[0..setter.length - 2].to_sym
         end
       end
