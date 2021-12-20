@@ -110,6 +110,13 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       )
     end
 
+    def snapshots
+      add_properties(
+        :manager_ref                  => %i[vm_or_template uid],
+        :parent_inventory_collections => %i[vms miq_templates]
+      )
+    end
+
     def hardwares
       add_properties(
         :manager_ref                  => %i[vm_or_template],
