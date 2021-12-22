@@ -52,8 +52,7 @@ RSpec.describe ManageIQ::Providers::BaseManager::Refresher do
         refresher.preprocess_targets
 
         targets_by_ems = refresher.targets_by_ems_id[vm.ext_management_system.id].first
-        expect(targets_by_ems).to be_a(InventoryRefresh::TargetCollection)
-        expect(targets_by_ems.targets.count).to eq(101)
+        expect(targets_by_ems).to be_a(ExtManagementSystem)
       end
     end
 
