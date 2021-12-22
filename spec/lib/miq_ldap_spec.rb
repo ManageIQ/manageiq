@@ -278,4 +278,53 @@ RSpec.describe MiqLdap do
       expect(ldap.fqusername('myuserid@mycompany.com')).to eq('myuserid@mycompany.com')
     end
   end
+
+  describe ".dn?" do
+    {
+      "dc=mycompany,dc=com"                            => true,
+      "cn=myuser,ou=people,ou=prod,dc=example,dc=com"  => true,
+      "cn=my@user,ou=people,ou=prod,dc=example,dc=com" => true,
+      "myuserid"                                       => false,
+      "my\\user\\id"                                   => false,
+      "myuserid@mycompany.com"                         => false,
+      nil                                              => false,
+      ""                                               => false,
+    }.each do |s, expectation|
+      it "with case: #{s.inspect}" do
+        expect(described_class.dn?(s)).to be expectation
+      end
+    end
+  end
+
+  describe ".upn?" do
+    {
+      "myuserid"               => false,
+      "my\\user\\id"           => false,
+      "myuserid@mycompany.com" => true,
+      "myuserid@"              => false,
+      "@mycompany.com"         => false,
+      nil                      => false,
+      ""                       => false,
+    }.each do |s, expectation|
+      it "with case: #{s.inspect}" do
+        expect(described_class.upn?(s)).to be expectation
+      end
+    end
+  end
+
+  describe ".domain_username?" do
+    {
+      "myuserid"               => false,
+      "my\\user\\id"           => true,
+      "myuserid@mycompany.com" => false,
+      "\\user\\id"             => false,
+      "my\\"                   => false,
+      nil                      => false,
+      ""                       => false,
+    }.each do |s, expectation|
+      it "with case: #{s.inspect}" do
+        expect(described_class.domain_username?(s)).to be expectation
+      end
+    end
+  end
 end

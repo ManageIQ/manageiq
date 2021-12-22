@@ -1,4 +1,5 @@
 require 'net/ldap'
+require 'net/ldap/dn'
 
 class MiqLdap
   include Vmdb::Logging
@@ -266,16 +267,30 @@ class MiqLdap
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
+  def self.dn?(str)
+    Net::LDAP::DN.new(str).to_a.any?
+  rescue Net::LDAP::Error
+    false
+  end
+
   def dn?(str)
-    !!(str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/)
+    self.class.dn?(str)
+  end
+
+  def self.upn?(str)
+    str.to_s.match?(/.@./)
   end
 
   def upn?(str)
-    !!(str =~ /^.+@.+$/)
+    self.class.upn?(str)
+  end
+
+  def self.domain_username?(str)
+    str.to_s.match?(/^[a-zA-Z][a-zA-Z0-9.-]+\\./)
   end
 
   def domain_username?(str)
-    !!(str =~ /^([a-zA-Z][a-zA-Z0-9.-]+)\\.+$/)
+    self.class.domain_username?(str)
   end
 
   def fqusername(username)
