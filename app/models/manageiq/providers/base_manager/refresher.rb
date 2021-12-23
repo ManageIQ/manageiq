@@ -68,8 +68,11 @@ module ManageIQ
       end
 
       def preprocess_targets
-        preprocess_targets_manager_refresh
-        preprocess_targets_full_refresh_threshold
+        targets_by_ems_id.each do |ems_id, targets|
+          ems = ems_by_ems_id[ems_id]
+          preprocess_targets_full_refresh!(ems, targets)
+          preprocess_targets_targeted_refresh!(ems, targets) unless full_refresh?(ems)
+        end
       end
 
       def refresh_targets_for_ems(ems, targets)
@@ -239,50 +242,36 @@ module ManageIQ
 
       # We preprocess targets to merge all non ExtManagementSystem class targets into one
       # InventoryRefresh::TargetCollection. This way we can do targeted refresh of all queued targets in 1 refresh
-      def preprocess_targets_manager_refresh
-        @targets_by_ems_id.each do |ems_id, targets|
-          ems = @ems_by_ems_id[ems_id]
-
-          # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
-          # we could be missing some crosslinks in the refreshed data
-          all_targets, sub_ems_targets = targets.partition { |x| x.kind_of?(ExtManagementSystem) }
-
-          if sub_ems_targets.present?
-            if ems.allow_targeted_refresh?
-              # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
-              ems_event_collection = InventoryRefresh::TargetCollection.new(:targets    => sub_ems_targets,
-                                                                            :manager_id => ems_id,
-                                                                            :manager    => ems)
-              all_targets << ems_event_collection
-            else
-              all_targets << @ems_by_ems_id[ems_id]
-            end
-          end
-
-          @targets_by_ems_id[ems_id] = all_targets
-        end
+      def preprocess_targets_targeted_refresh!(ems, targets)
+        # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
+        # we could be missing some crosslinks in the refreshed data
+        # We can also disable targeted refresh with a setting, then we will just do full ems refresh on any event
+        targets_by_ems_id[ems.id] = [
+          ems.allow_targeted_refresh? ? InventoryRefresh::TargetCollection.new(:targets => targets, :manager => ems) : ems
+        ]
       end
 
-      def preprocess_targets_full_refresh_threshold
-        @full_refresh_threshold = options[:full_refresh_threshold] || 10
-
+      def preprocess_targets_full_refresh!(ems, targets)
         # See if any should be escalated to a full refresh
-        @targets_by_ems_id.each do |ems_id, targets|
-          ems = @ems_by_ems_id[ems_id]
-          ems_in_list = targets.any? { |t| t.kind_of?(ExtManagementSystem) }
-
-          if ems_in_list
-            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].") if targets.length > 1
-            targets.clear << ems
-          elsif targets.length >= @full_refresh_threshold
-            _log.info("Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
-            targets.clear << ems
-          end
+        if targets.any?(ExtManagementSystem)
+          _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].") if targets.length > 1
+          targets.clear << ems
+        elsif targets.length >= full_refresh_threshold
+          _log.info("Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
+          targets.clear << ems
         end
       end
 
       def refresher_type
         self.class.parent.short_token
+      end
+
+      def full_refresh?(ems)
+        targets_by_ems_id[ems.id].any?(ExtManagementSystem)
+      end
+
+      def full_refresh_threshold
+        @full_refresh_threshold ||= options.full_refresh_threshold || 10
       end
 
       def format_ems_for_logging(ems)
