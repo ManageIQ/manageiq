@@ -10,11 +10,23 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_resource_quotas
+          add_common_default_values
+        end
+
+        def cloud_services
+          add_common_default_values
+        end
+
         def cloud_volumes
           add_common_default_values
         end
 
         def flavors
+          add_common_default_values
+        end
+
+        def host_aggregates
           add_common_default_values
         end
 
