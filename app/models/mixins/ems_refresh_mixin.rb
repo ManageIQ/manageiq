@@ -2,7 +2,7 @@ module EmsRefreshMixin
   extend ActiveSupport::Concern
 
   included do
-    supports :ems_refresh
+    supports :refresh_ems
   end
 
   class_methods do
