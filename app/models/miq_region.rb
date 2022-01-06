@@ -160,10 +160,6 @@ class MiqRegion < ApplicationRecord
     ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ContainerManager) }
   end
 
-  def ems_middlewares
-    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MiddlewareManager) }
-  end
-
   def ems_datawarehouses
     ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::DatawarehouseManager) }
   end
