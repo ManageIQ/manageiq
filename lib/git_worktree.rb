@@ -335,7 +335,7 @@ class GitWorktree
       merge(commit, rebase)
       rebase = true
       with_remote_options do |remote_options|
-        @repo.push(@remote_name, [local_ref], remote_options)
+        @repo.push(@remote_name, [local_ref], **remote_options)
       end
     end
   end

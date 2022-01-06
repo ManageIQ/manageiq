@@ -21,7 +21,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < Manage
     kwargs[:timeout]   = vars[:execution_ttl].to_i.minutes
     kwargs[:verbosity] = vars[:verbosity].to_i if vars[:verbosity].present?
 
-    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials, kwargs).tap do |job|
+    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials, **kwargs).tap do |job|
       job.signal(:start)
     end
   end
