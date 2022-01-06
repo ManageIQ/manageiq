@@ -109,7 +109,17 @@ module MiqPolicyMixin
       data  = event.attributes["full_data"]
       prevented = data.fetch_path(:policy, :prevented) if data
     end
-    prevented ? _log.info(event.attributes["message"]) : send(*action)
+
+    if prevented
+      _log.info(event.attributes["message"])
+    else
+      if action.last.kind_of?(Hash)
+        hsh = action.pop
+        send(*action, **hsh)
+      else
+        send(*action)
+      end
+    end
   end
 
   module ClassMethods
