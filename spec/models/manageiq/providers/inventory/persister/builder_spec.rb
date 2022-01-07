@@ -53,6 +53,12 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister::Builder do
     expect(data[:model_class]).to be_nil
   end
 
+  it "throws exception if model_class should be namespaced but isn't" do
+    expect { cloud.prepare_data(:vms, persister_class) }.to raise_error(
+      ::ManageIQ::Providers::Inventory::Persister::Builder::NotSubclassedError
+    )
+  end
+
   it 'throws exception if model_class not specified' do
     builder = cloud.prepare_data(:non_existing_ic, persister_class)
 
