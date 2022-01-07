@@ -35,14 +35,10 @@ module ManageIQ::Providers
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
-      def self.prepare_data(name, persister_class, options = {})
-        options = default_options.merge(options)
-        builder = new(name, persister_class, options)
-        builder.construct_data
-
-        yield(builder) if block_given?
-
-        builder
+      def self.prepare_data(name, persister_class, options = {}, &block)
+        new(name, persister_class, default_options.merge(options)).tap do |builder|
+          builder.construct_data(&block)
+        end
       end
 
       attr_accessor :name, :parent, :persister_class, :properties, :inventory_object_attributes,
@@ -88,6 +84,7 @@ module ManageIQ::Providers
         add_properties(@shared_properties, :if_missing)
 
         send(@name.to_sym) if @name.respond_to?(:to_sym) && respond_to?(@name.to_sym)
+        yield(self) if block_given?
 
         if @properties[:model_class].nil? && !(@options[:without_model_class])
           add_properties(:model_class => auto_model_class)
