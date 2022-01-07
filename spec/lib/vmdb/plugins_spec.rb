@@ -131,7 +131,7 @@ RSpec.describe Vmdb::Plugins do
           else
             sha = `git rev-parse HEAD~`.strip
             `git checkout #{"-b #{options[:branch]}" if options[:branch]} #{sha} 2>/dev/null`
-            `git tag #{options[:tag]}` if options[:tag]
+            `git tag --no-sign #{options[:tag]}` if options[:tag]
           end
         end
 
