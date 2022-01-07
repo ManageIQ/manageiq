@@ -230,8 +230,8 @@ module ManageIQ::Providers
         # class in the hierarchy even though it isn't at the same hierarchy depth we are expecting.
         return provider_class if provider_class.to_s == class_name
 
-        klass = "::#{name.to_s.classify}".constantize
-        raise NotSubclassedError, "#{name} should be subclassed under #{manager_class}" if klass.sti? && !@options[:without_sti]
+        klass = "::#{name.to_s.classify}".safe_constantize
+        raise NotSubclassedError, "#{name} should be subclassed under #{manager_class}" if klass && klass.sti? && !@options[:without_sti]
 
         klass
       end
