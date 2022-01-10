@@ -113,6 +113,7 @@ module ManageIQ::Providers
         end
 
         def container_volumes
+          skip_sti
           add_properties(
             :manager_ref                  => %i[parent name],
             :parent_inventory_collections => %i[container_groups]
