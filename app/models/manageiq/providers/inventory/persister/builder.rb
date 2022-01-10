@@ -233,7 +233,7 @@ module ManageIQ::Providers
         klass = "::#{name.to_s.classify}".safe_constantize
         return if klass.nil?
 
-        if klass.sti? && !without_sti?
+        if klass.sti? && with_sti?
           raise NotSubclassedError,
                 "expected #{name} to be found subclassed as #{class_name}, but instead found #{klass.name}"
         end
@@ -288,8 +288,8 @@ module ManageIQ::Providers
 
       private
 
-      def without_sti?
-        !!@options[:without_sti]
+      def with_sti?
+        !@options[:without_sti]
       end
     end
   end
