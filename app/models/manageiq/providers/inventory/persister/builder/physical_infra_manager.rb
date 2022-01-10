@@ -24,6 +24,7 @@ module ManageIQ::Providers
         end
 
         def customization_scripts
+          skip_sti
           add_properties(:manager_ref => %i[manager_ref])
           add_default_values(:manager_id => ->(persister) { persister.manager.id })
         end

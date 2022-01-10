@@ -43,6 +43,7 @@ module ManageIQ::Providers
         end
 
         def san_addresses
+          skip_sti
           add_common_default_values
         end
 

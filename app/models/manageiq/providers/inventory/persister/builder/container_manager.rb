@@ -213,6 +213,7 @@ module ManageIQ::Providers
         end
 
         def persistent_volumes
+          skip_sti
           add_default_values(:parent => ->(persister) { persister.manager })
         end
 
