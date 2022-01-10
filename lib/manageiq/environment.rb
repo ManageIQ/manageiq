@@ -61,6 +61,13 @@ module ManageIQ
       system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
       system!("gem install bundler -v '#{bundler_version}' --conservative")
       system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["CI"]
+
+      # For nokogiri 1.13.0+, native gem support was added, allowing pre-compiled binaries to be used.
+      # This provides faster and more reliable installation but assumes you have total control of the installation environment.
+      # On travis, or other CI's, we may not be able to easily install the various dev dependencies it expects.  We'll force
+      # travis to compile these extensions from source until we can use these native gems.
+      # See https://nokogiri.org/CHANGELOG.html#1130-2022-01-06
+      system!("bundle config set force_ruby_platform true") if ENV["TRAVIS"]
     end
 
     def self.setup_gemfile_lock
