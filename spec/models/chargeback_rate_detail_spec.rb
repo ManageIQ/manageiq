@@ -7,7 +7,7 @@ RSpec.describe ChargebackRateDetail do
                                                  :chargeable_field   => field,
                                                  :chargeback_rate_id => invalid_chargeback_rate_id)
       expect(chargeback_rate_detail).to be_invalid
-      expect(chargeback_rate_detail.errors.messages).to include(:chargeback_rate => [/can't be blank/])
+      expect(chargeback_rate_detail.errors[:chargeback_rate]).to include(/can't be blank/)
     end
   end
 

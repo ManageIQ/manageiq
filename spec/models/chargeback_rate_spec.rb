@@ -62,7 +62,7 @@ RSpec.describe ChargebackRate do
       expect(cbr).to_not be_destroyed
 
       expect(cbr.errors.count).to be(1)
-      expect(cbr.errors.first).to include("rate is assigned and cannot be deleted")
+      expect(cbr.errors.full_messages).to include(/rate is assigned and cannot be deleted/)
     end
 
     it "when default" do
@@ -70,7 +70,7 @@ RSpec.describe ChargebackRate do
       cbr.destroy
       expect(cbr).to_not be_destroyed
       expect(cbr.errors.count).to be(1)
-      expect(cbr.errors.first).to include("default rate cannot be deleted")
+      expect(cbr.errors.full_messages).to include(/default rate cannot be deleted/)
     end
 
     it "when non-default with default description" do
@@ -78,7 +78,7 @@ RSpec.describe ChargebackRate do
       cbr.destroy
       expect(cbr).to_not be_destroyed
       expect(cbr.errors.count).to be(1)
-      expect(cbr.errors.first).to include("default rate cannot be deleted")
+      expect(cbr.errors.full_messages).to include(/default rate cannot be deleted/)
     end
 
     it "when non-default" do

@@ -108,4 +108,10 @@ class ClassificationImport
       end
     end
   end
+
+  # part of the errors interface
+  # not bothering with localization
+  def self.human_attribute_name(attr_name, *_)
+    attr_name
+  end
 end

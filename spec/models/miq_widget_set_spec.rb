@@ -47,7 +47,7 @@ RSpec.describe MiqWidgetSet do
     it "validates that MiqWidgetSet#name cannot contain \"|\" " do
       widget_set = MiqWidgetSet.create(:name => 'TEST|TEST')
 
-      expect(widget_set.errors.messages).to include(:name => ["cannot contain \"|\""])
+      expect(widget_set.errors[:name]).to include("cannot contain \"|\"")
     end
 
     let(:other_group) { FactoryBot.create(:miq_group) }
@@ -55,16 +55,16 @@ RSpec.describe MiqWidgetSet do
     it "validates that MiqWidgetSet has unique description per group and userid" do
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => group)
 
-      expect(widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
+      expect(widget_set.errors[:description]).to include("must be unique for this group and userid")
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => nil)
-      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+      expect(widget_set.errors[:description]).not_to include("must be unique for this group and userid")
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
-      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+      expect(widget_set.errors[:description]).not_to include("must be unique for this group and userid")
 
       widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group)
-      expect(widget_set.errors.messages).not_to include(:description => ["must be unique for this group and userid"])
+      expect(widget_set.errors[:description]).not_to include("must be unique for this group and userid")
 
       FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "x")
       FactoryBot.create(:miq_widget_set, :description => @ws_group.description, :owner => other_group, :userid => "y")
@@ -72,34 +72,34 @@ RSpec.describe MiqWidgetSet do
       expect(other_userids).to match_array(%w[x y])
 
       other_widget_set = MiqWidgetSet.create(:description => @ws_group.description, :owner => other_group, :userid => "x")
-      expect(other_widget_set.errors.messages).to include(:description => ["must be unique for this group and userid"])
+      expect(other_widget_set.errors[:description]).to include("must be unique for this group and userid")
     end
 
     it "validates that there is at least one widget in set_data" do
       widget_set = MiqWidgetSet.create
 
-      expect(widget_set.errors.messages).to include(:set_data => ["One widget must be selected(set_data)"])
+      expect(widget_set.errors[:set_data]).to include("One widget must be selected(set_data)")
     end
 
     it "validates that widgets in set_data have to exist" do
       unknown_id = MiqWidgetSet.maximum(:id) + 1
       widget_set = MiqWidgetSet.create(:set_data => {:col1 => [unknown_id]})
 
-      expect(widget_set.errors.messages).to include(:set_data => ["Unable to find widget ids: #{unknown_id}"])
+      expect(widget_set.errors[:set_data]).to include("Unable to find widget ids: #{unknown_id}")
     end
 
     it "validates that group_id has to be present for non-read_only widget sets" do
       widget_set = MiqWidgetSet.create(:read_only => false)
-      expect(widget_set.errors.messages).to include(:group_id => ["can't be blank"])
+      expect(widget_set.errors[:group_id]).to include("can't be blank")
 
       widget_set = MiqWidgetSet.create(:read_only => true)
-      expect(widget_set.errors.messages).not_to include(:set_data => ["can't be blank"])
+      expect(widget_set.errors[:group_id]).not_to include("can't be blank")
     end
 
     it "works with HashWithIndifferentAccess set_data" do
       widget_set = MiqWidgetSet.create(:set_data => HashWithIndifferentAccess.new({:col1 => []}))
 
-      expect(widget_set.errors.messages).to include(:set_data => ["One widget must be selected(set_data)"])
+      expect(widget_set.errors[:set_data]).to include("One widget must be selected(set_data)")
     end
   end
 
@@ -129,7 +129,7 @@ RSpec.describe MiqWidgetSet do
 
     it "the belong to group is being deleted" do
       expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqWidgetSet.count })
-      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
+      expect(group.errors[:base]).to include("The group has users assigned that do not belong to any other group")
     end
 
     it "being deleted" do

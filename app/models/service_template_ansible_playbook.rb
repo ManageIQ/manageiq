@@ -110,7 +110,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def check_retirement_potential
     return true unless retirement_potential?
     error_text = 'Destroy aborted.  Active Services require retirement resources associated with this instance.'
-    errors[:base] << error_text
+    errors.add(:base, error_text)
     throw :abort
   end
 
