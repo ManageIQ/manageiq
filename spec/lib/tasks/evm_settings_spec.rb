@@ -94,4 +94,48 @@ RSpec.describe "EvmSettings", :type => :rake_task do
       expect(EvmSettings::ALLOWED_KEYS.sort).to eq(@settings_keys)
     end
   end
+
+  describe "#value_to_str (private)" do
+    it "keeps strings as strings" do
+      expect(EvmSettings.send(:value_to_str, "AbCd")).to eq("AbCd")
+    end
+
+    it "converts true boolean" do
+      expect(EvmSettings.send(:value_to_str, true)).to eq("true")
+      expect(EvmSettings.send(:value_to_str, "true")).to eq("true")
+      expect(EvmSettings.send(:value_to_str, "TRUE")).to eq("true")
+    end
+
+    it "converts false boolean" do
+      expect(EvmSettings.send(:value_to_str, false)).to eq("false")
+      expect(EvmSettings.send(:value_to_str, "false")).to eq("false")
+      expect(EvmSettings.send(:value_to_str, "FALSE")).to eq("false")
+    end
+
+    it "keeps nil as nil" do
+      expect(EvmSettings.send(:value_to_str, nil)).to eq(nil)
+    end
+  end
+
+  describe "#str_to_value (private)" do
+    it "keeps strings as strings" do
+      expect(EvmSettings.send(:str_to_value, "AbCd")).to eq("AbCd")
+    end
+
+    it "converts true boolean" do
+      expect(EvmSettings.send(:str_to_value, "true")).to eq(true)
+      expect(EvmSettings.send(:str_to_value, "TRUE")).to eq(true)
+    end
+
+    it "converts false boolean" do
+      expect(EvmSettings.send(:str_to_value, false)).to eq(false)
+      expect(EvmSettings.send(:str_to_value, "false")).to eq(false)
+      expect(EvmSettings.send(:str_to_value, "FALSE")).to eq(false)
+    end
+
+    it "keeps nil as nil" do
+      expect(EvmSettings.send(:str_to_value, "nil")).to eq(nil)
+      expect(EvmSettings.send(:str_to_value, nil)).to eq(nil)
+    end
+  end
 end
