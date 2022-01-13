@@ -215,8 +215,8 @@ module ManageIQ::Providers
 
         protected
 
-        def add_common_default_values
-          add_default_values(:ext_management_system => ->(persister) { persister.network_manager })
+        def manager
+          parent || persister.network_manager
         end
       end
     end

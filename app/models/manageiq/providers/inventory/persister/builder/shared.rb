@@ -202,12 +202,12 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
     protected
 
-    def parent_id
-      parent&.id || ->(persister) { persister.manager.id }
+    def add_common_default_values
+      add_default_values(:ext_management_system => manager)
     end
 
-    def add_common_default_values
-      add_default_values(:ems_id => parent_id)
+    def manager
+      parent || persister.manager
     end
 
     def relationship_save_block(relationship_key:, relationship_type: :ems_metadata, parent_type: nil)
