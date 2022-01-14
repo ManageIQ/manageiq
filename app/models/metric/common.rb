@@ -56,7 +56,7 @@ module Metric::Common
                        .where('timestamp >= ? and timestamp < ?', # This picks only the first midnight
                               timestamp.to_date, (timestamp + 1.day).to_date)
                        .where.not(:derived_storage_total => nil, :derived_storage_free => nil)
-    recs.send(mode, MetricRollup.arel_attribute(:v_derived_storage_used))
+    recs.send(mode, MetricRollup.arel_table[:v_derived_storage_used])
   end
 
   def min_v_derived_storage_used

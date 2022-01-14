@@ -250,12 +250,12 @@ RSpec.describe MiqExpression::Field do
   describe "#arel_attribute" do
     it "returns the main table when there are no associations" do
       field = described_class.new(Vm, [], "name")
-      expect(field.arel_attribute).to eq(Vm.arel_attribute("name"))
+      expect(field.arel_attribute).to eq(Vm.arel_table[:name])
     end
 
     it "returns the table of the target association without an alias" do
       field = described_class.new(Vm, ["guest_applications"], "name")
-      expect(field.arel_attribute).to eq(GuestApplication.arel_attribute("name"))
+      expect(field.arel_attribute).to eq(GuestApplication.arel_table[:name])
     end
 
     it "returns the table of the target association with an alias if needed" do

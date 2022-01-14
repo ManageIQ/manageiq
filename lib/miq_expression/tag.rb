@@ -55,7 +55,7 @@ class MiqExpression::Tag < MiqExpression::Target
   # please avoid using it
   # for tags, the tag tables are joined to the table's id
   def arel_attribute
-    target&.arel_attribute("id", arel_table)
+    target && target.arel_table[:id, arel_table]
   end
 
   private
