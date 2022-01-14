@@ -147,7 +147,7 @@ class Hardware < ApplicationRecord
 
   virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
     t.grouping(
-      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_attribute(:allocated_disk_storage), 0])) +
+      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_table[:allocated_disk_storage], 0])) +
       t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [t[:memory_mb], 0])) * 1.megabyte
     )
   end)

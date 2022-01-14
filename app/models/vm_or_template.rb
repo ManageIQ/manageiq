@@ -1237,11 +1237,11 @@ class VmOrTemplate < ApplicationRecord
   virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
     t.grouping(
       Arel::Nodes::Case.new
-      .when(arel_attribute(:archived)).then(Arel::Nodes::SqlLiteral.new("\'archived\'"))
-      .when(arel_attribute(:orphaned)).then(Arel::Nodes::SqlLiteral.new("\'orphaned\'"))
+      .when(arel_table[:archived]).then(Arel::Nodes::SqlLiteral.new("\'archived\'"))
+      .when(arel_table[:orphaned]).then(Arel::Nodes::SqlLiteral.new("\'orphaned\'"))
       .when(t[:template].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'template\'"))
       .when(t[:retired].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'retired\'"))
-      .when(arel_attribute(:disconnected)).then(Arel::Nodes::SqlLiteral.new("\'disconnected\'"))
+      .when(arel_table[:disconnected]).then(Arel::Nodes::SqlLiteral.new("\'disconnected\'"))
       .else(t.lower(
               Arel::Nodes::NamedFunction.new('COALESCE', [t[:power_state], Arel::Nodes::SqlLiteral.new("\'unknown\'")])
       ))

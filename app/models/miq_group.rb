@@ -255,7 +255,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.regional_groups(group)
-    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:description)]).eq(group.description.downcase)))
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_table[:description]]).eq(group.description.downcase)))
   end
 
   def self.create_tenant_group(tenant)

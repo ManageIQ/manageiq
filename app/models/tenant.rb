@@ -111,7 +111,7 @@ class Tenant < ApplicationRecord
   end
 
   def self.regional_tenants(tenant)
-    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:name)]).eq(tenant.name.downcase)))
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_table[:name]]).eq(tenant.name.downcase)))
   end
 
   def accessible_tenant_ids(strategy = nil)
