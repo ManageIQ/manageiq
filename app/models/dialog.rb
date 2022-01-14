@@ -57,7 +57,7 @@ class Dialog < ApplicationRecord
 
   def validate_children
     # To remove the meaningless error message like "Dialog tabs is invalid" when child's validation fails
-    errors[:dialog_tabs].delete("is invalid")
+    errors.delete(:dialog_tabs)
     if dialog_tabs.blank?
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
