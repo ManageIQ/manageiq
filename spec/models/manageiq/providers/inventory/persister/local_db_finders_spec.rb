@@ -418,8 +418,10 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
     it "checks relation is allowed in index" do
       persister.add_collection(persister.send(:cloud), :vms) do |builder|
-        builder.add_properties(:model_class    => ::ManageIQ::Providers::CloudManager::Vm,
-                               :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)})
+        builder.add_properties(
+          :model_class    => ::ManageIQ::Providers::CloudManager::Vm,
+          :secondary_refs => {:by_availability_zone_and_name => %i[availability_zone name]}
+        )
       end
 
       expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array(%i(manager_ref by_availability_zone_and_name))
