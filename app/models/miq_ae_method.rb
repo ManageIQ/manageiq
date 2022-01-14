@@ -6,7 +6,9 @@ class MiqAeMethod < ApplicationRecord
   include RelativePathMixin
 
   default_value_for(:embedded_methods) { [] }
-  validates :embedded_methods, :exclusion => { :in => [nil] }
+  # switch back to validates :exclusion once rails 6.1 issue is fixed
+  # https://github.com/rails/rails/issues/41051
+  validate :embedded_methods_not_nil
   serialize :options, Hash
   before_validation :set_relative_path
 
@@ -155,6 +157,10 @@ class MiqAeMethod < ApplicationRecord
   end
 
   private
+
+  def embedded_methods_not_nil
+    errors.add(:embedded_methods, "can not be blank") if embedded_methods.nil? || embedded_methods.include?(nil)
+  end
 
   def set_relative_path
     self.domain_id ||= ae_class&.domain_id
