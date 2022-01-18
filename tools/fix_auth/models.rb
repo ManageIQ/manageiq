@@ -28,6 +28,11 @@ module FixAuth
 
     belongs_to :field,    :class_name => "FixMiqAeField",    :foreign_key => :field_id
 
+    # add foreign keys so includes will work
+    def self.select_columns
+      super + [:field_id]
+    end
+
     # only bring back columns that store passwords
     # we want to use joins, but using joins makes this readonly, so we're using includes instead
     def self.contenders
