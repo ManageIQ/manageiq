@@ -12,10 +12,10 @@ RSpec.describe BinaryBlob do
         binary_blob2  = BinaryBlob.create(:resource => report_result)
 
         # StateVarHash blob that hasn't expired
-        binary_blob3 = BinaryBlob.create(:data => "---\n", :created_at => 1.week.ago.utc)
+        binary_blob3 = BinaryBlob.create(:binary => "---\n", :created_at => 1.week.ago.utc)
 
         # StateVarHash blob that has expired
-        binary_blob4 = BinaryBlob.create(:data => "---\n", :created_at => 2.months.ago.utc)
+        binary_blob4 = BinaryBlob.create(:binary => "---\n", :created_at => 2.months.ago.utc)
 
         expect(described_class.all).to match_array([binary_blob1, binary_blob2, binary_blob3, binary_blob4])
         count = described_class.purge_by_scope(purge_time)
