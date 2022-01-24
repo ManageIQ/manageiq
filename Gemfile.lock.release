@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 6428316386cd254f37844991c89fde1c30215110
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -14,7 +14,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
   revision: d336a968b5356c00a7558b2da5dba5f9668ba876
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -22,8 +22,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
-  revision: 3bdae46d7efd464a22409df617e969fb160d5b58
-  tag: morphy-1-beta1
+  revision: 99001199af42580e4fc1b7a985fc42a276efe590
+  branch: morphy
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -31,7 +31,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 86a86b38bd923c2557f8ed50d6bef43d4baea54f
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -39,23 +39,23 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
-  revision: c0d719f96f85e81f58682bdb6c9494a811c09280
-  tag: morphy-1-beta1
+  revision: 73ec6d9fff73dcd159454f3c7f7e2bff7b4e04d1
+  branch: morphy
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
-  revision: 27c1deb07cd711c6af2463fdc336d6f8bd5062f6
-  tag: morphy-1-beta1
+  revision: 60235967edd45c46c05621af16616819486a1e5d
+  branch: morphy
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 555987d6d289532a9cc068a04ec527361ba671df
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -83,7 +83,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-graphql
   revision: 39c268480e82526dabfc06ddb10f7eb7232661aa
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-graphql (0.1.0)
       graphql (~> 1.7, < 1.10.6)
@@ -93,7 +93,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
   revision: 3f3473b6c5ea16603ff4172d9c74e0e56f8a77ba
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -111,24 +111,24 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 6a00871bbf59528bff2205c40a16dff0ec45866b
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
-  revision: 1e7e5b9910bbe51b0b8f1d46ec8e69389244a882
-  tag: morphy-1-beta1
+  revision: e029487a6a714ab04779373a3b8fdf2d140b6ed7
+  branch: morphy
   specs:
     manageiq-providers-autosde (0.1.0)
-      autosde_openapi_client (~> 1.0.0)
+      autosde_openapi_client (~> 1.1.0)
       typhoeus (~> 1.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: 955537c6b7c80e8cd021dcf7f5b43154a6d3effe
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.13)
@@ -136,7 +136,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: d69b470c363878a26aa30b64285abeeb6b6b57c6
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -147,7 +147,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: b11673af90d4ddf85eb01543ac62a420d8b7c92f
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
@@ -155,7 +155,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: b491749585742fabc5dba283ceadf206eba20447
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.10)
@@ -164,7 +164,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
   revision: 3a8bf1939679617f94df65a662c1070a5833398d
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -179,21 +179,21 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
   revision: 15f3c8d8952328e7a7a0bcec6b99efa24eae8a5c
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: f34f6b120141b61ac5fe39f466c06301b23fd43c
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
   revision: 2ad8e7608cb0196c8781af21d67b8c874a309a5d
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-kubernetes (0.1.0)
       hawkular-client (~> 5.0)
@@ -206,7 +206,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: 8821fca4b8295a38bad71a45aa1f2b843361e5ab
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0)
@@ -215,7 +215,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
   revision: fcf6a9d6b06bb8b921679cd47dd59f5ee4e066be
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -223,14 +223,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: fba360e76470246b93c6c5ecd340eb046855f4fc
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
   revision: bec8f68d0e0e0bdaa8dfaea34094ff4385f6dd81
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -238,7 +238,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: 8979ec432dc1380a71e2084381e9be690cf85bd4
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
@@ -246,7 +246,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
   revision: 1b4d5ef3824ec51186b0a53a36d27bbbb837fdef
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -259,15 +259,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: d4ffa1e74fc855db14fbdafe722172e01dd504c5
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
-  revision: 057da9de89e4193008da6216305a784237058174
-  tag: morphy-1-beta1
+  revision: 18753d35de765f4dbd51a2ffe9cc0b1084fd44b8
+  branch: morphy
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -276,7 +276,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: d05cc0949b3de04c1c5c33fe3cd5a8bfbec4ffc3
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -284,15 +284,15 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
   revision: e1d34175e91b1362ef6539ac06fe32fdb74d9410
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
-  revision: 53dd634f61d868d58e6616e4958e01c0d5425cbf
-  tag: morphy-1-beta1
+  revision: 542e2f08931e97aa09444f4925d8f2111ff68320
+  branch: morphy
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -304,7 +304,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: 1ce4d95ac735d5811ae5238a302e0ed951bc423b
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.0)
@@ -318,8 +318,8 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
-  revision: affef7b5b149bc79ff4da7a850e974ff9a6387b2
-  tag: morphy-1-beta1
+  revision: f0be9bd9b28258ae8740f20894ba560345ecd824
+  branch: morphy
   specs:
     manageiq-ui-classic (0.1.0)
       coffee-rails
@@ -336,7 +336,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-v2v
   revision: b8f389f6417d245efefb62a754a78241cd988867
-  tag: morphy-1-beta1
+  branch: morphy
   specs:
     manageiq-v2v (0.1.0)
 
@@ -361,50 +361,50 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
-    actioncable (6.0.4.1)
-      actionpack (= 6.0.4.1)
+    actioncable (6.0.4.4)
+      actionpack (= 6.0.4.4)
       nio4r (~> 2.0)
       websocket-driver (>= 0.6.1)
-    actionmailbox (6.0.4.1)
-      actionpack (= 6.0.4.1)
-      activejob (= 6.0.4.1)
-      activerecord (= 6.0.4.1)
-      activestorage (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    actionmailbox (6.0.4.4)
+      actionpack (= 6.0.4.4)
+      activejob (= 6.0.4.4)
+      activerecord (= 6.0.4.4)
+      activestorage (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
       mail (>= 2.7.1)
-    actionmailer (6.0.4.1)
-      actionpack (= 6.0.4.1)
-      actionview (= 6.0.4.1)
-      activejob (= 6.0.4.1)
+    actionmailer (6.0.4.4)
+      actionpack (= 6.0.4.4)
+      actionview (= 6.0.4.4)
+      activejob (= 6.0.4.4)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (6.0.4.1)
-      actionview (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    actionpack (6.0.4.4)
+      actionview (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
       rack (~> 2.0, >= 2.0.8)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actiontext (6.0.4.1)
-      actionpack (= 6.0.4.1)
-      activerecord (= 6.0.4.1)
-      activestorage (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    actiontext (6.0.4.4)
+      actionpack (= 6.0.4.4)
+      activerecord (= 6.0.4.4)
+      activestorage (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
       nokogiri (>= 1.8.5)
-    actionview (6.0.4.1)
-      activesupport (= 6.0.4.1)
+    actionview (6.0.4.4)
+      activesupport (= 6.0.4.4)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activejob (6.0.4.1)
-      activesupport (= 6.0.4.1)
+    activejob (6.0.4.4)
+      activesupport (= 6.0.4.4)
       globalid (>= 0.3.6)
-    activemodel (6.0.4.1)
-      activesupport (= 6.0.4.1)
-    activerecord (6.0.4.1)
-      activemodel (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    activemodel (6.0.4.4)
+      activesupport (= 6.0.4.4)
+    activerecord (6.0.4.4)
+      activemodel (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
     activerecord-id_regions (0.3.1)
       activerecord (>= 5.0, < 6.1)
       activesupport (>= 5.0, < 6.1)
@@ -417,12 +417,12 @@ GEM
       railties (>= 5.2.4.1)
     activerecord-virtual_attributes (3.0.0)
       activerecord (>= 5.0)
-    activestorage (6.0.4.1)
-      actionpack (= 6.0.4.1)
-      activejob (= 6.0.4.1)
-      activerecord (= 6.0.4.1)
+    activestorage (6.0.4.4)
+      actionpack (= 6.0.4.4)
+      activejob (= 6.0.4.4)
+      activerecord (= 6.0.4.4)
       marcel (~> 1.0.0)
-    activesupport (6.0.4.1)
+    activesupport (6.0.4.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -450,7 +450,7 @@ GEM
       rest-client (>= 1.6.5)
     autoprefixer-rails (10.3.3.0)
       execjs (~> 2)
-    autosde_openapi_client (1.0.51)
+    autosde_openapi_client (1.1.8)
       typhoeus (~> 1.0, >= 1.0.1)
     awesome_spawn (1.5.0)
     aws-eventstream (1.2.0)
@@ -949,20 +949,20 @@ GEM
       rack (>= 1.0, < 3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rails (6.0.4.1)
-      actioncable (= 6.0.4.1)
-      actionmailbox (= 6.0.4.1)
-      actionmailer (= 6.0.4.1)
-      actionpack (= 6.0.4.1)
-      actiontext (= 6.0.4.1)
-      actionview (= 6.0.4.1)
-      activejob (= 6.0.4.1)
-      activemodel (= 6.0.4.1)
-      activerecord (= 6.0.4.1)
-      activestorage (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    rails (6.0.4.4)
+      actioncable (= 6.0.4.4)
+      actionmailbox (= 6.0.4.4)
+      actionmailer (= 6.0.4.4)
+      actionpack (= 6.0.4.4)
+      actiontext (= 6.0.4.4)
+      actionview (= 6.0.4.4)
+      activejob (= 6.0.4.4)
+      activemodel (= 6.0.4.4)
+      activerecord (= 6.0.4.4)
+      activestorage (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
       bundler (>= 1.3.0)
-      railties (= 6.0.4.1)
+      railties (= 6.0.4.4)
       sprockets-rails (>= 2.0.0)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
@@ -972,9 +972,9 @@ GEM
     rails-i18n (6.0.0)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 7)
-    railties (6.0.4.1)
-      actionpack (= 6.0.4.1)
-      activesupport (= 6.0.4.1)
+    railties (6.0.4.4)
+      actionpack (= 6.0.4.4)
+      activesupport (= 6.0.4.4)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.20.3, < 2.0)
@@ -1266,7 +1266,7 @@ DEPENDENCIES
   qpid_proton (~> 0.30.0)
   query_relation (~> 0.1.0)
   rack-attack (~> 6.5.0)
-  rails (~> 6.0.4, >= 6.0.4.1)
+  rails (~> 6.0.4, >= 6.0.4.2)
   rails-i18n (~> 6.x)
   rake (>= 12.3.3)
   responders (~> 3.0)
