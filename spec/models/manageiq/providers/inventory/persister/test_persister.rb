@@ -5,7 +5,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
     %i(vms
        miq_templates).each do |name|
 
-      add_collection(cloud, name) do |builder|
+      add_collection(cloud, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(
           :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i(uid_ems name)}
         )
@@ -25,7 +25,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        orchestration_stacks_outputs
        orchestration_stacks_parameters).each do |name|
 
-      add_collection(cloud, name)
+      add_collection(cloud, name, {}, {:without_sti => true})
     end
 
     add_orchestration_stacks_resources
@@ -37,7 +37,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        security_groups
        load_balancers).each do |name|
 
-      add_collection(network, name) do |builder|
+      add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
     end
@@ -57,7 +57,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
        load_balancer_health_checks
        load_balancer_health_check_members).each do |name|
 
-      add_collection(network, name) do |builder|
+      add_collection(network, name, {}, {:without_sti => true}) do |builder|
         builder.add_properties(:parent => manager.network_manager)
       end
     end
@@ -92,14 +92,14 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
 
   # Cloud InventoryCollection
   def add_flavors
-    add_collection(cloud, :flavors) do |builder|
+    add_collection(cloud, :flavors, {}, {:without_sti => true}) do |builder|
       builder.add_properties(:strategy => :local_db_find_references)
     end
   end
 
   # Network InventoryCollection
   def add_network_ports
-    add_collection(network, :network_ports) do |builder|
+    add_collection(network, :network_ports, {}, {:without_sti => true}) do |builder|
       builder.add_properties(
         :manager_uuids  => references(:vms) + references(:network_ports) + references(:load_balancers),
         :parent         => manager.network_manager,
@@ -110,7 +110,7 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
 
   # Network InventoryCollection
   def add_floating_ips
-    add_collection(network, :floating_ips) do |builder|
+    add_collection(network, :floating_ips, {}, {:without_sti => true}) do |builder|
       builder.add_properties(
         :manager_uuids => references(:floating_ips) + references(:load_balancers),
         :parent        => manager.network_manager

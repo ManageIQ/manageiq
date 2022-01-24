@@ -401,17 +401,18 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
   context "check validity of defined index" do
     it "checks primary index attributes exist" do
       expect do
-        persister.add_collection(persister.send(:cloud),
-                                 :vms,
-                                 :manager_ref => %i(ems_ref ems_gref))
+        persister.add_collection(persister.send(:cloud), :vms, {:manager_ref => %i[ems_ref ems_gref]}, {:without_sti => true})
       end.to raise_error("Invalid definition of index :manager_ref, there is no attribute :ems_gref on model Vm")
     end
 
     it "checks secondary index attributes exist" do
       expect do
-        persister.add_collection(persister.send(:cloud),
-                                 :vms,
-                                 :secondary_refs => {:by_uid_ems_and_name => %i(uid_emsa name)})
+        persister.add_collection(
+          persister.send(:cloud),
+          :vms,
+          {:secondary_refs => {:by_uid_ems_and_name => %i[uid_emsa name]}},
+          {:without_sti => true}
+        )
       end.to raise_error("Invalid definition of index :by_uid_ems_and_name, there is no attribute :uid_emsa on model Vm")
     end
 
@@ -426,14 +427,14 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
 
     it "checks relation is on model class" do
       expect do
-        persister.add_collection(persister.send(:cloud), :vms) do |builder|
+        persister.add_collection(persister.send(:cloud), :vms, {}, {:without_sti => true}) do |builder|
           builder.add_properties(:secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)})
         end
       end.to raise_error("Invalid definition of index :by_availability_zone_and_name, there is no attribute :availability_zone on model Vm")
     end
 
     it "checks we allow any index attributes when we use custom_saving block" do
-      persister.add_collection(persister.send(:cloud), :vms) do |builder|
+      persister.add_collection(persister.send(:cloud), :vms, {}, {:without_sti => true}) do |builder|
         builder.add_properties(
           :custom_save_block => ->(ems, _ic) { ems },
           :manager_ref       => %i(a b c)

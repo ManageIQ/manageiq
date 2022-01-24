@@ -4,6 +4,8 @@ module ManageIQ::Providers
     class Builder
       class MissingModelClassError < StandardError; end
 
+      class NotSubclassedError < StandardError; end
+
       require_nested :AutomationManager
       require_nested :CloudManager
       require_nested :InfraManager
@@ -33,14 +35,10 @@ module ManageIQ::Providers
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
-      def self.prepare_data(name, persister_class, options = {})
-        options = default_options.merge(options)
-        builder = new(name, persister_class, options)
-        builder.construct_data
-
-        yield(builder) if block_given?
-
-        builder
+      def self.prepare_data(name, persister_class, options = {}, &block)
+        new(name, persister_class, default_options.merge(options)).tap do |builder|
+          builder.construct_data(&block)
+        end
       end
 
       attr_accessor :name, :parent, :persister_class, :properties, :inventory_object_attributes,
@@ -86,6 +84,7 @@ module ManageIQ::Providers
         add_properties(@shared_properties, :if_missing)
 
         send(@name.to_sym) if @name.respond_to?(:to_sym) && respond_to?(@name.to_sym)
+        yield(self) if block_given?
 
         if @properties[:model_class].nil? && !(@options[:without_model_class])
           add_properties(:model_class => auto_model_class)
@@ -227,14 +226,33 @@ module ManageIQ::Providers
         # Check that safe_constantize returns our expected class_name, if not then
         # return the base class.
         #
-        # safe_constantize can return different similar class ( some Rails auto-magic :/ )
-        provider_class.to_s == class_name ? provider_class : "::#{name.to_s.classify}".safe_constantize
+        # safe_constantize can return different similar class (if it is able to resolve the
+        # class in the hierarchy even though it isn't at the same hierarchy depth we are expecting.
+        return provider_class if provider_class.to_s == class_name
+
+        klass = "::#{name.to_s.classify}".safe_constantize
+        return if klass.nil?
+
+        if klass.sti? && with_sti?
+          raise NotSubclassedError,
+                "expected #{name} to be found subclassed as #{class_name}, but instead found #{klass.name}"
+        end
+
+        klass
       end
 
       # Enables/disables auto_model_class and exception check
       # @param skip [Boolean]
       def skip_model_class(skip = true)
         @options[:without_model_class] = skip
+      end
+
+      def skip_sti
+        @options[:without_sti] = true
+      end
+
+      def with_sti
+        @options[:without_sti] = false
       end
 
       # Inventory object attributes are derived from setters
@@ -266,6 +284,12 @@ module ManageIQ::Providers
             value
           end
         end
+      end
+
+      private
+
+      def with_sti?
+        !@options[:without_sti]
       end
     end
   end
