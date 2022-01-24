@@ -74,6 +74,16 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       add_common_default_values
     end
 
+    def cross_link_vms
+      add_properties(
+        :arel           => Vm,
+        :model_class    => Vm,
+        :parent         => nil,
+        :secondary_refs => {:by_uid_ems => %i[uid_ems]},
+        :strategy       => :local_db_find_references
+      )
+    end
+
     def vm_and_template_labels
       # TODO(lsmola) make a generic CustomAttribute IC and move it to base class
       add_properties(
