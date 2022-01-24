@@ -34,8 +34,8 @@ task :release do
 
     FileUtils.rm([appliance_dependency, gemfile_lock])
 
-    content = lock_release.read
-    lock_release.write(content.gsub("branch: #{branch}", "tag: #{version}"))
+    lock_content = lock_release.read
+    lock_release.write(lock_content.gsub("branch: #{branch}", "tag: #{version}"))
   end
 
   # Change git based gem source to tag reference in Gemfile
@@ -52,9 +52,14 @@ task :release do
   # Tag
   exit $?.exitstatus unless system("git tag #{version} -m 'Release #{version}'")
 
-  # Revert the Gemfile update
+  # Revert the Gemfile and Gemfile.lock update
   gemfile.write(content)
-  exit $?.exitstatus unless system("git add #{gemfile}")
+  lock_release.write(lock_content) if lock_release.exist?
+
+  # Commit
+  files_to_update = [gemfile]
+  files_to_update << lock_release if lock_release.exist?
+  exit $?.exitstatus unless system("git add #{files_to_update.join(" ")}")
   exit $?.exitstatus unless system("git commit -m 'Revert Gemfile tag reference update and put back branch reference'")
 
   puts
