@@ -192,6 +192,8 @@ namespace :release do
       exit 1
     end
 
+    update_gems = ENV["UPDATE_GEMS"].to_s.split(" ")
+
     root = Pathname.new(__dir__).join("../..")
 
     # Ensure that local and global bundler.d is not enabled
@@ -210,6 +212,13 @@ namespace :release do
       File.write(appliance_deps_file, appliance_deps)
 
       FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+
+      if update_gems.any?
+        Bundler.with_unbundled_env do
+          puts "** Updating gems #{update_gems.join(", ")}"
+          exit $?.exitstatus unless system({"APPLIANCE" => "true"}, "bundle update --conservative --patch #{update_gems.join(" ")}", :chdir => root)
+        end
+      end
 
       platforms = %w[
         ruby
