@@ -317,6 +317,30 @@ RSpec.describe ContainerOrchestrator do
           subject.watch_pods(100)
         end
       end
+
+      it "#get_pod_by_namespace_and_hostname" do
+        pods = [
+          double("pod", :metadata => double("pod-metadata", :name => "3r1-ui-abcdef123-xyz12")),
+          double("pod", :metadata => double("pod-metadata", :name => "3r1-api-bcdefa123-yza12")),
+          double("pod", :metadata => double("pod-metadata", :name => "orchestrator-cdefab1234-zab12"))
+        ]
+        expect(kube_connection_stub).to receive(:get_pods).with(:namespace => namespace).and_return(pods)
+
+        expect(subject.get_pod_by_namespace_and_hostname(namespace, "3r1-ui-abcdef123-xyz12")).to eq pods.first
+      end
+
+      it "#my_pod" do
+        stub_const("ENV", ENV.to_h.merge("HOSTNAME" => "orchestrator-cdefab1234-zab12"))
+        pods = [
+          double("pod", :metadata => double("pod-metadata", :name => "3r1-ui-abcdef123-xyz12")),
+          double("pod", :metadata => double("pod-metadata", :name => "3r1-api-bcdefa123-yza12")),
+          double("pod", :metadata => double("pod-metadata", :name => "orchestrator-cdefab1234-zab12"))
+        ]
+        expect(kube_connection_stub).to receive(:get_pods).with(:namespace => namespace).and_return(pods)
+        orchestrator_pod = pods.last
+
+        expect(subject.my_pod).to eq orchestrator_pod
+      end
     end
   end
 end

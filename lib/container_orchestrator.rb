@@ -81,7 +81,22 @@ class ContainerOrchestrator
     kube_connection.watch_pods(default_get_options.merge(:resource_version => resource_version))
   end
 
+  # Returns the pod with the given hostname in the given namespace.
+  def get_pod_by_namespace_and_hostname(namespace, hostname)
+    kube_connection.get_pods(:namespace => namespace).detect { |i| i.metadata.name == hostname }
+  end
+
+  # Returns the pod for this container orchestrator.
+  #
+  # NOTE: It is presumed that this method is only called from within the
+  #       container orchestrator process itself, as it uses environment info
+  #       that only the running orchestrator pod will have.
+  def my_pod
+    get_pod_by_namespace_and_hostname(my_namespace, ENV["HOSTNAME"])
+  end
+
   private
+
   def default_get_options
     {:namespace => my_namespace, :label_selector => [app_name_selector, orchestrated_by_selector].join(",")}
   end
