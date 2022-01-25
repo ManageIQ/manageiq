@@ -1,3 +1,7 @@
+# Note, this is used to autoload constants serialized via marshal from one process and loaded in another such
+# as through args in the MiqQueue. An alternative would be to eager load all of our autoload_paths in all
+# processes or load just the classes that are marshaled, which may be far less classes and locations than when
+# we originally wrote this initializer.
 module MarshalAutoloader
   def load(data)
     super

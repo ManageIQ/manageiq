@@ -4,7 +4,9 @@
 # Psych::ClassLoader::Restricted is the class_loader if you use safe_load and was
 # added in psych 2.0.0:
 # https://github.com/ruby/psych/commit/2c644e184192975b261a81f486a04defa3172b3f
-# Note, ruby 2.4.0 shipped with psych 2.2.2+.  This class_loader would not work with ruby 2.3 and older.
+#
+# Note, this is used to autoload constants serialized as yaml from one process and loaded in another such as through
+# args in the MiqQueue. An alternative would be to eager load all of our autoload_paths in all processes.
 Psych::Visitors::ToRuby.prepend Module.new {
   def resolve_class(klass_name)
     (class_loader.class != Psych::ClassLoader::Restricted && klass_name && klass_name.safe_constantize) || super
