@@ -17,19 +17,6 @@ class VolumeMapping < ApplicationRecord
   supports_not :delete
   acts_as_miq_taggable
 
-  def mapped_to
-    raise NotImplementedError
-  end
-
-  def name
-    mapped_type = mapped_to.class.base_class
-    if mapped_type == ApplicationRecord
-      "Volume #{cloud_volume.name} is mapped to #{mapped_to.name}"
-    else
-      "Volume #{cloud_volume.name} is mapped to #{mapped_type.display_name} #{mapped_to.name}"
-    end
-  end
-
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
