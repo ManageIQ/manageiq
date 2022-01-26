@@ -203,17 +203,17 @@ RSpec.describe Service do
       expect(@service.all_vms).to    match_array [@vm, @vm1, @vm1, @vm2]
     end
 
-    it "#v_total_vms" do
-      expect(@service.v_total_vms).to eq 4
-      expect(@service.attribute_present?(:v_total_vms)).to eq false
-    end
+    describe "#v_total_vms" do
+      it "sql" do
+        service = Service.select(:id, :v_total_vms).find_by(:id => @service.id)
+        expect(service.v_total_vms).to eq 4
+        expect(service.attribute_present?(:v_total_vms)).to eq true
+      end
 
-    it "#v_total_vms with arel" do
-      service = Service.select(:id, :v_total_vms)
-                       .where(:id => @service.id)
-                       .first
-      expect(service.v_total_vms).to eq 4
-      expect(service.attribute_present?(:v_total_vms)).to eq true
+      it "ruby" do
+        expect(@service.v_total_vms).to eq 4
+        expect(@service.attribute_present?(:v_total_vms)).to eq false
+      end
     end
 
     it "#direct_service" do
