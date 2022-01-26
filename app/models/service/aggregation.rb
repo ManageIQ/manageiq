@@ -121,7 +121,7 @@ module Service::Aggregation
         subselect = base_service_aggregation_join(subselect, subtree_services, options)
         join_on_disks(subselect) if options[:include_disks]
 
-        subselect.where(aggregation_where_clause(t, subtree_services))
+        t.grouping(subselect.where(aggregation_where_clause(t, subtree_services)))
       end
     end
 
