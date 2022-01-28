@@ -84,35 +84,35 @@ class OperatingSystem < ApplicationRecord
   end
 
   def self.image_name(obj)
-    osName = nil
+    os_name = nil
 
     # Select most accurate name field
     os = obj.operating_system
     if os
       # check the given field names for possible matching value
-      osName = [:distribution, :product_type, :product_name].each do |field|
+      os_name = [:distribution, :product_type, :product_name].each do |field|
         os_field = os.send(field)
         break(os_field) if os_field && OperatingSystem.normalize_os_name(os_field) != "unknown"
       end
 
       # If the normalized name comes back as unknown, nil out the value so we can get it from another field
-      if osName.kind_of?(String)
-        osName = nil if OperatingSystem.normalize_os_name(osName) == "unknown"
+      if os_name.kind_of?(String)
+        os_name = nil if OperatingSystem.normalize_os_name(os_name) == "unknown"
       else
-        osName = nil
+        os_name = nil
       end
     end
 
     # If the OS Name is still blank check the 'user_assigned_os'
-    if osName.nil? && obj.respond_to?(:user_assigned_os) && obj.user_assigned_os
-      osName = obj.user_assigned_os
+    if os_name.nil? && obj.respond_to?(:user_assigned_os) && obj.user_assigned_os
+      os_name = obj.user_assigned_os
     end
 
     # If the OS Name is still blank check the hardware table
-    if osName.nil? && obj.hardware && !obj.hardware.guest_os.nil?
-      osName = obj.hardware.guest_os
+    if os_name.nil? && obj.hardware && !obj.hardware.guest_os.nil?
+      os_name = obj.hardware.guest_os
       # if we get generic linux or unknown back see if the vm name is better
-      norm_os = OperatingSystem.normalize_os_name(osName)
+      norm_os = OperatingSystem.normalize_os_name(os_name)
       if ["linux_generic", "unknown"].include?(norm_os)
         vm_name = OperatingSystem.normalize_os_name(obj.name)
         return vm_name unless vm_name == "unknown"
@@ -120,10 +120,10 @@ class OperatingSystem < ApplicationRecord
     end
 
     # If the OS Name is still blank use the name field from the object given
-    osName = obj.name if osName.nil?
+    os_name = obj.name if os_name.nil?
 
     # Normalize name to match existing icons
-    OperatingSystem.normalize_os_name(osName)
+    OperatingSystem.normalize_os_name(os_name)
   end
 
   def self.platform(obj)
