@@ -32,7 +32,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_generic",   %w[linux]],
     ["unix_aix",        %w[aix vios]],
     ["ibm_i",           %w[ibmi]]
-  ]
+  ].freeze
 
   def self.add_elements(vm, xmlNode)
     add_missing_elements(vm, xmlNode, "system/os")
@@ -73,11 +73,11 @@ class OperatingSystem < ApplicationRecord
     end
   end
 
-  def self.normalize_os_name(osName)
-    findStr = osName.downcase.gsub(/[^a-z0-9]/, "")
-    OS_MAP.each do |a|
-      a[1].each do |n|
-        return a[0] unless findStr.index(n).nil?
+  def self.normalize_os_name(os_name)
+    clean_os_name = os_name.downcase.gsub(/[^a-z0-9]/, "")
+    OS_MAP.each do |normalized_name, candidate_names|
+      candidate_names.each do |candidate|
+        return normalized_name if clean_os_name.include?(candidate)
       end
     end
     "unknown"
