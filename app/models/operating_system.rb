@@ -11,27 +11,27 @@ class OperatingSystem < ApplicationRecord
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
   @@os_map = [
-    ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
-    ["windows_generic", %w(winxppro winxp)],
-    ["windows_generic", %w(vista longhorn)],
-    ["windows_generic", %w(win2k win2000)],
-    ["windows_generic", %w(microsoft windows winnt)],
-    ["linux_ubuntu",    %w(ubuntu)],
-    ["linux_chrome",    %w(chromeos)],
-    ["linux_chromium",  %w(chromiumos)],
-    ["linux_suse",      %w(suse sles)],
-    ["linux_redhat",    %w(redhat rhel)],
-    ["linux_fedora",    %w(fedora)],
-    ["linux_gentoo",    %w(gentoo)],
-    ["linux_centos",    %w(centos)],
-    ["linux_debian",    %w(debian)],
-    ["linux_coreos",    %w(coreos)],
-    ["linux_esx",       %w(vmnixx86 vmwareesxserver esxserver vmwareesxi)],
-    ["linux_solaris",   %w(solaris)],
-    ["linux_oracle",    %w(oracle)],
-    ["linux_generic",   %w(linux)],
-    ["unix_aix",        %w(aix vios)],
-    ["ibm_i",           %w(ibmi)]
+    ["windows_generic", %w[winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt]],
+    ["windows_generic", %w[winxppro winxp]],
+    ["windows_generic", %w[vista longhorn]],
+    ["windows_generic", %w[win2k win2000]],
+    ["windows_generic", %w[microsoft windows winnt]],
+    ["linux_ubuntu",    %w[ubuntu]],
+    ["linux_chrome",    %w[chromeos]],
+    ["linux_chromium",  %w[chromiumos]],
+    ["linux_suse",      %w[suse sles]],
+    ["linux_redhat",    %w[redhat rhel]],
+    ["linux_fedora",    %w[fedora]],
+    ["linux_gentoo",    %w[gentoo]],
+    ["linux_centos",    %w[centos]],
+    ["linux_debian",    %w[debian]],
+    ["linux_coreos",    %w[coreos]],
+    ["linux_esx",       %w[vmnixx86 vmwareesxserver esxserver vmwareesxi]],
+    ["linux_solaris",   %w[solaris]],
+    ["linux_oracle",    %w[oracle]],
+    ["linux_generic",   %w[linux]],
+    ["unix_aix",        %w[aix vios]],
+    ["ibm_i",           %w[ibmi]]
   ]
 
   def self.add_elements(vm, xmlNode)
@@ -113,7 +113,7 @@ class OperatingSystem < ApplicationRecord
       osName = obj.hardware.guest_os
       # if we get generic linux or unknown back see if the vm name is better
       norm_os = OperatingSystem.normalize_os_name(osName)
-      if norm_os == "linux_generic" || norm_os == "unknown"
+      if ["linux_generic", "unknown"].include?(norm_os)
         vm_name = OperatingSystem.normalize_os_name(obj.name)
         return vm_name unless vm_name == "unknown"
       end
