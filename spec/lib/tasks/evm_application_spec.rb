@@ -304,7 +304,12 @@ RSpec.describe EvmApplication do
       expect(described_class.deployment_status).to eq("new_deployment")
     end
 
-    it "returns new_replica if the current server is not seeded" do
+    it "returns new_deployment if no servers are seeded" do
+      expect(described_class.deployment_status).to eq("new_deployment")
+    end
+
+    it "returns new_replica if the current server is not seeded, but others exist" do
+      FactoryBot.create(:miq_server)
       expect(described_class.deployment_status).to eq("new_replica")
     end
 
