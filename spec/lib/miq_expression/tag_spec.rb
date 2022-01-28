@@ -157,8 +157,12 @@ RSpec.describe MiqExpression::Tag do
   end
 
   describe "#attribute_supported_by_sql?" do
-    it "is always false" do
-      expect(described_class.new(Vm, [], "host")).not_to be_attribute_supported_by_sql
+    it "is supported by sql" do
+      expect(described_class.new(Vm, [], "host")).to be_attribute_supported_by_sql
+    end
+
+    it "is not supported by sql" do
+      expect(described_class.new(Vm, ['bogus'], "host")).not_to be_attribute_supported_by_sql
     end
   end
 end

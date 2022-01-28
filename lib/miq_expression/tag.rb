@@ -41,6 +41,9 @@ class MiqExpression::Tag < MiqExpression::Target
   end
 
   def attribute_supported_by_sql?
+    reflection_supported_by_sql?
+  rescue ArgumentError
+    # the association chain is not legal, so no, it is not supported by sql
     false
   end
 
