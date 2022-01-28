@@ -31,6 +31,7 @@ module ManageIQ
       template ".rubocop_cc.yml"
       template ".rubocop_local.yml", :skip => true
       template ".travis.yml"
+      template ".whitesource"
       template ".yamllint"
       template "Gemfile"
       template "LICENSE.txt"
