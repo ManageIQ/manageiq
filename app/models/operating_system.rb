@@ -45,7 +45,7 @@ class OperatingSystem < ApplicationRecord
 
     nh.delete(:type)
     if vm.operating_system.nil?
-      vm.operating_system = OperatingSystem.new(nh)
+      vm.operating_system = new(nh)
     else
       vm.operating_system.update(nh)
     end
@@ -92,12 +92,12 @@ class OperatingSystem < ApplicationRecord
       # check the given field names for possible matching value
       os_name = [:distribution, :product_type, :product_name].each do |field|
         os_field = os.send(field)
-        break(os_field) if os_field && OperatingSystem.normalize_os_name(os_field) != "unknown"
+        break(os_field) if os_field && normalize_os_name(os_field) != "unknown"
       end
 
       # If the normalized name comes back as unknown, nil out the value so we can get it from another field
       if os_name.kind_of?(String)
-        os_name = nil if OperatingSystem.normalize_os_name(os_name) == "unknown"
+        os_name = nil if normalize_os_name(os_name) == "unknown"
       else
         os_name = nil
       end
@@ -112,9 +112,9 @@ class OperatingSystem < ApplicationRecord
     if os_name.nil? && obj.hardware && !obj.hardware.guest_os.nil?
       os_name = obj.hardware.guest_os
       # if we get generic linux or unknown back see if the vm name is better
-      norm_os = OperatingSystem.normalize_os_name(os_name)
+      norm_os = normalize_os_name(os_name)
       if ["linux_generic", "unknown"].include?(norm_os)
-        vm_name = OperatingSystem.normalize_os_name(obj.name)
+        vm_name = normalize_os_name(obj.name)
         return vm_name unless vm_name == "unknown"
       end
     end
@@ -123,7 +123,7 @@ class OperatingSystem < ApplicationRecord
     os_name = obj.name if os_name.nil?
 
     # Normalize name to match existing icons
-    OperatingSystem.normalize_os_name(os_name)
+    normalize_os_name(os_name)
   end
 
   def self.platform(obj)
