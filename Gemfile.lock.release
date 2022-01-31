@@ -258,11 +258,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
-  revision: d4ffa1e74fc855db14fbdafe722172e01dd504c5
+  revision: 733aa46b3353728e2df9f32b0593a3c65b162280
   branch: morphy
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
-      oci
+      oci (~> 2.16)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
@@ -899,7 +899,7 @@ GEM
       racc (~> 1.4)
     nori (2.6.0)
     oauth (0.5.8)
-    oci (2.15.0)
+    oci (2.16.0)
       inifile (~> 3.0, >= 3.0.0)
       json (>= 1.4.6, < 3.0.0)
       jwt (~> 2.1)
