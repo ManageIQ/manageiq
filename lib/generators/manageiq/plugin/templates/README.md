@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.com/ManageIQ/<%= plugin_name %>.svg?branch=master)](https://travis-ci.com/ManageIQ/<%= plugin_name %>)
 [![Maintainability](https://api.codeclimate.com/v1/badges/<badge_token>/maintainability)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/<badge_token>/test_coverage)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/test_coverage)
-[![Security](https://hakiri.io/github/ManageIQ/<%= plugin_name %>/master.svg)](https://hakiri.io/github/ManageIQ/<%= plugin_name %>/master)
 
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/<%= plugin_name %>?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
