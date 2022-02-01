@@ -196,7 +196,10 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def hostname_format_valid?
+    return unless hostname_required?
+    return unless hostname.present? # Presence is checked elsewhere
     return if hostname.ipaddress? || hostname.hostname?
+
     errors.add(:hostname, _("format is invalid."))
   end
 
