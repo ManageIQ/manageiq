@@ -7,6 +7,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   validates :scm_type,   :presence => true, :inclusion => { :in => %w[git] }
   validates :scm_branch, :presence => true
 
+  supports :create
+
   default_value_for :scm_type,   "git"
   default_value_for :scm_branch, "master"
 

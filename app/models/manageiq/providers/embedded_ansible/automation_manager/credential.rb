@@ -8,6 +8,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   after_create :set_manager_ref
 
+  supports :create
+
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
