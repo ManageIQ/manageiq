@@ -81,16 +81,22 @@ module EvmSettings
   private_class_method :keyval_to_hash
 
   def self.str_to_value(value)
-    return true  if value =~ /true/i
-    return false if value =~ /false/i
-    return nil   if value =~ /nil/
+    return value unless value.kind_of?(String)
+
+    dvalue = value.downcase
+    return true  if dvalue.include?("true")
+    return false if dvalue.include?("false")
+    return nil   if value.include?("nil")
+
     value
   end
   private_class_method :str_to_value
 
   def self.value_to_str(value)
-    return "true"  if value == true || value =~ /true/i
-    return "false" if value == false || value =~ /false/i
+    dvalue = value.downcase if value.kind_of?(String)
+    return "true"  if value == true || dvalue&.include?("true")
+    return "false" if value == false || dvalue&.include?("false")
+
     value
   end
   private_class_method :value_to_str

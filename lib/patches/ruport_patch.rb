@@ -35,7 +35,7 @@ module Ruport
     def build_table_body
       data.each do |row|
         row_data = row.map do |column_value|
-          column_value.insert(0, "'") if column_value =~ /^\s*[@=+-]/ && column_value =~ /[(!\/]/
+          column_value.insert(0, "'") if column_value.kind_of?(String) && column_value.match?(/^\s*[@=+-]/) && column_value.match?(/[(!\/]/)
           column_value
         end
 
