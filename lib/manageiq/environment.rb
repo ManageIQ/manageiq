@@ -58,9 +58,9 @@ module ManageIQ
     end
 
     def self.install_bundler(root = APP_ROOT)
-      system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
-      system!("gem install bundler -v '#{bundler_version}' --conservative")
-      system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["CI"]
+      system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['TRAVIS']
+      system!("gem install bundler -v '#{bundler_version}' --conservative") unless ENV["GITHUB_ACTIONS"]
+      system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["TRAVIS"]
 
       # For nokogiri 1.13.0+, native gem support was added, allowing pre-compiled binaries to be used.
       # This provides faster and more reliable installation but assumes you have total control of the installation environment.
@@ -71,7 +71,10 @@ module ManageIQ
     end
 
     def self.setup_gemfile_lock
-      return if ENV["TRAVIS_BRANCH"] == "master"
+      # Gemfile.lock.release does not apply to the master branch nor to a PR to the master branch
+      return if ENV["TRAVIS_BRANCH"] == "master" || # Travis master branch OR PR to master branch
+        ENV["GITHUB_BASE_REF"] == "master" ||       # GHA PR to master branch
+        ENV["GITHUB_REF_NAME"] == "master"          # GHA master branch
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
@@ -80,6 +83,7 @@ module ManageIQ
     def self.bundle_update(root = APP_ROOT)
       system!("bundle update --jobs=3", :chdir => root)
       return unless ENV["CI"]
+
       lockfile_contents = File.read(root.join("Gemfile.lock"))
       puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
@@ -120,10 +124,14 @@ module ManageIQ
     end
 
     def self.create_database_user
+      return if ENV["GITHUB_ACTIONS"]
+
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
 
     def self.prepare_codeclimate_test_reporter(root = APP_ROOT)
+      return if ENV["GITHUB_ACTIONS"]
+
       system!("curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter", :chdir => root)
       system!("chmod +x ./cc-test-reporter", :chdir => root)
       system!("./cc-test-reporter before-build", :chdir => root)
