@@ -7,7 +7,7 @@ class OpenscapResult < ApplicationRecord
   before_save :create_rule_results
 
   def self.openscap_available?
-    # needed only for travis
+    # needed only for CI
     require 'openscap'
     require 'openscap/ds/arf'
     require 'openscap/xccdf/benchmark'

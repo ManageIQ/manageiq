@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+APP_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)
+
+if [ -n "$CI" ]; then
+  echo "== Installing system packages =="
+  sudo apt-get install libcurl4-openssl-dev
+  echo
+fi
+
+if [ -n "$CI" ]; then
+  echo "== Setup git config =="
+  git config --global user.name "ManageIQ"
+  git config --global user.email "contact@manageiq.org"
+  echo
+
+  # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
+  if [ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" -a "$GITHUB_BASE_REF" != "master" -a "$GITHUB_REF_NAME" != "master" ]; then
+    echo "== Setup Gemfile.lock.release =="
+    cp -f "$APP_ROOT/Gemfile.lock.release" "$APP_ROOT/Gemfile.lock"
+    echo
+  fi
+fi

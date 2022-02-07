@@ -1,6 +1,6 @@
 # ManageIQ
 
-[![Build Status](https://travis-ci.com/ManageIQ/manageiq.svg?branch=morphy)](https://travis-ci.com/ManageIQ/manageiq)
+[![CI](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml/badge.svg?branch=morphy)](https://github.com/ManageIQ/manageiq/actions/workflows/ci.yaml)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq/badges/gpa.svg)](https://codeclimate.com/github/ManageIQ/manageiq)
 [![Codacy](https://api.codacy.com/project/badge/grade/9ffce48ccb924020ae8f9e698048e9a4)](https://www.codacy.com/app/ManageIQ/manageiq)
 [![Coverage Status](https://coveralls.io/repos/ManageIQ/manageiq/badge.svg?branch=morphy&service=github)](https://coveralls.io/github/ManageIQ/manageiq?branch=morphy)
@@ -11,8 +11,7 @@
 [![Translate](https://img.shields.io/badge/translate-transifex-blue.svg)](https://www.transifex.com/manageiq/manageiq/dashboard/)
 [![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-
-[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=morphy&includeBuildsFromPullRequest=false&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
+[![Build history for morphy branch](https://buildstats.info/github/chart/ManageIQ/manageiq?branch=morphy&buildCount=50&includeBuildsFromPullRequest=false&showstats=false)](https://github.com/ManageIQ/manageiq/actions?query=branch%3Amorphy)
 
 ## Discover, Optimize, and Control your Hybrid IT
 
