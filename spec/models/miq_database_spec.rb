@@ -49,8 +49,8 @@ RSpec.describe MiqDatabase do
     end
   end
 
-  if ENV.key?("CI")
-    it "uses a random, non-zero, region number on Travis" do
+  if ENV["CI"]
+    it "uses a random, non-zero, region number on CI" do
       db = MiqDatabase.seed
       expect(db.region_number).to be > 0
       expect(db.region_number).to eq(MiqRegion.my_region_number)
