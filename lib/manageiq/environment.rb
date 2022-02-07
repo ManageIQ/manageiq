@@ -22,11 +22,7 @@ module ManageIQ
 
       ensure_config_files
 
-      create_database_user if ENV["CI"]
-
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
-
-      prepare_codeclimate_test_reporter(plugin_root) if ENV["CI"]
     end
 
     def self.ensure_config_files
@@ -58,23 +54,14 @@ module ManageIQ
     end
 
     def self.install_bundler(root = APP_ROOT)
-      system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['TRAVIS']
       system!("gem install bundler -v '#{bundler_version}' --conservative") unless ENV["GITHUB_ACTIONS"]
-      system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["TRAVIS"]
-
-      # For nokogiri 1.13.0+, native gem support was added, allowing pre-compiled binaries to be used.
-      # This provides faster and more reliable installation but assumes you have total control of the installation environment.
-      # On travis, or other CI's, we may not be able to easily install the various dev dependencies it expects.  We'll force
-      # travis to compile these extensions from source until we can use these native gems.
-      # See https://nokogiri.org/CHANGELOG.html#1130-2022-01-06
-      system!("bundle config set force_ruby_platform true") if ENV["TRAVIS"]
     end
 
     def self.setup_gemfile_lock
-      # Gemfile.lock.release does not apply to the master branch nor to a PR to the master branch
-      return if ENV["TRAVIS_BRANCH"] == "master" || # Travis master branch OR PR to master branch
-        ENV["GITHUB_BASE_REF"] == "master" ||       # GHA PR to master branch
-        ENV["GITHUB_REF_NAME"] == "master"          # GHA master branch
+      # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
+      return unless ENV["GITHUB_REPOSITORY_OWNER"] == "ManageIQ" &&
+                    ENV["GITHUB_BASE_REF"] != "master" && # PR to non-master branch
+                    ENV["GITHUB_REF_NAME"] != "master"    # A non-master branch
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
@@ -121,20 +108,6 @@ module ManageIQ
     def self.clear_logs_and_temp
       puts "\n== Removing old logs and tempfiles =="
       run_rake_task("log:clear tmp:clear")
-    end
-
-    def self.create_database_user
-      return if ENV["GITHUB_ACTIONS"]
-
-      system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
-    end
-
-    def self.prepare_codeclimate_test_reporter(root = APP_ROOT)
-      return if ENV["GITHUB_ACTIONS"]
-
-      system!("curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter", :chdir => root)
-      system!("chmod +x ./cc-test-reporter", :chdir => root)
-      system!("./cc-test-reporter before-build", :chdir => root)
     end
 
     def self.update_ui
