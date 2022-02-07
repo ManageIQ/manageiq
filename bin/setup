@@ -1,43 +1,5 @@
 #!/usr/bin/env ruby
-require_relative '../lib/manageiq/environment'
 
-if ARGV.any?
-  puts <<-EOS
-Usage: bin/setup
-
-Environment Variable Options:
-    SKIP_DATABASE_SETUP  Skip the creation, migration, and seeding of the database.
-    SKIP_UI_UPDATE       Skip the update of UI assets.
-    SKIP_TEST_RESET      Skip the creation of the test enviroment.  Defaults to
-                         true in production mode since the tasks do not exist.
-EOS
-  exit 1
-end
-
-ENV["SKIP_DATABASE_SETUP"] = "true" if ENV["CI"]
-ENV["SKIP_UI_UPDATE"] = "true" if ENV["CI"]
-ENV["SKIP_TEST_RESET"] = "true" if ENV['RAILS_ENV'] == 'production'
-
-Dir.chdir(ManageIQ::Environment::APP_ROOT) do
-  ManageIQ::Environment.ensure_config_files
-
-  unless ENV["CI"]
-    puts '== Installing dependencies =='
-    ManageIQ::Environment.install_bundler
-    ManageIQ::Environment.bundle_update
-  end
-
-  ui_thread = ManageIQ::Environment.update_ui_thread unless ENV["SKIP_UI_UPDATE"]
-
-  unless ENV["SKIP_DATABASE_SETUP"]
-    ManageIQ::Environment.create_database
-    ManageIQ::Environment.migrate_database
-    ManageIQ::Environment.seed_database
-  end
-
-  ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
-
-  ui_thread&.join
-
-  ManageIQ::Environment.clear_logs_and_temp
-end
+require_relative "../lib/manageiq/environment"
+ManageIQ::Environment.check_cli_options
+ManageIQ::Environment.manageiq_core_setup
