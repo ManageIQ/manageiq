@@ -17,7 +17,7 @@ if [ -n "$CI" ]; then
   echo
 
   # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
-  if [ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" -a "$GITHUB_BASE_REF" != "master" -a "$GITHUB_REF_NAME" != "master" ]; then
+  if [[ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" && "$GITHUB_BASE_REF" != "master" && "$GITHUB_REF_NAME" != "master" && "$GITHUB_REF_NAME" != "dependabot/"* ]]; then
     echo "== Setup Gemfile.lock.release =="
     cp -f "$APP_ROOT/Gemfile.lock.release" "$APP_ROOT/Gemfile.lock"
     echo
