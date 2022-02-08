@@ -4,16 +4,20 @@ class BinaryBlob < ApplicationRecord
     include PurgingMixin
 
     module ClassMethods
-      def purge_timer
-        purge_queue(:scope)
+      def purge_mode_and_value
+        [:scope, purge_date]
+      end
+
+      def purge_date
+        ::Settings.binary_blob.keep_orphaned.to_i_with_method.ago.utc
       end
 
       def purge_window_size
         ::Settings.binary_blob.purge_window_size
       end
 
-      def purge_scope(_older_than = nil)
-        where(:resource => nil)
+      def purge_scope(older_than = nil)
+        where(:resource_id => nil).where(arel_table[:created_at].lteq(older_than))
       end
 
       def purge_associated_records(ids)
