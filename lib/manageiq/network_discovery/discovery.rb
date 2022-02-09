@@ -9,6 +9,7 @@ module ManageIQ
         :mswin           => "ManageIQ::Providers::Microsoft::Discovery",
         :scvmm           => "ManageIQ::Providers::Microsoft::Discovery",
         :openstack_infra => "ManageIQ::Providers::Openstack::Discovery",
+        :ovirt           => "ManageIQ::Providers::Ovirt::Discovery",
         :rhevm           => "ManageIQ::Providers::Redhat::Discovery",
         :esx             => "ManageIQ::Providers::Vmware::Discovery",
         :virtualcenter   => "ManageIQ::Providers::Vmware::Discovery",

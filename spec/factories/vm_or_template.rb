@@ -52,6 +52,8 @@ FactoryBot.define do
   factory(:template_google, :class => "ManageIQ::Providers::Google::CloudManager::Template", :parent => :template_cloud) { vendor { "google" } }
   factory(:template_microsoft, :class => "ManageIQ::Providers::Microsoft::InfraManager::Template", :parent => :template_infra) { vendor { "microsoft" } }
   factory(:template_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::Template", :parent => :template_infra) { vendor { "redhat" } }
+  factory(:template_ovirt, :class => "ManageIQ::Providers::Ovirt::InfraManager::Template", :parent => :template_infra) { vendor { "ovirt" } }
+
 
   factory :template_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::Template", :parent => "template_infra" do
     location { |x| "[storage] #{x.name}/#{x.name}.vmtx" }
@@ -130,6 +132,11 @@ FactoryBot.define do
         FactoryBot.create(:ems_openstack, :vms => [x])
       end
     end
+  end
+
+  factory :vm_ovirt, :class => "ManageIQ::Providers::Ovirt::InfraManager::Vm", :parent => :vm_infra do
+    vendor          { "ovirt" }
+    raw_power_state { "up" }
   end
 
   factory :vm_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::Vm", :parent => :vm_infra do

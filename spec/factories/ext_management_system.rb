@@ -210,6 +210,23 @@ FactoryBot.define do
     end
   end
 
+  factory :ems_ovirt_with_metrics_authentication,
+          :parent => :ems_ovirt do
+    after(:create) do |x|
+      x.authentications << FactoryBot.create(:authentication_redhat_metric)
+    end
+  end
+
+  factory :ems_ovirt,
+          :aliases => ["manageiq/providers/ovirt/infra_manager"],
+          :class   => "ManageIQ::Providers::Ovirt::InfraManager",
+          :parent  => :ems_infra
+
+  factory :ems_ovirt_with_authentication,
+          :parent => :ems_ovirt do
+    authtype { "default" }
+  end
+
   factory :ems_openstack_infra,
           :aliases => ["manageiq/providers/openstack/infra_manager"],
           :class   => "ManageIQ::Providers::Openstack::InfraManager",

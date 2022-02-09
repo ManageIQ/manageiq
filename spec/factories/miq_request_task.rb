@@ -12,6 +12,7 @@ FactoryBot.define do
   factory :miq_provision_redhat,         :parent => :miq_provision,        :class => "ManageIQ::Providers::Redhat::InfraManager::Provision"
   factory :miq_provision_redhat_via_iso, :parent => :miq_provision_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso"
   factory :miq_provision_redhat_via_pxe, :parent => :miq_provision_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe"
+  factory :miq_provision_ovirt,          :parent => :miq_provision,        :class => "ManageIQ::Providers::Ovirt::InfraManager::Provision"
   factory :miq_provision_vmware,         :parent => :miq_provision,        :class => "ManageIQ::Providers::Vmware::InfraManager::Provision" do
     trait :clone_to_vm do
       request_type { "clone_to_vm" }

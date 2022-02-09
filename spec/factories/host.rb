@@ -46,6 +46,11 @@ FactoryBot.define do
     vmm_vendor { "redhat" }
   end
 
+  factory :host_ovirt, :parent => :host, :class => "ManageIQ::Providers::Ovirt::InfraManager::Host" do
+    sequence(:ems_ref) { |n| "host-#{seq_padded_for_sorting(n)}" }
+    vmm_vendor { "ovirt" }
+  end
+
   factory :host_openstack_infra, :parent => :host, :class => "ManageIQ::Providers::Openstack::InfraManager::Host" do
     vmm_vendor   { "unknown" }
     ems_ref      { "openstack-perf-host" }

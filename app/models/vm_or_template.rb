@@ -44,6 +44,7 @@ class VmOrTemplate < ApplicationRecord
     "parallels"    => "Parallels",
     "amazon"       => "Amazon",
     "redhat"       => "RedHat",
+    "ovirt"        => "Ovirt",
     "openstack"    => "OpenStack",
     "oracle"       => "Oracle",
     "google"       => "Google",
