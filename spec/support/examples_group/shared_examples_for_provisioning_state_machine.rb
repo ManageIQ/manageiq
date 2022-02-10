@@ -46,7 +46,7 @@ end
 
 shared_examples_for "End-to-end State Machine Run" do
   it "Completes Successfully" do
-    expect(task).to be_kind_of(ManageIQ::Providers::Redhat::InfraManager::Provision)
+    expect(task).to be_kind_of(MiqProvision)
     task.options[:vm_target_name] = options[:vm_target_name] # HACK: Automate usually does this
 
     @queue           = []
@@ -70,5 +70,11 @@ shared_examples_for "End-to-end State Machine Run" do
       hash.store_path(state, :signals, ssec[state])
     end
     expect(actual_states_with_counts).to eq(expected_states_with_counts)
+  end
+end
+
+shared_examples_for "check class for platform" do |platform|
+  it "checks class name" do
+    expect(described_class.class_for_platform(platform)).to eq(described_class)
   end
 end

@@ -407,7 +407,7 @@ class ExtManagementSystem < ApplicationRecord
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
                             elsif ost.hypervisor.include?(:rhevm)
-                              [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                              [ManageIQ::Providers::Ovirt::InfraManager, 'RHEV-M']
                             elsif ost.hypervisor.include?(:openstack_infra)
                               [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']
                             else
