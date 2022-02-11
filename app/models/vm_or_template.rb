@@ -36,24 +36,24 @@ class VmOrTemplate < ApplicationRecord
 
   VENDOR_TYPES = {
     # DB            Displayed
-    "azure"        => "Azure",
-    "azure_stack"  => "AzureStack",
-    "vmware"       => "VMware",
-    "microsoft"    => "Microsoft",
-    "xen"          => "XenSource",
-    "parallels"    => "Parallels",
-    "amazon"       => "Amazon",
-    "redhat"       => "RedHat",
-    "ovirt"        => "Ovirt",
-    "openstack"    => "OpenStack",
-    "oracle"       => "Oracle",
-    "google"       => "Google",
-    "kubevirt"     => "KubeVirt",
-    "ibm_cloud"    => "IBM Cloud",
-    "ibm_power_vc" => "IBM PowerVC",
-    "ibm_power_vm" => "IBM PowerVM",
-    "ibm_z_vm"     => "IBM Z/VM",
-    "unknown"      => "Unknown"
+    "azure"         => "Azure",
+    "azure_stack"   => "AzureStack",
+    "vmware"        => "VMware",
+    "microsoft"     => "Microsoft",
+    "xen"           => "XenSource",
+    "parallels"     => "Parallels",
+    "amazon"        => "Amazon",
+    "redhat"        => "RedHat",
+    "ovirt"         => "Ovirt",
+    "openstack"     => "OpenStack",
+    "oracle"        => "Oracle",
+    "google"        => "Google",
+    "kubevirt"      => "KubeVirt",
+    "ibm_cloud"     => "IBM Cloud",
+    "ibm_power_vc"  => "IBM PowerVC",
+    "ibm_power_hmc" => "IBM Power HMC",
+    "ibm_z_vm"      => "IBM Z/VM",
+    "unknown"       => "Unknown"
   }
 
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
