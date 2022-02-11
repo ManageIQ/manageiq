@@ -41,6 +41,10 @@ class HostAggregate < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def self.create_aggregate(*_args)
+    raise NotImplementedError, _("create_aggregate must be implemented in a subclass")
+  end
+
   def update_aggregate_queue(userid, options = {})
     task_opts = {
       :action => "updating Host Aggregate for user #{userid}",
@@ -56,6 +60,10 @@ class HostAggregate < ApplicationRecord
       :args        => [options]
     }
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_aggregate(*_args)
+    raise NotImplementedError, _("update_aggregate must be implemented in a subclass")
   end
 
   def delete_aggregate_queue(userid)
@@ -75,6 +83,10 @@ class HostAggregate < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def delete_aggregate(*_args)
+    raise NotImplementedError, _("delete_aggregate must be implemented in a subclass")
+  end
+
   def add_host_queue(userid, new_host)
     task_opts = {
       :action => "Adding Host to Host Aggregate for user #{userid}",
@@ -92,6 +104,10 @@ class HostAggregate < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def add_host(*_args)
+    raise NotImplementedError, _("add_host must be implemented in a subclass")
+  end
+
   def remove_host_queue(userid, old_host)
     task_opts = {
       :action => "Removing Host from Host Aggregate for user #{userid}",
@@ -107,6 +123,10 @@ class HostAggregate < ApplicationRecord
       :args        => [old_host.id]
     }
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def remove_host(*_args)
+    raise NotImplementedError, _("remove_host must be implemented in a subclass")
   end
 
   PERF_ROLLUP_CHILDREN = [:vms]
