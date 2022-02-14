@@ -63,10 +63,6 @@ RSpec.describe Vmdb::Loggers do
         expect(subject).to respond_to(:unknown)
       end
 
-      it "#filename" do
-        expect(subject.filename).to eq Pathname.new(log_file)
-      end
-
       it "#logdev" do
         if container_log
           expect(subject.logdev).to be_nil
