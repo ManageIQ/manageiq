@@ -206,7 +206,18 @@ namespace :release do
       appliance_deps_file = local_bundler_d.join("manageiq_appliance_dependencies.rb")
       File.write(appliance_deps_file, appliance_deps)
 
-      FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
+      lock_file = root.join("Gemfile.lock")
+      release_file = root.join("Gemfile.lock.release")
+
+      if release_file.exist?
+        FileUtils.cp(release_file, lock_file)
+      else
+        # Create it for the first time
+        Bundler.with_unbundled_env do
+          FileUtils.rm_f(lock_file)
+          exit $?.exitstatus unless system({"APPLIANCE" => "true"}, "bundle install", :chdir => root)
+        end
+      end
 
       if update_gems.any?
         Bundler.with_unbundled_env do
@@ -229,7 +240,7 @@ namespace :release do
         end
       end
 
-      FileUtils.cp(root.join("Gemfile.lock"), root.join("Gemfile.lock.release"))
+      FileUtils.cp(lock_file, release_file)
     ensure
       FileUtils.rm_f(appliance_deps_file)
     end
