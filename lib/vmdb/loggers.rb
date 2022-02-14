@@ -33,7 +33,12 @@ module Vmdb
       log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
       progname = log_file.try(:basename, ".*").to_s
 
-      logger_class.new(log_file, progname: progname).tap do |logger|
+      logger_class.new(log_file, :progname => progname).tap do |logger|
+        if MiqEnvironment::Command.is_appliance? && log_file.kind_of?(Pathname)
+          File.chmod(0o660, log_file)
+          File.chown(MiqEnvironment.manageiq_uid, MiqEnvironment.manageiq_gid, log_file)
+        end
+
         broadcast_logger = create_broadcast_logger
         if broadcast_logger
           logger.extend(ActiveSupport::Logger.broadcast(broadcast_logger))
