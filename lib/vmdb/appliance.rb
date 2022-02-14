@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Najdorf".freeze
+      "Oparin".freeze
     end
 
     def self.RELEASE
