@@ -144,7 +144,7 @@ RSpec.describe Vmdb::Loggers do
 
           subject.info("test message")
 
-          expect(log_file.string).to include("test message")
+          expect(log_file.string).to include("test message") unless container_log
         end
       end
 
@@ -185,20 +185,6 @@ RSpec.describe Vmdb::Loggers do
       end
 
       include_examples "has basic logging functionality"
-    end
-
-    context "in an appliance environment" do
-      around { |example| in_appliance_env(example) }
-
-      it "sets the log file owner and permissions" do
-        expect(MiqEnvironment).to receive(:manageiq_uid).and_return(1000)
-        expect(MiqEnvironment).to receive(:manageiq_gid).and_return(1000)
-
-        expect(File).to receive(:chown).with(1000, 1000, log_file_path)
-        expect(File).to receive(:chmod).with(0o660, log_file_path)
-
-        described_class.create_logger(log_file_name)
-      end
     end
 
     context "in a container environment" do

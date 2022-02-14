@@ -44,11 +44,12 @@ module Vmdb
       configure_external_loggers
     end
 
-    private_class_method def self.create_file_logger(log_file_name, logger_class)
-      log_file_name = ManageIQ.root.join("log", log_file_name)
-      progname      = progname_from_file(log_file_name)
+    private_class_method def self.create_file_logger(log_file, logger_class)
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      progname = log_file.try(:basename, ".*").to_s
 
-      logger_class.new(log_file_name, :progname => progname)
+      logger_class.new(log_file, :progname => progname)
     end
 
     private_class_method def self.create_container_logger(log_file_name, logger_class)
@@ -83,18 +84,12 @@ module Vmdb
       File.basename(log_file_name, ".*")
     end
 
-    private_class_method def self.create_wrapper_logger(log_file_name, logger_class, wrapped_logger)
-      log_file_name = Pathname.new(log_file_name) unless log_file_name.kind_of?(Pathname)
-      progname      = progname_from_file(log_file_name)
+    private_class_method def self.create_wrapper_logger(log_file, logger_class, wrapped_logger)
+      log_file = Pathname.new(log_file) if log_file.kind_of?(String)
+      log_file = ManageIQ.root.join("log", log_file) if log_file.try(:dirname).to_s == "."
+      progname = log_file.try(:basename, ".*").to_s
 
       logger_class.new(nil, :progname => progname).tap do |logger|
-        # HACK: In order to access the "filename" of the wrapped logger, we inject it as an instance var.
-        logger.instance_variable_set(:@log_file_name, log_file_name)
-
-        def logger.filename
-          @log_file_name
-        end
-
         # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
         if Rails.env.test?
           logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
