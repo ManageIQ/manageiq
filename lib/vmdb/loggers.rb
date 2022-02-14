@@ -90,13 +90,6 @@ module Vmdb
       progname = log_file.try(:basename, ".*").to_s
 
       logger_class.new(nil, :progname => progname).tap do |logger|
-        # HACK: In order to access the "filename" of the wrapped logger, we inject it as an instance var.
-        logger.instance_variable_set(:@log_file_name, log_file_name)
-
-        def logger.filename
-          @log_file_name
-        end
-
         # HACK: In order to access the wrapped logger in test, we inject it as an instance var.
         if Rails.env.test?
           logger.instance_variable_set(:@wrapped_logger, wrapped_logger)
