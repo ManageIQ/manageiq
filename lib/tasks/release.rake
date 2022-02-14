@@ -105,11 +105,6 @@ namespace :release do
     content = dockerfile.read
     dockerfile.write(content.sub(/^(ARG IMAGE_REF=).+/, "\\1latest-#{branch}"))
 
-    # Modify docker-assets README
-    docker_readme = root.join("docker-assets", "README.md")
-    content = docker_readme.read
-    docker_readme.write(content.sub(%r{(manageiq-pods/tree/)[^/]+(/)}, "\\1#{branch}\\2"))
-
     # Modify VERSION
     version_file = root.join("VERSION")
     version_file.write("#{branch}-pre")
@@ -125,7 +120,7 @@ namespace :release do
     deprecation.write(content.sub(/(ActiveSupport::Deprecation.new\(")[^"]+(")/, "\\1#{next_branch.capitalize}\\2"))
 
     # Commit
-    files_to_update = [gemfile, dockerfile, docker_readme, version_file, vmdb_appliance, deprecation]
+    files_to_update = [gemfile, dockerfile, version_file, vmdb_appliance, deprecation]
     exit $?.exitstatus unless system("git add #{files_to_update.join(" ")}")
     exit $?.exitstatus unless system("git commit -m 'Changes for new branch #{branch}'")
 
