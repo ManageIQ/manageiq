@@ -135,7 +135,7 @@ RSpec.describe Vmdb::Loggers do
 
           subject.info("test message")
 
-          expect(log_file.string).to include("test message")
+          expect(log_file.string).to include("test message") unless container_log
         end
       end
 
