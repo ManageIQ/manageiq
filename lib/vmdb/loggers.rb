@@ -49,7 +49,8 @@ module Vmdb
     end
 
     private_class_method def self.ensure_log_file_permissions!(log_file)
-      return unless MiqEnvironment::Command.is_appliance? && log_file.kind_of?(Pathname)
+      return unless log_file.kind_of?(Pathname)
+      return if !MiqEnvironment::Command.is_appliance? || MiqEnvironment::Command.is_podified?
 
       file_perm = 0o660 # Allow members of the manageiq group to write to log files
       file_uid  = MiqEnvironment.manageiq_uid
