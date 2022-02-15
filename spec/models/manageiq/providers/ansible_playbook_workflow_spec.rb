@@ -212,7 +212,7 @@ RSpec.describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     it "ansible-runner completed" do
       expect(response_async).to receive(:running?).and_return(false)
 
-      response = Ansible::Runner::Response.new(**(response_async.dump.merge(:return_code => 0)))
+      response = Ansible::Runner::Response.new(:return_code => 0, **response_async.dump)
       expect(response_async).to receive(:response).and_return(response)
       expect(job).to receive(:queue_signal).with(:post_execute, :deliver_on => nil)
 

@@ -120,7 +120,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
     context "with configuration_script_source_id + roles_relative_path" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :configuration_script_source_id => css.id, :roles_relative_path => roles_relative_path}, %w[192.0.2.0 192.0.2.1]] }
-      let(:job_kwargs)   { {:poll_interval => 5.minutes} }
+      let(:job_kwargs) { {:poll_interval => 5.minutes} }
 
       it "will checkout the git repository to a temp dir before proceeding" do
         expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
@@ -143,7 +143,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
     context "without role_name" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {}, %w[192.0.2.0 192.0.2.1]] }
-      let(:job_kwargs)   { {:poll_interval => 5.minutes} }
+      let(:job_kwargs) { {:poll_interval => 5.minutes} }
 
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)
@@ -154,7 +154,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
     context "with only configuration_script_source_id" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :configuration_script_source_id => css.id}, %w[192.0.2.0 192.0.2.1]] }
-      let(:job_kwargs)   { {:poll_interval => 5.minutes} }
+      let(:job_kwargs) { {:poll_interval => 5.minutes} }
 
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)
@@ -165,7 +165,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
     context "with only roles_relative_path" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :roles_relative_path => roles_relative_path}, %w[192.0.2.0 192.0.2.1]] }
-      let(:job_kwargs)   { {:poll_interval => 5.minutes} }
+      let(:job_kwargs) { {:poll_interval => 5.minutes} }
       it "fails" do
         expect(job).to_not receive(:queue_signal).with(:execute)
 
@@ -245,7 +245,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
     it "ansible-runner completed" do
       expect(response_async).to receive(:running?).and_return(false)
 
-      response = Ansible::Runner::Response.new(**(response_async.dump.merge(:return_code => 0)))
+      response = Ansible::Runner::Response.new(:return_code => 0, **response_async.dump)
       expect(response_async).to receive(:response).and_return(response)
       expect(job).to receive(:queue_signal).with(:post_execute, :deliver_on => nil)
 
@@ -256,7 +256,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
       allow(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
       expect(response_async).to receive(:running?).and_return(false)
 
-      response = Ansible::Runner::Response.new(**(response_async.dump.merge(:return_code => 0)))
+      response = Ansible::Runner::Response.new(:return_code => 0, **response_async.dump)
       expect(response_async).to receive(:response).and_return(response)
       expect(job).to receive(:signal).with(:post_execute)
 
@@ -314,7 +314,7 @@ RSpec.describe ManageIQ::Providers::AnsibleRoleWorkflow do
 
     context "deliver_on" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:roles_path => "/path/to/role"}] }
-      let(:job_kwargs)   { {:poll_interval => 5.minutes} }
+      let(:job_kwargs) { {:poll_interval => 5.minutes} }
 
       it "uses the option to queue poll_runner" do
         now = Time.now.utc
