@@ -16,10 +16,13 @@ if [ -n "$CI" ]; then
   git config --global user.email "contact@manageiq.org"
   echo
 
-  # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
-  if [[ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" && "$GITHUB_BASE_REF" != "master" && "$GITHUB_REF_NAME" != "master" && "$GITHUB_REF_NAME" != "dependabot/"* ]]; then
-    echo "== Setup Gemfile.lock.release =="
-    cp -f "$APP_ROOT/Gemfile.lock.release" "$APP_ROOT/Gemfile.lock"
-    echo
-  fi
+  # HACK: Temporarily disable using Gemfile.lock.release until we can figure out how to make it
+  #       work properly in Github Actions.
+  #
+  # # Gemfile.lock.release only applies to non-master branches and PRs to non-master branches
+  # if [[ "$GITHUB_REPOSITORY_OWNER" = "ManageIQ" && "$GITHUB_BASE_REF" != "master" && "$GITHUB_REF_NAME" != "master" && "$GITHUB_REF_NAME" != "dependabot/"* ]]; then
+  #   echo "== Setup Gemfile.lock.release =="
+  #   cp -f "$APP_ROOT/Gemfile.lock.release" "$APP_ROOT/Gemfile.lock"
+  #   echo
+  # fi
 fi

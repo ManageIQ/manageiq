@@ -65,7 +65,9 @@ module ManageIQ
                     !ENV["GITHUB_REF_NAME"].to_s.start_with?("dependabot/") # Dependabot makes branches in the core repo
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
-      FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
+      # HACK: Temporarily disable using Gemfile.lock.release until we can figure out how to make it
+      #       work properly in Github Actions.
+      # FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 
     def self.bundle_update(root = APP_ROOT)
