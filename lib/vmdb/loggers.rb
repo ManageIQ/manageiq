@@ -59,7 +59,7 @@ module Vmdb
       stat = File.stat(log_file)
 
       File.chmod(file_perm, log_file)          unless stat.mode & file_perm == file_perm
-      File.chown(file_uid, file_gid, log_file) unless stat.uid == file_uid && stat.group == file_gid
+      File.chown(file_uid, file_gid, log_file) unless stat.uid == file_uid && stat.gid == file_gid
     rescue Errno::EPERM
     end
 

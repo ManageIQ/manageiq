@@ -8,6 +8,15 @@ RSpec.describe Vmdb::Loggers do
     log_file_path.delete if log_file_path.exist?
   end
 
+  def in_appliance_env(example)
+    old_env = ENV.delete('APPLIANCE')
+    ENV['APPLIANCE'] = 'true'
+
+    example.run
+  ensure
+    ENV['APPLIANCE'] = old_env
+  end
+
   def in_container_env(example)
     old_env = ENV.delete('CONTAINER')
     ENV['CONTAINER'] = 'true'
@@ -164,6 +173,20 @@ RSpec.describe Vmdb::Loggers do
       end
 
       include_examples "has basic logging functionality"
+    end
+
+    context "in an appliance environment" do
+      around { |example| in_appliance_env(example) }
+
+      it "sets the log file owner and permissions" do
+        expect(MiqEnvironment).to receive(:manageiq_uid).and_return(1000)
+        expect(MiqEnvironment).to receive(:manageiq_gid).and_return(1000)
+
+        expect(File).to receive(:chown).with(1000, 1000, log_file_path)
+        expect(File).to receive(:chmod).with(0o660, log_file_path)
+
+        described_class.create_logger(log_file_name)
+      end
     end
 
     context "in a container environment" do
