@@ -205,11 +205,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
-  revision: 2b3f08a5782e22cf3edb6ed9044d9a441b8a12aa
+  revision: a86925465a6c1a60dac0439e18fe28eecb5a8429
   branch: morphy
   specs:
     manageiq-providers-kubevirt (0.1.0)
-      fog-kubevirt (~> 1.0)
+      fog-kubevirt (~> 1.0, >= 1.3.5)
       manageiq-providers-kubernetes (~> 0.1.0)
 
 GIT
@@ -623,7 +623,7 @@ GEM
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
-    fog-kubevirt (1.3.4)
+    fog-kubevirt (1.3.6)
       fog-core (~> 2.1)
       kubeclient (~> 4.3)
     fog-openstack (0.3.10)
