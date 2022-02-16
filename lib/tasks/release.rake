@@ -24,15 +24,12 @@ task :release do
   lock_release = root.join("Gemfile.lock.release")
   if lock_release.exist?
     gemfile_lock = lock_release.to_s.chomp(".release")
-    appliance_dependency = root.join("bundler.d/manageiq-appliance-dependencies.rb")
 
     FileUtils.ln_s(lock_release, gemfile_lock, :force => true)
-    FileUtils.ln_s(root.join("../manageiq-appliance/manageiq-appliance-dependencies.rb"),
-                   appliance_dependency, :force => true)
 
     exit $?.exitstatus unless Bundler.unbundled_system({"BUNDLE_IGNORE_CONFIG" => "true", "APPLIANCE" => "true"}, "bundle lock --update --conservative --patch")
 
-    FileUtils.rm([appliance_dependency, gemfile_lock])
+    FileUtils.rm(gemfile_lock)
 
     lock_content = lock_release.read
     lock_release.write(lock_content.gsub("branch: #{branch}", "tag: #{version}"))
@@ -201,11 +198,6 @@ namespace :release do
     end
 
     begin
-      require "open-uri"
-      appliance_deps = URI.parse("https://raw.githubusercontent.com/ManageIQ/manageiq-appliance/#{branch}/manageiq-appliance-dependencies.rb").read
-      appliance_deps_file = local_bundler_d.join("manageiq_appliance_dependencies.rb")
-      File.write(appliance_deps_file, appliance_deps)
-
       FileUtils.cp(root.join("Gemfile.lock.release"), root.join("Gemfile.lock"))
 
       if update_gems.any?
@@ -237,8 +229,6 @@ namespace :release do
       end
 
       FileUtils.cp(root.join("Gemfile.lock"), root.join("Gemfile.lock.release"))
-    ensure
-      FileUtils.rm_f(appliance_deps_file)
     end
   end
 end
