@@ -920,7 +920,8 @@ RSpec.describe ServiceTemplate do
     let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
     let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action], :service_template_catalog => service_template_catalog, :display => true) }
     let(:resource_action_options) { {:target => service_template, :initiator => 'control', :submit_workflow => true} }
-    let(:miq_request) { FactoryBot.create(:service_template_provision_request) }
+    let(:miq_automation_request) { FactoryBot.create(:automation_request) }
+    let(:miq_request) { FactoryBot.create(:service_template_provision_request, :parent_id => miq_automation_request.id) }
     let!(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, resource_action_options) }
 
     before do
@@ -1014,6 +1015,30 @@ RSpec.describe ServiceTemplate do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
           expect(resource_action_workflow).to receive(:request_options=).with(
             :initiator => 'control', :submit_workflow => true
+          )
+
+          expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
+        end
+      end
+
+      context "with parent request id" do
+        let(:arg2) { {:initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id} }
+
+        it "provisions a service template without errors" do
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
+          expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
+          expect(resource_action_workflow).to receive(:request_options=).with(
+            :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
+          )
+
+          expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
+          expect(miq_request.parent).to eq(miq_automation_request)
+        end
+
+        it "provisions a service template with errors" do
+          expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w[Error1 Error2])
+          expect(resource_action_workflow).to receive(:request_options=).with(
+            :initiator => 'control', :submit_workflow => true, :parent_id => miq_automation_request.id
           )
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
