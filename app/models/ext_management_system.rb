@@ -151,6 +151,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :cloud_subnet_create
   supports_not :cloud_tenant_mapping
   supports_not :cloud_volume_create
+  supports_not :create_iso_datastore
   supports_not :console
   supports_not :discovery
   supports_not :label_mapping
@@ -303,6 +304,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_attribute :supports_create_security_group, :child_model => "SecurityGroup"
   supports_attribute :supports_create_host_aggregate, :child_model => "HostAggregate"
   supports_attribute :feature => :create_network_router
+  supports_attribute :feature => :create_iso_datastore
   supports_attribute :feature => :storage_services
   supports_attribute :feature => :add_storage
   supports_attribute :feature => :add_host_initiator
