@@ -32,6 +32,11 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
     super
   end
 
+  def workers_quiesced?
+    check_not_responding
+    super
+  end
+
   def check_not_responding
     worker_deleted = false
     miq_workers.each do |w|

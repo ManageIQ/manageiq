@@ -210,7 +210,6 @@ RSpec.describe MiqServer do
       end
 
       it "quiesce_workers do mini-monitor_workers loop" do
-        expect(@miq_server).to receive(:heartbeat)
         expect(@miq_server.worker_manager).to receive(:quiesce_workers_loop_timeout?).never
         @worker.update(:status => MiqWorker::STATUS_STOPPED)
         @miq_server.worker_manager.workers_quiesced?
