@@ -61,12 +61,16 @@ RSpec.describe MiqEnvironment do
       end
 
       context "production build questions" do
+        let(:token_file) { "/run/secrets/kubernetes.io/serviceaccount/token" }
+        let(:ca_file)    { "/run/secrets/kubernetes.io/serviceaccount/ca.crt" }
+
         def container_conditions
           stub_const("ENV", ENV.to_h.merge("CONTAINER" => "true"))
         end
 
         def podified_conditions
-          expect(ContainerOrchestrator).to receive(:available?).and_return(true)
+          allow(File).to receive(:exist?).with(token_file).and_return(true)
+          allow(File).to receive(:exist?).with(ca_file).and_return(true)
           container_conditions
         end
 
