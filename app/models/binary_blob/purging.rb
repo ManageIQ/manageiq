@@ -9,7 +9,7 @@ class BinaryBlob < ApplicationRecord
       end
 
       def purge_date
-        ::Settings.binary_blob.keep_orphaned.to_i_with_method.ago.utc
+        ::Settings.binary_blob.keep_orphaned.to_i_with_method.seconds.ago.utc
       end
 
       def purge_window_size
