@@ -132,7 +132,9 @@ module SupportsFeatureMixin
 
     # scope to query all those classes that support a particular feature
     def supporting(feature)
-      where(:type => subclasses_supporting(feature).map(&:name))
+      # First find all instances where the class supports <feature> then select instances
+      # which also support <feature> (e.g. the supports block does not add an unsupported_reason)
+      where(:type => subclasses_supporting(feature).map(&:name)).select { |instance| instance.supports?(feature) }
     end
 
     # Providers that support this feature
