@@ -807,7 +807,7 @@
   :path:
 :help_menu:
   :documentation:
-    :type: default
+    :type: new_window
   :product:
     :type: new_window
   :about:
