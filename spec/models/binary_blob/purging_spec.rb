@@ -2,6 +2,18 @@ RSpec.describe BinaryBlob do
   let(:purge_time) { 1.month.ago.round }
 
   context "::Purging" do
+    describe ".purge_date" do
+      it "returns a date" do
+        expect(described_class.purge_date).to be_kind_of(Time)
+      end
+
+      it "changes with settings" do
+        stub_settings_merge(:binary_blob => {:keep_orphaned => "1.minute"})
+
+        expect(described_class.purge_date).to be_within(1.second).of(60.seconds.ago.utc)
+      end
+    end
+
     describe ".purge_by_scope" do
       it "purges all non-resource rows and expired StateVarHash ones" do
         # BinaryBlob with no resource
