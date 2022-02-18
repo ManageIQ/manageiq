@@ -68,8 +68,9 @@ module MiqEnvironment
     def self.is_podified?
       return @is_podified unless @is_podified.nil?
 
-      require "container_orchestrator"
-      @is_podified = is_container? && ContainerOrchestrator.available?
+      @is_podified = is_container? &&
+                     File.exist?("/run/secrets/kubernetes.io/serviceaccount/token") &&
+                     File.exist?("/run/secrets/kubernetes.io/serviceaccount/ca.crt")
     end
 
     def self.is_appliance?
