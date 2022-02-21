@@ -96,6 +96,7 @@ module PurgingMixin
       _log.info("Purging #{table_name.humanize}...")
       total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
       _log.info("Purging #{table_name.humanize}...Complete - Deleted #{total} records")
+      total
     end
 
     def purge_by_orphaned(fk_name, window = purge_window_size)
