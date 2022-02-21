@@ -44,9 +44,10 @@ class User < ApplicationRecord
   validates :name, :presence => true, :length => {:maximum => 100}
   validates :first_name, :length => {:maximum => 100}
   validates :last_name, :length => {:maximum => 100}
-  validates :userid, :presence => true, :unique_within_region => {:match_case => false}
+  validates :userid, :presence => true, :unique_within_region => {:match_case => false}, :length => {:maximum => 255}
   validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
-                                :allow_nil => true, :message => "must be a valid email address"}
+                                :allow_nil => true, :message => "must be a valid email address"},
+                    :length => {:maximum => 255}
   validates :current_group, :inclusion => {:in => proc { |u| u.miq_groups }, :allow_nil => true, :if => :current_group_id_changed?}
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
