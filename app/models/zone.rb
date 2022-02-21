@@ -189,7 +189,7 @@ class Zone < ApplicationRecord
 
   # @return [Array<ExtManagementSystem>] All emses that can collect Capacity and Utilization metrics
   def ems_metrics_collectable
-    ext_management_systems.supporting(:metrics).select { |e| e.supports?(:metrics) }
+    ext_management_systems.supporting(:metrics)
   end
 
   def ems_networks
