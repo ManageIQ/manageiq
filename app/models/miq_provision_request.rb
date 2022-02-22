@@ -17,7 +17,8 @@ class MiqProvisionRequest < MiqRequest
   validate               :must_have_user
 
   default_value_for :options,      :number_of_vms => 1
-  default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }
+  default_value_for(:source_id)    { |r| r.get_option(:src_vm_id) || r.get_option(:source_id) }
+  default_value_for :source_type,  "VmOrTemplate"
 
   virtual_column :provision_type, :type => :string
 
