@@ -404,6 +404,7 @@ class ServiceTemplate < ApplicationRecord
 
   def provision_request(user, options = nil, request_options = {})
     request_options[:provision_workflow] = true
+    request_options[:parent_id] = options.delete('param_parent_request_id') unless options['param_parent_request_id'].nil?
     result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
     result[:request]

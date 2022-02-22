@@ -14,6 +14,7 @@ class MiqRequest < ApplicationRecord
   belongs_to :requester,         :class_name  => "User"
   belongs_to :tenant
   belongs_to :service_order
+  belongs_to :parent, :class_name => "MiqRequest"
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
@@ -508,7 +509,8 @@ class MiqRequest < ApplicationRecord
     values[:src_ids] = Array.wrap(values[:src_ids]) unless values[:src_ids].nil?
     request_type = values.delete(:__request_type__) || request_types.first
     initiator = values.delete(:__initiated_by__) || 'user'
-    request = create!(:options => values, :requester => requester, :request_type => request_type, :initiated_by => initiator)
+    parent_id = values[:request_options]&.delete(:parent_id)
+    request = create!(:options => values, :requester => requester, :request_type => request_type, :initiated_by => initiator, :parent_id => parent_id)
 
     request.post_create(auto_approve)
   end

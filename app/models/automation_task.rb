@@ -22,6 +22,7 @@ class AutomationTask < MiqRequestTask
     args[:miq_group_id]     = options[:miq_group_id] || User.find(options[:user_id]).current_group.id
     args[:tenant_id]        = options[:tenant_id] || User.find(options[:user_id]).current_tenant.id
     args[:automate_message] = options[:message]
+    args[:attrs][:dialog_param_parent_request_id] = miq_request_id unless miq_request_id.nil?
 
     MiqAeEngine.deliver(args)
   end
