@@ -19,7 +19,8 @@ class DialogTab < ApplicationRecord
   end
 
   def validate_children
-    errors[:dialog_groups].delete("is invalid")
+    # To remove the meaningless error message like "Dialog groups is invalid" when child's validation fails
+    errors.delete(:dialog_groups)
     errors.add(:base, _("Tab %{tab_label} must have at least one Box") % {:tab_label => label}) if dialog_groups.blank?
 
     dialog_groups.each do |dg|
