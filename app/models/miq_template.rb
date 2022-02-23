@@ -31,7 +31,7 @@ class MiqTemplate < VmOrTemplate
   end
 
   def self.eligible_for_provisioning
-    supporting(:provisioning).active
+    where(:type => subclasses_supporting(:provisioning).map(&:name)).active
   end
 
   def self.without_volume_templates
