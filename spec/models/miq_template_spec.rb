@@ -1,4 +1,6 @@
 RSpec.describe MiqTemplate do
+  include Spec::Support::SupportsHelper
+
   subject { FactoryBot.create(:template) }
 
   include_examples "ComplianceMixin"
@@ -63,5 +65,42 @@ RSpec.describe MiqTemplate do
     template = FactoryBot.create(:template_microsoft)
     FactoryBot.create(:ems_openstack, :miq_templates => [template])
     expect(template.supports?(:provisioning)).to be_truthy
+  end
+
+  describe ".eligible_for_provisioning" do
+    context "with no templates" do
+      it "returns an empty set" do
+        expect(described_class.eligible_for_provisioning).to be_empty
+      end
+    end
+
+    context "with a template" do
+      let!(:template) { FactoryBot.create(:template_infra, :ext_management_system => ems) }
+      let(:ems)       { nil }
+
+      context "that does not support provisioning" do
+        it "returns an empty set" do
+          expect(described_class.eligible_for_provisioning).to be_empty
+        end
+      end
+
+      context "that supports provisioning" do
+        before { stub_supports(template, :provisioning) }
+
+        context "not connected to an EMS" do
+          it "returns an empty set" do
+            expect(described_class.eligible_for_provisioning).to be_empty
+          end
+        end
+
+        context "connected to an EMS" do
+          let(:ems) { FactoryBot.create(:ems_infra) }
+
+          it "returns the template" do
+            expect(described_class.eligible_for_provisioning).to include(template)
+          end
+        end
+      end
+    end
   end
 end
