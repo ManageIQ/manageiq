@@ -257,6 +257,8 @@ RSpec.describe TimeProfile do
   end
 
   describe "#profile_for_each_region" do
+    let(:region_id1) { @server.region_id }
+    let(:region_id2) { region_id1 + 1 }
     it "returns none for a non rollup metric" do
       tp = FactoryBot.create(:time_profile, :rollup_daily_metrics => false)
 
@@ -264,17 +266,17 @@ RSpec.describe TimeProfile do
     end
 
     it "returns unique entries" do
-      tp1a = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(5, 1))
-      tp1b = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(5, 2))
-      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(5, 3))
-      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(5, 4))
-      tp2 = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(6, 1))
-      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(6, 2))
-      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(6, 3))
+      tp1a = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(1, region_id1))
+      tp1b = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(2, region_id1))
+      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(3, region_id1))
+      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(4, region_id1))
+      tp2 = FactoryBot.create(:time_profile_with_rollup, :id => id_in_region(1, region_id2))
+      FactoryBot.create(:time_profile_with_rollup, :days => [1, 2], :id => id_in_region(2, region_id2))
+      FactoryBot.create(:time_profile, :rollup_daily_metrics => false, :id => id_in_region(3, region_id2))
 
       results = tp1a.profile_for_each_region
       expect(results.size).to eq(2)
-      expect(results.map(&:region_id)).to match_array([5, 6])
+      expect(results.map(&:region_id)).to match_array([region_id1, region_id2])
       expect(results.include?(tp1a) || results.include?(tp1b)).to be true
       expect(results).to include(tp2)
     end
@@ -321,8 +323,8 @@ RSpec.describe TimeProfile do
 
   private
 
-  def id_in_region(region, id)
-    region * MiqRegion::DEFAULT_RAILS_SEQUENCE_FACTOR + id
+  def id_in_region(record_id, region)
+    ApplicationRecord.id_in_region(record_id, region)
   end
 
   def assert_rebuild_daily_queued
