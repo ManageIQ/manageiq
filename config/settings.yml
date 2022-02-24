@@ -962,7 +962,7 @@
     :ui_login:
       :limit: 5
       :period: 20.seconds
-  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,remote_console,web_services,automate
+  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,ems_metrics_collector,ems_metrics_coordinator,ems_metrics_processor,user_interface,remote_console,web_services,automate
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
   :server_log_timings_threshold: 1.second
