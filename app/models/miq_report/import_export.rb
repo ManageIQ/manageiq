@@ -107,6 +107,8 @@ module MiqReport::ImportExport
     # @param cache [Hash] cache that holds yaml for the views
     def load_from_view_options(db, current_user = nil, options = {}, cache = {})
       filename = MiqReport.view_yaml_filename(db, current_user, options)
+      raise Errno::ENOENT, "Unable to find view yaml file for db #{db.inspect}" if filename.nil?
+
       view = load_from_filename(filename, cache)
       view.db = db if filename.ends_with?("Vm__restricted.yaml")
       view

@@ -184,6 +184,12 @@ RSpec.describe MiqReport::ImportExport do
       view = MiqReport.load_from_view_options(VmCloud.name, current_user)
       expect(view.extras[:filename]).to eq("ManageIQ_Providers_CloudManager_Vm")
     end
+
+    it "handles a missing yaml view" do
+      expect do
+        MiqReport.load_from_view_options("Blahblah", current_user)
+      end.to raise_error(Errno::ENOENT, /Unable to find view yaml file for db "Blahblah"/)
+    end
   end
 
   context ".load_from_filename" do
