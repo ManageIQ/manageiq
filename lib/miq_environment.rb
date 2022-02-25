@@ -120,7 +120,7 @@ module MiqEnvironment
 
     def self.which
       case Sys::Platform::IMPL
-      when :linux
+      when :linux, :macosx
         "which"
       else
         raise "Not yet supported platform: #{Sys::Platform::IMPL}"
