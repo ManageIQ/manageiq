@@ -13,7 +13,8 @@ module ManageIQ
           :key             => "_vmdb_session",
           :memcache_server => MiqMemcached.server_address,
           :namespace       => "MIQ:VMDB",
-          :value_max_bytes => 10.megabytes,
+          :pool_size       => 10,
+          :value_max_bytes => 10.megabytes
         )
       end
     end

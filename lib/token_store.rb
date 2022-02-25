@@ -52,8 +52,8 @@ class TokenStore
     MiqMemcached.default_client_options.merge(
       {
         :namespace  => "MIQ:TOKENS:#{namespace.upcase}",
-        :threadsafe => true,
-        :expires_in => token_ttl
+        :expires_in => token_ttl,
+        :pool_size  => 10,
       }
     )
   end
