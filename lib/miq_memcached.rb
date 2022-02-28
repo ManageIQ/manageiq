@@ -7,7 +7,10 @@ module MiqMemcached
 
   def self.default_client_options
     options = {
-      :pool_size => 1,
+      # Direct Dalli Clients won't use connection pool but will be threadsafe.
+      # ActiveSupport::Cache::MemCacheStore and ManageIQ::Session::MemCacheStoreAdapter
+      # use threadsafe but also accept connection pool options.
+      :threadsafe => true
     }
 
     if ENV["MEMCACHED_ENABLE_SSL"]
