@@ -50,6 +50,7 @@ class VmOrTemplate < ApplicationRecord
     "google"        => "Google",
     "kubevirt"      => "KubeVirt",
     "ibm_cloud"     => "IBM Cloud",
+    "ibm_power_vs"  => "IBM Power Systems Virtual Server",
     "ibm_power_vc"  => "IBM PowerVC",
     "ibm_power_hmc" => "IBM Power HMC",
     "ibm_z_vm"      => "IBM Z/VM",
