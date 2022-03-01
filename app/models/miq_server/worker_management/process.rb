@@ -13,7 +13,7 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
 
   def monitor_active_workers
     # Monitor all remaining current worker records
-    miq_workers.where(:status => MiqWorker::STATUSES_CURRENT_OR_STARTING).each do |worker|
+    miq_workers.find_current_or_starting.each do |worker|
       # Push the heartbeat into the database
       persist_last_heartbeat(worker)
       # Check the worker record for heartbeat timeouts

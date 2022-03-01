@@ -424,6 +424,10 @@ class MiqWorker < ApplicationRecord
     STATUSES_STOPPED.include?(status)
   end
 
+  def current_or_starting?
+    STATUSES_CURRENT_OR_STARTING.include?(status)
+  end
+
   def started?
     STATUS_STARTED == status
   end

@@ -30,7 +30,7 @@ module MiqServer::WorkerManagement::Monitor::Kill
     killed_workers = []
 
     workers.each do |w|
-      w.kill_process if MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
+      w.kill_process if w.current_or_starting?
       w.destroy
       worker_delete(w.pid)
       killed_workers << w
