@@ -16,7 +16,7 @@ namespace :test do
       Brakeman::AppTree.prepend(BrakemanExcludesPatch)
 
       app_path = Rails.root.to_s
-      engine_paths = Vmdb::Plugins.paths.values
+      engine_paths = Vmdb::Plugins.paths.except(ManageIQ::Schema::Engine).values
 
       puts "** Running brakeman in #{app_path}"
       puts "** with engines:"
