@@ -54,7 +54,7 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
-  revision: bc26dfcea22d02067e9ae244cd3aca13c88b846b
+  revision: 676e1d295583b0f5fde035c93f36ad28ecb0640e
   branch: najdorf
   specs:
     manageiq-gems-pending (0.1.0)
@@ -64,7 +64,7 @@ GIT
       bundler (~> 2.1, >= 2.1.4, != 2.2.10)
       erubis (= 2.7.0)
       fog-openstack (~> 0.3)
-      more_core_extensions (~> 4.3)
+      more_core_extensions (~> 4.4)
       nokogiri (~> 1.11, >= 1.11.4)
       sys-proctable (~> 1.2.5)
       sys-uname (~> 1.2.1)
@@ -770,7 +770,7 @@ GEM
       json (~> 2.3)
       more_core_extensions
       query_relation
-    manageiq-appliance_console (7.0.2)
+    manageiq-appliance_console (7.0.3)
       activerecord (~> 6.0.4, >= 6.0.4.1)
       activesupport (~> 6.0.4, >= 6.0.4.1)
       awesome_spawn (~> 1.4)
@@ -832,7 +832,7 @@ GEM
       monetize (~> 1.9)
       money (~> 6.13)
       railties (>= 3.0)
-    more_core_extensions (4.3.1)
+    more_core_extensions (4.4.0)
       activesupport
       sync
     ms_rest (0.7.6)
@@ -1168,7 +1168,7 @@ DEPENDENCIES
   log_decorator (~> 0.1)
   manageiq-api!
   manageiq-api-client (~> 0.3.4)
-  manageiq-appliance_console (~> 7.0, >= 7.0.2)
+  manageiq-appliance_console (~> 7.0, >= 7.0.3)
   manageiq-automation_engine!
   manageiq-consumption!
   manageiq-content!
