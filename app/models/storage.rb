@@ -555,7 +555,8 @@ class Storage < ApplicationRecord
 
   def vm_ids_by_path
     host_ids = hosts.collect(&:id)
-    return nil if host_ids.empty?
+    return {} if host_ids.empty?
+
     Vm.where(:host_id => host_ids).includes(:storage).inject({}) do |h, v|
       h[File.dirname(v.path)] = v.id
       h
