@@ -54,7 +54,11 @@ module ManageIQ
     end
 
     def self.install_bundler(root = APP_ROOT)
-      system!("gem install bundler -v '#{bundler_version}' --conservative") unless ENV["GITHUB_ACTIONS"]
+      if system("which bundle", [:out, :err] => "/dev/null") && system("bundle info bundler", [:out, :err] => "/dev/null")
+        puts "== proper bundler detected... skipping bundler install =="
+      else
+        system!("gem install bundler -v '#{bundler_version}' --conservative")
+      end
     end
 
     def self.setup_gemfile_lock
@@ -69,7 +73,11 @@ module ManageIQ
     end
 
     def self.bundle_update(root = APP_ROOT)
-      system!("bundle update --jobs=3", :chdir => root)
+      if system("bundle check", [:out, :err] => "/dev/null")
+        puts "== bundle check passed... skipping update =="
+      else
+        system!("bundle update --jobs=3", :chdir => root)
+      end
       return unless ENV["CI"]
 
       lockfile_contents = File.read(root.join("Gemfile.lock"))
