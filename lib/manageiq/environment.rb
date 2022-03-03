@@ -9,16 +9,16 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      manageiq_plugin_update(plugin_root)
+      manageiq_plugin_update(plugin_root, force_bundle_update: false)
     end
 
-    def self.manageiq_plugin_update(plugin_root = nil)
+    def self.manageiq_plugin_update(plugin_root = nil, force_bundle_update: true)
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       setup_gemfile_lock if ENV["CI"]
       install_bundler(plugin_root)
-      bundle_update(plugin_root)
+      bundle_update(plugin_root, force: force_bundle_update)
 
       ensure_config_files
 
@@ -72,8 +72,8 @@ module ManageIQ
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 
-    def self.bundle_update(root = APP_ROOT)
-      if system("bundle check", [:out, :err] => "/dev/null")
+    def self.bundle_update(root = APP_ROOT, force: false)
+      if !force && system("bundle check", [:out, :err] => "/dev/null")
         puts "== bundle check passed... skipping update =="
       else
         system!("bundle update --jobs=3", :chdir => root)
