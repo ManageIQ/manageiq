@@ -43,7 +43,7 @@ class OrchestrationTemplate < ApplicationRecord
         true
       else
         klass = hash[:type].present? ? hash[:type].constantize : self
-        md5s << klass.calc_md5(with_universal_newline(hash[:content]))
+        md5s << klass.calc_md5(with_universal_newline(hash[:content].to_s))
         false
       end
     end
