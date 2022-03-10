@@ -61,6 +61,25 @@ RSpec.describe MiqWorker::ContainerCommon do
       expect(ui_worker).to receive(:scale_deployment)
       ui_worker.create_container_objects
     end
+
+    it "Service workers use httpGet liveness and readiness probes" do
+      container_orchestrator = ContainerOrchestrator.new
+      kubeclient = double("Kubeclient::Client")
+
+      expect(ContainerOrchestrator).to receive(:new).and_return(container_orchestrator)
+      expect(container_orchestrator).to receive(:my_namespace).and_return("my-namespace")
+      expect(container_orchestrator).to receive(:raw_connect).and_return(kubeclient)
+
+      expect(kubeclient).to receive(:create_deployment) do |deployment|
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :ports)).to match_array([{:containerPort => 3000}, {:containerPort => 4000}])
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :livenessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 240, :periodSeconds => 15, :timeoutSeconds => 10)
+        expect(deployment.fetch_path(:spec, :template, :spec, :containers, 0, :readinessProbe)).to eq(:httpGet => {:path => "/ping", :port => 4000}, :initialDelaySeconds => 60, :timeoutSeconds => 3)
+      end
+
+      worker = MiqWebServiceWorker.new
+      expect(worker).to receive(:scale_deployment)
+      worker.create_container_objects
+    end
   end
 
   describe "#zone_selector" do
