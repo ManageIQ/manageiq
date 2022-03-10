@@ -1165,9 +1165,11 @@
       :vm_scan_dispatcher_stale_message_timeout: 2.minutes
     :ui_worker:
       :connection_pool_size: 8
+      :count: 2
       :nice_delta: 1
     :web_service_worker:
       :connection_pool_size: 8
+      :count: 2
       :nice_delta: 1
     :remote_console_worker:
       :connection_pool_size: 14

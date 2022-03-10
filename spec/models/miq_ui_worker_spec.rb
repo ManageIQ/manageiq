@@ -1,4 +1,11 @@
 RSpec.describe MiqUiWorker do
+  describe ".worker_settings" do
+    it "count defaults to 2" do
+      EvmSpecHelper.local_miq_server
+      expect(described_class.worker_settings[:count]).to eq 2
+    end
+  end
+
   context ".all_ports_in_use" do
     before do
       require 'util/miq-process'
