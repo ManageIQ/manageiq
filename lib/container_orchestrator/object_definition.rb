@@ -110,6 +110,7 @@ class ContainerOrchestrator
         {:name => "HOME",                    :value => Rails.root.join("tmp").to_s},
         {:name => "MEMCACHED_SERVER",        :value => ENV["MEMCACHED_SERVER"]},
         {:name => "MEMCACHED_SERVICE_NAME",  :value => ENV["MEMCACHED_SERVICE_NAME"]},
+        {:name => "WORKER_STARTED_FILE",     :value => Rails.root.join("tmp", "worker.startup").to_s},
         {:name => "WORKER_HEARTBEAT_FILE",   :value => Rails.root.join("tmp", "worker.hb").to_s},
         {:name => "WORKER_HEARTBEAT_METHOD", :value => "file"},
         {:name => "ENCRYPTION_KEY",          :valueFrom => {:secretKeyRef=>{:name => "app-secrets", :key => "encryption-key"}}}

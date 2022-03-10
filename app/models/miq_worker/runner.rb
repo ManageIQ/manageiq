@@ -143,11 +143,13 @@ class MiqWorker::Runner
 
   def started_worker_record
     reload_worker_record
-    @worker.sd_notify_started if systemd_worker?
     @worker.status         = "started"
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
     @worker.save
+
+    notify_worker_started
+
     $log.info("#{self.class.name} started. ID [#{@worker.id}], PID [#{@worker.pid}], GUID [#{@worker.guid}], Zone [#{MiqServer.my_zone}], Role [#{MiqServer.my_role}]")
   end
 
@@ -193,9 +195,10 @@ class MiqWorker::Runner
     @worker.stopped_on = Time.now.utc
     @worker.save
 
-    @worker.sd_notify_stopping if systemd_worker?
     @worker.status_update
     @worker.log_status
+
+    notify_worker_stopping
   end
 
   def do_exit(message = nil, exit_code = 0)
@@ -455,6 +458,20 @@ class MiqWorker::Runner
   end
 
   private
+
+  def notify_worker_started
+    if systemd_worker?
+      @worker.sd_notify_started
+    else
+      File.write(@worker.started_file, Time.now.to_i)
+    end
+  end
+
+  def notify_worker_stopping
+    if systemd_worker?
+      @worker.sd_notify_stopping
+    end
+  end
 
   def skip_heartbeat?
     ENV["DISABLE_MIQ_WORKER_HEARTBEAT"]

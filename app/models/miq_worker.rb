@@ -229,6 +229,10 @@ class MiqWorker < ApplicationRecord
     self.class.fetch_worker_settings_from_server(miq_server, options)
   end
 
+  def started_file
+    @started_file ||= Workers::MiqDefaults.started_file(guid)
+  end
+
   def heartbeat_file
     @heartbeat_file ||= Workers::MiqDefaults.heartbeat_file(guid)
   end
