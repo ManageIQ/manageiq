@@ -52800,7 +52800,7 @@ msgid_plural "Cloud Networks (IBM CIC)"
 msgstr[0] "云网络 (IBM CIC)"
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb:19
-msgid "Ibm Cic Provider"
+msgid "IBM CIC Provider"
 msgstr "IBM CIC 提供者"
 
 #:
