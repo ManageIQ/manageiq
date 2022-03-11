@@ -64009,7 +64009,7 @@ msgstr[0] "已启动 %{number} 个云网络的删除。"
 
 #: ../app/controllers/cloud_object_store_container_controller.rb:188
 msgid "Delete initiated for %{number} Cloud Object Store Container."
-msgstr "{n, plural, other {已针对 %\"{'number'}\" 个云对象存储容器启动删除操作。}}"
+msgstr "{n, plural, other {已针对 %{number} 个云对象存储容器启动删除操作。}}"
 
 #: ../app/controllers/cloud_tenant_controller.rb:152
 msgid "Delete initiated for %{number} Cloud Tenant."
