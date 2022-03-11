@@ -54972,9 +54972,10 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
+"ault location.\n"
+"example: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "Ermöglicht die Definition eines URL-Pfadpräfixes für die XCCDF-Datei anstelle "
 "des Zugriffs auf die Standardposition.\nBeispiel: http://my_file_server.org:"
@@ -57940,12 +57941,8 @@ msgstr "%{product} Region: %{region_description} [%{region}]"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:515
 #: ../app/controllers/ops_controller/diagnostics.rb:539
-msgid ""
-"%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description"
-"}\""
-msgstr ""
-"%{product} Server \"%{name}\" als %{priority} für Rolle \"%{role_description}\"
-"" festgelegt"
+msgid "%{product} Server \"%{name}\" set as %{priority} for Role \"%{role_description}\""
+msgstr "%{product} Server \"%{name}\" als %{priority} für Rolle \"%{role_description}\" festgelegt"
 
 #: ../app/helpers/container_service_helper/textual_summary.rb:59
 msgid "%{protocol} port %{port} to pods on target port:'%{target_port}'"
@@ -65507,8 +65504,8 @@ msgid ""
 msgstr ""
 "Datenspeicherimport war erfolgreich.\nAktualisierte/hinzugefügte "
 "Namensbereiche: %{namespace_stats}\nAktualisierte/hinzugefügte Klassen: %{"
-"class_stats}\nAktualisierte/hinzugefügte Instanzen: %{instance_stats}\"
-"nAktualisierte/hinzugefügte Methoden: %{method_stats}"
+"class_stats}\nAktualisierte/hinzugefügte Instanzen: %{instance_stats}\n"
+"Aktualisierte/hinzugefügte Methoden: %{method_stats}"
 
 #: ../app/presenters/tree_builder_utilization.rb:48
 msgid "Datastores (Click to open)"
@@ -77652,8 +77649,8 @@ msgstr "Replikation"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\" "
+"on My Tasks screen"
 msgstr ""
 "Speichern der Replikationskonfiguration eingeleitet. Prüfen Sie den Status von"
 " Task \"%{task_name}\" auf der Anzeige 'Eigene Tasks'."
