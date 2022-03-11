@@ -153,10 +153,6 @@ module ManageIQ::Providers
       false
     end
 
-    def console_url
-      raise MiqException::Error, _("Console not supported")
-    end
-
     def self.firmware_update_class
       self::FirmwareUpdateTask
     end

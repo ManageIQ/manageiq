@@ -29,6 +29,10 @@ module ManageIQ::Providers
       self.class.http_proxy_uri
     end
 
+    def console_url
+      raise MiqException::Error, _("Console not supported")
+    end
+
     # copy my attributes to a child manager
     # child managers need to be in lock step with this manager
     def propagate_child_manager_attributes(child, name = nil)
