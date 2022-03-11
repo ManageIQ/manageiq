@@ -41,6 +41,15 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+    - name: Wait for db
+      run: |
+          COUNT=1
+          while ! pg_isready ; do
+            echo "waiting for postgres to start"
+            COUNT=$(($COUNT + 1))
+            [[ $COUNT -lt 20 ]] || break
+            sleep 1
+          done
     - name: Prepare tests
       run: bin/setup
     - name: Run tests
