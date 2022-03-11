@@ -51227,7 +51227,7 @@ msgstr ""
 
 #: ../lib/vmdb/fast_gettext_helper.rb:67
 msgid "locale_name"
-msgstr ""
+msgstr "English"
 
 #: ../app/mailers/generic_mailer.rb:152
 msgid "login"
