@@ -53598,9 +53598,10 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
+"ault location.\n"
+"example: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "允许为 XCCDF 文件定义 URL 路径前缀，而不是访问缺省位置。示例：http://my_file_server.org:3333/"
 "xccdf_files/\n  应该可在那里找到 com.redhat.rhsa-RHEL7.ds.xml.bz2 文件。"
@@ -75147,8 +75148,8 @@ msgstr "复制"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\" "
+"on My Tasks screen"
 msgstr "已启动复制配置保存。在“我的任务”屏幕上，检查任务“%{task_name}”的状态"
 
 #:

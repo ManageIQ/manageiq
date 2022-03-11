@@ -53599,9 +53599,10 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
+"ault location.\n"
+"example: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "啟用為 XCCDF 檔案定義 URL 路徑字首而非存取預設位置的功能。例如：http://my_file_server.org:3333/"
 "xccdf_files/，期望在這裡能夠找到 com.redhat.rhsa-RHEL7.ds.xml.bz2 檔。"
@@ -55551,8 +55552,8 @@ msgid ""
 " be in \"available\", \"adoptfail\", \"cleanfail\", \"enroll\", or \""
 "inspectfail\""
 msgstr ""
-"\"%{task}\"：不適用於 %{hostname}. %{hostname} 的供應狀態必須處於 \"available\"、\"adoptfail\"
-""、\"cleanfail\"、\"enroll\" 或 \"inspectfail\""
+"\"%{task}\"：不適用於 %{hostname}. %{hostname} 的供應狀態必須處於 \"available\"、\"adoptfail\""
+"、\"cleanfail\"、\"enroll\" 或 \"inspectfail\""
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:118
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:129
@@ -75156,8 +75157,8 @@ msgstr "複寫"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\" "
+"on My Tasks screen"
 msgstr "已起始抄寫配置儲存。檢查「我的作業」畫面上作業 \"%{task_name}\" 的狀態"
 
 #:
