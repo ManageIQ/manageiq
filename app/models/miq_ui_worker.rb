@@ -23,6 +23,17 @@ class MiqUiWorker < MiqWorker
   def self.preload_for_worker_role
     super
     Api::ApiConfig.collections.each { |_k, v| v.klass.try(:constantize).try(:descendants) }
+
+    # There is a race condition between const_missing and singleton which can occur
+    # when one thread is holding the singleton lock and loading a constant while
+    # another thread is holding the signleton lock and waiting to load a different
+    # constant.
+    #
+    # As a workaround preload all classes which are Singletons from a single thread
+    # prior to booting the puma workers.
+    ApplicationHelper::Toolbar::Base.instance
+    Menu::Manager.instance
+    Menu::YamlLoader.instance
   end
 
   def container_port
