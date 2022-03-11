@@ -151,12 +151,12 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
-  revision: 9fd793b8d5d432a166ffa228d554f7a2fedb3249
+  revision: 3e6f7ceed85ca70c15422655dd67c181dc2c6b57
   branch: najdorf
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
-      ibm_cloud_activity_tracker (~> 0.1)
+      ibm_cloud_activity_tracker (~> 0.1, >= 0.1.1)
       ibm_cloud_databases (~> 0.1)
       ibm_cloud_global_tagging (~> 0.1)
       ibm_cloud_iam (~> 1.0)
@@ -680,7 +680,7 @@ GEM
     ibm-cloud-sdk (0.1.11)
       httparty
       rest-client
-    ibm_cloud_activity_tracker (0.1.0)
+    ibm_cloud_activity_tracker (0.1.1)
       concurrent-ruby (~> 1.0)
       http (~> 4.4.1)
       ibm_cloud_sdk_core (~> 1.1.1)
