@@ -54913,10 +54913,9 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
-"ault location.\n"
-"example: http://my_file_server.org:3333/xccdf_files/\n"
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the "
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
+"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "Abilita la definizione di un prefisso del percorso URL per il file XCCDF "
 "invece di accedere all'ubicazione predefinita.\nesempio: http://"
@@ -65362,8 +65361,8 @@ msgid ""
 "instance_stats}\nMethods updated/added: %{method_stats}"
 msgstr ""
 "Importazione del datastore eseguita correttamente.\nNamespace aggiornati/"
-"aggiunti: %{namespace_stats}\nClassi aggiornate/aggiunte: %{class_stats}\n"
-"Istanze aggiornate/aggiunte: %{instance_stats}\nMetodi aggiornati/aggiunti: %"
+"aggiunti: %{namespace_stats}\nClassi aggiornate/aggiunte: %{class_stats}\"
+"nIstanze aggiornate/aggiunte: %{instance_stats}\nMetodi aggiornati/aggiunti: %"
 "{method_stats}"
 
 #: ../app/presenters/tree_builder_utilization.rb:48
@@ -68594,8 +68593,8 @@ msgid ""
 "\"Display for\" (previous tab) set to \"Single\""
 msgstr ""
 "Le espressioni di abilitazione e di visibilità possono essere configurate solo"
-" per i pulsanti con \"Visualizzazione per\" (scheda precedente) impostata su \""
-"Singolo\""
+" per i pulsanti con \"Visualizzazione per\" (scheda precedente) impostata su \"
+""Singolo\""
 
 #: ../app/helpers/physical_storage_helper/textual_summary.rb:58
 msgid "Enclosure Count"
@@ -77436,8 +77435,8 @@ msgstr "Replica"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\" "
-"on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\"
+"" on My Tasks screen"
 msgstr ""
 "Salvataggio configurazione di replica avviata. Verificare lo stato "
 "dell'attività \"%{task_name}\" nel pannello Attività personali"
@@ -82845,8 +82844,8 @@ msgid ""
 "Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{"
 "details}"
 msgstr ""
-"Impossibile annullare l'associazione del Floating IP %{address} dall'istanza \""
-"%{name}\": %{details}"
+"Impossibile annullare l'associazione del Floating IP %{address} dall'istanza \"
+""%{name}\": %{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:23
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:104

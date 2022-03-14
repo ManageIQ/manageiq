@@ -54264,8 +54264,8 @@ msgid ""
 "workflow."
 msgstr ""
 "Une erreur côté serveur s'est produite dans le flux de travaux TPM. Contactez "
-"votre administrateur. Utilisez le menu ou le lien \"instances par fournisseur\" "
-" pour annuler ce flux de travaux."
+"votre administrateur. Utilisez le menu ou le lien \"instances par fournisseur\"
+"" pour annuler ce flux de travaux."
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/provision_workflow/common.rb:48
@@ -55089,10 +55089,9 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
-"ault location.\n"
-"example: http://my_file_server.org:3333/xccdf_files/\n"
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the "
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
+"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "Permet de définir un préfixe de chemin d'URL pour le fichier XCCDF au lieu "
 "d'accéder à l'emplacement par défaut.\nExemple : http://my_file_server.org:"
@@ -58049,9 +58048,11 @@ msgstr[1] "%{num} enregistrements corrects"
 
 #: ../app/controllers/vm_common.rb:836
 msgid ""
-"%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\""
+"%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}"
+"\""
 msgstr ""
-"%{object_types} sous %{datastore_or_provider} \"%{provider_or_datastore_name}\""
+"%{object_types} sous %{datastore_or_provider} \"%{provider_or_datastore_name}\"
+"""
 
 #: ../app/views/layouts/remote_console.html.haml:5
 msgid "%{product_name} HTML5 Remote Console"
@@ -65629,8 +65630,8 @@ msgid ""
 "instance_stats}\nMethods updated/added: %{method_stats}"
 msgstr ""
 "L'importation du magasin de données a abouti.\nEspaces de nom mis à jour/"
-"ajoutés : %{namespace_stats}\nClasses mises à jour/ajoutées : %{class_stats}\n"
-"Instances mises à jour/ajoutées : %{instance_stats}\nMéthodes mises à jour/"
+"ajoutés : %{namespace_stats}\nClasses mises à jour/ajoutées : %{class_stats}\"
+"nInstances mises à jour/ajoutées : %{instance_stats}\nMéthodes mises à jour/"
 "ajoutées : %{method_stats}"
 
 #: ../app/presenters/tree_builder_utilization.rb:48
@@ -77189,8 +77190,9 @@ msgstr "Retirer l'hôte de l'agrégat d'hôtes sélectionné"
 
 #: ../app/controllers/host_aggregate_controller.rb:237
 msgid "Remove Host not supported by Host Aggregate \"%{name}\""
-msgstr "Le retrait d'un hôte n'est pas pris en charge par l'agrégat d'hôtes \"%{name}\""
-
+msgstr ""
+"Le retrait d'un hôte n'est pas pris en charge par l'agrégat d'hôtes \"%{name}\"
+"""
 
 #: ../app/controllers/host_aggregate_controller.rb:225
 msgid "Remove Host to Host Aggregate \"%{name}\" failed: Task start failed"
@@ -77841,8 +77843,8 @@ msgstr "Réplication"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\" "
-"on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\"
+"" on My Tasks screen"
 msgstr ""
 "La sauvegarde de la configuration de la réplication a été lancée. Vérifiez le "
 "statut de la tâche \"%{task_name}\" sur l'écran Mes tâches"
