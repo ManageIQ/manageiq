@@ -10,7 +10,7 @@ RSpec.describe "I18n" do
     it "msgfmt on #{po_file} succeeds" do
       skip("msgfmt is not installed") unless system("which msgfmt > /dev/null")
 
-      result = AwesomeSpawn.run("msgfmt #{po_file} -o - >/dev/null", :chdir => Rails.root)
+      result = AwesomeSpawn.run("msgfmt #{po_file} --check -o - >/dev/null", :chdir => Rails.root)
       expect(result.success?).to be_truthy, "msgfmt failed with the following errors:\n\n#{result.error.indent(2)}"
     end
   end
