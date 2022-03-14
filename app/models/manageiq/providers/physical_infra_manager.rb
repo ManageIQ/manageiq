@@ -143,20 +143,6 @@ module ManageIQ::Providers
 
     alias total_vms count_vms
 
-    supports :console do
-      unless console_supported?
-        unsupported_reason_add(:console, N_("Console not supported"))
-      end
-    end
-
-    def console_supported?
-      false
-    end
-
-    def console_url
-      raise MiqException::Error, _("Console not supported")
-    end
-
     def self.firmware_update_class
       self::FirmwareUpdateTask
     end

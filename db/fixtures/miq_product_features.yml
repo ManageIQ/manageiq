@@ -492,6 +492,10 @@
       :description: Re-check Authentication Status of Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_recheck_auth_status
+    - :name: Native Console
+      :description: Provides the native webconsole of the Cloud Provider
+      :feature_type: control
+      :identifier: ems_native_console
   - :name: Modify
     :description: Modify Cloud Providers
     :feature_type: admin
@@ -1082,6 +1086,10 @@
       :description: Open Admin UI for Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_admin_ui
+    - :name: Native Console
+      :description: Provides the native webconsole of the Cloud Provider
+      :feature_type: control
+      :identifier: ems_native_console
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin
