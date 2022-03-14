@@ -53633,10 +53633,9 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
-"Enables defining a URL path prefix for XCCDF file instead of accessing the def"
-"ault location.\n"
-"example: http://my_file_server.org:3333/xccdf_files/\n"
-"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"Enables defining a URL path prefix for XCCDF file instead of accessing the "
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
+"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "デフォルトの場所にアクセスするのではなく、XCCDF ファイルの URL パス接頭部を定義できるようにします。\n例: http://"
 "my_file_server.org:3333/xccdf_files/\nそこで com.redhat.rhsa-RHEL7.ds.xml.bz2 "
@@ -75230,8 +75229,8 @@ msgstr "レプリケーション"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\" "
-"on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\"
+"" on My Tasks screen"
 msgstr "レプリケーション構成の保存を開始しました。マイ・タスクの画面でタスク \"%{task_name}\" のステータスを確認してください"
 
 #:
