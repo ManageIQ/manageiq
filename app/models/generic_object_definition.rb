@@ -185,34 +185,34 @@ class GenericObjectDefinition < ApplicationRecord
 
   def validate_property_attributes
     properties[:attributes].each do |name, type|
-      errors[:properties] << "attribute [#{name}] is not of a recognized type: [#{type}]" unless TYPE_MAP.key?(type.to_sym)
-      errors[:properties] << "invalid attribute name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
+      errors.add(:properties, "attribute [#{name}] is not of a recognized type: [#{type}]") unless TYPE_MAP.key?(type.to_sym)
+      errors.add(:properties, "invalid attribute name: [#{name}]") unless REG_ATTRIBUTE_NAME.match?(name)
     end
   end
 
   def validate_property_associations
     invalid_models = properties[:associations].values - ALLOWED_ASSOCIATION_TYPES
-    errors[:properties] << "invalid models for association: [#{invalid_models.join(",")}]" unless invalid_models.empty?
+    errors.add(:properties, "invalid models for association: [#{invalid_models.join(",")}]") unless invalid_models.empty?
 
     properties[:associations].each do |name, _klass|
-      errors[:properties] << "invalid association name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
+      errors.add(:properties, "invalid association name: [#{name}]") unless REG_ATTRIBUTE_NAME.match?(name)
     end
   end
 
   def validate_property_methods
     properties[:methods].each do |name|
-      errors[:properties] << "invalid method name: [#{name}]" unless REG_METHOD_NAME =~ name
+      errors.add(:properties, "invalid method name: [#{name}]") unless REG_METHOD_NAME.match?(name)
     end
   end
 
   def validate_property_name_unique
     common = property_keywords.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
-    errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
+    errors.add(:properties, "property name has to be unique: [#{common.join(",")}]") if common.present?
   end
 
   def validate_supported_property_features
     if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
-      errors[:properties] << "only these features are supported: [#{FEATURES.join(", ")}]"
+      errors.add(:properties, "only these features are supported: [#{FEATURES.join(", ")}]")
     end
   end
 
@@ -222,7 +222,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   def check_not_in_use
     return true if generic_objects.empty?
-    errors[:base] << "Cannot delete the definition while it is referenced by some generic objects"
+    errors.add(:base, "Cannot delete the definition while it is referenced by some generic objects")
     throw :abort
   end
 

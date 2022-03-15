@@ -345,7 +345,7 @@ RSpec.describe MiqPolicy do
                      "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid
-      expect(policy.errors.messages).to include(:towhat => [towhat_error])
+      expect(policy.errors.messages).to eq(:towhat => [towhat_error])
     end
   end
 end

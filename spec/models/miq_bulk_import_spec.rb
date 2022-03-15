@@ -8,7 +8,7 @@ RSpec.describe MiqBulkImport do
       ati = AssetTagImport.upload('VmOrTemplate', @file)
       expect(ati.stats[:bad]).to eq(1)
       expect(ati.stats[:good]).to eq(0)
-      ati.errors.all? { |attr,| expect(attr.to_s).to eq('vmortemplatenotfound') }
+      ati.errors.full_messages.all? { |error| expect(error).to match(/vmortemplatenotfound/) }
     end
 
     it ".upload" do
@@ -46,7 +46,7 @@ RSpec.describe MiqBulkImport do
       ci = ClassificationImport.upload(@file)
       expect(ci.stats[:bad]).to eq(1)
       expect(ci.stats[:good]).to eq(0)
-      ci.errors.all? { |attr,| expect(attr.to_s).to eq('vmnotfound') }
+      ci.errors.full_messages.all? { |error| expect(error).to match(/vmnotfound/) }
     end
 
     it ".upload with no category" do
@@ -54,7 +54,7 @@ RSpec.describe MiqBulkImport do
       ci = ClassificationImport.upload(@file)
       expect(ci.stats[:bad]).to eq(1)
       expect(ci.stats[:good]).to eq(0)
-      ci.errors.all? { |attr,| expect(attr.to_s).to eq('categorynotfound') }
+      ci.errors.full_messages.all? { |error| expect(error).to match(/categorynotfound/) }
     end
 
     it ".upload" do

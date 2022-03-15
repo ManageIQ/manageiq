@@ -217,7 +217,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   def check_not_in_use
     return true unless in_use?
-    errors[:base] << "Cannot delete the template while it is used by some orchestration stacks"
+    errors.add(:base, "Cannot delete the template while it is used by some orchestration stacks")
     throw :abort
   end
 end
