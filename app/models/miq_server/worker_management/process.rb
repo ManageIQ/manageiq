@@ -38,18 +38,14 @@ class MiqServer::WorkerManagement::Process < MiqServer::WorkerManagement
   end
 
   def check_not_responding
-    worker_deleted = false
-    miq_workers.each do |w|
-      next unless monitor_reason_not_responding?(w)
-      next unless worker_get_monitor_status(w.pid) == :waiting_for_stop
-
-      worker_not_responding(w)
-      worker_delete(w.pid)
-      w.destroy
-      worker_deleted = true
+    workers_to_check = miq_workers.select do |w|
+      monitor_reason_not_responding?(w) &&
+        worker_get_monitor_status(w.pid) == :waiting_for_stop
     end
 
-    miq_workers.reload if worker_deleted
+    remove_workers(workers_to_check) do |w|
+      worker_not_responding(w)
+    end
   end
 
   def validate_worker(worker)

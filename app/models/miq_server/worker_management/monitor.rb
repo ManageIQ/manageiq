@@ -52,16 +52,9 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def clean_worker_records
-    worker_deleted = false
-    miq_workers.each do |w|
-      next unless w.is_stopped?
+    remove_workers(miq_workers.to_a.select(&:is_stopped?)) do |w|
       _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
-      worker_delete(w.pid)
-      w.destroy
-      worker_deleted = true
     end
-
-    miq_workers.reload if worker_deleted
   end
 
   def check_pending_stop

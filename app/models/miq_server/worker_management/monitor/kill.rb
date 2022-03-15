@@ -27,14 +27,8 @@ module MiqServer::WorkerManagement::Monitor::Kill
   end
 
   def kill_worker_processes(workers = miq_workers)
-    killed_workers = []
-
-    workers.each do |w|
+    remove_workers(workers) do |w|
       w.kill_process if w.current_or_starting?
-      w.destroy
-      worker_delete(w.pid)
-      killed_workers << w
     end
-    miq_workers.delete(*killed_workers) unless killed_workers.empty?
   end
 end

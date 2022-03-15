@@ -7,19 +7,10 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     clean_worker_records
 
     return true if miq_workers.all?(&:is_stopped?)
+    return false unless quiesce_workers_loop_timeout?
 
-    if self.quiesce_workers_loop_timeout?
-      killed_workers = []
-      miq_workers.each do |w|
-        w.kill
-        worker_delete(w.pid)
-        killed_workers << w
-      end
-      miq_workers.delete(*killed_workers) unless killed_workers.empty?
-      return true
-    end
-
-    false
+    remove_workers(miq_workers, &:kill)
+    true
   end
 
   def quiesce_workers_loop
