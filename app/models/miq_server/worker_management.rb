@@ -71,4 +71,23 @@ class MiqServer::WorkerManagement
   def worker_delete(worker_pid)
     @workers_lock.synchronize(:EX) { @workers.delete(worker_pid) }
   end
+
+  def find_worker(worker)
+    worker = miq_workers.find_by(:id => worker) if worker.kind_of?(Integer)
+    _log.warn("Cannot find Worker <#{worker.inspect}>") if worker.nil?
+
+    worker
+  end
+
+  # remove workers from the miq_workers table and the in memory cache.
+  def remove_workers(workers)
+    return if workers.empty?
+
+    workers.each do |w|
+      yield(w)
+      worker_delete(w.pid)
+      w.destroy
+    end
+    miq_workers.reload
+  end
 end
