@@ -41,7 +41,7 @@ class ConfiguredSystem < ApplicationRecord
   virtual_delegate :cpu_total_cores, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
   virtual_delegate :ram_size, :to => "hardware.memory_mb", :allow_nil => true, :default => 0, :type => :integer
 
-  supports_not :console
+  supports_not :native_console
 
   virtual_column  :my_zone,                            :type => :string
   virtual_column  :configuration_architecture_name,    :type => :string
