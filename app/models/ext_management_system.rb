@@ -154,6 +154,7 @@ class ExtManagementSystem < ApplicationRecord
   supports_not :console
   supports_not :create_iso_datastore
   supports_not :discovery
+  supports_not :events
   supports_not :label_mapping
   supports_not :metrics
   supports_not :object_storage
