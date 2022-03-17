@@ -1,4 +1,6 @@
 RSpec.describe IsoDatastore do
+  include Spec::Support::ArelHelper
+
   let(:ems) { FactoryBot.create(:ems_redhat) }
   let(:iso_datastore) { FactoryBot.create(:iso_datastore, :ext_management_system => ems) }
 
@@ -34,6 +36,17 @@ RSpec.describe IsoDatastore do
             .to receive(:advertised_images)
           advertised_images
         end
+      end
+    end
+
+    describe "#name" do
+      it "has a name" do
+        expect(iso_datastore.name).to eq(ems.name)
+      end
+
+      it "fetches name via sql" do
+        iso_datastore
+        expect(virtual_column_sql_value(IsoDatastore, "name")).to eq(ems.name)
       end
     end
   end
