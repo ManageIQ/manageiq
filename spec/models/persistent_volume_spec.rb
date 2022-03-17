@@ -1,44 +1,36 @@
 RSpec.describe PersistentVolume do
-  it "has container volumes and pods" do
-    pvc = FactoryBot.create(
-      :persistent_volume_claim,
-      :name => "test_claim"
-    )
-
-    group = FactoryBot.create(
-      :container_group,
-      :name => "group",
-    )
-
-    ems = FactoryBot.create(
-      :ems_kubernetes,
-      :id   => group.id,
-      :name => "ems"
-    )
-
+  let(:pvc) { FactoryBot.create(:persistent_volume_claim) }
+  let(:group) { FactoryBot.create(:container_group) }
+  let(:ems) { FactoryBot.create(:ems_kubernetes) }
+  let(:volume) do
     FactoryBot.create(
       :container_volume,
-      :name                    => "container_volume",
       :type                    => 'ContainerVolume',
       :parent                  => group,
       :persistent_volume_claim => pvc
     )
+  end
 
+  it "has container volumes and pods" do
     persistent_volume = FactoryBot.create(
       :persistent_volume,
-      :name                    => "persistent_volume",
       :parent                  => ems,
       :persistent_volume_claim => pvc
     )
 
-    assert_pv_relationships(persistent_volume)
+    expect(persistent_volume.container_volumes).to eq([volume])
+    expect(persistent_volume.container_groups).to eq([group])
   end
 
-  def assert_pv_relationships(persistent_volume)
-    expect(persistent_volume.container_volumes.first.name).to eq("container_volume")
-    expect(persistent_volume.container_volumes.count).to eq(1)
-    expect(persistent_volume.container_groups.first.name).to eq("group")
-    expect(persistent_volume.container_groups.count).to eq(1)
+  describe "#parent_name" do
+    it "matches group_name" do
+      persistent_volume = FactoryBot.create(
+        :persistent_volume,
+        :parent                  => ems,
+        :persistent_volume_claim => pvc
+      )
+      expect(persistent_volume.parent_name).to eq(ems.name)
+    end
   end
 
   describe "#storage_capacity" do
