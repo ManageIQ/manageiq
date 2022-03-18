@@ -46,7 +46,6 @@ gem "inventory_refresh",                "~>1.0",             :require => false
 gem "kubeclient",                       "~>4.0",             :require => false # For scaling pods at runtime
 gem "linux_admin",                      "~>2.0", ">=2.0.1",  :require => false
 gem "listen",                           "~>3.2",             :require => false
-gem "log_decorator",                    "~>0.1",             :require => false
 gem "manageiq-api-client",              "~>0.3.4",           :require => false
 gem "manageiq-loggers",                 "~>1.0",             :require => false
 gem "manageiq-messaging",               "~>1.0", ">=1.0.3",  :require => false
