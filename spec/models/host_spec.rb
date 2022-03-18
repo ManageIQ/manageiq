@@ -1,5 +1,9 @@
 RSpec.describe Host do
+  include Spec::Support::ArelHelper
+
   subject { FactoryBot.create(:host) }
+
+  let(:ems) { FactoryBot.create(:ext_management_system) }
 
   include_examples "AggregationMixin"
   include_examples "MiqPolicyMixin"
@@ -559,6 +563,52 @@ RSpec.describe Host do
           expect(subject).to eq(:available => true, :message => nil)
         end
       end
+    end
+  end
+
+  describe "#normalized_state" do
+    it "returns archived" do
+      host = FactoryBot.build(:host)
+      expect(host.normalized_state).to eq("archived")
+    end
+
+    it "returns unknown" do
+      host = FactoryBot.build(:host, :power_state => nil, :ext_management_system => ems)
+      expect(host.normalized_state).to eq("unknown")
+    end
+
+    it "returns power_state" do
+      host = FactoryBot.build(:host, :power_state => "on", :ext_management_system => ems)
+      expect(host.normalized_state).to eq("on")
+    end
+  end
+
+  describe "#archived" do
+    it "works in sql true" do
+      FactoryBot.create(:host)
+      expect(virtual_column_sql_value(Host, "archived")).to eq(true)
+    end
+
+    it "works in sql false" do
+      FactoryBot.create(:host, :ext_management_system => ems)
+      expect(virtual_column_sql_value(Host, "archived")).to eq(false)
+    end
+
+    it "works in ruby true" do
+      expect(Host.new.archived).to be true
+    end
+
+    it "works in ruby false" do
+      expect(FactoryBot.create(:host, :ext_management_system => ems).archived).to be false
+    end
+  end
+
+  describe ".archived" do
+    it "only returns archived" do
+      host = FactoryBot.create(:host)
+      FactoryBot.create(:host, :ext_management_system => ems)
+
+      expect(Host.archived).to eq([host])
     end
   end
 
