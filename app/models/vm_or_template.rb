@@ -146,6 +146,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :platform,                             :type => :string,     :uses => [:operating_system, :hardware]
+  virtual_column :product_name,                         :type => :string,     :uses => [:operating_system]
   virtual_column :vendor_display,                       :type => :string
   virtual_column :v_owning_cluster,                     :type => :string,     :uses => :ems_cluster
   virtual_column :v_owning_resource_pool,               :type => :string,     :uses => :all_relationships
