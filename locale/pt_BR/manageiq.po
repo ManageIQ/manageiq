@@ -55058,8 +55058,8 @@ msgstr ""
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "Permite definir um prefixo de caminho de URL para o arquivo XCCDF em vez de "
 "acessar o local padrão.\nPor exemplo: http://my_file_server.org: 3333/"
@@ -66987,8 +66987,7 @@ msgstr "Editar %{object_type} '%{object_name}'"
 #: ../app/controllers/vm_common.rb:1242
 msgid "Edit %{product} Server Relationship for %{vm_or_template} \"%{name}\""
 msgstr ""
-"Editar o relacionamento do %{product} Server para %{vm_or_template} \"%{name}\"
-"""
+"Editar o relacionamento do %{product} Server para %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:259
 msgid "Edit %{type}"
@@ -77544,8 +77543,8 @@ msgstr "Replicação"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\""
+" on My Tasks screen"
 msgstr ""
 "Salvamento de configuração de replicação iniciado. Verificar o status da "
 "tarefa \"%{task_name}\" na tela Minhas tarefas"
