@@ -54078,8 +54078,8 @@ msgstr[0] "Rete cloud (IBM CIC)"
 msgstr[1] "Reti cloud (IBM CIC)"
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb:19
-msgid "Ibm Cic Provider"
-msgstr "Provider Ibm Cic"
+msgid "IBM CIC Provider"
+msgstr "Provider IBM CIC"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:172

@@ -52801,7 +52801,7 @@ msgid_plural "Cloud Networks (IBM CIC)"
 msgstr[0] "雲端網路 (IBM CIC)"
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb:19
-msgid "Ibm Cic Provider"
+msgid "IBM CIC Provider"
 msgstr "IBM Cic 提供者"
 
 #:
