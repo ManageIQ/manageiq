@@ -55137,8 +55137,8 @@ msgstr ""
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "Permite definir un prefijo de vía de acceso de URL para el archivo XCCDF, en "
 "lugar de acceder a la ubicación predeterminada.\nEjemplo: http://"
@@ -66612,8 +66612,7 @@ msgid ""
 "Detaching a Cloud Volume from Instance \"%{instance_name}\" was cancelled by "
 "the user"
 msgstr ""
-"El usuario ha cancelado la desconexión de un volumen de nube de la instancia \"
-""%{instance_name}\""
+"El usuario ha cancelado la desconexión de un volumen de nube de la instancia \"%{instance_name}\""
 
 #: ../app/helpers/application_helper/toolbar/compare_center.rb:32
 #: ../app/helpers/application_helper/toolbar/drift_center.rb:32
@@ -68166,8 +68165,7 @@ msgstr "El usuario ha cancelado la edición de IP flotantes \"%s\"."
 #: ../app/controllers/miq_ae_class_controller.rb:1126
 msgid "Edit of schema for Automate Class \"%{name}\" was cancelled by the user"
 msgstr ""
-"El usuario ha cancelado la edición del esquema de la clase de automatización \"
-""%{name}\""
+"El usuario ha cancelado la edición del esquema de la clase de automatización \"%{name}\""
 
 #: ../app/controllers/application_controller/policy_support.rb:29
 msgid "Edit policy assignments was cancelled by the user"
@@ -77805,8 +77803,8 @@ msgstr "Replicación"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\" "
+"on My Tasks screen"
 msgstr ""
 "Se ha iniciado la operación de guardar configuración de réplica. Compruebe el "
 "estado de la tarea \"%{task_name}\" en la pantalla Mis tareas"
@@ -83225,8 +83223,7 @@ msgstr ""
 #: ../app/controllers/cloud_volume_controller.rb:373
 msgid "Unable to create backup for Cloud Volume \"%{name}\": %{details}"
 msgstr ""
-"No se ha podido crear la copia de seguridad para el volumen de nube \"%{name}\"
-"": %{details}"
+"No se ha podido crear la copia de seguridad para el volumen de nube \"%{name}\": %{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:490
 msgid "Unable to create snapshot for Cloud Volume \"%{name}\": %{details}"

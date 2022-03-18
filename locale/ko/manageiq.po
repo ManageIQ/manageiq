@@ -53627,8 +53627,8 @@ msgstr ""
 #: ../app/models/manageiq/providers/kubernetes/container_manager.rb:669
 msgid ""
 "Enables defining a URL path prefix for XCCDF file instead of accessing the "
-"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\"
-"nExpecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
+"default location.\nexample: http://my_file_server.org:3333/xccdf_files/\n"
+"Expecting to find com.redhat.rhsa-RHEL7.ds.xml.bz2 file there."
 msgstr ""
 "기본 위치에 액세스하는 대신 XCCDF 파일의 URL 경로 접두부를 정의할 수 있습니다.\n예: http://"
 "my_file_server.org:3333/xccdf_files/\n여기에 com.redhat.rhsa-RHEL7.ds.xml.bz2 파일이"
@@ -75214,8 +75214,8 @@ msgstr "복제"
 
 #: ../app/controllers/ops_controller/settings/common.rb:194
 msgid ""
-"Replication configuration save initiated. Check status of task \"%{task_name}\"
-"" on My Tasks screen"
+"Replication configuration save initiated. Check status of task \"%{task_name}\" "
+"on My Tasks screen"
 msgstr "복제 구성 저장이 시작되었습니다. 내 태스크 화면에서 태스크 \"%{task_name}\"의 상태를 확인하십시오."
 
 #:
