@@ -35,6 +35,7 @@ class ConfiguredSystem < ApplicationRecord
   delegate :name, :to => :operating_system_flavor,       :prefix => true, :allow_nil => true
   delegate :name, :to => :provider,                      :prefix => true, :allow_nil => true
   delegate :name, :to => :orchestration_stack,           :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :inventory_root_group, :prefix => true, :allow_nil => true, :type => :string
   delegate :my_zone, :provider, :zone, :to => :manager
   delegate :queue_name_for_ems_operations, :to => :manager, :allow_nil => true
 
