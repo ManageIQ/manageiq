@@ -97,9 +97,6 @@ module Vmdb
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
 
-      require 'log_decorator'
-      LogDecorator.logger = $log
-
       require 'inventory_refresh'
       InventoryRefresh.logger = $log
     end
