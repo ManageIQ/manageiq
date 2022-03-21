@@ -72,7 +72,8 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
-      :args        => [ext_management_system.id, options]
+      :args        => [ext_management_system.id, options],
+      :msg_timeout => options["timeout"]&.to_i&.hours&.seconds
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
