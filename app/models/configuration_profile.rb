@@ -26,7 +26,7 @@ class ConfigurationProfile < ApplicationRecord
 
   delegate :my_zone, :provider, :zone, :to => :manager
 
-  supports_not :console
+  supports_not :native_console
 
   virtual_has_one :configuration_architecture,  :class_name => 'ConfigurationArchitecture', :uses => :configuration_tags
   virtual_has_one :configuration_compute_profile, :class_name => 'ConfigurationProfile',    :uses => :configuration_tags
