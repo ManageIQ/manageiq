@@ -29,6 +29,12 @@ module ManageIQ::Providers
       self.class.http_proxy_uri
     end
 
+    supports_not :native_console
+
+    def console_url
+      raise NotImplementedError, _("console_url must be implemented in a subclass")
+    end
+
     # copy my attributes to a child manager
     # child managers need to be in lock step with this manager
     def propagate_child_manager_attributes(child, name = nil)

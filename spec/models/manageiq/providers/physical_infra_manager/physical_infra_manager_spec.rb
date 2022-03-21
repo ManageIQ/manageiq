@@ -46,17 +46,17 @@ RSpec.describe ManageIQ::Providers::PhysicalInfraManager do
     expect(ps.supports?(:console)).to be(false)
   end
 
-  it 'will return false if console is not supported' do
+  it 'will check supports?(:native_console) returns false' do
     ps = FactoryBot.create(:ems_physical_infra,
                             :name     => "LXCA",
                             :hostname => "0.0.0.0")
-    expect(ps.console_supported?).to be(false)
+    expect(ps.supports?(:native_console)).to be(false)
   end
 
   it 'will raise exception for console url if console is not supported' do
     ps = FactoryBot.create(:ems_physical_infra,
-                            :name     => "LXCA",
-                            :hostname => "0.0.0.0")
-    expect { ps.console_url }.to raise_error(MiqException::Error)
+                           :name     => "LXCA",
+                           :hostname => "0.0.0.0")
+    expect { ps.console_url }.to raise_error(NotImplementedError)
   end
 end
