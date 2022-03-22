@@ -81,11 +81,11 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     end
   end
 
-  def queue_signal(*args, deliver_on: nil)
+  def queue_signal(*args, deliver_on: nil, msg_timeout: nil)
     role     = options[:role] || "ems_operations"
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
 
-    super(*args, :priority => priority, :role => role, :deliver_on => deliver_on, :server_guid => MiqServer.my_server.guid)
+    super(*args, :msg_timeout => msg_timeout, :priority => priority, :role => role, :deliver_on => deliver_on, :server_guid => MiqServer.my_server.guid)
   end
 
   def deliver_on
