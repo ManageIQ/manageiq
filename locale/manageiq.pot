@@ -53105,7 +53105,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../lib/manageiq/providers/ibm_cic/engine.rb:19
-msgid "Ibm Cic Provider"
+msgid "IBM CIC Provider"
 msgstr ""
 
 #:
