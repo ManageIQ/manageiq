@@ -96,12 +96,23 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
     end
 
     context "with a failed deployment" do
-      it "calls delete_deployment with pod name" do
+      before do
         current_pods[deployment_name][:last_state_terminated] = true
         current_pods[deployment_name][:container_restarts] = 100
+      end
 
+      it "calls delete_deployment with pod name" do
         allow(server.worker_manager).to receive(:current_pods).and_return(current_pods)
         expect(orchestrator).to receive(:delete_deployment).with(pod_label)
+        server.worker_manager.cleanup_failed_workers
+      end
+
+      it "calls delete_deployment only once for a deployment with 2 failed pods" do
+        # duplicate the pod information for a different pod name in the same deployment
+        current_pods['1-generic-11aa1a1aa1-1aaaa'] = current_pods[deployment_name].dup
+
+        allow(server.worker_manager).to receive(:current_pods).and_return(current_pods)
+        expect(orchestrator).to receive(:delete_deployment).with(pod_label).once
         server.worker_manager.cleanup_failed_workers
       end
     end
