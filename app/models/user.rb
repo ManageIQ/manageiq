@@ -59,7 +59,7 @@ class User < ApplicationRecord
 
   default_value_for :failed_login_attempts, 0
 
-  scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
+  scope :in_all_regions, ->(id) { where(:userid => User.default_scoped.where(:id => id).select(:userid)) }
 
   def self.with_roles_excluding(identifier)
     where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)

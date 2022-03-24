@@ -68,7 +68,7 @@ class MiqRequest < ApplicationRecord
   scope :with_cancel_status,  ->(status)     { where(:cancelation_status => status) }
   scope :with_type,           ->(type)       { where(:type => type) }
   scope :with_request_type,   ->(type)       { where(:request_type => type) }
-  scope :with_requester,      ->(id)         { where(:requester_id => User.with_same_userid(id).collect(&:id)) }
+  scope :with_requester,      ->(id)         { where(:requester_id => User.in_all_regions(id).select(:id)) }
 
   MODEL_REQUEST_TYPES = {
     :Automate       => {

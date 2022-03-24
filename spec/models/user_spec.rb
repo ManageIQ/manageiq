@@ -744,11 +744,16 @@ RSpec.describe User do
     end
   end
 
-  describe ".with_same_userid" do
-    # this is testing the select does not break and in general, the scope works
+  describe ".in_all_regions" do
     it "properly handles select clause" do
       u = FactoryBot.create(:user)
-      expect(User.select(:id, :email).with_same_userid(u.id)).to eq([u])
+      expect(User.select(:id, :email).in_all_regions(u.id)).to eq([u])
+    end
+
+    it "finds records with the same userid" do
+      u = FactoryBot.create(:user)
+      u2 = FactoryBot.create(:user, :userid => u.userid, :id => ApplicationRecord.id_in_region(1, u.region_id + 1))
+      expect(User.in_all_regions(u.id)).to match_array([u, u2])
     end
   end
 
