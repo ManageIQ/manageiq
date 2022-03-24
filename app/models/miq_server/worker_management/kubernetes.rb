@@ -42,7 +42,7 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
   def failed_deployments(restart_count = 5)
     # TODO: This logic might flag deployments that are hitting memory/cpu limits or otherwise not really 'failed'
-    current_pods.values.select { |h| h[:last_state_terminated] && h.fetch(:container_restarts, 0) > restart_count }.collect { |h| h[:label_name] }
+    current_pods.values.select { |h| h[:last_state_terminated] && h.fetch(:container_restarts, 0) > restart_count }.pluck(:label_name).uniq
   end
 
   def sync_deployment_settings
