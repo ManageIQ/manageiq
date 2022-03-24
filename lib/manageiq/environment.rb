@@ -54,11 +54,14 @@ module ManageIQ
     end
 
     def self.install_bundler(root = APP_ROOT)
-      if system("which bundle", [:out, :err] => "/dev/null") && system("bundle info bundler", [:out, :err] => "/dev/null")
-        puts "== proper bundler detected... skipping bundler install =="
-      else
-        system!("gem install bundler -v '#{bundler_version}' --conservative")
-      end
+      # We can avoid installing bundler on two conditions:
+      #   * The bundle command exists
+      #   * Using it to retrieve the bundle's information on the bundler version is successful.
+      #     This means the dependency tree is fully resolved and the currently active bundler's
+      #     bundle executable is in the bundle and matches the dependency requirements.
+      return if system("which bundle", [:out, :err] => "/dev/null") && system("bundle info bundler", [:out, :err] => "/dev/null")
+
+      system!("gem install bundler -v '#{bundler_version}' --conservative")
     end
 
     def self.setup_gemfile_lock
@@ -74,7 +77,7 @@ module ManageIQ
 
     def self.bundle_update(root = APP_ROOT, force: false)
       if !force && system("bundle check", [:out, :err] => "/dev/null")
-        puts "== bundle check passed... skipping update =="
+        puts "== Bundle up to date... Skipping bundle update =="
       else
         system!("bundle update --jobs=3", :chdir => root)
       end
