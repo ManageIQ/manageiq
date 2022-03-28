@@ -33,7 +33,6 @@ class MiqUiWorker < MiqWorker
     # prior to booting the puma workers.
     ApplicationHelper::Toolbar::Base.instance
     Menu::Manager.instance
-    Menu::YamlLoader.instance
   end
 
   def container_port
