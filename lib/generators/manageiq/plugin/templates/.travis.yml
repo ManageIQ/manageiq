@@ -1,8 +1,0 @@
-language: ruby
-cache: bundler
-rvm:
-<%= YAML.load_file(Rails.root.join(".travis.yml"))["rvm"].map { |r| "- #{r}" }.join("\n") %>
-addons:
-  postgresql: '10'
-install: bin/setup
-after_script: bin/ci/after_script

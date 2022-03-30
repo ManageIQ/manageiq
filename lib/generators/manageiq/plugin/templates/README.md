@@ -1,6 +1,6 @@
 # <%= class_name %>
 
-[![Build Status](https://travis-ci.com/ManageIQ/<%= plugin_name %>.svg?branch=master)](https://travis-ci.com/ManageIQ/<%= plugin_name %>)
+[![CI](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/<%= plugin_name %>/actions/workflows/ci.yaml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/<badge_token>/maintainability)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/<badge_token>/test_coverage)](https://codeclimate.com/github/ManageIQ/<%= plugin_name %>/test_coverage)
 

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -n "$CI" ]; then
+  echo "== Installing system packages =="
+  sudo apt-get install libcurl4-openssl-dev
+  echo
+fi
+
+gem_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
+spec_manageiq="$gem_root/spec/manageiq"
+
+if [ -n "$MANAGEIQ_REPO" ]; then
+  echo "== Symlinking spec/manageiq to $MANAGEIQ_REPO =="
+  rm -rf "$spec_manageiq"
+  ln -s "$(cd "$MANAGEIQ_REPO" &>/dev/null && pwd)" "$spec_manageiq"
+elif [ ! -d "$spec_manageiq" ]; then
+  echo "== Cloning manageiq sample app =="
+  git clone https://github.com/ManageIQ/manageiq.git --branch master --depth 1 "$spec_manageiq"
+fi
