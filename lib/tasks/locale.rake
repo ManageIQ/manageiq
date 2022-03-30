@@ -305,11 +305,28 @@ namespace :locale do
 
       combined_dir = File.join(Rails.root, "locale/combined")
       Dir.mkdir(combined_dir, 0o700)
-      po_files.each_key do |locale|
+      po_files.each do |locale, files|
+        files.delete_if do |file|
+          puts "Running 'msgfmt --check' on file: #{file}"
+          if system "msgfmt --check #{file}"
+            false
+          else
+            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
+            puts "Continue anyway?(Y/N)"
+            exit 1 if STDIN.gets.strip.upcase == "N"
+
+            puts "Warning: Skipping #{file}"
+            puts
+            true
+          end
+        end
+
         dir = File.join(combined_dir, locale)
         po = File.join(dir, 'manageiq.po')
         Dir.mkdir(dir, 0o700)
-        system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+        puts "Generating #{po} from #{files.collect(&:to_s).inspect}"
+        system "rmsgcat -o #{po} #{files.join(' ')}"
+        puts
       end
 
       # create webpack file for including bootstrap-datepicker language packs
