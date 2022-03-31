@@ -56,6 +56,33 @@ class CloudVolumeSnapshot < ApplicationRecord
     raise NotImplementedError, _("raw_create_snapshot must be implemented in a subclass")
   end
 
+  def update_snapshot_queue(userid = "system", options = {})
+    task_opts = {
+      :action => "updating volume snapshot #{inspect} in #{ext_management_system.inspect} with #{options.inspect}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'update_snapshot',
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => my_zone,
+      :args        => [options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_snapshot(options = {})
+    raw_update_snapshot(options)
+  end
+
+  def raw_update_snapshot(_options = {})
+    raise NotImplementedError, _("update_snapshot must be implemented in a subclass")
+  end
+
   # Delete a cloud volume snapshot as a queued task and return the task id. The
   # queue name and the queue zone are derived from the EMS. The userid is
   # optional and defaults to 'system'.
@@ -72,7 +99,6 @@ class CloudVolumeSnapshot < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => 'delete_snapshot',
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => my_zone,
