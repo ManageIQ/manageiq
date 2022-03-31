@@ -15,11 +15,10 @@ module Spec
 
         stub_supports(model, feature, :supported => false)
 
-        if reason
-          receive_reason = receive(:unsupported_reason).with(feature).and_return(reason)
-          allow(model).to(receive_reason)
-          allow_any_instance_of(model).to(receive_reason)
-        end
+        reason ||= SupportsFeatureMixin.reason_or_default(reason)
+        receive_reason = receive(:unsupported_reason).with(feature).and_return(reason)
+        allow(model).to(receive_reason)
+        allow_any_instance_of(model).to(receive_reason)
       end
     end
   end
