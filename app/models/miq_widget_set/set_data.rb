@@ -1,7 +1,7 @@
 module MiqWidgetSet::SetData
   extend ActiveSupport::Concern
 
-  SET_DATA_COLS = %i[col1 col2 col3].freeze
+  SET_DATA_COLS = %i[col1 col2].freeze
 
   included do
     validate :set_data do
