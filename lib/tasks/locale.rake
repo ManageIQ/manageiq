@@ -274,7 +274,10 @@ namespace :locale do
       require Rails.root.join("lib/vmdb/gettext/domains")
 
       po_files = {}
-      Vmdb::Gettext::Domains.paths.each do |path|
+
+      # TODO: Domains for po and mo are added with the same path in Vmdb::FastGettextHelper.register_locales
+      # We need to uniq them for now, otherwise we find and merge the same po files.
+      Vmdb::Gettext::Domains.paths.uniq.each do |path|
         files = ::Pathname.glob(::File.join(path, "**", "*.po"))
         files.each do |file|
           locale = file.dirname.basename.to_s
@@ -302,11 +305,20 @@ namespace :locale do
 
       combined_dir = File.join(Rails.root, "locale/combined")
       Dir.mkdir(combined_dir, 0o700)
-      po_files.each_key do |locale|
+      po_files.each do |locale, files|
+        files.each do |file|
+          unless system "msgfmt --check #{file}"
+            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
+            exit 1
+          end
+        end
+
         dir = File.join(combined_dir, locale)
         po = File.join(dir, 'manageiq.po')
         Dir.mkdir(dir, 0o700)
-        system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+        puts "Generating po from\n#{files.sort.map { |f| "- #{f}" }.join("\n")}"
+        system "rmsgcat -o #{po} #{files.join(' ')}"
+        puts
       end
 
       # create webpack file for including bootstrap-datepicker language packs
