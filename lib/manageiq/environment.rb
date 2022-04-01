@@ -9,16 +9,16 @@ module ManageIQ
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      manageiq_plugin_update(plugin_root)
+      manageiq_plugin_update(plugin_root, force_bundle_update: false)
     end
 
-    def self.manageiq_plugin_update(plugin_root = nil)
+    def self.manageiq_plugin_update(plugin_root = nil, force_bundle_update: true)
       # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
       plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
       setup_gemfile_lock if ENV["CI"]
       install_bundler(plugin_root)
-      bundle_update(plugin_root)
+      bundle_update(plugin_root, force: force_bundle_update)
 
       ensure_config_files
 
@@ -54,7 +54,14 @@ module ManageIQ
     end
 
     def self.install_bundler(root = APP_ROOT)
-      system!("gem install bundler -v '#{bundler_version}' --conservative") unless ENV["GITHUB_ACTIONS"]
+      # We can avoid installing bundler on two conditions:
+      #   * The bundle command exists
+      #   * Using it to retrieve the bundle's information on the bundler version is successful.
+      #     This means the dependency tree is fully resolved and the currently active bundler's
+      #     bundle executable is in the bundle and matches the dependency requirements.
+      return if system("which bundle", [:out, :err] => "/dev/null") && system("bundle info bundler", [:out, :err] => "/dev/null", :chdir => root)
+
+      system!("gem install bundler -v '#{bundler_version}' --conservative", :chdir => root)
     end
 
     def self.setup_gemfile_lock
@@ -68,8 +75,12 @@ module ManageIQ
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
     end
 
-    def self.bundle_update(root = APP_ROOT)
-      system!("bundle update --jobs=3", :chdir => root)
+    def self.bundle_update(root = APP_ROOT, force: false)
+      if !force && system("bundle check", [:out, :err] => "/dev/null", :chdir => root)
+        puts "== Bundle up to date... Skipping bundle update =="
+      else
+        system!("bundle update --jobs=3", :chdir => root)
+      end
       return unless ENV["CI"]
 
       lockfile_contents = File.read(root.join("Gemfile.lock"))
