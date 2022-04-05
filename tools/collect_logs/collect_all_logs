@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+require File.expand_path("../../config/environment", __dir__)
+
+require "optimist"
+
+class CollectAllLogs
+  def initialize(opts = {})
+    @remote_user    = opts.fetch(:remote_user, "root")
+    @vmdb_log_dir   = Rails.root.join("log")
+    @target_log_dir = vmdb_log_dir.join("evm_current_region_#{MiqRegion.my_region&.id}_#{Time.now.utc.strftime("%Y%m%d_%H%M%S")}")
+  end
+
+  def self.collect_all_logs!(opts = {})
+    new(opts).collect_all_logs
+  end
+
+  def collect_all_logs
+    # Create the directory to copy all log bundles into
+    target_log_dir.mkdir
+
+    $stdout.puts("Collecting logs from all servers in #{MiqRegion.my_region.description}...")
+
+    all_servers = MiqServer.active_miq_servers
+    num_servers = all_servers.count
+
+    # Loop through all active servers in the region
+    all_servers.each_with_index do |miq_server, i|
+      server_ident = miq_server.hostname || miq_server.ipaddress
+      $stdout.puts("Collecting logs from #{server_ident} #{i + 1} of #{num_servers}...")
+
+      # Check if the server we are collecting logs from is "local", if so we can skip ssh+scp
+      log_bundle = miq_server == MiqServer.my_server ? collect_local_logs : collect_remote_logs(miq_server)
+
+      $stdout.puts("Collecting logs from #{server_ident} #{i + 1} of #{num_servers}...Complete - [#{log_bundle}]")
+    end
+
+    # Tar up all of the logs we have collected from the servers
+    `cd #{vmdb_log_dir} && tar cfJ #{target_log_dir.basename}.tar.xz #{target_log_dir.basename} 2>&1`
+
+    # Cleanup the directory that we created the tar from
+    FileUtils.rm_r(target_log_dir)
+
+    $stdout.puts("Collecting logs from all servers in #{MiqRegion.my_region.description}...Complete - [#{target_log_dir}.tar.xz]")
+  end
+
+  private
+
+  attr_reader :remote_user, :target_log_dir, :vmdb_log_dir
+
+  def collect_local_logs
+    stdout = `cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1`
+    log_bundle = log_path(stdout)
+
+    FileUtils.mv(log_path(stdout), target_log_dir)
+
+    log_bundle
+  end
+
+  def collect_remote_logs(miq_server)
+    address = miq_server.hostname || miq_server.ipaddress
+    if address.match?(/(localhost.*|127.0.0.*)/)
+      puts("Not able to collect logs from remote server without a valid hostname/IP address: [#{address}]")
+      return
+    end
+
+    stdout = `ssh #{remote_user}@#{address} 'cd /var/www/miq/vmdb/tools/collect_logs && ./collect_current_logs.sh 2>&1'`
+
+    log_bundle = log_path(stdout)
+
+    `scp #{remote_user}@#{address}:#{log_bundle} #{target_log_dir}`
+
+    log_bundle
+  end
+
+  def log_path(stdout)
+    stdout.match(/Archive Written To: (.+)\n/).captures.first
+  end
+end
+
+opts = Optimist.options do
+  opt :remote_user, "The username to use to connect to remote servers", :type => :string, :default => "root"
+end
+
+CollectAllLogs.collect_all_logs!(opts)
