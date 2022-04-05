@@ -69,6 +69,11 @@
   :url: /availability_zone/show_list
   :rbac_feature_name: availability_zone_show_list
   :startup: true
+- :name: placement_group
+  :description: Compute / Clouds / Placement Group
+  :url: /placement_group/show_list
+  :rbac_feature_name: placement_group_list
+  :startup: true
 - :name: host_aggregates
   :description: Compute / Clouds / Host Aggregates
   :url: /host_aggregate/show_list

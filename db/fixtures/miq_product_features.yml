@@ -890,6 +890,42 @@
       :feature_type: admin
       :identifier: auth_key_pair_cloud_delete
 
+# Placement Groups
+- :name: Placement Group
+  :description: Placement Group
+  :feature_type: node
+  :identifier: placement_group
+  :children:
+  - :name: View
+    :description: View Placement Group
+    :feature_type: view
+    :identifier: placement_group_list
+  - :name: Operate
+    :description: Perform Operations on Placement Groups
+    :feature_type: control
+    :identifier: placement_group_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Placement Group
+      :feature_type: control
+      :identifier: placement_group_edit
+    - :name: Add Placement Group
+      :description: Add Placement Group
+      :feature_type: control
+      :identifier: placement_group_add
+    - :name: Delete Placement Group
+      :description: Delete Placement Group
+      :feature_type: control
+      :identifier: placement_group_delete
+    - :name: Add VM to placement group
+      :description: Add VM to Placement Group
+      :feature_type: control
+      :identifier: placement_group_add_vm
+    - :name: Remove VM from  Placement Group
+      :description: Delete VM from Placement Group
+      :feature_type: control
+      :identifier: placement_group_remove_vm
+
 # CloudVolumeSnapshot
 - :name: Cloud Volume Snapshots
   :description: Everything under Cloud Volume Snapshots
