@@ -14,7 +14,8 @@ RSpec.describe RemoteConsole::RackServer do
   let(:right) { pipes.last }
 
   let(:hijack) { double }
-  let(:env) { {'REQUEST_URI' => "/ws/#{url}", 'rack.hijack' => hijack} }
+  let(:path) { "/ws/#{url}" }
+  let(:env) { {'REQUEST_URI' => path, 'rack.hijack' => hijack} }
 
   describe '#call' do
     context 'remote console' do
@@ -27,6 +28,14 @@ RSpec.describe RemoteConsole::RackServer do
         expect(subject).to receive(:init_proxy).with(env, '12345')
 
         subject.call(env)
+      end
+    end
+
+    context 'any other URL' do
+      let(:path) { '/ping' }
+
+      it 'returns with 200' do
+        expect(subject.call(env)).to eq(described_class::RACK_PONG)
       end
     end
 
