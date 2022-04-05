@@ -275,9 +275,7 @@ namespace :locale do
 
       po_files = {}
 
-      # TODO: Domains for po and mo are added with the same path in Vmdb::FastGettextHelper.register_locales
-      # We need to uniq them for now, otherwise we find and merge the same po files.
-      Vmdb::Gettext::Domains.paths.uniq.each do |path|
+      Vmdb::Gettext::Domains.po_paths.each do |path|
         files = ::Pathname.glob(::File.join(path, "**", "*.po"))
         files.each do |file|
           locale = file.dirname.basename.to_s
