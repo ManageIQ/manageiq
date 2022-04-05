@@ -10,11 +10,6 @@ module Vmdb
         @domains
       end
 
-      # TODO: It's unclear why you'd want to know paths regardless of the type
-      def self.paths
-        @mo_paths | @po_paths
-      end
-
       def self.mo_paths
         @mo_paths ||= Set.new
       end
