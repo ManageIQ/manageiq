@@ -58,7 +58,7 @@ module RemoteConsole
 
     # Rack entrypoint
     def call(env)
-      exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
+      exp = env['REQUEST_URI'].to_s.match(%r{^/ws/console/([a-zA-Z0-9]+)/?$})
       if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
         @logger.info("RemoteConsole connection initiated")
         init_proxy(env, exp[1])
