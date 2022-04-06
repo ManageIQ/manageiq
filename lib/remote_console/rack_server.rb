@@ -62,7 +62,7 @@ module RemoteConsole
       if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
         @logger.info("RemoteConsole connection initiated")
         init_proxy(env, exp[1])
-      elsif same_origin_as_host?(env) && env['REQUEST_URI'].to_s.match?(%r{^/ping$})
+      elsif env['REQUEST_URI'].to_s.match?(%r{^/ping$})
         RACK_PONG
       else
         @logger.error('Invalid RemoteConsole request or URL')
