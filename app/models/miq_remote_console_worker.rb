@@ -16,4 +16,8 @@ class MiqRemoteConsoleWorker < MiqWorker
   def self.kill_priority
     MiqWorkerType::KILL_PRIORITY_REMOTE_CONSOLE_WORKERS
   end
+
+  def container_port
+    3001
+  end
 end
