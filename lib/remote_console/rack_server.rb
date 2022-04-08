@@ -27,8 +27,9 @@ module RemoteConsole
   class RackServer
     attr_accessor :logger
 
-    RACK_404 = [404, {'Content-Type' => 'text/plain'}, ['Not found']].freeze
-    RACK_YAY = [-1, {}, []].freeze
+    RACK_404  = [404, {'Content-Type' => 'text/plain'}, ['Not found']].freeze
+    RACK_PONG = [200, {'Content-Type' => 'text/plain'}, ['pong']].freeze
+    RACK_YAY  = [-1, {}, []].freeze
 
     def initialize(options = {})
       @logger = options.fetch(:logger, $remote_console_log)
@@ -57,10 +58,12 @@ module RemoteConsole
 
     # Rack entrypoint
     def call(env)
-      exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
+      exp = env['REQUEST_URI'].to_s.match(%r{^/ws/console/([a-zA-Z0-9]+)/?$})
       if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
         @logger.info("RemoteConsole connection initiated")
         init_proxy(env, exp[1])
+      elsif env['REQUEST_URI'].to_s.match?(%r{^/ping$})
+        RACK_PONG
       else
         @logger.error('Invalid RemoteConsole request or URL')
         RACK_404
