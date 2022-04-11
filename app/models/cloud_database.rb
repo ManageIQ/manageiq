@@ -12,6 +12,7 @@ class CloudDatabase < ApplicationRecord
 
   supports_not :create
   supports_not :delete
+  supports_not :update
 
   def self.create_cloud_database_queue(userid, ext_management_system, options = {})
     task_opts = {
@@ -68,5 +69,32 @@ class CloudDatabase < ApplicationRecord
 
   def raw_delete_cloud_database
     raise NotImplementedError, _("raw_delete_cloud_database must be implemented in a subclass")
+  end
+
+  def update_cloud_database_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Cloud Database for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_cloud_database',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def update_cloud_database(options = {})
+    raw_update_cloud_database(options)
+  end
+
+  def raw_update_cloud_database(_options = {})
+    raise NotImplementedError, _("raw_update_cloud_database must be implemented in a subclass")
   end
 end
