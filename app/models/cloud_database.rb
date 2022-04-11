@@ -10,7 +10,38 @@ class CloudDatabase < ApplicationRecord
 
   serialize :extra_attributes
 
+  supports_not :create
   supports_not :delete
+
+  def self.create_cloud_database_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "creating Cloud Database for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => name,
+      :method_name => 'create_cloud_database',
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.create_cloud_database(ems_id, options = {})
+    raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
+    ext_management_system = ExtManagementSystem.find(ems_id)
+    klass = ext_management_system.class_by_ems(:CloudDatabase)
+    klass.raw_create_cloud_database(ext_management_system, options)
+  end
+
+  def self.raw_create_cloud_database(_ext_management_system, _options = {})
+    raise NotImplementedError, _("raw_create_cloud_database must be implemented in a subclass")
+  end
 
   def delete_cloud_database_queue(userid)
     task_opts = {
