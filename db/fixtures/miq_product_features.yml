@@ -5516,6 +5516,10 @@
         :description: Reconfigure Instance
         :feature_type: control
         :identifier: instance_resize
+      - :name: Publish Instance to a Template
+        :description: Request to Publish Instance to a Template
+        :feature_type: control
+        :identifier: instance_publish
       - :name: Migrate Instance
         :description: Migrate Instance
         :feature_type: control
