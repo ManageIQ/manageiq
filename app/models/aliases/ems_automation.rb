@@ -1,1 +1,1 @@
-::EmsAutomation = ::ManageIQ::Providers::AnsibleTower::AutomationManager
+::EmsAutomation = ::ManageIQ::Providers::ExternalAutomationManager

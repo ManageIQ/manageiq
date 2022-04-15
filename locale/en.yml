@@ -1464,6 +1464,7 @@ en:
       LoadBalancer:                   Load Balancer
       ManageIQ::Providers::AutomationManager:                                             Automation Manager
       ManageIQ::Providers::BaseManager:                                                   Provider
+      ManageIQ::Providers::EmbeddedAutomationManager:                                     Embedded Automation Manager
       ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                     Credential
       ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:          Repository
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential:          Credential (Amazon)
@@ -1480,6 +1481,7 @@ en:
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:          Credential (VMware)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook:                  Playbook (Embedded Ansible)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource: Repository (Embedded Ansible)
+      ManageIQ::Providers::ExternalAutomationManager:                                     Automation Manager
       ManageIQ::Providers::AutomationManager::Authentication:                             Credential
       ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:             Credential (Amazon)
       ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:              Credential (Microsoft Azure)
