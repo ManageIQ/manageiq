@@ -14,6 +14,13 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def physical_disks
+          add_properties(
+            :manager_ref                  => %i[physical_storage ems_ref],
+            :parent_inventory_collections => %i[physical_storages]
+          )
+        end
+
         def physical_storages
           add_common_default_values
         end
@@ -66,6 +73,30 @@ module ManageIQ::Providers
 
         def physical_chassis_hardwares
           add_hardware_properties(:computer_system, :physical_chassis)
+        end
+
+        def physical_server_network_ports
+          add_properties(
+            :model_class                  => ::PhysicalNetworkPort,
+            :manager_ref                  => %i[port_type uid_ems],
+            :parent_inventory_collections => %i[physical_servers]
+          )
+        end
+
+        def physical_storage_network_ports
+          add_properties(
+            :model_class                  => ::PhysicalNetworkPort,
+            :manager_ref                  => %i[port_type port_name guest_device],
+            :parent_inventory_collections => %i[physical_storages]
+          )
+        end
+
+        def physical_switch_network_ports
+          add_properties(
+            :model_class                  => ::PhysicalNetworkPort,
+            :manager_ref                  => %i[port_type port_name physical_switch],
+            :parent_inventory_collections => %i[physical_switches]
+          )
         end
 
         def physical_storage_hardwares
