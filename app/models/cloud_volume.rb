@@ -189,4 +189,8 @@ class CloudVolume < ApplicationRecord
   def available_vms
     raise NotImplementedError, _("available_vms must be implemented in a subclass")
   end
+
+  def create_volume_snapshot_queue(userid, options = {})
+    ext_management_system.class_by_ems(:CloudVolumeSnapshot)&.create_snapshot_queue(userid, self, options)
+  end
 end
