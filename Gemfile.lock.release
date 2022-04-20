@@ -168,11 +168,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
-  revision: 2952d30dbfbb6f24d9cdc76179f379537c363246
+  revision: 208d9dba13a00c2adb02ecded5e2f01a34c75880
   branch: najdorf
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
-      ibm_power_hmc (~> 0.8.7)
+      ibm_power_hmc (~> 0.8.8)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
@@ -702,7 +702,7 @@ GEM
       concurrent-ruby (~> 1.0)
       http (~> 4.4.0)
       jwt (~> 2.2.1)
-    ibm_power_hmc (0.8.7)
+    ibm_power_hmc (0.8.8)
       rest-client (~> 2.1)
     ibm_vpc (0.4.0)
       concurrent-ruby (~> 1.0)
