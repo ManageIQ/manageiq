@@ -52,7 +52,13 @@ class MiqServer::WorkerManagement::Kubernetes < MiqServer::WorkerManagement
 
       if deployment_resource_constraints_changed?(worker)
         _log.info("Constraints changed, patching deployment: [#{worker.worker_deployment_name}]")
-        worker.patch_deployment
+
+        begin
+          worker.patch_deployment
+        rescue => err
+          _log.warn("Failure patching deployment: [#{worker.worker_deployment_name}] for worker: id: [#{worker.id}], system_uid: [#{worker.system_uid}]. Error: [#{err}]... skipping")
+          next
+        end
       end
       checked_deployments << worker.worker_deployment_name
     end
