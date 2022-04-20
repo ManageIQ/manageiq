@@ -28,6 +28,17 @@ class CustomButtonSet < ApplicationRecord
     replace_children(children)
   end
 
+  def self.reorder_group_index(ids)
+    sets = CustomButtonSet.where(:id => ids).index_by(&:id)
+    raise ArgumentError, "not all requested ids found" unless sets.keys.sort == ids.sort
+
+    ids.each.with_index(1) do |id, i|
+      button_set = sets[id]
+      button_set.set_data[:group_index] = i
+      button_set.save!
+    end
+  end
+
   def self.find_all_by_class_name(class_name, class_id = nil)
     ordering = ->(o) { [o.set_data[:group_index].to_s, o.name] }
 

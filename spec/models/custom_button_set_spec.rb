@@ -81,6 +81,20 @@ RSpec.describe CustomButtonSet do
     expect(CustomButtonSet.count).to eq(2)
   end
 
+  it "#reorder_group_index" do
+    service_template1  = FactoryBot.create(:service_template)
+    custom_button1     = FactoryBot.create(:custom_button, :applies_to => service_template1)
+    custom_button2     = FactoryBot.create(:custom_button, :applies_to => service_template1)
+    set_data1          = {:applies_to_class => "ServiceTemplate", :button_order => [custom_button1.id], :group_index => 1}
+    custom_button_set1 = FactoryBot.create(:custom_button_set, :set_data => set_data1)
+    set_data2          = {:applies_to_class => "ServiceTemplate", :button_order => [custom_button2.id], :group_index => 2}
+    custom_button_set2 = FactoryBot.create(:custom_button_set, :set_data => set_data2)
+
+    CustomButtonSet.reorder_group_index([custom_button_set2.id, custom_button_set1.id])
+    expect(custom_button_set1.reload.set_data[:group_index]).to eq(2)
+    expect(custom_button_set2.reload.set_data[:group_index]).to eq(1)
+  end
+
   context '#update_children' do
     let(:vm)                { FactoryBot.create(:vm_vmware, :name => 'vm') }
     let(:custom_button_1)   { FactoryBot.create(:custom_button, :applies_to => vm) }
