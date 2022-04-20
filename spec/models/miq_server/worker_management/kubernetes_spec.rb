@@ -351,6 +351,15 @@ RSpec.describe MiqServer::WorkerManagement::Kubernetes do
       expect(worker3).to receive(:patch_deployment)
       server.worker_manager.sync_deployment_settings
     end
+
+    it "skips worker classes missing their deployment" do
+      allow(server.worker_manager).to receive(:miq_workers).and_return([worker1, worker3])
+      allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker1).and_return(true)
+      allow(server.worker_manager).to receive(:deployment_resource_constraints_changed?).with(worker3).and_return(true)
+      allow(worker1).to receive(:patch_deployment).and_raise(StandardError.new("AHHHHHH!"))
+      expect(worker3).to receive(:patch_deployment)
+      server.worker_manager.sync_deployment_settings
+    end
   end
 
   context "deployment_resource_constraints_changed?" do
