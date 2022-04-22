@@ -6716,6 +6716,14 @@
       :description: Access Physical Server Remote Console
       :feature_type: control
       :identifier: physical_server_remote_console
+    - :name: Decommission Server
+      :description: Decommission Server
+      :feature_type: control
+      :identifier: physical_server_decommission
+    - :name: Recommission Server
+      :description: Recommission Server
+      :feature_type: control
+      :identifier: physical_server_recommission
 
 # Firmwares
 - :name: Firmwares
