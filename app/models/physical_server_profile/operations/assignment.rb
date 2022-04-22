@@ -38,3 +38,4 @@ module PhysicalServerProfile::Operations::Assignment
     response
   end
 end
+

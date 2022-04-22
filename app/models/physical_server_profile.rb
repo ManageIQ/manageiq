@@ -2,12 +2,10 @@ class PhysicalServerProfile < ApplicationRecord
   acts_as_miq_taggable
 
   include NewWithTypeStiMixin
-  include MiqPolicyMixin
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include EventMixin
   include ProviderObjectMixin
-  include ComplianceMixin
   include EmsRefreshMixin
 
   include_concern 'Operations'
@@ -17,6 +15,8 @@ class PhysicalServerProfile < ApplicationRecord
 
   belongs_to :assigned_server, :foreign_key => :assigned_server_id, :optional => true, :class_name => "ManageIQ::Providers::PhysicalInfraManager::PhysicalServer"
   belongs_to :associated_server, :foreign_key => :associated_server_id, :optional => true, :class_name => "ManageIQ::Providers::PhysicalInfraManager::PhysicalServer"
+
+  delegate :queue_name_for_ems_operations, :to => :ext_management_system, :allow_nil => true
 
   def my_zone
     ems = ext_management_system
