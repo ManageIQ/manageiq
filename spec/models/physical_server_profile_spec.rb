@@ -1,7 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PhysicalServerProfile, type: :model do
-
+RSpec.describe PhysicalServerProfile do
   subject { FactoryBot.create(:physical_server_profile) }
 
   describe "#queue_name_for_ems_operations" do
@@ -22,5 +21,4 @@ RSpec.describe PhysicalServerProfile, type: :model do
       end
     end
   end
-
 end

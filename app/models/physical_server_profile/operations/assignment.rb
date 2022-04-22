@@ -2,7 +2,7 @@ module PhysicalServerProfile::Operations::Assignment
   def assign_server(server_id)
     unless ext_management_system
       raise _("Server Profile %{profile} <%{name}> with Id: <%{id}> is not associated with a provider.") %
-              {:profile => self, :name => name, :id => id}
+            {:profile => self, :name => name, :id => id}
     end
 
     _log.info("Begin assign server with ID: #{server_id} to server profile #{name} (UUID: #{ems_ref})")
@@ -15,7 +15,7 @@ module PhysicalServerProfile::Operations::Assignment
   def deploy_server
     unless ext_management_system
       raise _("Server Profile %{profile} <%{name}> with Id: <%{id}> is not associated with a provider.") %
-              {:profile => self, :name => name, :id => id}
+            {:profile => self, :name => name, :id => id}
     end
 
     _log.info("Begin deploy of server profile #{name} (UUID: #{ems_ref})")
@@ -28,7 +28,7 @@ module PhysicalServerProfile::Operations::Assignment
   def unassign_server
     unless ext_management_system
       raise _("Server Profile %{profile} <%{name}> with Id: <%{id}> is not associated with a provider.") %
-              {:profile => self, :name => name, :id => id}
+            {:profile => self, :name => name, :id => id}
     end
 
     _log.info("Begin unassign of server profile #{name} (UUID: #{ems_ref})")
@@ -38,4 +38,3 @@ module PhysicalServerProfile::Operations::Assignment
     response
   end
 end
-
