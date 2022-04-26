@@ -5,7 +5,7 @@ RSpec.describe PhysicalServerProfile do
 
   describe "#queue_name_for_ems_operations" do
     context "with an active configured_system" do
-      let(:manager)         { FactoryBot.create(:physical_infra) }
+      let(:manager)                 { FactoryBot.create(:physical_infra) }
       let(:physical_server_profile) { FactoryBot.create(:physical_server_profile, :ext_management_system => manager) }
 
       it "uses the manager's queue_name_for_ems_operations" do
