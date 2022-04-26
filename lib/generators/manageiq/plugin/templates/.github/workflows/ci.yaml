@@ -12,8 +12,7 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-        - '2.6'
-        - '2.7'
+<%= YAML.load_file(Rails.root.join(".github/workflows/ci.yaml")).dig("jobs", "ci", "strategy", "matrix", "ruby-version").to_a.map { |r| "- #{r}".indent(8) }.join("\n") %>
     services:
       postgres:
         image: manageiq/postgresql:10
@@ -42,6 +41,6 @@ jobs:
     - name: Run tests
       run: bundle exec rake
     - name: Report code coverage
-      if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '2.7' }}
+      if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '<%= YAML.load_file(Rails.root.join(".github/workflows/ci.yaml")).dig("jobs", "ci", "strategy", "matrix", "ruby-version").max %>' }}
       continue-on-error: true
       uses: paambaati/codeclimate-action@v3.0.0
