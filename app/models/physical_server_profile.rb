@@ -22,8 +22,4 @@ class PhysicalServerProfile < ApplicationRecord
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
   end
-
-  def event_where_clause(assoc = :ems_events)
-    ["#{events_table_name(assoc)}.physical_server_profile_id = ?", id]
-  end
 end
