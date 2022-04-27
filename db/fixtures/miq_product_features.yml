@@ -6724,6 +6724,19 @@
       :description: Recommission Server
       :feature_type: control
       :identifier: physical_server_recommission
+    - :name: Assign Server Profile
+      :description: Assign Server Profile
+      :feature_type: control
+      :identifier: physical_server_assign_server_profile
+    - :name: Deploy Server Profile
+      :description: Deploy Server Profile
+      :feature_type: control
+      :identifier: physical_server_deploy_server_profile
+    - :name: Unassign Server Profile
+      :description: Unassign Server Profile
+      :feature_type: control
+      :identifier: physical_server_unassign_server_profile
+
 
 # Firmwares
 - :name: Firmwares
