@@ -118,6 +118,10 @@ group :azure_stack, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure_stack"
 end
 
+group :cisco_intersight, :manageiq_default do
+  manageiq_plugin "manageiq-providers-cisco_intersight"
+end
+
 group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
 end
