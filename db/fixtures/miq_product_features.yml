@@ -4086,6 +4086,23 @@
       :description: Display Individual Cloud Databases
       :feature_type: view
       :identifier: cloud_database_show
+  - :name: Modify
+    :description: Modify Cloud Databases
+    :feature_type: admin
+    :identifier: cloud_database_admin
+    :children:
+    - :name: Add
+      :description: Add a cloud database
+      :feature_type: admin
+      :identifier: cloud_database_new
+    - :name: Edit
+      :description: Edit a cloud database
+      :feature_type: admin
+      :identifier: cloud_database_edit
+    - :name: Remove
+      :description: Remove cloud database
+      :feature_type: admin
+      :identifier: cloud_database_delete
 
 # Cloud Database Flavor
 - :name: Cloud Database Flavors
