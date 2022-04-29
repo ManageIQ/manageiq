@@ -179,6 +179,10 @@ class EvmApplication
     return "new_replica"    if MiqServer.my_server.nil?
     return "upgrade"        if context.needs_migration?
     "redeployment"
+  rescue PG::ConnectionBad, ActiveRecord::NoDatabaseError => err
+    raise unless err.message.match?(/database "[^"]+" does not exist/)
+
+    "no_database"
   end
 
   def self.queue_overview
