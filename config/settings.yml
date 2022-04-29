@@ -834,27 +834,6 @@
     :user:
     :scheme:
 :log:
-  :collection:
-    :include_automate_models_and_dialogs: true
-    :archive:
-      :pattern:
-    :current:
-      :pattern:
-      - log/*.log
-      - log/apache/*.log
-      - log/*.txt
-      - config/*
-      - "/var/log/syslog*"
-      - "/var/log/daemon.log*"
-      - "/etc/default/ntp*"
-      - "/var/log/messages*"
-      - "/var/log/cron*"
-      - "/var/log/tower/*.log"
-      - BUILD
-      - GUID
-      - VERSION
-    :ping_depot: true
-    :ping_depot_timeout: 20
   :level: info
   :level_audit: info
   :level_rails: info

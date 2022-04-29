@@ -5,7 +5,6 @@ class MiqServer < ApplicationRecord
   include_concern 'ServerSmartProxy'
   include_concern 'ConfigurationManagement'
   include_concern 'EnvironmentManagement'
-  include_concern 'LogManagement'
   include_concern 'QueueManagement'
   include_concern 'RoleManagement'
   include_concern 'StatusManagement'
@@ -320,10 +319,6 @@ class MiqServer < ApplicationRecord
 
   def friendly_name
     _("EVM Server (%{id})") % {:id => pid}
-  end
-
-  def who_am_i
-    @who_am_i ||= "#{name} #{my_zone} #{self.class.name} #{id}"
   end
 
   def database_application_name

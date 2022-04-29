@@ -6,7 +6,6 @@ RSpec.describe FileDepotFtp do
   let(:connection)     { double("FtpConnection") }
   let(:uri)            { "ftp://server.example.com/uploads" }
   let(:file_depot_ftp) { FileDepotFtp.new(:uri => uri) }
-  let(:log_file)       { LogFile.new(:resource => @miq_server, :local_file => "/tmp/file.txt") }
   let(:ftp_mock) do
     Class.new do
       attr_reader :pwd, :content
@@ -58,7 +57,6 @@ RSpec.describe FileDepotFtp do
     end
   end
 
-
   context "#file_exists?" do
     it "true if file exists" do
       file_depot_ftp.ftp = double(:nlst => ["somefile"])
@@ -77,55 +75,6 @@ RSpec.describe FileDepotFtp do
       file_depot_ftp.ftp = double(:nlst => [])
 
       expect(file_depot_ftp.file_exists?("somefile")).to be_falsey
-    end
-  end
-
-  context "#upload_file" do
-    it 'uploads file to vsftpd with existing directory structure' do
-      vsftpd = vsftpd_mock.new('uploads' =>
-                              {"#{@zone.name}_#{@zone.id}" =>
-                              {"#{@miq_server.name}_#{@miq_server.id}" => {}}})
-      expect(file_depot_ftp).to receive(:connect).and_return(vsftpd)
-      file_depot_ftp.upload_file(log_file)
-      expect(vsftpd.content).to eq('uploads' =>
-                                   {"#{@zone.name}_#{@zone.id}" =>
-                                   {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
-                                   log_file.local_file}}})
-    end
-
-    it 'uploads file to vsftpd with empty /uploads directory' do
-      vsftpd = vsftpd_mock.new('uploads' => {})
-      expect(file_depot_ftp).to receive(:connect).and_return(vsftpd)
-      file_depot_ftp.upload_file(log_file)
-      expect(vsftpd.content).to eq('uploads' =>
-                                   {"#{@zone.name}_#{@zone.id}" =>
-                                   {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
-                                   log_file.local_file}}})
-    end
-
-    it "already exists" do
-      expect(file_depot_ftp).to receive(:connect).and_return(connection)
-      expect(file_depot_ftp).to receive(:file_exists?).and_return(true)
-      expect(connection).not_to receive(:mkdir)
-      expect(connection).not_to receive(:putbinaryfile)
-      expect(log_file).not_to receive(:post_upload_tasks)
-      expect(connection).to receive(:close)
-
-      file_depot_ftp.upload_file(log_file)
-    end
-  end
-
-  context "#base_path" do
-    it "escaped characters" do
-      file_depot_ftp.uri = "ftp://ftpserver.com/path/abc 123 %^{}|\"<>\\.csv"
-      expect(file_depot_ftp.send(:base_path).to_s).to eq "path/abc%20123%20%25%5E%7B%7D%7C%22%3C%3E%5C.csv"
-    end
-
-    it "not escaped characters" do
-      file_depot_ftp.uri = "ftp://ftpserver.com/path/abc&$!@*()_+:-=;',./.csv"
-      expect(file_depot_ftp.send(:base_path).to_s).to eq "path/abc&$!@*()_+:-=;',./.csv"
     end
   end
 

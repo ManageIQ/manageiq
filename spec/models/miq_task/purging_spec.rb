@@ -5,14 +5,12 @@ RSpec.describe MiqTask do
         Timecop.freeze(8.days.ago) do
           @old_task = VmScan.create_job(:guid => "old").miq_task
           FactoryBot.create(:binary_blob, :name => "old", :resource_type => 'MiqTask', :resource_id => @old_task.id)
-          FactoryBot.create(:log_file, :name => "old", :miq_task_id => @old_task.id)
         end
 
         Timecop.freeze(6.days.ago) do
           @new_task = VmScan.create_job(:guid => "recent").miq_task
           @new_task.state_finished
           FactoryBot.create(:binary_blob, :name => "recent", :resource_type => 'MiqTask', :resource_id => @new_task.id)
-          FactoryBot.create(:log_file, :name => "recent", :miq_task_id => @new_task.id)
         end
       end
 
@@ -25,8 +23,6 @@ RSpec.describe MiqTask do
         expect(described_class.all).to match_array([@new_task])
         expect(BinaryBlob.count).to eq(1)
         expect(BinaryBlob.first.name).to eq("recent")
-        expect(LogFile.count).to eq(1)
-        expect(LogFile.first.name).to eq("recent")
         expect(Job.count).to eq(1)
         expect(Job.first.guid).to eq("recent")
       end

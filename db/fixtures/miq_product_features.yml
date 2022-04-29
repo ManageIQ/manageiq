@@ -3218,16 +3218,6 @@
         :identifier: ops_diagnostics_server_control
         :hidden: true
         :children:
-        - :name: Collect All Logs
-          :description: Collect All Logs
-          :feature_type: control
-          :hidden: true
-          :identifier: collect_logs
-        - :name: Collect Current Logs
-          :description: Collect Current Logs
-          :feature_type: control
-          :hidden: true
-          :identifier: collect_current_logs
         - :name: Download Audit Log
           :description: Download Audit Log
           :feature_type: control
@@ -3243,11 +3233,6 @@
           :feature_type: control
           :hidden: true
           :identifier: fetch_production_log
-        - :name: Edit Log Depot Settings
-          :description: Edit Log Depot Settings
-          :feature_type: control
-          :hidden: true
-          :identifier: log_depot_edit
         - :name: Refresh Audit Log
           :description: Refresh Audit Log
           :feature_type: control
@@ -3349,26 +3334,11 @@
         :identifier: ops_diagnostics_zone_control
         :hidden: true
         :children:
-        - :name: Collect All Logs
-          :description: Collect All Logs
-          :feature_type: control
-          :hidden: true
-          :identifier: zone_collect_logs
-        - :name: Collect Current Logs
-          :description: Collect Current Logs
-          :feature_type: control
-          :hidden: true
-          :identifier: zone_collect_current_logs
         - :name: Delete Server
           :description: Delete Server
           :feature_type: control
           :hidden: true
           :identifier: zone_delete_server
-        - :name: Edit Log Depot Settings
-          :description: Edit Log Depot Settings
-          :feature_type: control
-          :hidden: true
-          :identifier: zone_log_depot_edit
         - :name: Start Role
           :description: Start Role
           :feature_type: control

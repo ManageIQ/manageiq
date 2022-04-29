@@ -4,8 +4,6 @@ class Zone < ApplicationRecord
 
   serialize :settings, Hash
 
-  belongs_to :log_file_depot, :class_name => "FileDepot"
-
   has_many :miq_servers
   has_many :ext_management_systems
   has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :foreign_key => :zone_before_pause_id
@@ -125,34 +123,6 @@ class Zone < ApplicationRecord
     else
       MiqServer.my_zone
     end
-  end
-
-  def synchronize_logs(*args)
-    options = args.extract_options!
-    enabled = Settings.log.collection.include_automate_models_and_dialogs
-
-    active_miq_servers.each_with_index do |s, index|
-      # If enabled, export the automate domains and dialogs on the first active server
-      include_models_and_dialogs = enabled ? index.zero? : false
-      s.synchronize_logs(*args, options.merge(:include_automate_models_and_dialogs => include_models_and_dialogs))
-    end
-  end
-
-  def last_log_sync_on
-    miq_servers.inject(nil) do |d, s|
-      last = s.last_log_sync_on
-      d ||= last
-      d = last if last && last > d
-      d
-    end
-  end
-
-  def log_collection_active?
-    miq_servers.any?(&:log_collection_active?)
-  end
-
-  def log_collection_active_recently?(since = nil)
-    miq_servers.any? { |s| s.log_collection_active_recently?(since) }
   end
 
   def self.hosts_without_a_zone

@@ -36,7 +36,6 @@ gem "config",                           "~>2.2", ">=2.2.3",  :require => false
 gem "dalli",                            "~>3.1.0",           :require => false
 gem "default_value_for",                "~>3.3"
 gem "docker-api",                       "~>1.33.6",          :require => false
-gem "elif",                             "=0.1.0",            :require => false
 gem "fast_gettext",                     "~>2.0.1"
 gem "gettext_i18n_rails",               "~>1.7.2"
 gem "gettext_i18n_rails_js",            "~>1.3.0"

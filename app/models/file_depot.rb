@@ -1,12 +1,11 @@
 class FileDepot < ApplicationRecord
+  #TODO: I believe this class and child classes are completely removable once log collection is deleted
   include NewWithTypeStiMixin
   include AuthenticationMixin
   include_concern 'ImportExport'
   include YAMLImportExportMixin
 
   has_many              :miq_schedules, :dependent => :nullify
-  has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
-  has_many              :log_files
   validates_presence_of :uri
 
   attr_accessor         :file
@@ -21,10 +20,6 @@ class FileDepot < ApplicationRecord
 
   def self.requires_credentials?
     true
-  end
-
-  def requires_support_case?
-    false
   end
 
   def upload_file(file)
