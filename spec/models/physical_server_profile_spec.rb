@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe PhysicalServerProfile do
   describe "#queue_name_for_ems_operations" do
     context "with an active physical_server_profile" do
