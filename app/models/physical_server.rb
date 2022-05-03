@@ -42,6 +42,9 @@ class PhysicalServer < ApplicationRecord
 
   has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
 
+  has_one :assigned_server_profile, :foreign_key => :assigned_server_id, :dependent => :destroy, :inverse_of => :assigned_server, :class_name => "::PhysicalServerProfile"
+  has_one :associated_server_profile, :foreign_key => :associated_server_id, :dependent => :destroy, :inverse_of => :associated_server, :class_name => "::PhysicalServerProfile"
+
   def name_with_details
     details % {
       :name => name,
