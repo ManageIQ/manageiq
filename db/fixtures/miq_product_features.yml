@@ -6349,6 +6349,10 @@
       :description: Add a Host Initiator
       :feature_type: admin
       :identifier: host_initiator_new
+    - :name: Remove
+      :description: Remove a Host Initiator
+      :feature_type: admin
+      :identifier: host_initiator_delete
 
   # host_initiator_group
 - :name: Host Initiator Group
