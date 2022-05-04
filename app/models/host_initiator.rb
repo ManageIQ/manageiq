@@ -58,4 +58,31 @@ class HostInitiator < ApplicationRecord
   def self.raw_create_host_initiator(_ext_management_system, _options = {})
     raise NotImplementedError, _("raw_create_host_initiator must be implemented in a subclass")
   end
+
+  def raw_delete_host_initiator
+    raise NotImplementedError, _("raw_delete_host_initiator must be implemented in a subclass")
+  end
+
+  def delete_host_initiator
+    raw_delete_host_initiator
+  end
+
+  # Delete a storage system as a queued task and return the task id. The queue
+  # name and the queue zone are derived from the EMS, and a userid is mandatory.
+  def delete_host_initiator_queue(userid)
+    task_opts = {
+      :action => "deleting host initiator for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_host_initiator',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
 end
