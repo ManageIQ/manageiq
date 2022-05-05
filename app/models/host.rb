@@ -182,13 +182,6 @@ class Host < ApplicationRecord
 
   supports     :destroy
   supports_not :quick_stats
-  supports     :reset do
-    unsupported_reason_add(:reset, _("The Host is not configured for IPMI")) if ipmi_address.blank?
-    unsupported_reason_add(:reset, _("The Host has no IPMI credentials")) if authentication_type(:ipmi).nil?
-    if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
-      unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
-    end
-  end
   supports_not :refresh_advanced_settings
   supports_not :refresh_firewall_rules
   supports_not :refresh_logs
@@ -196,6 +189,24 @@ class Host < ApplicationRecord
   supports_not :set_node_maintenance
   supports_not :smartstate_analysis
   supports_not :unset_node_maintenance
+  supports_not :reboot
+  supports_not :shutdown
+  supports_not :standby
+  supports_not :enter_maint_mode
+  supports_not :exit_maint_mode
+  supports_not :enable_vmotion
+  supports_not :disable_vmotion
+  supports_not :vmotion_enabled
+
+  supports :start do
+    validate_ipmi("off")
+  end
+  supports :stop do
+    validate_ipmi("on")
+  end
+  supports :reset do
+    validate_ipmi
+  end
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -242,79 +253,19 @@ class Host < ApplicationRecord
   end
   private :raise_cluster_event
 
-  def validate_reboot
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_shutdown
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_standby
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_enter_maint_mode
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_exit_maint_mode
-    validate_esx_host_connected_to_vc_with_power_state('maintenance')
-  end
-
-  def validate_enable_vmotion
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_disable_vmotion
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_vmotion_enabled?
-    validate_esx_host_connected_to_vc_with_power_state('on')
-  end
-
-  def validate_start
-    validate_ipmi('off')
-  end
-
-  def validate_stop
-    validate_ipmi('on')
-  end
-
   def validate_ipmi(pstate = nil)
-    return {:available => false, :message => "The Host is not configured for IPMI"}   if ipmi_address.blank?
-    return {:available => false, :message => "The Host has no IPMI credentials"}      if authentication_type(:ipmi).nil?
-    return {:available => false, :message => "The Host has invalid IPMI credentials"} if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
-    msg = validate_power_state(pstate)
-    return msg unless msg.nil?
-    {:available => true,  :message => nil}
-  end
+    return _("The Host is not configured for IPMI")   if ipmi_address.blank?
+    return _("The Host has no IPMI credentials")      if authentication_type(:ipmi).nil?
+    return _("The Host has invalid IPMI credentials") if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
 
-  def validate_esx_host_connected_to_vc_with_power_state(pstate)
-    msg = validate_esx_host_connected_to_vc
-    return msg unless msg.nil?
-    msg = validate_power_state(pstate)
-    return msg unless msg.nil?
-    {:available => true,   :message => nil}
+    validate_power_state(pstate) if pstate
   end
+  private :validate_ipmi
 
   def validate_power_state(pstate)
-    return nil if pstate.nil?
-    case pstate.class.name
-    when 'String'
-      return {:available => false,   :message => "The Host is not powered '#{pstate}'"} unless power_state == pstate
-    when 'Array'
-      return {:available => false,   :message => "The Host is not powered #{pstate.inspect}"} unless pstate.include?(power_state)
-    end
+    _("The Host is not in power state #{pstate.inspect}") unless Array(pstate).include?(power_state)
   end
-
-  def validate_esx_host_connected_to_vc
-    # Check the basic require to interact with a VM.
-    return {:available => false, :message => "The Host is not connected to an active Provider"} unless has_active_ems?
-    return {:available => false, :message => "The Host is not VMware ESX"} unless is_vmware_esx?
-    nil
-  end
+  private :validate_power_state
 
   def validate_scan_and_check_compliance_queue
     {:available => true, :message => nil}
@@ -322,10 +273,6 @@ class Host < ApplicationRecord
 
   def validate_check_compliance_queue
     {:available => true, :message => nil}
-  end
-
-  def validate_unsupported(message_prefix)
-    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
   end
 
   def has_active_ems?
@@ -367,11 +314,11 @@ class Host < ApplicationRecord
   end
 
   def start
-    if validate_start[:available] && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
+    if supports?(:start) && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
       check_policy_prevent("request_host_start", "vim_power_up_from_standby")
     else
       msg = validate_ipmi
-      if msg[:available]
+      if msg.nil?
         pstate = run_ipmi_command(:power_state)
         if pstate == 'off'
           check_policy_prevent("request_host_start", "ipmi_power_on")
@@ -379,97 +326,80 @@ class Host < ApplicationRecord
           _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
         end
       else
-        _log.warn("Cannot start because <#{msg[:message]}>")
+        _log.warn("Cannot start because <#{msg}>")
       end
     end
   end
 
   def stop
-    msg = validate_stop
-    if msg[:available]
+    if supports?(:stop)
       check_policy_prevent("request_host_stop", "ipmi_power_off")
     else
-      _log.warn("Cannot stop because <#{msg[:message]}>")
+      _log.warn("Cannot stop because <#{unsupported_reason(:stop)}>")
     end
   end
 
   def standby
-    msg = validate_standby
-    if msg[:available]
-      if power_state == 'on' && respond_to?(:vim_power_down_to_standby)
-        check_policy_prevent("request_host_standby", "vim_power_down_to_standby")
-      else
-        _log.warn("Cannot go into standby mode from power state = <#{power_state.inspect}>")
-      end
+    if supports?(:standby)
+      check_policy_prevent("request_host_standby", "vim_power_down_to_standby")
     else
-      _log.warn("Cannot go into standby mode because <#{msg[:message]}>")
+      _log.warn("Cannot go into standby mode because <#{unsupported_reason(:standby)}>")
     end
   end
 
   def enter_maint_mode
-    msg = validate_enter_maint_mode
-    if msg[:available]
-      if power_state == 'on' && respond_to?(:vim_enter_maintenance_mode)
-        check_policy_prevent("request_host_enter_maintenance_mode", "vim_enter_maintenance_mode")
-      else
-        _log.warn("Cannot enter maintenance mode from power state = <#{power_state.inspect}>")
-      end
+    if supports?(:enter_maint_mode)
+      check_policy_prevent("request_host_enter_maintenance_mode", "vim_enter_maintenance_mode")
     else
-      _log.warn("Cannot enter maintenance mode because <#{msg[:message]}>")
+      _log.warn("Cannot enter maintenance mode because <#{unsupported_reason(:enter_maint_mode)}>")
     end
   end
 
   def exit_maint_mode
-    msg = validate_exit_maint_mode
-    if msg[:available] && respond_to?(:vim_exit_maintenance_mode)
+    if supports?(:exit_maint_mode)
       check_policy_prevent("request_host_exit_maintenance_mode", "vim_exit_maintenance_mode")
     else
-      _log.warn("Cannot exit maintenance mode because <#{msg[:message]}>")
+      _log.warn("Cannot exit maintenance mode because <#{unsupported_reason(:exit_maint_mode)}>")
     end
   end
 
   def shutdown
-    msg = validate_shutdown
-    if msg[:available] && respond_to?(:vim_shutdown)
+    if supports?(:shutdown)
       check_policy_prevent("request_host_shutdown", "vim_shutdown")
     else
-      _log.warn("Cannot shutdown because <#{msg[:message]}>")
+      _log.warn("Cannot shutdown because <#{unsupported_reason(:shutdown)}>")
     end
   end
 
   def reboot
-    msg = validate_reboot
-    if msg[:available] && respond_to?(:vim_reboot)
+    if supports?(:reboot)
       check_policy_prevent("request_host_reboot", "vim_reboot")
     else
-      _log.warn("Cannot reboot because <#{msg[:message]}>")
+      _log.warn("Cannot reboot because <#{unsupported_reason(:reboot)}>")
     end
   end
 
   def enable_vmotion
-    msg = validate_enable_vmotion
-    if msg[:available] && respond_to?(:vim_enable_vmotion)
+    if supports?(:enable_vmotion)
       check_policy_prevent("request_host_enable_vmotion", "vim_enable_vmotion")
     else
-      _log.warn("Cannot enable vmotion because <#{msg[:message]}>")
+      _log.warn("Cannot enable vmotion because <#{unsupported_reason(:enable_vmotion)}>")
     end
   end
 
   def disable_vmotion
-    msg = validate_disable_vmotion
-    if msg[:available] && respond_to?(:vim_disable_vmotion)
+    if supports?(:disable_vmotion)
       check_policy_prevent("request_host_disable_vmotion", "vim_disable_vmotion")
     else
-      _log.warn("Cannot disable vmotion because <#{msg[:message]}>")
+      _log.warn("Cannot disable vmotion because <#{unsupported_reason(:disable_vmotion)}>")
     end
   end
 
   def vmotion_enabled?
-    msg = validate_vmotion_enabled?
-    if msg[:available] && respond_to?(:vim_vmotion_enabled?)
+    if supports?(:vmotion_enabled)
       vim_vmotion_enabled?
     else
-      _log.warn("Cannot check if vmotion is enabled because <#{msg[:message]}>")
+      _log.warn("Cannot check if vmotion is enabled because <#{unsupported_reason(:vmotion_enabled)}>")
     end
   end
 
