@@ -220,9 +220,16 @@ namespace :release do
       end
 
       if update_gems.any?
+        cmd =
+          if update_gems == ["*"]
+            "bundle update --conservative --patch #{update_gems.join(" ")}"
+          else
+            "bundle update" # Update everything regardless of patch level
+          end
+
         Bundler.with_unbundled_env do
           puts "** Updating gems #{update_gems.join(", ")}"
-          exit $?.exitstatus unless system({"APPLIANCE" => "true"}, "bundle update --conservative --patch #{update_gems.join(" ")}", :chdir => root)
+          exit $?.exitstatus unless system({"APPLIANCE" => "true"}, cmd, :chdir => root)
         end
       end
 
