@@ -6745,19 +6745,43 @@
       :description: Recommission Server
       :feature_type: control
       :identifier: physical_server_recommission
-    - :name: Assign Server Profile
-      :description: Assign Server Profile
-      :feature_type: control
-      :identifier: physical_server_assign_server_profile
-    - :name: Deploy Server Profile
-      :description: Deploy Server Profile
-      :feature_type: control
-      :identifier: physical_server_deploy_server_profile
-    - :name: Unassign Server Profile
-      :description: Unassign Server Profile
-      :feature_type: control
-      :identifier: physical_server_unassign_server_profile
 
+# Physical Server Profiles
+- :name: Physical Server Profiles
+  :description: Everything under Physical Server Profiles
+  :feature_type: node
+  :identifier: physical_server_profile
+  :children:
+  - :name: View
+    :description: View Physical Server Profile
+    :feature_type: view
+    :identifier: physical_server_profile_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Server Profiles
+      :feature_type: view
+      :identifier: physical_server_profile_show_list
+    - :name: Show
+      :description: Display Individual Physical Server Profile
+      :feature_type: view
+      :identifier: physical_server_profile_show
+  - :name: Operate
+    :description: Perform Operations on Physical Server Profiles
+    :feature_type: control
+    :identifier: physical_server_profile_control
+    :children:
+    - :name: Assign Server
+      :description: Assign Server
+      :feature_type: control
+      :identifier: physical_server_profile_assign_server
+    - :name: Deploy Server
+      :description: Deploy Server assigned to Server Profile
+      :feature_type: control
+      :identifier: physical_server_profile_deploy_server
+    - :name: Unassign Server
+      :description: Unassign Server
+      :feature_type: control
+      :identifier: physical_server_profile_unassign_server
 
 # Firmwares
 - :name: Firmwares
