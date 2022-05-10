@@ -1,5 +1,6 @@
 RSpec.describe AuthenticationMixin do
   include Spec::Support::ArelHelper
+  include Spec::Support::SupportsHelper
 
   let(:host)            { FactoryBot.create(:host) }
   let(:invalid_auth)    { FactoryBot.create(:authentication, :resource => host, :status => "Invalid") }
@@ -732,7 +733,7 @@ RSpec.describe AuthenticationMixin do
         context "#change_password" do
           it "should fail if some param is blank" do
             current_password = ""
-            allow(@ems).to receive(:supports?).with(:change_password) { true }
+            stub_supports(@ems.class, :change_password)
 
             expect { @ems.change_password(current_password, new_password, confirm_password) }
               .to raise_error(MiqException::Error, "Please, fill the current_password and new_password fields.")
@@ -745,7 +746,7 @@ RSpec.describe AuthenticationMixin do
 
           it "should update the provider password" do
             allow(@ems).to receive(:raw_change_password) { true }
-            allow(@ems).to receive(:supports?).with(:change_password) { true }
+            stub_supports(@ems.class, :change_password)
 
             expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
           end

@@ -1,4 +1,5 @@
 RSpec.describe Zone do
+  include Spec::Support::SupportsHelper
   include_examples "AggregationMixin", "ext_management_systems"
 
   context ".seed" do
@@ -100,9 +101,8 @@ RSpec.describe Zone do
     let(:ems_not_supporting_metrics) { FactoryBot.create(:ems_cloud, :zone => zone) }
 
     before do
-      allow_any_instance_of(ExtManagementSystem).to receive(:supports?).with(:metrics).and_return(true)
-      allow(ems_supporting_metrics.class).to receive(:supports?).with(:metrics).and_return(true)
-      allow(ems_not_supporting_metrics.class).to receive(:supports?).with(:metrics).and_return(false)
+      stub_supports(ems_supporting_metrics.class, :metrics)
+      stub_supports_not(ems_not_supporting_metrics.class, :metrics)
     end
 
     it "only returns EMSs which support metrics collection" do
