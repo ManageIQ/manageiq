@@ -8,6 +8,8 @@ module Spec
         receive_supports = receive(:supports?).with(feature).and_return(supported)
         allow(model).to receive_supports
         allow_any_instance_of(model).to receive_supports
+
+        allow(model).to receive(:types_supporting).with(feature).and_return([nil] + model.descendants.map(&:name))
       end
 
       def stub_supports_not(model, feature = :update, reason = nil)

@@ -125,6 +125,10 @@ module SupportsFeatureMixin
       supported_subclasses.select { |subclass| subclass.supports?(feature) }
     end
 
+    def types_supporting(feature)
+      subclasses_supporting(feature).map(&:name)
+    end
+
     # Provider classes that support this feature
     def provider_classes_supporting(feature)
       subclasses_supporting(feature).map(&:module_parent)
@@ -134,7 +138,7 @@ module SupportsFeatureMixin
     def supporting(feature)
       # First find all instances where the class supports <feature> then select instances
       # which also support <feature> (e.g. the supports block does not add an unsupported_reason)
-      where(:type => subclasses_supporting(feature).map(&:name)).select { |instance| instance.supports?(feature) }
+      where(:type => types_supporting(feature)).select { |instance| instance.supports?(feature) }
     end
 
     # Providers that support this feature
