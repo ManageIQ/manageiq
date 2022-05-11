@@ -1,4 +1,6 @@
 RSpec.describe ExtManagementSystem do
+  include Spec::Support::SupportsHelper
+
   it "supports label mapping for provider subclasses" do
     expect(ExtManagementSystem.entities_for_label_mapping.keys).to include("VmOpenstack", "VmIBM")
   end
@@ -848,17 +850,29 @@ RSpec.describe ExtManagementSystem do
   end
 
   context "virtual column :supports_block_storage" do
+    it "returns false if block storage is not supported" do
+      ems = FactoryBot.create(:ext_management_system)
+      stub_supports_not(ems.class, :block_storage)
+      expect(ems.supports_block_storage).to eq(false)
+    end
+
     it "returns true if block storage is supported" do
       ems = FactoryBot.create(:ext_management_system)
-      allow(ems).to receive(:supports_block_storage).and_return(true)
+      stub_supports(ems.class, :block_storage)
       expect(ems.supports_block_storage).to eq(true)
     end
   end
 
   context "virtual column :supports_cloud_object_store_container_create" do
+    it "returns false if cloud_object_store_container_create is not supported" do
+      ems = FactoryBot.create(:ems_storage)
+      stub_supports_not(ems.class_by_ems("CloudObjectStoreContainer"), :create)
+      expect(ems.supports_cloud_object_store_container_create).to eq(false)
+    end
+
     it "returns true if cloud_object_store_container_create is supported" do
-      ems = FactoryBot.create(:ext_management_system)
-      allow(ems).to receive(:supports_cloud_object_store_container_create).and_return(true)
+      ems = FactoryBot.create(:ems_storage)
+      stub_supports(ems.class_by_ems("CloudObjectStoreContainer"), :create)
       expect(ems.supports_cloud_object_store_container_create).to eq(true)
     end
   end
