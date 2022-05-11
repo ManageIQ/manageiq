@@ -35,6 +35,7 @@ RSpec.describe DialogFieldSerializer do
         "visible"                 => true,
         "validator_type"          => "validator_type",
         "validator_rule"          => "validator_rule",
+        "validator_message"       => "validator_message",
         "reconfigurable"          => nil
       }
     end

@@ -282,14 +282,15 @@ RSpec.describe DialogFieldTextBox do
     let(:dialog_field) { described_class.new }
     let(:automate_hash) do
       {
-        "data_type"      => "datatype",
-        "value"          => value,
-        "protected"      => true,
-        "description"    => "description",
-        "required"       => true,
-        "read_only"      => true,
-        "validator_type" => "regex",
-        "validator_rule" => "rule"
+        "data_type"         => "datatype",
+        "value"             => value,
+        "protected"         => true,
+        "description"       => "description",
+        "required"          => true,
+        "read_only"         => true,
+        "validator_type"    => "regex",
+        "validator_rule"    => "rule",
+        "validator_message" => "message"
       }
     end
 
@@ -320,6 +321,10 @@ RSpec.describe DialogFieldTextBox do
 
       it "sets the validator rule" do
         expect(dialog_field.validator_rule).to eq("rule")
+      end
+
+      it "sets the validator message" do
+        expect(dialog_field.validator_message).to eq("message")
       end
     end
 
