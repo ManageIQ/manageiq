@@ -323,10 +323,6 @@ class Host < ApplicationRecord
     {:available => true, :message => nil}
   end
 
-  def validate_reset
-    validate_unsupported("Reset is unavailable")
-  end
-
   def validate_unsupported(message_prefix)
     {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} Host."}
   end
