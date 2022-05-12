@@ -81,11 +81,6 @@ module SupportsFeatureMixin
     public_send("supports_#{feature}?")
   end
 
-  # query the instance if a feature is generally known
-  def feature_known?(feature)
-    self.class.feature_known?(feature)
-  end
-
   private
 
   # used inside a +supports+ block to add a reason why the feature is not supported
