@@ -4,10 +4,10 @@ class ManageIQ::Providers::ContainerManager::MetricsCapture < ManageIQ::Provider
 
     MiqPreloader.preload([ems], :container_images => :tags, :container_nodes => :tags, :container_groups => [:tags, :containers => :tags])
 
-    with_archived(ems.all_container_nodes.supporting(:capture)) +
-      with_archived(ems.all_container_groups.supporting(:capture)) +
-      with_archived(ems.all_containers.supporting(:capture)) +
-      with_archived(ems.container_images.supporting(:capture))
+    with_archived(ems.all_container_nodes).supporting(:capture) +
+      with_archived(ems.all_container_groups).supporting(:capture) +
+      with_archived(ems.all_containers).supporting(:capture) +
+      with_archived(ems.container_images).supporting(:capture)
   end
 
   private
