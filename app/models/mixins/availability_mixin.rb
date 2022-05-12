@@ -18,17 +18,17 @@ module AvailabilityMixin
   # to the storage to scan it then this method would be expected to return false.
 
   class_methods do
-    def is_available?(request_type, *args)
+    def is_available?(feature)
       # please prefer supports_feature_mixin.rb over this
-      validate_method = "validate_#{request_type}"
-      send(validate_method, *args)[:available]
+      validate_method = "validate_#{feature}"
+      send(validate_method)[:available]
     end
 
     # Returns an error message string if there is an error.
     # Otherwise nil to indicate no errors.
-    def is_available_now_error_message(request_type, *args)
+    def is_available_now_error_message(feature)
       # please prefer supports_feature_mixin.rb over this
-      send("validate_#{request_type}", *args)[:message]
+      send("validate_#{feature}")[:message]
     end
   end
 
