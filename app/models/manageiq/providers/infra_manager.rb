@@ -13,6 +13,7 @@ module ManageIQ::Providers
     require_nested :VmOrTemplate
 
     include AvailabilityMixin
+    include SupportsFeatureMixin
 
     has_many :distributed_virtual_switches, :dependent => :destroy, :foreign_key => :ems_id, :inverse_of => :ext_management_system
     has_many :distributed_virtual_lans, -> { distinct }, :through => :distributed_virtual_switches, :source => :lans

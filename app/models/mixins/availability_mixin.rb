@@ -18,17 +18,16 @@ module AvailabilityMixin
   # to the storage to scan it then this method would be expected to return false.
 
   class_methods do
+    Vmdb::Deprecation.deprecate_methods(self, :is_available? => :supports?)
     def is_available?(feature)
-      # please prefer supports_feature_mixin.rb over this
-      validate_method = "validate_#{feature}"
-      send(validate_method)[:available]
+      supports?(feature)
     end
 
     # Returns an error message string if there is an error.
     # Otherwise nil to indicate no errors.
+    Vmdb::Deprecation.deprecate_methods(self, :is_available_now_error_message => :unsupported_reason)
     def is_available_now_error_message(feature)
-      # please prefer supports_feature_mixin.rb over this
-      send("validate_#{feature}")[:message]
+      unsupported_reason(feature)
     end
   end
 
