@@ -36,19 +36,19 @@ class CloudVolumeSnapshot < ApplicationRecord
     }
 
     queue_opts = {
-      :class_name  => cloud_volume.class.name,
-      :instance_id => cloud_volume.id,
-      :method_name => 'create_volume_snapshot',
+      :class_name  => name,
+      :method_name => 'create_snapshot',
       :role        => 'ems_operations',
       :queue_name  => ext_management_system.queue_name_for_ems_operations,
       :zone        => my_zone(ext_management_system),
-      :args        => [options]
+      :args        => [cloud_volume.id, options]
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def self.create_snapshot(cloud_volume, options)
+  def self.create_snapshot(cloud_volume_id, options)
+    cloud_volume = CloudVolume.find(cloud_volume_id)
     raw_create_snapshot(cloud_volume, options)
   end
 

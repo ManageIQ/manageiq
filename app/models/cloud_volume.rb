@@ -192,6 +192,7 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("available_vms must be implemented in a subclass")
   end
 
+  # TODO(kbrock): remove when this is moved from ui-classic to manageiq-api
   def create_volume_snapshot_queue(userid, options = {})
     ext_management_system.class_by_ems(:CloudVolumeSnapshot)&.create_snapshot_queue(userid, self, options)
   end
