@@ -59,8 +59,8 @@ class MiqScheduleWorker::Jobs
   end
 
   def image_import_dispatcher_dispatch
-    if ImageImportJob::Dispatcher.waiting?
-      queue_work(:class_name => "ImageImportJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
+    if ManageIQ::Providers::ImageImportJob::Dispatcher.waiting?
+      queue_work(:class_name => "ManageIQ::Providers::ImageImportJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
     end
   end
 

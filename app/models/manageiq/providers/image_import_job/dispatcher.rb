@@ -1,4 +1,4 @@
-class ImageImportJob
+class ManageIQ::Providers::ImageImportJob
   class Dispatcher < Job::Dispatcher
     def dispatch
       pending, = Benchmark.realtime_block(:pending_import_jobs) { pending_import_jobs }

@@ -1,4 +1,4 @@
-class ImageImportJob < ManageIQ::Providers::AnsiblePlaybookWorkflow
+class ManageIQ::Providers::ImageImportJob < ManageIQ::Providers::AnsiblePlaybookWorkflow
   require_nested :Dispatcher
 
   # FIXME: As of now ManageIQ supports only IBM Power Virtual Servers <--> IBM PowerVC

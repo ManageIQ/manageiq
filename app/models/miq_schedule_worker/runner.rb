@@ -182,8 +182,8 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:vm_scan_dispatcher_dispatch)
     end
 
-    # Schedule - ImageImportJob::Dispatcher
-    # Queue a ImageImportJob::Dispatcher task unless there's already one on the queue
+    # Schedule - ManageIQ::Providers::ImageImportJob::Dispatcher
+    # Queue a ManageIQ::Providers::ImageImportJob::Dispatcher task unless there's already one on the queue
     scheduler.schedule_every(:image_import_dispatcher_dispatch, worker_settings[:image_import_dispatcher_interval]) do
       enqueue(:image_import_dispatcher_dispatch)
     end
