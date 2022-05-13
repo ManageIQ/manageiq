@@ -9,11 +9,10 @@ class ImageImportJob
         break if running[dst_id].present? || busy_src_ids.include?(dst_id)
 
         pending_job = pending_jobs.detect { |x| busy_src_ids.exclude?(x.options[:src_provider_id]) }
+        next if pending_job.nil?
 
-        unless pending_job.nil?
-          busy_src_ids << pending_job.options[:src_provider_id]
-          do_dispatch(pending_job)
-        end
+        busy_src_ids << pending_job.options[:src_provider_id]
+        do_dispatch(pending_job)
       end
     end
 
