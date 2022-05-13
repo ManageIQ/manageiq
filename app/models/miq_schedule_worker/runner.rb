@@ -182,10 +182,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:vm_scan_dispatcher_dispatch)
     end
 
-    # Schedule - ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher
-    # Queue a ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher task unless there's already one on the queue
-    scheduler.schedule_every(:image_import_pvc_to_pvs_dispatcher_dispatch, worker_settings[:image_import_pvc_to_pvs_dispatcher_interval]) do
-      enqueue(:image_import_pvc_to_pvs_dispatcher_dispatch)
+    # Schedule - ManageIQ::Providers::ImageImportJob::Dispatcher
+    # Queue a ManageIQ::Providers::ImageImportJob::Dispatcher task unless there's already one on the queue
+    scheduler.schedule_every(:image_import_dispatcher_dispatch, worker_settings[:image_import_dispatcher_interval]) do
+      enqueue(:image_import_dispatcher_dispatch)
     end
 
     # Schedule - Check for a stuck VmScan::Dispatcher#dispatch

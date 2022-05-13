@@ -1160,7 +1160,7 @@
       :vim_performance_states_purge_interval: 1.day
       :vm_retired_interval: 10.minutes
       :vm_scan_dispatcher_interval: 15.seconds
-      :image_import_pvc_to_pvs_dispatcher_interval: 30.seconds
+      :image_import_dispatcher_interval: 30.seconds
       :vm_scan_dispatcher_stale_message_check_interval: 60.seconds
       :vm_scan_dispatcher_stale_message_timeout: 2.minutes
     :ui_worker:

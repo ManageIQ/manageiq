@@ -58,9 +58,9 @@ class MiqScheduleWorker::Jobs
     end
   end
 
-  def image_import_pvc_to_pvs_dispatcher_dispatch
-    if ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher.waiting?
-      queue_work(:class_name => "ManageIQ::Providers::IbmCloud::PowerVirtualServers::CloudManager::ImageImportWorkflow::ImportDispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
+  def image_import_dispatcher_dispatch
+    if ManageIQ::Providers::ImageImportJob::Dispatcher.waiting?
+      queue_work(:class_name => "ManageIQ::Providers::ImageImportJob::Dispatcher", :method_name => "dispatch", :task_id => "job_dispatcher", :priority => MiqQueue::HIGH_PRIORITY)
     end
   end
 
