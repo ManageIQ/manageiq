@@ -72,18 +72,25 @@ module SupportsFeatureMixin
   # query instance for the reason why the feature is unsupported
   def unsupported_reason(feature)
     feature = feature.to_sym
-    public_send("supports_#{feature}?") unless unsupported.key?(feature)
+    supports?(feature) unless unsupported.key?(feature)
     unsupported[feature]
   end
 
   # query the instance if the feature is supported or not
   def supports?(feature)
+    # AvailabilityMixin and that feature is used
+    method_name = "validate_#{feature}"
+    if respond_to?(:is_available?) && respond_to?(method_name)
+      # e.g.: {:available => true,  :message => nil}
+      rslts = send(method_name)
+      if rslts.kind_of?(Hash)
+        unsupported.delete(feature)
+        unsupported_reason_add(feature, rslts[:message]) unless rslts[:available]
+        return rslts[:available]
+      end
+    end
+    # /AvailabilityMixin
     public_send("supports_#{feature}?")
-  end
-
-  # query the instance if a feature is generally known
-  def feature_known?(feature)
-    self.class.feature_known?(feature)
   end
 
   private
