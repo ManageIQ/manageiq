@@ -159,7 +159,8 @@
             :method: :allowed_cloud_networks
           :description: Virtual Private Cloud
           :auto_select_single: false
-          :required: false
+          :required: true
+          :required_method: :validate_cloud_network
           :display: :edit
           :data_type: :integer
         :cloud_subnet:
