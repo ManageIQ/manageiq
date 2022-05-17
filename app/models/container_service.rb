@@ -22,11 +22,7 @@ class ContainerService < ApplicationRecord
 
   acts_as_miq_taggable
 
-  virtual_column :container_groups_count, :type => :integer
-
-  def container_groups_count
-    number_of(:container_groups)
-  end
+  virtual_total :container_groups_count, :container_groups
 
   include Metric::CiMixin
 

@@ -13,7 +13,7 @@ class SecurityPolicy < ApplicationRecord
   has_many :security_policy_rules, :foreign_key => :security_policy_id, :dependent => :destroy
   alias rules security_policy_rules
 
-  virtual_total :rules_count, :rules
+  virtual_total :rules_count, :security_policy_rules
 
   def self.class_by_ems(ext_management_system)
     ext_management_system&.class_by_ems(:SecurityPolicy)

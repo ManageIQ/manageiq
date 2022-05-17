@@ -1507,6 +1507,27 @@ RSpec.describe VmOrTemplate do
     end
   end
 
+  describe "#product_name" do
+    it "handles no os" do
+      expect(vm.product_name).to be_blank
+    end
+
+    it "uses os" do
+      os = OperatingSystem.create!(:product_name => "test")
+      vm = FactoryBot.create(:vm_or_template, :operating_system => os)
+
+      expect(vm.product_name).to eq(os.product_name)
+    end
+
+    it "uses parent os" do
+      os = OperatingSystem.create!(:product_name => "test")
+      parent = FactoryBot.create(:vm_or_template, :operating_system => os)
+      vm = FactoryBot.create(:vm_or_template, :genealogy_parent => parent)
+
+      expect(vm.product_name).to eq(os.product_name)
+    end
+  end
+
   describe '#normalized_state' do
     let(:klass) { :vm_vmware }
     let(:storage) { FactoryBot.create(:storage_vmware) }

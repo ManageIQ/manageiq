@@ -2,11 +2,7 @@ class IsoDatastore < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :iso_datastore
   has_many   :iso_images, :dependent => :destroy
 
-  virtual_column :name, :type => :string, :uses => :ext_management_system
-
-  def name
-    ext_management_system.try(:name)
-  end
+  virtual_delegate :name, :to => :ext_management_system, :allow_nil => true, :type => :string
 
   # Synchronize advertised images as a queued task. The
   # queue name and the queue zone are derived from the EMS.
