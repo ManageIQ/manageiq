@@ -39,12 +39,7 @@ module MiqEnvironment
   end
 
   class Command
-    EVM_KNOWN_COMMANDS = %w[apachectl memcached memcached-tool nohup service systemctl].freeze
-
-    def self.supports_memcached?
-      return @supports_memcached unless @supports_memcached.nil?
-      @supports_memcached = is_linux? && is_appliance? && !is_container? && supports_command?('memcached') && supports_command?('memcached-tool') && supports_command?('service')
-    end
+    EVM_KNOWN_COMMANDS = %w[apachectl nohup service systemctl].freeze
 
     def self.supports_systemd?
       return @supports_systemd unless @supports_systemd.nil?
