@@ -1,3 +1,3 @@
 class DialogFieldTextAreaBox < DialogFieldTextBox
-  AUTOMATE_VALUE_FIELDS = %w[required read_only visible description validator_rule validator_type].freeze
+  AUTOMATE_VALUE_FIELDS = %w[required read_only visible description validator_rule validator_type validator_message].freeze
 end

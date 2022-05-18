@@ -1,5 +1,5 @@
 class DialogFieldTextBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only visible description).freeze
+  AUTOMATE_VALUE_FIELDS = %w[data_type protected required validator_rule validator_type validator_message read_only visible description].freeze
 
   def initialize_value_context
     if @value.blank?

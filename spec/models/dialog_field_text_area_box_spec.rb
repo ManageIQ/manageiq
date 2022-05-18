@@ -4,14 +4,15 @@ RSpec.describe DialogFieldTextAreaBox do
   describe "#normalize_automate_values" do
     let(:automate_hash) do
       {
-        "data_type"      => "datatype",
-        "value"          => value,
-        "protected"      => true,
-        "description"    => "description",
-        "required"       => true,
-        "read_only"      => true,
-        "validator_rule" => "rule",
-        "validator_type" => "regex"
+        "data_type"         => "datatype",
+        "value"             => value,
+        "protected"         => true,
+        "description"       => "description",
+        "required"          => true,
+        "read_only"         => true,
+        "validator_rule"    => "rule",
+        "validator_type"    => "regex",
+        "validator_message" => "message"
       }
     end
 
@@ -34,6 +35,10 @@ RSpec.describe DialogFieldTextAreaBox do
 
       it "sets the validator rule" do
         expect(dialog_field.validator_rule).to eq("rule")
+      end
+
+      it "sets the validator message" do
+        expect(dialog_field.validator_message).to eq("message")
       end
 
       it "sets the required" do
