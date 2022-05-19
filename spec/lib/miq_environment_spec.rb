@@ -11,6 +11,7 @@ RSpec.describe MiqEnvironment do
 
     context "Host Info" do
       example "fully_qualified_domain_name" do
+        skip if RUBY_PLATFORM.include?("darwin")
         expect(described_class.fully_qualified_domain_name).to eq(`hostname -f`.chomp)
       end
 
