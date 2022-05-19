@@ -853,13 +853,13 @@ RSpec.describe ExtManagementSystem do
     it "returns false if block storage is not supported" do
       ems = FactoryBot.create(:ext_management_system)
       stub_supports_not(ems.class, :block_storage)
-      expect(ems.supports_block_storage).to eq(false)
+      expect(ems.supports?(:block_storage)).to eq(false)
     end
 
     it "returns true if block storage is supported" do
       ems = FactoryBot.create(:ext_management_system)
       stub_supports(ems.class, :block_storage)
-      expect(ems.supports_block_storage).to eq(true)
+      expect(ems.supports?(:block_storage)).to eq(true)
     end
   end
 
@@ -933,7 +933,7 @@ RSpec.describe ExtManagementSystem do
 
     it "defaults to false" do
       ems = ExtManagementSystem.new
-      expect(ems.supports_block_storage).to be(false)
+      expect(ems.supports?(:block_storage)).to be(false)
     end
 
     it "detects security group for provider" do
