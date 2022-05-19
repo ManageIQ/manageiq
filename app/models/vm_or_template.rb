@@ -252,7 +252,7 @@ class VmOrTemplate < ApplicationRecord
       return nil if as.nil? || as.value.nil?
 
       return case t
-             when :boolean then ActiveRecord::ConnectionAdapters::Column.value_to_boolean(as.value)
+             when :boolean then ActiveRecord::Type::Boolean.new.cast(as.value)
              when :integer then as.value.to_i
              when :float then as.value.to_f
              else as.value.to_s
