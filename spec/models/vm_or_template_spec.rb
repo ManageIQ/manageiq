@@ -350,6 +350,32 @@ RSpec.describe VmOrTemplate do
       @options = {:hdw_attr => :memory_mb}
     end
 
+    context "#advanced_settings" do
+      describe "#paravirtualization" do
+        context "with no advanced_setting" do
+          it "returns nil" do
+            expect(@vm.paravirtualization).to be_nil
+          end
+        end
+
+        context "with vmi.present 'false'" do
+          before { @vm.advanced_settings.create!(:name => "vmi.present", :value => "false") }
+
+          it "returns false" do
+            expect(@vm.paravirtualization).to be_falsey
+          end
+        end
+
+        context "with vmi.present 'true'" do
+          before { @vm.advanced_settings.create!(:name => "vmi.present", :value => "true") }
+
+          it "returns false" do
+            expect(@vm.paravirtualization).to be_truthy
+          end
+        end
+      end
+    end
+
     it "with no drift states" do
       expect(@vm.reconfigured_hardware_value?(@options)).to be_falsey
     end
