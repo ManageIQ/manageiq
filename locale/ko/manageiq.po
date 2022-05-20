@@ -64545,7 +64545,7 @@ msgstr "서버 프로파일"
 msgid ""
 "Server Profile %{profile} <%{name}> with Id: <%{id}> is not associated with a "
 "provider."
-msgstr "Id: <%{id}>의 서버 프로파일 %{Profile} <%{name}>이(가) 제공자와 연관되지 않았습니다."
+msgstr "Id: <%{id}>의 서버 프로파일 %{profile} <%{name}>이(가) 제공자와 연관되지 않았습니다."
 
 #: ../config/model_display_names.rb:209
 msgid "Server Role"

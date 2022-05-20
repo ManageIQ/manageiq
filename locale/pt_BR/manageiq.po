@@ -66628,7 +66628,7 @@ msgid ""
 "Server Profile %{profile} <%{name}> with Id: <%{id}> is not associated with a "
 "provider."
 msgstr ""
-"O perfil do servidor%{Profile} <%{name}> com ID: <%{id}> não está associado a "
+"O perfil do servidor%{profile} <%{name}> com ID: <%{id}> não está associado a "
 "um provedor."
 
 #: ../config/model_display_names.rb:209
