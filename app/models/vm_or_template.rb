@@ -75,6 +75,8 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :cloud_tenant
   belongs_to                :flavor
 
+  belongs_to                :placement_group
+
   belongs_to                :storage
   belongs_to                :storage_profile
   belongs_to                :ext_management_system, :foreign_key => "ems_id", :inverse_of => :vms_and_templates

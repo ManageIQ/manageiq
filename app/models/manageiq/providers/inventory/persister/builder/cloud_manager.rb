@@ -42,6 +42,10 @@ module ManageIQ::Providers
           )
         end
 
+        def placement_groups
+          add_common_default_values
+        end
+
         def cloud_database_flavors
           add_common_default_values
         end
