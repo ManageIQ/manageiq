@@ -19,6 +19,11 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
+- :name: automate_template_published
+  :message: Template %{subject} has been published.
+  :expires_in: 7.days
+  :level: :success
+  :audience: tenant
 - :name: vm_retired
   :message: Virtual Machine %{subject} has been retired.
   :expires_in: 7.days
