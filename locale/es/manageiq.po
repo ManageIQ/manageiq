@@ -1077,7 +1077,7 @@ msgstr "Se ha cargado el %{image} \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/upload.rb:35
 msgid "%{image} must be a .%{type} file"
-msgstr "%{image} debe ser un archivo .%{type} "
+msgstr "%{image} debe ser un archivo .%{type}"
 
 #: ../app/helpers/generic_object_helper/textual_summary.rb:47
 #: ../app/helpers/generic_object_helper/textual_summary.rb:60
@@ -5092,8 +5092,7 @@ msgstr "El usuario ha cancelado la adición de un nuevo perfil de tiempo."
 
 #: ../app/javascript/components/routers-form/index.jsx:132
 msgid "Adding of Network Router %s has been successfully queued."
-msgstr ""
-"La adición del direccionador de red %s se ha puesto en cola correctamente."
+msgstr "La adición del enrutador de red %s se ha puesto en cola correctamente."
 
 #: ../app/javascript/components/network-routers-interfaces-form/index.jsx:31
 msgid "Adding of interface was cancelled by the user."
@@ -5101,7 +5100,7 @@ msgstr "El usuario ha cancelado la adición de la interfaz."
 
 #: ../app/javascript/components/routers-form/index.jsx:146
 msgid "Adding of new Network Router was cancelled by the user."
-msgstr "El usuario ha cancelado la adición de un nuevo direccionador de red."
+msgstr "El usuario ha cancelado la adición de un nuevo enrutador de red."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:58
 msgid "Adding of new cloud object store container was cancelled by the user."
@@ -30482,13 +30481,11 @@ msgstr "Edición de la zona \"%{name}\""
 msgid ""
 "Editing of Network Router ${initialValues.name} was cancelled by the user."
 msgstr ""
-"El usuario ha cancelado la edición del direccionador de red ${"
-"initialValues.name}."
+"El usuario ha cancelado la edición del enrutador de red ${initialValues.name}."
 
 #: ../app/javascript/components/routers-form/index.jsx:131
 msgid "Editing of Network Router %s has been successfully queued"
-msgstr ""
-"La edición del direccionador de red %s se ha puesto en cola correctamente"
+msgstr "La edición del enrutador de red %s se ha puesto en cola correctamente"
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:26
 msgid ""
@@ -38935,12 +38932,12 @@ msgstr "Icono"
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:52
 msgid "Icon Color"
-msgstr "Color de icono"
+msgstr "Color del icono"
 
 #: ../app/javascript/components/button-group/group-form.schema.js:51
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js:122
 msgid "Icon color"
-msgstr "Color de icono"
+msgstr "Color del icono"
 
 #. TRANSLATORS: file: product/views/CloudDatabase.yaml
 #. TRANSLATORS: file: product/views/ContainerImage.yaml

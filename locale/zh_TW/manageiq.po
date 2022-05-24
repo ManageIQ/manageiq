@@ -39,16 +39,16 @@ msgstr " # 天"
 
 #: ../app/controllers/ems_infra_controller.rb:301
 msgid " %{host_uid_ems} is not a compute node "
-msgstr " %{host_uid_ems} 不是計算節點"
+msgstr " %{host_uid_ems} 不是計算節點 "
 
 #: ../app/controllers/ems_infra_controller.rb:296
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
-msgstr " 必須先退出 %{host_uid_ems}，才能移除它"
+msgstr " 必須先退出 %{host_uid_ems}，才能移除它 "
 
 #: ../app/controllers/ems_infra_controller.rb:291
 msgid ""
 " %{host_uid_ems} needs to be in maintenance mode before it can be removed "
-msgstr " %{host_uid_ems} 必須處於維護模式，才能移除它"
+msgstr " %{host_uid_ems} 必須處於維護模式，才能移除它 "
 
 #: ../app/controllers/ems_infra_controller.rb:84
 msgid " %{name} from %{value} to %{parameters} "
@@ -170,7 +170,7 @@ msgstr " ID 為 <%{id}> 的伺服器 %{server} <%{name}> 與提供者不關聯�
 
 #: ../app/views/vm_common/_reconfigure.html.haml:295
 msgid " Add "
-msgstr " 新增"
+msgstr " 新增 "
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:7004
@@ -188,7 +188,7 @@ msgstr " 天"
 
 #: ../app/helpers/miq_policy_helper.rb:5
 msgid " Days"
-msgstr " 天"
+msgstr " 星期"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
 #: ../config/yaml_strings.rb:5632
@@ -206,7 +206,7 @@ msgstr " 小時"
 
 #: ../app/helpers/miq_policy_helper.rb:4
 msgid " Hours"
-msgstr " 時"
+msgstr " 小時"
 
 #: ../app/javascript/components/dashboard-widgets/widget-chart/index.jsx:15
 #: ../app/javascript/components/dashboard-widgets/widget-report/index.jsx:14
@@ -275,7 +275,7 @@ msgstr " 需要有效的記憶體值"
 
 #: ../app/views/ops/_tenant_quota_form.html.haml:42
 msgid " Valid numeric quota value required "
-msgstr " 需要有效的數值配額值"
+msgstr " 需要有效的數值配額值 "
 
 #: ../app/helpers/miq_policy_helper.rb:6
 msgid " Week"
@@ -3368,7 +3368,7 @@ msgstr "新增（手動輸入）"
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:56
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:60
 msgid "Add All"
-msgstr "全部新增"
+msgstr "新增全部"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1062
@@ -3567,7 +3567,7 @@ msgstr "新增雲端網路"
 
 #: ../app/controllers/cloud_network_controller.rb:62
 msgid "Add New Cloud Network "
-msgstr "新增雲端網路"
+msgstr "新增雲端網路 "
 
 #: ../app/controllers/cloud_object_store_container_controller.rb:53
 msgid "Add New Cloud Object Store Container"
@@ -3592,7 +3592,7 @@ msgstr "新增浮動 IP"
 
 #: ../app/controllers/floating_ip_controller.rb:63
 msgid "Add New Floating IP "
-msgstr "新增浮動 IP"
+msgstr "新增浮動 IP "
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:60
 msgid "Add New Key Pair"
@@ -3612,7 +3612,7 @@ msgstr "新增安全群組"
 
 #: ../app/controllers/security_group_controller.rb:72
 msgid "Add New Security Group "
-msgstr "新增安全群組"
+msgstr "新增安全群組 "
 
 #: ../app/controllers/cloud_subnet_controller.rb:44
 msgid "Add New Subnet"
@@ -6180,15 +6180,15 @@ msgstr "應用裝置名稱"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb:854
 msgid "Appliance Operation"
-msgstr "軟體驅動裝置作業"
+msgstr "應用裝置作業"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:70
 msgid "Appliance Time Zone"
-msgstr "軟體驅動裝置時區"
+msgstr "應用裝置時區"
 
 #: ../app/controllers/ops_controller/settings/common.rb:478
 msgid "Appliance name must be entered."
-msgstr "必須輸入軟體驅動裝置名稱。"
+msgstr "必須輸入應用裝置名稱。"
 
 #: ../app/views/dashboard/login.html.haml:123
 msgid "Appliance:"
@@ -6207,7 +6207,7 @@ msgstr "應用程式啟動程式"
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
 #: ../config/yaml_strings.rb:6623
 msgid "Application Name"
-msgstr "應用程式名稱 "
+msgstr "應用程式名稱"
 
 #: ../app/presenters/menu/default_menu.rb:238
 msgid "Application Settings"
@@ -9361,7 +9361,7 @@ msgstr "CPU - 收集間隔 30 天最大值的子 VM 的聚集使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6486
 msgid "CPU - Aggressive "
-msgstr "CPU - 激進"
+msgstr "CPU - 激進 "
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb:2114
@@ -9442,7 +9442,7 @@ msgstr "CPU - 收集間隔內最小使用情形 (%)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6492
 msgid "CPU - Moderate "
-msgstr "CPU - 中等"
+msgstr "CPU - 中等 "
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
 #: ../config/dictionary_strings.rb:2228
@@ -12294,7 +12294,7 @@ msgstr "雲端認證"
 msgid ""
 "Cloud Credential '%{cloud_credential_name}' doesn't exist in the appliance "
 "please add this credential and retry the import."
-msgstr "雲端認證 '%{cloud_credential_name}' 不存在於軟體驅動裝置中，請新增此認證，然後重試匯入。"
+msgstr "雲端認證 '%{cloud_credential_name}' 不存在於應用裝置中，請新增此認證，然後重試匯入。"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/cloud_database.rb:13
@@ -13791,7 +13791,7 @@ msgstr "叢集至主機的親緣性"
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
 msgid "Cluster: "
-msgstr "叢集："
+msgstr "叢集： "
 
 #: ../app/presenters/tree_node/ems_cluster.rb:3
 msgid "Cluster: %{name}"
@@ -18249,7 +18249,7 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:1202
 msgid "ContainerTemplateParameter|Required"
-msgstr "必要"
+msgstr "ContainerTemplateParameter|必要"
 
 #: ../config/model_attributes.rb:1203
 msgid "ContainerTemplateParameter|Value"
@@ -19802,7 +19802,7 @@ msgstr "認證"
 msgid ""
 "Credential '%{credential_name}' doesn't exist in the appliance, please add "
 "this credential and retry the import."
-msgstr "認證 '%{credential_name}' 不存在於軟體驅動裝置中，請新增此認證，然後重試匯入。"
+msgstr "認證 '%{credential_name}' 不存在於應用裝置中，請新增此認證，然後重試匯入。"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/amazon_credential.rb:35
@@ -21174,7 +21174,7 @@ msgstr "虛擬機器的資料儲存庫摘要"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:35
 msgid "Datastore Type"
-msgstr "資料儲存庫類型 "
+msgstr "資料儲存庫類型"
 
 #. TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 #: ../config/yaml_strings.rb:1819
@@ -21386,7 +21386,7 @@ msgstr "日期/時間值不得為空白"
 
 #: ../app/javascript/oldjs/miq_timeline.js:41
 msgid "Date: "
-msgstr "日期："
+msgstr "日期： "
 
 #: ./dist/js/ui-components.js:1
 msgid "Datepicker"
@@ -25864,12 +25864,12 @@ msgstr "解除浮動 IP 與實例 '%{name}' 的關聯"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:113
 msgid "Distributed "
-msgstr "分散式"
+msgstr "分散式 "
 
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #: ../config/yaml_strings.rb:5293
 msgid "Distribution"
-msgstr "發行套件"
+msgstr "配送"
 
 #. TRANSLATORS: en.yml key: dictionary.column.divisible
 #: ../config/dictionary_strings.rb:772
@@ -25925,7 +25925,7 @@ msgstr "文件"
 #: ../app/views/ops/_settings_server_tab.html.haml:146
 #: ../config/yaml_strings.rb:167
 msgid "Domain"
-msgstr "領域"
+msgstr "網域"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager.rb:123
 #: ../app/models/manageiq/providers/openstack/infra_manager.rb:54
@@ -25981,7 +25981,7 @@ msgstr "按兩下「新建資料夾」來編輯"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "已關閉"
+msgstr "關閉"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -33930,7 +33930,7 @@ msgstr "專用處理器的格式為「正整數」"
 
 #: ../app/views/support/show.html.haml:23
 msgid "For questions or problem reporting, visit "
-msgstr "慾了解問題或問題報告，造訪"
+msgstr "慾了解問題或問題報告，造訪 "
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:163
@@ -37084,7 +37084,7 @@ msgstr "每小時計時器"
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:88
 #: ../app/javascript/oldjs/components/datetime-delay-picker.js:34
 msgid "Hours"
-msgstr "時"
+msgstr "小時"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:99
@@ -38624,7 +38624,7 @@ msgstr "是範本"
 #. TRANSLATORS: en.yml key: dictionary.column.is_evm_appliance
 #: ../config/dictionary_strings.rb:1046
 msgid "Is an EVM Appliance?"
-msgstr "是否為 EVM 軟體驅動裝置？"
+msgstr "是否為 EVM 應用裝置？"
 
 #. TRANSLATORS: en.yml key: dictionary.column.iscsi_iqn
 #: ../config/dictionary_strings.rb:1052
@@ -40185,27 +40185,27 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:2227
 msgid "LoadBalancer|Retired"
-msgstr "已退休"
+msgstr "LoadBalancer|已淘汰"
 
 #: ../config/model_attributes.rb:2228
 msgid "LoadBalancer|Retirement last warn"
-msgstr "退休前次警告"
+msgstr "LoadBalancer|淘汰前次警告"
 
 #: ../config/model_attributes.rb:2229
 msgid "LoadBalancer|Retirement requester"
-msgstr "退休要求者"
+msgstr "LoadBalancer|淘汰要求者"
 
 #: ../config/model_attributes.rb:2230
 msgid "LoadBalancer|Retirement state"
-msgstr "退休狀態"
+msgstr "LoadBalancer|淘汰狀態"
 
 #: ../config/model_attributes.rb:2231
 msgid "LoadBalancer|Retirement warn"
-msgstr "退休警告"
+msgstr "LoadBalancer|淘汰警告"
 
 #: ../config/model_attributes.rb:2232
 msgid "LoadBalancer|Retires on"
-msgstr "退休時間"
+msgstr "LoadBalancer|淘汰於"
 
 #: ../config/model_attributes.rb:2233
 msgid "LoadBalancer|Total vms"
@@ -41547,7 +41547,7 @@ msgstr "一段時間的記憶體使用情況絕對低平均值"
 #: ../app/views/vm_common/_right_size.html.haml:202
 #: ../config/yaml_strings.rb:993
 msgid "Memory"
-msgstr "記憶體 "
+msgstr "記憶體"
 
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #: ../config/yaml_strings.rb:1605
@@ -42157,7 +42157,7 @@ msgstr "記憶體用量"
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/090_Projects by Memory Usage.yaml
 #: ../config/yaml_strings.rb:6382
 msgid "Memory Usage (%)"
-msgstr "記憶體用量 (%)\t\t  "
+msgstr "記憶體用量 (%)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.memory_used_metric
 #. TRANSLATORS: file: product/charts/miq_reports/vm_chargeback.yaml
@@ -49251,7 +49251,7 @@ msgstr "永不驗證"
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:6
 #: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml:6
 msgid "New "
-msgstr "建立"
+msgstr "建立 "
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:59
 msgid "New Alert Profile \"%s\" has been successfully queued."
@@ -50052,7 +50052,7 @@ msgstr "找不到漂移歷程，可能需要對此 VM 執行分析或虛擬黑�
 
 #: ../app/javascript/components/miq-structured-list/index.jsx:213
 msgid "No entries found for ${title.toLowerCase()}"
-msgstr "找不到 ${title.toLowerCase()} 的項目"
+msgstr "找不到「${title.toLowerCase()}」的項目"
 
 #: ../app/models/mixins/miq_policy_mixin.rb:118
 #: ../app/models/mixins/miq_policy_mixin.rb:143
@@ -51924,7 +51924,7 @@ msgstr "編排堆疊淘汰"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:633
 msgid "Orchestration Stack Retire Request"
-msgstr "編排堆疊撤銷要求"
+msgstr "編排堆疊淘汰要求"
 
 #: ../app/helpers/application_helper/button/orchestration_stack_retire_now.rb:5
 msgid "Orchestration Stack is already retired"
@@ -52222,27 +52222,27 @@ msgstr "資源群組"
 
 #: ../config/model_attributes.rb:3570
 msgid "OrchestrationStack|Retired"
-msgstr "已退休"
+msgstr "OrchestrationStack|已淘汰"
 
 #: ../config/model_attributes.rb:3571
 msgid "OrchestrationStack|Retirement last warn"
-msgstr "退休前次警告"
+msgstr "OrchestrationStack|淘汰前次警告"
 
 #: ../config/model_attributes.rb:3572
 msgid "OrchestrationStack|Retirement requester"
-msgstr "退休要求者"
+msgstr "OrchestrationStack|淘汰要求者"
 
 #: ../config/model_attributes.rb:3573
 msgid "OrchestrationStack|Retirement state"
-msgstr "退休狀況"
+msgstr "OrchestrationStack|淘汰狀況"
 
 #: ../config/model_attributes.rb:3574
 msgid "OrchestrationStack|Retirement warn"
-msgstr "退休警告"
+msgstr "OrchestrationStack|淘汰警告"
 
 #: ../config/model_attributes.rb:3575
 msgid "OrchestrationStack|Retires on"
-msgstr "退休時間"
+msgstr "OrchestrationStack|淘汰於"
 
 #: ../config/model_attributes.rb:3576
 msgid "OrchestrationStack|Start time"
@@ -54818,7 +54818,7 @@ msgstr "Pin 狀態"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:83
 msgid "Placement"
-msgstr "佈置"
+msgstr "放置"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:139
 msgid "Placement - Options"
@@ -55905,7 +55905,7 @@ msgstr "除非已選取至少 1 個欄位，否則「預覽」標籤無法使用
 #: ../app/views/layouts/_paging_bar.html.haml:19
 #: ../app/views/layouts/_paging_bar.html.haml:20
 msgid "Previous"
-msgstr "上一個"
+msgstr "上一步"
 
 #. TRANSLATORS: en.yml key: dictionary.column.previous_state
 #: ../config/dictionary_strings.rb:1628
@@ -56739,7 +56739,7 @@ msgstr "提供者："
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
 msgid "Provider: "
-msgstr "提供者："
+msgstr "提供者： "
 
 #: ../config/model_attributes.rb:3821
 msgid "ProviderTagMapping|Href slug"
@@ -57661,7 +57661,7 @@ msgstr "重新檢查所選雲端提供者的鑑別狀態"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:113
 msgid "Re-check Authentication Status for the selected Containers Providers "
-msgstr "重新檢查所選儲存器提供者的鑑別狀態"
+msgstr "重新檢查所選儲存器提供者的鑑別狀態 "
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:101
 msgid ""
@@ -58646,13 +58646,13 @@ msgstr "重新整理與這些主機起始器叢集相關之所有項目的關係
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators Cluster?"
-msgstr "是否重新整理與這些主機起始器叢集相關的所有項目的關係和電源狀態？"
+msgstr "要重新整理與這些「主機起始器叢集」相關的所有項目的關係和電源狀態？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:19
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators?"
-msgstr "重新整理與這些主機起始器相關之所有項目的關係和電源狀態？"
+msgstr "要重新整理與這些「主機起始器」相關的所有項目的關係和電源狀態？"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:14
 msgid ""
@@ -60431,7 +60431,7 @@ msgstr "從庫存中移除此資源儲存區"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:221
 msgid "Remove this Retirement Entry Point"
-msgstr "移除此項目點"
+msgstr "移除此淘汰進入點"
 
 #:
 #: ../app/helpers/helper/manageiq/providers/nsxt/toolbar_overrides/security_group_center.rb:34
@@ -60802,8 +60802,7 @@ msgid ""
 "this repo into this appliance and retry the import. If the repository has been"
 " deleted this import will never succeed."
 msgstr ""
-"在資料庫中找不到儲存庫 '%{repository_name}'。請嘗試將此儲存庫匯入此軟體驅動裝置中，然後重試匯入。如果儲存庫已遭刪除，"
-"則此匯入永遠不會成功。"
+"在資料庫中找不到儲存庫 '%{repository_name}'。請嘗試將此儲存庫匯入此應用裝置中，然後重試匯入。如果儲存庫已遭刪除，則此匯入永遠不會成功。"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource
 #:
@@ -61966,11 +61965,11 @@ msgstr "淘汰 %{name}"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3644
 msgid "Retire Instances"
-msgstr "退休實例"
+msgstr "淘汰實例"
 
 #: ../app/models/miq_template/operations.rb:11
 msgid "Retire Operation is not available for Images and VM Templates."
-msgstr "「撤銷作業」無法用於「映像檔」和「VM 範本」。"
+msgstr "「淘汰作業」無法用於「映像檔」和「VM 範本」。"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:17
 msgid "Retire Orchestration Stack"
@@ -61983,7 +61982,7 @@ msgstr "淘汰服務"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1164
 msgid "Retire Services"
-msgstr "服務退休"
+msgstr "淘汰服務"
 
 #: ../app/models/miq_retire_task.rb:89
 msgid "Retire Task"
@@ -62006,11 +62005,11 @@ msgstr "淘汰虛擬機器"
 
 #: ../app/models/vm/operations/lifecycle.rb:7
 msgid "Retire not supported because VM is archived"
-msgstr "不支援撤銷，因為 VM 已保存"
+msgstr "不支援淘汰，因為 VM 已保存"
 
 #: ../app/models/vm/operations/lifecycle.rb:6
 msgid "Retire not supported because VM is orphaned"
-msgstr "不支援撤銷，因為 VM 孤立"
+msgstr "不支援淘汰，因為 VM 孤立"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:64
 msgid "Retire selected Orchestration Stacks"
@@ -62080,7 +62079,7 @@ msgstr "已淘汰的服務"
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6087
 msgid "Retired?"
-msgstr "已退休？"
+msgstr "已淘汰？"
 
 #: ../app/controllers/application_controller/ci_processing.rb:390
 #: ../app/helpers/application_helper/tasks.rb:14
@@ -62118,12 +62117,12 @@ msgstr "淘汰資訊"
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_last_warn
 #: ../config/dictionary_strings.rb:1758
 msgid "Retirement Last Warn"
-msgstr "退休前次警告"
+msgstr "淘汰前次警告"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_requester
 #: ../config/dictionary_strings.rb:1760
 msgid "Retirement Requester"
-msgstr "退休要求者"
+msgstr "淘汰要求者"
 
 #: ../app/helpers/service_helper/textual_summary.rb:146
 #: ../app/helpers/vm_helper/textual_summary.rb:209
@@ -62133,12 +62132,12 @@ msgstr "淘汰狀態"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:80
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:94
 msgid "Retirement Time"
-msgstr "撤銷時間"
+msgstr "淘汰時間"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_warn
 #: ../config/dictionary_strings.rb:1764
 msgid "Retirement Warn"
-msgstr "退休警告"
+msgstr "淘汰警告"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:111
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:131
@@ -62148,7 +62147,7 @@ msgstr "淘汰警告"
 
 #: ../app/javascript/components/retirement-form/index.jsx:75
 msgid "Retirement date removed"
-msgstr "已移除汰舊日期"
+msgstr "已移除淘汰日期"
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
 msgid "Retirement date set to ${tempDate.toLocaleString()}"
@@ -62162,7 +62161,7 @@ msgstr "停用日期設為 ${tempDate.toLocaleString()}"
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
 #: ../config/dictionary_strings.rb:1766 ../config/yaml_strings.rb:5382
 msgid "Retires On"
-msgstr "退休時間"
+msgstr "淘汰於"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4110
@@ -63778,12 +63777,12 @@ msgstr "全選"
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:50
 msgid "Select All Days"
-msgstr "選取所有日期"
+msgstr "選取所有日子"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:92
 msgid "Select All Hours"
-msgstr "選取所有時數"
+msgstr "選取所有小時"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:301
 msgid "Select Ceilometer if eventing is not enabled on AMQP."
@@ -64073,7 +64072,7 @@ msgstr "選取貨幣"
 
 #: ../app/views/chargeback_rate/_form.html.haml:39
 msgid "Select currency: "
-msgstr "選取貨幣："
+msgstr "選取貨幣： "
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:128
 msgid "Select domain you wish to import from:"
@@ -64399,7 +64398,7 @@ msgstr "伺服器 \"%{name}\"：刪除成功"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:484
 msgid "Server \"%{name}\": Error during 'destroy': "
-msgstr "伺服器 \"%{name}\"：在「毀損」期間發生錯誤："
+msgstr "伺服器 \"%{name}\"：在「毀損」期間發生錯誤： "
 
 #: ../app/helpers/application_helper/button/delete_server.rb:6
 msgid ""
@@ -64870,17 +64869,17 @@ msgstr "服務淘汰"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:605
 msgid "Service Retire Request"
-msgstr "服務撤銷要求"
+msgstr "服務淘汰要求"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:598
 msgid "Service Retired"
-msgstr "服務已撤銷"
+msgstr "服務已淘汰"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:609
 msgid "Service Retirement Warning"
-msgstr "服務撤銷警告"
+msgstr "服務淘汰警告"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
 #: ../config/yaml_strings.rb:6011
@@ -65629,27 +65628,27 @@ msgstr "地區號碼"
 
 #: ../config/model_attributes.rb:4136
 msgid "Service|Retired"
-msgstr "已退休"
+msgstr "服務|已淘汰"
 
 #: ../config/model_attributes.rb:4137
 msgid "Service|Retirement last warn"
-msgstr "退休前次警告"
+msgstr "服務|淘汰前次警告"
 
 #: ../config/model_attributes.rb:4138
 msgid "Service|Retirement requester"
-msgstr "退休要求者"
+msgstr "服務|淘汰要求者"
 
 #: ../config/model_attributes.rb:4139
 msgid "Service|Retirement state"
-msgstr "退休狀態"
+msgstr "服務|淘汰狀況"
 
 #: ../config/model_attributes.rb:4140
 msgid "Service|Retirement warn"
-msgstr "退休警告"
+msgstr "服務|淘汰警告"
 
 #: ../config/model_attributes.rb:4141
 msgid "Service|Retires on"
-msgstr "退休時間"
+msgstr "服務|淘汰於"
 
 #: ../config/model_attributes.rb:4143
 msgid "Service|V total vms"
@@ -66170,7 +66169,7 @@ msgstr "擱置此實例？"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4573
 msgid "Shopping Cart"
-msgstr "購物車  "
+msgstr "購物車"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4575
@@ -68501,11 +68500,11 @@ msgstr "狀態原因"
 
 #: ../app/views/ops/_zone_tree.html.haml:5
 msgid "Status of Regional Roles for Servers in %{kind} %{description}"
-msgstr "%{kind} %{description} 中伺服器的地區角色狀態 "
+msgstr "%{kind} %{description} 中伺服器的地區角色狀態"
 
 #: ../app/views/ops/_zone_tree.html.haml:7
 msgid "Status of Roles for Servers in %{kind} %{description}"
-msgstr "%{kind} %{description} 中伺服器的角色狀態 "
+msgstr "%{kind} %{description} 中伺服器的角色狀態"
 
 #. TRANSLATORS: en.yml key: dictionary.column.stdout
 #: ../config/dictionary_strings.rb:1858
@@ -69854,7 +69853,7 @@ msgstr "交換器 UUID"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:117
 msgid "Switch: "
-msgstr "交換器："
+msgstr "交換器： "
 
 #: ../app/presenters/tree_node/switch.rb:3
 msgid "Switch: %{name}"
@@ -71587,7 +71586,7 @@ msgstr "應該至少有 2 個儀表板才能編輯順序"
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:186
 msgid "There was an error editing this dialog: "
-msgstr "編輯這個對話框時發生錯誤："
+msgstr "編輯這個對話框時發生錯誤： "
 
 #: ../app/controllers/application_controller.rb:1521
 msgid "These VMs can not be migrated together."
@@ -71824,7 +71823,7 @@ msgstr "無法取消此作業"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:9
 msgid "This user is limited to "
-msgstr "此使用者限制為"
+msgstr "此使用者限制為 "
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:27
 msgid "This user is limited to items with the selected tags."
@@ -72172,7 +72171,7 @@ msgstr "如果要重設回範本的設定或刪除設定，請將值設為 <<res
 
 #: ../app/helpers/miq_task_helper.rb:3 ../app/helpers/view_helper.rb:78
 msgid "Today"
-msgstr "當天"
+msgstr "今天"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:217
 msgid "Today (partial)"
@@ -73223,7 +73222,7 @@ msgstr "無法 %{action} %{resource}：%{details}"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:84
 msgid "Unable to add Repository "
-msgstr "無法新增儲存庫"
+msgstr "無法新增儲存庫 "
 
 #: ../app/controllers/mixins/actions/vm_actions/add_security_group.rb:17
 msgid "Unable to add Security Group to Instance \"%{name}\": %{details}"
@@ -75680,22 +75679,22 @@ msgstr "VM 淘汰"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:416
 msgid "VM Retire Request"
-msgstr "VM 撤銷要求"
+msgstr "VM 淘汰要求"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:412
 msgid "VM Retired"
-msgstr "已撤銷 VM"
+msgstr "已淘汰 VM"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:420
 msgid "VM Retirement Warning"
-msgstr "VM 撤銷警告"
+msgstr "VM 淘汰警告"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6089
 msgid "VM Retires On"
-msgstr "虛擬機器退休時間"
+msgstr "虛擬機器淘汰於"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6800
@@ -75999,7 +75998,7 @@ msgstr "VM 的母項太多。"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6765
 msgid "VM is Retired?"
-msgstr "虛擬機器已退休？"
+msgstr "虛擬機器已淘汰？"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6085
@@ -76013,7 +76012,7 @@ msgstr "已淘汰 VM"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4519
 msgid "VM operations"
-msgstr "虛擬機器作業"
+msgstr "VM 作業"
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
 #: ../app/models/vm_or_template.rb:1688 ../config/dictionary_strings.rb:3810
@@ -76224,8 +76223,8 @@ msgid ""
 "that:\n  1) Direct LUNs are attached to ManageIQ appliance\n  2) Management "
 "Relationship is set for the ManageIQ appliance"
 msgstr ""
-"除非透過 SmartProxy 親緣性置換，否則必須從其主機連接至與 VM 相同的儲存體的 EVM 伺服器中掃描 VM。\n  請驗證：\n  1) 直接 "
-"LUN 已連接至 ManageIQ 軟體驅動裝置\n  2) 已為 ManageIQ 軟體驅動裝置設定管理關係"
+"除非透過 SmartProxy 親緣性置換，否則必須從其主機連接至與 VM 相同的儲存體的 EVM 伺服器中掃描 VM。\n  請驗證：  1) 直接 "
+"LUN 已連接至 ManageIQ 應用裝置  2) 已為 ManageIQ 應用裝置設定管理關係"
 
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
 #: ../config/yaml_strings.rb:6580
@@ -76240,22 +76239,22 @@ msgstr "資料儲存庫上未登錄到主機的虛擬機器"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 #: ../config/yaml_strings.rb:6762
 msgid "VMs pending Retirement"
-msgstr "擱置退休的虛擬機器"
+msgstr "擱置淘汰的虛擬機器"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6775
 msgid "VMs that are Retired"
-msgstr "已退休的虛擬機器"
+msgstr "已淘汰的虛擬機器"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 #: ../config/yaml_strings.rb:6760
 msgid "VMs that are pending Retirement"
-msgstr "擱置退休的虛擬機器"
+msgstr "擱置淘汰的虛擬機器"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6773
 msgid "VMs that have been Retired (past retirement date)"
-msgstr "已退休的虛擬機器（已過淘汰日期）"
+msgstr "已淘汰的虛擬機器（已過淘汰日期）"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
 #: ../config/yaml_strings.rb:5563
@@ -76761,7 +76760,7 @@ msgstr "儲存庫認證"
 msgid ""
 "Vault Credential '%{vault_credential_name}' doesn't exist in the appliance "
 "please add this credential and retry the import."
-msgstr "儲存庫認證 '%{vault_credential_name}' 不存在於軟體驅動裝置中，請新增此認證，然後重試匯入。"
+msgstr "儲存庫認證 '%{vault_credential_name}' 不存在於應用裝置中，請新增此認證，然後重試匯入。"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/vault_credential.rb:7
@@ -78654,7 +78653,7 @@ msgstr "IP 位址"
 
 #: ../config/model_attributes.rb:4689
 msgid "VmOrTemplate|Is evm appliance"
-msgstr "是否為 evm 軟體驅動裝置"
+msgstr "是否為 evm 應用裝置"
 
 #: ../config/model_attributes.rb:4690
 msgid "VmOrTemplate|Last compliance status"
@@ -78999,19 +78998,19 @@ msgstr "已淘汰"
 
 #: ../config/model_attributes.rb:4773
 msgid "VmOrTemplate|Retirement last warn"
-msgstr "退休前次警告"
+msgstr "VmOrTemplate|淘汰前次警告"
 
 #: ../config/model_attributes.rb:4774
 msgid "VmOrTemplate|Retirement requester"
-msgstr "退休要求者"
+msgstr "VmOrTemplate|淘汰要求者"
 
 #: ../config/model_attributes.rb:4775
 msgid "VmOrTemplate|Retirement state"
-msgstr "退休狀況"
+msgstr "VmOrTemplate|淘汰狀況"
 
 #: ../config/model_attributes.rb:4776
 msgid "VmOrTemplate|Retirement warn"
-msgstr "退休警告"
+msgstr "VmOrTemplate|淘汰警告"
 
 #: ../config/model_attributes.rb:4777
 msgid "VmOrTemplate|Retires on"
@@ -81513,7 +81512,7 @@ msgstr "extmanagementsystem_compliance_passed"
 #: ../app/views/miq_request/_prov_vm_grid.html.haml:83
 #: ../app/views/report/_form_styling.html.haml:58
 msgid "false"
-msgstr "false "
+msgstr "false"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:253
 msgid "fatal"
@@ -82170,7 +82169,7 @@ msgstr "primary"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:15
 msgid "primary, "
-msgstr "主要，"
+msgstr "主要， "
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb:102
@@ -82592,7 +82591,7 @@ msgstr "次要"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:17
 msgid "secondary, "
-msgstr "次要，"
+msgstr "次要， "
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:81
 msgid "selected to copy"
@@ -82643,7 +82642,7 @@ msgstr "%{name} ID [%{number}] 的大小不正確"
 
 #: src/report-editor/charts-warning.jsx:15
 msgid "sort field from Summary tab "
-msgstr "「摘要」標籤的排序欄位"
+msgstr "「摘要」標籤的排序欄位 "
 
 #: ../app/models/log_file.rb:239
 msgid "started? not implemented for %{server_name}"
@@ -82745,7 +82744,7 @@ msgstr "至頂端"
 #: ../app/views/miq_request/_prov_vm_grid.html.haml:83
 #: ../app/views/report/_form_styling.html.haml:58
 msgid "true"
-msgstr "True"
+msgstr "true"
 
 #: ../app/javascript/oldjs/miq_application.js:70
 msgid "true/false"
@@ -82827,12 +82826,12 @@ msgstr "不明區域 %{zone_name}"
 #: ../app/views/ops/_selected_by_roles.html.haml:16
 #: ../app/views/ops/_selected_by_servers.html.haml:96
 msgid "unlimited"
-msgstr "unlimited"
+msgstr "無限"
 
 #: ../app/views/report/_column_lists.html.haml:26
 #: ../app/views/report/_column_lists.html.haml:58
 msgid "up"
-msgstr "up"
+msgstr "作用"
 
 #: ../app/models/host_aggregate.rb:66
 msgid "update_aggregate must be implemented in a subclass"

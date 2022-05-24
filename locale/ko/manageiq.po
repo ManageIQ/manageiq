@@ -570,7 +570,7 @@ msgstr[0] "%{amount}개의 Ansible Tower 작업에 태그가 지정됨"
 #: ../app/views/layouts/_tag_edit_items.html.haml:9
 msgid "%{amount} Automation Manager (Ansible Tower) Being Tagged"
 msgid_plural "%{amount} Automation Managers (Ansible Tower) Being Tagged"
-msgstr[0] "%{amount}개의 자동화 관리자(Ansible Tower)에 태그가 지정됨"
+msgstr[0] "%{amount}개의 자동화 관리자자(Ansible Tower)에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:11
 msgid "%{amount} Availability Zone Being Tagged"
@@ -765,7 +765,7 @@ msgstr[0] "%{amount}개의 오케스트레이션 템플리트에 태그가 지�
 #: ../app/views/layouts/_tag_edit_items.html.haml:87
 msgid "%{amount} PXE Server Being Tagged"
 msgid_plural "%{amount} PXE Servers Being Tagged"
-msgstr[0] "%{amount}개의 Pxe 서버에 태그가 지정됨"
+msgstr[0] "%{amount}개의 PXE 서버에 태그가 지정됨"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:89
 msgid "%{amount} Persistent Volume Being Tagged"
@@ -1328,7 +1328,7 @@ msgstr "%{number}"
 #: ../app/helpers/storage_helper/textual_summary.rb:152
 msgid "%{number} (%{percentage} of Used Space, %{amount} file)"
 msgid_plural "%{number} (%{percentage} of Used Space, %{amount} files)"
-msgstr[0] "%{number}(%{percentage}의 사용된 공간, %{amount}개의 파일)"
+msgstr[0] "%{number} (%{percentage}의 사용된 공간, %{amount}개의 파일)"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:119
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:126
@@ -1582,7 +1582,7 @@ msgstr[0] "%{count}개의 제공자에 대한 %{task}이(가) 시작되었습니
 msgid "%{task} initiated for %{number} %{model} from the %{product} Database"
 msgid_plural ""
 "%{task} initiated for %{number} %{models} from the %{product} Database"
-msgstr[0] "%{product} 데이터베이스에서 %{number}개의 %{models}에 대한 %{task}이(가) 시작되었습니다."
+msgstr[0] "%{product} 데이터베이스에서 %{number}개의 %{model}에 대한 %{task}이(가) 시작되었습니다."
 
 #: ../app/models/miq_request.rb:422 ../app/models/miq_request_task.rb:132
 msgid "%{task} request has already been processed"
@@ -3831,7 +3831,7 @@ msgstr "그룹 추가"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4114
 msgid "Add a Host Initiator"
-msgstr "호스트 개시자 추가"
+msgstr "호스트 이니시에이터 추가"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4136
@@ -6579,11 +6579,11 @@ msgstr "이 구역을 삭제하시겠습니까?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:34
 msgid "Are you sure you want to delete this host initiator?"
-msgstr "이 호스트 개시자를 삭제하시겠습니까?"
+msgstr "이 호스트 이니시에이터를 삭제하시겠습니까?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:42
 msgid "Are you sure you want to delete this host initiators?"
-msgstr "이 호스트 개시자를 삭제하시겠습니까?"
+msgstr "이 호스트 이니시에이터를 삭제하시겠습니까?"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:42
 msgid "Are you sure you want to delete this item and all of it's children?"
@@ -15952,7 +15952,7 @@ msgstr "컨테이너 프로젝트"
 #: ../app/models/manageiq/providers/amazon/container_manager.rb:27
 msgid "Container Provider (Amazon)"
 msgid_plural "Container Providers (Amazon)"
-msgstr[0] "컨테이너 제공자"
+msgstr[0] "컨테이너 제공자(Amazon)"
 
 #: ../app/models/manageiq/providers/azure/container_manager.rb:27
 msgid "Container Provider (Azure)"
@@ -21416,7 +21416,7 @@ msgstr "날짜: "
 
 #: ./dist/js/ui-components.js:1
 msgid "Datepicker"
-msgstr "Datepicker"
+msgstr "날짜 선택기"
 
 #: ../app/helpers/report_helper/timer.rb:3
 #: ../app/javascript/oldjs/miq_formatters.js:262
@@ -21732,7 +21732,7 @@ msgstr "범위 정의"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:25
 msgid "Define a new host initiator"
-msgstr "새 호스트 개시자 정의"
+msgstr "새 호스트 이니시에이터 정의"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:25
 msgid "Define a new volume mapping"
@@ -21740,7 +21740,7 @@ msgstr "새 볼륨 맵핑 정의"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:29
 msgid "Defining of Host initiator \"%s\" has been successfully queued."
-msgstr "호스트 개시자 \"%s\"의 정의가 큐에 지정되었습니다."
+msgstr "호스트 이니시에이터 \"%s\"의 정의가 큐에 지정되었습니다."
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:17
 msgid "Defining of a new Volume mapping has been successfully queued."
@@ -22441,7 +22441,7 @@ msgstr "이름이 %{filter}인 %{model} 필터 삭제?"
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:25
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:32
 msgid "Delete the Host Initiator"
-msgstr "호스트 개시자 삭제"
+msgstr "호스트 이니시에이터 삭제"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:33
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
@@ -24892,7 +24892,7 @@ msgstr "개별 호스트 이니시에이터 그룹 표시"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4100
 msgid "Display Individual Host Initiators"
-msgstr "개별 호스트 개시자 표시"
+msgstr "개별 호스트 이니시에이터 표시"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1607
@@ -25372,7 +25372,7 @@ msgstr "호스트 이니시에이터 그룹 목록 표시"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4098
 msgid "Display Lists of Host Initiators"
-msgstr "호스트 개시자 목록 표시"
+msgstr "호스트 이니시에이터 목록 표시"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1605
@@ -27095,7 +27095,7 @@ msgstr "선택한 물리적 인프라 제공자 편집"
 
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:34
 msgid "Edit Selected Provider"
-msgstr "선택된 제공자 편집"
+msgstr "선택한 제공자 편집"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:16
 msgid "Edit Selected Service"
@@ -27858,7 +27858,7 @@ msgstr "호스트 이니시에이터 그룹의 태그 편집"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4106
 msgid "Edit Tags of Host Initiators"
-msgstr "호스트 개시자 태그 편집"
+msgstr "호스트 이니시에이터 태그 편집"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1506
@@ -29319,7 +29319,7 @@ msgstr "이메일이 올바른 이메일 주소여야 합니다."
 
 #: ../app/presenters/menu/default_menu.rb:201
 msgid "Embedded Ansible"
-msgstr "Embedded Ansible"
+msgstr "임베디드 Ansible"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:37
 msgid "Embedded Ansible Provider not found."
@@ -29335,7 +29335,7 @@ msgstr "임베디드 Ansible 서비스를 사용할 수 없습니다."
 
 #: ../app/presenters/menu/default_menu.rb:209
 msgid "Embedded Automate"
-msgstr "Embedded Automate"
+msgstr "임베디드 자동화"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::EmbeddedAutomationManager
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -31508,7 +31508,7 @@ msgstr "호스트 이니시에이터 그룹 아래의 모든 항목"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4094
 msgid "Everything under Host Initiators"
-msgstr "호스트 개시자 아래의 모든 항목"
+msgstr "호스트 이니시에이터 아래의 모든 항목"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1599
@@ -35846,7 +35846,7 @@ msgstr "호스트 IP 주소"
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:60
 #: ../config/yaml_strings.rb:1919
 msgid "Host Initiator"
-msgstr "호스트 개시자"
+msgstr "호스트 이니시에이터"
 
 #. TRANSLATORS: file: product/views/VolumeMapping.yaml
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:73
@@ -35867,7 +35867,7 @@ msgstr "호스트 이니시에이터 그룹"
 #:
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:97
 msgid "Host Initiator:"
-msgstr "호스트 개시자:"
+msgstr "호스트 이니시에이터:"
 
 #. TRANSLATORS: file: product/views/HostInitiator.yaml
 #: ../app/controllers/host_initiator_controller.rb:51
@@ -35878,7 +35878,7 @@ msgstr "호스트 개시자:"
 #: ../app/services/ems_storage_dashboard_service.rb:54
 #: ../config/yaml_strings.rb:1131
 msgid "Host Initiators"
-msgstr "호스트 개시자"
+msgstr "호스트 이니시에이터"
 
 #. TRANSLATORS: file: product/compare/ems_clusters.yaml
 #: ../config/yaml_strings.rb:5174
@@ -36115,7 +36115,7 @@ msgstr "호스트에 EMS 없음, 사용자 정의 속성을 설정할 수 없습
 
 #: ../config/model_attributes.rb:2124
 msgid "Host initiator"
-msgstr "호스트 개시자"
+msgstr "호스트 이니시에이터"
 
 #: ../config/model_attributes.rb:2134
 msgid "Host initiator group"
@@ -36335,7 +36335,7 @@ msgstr "HostAggregate|vm 총계"
 #. TRANSLATORS: file: product/views/HostInitiator.yaml
 #: ../config/yaml_strings.rb:1133
 msgid "HostInitiator"
-msgstr "호스트 개시자"
+msgstr "호스트 이니시에이터"
 
 #. TRANSLATORS: file: product/views/HostInitiatorGroup.yaml
 #: ../config/yaml_strings.rb:1150
@@ -38199,12 +38199,12 @@ msgstr "최신 C&U 데이터 새로 고치기 시작?"
 #. TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
 #: ../config/dictionary_strings.rb:1018 ../config/yaml_strings.rb:6845
 msgid "Initiated By"
-msgstr "개시자"
+msgstr "이니시에이터"
 
 #. TRANSLATORS: en.yml key: dictionary.column.initiator
 #: ../config/dictionary_strings.rb:1020
 msgid "Initiator"
-msgstr "개시자"
+msgstr "이니시에이터"
 
 #: ../app/helpers/miq_ae_class_helper.rb:144
 msgid "Inline"
@@ -38621,7 +38621,7 @@ msgstr "인벤토리"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1209
 msgid "Inventory Group"
-msgstr "재고 그룹"
+msgstr "인벤토리 그룹"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryGroup.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AutomationManager_InventoryRootGroup.yaml
@@ -46233,7 +46233,7 @@ msgstr "MiqRequest|Href slug"
 
 #: ../config/model_attributes.rb:3142
 msgid "MiqRequest|Initiated by"
-msgstr "MiqRequest|개시자"
+msgstr "MiqRequest|이니시에이터"
 
 #: ../config/model_attributes.rb:3143
 msgid "MiqRequest|Message"
@@ -47374,7 +47374,7 @@ msgstr "호스트 집계 수정"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4112
 msgid "Modify Host Initiator"
-msgstr "호스트 개시자 수정"
+msgstr "호스트 이니시에이터 수정"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4134
@@ -48339,7 +48339,7 @@ msgstr "이 맵핑의 클라우드 볼륨으로 이동"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:62
 msgid "Navigate to the Host Initiator of this Mapping"
-msgstr "이 맵핑의 호스트 개시자로 이동"
+msgstr "이 맵핑의 호스트 이니시에이터로 이동"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:36
 msgid "Navigate to the Physical Storage of this mapping"
@@ -49970,7 +49970,7 @@ msgstr "구역을 찾을 수 없습니다."
 
 #: ../app/views/miq_alert/_alert_builtin_exp.html.haml:164
 msgid "No alarms found for the selected Provider"
-msgstr "선택된 제공자에 대한 알람을 찾을 수 없음"
+msgstr "선택한 제공자에 대한 알람을 찾을 수 없음"
 
 #: ../app/views/layouts/_tl_options.html.haml:26
 msgid "No category selected"
@@ -50260,7 +50260,7 @@ msgstr "%{task}에 대한 제공자가 선택되지 않음"
 
 #: ../app/javascript/components/no-recods-found.jsx:7
 msgid "No records found"
-msgstr "보고서를 찾을 수 없음"
+msgstr "레코드를 찾을 수 없음"
 
 #: ../app/models/miq_report/notification.rb:67
 msgid "No records found for scheduled report \"%{name}\""
@@ -53478,7 +53478,7 @@ msgstr "호스트 이니시에이터 그룹에 대한 조작 수행"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4102
 msgid "Perform Operations on Host Initiators"
-msgstr "호스트 개시자에 대한 오퍼레이션 수행"
+msgstr "호스트 이니시에이터에 대한 오퍼레이션 수행"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1615
@@ -57723,7 +57723,7 @@ msgstr "선택한 물리적 인프라 제공자의 인증 상태 재검사"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:96
 msgid "Re-check Authentication Status for the selected storage manager"
-msgstr "선택된 스토리지 관리자에 대한 인증 상태 다시 확인"
+msgstr "선택한 스토리지 관리자에 대한 인증 상태 다시 확인"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:98
 msgid "Re-check Authentication Status for this Cloud Provider"
@@ -58504,7 +58504,7 @@ msgstr "호스트 이니시에이터 그룹과 관련된 모든 항목에 대한
 msgid ""
 "Refresh relationships and power states for all items related to Host "
 "Initiators"
-msgstr "호스트 개시자와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
+msgstr "호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1627
@@ -58681,7 +58681,7 @@ msgstr "선택한 항목에 관련된 모든 항목에 대한 관계 및 전원 
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators"
-msgstr "해당 호스트 개시자와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
+msgstr "해당 호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:14
 msgid ""
@@ -58699,7 +58699,7 @@ msgstr "이러한 호스트 이니시에이터 클러스터와 관련된 모든 
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators?"
-msgstr "해당 호스트 개시자와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기?"
+msgstr "해당 호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:14
 msgid ""
@@ -58753,7 +58753,7 @@ msgstr "이 클라우드 제공자에 관련된 모든 항목에 대한 관계 �
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator"
-msgstr "이 호스트 개시자와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
+msgstr "이 호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb:14
 msgid ""
@@ -58771,7 +58771,7 @@ msgstr "이 호스트 이니시에이터 클러스터와 관련된 모든 항목
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator?"
-msgstr "이 호스트 개시자와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기?"
+msgstr "이 호스트 이니시에이터와 관련된 모든 항목에 대한 관계 및 전원 상태 새로 고치기?"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:12
 msgid ""
@@ -60055,7 +60055,7 @@ msgstr "위젯 제거"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4116
 msgid "Remove a Host Initiator"
-msgstr "호스트 개시자 제거"
+msgstr "호스트 이니시에이터 제거"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3090
@@ -62718,7 +62718,7 @@ msgstr "안전하게 볼륨 제거"
 #: ../app/models/file_depot_smb.rb:19 ../config/dictionary_strings.rb:2888
 msgid "Samba"
 msgid_plural "Sambas"
-msgstr[0] "Samba"
+msgstr[0] "Sambas"
 
 #. TRANSLATORS: en.yml key: dictionary.model.FileDepotSmb (plural form)
 #: ../config/dictionary_strings.rb:2890
@@ -64871,8 +64871,7 @@ msgstr[0] "서비스 순서"
 
 #: ../config/model_display_names.rb:220
 msgid "Service Order Cart"
-msgid_plural "Service Order Carts"
-msgstr[0] "서비스 순서 차트"
+msgstr "{n, plural, one {서비스 순서 차트}} other {서비스 순서 차트}}"
 
 #: ../app/controllers/application_controller/dialog_runner.rb:34
 msgid "Service Order was cancelled by the user"
@@ -65564,7 +65563,7 @@ msgstr "서비스|Href slug"
 
 #: ../config/model_attributes.rb:4109
 msgid "Service|Initiator"
-msgstr "서비스|개시자"
+msgstr "서비스|이니시에이터"
 
 #: ../config/model_attributes.rb:4110
 msgid "Service|Lifecycle state"
@@ -69626,7 +69625,7 @@ msgstr "성공한 이벤트"
 #: ../app/controllers/application_controller.rb:1028
 msgid "Successfully deleted Saved Report from the %{product} Database"
 msgid_plural "Successfully deleted Saved Reports from the %{product} Database"
-msgstr[0] "%{product} 데이터베이스에서 저장된 보고서가 정상적으로 삭제되었습니다,"
+msgstr[0] "%{product} 데이터베이스에서 저장된 보고서가 정상적으로 삭제되었습니다."
 
 #: ../app/controllers/miq_ae_class_controller.rb:1795
 msgid "Successfully refreshed!"
@@ -75681,12 +75680,12 @@ msgstr "VM 원격 콘솔에 연결됨"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:527
 msgid "VM Removal from Inventory"
-msgstr "재고에서 VM 제거"
+msgstr "인벤토리에서 VM 제거"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:531
 msgid "VM Removal from Inventory Request"
-msgstr "재고에서 VM 제거 요청"
+msgstr "인벤토리에서 VM 제거 요청"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:389
@@ -77264,7 +77263,7 @@ msgstr "호스트 이니시에이터 그룹 보기"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4096
 msgid "View Host Initiators"
-msgstr "호스트 개시자 보기"
+msgstr "호스트 이니시에이터 보기"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1601
@@ -81277,7 +81276,7 @@ msgstr "기본값"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:35
 msgid "defining of host initiator was cancelled by the user"
-msgstr "사용자가 호스트 개시자 정의를 취소했습니다."
+msgstr "사용자가 호스트 이니시에이터 정의를 취소했습니다."
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:23
 msgid "defining of volume mapping was cancelled by the user"

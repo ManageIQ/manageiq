@@ -3408,7 +3408,7 @@ msgstr "Ação"
 #: ../app/helpers/catalog_helper.rb:5
 #: ../app/views/catalog/_form_resources_info.html.haml:32
 msgid "Action Order"
-msgstr "Pedido de ação"
+msgstr "Pedido da ação"
 
 #: ../app/models/miq_action_set.rb:5
 msgid "Action Set"
@@ -3423,11 +3423,11 @@ msgstr "Conjuntos de ações"
 
 #: ../app/helpers/catalog_helper.rb:5
 msgid "Action Start"
-msgstr "Início de ação"
+msgstr "Início da ação"
 
 #: ../app/helpers/catalog_helper.rb:5
 msgid "Action Stop"
-msgstr "Parada de ação"
+msgstr "Parada da ação"
 
 #: ../app/helpers/miq_action_helper.rb:6
 #: ../app/javascript/components/action-form/action-form.schema.js:508
@@ -3600,7 +3600,7 @@ msgstr "Incluir (inserir manualmente)"
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:56
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:60
 msgid "Add All"
-msgstr "Incluir Tudo"
+msgstr "Incluir todos"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1062
@@ -4378,7 +4378,7 @@ msgstr "Incluir um novo provedor em nuvem"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnets_center.rb:12
 msgid "Add a new Cloud Subnet"
-msgstr "Incluir uma nova sub-rede em nuvem"
+msgstr "Incluir uma nova sub-rede na nuvem"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:12
 msgid "Add a new Cloud Volume"
@@ -4605,7 +4605,7 @@ msgstr "A inclusão do %s foi cancelada pelo usuário"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:60
 msgid "Add of Alert Profile \"%s\" has been successfully queued."
-msgstr "A inclusão do Perfil de Alerta \"%s\" foi enfileirada com sucesso."
+msgstr "A inclusão do perfil de alerta \"%s\" foi enfileirada com sucesso."
 
 #: ../app/controllers/miq_ae_class_controller.rb:1189
 msgid "Add of Automate Method was cancelled by the user"
@@ -4702,7 +4702,7 @@ msgstr "A inclusão de IPs flutuantes \"%s\" foi enfileirada com sucesso."
 
 #: ../app/controllers/condition_controller.rb:51
 msgid "Add of new %{model} Condition was cancelled by the user"
-msgstr "A inclusão da nova Condição do %{model} foi cancelada pelo usuário"
+msgstr "A inclusão da nova condição do %{model} foi cancelada pelo usuário"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:624
 msgid "Add of new %{name} was cancelled by the user"
@@ -4710,7 +4710,7 @@ msgstr "A inclusão de novo %{name} foi cancelada pelo usuário"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:88
 msgid "Add of new %{type} Request was cancelled by the user"
-msgstr "A inclusão da nova Solicitação %{type} foi cancelada pelo usuário"
+msgstr "A inclusão da nova solicitação %{type} foi cancelada pelo usuário"
 
 #: ../app/controllers/miq_alert_controller.rb:23
 msgid "Add of new Alert was cancelled by the user"
@@ -4784,7 +4784,7 @@ msgstr "A adição da nova caixa de diálogo foi cancelada pelo usuário"
 #: ../app/javascript/components/generic-objects-form/index.jsx:134
 msgid "Add of new Generic Object Definition was cancelled by the user."
 msgstr ""
-"A inclusão da nova Definição de Objeto Genérico foi cancelada pelo usuário."
+"A inclusão da nova definição de objeto genérico foi cancelada pelo usuário."
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:25
 msgid "Add of new ISO Datastore was cancelled by the user"
@@ -4800,7 +4800,7 @@ msgstr "A adição do novo servidor PXE foi cancelada pelo usuário"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:51
 msgid "Add of new Physical Storage was cancelled by the user."
-msgstr "A inclusão do novo Armazenamento Físico foi cancelada pelo usuário."
+msgstr "A inclusão do novo armazenamento físico foi cancelada pelo usuário."
 
 #: ../app/controllers/miq_policy_controller/policies.rb:8
 msgid "Add of new Policy was cancelled by the user"
@@ -4809,7 +4809,7 @@ msgstr "A adição da nova política foi cancelada pelo usuário"
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:60
 msgid "Add of new Provider Tag Mapping was cancelled by the user"
 msgstr ""
-"A inclusão do novo Mapeamento de tag do provedor foi cancelada pelo usuário"
+"A inclusão do novo mapeamento de tag do provedor foi cancelada pelo usuário"
 
 #: ../app/controllers/report_controller/reports/editor.rb:55
 msgid "Add of new Report was cancelled by the user"
@@ -5037,7 +5037,7 @@ msgstr "A inclusão de novo perfil de tempo foi cancelada pelo usuário."
 
 #: ../app/javascript/components/routers-form/index.jsx:132
 msgid "Adding of Network Router %s has been successfully queued."
-msgstr "A inclusão do Roteador de Rede %s foi enfileirada com sucesso."
+msgstr "A inclusão do roteador de rede %s foi enfileirada com sucesso."
 
 #: ../app/javascript/components/network-routers-interfaces-form/index.jsx:31
 msgid "Adding of interface was cancelled by the user."
@@ -5045,7 +5045,7 @@ msgstr "A inclusão da interface foi cancelada pelo usuário."
 
 #: ../app/javascript/components/routers-form/index.jsx:146
 msgid "Adding of new Network Router was cancelled by the user."
-msgstr "A inclusão do novo Roteador de Rede foi cancelada pelo usuário."
+msgstr "A inclusão do novo roteador de rede foi cancelada pelo usuário."
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:58
 msgid "Adding of new cloud object store container was cancelled by the user."
@@ -11172,7 +11172,7 @@ msgstr "A Categoria \"%{name}\" foi incluída"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:106
 msgid "Category \"%{name}\" was saved"
-msgstr "A Categoria \"%{name}\" foi salva"
+msgstr "A categoria \"%{name}\" foi salva"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:26
 msgid "Category \"%{name}\": Delete successful"
@@ -11471,7 +11471,7 @@ msgstr "A taxa de estorno \"%{name}\" foi incluída"
 
 #: ../app/controllers/chargeback_rate_controller.rb:230
 msgid "Chargeback Rate \"%{name}\" was saved"
-msgstr "A Taxa de estorno \"%{name}\" foi salva"
+msgstr "A taxa de estorno \"%{name}\" foi salva"
 
 #: ../config/model_display_names.rb:19
 msgid "Chargeback Rate Detail"
@@ -12433,7 +12433,7 @@ msgstr "A classe '%{type}' não é elegível para classificação"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1596
 msgid "Class Schema Sequence was saved"
-msgstr "A sequência do esquema de classe foi salva"
+msgstr "A sequência do esquemas de classes foi salva"
 
 #: ../app/views/miq_ae_class/_fields_seq_form.html.haml:3
 msgid "Class Schema Sequencing:"
@@ -20650,15 +20650,15 @@ msgstr "A criação do novo %s foi cancelada pelo usuário."
 
 #: ../app/javascript/components/action-form/index.jsx:38
 msgid "Creation of new Action was canceled by the user."
-msgstr "A criação de nova Ação foi cancelada pelo usuário."
+msgstr "A criação da nova ação foi cancelada pelo usuário."
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:71
 msgid "Creation of new Alert Profile was canceled by the user."
-msgstr "A criação do novo Perfil de Alerta foi cancelada pelo usuário."
+msgstr "A criação do novo perfil de alerta foi cancelada pelo usuário."
 
 #: ../app/javascript/components/subnet-form/index.jsx:76
 msgid "Creation of new Cloud Subnet was canceled by the user."
-msgstr "A criação da nova Sub-rede de Nuvem foi cancelada pelo usuário."
+msgstr "A criação da nova sub-rede na nuvem foi cancelada pelo usuário."
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:37
 msgid "Creation of new Cloud Tenant was canceled by the user."
@@ -20689,7 +20689,7 @@ msgstr ""
 
 #: ../app/javascript/components/policy-profile-form/index.js:53
 msgid "Creation of new Policy Profile was canceled by the user."
-msgstr "A criação do novo Perfil de Política foi cancelada pelo usuário."
+msgstr "A criação do novo perfil de política foi cancelada pelo usuário."
 
 #: ../app/javascript/components/zone-form/index.jsx:34
 msgid "Creation of new Zone was canceled by the user."
@@ -23411,7 +23411,7 @@ msgstr "Excluir o Iniciador de host"
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:33
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
 msgid "Delete the Physical Storage"
-msgstr "Excluir o Armazenamento físico"
+msgstr "Excluir o armazenamento físico"
 
 #: ../app/views/layouts/_adv_search_footer.html.haml:36
 msgid "Delete the filter named %{filter_name}"
@@ -29418,12 +29418,12 @@ msgstr "A edição do %s \"%s\" foi cancelada pelo usuário"
 #: ../app/controllers/condition_controller.rb:49
 msgid "Edit of %{model} Condition \"%{name}\" was cancelled by the user"
 msgstr ""
-"A edição da Condição do %{model} \"%{name}\" foi cancelada pelo usuário"
+"A edição da condição do %{model} \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:221
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
 msgstr ""
-"A edição da Solicitação %{model} \"%{name}\" foi cancelada pelo usuário"
+"A edição da solicitação %{model} \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:622
 msgid "Edit of %{name} was cancelled by the user"
@@ -29435,7 +29435,7 @@ msgstr "A edição do %{object_type} %{object_name} não é suportada."
 
 #: ../app/javascript/components/action-form/index.jsx:37
 msgid "Edit of Action \"%s\" was canceled by the user."
-msgstr "A edição da Ação \"%s\" foi cancelada pelo usuário."
+msgstr "A edição da ação \"%s\" foi cancelada pelo usuário."
 
 #: ../app/controllers/miq_alert_controller.rb:25
 msgid "Edit of Alert \"%{name}\" was cancelled by the user"
@@ -29451,12 +29451,12 @@ msgstr "A edição do Perfil de análise \"%{name}\" foi cancelada pelo usuário
 
 #: ../app/controllers/miq_ae_class_controller.rb:1082
 msgid "Edit of Automate Class \"%{name}\" was cancelled by the user"
-msgstr "A edição da Classe automatizada \"%{name}\" foi cancelada pelo usuário"
+msgstr "A edição da classe automatizada \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/miq_ae_class_controller.rb:591
 msgid "Edit of Automate Instance \"%{name}\" was cancelled by the user"
 msgstr ""
-"A edição da Instância de automação \"%{name}\" foi cancelada pelo usuário"
+"A edição da instância de automação \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1187
 #: ../app/controllers/miq_ae_class_controller.rb:1241
@@ -29490,27 +29490,28 @@ msgstr "A edição do item do catálogo %s foi cancelada pelo usuário"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:49
 msgid "Edit of Category \"%{name}\" was cancelled by the user"
-msgstr "A Edição da categoria \"%{name}\" foi cancelada pelo usuário"
+msgstr "A edição da categoria \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/chargeback_rate_controller.rb:190
 msgid "Edit of Chargeback Rate \"%{name}\" was cancelled by the user"
-msgstr "A edição da Taxa de estorno \"%{name}\" foi cancelada pelo usuário"
+msgstr "A edição da taxa de estorno \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/controllers/miq_ae_class_controller.rb:2526
 msgid "Edit of Class Schema Sequence '%{name}'"
-msgstr "Edição da Sequência de esquema de classe '%{name}'"
+msgstr "Edição da sequência de esquemas de classes '%{name}'"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1573
 msgid "Edit of Class Schema Sequence was cancelled by the user"
-msgstr "A edição da sequência do esquema de classe foi cancelada pelo usuário"
+msgstr ""
+"A edição da sequência de esquemas de classes foi cancelada pelo usuário"
 
 #: ../app/controllers/cloud_network_controller.rb:144
 msgid "Edit of Cloud Network \"%{name}\" was cancelled by the user"
-msgstr "A edição da Rede em nuvem \"%{name}\" foi cancelada pelo usuário"
+msgstr "A edição da rede em nuvem \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/javascript/components/subnet-form/index.jsx:75
 msgid "Edit of Cloud Subnet \"%s\" was canceled by the user."
-msgstr "A edição da Sub-rede de Nuvem \"%s\" foi cancelada pelo usuário."
+msgstr "A edição da sub-rede da nuvem \"%s\" foi cancelada pelo usuário."
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:36
 msgid "Edit of Cloud Tenant \"%s\" was canceled by the user."
@@ -29570,7 +29571,7 @@ msgstr "A edição do domínio do \"%s\" foi cancelada pelo usuário."
 #: ../app/javascript/components/generic-objects-form/index.jsx:133
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
 msgstr ""
-"A edição da Definição de Objeto Genérico \"%s\" foi cancelada pelo usuário."
+"A edição da definição de objeto genérico \"%s\" foi cancelada pelo usuário."
 
 #: ../app/controllers/host_controller.rb:172
 msgid "Edit of Host \"%{name}\" was cancelled by the user"
@@ -29582,7 +29583,7 @@ msgstr "A edição do Host Agregado \"%s\" foi cancelada pelo usuário."
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx:36
 msgid "Edit of ISO Image \"%s\" was cancelled by the user"
-msgstr "A edição da Imagem ISO \"%s\" foi cancelada pelo usuário"
+msgstr "A edição da imagem ISO \"%s\" foi cancelada pelo usuário"
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:55
 msgid "Edit of Namespace \"%s\" was cancelled by user."
@@ -29607,7 +29608,7 @@ msgstr "A edição do Armazenamento Físico \"%s\" foi cancelada pelo usuário."
 
 #: ../app/controllers/miq_policy_controller/policies.rb:6
 msgid "Edit of Policy \"%{name}\" was cancelled by the user"
-msgstr "A edição da Política \"%{name}\" foi cancelada pelo usuário"
+msgstr "A edição da política \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/javascript/components/policy-profile-form/index.js:52
 msgid "Edit of Policy Profile \"%s\" was canceled by the user."
@@ -29620,7 +29621,7 @@ msgstr "Edição de Designação de condição da política cancelada pelo usuá
 #: ../app/controllers/miq_policy_controller/policies.rb:163
 msgid "Edit of Policy's Event Assignment cancelled by user"
 msgstr ""
-"A edição da Designação de Evento da Política foi cancelada pelo usuário"
+"A edição da designação de evento da política foi cancelada pelo usuário"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1639
 msgid "Edit of Priority Order was cancelled by the user"
@@ -29638,7 +29639,7 @@ msgstr "A edição do provedor foi cancelada pelo usuário"
 
 #: ../app/javascript/components/region-form/index.jsx:21
 msgid "Edit of Region was cancelled by the user"
-msgstr "A edição da Região foi cancelada pelo usuário"
+msgstr "A edição da região foi cancelada pelo usuário"
 
 #: ../app/controllers/report_controller/reports/editor.rb:53
 msgid "Edit of Report \"%{name}\" was cancelled by the user"
@@ -29688,7 +29689,7 @@ msgstr ""
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:45
 msgid "Edit of System Image Type \"%s\" was cancelled by the user"
 msgstr ""
-"A edição do Tipo de Imagem do Sistema \"%s\" foi cancelada pelo usuário"
+"A edição do tipo de imagem do sistema \"%s\" foi cancelada pelo usuário"
 
 #: ../app/controllers/report_controller/widgets.rb:63
 msgid "Edit of Widget \"%{title}\" was cancelled by the user"
@@ -29700,7 +29701,7 @@ msgstr "A edição da imagem do Windows \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/javascript/components/zone-form/index.jsx:33
 msgid "Edit of Zone \"%s\" was canceled by the user."
-msgstr "A edição da Zona \"%s\" foi cancelada pelo usuário."
+msgstr "A edição da zona \"%s\" foi cancelada pelo usuário."
 
 #: ../app/controllers/host_controller.rb:169
 msgid "Edit of credentials for selected Hosts was cancelled by the user"
@@ -29741,7 +29742,7 @@ msgstr "Editar modelo de orquestração selecionado"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:31
 msgid "Edit selected Physical Storage"
-msgstr "Editar Armazenamento Físico selecionado"
+msgstr "Editar o armazenamento físico selecionado"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:33
 msgid "Edit selected Schema"
@@ -35472,7 +35473,7 @@ msgstr "A Definição de Objeto Genérico \"%s\" foi incluída."
 
 #: ../app/javascript/components/generic-objects-form/index.jsx:39
 msgid "Generic Object Definition \"%s\" was saved."
-msgstr "A Definição de Objeto Genérico \"%s\" foi salva."
+msgstr "A definição de objeto genérico \"%s\" foi salva."
 
 #: ../app/controllers/generic_object_definition_controller.rb:210
 msgid "Generic Object Definition %{record_name}"
@@ -38694,7 +38695,7 @@ msgstr[1] "Armazenamento de dados ISO"
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:19
 msgid "ISO Datastore \"%s\" was added."
-msgstr "O Armazenamento de Dados ISO \"%s\" foi incluído."
+msgstr "O armazenamento de dados ISO \"%s\" foi incluído."
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:136
 msgid "ISO Datastore \"%{name}\""
@@ -38720,7 +38721,7 @@ msgstr[1] "Imagens ISO"
 
 #: ../app/javascript/components/pxe-iso-image-form/index.jsx:30
 msgid "ISO Image \"%s\" was saved."
-msgstr "A Imagem ISO \"%s\" foi salva."
+msgstr "A imagem ISO \"%s\" foi salva."
 
 #: ../app/controllers/pxe_controller.rb:213
 #: ../app/controllers/pxe_controller/iso_datastores.rb:139
@@ -48728,7 +48729,7 @@ msgstr ""
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:34
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr ""
-"A modificação do Tipo de Imagem do Sistema \"%s\" foi enfileirada com sucesso."
+"A modificação do tipo de imagem do sistema \"%s\" foi enfileirada com sucesso."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:970
@@ -50856,7 +50857,7 @@ msgstr "Novo "
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:59
 msgid "New Alert Profile \"%s\" has been successfully queued."
-msgstr "O novo Perfil de Alerta \"%s\" foi enfileirado com sucesso."
+msgstr "O novo perfil de alerta \"%s\" foi enfileirado com sucesso."
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:74
 msgid "New Field"
@@ -60567,7 +60568,7 @@ msgid ""
 "Initiators"
 msgstr ""
 "Atualizar relacionamentos e estados da energia para todos os itens "
-"relacionados a esses Inicializadores de host"
+"relacionados aos inicializadores de host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:14
 msgid ""
@@ -60575,7 +60576,7 @@ msgid ""
 "Initiators Cluster"
 msgstr ""
 "Atualize os relacionamentos e os estados de energia para todos os itens "
-"relacionados a esses Grupos Inicializadores de Host"
+"relacionados aos grupos inicializadores de host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:19
 msgid ""
@@ -60591,7 +60592,7 @@ msgid ""
 "Initiators?"
 msgstr ""
 "Atualizar relacionamentos e estados da energia para todos os itens "
-"relacionados a esses Inicializadores de host?"
+"relacionados aos inicializadores de host?"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:14
 msgid ""
@@ -60671,7 +60672,7 @@ msgid ""
 "Initiator Cluster"
 msgstr ""
 "Atualize os relacionamentos e os estados de energia para todos os itens "
-"relacionados a esses Clusters Inicializadores de Host"
+"relacionados aos clusters inicializadores de host"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb:19
 msgid ""
@@ -60679,7 +60680,7 @@ msgid ""
 "Initiator Cluster?"
 msgstr ""
 "Deseja atualizar os relacionamentos e os estados de energia para todos os "
-"itens relacionados a esses Clusters Inicializadores de Host?"
+"itens relacionados aos clusters inicializadores de host?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid ""
@@ -61488,7 +61489,7 @@ msgstr "Remover %{email}"
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:54
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:58
 msgid "Remove All"
-msgstr "Remover tudo"
+msgstr "Remover todos"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4030
@@ -62065,7 +62066,7 @@ msgstr "Remover um grupo de segurança desta instância"
 
 #: ../app/javascript/components/button-group/group-form.schema.js:63
 msgid "Remove all"
-msgstr "Remover tudo"
+msgstr "Remover todos"
 
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
@@ -62280,7 +62281,7 @@ msgstr "Remover modelos selecionados do inventário"
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:72
 #: ../app/helpers/application_helper/toolbar/vms_center.rb:51
 msgid "Remove selected items from Inventory"
-msgstr "Remover itens selecionados do Inventory"
+msgstr "Remover itens selecionados do inventário"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4503
@@ -64191,12 +64192,12 @@ msgstr "Informações de desativação"
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_last_warn
 #: ../config/dictionary_strings.rb:1758
 msgid "Retirement Last Warn"
-msgstr "Último aviso de aposentadoria"
+msgstr "Último aviso de desativação"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_requester
 #: ../config/dictionary_strings.rb:1760
 msgid "Retirement Requester"
-msgstr "Solicitante de aposentadoria"
+msgstr "Solicitante da desativação"
 
 #: ../app/helpers/service_helper/textual_summary.rb:146
 #: ../app/helpers/vm_helper/textual_summary.rb:209
@@ -64206,12 +64207,12 @@ msgstr "Estado da desativação"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:80
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:94
 msgid "Retirement Time"
-msgstr "Horário da aposentadoria"
+msgstr "Horário da desativação"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_warn
 #: ../config/dictionary_strings.rb:1764
 msgid "Retirement Warn"
-msgstr "Aviso de aposentadoria"
+msgstr "Aviso de desativação"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:111
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:131
@@ -64225,7 +64226,7 @@ msgstr "Data de desativação removida"
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
 msgid "Retirement date set to ${tempDate.toLocaleString()}"
-msgstr "Data de aposentadoria definida para ${tempDate.toLocaleString()}"
+msgstr "Data da desativação definida para ${tempDate.toLocaleString()}"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retires_on
 #. TRANSLATORS: file: product/compare/vms.yaml
@@ -66098,7 +66099,7 @@ msgstr "Selecionar um único provedor de infraestrutura física para editar"
 
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:33
 msgid "Select a single Provider to edit"
-msgstr "Selecione um Provedor único para editar"
+msgstr "Selecione um único provedor para editar"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:26
 msgid "Select a single Role to copy"
@@ -66792,7 +66793,7 @@ msgstr "O serviço %{subject} foi aposentado."
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4711
 msgid "Service %{subject} has started retirement."
-msgstr "O serviço %{subject} iniciou a aposentadoria."
+msgstr "O serviço %{subject} iniciou a desativação."
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../config/yaml_strings.rb:716
@@ -67031,7 +67032,7 @@ msgstr "Serviço obsoleto"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:609
 msgid "Service Retirement Warning"
-msgstr "Aviso de aposentadoria do serviço"
+msgstr "Aviso de desativação do serviço"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
 #: ../config/yaml_strings.rb:6011
@@ -68118,7 +68119,7 @@ msgstr "Definir/remover a data de desativação"
 
 #: ../app/controllers/vm_common.rb:1294
 msgid "Set/Remove retirement date for %{vm_or_template}"
-msgstr "Configurar/remover a data de aposentadoria para %{vm_or_template}"
+msgstr "Configurar/remover a data de desativação para %{vm_or_template}"
 
 #: ../app/controllers/service_controller.rb:386
 msgid "Set/Remove retirement date for Service"
@@ -71672,7 +71673,7 @@ msgstr "Atualização de fluxo não ativada"
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:39
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:79
 msgid "String"
-msgstr "Sequência de caracteres"
+msgstr "Sequência"
 
 #: ../app/javascript/oldjs/miq_application.js:89
 msgid "String List"
@@ -72315,7 +72316,7 @@ msgstr "Tipo de imagem do sistema"
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:35
 msgid "System Image Type \"%s\" was added."
-msgstr "O Tipo de Imagem do Sistema \"%s\" foi incluído."
+msgstr "O tipo de imagem do sistema \"%s\" foi incluído."
 
 #: ../app/controllers/pxe_controller.rb:187
 #: ../app/controllers/pxe_controller.rb:191
@@ -78163,7 +78164,7 @@ msgstr "VM obsoleta"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:420
 msgid "VM Retirement Warning"
-msgstr "Aviso de aposentadoria da VM"
+msgstr "Aviso de desativação da VM"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6089
@@ -80454,7 +80455,7 @@ msgstr "A máquina virtual %{subject} foi aposentada."
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4717
 msgid "Virtual Machine %{subject} has started retirement."
-msgstr "A máquina virtual %{subject} iniciou a aposentadoria."
+msgstr "A máquina virtual %{subject} iniciou a desativação."
 
 #: ../app/models/manageiq/providers/kubevirt/infra_manager/vm.rb:106
 msgid "Virtual Machine (Kubevirt)"
@@ -82159,7 +82160,7 @@ msgstr "Tempo de espera (segundos)"
 #:
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js:89
 msgid "Warn"
-msgstr "Avisar"
+msgstr "Aviso"
 
 #: src/topology/topologyCanvas.jsx:270
 msgid "Warning"
@@ -85916,7 +85917,7 @@ msgstr "vm_unregister"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:253
 msgid "warn"
-msgstr "avisar"
+msgstr "aviso"
 
 #: ../app/models/miq_schedule.rb:179
 msgid "weekly"
