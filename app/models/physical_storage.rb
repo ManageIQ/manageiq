@@ -69,6 +69,36 @@ class PhysicalStorage < ApplicationRecord
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def self.raw_validate_physical_storage(_ext_management_system, _options = {})
+    raise NotImplementedError, _("raw_validate_physical_storage must be implemented in a subclass")
+  end
+
+  def self.validate_physical_storage(ems_id, options = {})
+    raise ArgumentError, _("ems_id cannot be nil") if ems_id.nil?
+
+    ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
+    raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
+
+    klass = ext_management_system.class_by_ems(:PhysicalStorage)
+    klass.raw_validate_physical_storage(ext_management_system, options)
+  end
+
+  def self.validate_storage_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "validating PhysicalStorage for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => 'PhysicalStorage',
+      :method_name => 'validate_physical_storage',
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def self.create_physical_storage_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "creating PhysicalStorage for user #{userid}",
