@@ -39,16 +39,16 @@ msgstr " 天数"
 
 #: ../app/controllers/ems_infra_controller.rb:301
 msgid " %{host_uid_ems} is not a compute node "
-msgstr " %{host_uid_ems} 不是一个计算节点"
+msgstr " %{host_uid_ems} 不是一个计算节点 "
 
 #: ../app/controllers/ems_infra_controller.rb:296
 msgid " %{host_uid_ems} needs to be evacuated before it can be removed "
-msgstr " %{host_uid_ems} 在移除前需要先撤除"
+msgstr " %{host_uid_ems} 在移除前需要先撤除 "
 
 #: ../app/controllers/ems_infra_controller.rb:291
 msgid ""
 " %{host_uid_ems} needs to be in maintenance mode before it can be removed "
-msgstr " %{host_uid_ems} 在移除前需要先处于维护方式"
+msgstr " %{host_uid_ems} 在移除前需要先处于维护方式 "
 
 #: ../app/controllers/ems_infra_controller.rb:84
 msgid " %{name} from %{value} to %{parameters} "
@@ -170,7 +170,7 @@ msgstr " 服务器 %{server} <%{name}>（标识：<%{id}>）没有和供应商�
 
 #: ../app/views/vm_common/_reconfigure.html.haml:295
 msgid " Add "
-msgstr " 添加"
+msgstr " 添加 "
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:7004
@@ -275,7 +275,7 @@ msgstr " 必须填写有效内存值"
 
 #: ../app/views/ops/_tenant_quota_form.html.haml:42
 msgid " Valid numeric quota value required "
-msgstr " 要求有效的数字配额值"
+msgstr " 要求有效的数字配额值 "
 
 #: ../app/helpers/miq_policy_helper.rb:6
 msgid " Week"
@@ -703,7 +703,7 @@ msgstr[0] "正在标记 %{amount} 个凭证"
 #: ../app/views/layouts/_tag_edit_items.html.haml:63
 msgid "%{amount} Datastore Being Tagged"
 msgid_plural "%{amount} Datastores Being Tagged"
-msgstr[0] "正在标记 %{amount} 个数据存储区"
+msgstr[0] "%{amount} 个数据存储正被标记"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:65
 msgid "%{amount} Flavor Being Tagged"
@@ -1252,7 +1252,7 @@ msgstr "%{name} 类型"
 
 #: ../app/models/mixins/retirement_mixin.rb:177
 msgid "%{name} already retired"
-msgstr "%{name} 已退订"
+msgstr "%{name} 已停用"
 
 #: ../app/controllers/dashboard_controller.rb:571
 msgid "%{name} dashboard for user %{id} in group id %{current_group_id}"
@@ -1948,7 +1948,7 @@ msgstr "* 要求图片文件格式为 .png 或 .jpg"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:72
 #: ../app/views/static/retirement-form.html.haml:48
 msgid "* Saving a blank date will remove all retirement dates"
-msgstr "* 保存空日期将移除所有退订日期"
+msgstr "* 保存空日期将移除所有停用日期"
 
 #: ../app/views/miq_ae_class/_fields_seq_form.html.haml:7
 msgid "* Select one or more consecutive fields to move up or down."
@@ -2037,7 +2037,7 @@ msgstr "1 周前"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:114
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:134
 msgid "1 Week before retirement"
-msgstr "退订前 1 周"
+msgstr "停用前 1 周"
 
 #: ../app/helpers/view_helper.rb:61
 msgid "10 Hours Ago"
@@ -2152,7 +2152,7 @@ msgstr "2 周前"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:115
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:135
 msgid "2 Weeks before retirement"
-msgstr "退订前 2 周"
+msgstr "停用前 2 周"
 
 #: ../app/helpers/view_helper.rb:117
 msgid "2 Years Ago"
@@ -2233,7 +2233,7 @@ msgstr "3 年前"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:116
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:136
 msgid "30 Days before retirement"
-msgstr "退订前 30 天"
+msgstr "停用前 30 天"
 
 #: ../app/controllers/miq_alert_controller.rb:515
 #: ../app/controllers/miq_alert_controller.rb:531
@@ -2569,7 +2569,7 @@ msgstr "<use template=\"\" nics=\"\"></use>"
 
 #: ../app/controllers/report_controller/widgets.rb:605
 msgid "A %{type} must be selected"
-msgstr "必须选择一个 %{type} "
+msgstr "必须选择一个 %{type}"
 
 #: ../app/controllers/miq_alert_controller.rb:604
 msgid "A Driving Event must be selected"
@@ -2696,7 +2696,7 @@ msgstr "单个容器镜像"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:718
 msgid "A single Datastore"
-msgstr "单个数据存储区"
+msgstr "单个数据存储"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:694
 msgid "A single Host"
@@ -3218,7 +3218,7 @@ msgstr "未执行操作"
 msgid ""
 "Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%"
 "{id}]"
-msgstr "类型为 [%{store_type}] 的数据存储区，标识为 [%{id}] 的 [%{name}] 不支持此操作"
+msgstr "类型为 [%{store_type}] 的数据存储，标识为 [%{id}] 的 [%{name}] 不支持此操作"
 
 #: ../app/models/miq_action.rb:481
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
@@ -3522,7 +3522,7 @@ msgstr "为路由器“%{name}”在子网中添加接口失败：任务启动�
 
 #: ../app/controllers/network_router_controller.rb:98
 msgid "Add Interface on Subnet to Router \"%{name}\" was cancelled by the user"
-msgstr "用户取消了为路由器“%{name}”在子网中添加接口的操作"
+msgstr "用户已取消为路由器“%{name}”在子网中添加接口的操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3064
@@ -3564,7 +3564,7 @@ msgstr "添加新的云网络"
 
 #: ../app/controllers/cloud_network_controller.rb:62
 msgid "Add New Cloud Network "
-msgstr "添加新的云网络"
+msgstr "添加新的云网络 "
 
 #: ../app/controllers/cloud_object_store_container_controller.rb:53
 msgid "Add New Cloud Object Store Container"
@@ -3609,7 +3609,7 @@ msgstr "添加新的安全组"
 
 #: ../app/controllers/security_group_controller.rb:72
 msgid "Add New Security Group "
-msgstr "添加新的安全组"
+msgstr "添加新的安全组 "
 
 #: ../app/controllers/cloud_subnet_controller.rb:44
 msgid "Add New Subnet"
@@ -3711,7 +3711,7 @@ msgstr "添加时间概要文件"
 
 #: ../app/controllers/vm_common.rb:550
 msgid "Add VM \"%{name}\" to a Service was cancelled by the user"
-msgstr "用户取消了添加虚拟机“%{name}”到服务"
+msgstr "用户已取消添加虚拟机“%{name}”到服务的操作"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:18
 msgid "Add VM Analysis Profile"
@@ -3822,7 +3822,7 @@ msgstr "添加主机发起者"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4136
 msgid "Add a Host Initiator Group"
-msgstr "添加主机发起方组"
+msgstr "添加主机发起者组"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1416
@@ -3892,7 +3892,7 @@ msgstr "添加新主机聚集"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:12
 msgid "Add a New ISO Datastore"
-msgstr "添加新的 ISO 数据存储区"
+msgstr "添加新的 ISO 数据存储"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:23
 msgid "Add a New Infrastructure Provider"
@@ -4306,7 +4306,7 @@ msgstr "添加定制模板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2720
 msgid "Add an ISO Datastore"
-msgstr "添加 ISO 数据存储区"
+msgstr "添加 ISO 数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1528
@@ -4354,7 +4354,7 @@ msgstr "添加新的时间概要文件"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:25
 msgid "Add new host initiator group"
-msgstr "添加新的主机发起方组"
+msgstr "添加新的主机发起者组"
 
 #: ../app/javascript/components/provider-form/index.jsx:141
 msgid "Add of %s was cancelled by the user"
@@ -4362,22 +4362,22 @@ msgstr "用户已取消添加%s"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:60
 msgid "Add of Alert Profile \"%s\" has been successfully queued."
-msgstr "警报概要文件 \"%s\" 添加操作已成功排队。"
+msgstr "添加警报概要文件 \"%s\" 的操作已成功排队。"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1189
 msgid "Add of Automate Method was cancelled by the user"
-msgstr "用户取消了添加 Automate 方法"
+msgstr "用户已取消添加 Automate 方法的操作"
 
 #:
 #: ../app/javascript/oldjs/controllers/catalog/catalog_item_form_controller.js:197
 msgid "Add of Catalog Item was cancelled by the user"
-msgstr "用户取消了添加目录项"
+msgstr "用户已取消添加目录项的操作"
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:46
 msgid ""
 "Add of Cloud Object Store Container ${values.name} has been successfully "
 "queued."
-msgstr "已成功将 Cloud Object Store Container ${values.name} 添加到队列中。"
+msgstr "添加 Cloud Object Store Container ${values.name} 的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
 msgid ""
@@ -4387,51 +4387,51 @@ msgstr "添加云对象存储容器 ${values.name} 失败，错误为：${error.
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
 msgid "Add of Cloud Subnet \"%s\" has been successfully queued."
-msgstr "云子网 \"%s\" 添加操作已成功排队。"
+msgstr "添加云子网 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Add of Cloud Tenant \"%s\" has been successfully queued."
-msgstr "添加云租户“%s”已成功加入队列。"
+msgstr "添加云租户“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:50
 msgid "Add of Cloud Volume \"%s\" has been successfully queued."
-msgstr "添加云卷“%s”已成功加入队列。"
+msgstr "添加云卷“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:59
 msgid "Add of Credential \"%s\" has been successfully queued."
-msgstr "添加凭证“%s”已成功加入队列。"
+msgstr "添加凭证“%s”的操作已成功排队。"
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Domain was cancelled by user."
-msgstr "用户取消了添加域。"
+msgstr "用户已取消添加域的操作。"
 
 #: ../app/javascript/components/flavor-form/index.jsx:14
 msgid "Add of Flavor \"%s\" was successfully queued."
-msgstr "添加风格“%s”已成功加入队列。"
+msgstr "添加风格“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/flavor-form/index.jsx:19
 msgid "Add of Flavor cancelled by user."
-msgstr "用户取消了添加风格。"
+msgstr "用户已取消添加风格的操作。"
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx:26
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
-msgstr "主机聚集 \"%s\" 添加操作已成功排队。"
+msgstr "添加主机聚集 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx:10
 msgid "Add of Key Pair \"%s\" has been successfully queued."
-msgstr "添加密钥对“%s”已成功加入队列。"
+msgstr "添加密钥对“%s”的操作已成功排队。"
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:53
 msgid "Add of Namespace was cancelled by user."
-msgstr "用户取消了添加名称空间。"
+msgstr "用户已取消添加名称空间的操作。"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:40
 msgid "Add of Physical Storage has been successfully queued."
-msgstr "已成功将物理存储器添加到队列中。"
+msgstr "添加物理存储器的操作已成功排队。"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:62
 msgid "Add of Provider was cancelled by the user"
-msgstr "用户取消了添加供应商"
+msgstr "用户已取消添加提供者的操作"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:87
 msgid "Add of Repository \"${values.name}\" was successfully initiated."
@@ -4439,19 +4439,19 @@ msgstr "存储库 \"${values.name}\" 添加操作已成功启动。"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:100
 msgid "Add of Repository cancelled by user."
-msgstr "用户取消了添加存储库。"
+msgstr "用户已取消添加存储库的操作。"
 
 #: ../app/javascript/components/zone-form/index.jsx:23
 msgid "Add of Zone \"%s\" has been successfully queued."
-msgstr "区域 \"%s\" 添加操作已成功排队。"
+msgstr "添加区域 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/action-form/index.jsx:27
 msgid "Add of action \"%s\" has been successfully queued."
-msgstr "操作 \"%s\" 添加操作已成功排队。"
+msgstr "添加操作 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx:70
 msgid "Add of floating IPs \"%s\" has been successfully queued."
-msgstr "浮动 IP \"%s\" 添加操作已成功排队。"
+msgstr "添加浮动 IP \"%s\" 的操作已成功排队。"
 
 #: ../app/controllers/condition_controller.rb:51
 msgid "Add of new %{model} Condition was cancelled by the user"
@@ -4467,39 +4467,39 @@ msgstr "用户已取消添加新 %{type} 请求的操作"
 
 #: ../app/controllers/miq_alert_controller.rb:23
 msgid "Add of new Alert was cancelled by the user"
-msgstr "用户取消了添加新警报"
+msgstr "用户已取消添加新警报的操作"
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:242
 msgid "Add of new Analysis Profile was cancelled by the user"
-msgstr "用户取消了添加新分析概要文件"
+msgstr "用户已取消添加新的分析概要文件的操作"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1317
 msgid "Add of new Automate Class was cancelled by the user"
-msgstr "用户取消了添加新自动化类"
+msgstr "用户已取消添加新的自动化类的操作"
 
 #: ../app/controllers/miq_ae_class_controller.rb:637
 msgid "Add of new Automate Instance was cancelled by the user"
-msgstr "用户取消了添加新自动化实例"
+msgstr "用户已取消添加新的自动化实例的操作"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1353
 msgid "Add of new Automate Method was cancelled by the user"
-msgstr "用户取消了添加新 Automate 方法"
+msgstr "用户已取消添加新的 Automate 方法的操作"
 
 #: ../app/controllers/application_controller/buttons.rb:316
 msgid "Add of new Button Group was cancelled by the user"
-msgstr "用户取消了添加新按钮组"
+msgstr "用户已取消添加新的按钮组的操作"
 
 #: ../app/controllers/catalog_controller.rb:430
 msgid "Add of new Catalog Bundle was cancelled by the user"
-msgstr "用户取消了添加新的目录组合"
+msgstr "用户已取消添加新的目录组合的操作"
 
 #: ../app/controllers/catalog_controller.rb:735
 msgid "Add of new Catalog was cancelled by the user"
-msgstr "用户取消了添加新的对话框"
+msgstr "用户已取消添加新的对话框的操作"
 
 #: ../app/controllers/ops_controller/settings/tags.rb:47
 msgid "Add of new Category was cancelled by the user"
-msgstr "用户取消了添加新类别"
+msgstr "用户已取消添加新类别的操作"
 
 #: ../app/controllers/chargeback_rate_controller.rb:192
 msgid "Add of new Chargeback Rate was cancelled by the user"
@@ -4507,85 +4507,85 @@ msgstr "用户已取消新增计费费率"
 
 #: ../app/controllers/cloud_network_controller.rb:43
 msgid "Add of new Cloud Network was cancelled by the user"
-msgstr "用户取消了添加新的云网络"
+msgstr "用户已取消添加新的云网络的操作"
 
 #: ../app/controllers/cloud_volume_controller.rb:91
 msgid "Add of new Cloud Volume was cancelled by the user"
-msgstr "用户取消了添加新云卷"
+msgstr "用户已取消添加新云卷的操作"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:62
 msgid "Add of new Cloud Volume was cancelled by the user."
-msgstr "用户取消了添加新云卷。"
+msgstr "用户已取消添加新云卷的操作。"
 
 #: ../app/controllers/application_controller/buttons.rb:393
 msgid "Add of new Custom Button was cancelled by the user"
-msgstr "用户取消了添加新定制按钮"
+msgstr "用户已取消添加新定制按钮的操作"
 
 #: ../app/javascript/components/pxe-customization-template-form/index.jsx:49
 msgid "Add of new Customization Template was cancelled by the user"
-msgstr "用户取消了添加新定制模板"
+msgstr "用户已取消添加新定制模板的操作"
 
 #: ../app/controllers/report_controller/dashboards.rb:123
 msgid "Add of new Dashboard was cancelled by the user"
-msgstr "用户取消了添加新的仪表板"
+msgstr "用户已取消添加新仪表板的操作"
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:222
 msgid "Add of new Dialog was cancelled by the user"
-msgstr "用户取消了添加新对话框"
+msgstr "用户已取消添加新对话框的操作"
 
 #: ../app/javascript/components/generic-objects-form/index.jsx:134
 msgid "Add of new Generic Object Definition was cancelled by the user."
-msgstr "用户已取消添加新的通用对象定义。"
+msgstr "用户已取消添加新通用对象定义的操作。"
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:25
 msgid "Add of new ISO Datastore was cancelled by the user"
-msgstr "用户取消了添加新 ISO 数据存储区"
+msgstr "用户已取消添加新 ISO 数据存储的操作"
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx:17
 msgid "Add of new Key Pair was cancelled by the user"
-msgstr "用户取消了添加新密钥对"
+msgstr "用户已取消添加新密钥对的操作"
 
 #: ../app/javascript/components/pxe-servers-form/pxe-server-form.jsx:53
 msgid "Add of new PXE Server was cancelled by the user"
-msgstr "用户取消了添加新 PXE 服务器"
+msgstr "用户已取消添加新 PXE 服务器的操作"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:51
 msgid "Add of new Physical Storage was cancelled by the user."
-msgstr "新物理存储器添加操作已由用户取消。"
+msgstr "用户已取消添加新物理存储器的操作。"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:8
 msgid "Add of new Policy was cancelled by the user"
-msgstr "用户取消了添加新策略"
+msgstr "用户已取消添加新策略的操作"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:60
 msgid "Add of new Provider Tag Mapping was cancelled by the user"
-msgstr "用户取消了添加新提供程序标记映射"
+msgstr "用户已取消添加新提供程序标记映射的操作"
 
 #: ../app/controllers/report_controller/reports/editor.rb:55
 msgid "Add of new Report was cancelled by the user"
-msgstr "用户取消了添加新报告"
+msgstr "用户已取消添加新报告的操作"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:66
 #: ../app/controllers/report_controller/schedules.rb:197
 msgid "Add of new Schedule was cancelled by the user"
-msgstr "用户取消了添加新调度"
+msgstr "用户已取消添加新调度的操作"
 
 #: ../app/controllers/security_group_controller.rb:53
 #: ../app/javascript/components/network-security-groups-form/index.jsx:89
 msgid "Add of new Security Group was cancelled by the user"
-msgstr "用户取消了添加新的安全组"
+msgstr "用户已取消添加新安全组的操作"
 
 #: ../app/controllers/catalog_controller.rb:186
 msgid "Add of new Service Catalog Item was cancelled by the user"
-msgstr "用户取消了添加新服务目录项"
+msgstr "用户已取消添加新服务目录项的操作"
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:46
 msgid "Add of new System Image Type was cancelled by the user"
-msgstr "用户取消了添加新系统镜像类型"
+msgstr "用户已取消添加新系统镜像类型的操作"
 
 #: ../app/controllers/report_controller/widgets.rb:61
 msgid "Add of new Widget was cancelled by the user"
-msgstr "用户取消了添加新窗口小部件"
+msgstr "用户已取消添加新窗口小部件的操作"
 
 #: ../app/controllers/report_controller.rb:768
 #: ../app/views/report/_menu_form1.html.haml:23
@@ -4708,7 +4708,7 @@ msgstr "添加新的组"
 
 #: ../app/controllers/pxe_controller.rb:212
 msgid "Adding a new ISO Datastore"
-msgstr "添加新的 ISO 数据存储区"
+msgstr "添加新的 ISO 数据存储"
 
 #: ../app/controllers/ops_controller.rb:663
 msgid "Adding a new Mapping"
@@ -4783,7 +4783,7 @@ msgstr "用户已取消添加新的时间概要文件。"
 
 #: ../app/javascript/components/routers-form/index.jsx:132
 msgid "Adding of Network Router %s has been successfully queued."
-msgstr "网络路由器 %s 添加操作已成功排队。"
+msgstr "添加网络路由器 %s 的操作已成功排队。"
 
 #: ../app/javascript/components/network-routers-interfaces-form/index.jsx:31
 msgid "Adding of interface was cancelled by the user."
@@ -4791,11 +4791,11 @@ msgstr "用户已取消接口添加操作。"
 
 #: ../app/javascript/components/routers-form/index.jsx:146
 msgid "Adding of new Network Router was cancelled by the user."
-msgstr "新网络路由器添加操作已由用户取消。"
+msgstr "用户已取消添加新的网络路由器的操作。"
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:58
 msgid "Adding of new cloud object store container was cancelled by the user."
-msgstr "用户已取消添加新的云对象存储库容器。"
+msgstr "用户已取消添加新的云对象存储容器的操作。"
 
 #: ../app/javascript/components/network-routers-interfaces-form/index.jsx:28
 msgid "Adding or removing of interface was cancelled by the user."
@@ -4810,7 +4810,7 @@ msgstr "添加资源 <%{resource_name}> 到服务 <%{name}> 将创建一个循�
 #:
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:27
 msgid "Addition of Host has been successfully queued."
-msgstr "已成功将主机添加到队列中。"
+msgstr "添加主机的操作已成功排队。"
 
 #:
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:37
@@ -4896,7 +4896,7 @@ msgstr[0] "高级设置"
 #: ../app/helpers/host_helper/textual_summary.rb:461
 #: ../app/helpers/textual_mixins/textual_advanced_settings.rb:4
 msgid "Advanced Settings"
-msgstr "高级设置 "
+msgstr "高级设置"
 
 #: ../app/models/manageiq/providers/kubernetes/container_manager/options.rb:70
 msgid "Advanced Settings for provider configuration"
@@ -5338,28 +5338,28 @@ msgstr "所有仪表板"
 #: ../app/controllers/storage_controller/storage_pod.rb:32
 #: ../app/presenters/tree_builder_storage_pod.rb:8
 msgid "All Datastore Clusters"
-msgstr "所有数据存储区集群"
+msgstr "所有数据存储集群"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:74
 msgid ""
 "All Datastore customizations will be lost. Are you sure you want to reset all "
 "classes and instances to default?"
-msgstr "所有数据存储区的定制都将丢失。您确定要重置所有类和实例为缺省值吗？"
+msgstr "所有数据存储的定制都将丢失。您确定要重置所有类和实例为缺省值吗？"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:715
 #: ../app/controllers/storage_controller/storage_d.rb:28
 #: ../app/controllers/storage_controller/storage_d.rb:37
 #: ../app/presenters/tree_builder_storage.rb:12
 msgid "All Datastores"
-msgstr "所有数据存储区"
+msgstr "所有数据存储"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:716
 msgid "All Datastores for Host"
-msgstr "主机的所有数据存储区"
+msgstr "主机的所有数据存储"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:717
 msgid "All Datastores for Infrastructure Provider"
-msgstr "基础架构供应商的所有数据存储区"
+msgstr "基础架构供应商的所有数据存储"
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 #: ../config/yaml_strings.rb:6996
@@ -5422,7 +5422,7 @@ msgstr "基础架构供应商的所有主机"
 #: ../app/controllers/pxe_controller/iso_datastores.rb:128
 #: ../app/presenters/tree_builder_iso_datastores.rb:12
 msgid "All ISO Datastores"
-msgstr "所有 ISO 数据存储区"
+msgstr "所有 ISO 数据存储"
 
 #: ../app/controllers/vm_common.rb:756
 #: ../app/presenters/tree_builder_images_filter.rb:9
@@ -5855,7 +5855,7 @@ msgstr "允许的标签"
 
 #: ../app/models/manageiq/providers/redhat/infra_manager.rb:49
 msgid "Already has an ISO datastore"
-msgstr "已具有 ISO 数据存储器"
+msgstr "已具有 ISO 数据存储"
 
 #: ../app/helpers/view_helper.rb:133
 #: ../app/javascript/oldjs/controllers/playbook-reusable-code-mixin.js:37
@@ -6168,7 +6168,7 @@ msgstr "对帮助菜单所做的任何更改将在重新加载整个页面之后
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb:64
 msgid "Apikey"
-msgstr "Apikey"
+msgstr "API 密钥"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:41
 msgid "Appliance Name"
@@ -6402,7 +6402,7 @@ msgstr "您确定现在要为此窗口小部件启动内容生成吗？"
 #: ../app/views/catalog/_confirmation_modal.html.haml:25
 msgid ""
 "Are you sure you want the retirement options to be copied from provisioning?"
-msgstr "您确定要从供应复制退订选项吗？"
+msgstr "您确定要从供应复制停用选项吗？"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:21
 msgid "Are you sure you want to copy this Alert?"
@@ -6656,7 +6656,7 @@ msgstr "您确定要移除此重新配置入口点吗？"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:222
 msgid "Are you sure you want to remove this Retirement Entry Point?"
-msgstr "您确定要移除此退订入口点吗？"
+msgstr "您确定要移除此停用入口点吗？"
 
 #: ../app/javascript/components/dashboard_toolbar.jsx:12
 msgid ""
@@ -6810,7 +6810,7 @@ msgstr "分配过滤器"
 msgid ""
 "Assign Hosts and Datastores to Embedded SmartProxies in Zone: \"%{"
 "zone_description}\""
-msgstr "分配主机和数据存储区到区：“%{zone_description}”中内置的 SmartProxy"
+msgstr "分配主机和数据存储到区：“%{zone_description}”中内置的 SmartProxy"
 
 #: ../app/models/miq_action.rb:19
 msgid "Assign Profile to Analysis Task"
@@ -7165,7 +7165,7 @@ msgstr "将云卷“%{volume_name}”附加到 %{vm_name} 完成"
 msgid ""
 "Attaching Cloud Volume to Instance \"%{instance_name}\" was cancelled by the "
 "user"
-msgstr "用户取消了附加云卷到实例“%{instance_name}”"
+msgstr "用户已取消连接云卷到实例“%{instance_name}”的操作"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:63
@@ -7193,7 +7193,7 @@ msgstr "将卷 %{subject} 附加到实例 %{instance_name} 失败：%{error_mess
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:53
 msgid "Attachment of Cloud Volume has been successfully queued."
-msgstr "已成功对云卷的附件进行排队。"
+msgstr "连接云卷的操作已成功排队。"
 
 #: ../app/views/report/_schedule_email_options.html.haml:16
 msgid "Attachments"
@@ -7227,7 +7227,7 @@ msgstr "属性/值对"
 #: ../app/helpers/generic_object_helper/textual_summary.rb:26
 #: ../app/javascript/components/generic-objects-form/generic-objects-form.schema.js:75
 msgid "Attributes"
-msgstr "属性 "
+msgstr "属性"
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:39
 msgid "Attributes (%{count})"
@@ -8000,7 +8000,7 @@ msgstr "时间周期内不计开销的最大内存使用率的绝对平均最低
 
 #: ../config/model_attributes.rb:141
 msgid "AvailabilityZone|Mem usage absolute average avg over time period"
-msgstr "时间周期内的内存使用率绝对平均值 "
+msgstr "时间周期内的内存使用率绝对平均值"
 
 #: ../config/model_attributes.rb:142
 msgid "AvailabilityZone|Mem usage absolute average high over time period"
@@ -8016,7 +8016,7 @@ msgstr "名称"
 
 #: ../config/model_attributes.rb:145
 msgid "AvailabilityZone|Provider services supported"
-msgstr "支持的供应商服务 "
+msgstr "支持的供应商服务"
 
 #: ../config/model_attributes.rb:146
 msgid "AvailabilityZone|Region description"
@@ -9358,7 +9358,7 @@ msgstr "CPU - 子虚拟机收集间隔 30 天最大值的总使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6486
 msgid "CPU - Aggressive "
-msgstr "CPU - 激进"
+msgstr "CPU - 激进 "
 
 #. TRANSLATORS: en.yml key: dictionary.column.aggressive_recommended_vcpus
 #: ../config/dictionary_strings.rb:2114
@@ -9439,7 +9439,7 @@ msgstr "CPU - 收集间隔的最小使用率 (MHz)"
 #. TRANSLATORS: file: product/reports/200_Optimization - Virtual Machines/001_CPU Right Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6492
 msgid "CPU - Moderate "
-msgstr "CPU - 适中"
+msgstr "CPU - 适中 "
 
 #. TRANSLATORS: en.yml key: dictionary.column.moderate_recommended_vcpus
 #: ../config/dictionary_strings.rb:2228
@@ -12132,7 +12132,7 @@ msgstr "点击选择重新配置入口点"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:217
 msgid "Click to select Retirement Entry Point"
-msgstr "点击选择退订入口点"
+msgstr "点击选择停用入口点"
 
 #: ../app/helpers/catalog_helper.rb:27
 msgid "Click to this Catalog Item"
@@ -12889,7 +12889,7 @@ msgstr "云卷备份"
 
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:25
 msgid "Cloud volume backup has been successfully queued."
-msgstr "云卷备份已成功排队。"
+msgstr "云卷备份的操作已成功排队。"
 
 #: ../app/javascript/components/cloud-volume-actions-form/helper.js:40
 msgid "Cloud volume has been successfully restored from backup."
@@ -12918,35 +12918,35 @@ msgstr "云 / 基础架构供应商名称"
 
 #: ../config/model_attributes.rb:291
 msgid "CloudDatabaseFlavor|Cpus"
-msgstr "CPU"
+msgstr "CloudDatabaseFlavor|CPU"
 
 #: ../config/model_attributes.rb:292
 msgid "CloudDatabaseFlavor|Ems ref"
-msgstr "Ems 引用"
+msgstr "CloudDatabaseFlavor|Ems 引用"
 
 #: ../config/model_attributes.rb:293
 msgid "CloudDatabaseFlavor|Enabled"
-msgstr "已启用"
+msgstr "CloudDatabaseFlavor|已启用"
 
 #: ../config/model_attributes.rb:294
 msgid "CloudDatabaseFlavor|Href slug"
-msgstr "Href slug"
+msgstr "CloudDatabaseFlavor|Href slug"
 
 #: ../config/model_attributes.rb:295
 msgid "CloudDatabaseFlavor|Max connections"
-msgstr "最大连接数"
+msgstr "CloudDatabaseFlavor|最大连接数"
 
 #: ../config/model_attributes.rb:296
 msgid "CloudDatabaseFlavor|Max size"
-msgstr "最大大小"
+msgstr "CloudDatabaseFlavor|最大大小"
 
 #: ../config/model_attributes.rb:297
 msgid "CloudDatabaseFlavor|Memory"
-msgstr "内存"
+msgstr "CloudDatabaseFlavor|内存"
 
 #: ../config/model_attributes.rb:298
 msgid "CloudDatabaseFlavor|Name"
-msgstr "名称"
+msgstr "CloudDatabaseFlavor|名称"
 
 #: ../config/model_attributes.rb:299
 msgid "CloudDatabaseFlavor|Performance"
@@ -12962,7 +12962,7 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:302
 msgid "CloudDatabaseFlavor|Total cloud databases"
-msgstr "云数据库总数"
+msgstr "CloudDatabaseFlavor|云数据库总数"
 
 #: ../config/model_attributes.rb:279
 msgid "CloudDatabase|Db engine"
@@ -13788,7 +13788,7 @@ msgstr "集群与主机关联性"
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
 msgid "Cluster: "
-msgstr "集群："
+msgstr "集群： "
 
 #: ../app/presenters/tree_node/ems_cluster.rb:3
 msgid "Cluster: %{name}"
@@ -13899,7 +13899,7 @@ msgstr "收集所有集群"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:46
 msgid "Collect for All Datastores"
-msgstr "为所有数据存储区收集"
+msgstr "为所有数据存储收集"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:69
 msgid "Collect the current logs from the selected Server"
@@ -14789,7 +14789,7 @@ msgstr "配置版本"
 #: ../app/helpers/textual_mixins/vm_common.rb:27
 #: ../app/presenters/menu/default_menu.rb:34
 msgid "Configuration"
-msgstr "配置 "
+msgstr "配置"
 
 #: ../app/helpers/host_helper/textual_summary.rb:119
 msgid "Configuration (%{number})"
@@ -19157,7 +19157,7 @@ msgstr "复制 %{typ} 请求"
 
 #: ../app/controllers/report_controller/dashboards.rb:83
 msgid "Copy of Dashboard was cancelled by the user"
-msgstr "用户取消了复制仪表板"
+msgstr "用户已取消复制仪表板的操作"
 
 #: ../app/controllers/orchestration_stack_controller.rb:216
 #: ../app/javascript/components/orchestration-template/orcherstration-template-form.js:79
@@ -19167,7 +19167,7 @@ msgstr "复制编排模板已被用户取消"
 
 #: ../app/controllers/catalog_controller.rb:154
 msgid "Copy of a Service Catalog Item was cancelled by the user"
-msgstr "用户取消了复制服务目录项"
+msgstr "用户已取消复制服务目录项的操作"
 
 #: ../app/controllers/catalog_controller.rb:163
 msgid "Copy of a Service Catalog Item was successfully saved"
@@ -19430,7 +19430,7 @@ msgstr "CPU"
 
 #: src/vm-snapshot-form/snapshot-form/snapshotForm.jsx:59
 msgid "Create"
-msgstr "创建 "
+msgstr "创建"
 
 #: ../app/controllers/cloud_volume_controller.rb:222
 msgid "Create Backup for Cloud Volume \"%{name}\""
@@ -19726,7 +19726,7 @@ msgstr "创建时间戳记"
 #:
 #: ../app/javascript/components/orchestration-template/orcherstration-template-form.js:84
 msgid "Creation of a new Orchestration Template was cancelled by the user"
-msgstr "用户取消了新编排模板的创建"
+msgstr "用户已取消新建编排模板的操作"
 
 #: ../app/controllers/mixins/containers_common_mixin.rb:78
 #: ../app/javascript/components/service-dialog-from-form/service-dialog-from.jsx:31
@@ -19735,27 +19735,27 @@ msgstr "用户已取消创建新服务对话框"
 
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:37
 msgid "Creation of new %s was canceled by the user."
-msgstr "用户取消了新建 %s"
+msgstr "用户已取消新建 %s 的操作"
 
 #: ../app/javascript/components/action-form/index.jsx:38
 msgid "Creation of new Action was canceled by the user."
-msgstr "用户已取消创建新操作。"
+msgstr "用户已取消新建操作的操作。"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:71
 msgid "Creation of new Alert Profile was canceled by the user."
-msgstr "用户已取消创建新警报概要文件。"
+msgstr "用户已取消新建警报概要文件的操作。"
 
 #: ../app/javascript/components/subnet-form/index.jsx:76
 msgid "Creation of new Cloud Subnet was canceled by the user."
-msgstr "用户已取消创建新云子网。"
+msgstr "用户已取消新建云子网的操作。"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:37
 msgid "Creation of new Cloud Tenant was canceled by the user."
-msgstr "用户取消了新建云租户。"
+msgstr "用户已取消新建云租户的操作。"
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:70
 msgid "Creation of new Credential was canceled by the user."
-msgstr "用户取消了新建凭证。"
+msgstr "用户已取消新建凭证的操作。"
 
 #: ../app/javascript/components/button-group/index.jsx:112
 msgid "Creation of new Custom Button Group was canceled by the user."
@@ -19772,11 +19772,11 @@ msgstr "用户已取消创建新主机聚集。"
 
 #: ../app/javascript/components/host-initiator-group-form/index.jsx:38
 msgid "Creation of new Host Initiator Group was canceled by the user"
-msgstr "用户已取消创建新的主机发起方组。"
+msgstr "用户已取消新建主机发起者组的操作"
 
 #: ../app/javascript/components/policy-profile-form/index.js:53
 msgid "Creation of new Policy Profile was canceled by the user."
-msgstr "用户已取消创建新策略概要文件。"
+msgstr "用户已取消新建策略概要文件的操作。"
 
 #: ../app/javascript/components/zone-form/index.jsx:34
 msgid "Creation of new Zone was canceled by the user."
@@ -19784,7 +19784,7 @@ msgstr "用户已取消创建新区域。"
 
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx:82
 msgid "Creation of new floating IPs was canceled by the user."
-msgstr "用户已取消创建新浮动 IP。"
+msgstr "用户已取消新建浮动 IP 的操作。"
 
 #: ../app/helpers/container_summary_helper.rb:107
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb:221
@@ -21041,38 +21041,38 @@ msgstr "数据中心"
 #: ../app/views/shared/views/_prov_dialog.html.haml:129
 #: ../config/yaml_strings.rb:1165
 msgid "Datastore"
-msgstr "数据存储区"
+msgstr "数据存储"
 
 #: ../app/controllers/storage_controller/storage_d.rb:43
 #: ../app/controllers/storage_controller/storage_pod.rb:39
 msgid "Datastore \"%{name}\""
-msgstr "数据存储区“%{name}”"
+msgstr "数据存储“%{name}”"
 
 #: ../app/controllers/application_controller/ci_processing.rb:736
 msgid "Datastore \"%{name}\": Error during '%{task}': %{error_message}"
-msgstr "数据存储区“%{name}”：“%{task}”期间出错：%{error_message}"
+msgstr "数据存储“%{name}”：“%{task}”期间出错：%{error_message}"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:96
 msgid "Datastore Actual Usage Summary"
-msgstr "数据存储区实际使用摘要"
+msgstr "数据存储实际使用摘要"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:89
 msgid "Datastore Allocation Summary"
-msgstr "数据存储区分配摘要"
+msgstr "数据存储分配摘要"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:654
 msgid "Datastore Analysis"
-msgstr "数据存储区分析"
+msgstr "数据存储分析"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:590
 msgid "Datastore Analysis Complete"
-msgstr "数据存储器分析完成"
+msgstr "数据存储分析完成"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:583
 msgid "Datastore Analysis Request"
-msgstr "数据存储器分析请求"
+msgstr "数据存储分析请求"
 
 #. TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
 #: ../config/yaml_strings.rb:7180
@@ -21086,7 +21086,7 @@ msgstr "过去 6 个月数据存储容量趋势"
 
 #: ../app/controllers/storage_controller.rb:323
 msgid "Datastore Clusters"
-msgstr "数据存储区集群"
+msgstr "数据存储集群"
 
 #. TRANSLATORS: en.yml key: dictionary.model.StorageFile
 #. TRANSLATORS: en.yml key: dictionary.table.storage_file
@@ -21094,12 +21094,12 @@ msgstr "数据存储区集群"
 #: ../config/dictionary_strings.rb:4312
 msgid "Datastore File"
 msgid_plural "Datastore Files"
-msgstr[0] "数据存储区文件"
+msgstr[0] "数据存储文件"
 
 #. TRANSLATORS: file: product/views/StorageFile-files.yaml
 #: ../config/yaml_strings.rb:1813
 msgid "Datastore Files"
-msgstr "数据存储区文件"
+msgstr "数据存储文件"
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6331
@@ -21121,17 +21121,17 @@ msgstr "数据存储名称"
 #. TRANSLATORS: file: product/views/StorageFile-debris_files.yaml
 #: ../config/yaml_strings.rb:1788
 msgid "Datastore Non-VM Files"
-msgstr "数据存储区非虚拟机文件"
+msgstr "数据存储非虚拟机文件"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_sets.yml
 #: ../config/yaml_strings.rb:864
 msgid "Datastore Operation"
-msgstr "数据存储器操作"
+msgstr "数据存储操作"
 
 #. TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
 #: ../config/yaml_strings.rb:1817
 msgid "Datastore Other VM Files"
-msgstr "数据存储区其他虚拟机文件"
+msgstr "数据存储其他虚拟机文件"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_datastore_path
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
@@ -21148,11 +21148,11 @@ msgstr "数据存储区其他虚拟机文件"
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
 #: ../config/dictionary_strings.rb:2348 ../config/yaml_strings.rb:5744
 msgid "Datastore Path"
-msgstr "数据存储区路径"
+msgstr "数据存储路径"
 
 #: ../app/javascript/oldjs/controllers/schedule/schedule_form_controller.js:192
 msgid "Datastore Selection"
-msgstr "数据存储区选择"
+msgstr "数据存储选择"
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6329
@@ -21176,17 +21176,17 @@ msgstr "数据存储类型"
 #. TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 #: ../config/yaml_strings.rb:1819
 msgid "Datastore VM Memory Files"
-msgstr "数据存储区虚拟机内存文件"
+msgstr "数据存储虚拟机内存文件"
 
 #. TRANSLATORS: file: product/views/StorageFile-disk_files.yaml
 #: ../config/yaml_strings.rb:1811
 msgid "Datastore VM Provisioned Disk Files"
-msgstr "数据存储区虚拟机供应的磁盘文件"
+msgstr "数据存储虚拟机供应的磁盘文件"
 
 #. TRANSLATORS: file: product/views/StorageFile-snapshot_files.yaml
 #: ../config/yaml_strings.rb:1815
 msgid "Datastore VM Snapshot Files"
-msgstr "数据存储区虚拟机快照文件"
+msgstr "数据存储虚拟机快照文件"
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/configuration.rb:41
@@ -21199,7 +21199,7 @@ msgstr "数据存储不存在，无法添加磁盘"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:128
 msgid "Datastore import was cancelled or is finished"
-msgstr "数据存储区导入已取消或完成"
+msgstr "数据存储导入已取消或完成"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:169
 #: ../app/controllers/miq_ae_tools_controller.rb:289
@@ -21227,7 +21227,7 @@ msgstr "主机数据存储摘要"
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:42
 #: ../config/yaml_strings.rb:1346
 msgid "Datastores"
-msgstr "数据存储区"
+msgstr "数据存储"
 
 #: ../app/presenters/tree_builder_utilization.rb:48
 msgid "Datastores (Click to open)"
@@ -21240,7 +21240,7 @@ msgstr "数据存储摘要"
 
 #: ../app/controllers/storage_controller/storage_pod.rb:44
 msgid "Datastores in cluster %{name}"
-msgstr "集群 %{name} 中的数据存储器"
+msgstr "集群 %{name} 中的数据存储"
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse
 #: ../config/dictionary_strings.rb:4046
@@ -21383,7 +21383,7 @@ msgstr "日期/时间值不能为空"
 
 #: ../app/javascript/oldjs/miq_timeline.js:41
 msgid "Date: "
-msgstr "日期："
+msgstr "日期： "
 
 #: ./dist/js/ui-components.js:1
 msgid "Datepicker"
@@ -21711,11 +21711,11 @@ msgstr "定义新的卷映射"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:29
 msgid "Defining of Host initiator \"%s\" has been successfully queued."
-msgstr "主机发起方“%s”的定义已成功排队。"
+msgstr "定义主机发起者“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:17
 msgid "Defining of a new Volume mapping has been successfully queued."
-msgstr "已成功对新卷映射的定义进行排队。"
+msgstr "定义新卷映射的操作已成功排队。"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/helpers/generic_object_helper/textual_summary.rb:10
@@ -22254,7 +22254,8 @@ msgstr[0] "已启动 %{number} 个云网络的删除。"
 
 #: ../app/controllers/cloud_object_store_container_controller.rb:124
 msgid "Delete initiated for %{number} Cloud Object Store Container."
-msgstr "{n, plural, other {已针对 %{number} 个云对象存储容器启动删除操作。}}"
+msgid_plural "Delete initiated for %{number} Cloud Object Store Containers."
+msgstr[0] "已针对 %{number} 个云对象存储容器启动删除操作。"
 
 #: ../app/controllers/cloud_tenant_controller.rb:152
 msgid "Delete initiated for %{number} Cloud Tenant."
@@ -23050,12 +23051,12 @@ msgstr "从实例 %{instance_name} 拆离卷 %{subject} 失败：%{error_message
 msgid ""
 "Detaching a Cloud Volume from Instance \"%{instance_name}\" was cancelled by "
 "the user"
-msgstr "用户取消了从实例“%{instance_name}”拆离云卷"
+msgstr "用户已取消从实例“%{instance_name}”拆离云卷的操作"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/attach-detach-cloud-volume-form.jsx:54
 msgid "Detachment of Cloud Volume of Host has been successfully queued."
-msgstr "已成功将主机的云卷拆离排队。"
+msgstr "拆离主机的云卷的操作已成功排队。"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 #: ../config/yaml_strings.rb:6517
@@ -23320,7 +23321,7 @@ msgstr "无法删除对话框，因为其连接到其他组件：%{components}"
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:174
 msgid "Dialog editing was canceled by the user."
-msgstr "用户取消了对话框编辑。"
+msgstr "用户已取消对话框编辑操作。"
 
 #: ../config/model_attributes.rb:1329
 msgid "Dialog field"
@@ -23361,7 +23362,7 @@ msgstr "对话框需要一个标签"
 
 #: ./dist/js/ui-components.js:1
 msgid "Dialog needs to have at least one tab"
-msgstr "对话框至少需要一个选项卡"
+msgstr "对话框需要至少有一个选项卡"
 
 #: ../app/controllers/miq_ae_customization_controller/dialogs.rb:91
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:77
@@ -23374,7 +23375,7 @@ msgstr "对话框部分必须具有标签"
 
 #: ./dist/js/ui-components.js:1
 msgid "Dialog section needs to have at least one field"
-msgstr "对话框部分必须至少具有一个字段"
+msgstr "对话框部分需要至少有一个字段"
 
 #: ../config/model_attributes.rb:1371
 msgid "Dialog tab"
@@ -23753,7 +23754,7 @@ msgstr "正在解除浮动 IP 与 %{model}“%{name}”的关联"
 msgid ""
 "Disassociation of Floating IP from Instance \"%{name}\" was cancelled by the "
 "user"
-msgstr "用户取消了解除浮动 IP 和实例“%{name}”的关联"
+msgstr "用户已取消解除浮动 IP 和实例“%{name}”的关联的操作"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
 #: ../app/views/ops/_settings_replication_tab.html.haml:98
@@ -24667,7 +24668,7 @@ msgstr "显示单独的计费保存报告"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2978
 msgid "Display Individual Cloud Database Flavors"
-msgstr "显示单个云数据库类型模板"
+msgstr "显示单个云数据库风格"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2960
@@ -24802,12 +24803,12 @@ msgstr "显示单独的数据中心"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1733
 msgid "Display Individual Datastore Clusters"
-msgstr "显示单独的数据存储区集群"
+msgstr "显示单独的数据存储集群"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1711
 msgid "Display Individual Datastores"
-msgstr "显示单独的数据存储区"
+msgstr "显示单独的数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4410
@@ -24857,7 +24858,7 @@ msgstr "显示单独的主机聚集"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4126
 msgid "Display Individual Host Initiator Groups"
-msgstr "显示个别主机发起方组"
+msgstr "显示个别主机发起者组"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4100
@@ -25152,7 +25153,7 @@ msgstr "显示计费保存报告列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2976
 msgid "Display Lists of Cloud Database Flavors"
-msgstr "显示云数据库模板列表"
+msgstr "显示云数据库风格列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2958
@@ -25282,12 +25283,12 @@ msgstr "显示数据中心的列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1709
 msgid "Display Lists of Datastores"
-msgstr "显示数据存储区的列表"
+msgstr "显示数据存储的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1731
 msgid "Display Lists of Datastores Clusters"
-msgstr "显示数据存储区集群的列表"
+msgstr "显示数据存储集群的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4408
@@ -25337,7 +25338,7 @@ msgstr "显示主机聚集列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4124
 msgid "Display Lists of Host Initiator Groups"
-msgstr "显示主机发起方组列表"
+msgstr "显示主机发起者组列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4098
@@ -25587,12 +25588,12 @@ msgstr "显示和 CI 相关的孤立 VM 的列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3610
 msgid "Display Lists of retired Instances related to a CI"
-msgstr "显示和 CI 相关的已退订实例的列表"
+msgstr "显示和 CI 相关的已停用实例的列表"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3780
 msgid "Display Lists of retired Vms related to a CI"
-msgstr "显示和 CI 相关的退订 VM 的列表"
+msgstr "显示和 CI 相关的已停用虚拟机的列表"
 
 #. TRANSLATORS: en.yml key: dictionary.column.display_memory
 #: ../config/dictionary_strings.rb:760
@@ -25860,7 +25861,7 @@ msgstr "解除浮动 IP 与实例“%{name}”的关联"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:113
 msgid "Distributed "
-msgstr "分布式"
+msgstr "分布式 "
 
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #: ../config/yaml_strings.rb:5293
@@ -26613,7 +26614,7 @@ msgstr "编辑此策略事件的操作"
 
 #: ../app/controllers/miq_alert_set_controller.rb:80
 msgid "Edit Alert Profile assignments cancelled by user"
-msgstr "用户取消了编辑警报概要文件分配"
+msgstr "用户已取消编辑警报概要文件分配的操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2467
@@ -26761,12 +26762,12 @@ msgstr "编辑定制模板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1737
 msgid "Edit Datastore Cluster Tags"
-msgstr "编辑数据存储区集群标签"
+msgstr "编辑数据存储集群标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1719
 msgid "Edit Datastore Tags"
-msgstr "编辑数据存储区标签"
+msgstr "编辑数据存储标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2407
@@ -26799,7 +26800,7 @@ msgstr "编辑事件分配"
 
 #: ../app/controllers/miq_policy_controller/events.rb:9
 msgid "Edit Event cancelled by user"
-msgstr "用户取消了事件编辑"
+msgstr "用户已取消编辑事件的操作"
 
 #: ../app/views/condition/_form_expression.html.haml:18
 #: ../app/views/layouts/_exp_editor.html.haml:14
@@ -26848,7 +26849,7 @@ msgstr "编辑 ISO 镜像"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2726
 msgid "Edit ISO Images on ISO Datastores"
-msgstr "编辑 ISO 数据存储区上的 ISO 镜像"
+msgstr "编辑 ISO 数据存储上的 ISO 镜像"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3754
@@ -26872,7 +26873,7 @@ msgstr "编辑日志库设置"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:85
 msgid "Edit Log Depot settings was cancelled by the user"
-msgstr "用户取消了对日志库设置的编辑"
+msgstr "用户已取消编辑日志库设置的操作"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:60
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:46
@@ -26881,7 +26882,7 @@ msgstr "编辑管理引擎关系"
 
 #: ../app/javascript/components/vm-server-relationship-form/index.jsx:37
 msgid "Edit Management Engine Relationship was cancelled by the user"
-msgstr "用户取消了编辑管理引擎关系"
+msgstr "用户已取消编辑管理引擎关系的操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:980
@@ -27112,7 +27113,7 @@ msgstr "编辑 LDAP 查找的用户组序列"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:369
 msgid "Edit Sequence of User Groups was cancelled by the user"
-msgstr "用户取消了对用户组序列的编辑"
+msgstr "用户已取消编辑用户组序列的操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4493
@@ -27290,7 +27291,7 @@ msgstr "编辑集群的标记"
 
 #: ../app/controllers/storage_controller.rb:430
 msgid "Edit Tags for Datastore"
-msgstr "编辑数据存储区的标签"
+msgstr "编辑数据存储的标签"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:988
@@ -27823,7 +27824,7 @@ msgstr "编辑主机聚集的标签"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4132
 msgid "Edit Tags of Host Initiator Groups"
-msgstr "编辑主机发起方组标记"
+msgstr "编辑主机发起者组标记"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4106
@@ -28427,7 +28428,7 @@ msgstr "编辑类模式序列“%{name}”"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1573
 msgid "Edit of Class Schema Sequence was cancelled by the user"
-msgstr "用户取消了对类模式序列的编辑"
+msgstr "用户已取消编辑类模式序列的操作"
 
 #: ../app/controllers/cloud_network_controller.rb:144
 msgid "Edit of Cloud Network \"%{name}\" was cancelled by the user"
@@ -28439,11 +28440,11 @@ msgstr "用户已取消编辑云子网 \"%s\"。"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:36
 msgid "Edit of Cloud Tenant \"%s\" was canceled by the user."
-msgstr "用户取消了对云租户“%s”的编辑。"
+msgstr "用户已取消编辑云租户“%s”的操作。"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:61
 msgid "Edit of Cloud Volume \"%s\" was canceled by the user."
-msgstr "用户取消了对云卷“%s”的编辑。"
+msgstr "用户已取消编辑云卷“%s”的操作。"
 
 #: ../app/controllers/cloud_volume_controller.rb:167
 msgid "Edit of Cloud Volume \"%{name}\" was cancelled by the user"
@@ -28451,7 +28452,7 @@ msgstr "用户已取消针对云卷“%{name}”的编辑"
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:69
 msgid "Edit of Credential \"%s\" was canceled by the user."
-msgstr "用户取消了对凭证“%s”的编辑。"
+msgstr "用户已取消编辑凭证“%s”的操作。"
 
 #: ../app/controllers/application_controller/buttons.rb:391
 msgid "Edit of Custom Button \"%{name}\" was cancelled by the user"
@@ -28478,7 +28479,7 @@ msgstr "用户已取消针对仪表板“%{name}”的编辑"
 
 #: ../app/controllers/report_controller/dashboards.rb:10
 msgid "Edit of Dashboard Sequence was cancelled by the user"
-msgstr "用户取消了对仪表板序列的编辑"
+msgstr "用户已取消编辑仪表板序列的操作"
 
 #: ../app/controllers/miq_ae_customization_controller/old_dialogs.rb:224
 msgid "Edit of Dialog \"%{name}\" was cancelled by the user"
@@ -28486,11 +28487,11 @@ msgstr "用户已取消针对对话框“%{name}”的编辑"
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:55
 msgid "Edit of Domain \"%s\" was cancelled by user."
-msgstr "用户取消了对域“%s”的编辑。"
+msgstr "用户已取消编辑域“%s”的操作。"
 
 #: ../app/javascript/components/generic-objects-form/index.jsx:133
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
-msgstr "用户已取消编辑通用对象定义 \"%s\"。"
+msgstr "用户已取消编辑通用对象定义 \"%s\" 的操作。"
 
 #: ../app/controllers/host_controller.rb:172
 msgid "Edit of Host \"%{name}\" was cancelled by the user"
@@ -28506,7 +28507,7 @@ msgstr "用户已取消编辑 ISO 映像 \"%s\"。"
 
 #: ../app/javascript/oldjs/components/miq_ae_class/namespace-form.js:55
 msgid "Edit of Namespace \"%s\" was cancelled by user."
-msgstr "用户取消了对名称空间“%s”的编辑。"
+msgstr "用户已取消编辑名称空间“%s”的操作。"
 
 #:
 #: ../app/javascript/components/orchestration-template/orcherstration-template-form.js:83
@@ -28535,7 +28536,7 @@ msgstr "用户已取消编辑策略概要文件 \"%s\"。"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:190
 msgid "Edit of Policy's Condition Assignment cancelled by user"
-msgstr "用户取消了对策略条件分配的编辑"
+msgstr "用户已取消编辑策略条件分配的操作"
 
 #: ../app/controllers/miq_policy_controller/policies.rb:163
 msgid "Edit of Policy's Event Assignment cancelled by user"
@@ -28543,7 +28544,7 @@ msgstr "用户已取消编辑策略的事件分配。"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1639
 msgid "Edit of Priority Order was cancelled by the user"
-msgstr "用户取消了对优先级顺序的编辑"
+msgstr "用户已取消编辑优先级顺序的操作"
 
 #: ../app/controllers/ops_controller/settings/label_tag_mapping.rb:62
 msgid "Edit of Provider Tag Mapping \"%{name}\" was cancelled by the user"
@@ -28551,11 +28552,11 @@ msgstr "用户已取消针对提供程序标记映射“%{name}”的编辑"
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:64
 msgid "Edit of Provider was cancelled by the user"
-msgstr "用户取消了对供应商的编辑"
+msgstr "用户已取消编辑提供者的操作"
 
 #: ../app/javascript/components/region-form/index.jsx:21
 msgid "Edit of Region was cancelled by the user"
-msgstr "用户取消了对区域的编辑"
+msgstr "用户已取消编辑区域的操作"
 
 #: ../app/controllers/report_controller/reports/editor.rb:53
 msgid "Edit of Report \"%{name}\" was cancelled by the user"
@@ -28613,7 +28614,7 @@ msgstr "用户已取消编辑区域 \"%s\"。"
 
 #: ../app/controllers/host_controller.rb:169
 msgid "Edit of credentials for selected Hosts was cancelled by the user"
-msgstr "用户取消了对所选主机的凭证的编辑"
+msgstr "用户已取消编辑所选主机的凭证的操作"
 
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx:81
 msgid "Edit of floating IPs \"%s\" was canceled by the user."
@@ -28625,7 +28626,7 @@ msgstr "用户已取消针对自动化类“%{name}”的模式的编辑"
 
 #: ../app/controllers/application_controller/policy_support.rb:29
 msgid "Edit policy assignments was cancelled by the user"
-msgstr "用户取消了对策略分配的编辑"
+msgstr "用户已取消编辑策略分配的操作"
 
 #: ../app/controllers/application_controller/policy_support.rb:131
 msgid "Edit policy simulation was cancelled by the user"
@@ -29099,15 +29100,15 @@ msgstr "正在编辑 %{vm_or_template}“%{name}”"
 
 #: ../app/controllers/miq_action_controller.rb:385
 msgid "Editing Action \"%{name}\""
-msgstr "正在编辑操作 \"%{name}\""
+msgstr "编辑操作 \"%{name}\""
 
 #: ../app/controllers/miq_alert_controller.rb:699
 msgid "Editing Alert \"%{name}\""
-msgstr "正在编辑警报 \"%{name}\""
+msgstr "编辑警报 \"%{name}\""
 
 #: ../app/controllers/miq_alert_set_controller.rb:288
 msgid "Editing Alert Profile \"%{name}\""
-msgstr "正在编辑警报概要文件 \"%{name}\""
+msgstr "编辑警报概要文件 \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:673
 msgid "Editing Analysis Profile \"%{name}\""
@@ -29840,7 +29841,7 @@ msgstr "启用按集群收集"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:58
 msgid "Enable Collection by Datastore"
-msgstr "启用收集（按数据存储区）"
+msgstr "启用收集（按数据存储）"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2810
@@ -30153,7 +30154,7 @@ msgstr "输入新大小"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:12
 #: ../app/views/static/retirement-form.html.haml:13
 msgid "Enter Retirement Date as"
-msgstr "输入退订日期"
+msgstr "输入停用日期"
 
 #: ../app/views/vm_common/_reconfigure.html.haml:163
 msgid "Enter Size"
@@ -30637,7 +30638,7 @@ msgstr "错误：验证失败"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:179
 msgid "Error: Datastore import file upload expired"
-msgstr "错误：数据存储区导入文件上传过期"
+msgstr "错误：数据存储导入文件上传过期"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:165
 msgid "Error: Datastore import was not successful"
@@ -30756,7 +30757,7 @@ msgstr "撤除实例 %{instance_name} 失败：%{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:36
 msgid "Evacuation of Instances was cancelled by the user"
-msgstr "用户取消了撤除实例"
+msgstr "用户已取消撤除实例的操作"
 
 #: ../app/models/miq_action.rb:18
 msgid "Evaluate Alerts"
@@ -31236,7 +31237,7 @@ msgstr "“计费”下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2972
 msgid "Everything under Cloud Database Flavors"
-msgstr "云数据库模板下的所有内容"
+msgstr "云数据库风格下的所有内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2954
@@ -31416,12 +31417,12 @@ msgstr "“仪表板”下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1705
 msgid "Everything under Datastores"
-msgstr "“数据存储区”下的任何内容"
+msgstr "“数据存储”下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1727
 msgid "Everything under Datastores Clusters"
-msgstr "“数据存储区集群”下的任何内容"
+msgstr "“数据存储集群”下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4404
@@ -31466,7 +31467,7 @@ msgstr "“主机聚集”下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4120
 msgid "Everything under Host Initiator Groups"
-msgstr "主机发起方组下的所有内容"
+msgstr "主机发起者组下的所有内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4094
@@ -31481,7 +31482,7 @@ msgstr "“主机”下的任何内容"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2708
 msgid "Everything under ISO Datastores"
-msgstr "'ISO 数据存储区' 下的任何内容"
+msgstr "“ISO 数据存储”下的任何内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1490
@@ -31883,7 +31884,7 @@ msgstr "导出所有类和实例到文件"
 
 #: ../app/controllers/miq_policy_export_controller.rb:29
 msgid "Export cancelled by user"
-msgstr "用户取消了导出"
+msgstr "用户已取消导出操作"
 
 #: ../app/views/miq_policy_export/_export.html.haml:72
 msgid "Export:"
@@ -32237,7 +32238,7 @@ msgstr "订阅"
 
 #: ../config/model_attributes.rb:1667
 msgid "ExtManagementSystem|Supports add host initiator"
-msgstr "ExtManagementSystem|支持添加主机发起方"
+msgstr "ExtManagementSystem|支持添加主机发起者"
 
 #: ../config/model_attributes.rb:1668
 msgid "ExtManagementSystem|Supports add storage"
@@ -32293,7 +32294,7 @@ msgstr "支持创建主机聚集"
 
 #: ../config/model_attributes.rb:1681
 msgid "ExtManagementSystem|Supports create host initiator group"
-msgstr "ExtManagementSystem|支持创建主机发起方组"
+msgstr "ExtManagementSystem|支持创建主机发起者组"
 
 #: ../config/model_attributes.rb:1682
 msgid "ExtManagementSystem|Supports create iso datastore"
@@ -32855,7 +32856,7 @@ msgstr "文件名"
 #: ../app/helpers/textual_mixins/textual_filesystems.rb:4
 #: ../config/yaml_strings.rb:926
 msgid "Files"
-msgstr "文件"
+msgstr "Files"
 
 #: ../app/controllers/vm_common.rb:1127
 msgid "Filesystem"
@@ -33925,7 +33926,7 @@ msgstr "对于专用处理器，格式为：“正整数”"
 
 #: ../app/views/support/show.html.haml:23
 msgid "For questions or problem reporting, visit "
-msgstr "对于疑问或问题报告，请访问"
+msgstr "对于疑问或问题报告，请访问 "
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision_workflow.rb:163
@@ -34393,7 +34394,7 @@ msgstr "Git URL："
 
 #: ../app/controllers/miq_ae_class_controller.rb:1800
 msgid "Git based refresh canceled"
-msgstr "取消了基于 Git 的刷新"
+msgstr "已取消基于 Git 的刷新"
 
 #: ../app/models/miq_ae_yaml_import.rb:82
 #: ../app/models/miq_ae_yaml_import.rb:90
@@ -35253,7 +35254,7 @@ msgstr "磁盘大小最小值"
 
 #: ../config/model_attributes.rb:1941
 msgid "Hardware|Firmware type"
-msgstr "固件类型 "
+msgstr "固件类型"
 
 #: ../config/model_attributes.rb:1942
 msgid "Hardware|Guest os"
@@ -35808,17 +35809,17 @@ msgstr "主机发起者"
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:73
 #: ../config/yaml_strings.rb:1921
 msgid "Host Initiator Group"
-msgstr "主机发起方组"
+msgstr "主机发起者组"
 
 #:
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:116
 msgid "Host Initiator Group:"
-msgstr "主机发起方组："
+msgstr "主机发起者组："
 
 #: ../app/controllers/host_initiator_group_controller.rb:51
 #: ../app/presenters/menu/default_menu.rb:159
 msgid "Host Initiator Groups"
-msgstr "主机发起方组"
+msgstr "主机发起者组"
 
 #:
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:97
@@ -36075,7 +36076,7 @@ msgstr "主机发起者"
 
 #: ../config/model_attributes.rb:2134
 msgid "Host initiator group"
-msgstr "主机发起方组"
+msgstr "主机发起者组"
 
 #: ../app/controllers/mixins/policy_mixin.rb:93
 msgid "Host is required"
@@ -36553,7 +36554,7 @@ msgstr "主机 - vLAN 和 vSwitch"
 #. TRANSLATORS: file: product/views/HostInitiatorGroup.yaml
 #: ../config/yaml_strings.rb:1148
 msgid "Hosts Cluster Initiators"
-msgstr "主机集群发起方"
+msgstr "主机集群发起者"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
 #: ../config/yaml_strings.rb:5968
@@ -36612,7 +36613,7 @@ msgstr "所有启用的端口"
 
 #: ../config/model_attributes.rb:1984
 msgid "Host|Archived"
-msgstr "已存档 "
+msgstr "已存档"
 
 #: ../config/model_attributes.rb:1985
 msgid "Host|Asset tag"
@@ -37082,13 +37083,13 @@ msgstr "小时"
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:99
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:121
 msgid "Hours (AM)"
-msgstr "小时 (AM)"
+msgstr "小时（上午）"
 
 #:
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:110
 #: ../app/javascript/components/settings-time-profile-form/settings-time-profile-form.schema.js:134
 msgid "Hours (PM)"
-msgstr "小时 (PM)"
+msgstr "小时（下午）"
 
 #: ../app/models/miq_alert.rb:420 ../app/models/miq_alert.rb:431
 #: ../app/models/miq_alert.rb:440
@@ -37381,24 +37382,24 @@ msgstr "ISO"
 #: ../config/dictionary_strings.rb:4130
 msgid "ISO Datastore"
 msgid_plural "ISO Datastores"
-msgstr[0] "ISO 数据存储区"
+msgstr[0] "ISO 数据存储"
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:19
 msgid "ISO Datastore \"%s\" was added."
-msgstr "已添加 ISO 数据存储器 \"%s\"。"
+msgstr "已添加 ISO 数据存储 \"%s\"。"
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:136
 msgid "ISO Datastore \"%{name}\""
-msgstr "ISO 数据存储区“%{name}”"
+msgstr "ISO 数据存储“%{name}”"
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:47
 msgid "ISO Datastore no longer exists"
-msgstr "ISO 数据存储区不再存在"
+msgstr "ISO 数据存储不再存在"
 
 #. TRANSLATORS: file: product/views/IsoDatastore.yaml
 #: ../app/controllers/pxe_controller.rb:124 ../config/yaml_strings.rb:1179
 msgid "ISO Datastores"
-msgstr "ISO 数据存储区"
+msgstr "ISO 数据存储"
 
 #. TRANSLATORS: en.yml key: dictionary.model.IsoImage
 #. TRANSLATORS: en.yml key: dictionary.table.iso_image
@@ -37757,15 +37758,15 @@ msgstr "导入云模板"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:116
 msgid "Import Datastore classes"
-msgstr "导入数据存储区类"
+msgstr "导入数据存储类"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:13
 msgid "Import Datastore classes (*.zip)"
-msgstr "导入数据存储区类（*.zip）"
+msgstr "导入数据存储类（*.zip）"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:27
 msgid "Import Datastore via git"
-msgstr "使用 git 导入数据存储区"
+msgstr "使用 git 导入数据存储"
 
 #: ../config/model_display_names.rb:138
 msgid "Import File Upload"
@@ -39743,7 +39744,7 @@ msgstr "孤立的列表"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3608
 msgid "List Retired"
-msgstr "已退订的列表"
+msgstr "已停用的列表"
 
 #:
 #: ../app/javascript/components/visual-settings-form/visual-settings-form.schema.js:76
@@ -39770,7 +39771,7 @@ msgstr "实时迁移实例 %{instance_name} 失败：%{error_message}"
 
 #: ../app/controllers/mixins/actions/vm_actions/live_migrate.rb:61
 msgid "Live migration of Instances was cancelled by the user"
-msgstr "用户取消了对实例的实时迁移"
+msgstr "用户已取消实时迁移实例的操作"
 
 #. TRANSLATORS: en.yml key: dictionary.column.lives_on_type
 #: ../config/dictionary_strings.rb:1140
@@ -40177,27 +40178,27 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:2227
 msgid "LoadBalancer|Retired"
-msgstr "已退订"
+msgstr "LoadBalancer|已停用"
 
 #: ../config/model_attributes.rb:2228
 msgid "LoadBalancer|Retirement last warn"
-msgstr "退订的最后警告"
+msgstr "LoadBalancer|停用最后警告"
 
 #: ../config/model_attributes.rb:2229
 msgid "LoadBalancer|Retirement requester"
-msgstr "退订请求者"
+msgstr "LoadBalancer|停用请求者"
 
 #: ../config/model_attributes.rb:2230
 msgid "LoadBalancer|Retirement state"
-msgstr "退订状态"
+msgstr "LoadBalancer|停用状态"
 
 #: ../config/model_attributes.rb:2231
 msgid "LoadBalancer|Retirement warn"
-msgstr "退订警告"
+msgstr "LoadBalancer|停用警告"
 
 #: ../config/model_attributes.rb:2232
 msgid "LoadBalancer|Retires on"
-msgstr "退订日期"
+msgstr "LoadBalancer|停用日期"
 
 #: ../config/model_attributes.rb:2233
 msgid "LoadBalancer|Total vms"
@@ -43686,7 +43687,7 @@ msgstr "迁移虚拟机"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3858
 msgid "Migrate VMs to another Host/Datastore"
-msgstr "把虚拟机迁移到另外的主机/数据存储区"
+msgstr "把虚拟机迁移到另外的主机/数据存储"
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:8
@@ -43717,7 +43718,7 @@ msgstr "迁移选择的项"
 
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:186
 msgid "Migrate selected items to another Host/Datastore"
-msgstr "把选择的项迁移到另外的主机/数据存储区"
+msgstr "把选择的项迁移到另外的主机/数据存储"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:143
 msgid "Migrate this VM"
@@ -43725,7 +43726,7 @@ msgstr "迁移此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:142
 msgid "Migrate this VM to another Host/Datastore"
-msgstr "把此虚拟机迁移到另外的主机/数据存储区"
+msgstr "把此虚拟机迁移到另外的主机/数据存储"
 
 #: ../app/helpers/configuration_script_helper.rb:99
 #: ../app/helpers/container_project_helper/textual_summary.rb:50
@@ -46678,7 +46679,7 @@ msgstr "MiqSnmp.trap_v1：确保提供了企业 OID"
 msgid ""
 "MiqSnmp.trap_v1: Ensure that server.host is configured properly in your "
 "settings.yml file"
-msgstr "MiqSnmp.trap_v1：确保在您的 settings.yml 文件中正确配置 server.host "
+msgstr "MiqSnmp.trap_v1：确保在您的 settings.yml 文件中正确配置 server.host"
 
 #: ../app/models/miq_snmp.rb:48
 msgid "MiqSnmp.trap_v1: Ensure that specific trap is provided"
@@ -47134,11 +47135,11 @@ msgstr "修改云租户“%s”已成功排入队列"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:49
 msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
-msgstr "修改云卷“%s”已成功加入队列。"
+msgstr "修改云卷“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:58
 msgid "Modification of Credential \"%s\" has been successfully queued."
-msgstr "修改凭证“%s”已成功排入队列。"
+msgstr "修改凭证“%s”的操作已成功排队。"
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx:25
 msgid "Modification of Host Aggregate %s has been successfully queued"
@@ -47146,11 +47147,11 @@ msgstr "主机聚集 %s 的修改操作已成功排队"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:39
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
-msgstr "物理存储器 \"%s\" 修改操作已成功排队。"
+msgstr "修改物理存储器 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:34
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
-msgstr "系统映像类型 \"%s\" 的修改操作已成功排队。"
+msgstr "修改系统映像类型 \"%s\" 的操作已成功排队。"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:970
@@ -47210,7 +47211,7 @@ msgstr "修改计费费率"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2962
 msgid "Modify Cloud Databases"
-msgstr "修改 Cloud Databases"
+msgstr "修改云数据库"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1290
@@ -47280,12 +47281,12 @@ msgstr "修改仪表板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1739
 msgid "Modify Datastore Clusters"
-msgstr "修改数据存储区集群"
+msgstr "修改数据存储集群"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1721
 msgid "Modify Datastores"
-msgstr "修改数据存储区"
+msgstr "修改数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2265
@@ -47330,7 +47331,7 @@ msgstr "修改主机发起者"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4134
 msgid "Modify Host Initiator Group"
-msgstr "修改主机发起方组"
+msgstr "修改主机发起者组"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1669
@@ -47340,7 +47341,7 @@ msgstr "修改主机"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2718
 msgid "Modify ISO Datastores"
-msgstr "修改 ISO 数据存储区"
+msgstr "修改 ISO 数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3758
@@ -48281,7 +48282,7 @@ msgstr "本机控制台访问失败：任务启动失败"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:75
 msgid "Navigate to Host Initiator Group %{group_name}"
-msgstr "导航至主机发起方组 %{group_name}"
+msgstr "导航至主机发起者组 %{group_name}"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:49
 msgid "Navigate to the Cloud Volume of this Mapping"
@@ -49243,11 +49244,11 @@ msgstr "从未验证的"
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:6
 #: ../app/views/layouts/angular-bootstrap/_auth_keypair_angular_bootstrap.html.haml:6
 msgid "New "
-msgstr "新建"
+msgstr "新建 "
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:59
 msgid "New Alert Profile \"%s\" has been successfully queued."
-msgstr "新建警报概要文件 \"%s\" 已成功排队。"
+msgstr "新建警报概要文件 \"%s\" 的操作已成功排队。"
 
 #: ../app/views/miq_ae_class/_class_fields.html.haml:74
 msgid "New Field"
@@ -49295,11 +49296,11 @@ msgstr "新窗口"
 
 #: ../app/javascript/components/action-form/index.jsx:26
 msgid "New action \"%s\" has been successfully queued."
-msgstr "新建操作 \"%s\" 已成功排队。"
+msgstr "新建操作 \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx:69
 msgid "New floating IPs \"%s\" has been successfully queued."
-msgstr "新建浮动 IP \"%s\" 已成功排队。"
+msgstr "新建浮动 IP \"%s\" 的操作已成功排队。"
 
 #: ../app/javascript/oldjs/miq_tree.js:311
 msgid "New name?"
@@ -49343,7 +49344,7 @@ msgstr "新卷存在以下问题：%{error}"
 
 #: ../app/javascript/components/zone-form/index.jsx:22
 msgid "New zone \"%s\" has been successfully queued."
-msgstr "新建区域 \"%s\" 已成功排队。"
+msgstr "新建区域 \"%s\" 的操作已成功排队。"
 
 #: ../app/views/layouts/_paging_bar.html.haml:45
 #: ../app/views/layouts/_paging_bar.html.haml:46
@@ -49528,7 +49529,7 @@ msgstr "没有采集该集群的容量和使用率数据"
 
 #: ../app/helpers/application_helper/button/storage_perf.rb:6
 msgid "No Capacity & Utilization data has been collected for this Datastore"
-msgstr "没有为该数据存储区收集容量和利用率数据"
+msgstr "没有为该数据存储收集容量和利用率数据"
 
 #: ../app/helpers/application_helper/button/host_performance.rb:5
 msgid "No Capacity & Utilization data has been collected for this Host"
@@ -49609,7 +49610,7 @@ msgstr "每日数据不可用"
 
 #: ../app/views/ops/_settings_cu_collection_tab.html.haml:55
 msgid "No Datastores found in the current region."
-msgstr "在当前区域里没有找到数据存储区。"
+msgstr "在当前区域里没有找到数据存储。"
 
 #: ../lib/miq_expression.rb:1112
 msgid "No Date/Time value specified"
@@ -49659,7 +49660,7 @@ msgstr "没有可用的小时或日数据，显示的是最近一个小时的实
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:38
 msgid "No ISO Datastores were selected to %{button}"
-msgstr "没有选择要 %{button} 的 ISO 数据存储区"
+msgstr "没有选择要 %{button} 的 ISO 数据存储"
 
 #: ../app/helpers/application_helper/button/vm_miq_request_new.rb:3
 msgid "No Infrastructure Provider that supports VM provisioning added"
@@ -49742,7 +49743,7 @@ msgstr "没有定义供应商"
 
 #: ../app/helpers/application_helper/button/iso_datastore_new.rb:4
 msgid "No Providers are available to create an ISO Datastore on"
-msgstr "没有可用来创建 ISO 数据存储区的供应商"
+msgstr "没有可用来创建 ISO 数据存储的供应商"
 
 #: ../app/models/manageiq/providers/vmware/infra_manager/scanning/job.rb:170
 msgid "No Providers available to delete snapshot"
@@ -50044,7 +50045,7 @@ msgstr "没有找到偏移历史记录，可能需要运行此虚拟机的分析
 
 #: ../app/javascript/components/miq-structured-list/index.jsx:213
 msgid "No entries found for ${title.toLowerCase()}"
-msgstr "找不到对应 ${title.toLowerCase()} 的条目"
+msgstr "找不到对应${title.toLowerCase()}的条目"
 
 #: ../app/models/mixins/miq_policy_mixin.rb:118
 #: ../app/models/mixins/miq_policy_mixin.rb:143
@@ -50278,11 +50279,11 @@ msgstr "没有支持创建云对象存储容器的存储管理者。"
 
 #: ../app/helpers/application_helper/button/host_initiator_group_new.rb:5
 msgid "No storage providers support creating host initiator groups."
-msgstr "没有存储器提供者支持创建主机发起方组。"
+msgstr "没有存储器提供者支持创建主机发起者组。"
 
 #: ../app/helpers/application_helper/button/host_initiator_new.rb:5
 msgid "No storage providers support creating host initiators."
-msgstr "没有存储器提供者支持创建主机发起方。"
+msgstr "没有存储器提供者支持创建主机发起者。"
 
 #: ../app/controllers/network_router_controller.rb:74
 msgid "No subnets available to add interfaces to Router \"%{name}\""
@@ -51215,7 +51216,7 @@ msgstr "一"
 
 #: ../app/controllers/mixins/actions/vm_actions/right_size.rb:11
 msgid "One %{model} must be selected to Right-Size Recommendations"
-msgstr "必须为适当大小推荐选择一个 %{model} "
+msgstr "必须为适当大小推荐选择一个 %{model}"
 
 #:
 #: ../app/javascript/components/generic-objects-form/custom-button-form/custom-button-form.schema.js:18
@@ -51231,7 +51232,7 @@ msgstr "其中一个电子邮件地址的“收件人”是无效的"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:61
 msgid "One or more %{model} must be selected to Reconfigure"
-msgstr "必须为重配置选择一个或多个 %{model} "
+msgstr "必须为重配置选择一个或多个 %{model}"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:34
 msgid "One or more %{model} must be selected to Set Ownership"
@@ -51257,7 +51258,7 @@ msgstr "仅 %{dashboard_count} 仪表板被组允许"
 
 #: ../app/helpers/application_helper/button/storage_delete.rb:6
 msgid "Only Datastore without VMs and Hosts can be removed"
-msgstr "仅可移除没有虚拟机和主机的数据存储区"
+msgstr "仅可移除没有虚拟机和主机的数据存储"
 
 #: ../app/models/miq_user_role.rb:27
 msgid "Only User Owned"
@@ -51867,7 +51868,7 @@ msgstr "编排堆栈"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4747
 msgid "Orchestration Stack %{subject} has been retired."
-msgstr "已退订编排堆栈 %{subject}。"
+msgstr "已停用编排堆栈 %{subject}。"
 
 #:
 #: ../app/models/manageiq/providers/amazon/cloud_manager/orchestration_stack.rb:58
@@ -51911,7 +51912,7 @@ msgstr[0] "编排堆栈资源"
 
 #: ../app/models/miq_request.rb:89
 msgid "Orchestration Stack Retire"
-msgstr "编排堆栈退订"
+msgstr "编排堆栈停用"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:633
@@ -51966,7 +51967,7 @@ msgstr "已保存编排模板 %s"
 #:
 #: ../app/javascript/components/orchestration-template/orcherstration-template-form.js:71
 msgid "Orchestration Template %s was successfully created"
-msgstr "已成功创建编排模板 %s "
+msgstr "已成功创建编排模板 %s"
 
 #: ../app/controllers/catalog_controller.rb:971
 msgid "Orchestration Template is required, please select one from the list"
@@ -52162,11 +52163,11 @@ msgstr "EMS 引用"
 
 #: ../config/model_attributes.rb:3557
 msgid "OrchestrationStack|Evm owner email"
-msgstr "Evm 所有者电子邮件 "
+msgstr "Evm 所有者电子邮件"
 
 #: ../config/model_attributes.rb:3558
 msgid "OrchestrationStack|Evm owner name"
-msgstr "Evm 所有者名称 "
+msgstr "Evm 所有者名称"
 
 #: ../config/model_attributes.rb:3559
 msgid "OrchestrationStack|Evm owner userid"
@@ -52214,27 +52215,27 @@ msgstr "资源组"
 
 #: ../config/model_attributes.rb:3570
 msgid "OrchestrationStack|Retired"
-msgstr "已退订"
+msgstr "OrchestrationStack|已停用"
 
 #: ../config/model_attributes.rb:3571
 msgid "OrchestrationStack|Retirement last warn"
-msgstr "退订最后警告"
+msgstr "OrchestrationStack|停用最后警告"
 
 #: ../config/model_attributes.rb:3572
 msgid "OrchestrationStack|Retirement requester"
-msgstr "退订请求者"
+msgstr "OrchestrationStack|停用请求者"
 
 #: ../config/model_attributes.rb:3573
 msgid "OrchestrationStack|Retirement state"
-msgstr "退订状态"
+msgstr "OrchestrationStack|停用状态"
 
 #: ../config/model_attributes.rb:3574
 msgid "OrchestrationStack|Retirement warn"
-msgstr "退订警告"
+msgstr "OrchestrationStack|停用警告"
 
 #: ../config/model_attributes.rb:3575
 msgid "OrchestrationStack|Retires on"
-msgstr "退订日期"
+msgstr "OrchestrationStack|停用日期"
 
 #: ../config/model_attributes.rb:3576
 msgid "OrchestrationStack|Start time"
@@ -53388,12 +53389,12 @@ msgstr "对容器供应商执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1735
 msgid "Perform Operations on Datastore Clusters"
-msgstr "对数据存储区集群执行操作"
+msgstr "对数据存储集群执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1715
 msgid "Perform Operations on Datastores"
-msgstr "对数据存储区执行操作"
+msgstr "对数据存储执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1480
@@ -53418,7 +53419,7 @@ msgstr "对主机聚集执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4128
 msgid "Perform Operations on Host Initiator Groups"
-msgstr "对主机发起方组执行操作"
+msgstr "对主机发起者组执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4102
@@ -53433,7 +53434,7 @@ msgstr "对主机执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2714
 msgid "Perform Operations on ISO Datastores"
-msgstr "对 ISO 数据存储区执行操作"
+msgstr "对 ISO 数据存储执行操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3742
@@ -53687,7 +53688,7 @@ msgstr "执行智能状态分析"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1717
 msgid "Perform SmartState Analysis for Datastores"
-msgstr "为数据存储区执行智能状态分析"
+msgstr "为数据存储执行智能状态分析"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1617
@@ -53726,11 +53727,11 @@ msgstr "对虚拟机执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:14
 msgid "Perform SmartState Analysis on the selected Datastores"
-msgstr "在所选的数据存储区中执行智能状态分析"
+msgstr "在所选的数据存储中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:18
 msgid "Perform SmartState Analysis on the selected Datastores?"
-msgstr "在所选的数据存储区中执行智能状态分析?"
+msgstr "在所选的数据存储中执行智能状态分析?"
 
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:24
 msgid "Perform SmartState Analysis on the selected Templates"
@@ -53760,11 +53761,11 @@ msgstr "在所选的项中执行智能状态分析?"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:12
 msgid "Perform SmartState Analysis on this Datastore"
-msgstr "在此数据存储区中执行智能状态分析"
+msgstr "在此数据存储中执行智能状态分析"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:14
 msgid "Perform SmartState Analysis on this Datastore?"
-msgstr "在此数据存储区中执行智能状态分析？"
+msgstr "在此数据存储中执行智能状态分析？"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:18
 msgid "Perform SmartState Analysis on this Image"
@@ -53858,12 +53859,12 @@ msgstr "性能 - 容器"
 #: ../app/models/storage_performance.rb:7 ../config/dictionary_strings.rb:3778
 msgid "Performance - Datastore"
 msgid_plural "Performance - Datastores"
-msgstr[0] "性能 - 数据存储区"
+msgstr[0] "性能 - 数据存储"
 
 #. TRANSLATORS: en.yml key: dictionary.model.StoragePerformance (plural form)
 #: ../config/dictionary_strings.rb:3780
 msgid "Performance - Datastores"
-msgstr "性能 - 数据存储区"
+msgstr "性能 - 数据存储"
 
 #. TRANSLATORS: en.yml key: dictionary.model.HostPerformance
 #: ../app/models/host_performance.rb:8 ../config/dictionary_strings.rb:2930
@@ -54918,7 +54919,7 @@ msgstr "请在保存前改正无效的重新配置入口点"
 
 #: ../app/controllers/catalog_controller.rb:1000
 msgid "Please correct invalid Retirement Entry Point prior to saving"
-msgstr "请在保存前改正无效的退订入口点"
+msgstr "请在保存前改正无效的停用入口点"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:222
 #: ../app/helpers/miq_ae_tools_helper.rb:12
@@ -56731,7 +56732,7 @@ msgstr "供应商："
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
 msgid "Provider: "
-msgstr "供应商："
+msgstr "供应商： "
 
 #: ../config/model_attributes.rb:3821
 msgid "ProviderTagMapping|Href slug"
@@ -57653,7 +57654,7 @@ msgstr "重新检查所选云供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:113
 msgid "Re-check Authentication Status for the selected Containers Providers "
-msgstr "重新检查所选容器供应商的认证状态"
+msgstr "重新检查所选容器供应商的认证状态 "
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:101
 msgid ""
@@ -57668,7 +57669,7 @@ msgstr "重新检查所选物理基础架构供应商的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:96
 msgid "Re-check Authentication Status for the selected storage manager"
-msgstr "请重新检查所选存储管理器的认证状态"
+msgstr "重新检查所选存储管理器的认证状态"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:98
 msgid "Re-check Authentication Status for this Cloud Provider"
@@ -58322,11 +58323,11 @@ msgstr "刷新关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:29
 msgid "Refresh Relationships for selected ISO Datastores"
-msgstr "为所选 ISO 数据存储区刷新关系"
+msgstr "为所选 ISO 数据存储刷新关系"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:33
 msgid "Refresh Relationships for selected ISO Datastores?"
-msgstr "为所选 ISO 数据存储区刷新关系?"
+msgstr "为所选 ISO 数据存储刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:38
 msgid "Refresh Relationships for selected PXE Servers"
@@ -58338,11 +58339,11 @@ msgstr "为所选 PXE 服务器刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:20
 msgid "Refresh Relationships for this ISO Datastore"
-msgstr "为此 ISO 数据存储区刷新关系"
+msgstr "为此 ISO 数据存储刷新关系"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:22
 msgid "Refresh Relationships for this ISO Datastore?"
-msgstr "为此 ISO 数据存储区刷新关系?"
+msgstr "为此 ISO 数据存储刷新关系?"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:25
 msgid "Refresh Relationships for this PXE Server"
@@ -58407,7 +58408,7 @@ msgstr "刷新输出"
 #: ../config/yaml_strings.rb:2716
 msgid ""
 "Refresh relationships and power states for all items related of ISO Datastores"
-msgstr "刷新与 ISO 数据存储区相关的所有项的关系和电源状态"
+msgstr "刷新与 ISO 数据存储相关的所有项的关系和电源状态"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3752
@@ -58442,7 +58443,7 @@ msgstr "刷新与虚拟机相关的所有项的关系和电源状态"
 msgid ""
 "Refresh relationships and power states for all items related to Host Initiator"
 " Groups"
-msgstr "刷新与主机发起方组相关的所有项的关系和电源状态"
+msgstr "刷新与主机发起者组相关的所有项的关系和电源状态"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4104
@@ -58632,13 +58633,13 @@ msgstr "刷新与这些主机发起者相关的所有项的关系和电源状态
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators Cluster"
-msgstr "刷新与这些主机发起方集群相关的所有项的关系和电源状态。"
+msgstr "刷新与这些主机发起者集群相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:19
 msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators Cluster?"
-msgstr "是否刷新与这些主机发起方集群相关的所有项的关系和电源状态？"
+msgstr "是否刷新与这些主机发起者集群相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:19
 msgid ""
@@ -58704,13 +58705,13 @@ msgstr "刷新与此主机发起者相关的所有项的关系和电源状态"
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator Cluster"
-msgstr "刷新与此主机发起方集群相关的所有项的关系和电源状态。"
+msgstr "刷新与此主机发起者集群相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb:19
 msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator Cluster?"
-msgstr "是否刷新与此主机发起方集群相关的所有项的关系和电源状态？"
+msgstr "是否刷新与此主机发起者集群相关的所有项的关系和电源状态？"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid ""
@@ -59414,7 +59415,7 @@ msgstr "远程安全组（名称 - 引用）"
 #:
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:28
 msgid "Removal of Host has been successfully queued."
-msgstr "已成功对除去主机进行排队。"
+msgstr "除去主机的操作已成功排队。"
 
 #:
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:38
@@ -59424,7 +59425,7 @@ msgstr "用户已取消主机除去操作。"
 #:
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:87
 msgid "Removal of security group was canceled by the user."
-msgstr "用户取消了移除安全组。"
+msgstr "用户已取消移除安全组的操作。"
 
 #: ../app/javascript/components/action-form/action-form.schema.js:89
 #: ../app/javascript/components/button-group/group-form.schema.js:62
@@ -59453,7 +59454,7 @@ msgstr "移除 %{email}"
 #: ../app/javascript/components/catalog-form/catalog-form.schema.js:54
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:58
 msgid "Remove All"
-msgstr "全部移除"
+msgstr "全部除去"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4030
@@ -59536,20 +59537,20 @@ msgstr "移除定制模板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1741
 msgid "Remove Datastore Clusters"
-msgstr "移除数据存储区集群"
+msgstr "移除数据存储集群"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:22
 msgid "Remove Datastore from Inventory"
-msgstr "从库存移除数据存储区"
+msgstr "从库存移除数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1723
 msgid "Remove Datastores"
-msgstr "移除数据存储区"
+msgstr "移除数据存储"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:25
 msgid "Remove Datastores from Inventory"
-msgstr "从库存移除数据存储区"
+msgstr "从库存移除数据存储"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:29
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:26
@@ -59637,11 +59638,11 @@ msgstr "移除主机"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2722
 msgid "Remove ISO Datastores"
-msgstr "移除 ISO 数据存储区"
+msgstr "移除 ISO 数据存储"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:19
 msgid "Remove ISO Datastores from Inventory"
-msgstr "从库存移除 ISO 数据存储区"
+msgstr "从库存移除 ISO 数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3760
@@ -59849,7 +59850,7 @@ msgstr "从库存移除资源池"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:425
 msgid "Remove Resources"
-msgstr "移除资源 "
+msgstr "移除资源"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3060
@@ -60023,7 +60024,7 @@ msgstr "从该实例移除安全组"
 
 #: ../app/javascript/components/button-group/group-form.schema.js:63
 msgid "Remove all"
-msgstr "全部移除"
+msgstr "全部除去"
 
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
@@ -60104,7 +60105,7 @@ msgstr "移除所选的定制模板"
 
 #: ../app/helpers/application_helper/toolbar/storages_center.rb:24
 msgid "Remove selected Datastores from Inventory"
-msgstr "从库存移除所选的数据存储区"
+msgstr "从库存移除所选的数据存储"
 
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:38
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:37
@@ -60130,7 +60131,7 @@ msgstr "从库存移除所选通用对象定义"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:18
 msgid "Remove selected ISO Datastores from Inventory"
-msgstr "从库存移除所选的 ISO 数据存储区"
+msgstr "从库存移除所选的 ISO 数据存储"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:39
 msgid "Remove selected Infrastructure Providers from Inventory"
@@ -60315,7 +60316,7 @@ msgstr "移除此定制模板"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:21
 msgid "Remove this Datastore from Inventory"
-msgstr "从库存移除此数据存储区"
+msgstr "从库存移除此数据存储"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:28
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:25
@@ -60337,7 +60338,7 @@ msgstr "从库存移除此通用对象定义"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:12
 msgid "Remove this ISO Datastore from Inventory"
-msgstr "从库存移除此 ISO 数据存储区"
+msgstr "从库存移除此 ISO 数据存储"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:38
 msgid "Remove this Image from Inventory"
@@ -60423,7 +60424,7 @@ msgstr "从库存移除此资源池"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:221
 msgid "Remove this Retirement Entry Point"
-msgstr "移除此退订入口点"
+msgstr "移除此停用入口点"
 
 #:
 #: ../app/helpers/helper/manageiq/providers/nsxt/toolbar_overrides/security_group_center.rb:34
@@ -61606,7 +61607,7 @@ msgstr "无资源服务器模板"
 #: ../app/views/catalog/_sandt_tree_show.html.haml:247
 #: ../config/yaml_strings.rb:1587
 msgid "Resources"
-msgstr "资源 "
+msgstr "资源"
 
 #: ../app/helpers/ems_storage_helper/textual_summary.rb:87
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:132
@@ -61948,16 +61949,16 @@ msgstr "恢复供应商"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4535
 msgid "Retire"
-msgstr "退订"
+msgstr "停用"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:60
 msgid "Retire %{name}"
-msgstr "退订 %{name}"
+msgstr "停用 %{name}"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3644
 msgid "Retire Instances"
-msgstr "退订实例"
+msgstr "停用实例"
 
 #: ../app/models/miq_template/operations.rb:11
 msgid "Retire Operation is not available for Images and VM Templates."
@@ -61965,35 +61966,35 @@ msgstr "停用操作不可用于映像和虚拟机模板。"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:17
 msgid "Retire Orchestration Stack"
-msgstr "退订编排堆栈"
+msgstr "停用编排堆栈"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:14
 msgid "Retire Service"
-msgstr "退订服务"
+msgstr "停用服务"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1164
 msgid "Retire Services"
-msgstr "退订服务"
+msgstr "停用服务"
 
 #: ../app/models/miq_retire_task.rb:89
 msgid "Retire Task"
 msgid_plural "Retire Tasks"
-msgstr[0] "退订任务"
+msgstr[0] "停用任务"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4537
 msgid "Retire VM"
-msgstr "退订虚拟机"
+msgstr "停用虚拟机"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:11
 msgid "Retire VM or Instance"
-msgstr "退订虚拟机或实例"
+msgstr "停用虚拟机或实例"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3810
 msgid "Retire VMs"
-msgstr "退订虚拟机"
+msgstr "停用虚拟机"
 
 #: ../app/models/vm/operations/lifecycle.rb:7
 msgid "Retire not supported because VM is archived"
@@ -62011,7 +62012,7 @@ msgstr "停用所选的编排堆栈"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:158
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:207
 msgid "Retire selected items"
-msgstr "退订所选的项"
+msgstr "停用所选项"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:66
 msgid "Retire the selected Orchestration Stacks?"
@@ -62021,57 +62022,57 @@ msgstr "停用所选的编排堆栈?"
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:157
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:206
 msgid "Retire the selected items"
-msgstr "退订所选的项"
+msgstr "停用所选项"
 
 #: ../app/helpers/application_helper/toolbar/service/lifecycle_mixin.rb:28
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:161
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:210
 msgid "Retire the selected items?"
-msgstr "退订所选的项?"
+msgstr "停用所选项?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:167
 msgid "Retire this Instance"
-msgstr "退订此实例"
+msgstr "停用此实例"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:169
 msgid "Retire this Instance?"
-msgstr "退订此实例?"
+msgstr "停用此实例?"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:49
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:51
 msgid "Retire this Orchestration Stack"
-msgstr "退订此编排堆栈"
+msgstr "停用此编排堆栈"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:73
 msgid "Retire this Service"
-msgstr "退订此服务"
+msgstr "停用此服务"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:75
 msgid "Retire this Service?"
-msgstr "退订此服务?"
+msgstr "停用此服务?"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:155
 msgid "Retire this VM"
-msgstr "退订此虚拟机"
+msgstr "停用此虚拟机"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:157
 msgid "Retire this VM?"
-msgstr "退订此虚拟机?"
+msgstr "停用此虚拟机?"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retired
 #: ../config/dictionary_strings.rb:1756
 msgid "Retired"
-msgstr "已退订"
+msgstr "已停用"
 
 #: ../app/controllers/service_controller.rb:344
 #: ../app/presenters/tree_builder_services.rb:24
 msgid "Retired Services"
-msgstr "已退订服务"
+msgstr "已停用服务"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6087
 msgid "Retired?"
-msgstr "已退订？"
+msgstr "已停用？"
 
 #: ../app/controllers/application_controller/ci_processing.rb:390
 #: ../app/helpers/application_helper/tasks.rb:14
@@ -62080,46 +62081,46 @@ msgstr "已退订？"
 #: ../app/views/layouts/angular/_multi_tab_ansible_form_options.html.haml:8
 #: ../app/views/service/_svcs_show.html.haml:13
 msgid "Retirement"
-msgstr "退订"
+msgstr "停用"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:45
 #: ../app/helpers/service_helper/textual_summary.rb:140
 #: ../app/helpers/vm_helper/textual_summary.rb:203
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:62
 msgid "Retirement Date"
-msgstr "退订日期"
+msgstr "停用日期"
 
 #: ../app/views/static/retirement-form.html.haml:21
 #: ../app/views/static/retirement-form.html.haml:32
 msgid "Retirement Date and Time"
-msgstr "退订日期和时间"
+msgstr "停用日期和时间"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:207
 msgid "Retirement Entry Point"
-msgstr "退订入口点"
+msgstr "停用入口点"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:206
 msgid "Retirement Entry Point (NameSpace/Class/Instance)"
-msgstr "退订入口点（名称空间/类/实例）"
+msgstr "停用入口点（名称空间/类/实例）"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:370
 msgid "Retirement Info"
-msgstr "退订信息"
+msgstr "停用信息"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_last_warn
 #: ../config/dictionary_strings.rb:1758
 msgid "Retirement Last Warn"
-msgstr "退订最后警告"
+msgstr "停用最后警告"
 
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_requester
 #: ../config/dictionary_strings.rb:1760
 msgid "Retirement Requester"
-msgstr "退订请求者"
+msgstr "停用请求者"
 
 #: ../app/helpers/service_helper/textual_summary.rb:146
 #: ../app/helpers/vm_helper/textual_summary.rb:209
 msgid "Retirement State"
-msgstr "退订状态"
+msgstr "停用状态"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:80
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:94
@@ -62129,17 +62130,17 @@ msgstr "停用时间"
 #. TRANSLATORS: en.yml key: dictionary.column.retirement_warn
 #: ../config/dictionary_strings.rb:1764
 msgid "Retirement Warn"
-msgstr "退订警告"
+msgstr "停用警告"
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:111
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:131
 #: ../app/views/static/retirement-form.html.haml:37
 msgid "Retirement Warning"
-msgstr "退订警告"
+msgstr "停用警告"
 
 #: ../app/javascript/components/retirement-form/index.jsx:75
 msgid "Retirement date removed"
-msgstr "退订日期已移除"
+msgstr "已移除停用日期"
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
 msgid "Retirement date set to ${tempDate.toLocaleString()}"
@@ -62153,7 +62154,7 @@ msgstr "停用日期设置为 ${tempDate.toLocaleString()}"
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
 #: ../config/dictionary_strings.rb:1766 ../config/yaml_strings.rb:5382
 msgid "Retires On"
-msgstr "退订日期"
+msgstr "停用日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4110
@@ -63127,7 +63128,7 @@ msgstr "已保存调度“%{name}”"
 
 #: ../app/controllers/report_controller/schedules.rb:82
 msgid "Schedule %{name} was deleted"
-msgstr "已删除调度 %{name} "
+msgstr "已删除调度 %{name}"
 
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml:54
 #: ../app/views/miq_request/_prov_physical_server_dialog.html.haml:54
@@ -64064,7 +64065,7 @@ msgstr "选择币种"
 
 #: ../app/views/chargeback_rate/_form.html.haml:39
 msgid "Select currency: "
-msgstr "选择币种："
+msgstr "选择币种： "
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:128
 msgid "Select domain you wish to import from:"
@@ -64390,7 +64391,7 @@ msgstr "服务器“%{name}”：成功删除"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:484
 msgid "Server \"%{name}\": Error during 'destroy': "
-msgstr "服务器“%{name}”：“销毁”期间出错："
+msgstr "服务器“%{name}”：“销毁”期间出错： "
 
 #: ../app/helpers/application_helper/button/delete_server.rb:6
 msgid ""
@@ -64640,12 +64641,12 @@ msgstr "已供应服务 %{subject}。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4709
 msgid "Service %{subject} has been retired."
-msgstr "已退订服务 %{subject}。"
+msgstr "已停用服务 %{subject}。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4711
 msgid "Service %{subject} has started retirement."
-msgstr "服务 %{subject} 已启动退订。"
+msgstr "服务 %{subject} 已启动停用。"
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
 #: ../config/yaml_strings.rb:716
@@ -64818,7 +64819,7 @@ msgstr[0] "服务订单车"
 
 #: ../app/controllers/application_controller/dialog_runner.rb:34
 msgid "Service Order was cancelled by the user"
-msgstr "用户取消了服务订单"
+msgstr "用户已取消服务订单"
 
 #. TRANSLATORS: file: product/views/Patch.yaml
 #: ../app/helpers/textual_mixins/textual_os_info.rb:29
@@ -64856,7 +64857,7 @@ msgstr[0] "服务资源"
 
 #: ../app/models/miq_request.rb:98
 msgid "Service Retire"
-msgstr "退订服务"
+msgstr "服务停用"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:605
@@ -65406,7 +65407,7 @@ msgstr "时间周期内 CPU 使用率平均值"
 
 #: ../config/model_attributes.rb:4084
 msgid "Service|Cpu usage rate average high over time period"
-msgstr "时间周期内 CPU 使用率平均最高值 "
+msgstr "时间周期内 CPU 使用率平均最高值"
 
 #: ../config/model_attributes.rb:4085
 msgid "Service|Cpu usage rate average low over time period"
@@ -65620,27 +65621,27 @@ msgstr "区域编号"
 
 #: ../config/model_attributes.rb:4136
 msgid "Service|Retired"
-msgstr "已退订"
+msgstr "服务|已停用"
 
 #: ../config/model_attributes.rb:4137
 msgid "Service|Retirement last warn"
-msgstr "退订最后警告"
+msgstr "服务|停用最后警告"
 
 #: ../config/model_attributes.rb:4138
 msgid "Service|Retirement requester"
-msgstr "退订请求者"
+msgstr "服务|停用请求者"
 
 #: ../config/model_attributes.rb:4139
 msgid "Service|Retirement state"
-msgstr "退订状态"
+msgstr "服务|停用状态"
 
 #: ../config/model_attributes.rb:4140
 msgid "Service|Retirement warn"
-msgstr "退订警告"
+msgstr "服务|停用警告"
 
 #: ../config/model_attributes.rb:4141
 msgid "Service|Retires on"
-msgstr "退订日期"
+msgstr "服务|停用日期"
 
 #: ../config/model_attributes.rb:4143
 msgid "Service|V total vms"
@@ -65820,65 +65821,65 @@ msgstr "设置虚拟机的所有权"
 
 #: ../app/controllers/mixins/actions/vm_actions/ownership.rb:164
 msgid "Set Ownership was cancelled by the user"
-msgstr "用户取消了设置所有权"
+msgstr "用户已取消设置所有权的操作"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:45
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:150
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:163
 msgid "Set Retirement Date"
-msgstr "设置退订日期"
+msgstr "设置停用日期"
 
 #: ../app/controllers/mixins/actions/vm_actions/retire.rb:25
 msgid "Set Retirement Date does not apply to selected VM Template"
-msgstr "设置退订日期不适用于所选的虚拟机模板"
+msgstr "设置停用日期不适用于所选的虚拟机模板"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3642
 msgid "Set Retirement Date for Instances"
-msgstr "设置实例的退订日期"
+msgstr "设置实例的停用日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1160
 msgid "Set Retirement Date for Services"
-msgstr "设置服务的退订日期"
+msgstr "设置服务的停用日期"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3808
 msgid "Set Retirement Date for VMs"
-msgstr "设置虚拟机的退订日期"
+msgstr "设置虚拟机的停用日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:56
 #: ../app/helpers/application_helper/toolbar/service/lifecycle_mixin.rb:16
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:149
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:197
 msgid "Set Retirement Dates"
-msgstr "设置退订日期"
+msgstr "设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stacks_center.rb:55
 msgid "Set Retirement Dates for the selected Orchestration Stacks"
-msgstr "为所选的编排堆栈设置退订日期"
+msgstr "为所选的编排堆栈设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/service/lifecycle_mixin.rb:15
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:148
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:196
 msgid "Set Retirement Dates for the selected items"
-msgstr "为所选的项设置退订日期"
+msgstr "为所选的项设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:162
 msgid "Set Retirement Dates for this Instance"
-msgstr "为此实例设置退订日期"
+msgstr "为此实例设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:44
 msgid "Set Retirement Dates for this Orchestration Stack"
-msgstr "为编排堆栈设置退订日期"
+msgstr "为编排堆栈设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:66
 msgid "Set Retirement Dates for this Service"
-msgstr "为此服务设置退订日期"
+msgstr "为此服务设置停用日期"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:149
 msgid "Set Retirement Dates for this VM"
-msgstr "为此虚拟机设置退订日期"
+msgstr "为此虚拟机设置停用日期"
 
 #: ../app/models/miq_action.rb:20
 msgid "Set a Custom Attribute in vCenter"
@@ -65910,7 +65911,7 @@ msgstr "设置服务所有权"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4495
 msgid "Set services retire date"
-msgstr "设置服务退订日期"
+msgstr "设置服务停用日期"
 
 #: ../app/views/layouts/listnav/_show_list.html.haml:36
 msgid "Set the current filter as my default"
@@ -65927,19 +65928,19 @@ msgstr "是否将该项目设定为可管理？"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:7
 #: ../app/views/static/retirement-form.html.haml:8
 msgid "Set/Remove Retirement Date"
-msgstr "设置/移除退订日期"
+msgstr "设置/移除停用日期"
 
 #: ../app/controllers/vm_common.rb:1294
 msgid "Set/Remove retirement date for %{vm_or_template}"
-msgstr "设置/移除 %{vm_or_template} 的退订日期"
+msgstr "设置/移除 %{vm_or_template} 的停用日期"
 
 #: ../app/controllers/service_controller.rb:386
 msgid "Set/Remove retirement date for Service"
-msgstr "设置/移除服务的退订日期"
+msgstr "设置/移除服务的停用日期"
 
 #: ../app/javascript/components/retirement-form/index.jsx:82
 msgid "Set/remove retirement date was cancelled by the user"
-msgstr "用户取消了设置/移除退订日期"
+msgstr "用户已取消设置/移除停用日期的操作"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:500
 #: ../app/controllers/ops_controller/diagnostics.rb:524
@@ -66247,7 +66248,7 @@ msgstr "显示此容器的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:54
 msgid "Show Capacity & Utilization data for this Datastore"
-msgstr "显示此数据存储区的容量和利用率数据"
+msgstr "显示此数据存储的容量和利用率数据"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:202
 msgid "Show Capacity & Utilization data for this Instance"
@@ -66308,7 +66309,7 @@ msgstr "显示容器的容量和利用率数据"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1713
 msgid "Show Capacity & Utilization data of Datastores"
-msgstr "显示数据存储区的容量和利用率数据"
+msgstr "显示数据存储的容量和利用率数据"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1252
@@ -66490,7 +66491,7 @@ msgstr "显示最近的警报"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:225
 msgid "Show Non-VM Files installed on this Datastore"
-msgstr "显示此数据存储区上安装的非虚拟机文件"
+msgstr "显示此数据存储上安装的非虚拟机文件"
 
 #: ../app/helpers/textual_mixins/textual_os_info.rb:19
 msgid "Show OS information"
@@ -66498,7 +66499,7 @@ msgstr "显示操作系统信息"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:211
 msgid "Show Other VM Files installed on this Datastore"
-msgstr "显示此数据存储区上安装的其他虚拟机文件"
+msgstr "显示此数据存储上安装的其他虚拟机文件"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:84
 msgid "Show Parent Cluster '%{name}'"
@@ -66650,15 +66651,15 @@ msgstr "显示此项的时间线"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:197
 msgid "Show VM Memory Files installed on this Datastore"
-msgstr "显示此数据存储区上安装的虚拟机内存文件"
+msgstr "显示此数据存储上安装的虚拟机内存文件"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:169
 msgid "Show VM Provisioned Disk Files installed on this Datastore"
-msgstr "显示此数据存储区上安装的虚拟机供应磁盘文件"
+msgstr "显示此数据存储上安装的虚拟机供应磁盘文件"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:183
 msgid "Show VM Snapshot Files installed on this Datastore"
-msgstr "显示此数据存储区上安装的虚拟机快照文件"
+msgstr "显示此数据存储上安装的虚拟机快照文件"
 
 #: ../app/views/layouts/_perf_options.html.haml:98
 msgid "Show VM Types"
@@ -66858,7 +66859,7 @@ msgstr "显示所有附加的实例"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:143
 msgid "Show all files installed on this Datastore"
-msgstr "显示此数据存储区上安装的所有文件"
+msgstr "显示此数据存储上安装的所有文件"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:125
 msgid "Show all outputs"
@@ -66892,7 +66893,7 @@ msgstr "显示全屏报告"
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:130
 msgid "Show host initiators mapped to this volume"
-msgstr "显示映射到此卷的主机发起方"
+msgstr "显示映射到此卷的主机发起者"
 
 #: ../app/views/report/_form_filter_performance.html.haml:8
 msgid "Show hourly data from"
@@ -67181,7 +67182,7 @@ msgstr "显示此 VM 的集群"
 #: ../app/helpers/vm_helper/textual_summary.rb:266
 #: ../app/helpers/vm_helper/textual_summary.rb:274
 msgid "Show this VM's Datastores"
-msgstr "显示此虚拟机的数据存储区"
+msgstr "显示此虚拟机的数据存储"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:305
 msgid "Show this VM's Flavor"
@@ -67236,7 +67237,7 @@ msgstr "显示虚拟机族系"
 #: ../app/helpers/host_initiator_helper/textual_summary.rb:58
 #: ../app/helpers/host_initiator_helper/textual_summary.rb:70
 msgid "Show volumes mapped to this host initiator"
-msgstr "显示映射到此主机发起方的卷"
+msgstr "显示映射到此主机发起者的卷"
 
 #: ../lib/manageiq/showback/engine.rb:15
 msgid "Showback"
@@ -67580,7 +67581,7 @@ msgstr "SmartState Docker 用户名"
 
 #: ../app/models/storage.rb:75
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
-msgstr "不能在所选的数据存储区上执行智能状态分析"
+msgstr "不能在所选的数据存储上执行智能状态分析"
 
 #. TRANSLATORS: file: product/views/ProvisionCloudTemplates.yaml
 #. TRANSLATORS: file: product/views/ProvisionInfraTemplates.yaml
@@ -69847,7 +69848,7 @@ msgstr "交换机 Uuid"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:117
 msgid "Switch: "
-msgstr "交换机："
+msgstr "交换机： "
 
 #: ../app/presenters/tree_node/switch.rb:3
 msgid "Switch: %{name}"
@@ -70311,7 +70312,7 @@ msgstr "标签控件"
 #: ../app/controllers/application_controller/tags.rb:93
 #: ../app/controllers/ops_controller/ops_rbac.rb:595
 msgid "Tag Edit was cancelled by the user"
-msgstr "用户取消了标签编辑"
+msgstr "用户已取消标签编辑操作"
 
 #: ../app/views/chargeback_assignment/_form.html.haml:95
 msgid "Tag Name"
@@ -70325,7 +70326,7 @@ msgstr "标记父集群完成"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:354
 msgid "Tag Parent Datastore Complete"
-msgstr "标记父数据存储器完成"
+msgstr "标记父数据存储完成"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:342
@@ -71580,7 +71581,7 @@ msgstr "应当至少有 2 个仪表板才能编辑序列"
 #:
 #: ../app/javascript/oldjs/controllers/dialog_editor/dialog_editor_controller.js:186
 msgid "There was an error editing this dialog: "
-msgstr "编辑此对话框时出错："
+msgstr "编辑此对话框时出错： "
 
 #: ../app/controllers/application_controller.rb:1521
 msgid "These VMs can not be migrated together."
@@ -71817,7 +71818,7 @@ msgstr "此任务无法取消"
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:9
 msgid "This user is limited to "
-msgstr "此用户受限于"
+msgstr "此用户受限于 "
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:27
 msgid "This user is limited to items with the selected tags."
@@ -72359,12 +72360,12 @@ msgstr "总成本"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:522
 msgid "Total Datastore Used Space"
-msgstr "数据存储区已使用的空间总数"
+msgstr "数据存储已使用的空间总数"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_total_storages
 #: ../config/dictionary_strings.rb:2430
 msgid "Total Datastores"
-msgstr "数据存储区总数"
+msgstr "数据存储总数"
 
 #. TRANSLATORS: en.yml key: dictionary.column.total_direct_miq_templates
 #: ../config/dictionary_strings.rb:1950
@@ -73193,7 +73194,7 @@ msgstr "取消标记父集群已完成"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:378
 msgid "Un-Tag Parent Datastore Complete"
-msgstr "取消标记父数据存储器完成"
+msgstr "取消标记父数据存储完成"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:366
@@ -73216,7 +73217,7 @@ msgstr "无法%{action} %{resource}：%{details}"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:84
 msgid "Unable to add Repository "
-msgstr "无法添加存储库"
+msgstr "无法添加存储库 "
 
 #: ../app/controllers/mixins/actions/vm_actions/add_security_group.rb:17
 msgid "Unable to add Security Group to Instance \"%{name}\": %{details}"
@@ -73450,7 +73451,7 @@ msgstr "供应商被暂挂时，无法刷新"
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:51
 msgid "Unable to relocate VM: Specified Datastore is not a valid object"
-msgstr "无法改变虚拟机的位置: 指定的数据存储区不是一个有效的项"
+msgstr "无法改变虚拟机的位置: 指定的数据存储不是一个有效的项"
 
 #:
 #: ../app/models/manageiq/providers/vmware/infra_manager/vm_or_template_shared/operations/relocation.rb:46
@@ -75593,7 +75594,7 @@ msgstr "虚拟机重新配置"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:371
 msgid "VM Reconfigure Request was cancelled by the user"
-msgstr "用户取消了虚拟机的重配置请求"
+msgstr "用户已取消虚拟机重新配置请求"
 
 #: ../app/controllers/mixins/actions/vm_actions/reconfigure.rb:440
 msgid "VM Reconfigure Request was saved"
@@ -75666,7 +75667,7 @@ msgstr "虚拟机恢复"
 
 #: ../app/models/miq_request.rb:116
 msgid "VM Retire"
-msgstr "退订虚拟机"
+msgstr "停用虚拟机"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:416
@@ -75686,7 +75687,7 @@ msgstr "虚拟机停用警告"
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6089
 msgid "VM Retires On"
-msgstr "虚拟机退订日期"
+msgstr "虚拟机停用日期"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6800
@@ -75990,7 +75991,7 @@ msgstr "虚拟机具有太多父级。"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6765
 msgid "VM is Retired?"
-msgstr "虚拟机已退订？"
+msgstr "虚拟机已停用？"
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #: ../config/yaml_strings.rb:6085
@@ -76231,22 +76232,22 @@ msgstr "在数据存储中但未注册到主机的虚拟机"
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 #: ../config/yaml_strings.rb:6762
 msgid "VMs pending Retirement"
-msgstr "待退订虚拟机"
+msgstr "虚拟机待停用"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6775
 msgid "VMs that are Retired"
-msgstr "已退订虚拟机"
+msgstr "已停用虚拟机"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 #: ../config/yaml_strings.rb:6760
 msgid "VMs that are pending Retirement"
-msgstr "正在等待退订的虚拟机"
+msgstr "正在等待停用的虚拟机"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
 #: ../config/yaml_strings.rb:6773
 msgid "VMs that have been Retired (past retirement date)"
-msgstr "已退订的虚拟机（最近退订日期）"
+msgstr "已停用的虚拟机（最近停用日期）"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
 #: ../config/yaml_strings.rb:5563
@@ -76898,7 +76899,7 @@ msgstr "查看所有定制模板"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2710
 msgid "View All ISO Datastores"
-msgstr "查看所有 ISO 数据存储区"
+msgstr "查看所有 ISO 数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2652
@@ -76953,7 +76954,7 @@ msgstr "查看计费费率"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2974
 msgid "View Cloud Database Flavors"
-msgstr "查看云数据库类型模板"
+msgstr "查看云数据库风格"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2956
@@ -77123,12 +77124,12 @@ msgstr "查看数据中心"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1707
 msgid "View Datastores"
-msgstr "查看数据存储区"
+msgstr "查看数据存储"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1729
 msgid "View Datastores Clusters"
-msgstr "查看数据存储区集群"
+msgstr "查看数据存储集群"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4406
@@ -77191,7 +77192,7 @@ msgstr "查看主机聚集"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4122
 msgid "View Host Initiator Groups"
-msgstr "查看主机发起方组"
+msgstr "查看主机发起者组"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4096
@@ -77211,7 +77212,7 @@ msgstr "混合视图"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2712
 msgid "View ISO Images on ISO Datastores"
-msgstr "查看 ISO 数据存储区上的 ISO 镜像"
+msgstr "查看 ISO 数据存储上的 ISO 镜像"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3728
@@ -77905,12 +77906,12 @@ msgstr "已供应虚拟机 %{subject}。"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4715
 msgid "Virtual Machine %{subject} has been retired."
-msgstr "已退订虚拟机 %{subject}。"
+msgstr "已停用虚拟机 %{subject}。"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:4717
 msgid "Virtual Machine %{subject} has started retirement."
-msgstr "虚拟机 %{subject} 已启动退订。"
+msgstr "虚拟机 %{subject} 已启动停用。"
 
 #: ../app/models/manageiq/providers/kubevirt/infra_manager/vm.rb:106
 msgid "Virtual Machine (Kubevirt)"
@@ -78986,27 +78987,27 @@ msgstr "需要重启"
 
 #: ../config/model_attributes.rb:4772
 msgid "VmOrTemplate|Retired"
-msgstr "已退订"
+msgstr "VmOrTemplate|已停用"
 
 #: ../config/model_attributes.rb:4773
 msgid "VmOrTemplate|Retirement last warn"
-msgstr "退订最后警告"
+msgstr "VmOrTemplate|停用最后警告"
 
 #: ../config/model_attributes.rb:4774
 msgid "VmOrTemplate|Retirement requester"
-msgstr "退订请求者"
+msgstr "VmOrTemplate|停用请求者"
 
 #: ../config/model_attributes.rb:4775
 msgid "VmOrTemplate|Retirement state"
-msgstr "退订状态"
+msgstr "VmOrTemplate|停用状态"
 
 #: ../config/model_attributes.rb:4776
 msgid "VmOrTemplate|Retirement warn"
-msgstr "退订警告"
+msgstr "VmOrTemplate|停用警告"
 
 #: ../config/model_attributes.rb:4777
 msgid "VmOrTemplate|Retires on"
-msgstr "退订日期"
+msgstr "VmOrTemplate|停用日期"
 
 #: ../config/model_attributes.rb:4778
 msgid "VmOrTemplate|Smart"
@@ -79074,7 +79075,7 @@ msgstr "V 注解"
 
 #: ../config/model_attributes.rb:4794
 msgid "VmOrTemplate|V datastore path"
-msgstr "V 数据存储区路径"
+msgstr "VmOrTemplate|V 数据存储路径"
 
 #: ../config/model_attributes.rb:4795
 msgid "VmOrTemplate|V host vmm product"
@@ -79259,14 +79260,14 @@ msgstr "卷%{index} 大小 \"%{value}\" 必须在 10 到 2000 之间。"
 msgid ""
 "Volume <%{cloud_volume_name}> is mapped to Host Initiator <%{"
 "host_initiator_name}>"
-msgstr "卷 <%{cloud_volume_name}> 已映射至主机发起方 <%{host_initiator_name}>"
+msgstr "卷 <%{cloud_volume_name}> 已映射至主机发起者 <%{host_initiator_name}>"
 
 #:
 #: ../app/models/manageiq/providers/autosde/storage_manager/cluster_volume_mapping.rb:3
 msgid ""
 "Volume <%{cloud_volume_name}> is mapped to Host Initiator Group <%{"
 "host_initiator_group_name}>"
-msgstr "卷 <%{cloud_volume_name}> 已映射至主机发起方组 <%{host_initiator_group_name}>"
+msgstr "卷 <%{cloud_volume_name}> 已映射至主机发起者组 <%{host_initiator_group_name}>"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:117
 #: ../app/presenters/menu/default_menu.rb:155
@@ -79487,7 +79488,7 @@ msgstr "卷"
 
 #: ../app/helpers/host_initiator_helper/textual_summary.rb:68
 msgid "Volumes Attached Through Host Initiator Group"
-msgstr "通过主机发起方组连接的卷"
+msgstr "通过主机发起者组连接的卷"
 
 #: ../config/model_attributes.rb:4829
 msgid "Volume|Created on"
@@ -79911,7 +79912,7 @@ msgstr "警告：此仪表板及其全部组件都将被永久移除！"
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:24
 msgid ""
 "Warning: This Datastore and ALL of its components will be permanently removed!"
-msgstr "警告：此数据存储区及其全部组件都将被永久移除！"
+msgstr "警告：此数据存储及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:29
 msgid ""
@@ -79937,7 +79938,7 @@ msgstr "警告：此通用对象定义将被永久移除！"
 msgid ""
 "Warning: This ISO Datastore and ALL of its components will be permanently "
 "removed!"
-msgstr "警告：此 ISO 数据存储区及其全部组件都将被永久移除！"
+msgstr "警告：此 ISO 数据存储及其全部组件都将被永久移除！"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:41
 msgid ""
@@ -80068,7 +80069,7 @@ msgstr "警告：此供应商已被暂停，目前没有从该供应商收集数
 msgid ""
 "Warning: You will lose all of your current retirement options if you continue "
 "with this action"
-msgstr "警告：如果继续此操作，您将丢失目前所有退订选项"
+msgstr "警告：如果继续此操作，您将丢失目前所有停用选项"
 
 #: ../app/javascript/components/workers-form/workers.schema.js:209
 msgid "Web Service Workers"
@@ -81204,11 +81205,11 @@ msgstr "缺省值"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:35
 msgid "defining of host initiator was cancelled by the user"
-msgstr "用户取消了定义主机发起者"
+msgstr "用户已取消定义主机发起者的操作"
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:23
 msgid "defining of volume mapping was cancelled by the user"
-msgstr "用户取消了定义卷映射"
+msgstr "用户已取消定义卷映射的操作"
 
 #: ../app/models/host_aggregate.rb:87
 msgid "delete_aggregate must be implemented in a subclass"
@@ -82161,7 +82162,7 @@ msgstr "主接口"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:15
 msgid "primary, "
-msgstr "主要的，"
+msgstr "主要的， "
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb:102
@@ -82252,7 +82253,7 @@ msgstr "必须在子类中实现 raw_delete_cloud_network"
 
 #: ../app/models/cloud_subnet.rb:80
 msgid "raw_delete_cloud_subnet must be implemented in a subclass"
-msgstr "必须在子类中实现 raw_delete_cloud_subnet "
+msgstr "必须在子类中实现 raw_delete_cloud_subnet"
 
 #: ../app/models/cloud_tenant.rb:117
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
@@ -82268,11 +82269,11 @@ msgstr "必须在子类中实现 raw_delete_host_initiator"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb:152
 msgid "raw_delete_image must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_delete_image "
+msgstr "必须在子类中使用 raw_delete_image"
 
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair/operations.rb:5
 msgid "raw_delete_key_pair must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_delete_key_pair "
+msgstr "必须在子类中使用 raw_delete_key_pair"
 
 #: ../app/models/load_balancer.rb:70
 msgid "raw_delete_load_balancer must be implemented in a subclass"
@@ -82300,7 +82301,7 @@ msgstr "必须在子类中实现 raw_delete_snapshot"
 
 #: ../app/models/orchestration_stack.rb:139
 msgid "raw_delete_stack must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_delete_stack "
+msgstr "必须在子类中使用 raw_delete_stack"
 
 #: ../app/models/cloud_volume.rb:161
 msgid "raw_delete_volume must be implemented in a subclass"
@@ -82324,7 +82325,7 @@ msgstr "必须在子类中使用 raw_exists"
 
 #: ../app/models/vm_or_template/operations/relocation.rb:13
 msgid "raw_live_migrate must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_live_migrate "
+msgstr "必须在子类中使用 raw_live_migrate"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:227
 msgid "raw_remove_security_group must be implemented in a subclass"
@@ -82356,11 +82357,11 @@ msgstr "必须在子类中使用 raw_update_cloud_tenant"
 
 #: ../app/models/manageiq/providers/cloud_manager/template.rb:126
 msgid "raw_update_image must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_update_image "
+msgstr "必须在子类中使用 raw_update_image"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_update_load_balancer "
+msgstr "必须在子类中使用 raw_update_load_balancer"
 
 #: ../app/models/security_group.rb:64
 msgid "raw_update_security_group must be implemented in a subclass"
@@ -82376,7 +82377,7 @@ msgstr "必须在子类中实现 raw_update_security_policy_rule"
 
 #: ../app/models/orchestration_stack.rb:123
 msgid "raw_update_stack must be implemented in a subclass"
-msgstr "必须在子类中使用 raw_update_stack "
+msgstr "必须在子类中使用 raw_update_stack"
 
 #: ../app/models/cloud_volume.rb:131 ../app/models/physical_storage.rb:136
 msgid "raw_update_volume must be implemented in a subclass"
@@ -82583,7 +82584,7 @@ msgstr "从接口"
 
 #: ../app/presenters/tree_node/assigned_server_role.rb:17
 msgid "secondary, "
-msgstr "次要的，"
+msgstr "次要的， "
 
 #: ../app/views/miq_ae_class/_copy_objects_form.html.haml:81
 msgid "selected to copy"
@@ -82634,7 +82635,7 @@ msgstr "%{name} 标识 [%{number}] 的大小不正确"
 
 #: src/report-editor/charts-warning.jsx:15
 msgid "sort field from Summary tab "
-msgstr "“摘要”选项卡中的排序字段"
+msgstr "“摘要”选项卡中的排序字段 "
 
 #: ../app/models/log_file.rb:239
 msgid "started? not implemented for %{server_name}"
@@ -82951,7 +82952,7 @@ msgstr "vSwitch"
 
 #: ../app/models/orchestration_template.rb:156
 msgid "validate_format must be implemented in subclass"
-msgstr "必须在子类中使用 validate_format "
+msgstr "必须在子类中使用 validate_format"
 
 #: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb:564
 msgid "value of min. supported PowerVC release is malformed"

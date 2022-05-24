@@ -4975,7 +4975,7 @@ msgstr "Hinzufügen von neuem %{tenant}"
 
 #: ../app/controllers/miq_action_controller.rb:387
 msgid "Adding a new Action"
-msgstr "Hinzufügen von neuer Aktion"
+msgstr "Neue Aktion hinzufügen"
 
 #: ../app/controllers/miq_alert_controller.rb:701
 msgid "Adding a new Alert"
@@ -4983,7 +4983,7 @@ msgstr "Hinzufügen von neuem Alert"
 
 #: ../app/controllers/miq_alert_set_controller.rb:290
 msgid "Adding a new Alert Profile"
-msgstr "Hinzufügen von neuem Alertprofil"
+msgstr "Neues Alertprofil hinzufügen"
 
 #: ../app/controllers/ops_controller.rb:671
 msgid "Adding a new Analysis Profile"
@@ -30292,15 +30292,15 @@ msgstr "Bearbeiten von %{vm_or_template} \"%{name}\""
 
 #: ../app/controllers/miq_action_controller.rb:385
 msgid "Editing Action \"%{name}\""
-msgstr "Bearbeiten von Aktion \"%{name}\""
+msgstr "Aktion \"%{name}\" bearbeiten"
 
 #: ../app/controllers/miq_alert_controller.rb:699
 msgid "Editing Alert \"%{name}\""
-msgstr "Bearbeiten von Alert \"%{name}\""
+msgstr "Alert \"%{name}\" bearbeiten"
 
 #: ../app/controllers/miq_alert_set_controller.rb:288
 msgid "Editing Alert Profile \"%{name}\""
-msgstr "Bearbeiten von Alertprofil \"%{name}\""
+msgstr "Alertprofil \"%{name}\" bearbeiten"
 
 #: ../app/controllers/ops_controller.rb:673
 msgid "Editing Analysis Profile \"%{name}\""
@@ -62145,7 +62145,7 @@ msgstr "Sicherheitsgruppe aus dieser Instanz entfernen"
 
 #: ../app/javascript/components/button-group/group-form.schema.js:63
 msgid "Remove all"
-msgstr "Alles entfernen"
+msgstr "Alle entfernen"
 
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
@@ -69007,7 +69007,7 @@ msgstr "Alle untergeordneten Orchestrierungsstacks anzeigen"
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:128
 msgid "Show all Cloud Databases"
-msgstr "Alle Cloud Databases-Instanzen anzeigen"
+msgstr "Alle Clouddatenbanken-Instanzen anzeigen"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:419
 msgid "Show all Cloud Networks"

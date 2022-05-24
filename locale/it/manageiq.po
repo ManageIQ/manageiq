@@ -644,8 +644,8 @@ msgstr[1] "Aggiunta di tag a %{amount} volumi cloud"
 #: ../app/views/layouts/_tag_edit_items.html.haml:27
 msgid "%{amount} Cloud Volume Snapshot Being Tagged"
 msgid_plural "%{amount} Cloud Volume Snapshots Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} istantanea volume cloud"
-msgstr[1] "Aggiunta di tag a %{amount} istantanee volume cloud"
+msgstr[0] "Aggiunta di tag a %{amount} istantanea del volume cloud"
+msgstr[1] "Aggiunta di tag a %{amount} istantanee del volume cloud"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:29
 msgid "%{amount} Cloud Volume Type Being Tagged"
@@ -884,8 +884,8 @@ msgstr[1] "Aggiunta di tag a %{amount} elementi catalogo di servizio"
 #: ../app/views/layouts/_tag_edit_items.html.haml:107
 msgid "%{amount} Storage Manager Being Tagged"
 msgid_plural "%{amount} Storage Managers Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} gestore archiviazione"
-msgstr[1] "Aggiunta di tag a %{amount} gestori archiviazione"
+msgstr[0] "Aggiunta di tag a %{amount} gestore dello spazio di archiviazione"
+msgstr[1] "Aggiunta di tag a %{amount} gestori dello spazio di archiviazione"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:109
 msgid "%{amount} Switch Being Tagged"
@@ -3140,7 +3140,7 @@ msgstr "Accesso"
 
 #: ../app/controllers/ops_controller.rb:333
 msgid "Access Control"
-msgstr "Controllo accessi"
+msgstr "Controllo degli accessi"
 
 #: ../app/controllers/ops_controller.rb:575
 msgid "Access Control %{text}"
@@ -3242,7 +3242,7 @@ msgstr "URL accesso"
 
 #: ../app/helpers/ops_helper.rb:71
 msgid "Access control"
-msgstr "Controllo accessi"
+msgstr "Controllo degli accessi"
 
 #: ../app/models/authenticator/amazon.rb:42
 msgid ""
@@ -3813,7 +3813,7 @@ msgstr "Aggiungi nuovo contenitore archivio oggetti cloud"
 
 #: ../app/controllers/cloud_tenant_controller.rb:58
 msgid "Add New Cloud Tenant"
-msgstr "Aggiungi nuovo Tenant Cloud"
+msgstr "Aggiungi nuovo tenant cloud"
 
 #: ../app/controllers/cloud_volume_controller.rb:82
 #: ../app/controllers/cloud_volume_controller.rb:110
@@ -3826,11 +3826,11 @@ msgstr "Aggiungi nuove credenziali"
 
 #: ../app/controllers/floating_ip_controller.rb:118
 msgid "Add New Floating IP"
-msgstr "Aggiungi Nuovo Floating IP"
+msgstr "Aggiungi nuovo floating IP"
 
 #: ../app/controllers/floating_ip_controller.rb:63
 msgid "Add New Floating IP "
-msgstr "Aggiungi Nuovo Floating IP "
+msgstr "Aggiungi nuovo floating IP "
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:60
 msgid "Add New Key Pair"
@@ -3970,7 +3970,7 @@ msgstr "Aggiungi VM al servizio selezionato"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4026
 msgid "Add a Block Storage Manager"
-msgstr "Aggiungi un gestore Block Storage"
+msgstr "Aggiungi un gestore dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1935
@@ -4135,7 +4135,7 @@ msgstr "Aggiungere un nuovo aggregato Host"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:12
 msgid "Add a New ISO Datastore"
-msgstr "Aggiungi un Nuovo Datastore ISO"
+msgstr "Aggiungi un nuovo datastore ISO"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:23
 msgid "Add a New Infrastructure Provider"
@@ -4176,7 +4176,7 @@ msgstr "Aggiungi un nuovo profilo di politica"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:24
 msgid "Add a New Storage Manager"
-msgstr "Aggiungi un nuovo gestore storage"
+msgstr "Aggiungi un nuovo gestore dello spazio di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3234
@@ -4191,7 +4191,7 @@ msgstr "Aggiungi un provider di infrastrutture fisiche"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4254
 msgid "Add a Physical Storage"
-msgstr "Aggiungi uno spazio di archiviazione fisico"
+msgstr "Aggiungi uno spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3478
@@ -4282,7 +4282,7 @@ msgstr "Aggiungi tasto di scelta rapida"
 
 #: ../app/views/ems_storage/show_list.html.haml:5
 msgid "Add a Storage Manager"
-msgstr "Aggiungi un Gestore Archiviazione"
+msgstr "Aggiungi un gestore dello spazio di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3034
@@ -4391,7 +4391,7 @@ msgstr "Aggiungi un nuovo gestore configurazione"
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:35
 #: ../app/views/ems_container/show_list.html.haml:5
 msgid "Add a new Containers Provider"
-msgstr "Aggiungi nuovo Provider Contenitori"
+msgstr "Aggiungi nuovo provider contenitori"
 
 #: ../app/controllers/ansible_credential_controller.rb:46
 msgid "Add a new Credential"
@@ -4455,7 +4455,7 @@ msgstr "Aggiungi un nuovo provider di rete"
 
 #: ../app/views/ems_physical_infra/show_list.html.haml:5
 msgid "Add a new Physical Infrastructure Provider"
-msgstr "Aggiungi nuovo Provider di infrastruttura fisica"
+msgstr "Aggiungi nuovo provider di infrastruttura fisica"
 
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:25
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:24
@@ -4500,7 +4500,7 @@ msgstr "Aggiungi un nuovo tipo di immagine di sistema"
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:12
 msgid "Add a new Time Profile"
-msgstr "Aggiungi nuovo Profilo dell'ora"
+msgstr "Aggiungi nuovo profilo dell'ora"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:12
 msgid "Add a new User"
@@ -4549,7 +4549,7 @@ msgstr "Aggiungi un modello di personalizzazione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2720
 msgid "Add an ISO Datastore"
-msgstr "Aggiungi un Datastore ISO"
+msgstr "Aggiungi un datastore ISO"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1528
@@ -4593,7 +4593,7 @@ msgstr "Aggiungi nuovo repository"
 
 #: ../app/controllers/configuration_controller.rb:222
 msgid "Add new Time Profile"
-msgstr "Aggiungi nuovo Profilo Ora"
+msgstr "Aggiungi nuovo profilo ora"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_groups_center.rb:25
 msgid "Add new host initiator group"
@@ -4677,7 +4677,9 @@ msgstr "L'aggiunta del Namespace è stata annullata dall'utente."
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:40
 msgid "Add of Physical Storage has been successfully queued."
-msgstr "L'aggiunta di uno storage fisico è stata accodata correttamente."
+msgstr ""
+"L'aggiunta di uno spazio fisico di archiviazione è stata accodata "
+"correttamente."
 
 #: ../app/controllers/mixins/manager_controller_mixin.rb:62
 msgid "Add of Provider was cancelled by the user"
@@ -4702,7 +4704,7 @@ msgstr "L'aggiunta dell'azione \"%s\" è stata accodata correttamente."
 
 #: ../app/javascript/components/network-floatingIPs-form/index.jsx:70
 msgid "Add of floating IPs \"%s\" has been successfully queued."
-msgstr "L'aggiunta degli IP mobili \"%s\" è stata accodata correttamente."
+msgstr "L'aggiunta di IP mobili \"%s\" è stata accodata correttamente."
 
 #: ../app/controllers/condition_controller.rb:51
 msgid "Add of new %{model} Condition was cancelled by the user"
@@ -4802,7 +4804,7 @@ msgstr ""
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:25
 msgid "Add of new ISO Datastore was cancelled by the user"
-msgstr "L'aggiunta di nuovo Datastore ISO è stata annullata dall'utente"
+msgstr "L'aggiunta di nuovo datastore ISO è stata annullata dall'utente"
 
 #: ../app/javascript/components/auth-key-pair-cloud/index.jsx:17
 msgid "Add of new Key Pair was cancelled by the user"
@@ -4814,7 +4816,9 @@ msgstr "L'aggiunta di nuovo Server PXE è stata annullata dall'utente"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:51
 msgid "Add of new Physical Storage was cancelled by the user."
-msgstr "L'aggiunta del nuovo storage fisico è stata annullata dall'utente."
+msgstr ""
+"L'aggiunta di un nuovo spazio fisico di archiviazione è stata annullata "
+"dall'utente."
 
 #: ../app/controllers/miq_policy_controller/policies.rb:8
 msgid "Add of new Policy was cancelled by the user"
@@ -4913,7 +4917,7 @@ msgstr "Aggiunta di una nuova azione"
 
 #: ../app/controllers/miq_alert_controller.rb:701
 msgid "Adding a new Alert"
-msgstr "Aggiunta di un nuovo Avviso"
+msgstr "Aggiunta di un nuovo avviso"
 
 #: ../app/controllers/miq_alert_set_controller.rb:290
 msgid "Adding a new Alert Profile"
@@ -4921,7 +4925,7 @@ msgstr "Aggiunta di un nuovo profilo di avviso"
 
 #: ../app/controllers/ops_controller.rb:671
 msgid "Adding a new Analysis Profile"
-msgstr "Aggiunta di un nuovo profilo di analisi"
+msgstr "Aggiungi un nuovo profilo di analisi"
 
 #: ../app/controllers/miq_ae_class_controller.rb:695
 msgid "Adding a new Automate Class"
@@ -4975,7 +4979,7 @@ msgstr "Aggiunta di un nuovo gruppo"
 
 #: ../app/controllers/pxe_controller.rb:212
 msgid "Adding a new ISO Datastore"
-msgstr "Aggiunta di un nuovo Datastore ISO"
+msgstr "Aggiunta di un nuovo datastore ISO"
 
 #: ../app/controllers/ops_controller.rb:663
 msgid "Adding a new Mapping"
@@ -5026,7 +5030,7 @@ msgstr "Aggiunta di una nuova istantanea"
 
 #: ../app/controllers/pxe_controller.rb:185
 msgid "Adding a new System Image Types"
-msgstr "Aggiunta di un nuovo tipo di immagine del sistema"
+msgstr "Aggiunta di un nuovo tipo di immagine di sistema"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:1023
 msgid "Adding a new User"
@@ -5686,7 +5690,7 @@ msgstr "Tutti i file"
 
 #: ../app/presenters/tree_builder_generic_object_definition.rb:10
 msgid "All Generic Object Definitions"
-msgstr "Tutte le definizioni oggetto generico"
+msgstr "Tutte le definizioni di oggetto generico"
 
 #: ../app/presenters/tree_builder_report_dashboards.rb:22
 msgid "All Groups"
@@ -5708,7 +5712,7 @@ msgstr "Tutti gli Host per i provider infrastruttura"
 #: ../app/controllers/pxe_controller/iso_datastores.rb:128
 #: ../app/presenters/tree_builder_iso_datastores.rb:12
 msgid "All ISO Datastores"
-msgstr "Tutti i Datastore ISO"
+msgstr "Tutti i datastore ISO"
 
 #: ../app/controllers/vm_common.rb:756
 #: ../app/presenters/tree_builder_images_filter.rb:9
@@ -5806,7 +5810,7 @@ msgstr "Tutti gli switch (nomi con \"%{search_text}\")"
 #: ../app/controllers/pxe_controller/pxe_image_types.rb:85
 #: ../app/presenters/tree_builder_pxe_image_types.rb:10
 msgid "All System Image Types"
-msgstr "Tutti i Tipi di immagini di sistema"
+msgstr "Tutti i tipi di immagini di sistema"
 
 #: ../app/controllers/miq_task_controller.rb:67
 #: ../app/helpers/application_helper/title.rb:81
@@ -6302,7 +6306,7 @@ msgstr "Il profilo di analisi è obbligatorio"
 #: ../app/views/ops/_settings_details_tab.html.haml:25
 #: ../config/yaml_strings.rb:1696
 msgid "Analysis Profiles"
-msgstr "Profili di Analisi"
+msgstr "Profili di analisi"
 
 #: ../app/controllers/mixins/actions/host_actions/misc.rb:196
 msgid "Analyze and Compliance Check"
@@ -6894,8 +6898,9 @@ msgid ""
 "Are you sure you want to delete this physical storage?\nNote that all of the "
 "attached services (e.g. volumes) will be unmapped."
 msgstr ""
-"Si è sicuri di voler eliminare questa archiviazione fisica?\nL'associazione di"
-" tutti i servizi collegati (ad esempio i volumi) sarà annullata."
+"Si è sicuri di voler eliminare questo spazio fisico di archiviazione?"
+"\nL'associazione di tutti i servizi collegati (ad esempio i volumi) sarà "
+"annullata."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_center.rb:79
 msgid "Are you sure you want to delete this volume?"
@@ -6913,11 +6918,11 @@ msgid "Are you sure you want to permanently delete the following catalog item?"
 msgid_plural ""
 "Are you sure you want to permanently delete the following catalog items?"
 msgstr[0] ""
-"Si è sicuri di voler eliminare in modo permanente la seguente voce di catalogo"
-"?"
+"Si è sicuri di voler eliminare in modo permanente la seguente voce del "
+"catalogo?"
 msgstr[1] ""
-"Si è sicuri di voler eliminare in modo permanente le seguenti voci di catalogo"
-"?"
+"Si è sicuri di voler eliminare in modo permanente le seguenti voci del "
+"catalogo?"
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx:171
 msgid "Are you sure you want to remove ${widgetTitle} from the Dashboard?"
@@ -7596,21 +7601,21 @@ msgstr "Attributi con stessi valori"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:655
 msgid "Audit"
-msgstr "Controllo"
+msgstr "Verifica"
 
 #: ../config/model_display_names.rb:5
 msgid "Audit Event"
 msgid_plural "Audit Events"
-msgstr[0] "Evento di controllo"
-msgstr[1] "Eventi di controllo"
+msgstr[0] "Evento di verifica"
+msgstr[1] "Eventi di verifica"
 
 #: ../app/views/ops/_all_tabs.html.haml:145
 msgid "Audit Log"
-msgstr "Log di controllo"
+msgstr "Log di verifica"
 
 #: ../config/model_attributes.rb:58
 msgid "Audit event"
-msgstr "Evento di controllo"
+msgstr "Evento di verifica"
 
 #: ../config/model_attributes.rb:59
 msgid "AuditEvent|Created on"
@@ -9139,17 +9144,17 @@ msgstr "Migrazione dei blocchi"
 #: ../app/helpers/flavor_helper/textual_summary.rb:68
 #: ../config/yaml_strings.rb:1005
 msgid "Block Storage Based"
-msgstr "Basato su Archiviazione a blocchi"
+msgstr "Basato sullo spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: en.yml key: dictionary.column.block_storage_based_only
 #: ../config/dictionary_strings.rb:276
 msgid "Block Storage Based Only"
-msgstr "Solo basato sull'archiviazione a blocchi"
+msgstr "Basato solo sullo spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage
 #: ../config/dictionary_strings.rb:3992
 msgid "Block Storage Manager"
-msgstr "Gestore Archiviazione a blocchi"
+msgstr "Gestore dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
@@ -9157,7 +9162,7 @@ msgstr "Gestore Archiviazione a blocchi"
 #: ../config/dictionary_strings.rb:3994 ../config/dictionary_strings.rb:3996
 #: ../config/yaml_strings.rb:4002
 msgid "Block Storage Managers"
-msgstr "Gestori archiviazione a blocchi"
+msgstr "Gestori dello spazio di archiviazione a blocchi"
 
 #: ../app/helpers/availability_zone_helper/textual_summary.rb:43
 msgid "Block storage disk capacity"
@@ -11957,8 +11962,8 @@ msgid ""
 "Check Compliance of the last known configuration for these Physical Infra "
 "Managers"
 msgstr ""
-"Verifica la conformità dell'ultima configurazione nota di questi Gestori "
-"Infrastruttura fisici"
+"Verifica la conformità dell'ultima configurazione nota di questi gestori "
+"fisici dell'infrastruttura"
 
 #: ../app/helpers/application_helper/toolbar/container_groups_center.rb:32
 msgid "Check Compliance of the last known configuration for these Pods"
@@ -12384,13 +12389,13 @@ msgstr "Cidr"
 #: ../app/models/manageiq/providers/openstack/storage_manager/cinder_manager.rb:97
 msgid "Cinder Block Storage Manager (OpenStack)"
 msgid_plural "Cinder Block Storage Managers (OpenStack)"
-msgstr[0] "Gestore archiviazione blocco cinder (OpenStack)"
-msgstr[1] "Gestori archiviazione blocco cinder (OpenStack)"
+msgstr[0] "Gestore dello spazio di archiviazione a blocchi Cinder (OpenStack)"
+msgstr[1] "Gestori dello spazio di archiviazione a blocchi Cinder (OpenStack)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::StorageManager::CinderManager (plural form)
 #: ../config/dictionary_strings.rb:3416
 msgid "Cinder Block Storage Managers (OpenStack)"
-msgstr "Gestori archiviazione blocco cinder (OpenStack)"
+msgstr "Gestori dello spazio di archiviazione a blocchi Cinder (OpenStack)"
 
 #: src/amazon-security-form-group/security-group.jsx:47
 msgid "Cird ip"
@@ -13108,13 +13113,13 @@ msgstr "Quota Cloud"
 #: ../config/model_display_names.rb:28 ../config/dictionary_strings.rb:2718
 msgid "Cloud Resource Quota"
 msgid_plural "Cloud Resource Quotas"
-msgstr[0] "Quota risorse Cloud"
-msgstr[1] "Quote risorse Cloud"
+msgstr[0] "Quota risorse cloud"
+msgstr[1] "Quote risorse cloud"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CloudResourceQuota (plural form)
 #: ../config/dictionary_strings.rb:2720
 msgid "Cloud Resource Quotas"
-msgstr "Quote risorse Cloud"
+msgstr "Quote risorse cloud"
 
 #: ../config/model_display_names.rb:29
 msgid "Cloud Service"
@@ -13428,7 +13433,7 @@ msgstr "Oggetto dell'archivio oggetti cloud"
 
 #: ../config/model_attributes.rb:343
 msgid "Cloud resource quota"
-msgstr "Quota risorse Cloud"
+msgstr "Quota risorse cloud"
 
 #: ../config/model_attributes.rb:352
 msgid "Cloud service"
@@ -14954,7 +14959,7 @@ msgstr "Vista compressa"
 #: ../app/controllers/vm_infra_controller.rb:84
 #: ../app/presenters/menu/default_menu.rb:25
 msgid "Compute"
-msgstr "Calcola"
+msgstr "Elaborazione"
 
 #: ../app/helpers/configured_system_helper/textual_summary.rb:128
 msgid "Compute Profile"
@@ -21551,7 +21556,7 @@ msgstr "Modelli di personalizzazione"
 #: ../app/controllers/pxe_controller/pxe_customization_templates.rb:139
 msgid "Customization Templates for System Image Types \"%{name}\""
 msgstr ""
-"Modelli di personalizzazione per i tipi di immagine del sistema \"%{name}\""
+"Modelli di personalizzazione per i tipi di immagine di sistema \"%{name}\""
 
 #: ../config/model_attributes.rb:1295
 msgid "Customization script"
@@ -22620,11 +22625,11 @@ msgstr "Definisci ambito"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:25
 msgid "Define a new host initiator"
-msgstr "Definire un nuovo iniziatore host"
+msgstr "Definisci un nuovo iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:25
 msgid "Define a new volume mapping"
-msgstr "Definire una nuova associazione del volume"
+msgstr "Definisci una nuova associazione di volume"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:29
 msgid "Defining of Host initiator \"%s\" has been successfully queued."
@@ -22649,11 +22654,11 @@ msgstr "Ritardo (mins)"
 
 #: ../app/helpers/catalog_helper.rb:5
 msgid "Delay (mins) Start"
-msgstr "Ritarda avvio (min)"
+msgstr "Avvio ritardato (min)"
 
 #: ../app/helpers/catalog_helper.rb:5
 msgid "Delay (mins) Stop"
-msgstr "Ritarda arresto (min)"
+msgstr "Arresto ritardato (min)"
 
 #: ../app/controllers/application_controller/ci_processing.rb:340
 #: ../app/helpers/application_helper/tasks.rb:10
@@ -22804,7 +22809,7 @@ msgstr "Elimina Elemento del catalogo"
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:43
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:48
 msgid "Delete Catalog Items"
-msgstr "Elimina Elementi del Catalogo"
+msgstr "Elimina elementi del catalogo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1296
@@ -22883,7 +22888,7 @@ msgstr "Elimina flavor"
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:32
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:30
 msgid "Delete Generic Object Definition"
-msgstr "Elimina definizione oggetto generico"
+msgstr "Elimina definizione di oggetto generico"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:43
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:47
@@ -23261,7 +23266,7 @@ msgstr "Elimina i backup selezionati"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:42
 msgid "Delete selected Catalog Items"
-msgstr "Elimina gli Elementi del Catalogo selezionati"
+msgstr "Elimina elementi del catalogo selezionati"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:27
 msgid "Delete selected Cloud Tenants"
@@ -23327,7 +23332,7 @@ msgstr "Elimina attività selezionate"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:32
 msgid "Delete selected volume mappings"
-msgstr "Elimina associazioni volume selezionate"
+msgstr "Elimina associazioni di volume selezionate"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4525
@@ -23350,7 +23355,7 @@ msgstr "Eliminare l'iniziatore host"
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:33
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
 msgid "Delete the Physical Storage"
-msgstr "Elimina l'archiviazione fisica"
+msgstr "Elimina spazio fisico di archiviazione"
 
 #: ../app/views/layouts/_adv_search_footer.html.haml:36
 msgid "Delete the filter named %{filter_name}"
@@ -24803,7 +24808,7 @@ msgstr "Rileva Provider di infrastrutture fisiche"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3986
 msgid "Discover Storage Managers"
-msgstr "Rileva Gestori Archiviazione"
+msgstr "Rileva gestori dello spazio di archiviazione"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:192
 msgid "Discovered"
@@ -25647,7 +25652,7 @@ msgstr "Visualizza singoli backup"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4010
 msgid "Display Individual Block Storage Managers"
-msgstr "Visualizza Singoli Gestori Archiviazione a blocchi"
+msgstr "Visualizza singoli gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1931
@@ -25922,7 +25927,7 @@ msgstr "Visualizza singolo Elemento di Networking"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4040
 msgid "Display Individual Object Storage Managers"
-msgstr "Visualizza Singoli gestori archivio oggetti"
+msgstr "Visualizza singoli gestori dell'archiviazione a oggetti"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2768
@@ -25962,7 +25967,7 @@ msgstr "Visualizza un singolo profilo di server fisico"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4244
 msgid "Display Individual Physical Storage"
-msgstr "Visualizza Singolo Spazio di archiviazione Fisico"
+msgstr "Visualizza singolo spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4226
@@ -26027,7 +26032,7 @@ msgstr "Visualizza istantanee individuali"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3980
 msgid "Display Individual Storage Managers"
-msgstr "Visualizza Singoli Gestori Archiviazione"
+msgstr "Visualizza singoli gestori dell'archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4064
@@ -26132,7 +26137,7 @@ msgstr "Visualizza elenchi di backup"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4008
 msgid "Display Lists of Block Storage Managers"
-msgstr "Visualizza Elenchi di Gestori Archiviazione a blocchi"
+msgstr "Visualizza elenchi dei gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1929
@@ -26442,7 +26447,7 @@ msgstr "Visualizza Elenchi di Server Fisici"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4242
 msgid "Display Lists of Physical Storages"
-msgstr "Visualizza Elenchi di Spazi di archiviazione fisici"
+msgstr "Visualizza elenchi degli spazi fisici di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4224
@@ -26667,7 +26672,9 @@ msgstr "Visualizza le Sequenze Temporali per Zone Disponibilità"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4012
 msgid "Display Timelines for Block Storage Managers"
-msgstr "Visualizza Sequenze Temporali per i Gestori Archiviazione a blocchi"
+msgstr ""
+"Visualizza sequenze temporali dei gestori dello spazio di archiviazione a "
+"blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1178
@@ -27139,7 +27146,7 @@ msgstr "Scarica il file di log %{log_type} completo"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:24
 msgid "Download the Entire Audit Log File"
-msgstr "Scarica il file di log di controllo completo"
+msgstr "Scarica il file di log di verifica completo"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_server_center.rb:37
 msgid "Download the Entire EVM Log File"
@@ -27411,12 +27418,12 @@ msgstr "ETag"
 #. TRANSLATORS: en.yml key: dictionary.model.AuditEvent
 #: ../config/dictionary_strings.rb:2674
 msgid "EVM Audit Event"
-msgstr "Evento di controllo EVM"
+msgstr "Evento di verifica EVM"
 
 #. TRANSLATORS: en.yml key: dictionary.model.AuditEvent (plural form)
 #: ../config/dictionary_strings.rb:2676
 msgid "EVM Audit Events"
-msgstr "Eventi di controllo EVM"
+msgstr "Eventi di verifica EVM"
 
 #. TRANSLATORS: en.yml key: dictionary.table.server_builds
 #: ../config/dictionary_strings.rb:4298
@@ -27688,7 +27695,7 @@ msgstr "Modifica catalogo"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1066
 msgid "Edit Catalog Items Tags"
-msgstr "Modifica Tag Elementi del catalogo"
+msgstr "Modifica tag elementi del catalogo"
 
 #: ../app/controllers/cloud_network_controller.rb:122
 msgid "Edit Cloud Network \"%{name}\""
@@ -27854,7 +27861,7 @@ msgstr "Modifica immagini ISO"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2726
 msgid "Edit ISO Images on ISO Datastores"
-msgstr "Modifica immagini ISO su Datastore ISO"
+msgstr "Modifica immagini ISO su datastore ISO"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3754
@@ -27923,7 +27930,7 @@ msgstr "Modifica immagine PXE"
 
 #: ../app/controllers/physical_storage_controller.rb:33
 msgid "Edit Physical Storage \"%{name}\""
-msgstr "Modifica storage fisico \"%{name}\""
+msgstr "Modifica spazio fisico di archiviazione \"%{name}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3480
@@ -28082,7 +28089,7 @@ msgstr "Modifica servizio selezionato"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:32
 msgid "Edit Selected Storage Manager"
-msgstr "Modifica gestore archiviazione selezionato"
+msgstr "Modifica gestore dello spazio di archiviazione selezionato"
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:35
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:45
@@ -28429,7 +28436,7 @@ msgstr "Modifica tag per le regole della politica di sicurezza selezionate"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:74
 msgid "Edit Tags for the selected Storage Managers"
-msgstr "Modifica tag dei Gestori di Archiviazione selezionati"
+msgstr "Modifica tag dei gestori dello spazio di archiviazione selezionati"
 
 #: ../app/helpers/application_helper/toolbar/configuration_scripts_center.rb:34
 msgid "Edit Tags for the selected Templates"
@@ -28680,7 +28687,7 @@ msgstr "Modifica tag di questo servizio"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:52
 msgid "Edit Tags for this Storage Manager"
-msgstr "Modifica tag per questo gestore di spazio di archiviazione"
+msgstr "Modifica tag per questo gestore dello spazio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/configuration_script_center.rb:27
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:66
@@ -28718,7 +28725,7 @@ msgstr "Modifica tag di backup"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4016
 msgid "Edit Tags of Block Storage Managers"
-msgstr "Modifica tag dei Gestori Archiviazione a blocchi"
+msgstr "Modifica tag dei gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2992
@@ -28913,7 +28920,7 @@ msgstr "Modifica Tag di Provider di Infrastrutture Fisiche"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4250
 msgid "Edit Tags of Physical Storage"
-msgstr "Modifica tag dello spazio di archiviazione fisico"
+msgstr "Modifica tag dello spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3144
@@ -29016,7 +29023,7 @@ msgstr "Modifica immagine di Windows"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4028
 msgid "Edit a Block Storage Manager"
-msgstr "Modifica un gestore Block Storage"
+msgstr "Modifica un gestore dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1098
@@ -29145,7 +29152,7 @@ msgstr "Modifica un Server Fisico"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4256
 msgid "Edit a Physical Storage"
-msgstr "Modifica uno spazio di archiviazione fisico"
+msgstr "Modifica uno spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3482
@@ -29239,7 +29246,7 @@ msgstr "Modifica una regola della politica di sicurezza"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3998
 msgid "Edit a Storage Manager"
-msgstr "Modifica un Gestore Archiviazione"
+msgstr "Modifica un gestore dello spazio di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3036
@@ -29527,7 +29534,7 @@ msgstr "La modifica del dominio \"%s\" è stata annullata dall'utente."
 #: ../app/javascript/components/generic-objects-form/index.jsx:133
 msgid "Edit of Generic Object Definition \"%s\" was cancelled by the user."
 msgstr ""
-"La modifica della definizione oggetto generica \"%s\" è stata annullata "
+"La modifica della definizione di oggetto generico \"%s\" è stata annullata "
 "dall'utente."
 
 #: ../app/controllers/host_controller.rb:172
@@ -29563,7 +29570,9 @@ msgstr "La modifica del Server PXE%s è stata annullata dall'utente"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:50
 msgid "Edit of Physical Storage \"%s\" was canceled by the user."
-msgstr "La modifica dello storage fisico \"%s\" è stata annullata dall'utente."
+msgstr ""
+"La modifica dello spazio fisico di archiviazione \"%s\" è stata annullata "
+"dall'utente."
 
 #: ../app/controllers/miq_policy_controller/policies.rb:6
 msgid "Edit of Policy \"%{name}\" was cancelled by the user"
@@ -29654,7 +29663,7 @@ msgstr ""
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:45
 msgid "Edit of System Image Type \"%s\" was cancelled by the user"
 msgstr ""
-"La modifica del tipo di immagine del sistema \"%s\" è stata annullata "
+"La modifica del tipo di immagine di sistema \"%s\" è stata annullata "
 "dall'utente"
 
 #: ../app/controllers/report_controller/widgets.rb:63
@@ -29702,7 +29711,7 @@ msgstr "Modifica volume cloud selezionato"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:17
 msgid "Edit selected Generic Object Definition"
-msgstr "Modifica definizione oggetto generico selezionata"
+msgstr "Modifica definizione di oggetto generico selezionata"
 
 #:
 #: ../app/helpers/application_helper/toolbar/orchestration_templates_center.rb:17
@@ -29711,7 +29720,7 @@ msgstr "Modifica modello di orchestrazione selezionato"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:31
 msgid "Edit selected Physical Storage"
-msgstr "Modifica storage fisico selezionato"
+msgstr "Modifica spazio fisico di archiviazione selezionato"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:33
 msgid "Edit selected Schema"
@@ -29970,7 +29979,7 @@ msgstr "Modifica questo dominio"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:11
 msgid "Edit this Generic Object Definition"
-msgstr "Modifica questa definizione oggetto generico"
+msgstr "Modifica questa definizione di oggetto generico"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:12
 msgid "Edit this Group"
@@ -30026,7 +30035,7 @@ msgstr "Modifica questo server PXE"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:25
 msgid "Edit this Physical Storage"
-msgstr "Modifica questo storage fisico"
+msgstr "Modifica questo spazio fisico di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/miq_policy_set_center.rb:12
 msgid "Edit this Policy Profile"
@@ -30096,7 +30105,7 @@ msgstr "Modifica questo Servizio"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:24
 msgid "Edit this Storage Manager"
-msgstr "Modifica questo gestore archiviazione"
+msgstr "Modifica questo gestore dello spazio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:12
 msgid "Edit this System Image Type"
@@ -30175,7 +30184,7 @@ msgstr "Modifica del profilo di avviso \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:673
 msgid "Editing Analysis Profile \"%{name}\""
-msgstr "Modifica del profilo di analisi \"%{name}\""
+msgstr "Modifica il profilo di analisi \"%{name}\""
 
 #: ../app/controllers/miq_ae_class_controller.rb:697
 msgid "Editing Automate Class \"%{name}\""
@@ -30335,13 +30344,13 @@ msgstr "Tempo trascorso (10 giorni, 0 ore, 1 minuti, 44 secondi)"
 #: ../app/models/manageiq/providers/amazon/storage_manager/ebs.rb:46
 msgid "Elastic Block Storage Manager (Amazon)"
 msgid_plural "Elastic Block Storage Managers (Amazon)"
-msgstr[0] "Gestore archiviazione Elastic Block (Amazon)"
-msgstr[1] "Gestori archiviazione Elastic Block (Amazon)"
+msgstr[0] "Gestore dello spazio di archiviazione a blocchi Elastic (Amazon)"
+msgstr[1] "Gestori dello spazio di archiviazione a blocchi Elastic (Amazon)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::StorageManager::Ebs (plural form)
 #: ../config/dictionary_strings.rb:3328
 msgid "Elastic Block Storage Managers (Amazon)"
-msgstr "Gestori archiviazione Elastic Block (Amazon)"
+msgstr "Gestori dello spazio di archiviazione a blocchi Elastic (Amazon)"
 
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
 #: ../config/yaml_strings.rb:1410
@@ -32361,7 +32370,7 @@ msgstr "Tutto sotto Zone di disponibilità"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4004
 msgid "Everything under Block Storage Managers"
-msgstr "Tutto sotto Gestori Archiviazione a blocchi"
+msgstr "Tutto sotto i gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1028
@@ -32426,7 +32435,7 @@ msgstr "Tutto sotto backup volume cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1422
 msgid "Everything under Cloud Volume Snapshots"
-msgstr "Tutto sotto istantanee volume cloud"
+msgstr "Tutto sotto istantanee del volume cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1458
@@ -32741,7 +32750,7 @@ msgstr "Tutto sotto Server Fisici"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4238
 msgid "Everything under Physical Storages"
-msgstr "Tutto sotto Spazi di archiviazione fisici"
+msgstr "Tutto sotto spazi fisici di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4220
@@ -34786,7 +34795,7 @@ msgstr "Flavor (OpenStack)"
 
 #: ../config/model_attributes.rb:1807
 msgid "Flavor|Block storage based only"
-msgstr "Solo basato sull'Archiviazione a blocchi"
+msgstr "Basato solo sullo spazio di archiviazione a blocchi"
 
 #: ../config/model_attributes.rb:1808
 msgid "Flavor|Cloud subnet required"
@@ -35243,7 +35252,8 @@ msgstr "Dall'indirizzo email"
 
 #: ../app/javascript/components/action-form/action-form.schema.js:335
 msgid "From E-mail Address (leave blank for default)"
-msgstr "Da indirizzo e-mail (lasciare vuoto per valore predefinito)"
+msgstr ""
+"Indirizzo email del mittente (lasciare vuoto per impostazione predefinita)"
 
 #: src/amazon-security-form-group/security-group.jsx:29
 msgid "From port"
@@ -35455,7 +35465,7 @@ msgstr "La definizione di oggetto generico \"%s\" è stata salvata."
 
 #: ../app/controllers/generic_object_definition_controller.rb:210
 msgid "Generic Object Definition %{record_name}"
-msgstr "Definizione oggetto generico %{record_name}"
+msgstr "Definizione di oggetto generico %{record_name}"
 
 #. TRANSLATORS: file: product/views/GenericObjectDefinition.yaml
 #: ../app/controllers/generic_object_definition_controller.rb:203
@@ -35464,7 +35474,7 @@ msgstr "Definizione oggetto generico %{record_name}"
 #: ../app/views/layouts/listnav/_generic_object_definition_show_list_with_treeview.html.haml:2
 #: ../config/yaml_strings.rb:1034
 msgid "Generic Object Definitions"
-msgstr "Definizioni oggetto generico"
+msgstr "Definizioni di oggetto generico"
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/controllers/generic_object_definition_controller.rb:309
@@ -35488,7 +35498,7 @@ msgstr "Oggetto generico"
 
 #: ../config/model_attributes.rb:1849
 msgid "Generic object definition"
-msgstr "Definizione oggetto generico"
+msgstr "Definizione di oggetto generico"
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:46
 msgid "Generic object definition ${item.name} was successfully deleted"
@@ -35536,7 +35546,7 @@ msgstr "numero della Regione"
 
 #: ../config/model_attributes.rb:1842
 msgid "GenericObject|Generic object definition name"
-msgstr "Nome definizione oggetto generico"
+msgstr "Nome definizione di oggetto generico"
 
 #: ../config/model_attributes.rb:1843
 msgid "GenericObject|Href slug"
@@ -38685,7 +38695,7 @@ msgstr[1] "Datastore ISO"
 
 #: ../app/javascript/components/pxe-iso-datastore-form/index.jsx:19
 msgid "ISO Datastore \"%s\" was added."
-msgstr "Datastore ISO \"%s\" aggiunto."
+msgstr "Il datastore ISO \"%s\" è stato aggiunto."
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:136
 msgid "ISO Datastore \"%{name}\""
@@ -38693,7 +38703,7 @@ msgstr "Datastore ISO \"%{name}\""
 
 #: ../app/controllers/pxe_controller/iso_datastores.rb:47
 msgid "ISO Datastore no longer exists"
-msgstr "Il Datastore ISO non esiste più"
+msgstr "Il datastore ISO non esiste più"
 
 #. TRANSLATORS: file: product/views/IsoDatastore.yaml
 #: ../app/controllers/pxe_controller.rb:124 ../config/yaml_strings.rb:1179
@@ -39803,7 +39813,7 @@ msgstr "Verificato internamente"
 
 #: ../app/models/mixins/retirement_mixin.rb:77
 msgid "Invalid Date specified: %{date}"
-msgstr "Specificata data non valida: %{date}"
+msgstr "La data specificata non è valida: %{date}"
 
 #: ../lib/miq_expression.rb:1126
 msgid "Invalid Date/Time range, %{first_value} comes before %{second_value}"
@@ -39858,7 +39868,7 @@ msgstr "Parametri di configurazione non validi."
 
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:147
 msgid "Invalid date selected. Please select a future date."
-msgstr "Data non valida selezionata. Selezionare una data futura."
+msgstr "La data selezionata non è valida. Selezionare una data futura."
 
 #: ../app/models/manageiq/providers/azure/manager_mixin.rb:170
 msgid "Invalid endpoint"
@@ -42214,7 +42224,8 @@ msgstr "Gestisci le Politiche dei Pool di Risorse"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:64
 msgid "Manage Policies for the selected Storage Managers"
-msgstr "Gestisci le Politiche dei Gestori Archiviazione selezionati"
+msgstr ""
+"Gestisci le politiche dei gestori dello spazio di archiviazione selezionati"
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:74
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:84
@@ -42299,7 +42310,7 @@ msgstr "Gestisci Politiche di questo Pool di Risorse"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:47
 msgid "Manage Policies for this Storage Manager"
-msgstr "Gestisci politiche per questo gestore di spazio di archiviazione"
+msgstr "Gestisci politiche per questo gestore dello spazio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/x_miq_template_center.rb:54
 msgid "Manage Policies for this Template"
@@ -42317,7 +42328,7 @@ msgstr "Gestisci Politiche di questo elemento"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4018
 msgid "Manage Policies of Block Storage Managers"
-msgstr "Gestisci Politiche dei Gestori Archiviazione a blocchi"
+msgstr "Gestisci politiche dei gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1186
@@ -44239,19 +44250,19 @@ msgstr "Valore massimo dello spazio di archiviazione libero derivato"
 
 #: ../config/model_attributes.rb:2492
 msgid "MetricRollup|Max derived storage mem managed"
-msgstr "Valore massimo di spazio di archiviazione derivato gestito"
+msgstr "Valore massimo dello spazio di archiviazione derivato gestito"
 
 #: ../config/model_attributes.rb:2493
 msgid "MetricRollup|Max derived storage mem registered"
-msgstr "Valore massimo di spazio di archiviazione derivato registrato"
+msgstr "Valore massimo dello spazio di archiviazione derivato registrato"
 
 #: ../config/model_attributes.rb:2494
 msgid "MetricRollup|Max derived storage mem unmanaged"
-msgstr "Valore massimo di spazio di archiviazione derivato non gestito"
+msgstr "Valore massimo dello spazio di archiviazione derivato non gestito"
 
 #: ../config/model_attributes.rb:2495
 msgid "MetricRollup|Max derived storage mem unregistered"
-msgstr "Valore massimo di spazio di archiviazione derivato non registrato"
+msgstr "Valore massimo dello spazio di archiviazione derivato non registrato"
 
 #: ../config/model_attributes.rb:2496
 msgid "MetricRollup|Max derived storage snapshot managed"
@@ -44281,22 +44292,24 @@ msgstr "Valore massimo dello spazio di archiviazione totale derivato"
 
 #: ../config/model_attributes.rb:2501
 msgid "MetricRollup|Max derived storage used managed"
-msgstr "Valore massimo di spazio di archiviazione derivato utilizzato gestito"
+msgstr ""
+"Valore massimo dello spazio di archiviazione derivato utilizzato gestito"
 
 #: ../config/model_attributes.rb:2502
 msgid "MetricRollup|Max derived storage used registered"
 msgstr ""
-"Valore massimo di spazio di archiviazione derivato utilizzato registrato"
+"Valore massimo dello spazio di archiviazione derivato utilizzato registrato"
 
 #: ../config/model_attributes.rb:2503
 msgid "MetricRollup|Max derived storage used unmanaged"
 msgstr ""
-"Valore massimo di spazio di archiviazione derivato utilizzato non gestito"
+"Valore massimo dello spazio di archiviazione derivato utilizzato non gestito"
 
 #: ../config/model_attributes.rb:2504
 msgid "MetricRollup|Max derived storage used unregistered"
 msgstr ""
-"Valore massimo di spazio di archiviazione derivato utilizzato non registrato"
+"Valore massimo dello spazio di archiviazione derivato utilizzato non "
+"registrato"
 
 #: ../config/model_attributes.rb:2505
 msgid "MetricRollup|Max derived storage vm count managed"
@@ -44521,19 +44534,19 @@ msgstr "Valore minimo dello spazio di archiviazione libero derivato"
 
 #: ../config/model_attributes.rb:2560
 msgid "MetricRollup|Min derived storage mem managed"
-msgstr "Valore minimo di spazio di archiviazione derivato gestito"
+msgstr "Valore minimo dello spazio di archiviazione derivato gestito"
 
 #: ../config/model_attributes.rb:2561
 msgid "MetricRollup|Min derived storage mem registered"
-msgstr "Valore minimo di spazio di archiviazione derivato registrato"
+msgstr "Valore minimo dello spazio di archiviazione derivato registrato"
 
 #: ../config/model_attributes.rb:2562
 msgid "MetricRollup|Min derived storage mem unmanaged"
-msgstr "Valore minimo di spazio di archiviazione derivato non gestito"
+msgstr "Valore minimo dello spazio di archiviazione derivato non gestito"
 
 #: ../config/model_attributes.rb:2563
 msgid "MetricRollup|Min derived storage mem unregistered"
-msgstr "Valore minimo di spazio di archiviazione derivato non registrato"
+msgstr "Valore minimo dello spazio di archiviazione derivato non registrato"
 
 #: ../config/model_attributes.rb:2564
 msgid "MetricRollup|Min derived storage snapshot managed"
@@ -44562,22 +44575,23 @@ msgstr "Valore minimo dello spazio di archiviazione totale derivato"
 
 #: ../config/model_attributes.rb:2569
 msgid "MetricRollup|Min derived storage used managed"
-msgstr "Valore minimo di spazio di archiviazione derivato utilizzato gestito"
+msgstr ""
+"Valore minimo dello spazio di archiviazione derivato utilizzato gestito"
 
 #: ../config/model_attributes.rb:2570
 msgid "MetricRollup|Min derived storage used registered"
 msgstr ""
-"Valore minimo di spazio di archiviazione derivato utilizzato registrato"
+"Valore minimo dello spazio di archiviazione derivato utilizzato registrato"
 
 #: ../config/model_attributes.rb:2571
 msgid "MetricRollup|Min derived storage used unmanaged"
 msgstr ""
-"Valore minimo di spazio di archiviazione derivato utilizzato non gestito"
+"Valore minimo dello spazio di archiviazione derivato utilizzato non gestito"
 
 #: ../config/model_attributes.rb:2572
 msgid "MetricRollup|Min derived storage used unregistered"
 msgstr ""
-"Valore minimo di spazio di archiviazione derivato utilizzato non registrato"
+"Valore minimo dello spazio di archiviazione derivato utilizzato non registrato"
 
 #: ../config/model_attributes.rb:2573
 msgid "MetricRollup|Min derived storage vm count managed"
@@ -48661,12 +48675,13 @@ msgstr "La modifica dell'aggregato host %s è stata accodata correttamente"
 #: ../app/javascript/components/physical-storage-form/index.jsx:39
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
 msgstr ""
-"La modifica dello storage fisico \"%s\" è stata accodata correttamente."
+"La modifica dello spazio fisico di archiviazione \"%s\" è stata accodata "
+"correttamente."
 
 #: ../app/javascript/components/pxe-image-type-form/index.jsx:34
 msgid "Modification of System Image Type \"%s\" has been successfully queued."
 msgstr ""
-"La modifica del tipo di immagine del sistema \"%s\" è stata accodata "
+"La modifica del tipo di immagine di sistema \"%s\" è stata accodata "
 "correttamente."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -48697,7 +48712,7 @@ msgstr "Modifica servizi disponibili"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4024
 msgid "Modify Block Storage Managers"
-msgstr "Modifica Gestori Archiviazione a blocchi"
+msgstr "Modifica gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2295
@@ -48857,7 +48872,7 @@ msgstr "Modifica host"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2718
 msgid "Modify ISO Datastores"
-msgstr "Modifica Datastore ISO"
+msgstr "Modifica datastore ISO"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3758
@@ -48962,7 +48977,7 @@ msgstr "Modifica server fisici"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4252
 msgid "Modify Physical Storage"
-msgstr "Modifica spazio di archiviazione fisico"
+msgstr "Modifica spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3474
@@ -49182,7 +49197,7 @@ msgstr "Lunedì"
 #: ../app/controllers/alerts_overview_controller.rb:35
 #: ../app/presenters/menu/default_menu.rb:228
 msgid "Monitor"
-msgstr "Controlla"
+msgstr "Monitor"
 
 #: ../app/helpers/application_helper/title.rb:51
 msgid "Monitor Alerts"
@@ -49817,7 +49832,7 @@ msgstr "Passare all'Iniziatore Host di questa Associazione"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:36
 msgid "Navigate to the Physical Storage of this mapping"
-msgstr "Passare all'Archiviazione Fisica di questa Associazione"
+msgstr "Passare allo spazio fisico di archiviazione di questa associazione"
 
 #: ../app/models/miq_report/import_export.rb:60
 msgid "Neither user or group to be preserved during import were found"
@@ -50866,20 +50881,21 @@ msgstr "Nuova sezione"
 #: ../app/views/shared/views/_retire.html.haml:11
 msgid "New setting will affect Orchestration Stack"
 msgid_plural "New setting will affect Orchestration Stacks"
-msgstr[0] "Le nuove impostazioni influiranno sullo Stack di orchestrazione "
-msgstr[1] "Le nuove impostazioni influiranno sugli Stack di orchestrazione "
+msgstr[0] ""
+"Le nuove impostazioni avranno effetto sullo stack di orchestrazione "
+msgstr[1] "Le nuove impostazioni avranno effetto sugli stack di orchestrazione"
 
 #: ../app/views/shared/views/_retire.html.haml:9
 msgid "New setting will affect Service"
 msgid_plural "New setting will affect Services"
-msgstr[0] "Le nuove impostazioni influiranno sul Servizio"
-msgstr[1] "Le nuove impostazioni influiranno sui Servizi"
+msgstr[0] "Le nuove impostazioni avranno effetto sul servizio"
+msgstr[1] "Le nuove impostazioni avranno effetto sui servizi"
 
 #: ../app/views/shared/views/_retire.html.haml:14
 msgid "New setting will affect VM"
 msgid_plural "New setting will affect VMs"
-msgstr[0] "Le nuove impostazioni influiranno sulla VM"
-msgstr[1] "Le nuove impostazioni influiranno sulle VM"
+msgstr[0] "Le nuove impostazioni avranno effetto sulla VM"
+msgstr[1] "Le nuove impostazioni avranno effetto sulle VM"
 
 #: ./dist/js/ui-components.js:1
 msgid "New tab"
@@ -51205,7 +51221,7 @@ msgstr "Nessuna Espressione Filtro definita"
 
 #: ../app/models/generic_object_definition/import_export.rb:8
 msgid "No Generic Object Definition to Import"
-msgstr "Nessuna definizione dell'oggetto generico da importare"
+msgstr "Nessuna definizione di oggetto generico da importare"
 
 #: ../app/controllers/host_aggregate_controller.rb:68
 msgid "No Host Aggregates were selected for deletion."
@@ -51311,7 +51327,7 @@ msgstr "Nessun provider definito"
 
 #: ../app/helpers/application_helper/button/iso_datastore_new.rb:4
 msgid "No Providers are available to create an ISO Datastore on"
-msgstr "Non sono disponibili Provider per creare un Datastore ISO su"
+msgstr "Non sono disponibili provider per creare un datastore ISO su"
 
 #: ../app/models/manageiq/providers/vmware/infra_manager/scanning/job.rb:170
 msgid "No Providers available to delete snapshot"
@@ -51447,8 +51463,8 @@ msgstr ""
 #: ../app/helpers/application_helper/button/ems_storage_timeline.rb:9
 msgid "No Timeline data has been collected for this Storage Manager"
 msgstr ""
-"Non sono stati raccolti dati sulla sequenza temporale per questo gestore "
-"archiviazione"
+"Non sono stati raccolti dati sulla sequenza temporale per questo gestore dello"
+" spazio di archiviazione"
 
 #: ../app/helpers/application_helper/button/miq_template_timeline.rb:6
 msgid "No Timeline data has been collected for this Template"
@@ -51887,11 +51903,14 @@ msgstr ""
 #: ../app/helpers/application_helper/button/host_initiator_group_new.rb:5
 msgid "No storage providers support creating host initiator groups."
 msgstr ""
-"Nessun provider di storage supporta la creazione di gruppi di iniziatori host."
+"Nessun provider dello spazio di archiviazione supporta la creazione di gruppi "
+"di iniziatori host."
 
 #: ../app/helpers/application_helper/button/host_initiator_new.rb:5
 msgid "No storage providers support creating host initiators."
-msgstr "Nessun provider di storage supporta la creazione di iniziatori host."
+msgstr ""
+"Nessun provider dello spazio di archiviazione supporta la creazione di "
+"iniziatori host."
 
 #: ../app/controllers/network_router_controller.rb:74
 msgid "No subnets available to add interfaces to Router \"%{name}\""
@@ -52438,7 +52457,7 @@ msgstr "Numero di host %{host_type}"
 
 #: ../app/helpers/ems_infra_helper.rb:9
 msgid "Number of Block Storage Hosts"
-msgstr "Numero di Host con Archiviazione a blocchi"
+msgstr "Numero di host dello spazio di archiviazione a blocchi"
 
 #: ../app/helpers/container_node_helper/textual_summary.rb:53
 #: ../app/helpers/host_helper/textual_summary.rb:249
@@ -52736,12 +52755,12 @@ msgstr "Gestori archivio oggetti"
 #: ../app/controllers/cloud_object_store_container_controller.rb:93
 #: ../app/presenters/menu/default_menu.rb:162
 msgid "Object Store Containers"
-msgstr "Contenitori Archivio Oggetti"
+msgstr "Contenitori archivio oggetti"
 
 #: ../app/controllers/cloud_object_store_object_controller.rb:55
 #: ../app/presenters/menu/default_menu.rb:163
 msgid "Object Store Objects"
-msgstr "Oggetti Archivio Oggetti"
+msgstr "Oggetti archivio oggetti"
 
 #: ../app/javascript/oldjs/controllers/alerts/alerts_overview_controller.js:96
 #: ../app/views/ops/_schedule_show.html.haml:68
@@ -54962,12 +54981,12 @@ msgstr "Eseguire operazioni su backup"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4014
 msgid "Perform Operations on Block Storage Managers"
-msgstr "Esegui operazioni su Gestori Archiviazione a blocchi"
+msgstr "Esegui operazioni sui gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1064
 msgid "Perform Operations on Catalog Items"
-msgstr "Esegui operazioni sugli Elementi del catalogo"
+msgstr "Esegui operazioni sugli elementi del catalogo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2990
@@ -55240,7 +55259,7 @@ msgstr "Esegui le operazioni sui server fisici"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4246
 msgid "Perform Operations on Physical Storages"
-msgstr "Esegui le operazioni sugli spazi di archiviazione fisici"
+msgstr "Esegui le operazioni sugli spazi fisici di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4228
@@ -56017,27 +56036,27 @@ msgstr "Server fisici con Host"
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:34
 #: ../config/yaml_strings.rb:1658
 msgid "Physical Storage"
-msgstr "Archiviazione fisica"
+msgstr "Spazio fisico di archiviazione"
 
 #:
 #: ../app/models/manageiq/providers/lenovo/physical_infra_manager/physical_storage.rb:4
 msgid "Physical Storage (Lenovo)"
 msgid_plural "Physical Storages (Lenovo)"
-msgstr[0] "Spazio di archiviazione fisico (Lenovo)"
-msgstr[1] "Spazi di archiviazione fisici (Lenovo)"
+msgstr[0] "Spazio fisico di archiviazione (Lenovo)"
+msgstr[1] "Spazi fisici di archiviazione (Lenovo)"
 
 #: ../config/model_display_names.rb:185
 msgid "Physical Storage Family"
 msgid_plural "Physical Storage Families"
-msgstr[0] "Famiglia spazio di archiviazione fisico"
-msgstr[1] "Famiglie spazio di archiviazione fisico"
+msgstr[0] "Famiglia dello spazio fisico di archiviazione"
+msgstr[1] "Famiglie dello spazio fisico di archiviazione"
 
 #:
 #: ../app/javascript/components/host-initiator-form/host-initiator-form.schema.js:65
 #: ../app/javascript/components/host-initiator-group-form/host-initiator-group-form.schema.js:55
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:62
 msgid "Physical Storage:"
-msgstr "Archiviazione fisica:"
+msgstr "Spazio fisico di archiviazione:"
 
 #. TRANSLATORS: file: product/views/PhysicalStorage.yaml
 #: ../app/controllers/physical_storage_controller.rb:43
@@ -56045,12 +56064,12 @@ msgstr "Archiviazione fisica:"
 #: ../app/services/ems_storage_dashboard_service.rb:53
 #: ../config/yaml_strings.rb:1656
 msgid "Physical Storages"
-msgstr "Spazi di archiviazione fisici"
+msgstr "Spazi fisici di archiviazione"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage (plural form)
 #: ../config/dictionary_strings.rb:3490
 msgid "Physical Storages (Lenovo)"
-msgstr "Spazi di archiviazione fisici (Lenovo)"
+msgstr "Spazi fisici di archiviazione (Lenovo)"
 
 #. TRANSLATORS: file: product/views/PhysicalSwitch.yaml
 #: ../config/yaml_strings.rb:1662
@@ -56112,11 +56131,11 @@ msgstr "Server fisico"
 
 #: ../config/model_attributes.rb:3762
 msgid "Physical storage"
-msgstr "Spazio di archiviazione fisico"
+msgstr "Spazio fisico di archiviazione"
 
 #: ../config/model_attributes.rb:3776
 msgid "Physical storage family"
-msgstr "Famiglia spazio di archiviazione fisico"
+msgstr "Famiglia dello spazio fisico di archiviazione"
 
 #: ../config/model_attributes.rb:3687
 msgid "PhysicalChassis|Blade slot count"
@@ -57551,7 +57570,7 @@ msgstr "Stato alimentazione"
 
 #: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb:161
 msgid "PowerVC API Endpoint (Hostname or IPv4/IPv6 address)"
-msgstr "API endpoint PowerVC (nome host o indirizzo IPv4/IPv6)"
+msgstr "Endpoint API PowerVC (nome host o indirizzo IPv4/IPv6)"
 
 #: ../app/models/manageiq/providers/ibm_power_vc/cloud_manager.rb:438
 msgid "PowerVC Server SSH Password"
@@ -59410,53 +59429,56 @@ msgstr "Riapplicare la modifica precedente"
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:101
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:97
 msgid "Re-check Authentication Status"
-msgstr "Verifica di nuovo lo stato di autenticazione"
+msgstr "Verifica nuovamente lo stato di autenticazione"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:101
 msgid "Re-check Authentication Status for the selected Cloud Providers"
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione dei provider cloud selezionati"
+"Verifica nuovamente lo stato di autenticazione dei provider cloud selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:113
 msgid "Re-check Authentication Status for the selected Containers Providers "
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione dei Provider Contenitori "
+"Verifica nuovamente lo stato di autenticazione dei provider dei contenitori "
 "selezionati "
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:101
 msgid ""
 "Re-check Authentication Status for the selected Infrastructure Providers"
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione dei Provider Infrastruttura "
-"selezionati"
+"Verifica nuovamente lo stato di autenticazione dei provider "
+"dell'infrastruttura selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:100
 msgid ""
 "Re-check Authentication Status for the selected Physical Infrastructure "
 "Providers"
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione dei Provider di Infrastrutture "
-"Fisiche selezionati"
+"Verifica nuovamente lo stato di autenticazione dei provider "
+"dell'infrastruttura fisica selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:96
 msgid "Re-check Authentication Status for the selected storage manager"
 msgstr ""
-"Controlla nuovamente lo stato di autenticazione per il gestore di storage "
-"selezionato"
+"Verifica nuovamente lo stato di autenticazione del gestore dello spazio di "
+"archiviazione selezionato"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:98
 msgid "Re-check Authentication Status for this Cloud Provider"
-msgstr "Verifica di nuovo lo stato di autenticazione di questo provider cloud"
+msgstr ""
+"Verifica nuovamente lo stato di autenticazione di questo provider cloud"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:116
 msgid "Re-check Authentication Status for this Containers Provider"
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione di questo Provider Contenitori"
+"Verifica nuovamente lo stato di autenticazione di questo provider dei "
+"contenitori"
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:111
 msgid "Re-check Authentication Status for this Infrastructure Provider"
 msgstr ""
-"Verifica di nuovo lo stato di autenticazione di questo Provider Infrastruttura"
+"Verifica nuovamente lo stato di autenticazione di questo provider "
+"dell'infrastruttura"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:110
 msgid ""
@@ -59489,7 +59511,9 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4022
 msgid "Re-check Authentication Status of storage manager"
-msgstr "Verifica nuovamente stato di autenticazione gestore storage"
+msgstr ""
+"Verifica nuovamente lo stato di autenticazione del gestore dello spazio di "
+"archiviazione"
 
 #: ../app/controllers/mixins/ems_common.rb:399
 msgid ""
@@ -59965,12 +59989,12 @@ msgstr "Aggiorna"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2591
 msgid "Refresh Audit Log"
-msgstr "Aggiorna log di controllo"
+msgstr "Aggiorna log di verifica"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4020
 msgid "Refresh Block Storage Managers"
-msgstr "Aggiorna Gestori Archiviazione a blocchi"
+msgstr "Aggiorna gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1194
@@ -60101,7 +60125,7 @@ msgstr "Aggiorna Relazioni"
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:13
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:13
 msgid "Refresh Relationships and Power States"
-msgstr "Aggiorna relazioni e gli stati di alimentazione"
+msgstr "Aggiorna relazioni e stati di alimentazione"
 
 #: ../app/helpers/application_helper/toolbar/ems_automation_center.rb:14
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:14
@@ -60113,11 +60137,11 @@ msgstr "Aggiorna le relazioni e gli stati di alimentazione"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:29
 msgid "Refresh Relationships for selected ISO Datastores"
-msgstr "Aggiorna Relazioni per i Datastore ISO selezionati"
+msgstr "Aggiorna relazioni per i datastore ISO selezionati"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:33
 msgid "Refresh Relationships for selected ISO Datastores?"
-msgstr "Aggiornare Relazioni per i Datastore ISO selezionati?"
+msgstr "Aggiornare le relazioni per i datastore ISO selezionati?"
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:38
 msgid "Refresh Relationships for selected PXE Servers"
@@ -60129,11 +60153,11 @@ msgstr "Aggiorna relazioni dei Server PXE selezionati?"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:20
 msgid "Refresh Relationships for this ISO Datastore"
-msgstr "Aggiorna Relazioni per questo Datastore ISO"
+msgstr "Aggiorna relazioni per questo datastore ISO"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:22
 msgid "Refresh Relationships for this ISO Datastore?"
-msgstr "Aggiorna Relazioni per questo Datastore ISO?"
+msgstr "Aggiornare le relazioni per questo datastore ISO?"
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:25
 msgid "Refresh Relationships for this PXE Server"
@@ -60300,7 +60324,7 @@ msgid ""
 "Storages"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Spazi di archiviazione fisici"
+"relativi a questi spazi fisici di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4230
@@ -60414,7 +60438,7 @@ msgid ""
 "Physical Servers"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Server Fisici selezionati"
+"relativi ai server fisici selezionati"
 
 #: ../app/helpers/application_helper/toolbar/physical_server_center.rb:21
 #: ../app/helpers/application_helper/toolbar/physical_servers_center.rb:21
@@ -60423,15 +60447,15 @@ msgid ""
 "Physical Servers?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Server Fisici selezionati?"
+"relativi ai server fisici selezionati?"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:12
 msgid ""
 "Refresh relationships and power states for all items related to the selected "
 "Storage Managers"
 msgstr ""
-"Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Gestori Archiviazione selezionati?"
+"Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
+"relativi ai gestori dello spazio di archiviazione selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:16
 msgid ""
@@ -60439,7 +60463,7 @@ msgid ""
 "Storage Managers?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Gestori Archiviazione selezionati?"
+"relativi ai gestori dello spazio di archiviazione selezionati?"
 
 #: ../app/helpers/application_helper/toolbar/miq_templates_center.rb:14
 #: ../app/helpers/application_helper/toolbar/template_infras_center.rb:14
@@ -60504,8 +60528,8 @@ msgid ""
 "Refresh relationships and power states for all items related to these Host "
 "Initiators Cluster?"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questo cluster di iniziatori host?"
+"Aggiornare le relazioni e gli stati di alimentazione per tutti gli elementi "
+"correlati a questo cluster di iniziatori host?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:19
 msgid ""
@@ -60521,7 +60545,7 @@ msgid ""
 " Storages"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Spazi di archiviazione Fisici"
+"relativi a questi spazi fisici di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:19
 msgid ""
@@ -60529,7 +60553,7 @@ msgid ""
 " Storages?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Spazi di archiviazione Fisici?"
+"relativi a questi spazi fisici di archiviazione?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb:14
 msgid ""
@@ -60600,8 +60624,8 @@ msgid ""
 "Refresh relationships and power states for all items related to this Host "
 "Initiator Cluster?"
 msgstr ""
-"Aggiornare relazioni e stati di alimentazione per tutti gli elementi correlati"
-" a questo cluster dell'iniziatore host?"
+"Aggiornare le relazioni e gli stati di alimentazione per tutti gli elementi "
+"correlati a questo cluster dell'iniziatore host?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid ""
@@ -60689,7 +60713,7 @@ msgid ""
 "Storage"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questo spazio di archiviazione fisico"
+"relativi a questo spazio fisico di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:19
 msgid ""
@@ -60697,7 +60721,7 @@ msgid ""
 "Storage?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questo spazio di archiviazione fisico?"
+"relativi a questo spazio fisico di archiviazione?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switch_center.rb:14
 msgid ""
@@ -61409,7 +61433,7 @@ msgstr "Elimina tutto"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4030
 msgid "Remove Block Storage Manager"
-msgstr "Rimuovi Gestore Archiviazione a blocchi"
+msgstr "Rimuovi gestore dello spazio di archiviazione a blocchi"
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:21
@@ -61592,11 +61616,11 @@ msgstr "Rimuovi host"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2722
 msgid "Remove ISO Datastores"
-msgstr "Rimuovi Datastore ISO"
+msgstr "Rimuovi datastore ISO"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:19
 msgid "Remove ISO Datastores from Inventory"
-msgstr "Rimuovere i Datastore ISO dall'inventario"
+msgstr "Rimuovere i datastore ISO dall'inventario"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3760
@@ -61870,7 +61894,7 @@ msgstr "Rimuovi regle della politica di sicurezza"
 
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:88
 msgid "Remove Selected items from Inventory"
-msgstr "Rimuovere gli elementi selezionati dall'inventario"
+msgstr "Rimuovi elementi selezionati dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/service_center.rb:18
 msgid "Remove Service from Inventory"
@@ -61893,11 +61917,11 @@ msgstr "Rimuovi istantanea"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3996
 msgid "Remove Storage Manager"
-msgstr "Rimuovi Gestori Archiviazione"
+msgstr "Rimuovi gestori dello spazio di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:42
 msgid "Remove Storage Managers from Inventory"
-msgstr "Rimuovi i Gestori Archiviazione dall'inventario"
+msgstr "Rimuovi gestori dello spazio di archiviazione dall'inventario"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3038
@@ -61969,7 +61993,7 @@ msgstr "Rimuovi un servizio di rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4258
 msgid "Remove a Physical Storage"
-msgstr "Rimuovi uno spazio di archiviazione fisico"
+msgstr "Rimuovi uno spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3460
@@ -62085,11 +62109,11 @@ msgstr "Rimuovi Flavor selezionati"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:26
 msgid "Remove selected Generic Object Definitions from Inventory"
-msgstr "Rimuovi definizioni oggetto generico selezionate dall'inventario"
+msgstr "Rimuovi definizioni di oggetto generico selezionate dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:18
 msgid "Remove selected ISO Datastores from Inventory"
-msgstr "Rimuovere il Datastore ISO selezionato dall'inventario"
+msgstr "Rimuovere il datastore ISO selezionato dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:39
 msgid "Remove selected Infrastructure Providers from Inventory"
@@ -62130,7 +62154,9 @@ msgstr "Rimuovi contenitori archivio oggetti selezionati dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:23
 msgid "Remove selected Object Storage Managers from Inventory"
-msgstr "Rimuovi i Gestori Archiviazione Oggetti selezionati dall'inventario"
+msgstr ""
+"Rimuovi gestori dello spazio di archiviazione oggetti selezionati "
+"dall'inventario"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_objects_center.rb:16
@@ -62174,7 +62200,8 @@ msgstr "Rimuovi i servizi selezionati dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:41
 msgid "Remove selected Storage Managers from Inventory"
-msgstr "Rimuovi i Gestori Archiviazione selezionati dall'inventario"
+msgstr ""
+"Rimuovi gestori dello spazio di archiviazione selezionati dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:27
 msgid "Remove selected System Image Types"
@@ -62196,7 +62223,7 @@ msgstr "Rimuovi i Modelli selezionati dall'inventario"
 #: ../app/helpers/application_helper/toolbar/vm_infras_center.rb:72
 #: ../app/helpers/application_helper/toolbar/vms_center.rb:51
 msgid "Remove selected items from Inventory"
-msgstr "Rimuovere gli elementi selezionati dall'inventario"
+msgstr "Rimuovi elementi selezionati dall'inventario"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4503
@@ -62293,11 +62320,11 @@ msgstr "Rimuovere questo registro firmware selezionati dall'inventario?"
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:29
 msgid "Remove this Generic Object Definitions from Inventory"
-msgstr "Rimuovi queste definizioni oggetto generiche dall'inventario"
+msgstr "Rimuovi queste definizioni di oggetto generiche dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:12
 msgid "Remove this ISO Datastore from Inventory"
-msgstr "Rimuovere questo Datastore ISO dall'inventario"
+msgstr "Rimuovere questo datastore ISO dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:38
 msgid "Remove this Image from Inventory"
@@ -64083,12 +64110,12 @@ msgstr "Ritiro"
 #: ../app/helpers/vm_helper/textual_summary.rb:203
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:62
 msgid "Retirement Date"
-msgstr "Data ritiro"
+msgstr "Data di ritiro"
 
 #: ../app/views/static/retirement-form.html.haml:21
 #: ../app/views/static/retirement-form.html.haml:32
 msgid "Retirement Date and Time"
-msgstr "Data ed ora ritiro"
+msgstr "Data ed ora di ritiro"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:207
 msgid "Retirement Entry Point"
@@ -66020,7 +66047,7 @@ msgstr "Seleziona un singolo Provider di infrastruttura fisica da modificare"
 
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:33
 msgid "Select a single Provider to edit"
-msgstr "Selezionare un singolo provider da modificare"
+msgstr "Seleziona un singolo provider da modificare"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:26
 msgid "Select a single Role to copy"
@@ -66499,7 +66526,7 @@ msgstr "Utilizzo disco /var/log server elevato"
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:119
 msgid "Server High /var/log/audit Disk Usage"
-msgstr "Utilizzo disco /var/log/audit server elevato"
+msgstr "Utilizzo disco /var/log/verifica server elevato"
 
 #. TRANSLATORS: file: db/fixtures/miq_event_definition_events.yml
 #: ../config/yaml_strings.rb:123
@@ -68093,7 +68120,7 @@ msgstr "Profilo di analisi delle impostazioni \"%{name}\""
 
 #: ../app/controllers/ops_controller/settings/common.rb:920
 msgid "Settings Analysis Profiles"
-msgstr "Profili di Analisi delle Impostazioni"
+msgstr "Profili di analisi delle impostazioni"
 
 #: ../config/model_display_names.rb:225
 msgid "Settings Change"
@@ -70893,19 +70920,19 @@ msgstr "Tipo di dominio spazio di archiviazione"
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js:31
 #: ../config/yaml_strings.rb:591
 msgid "Storage Manager"
-msgstr "Gestore archiviazione"
+msgstr "Gestore dello spazio di archiviazione"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager
 #: ../config/dictionary_strings.rb:3450
 msgid "Storage Manager (Cinder)"
-msgstr "Gestore Archiviazione (Cinder)"
+msgstr "Gestore dello spazio di archiviazione (Cinder)"
 
 #:
 #: ../app/models/manageiq/providers/openstack/storage_manager/swift_manager.rb:60
 msgid "Storage Manager (Swift)"
 msgid_plural "Storage Managers (Swift)"
-msgstr[0] "Gestore Archiviazione (Swift)"
-msgstr[1] "Gestori Archiviazione (Swift)"
+msgstr[0] "Gestore dello spazio di archiviazione (Swift)"
+msgstr[1] "Gestori dello spazio di archiviazione (Swift)"
 
 #. TRANSLATORS: file: product/views/ems_storage.yaml
 #: ../app/controllers/ems_storage_controller.rb:24
@@ -70961,7 +70988,7 @@ msgstr[1] "Spazi di archiviazione del profilo dello Spazio di archiviazione"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #: ../config/yaml_strings.rb:1370
 msgid "Storage Providers"
-msgstr "Provider di archiviazione"
+msgstr "Provider dello spazio di archiviazione"
 
 #: ../config/model_display_names.rb:230
 msgid "Storage Resource"
@@ -72213,7 +72240,7 @@ msgstr "Il tipo di immagine di sistema \"%s\" è stato aggiunto."
 #: ../app/controllers/pxe_controller.rb:187
 #: ../app/controllers/pxe_controller.rb:191
 msgid "System Image Type \"%{name}\""
-msgstr "Tipo di immagine del sistema \"%{name}\""
+msgstr "Tipo di immagine di sistema \"%{name}\""
 
 #. TRANSLATORS: file: product/views/PxeImageType.yaml
 #: ../app/controllers/pxe_controller.rb:118 ../config/yaml_strings.rb:1674
@@ -72222,7 +72249,7 @@ msgstr "Tipi Immagine di sistema"
 
 #: ../app/controllers/pxe_controller/pxe_image_types.rb:91
 msgid "System Image Types \"%{name}\""
-msgstr "Tipi di immagine del sistema \"%{name}\""
+msgstr "Tipi di immagine di sistema \"%{name}\""
 
 #. TRANSLATORS: en.yml key: dictionary.column.system_memory_free
 #: ../config/dictionary_strings.rb:1908
@@ -73271,7 +73298,7 @@ msgstr "La rete dispone di VMI attive correlate"
 #: ../app/models/manageiq/providers/autosde/storage_manager/physical_storage.rb:4
 #: ../app/models/manageiq/providers/autosde/storage_manager/physical_storage.rb:7
 msgid "The Physical Storage is not connected to an active Manager"
-msgstr "L'Archiviazione fisica non è collegata ad un Gestore attivo"
+msgstr "Lo spazio fisico di archiviazione non è collegato a un gestore attivo"
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:8
@@ -74437,7 +74464,7 @@ msgstr "Indirizzo email destinatario"
 #: ../app/helpers/miq_action_helper.rb:42
 #: ../app/javascript/components/action-form/action-form.schema.js:343
 msgid "To E-mail Address"
-msgstr "Ad indirizzo email"
+msgstr "Indirizzo email del destinatario"
 
 #: src/amazon-security-form-group/security-group.jsx:38
 msgid "To port"
@@ -79334,7 +79361,7 @@ msgstr "Visualizza tutti i tipi di immagine di sistema"
 #: ../app/views/ops/_settings_details_tab.html.haml:22
 #: ../app/views/ops/_settings_details_tab.html.haml:24
 msgid "View Analysis Profiles"
-msgstr "Visualizza Profili di analisi"
+msgstr "Visualizza profili di analisi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1226
@@ -79349,7 +79376,7 @@ msgstr "Visualizza backup"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4006
 msgid "View Block Storage Managers"
-msgstr "Visualizza gestori archiviazione a blocchi"
+msgstr "Visualizza gestori dello spazio di archiviazione a blocchi"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1034
@@ -79627,7 +79654,7 @@ msgstr "Visualizza Hybrid"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2712
 msgid "View ISO Images on ISO Datastores"
-msgstr "Visualizza immagini ISO su Datastore ISO"
+msgstr "Visualizza immagini ISO su datastore ISO"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3728
@@ -79785,7 +79812,7 @@ msgstr "Visualizza profilo server fisico"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4240
 msgid "View Physical Storage"
-msgstr "Visualizza Spazio di archiviazione fisico"
+msgstr "Visualizza spazio fisico di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4222
@@ -81850,7 +81877,7 @@ msgstr "Modelli istantanea volume (Openstack)"
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb:86
 #: ../app/presenters/menu/default_menu.rb:154
 msgid "Volume Snapshots"
-msgstr "Istantanee volume"
+msgstr "Istantanee del volume"
 
 #:
 #: ../app/models/manageiq/providers/openstack/cloud_manager/volume_template.rb:14
@@ -82188,8 +82215,8 @@ msgid ""
 "Warning: The selected ISO Datastores and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i Datastore ISO selezionati e TUTTI i relativi componenti verranno"
-" definitivamente rimossi."
+"Avvertenza: i datastore ISO selezionati e tutti i relativi componenti verranno"
+" rimossi in modo definitivo."
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:43
 msgid ""
@@ -82327,8 +82354,8 @@ msgid ""
 "Warning: The selected Storage Managers and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i Gestori Archiviazione e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: i gestori dello spazio di archiviazione e tutti i relativi "
+"componenti verranno rimossi in modo definitivo."
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:31
 msgid "Warning: The selected System Image Types will be permanently removed!"
@@ -82499,7 +82526,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:31
 msgid "Warning: This Generic Object Definition will be permanently removed!"
 msgstr ""
-"Avvertenza: questa definizione oggetto generico verrà rimossa in modo "
+"Avvertenza: questa definizione di oggetto generico verrà rimossa in modo "
 "permanente."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
@@ -82507,8 +82534,8 @@ msgid ""
 "Warning: This ISO Datastore and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: Questo Datastore ISO e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: questo datastore ISO e tutti i relativi componenti verranno "
+"rimossi in modo definitivo."
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:41
 msgid ""
