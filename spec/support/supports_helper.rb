@@ -4,6 +4,7 @@ module Spec
       # when testing requests, ensure the model supports a certain attribute
       def stub_supports(model, feature = :update, supported: true)
         model = model.class unless model.kind_of?(Class)
+        feature = feature.to_sym
 
         receive_supports = receive(:supports?).with(feature).and_return(supported)
         allow(model).to receive_supports
@@ -14,6 +15,7 @@ module Spec
 
       def stub_supports_not(model, feature = :update, reason = nil)
         model = model.class unless model.kind_of?(Class)
+        feature = feature.to_sym
 
         stub_supports(model, feature, :supported => false)
 

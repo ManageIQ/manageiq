@@ -18,6 +18,15 @@ RSpec.describe 'SupportsHelper' do
       expect(Post.supports?(:delete)).to be true
       expect(Post.new.supports?(:delete)).to be true
     end
+
+    it "overrides supports (string) from false to true" do
+      expect(Post.supports?(:delete)).to be false
+
+      stub_supports(Post, "delete")
+
+      expect(Post.supports?(:delete)).to be true
+      expect(Post.new.supports?(:delete)).to be true
+    end
   end
 
   context "stub_supports_not" do
