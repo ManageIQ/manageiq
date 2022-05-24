@@ -91,7 +91,7 @@ namespace :locale do
 
     yamls.each_key do |yaml_glob|
       yaml_glob_full = root_path.join(yaml_glob)
-      Dir.glob(yaml_glob_full).each do |file|
+      Dir.glob(yaml_glob_full).sort.each do |file|
         yml = YAML.load_file(file)
         parse_object(yml, yamls[yaml_glob], file, output, root_path.to_s)
       end
@@ -195,9 +195,9 @@ namespace :locale do
       pot_files << pot_file
     end
 
-    system('rmsgcat', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
+    system('rmsgcat', '--sort-by-msgid', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
     system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('rmsgmerge', '--sort-by-msgid', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
     system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
     system('rm', '-rf', tmp_dir)
   end
@@ -243,7 +243,7 @@ namespace :locale do
       end
 
       def files_to_translate
-        Dir.glob("#{@engine_root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js,jsx}")
+        Dir.glob("#{@engine_root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js,jsx}").sort
       end
 
       def text_domain
@@ -274,8 +274,9 @@ namespace :locale do
       require Rails.root.join("lib/vmdb/gettext/domains")
 
       po_files = {}
-      Vmdb::Gettext::Domains.paths.each do |path|
-        files = ::Pathname.glob(::File.join(path, "**", "*.po"))
+
+      Vmdb::Gettext::Domains.po_paths.each do |path|
+        files = ::Pathname.glob(::File.join(path, "**", "*.po")).sort
         files.each do |file|
           locale = file.dirname.basename.to_s
           po_files[locale] ||= []
@@ -283,30 +284,22 @@ namespace :locale do
         end
       end
 
-      js_plugins = {} # currently we don't need to download any catalogs from JS/node plugins
-
-      plugins_dir = File.join(Rails.root, 'locale/plugins')
-      Dir.mkdir(plugins_dir, 0o700)
-      js_plugins.each do |plugin, content|
-        plugin_dir = File.join(plugins_dir, plugin)
-        Dir.mkdir(plugin_dir)
-        content.each do |lang, url|
-          lang_dir = File.join(plugin_dir, lang)
-          Dir.mkdir(lang_dir)
-          lang_file = "#{lang_dir}/#{url.split('/')[-1]}"
-          ManageIQ::Environment.system!("curl -f -o #{lang_file} #{url}")
-          po_files[lang] ||= []
-          po_files[lang].push(Pathname(lang_file))
-        end
-      end
-
       combined_dir = File.join(Rails.root, "locale/combined")
       Dir.mkdir(combined_dir, 0o700)
-      po_files.each_key do |locale|
+      po_files.each do |locale, files|
+        files.each do |file|
+          unless system "msgfmt --check #{file}"
+            puts "Fatal error running 'msgfmt --check' on file: #{file}.  Review the output above."
+            exit 1
+          end
+        end
+
         dir = File.join(combined_dir, locale)
         po = File.join(dir, 'manageiq.po')
         Dir.mkdir(dir, 0o700)
-        system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+        puts "Generating po from\n#{files.sort.map { |f| "- #{f}" }.join("\n")}"
+        system "rmsgcat --sort-by-msgid -o #{po} #{files.join(' ')}"
+        puts
       end
 
       # create webpack file for including bootstrap-datepicker language packs
@@ -322,7 +315,7 @@ namespace :locale do
       # This depends on PoToJson overrides as defined in lib/tasks/po_to_json_override.rb
       Rake::Task['gettext:po_to_json'].invoke
     ensure
-      system "rm -rf #{combined_dir} #{plugins_dir}"
+      system "rm -rf #{combined_dir}"
     end
   end
 
