@@ -108,11 +108,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: fea27431ec6912e20158ee7a9cbea2eae4f701e8
+  revision: 622e43171bad9d71f48a044529c7dbbdad903be2
   branch: najdorf
   specs:
     manageiq-providers-azure (0.1.0)
-      azure-armrest (~> 0.13)
+      azure-armrest (~> 0.14)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
@@ -484,7 +484,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    azure-armrest (0.13.1)
+    azure-armrest (0.14.0)
       activesupport (>= 4.2.2)
       addressable (~> 2.8)
       azure-signature (~> 0.3.0)
