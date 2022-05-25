@@ -127,11 +127,11 @@ GIT
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
-  revision: 955537c6b7c80e8cd021dcf7f5b43154a6d3effe
+  revision: d1648c1764c9754a759d172dff0a1463670651cc
   branch: morphy
   specs:
     manageiq-providers-azure (0.1.0)
-      azure-armrest (~> 0.13)
+      azure-armrest (~> 0.14)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
@@ -496,7 +496,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.4.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    azure-armrest (0.13.0)
+    azure-armrest (0.14.0)
       activesupport (>= 4.2.2)
       addressable (~> 2.8)
       azure-signature (~> 0.3.0)
