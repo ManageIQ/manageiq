@@ -64,14 +64,7 @@ module ManageIQ::Providers
       end
 
       def manager_class
-        @manager_class ||= begin
-          provider_module = persister_class.provider_module
-          manager_module = self.class.name.split('::').last
-
-          "#{provider_module}::#{manager_module}".safe_constantize
-        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
-          nil
-        end
+        @manager_class ||= options[:parent].class
       end
 
       # Builds data for InventoryCollection

@@ -3,7 +3,7 @@ require 'bigdecimal'
 module SpecParsedData
   def vm_data(i, data = {})
     {
-      :type            => ManageIQ::Providers::CloudManager::Vm.name,
+      :type            => ManageIQ::Providers::Amazon::CloudManager::Vm.name,
       :ems_id          => @ems.id,
       :uid_ems         => "vm_uid_ems_#{i}",
       :ems_ref         => "vm_ems_ref_#{i}",
@@ -16,7 +16,7 @@ module SpecParsedData
 
   def key_pair_data(i, data = {})
     {
-      :type          => ManageIQ::Providers::CloudManager::AuthKeyPair.name,
+      :type          => ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.name,
       :resource_id   => @ems.id,
       :resource_type => "ExtManagementSystem",
       :name          => "key_pair_name_#{i}",
@@ -25,7 +25,7 @@ module SpecParsedData
 
   def image_data(i, data = {})
     {
-      :type               => ManageIQ::Providers::CloudManager::Template.name,
+      :type               => ManageIQ::Providers::Amazon::CloudManager::Template.name,
       :ems_id             => @ems.id,
       :uid_ems            => "image_uid_ems_#{i}",
       :ems_ref            => "image_ems_ref_#{i}",
