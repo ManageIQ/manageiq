@@ -59,7 +59,8 @@ module ManageIQ
             post_refresh_ems_cleanup(ems, targets)
           end
 
-          ems.update!(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
+          refresh_date = Time.now.utc
+          ems.update!(:last_refresh_error => nil, :last_refresh_date => refresh_date, :last_refresh_success_date => refresh_date)
           post_refresh(ems, ems_refresh_start_time)
         end
 
