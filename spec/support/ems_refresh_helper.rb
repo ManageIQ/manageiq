@@ -9,7 +9,7 @@ module Spec
         # Skip attributes that always change between refreshes
         skip_attrs_global   = ["created_on", "created_at", "updated_on", "updated_at"]
         skip_attrs_by_model = {
-          "ExtManagementSystem" => ["last_refresh_date", "last_inventory_date"],
+          "ExtManagementSystem" => ["last_refresh_date", "last_refresh_success_date", "last_inventory_date"],
         }
 
         models.each_with_object({}) do |model, inventory|
