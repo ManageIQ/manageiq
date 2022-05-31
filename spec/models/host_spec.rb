@@ -132,7 +132,6 @@ RSpec.describe Host do
 
     context "#start" do
       before do
-        allow_any_instance_of(described_class).to receive_messages(:supports_start?  => false)
         allow_any_instance_of(described_class).to receive_messages(:validate_ipmi    => nil)
         allow_any_instance_of(described_class).to receive_messages(:run_ipmi_command => "off")
         FactoryBot.create(:miq_event_definition, :name => :request_host_start)
@@ -162,27 +161,27 @@ RSpec.describe Host do
 
     context "with shutdown invalid" do
       it("#shutdown")           { expect { @host.shutdown }.not_to raise_error }
-      it("#supports_shutdown?") { expect(@host.supports_shutdown?).to be_falsey }
+      it("#supports_shutdown?") { expect(@host.supports?(:shutdown)).to be_falsey }
     end
 
     context "with reboot invalid" do
       it("#reboot")           { expect { @host.reboot }.not_to raise_error }
-      it("#supports_reboot?") { expect(@host.supports_reboot?).to be_falsey }
+      it("#supports_reboot?") { expect(@host.supports?(:reboot)).to be_falsey }
     end
 
     context "with standby invalid" do
       it("#standby")            { expect { @host.standby }.not_to raise_error }
-      it("#supports_shutdown?") { expect(@host.supports_shutdown?).to be_falsey }
+      it("#supports_shutdown?") { expect(@host.supports?(:shutdown)).to be_falsey }
     end
 
     context "with enter_maint_mode invalid" do
       it("#enter_maint_mode")           { expect { @host.enter_maint_mode }.not_to raise_error }
-      it("#supports_enter_maint_mode?") { expect(@host.supports_enter_maint_mode?).to be_falsey }
+      it("#supports_enter_maint_mode?") { expect(@host.supports?(:enter_maint_mode)).to be_falsey }
     end
 
     context "with exit_maint_mode invalid" do
       it("#exit_maint_mode")          { expect { @host.exit_maint_mode }.not_to raise_error }
-      it("#supports_exit_maint_mode") { expect(@host.supports_exit_maint_mode?).to be_falsey }
+      it("#supports_exit_maint_mode") { expect(@host.supports?(:exit_maint_mode)).to be_falsey }
     end
   end
 
