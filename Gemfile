@@ -63,6 +63,7 @@ gem "optimist",                         "~>3.0",             :require => false
 gem "pg",                                                    :require => false
 gem "pg-dsn_parser",                    "~>0.1.0",           :require => false
 gem "query_relation",                   "~>0.1.0",           :require => false
+gem "rack",                             ">=2.2.3.1",         :require => false
 gem "rack-attack",                      "~>6.5.0",           :require => false
 gem "rails",                            "~>6.0.4", ">=6.0.4.8"
 gem "rails-i18n",                       "~>6.x"
