@@ -29,6 +29,10 @@ module ManageIQ::Providers
       self.class.http_proxy_uri
     end
 
+    def http_proxy
+      self.class.http_proxy
+    end
+
     supports_not :native_console
 
     def console_url
@@ -50,6 +54,10 @@ module ManageIQ::Providers
 
     def self.http_proxy_uri
       VMDB::Util.http_proxy_uri(ems_type.try(:to_sym)) || VMDB::Util.http_proxy_uri
+    end
+
+    def self.http_proxy
+      VMDB::Util.http_proxy(ems_type.try(:to_sym)) || VMDB::Util.http_proxy
     end
 
     def self.default_blacklisted_event_names
