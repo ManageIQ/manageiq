@@ -4102,7 +4102,7 @@ msgstr "Ajouter un initiateur hôte"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4136
 msgid "Add a Host Initiator Group"
-msgstr "Ajouter un groupe d'initiateurs hôte"
+msgstr "Ajouter un groupe d'initiateurs hôtes"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1416
@@ -6929,7 +6929,7 @@ msgstr "Voulez-vous vraiment supprimer cet initiateur hôte ?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:42
 msgid "Are you sure you want to delete this host initiators?"
-msgstr "Etes-vous sûr de vouloir supprimer ces initiateurs hôtes ?"
+msgstr "Voulez-vous vraiment supprimer ces initiateurs hôtes ?"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:42
 msgid "Are you sure you want to delete this item and all of it's children?"
@@ -12955,7 +12955,7 @@ msgstr "Nom de la base de données cloud"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "Bases de données cloud"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
@@ -13630,7 +13630,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:302
 msgid "CloudDatabaseFlavor|Total cloud databases"
-msgstr "Nombre total de bases de données cloud"
+msgstr "CloudDatabaseFlavor|Nombre total de bases de données cloud"
 
 #: ../config/model_attributes.rb:279
 msgid "CloudDatabase|Db engine"
@@ -20721,7 +20721,7 @@ msgstr "La création du nouvel agrégat d'hôtes a été annulée par l'utilisat
 #: ../app/javascript/components/host-initiator-group-form/index.jsx:38
 msgid "Creation of new Host Initiator Group was canceled by the user"
 msgstr ""
-"La création du nouveau groupe d'initiateurs hôte a été annulée par "
+"La création du nouveau groupe d'initiateurs hôtes a été annulée par "
 "l'utilisateur"
 
 #: ../app/javascript/components/policy-profile-form/index.js:53
@@ -23435,7 +23435,7 @@ msgstr "Supprimer les mappages de volume sélectionnés"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4525
 msgid "Delete snapshots"
-msgstr "Supprimer des clichés"
+msgstr "Supprimer les images instantanées"
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:32
 msgid "Delete tasks older than the selected task"
@@ -24801,7 +24801,7 @@ msgstr "Désactiver ce planning"
 #: ../app/views/ems_container/_form.html.haml:80
 #: ../app/views/ems_container/_form.html.haml:92
 msgid "Disabled"
-msgstr "Désactivé"
+msgstr "Désactivé(s)"
 
 #: ../app/views/shared/buttons/_ab_advanced_form.html.haml:14
 #: ../app/views/shared/buttons/_ab_show.html.haml:113
@@ -27102,7 +27102,7 @@ msgstr "Cliquez deux fois sur 'Nouveau dossier' pour éditer"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "Désactivé"
+msgstr "Arrêté"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -33604,7 +33604,7 @@ msgstr "ExtManagementSystem|Création d'agrégat d'hôtes prise en charge"
 msgid "ExtManagementSystem|Supports create host initiator group"
 msgstr ""
 "ExtManagementSystem | Prend en charge la création d'un groupe d'initiateurs "
-"hôte"
+"hôtes"
 
 #: ../config/model_attributes.rb:1682
 msgid "ExtManagementSystem|Supports create iso datastore"
@@ -37209,12 +37209,12 @@ msgstr "Initiateur hôte"
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:73
 #: ../config/yaml_strings.rb:1921
 msgid "Host Initiator Group"
-msgstr "Groupe d'initiateurs hôte"
+msgstr "Groupe d'initiateurs hôtes"
 
 #:
 #: ../app/javascript/components/volume-mapping-form/volume-mapping-form.schema.js:116
 msgid "Host Initiator Group:"
-msgstr "Groupe d'initiateurs hôte :"
+msgstr "Groupe d'initiateurs hôtes :"
 
 #: ../app/controllers/host_initiator_group_controller.rb:51
 #: ../app/presenters/menu/default_menu.rb:159
@@ -37485,7 +37485,7 @@ msgstr "Initiateur hôte"
 
 #: ../config/model_attributes.rb:2134
 msgid "Host initiator group"
-msgstr "Groupe d'initiateurs hôte"
+msgstr "Groupe d'initiateurs hôtes"
 
 #: ../app/controllers/mixins/policy_mixin.rb:93
 msgid "Host is required"
@@ -49000,7 +49000,7 @@ msgstr "Modifier l'initiateur hôte"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4134
 msgid "Modify Host Initiator Group"
-msgstr "Modifier le groupe d'initiateurs hôte"
+msgstr "Modifier le groupe d'initiateurs hôtes"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1669
@@ -49966,7 +49966,7 @@ msgstr "L'accès à la console native a échoué : échec du démarrage de la t�
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:75
 msgid "Navigate to Host Initiator Group %{group_name}"
-msgstr "Accédez au groupe d'initiateurs hôte %{group_name}"
+msgstr "Accédez au groupe d'initiateurs hôtes %{group_name}"
 
 #: ../app/helpers/volume_mapping_helper/textual_summary.rb:49
 msgid "Navigate to the Cloud Volume of this Mapping"
@@ -52084,7 +52084,7 @@ msgstr ""
 msgid "No storage providers support creating host initiators."
 msgstr ""
 "Aucun fournisseur de stockage ne prend en charge la création d'initiateurs "
-"hôte."
+"hôtes."
 
 #: ../app/controllers/network_router_controller.rb:74
 msgid "No subnets available to add interfaces to Router \"%{name}\""
@@ -52341,7 +52341,7 @@ msgid ""
 "Note! Volume can't be mapped to an empty host-initiator-group (host-cluster). "
 "Empty host-initiator-groups are not listed."
 msgstr ""
-"Remarque : Le volume ne peut pas être mappé vers un groupe d'initiateurs hôte "
+"Remarque : Le volume ne peut pas être mappé à un groupe d'initiateurs hôtes "
 "vide (cluster hôte). Les groupes d'initiateurs hôtes vides ne sont pas "
 "répertoriés."
 
@@ -60845,7 +60845,7 @@ msgid ""
 "Initiator Cluster"
 msgstr ""
 "Actualiser les relations et les états d'alimentation pour tous les éléments "
-"liés à ce cluster d'initiateurs hôte"
+"liés à ce cluster d'initiateurs hôtes"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_group_center.rb:19
 msgid ""
@@ -60853,7 +60853,7 @@ msgid ""
 "Initiator Cluster?"
 msgstr ""
 "Actualiser les relations et les états d'alimentation pour tous les éléments "
-"liés à ce cluster d'initiateurs hôte ?"
+"liés à ce cluster d'initiateurs hôtes ?"
 
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:19
 msgid ""
@@ -69332,7 +69332,7 @@ msgstr "Afficher un rapport plein écran"
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:130
 msgid "Show host initiators mapped to this volume"
-msgstr "Afficher les initiateurs hôte mappés vers ce volume"
+msgstr "Afficher les initiateurs hôtes mappés à ce volume"
 
 #: ../app/views/report/_form_filter_performance.html.haml:8
 msgid "Show hourly data from"
@@ -76528,7 +76528,7 @@ msgstr "Allocation inutilisée/sursollicitée"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:82
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:187
 msgid "Up"
-msgstr "Activé"
+msgstr "Démarré"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:163
 msgid "Update"
@@ -76593,7 +76593,7 @@ msgstr "Mettre à jour cette entrée"
 #: ../app/views/shared/views/_alerts_list.html.haml:40
 #: ../config/yaml_strings.rb:1032
 msgid "Updated"
-msgstr "Mis à jour"
+msgstr "Mis à jour le"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:19
 msgid "Updated - %{time}"
@@ -82215,7 +82215,7 @@ msgid ""
 "Volume <%{cloud_volume_name}> is mapped to Host Initiator Group <%{"
 "host_initiator_group_name}>"
 msgstr ""
-"Le volume <%{cloud_volume_name}> est mappé au groupe d'initiateurs hôte <%{"
+"Le volume <%{cloud_volume_name}> est mappé au groupe d'initiateurs hôtes <%{"
 "host_initiator_group_name}>"
 
 #: ../app/controllers/cloud_volume_backup_controller.rb:117
@@ -82440,7 +82440,7 @@ msgstr "Volumes"
 
 #: ../app/helpers/host_initiator_helper/textual_summary.rb:68
 msgid "Volumes Attached Through Host Initiator Group"
-msgstr "Volumes attachés par le biais du groupe d'initiateurs hôte"
+msgstr "Volumes attachés par le biais du groupe d'initiateurs hôtes"
 
 #: ../config/model_attributes.rb:4829
 msgid "Volume|Created on"

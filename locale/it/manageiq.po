@@ -650,8 +650,8 @@ msgstr[1] "Aggiunta di tag a %{amount} istantanee del volume cloud"
 #: ../app/views/layouts/_tag_edit_items.html.haml:29
 msgid "%{amount} Cloud Volume Type Being Tagged"
 msgid_plural "%{amount} Cloud Volume Types Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} tipo volume cloud"
-msgstr[1] "Aggiunta di tag a %{amount} tipi volume cloud"
+msgstr[0] "Aggiunta di tag a %{amount} tipo di volume cloud"
+msgstr[1] "Aggiunta di tag a %{amount} tipi di volume cloud"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:31
 msgid "%{amount} Cluster Being Tagged"
@@ -764,8 +764,8 @@ msgstr[1] "Aggiunta di tag a %{amount} flavor"
 #: ../app/views/layouts/_tag_edit_items.html.haml:67
 msgid "%{amount} Floating IP Being Tagged"
 msgid_plural "%{amount} Floating IPs Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} floating IP"
-msgstr[1] "Aggiunta di tag a %{amount} floating IP"
+msgstr[0] "Aggiunta di tag a %{amount} IP mobile"
+msgstr[1] "Aggiunta di tag a %{amount} IP mobili"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:71
 msgid "%{amount} Host Aggregate Being Tagged"
@@ -794,8 +794,8 @@ msgstr[1] "Aggiunta di tag a %{amount} coppie di chiavi"
 #: ../app/views/layouts/_tag_edit_items.html.haml:77
 msgid "%{amount} Network Manager Being Tagged"
 msgid_plural "%{amount} Network Managers Being Tagged"
-msgstr[0] "Aggiunta di tag a %{amount} gestore rete"
-msgstr[1] "Aggiunta di tag a %{amount} gestori rete"
+msgstr[0] "Aggiunta di tag a %{amount} gestore di rete"
+msgstr[1] "Aggiunta di tag a %{amount} gestori di rete"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:79
 msgid "%{amount} Network Port Being Tagged"
@@ -1449,14 +1449,14 @@ msgstr[1] "%{number} Sottoreti cloud"
 #: ../app/decorators/manageiq/providers/autosde/storage_manager_decorator.rb:15
 msgid "%{number} Cloud Volume"
 msgid_plural "%{number} Cloud Volumes"
-msgstr[0] "%{number} Volume Cloud"
-msgstr[1] "%{number} Volumi Cloud"
+msgstr[0] "%{number} Volume cloud"
+msgstr[1] "%{number} Volumi cloud"
 
 #: ../app/decorators/manageiq/providers/storage_manager_decorator.rb:33
 msgid "%{number} Cloud Volume Snapshot"
 msgid_plural "%{number} Cloud Volume Snapshots"
-msgstr[0] "%{number} Istantanea Volume Cloud"
-msgstr[1] "%{number} Istantanee Volumi Cloud"
+msgstr[0] "%{number} Istantanea volume cloud"
+msgstr[1] "%{number} Istantanee volumi cloud"
 
 #: ../app/decorators/manageiq/providers/container_manager_decorator.rb:22
 msgid "%{number} Container"
@@ -2124,7 +2124,9 @@ msgstr "* Richiede il file immagine in formato .png o .jpg"
 #: ../app/javascript/components/retirement-form/retirement-form.schema.js:72
 #: ../app/views/static/retirement-form.html.haml:48
 msgid "* Saving a blank date will remove all retirement dates"
-msgstr "* Il salvataggio di una data vuota rimuoverà tutte le date di ritiro"
+msgstr ""
+"* Se il campo della data è vuoto, durante il salvataggio tutte le date di "
+"ritiro verranno rimosse"
 
 #: ../app/views/miq_ae_class/_fields_seq_form.html.haml:7
 msgid "* Select one or more consecutive fields to move up or down."
@@ -3695,7 +3697,7 @@ msgstr "Aggiungi Dischi"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1484
 msgid "Add Flavor"
-msgstr "Aggiungi Flavor"
+msgstr "Aggiungi flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4595
@@ -3943,7 +3945,7 @@ msgstr "Aggiungi sottoscrizione"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2700
 msgid "Add System Image Types"
-msgstr "Aggiungi Tipi Immagine di sistema"
+msgstr "Aggiungi tipi di immagine di sistema"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2415
@@ -3990,7 +3992,7 @@ msgstr "Aggiungi un Catalogo Composito"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1052
 msgid "Add a Composite Catalog Item"
-msgstr "Aggiungi un Elemento del Catalogo Composito"
+msgstr "Aggiungi un elemento del catalogo composito"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2021
@@ -4040,7 +4042,7 @@ msgstr "Aggiungi una regola firewall"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2946
 msgid "Add a Floating IP"
-msgstr "Aggiungi un Floating IP"
+msgstr "Aggiungi un IP mobile"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2383
@@ -4106,7 +4108,7 @@ msgstr "Aggiungi un Nuovo Bundle del Catalogo"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:12
 msgid "Add a New Catalog Item"
-msgstr "Aggiungi un Nuovo Elemento del Catalogo"
+msgstr "Aggiungi un nuovo elemento del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_namespace_center.rb:32
 msgid "Add a New Class"
@@ -4422,11 +4424,11 @@ msgstr "Aggiungi nuovo registro firmware"
 #: ../app/controllers/flavor_controller.rb:19
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:12
 msgid "Add a new Flavor"
-msgstr "Aggiungere un nuovo Flavor"
+msgstr "Aggiungere un nuovo flavor"
 
 #: ../app/helpers/application_helper/toolbar/floating_ips_center.rb:14
 msgid "Add a new Floating IP"
-msgstr "Aggiungere un nuovo Floating IP"
+msgstr "Aggiungere un nuovo IP mobile"
 
 #: ../app/controllers/generic_object_definition_controller.rb:83
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:11
@@ -4460,7 +4462,7 @@ msgstr "Aggiungi nuovo provider di infrastruttura fisica"
 #: ../app/helpers/application_helper/toolbar/ems_automations_center.rb:25
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:24
 msgid "Add a new Provider"
-msgstr "Aggiungi nuovo provider"
+msgstr "Aggiungi un nuovo provider"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:20
 #: ../app/helpers/application_helper/toolbar/miq_reports_center.rb:12
@@ -4640,7 +4642,7 @@ msgstr ""
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Add of Cloud Tenant \"%s\" has been successfully queued."
-msgstr "L'aggiunta del Tenant Cloud \"%s\" è stata accodata correttamente."
+msgstr "L'aggiunta del tenant cloud \"%s\" è stata accodata correttamente."
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:50
 msgid "Add of Cloud Volume \"%s\" has been successfully queued."
@@ -4660,7 +4662,7 @@ msgstr "L'aggiunta del flavor \"%s\" è stata correttamente accodata."
 
 #: ../app/javascript/components/flavor-form/index.jsx:19
 msgid "Add of Flavor cancelled by user."
-msgstr "Aggiunta del Flavor annullata dall'utente."
+msgstr "Aggiunta del flavor annullata dall'utente."
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx:26
 msgid "Add of Host Aggregate \"%s\" has been successfully queued."
@@ -7256,29 +7258,29 @@ msgstr "Assegnazioni Accordion"
 
 #: ../app/views/vm_common/_associate_floating_ip.html.haml:4
 msgid "Associate Floating IP"
-msgstr "Associa floating IP"
+msgstr "Associa IP mobile"
 
 #: ../app/controllers/floating_ip_controller.rb:110
 msgid "Associate Floating IP \"%{address}\""
-msgstr "Associa Floating IP \"%{address}\""
+msgstr "Associa IP mobile \"%{address}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3698
 msgid "Associate Floating IP with Instance"
-msgstr "Associa floating IP con istanza"
+msgstr "Associa IP mobile con istanza"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:37
 msgid "Associate Floating IP with Instance '%{name}'"
-msgstr "Associa Floating IP all'instanza '%{name}'"
+msgstr "Associa IP mobile all'istanza '%{name}'"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:64
 msgid "Associate a Floating IP with this Instance"
-msgstr "Associa un Floating IP con questa istanza"
+msgstr "Associa un IP mobile con questa istanza"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2948
 msgid "Associate/Disassociate a Floating IP"
-msgstr "Associa/Disassocia un floating IP"
+msgstr "Associa/Annulla associazione IP mobile"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_tag_hourly.yaml
@@ -7289,7 +7291,7 @@ msgstr "ID associati"
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:93
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:175
 msgid "Associated Port ID (blank to disassociate)"
-msgstr "ID porta associato (annullare l'associazione del vuoto)"
+msgstr "ID porta associato (lasciare vuoto per annullare l'associazione)"
 
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily.yaml
 #. TRANSLATORS: file: product/charts/miq_reports/vim_perf_daily_cloud.yaml
@@ -7304,11 +7306,11 @@ msgstr "ID record associati"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:86
 msgid "Associating Floating IP %{address} with Instance \"%{name}\""
-msgstr "Associazione del Floating IP %{address} all'istanza \"%{name}\""
+msgstr "Associazione dell'IP mobile %{address} all'istanza \"%{name}\""
 
 #: ../app/controllers/vm_common.rb:1199
 msgid "Associating Floating IP with %{model} \"%{name}\""
-msgstr "Associazione del Floating IP a %{model} \"%{name}\""
+msgstr "Associazione dell'IP mobile a %{model} \"%{name}\""
 
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:70
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:152
@@ -7319,7 +7321,7 @@ msgstr "Informazioni di associazione"
 msgid ""
 "Association of Floating IP with Instance \"%{name}\" was cancelled by the user"
 msgstr ""
-"L'associazione del Floating IP all'istanza \"%{name}\" è stata annullata "
+"L'associazione dell'IP mobile all'istanza \"%{name}\" è stata annullata "
 "dall'utente"
 
 #: ../app/helpers/generic_object_definition_helper/textual_summary.rb:47
@@ -12217,7 +12219,7 @@ msgstr "Scegli file"
 
 #: ../app/views/vm_common/_resize.html.haml:18
 msgid "Choose Flavor"
-msgstr "Scegli Flavor"
+msgstr "Scegli flavor"
 
 #: ../app/views/layouts/_policy_sim.html.haml:10
 msgid "Choose Policies"
@@ -12847,13 +12849,13 @@ msgstr "Database cloud"
 #: ../config/model_display_names.rb:24
 msgid "Cloud Database Flavor"
 msgid_plural "Cloud Database Flavors"
-msgstr[0] "Flavor database Cloud"
-msgstr[1] "Flavor database Cloud"
+msgstr[0] "Flavor del database cloud"
+msgstr[1] "Flavor del database cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
 msgid "Cloud Database Flavors"
-msgstr "Flavor database cloud"
+msgstr "Flavor del database cloud"
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager/cloud_database.rb:30
 msgid "Cloud Database Instance Class"
@@ -13237,7 +13239,7 @@ msgstr "Sottoreti Cloud (OpenStack)"
 #: ../app/helpers/security_policy_rule_helper/textual_summary.rb:108
 #: ../config/yaml_strings.rb:526
 msgid "Cloud Tenant"
-msgstr "Tenant Cloud"
+msgstr "Tenant cloud"
 
 #: ../app/controllers/cloud_tenant_controller.rb:79
 msgid ""
@@ -13250,20 +13252,20 @@ msgstr ""
 #: ../app/models/manageiq/providers/nsxt/network_manager/cloud_tenant.rb:3
 msgid "Cloud Tenant (NSX-T)"
 msgid_plural "Cloud Tenants (NSX-T)"
-msgstr[0] "Tenant Cloud (NSX-T)"
-msgstr[1] "Tenant Cloud (NSX-T)"
+msgstr[0] "Tenant cloud (NSX-T)"
+msgstr[1] "Tenant cloud (NSX-T)"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/cloud_tenant.rb:52
 msgid "Cloud Tenant (OpenStack)"
 msgid_plural "Cloud Tenants (OpenStack)"
-msgstr[0] "Tenant Cloud (OpenStack)"
-msgstr[1] "Tenant Cloud (OpenStack)"
+msgstr[0] "Tenant cloud (OpenStack)"
+msgstr[1] "Tenant cloud (OpenStack)"
 
 #: ../config/model_display_names.rb:33
 msgid "Cloud Tenant Flavor"
 msgid_plural "Cloud Tenant Flavors"
-msgstr[0] "Flavor Tenant Cloud"
-msgstr[1] "Flavor Tenant Cloud"
+msgstr[0] "Flavor del tenant cloud"
+msgstr[1] "Flavor del tenant cloud"
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb:34
@@ -13275,12 +13277,12 @@ msgstr[1] "Flavor Tenant Cloud"
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:57
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:113
 msgid "Cloud Tenant Placement"
-msgstr "Posizionamento Tenant Cloud"
+msgstr "Posizionamento del tenant cloud"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:19
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:23
 msgid "Cloud Tenant:"
-msgstr "Tenant Cloud:"
+msgstr "Tenant cloud:"
 
 #: ../app/helpers/cloud_volume_backup_helper/textual_summary.rb:36
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:88
@@ -13297,7 +13299,7 @@ msgstr "Tenant cloud"
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
 #: ../config/dictionary_strings.rb:3408 ../config/dictionary_strings.rb:4204
 msgid "Cloud Tenants (OpenStack)"
-msgstr "Tenant Cloud (OpenStack)"
+msgstr "Tenant cloud (OpenStack)"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1218
@@ -13395,21 +13397,21 @@ msgstr ""
 #: ../app/services/cloud_tenant_dashboard_service.rb:42
 #: ../app/services/ems_cloud_dashboard_service.rb:58
 msgid "Cloud Volumes"
-msgstr "Volumi Cloud"
+msgstr "Volumi cloud"
 
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb:20
 msgid "Cloud Volumes Based on Snapshot"
-msgstr "Volumi Cloud Basati su Istantanea"
+msgstr "Volumi cloud basati su istantanea"
 
 #. TRANSLATORS: en.yml key: dictionary.table.based_volumes (plural form)
 #: ../config/dictionary_strings.rb:3852
 msgid "Cloud Volumes Based on Snapshots"
-msgstr "Volumi Cloud basati su istantanee"
+msgstr "Volumi cloud basati su istantanee"
 
 #. TRANSLATORS: file: product/views/CloudVolume.yaml
 #: ../config/yaml_strings.rb:593
 msgid "Cloud Volumes based on Snapshot"
-msgstr "Volumi Cloud basati su Istantanee"
+msgstr "Volumi cloud basati su istantanee"
 
 #: ../config/model_attributes.rb:278
 msgid "Cloud database"
@@ -13417,7 +13419,7 @@ msgstr "Database cloud"
 
 #: ../config/model_attributes.rb:290
 msgid "Cloud database flavor"
-msgstr "Flavor database Cloud"
+msgstr "Flavor del database cloud"
 
 #: ../config/model_attributes.rb:303
 msgid "Cloud network"
@@ -13449,11 +13451,11 @@ msgstr "Porta di rete sottorete cloud"
 
 #: ../config/model_attributes.rb:390
 msgid "Cloud tenant"
-msgstr "Tenant Cloud"
+msgstr "Tenant cloud"
 
 #: ../config/model_attributes.rb:399
 msgid "Cloud tenant flavor"
-msgstr "Flavor Tenant Cloud"
+msgstr "Flavor del tenant cloud"
 
 #: ../config/model_attributes.rb:403
 msgid "Cloud volume"
@@ -15748,7 +15750,7 @@ msgstr "ConfigurationProfile|Piattaforma di destinazione"
 
 #: ../config/model_attributes.rb:544
 msgid "ConfigurationProfile|Total configured systems"
-msgstr "Sistemi configurati totali"
+msgstr "Numero totale di sistemi configurati"
 
 #: ../config/model_attributes.rb:546
 msgid "ConfigurationScriptBase|Description"
@@ -20287,7 +20289,7 @@ msgstr "Crea contenitore di archivio oggetti cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:12
 msgid "Create Cloud Tenant"
-msgstr "Crea Tenant Cloud"
+msgstr "Crea tenant cloud"
 
 #: ../app/views/report/_form_filter.html.haml:35
 msgid "Create Display Filter"
@@ -20448,7 +20450,7 @@ msgstr "Crea nuova Istantanea"
 #: ../app/javascript/oldjs/controllers/mixins/charts-mixin.js:153
 #: ../config/yaml_strings.rb:1028
 msgid "Created"
-msgstr "Creato"
+msgstr "Data di creazione"
 
 #. TRANSLATORS: file: product/views/AutomationRequest.yaml
 #. TRANSLATORS: file: product/views/ConfigurationScript.yaml
@@ -20615,7 +20617,7 @@ msgstr ""
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:37
 msgid "Creation of new Cloud Tenant was canceled by the user."
-msgstr "La creazione di nuovo Tenant Cloud è stata annullata dall'utente."
+msgstr "La creazione di un nuovo tenant cloud è stata annullata dall'utente."
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:70
 msgid "Creation of new Credential was canceled by the user."
@@ -21138,7 +21140,7 @@ msgstr[1] "Eventi pulsante personalizzato"
 #: ../app/helpers/textual_mixins/textual_custom_button_events.rb:12
 #: ../config/yaml_strings.rb:824
 msgid "Custom Button Events"
-msgstr "Eventi Pulsanti Personalizzati"
+msgstr "Eventi pulsanti personalizzati"
 
 #: ../app/javascript/components/button-group/index.jsx:93
 msgid "Custom Button Group \"${values.name}\" has been successfully added."
@@ -22639,8 +22641,8 @@ msgstr ""
 #: ../app/javascript/components/volume-mapping-form/index.jsx:17
 msgid "Defining of a new Volume mapping has been successfully queued."
 msgstr ""
-"La definizione di una nuova associazione del volume è stata accodata "
-"correttamente."
+"La definizione di una nuova associazione volume è stata accodata correttamente"
+"."
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
 #: ../app/helpers/generic_object_helper/textual_summary.rb:10
@@ -22804,7 +22806,7 @@ msgstr "Elimina pulsanti"
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:48
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:51
 msgid "Delete Catalog Item"
-msgstr "Elimina Elemento del catalogo"
+msgstr "Elimina elemento del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:43
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:48
@@ -22832,7 +22834,7 @@ msgstr "Elimina tenant cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:28
 msgid "Delete Cloud Tenants"
-msgstr "Elimina Tenant Cloud"
+msgstr "Elimina tenant cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_snapshot_center.rb:12
 msgid "Delete Cloud Volume Snapshot"
@@ -23191,20 +23193,20 @@ msgstr[1] "Eliminazione avviata per %{number} contenitori Cloud Object Store."
 #: ../app/controllers/cloud_tenant_controller.rb:152
 msgid "Delete initiated for %{number} Cloud Tenant."
 msgid_plural "Delete initiated for %{number} Cloud Tenants."
-msgstr[0] "Eliminazione avviata per %{number} Tenant Cloud."
-msgstr[1] "Eliminazione avviata per %{number} Tenant Cloud."
+msgstr[0] "Eliminazione avviata per %{number} tenant cloud."
+msgstr[1] "Eliminazione avviata per %{number} tenant cloud."
 
 #: ../app/controllers/cloud_volume_snapshot_controller.rb:82
 msgid "Delete initiated for %{number} Cloud Volume Snapshot."
 msgid_plural "Delete initiated for %{number} Cloud Volume Snapshots."
-msgstr[0] "Eliminazione avviata per %{number} Istantanea Volume Cloud."
-msgstr[1] "Eliminazione avviata per %{number} Istantanee Volumi Cloud."
+msgstr[0] "Eliminazione avviata per %{number} Istantanea volume cloud."
+msgstr[1] "Eliminazione avviata per %{number} Istantanee volumi cloud."
 
 #: ../app/controllers/floating_ip_controller.rb:164
 msgid "Delete initiated for %{number} Floating IP."
 msgid_plural "Delete initiated for %{number} Floating IPs."
-msgstr[0] "Eliminazione avviata per %{number} Floating IP."
-msgstr[1] "Eliminazione avviata per %{number} Floating IP."
+msgstr[0] "Eliminazione avviata per %{number} IP mobile."
+msgstr[1] "Eliminazione avviata per %{number} IP mobili."
 
 #: ../app/controllers/host_aggregate_controller.rb:308
 msgid "Delete initiated for %{number} Host Aggregate."
@@ -23270,7 +23272,7 @@ msgstr "Elimina elementi del catalogo selezionati"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:27
 msgid "Delete selected Cloud Tenants"
-msgstr "Elimina Tenant Cloud selezionati"
+msgstr "Elimina tenant cloud selezionati"
 
 #: ../app/helpers/application_helper/toolbar/cloud_volumes_center.rb:92
 msgid "Delete selected Cloud Volumes"
@@ -23350,7 +23352,7 @@ msgstr "Elimina il filtro %{model} denominato %{filter}?"
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:25
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:32
 msgid "Delete the Host Initiator"
-msgstr "Eliminare l'iniziatore host"
+msgstr "Elimina l'iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:33
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41
@@ -23408,7 +23410,7 @@ msgstr "Elimina questo profilo di analisi"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:47
 msgid "Delete this Catalog Item"
-msgstr "Elimina questo Elemento del catalogo"
+msgstr "Elimina questo elemento del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:24
 msgid "Delete this Cloud Network"
@@ -23428,7 +23430,7 @@ msgstr "Elimina questo Dashboard dal Database"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:24
 msgid "Delete this Floating IP"
-msgstr "Elimina questo Floating IP"
+msgstr "Elimina questo IP mobile"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:18
 msgid "Delete this Group"
@@ -24722,33 +24724,33 @@ msgstr "Livelli Di Esecuzione disabilitati"
 
 #: ../app/views/vm_common/_disassociate_floating_ip.html.haml:4
 msgid "Disassociate Floating IP"
-msgstr "Dissocia floating IP"
+msgstr "Annulla associazione IP mobile"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3702
 msgid "Disassociate Floating IP from Instance"
-msgstr "Annulla associazione floating IP da istanza"
+msgstr "Annulla associazione IP mobile dall'istanza"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:70
 msgid "Disassociate a Floating IP from this Instance"
-msgstr "Annulla associazione di un Floating IP da questa istanza"
+msgstr "Annulla associazione di un IP mobile da questa istanza"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:92
 msgid "Disassociating Floating IP %{address} from Instance \"%{name}\""
 msgstr ""
-"Annullamento dell'associazione del Floating IP %{address} dall'istanza \"%{"
-"name}\""
+"Annullamento dell'associazione dell'IP mobile %{address} dall'istanza \"%{name"
+"}\""
 
 #: ../app/controllers/vm_common.rb:1205
 msgid "Disassociating Floating IP from %{model} \"%{name}\""
-msgstr "Annullamento dell'associazione del Floating IP da %{model} \"%{name}\""
+msgstr "Annullamento dell'associazione dell'IP mobile da %{model} \"%{name}\""
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:74
 msgid ""
 "Disassociation of Floating IP from Instance \"%{name}\" was cancelled by the "
 "user"
 msgstr ""
-"L'annullamento dell'associazione del Floating IP dall'istanza \"%{name}\" è "
+"L'annullamento dell'associazione dell'IP mobile dall'istanza \"%{name}\" è "
 "stato annullato dall'utente"
 
 #: ../app/views/layouts/exp_atom/_editor.html.haml:56
@@ -25377,7 +25379,7 @@ msgstr "Dimensione disco"
 
 #: ../app/helpers/service_helper/textual_summary.rb:125
 msgid "Disk Space Allocated"
-msgstr "Spazio Disco Allocato"
+msgstr "Spazio su disco allocato"
 
 #. TRANSLATORS: en.yml key: dictionary.column.trend_v_derived_storage_used
 #: ../config/dictionary_strings.rb:2326
@@ -25417,7 +25419,7 @@ msgstr "Spazio su disco minimo utilizzato"
 
 #: ../app/helpers/service_helper/textual_summary.rb:130
 msgid "Disk Space Used"
-msgstr "Spazio disco utilizzato"
+msgstr "Spazio su disco utilizzato"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
@@ -25667,7 +25669,7 @@ msgstr "Visualizza report salvato chargeback individuale"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2978
 msgid "Display Individual Cloud Database Flavors"
-msgstr "Visualizza flavor database cloud singolo"
+msgstr "Visualizza flavor del singolo database cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2960
@@ -25822,12 +25824,12 @@ msgstr "Visualizza singolo firmware"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1478
 msgid "Display Individual Flavors"
-msgstr "Visualizza singoli Flavor"
+msgstr "Visualizza singoli flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2938
 msgid "Display Individual Floating IPs"
-msgstr "Visualizza Singoli Floating IP"
+msgstr "Visualizza IP mobili singoli"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2327
@@ -25907,7 +25909,7 @@ msgstr "Visualizza Singoli Provider di rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3048
 msgid "Display Individual Network Routers"
-msgstr "Visualizza Singoli Router di Rete"
+msgstr "Visualizza singoli router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3100
@@ -26067,7 +26069,7 @@ msgstr "VIsualizza associazioni volume individuali"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1464
 msgid "Display Individual Volume Types"
-msgstr "Visualizza Singoli Tipi di volume"
+msgstr "Visualizza singoli tipi di volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1354
@@ -26152,7 +26154,7 @@ msgstr "Visualizza elenchi di report chargeback salvati"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2976
 msgid "Display Lists of Cloud Database Flavors"
-msgstr "Visualizza elenchi di flavor database cloud"
+msgstr "Visualizza elenchi dei flavor del database cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2958
@@ -26302,12 +26304,12 @@ msgstr "Visualizza elenchi di firmware"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1476
 msgid "Display Lists of Flavors"
-msgstr "Visualizza Elenchi di Flavor"
+msgstr "Visualizza elenchi dei flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2936
 msgid "Display Lists of Floating IPs"
-msgstr "Visualizza Elenchi di Floating IP"
+msgstr "Visualizza elenchi di IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2325
@@ -26392,7 +26394,7 @@ msgstr "Visualizza Elenchi di Provider di Rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3046
 msgid "Display Lists of Network Routers"
-msgstr "Visualizza Elenchi di Router di Rete"
+msgstr "Visualizza elenchi dei router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3098
@@ -26512,7 +26514,7 @@ msgstr "Visualizza elenchi di istantanee"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3978
 msgid "Display Lists of Storage Managers"
-msgstr "Visualizza Elenchi di Gestori Archiviazione"
+msgstr "Visualizza elenchi dei gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4062
@@ -26557,7 +26559,7 @@ msgstr "Visualizza elenchi delle associazioni volume"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1462
 msgid "Display Lists of Volume Types"
-msgstr "Visualizza Elenchi di Tipi di volume"
+msgstr "Visualizza elenchi dei tipi di volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1352
@@ -26754,7 +26756,7 @@ msgstr "Visualizza le Sequenze Temporali per i pod"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3982
 msgid "Display Timelines for Storage Managers"
-msgstr "Visualizza Sequenze Temporali per i Gestori Archiviazione"
+msgstr "Visualizza sequenze temporali per i gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3934
@@ -26858,7 +26860,7 @@ msgstr "Visualizza Utilità di avvio dell'applicazione"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:37
 msgid "Disssociate Floating IP from Instance '%{name}'"
-msgstr "Annulla associazione del Floating IP dall'istanza '%{name}'"
+msgstr "Annulla associazione dell'IP mobile dall'istanza '%{name}'"
 
 #: ../app/helpers/textual_mixins/textual_devices.rb:113
 msgid "Distributed "
@@ -26985,7 +26987,7 @@ msgstr "Doppio clic su 'New Folder' per modificare"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "In basso"
+msgstr "Disattivo"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -28022,7 +28024,7 @@ msgstr "Modifica provider cloud selezionato"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:19
 msgid "Edit Selected Cloud Tenant"
-msgstr "Modifica Tenant Cloud selezionato"
+msgstr "Modifica tenant cloud selezionato"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:43
 msgid "Edit Selected Containers Provider"
@@ -28360,11 +28362,11 @@ msgstr "Modifica Tag dei Datastore selezionati"
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:43
 msgid "Edit Tags for the selected Flavors"
-msgstr "Modifica Tag per gli flavor selezionati"
+msgstr "Modifica tag per i flavor selezionati"
 
 #: ../app/helpers/application_helper/toolbar/floating_ips_center.rb:56
 msgid "Edit Tags for the selected Floating IPs"
-msgstr "Modifica Tag per gli Floating IP selezionati"
+msgstr "Modifica tag per gli IP mobili selezionati"
 
 #: ../app/helpers/application_helper/toolbar/generic_objects_center.rb:14
 msgid "Edit Tags for the selected Generic Object Instances"
@@ -28400,7 +28402,7 @@ msgstr "Modifica Tag dei Provider di Rete selezionati"
 
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:61
 msgid "Edit Tags for the selected Network Routers"
-msgstr "Modifica Tag per i router di rete selezionati"
+msgstr "Modifica tag per i router di rete selezionati"
 
 #: ../app/helpers/application_helper/toolbar/network_services_center.rb:16
 msgid "Edit Tags for the selected Network Services"
@@ -28511,7 +28513,7 @@ msgstr "Modifica tag di questa zona di disponibilità"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:73
 msgid "Edit Tags for this Catalog Item"
-msgstr "Modifica Tag per questo Elemento del catalogo"
+msgstr "Modifica tag per questo elemento del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:48
 msgid "Edit Tags for this Cloud Network"
@@ -28564,11 +28566,11 @@ msgstr "Modifica Tag per questo Datastore"
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:30
 msgid "Edit Tags for this Flavor"
-msgstr "Modifica Tag per questo Flavor"
+msgstr "Modifica tag per questo flavor"
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:48
 msgid "Edit Tags for this Floating IP"
-msgstr "Modifica Tag per questo Floating IP"
+msgstr "Modifica tag per questo IP mobile"
 
 #: ../app/helpers/application_helper/toolbar/generic_object_center.rb:12
 msgid "Edit Tags for this Generic Object Instance"
@@ -28615,7 +28617,7 @@ msgstr "Modifica tag di questo provider di rete"
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:82
 msgid "Edit Tags for this Network Router"
-msgstr "Modifica Tag per questo Router di rete"
+msgstr "Modifica tag per questo router di rete"
 
 #: ../app/helpers/application_helper/toolbar/network_service_center.rb:14
 msgid "Edit Tags for this Network Service"
@@ -28820,12 +28822,12 @@ msgstr "Modifica Tag di Provider Contenitori"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1482
 msgid "Edit Tags of Flavor"
-msgstr "Modifica Tag di Flavor"
+msgstr "Modifica tag del flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2942
 msgid "Edit Tags of Floating IP"
-msgstr "Modifica Tag di Floating IP"
+msgstr "Modifica tag dell'IP mobile"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2373
@@ -28875,7 +28877,7 @@ msgstr "Modifica Tag di Provider di Rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3052
 msgid "Edit Tags of Network Router"
-msgstr "Modifica Tag dei Router di Rete"
+msgstr "Modifica tag dei router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3082
@@ -28960,7 +28962,7 @@ msgstr "Modifica Tag di istantanee"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3988
 msgid "Edit Tags of Storage Managers"
-msgstr "Modifica tag dei Gestori Archiviazione"
+msgstr "Modifica tag dei gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4068
@@ -28980,7 +28982,7 @@ msgstr "Modifica tag delle associazioni volume"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1468
 msgid "Edit Tags of Volume Types"
-msgstr "Modifica Tag dei tipi di volume"
+msgstr "Modifica tag dei tipi di volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1358
@@ -29043,7 +29045,7 @@ msgstr "Modifica un provider Cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1048
 msgid "Edit a Composite Catalog Item"
-msgstr "Modifica un Elemento del Catalogo Composito"
+msgstr "Modifica un elemento del catalogo composito"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2029
@@ -29326,7 +29328,7 @@ msgstr "Modifica un profilo di definizione degli avvisi"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1060
 msgid "Edit an Atomic Catalog Item"
-msgstr "Modifica un Elemento del catalogo Atomic"
+msgstr "Modifica un elemento del catalogo Atomic"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1526
@@ -29474,7 +29476,7 @@ msgstr ""
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:36
 msgid "Edit of Cloud Tenant \"%s\" was canceled by the user."
-msgstr "La modifica del Tenant Cloud \"%s\" è stata annullata dall'utente."
+msgstr "La modifica del tenant cloud \"%s\" è stata annullata dall'utente."
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:61
 msgid "Edit of Cloud Volume \"%s\" was canceled by the user."
@@ -32390,7 +32392,7 @@ msgstr "Tutto sotto Chargeback"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2972
 msgid "Everything under Cloud Database Flavors"
-msgstr "Tutto in flavor database cloud"
+msgstr "Tutto sotto i flavor del database cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2954
@@ -32445,7 +32447,7 @@ msgstr "Tutto sotto tipi di volume cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1348
 msgid "Everything under Cloud Volumes"
-msgstr "Tutto sotto Volumi Cloud"
+msgstr "Tutto sotto volumi cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1552
@@ -32590,12 +32592,12 @@ msgstr "Tutto sotto firmware"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1472
 msgid "Everything under Flavors"
-msgstr "Tutto sotto Flavor"
+msgstr "Tutto sotto i flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2932
 msgid "Everything under Floating IPs"
-msgstr "Tutto sotto Floating IP"
+msgstr "Tutto sotto IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2321
@@ -32670,7 +32672,7 @@ msgstr "Tutto sotto Provider di Rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3042
 msgid "Everything under Network Routers"
-msgstr "Tutto sotto Router di Rete"
+msgstr "Tutto sotto router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3094
@@ -32875,7 +32877,7 @@ msgstr "Tutto sotto le Azioni di Stato"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3974
 msgid "Everything under Storage Managers"
-msgstr "Tutto sotto Gestori Archiviazione"
+msgstr "Tutto sotto gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4058
@@ -32905,7 +32907,7 @@ msgstr "Tutto sotto Sequenze Temporali"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4072
 msgid "Everything under Volume Mapping"
-msgstr "Tutto sotto Associazione volume"
+msgstr "Tutto sotto associazione volume"
 
 #. TRANSLATORS: en.yml key: dictionary.column.evm_owner_email
 #: ../config/dictionary_strings.rb:866
@@ -33659,7 +33661,7 @@ msgstr "Avvisi Prometheus Esterni"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_network.rb:215
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_network.rb:435
 msgid "External Router"
-msgstr "Router Esterno"
+msgstr "Router esterno"
 
 #: ../config/model_display_names.rb:111
 msgid "External Url"
@@ -34902,50 +34904,50 @@ msgstr "A virgola mobile"
 #: ../app/views/vm_common/_disassociate_floating_ip.html.haml:8
 #: ../config/yaml_strings.rb:1009
 msgid "Floating IP"
-msgstr "Floating IP"
+msgstr "IP mobile"
 
 #: ../app/controllers/floating_ip_controller.rb:74
 msgid "Floating IP \"%{address}\" created"
-msgstr "Floating IP \"%{address}\" creato"
+msgstr "IP mobile \"%{address}\" creato"
 
 #: ../app/models/manageiq/providers/amazon/network_manager/floating_ip.rb:3
 msgid "Floating IP (Amazon)"
 msgid_plural "Floating IPs (Amazon)"
-msgstr[0] "Floating IP (Amazon)"
-msgstr[1] "Floating IP (Amazon)"
+msgstr[0] "IP mobile (Amazon)"
+msgstr[1] "IP mobili (Amazon)"
 
 #: ../app/models/manageiq/providers/google/network_manager/floating_ip.rb:3
 msgid "Floating IP (Google)"
 msgid_plural "Floating IPs (Google)"
-msgstr[0] "Floating IP (Google)"
-msgstr[1] "Floating IP (Google)"
+msgstr[0] "IP mobile (Google)"
+msgstr[1] "IP mobili (Google)"
 
 #: ../app/models/manageiq/providers/azure/network_manager/floating_ip.rb:7
 msgid "Floating IP (Microsoft Azure)"
 msgid_plural "Floating IPs (Microsoft Azure)"
-msgstr[0] "Floating IP (Microsoft Azure)"
-msgstr[1] "Floating IP (Microsoft Azure)"
+msgstr[0] "IP mobile (Microsoft Azure)"
+msgstr[1] "IP mobili (Microsoft Azure)"
 
 #:
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:279
 msgid "Floating IP (OpenStack)"
 msgid_plural "Floating IPs (OpenStack)"
-msgstr[0] "Floating IP (OpenStack)"
-msgstr[1] "Floating IP (OpenStack)"
+msgstr[0] "IP mobile (OpenStack)"
+msgstr[1] "IP mobili (OpenStack)"
 
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:79
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:161
 msgid "Floating IP Address (optional)"
-msgstr "Indirizzo Floating IP (facoltativo)"
+msgstr "Indirizzo IP mobile (facoltativo)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.floating_ip_addresses
 #: ../config/dictionary_strings.rb:910
 msgid "Floating IP Addresses"
-msgstr "Indirizzi IP mobili"
+msgstr "Indirizzi IP mobile"
 
 #: ../app/controllers/floating_ip_controller.rb:52
 msgid "Floating IP creation failed: Task start failed"
-msgstr "Creazione Floating IP non riuscita: Avvio attività non riuscito"
+msgstr "Creazione dell'IP mobile non riuscita: Avvio attività non riuscito"
 
 #: ../app/controllers/floating_ip_controller.rb:176
 #: ../app/controllers/vm_common.rb:358
@@ -34956,36 +34958,36 @@ msgstr "Creazione Floating IP non riuscita: Avvio attività non riuscito"
 #: ../app/helpers/vm_helper/textual_summary.rb:373
 #: ../app/presenters/menu/default_menu.rb:145
 msgid "Floating IPs"
-msgstr "Floating IP"
+msgstr "IP mobili"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::FloatingIp (plural form)
 #: ../config/dictionary_strings.rb:3388
 msgid "Floating IPs (Amazon)"
-msgstr "Floating IP (Amazon)"
+msgstr "IP mobili (Amazon)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::FloatingIp (plural form)
 #: ../config/dictionary_strings.rb:3392
 msgid "Floating IPs (Microsoft Azure)"
-msgstr "Floating IP (Microsoft Azure)"
+msgstr "IP mobili (Microsoft Azure)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::FloatingIp (plural form)
 #: ../config/dictionary_strings.rb:3384
 msgid "Floating IPs (OpenStack)"
-msgstr "Floating IP (OpenStack)"
+msgstr "IP mobili (OpenStack)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::FloatingIp
 #: ../config/dictionary_strings.rb:3346
 msgid "Floating Ip (Google)"
-msgstr "Floating Ip (Google)"
+msgstr "IP mobile (Google)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::FloatingIp (plural form)
 #: ../config/dictionary_strings.rb:3348
 msgid "Floating Ips (Google)"
-msgstr "Floating Ip (Google)"
+msgstr "IP mobili (Google)"
 
 #: ../config/model_attributes.rb:1832
 msgid "Floating ip"
-msgstr "Floating IP"
+msgstr "IP mobile"
 
 #. TRANSLATORS: file: product/views/FloatingIp.yaml
 #: ../config/yaml_strings.rb:1011
@@ -39556,7 +39558,7 @@ msgstr "L'istanza \"%{instance_name}\" non dispone di volumi cloud collegati"
 #:
 #: ../app/helpers/application_helper/button/instance_disassociate_floating_ip.rb:10
 msgid "Instance \"%{name}\" does not have any associated Floating IPs"
-msgstr "L'istanza \"%{name}\" non dispone di alcun Floating IP associato"
+msgstr "L'istanza \"%{name}\" non dispone di alcun IP mobile associato"
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager/vm.rb:64
 msgid "Instance (Amazon)"
@@ -42393,7 +42395,7 @@ msgstr "Gestisci Politiche di pool di risorse"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3990
 msgid "Manage Policies of Storage Managers"
-msgstr "Gestisci Politiche dei Gestori Archiviazione"
+msgstr "Gestisci politiche dei gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1580
@@ -48658,7 +48660,7 @@ msgstr "La modifica della sottorete cloud %s è stata accodata correttamente"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:25
 msgid "Modification of Cloud Tenant %s has been successfully queued"
-msgstr "La modifica di Tenant Cloud %s è stata accodata correttamente"
+msgstr "La modifica del tenant cloud %s è stata accodata correttamente"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:49
 msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
@@ -48832,7 +48834,7 @@ msgstr "Modifica dominio"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2944
 msgid "Modify Floating IPs"
-msgstr "Modifica Floating IP"
+msgstr "Modifica IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2329
@@ -49102,7 +49104,7 @@ msgstr "Modifica servizi"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3994
 msgid "Modify Storage Managers"
-msgstr "Modifica Gestori Archiviazione"
+msgstr "Modifica gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3032
@@ -49197,7 +49199,7 @@ msgstr "Lunedì"
 #: ../app/controllers/alerts_overview_controller.rb:35
 #: ../app/presenters/menu/default_menu.rb:228
 msgid "Monitor"
-msgstr "Monitor"
+msgstr "Monitoraggio"
 
 #: ../app/helpers/application_helper/title.rb:51
 msgid "Monitor Alerts"
@@ -50084,7 +50086,7 @@ msgstr "Provider di gestione della rete"
 #: ../app/javascript/components/routers-form/RoutersForm.schema.js:43
 #: ../app/javascript/components/subnet-form/subnet-form.schema.js:20
 msgid "Network Manager"
-msgstr "Gestore rete"
+msgstr "Gestore di rete"
 
 #: ../app/models/manageiq/providers/azure_stack/network_manager.rb:46
 msgid "Network Manager (Microsoft Azure Stack)"
@@ -50267,8 +50269,8 @@ msgstr "Router di rete"
 #: ../app/models/manageiq/providers/amazon/network_manager/network_router.rb:3
 msgid "Network Router (Amazon)"
 msgid_plural "Network Routers (Amazon)"
-msgstr[0] "Router di Rete (Amazon)"
-msgstr[1] "Router di Rete (Amazon)"
+msgstr[0] "Router di rete (Amazon)"
+msgstr[1] "Router di rete (Amazon)"
 
 #: ../app/models/manageiq/providers/google/network_manager/network_router.rb:3
 msgid "Network Router (Google)"
@@ -50279,7 +50281,7 @@ msgstr[1] "Router di rete (Google)"
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::NetworkRouter
 #: ../config/dictionary_strings.rb:3378
 msgid "Network Router (Microsoft Azure)"
-msgstr "Router di Rete (Microsoft Azure)"
+msgstr "Router di rete (Microsoft Azure)"
 
 #: ../app/models/manageiq/providers/nsxt/network_manager/network_router.rb:3
 msgid "Network Router (NSX-T)"
@@ -50301,27 +50303,27 @@ msgstr[1] "Router di rete (OpenStack)"
 #: ../app/helpers/ems_network_helper/textual_summary.rb:75
 #: ../app/helpers/vm_helper/textual_summary.rb:384
 msgid "Network Routers"
-msgstr "Router di Rete"
+msgstr "Router di rete"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager::NetworkRouter (plural form)
 #: ../config/dictionary_strings.rb:3432
 msgid "Network Routers (Amazon)"
-msgstr "Router di Rete (Amazon)"
+msgstr "Router di rete (Amazon)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::NetworkRouter (plural form)
 #: ../config/dictionary_strings.rb:3352
 msgid "Network Routers (Google)"
-msgstr "Router di Rete (Google)"
+msgstr "Router di rete (Google)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::NetworkRouter (plural form)
 #: ../config/dictionary_strings.rb:3380
 msgid "Network Routers (Microsoft Azure)"
-msgstr "Router di Rete (Microsoft Azure)"
+msgstr "Router di rete (Microsoft Azure)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter (plural form)
 #: ../config/dictionary_strings.rb:3400
 msgid "Network Routers (OpenStack)"
-msgstr "Router di Rete (OpenStack)"
+msgstr "Router di rete (OpenStack)"
 
 #. TRANSLATORS: file: product/views/NetworkService.yaml
 #: ../config/yaml_strings.rb:1567
@@ -50531,7 +50533,7 @@ msgstr "IP fissi"
 
 #: ../config/model_attributes.rb:3434
 msgid "NetworkPort|Floating ip addresses"
-msgstr "indirizzi floating ip"
+msgstr "indirizzi IP mobile"
 
 #: ../config/model_attributes.rb:3435
 msgid "NetworkPort|Href slug"
@@ -50798,7 +50800,7 @@ msgstr "Mai"
 
 #: ../app/helpers/compliance_summary_helper.rb:9
 msgid "Never Verified"
-msgstr "Mai Verificato"
+msgstr "Mai verificato"
 
 #:
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:6
@@ -51548,7 +51550,7 @@ msgstr "Nessun provider cloud supporta la creazione di volumi cloud."
 
 #: ../app/helpers/application_helper/button/floating_ip_new.rb:5
 msgid "No cloud providers support creating floating IPs."
-msgstr "Nessun provider cloud supporta la creazione di floating IP."
+msgstr "Nessun provider cloud supporta la creazione di IP mobili."
 
 #: ../app/helpers/application_helper/button/network_router_new.rb:5
 msgid "No cloud providers support creating network routers."
@@ -52950,7 +52952,7 @@ msgid ""
 "and Generic Object with \"Display for\" set to \"Single\""
 msgstr ""
 "Disponibile solo per VM, Provider, Servizio, Utente, Gruppo, Tenant, Tenant "
-"Cloud e Oggetto Generico con \"Visualizzazione per\" impostato su \"Singolo\""
+"cloud e Oggetto generico con \"Visualizzazione per\" impostato su \"Singolo\""
 
 #: ../app/views/shared/buttons/_ab_options_form.html.haml:71
 msgid "Only available when \"Display for\" is set to \"Single\""
@@ -53318,7 +53320,7 @@ msgstr[1] "Flavor del sistema operativo"
 #. TRANSLATORS: en.yml key: dictionary.column.operating_system_flavor_name
 #: ../config/dictionary_strings.rb:1534
 msgid "Operating System Flavor Name"
-msgstr "Nome flavor sistema operativo"
+msgstr "Nome flavor del sistema operativo"
 
 #:
 #: ../app/models/manageiq/providers/ibm_power_vc/inventory/parser/cloud_manager.rb:8
@@ -55109,12 +55111,12 @@ msgstr "Esegui operazioni su Datastore"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1480
 msgid "Perform Operations on Flavors"
-msgstr "Esegui operazioni su Flavor"
+msgstr "Esegui operazioni sui flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2940
 msgid "Perform Operations on Floating IPs"
-msgstr "Esegui le operazioni sui Floating IP"
+msgstr "Esegui operazioni sugli IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2371
@@ -55184,7 +55186,7 @@ msgstr "Esegui le operazioni sui Provider di Rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3050
 msgid "Perform Operations on Network Routers"
-msgstr "Esegui le operazioni sui Router di Rete"
+msgstr "Esegui le operazioni sui router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3102
@@ -55324,7 +55326,7 @@ msgstr "Esegui le operazioni sulle istantanee"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3984
 msgid "Perform Operations on Storage Managers"
-msgstr "Esegui operazioni su Gestori Archiviazione"
+msgstr "Esegui operazioni sui gestori di archiviazione"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4066
@@ -55364,7 +55366,7 @@ msgstr "Esegui operazioni su associazioni volume"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1466
 msgid "Perform Operations on Volume Types"
-msgstr "Esegui operazioni su Tipi di volume"
+msgstr "Esegui operazioni sui tipi di volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1356
@@ -56689,7 +56691,7 @@ msgstr "Aggiornare il provider prima dell'acquisizione delle metriche"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:27
 msgid "Please select a Cloud Tenant from the Environment Tab"
-msgstr "Selezionare un Tenant Cloud dal Tab dell'ambiente"
+msgstr "Selezionare un tenant cloud dal tab dell'ambiente"
 
 #: ../app/controllers/ems_infra_controller.rb:145
 msgid ""
@@ -60133,7 +60135,7 @@ msgstr "Aggiorna relazioni e stati di alimentazione"
 #: ../app/helpers/application_helper/toolbar/ems_configurations_center.rb:14
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:14
 msgid "Refresh Relationships and Power states"
-msgstr "Aggiorna le relazioni e gli stati di alimentazione"
+msgstr "Aggiorna relazioni e stati di alimentazione"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:29
 msgid "Refresh Relationships for selected ISO Datastores"
@@ -60180,7 +60182,7 @@ msgstr "Aggiorna i repository Ansible selezionati"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3992
 msgid "Refresh Storage Managers"
-msgstr "Aggiorna Gestori Archiviazione"
+msgstr "Aggiorna gestori di archiviazione"
 
 #: ../app/helpers/application_helper/toolbar/miq_widgets_center.rb:6
 msgid "Refresh Widgets"
@@ -60226,7 +60228,7 @@ msgid ""
 "Refresh relationships and power states for all items related of ISO Datastores"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione per tutti gli elementi "
-"relativi ai Server ISO"
+"relativi ai server ISO"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3752
@@ -60249,7 +60251,7 @@ msgid ""
 "Refresh relationships and power states for all items related of PXE Servers"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione per tutti gli elementi "
-"relativi ai Server PXE"
+"relativi ai server PXE"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3944
@@ -60298,7 +60300,7 @@ msgid ""
 "Chassis"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Chassis Fisici"
+"relativi a questi chassis fisici"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4190
@@ -60306,7 +60308,7 @@ msgid ""
 "Refresh relationships and power states for all items related to Physical Rack"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Rack Fisici"
+"relativi a questi rack fisici"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4292
@@ -60373,7 +60375,7 @@ msgid ""
 "Infrastructure Providers"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Provider Infrastruttura selezionati"
+"relativi ai provider infrastruttura selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_infras_center.rb:16
 msgid ""
@@ -60389,7 +60391,7 @@ msgid ""
 "Network Providers"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi ai Provider di Rete selezionati"
+"relativi ai provider di rete selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:16
 msgid ""
@@ -60421,7 +60423,7 @@ msgid ""
 "Physical Infrastructure Providers"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione per tutti gli elementi "
-"relativi ai Provider di Infrastrutture Fisiche selezionati"
+"relativi ai provider di infrastrutture fisiche selezionati"
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:16
 msgid ""
@@ -60561,7 +60563,7 @@ msgid ""
 " Switches"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questi Switch Fisici"
+"relativi a questi switch fisici"
 
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb:20
 msgid ""
@@ -60577,7 +60579,7 @@ msgid ""
 "Mappings"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione per tutti gli elementi "
-"correlati a queste associazioni di volumi"
+"correlati a queste associazioni volume"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:19
 msgid ""
@@ -60585,7 +60587,7 @@ msgid ""
 "Mappings?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione per tutti gli elementi "
-"correlati a queste associazioni di volumi?"
+"correlati a queste associazioni volume?"
 
 #: ../app/helpers/application_helper/toolbar/ems_cloud_center.rb:17
 msgid ""
@@ -60788,7 +60790,7 @@ msgid ""
 "Mapping"
 msgstr ""
 "Aggiorna le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questa associazione di volumi"
+"relativi a questa associazione volume"
 
 #: ../app/helpers/application_helper/toolbar/volume_mapping_center.rb:19
 msgid ""
@@ -60796,7 +60798,7 @@ msgid ""
 "Mapping?"
 msgstr ""
 "Aggiornare le relazioni e gli stati di alimentazione di tutti gli elementi "
-"relativi a questa associazione di volumi?"
+"relativi a questa associazione volume?"
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:12
 msgid ""
@@ -61549,12 +61551,12 @@ msgstr "Rimuovi Registro Firmware dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:12
 msgid "Remove Flavor"
-msgstr "Rimuovi Flavor"
+msgstr "Rimuovi flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2950
 msgid "Remove Floating IPs"
-msgstr "Rimuovi floating IP"
+msgstr "Rimuovi IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2331
@@ -61747,7 +61749,7 @@ msgstr "Rimuovi Gestore Archivio Oggetti"
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:24
 msgid "Remove Object Storage Managers from Inventory"
-msgstr "Rimuovere Gestori Archiviazione Oggetti dall'inventario"
+msgstr "Rimuovi gestori di archiviazione oggetti dall'inventario"
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:14
@@ -62104,7 +62106,7 @@ msgstr "Rimuovere i registri firmware selezionati dall'inventario?"
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:20
 msgid "Remove selected Flavors"
-msgstr "Rimuovi Flavor selezionati"
+msgstr "Rimuovi flavor selezionati"
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definitions_center.rb:26
@@ -62427,7 +62429,7 @@ msgstr "Rimuovi questo taso di scelta rapida"
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:30
 msgid "Remove this Storage Manager from Inventory"
-msgstr "Rimuovere Gestori Archiviazione dall'inventario"
+msgstr "Rimuovi questo gestore di archiviazione dall'inventario"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:17
 msgid "Remove this System Image Type"
@@ -65962,7 +65964,7 @@ msgstr "Seleziona un singolo provider cloud da modificare"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:18
 msgid "Select a single Cloud Tenant to edit"
-msgstr "Selezionare un singolo Tenant Cloud da modificare"
+msgstr "Selezionare un singolo tenant cloud da modificare"
 
 #: ../app/helpers/application_helper/toolbar/ems_containers_center.rb:42
 msgid "Select a single Containers Provider to edit"
@@ -67870,7 +67872,7 @@ msgstr "Imposta propretàper gli elementi selezionati"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:55
 msgid "Set Ownership for the selected Catalog Item"
-msgstr "Imposta Proprietà per l'Elemento del Catalogo selezionato"
+msgstr "Imposta proprietà per l'elemento del catalogo selezionato"
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:35
 msgid "Set Ownership for the selected Services"
@@ -67892,7 +67894,7 @@ msgstr "Imposta proprietà per gli elementi selezionati"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplate_center.rb:58
 msgid "Set Ownership for this Catalog Item"
-msgstr "Imposta Proprietà per questo Elemento del catalogo"
+msgstr "Imposta proprietà per questo elemento del catalogo"
 
 #: ../app/helpers/application_helper/toolbar/x_template_cloud_center.rb:31
 msgid "Set Ownership for this Image"
@@ -67917,7 +67919,7 @@ msgstr "Imposta Proprietà di questa VM"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1044
 msgid "Set Ownership of Catalog Item"
-msgstr "Imposta Proprietà dell'Elemento del catalogo"
+msgstr "Imposta proprietà dell'elemento del catalogo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3750
@@ -68526,7 +68528,7 @@ msgstr "Mostra anteprima Chargeback"
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:101
 msgid "Show Cloud Volumes"
-msgstr "Mostra Volumi Cloud"
+msgstr "Mostra volumi cloud"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:194
 msgid "Show Cluster drift history"
@@ -68893,7 +68895,7 @@ msgstr "Mostra tutti i volume cloud"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:440
 msgid "Show all Cloud Volumes attached to this VM."
-msgstr "Mostra tutti i Volumi Cloud allegati con questa VM"
+msgstr "Mostra tutti i volumi cloud collegati a questa VM."
 
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb:22
 msgid "Show all Cloud Volumes based on this Snapshot."
@@ -68914,7 +68916,7 @@ msgstr "Mostra tutte le macchine virtuali di destinazione"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:375
 msgid "Show all Floating IPs"
-msgstr "Mostra tutti i Floating IP"
+msgstr "Mostra tutti gli IP mobili"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:143
 #: ../app/helpers/host_aggregate_helper/textual_summary.rb:21
@@ -69281,7 +69283,7 @@ msgstr ""
 
 #: ../app/helpers/cloud_object_store_object_helper/textual_summary.rb:40
 msgid "Show this Cloud Object's parent Cloud Tenant"
-msgstr "Mostra il Tenant Cloud parent di questo Oggetto Cloud"
+msgstr "Mostra il tenant cloud parent di questo oggetto cloud"
 
 #: ../app/helpers/configuration_profile_helper/textual_summary.rb:62
 msgid "Show this Configuration Profile's Configuration Manager"
@@ -69335,7 +69337,7 @@ msgstr "Mostra il Catalogo servizi parent di questo servizio"
 
 #: ../app/helpers/cloud_volume_snapshot_helper/textual_summary.rb:44
 msgid "Show this Snapshot's Cloud Tenants"
-msgstr "Mostra tutti i Tenant Cloud dell'Istantanea"
+msgstr "Mostra tutti i tenant cloud dell'istantanea"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:295
 msgid "Show this VM's Availability Zone"
@@ -69343,7 +69345,7 @@ msgstr "Mostra la zona di disponibilità di questa VM"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:430
 msgid "Show this VM's Cloud Tenants"
-msgstr "Mostra i tenant Cloud di questa VM"
+msgstr "Mostra i tenant cloud di questa VM"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:231
 msgid "Show this VM's Cluster"
@@ -69356,7 +69358,7 @@ msgstr "Mostra i Datastore di questa VM"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:305
 msgid "Show this VM's Flavor"
-msgstr "Mostra i Flavor di questa VM"
+msgstr "Mostra flavor di questa VM"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:242
 msgid "Show this VM's Host"
@@ -69384,7 +69386,7 @@ msgstr "Mostra l'istantanea di base di questo Volume"
 
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:90
 msgid "Show this Volume's Cloud Tenants"
-msgstr "Mostra tutti i Tenant Cloud del Volume"
+msgstr "Mostra tutti i tenant cloud del volume"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:49
 #: ../app/views/report/_form_filter_chargeback.html.haml:201
@@ -70939,17 +70941,17 @@ msgstr[1] "Gestori dello spazio di archiviazione (Swift)"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:116
 #: ../config/yaml_strings.rb:1925
 msgid "Storage Managers"
-msgstr "Gestori archiviazione"
+msgstr "Gestori di archiviazione"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::CinderManager (plural form)
 #: ../config/dictionary_strings.rb:3452
 msgid "Storage Managers (Cinder)"
-msgstr "Gestori Archiviazione (Cinder)"
+msgstr "Gestori di archiviazione (Cinder)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager::SwiftManager (plural form)
 #: ../config/dictionary_strings.rb:3456
 msgid "Storage Managers (Swift)"
-msgstr "Gestori Archiviazione (Swift)"
+msgstr "Gestori di archiviazione (Swift)"
 
 #: ../app/helpers/container_group_helper/textual_summary.rb:42
 #: ../app/helpers/persistent_volume_helper/textual_summary.rb:67
@@ -72245,7 +72247,7 @@ msgstr "Tipo di immagine di sistema \"%{name}\""
 #. TRANSLATORS: file: product/views/PxeImageType.yaml
 #: ../app/controllers/pxe_controller.rb:118 ../config/yaml_strings.rb:1674
 msgid "System Image Types"
-msgstr "Tipi Immagine di sistema"
+msgstr "Tipi di immagine di sistema"
 
 #: ../app/controllers/pxe_controller/pxe_image_types.rb:91
 msgid "System Image Types \"%{name}\""
@@ -72521,11 +72523,11 @@ msgstr "Il tag %{tag} non è una voce di categoria"
 
 #: src/rbac-forms/rbacAssignUserTags.jsx:116
 msgid "Tag Assignment"
-msgstr "Assegnazione Tag"
+msgstr "Assegnazione tag"
 
 #: ../app/views/layouts/_tag_edit.html.haml:4
 msgid "Tag Assignment (Tags common to all selected items)"
-msgstr "Assegnazione Tag (Tag comune a tutti gli elementi selezionati)"
+msgstr "Assegnazione tag (Tag comune a tutti gli elementi selezionati)"
 
 #: ../app/views/chargeback_assignment/_form.html.haml:28
 #: ../app/views/chargeback_assignment/_form.html.haml:94
@@ -73229,7 +73231,7 @@ msgstr "Azienda"
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:10
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:18
 msgid "The Floating Ip is not connected to an active %{table}"
-msgstr "Il Floating Ip non è collegato ad un %{table} attivo"
+msgstr "L'IP mobile non è collegato ad un %{table} attivo"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/google_credential.rb:26
@@ -73644,7 +73646,7 @@ msgstr "Il record di filtro selezionato non è stato trovato"
 
 #: ../app/controllers/floating_ip_controller.rb:98
 msgid "The selected Floating IP was deleted"
-msgstr "Il Floating IP selezionato è stato eliminato"
+msgstr "L'IP mobile selezionato è stato eliminato"
 
 #: ../app/views/miq_ae_class/_ns_details.html.haml:5
 msgid "The selected Namespace is empty"
@@ -73844,7 +73846,7 @@ msgstr "Nessun %{security_groups} disponibile per questa %{instance}."
 
 #: ../app/helpers/application_helper/button/instance_attach.rb:9
 msgid "There are no Cloud Volumes available to attach to this Instance."
-msgstr "Non sono disponibili Volumi Cloud da allegare a questa Istanza."
+msgstr "Non sono presenti volumi cloud da collegare a questa istanza."
 
 #: ../app/models/storage.rb:525
 msgid ""
@@ -73861,7 +73863,7 @@ msgstr "Non vi sono EMS con credenziali valide per questo Datastore"
 #:
 #: ../app/helpers/application_helper/button/instance_associate_floating_ip.rb:10
 msgid "There are no Floating IPs available to this Instance."
-msgstr "Non sono disponibili Floating IP per questa Istanza."
+msgstr "Non sono disponibili IP mobili per questa istanza."
 
 #: ../app/views/ops/rbac_group/_customer_tags.html.haml:31
 msgid "There are not tags assigned to this group."
@@ -74671,7 +74673,7 @@ msgstr "Memoria Configurata totale"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ExternalAutomationManager.yaml
 #: ../config/yaml_strings.rb:639
 msgid "Total Configured Systems"
-msgstr "Sistemi Configurati totali"
+msgstr "Numero totale di sistemi configurati"
 
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:71
 msgid "Total Configured VM CPUs"
@@ -75572,14 +75574,13 @@ msgid ""
 "Unable to associate Floating IP %{address} with Instance \"%{name}\": %{"
 "details}"
 msgstr ""
-"Impossibile associare ilFloating IP %{address} all'istanza \"%{name}\": %{"
+"Impossibile associare l'IP mobile %{address} all'istanza \"%{name}\": %{"
 "details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:23
 #: ../app/controllers/mixins/actions/vm_actions/associate_floating_ip.rb:98
 msgid "Unable to associate Floating IP with Instance \"%{name}\": %{details}"
-msgstr ""
-"Impossibile associare il Floating IP all'istanza \"%{name}\": %{details}"
+msgstr "Impossibile associare l'IP mobile all'istanza \"%{name}\": %{details}"
 
 #: ../app/controllers/vm_cloud_controller.rb:96
 msgid ""
@@ -75611,7 +75612,7 @@ msgstr "Impossibile creare il volume cloud \"%{name}\": %{details}"
 
 #: ../app/controllers/floating_ip_controller.rb:76
 msgid "Unable to create Floating IP \"%{address}\": %{details}"
-msgstr "Impossibile creare il Floating IP \"%{address}\": %{details}"
+msgstr "Impossibile creare l'IP mobile \"%{address}\": %{details}"
 
 #: ../app/controllers/security_group_controller.rb:85
 msgid "Unable to create Security Group \"%{name}\": %{details}"
@@ -75681,16 +75682,16 @@ msgid ""
 "Unable to disassociate Floating IP %{address} from Instance \"%{name}\": %{"
 "details}"
 msgstr ""
-"Impossibile annullare l'associazione del Floating IP %{address} dall'istanza "
-"\"%{name}\": %{details}"
+"Impossibile annullare l'associazione dell'IP mobile %{address} dall'istanza \""
+"%{name}\": %{details}"
 
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:23
 #: ../app/controllers/mixins/actions/vm_actions/disassociate_floating_ip.rb:104
 msgid ""
 "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
 msgstr ""
-"Impossibile annullare l'associazione del Floating IP dall'istanza \"%{name}\":"
-" %{details}"
+"Impossibile annullare l'associazione dell'IP mobile dall'istanza \"%{name}\": "
+"%{details}"
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:71
 msgid "Unable to edit Repository "
@@ -76172,7 +76173,7 @@ msgstr "Allocazione inutilizzata/eccessiva"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:82
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:187
 msgid "Up"
-msgstr "In alto"
+msgstr "Attivo"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:163
 msgid "Update"
@@ -79396,7 +79397,7 @@ msgstr "Visualizza tassi di chargeback"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2974
 msgid "View Cloud Database Flavors"
-msgstr "Visualizza flavor database cloud"
+msgstr "Visualizza flavor del database cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2956
@@ -79590,12 +79591,12 @@ msgstr "Visualizza firmware"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1474
 msgid "View Flavors"
-msgstr "Visualizza Flavor"
+msgstr "Visualizza flavor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2934
 msgid "View Floating IPs"
-msgstr "Visualizza Floating IP"
+msgstr "Visualizza IP mobili"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2323
@@ -79723,7 +79724,7 @@ msgstr "Visualizza Provider di Rete"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3044
 msgid "View Network Routers"
-msgstr "Visualizza Router di Rete"
+msgstr "Visualizza router di rete"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3096
@@ -79988,7 +79989,7 @@ msgstr "Visualizza istantanee"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3976
 msgid "View Storage Managers"
-msgstr "Visualizza Gestori Archiviazione"
+msgstr "Visualizza gestori di archiviazione"
 
 #: ../app/views/chargeback_rate/_rates_list.html.haml:10
 #: ../app/views/chargeback_rate/_rates_list.html.haml:12
@@ -80070,7 +80071,7 @@ msgstr "Visualizza associazioni volume"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1460
 msgid "View Volume Types"
-msgstr "Visualizza Tipi di volume"
+msgstr "Visualizza tipi di volume"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1350
@@ -81822,7 +81823,7 @@ msgstr "ID volume"
 #: ../config/yaml_strings.rb:4070
 msgid "Volume Mapping"
 msgid_plural "Volume Mappings"
-msgstr[0] "Associazione Volume"
+msgstr[0] "Associazione volume"
 msgstr[1] "Associazioni volume"
 
 #. TRANSLATORS: file: product/views/VolumeMapping.yaml
@@ -81832,7 +81833,7 @@ msgstr[1] "Associazioni volume"
 #: ../app/services/ems_storage_dashboard_service.rb:55
 #: ../config/yaml_strings.rb:1909
 msgid "Volume Mappings"
-msgstr "Associazioni dei volumi"
+msgstr "Associazioni volume"
 
 #:
 #: ../app/javascript/components/cloud-volume-form/cloud-volume-form.schema.js:42
@@ -81899,7 +81900,7 @@ msgstr "Tipo di volume"
 #: ../app/controllers/cloud_volume_type_controller.rb:29
 #: ../app/presenters/menu/default_menu.rb:156
 msgid "Volume Types"
-msgstr "Tipi di volumi"
+msgstr "Tipi di volume"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
@@ -82074,7 +82075,7 @@ msgstr "Tempo di attesa (Secondi)"
 #:
 #: ../app/javascript/components/settings-tasks-form/settings-tasks-form.schema.js:89
 msgid "Warn"
-msgstr "Avverti"
+msgstr "Avvertenza"
 
 #: src/topology/topologyCanvas.jsx:270
 msgid "Warning"
@@ -82129,13 +82130,13 @@ msgid ""
 "Warning: The selected Analysis Profiles and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i profili di analisi selezionati e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: i profili di analisi selezionati e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalogs_center.rb:31
 msgid "Warning: The selected Catalogs will be permanently removed!"
-msgstr "Avvertenza: I Cataloghi selezionati verranno definitivamente rimossi."
+msgstr "Avvertenza: I cataloghi selezionati verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rates_center.rb:46
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
@@ -82147,13 +82148,13 @@ msgid ""
 "Warning: The selected Cloud Providers and ALL related components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i provider cloud selezionati e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: i provider cloud selezionati e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:31
 msgid "Warning: The selected Cloud Tenants will be permanently deleted!"
 msgstr ""
-"Avvertenza: I Tenant Cloud selezionati verranno eliminati definitivamente."
+"Avvertenza: I tenant cloud selezionati verranno eliminati definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/cloud_volume_backups_center.rb:27
 msgid "Warning: The selected Cloud Volume Backups will be removed!"
@@ -82164,8 +82165,8 @@ msgid ""
 "Warning: The selected Containers Providers and ALL of their components will be"
 " permanently removed!"
 msgstr ""
-"Avvertenza: i provider contenitori selezionati e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: i provider contenitori selezionati e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_templates_center.rb:42
@@ -82180,8 +82181,8 @@ msgid ""
 "Warning: The selected Datastores and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: I Datastore selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: I datastore selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:42
 msgid ""
@@ -82193,15 +82194,15 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:42
 msgid "Warning: The selected Dialog will be permanently removed!"
-msgstr "Avvertenza: La finestra di dialogo verrà definitivamente rimossa."
+msgstr "Avvertenza: La finestra di dialogo verrà rimossa definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/flavor_center.rb:15
 msgid "Warning: The selected Flavor will be permanently removed!"
-msgstr "Avvertenza: Il Flavor selezionato verrà rimosso definitivamente"
+msgstr "Avvertenza: Il flavor selezionato verrà rimosso definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/flavors_center.rb:24
 msgid "Warning: The selected Flavors will be permanently removed!"
-msgstr "Attenzione: i Flavor selezionati verranno rimossi definitivamente!"
+msgstr "Attenzione: i flavor selezionati verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:46
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:50
@@ -82223,24 +82224,24 @@ msgid ""
 "Warning: The selected Infrastructure Providers and ALL of their components "
 "will be permanently removed!"
 msgstr ""
-"Avvertenza: i provider infrastruttura selezionati e TUTTI i relativi "
-"componenti verranno definitivamente rimossi."
+"Avvertenza: i provider infrastruttura selezionati e tutti i relativi "
+"componenti verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/configuration_jobs_center.rb:27
 msgid ""
 "Warning: The selected Jobs and ALL of their components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: i lavori selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: i lavori selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:44
 msgid ""
 "Warning: The selected Network Providers and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i provider di rete selezionati e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: i provider di rete selezionati e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_container_center.rb:30
@@ -82248,7 +82249,7 @@ msgid ""
 "Warning: The selected Object Storage Container and ALL related Objects will be"
 " permanently removed!"
 msgstr ""
-"Avvertenza: il contenitore archivio oggetti selezionato e TUTTI i relativi "
+"Avvertenza: il contenitore archivio oggetti selezionato e tutti i relativi "
 "oggetti verranno rimossi definitivamente."
 
 #:
@@ -82257,7 +82258,7 @@ msgid ""
 "Warning: The selected Object Storage Containers and ALL related Objects will "
 "be permanently removed!"
 msgstr ""
-"Avvertenza: i contenitori archivio oggetti selezionati e TUTTI i relativi "
+"Avvertenza: i contenitori archivio oggetti selezionati e tutti i relativi "
 "oggetti verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_object_storages_center.rb:27
@@ -82265,8 +82266,8 @@ msgid ""
 "Warning: The selected Object Storage Managers and ALL of their components will"
 " be permanently removed!"
 msgstr ""
-"Avvertenza: i Gestori Archiviazione Oggetti selezionati e TUTTI i relativi "
-"componenti verranno definitivamente rimossi."
+"Avvertenza: i gestori di archiviazione oggetti selezionati e tutti i relativi "
+"componenti verranno rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/cloud_object_store_object_center.rb:18
@@ -82282,32 +82283,32 @@ msgid ""
 "Warning: The selected Orchestration Stacks and ALL of their components will be"
 " permanently removed!"
 msgstr ""
-"Avvertenza: gli stack di orchestrazione selezionati e TUTTI i relativi "
-"componenti verranno definitivamente rimossi."
+"Avvertenza: gli stack di orchestrazione selezionati e tutti i relativi "
+"componenti verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/pxe_servers_center.rb:31
 msgid ""
 "Warning: The selected PXE Servers and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: I Server PXE selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: I server PXE selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_physical_infras_center.rb:42
 msgid ""
 "Warning: The selected Physical Infrastructure Providers and ALL of their "
 "components will be permanently removed!"
 msgstr ""
-"Avvertenza: i provider di infrastrutture fisiche selezionati e TUTTI i "
-"relativi componenti verranno definitivamente rimossi."
+"Avvertenza: i provider di infrastrutture fisiche selezionati e tutti i "
+"relativi componenti verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/inventory_group_center.rb:30
 msgid ""
 "Warning: The selected Provider and ALL of their components will be permanently"
 " removed!"
 msgstr ""
-"Avvertenza: il provider selezionato e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: il provider selezionato e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:52
 msgid ""
@@ -82320,8 +82321,8 @@ msgid ""
 "Warning: The selected Resource Pools and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: I Pool di Risorse selezionati e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: I pool di risorse selezionati e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_center.rb:44
 #: ../app/helpers/application_helper/toolbar/saved_reports_center.rb:25
@@ -82338,16 +82339,16 @@ msgid ""
 "Warning: The selected Schedules and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: le pianificazioni selezionate e TUTTI i relativi componenti "
-"verranno definitivamente rimossi."
+"Avvertenza: le pianificazioni selezionate e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/service/vmdb_mixin.rb:29
 msgid ""
 "Warning: The selected Services and ALL of their components will be permanently"
 " removed!"
 msgstr ""
-"Avvertenza: I Servizi selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: I servizi selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_storages_center.rb:45
 msgid ""
@@ -82369,13 +82370,13 @@ msgid ""
 "Warning: The selected Templates and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: i modelli selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: i modelli selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/time_profiles_center.rb:41
 msgid "Warning: The selected Time Profiles will be permanently removed!"
 msgstr ""
-"Avvertenza: I Profili dell'ora selezionati verranno definitivamente rimossi."
+"Avvertenza: I profili dell'ora selezionati verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/template_clouds_center.rb:66
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:66
@@ -82385,8 +82386,8 @@ msgid ""
 "Warning: The selected items and ALL of their components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: gli elementi selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: gli elementi selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_clusters_center.rb:38
 #: ../app/helpers/application_helper/toolbar/hosts_center.rb:92
@@ -82394,8 +82395,8 @@ msgid ""
 "Warning: The selected items and ALL of their components will be permanently "
 "removed!?"
 msgstr ""
-"Avvertenza: gli elementi selezionati e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: gli elementi selezionati e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:59
 msgid ""
@@ -82433,8 +82434,8 @@ msgid ""
 "Warning: This Analysis Profile and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: questo profilo di analisi e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: questo profilo di analisi e tutti i relativi componenti saranno "
+"rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_center.rb:18
@@ -82444,11 +82445,11 @@ msgstr "Avvertenza: questo pulsante verrà rimosso definitivamente."
 #:
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:24
 msgid "Warning: This Catalog will be permanently removed!"
-msgstr "Avvertenza: Questo Catalogo verrà rimosso definitivamente."
+msgstr "Avvertenza: Questo catalogo verrà rimosso definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/chargeback_rate_center.rb:29
 msgid "Warning: This Chargeback Rate will be permanently removed!"
-msgstr "Avvertenza: questo tasso di chargeback verrà definitivamente rimosso."
+msgstr "Avvertenza: questo tasso di chargeback verrà rimosso definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:28
 msgid "Warning: This Cloud Network and ALL of its components will be removed!"
@@ -82460,8 +82461,8 @@ msgid ""
 "Warning: This Cloud Provider and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: questo provider cloud e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: questo provider cloud e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:26
 msgid "Warning: This Cloud Subnet and ALL of its components will be removed!"
@@ -82474,35 +82475,35 @@ msgid ""
 "Warning: This Containers Provider and ALL of its components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: Questo Provider Contenitori e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo provider contenitori e tutti i relativi componenti verranno"
+" rimossi definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_button_group_center.rb:24
 msgid "Warning: This Custom Button Group will be permanently removed!"
 msgstr ""
-"Avvertenza: questo gruppo di pulsanti personalizzato verrà rimosso in modo "
-"permanente."
+"Avvertenza: questo gruppo di pulsanti personalizzato verrà rimosso "
+"definitivamente."
 
 #:
 #: ../app/helpers/application_helper/toolbar/customization_template_center.rb:27
 msgid "Warning: This Customization Template will be permanently removed!"
 msgstr ""
-"Avvertenza: questo modello di personalizzazione verrà definitivamente rimosso."
+"Avvertenza: questo modello di personalizzazione verrà rimosso definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_set_center.rb:28
 msgid ""
 "Warning: This Dashboard and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo dashboard e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo dashboard e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/storage_center.rb:24
 msgid ""
 "Warning: This Datastore and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo Datastore e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo datastore e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:29
 msgid ""
@@ -82514,12 +82515,12 @@ msgstr ""
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:32
 msgid "Warning: This Dialog will be permanently removed!"
-msgstr "Avvertenza: Questa finestra di dialogo verrà definitivamente rimossa."
+msgstr "Avvertenza: Questa finestra di dialogo verrà rimossa definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/floating_ip_center.rb:28
 msgid "Warning: This Floating IP and ALL of its components will be removed!"
 msgstr ""
-"Avvertenza: Questo Floating IP e TUTTI i relativi componenti saranno rimossi."
+"Avvertenza: Questo IP mobile e tutti i relativi componenti verranno rimossi."
 
 #:
 #: ../app/helpers/application_helper/toolbar/generic_object_definition_center.rb:33
@@ -82541,8 +82542,8 @@ msgstr ""
 msgid ""
 "Warning: This Image and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questa Immagine e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questa immagine e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_infra_center.rb:54
 #: ../app/helpers/application_helper/toolbar/ems_physical_infra_center.rb:33
@@ -82550,45 +82551,45 @@ msgid ""
 "Warning: This Infrastructure Provider and ALL of its components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: Questo Provider Infrastruttura e TUTTI i relativi componenti "
-"saranno definitivamente rimossi."
+"Avvertenza: Questo provider infrastruttura e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_cloud_center.rb:42
 msgid ""
 "Warning: This Instance and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questa Istanza e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questa istanza e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/configuration_job_center.rb:15
 msgid ""
 "Warning: This Job and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: questo lavoro e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: questo lavoro e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_network_center.rb:34
 msgid ""
 "Warning: This Network Provider and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: questo provider di rete e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: questo provider di rete e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/orchestration_stack_center.rb:15
 msgid ""
 "Warning: This Orchestration Stack and ALL of its components will be "
 "permanently removed!"
 msgstr ""
-"Avvertenza: Questo stack di orchestrazione e TUTTI i relativi componenti "
-"saranno definitivamente rimossi."
+"Avvertenza: Questo stack di orchestrazione e tutti i relativi componenti "
+"verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/pxe_server_center.rb:20
 msgid ""
 "Warning: This PXE Server and ALL of its components will be permanently removed"
 "!"
 msgstr ""
-"Avvertenza: Questo Server PXE e TUTTI i relativi componenti saranno rimossi "
+"Avvertenza: Questo server PXE e tutti i relativi componenti verranno rimossi "
 "definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/resource_pool_center.rb:15
@@ -82596,8 +82597,8 @@ msgid ""
 "Warning: This Resource Pool and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: Questo Pool di Risorse e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo pool di risorse e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/network_router_center.rb:48
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:25
@@ -82610,16 +82611,16 @@ msgid ""
 "Warning: This Saved Report and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: Questo Report Salvato e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo report salvato e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:20
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:20
 msgid ""
 "Warning: This Schedule and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questa pianificazione e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questa pianificazione e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/security_group_center.rb:28
 msgid "Warning: This Security Group and ALL of its components will be removed!"
@@ -82645,16 +82646,16 @@ msgstr ""
 msgid ""
 "Warning: This Service and ALL of their components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo Servizio e TUTTI i relativi componenti verranno "
-"definitivamente rimossi."
+"Avvertenza: Questo servizio e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_storage_center.rb:33
 msgid ""
 "Warning: This Storage Manager and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: Questo Manager di Spazio di archiviazione e TUTTI i relativi "
-"componenti saranno definitivamente rimossi."
+"Avvertenza: Questo manager dello spazio di archiviazione e tutti i relativi "
+"componenti verranno rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_type_center.rb:20
 msgid "Warning: This System Image Type will be permanently removed!"
@@ -82665,37 +82666,37 @@ msgstr ""
 msgid ""
 "Warning: This Template and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo Modello e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo modello e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:56
 msgid ""
 "Warning: This Virtual Machine and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avvertenza: Questa Macchina Virtuale e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questa macchina virtuale e tutti i relativi componenti verranno "
+"rimossi definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/miq_widget_center.rb:25
 msgid ""
 "Warning: This Widget and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo widget e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo widget e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/ems_cluster_center.rb:21
 msgid ""
 "Warning: This item and ALL of its components will be permanently removed!"
 msgstr ""
-"Avvertenza: Questo elemento e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo elemento e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/helpers/application_helper/toolbar/host_center.rb:64
 msgid ""
 "Warning: This item and ALL of its components will be permanently removed!?"
 msgstr ""
-"Avvertenza: Questo elemento e TUTTI i relativi componenti saranno "
-"definitivamente rimossi."
+"Avvertenza: Questo elemento e tutti i relativi componenti verranno rimossi "
+"definitivamente."
 
 #: ../app/controllers/mixins/dashboard_view_mixin.rb:17
 #: ../app/views/shared/_provider_paused.html.haml:5
@@ -82785,7 +82786,7 @@ msgstr "Cosa viene valutato"
 #: ../app/helpers/miq_alert_helper.rb:10
 #: ../app/views/miq_alert/_form.html.haml:55
 msgid "What to Evaluate"
-msgstr "Cosa valutare"
+msgstr "Aspetti da valutare"
 
 #:
 #: ../app/models/manageiq/providers/redhat/infra_manager/provision_workflow/dialog_field_validation.rb:11
@@ -83885,7 +83886,7 @@ msgstr ""
 
 #: ../app/javascript/components/action-form/helper.js:113
 msgid "default"
-msgstr "predefinito"
+msgstr "valore predefinito"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:35
 msgid "defining of host initiator was cancelled by the user"
@@ -83893,8 +83894,7 @@ msgstr "la definizione dell'iniziatore host è stata annullata dall'utente"
 
 #: ../app/javascript/components/volume-mapping-form/index.jsx:23
 msgid "defining of volume mapping was cancelled by the user"
-msgstr ""
-"La definizione dell'associazione dei volumi è stata annullata dall'utente"
+msgstr "La definizione dell'associazione volume è stata annullata dall'utente"
 
 #: ../app/models/host_aggregate.rb:87
 msgid "delete_aggregate must be implemented in a subclass"
@@ -84208,7 +84208,7 @@ msgstr "find_external_identity deve essere implementato in una sottoclasse"
 
 #: ../app/models/manageiq/providers/cloud_manager/vm.rb:116
 msgid "flavor cannot be found"
-msgstr "Impossibile trovare flavor"
+msgstr "Impossibile trovare il flavor"
 
 #: ../app/models/ext_management_system.rb:206
 msgid "format is invalid."

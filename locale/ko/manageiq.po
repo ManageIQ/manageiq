@@ -188,7 +188,7 @@ msgstr " 일"
 
 #: ../app/helpers/miq_policy_helper.rb:5
 msgid " Days"
-msgstr " 일"
+msgstr " 요일"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
 #: ../config/yaml_strings.rb:5632
@@ -6188,7 +6188,7 @@ msgstr "도움말 메뉴를 변경하면 전체 페이지를 다시 로드할 �
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/object_storage/storage_manager.rb:64
 msgid "Apikey"
-msgstr "Apikey"
+msgstr "API 키"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:41
 msgid "Appliance Name"
@@ -12350,7 +12350,7 @@ msgstr "클라우드 데이터베이스 이름"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "클라우드 데이터베이스"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
@@ -23164,7 +23164,7 @@ msgstr "디바이스 마운트 지점"
 
 #: ../app/views/vm_common/_attach.html.haml:22
 msgid "Device Mountpoint (optional)"
-msgstr "디바이스 마운트 지점(선택적)"
+msgstr "디바이스 마운트 지점(선택사항)"
 
 #. TRANSLATORS: file: product/views/GuestDevice.yaml
 #: ../config/yaml_strings.rb:1059
@@ -26007,7 +26007,7 @@ msgstr "편집하려면 '새 폴더'를 두 번 클릭하십시오."
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "아래로"
+msgstr "작동 중지"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -32824,8 +32824,8 @@ msgid ""
 "File is too large, maximum allowed size is ${maxSize} bytes. Current file has "
 "${value.inputFiles[0].size} bytes"
 msgstr ""
-"파일이 너무 큽니다. 허용되는 최대 크기는 ${maxSize}바이트입니다. 현재 파일에 ${value.inputFiles[0].size}"
-"바이트가 있음"
+"파일이 너무 큽니다. 허용되는 최대 크기는 ${maxSize}바이트입니다. 현재 파일은 ${value.inputFiles[0].size}"
+"바이트임"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:16
 msgid ""
@@ -33766,7 +33766,7 @@ msgstr[0] "유동 IP(OpenStack)"
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:79
 #: ../app/models/manageiq/providers/openstack/network_manager/floating_ip.rb:161
 msgid "Floating IP Address (optional)"
-msgstr "유동 IP 주소(선택적)"
+msgstr "유동 IP 주소(선택사항)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.floating_ip_addresses
 #: ../config/dictionary_strings.rb:910
@@ -53028,7 +53028,7 @@ msgstr "비밀번호(API 키)"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:45
 msgid "Password (optional):"
-msgstr "비밀번호(선택적):"
+msgstr "비밀번호(선택사항):"
 
 #: ../app/helpers/textual_mixins/textual_os_info.rb:44
 msgid "Password Complex"
@@ -73851,7 +73851,7 @@ msgstr "사용하지 않은/초과 커미트된 할당"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:82
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:187
 msgid "Up"
-msgstr "위로"
+msgstr "작동"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:163
 msgid "Update"
@@ -74955,7 +74955,7 @@ msgstr "사용자 이름"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:40
 msgid "Username (optional):"
-msgstr "사용자 이름(선택적):"
+msgstr "사용자 이름(선택사항):"
 
 #:
 #: ../app/models/manageiq/providers/ansible_tower/automation_manager/machine_credential.rb:9

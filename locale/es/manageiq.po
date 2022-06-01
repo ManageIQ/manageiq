@@ -12902,7 +12902,7 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb:281
 #: ../config/yaml_strings.rb:1519
 msgid "Cloud"
-msgstr "Nube"
+msgstr "Cloud"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:306
 #: ../app/views/catalog/_sandt_tree_show.html.haml:400
@@ -12923,18 +12923,18 @@ msgstr ""
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/cloud_database.rb:13
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/cloud_manager/cloud_database.rb:33
 msgid "Cloud Database"
-msgstr "Bases de datos de la nube"
+msgstr "Base de datos en la nube"
 
 #: ../config/model_display_names.rb:24
 msgid "Cloud Database Flavor"
 msgid_plural "Cloud Database Flavors"
-msgstr[0] "Clase de base de datos de nube"
-msgstr[1] "Clases de bases de datos de nube"
+msgstr[0] "Clase de base de datos en la nube"
+msgstr[1] "Clases de bases de datos en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2970
 msgid "Cloud Database Flavors"
-msgstr "Clases de bases de datos de la nube"
+msgstr "Clases de bases de datos en la nube"
 
 #: ../app/models/manageiq/providers/amazon/cloud_manager/cloud_database.rb:30
 msgid "Cloud Database Instance Class"
@@ -12952,7 +12952,7 @@ msgstr "Nombre de base de datos en la nube"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "Bases de datos en la nube"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
@@ -13495,11 +13495,11 @@ msgstr "Volúmenes de nube basados en instantánea"
 
 #: ../config/model_attributes.rb:278
 msgid "Cloud database"
-msgstr "Base de datos de la nube"
+msgstr "Base de datos en la nube"
 
 #: ../config/model_attributes.rb:290
 msgid "Cloud database flavor"
-msgstr "Clase de base de datos de la nube"
+msgstr "Clase de base de datos en la nube"
 
 #: ../config/model_attributes.rb:303
 msgid "Cloud network"
@@ -13626,7 +13626,7 @@ msgstr "CloudDatabaseFlavor|Número de región"
 
 #: ../config/model_attributes.rb:302
 msgid "CloudDatabaseFlavor|Total cloud databases"
-msgstr "CloudDatabaseFlavor|Total bases de datos de nube"
+msgstr "CloudDatabaseFlavor|Total bases de datos en la nube"
 
 #: ../config/model_attributes.rb:279
 msgid "CloudDatabase|Db engine"
@@ -25853,12 +25853,12 @@ msgstr "Mostrar informe guardado de Chargeback individual"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2978
 msgid "Display Individual Cloud Database Flavors"
-msgstr "Visualizar tipos de bases de datos en la nube individuales"
+msgstr "Visualizar tipos de bases de datos individuales en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2960
 msgid "Display Individual Cloud Databases"
-msgstr "Visualizar Cloud Databases individuales"
+msgstr "Visualizar bases de datos individuales en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2988
@@ -26343,7 +26343,7 @@ msgstr "Visualizar listas de tipos de bases de datos en la nube"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2958
 msgid "Display Lists of Cloud Databases"
-msgstr "Visualizar listas de Cloud Databases"
+msgstr "Visualizar listas de bases de datos en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2986
@@ -32572,7 +32572,7 @@ msgstr "Todo bajo Tipos de bases de datos en la nube"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2954
 msgid "Everything under Cloud Databases"
-msgstr "Todo bajo Cloud Databases"
+msgstr "Todo bajo bases de datos en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2982
@@ -69171,7 +69171,7 @@ msgstr "Mostrar todas las Pilas de orquestación secundarias"
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:128
 msgid "Show all Cloud Databases"
-msgstr "Mostrar todo Cloud Databases"
+msgstr "Mostrar todo bases de datos en la nube"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:419
 msgid "Show all Cloud Networks"
@@ -79813,7 +79813,7 @@ msgstr "Ver tipos de bases de datos en la nube"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2956
 msgid "View Cloud Databases"
-msgstr "Ver Cloud Databases"
+msgstr "Ver bases de datos en la nube"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2984
