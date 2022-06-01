@@ -10,19 +10,16 @@
 /app/models/authenticator*                      @kbrock
 /app/models/cloud*                              @agrare
 /app/models/container*                          @agrare
-/app/models/conversion_host*                    @fdupont-redhat
 /app/models/ems_event*                          @agrare
 /app/models/ems_refresh*                        @agrare
 /app/models/event_stream*                       @agrare
-/app/models/file_depot*                         @NickLaMuro
 /app/models/firmware_registry*                  @agrare
 /app/models/job*                                @agrare
 /app/models/manageiq/providers                  @agrare
 /app/models/metric*                             @agrare
-/app/models/miq_cockpit_ws_worker*              @jrafanie
 /app/models/miq_ems_metrics_processor_worker*   @agrare
 /app/models/miq_event_handler*                  @agrare
-/app/models/miq_product_feature*                @kavyanekkalapu
+/app/models/miq_product_feature*                @jeffibm
 /app/models/miq_report*                         @kbrock
 /app/models/miq_schedule*                       @jrafanie
 /app/models/miq_server*                         @jrafanie
@@ -30,10 +27,8 @@
 /app/models/miq_worker*                         @jrafanie
 /app/models/physical_server*                    @agrare
 /app/models/scan_item*                          @agrare
-/app/models/transformation_mapping*             @fdupont-redhat
 /app/models/vim_performance_state*              @agrare
 /app/models/vm                                  @agrare
-/app/models/vm_migrate_workflow                 @fdupont-redhat
 /app/models/vm_or_template                      @agrare
 /bin                                            @jrafanie @bdunne
 /content                                        @bdunne
@@ -41,4 +36,5 @@
 /db                                             @agrare @bdunne
 /lib/generators                                 @agrare
 /lib/manageiq/reporting                         @jrafanie
-/product/*                                      @kavyanekkalapu
+/locale/*                                       @jrafanie
+/product/*                                      @jeffibm
