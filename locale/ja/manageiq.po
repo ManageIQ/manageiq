@@ -12356,7 +12356,7 @@ msgstr "クラウド・データベース名"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "クラウド・データベース"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
@@ -24711,7 +24711,7 @@ msgstr "個々のクラウド・データベース・フレーバーを表示す
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2960
 msgid "Display Individual Cloud Databases"
-msgstr "個々の Cloud Databases を表示する"
+msgstr "個々のクラウド・データベースを表示する"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2988
@@ -25196,7 +25196,7 @@ msgstr "クラウド・データベース・フレーバー・リストを表示
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2958
 msgid "Display Lists of Cloud Databases"
-msgstr "Cloud Databases のリストを表示する"
+msgstr "クラウド・データベースのリストを表示する"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2986
@@ -31285,7 +31285,7 @@ msgstr "クラウド・データベース・フレーバー下のすべての内
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2954
 msgid "Everything under Cloud Databases"
-msgstr "Cloud Databases 下のすべての内容"
+msgstr "クラウド・データベース下のすべての内容"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2982
@@ -38763,7 +38763,7 @@ msgstr "スコープ外の項目"
 
 #: ../app/javascript/components/miq-pagination.jsx:16
 msgid "Items per page:"
-msgstr "ページ当たりの項目:"
+msgstr "ページ当たりのアイテム数:"
 
 #: ../app/controllers/ems_infra_controller.rb:153
 msgid "JSON file format is incorrect, missing 'nodes'."
@@ -66791,7 +66791,7 @@ msgstr "すべての子オーケストレーション・スタックを表示"
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:128
 msgid "Show all Cloud Databases"
-msgstr "すべての Cloud Databasesを表示する"
+msgstr "すべてのクラウド・データベースを表示する"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:419
 msgid "Show all Cloud Networks"
@@ -77046,7 +77046,7 @@ msgstr "クラウド・データベース・フレーバーを表示する"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2956
 msgid "View Cloud Databases"
-msgstr "Cloud Databases を表示する"
+msgstr "クラウド・データベースを表示する"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2984

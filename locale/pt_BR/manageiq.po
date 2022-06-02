@@ -638,7 +638,7 @@ msgstr[1] "%{amount} Provedores em nuvem sendo identificados"
 #: ../app/views/layouts/_tag_edit_items.html.haml:21
 msgid "%{amount} Cloud Subnet Being Tagged"
 msgid_plural "%{amount} Cloud Subnets Being Tagged"
-msgstr[0] "%{amount} Sub-rede de nuvem sendo identificada"
+msgstr[0] "%{amount} sub-rede na nuvem sendo identificada"
 msgstr[1] "%{amount} Sub-redes de nuvem sendo identificadas"
 
 #: ../app/views/layouts/_tag_edit_items.html.haml:23
@@ -4634,7 +4634,7 @@ msgstr ""
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
 msgid "Add of Cloud Subnet \"%s\" has been successfully queued."
-msgstr "A inclusão da Sub-rede de Nuvem \"%s\" foi enfileirada com sucesso."
+msgstr "A inclusão da sub-rede na nuvem \"%s\" foi enfileirada com sucesso."
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:26
 msgid "Add of Cloud Tenant \"%s\" has been successfully queued."
@@ -13188,7 +13188,7 @@ msgstr "Sub-rede da nuvem obrigatória"
 
 #: ../app/controllers/cloud_subnet_controller.rb:54
 msgid "Cloud Subnet no longer exists."
-msgstr "A sub-rede de nuvem não existe mais."
+msgstr "A sub-rede na nuvem não existe mais."
 
 #: ../app/helpers/cloud_tenant_helper/textual_summary.rb:135
 #: ../app/helpers/ems_network_helper/textual_summary.rb:91
@@ -13443,7 +13443,7 @@ msgstr "Sub-rede da nuvem"
 
 #: ../config/model_attributes.rb:385
 msgid "Cloud subnet network port"
-msgstr "Porta de rede da sub-rede de nuvem"
+msgstr "Porta de rede da sub-rede na nuvem"
 
 #: ../config/model_attributes.rb:390
 msgid "Cloud tenant"
@@ -27032,7 +27032,7 @@ msgstr "Clique duas vezes em 'Nova pasta' para editar"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "Para baixo"
+msgstr "Desligado"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -29141,7 +29141,7 @@ msgstr "Editar uma classe de objeto genérico"
 
 #: ../app/controllers/generic_object_definition_controller.rb:90
 msgid "Edit a Generic Object Definition '%{name}'"
-msgstr "Editar uma Definição de objeto genérico '%{name}'"
+msgstr "Editar uma definição de objeto genérico '%{name}'"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2529
@@ -29443,7 +29443,7 @@ msgstr "A edição do alerta \"%{name}\" foi cancelada pelo usuário"
 
 #: ../app/javascript/components/miq-alert-set-form/index.jsx:70
 msgid "Edit of Alert Profile \"%s\" was canceled by the user."
-msgstr "A edição do Perfil de Alerta \"%s\" foi cancelada pelo usuário."
+msgstr "A edição do perfil de alerta \"%s\" foi cancelada pelo usuário."
 
 #: ../app/controllers/ops_controller/settings/analysis_profiles.rb:240
 msgid "Edit of Analysis Profile \"%{name}\" was cancelled by the user"
@@ -29851,7 +29851,7 @@ msgstr "Editar a ação selecionada"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_sets_center.rb:21
 msgid "Edit the selected Alert Profile"
-msgstr "Editar o Perfil de alerta selecionado"
+msgstr "Editar o perfil de alerta selecionado"
 
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:22
 msgid "Edit the selected Analysis Profiles"
@@ -30202,7 +30202,7 @@ msgstr "Editando o alerta \"%{name}\""
 
 #: ../app/controllers/miq_alert_set_controller.rb:288
 msgid "Editing Alert Profile \"%{name}\""
-msgstr "Editando o Perfil de Alerta \"%{name}\""
+msgstr "Editando o perfil de alerta \"%{name}\""
 
 #: ../app/controllers/ops_controller.rb:673
 msgid "Editing Analysis Profile \"%{name}\""
@@ -33457,7 +33457,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1674
 msgid "ExtManagementSystem|Supports cloud subnet create"
-msgstr "ExtManagementSystem|suporta a criação de sub-rede de nuvem"
+msgstr "ExtManagementSystem|suporta a criação de sub-rede na nuvem"
 
 #: ../config/model_attributes.rb:1675
 msgid "ExtManagementSystem|Supports cloud tenants"
@@ -35469,7 +35469,7 @@ msgstr "Classes de objetos genéricos"
 
 #: ../app/javascript/components/generic-objects-form/index.jsx:123
 msgid "Generic Object Definition \"%s\" was added."
-msgstr "A Definição de Objeto Genérico \"%s\" foi incluída."
+msgstr "A definição de objeto genérico \"%s\" foi incluída."
 
 #: ../app/javascript/components/generic-objects-form/index.jsx:39
 msgid "Generic Object Definition \"%s\" was saved."
@@ -48703,7 +48703,7 @@ msgstr "Modelo"
 
 #: ../app/javascript/components/subnet-form/index.jsx:64
 msgid "Modification of Cloud Subnet %s has been successfully queued"
-msgstr "A modificação da Sub-rede de Nuvem %s foi enfileirada com sucesso"
+msgstr "A modificação da sub-rede na nuvem %s foi enfileirada com sucesso"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:25
 msgid "Modification of Cloud Tenant %s has been successfully queued"
@@ -73695,7 +73695,7 @@ msgstr "A rede em nuvem selecionada foi excluída"
 
 #: ../app/controllers/cloud_subnet_controller.rb:70
 msgid "The selected Cloud Subnet was deleted"
-msgstr "A sub-rede de nuvem selecionada foi excluída"
+msgstr "A sub-rede na nuvem selecionada foi excluída"
 
 #: ../app/controllers/cloud_volume_snapshot_controller.rb:60
 msgid "The selected Cloud Volume Snapshot was deleted"
@@ -76245,7 +76245,7 @@ msgstr "Alocação não usada/excessivamente comprometida"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:82
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:187
 msgid "Up"
-msgstr "Para cima"
+msgstr "Ligado"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:163
 msgid "Update"
@@ -83986,7 +83986,7 @@ msgstr "não altere o resultado do escopo ou da expressão"
 #: ../app/views/report/_column_lists.html.haml:26
 #: ../app/views/report/_column_lists.html.haml:58
 msgid "down"
-msgstr "para baixo"
+msgstr "Para baixo"
 
 #: ../app/models/orchestration_template.rb:130
 msgid "eligible_manager_types must be implemented in subclass"
@@ -85588,7 +85588,7 @@ msgstr "ilimitado"
 #: ../app/views/report/_column_lists.html.haml:26
 #: ../app/views/report/_column_lists.html.haml:58
 msgid "up"
-msgstr "para cima"
+msgstr "ligado"
 
 #: ../app/models/host_aggregate.rb:66
 msgid "update_aggregate must be implemented in a subclass"

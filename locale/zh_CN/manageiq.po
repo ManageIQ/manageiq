@@ -7748,7 +7748,7 @@ msgstr "自动化的"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:21
 msgid "Automatic Placement"
-msgstr "自动放置位置"
+msgstr "自动放置"
 
 #: ../app/controllers/ansible_credential_controller.rb:106
 #: ../app/controllers/ansible_playbook_controller.rb:68
@@ -12702,7 +12702,7 @@ msgstr[0] "云租户风格"
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:57
 #: ../app/models/manageiq/providers/openstack/network_manager/security_group.rb:113
 msgid "Cloud Tenant Placement"
-msgstr "云租户放置位置"
+msgstr "云租户放置"
 
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:19
 #: ../app/views/miq_request/_prov_dialog_cloud_quota.html.haml:23
@@ -25978,7 +25978,7 @@ msgstr "双击“新建文件夹”进行编辑"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:83
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:188
 msgid "Down"
-msgstr "向下"
+msgstr "关闭"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_report_center.rb:6
 #: ../app/helpers/application_helper/toolbar/compare_view.rb:22
@@ -47127,23 +47127,23 @@ msgstr "型号"
 
 #: ../app/javascript/components/subnet-form/index.jsx:64
 msgid "Modification of Cloud Subnet %s has been successfully queued"
-msgstr "云子网 %s 的修改操作已成功排队。"
+msgstr "修改云子网 %s 的操作已成功排队"
 
 #: ../app/javascript/components/cloud-tenant-form/index.jsx:25
 msgid "Modification of Cloud Tenant %s has been successfully queued"
-msgstr "修改云租户“%s”已成功排入队列"
+msgstr "修改云租户 %s 的操作已成功排队"
 
 #: ../app/javascript/components/cloud-volume-form/index.jsx:49
 msgid "Modification of Cloud Volume \"%s\" has been successfully queued."
-msgstr "修改云卷“%s”的操作已成功排队。"
+msgstr "修改云卷\"%s\"的操作已成功排队。"
 
 #: ../app/javascript/components/ansible-credentials-form/index.jsx:58
 msgid "Modification of Credential \"%s\" has been successfully queued."
-msgstr "修改凭证“%s”的操作已成功排队。"
+msgstr "修改凭证\"%s\"的操作已成功排队。"
 
 #: ../app/javascript/components/host-aggregate-form/index.jsx:25
 msgid "Modification of Host Aggregate %s has been successfully queued"
-msgstr "主机聚集 %s 的修改操作已成功排队"
+msgstr "修改主机聚集 %s 的操作已成功排队"
 
 #: ../app/javascript/components/physical-storage-form/index.jsx:39
 msgid "Modification of Physical Storage \"%s\" has been successfully queued."
@@ -54331,7 +54331,7 @@ msgstr "物理存储器："
 #: ../app/services/ems_storage_dashboard_service.rb:53
 #: ../config/yaml_strings.rb:1656
 msgid "Physical Storages"
-msgstr "物理存储"
+msgstr "物理存储器"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage (plural form)
 #: ../config/dictionary_strings.rb:3490
@@ -54811,11 +54811,11 @@ msgstr "锁定状态"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:83
 msgid "Placement"
-msgstr "放置位置"
+msgstr "放置"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:139
 msgid "Placement - Options"
-msgstr "放置位置 - 选项"
+msgstr "放置 - 选项"
 
 #:
 #: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:139
@@ -58482,7 +58482,7 @@ msgstr "刷新与物理服务器相关的所有项的关系和电源状态"
 msgid ""
 "Refresh relationships and power states for all items related to Physical "
 "Storages"
-msgstr "刷新与物理存储相关的所有项的关系和电源状态"
+msgstr "刷新与物理存储器相关的所有项的关系和电源状态"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4230
@@ -58651,13 +58651,13 @@ msgstr "是否刷新与这些主机发起者相关的所有项的关系和电源
 msgid ""
 "Refresh relationships and power states for all items related to these Physical"
 " Storages"
-msgstr "刷新与这些物理存储相关的所有项的关系和电源状态"
+msgstr "刷新与这些物理存储器相关的所有项的关系和电源状态"
 
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:19
 msgid ""
 "Refresh relationships and power states for all items related to these Physical"
 " Storages?"
-msgstr "刷新与所这些物理存储相关的所有项的关系和电源状态?"
+msgstr "刷新与这些物理存储器相关的所有项的关系和电源状态?"
 
 #: ../app/helpers/application_helper/toolbar/physical_switches_center.rb:14
 msgid ""
@@ -73794,7 +73794,7 @@ msgstr "未用/过度的分配"
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:82
 #: ../app/models/manageiq/providers/openstack/network_manager/network_router.rb:187
 msgid "Up"
-msgstr "向上"
+msgstr "开启"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:163
 msgid "Update"
@@ -73859,7 +73859,7 @@ msgstr "更新此条目"
 #: ../app/views/shared/views/_alerts_list.html.haml:40
 #: ../config/yaml_strings.rb:1032
 msgid "Updated"
-msgstr "已更新"
+msgstr "更新时间"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:19
 msgid "Updated - %{time}"
@@ -73926,7 +73926,7 @@ msgstr "更新卷 %{subject} 失败：%{error_message}"
 #: ../app/views/report/_export_custom_reports.html.haml:26
 #: ../app/views/report/_export_widgets.html.haml:43
 msgid "Upload"
-msgstr "上传"
+msgstr "上载"
 
 #: ../app/views/ops/_settings_import_tags_tab.html.haml:7
 msgid "Upload %{customer_name} Tag Assignments for VMs"
@@ -78919,7 +78919,7 @@ msgstr "父代蓝色文件夹 9 名称"
 
 #: ../config/model_attributes.rb:4755
 msgid "VmOrTemplate|Placement group"
-msgstr "VmOrTemplate|安置组"
+msgstr "VmOrTemplate|放置组"
 
 #: ../config/model_attributes.rb:4756
 msgid "VmOrTemplate|Platform"
