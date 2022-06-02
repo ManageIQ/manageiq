@@ -4,7 +4,6 @@ module ManageIQ::Providers
     require_nested :MetricsCapture
     require_nested :OrchestrationStack
 
-    include AvailabilityMixin
     include HasMonitoringManagerMixin
     include HasInfraManagerMixin
     include SupportsFeatureMixin

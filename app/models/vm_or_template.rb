@@ -30,8 +30,6 @@ class VmOrTemplate < ApplicationRecord
   include EventMixin
   include ProcessTasksMixin
   include TenancyMixin
-
-  include AvailabilityMixin
   include ManageIQ::Providers::Inflector::Methods
 
   VENDOR_TYPES = {

@@ -174,7 +174,6 @@ class Host < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include ComplianceMixin
-  include AvailabilityMixin
   include AggregationMixin
 
   before_create :make_smart

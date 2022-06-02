@@ -227,7 +227,6 @@ class ExtManagementSystem < ApplicationRecord
   include UuidMixin
   include EmsRefresh::Manager
   include TenancyMixin
-  include AvailabilityMixin
   include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin

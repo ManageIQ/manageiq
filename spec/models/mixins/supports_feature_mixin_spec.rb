@@ -9,7 +9,6 @@ RSpec.describe SupportsFeatureMixin do
     Class.new do
       attr_accessor :attr1
 
-      include AvailabilityMixin
       include SupportsFeatureMixin
 
       # no need to make this dynamic
@@ -41,40 +40,6 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   let(:test_inst) { test_class.new }
-
-  describe '#is_available?' do
-    it "handles availability" do
-      silence_warnings do
-        expect(test_inst.is_available?(:accept)).to be_truthy
-        expect(test_inst.is_available?(:denial)).to be_falsey
-      end
-    end
-
-    it "translates supports to availability" do
-      silence_warnings do
-        expect(test_inst.is_available?(:std_accept)).to be_truthy
-        expect(test_inst.is_available?(:module_accept)).to be_truthy
-        expect(test_inst.is_available?(:std_denial)).to be_falsey
-      end
-    end
-  end
-
-  describe '#is_available_now_error_message' do
-    it "handles availability" do
-      silence_warnings do
-        expect(test_inst.is_available_now_error_message(:accept)).to be_nil
-        expect(test_inst.is_available_now_error_message(:denial)).not_to be_nil
-      end
-    end
-
-    it "translates supports to availability" do
-      silence_warnings do
-        expect(test_inst.is_available_now_error_message(:std_accept)).to be_nil
-        expect(test_inst.is_available_now_error_message(:module_accept)).to be_nil
-        expect(test_inst.is_available_now_error_message(:std_denial)).not_to be_nil
-      end
-    end
-  end
 
   describe "#supports_feature?" do
     it "defines supports on the instance" do

@@ -41,7 +41,6 @@ class Storage < ApplicationRecord
   include Metric::CiMixin
   include StorageMixin
   include AsyncDeleteMixin
-  include AvailabilityMixin
   include TenantIdentityMixin
   include CustomActionsMixin
 
