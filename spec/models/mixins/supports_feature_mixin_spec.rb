@@ -216,23 +216,23 @@ RSpec.describe SupportsFeatureMixin do
 
   describe ".subclasses_supporting" do
     it 'detect' do
-      define_subclass("ProviderA", Post, :fake => true)
-      define_subclass("ProviderB", Post, :publish => false, :delete => true, :fake => true)
+      define_subclass("ProviderA", model, :fake => true)
+      define_subclass("ProviderB", model, :publish => false, :delete => true, :fake => true)
 
-      expect(Post.subclasses_supporting(:publish).map(&:name)).to eq(%w[ProviderA::Post])
-      expect(Post.subclasses_supporting(:delete).map(&:name)).to eq(%w[ProviderB::Post])
-      expect(Post.subclasses_supporting(:fake).map(&:name)).to match_array(%w[ProviderA::Post ProviderB::Post])
+      expect(model.subclasses_supporting(:publish).map(&:name)).to eq(%w[ProviderA::Model])
+      expect(model.subclasses_supporting(:delete).map(&:name)).to eq(%w[ProviderB::Model])
+      expect(model.subclasses_supporting(:fake).map(&:name)).to match_array(%w[ProviderA::Model ProviderB::Model])
     end
   end
 
-  describe "provider_classes_supporting" do
+  describe ".provider_classes_supporting" do
     it 'detects' do
-      define_subclass("ProviderA", Post, :fake => true)
-      define_subclass("ProviderB", Post, :publish => false, :delete => true, :fake => true)
+      define_subclass("ProviderA", model, :fake => true)
+      define_subclass("ProviderB", model, :publish => false, :delete => true, :fake => true)
 
-      expect(Post.provider_classes_supporting(:publish).map(&:name)).to eq(%w[ProviderA])
-      expect(Post.provider_classes_supporting(:delete).map(&:name)).to eq(%w[ProviderB])
-      expect(Post.provider_classes_supporting(:fake).map(&:name)).to match_array(%w[ProviderA ProviderB])
+      expect(model.provider_classes_supporting(:publish).map(&:name)).to eq(%w[ProviderA])
+      expect(model.provider_classes_supporting(:delete).map(&:name)).to eq(%w[ProviderB])
+      expect(model.provider_classes_supporting(:fake).map(&:name)).to match_array(%w[ProviderA ProviderB])
     end
   end
 
@@ -302,8 +302,8 @@ RSpec.describe SupportsFeatureMixin do
   end
 
   def define_supporting_class(class_name, parent, supports_values = {})
-    child = stub_const(class_name, Class.new(parent) do
-      include SupportsFeatureMixin
+    child = Class.new(parent) do
+      include SupportsFeatureMixin unless parent.respond_to?(:supports?)
 
       yield(self) if block_given?
       supports_values.each do |feature, value|
@@ -314,13 +314,15 @@ RSpec.describe SupportsFeatureMixin do
           supports_not feature
         when String
           supports_not feature, :reason => value
-        when Callable
-          supports(feature, &value)
+        when :dynamic
+          supports(feature) { unsupported_reason_add(feature, "dynamically unsupported") unless attr1 }
         else
           raise "trouble defining #{feature} with #{value.class.name}"
         end
       end
-    end)
+    end
+
+    stub_const(class_name, child) if class_name
     # remember what is subclasses so we can clean up the descendant cache
     ((@defined_parent_classes ||= {})[parent] ||= []) << child
     child
