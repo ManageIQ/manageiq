@@ -12902,7 +12902,7 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb:281
 #: ../config/yaml_strings.rb:1519
 msgid "Cloud"
-msgstr "Cloud"
+msgstr "Nube"
 
 #: ../app/views/catalog/_sandt_tree_show.html.haml:306
 #: ../app/views/catalog/_sandt_tree_show.html.haml:400
