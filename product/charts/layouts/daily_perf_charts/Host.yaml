@@ -23,6 +23,30 @@
     :title: VMs
     :columns:
     - derived_vm_count_on
+  :applies_to_method: cpu_mhz_available?
+
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  - max_derived_cpu_available
+  - max_derived_cpu_reserved
+
+  :menu:
+  - Chart-Current-Hourly:Hourly for this day
+  - Chart-VMs-topday:Top VMs on this day
+  - Timeline-Current-Daily:Daily events on this Host
+  - Timeline-Current-Hourly:Hourly events on this Host
+  - Display-VMs-on:VMs that were running
+  :trends:
+  - max_derived_cpu_reserved:Projected to hit reserve
+  - max_derived_cpu_available:Projected to hit available
+  :chart2:
+    :type: Line
+    :title: VMs
+    :columns:
+    - derived_vm_count_on
+  :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
   :type: Area
@@ -43,6 +67,7 @@
     :title: VMs
     :columns:
     - derived_vm_count_on
+  :applies_to_method: cpu_ready_available?
 
 - :title: Memory (MB)
   :type: Line

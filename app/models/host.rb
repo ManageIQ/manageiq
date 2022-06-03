@@ -1594,6 +1594,19 @@ class Host < ApplicationRecord
     perf_hash
   end
 
+  # Display or hide certain charts
+  def cpu_mhz_available?
+    true
+  end
+
+  def cpu_ready_available?
+    true
+  end
+
+  def cpu_percent_available?
+    false
+  end
+
   # Host Discovery Types and Platforms
 
   def self.host_create_os_types
