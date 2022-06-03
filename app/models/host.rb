@@ -198,7 +198,8 @@ class Host < ApplicationRecord
   supports_not :vmotion_enabled
 
   supports :start do
-    msg = validate_ipmi("off")
+    valid_states = respond_to?(:vim_power_up_from_standby) ? %w[off standby] : "off"
+    msg = validate_ipmi(valid_states)
     unsupported_reason_add(:start, msg) if msg
   end
   supports :stop do
@@ -316,20 +317,15 @@ class Host < ApplicationRecord
   end
 
   def start
-    if supports?(:start) && power_state == 'standby' && respond_to?(:vim_power_up_from_standby)
-      check_policy_prevent("request_host_start", "vim_power_up_from_standby")
-    else
-      msg = validate_ipmi
-      if msg.nil?
-        pstate = run_ipmi_command(:power_state)
-        if pstate == 'off'
-          check_policy_prevent("request_host_start", "ipmi_power_on")
-        else
-          _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
-        end
-      else
-        _log.warn("Cannot start because <#{msg}>")
+    self.power_state = run_ipmi_command(:power_state)
+    if supports?(:start)
+      if power_state == 'standby'
+        check_policy_prevent("request_host_start", "vim_power_up_from_standby")
+      else # power_state == 'off'
+        check_policy_prevent("request_host_start", "ipmi_power_on")
       end
+    else
+      _log.warn("Cannot start because <#{unsupported_reason(:start)}>")
     end
   end
 
