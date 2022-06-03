@@ -198,13 +198,16 @@ class Host < ApplicationRecord
   supports_not :vmotion_enabled
 
   supports :start do
-    validate_ipmi("off")
+    msg = validate_ipmi("off")
+    unsupported_reason_add(:start, msg) if msg
   end
   supports :stop do
-    validate_ipmi("on")
+    msg = validate_ipmi("on")
+    unsupported_reason_add(:stop, msg) if msg
   end
   supports :reset do
-    validate_ipmi
+    msg = validate_ipmi
+    unsupported_reason_add(:reset, msg) if msg
   end
 
   def self.non_clustered

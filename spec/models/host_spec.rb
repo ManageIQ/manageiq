@@ -522,8 +522,8 @@ RSpec.describe Host do
     end
   end
 
-  describe "#validate_ipmi (private)" do
-    subject { host.send(:validate_ipmi) }
+  describe "#supports (validate_ipmi portion)" do
+    subject { host.unsupported_reason(:reset) }
 
     context "host does not have ipmi address" do
       let(:host) { FactoryBot.create(:host) }
