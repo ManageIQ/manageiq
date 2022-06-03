@@ -44,20 +44,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
       :id               => 'become_method',
       :type             => 'choice',
       :isClearable      => true,
-      :options          => %w[
-        sudo
-        su
-        pbrum
-        pfexec
-        doas
-        dzdo
-        pmrun
-        runas
-        enable
-        ksu
-        sesu
-        machinectl
-      ].map { |item| {:label => item, :value => item} },
+      :options          => ['sudo', 'su', 'pbrun', 'pfexec', 'doas', 'dzdo', 'pmrun', 'runas', 'enable', 'ksu', 'sesu', 'machinectl']
     },
     {
       :component  => 'text-field',
