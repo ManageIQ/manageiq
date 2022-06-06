@@ -1,5 +1,6 @@
 RSpec.describe Host do
   include Spec::Support::ArelHelper
+  include Spec::Support::SupportsHelper
 
   subject { FactoryBot.create(:host) }
 
@@ -132,7 +133,8 @@ RSpec.describe Host do
 
     context "#start" do
       before do
-        allow_any_instance_of(described_class).to receive_messages(:validate_ipmi    => nil)
+        stub_supports_all_others(described_class)
+        stub_supports(described_class, :ipmi)
         allow_any_instance_of(described_class).to receive_messages(:run_ipmi_command => "off")
         FactoryBot.create(:miq_event_definition, :name => :request_host_start)
         # admin user is needed to process Events
@@ -471,28 +473,6 @@ RSpec.describe Host do
     it "returns smartstate" do
       host = FactoryBot.build(:host)
       expect(host.authentication_check_role).to eq('smartstate')
-    end
-  end
-
-  describe "#validate_power_state (private)" do
-    let(:host) do
-      FactoryBot.create(:host_vmware_esx,
-                        :ext_management_system => FactoryBot.create(:ems_vmware),
-                        :vmm_vendor            => 'vmware')
-    end
-
-    context "when host power state equal to pstate" do
-      it "returns nil" do
-        expect(host.send(:validate_power_state, 'on')).to be_nil
-        expect(host.send(:validate_power_state, ['on'])).to be_nil
-      end
-    end
-
-    context "when host power state does not equal to pstate" do
-      it "returns available false" do
-        expect(host.send(:validate_power_state, 'off')).to eq("The Host is not in power state \"off\"")
-        expect(host.send(:validate_power_state, ['off'])).to eq("The Host is not in power state [\"off\"]")
-      end
     end
   end
 
