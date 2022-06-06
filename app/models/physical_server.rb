@@ -67,16 +67,6 @@ class PhysicalServer < ApplicationRecord
     refreshable_status[:message]
   end
 
-  def is_available?(_address)
-    # TODO: (walteraa) remove bypass
-    true
-  end
-
-  def smart?
-    # TODO: (walteraa) remove bypass
-    true
-  end
-
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone

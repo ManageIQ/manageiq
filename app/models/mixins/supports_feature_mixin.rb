@@ -78,12 +78,13 @@ module SupportsFeatureMixin
 
   # query the instance if the feature is supported or not
   def supports?(feature)
-    # AvailabilityMixin and that feature is used
+    # remnants of AvailabilityMixin
+    # remove this respond_to block once the validates_feature methods are gone
     method_name = "validate_#{feature}"
-    if respond_to?(:is_available?) && respond_to?(method_name)
+    if respond_to?(method_name)
       # e.g.: {:available => true,  :message => nil}
       rslts = send(method_name)
-      if rslts.kind_of?(Hash)
+      if rslts.kind_of?(Hash) && rslts.key?(:available)
         unsupported.delete(feature)
         unsupported_reason_add(feature, rslts[:message]) unless rslts[:available]
         return rslts[:available]
