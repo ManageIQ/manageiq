@@ -196,19 +196,36 @@ class Host < ApplicationRecord
   supports_not :enable_vmotion
   supports_not :disable_vmotion
   supports_not :vmotion_enabled
+  supports     :ipmi do
+    if ipmi_address.blank?
+      unsupported_reason_add(:ipmi, _("The Host is not configured for IPMI"))
+    elsif authentication_type(:ipmi).nil?
+      unsupported_reason_add(:ipmi, _("The Host has no IPMI credentials"))
+    elsif authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
+      unsupported_reason_add(:ipmi, _("The Host has invalid IPMI credentials"))
+    end
+  end
 
   supports :start do
     valid_states = respond_to?(:vim_power_up_from_standby) ? %w[off standby] : "off"
-    msg = validate_ipmi(valid_states)
-    unsupported_reason_add(:start, msg) if msg
+
+    if !supports?(:ipmi)
+      unsupported_reason_add(:start, unsupported_reason(:ipmi))
+    elsif Array(valid_states).exclude?(power_state)
+      unsupported_reason_add(:start, _("The Host is not in power state #{valid_states.inspect}"))
+    end
   end
+
   supports :stop do
-    msg = validate_ipmi("on")
-    unsupported_reason_add(:stop, msg) if msg
+    if !supports?(:ipmi)
+      unsupported_reason_add(:stop, unsupported_reason(:ipmi))
+    elsif power_state != "on"
+      unsupported_reason_add(:stop, _("The Host is not in powered on"))
+    end
   end
+
   supports :reset do
-    msg = validate_ipmi
-    unsupported_reason_add(:reset, msg) if msg
+    unsupported_reason_add(:reset, unsupported_reason(:ipmi)) unless supports?(:ipmi)
   end
 
   def self.non_clustered
@@ -255,20 +272,6 @@ class Host < ApplicationRecord
     end
   end
   private :raise_cluster_event
-
-  def validate_ipmi(pstate = nil)
-    return _("The Host is not configured for IPMI")   if ipmi_address.blank?
-    return _("The Host has no IPMI credentials")      if authentication_type(:ipmi).nil?
-    return _("The Host has invalid IPMI credentials") if authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
-
-    validate_power_state(pstate) if pstate
-  end
-  private :validate_ipmi
-
-  def validate_power_state(pstate)
-    _("The Host is not in power state #{pstate.inspect}") unless Array(pstate).include?(power_state)
-  end
-  private :validate_power_state
 
   def validate_scan_and_check_compliance_queue
     {:available => true, :message => nil}
