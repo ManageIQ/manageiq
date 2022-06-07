@@ -1,6 +1,12 @@
 module Spec
   module Support
     module SupportsHelper
+      # when testing a model that receives multiple supports,
+      # put this down first to allow the other supports to work fine.
+      def stub_supports_all_others(model)
+        allow_any_instance_of(model).to receive(:supports?).and_call_original
+      end
+
       # when testing requests, ensure the model supports a certain attribute
       def stub_supports(model, feature = :update, supported: true)
         model = model.class unless model.kind_of?(Class)
