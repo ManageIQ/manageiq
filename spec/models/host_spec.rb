@@ -125,10 +125,11 @@ RSpec.describe Host do
   end
 
   context "power operations" do
+    let(:power_state) { "off" }
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryBot.create(:ext_management_system, :tenant => FactoryBot.create(:tenant))
-      @host = FactoryBot.create(:host, :ems_id => @ems.id)
+      @host = FactoryBot.create(:host, :ems_id => @ems.id, :power_state => power_state)
     end
 
     context "#start" do
