@@ -40,7 +40,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
       :component        => 'select',
       :label            => N_('Privilege Escalation'),
       :helperText       => N_('Privilege escalation method'),
-      :name             => 'become_method',
+      :name             => 'options.become_method',
       :id               => 'become_method',
       :type             => 'choice',
       :isClearable      => true,
