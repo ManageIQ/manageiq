@@ -320,12 +320,16 @@ class Host < ApplicationRecord
   end
 
   def start
-    self.power_state = run_ipmi_command(:power_state)
     if supports?(:start)
       if power_state == 'standby'
         check_policy_prevent("request_host_start", "vim_power_up_from_standby")
-      else # power_state == 'off'
-        check_policy_prevent("request_host_start", "ipmi_power_on")
+      elsif supports?(:ipmi)
+        pstate = run_ipmi_command(:power_state)
+        if pstate == "off"
+          check_policy_prevent("request_host_start", "ipmi_power_on")
+        else
+          _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
+        end
       end
     else
       _log.warn("Cannot start because <#{unsupported_reason(:start)}>")
