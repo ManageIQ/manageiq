@@ -22,16 +22,6 @@
   :columns:
   - cpu_usage_rate_average
   - derived_cpu_available
-#  :menu:
-#  - Chart-Vms-tophour:Top VMs during this hour
-#  - Chart-Current-Daily:Back to daily
-#  - Timeline-Current-Hourly:Hourly events on this Host
-#  - Display-VMs-on:VMs that were running
-#  :chart2:
-#    :type: Line
-#    :title: VMs
-#    :columns:
-#    - derived_vm_count_on
   :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
