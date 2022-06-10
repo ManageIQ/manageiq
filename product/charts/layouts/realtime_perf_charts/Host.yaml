@@ -15,9 +15,18 @@
 #    :title: VMs
 #    :columns:
 #    - derived_vm_count_on
+  :applies_to_method: cpu_mhz_available?
+
+- :title: CPU (%)
+  :type: Line
+  :columns:
+  - cpu_usage_rate_average
+  - derived_cpu_available
+  :applies_to_method: cpu_percent_available?
 
 - :title: Virtual Machine CPU States
   :type: None
+  :applies_to_method: cpu_ready_available?
 
 - :title: Memory (MB)
   :type: Line
