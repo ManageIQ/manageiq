@@ -8930,7 +8930,7 @@ msgstr "Referencia de copias de seguridad (ID de contenedor)"
 
 #: ../app/views/ops/_settings_replication_tab.html.haml:38
 msgid "Backlog"
-msgstr "Trabajo pendiente"
+msgstr "Atrasado"
 
 #:
 #: ../app/javascript/components/cloud-volume-actions-form/create-backup.schema.js:14
@@ -80969,7 +80969,7 @@ msgstr "Red virtual"
 
 #: ../app/helpers/vm_helper.rb:24
 msgid "Virtual Private Cloud"
-msgstr "Nube privada virtual"
+msgstr "Virtual Private Cloud"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/070_Newest VMs.yaml
 #: ../config/yaml_strings.rb:5979

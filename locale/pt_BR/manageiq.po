@@ -12898,7 +12898,7 @@ msgstr "Nome do banco de dados em cloud"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "Bancos de dados da nuvem"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
@@ -25756,7 +25756,7 @@ msgstr "Exibir tipos de Cloud Database individuais"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2978
 msgid "Display Individual Cloud Databases"
-msgstr "Exibir Cloud Databases individuais"
+msgstr "Exibir Bancos de dados da nuvem individuais"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3006
@@ -26241,7 +26241,7 @@ msgstr "Exibir listas de tipos de Cloud Database"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2976
 msgid "Display Lists of Cloud Databases"
-msgstr "Exibir listas de Cloud Databases"
+msgstr "Exibir listas de Bancos de dados da nuvem"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3004
@@ -32424,7 +32424,7 @@ msgstr "Tudo em tipos de Cloud Database"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2972
 msgid "Everything under Cloud Databases"
-msgstr "Tudo em Cloud Databases"
+msgstr "Tudo em Bancos de dados da nuvem"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3000
@@ -69022,7 +69022,7 @@ msgstr "Mostrar todas as pilhas de orquestração filho"
 
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:128
 msgid "Show all Cloud Databases"
-msgstr "Mostrar todos os Cloud Databases"
+msgstr "Mostrar todos os Bancos de dados da nuvem"
 
 #: ../app/helpers/vm_helper/textual_summary.rb:419
 msgid "Show all Cloud Networks"
@@ -79599,7 +79599,7 @@ msgstr "Visualizar tipos de Cloud Database"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2974
 msgid "View Cloud Databases"
-msgstr "Visualizar Cloud Databases"
+msgstr "Visualizar os Bancos de dados da nuvem"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3002

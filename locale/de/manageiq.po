@@ -12975,7 +12975,7 @@ msgstr "Clouddatenbankname"
 #: ../app/helpers/ems_cloud_helper/textual_summary.rb:126
 #: ../config/yaml_strings.rb:451
 msgid "Cloud Databases"
-msgstr "Cloud Databases"
+msgstr "Clouddatenbanken"
 
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager

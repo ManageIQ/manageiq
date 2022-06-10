@@ -18411,7 +18411,7 @@ msgstr "Git 修訂"
 
 #: ../config/model_attributes.rb:1221
 msgid "ContainerVolume|Glusterfs endpoint name"
-msgstr "Glusterfs 端點名稱"
+msgstr "ContainerVolume|Glusterfs 端點名稱"
 
 #: ../config/model_attributes.rb:1222
 msgid "ContainerVolume|Href slug"
@@ -30067,7 +30067,7 @@ msgstr "已加密"
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb:97
 #: ../app/models/manageiq/providers/openstack/network_manager/cloud_subnet.rb:201
 msgid "End"
-msgstr "終端"
+msgstr "結尾"
 
 #: ../app/views/ops/_diagnostics_cu_repair_tab.html.haml:33
 msgid "End Date"
@@ -30107,7 +30107,7 @@ msgstr "結束位址必須大於開始位址"
 
 #: ../app/models/manageiq/providers/ibm_terraform/provider.rb:37
 msgid "Endpoint"
-msgstr "端點 (Endpoint)"
+msgstr "端點"
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_for_url.html.haml:4
 msgid "Endpoint URL"

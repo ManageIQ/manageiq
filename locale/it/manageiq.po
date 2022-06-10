@@ -3611,7 +3611,7 @@ msgstr "Aggiungi (immettere manualmente)"
 #: ../app/javascript/components/miq-alert-set-form/miq-alert-set-form.schema.js:60
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js:28
 msgid "Add All"
-msgstr "Aggiungi tutti"
+msgstr "Aggiungi tutto"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1062
@@ -3839,11 +3839,11 @@ msgstr "Aggiungi nuove credenziali"
 
 #: ../app/controllers/floating_ip_controller.rb:118
 msgid "Add New Floating IP"
-msgstr "Aggiungi nuovo floating IP"
+msgstr "Aggiungi nuovo IP mobile"
 
 #: ../app/controllers/floating_ip_controller.rb:63
 msgid "Add New Floating IP "
-msgstr "Aggiungi nuovo floating IP "
+msgstr "Aggiungi nuovo IP mobile "
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:60
 msgid "Add New Key Pair"
@@ -22655,7 +22655,7 @@ msgstr "Definisci un nuovo iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:25
 msgid "Define a new volume mapping"
-msgstr "Definisci una nuova associazione di volume"
+msgstr "Definisci una nuova associazione volume"
 
 #: ../app/javascript/components/host-initiator-form/index.jsx:29
 msgid "Defining of Host initiator \"%s\" has been successfully queued."
@@ -23368,7 +23368,7 @@ msgstr "Elimina attività selezionate"
 
 #: ../app/helpers/application_helper/toolbar/volume_mappings_center.rb:32
 msgid "Delete selected volume mappings"
-msgstr "Elimina associazioni di volume selezionate"
+msgstr "Elimina associazioni volume selezionate"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4547
@@ -23386,7 +23386,7 @@ msgstr "Elimina il filtro %{model} denominato %{filter}?"
 #: ../app/helpers/application_helper/toolbar/host_initiator_center.rb:25
 #: ../app/helpers/application_helper/toolbar/host_initiators_center.rb:32
 msgid "Delete the Host Initiator"
-msgstr "Elimina l'iniziatore host"
+msgstr "Elimina iniziatore host"
 
 #: ../app/helpers/application_helper/toolbar/physical_storage_center.rb:33
 #: ../app/helpers/application_helper/toolbar/physical_storages_center.rb:41

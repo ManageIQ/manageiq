@@ -426,7 +426,7 @@ msgstr "已成功添加 ${values.security_group}。"
 #:
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:65
 msgid "${values.security_group} has been successfully removed."
-msgstr "已成功除去 ${values.security_group}。"
+msgstr "已成功移除 ${values.security_group}。"
 
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6836
@@ -6616,7 +6616,7 @@ msgstr[0] "确定要永久删除下列目录项吗？"
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx:171
 msgid "Are you sure you want to remove ${widgetTitle} from the Dashboard?"
-msgstr "确定要将 ${widgetTitle} 从仪表板中除去吗？"
+msgstr "确定要将 ${widgetTitle} 从仪表板中移除吗？"
 
 #: ../app/presenters/widget_presenter.rb:30
 msgid "Are you sure you want to remove '%{title}'from the Dashboard?"
@@ -21074,7 +21074,7 @@ msgstr "数据存储"
 #: ../app/controllers/storage_controller/storage_d.rb:43
 #: ../app/controllers/storage_controller/storage_pod.rb:39
 msgid "Datastore \"%{name}\""
-msgstr "数据存储“%{name}”"
+msgstr "数据存储\"%{name}\""
 
 #: ../app/controllers/application_controller/ci_processing.rb:730
 msgid "Datastore \"%{name}\": Error during '%{task}': %{error_message}"
@@ -59513,7 +59513,7 @@ msgstr "除去主机的操作已成功排队。"
 #:
 #: ../app/javascript/components/host-aggregate-form/add-remove-host-aggregate-form.jsx:38
 msgid "Removal of Host was cancelled by the user."
-msgstr "用户已取消主机除去操作。"
+msgstr "用户已取消移除主机的操作。"
 
 #:
 #: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:87
@@ -59549,7 +59549,7 @@ msgstr "移除 %{email}"
 #: ../app/javascript/components/policy-profile-form/policy-profile-form.schema.js:26
 #: ../app/javascript/components/vm-edit-form/vm-edit-form.schema.js:58
 msgid "Remove All"
-msgstr "全部除去"
+msgstr "全部移除"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4052
@@ -60083,7 +60083,7 @@ msgstr "移除虚拟机"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1434
 msgid "Remove VM from  Placement Group"
-msgstr "从安置组中除去 VM"
+msgstr "从安置组中移除 VM"
 
 #: ../app/helpers/application_helper/toolbar/x_vm_center.rb:54
 msgid "Remove Virtual Machine from Inventory"
@@ -60101,7 +60101,7 @@ msgstr "移除窗口小部件"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:4138
 msgid "Remove a Host Initiator"
-msgstr "除去主机启动程序"
+msgstr "移除主机启动程序"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3108
@@ -60124,7 +60124,7 @@ msgstr "从该实例移除安全组"
 
 #: ../app/javascript/components/button-group/group-form.schema.js:63
 msgid "Remove all"
-msgstr "全部除去"
+msgstr "全部移除"
 
 #: ../app/views/miq_policy/_event_edit.html.haml:46
 #: ../app/views/miq_policy/_event_edit.html.haml:115
@@ -60139,7 +60139,7 @@ msgstr "从此概要文件里移除所有条件"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2986
 msgid "Remove cloud database"
-msgstr "除去云数据库"
+msgstr "移除云数据库"
 
 #: ../app/presenters/widget_presenter.rb:28
 msgid "Remove from Dashboard"
@@ -60351,7 +60351,7 @@ msgstr "移除当前过滤器"
 #: ../app/views/chargeback_rate/_cb_rate_edit_table.html.haml:70
 #: ../app/views/chargeback_rate/_tier_row.haml:9
 msgid "Remove the tier"
-msgstr "移除此阶层"
+msgstr "移除此层"
 
 #: ../app/controllers/application_controller/compare.rb:1308
 msgid "Remove this %{title} from the comparison"

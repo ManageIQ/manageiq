@@ -188,7 +188,7 @@ msgstr " 日"
 
 #: ../app/helpers/miq_policy_helper.rb:5
 msgid " Days"
-msgstr " 曜日"
+msgstr " 日"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
 #: ../config/yaml_strings.rb:5656

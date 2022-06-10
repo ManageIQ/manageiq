@@ -65604,7 +65604,7 @@ msgstr "Script"
 #: ../app/javascript/components/search-bar/index.jsx:80
 #: ../app/javascript/components/search-bar/index.jsx:82
 msgid "Search"
-msgstr "Recherche"
+msgstr "Rechercher"
 
 #: ../app/controllers/application_controller/advanced_search.rb:104
 msgid "Search \"%{name}\": Error during 'delete': %{error_message}"
