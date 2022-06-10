@@ -1216,6 +1216,8 @@ class VmOrTemplate < ApplicationRecord
   end)
 
   def disconnected?
+    return self["disconnected"] if has_attribute?("disconnected")
+
     !connected_to_ems?
   end
   virtual_attribute :disconnected, :boolean, :arel => (lambda do |t|
@@ -1224,6 +1226,8 @@ class VmOrTemplate < ApplicationRecord
   alias_method :disconnected, :disconnected?
 
   def normalized_state
+    return self["normalized_state"] if has_attribute?("normalized_state")
+
     %w(archived orphaned template retired disconnected).each do |s|
       return s if send("#{s}?")
     end

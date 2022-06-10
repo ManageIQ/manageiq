@@ -1,7 +1,7 @@
 RSpec.describe PersistentVolume do
   let(:pvc) { FactoryBot.create(:persistent_volume_claim) }
   let(:group) { FactoryBot.create(:container_group) }
-  let(:ems) { FactoryBot.create(:ems_kubernetes) }
+  let(:ems) { FactoryBot.create(:ems_kubernetes, :name => 'ems_name') }
   let(:volume) do
     FactoryBot.create(
       :container_volume,
@@ -51,5 +51,18 @@ RSpec.describe PersistentVolume do
       )
       expect(persistent_volume.storage_capacity).to be nil
     end
+  end
+
+  describe "#parent_name" do
+    subject do
+      FactoryBot.create(
+        :persistent_volume,
+        :parent                  => ems,
+        :persistent_volume_claim => pvc
+      )
+    end
+
+    # delegating through a polymorphic forces us to ruby only
+    it_behaves_like "ruby only virtual_attribute", :parent_name, 'ems_name'
   end
 end
