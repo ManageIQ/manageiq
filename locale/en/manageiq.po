@@ -402,24 +402,6 @@ msgstr ""
 msgid "$http session timed out, redirecting to the login page"
 msgstr ""
 
-#: ../app/javascript/components/miq-pagination.jsx:5
-msgid "${min}-${max} of ${totalItems} items"
-msgstr ""
-
-#: ../app/javascript/components/container-projects/chart-card.jsx:36
-msgid "${resource.resource} - ${resource.quota_observed} ${resource.units} Used"
-msgstr ""
-
-#:
-#: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:71
-msgid "${values.security_group} has been successfully added."
-msgstr ""
-
-#:
-#: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:65
-msgid "${values.security_group} has been successfully removed."
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/060_Right-Sizing Recommendations.yaml
 #: ../config/yaml_strings.rb:6836
 msgid "% Disk Used"
@@ -471,6 +453,10 @@ msgstr ""
 msgid "% Used"
 msgstr ""
 
+#: ../app/javascript/components/workers-form/helpers.jsx:228
+msgid "%d (Custom)"
+msgstr ""
+
 #: ../app/views/report/_form_filter_chargeback.html.haml:221
 msgid "%d Months Ago"
 msgstr ""
@@ -499,6 +485,10 @@ msgid_plural "%d unread notifications"
 msgstr[0] ""
 msgstr[1] ""
 
+#: ../app/javascript/components/miq-pagination.jsx:5
+msgid "%d-%d of %d items"
+msgstr ""
+
 #: ../app/javascript/components/ops-tenant-form/ops-tenant-form.jsx:69
 msgid "%s \"%s\" has been successfully added."
 msgstr ""
@@ -515,8 +505,26 @@ msgstr ""
 msgid "%s %s was saved"
 msgstr ""
 
+#: ../app/javascript/components/workers-form/helpers.jsx:228
+msgid "%s (Custom)"
+msgstr ""
+
+#: ../app/javascript/components/container-projects/chart-card.jsx:36
+msgid "%s - %s %s Used"
+msgstr ""
+
 #: src/rbac-forms/rbacUserTagsList.jsx:19
 msgid "%s Tags"
+msgstr ""
+
+#:
+#: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:71
+msgid "%s has been successfully added."
+msgstr ""
+
+#:
+#: ../app/javascript/components/vm-cloud-add-remove-security-group-form/index.jsx:65
+msgid "%s has been successfully removed."
 msgstr ""
 
 #: ../app/javascript/http_api/fetch.js:94
@@ -545,7 +553,7 @@ msgstr ""
 msgid "%{action} \"%{item_name}\" for Switch \"%{name}\""
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1708
+#: ../app/models/vm_or_template.rb:1706
 msgid "%{action} cannot be performed on orphaned VM."
 msgstr ""
 
@@ -2450,11 +2458,11 @@ msgstr ""
 msgid "9 Hours Ago"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1384
+#: ../app/models/vm_or_template.rb:1382
 msgid ":attr required"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1363
+#: ../app/models/vm_or_template.rb:1361
 msgid ":hdw_attr required"
 msgstr ""
 
@@ -3285,7 +3293,7 @@ msgstr ""
 msgid "Action not implemented"
 msgstr ""
 
-#: ../app/models/storage.rb:353
+#: ../app/models/storage.rb:352
 msgid ""
 "Action not supported for Datastore type [%{store_type}], [%{name}] with id: [%"
 "{id}]"
@@ -4460,15 +4468,11 @@ msgid "Add of Catalog Item was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:46
-msgid ""
-"Add of Cloud Object Store Container ${values.name} has been successfully queue"
-"d."
+msgid "Add of Cloud Object Store Container \"%s\" has been successfully queued."
 msgstr ""
 
 #: ../app/javascript/components/cloud-object-store-container-form/index.jsx:50
-msgid ""
-"Add of Cloud Object Store Container ${values.name} has failed with error: ${er"
-"ror.data.error.message}"
+msgid "Add of Cloud Object Store Container \"%s\" has failed with error: %s"
 msgstr ""
 
 #: ../app/javascript/components/subnet-form/index.jsx:65
@@ -6012,7 +6016,7 @@ msgid ""
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision/cloning.rb:90
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/provision/cloning.rb:145
 msgid "An error occurred while provisioning the instance."
 msgstr ""
 
@@ -6684,7 +6688,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../app/javascript/components/dashboard-widgets/widget-wrapper/helper.jsx:171
-msgid "Are you sure you want to remove ${widgetTitle} from the Dashboard?"
+msgid "Are you sure you want to remove %s from the Dashboard?"
 msgstr ""
 
 #: ../app/presenters/widget_presenter.rb:30
@@ -10407,6 +10411,19 @@ msgstr ""
 msgid "Cannot revert to snapshot while VM is running"
 msgstr ""
 
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/host.rb:9
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/host.rb:13
+msgid "Cannot shutdown a host that is powered off"
+msgstr ""
+
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/host.rb:14
+msgid "Cannot shutdown a host with running vms"
+msgstr ""
+
+#: ../app/models/manageiq/providers/ibm_power_hmc/infra_manager/host.rb:18
+msgid "Cannot start a host that is already powered on"
+msgstr ""
+
 #: ../app/controllers/ops_controller/diagnostics.rb:391
 msgid ""
 "Cannot start log collection, a log collection is already in progress within th"
@@ -11646,7 +11663,7 @@ msgstr ""
 msgid "Check input"
 msgstr ""
 
-#: ../app/models/storage.rb:359
+#: ../app/models/storage.rb:358
 msgid ""
 "Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id"
 "}]"
@@ -13960,7 +13977,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
-msgid "Cluster: "
+msgid "Cluster: %s"
 msgstr ""
 
 #: ../app/presenters/tree_node/ems_cluster.rb:3
@@ -15789,7 +15806,7 @@ msgstr ""
 msgid "Console access failed: Unexpected remote console resource type [%{type}]"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1678
+#: ../app/models/vm_or_template.rb:1676
 msgid "Console not supported"
 msgstr ""
 
@@ -18737,7 +18754,7 @@ msgstr ""
 msgid "Containers Explorer"
 msgstr ""
 
-#: ../app/models/manageiq/providers/container_manager.rb:106
+#: ../app/models/manageiq/providers/container_manager.rb:105
 msgid "Containers Manager"
 msgid_plural "Containers Managers"
 msgstr[0] ""
@@ -20345,7 +20362,7 @@ msgid "Current group"
 msgstr ""
 
 #: ../app/javascript/menu/group-switcher.jsx:31
-msgid "Current group:"
+msgid "Current group: %s"
 msgstr ""
 
 #: ../app/helpers/container_replicator_helper/textual_summary.rb:30
@@ -20362,7 +20379,6 @@ msgid "Currently Used Space"
 msgstr ""
 
 #: ../app/helpers/report_helper.rb:128
-#: ../app/javascript/components/workers-form/helpers.jsx:228
 #: ../app/views/catalog/_sandt_tree_show.html.haml:67
 msgid "Custom"
 msgstr ""
@@ -20449,19 +20465,17 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx:54
-msgid ""
-"Custom Button ${submitValues.name} has been successfully added under the selec"
-"ted button group."
+msgid "Custom Button %s has been successfully added under the selected button group."
 msgstr ""
 
 #:
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx:52
-msgid "Custom Button ${submitValues.name} has been successfully added."
+msgid "Custom Button %s has been successfully added."
 msgstr ""
 
 #:
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx:39
-msgid "Custom Button ${submitValues.name} has been successfully saved."
+msgid "Custom Button %s has been successfully saved."
 msgstr ""
 
 #: ../app/controllers/generic_object_definition_controller.rb:224
@@ -20487,11 +20501,11 @@ msgid "Custom Button Events"
 msgstr ""
 
 #: ../app/javascript/components/button-group/index.jsx:93
-msgid "Custom Button Group \"${values.name}\" has been successfully added."
+msgid "Custom Button Group \"%s\" has been successfully added."
 msgstr ""
 
 #: ../app/javascript/components/button-group/index.jsx:92
-msgid "Custom Button Group \"${values.name}\" has been successfully saved."
+msgid "Custom Button Group \"%s\" has been successfully saved."
 msgstr ""
 
 #: ../app/controllers/generic_object_definition_controller.rb:217
@@ -22155,7 +22169,7 @@ msgid "Delete Cloud Object Store Object"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/template.rb:116
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/template.rb:124
 msgid "Delete Cloud Template Operation"
 msgstr ""
 
@@ -28759,11 +28773,11 @@ msgstr ""
 
 #:
 #: ../app/javascript/components/generic-objects-form/custom-button-form/index.jsx:73
-msgid "Edit of Custom Button ${initialValues.name} was canceled by the user."
+msgid "Edit of Custom Button %s was canceled by the user."
 msgstr ""
 
 #: ../app/javascript/components/button-group/index.jsx:110
-msgid "Edit of Custom Button Group \"${initialValues.name}\" was canceled by the user."
+msgid "Edit of Custom Button Group \"%s\" was canceled by the user."
 msgstr ""
 
 #: ../app/javascript/components/pxe-customization-template-form/index.jsx:48
@@ -28877,7 +28891,7 @@ msgid "Edit of Schedule \"%{name}\" was cancelled by the user"
 msgstr ""
 
 #: ../app/javascript/components/network-security-groups-form/index.jsx:86
-msgid "Edit of Security Group \"${initialValues.name}\" was cancelled by the user"
+msgid "Edit of Security Group \"%s\" was cancelled by the user"
 msgstr ""
 
 #: ../app/controllers/security_group_controller.rb:144
@@ -29520,12 +29534,12 @@ msgstr ""
 msgid "Editing Zone \"%{name}\""
 msgstr ""
 
-#: ../app/javascript/components/routers-form/index.jsx:143
-msgid "Editing of Network Router ${initialValues.name} was cancelled by the user."
-msgstr ""
-
 #: ../app/javascript/components/routers-form/index.jsx:131
 msgid "Editing of Network Router %s has been successfully queued"
+msgstr ""
+
+#: ../app/javascript/components/routers-form/index.jsx:143
+msgid "Editing of Network Router %s was cancelled by the user."
 msgstr ""
 
 #: ../app/javascript/components/settings-time-profile-form/index.jsx:56
@@ -30336,11 +30350,11 @@ msgstr ""
 msgid "Ending IP Address"
 msgstr ""
 
-#: ../app/models/host.rb:742
+#: ../app/models/host.rb:747
 msgid "Ending address is malformed"
 msgstr ""
 
-#: ../app/models/host.rb:749
+#: ../app/models/host.rb:754
 msgid "Ending address must be greater than starting address"
 msgstr ""
 
@@ -30489,7 +30503,7 @@ msgid "Enterprises"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:234
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:235
 msgid "Entitled Processors"
 msgstr ""
 
@@ -34410,7 +34424,7 @@ msgstr ""
 msgid "Function"
 msgstr ""
 
-#: ../app/models/host.rb:1567
+#: ../app/models/host.rb:1572
 msgid "Function %{function} is invalid, should be one of :min, :max, :avg or nil"
 msgstr ""
 
@@ -34604,7 +34618,7 @@ msgid "Generic object definition"
 msgstr ""
 
 #: ../app/javascript/components/remove-generic-item-modal.jsx:46
-msgid "Generic object definition ${item.name} was successfully deleted"
+msgid "Generic object definition %s was successfully deleted"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/GenericObject.yaml
@@ -35806,7 +35820,7 @@ msgstr ""
 msgid "Hide Input Parameters"
 msgstr ""
 
-#: ../app/views/miq_request/_pre_prov.html.haml:13
+#: ../app/views/miq_request/_pre_prov.html.haml:15
 msgid "Hide deprecated"
 msgstr ""
 
@@ -36234,11 +36248,11 @@ msgstr ""
 msgid "Host Network Information"
 msgstr ""
 
-#: ../app/models/host.rb:783
+#: ../app/models/host.rb:788
 msgid "Host Not Resettable - No IPMI Address"
 msgstr ""
 
-#: ../app/models/host.rb:785
+#: ../app/models/host.rb:790
 msgid "Host Not Resettable - No IPMI Credentials"
 msgstr ""
 
@@ -36412,11 +36426,11 @@ msgstr ""
 msgid "Host cannot be nil"
 msgstr ""
 
-#: ../app/models/host.rb:1126
+#: ../app/models/host.rb:1131
 msgid "Host has no EMS, unable to get host statistics"
 msgstr ""
 
-#: ../app/models/host.rb:1116
+#: ../app/models/host.rb:1121
 msgid "Host has no EMS, unable to set custom attribute"
 msgstr ""
 
@@ -37495,7 +37509,7 @@ msgid "IBM CIC Provider"
 msgstr ""
 
 #: ../app/models/manageiq/providers/ibm_cloud/container_manager.rb:215
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:109
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:114
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/manager_mixin.rb:81
 msgid "IBM Cloud API Key"
 msgstr ""
@@ -37505,7 +37519,7 @@ msgid "IBM Cloud Activity Tracker Instance Service Key"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:188
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:189
 msgid "IBM Cloud Block-Storage Volume"
 msgstr ""
 
@@ -37527,7 +37541,7 @@ msgid "IBM PowerVC Provider"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager.rb:114
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager.rb:115
 msgid "IBM PowerVS"
 msgstr ""
 
@@ -37633,7 +37647,7 @@ msgstr ""
 msgid "IP Version"
 msgstr ""
 
-#: ../app/models/host.rb:746
+#: ../app/models/host.rb:751
 msgid "IP address octets must be 0 to 255"
 msgstr ""
 
@@ -37674,11 +37688,11 @@ msgstr ""
 msgid "IPMI Present"
 msgstr ""
 
-#: ../app/models/host.rb:726
+#: ../app/models/host.rb:731
 msgid "IPMI address is not configured for this Host"
 msgstr ""
 
-#: ../app/models/host.rb:734
+#: ../app/models/host.rb:739
 msgid "IPMI is not available on this Host"
 msgstr ""
 
@@ -38229,7 +38243,7 @@ msgstr ""
 msgid "In Use"
 msgstr ""
 
-#: ../app/models/physical_server.rb:90
+#: ../app/models/physical_server.rb:80
 msgid "In use"
 msgstr ""
 
@@ -38343,7 +38357,7 @@ msgstr ""
 msgid "Infrastructure Machine ID"
 msgstr ""
 
-#: ../app/models/manageiq/providers/infra_manager.rb:74
+#: ../app/models/manageiq/providers/infra_manager.rb:73
 msgid "Infrastructure Manager"
 msgid_plural "Infrastructure Managers"
 msgstr[0] ""
@@ -40937,7 +40951,7 @@ msgstr ""
 msgid "Logo Updated At"
 msgstr ""
 
-#: ../app/models/host.rb:681 ../app/models/host.rb:702
+#: ../app/models/host.rb:686 ../app/models/host.rb:707
 msgid "Logon to platform [%{os_name}] not supported"
 msgstr ""
 
@@ -47506,7 +47520,7 @@ msgid "Missing config section %{section_name}"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:144
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:149
 #: ../app/models/manageiq/providers/ibm_cloud/vpc/manager_mixin.rb:205
 msgid "Missing credentials"
 msgstr ""
@@ -48429,7 +48443,7 @@ msgid "Must call .new with an options hash."
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:65
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:72
 msgid "Must contain only alphanumeric, hyphen, and underscore characters"
 msgstr ""
 
@@ -48969,7 +48983,7 @@ msgid_plural "Network Managers (Microsoft Azure Stack)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/models/manageiq/providers/azure/network_manager.rb:60
+#: ../app/models/manageiq/providers/azure/network_manager.rb:62
 #, fuzzy
 msgid "Network Manager (Microsoft Azure)"
 msgid_plural "Network Managers (Microsoft Azure)"
@@ -50458,7 +50472,7 @@ msgstr ""
 msgid "No credentials defined"
 msgstr ""
 
-#: ../app/models/host.rb:722
+#: ../app/models/host.rb:727
 msgid "No credentials defined for IPMI"
 msgstr ""
 
@@ -53060,7 +53074,7 @@ msgid "PCM not enabled for this Host"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:97
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:98
 msgid "PCM-enabled"
 msgstr ""
 
@@ -53083,7 +53097,7 @@ msgid "PID"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:50
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:51
 msgid "PVM Instance"
 msgstr ""
 
@@ -53358,7 +53372,7 @@ msgid "Partition"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:212
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:213
 msgid "Partition ID"
 msgstr ""
 
@@ -54437,7 +54451,7 @@ msgid "Performance Trends"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:98
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:99
 msgid "Performance and Capacity Monitoring data collection enabled"
 msgstr ""
 
@@ -55338,7 +55352,7 @@ msgid "Picture|Resource type"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:127
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:128
 msgid "Pin Policy"
 msgstr ""
 
@@ -55356,7 +55370,7 @@ msgid "Placement - Options"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:139
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:140
 #, fuzzy
 msgid "Placement Group"
 msgstr ""
@@ -56387,7 +56401,7 @@ msgid "PowerVC Server Username"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:118
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/manager_mixin.rb:123
 msgid "PowerVS Service GUID"
 msgstr ""
 
@@ -56726,7 +56740,7 @@ msgid "Processor mode"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:245
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:246
 msgid "Processor type"
 msgstr ""
 
@@ -57246,8 +57260,8 @@ msgstr ""
 msgid "Provider User Name"
 msgstr ""
 
-#: ../app/models/ext_management_system.rb:644
-#: ../app/models/ext_management_system.rb:656
+#: ../app/models/ext_management_system.rb:643
+#: ../app/models/ext_management_system.rb:655
 #: ../app/models/mixins/ems_refresh_mixin.rb:29 ../app/models/provider.rb:69
 msgid "Provider failed last authentication check"
 msgstr ""
@@ -57281,7 +57295,7 @@ msgstr ""
 #:
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:18
 #: ../app/javascript/components/provider-dashboard-charts/heat-map-chart/HeatMapChartGraph.js:36
-msgid "Provider: "
+msgid "Provider: %s"
 msgstr ""
 
 #: ../config/model_attributes.rb:3823
@@ -57413,7 +57427,7 @@ msgstr ""
 msgid "Provision %{vms_or_templates}"
 msgstr ""
 
-#: ../app/views/miq_request/_pre_prov.html.haml:6
+#: ../app/views/miq_request/_pre_prov.html.haml:4
 msgid "Provision %{what} based on the selected %{type}"
 msgstr ""
 
@@ -57688,6 +57702,21 @@ msgstr ""
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:257
 msgid "Publish Virtual Machine"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:24
+msgid "Publish not supported because VM is archived"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:22
+msgid "Publish not supported because VM is blank"
+msgstr ""
+
+#:
+#: ../app/models/manageiq/providers/ibm_cloud/power_virtual_servers/cloud_manager/vm.rb:23
+msgid "Publish not supported because VM is orphaned"
 msgstr ""
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/vm.rb:28
@@ -58715,7 +58744,7 @@ msgid "Redfish Provider"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:223
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:224
 msgid "Reference Code"
 msgstr ""
 
@@ -62490,8 +62519,12 @@ msgstr ""
 #: ../app/helpers/service_helper/textual_summary.rb:16
 #: ../app/helpers/service_helper/textual_summary.rb:36
 #: ../app/helpers/service_helper/textual_summary.rb:56
-#: ../app/javascript/menu/search-results.jsx:21 ../config/yaml_strings.rb:1577
+#: ../config/yaml_strings.rb:1577
 msgid "Results"
+msgstr ""
+
+#: ../app/javascript/menu/search-results.jsx:21
+msgid "Results %s"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -62712,7 +62745,7 @@ msgid "Retirement date removed"
 msgstr ""
 
 #: ../app/javascript/components/retirement-form/index.jsx:61
-msgid "Retirement date set to ${tempDate.toLocaleString()}"
+msgid "Retirement date set to %s"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.retires_on
@@ -68192,7 +68225,7 @@ msgstr ""
 msgid "SmartState Docker User Name"
 msgstr ""
 
-#: ../app/models/storage.rb:75
+#: ../app/models/storage.rb:74
 msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr ""
 
@@ -68464,8 +68497,8 @@ msgid "Software"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:149
 #: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:150
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:151
 msgid "Software Licenses"
 msgstr ""
 
@@ -68897,7 +68930,7 @@ msgstr ""
 msgid "Starting Time"
 msgstr ""
 
-#: ../app/models/host.rb:741
+#: ../app/models/host.rb:746
 msgid "Starting address is malformed"
 msgstr ""
 
@@ -69493,7 +69526,7 @@ msgstr ""
 msgid "Storage service resource attachment"
 msgstr ""
 
-#: ../app/models/storage.rb:518
+#: ../app/models/storage.rb:517
 msgid "Storage: [%{name}] is not connected to an EMS."
 msgstr ""
 
@@ -71619,15 +71652,15 @@ msgstr ""
 msgid "The Host SSH key has changed, do you want to accept the new key?"
 msgstr ""
 
-#: ../app/models/host.rb:259
+#: ../app/models/host.rb:205
 msgid "The Host has invalid IPMI credentials"
 msgstr ""
 
-#: ../app/models/host.rb:258
+#: ../app/models/host.rb:203
 msgid "The Host has no IPMI credentials"
 msgstr ""
 
-#: ../app/models/host.rb:257
+#: ../app/models/host.rb:201
 msgid "The Host is not configured for IPMI"
 msgstr ""
 
@@ -71648,6 +71681,10 @@ msgstr ""
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/host.rb:33
 msgid "The Host is not in maintenance mode"
+msgstr ""
+
+#: ../app/models/host.rb:223
+msgid "The Host is not in powered on"
 msgstr ""
 
 #: ../app/models/manageiq/providers/redhat/infra_manager/host.rb:28
@@ -71898,12 +71935,12 @@ msgid "The item \"%s\" has been successfully deleted"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:213
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:214
 msgid "The logical partition number"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:224
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:225
 msgid "The logical partition reference code"
 msgstr ""
 
@@ -71912,7 +71949,7 @@ msgid "The login group cannot be deleted"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:235
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:236
 msgid "The number of entitled processors assigned to the VM"
 msgstr ""
 
@@ -71959,7 +71996,7 @@ msgid "The password to use to connect to the Microsoft Azure account"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:140
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:141
 msgid "The placement group of the server"
 msgstr ""
 
@@ -72198,13 +72235,13 @@ msgstr ""
 msgid "There are no Cloud Volumes available to attach to this Instance."
 msgstr ""
 
-#: ../app/models/storage.rb:525
+#: ../app/models/storage.rb:524
 msgid ""
 "There are no EMSs with valid credentials connected to Storage: [%{name}] in Zo"
 "ne: [%{zone}]."
 msgstr ""
 
-#: ../app/models/storage.rb:77
+#: ../app/models/storage.rb:76
 msgid "There are no EMSs with valid credentials for this Datastore"
 msgstr ""
 
@@ -72449,7 +72486,7 @@ msgstr ""
 msgid "This provider type does not support External Logging"
 msgstr ""
 
-#: ../app/models/manageiq/providers/container_manager.rb:62
+#: ../app/models/manageiq/providers/container_manager.rb:61
 msgid "This provider type does not support external_logging"
 msgstr ""
 
@@ -73859,7 +73896,7 @@ msgid "Unable to %{action} %{resource}: %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:84
-msgid "Unable to add Repository "
+msgid "Unable to add Repository \"%s\": %s"
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/add_security_group.rb:17
@@ -73971,14 +74008,14 @@ msgid "Unable to disassociate Floating IP from Instance \"%{name}\": %{details}"
 msgstr ""
 
 #: ../app/javascript/components/ansible-repository-form/index.jsx:71
-msgid "Unable to edit Repository "
+msgid "Unable to edit Repository \"%s\": %s"
 msgstr ""
 
 #: ../app/controllers/mixins/actions/vm_actions/evacuate.rb:87
 msgid "Unable to evacuate Instance \"%{name}\": %{details}"
 msgstr ""
 
-#: ../app/models/miq_widget.rb:469
+#: ../app/models/miq_widget.rb:476
 msgid "Unable to find %{class} with name %{name}"
 msgstr ""
 
@@ -74392,7 +74429,7 @@ msgstr ""
 msgid "Unsupported endpoint"
 msgstr ""
 
-#: ../app/models/miq_widget.rb:510
+#: ../app/models/miq_widget.rb:517
 msgid "Unsupported interval '%{interval}'"
 msgstr ""
 
@@ -74401,7 +74438,7 @@ msgstr ""
 msgid "Unsupported log depot protocol: %{protocol}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1570 ../app/models/vm_or_template.rb:1589
+#: ../app/models/vm_or_template.rb:1568 ../app/models/vm_or_template.rb:1587
 msgid "Unsupported property type [%{property}]"
 msgstr ""
 
@@ -76639,7 +76676,7 @@ msgid "VM operations"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1691 ../config/dictionary_strings.rb:3810
+#: ../app/models/vm_or_template.rb:1689 ../config/dictionary_strings.rb:3810
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] ""
@@ -76656,7 +76693,7 @@ msgid "VM pinning policy can only be none, soft, or hard"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:128
+#: ../app/models/manageiq/providers/ibm_cloud/inventory/parser/power_virtual_servers.rb:129
 msgid "VM pinning policy to use [none, soft, hard]"
 msgstr ""
 
@@ -76669,11 +76706,11 @@ msgstr ""
 msgid "VM's Chargeback"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:360
+#: ../app/models/vm_or_template.rb:358
 msgid "VM/Template <%{name}> with Id: <%{id}> is not associated with a provider."
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:363
+#: ../app/models/vm_or_template.rb:361
 msgid "VM/Template <%{name}> with Id: <%{id}>: Provider authentication failed."
 msgstr ""
 
@@ -80730,7 +80767,7 @@ msgstr ""
 msgid "Web Services Port"
 msgstr ""
 
-#: ../app/models/host.rb:696
+#: ../app/models/host.rb:701
 msgid "Web Services authentication is not supported for hosts of this type."
 msgstr ""
 
@@ -80802,7 +80839,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:584 ../config/dictionary_strings.rb:3624
+#: ../app/models/miq_widget.rb:591 ../config/dictionary_strings.rb:3624
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] ""
@@ -81492,7 +81529,7 @@ msgstr ""
 msgid "available"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:192
+#: ../app/models/cloud_volume.rb:191
 msgid "available_vms must be implemented in a subclass"
 msgstr ""
 
@@ -81839,7 +81876,7 @@ msgid "debug"
 msgstr ""
 
 #:
-#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:246
+#: ../app/models/manageiq/providers/ibm_power_hmc/inventory/parser/infra_manager.rb:247
 msgid "dedicated: Dedicated, shared: Uncapped shared, capped: Capped shared"
 msgstr ""
 
@@ -81936,7 +81973,7 @@ msgstr ""
 msgid "ems_configuration"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:92 ../app/models/host_initiator.rb:49
+#: ../app/models/cloud_volume.rb:91 ../app/models/host_initiator.rb:49
 #: ../app/models/host_initiator_group.rb:49 ../app/models/placement_group.rb:48
 #: ../app/models/cloud_database.rb:36 ../app/models/physical_storage.rb:91
 #: ../app/models/volume_mapping.rb:75
@@ -82116,7 +82153,7 @@ msgid ""
 "'"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:94 ../app/models/host_initiator.rb:52
+#: ../app/models/cloud_volume.rb:93 ../app/models/host_initiator.rb:52
 #: ../app/models/host_initiator_group.rb:52 ../app/models/placement_group.rb:51
 #: ../app/models/physical_storage.rb:94 ../app/models/volume_mapping.rb:78
 #: ../app/models/cloud_object_store_container.rb:48
@@ -82347,7 +82384,7 @@ msgstr ""
 msgid "invalid interval name %{name}"
 msgstr ""
 
-#: ../app/models/storage.rb:681 ../app/models/metric/ci_mixin/processing.rb:4
+#: ../app/models/storage.rb:680 ../app/models/metric/ci_mixin/processing.rb:4
 #: ../app/models/metric/ci_mixin/capture.rb:26
 msgid "invalid interval_name '%{name}'"
 msgstr ""
@@ -82467,7 +82504,7 @@ msgstr ""
 msgid "must be an OperatingSystem"
 msgstr ""
 
-#: ../app/models/ext_management_system.rb:441 ../app/models/service_order.rb:21
+#: ../app/models/ext_management_system.rb:440 ../app/models/service_order.rb:21
 #: ../app/models/miq_worker/runner.rb:259
 #: ../app/models/vm/operations/guest.rb:16
 #: ../app/models/vm/operations/guest.rb:26
@@ -82556,8 +82593,8 @@ msgstr ""
 msgid "new_flavor_id cannot be nil"
 msgstr ""
 
-#: ../app/models/ext_management_system.rb:641
-#: ../app/models/ext_management_system.rb:655 ../app/models/provider.rb:66
+#: ../app/models/ext_management_system.rb:640
+#: ../app/models/ext_management_system.rb:654 ../app/models/provider.rb:66
 msgid "no Provider credentials defined"
 msgstr ""
 
@@ -82660,7 +82697,7 @@ msgstr ""
 msgid "operator '%{operator_name}' is not supported"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1400
+#: ../app/models/vm_or_template.rb:1398
 msgid "operator '%{operator}' is not supported"
 msgstr ""
 
@@ -82668,11 +82705,11 @@ msgstr ""
 msgid "option :cat_model must have a value"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1351
+#: ../app/models/vm_or_template.rb:1349
 msgid "option :event_types is required"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1353
+#: ../app/models/vm_or_template.rb:1351
 msgid "option :freq_threshold is required"
 msgstr ""
 
@@ -82688,7 +82725,7 @@ msgstr ""
 msgid "option :message_filter_value is required"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1352
+#: ../app/models/vm_or_template.rb:1350
 msgid "option :time_threshold is required"
 msgstr ""
 
@@ -82731,8 +82768,8 @@ msgstr ""
 msgid "password change not allowed when authentication mode is %{name}"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:663 ../app/models/vm_or_template.rb:669
-#: ../app/models/vm_or_template.rb:679
+#: ../app/models/vm_or_template.rb:661 ../app/models/vm_or_template.rb:667
+#: ../app/models/vm_or_template.rb:677
 msgid "path, '%{path}', is malformed"
 msgstr ""
 
@@ -82824,7 +82861,7 @@ msgstr ""
 msgid "provider_object_release must be implemented by a subclass"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1135
+#: ../app/models/vm_or_template.rb:1133
 msgid "raise_created_event must be implemented in a subclass"
 msgstr ""
 
@@ -82868,7 +82905,7 @@ msgstr ""
 msgid "raw_create_stack must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:101
+#: ../app/models/cloud_volume.rb:100
 msgid "raw_create_volume must be implemented in a subclass"
 msgstr ""
 
@@ -82944,7 +82981,7 @@ msgstr ""
 msgid "raw_delete_stack must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:161
+#: ../app/models/cloud_volume.rb:160
 msgid "raw_delete_volume must be implemented in a subclass"
 msgstr ""
 
@@ -82976,7 +83013,7 @@ msgstr ""
 msgid "raw_restore must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:188
+#: ../app/models/cloud_volume.rb:187
 msgid "raw_safe_delete_volume must be implemented in a subclass"
 msgstr ""
 
@@ -83020,7 +83057,7 @@ msgstr ""
 msgid "raw_update_stack must be implemented in a subclass"
 msgstr ""
 
-#: ../app/models/cloud_volume.rb:131 ../app/models/physical_storage.rb:136
+#: ../app/models/cloud_volume.rb:130 ../app/models/physical_storage.rb:136
 msgid "raw_update_volume must be implemented in a subclass"
 msgstr ""
 
@@ -83605,7 +83642,7 @@ msgstr ""
 msgid "vcpus"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:413
+#: ../app/models/vm_or_template.rb:411
 msgid "vm does not belong to any host"
 msgstr ""
 
