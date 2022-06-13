@@ -42,7 +42,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
       :helperText       => N_('Privilege escalation method'),
       :name             => 'become_method',
       :id               => 'become_method',
-      :type             => 'choice',
       :isClearable      => true,
       :options          => %w[
         sudo
