@@ -69,6 +69,10 @@ FactoryBot.define do
     end
   end
 
+  factory :awx_job, :class => "ManageIQ::Providers::Awx::AutomationManager::Job"
+
+  factory :awx_workflow_job, :class => "ManageIQ::Providers::Awx::AutomationManager::WorkflowJob"
+
   factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::AutomationManager::Job"
 
   factory :ansible_tower_workflow_job, :class => "ManageIQ::Providers::AnsibleTower::AutomationManager::WorkflowJob"

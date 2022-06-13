@@ -24,4 +24,13 @@ FactoryBot.define do
     end
   end
   factory :provider_embedded_ansible, :class => "ManageIQ::Providers::EmbeddedAnsible::Provider", :parent => :provider
+
+  factory(:provider_awx, :class => "ManageIQ::Providers::Awx::Provider", :parent => :provider) do
+    sequence(:url) { |n| "example_#{seq_padded_for_sorting(n)}.com" }
+    trait(:with_authentication) do
+      after(:create) do |x|
+        x.authentications << FactoryBot.create(:authentication)
+      end
+    end
+  end
 end

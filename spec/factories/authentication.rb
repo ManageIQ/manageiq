@@ -53,6 +53,30 @@ FactoryBot.define do
           :parent => :authentication,
           :class  => "ManageIQ::Providers::EmbeddedAutomationManager::Authentication"
 
+  factory :awx_credential,
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::Credential"
+
+  factory :awx_cloud_credential,
+          :parent => :awx_credential,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::CloudCredential"
+
+  factory :awx_machine_credential,
+          :parent => :awx_credential,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::MachineCredential"
+
+  factory :awx_vault_credential,
+          :parent => :awx_credential,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::VaultCredential"
+
+  factory :awx_network_credential,
+          :parent => :awx_credential,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::NetworkCredential"
+
+  factory :awx_scm_credential,
+          :parent => :awx_credential,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::ScmCredential"
+
   factory :ansible_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential"
