@@ -11,22 +11,13 @@ RSpec.describe ConfiguredSystem do
   end
 
   describe "#inventory_root_group_name" do
-    it "handles no inventory root group" do
-      system = ConfiguredSystem.new
-      expect(system.inventory_root_group_name).to be_nil
+    context "with no inventory root group" do
+      subject { FactoryBot.create(:configured_system) }
+      it_behaves_like "sql friendly virtual_attribute", :inventory_root_group_name, nil
     end
 
-    it "handles inventory root group in ruby" do
-      folder = FactoryBot.create(:ems_folder)
-      system = ConfiguredSystem.new(:inventory_root_group => folder)
-      expect(system.inventory_root_group_name).to eq(folder.name)
-    end
-
-    it "handles inventory root group in sql" do
-      folder = FactoryBot.create(:ems_folder)
-      FactoryBot.create(:configured_system, :inventory_root_group => folder)
-      expect(virtual_column_sql_value(ConfiguredSystem, "inventory_root_group_name")).to eq(folder.name)
-    end
+    subject { FactoryBot.create(:configured_system, :inventory_root_group => FactoryBot.create(:ems_folder, :name => 'folder_name')) }
+    it_behaves_like "sql friendly virtual_attribute", :inventory_root_group_name, 'folder_name'
   end
 
   describe "#queue_name_for_ems_operations" do

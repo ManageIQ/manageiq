@@ -397,10 +397,9 @@ RSpec.describe GenericObjectDefinition do
   end
 
   describe '#generic_objects_count' do
-    it "counts" do
-      objects
-      expect(definition.generic_objects_count).to eq(objects.size)
-    end
+    before  { objects }
+    subject { definition }
+    it_behaves_like "sql friendly virtual_attribute", :generic_objects_count, 2
   end
 
   shared_examples 'AR attribute allowing letters' do |hash|

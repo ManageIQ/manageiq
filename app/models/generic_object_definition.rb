@@ -46,7 +46,7 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_destroy    :check_not_in_use
 
-  virtual_delegate :count, :to => :generic_objects, :prefix => true, :allow_nil => false, :type => :integer
+  virtual_total :generic_objects_count, :generic_objects
 
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
