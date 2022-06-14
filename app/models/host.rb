@@ -312,15 +312,13 @@ class Host < ApplicationRecord
   end
 
   def reset
-    if supports?(:reset)
+    if verbose_supports?(:reset)
       check_policy_prevent("request_host_reset", "ipmi_power_reset")
-    else
-      _log.warn("Cannot stop because <#{unsupported_reason(:reset)}>")
     end
   end
 
   def start
-    if supports?(:start)
+    if verbose_supports?(:start)
       if power_state == 'standby'
         check_policy_prevent("request_host_start", "vim_power_up_from_standby")
       elsif supports?(:ipmi)
@@ -331,80 +329,60 @@ class Host < ApplicationRecord
           _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
         end
       end
-    else
-      _log.warn("Cannot start because <#{unsupported_reason(:start)}>")
     end
   end
 
   def stop
-    if supports?(:stop)
+    if verbose_supports?(:stop)
       check_policy_prevent("request_host_stop", "ipmi_power_off")
-    else
-      _log.warn("Cannot stop because <#{unsupported_reason(:stop)}>")
     end
   end
 
   def standby
-    if supports?(:standby)
+    if verbose_supports?(:standby)
       check_policy_prevent("request_host_standby", "vim_power_down_to_standby")
-    else
-      _log.warn("Cannot go into standby mode because <#{unsupported_reason(:standby)}>")
     end
   end
 
   def enter_maint_mode
-    if supports?(:enter_maint_mode)
+    if verbose_supports?(:enter_maint_mode)
       check_policy_prevent("request_host_enter_maintenance_mode", "vim_enter_maintenance_mode")
-    else
-      _log.warn("Cannot enter maintenance mode because <#{unsupported_reason(:enter_maint_mode)}>")
     end
   end
 
   def exit_maint_mode
-    if supports?(:exit_maint_mode)
+    if verbose_supports?(:exit_maint_mode)
       check_policy_prevent("request_host_exit_maintenance_mode", "vim_exit_maintenance_mode")
-    else
-      _log.warn("Cannot exit maintenance mode because <#{unsupported_reason(:exit_maint_mode)}>")
     end
   end
 
   def shutdown
-    if supports?(:shutdown)
+    if verbose_supports?(:shutdown)
       check_policy_prevent("request_host_shutdown", "vim_shutdown")
-    else
-      _log.warn("Cannot shutdown because <#{unsupported_reason(:shutdown)}>")
     end
   end
 
   def reboot
-    if supports?(:reboot)
+    if verbose_supports?(:reboot)
       check_policy_prevent("request_host_reboot", "vim_reboot")
-    else
-      _log.warn("Cannot reboot because <#{unsupported_reason(:reboot)}>")
     end
   end
 
   def enable_vmotion
-    if supports?(:enable_vmotion)
+    if verbose_supports?(:enable_vmotion)
       check_policy_prevent("request_host_enable_vmotion", "vim_enable_vmotion")
-    else
-      _log.warn("Cannot enable vmotion because <#{unsupported_reason(:enable_vmotion)}>")
     end
   end
 
   def disable_vmotion
-    if supports?(:disable_vmotion)
+    if verbose_supports?(:disable_vmotion)
       check_policy_prevent("request_host_disable_vmotion", "vim_disable_vmotion")
-    else
-      _log.warn("Cannot disable vmotion because <#{unsupported_reason(:disable_vmotion)}>")
     end
   end
 
   def vmotion_enabled?
-    if supports?(:vmotion_enabled)
+    if verbose_supports?(:vmotion_enabled, "check if vmotion is enabled")
       vim_vmotion_enabled?
-    else
-      _log.warn("Cannot check if vmotion is enabled because <#{unsupported_reason(:vmotion_enabled)}>")
     end
   end
 
@@ -1651,5 +1629,14 @@ class Host < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Host', 'Hosts', number)
+  end
+
+  def verbose_supports?(feature, description = nil)
+    supports?(feature).tap do |value|
+      unless value
+        description ||= feature.to_s.humanize(:capitalize => false)
+        _log.warn("Cannot #{description} because <#{unsupported_reason(feature)}>")
+      end
+    end
   end
 end
