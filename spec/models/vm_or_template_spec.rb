@@ -1587,6 +1587,14 @@ RSpec.describe VmOrTemplate do
       include_examples "normalized_state return value", "archived"
     end
 
+    context 'with no ems and no storage attached' do
+      let(:ems) { nil }
+      let(:storage) { nil }
+      subject { vm }
+
+      it_behaves_like "sql friendly virtual_attribute", :normalized_state, "archived"
+    end
+
     context 'no ems attached' do
       let(:ems) { nil }
 
