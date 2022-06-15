@@ -221,7 +221,7 @@ RSpec.describe Ansible::Runner do
     let(:user)     { FactoryBot.create(:user) }
 
     it "queues Ansible::Runner.run in the right zone" do
-      described_class.run_queue(env_vars, extra_vars, playbook, user.name, :zone => zone.name)
+      described_class.run_queue(env_vars, extra_vars, playbook, user.name, {:zone => zone.name})
 
       expect(MiqQueue.count).to eq(1)
       expect(MiqQueue.first.zone).to eq(zone.name)
