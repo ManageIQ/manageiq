@@ -133,10 +133,10 @@ module VmOrTemplate::Operations::Configuration
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def clone_volume(_options = {})
+  def clone_volume(options = {})
     raise _("VM has no EMS, unable to clone volume") unless ext_management_system
 
-    raw_clone_volume(_options = {})
+    raw_clone_volume(options)
   end
 
   def raw_reconfigure
