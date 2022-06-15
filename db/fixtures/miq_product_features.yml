@@ -6627,6 +6627,10 @@
       :description: Remove a Physical Storage
       :feature_type: admin
       :identifier: physical_storage_delete
+    - :name: Validate
+      :description: Validate a Physical Storage
+      :feature_type: admin
+      :identifier: physical_storage_validate
 
 # Physical Servers
 - :name: Physical Servers
