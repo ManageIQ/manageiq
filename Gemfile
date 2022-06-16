@@ -110,6 +110,10 @@ group :autosde, :manageiq_default do
   manageiq_plugin "manageiq-providers-autosde"
 end
 
+group :awx, :manageiq_default do
+  manageiq_plugin "manageiq-providers-awx"
+end
+
 group :azure, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure"
 end
