@@ -831,6 +831,10 @@
       :description: Detach a Volume
       :feature_type: admin
       :identifier: cloud_volume_detach
+    - :name: Clone
+      :description: Clone a Volume
+      :feature_type: admin
+      :identifier: cloud_volume_clone
     - :name: Remove
       :description: Remove Volumes
       :feature_type: admin

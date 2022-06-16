@@ -28,6 +28,28 @@ module CloudVolume::Operations
     raw_attach_volume(server_ems_ref, device)
   end
 
+  def clone_volume_queue(userid, options = {})
+    task_opts = {
+      :action => "cloning Cloud Volume for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'clone_volume',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :queue_name  => ext_management_system.queue_name_for_ems_operations,
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def clone_volume(options = {})
+    raw_clone_volume(options)
+  end
+
   # Detach a cloud volume as a queued task and return the task id. The queue
   # name and the queue zone are derived from the server EMS, and both a userid
   # and server EMS ref are mandatory.
