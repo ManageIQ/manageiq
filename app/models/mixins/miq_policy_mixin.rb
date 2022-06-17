@@ -113,12 +113,8 @@ module MiqPolicyMixin
     if prevented
       _log.info(event.attributes["message"])
     else
-      if action.last.kind_of?(Hash)
-        hsh = action.pop
-        send(*action, **hsh)
-      else
-        send(*action)
-      end
+      kwargs = action.extract_options!
+      send(*action, **kwargs)
     end
   end
 
