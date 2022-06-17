@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Handle truncated log lines which are no longer valid JSON
+jq -c -R 'if endswith("...") then "\(.)\"}" else . end | fromjson? | .' | \
+	# Convert JSON log line to MIQ log line
+	jq -c -r -M '"[----] \(.level[:1] | ascii_upcase), [\(.["@timestamp"])#\(.pid | tostring):\(.tid)]\(" " * (5 - (.level[:5] | length) + 1))\(.level[:5] | ascii_upcase) -- \(.service? // ""): \(.message)"'
