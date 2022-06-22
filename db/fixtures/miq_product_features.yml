@@ -6854,6 +6854,11 @@
       :description: Display Individual Firmware
       :feature_type: view
       :identifier: firmware_show
+    - :name: Reload Current Display
+      :description: Reload Current Display
+      :feature_type: view
+      :hidden: true
+      :identifier: firmware_registries_reload
 
 # Guest Devices
 - :name: Guest Devices
