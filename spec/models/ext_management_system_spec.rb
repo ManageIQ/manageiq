@@ -849,7 +849,7 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
-  context "virtual column :supports_block_storage" do
+  context "virtual column :supports_block_storage (direct supports)" do
     it "returns false if block storage is not supported" do
       ems = FactoryBot.create(:ext_management_system)
       stub_supports_not(ems.class, :block_storage)
@@ -863,7 +863,7 @@ RSpec.describe ExtManagementSystem do
     end
   end
 
-  context "virtual column :supports_cloud_object_store_container_create" do
+  context "virtual column :supports_cloud_object_store_container_create (child class supports)" do
     it "returns false if cloud_object_store_container_create is not supported" do
       ems = FactoryBot.create(:ems_storage)
       stub_supports_not(ems.class_by_ems("CloudObjectStoreContainer"), :create)
@@ -874,6 +874,20 @@ RSpec.describe ExtManagementSystem do
       ems = FactoryBot.create(:ems_storage)
       stub_supports(ems.class_by_ems("CloudObjectStoreContainer"), :create)
       expect(ems.supports_cloud_object_store_container_create).to eq(true)
+    end
+  end
+
+  context "virtual column :supports_cloud_database_create (child class supports)" do
+    it "returns false if cloud_object_store_container_create is not supported" do
+      ems = FactoryBot.create(:ems_cloud)
+      stub_supports_not(ems.class_by_ems("CloudDatabase"), :create)
+      expect(ems.supports_cloud_database_create).to eq(false)
+    end
+
+    it "returns true if cloud_database_create is supported" do
+      ems = FactoryBot.create(:ems_cloud)
+      stub_supports(ems.class_by_ems("CloudDatabase"), :create)
+      expect(ems.supports_cloud_database_create).to eq(true)
     end
   end
 
