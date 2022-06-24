@@ -7,6 +7,8 @@ module ManageIQ
 
     class_option :path, :type => :string, :default => 'plugins',
                  :desc => "Create plugin at given path"
+    class_option :js, :type => :boolean, :default => false,
+                 :desc => "Enable JavaScript in the plugin"
 
     def self.namespace
       # Thor has its own version of snake_case, which doesn't account for acronyms
@@ -54,6 +56,25 @@ module ManageIQ
       empty_directory "spec/factories"
       empty_directory "spec/support"
       template "spec/spec_helper.rb"
+
+      if options[:js]
+        gitignore = <<~GITIGNORE
+
+          /node_modules/
+          /.pnp.*
+          /.yarn/*
+          !/.yarn/patches
+          !/.yarn/plugins
+          !/.yarn/releases
+          !/.yarn/sdks
+          !/.yarn/versions
+        GITIGNORE
+
+        inject_into_file ".gitignore", gitignore, :after => "/spec/manageiq\n"
+        template ".yarnrc.yml"
+        template "package.json"
+        # TODO template "yarn.lock"
+      end
     end
 
     def insert_manageiq_gem
