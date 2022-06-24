@@ -126,6 +126,26 @@ module ManageIQ
       @plugin_description ||= "#{plugin_short_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
     end
 
+    def node_version
+      @node_version ||= package_json.dig("engines", "node")
+    end
+
+    def npm_version
+      @npm_version ||= package_json.dig("engines", "npm")
+    end
+
+    def yarn_version
+      @yarn_version ||= package_json.dig("engines", "yarn") || ">= 0.20.1"
+    end
+
+    def package_managaer
+      @package_managaer ||= package_json["packageManager"]
+    end
+
+    def package_json
+      @package_json ||= JSON.parse(File.read(ManageIQ::UI::Classic::Engine.root.join("package.json")))
+    end
+
     def empty_directory_with_keep_file(destination, config = {})
       empty_directory(destination, config)
       keep_file(destination)
