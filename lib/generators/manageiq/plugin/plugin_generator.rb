@@ -72,8 +72,9 @@ module ManageIQ
 
         inject_into_file ".gitignore", gitignore, :after => "/spec/manageiq\n"
         template ".yarnrc.yml"
+        template ".yarn/releases/yarn-3.0.2.cjs"
         template "package.json"
-        # TODO template "yarn.lock"
+        template "yarn.lock"
       end
     end
 
