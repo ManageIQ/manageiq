@@ -72,7 +72,7 @@ module ManageIQ
 
         inject_into_file ".gitignore", gitignore, :after => "/spec/manageiq\n"
         template ".yarnrc.yml"
-        template ".yarn/releases/yarn-3.0.2.cjs"
+        template ".yarn/releases/yarn-#{yarn_version}.cjs"
         template "package.json"
         template "yarn.lock"
       end
@@ -136,15 +136,23 @@ module ManageIQ
     end
 
     def yarn_version
-      @yarn_version ||= package_json.dig("engines", "yarn") || ">= 0.20.1"
+      @yarn_version ||= Dir.glob(template_yarn_releases_path.join("yarn-*.cjs")).first.match(/yarn-(.+).cjs/).captures.first
     end
 
     def package_managaer
-      @package_managaer ||= package_json["packageManager"]
+      @package_managaer ||= "yarn@#{yarn_version}"
     end
 
     def package_json
-      @package_json ||= JSON.parse(File.read(ManageIQ::UI::Classic::Engine.root.join("package.json")))
+      @package_json ||= JSON.parse(File.read(ui_classic_package_json_path))
+    end
+
+    def ui_classic_package_json_path
+      ManageIQ::UI::Classic::Engine.root.join("package.json")
+    end
+
+    def template_yarn_releases_path
+      Rails.root.join("lib/generators/manageiq/plugin/templates/.yarn/releases")
     end
 
     def empty_directory_with_keep_file(destination, config = {})

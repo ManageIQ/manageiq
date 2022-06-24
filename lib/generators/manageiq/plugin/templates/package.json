@@ -15,8 +15,7 @@
   "homepage": "https://github.com/ManageIQ/manageiq#readme",
   "engines": {
     "node": "<%= node_version %>",
-    "npm": "<%= npm_version %>",
-    "yarn": "<%= yarn_version %>"
+    "npm": "<%= npm_version %>"
   },
   "packageManager": "<%= package_managaer %>"
 }
