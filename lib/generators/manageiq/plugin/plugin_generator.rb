@@ -7,6 +7,8 @@ module ManageIQ
 
     class_option :path, :type => :string, :default => 'plugins',
                  :desc => "Create plugin at given path"
+    class_option :js, :type => :boolean, :default => false,
+                 :desc => "Enable JavaScript in the plugin"
 
     def self.namespace
       # Thor has its own version of snake_case, which doesn't account for acronyms
@@ -54,6 +56,26 @@ module ManageIQ
       empty_directory "spec/factories"
       empty_directory "spec/support"
       template "spec/spec_helper.rb"
+
+      if options[:js]
+        gitignore = <<~GITIGNORE
+
+          /node_modules/
+          /.pnp.*
+          /.yarn/*
+          !/.yarn/patches
+          !/.yarn/plugins
+          !/.yarn/releases
+          !/.yarn/sdks
+          !/.yarn/versions
+        GITIGNORE
+
+        inject_into_file ".gitignore", gitignore, :after => "/spec/manageiq\n"
+        template ".yarnrc.yml"
+        template ".yarn/releases/yarn-#{yarn_version}.cjs"
+        template "package.json"
+        template "yarn.lock"
+      end
     end
 
     def insert_manageiq_gem
@@ -103,6 +125,34 @@ module ManageIQ
     #   # => "My Helper plugin for ManageIQ."
     def plugin_description
       @plugin_description ||= "#{plugin_short_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}."
+    end
+
+    def node_version
+      @node_version ||= package_json.dig("engines", "node")
+    end
+
+    def npm_version
+      @npm_version ||= package_json.dig("engines", "npm")
+    end
+
+    def yarn_version
+      @yarn_version ||= Dir.glob(template_yarn_releases_path.join("yarn-*.cjs")).first.match(/yarn-(.+).cjs/).captures.first
+    end
+
+    def package_managaer
+      @package_managaer ||= "yarn@#{yarn_version}"
+    end
+
+    def package_json
+      @package_json ||= JSON.parse(File.read(ui_classic_package_json_path))
+    end
+
+    def ui_classic_package_json_path
+      ManageIQ::UI::Classic::Engine.root.join("package.json")
+    end
+
+    def template_yarn_releases_path
+      Rails.root.join("lib/generators/manageiq/plugin/templates/.yarn/releases")
     end
 
     def empty_directory_with_keep_file(destination, config = {})

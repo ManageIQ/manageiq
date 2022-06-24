@@ -1,0 +1,21 @@
+{
+  "name": "<%= plugin_name %>",
+  "version": "1.0.0",
+  "description": "ManageIQ Cloud Management Platform",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManageIQ/manageiq.git"
+  },
+  "author": "ManageIQ",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ManageIQ/manageiq/issues"
+  },
+  "homepage": "https://github.com/ManageIQ/manageiq#readme",
+  "engines": {
+    "node": "<%= node_version %>",
+    "npm": "<%= npm_version %>"
+  },
+  "packageManager": "<%= package_managaer %>"
+}
