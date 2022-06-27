@@ -206,13 +206,12 @@ class Host < ApplicationRecord
     end
   end
 
+  # if you change this, please check in on VmWare#start
   supports :start do
-    valid_states = respond_to?(:vim_power_up_from_standby) ? %w[off standby] : "off"
-
     if !supports?(:ipmi)
       unsupported_reason_add(:start, unsupported_reason(:ipmi))
-    elsif Array(valid_states).exclude?(power_state)
-      unsupported_reason_add(:start, _("The Host is not in power state #{valid_states.inspect}"))
+    elsif power_state != "off"
+      unsupported_reason_add(:start, _("The Host is not in power state off"))
     end
   end
 
@@ -318,16 +317,12 @@ class Host < ApplicationRecord
   end
 
   def start
-    if verbose_supports?(:start)
-      if power_state == 'standby'
-        check_policy_prevent("request_host_start", "vim_power_up_from_standby")
-      elsif supports?(:ipmi)
-        pstate = run_ipmi_command(:power_state)
-        if pstate == "off"
-          check_policy_prevent("request_host_start", "ipmi_power_on")
-        else
-          _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
-        end
+    if verbose_supports?(:start) && supports?(:ipmi)
+      pstate = run_ipmi_command(:power_state)
+      if pstate == "off"
+        check_policy_prevent("request_host_start", "ipmi_power_on")
+      else
+        _log.warn("Non-Startable IPMI power state = <#{pstate.inspect}>")
       end
     end
   end
