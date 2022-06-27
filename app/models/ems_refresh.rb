@@ -97,7 +97,7 @@ module EmsRefresh
       ids.uniq!
 
       recs = if target_class <= InventoryRefresh::Target
-               ids.map { |x| InventoryRefresh::Target.load(x) }
+               ids.map { |x| InventoryRefresh::Target.load(**x) }
              else
                active_record_recs = target_class.where(:id => ids)
                active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
