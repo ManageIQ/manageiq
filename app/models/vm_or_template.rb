@@ -1675,11 +1675,7 @@ class VmOrTemplate < ApplicationRecord
     user
   end
 
-  supports :console do
-    unless console_supported?('spice') || console_supported?('vnc')
-      unsupported_reason_add(:console, N_("Console not supported"))
-    end
-  end
+  supports(:console) { N_("Console not supported") unless console_supported?('spice') || console_supported?('vnc') }
 
   def child_resources
     children

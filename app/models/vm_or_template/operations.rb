@@ -126,20 +126,19 @@ module VmOrTemplate::Operations
 
   included do
     supports :control do
-      msg = if retired?
-              _('The VM is retired')
-            elsif template?
-              _('The VM is a template')
-            elsif terminated?
-              _('The VM is terminated')
-            elsif !has_required_host?
-              _('The VM is not connected to a Host')
-            elsif disconnected?
-              _('The VM does not have a valid connection state')
-            elsif !has_active_ems?
-              _("The VM is not connected to an active Provider")
-            end
-      unsupported_reason_add(:control, msg) if msg
+      if retired?
+        _('The VM is retired')
+      elsif template?
+        _('The VM is a template')
+      elsif terminated?
+        _('The VM is terminated')
+      elsif !has_required_host?
+        _('The VM is not connected to a Host')
+      elsif disconnected?
+        _('The VM does not have a valid connection state')
+      elsif !has_active_ems?
+        _("The VM is not connected to an active Provider")
+      end
     end
     supports_not :clone
     supports_not :quick_stats

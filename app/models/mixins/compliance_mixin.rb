@@ -9,9 +9,7 @@ module ComplianceMixin
              :inverse_of => :resource,
              :class_name => "Compliance"
 
-    supports :check_compliance do
-      unsupported_reason_add(:check_compliance, "No compliance policies assigned") unless has_compliance_policies?
-    end
+    supports(:check_compliance) { "No compliance policies assigned" unless has_compliance_policies? }
 
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",

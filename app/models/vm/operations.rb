@@ -8,33 +8,33 @@ module Vm::Operations
   included do
     supports :html5_console do
       consup = %w[vnc webmks spice].any? { |type| send(:console_supported?, type) }
-      unsupported_reason_add(:html5_console, _("The web-based HTML5 Console is not supported")) unless consup
+      _("The web-based HTML5 Console is not supported") unless consup
     end
 
     supports :vmrc_console do
-      unsupported_reason_add(:vmrc_console, _("VMRC Console not supported")) unless console_supported?('VMRC')
+      _("VMRC Console not supported") unless console_supported?('VMRC')
     end
 
     supports :native_console do
-      unsupported_reason_add(:native_console, _("VM NATIVE Console not supported")) unless console_supported?('NATIVE')
+      _("VM NATIVE Console not supported") unless console_supported?('NATIVE')
     end
 
     supports :launch_html5_console do
-      unsupported_reason_add(:launch_html5_console, _("The web-based HTML5 Console is not available because the VM is not powered on")) unless power_state == 'on'
+      _("The web-based HTML5 Console is not available because the VM is not powered on") unless power_state == 'on'
     end
 
     supports :launch_vmrc_console do
       begin
         validate_remote_console_vmrc_support
       rescue => err
-        unsupported_reason_add(:launch_vmrc_console, _('VM VMRC Console error: %{error}') % {:error => err})
+        _('VM VMRC Console error: %{error}') % {:error => err}
       end
     end
 
     supports :launch_native_console do
       validate_native_console_support
     rescue StandardError => err
-      unsupported_reason_add(:launch_native_console, _('VM NATIVE Console error: %{error}') % {:error => err})
+      _('VM NATIVE Console error: %{error}') % {:error => err}
     end
 
     supports :collect_running_processes do
@@ -44,7 +44,7 @@ module Vm::Operations
       reason ||= N_('VM Process collection requires credentials set at the Zone level.') if my_zone.nil? || my_zone_obj.auth_user_pwd(:windows_domain).nil?
       reason ||= N_('VM Process collection requires an IP address for the VM.') if ipaddresses.blank?
 
-      unsupported_reason_add(:collect_running_processes, reason) if reason
+      reason
     end
 
     supports_not :evacuate

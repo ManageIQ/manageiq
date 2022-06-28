@@ -3,9 +3,11 @@ module Vm::Operations::Lifecycle
 
   included do
     supports :retire do
-      reason   = _("Retire not supported because VM is orphaned") if orphaned?
-      reason ||= _("Retire not supported because VM is archived") if archived?
-      unsupported_reason_add(:retire, reason) if reason
+      if orphaned?
+        _("Retire not supported because VM is orphaned")
+      elsif archived?
+        _("Retire not supported because VM is archived")
+      end
     end
 
     supports_not :publish

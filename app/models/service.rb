@@ -100,10 +100,7 @@ class Service < ApplicationRecord
   scope :displayed, ->              { where(:visible => true) }
   scope :retired,   ->(bool = true) { where(:retired => bool) }
 
-  supports :reconfigure do
-    unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
-  end
-
+  supports(:reconfigure) { _("Reconfigure unsupported") unless validate_reconfigure }
   supports :retire
 
   alias parent_service parent
