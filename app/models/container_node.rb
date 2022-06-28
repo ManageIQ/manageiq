@@ -88,11 +88,7 @@ class ContainerNode < ApplicationRecord
     true
   end
 
-  supports :external_logging do
-    unless ext_management_system.respond_to?(:external_logging_route_name)
-      unsupported_reason_add(:external_logging, _('This provider type does not support External Logging'))
-    end
-  end
+  supports_not :external_logging
 
   def external_logging_query
     nil # {}.to_query # TODO
