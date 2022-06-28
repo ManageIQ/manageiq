@@ -40,14 +40,15 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
   end
 
   def raw_update_in_provider(params)
-    update!(params_for_update(params))
+    update!(params_to_attributes(params))
   end
 
   def raw_delete_in_provider
     destroy!
   end
 
-  def params_for_update(params)
+  # params for update
+  def params_to_attributes(params)
     update_params           = params.dup
     update_params[:options] = options.merge(update_params[:options] || {}) if options
     self.class.params_to_attributes(update_params.except(:task_id, :miq_task_id))
