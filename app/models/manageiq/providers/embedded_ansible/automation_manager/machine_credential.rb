@@ -37,13 +37,16 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
       :type       => 'password',
     },
     {
-      :component        => 'select',
-      :label            => N_('Privilege Escalation'),
-      :helperText       => N_('Privilege escalation method'),
-      :name             => 'options.become_method',
-      :id               => 'become_method',
-      :isClearable      => true,
-      :options          => %w[
+      :component    => 'select',
+      :label        => N_('Privilege Escalation'),
+      :helperText   => N_('Privilege escalation method'),
+      :name         => 'become_method',
+      :id           => 'become_method',
+      :isClearable  => true,
+      :clearedValue => nil,
+      :placeholder  => N_('None'),
+      :simpleValue  => true,
+      :options      => %w[
         sudo
         su
         pbrum
@@ -100,14 +103,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
     attrs[:auth_key]          = attrs.delete(:ssh_key_data)   if attrs.key?(:ssh_key_data)
     attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock) if attrs.key?(:ssh_key_unlock)
 
-    if attrs[:become_method]
-      attrs[:options] = { :become_method => attrs.delete(:become_method) }
-    end
-
     attrs
-  end
-
-  def become_method
-    options && options[:become_method]
   end
 end

@@ -22,7 +22,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
         :become_username   => "root",
         :become_password   => "othersecret",
         :auth_key_password => "keypass",
-        :options           => {:become_method => "su"}
+        :become_method     => "su",
       }
       FactoryBot.create(:embedded_ansible_machine_credential, auth_attributes)
     end

@@ -185,9 +185,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
         :become_password   => "secret3",
         :become_username   => "admin",
         :auth_key_password => "secret4",
-        :options           => {
-          :become_method => "sudo"
-        }
+        :become_method     => "sudo"
       }
     end
     let(:expected_values) do
@@ -204,9 +202,6 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credenti
         :auth_key_encrypted          => expected_ssh_key.present? ? ManageIQ::Password.try_encrypt(expected_ssh_key) : expected_ssh_key,
         :become_password_encrypted   => ManageIQ::Password.try_encrypt("secret3"),
         :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret4"),
-        :options                     => {
-          :become_method => "sudo"
-        }
       }
     end
     let(:params_to_attrs) { [:auth_key, :auth_key_password, :become_method] }
