@@ -792,7 +792,7 @@ RSpec.describe MiqQueue do
 
     context "with a single server" do
       it "creates a queue item for the server" do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         MiqQueue.broadcast(queue_params)
 
         expect(queue_items.count).to eq(1)
@@ -813,7 +813,7 @@ RSpec.describe MiqQueue do
       end
 
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         other_servers.last.role = other_role.name
       end
 
@@ -850,9 +850,7 @@ RSpec.describe MiqQueue do
   end
 
   describe ".unqueue" do
-    before do
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
+    before { EvmSpecHelper.local_miq_server }
 
     # NOTE: default queue_name, state, zone
     it "should unqueue a message" do

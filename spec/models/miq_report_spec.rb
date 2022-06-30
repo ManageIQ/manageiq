@@ -702,7 +702,7 @@ RSpec.describe MiqReport do
         let(:user_admin) { FactoryBot.create(:user_admin) }
 
         before do
-          EvmSpecHelper.create_guid_miq_server_zone
+          EvmSpecHelper.local_miq_server
           rollup_params = {:capture_interval_name => 'daily', :time_profile_id => time_profile.id }
           add_metric_rollups_for([vm], first_rollup_timestamp...last_rollup_timestamp, 24.hours, rollup_params)
         end
@@ -1077,7 +1077,7 @@ RSpec.describe MiqReport do
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
       ChargebackRate.seed
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
     end
 
     context "chargeback based on container images" do

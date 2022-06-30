@@ -14,7 +14,7 @@ RSpec.describe TaskHelpers::Imports::Widgets do
     let(:options) { { :source => source } }
 
     before do
-      _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       FactoryBot.create(:user_admin, :userid => "admin")
     end
 

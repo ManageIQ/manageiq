@@ -40,7 +40,7 @@ RSpec.describe ProcessTasksMixin do
     end
 
     it "queues a message for the specified task" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       test_class.process_tasks(:task => "test_method", :ids => [5], :userid => "admin")
 
       message = MiqQueue.first
@@ -54,7 +54,7 @@ RSpec.describe ProcessTasksMixin do
     end
 
     it "defaults the userid to system in the queue message" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       test_class.process_tasks(:task => "test_method", :ids => [5])
 
       message = MiqQueue.first

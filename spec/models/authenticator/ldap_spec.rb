@@ -53,7 +53,7 @@ RSpec.describe Authenticator::Ldap do
 
     allow(User).to receive(:authenticator).and_return(subject)
 
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
   end
 
   before do

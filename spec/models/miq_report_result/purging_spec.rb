@@ -55,7 +55,7 @@ RSpec.describe MiqReportResult do
     end
 
     it "#purge_timer" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       Timecop.freeze(Time.now) do
         described_class.purge_timer
@@ -73,7 +73,7 @@ RSpec.describe MiqReportResult do
 
     context "#purge_queue" do
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         described_class.purge_queue(:remaining, 1)
       end
 

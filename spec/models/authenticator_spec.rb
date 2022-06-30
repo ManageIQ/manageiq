@@ -21,7 +21,7 @@ RSpec.describe Authenticator do
     let(:groups) { FactoryBot.create_list(:miq_group, 2) }
 
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
     end
 
     it 'Updates the user groups when no matching groups' do

@@ -4,7 +4,7 @@ RSpec.describe TaskHelpers::Exports::Widgets do
   end
 
   before do
-    _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
 
     MiqReport.seed_report("Vendor and Guest OS")
     MiqWidget.seed_widget("chart_vendor_and_guest_os")

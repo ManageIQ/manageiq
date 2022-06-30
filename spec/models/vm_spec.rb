@@ -123,7 +123,7 @@ RSpec.describe Vm do
   context "#invoke_tasks_local" do
     before do
       Zone.seed
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       @host = FactoryBot.create(:host)
       @vm = FactoryBot.create(:vm_vmware, :host => @host)
@@ -169,7 +169,7 @@ RSpec.describe Vm do
 
   context "#start" do
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       @host = FactoryBot.create(:host_vmware)
       @vm = FactoryBot.create(:vm_vmware,
                                :host      => @host,
@@ -203,7 +203,7 @@ RSpec.describe Vm do
 
   context "#scan" do
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       @host = FactoryBot.create(:host_vmware)
       @vm = FactoryBot.create(
         :vm_vmware,

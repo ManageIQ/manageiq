@@ -1,7 +1,7 @@
 RSpec.describe "Widget Chart Content" do
   let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
   before do
-    _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
 
     MiqReport.seed_report("Vendor and Guest OS")
     MiqWidget.seed_widget("chart_vendor_and_guest_os")

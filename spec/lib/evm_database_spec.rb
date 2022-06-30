@@ -133,7 +133,7 @@ RSpec.describe EvmDatabase do
 
   describe ".raise_server_event" do
     it "adds to queue request to raise 'evm_event'" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       described_class.raise_server_event("db_failover_executed")
       record = MiqQueue.last
       expect(record.class_name). to eq "MiqEvent"

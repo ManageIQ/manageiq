@@ -6,9 +6,7 @@ RSpec.describe MiqSchedule::Filters do
 
   let(:filter_type) { "Base" }
 
-  before do
-    EvmSpecHelper.create_guid_miq_server_zone
-  end
+  before { EvmSpecHelper.local_miq_server }
 
   subject do
     schedule.build_hash_filter_expression(value, other_value, filter_type)

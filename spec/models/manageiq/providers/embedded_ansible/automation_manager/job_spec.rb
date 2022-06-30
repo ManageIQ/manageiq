@@ -147,7 +147,7 @@ RSpec.describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
     describe "#raw_stdout_via_worker" do
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         allow(described_class).to receive(:find).and_return(job)
 
         allow(MiqTask).to receive(:wait_for_taskid) do

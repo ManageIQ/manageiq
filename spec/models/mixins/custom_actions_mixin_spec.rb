@@ -36,7 +36,7 @@ RSpec.describe CustomActionsMixin do
     let!(:custom_button_event_2) { FactoryBot.create(:custom_button_event, :target => cloud_tenant) }
 
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
     end
 
     it "returns all custom button events for super admin user" do

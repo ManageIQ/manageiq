@@ -5,7 +5,7 @@ require Rails.root.join("lib", "tasks", "evm_application")
 RSpec.describe EvmApplication do
   context ".server_state" do
     it "with a valid status" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       expect(EvmApplication.server_state).to eq("started")
     end
