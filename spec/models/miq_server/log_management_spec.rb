@@ -83,8 +83,9 @@ RSpec.describe MiqServer do
     let(:miq_task) { FactoryBot.create(:miq_task) }
 
     before do
-      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      @miq_server2          = FactoryBot.create(:miq_server, :zone => @zone)
+      @miq_server  = EvmSpecHelper.local_miq_server
+      @zone        = @miq_server.zone
+      @miq_server2 = FactoryBot.create(:miq_server, :zone => @zone)
     end
 
     context "#pg_data_log_patterns" do

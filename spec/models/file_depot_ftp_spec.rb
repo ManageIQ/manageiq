@@ -1,12 +1,11 @@
 RSpec.describe FileDepotFtp do
-  before do
-    _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-  end
-
+  let!(:server)        { EvmSpecHelper.local_miq_server }
+  let(:server_name_id) { "#{server.name}_#{server.id}" }
+  let(:zone_name_id)   { "#{server.zone.name}_#{server.zone.id}" }
   let(:connection)     { double("FtpConnection") }
   let(:uri)            { "ftp://server.example.com/uploads" }
   let(:file_depot_ftp) { FileDepotFtp.new(:uri => uri) }
-  let(:log_file)       { LogFile.new(:resource => @miq_server, :local_file => "/tmp/file.txt") }
+  let(:log_file)       { LogFile.new(:resource => server, :local_file => "/tmp/file.txt") }
   let(:ftp_mock) do
     Class.new do
       attr_reader :pwd, :content
@@ -81,28 +80,19 @@ RSpec.describe FileDepotFtp do
   end
 
   context "#upload_file" do
+    let(:region_key) { "Current_region_unknown_#{zone_name_id}_#{server_name_id}.txt".gsub(/\s+/, "_") }
     it 'uploads file to vsftpd with existing directory structure' do
-      vsftpd = vsftpd_mock.new('uploads' =>
-                              {"#{@zone.name}_#{@zone.id}" =>
-                              {"#{@miq_server.name}_#{@miq_server.id}" => {}}})
+      vsftpd = vsftpd_mock.new('uploads' => {zone_name_id => {server_name_id => {}}})
       expect(file_depot_ftp).to receive(:connect).and_return(vsftpd)
       file_depot_ftp.upload_file(log_file)
-      expect(vsftpd.content).to eq('uploads' =>
-                                   {"#{@zone.name}_#{@zone.id}" =>
-                                   {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
-                                   log_file.local_file}}})
+      expect(vsftpd.content).to eq('uploads' => {zone_name_id => {server_name_id => {region_key =>log_file.local_file}}})
     end
 
     it 'uploads file to vsftpd with empty /uploads directory' do
       vsftpd = vsftpd_mock.new('uploads' => {})
       expect(file_depot_ftp).to receive(:connect).and_return(vsftpd)
       file_depot_ftp.upload_file(log_file)
-      expect(vsftpd.content).to eq('uploads' =>
-                                   {"#{@zone.name}_#{@zone.id}" =>
-                                   {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
-                                   log_file.local_file}}})
+      expect(vsftpd.content).to eq('uploads' => {zone_name_id => {server_name_id => {region_key => log_file.local_file}}})
     end
 
     it "already exists" do
