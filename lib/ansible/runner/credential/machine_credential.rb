@@ -24,7 +24,7 @@ module Ansible
       def become_args
         {
           :become_user   => auth.become_username,
-          :become_method => auth.options.try(:[], :become_method) || "sudo"
+          :become_method => auth.become_method || "sudo"
         }.delete_blanks
       end
 
