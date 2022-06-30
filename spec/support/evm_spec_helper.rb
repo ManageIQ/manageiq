@@ -34,8 +34,9 @@ module EvmSpecHelper
     yield if block_given?
   ensure
     Module.clear_all_cache_with_timeout if Module.respond_to?(:clear_all_cache_with_timeout)
+    TokenStore.token_caches.clear if defined?(TokenStore)
 
-    clear_instance_variables(MiqEnvironment::Command)
+    clear_instance_variables(MiqEnvironment::Command) if defined?(MiqEnvironment::Command)
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
     clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
