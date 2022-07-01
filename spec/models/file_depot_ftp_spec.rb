@@ -9,6 +9,7 @@ RSpec.describe FileDepotFtp do
   let(:ftp_mock) do
     Class.new do
       attr_reader :pwd, :content
+
       def initialize(content = {})
         @pwd = '/'
         @content = content
@@ -27,6 +28,7 @@ RSpec.describe FileDepotFtp do
         local = @content
         path.split('/').each do |dir|
           next if dir.empty?
+
           local = local[dir]
           raise Net::FTPPermError, '550 Failed to change directory.' if local.nil?
         end
@@ -41,7 +43,7 @@ RSpec.describe FileDepotFtp do
         l = local(pwd + path)
         l.respond_to?(:keys) ? l.keys : []
       rescue
-        return []
+        []
       end
 
       def mkdir(dir)
@@ -56,7 +58,6 @@ RSpec.describe FileDepotFtp do
       end
     end
   end
-
 
   context "#file_exists?" do
     it "true if file exists" do
