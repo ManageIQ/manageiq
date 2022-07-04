@@ -69,10 +69,10 @@ class HostInitiator < ApplicationRecord
 
   # Delete a storage system as a queued task and return the task id. The queue
   # name and the queue zone are derived from the EMS, and a userid is mandatory.
-  def delete_host_initiator_queue(userid)
+  def delete_host_initiator_queue(user)
     task_opts = {
-      :action => "deleting host initiator for user #{userid}",
-      :userid => userid
+      :action => "deleting host initiator for user #{user.userid}",
+      :userid => user.userid
     }
     queue_opts = {
       :class_name  => self.class.name,

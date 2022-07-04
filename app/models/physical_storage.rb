@@ -52,10 +52,10 @@ class PhysicalStorage < ApplicationRecord
 
   # Delete a storage system as a queued task and return the task id. The queue
   # name and the queue zone are derived from the EMS, and a userid is mandatory.
-  def delete_physical_storage_queue(userid)
+  def delete_physical_storage_queue(user)
     task_opts = {
-      :action => "deleting PhysicalStorage for user #{userid}",
-      :userid => userid
+      :action => "deleting PhysicalStorage for user #{user.userid}",
+      :userid => user.userid
     }
     queue_opts = {
       :class_name  => self.class.name,
