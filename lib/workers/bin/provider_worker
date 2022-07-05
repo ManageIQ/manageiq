@@ -4,12 +4,16 @@ require File.expand_path("../../../config/environment", __dir__)
 
 ems_id = ENV["EMS_ID"]
 
-ems = ExtManagementSystem.find(ems_id)
+ems      = ExtManagementSystem.find(ems_id)
+all_emss = [ems] + ems.child_managers
 
 provider_opts = {
-  :ems_id            => ems_id,
-  :ems_name          => ems.name,
-  :connection_config => ems.connection_configurations
+  :ems => all_emss.map do |e|
+    e.attributes.merge(
+      "endpoints"       => e.endpoints,
+      "authentications" => e.authentications
+    )
+  end
 }
 
 # Send the connection information to the child process via STDIN by creating a
