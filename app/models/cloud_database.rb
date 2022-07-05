@@ -1,4 +1,5 @@
 class CloudDatabase < ApplicationRecord
+  include AsyncDeleteMixin
   include NewWithTypeStiMixin
   include ProviderObjectMixin
   include SupportsFeatureMixin
