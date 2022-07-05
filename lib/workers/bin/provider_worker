@@ -6,14 +6,16 @@ ems_id = ENV["EMS_ID"]
 
 ems      = ExtManagementSystem.find(ems_id)
 all_emss = [ems] + ems.child_managers
+ems_opts = all_emss.map do |e|
+  e.attributes.merge(
+    "endpoints"       => e.endpoints,
+    "authentications" => e.authentications
+  )
+end
 
 provider_opts = {
-  :ems => all_emss.map do |e|
-    e.attributes.merge(
-      "endpoints"       => e.endpoints,
-      "authentications" => e.authentications
-    )
-  end
+  :ems       => ems_opts,
+  :messaging => MiqQueue.messaging_client_options
 }
 
 # Send the connection information to the child process via STDIN by creating a

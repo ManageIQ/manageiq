@@ -57,6 +57,14 @@ class MiqQueue < ApplicationRecord
     end
   end
 
+  def self.messaging_client_options
+    opts = messaging_options_from_env || messaging_options_from_file
+    return if opts.nil?
+
+    opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
+    opts.merge(:encoding => "json", :protocol => messaging_protocol)
+  end
+
   def self.columns_for_requeue
     @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
   end
@@ -648,15 +656,6 @@ class MiqQueue < ApplicationRecord
   end
 
   private_class_method :optional_values
-
-  def self.messaging_client_options
-    opts = messaging_options_from_env || messaging_options_from_file
-    return if opts.nil?
-
-    opts.transform_values! { |v| v.kind_of?(String) ? ManageIQ::Password.try_decrypt(v) : v }
-    opts.merge(:encoding => "json", :protocol => messaging_protocol)
-  end
-  private_class_method :messaging_client_options
 
   def self.messaging_protocol
     case messaging_type
