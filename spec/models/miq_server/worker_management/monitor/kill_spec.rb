@@ -1,6 +1,6 @@
 RSpec.describe MiqServer::WorkerManagement::Monitor::Kill do
   context "#kill_all_workers" do
-    let(:server)   { EvmSpecHelper.create_guid_miq_server_zone.second }
+    let(:server)   { EvmSpecHelper.local_miq_server }
     let(:is_local) { true }
     let(:worker)   do
       FactoryBot.create(:miq_generic_worker, :pid => 1234, :status => MiqWorker::STATUS_STARTING, :miq_server => server).tap do |w|

@@ -1,7 +1,7 @@
 RSpec.describe LogFile do
   context "With server and zone" do
     before do
-      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
       @miq_server.create_log_file_depot!(:type => "FileDepotFtpAnonymous", :uri => "test")
       @miq_server.save
     end

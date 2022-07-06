@@ -44,7 +44,7 @@ RSpec.describe Zone do
 
   context "when dealing with clouds" do
     before do
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @zone = EvmSpecHelper.local_miq_server.zone
     end
 
     it "returns the set of ems_clouds" do

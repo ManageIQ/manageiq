@@ -1,7 +1,7 @@
 RSpec.describe MiqServer do
   context "WorkerManagement::Monitor::SystemLimits" do
     before do
-      _, @server, = EvmSpecHelper.create_guid_miq_server_zone
+      @server = EvmSpecHelper.local_miq_server
       @monitor_settings = YAML.load(<<-EOS
         :kill_algorithm:
           :name: used_swap_percent_gt_value

@@ -1,7 +1,7 @@
 RSpec.describe MiqServer do
   context "StatusManagement" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     # for now, just making sure there are no syntax errors

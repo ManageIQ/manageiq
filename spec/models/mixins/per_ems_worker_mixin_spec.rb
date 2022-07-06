@@ -1,7 +1,7 @@
 RSpec.describe PerEmsWorkerMixin do
   before do
-    _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryBot.create(:ems_vmware, :with_unvalidated_authentication, :zone => zone)
+    server = EvmSpecHelper.local_miq_server
+    @ems = FactoryBot.create(:ems_vmware, :with_unvalidated_authentication, :zone => server.zone)
     @ems_queue_name = "ems_#{@ems.id}"
 
     # General stubbing for testing any worker (methods called during initialize)

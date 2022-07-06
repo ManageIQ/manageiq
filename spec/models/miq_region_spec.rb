@@ -23,7 +23,7 @@ RSpec.describe MiqRegion do
 
     context "with cloud and infra EMSes" do
       before do
-        _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+        zone = EvmSpecHelper.local_miq_server.zone
         ems_vmware = FactoryBot.create(:ems_vmware, :zone => zone)
         ems_openstack = FactoryBot.create(:ems_openstack, :zone => zone)
         ems_redhat = FactoryBot.create(:ems_redhat, :zone => zone)

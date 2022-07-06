@@ -350,7 +350,7 @@ RSpec.describe MiqQueue do
 
   context "worker" do
     before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
 
       @worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
       @msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
@@ -369,7 +369,7 @@ RSpec.describe MiqQueue do
     before do
       MiqRegion.seed
       Zone.seed
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     it "should put one message on queue" do
@@ -604,7 +604,7 @@ RSpec.describe MiqQueue do
 
   context "#put_unless_exists" do
     before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     it "should put a unique message on the queue if method_name is different" do
@@ -696,7 +696,7 @@ RSpec.describe MiqQueue do
 
   context "#put_or_update" do
     before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     it "should respect hash updates in put_or_update for create" do

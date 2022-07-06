@@ -7,7 +7,7 @@ RSpec.describe MiqScheduleWorker::Jobs do
     end
 
     it "with an EMS" do
-      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       FactoryBot.create(:ems_vmware, :zone => zone)
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)
 
@@ -62,9 +62,9 @@ RSpec.describe MiqScheduleWorker::Jobs do
   end
 
   context "with guid, server, zone" do
-    let!(:guid_server_zone) { EvmSpecHelper.create_guid_miq_server_zone }
-    let(:guid) { guid_server_zone.first }
-    let(:zone) { guid_server_zone.last }
+    let!(:server) { EvmSpecHelper.local_miq_server }
+    let(:guid) { server.guid }
+    let(:zone) { server.zone }
 
     context "queues for miq_server process" do
       it "#vmdb_database_connection_log_statistics" do

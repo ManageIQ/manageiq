@@ -52,7 +52,7 @@ RSpec.describe MiqServer do
 
   context "instance" do
     before do
-      @guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
     end
 
     describe "#monitor_myself" do
@@ -77,14 +77,6 @@ RSpec.describe MiqServer do
         @miq_server.monitor_myself
         expect(Notification.count).to eq(0)
       end
-    end
-
-    it "should have proper guid" do
-      expect(@miq_server.guid).to eq(@guid)
-    end
-
-    it "should have default zone" do
-      expect(@miq_server.zone.name).to eq(@zone.name)
     end
 
     it "cannot assign to maintenance zone" do
@@ -333,8 +325,8 @@ RSpec.describe MiqServer do
 
   describe "#zone_description" do
     it "delegates to zone" do
-      _, miq_server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      expect(miq_server.zone_description).to eq(zone.description)
+      miq_server = EvmSpecHelper.local_miq_server
+      expect(miq_server.zone_description).to eq(miq_server.zone.description)
     end
   end
 

@@ -3,7 +3,7 @@ require "inventory_refresh"
 RSpec.describe EmsRefresh do
   context ".queue_refresh" do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       @ems = FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
@@ -48,7 +48,7 @@ RSpec.describe EmsRefresh do
 
   context "stopping targets unbounded growth" do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       @ems = FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
@@ -98,7 +98,7 @@ RSpec.describe EmsRefresh do
 
   context ".queue_refresh_task" do
     before do
-      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       @ems  = FactoryBot.create(:ems_vmware, :zone => zone)
       @ems2 = FactoryBot.create(:ems_vmware, :zone => zone)
     end

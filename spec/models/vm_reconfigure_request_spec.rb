@@ -9,7 +9,7 @@ RSpec.describe VmReconfigureRequest do
   let(:vm_vmware)     { FactoryBot.create(:vm_vmware, :hardware => vm_hardware, :host => host) }
   let(:zone2)         { FactoryBot.create(:zone, :name => "zone_2") }
 
-  before { _guid, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone }
+  before { @zone1 = EvmSpecHelper.local_miq_server.zone }
 
   it("#my_role should be 'ems_operations'") { expect(request.my_role).to eq('ems_operations') }
 

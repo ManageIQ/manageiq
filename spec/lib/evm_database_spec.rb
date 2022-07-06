@@ -177,7 +177,7 @@ RSpec.describe EvmDatabase do
   end
 
   describe ".run_failover_monitor" do
-    let!(:server) { EvmSpecHelper.local_guid_miq_server_zone[1] }
+    let!(:server) { EvmSpecHelper.local_miq_server }
     let(:monitor) { ManageIQ::PostgresHaAdmin::FailoverMonitor.new }
     let(:subscriptions) do
       [
