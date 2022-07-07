@@ -54,6 +54,10 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def cloud_database_servers
+          add_common_default_values
+        end
+
         def orchestration_stacks_resources
           add_properties(
             :model_class                  => ::OrchestrationStackResource,
