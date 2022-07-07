@@ -45,6 +45,8 @@ jobs:
       timeout-minutes: 30
     - name: Prepare tests
       run: bin/setup
+    - name: check model db access
+      run: bundle exec rake test:verify_no_db_access_loading_rails_environment
     - name: Run tests
       run: bundle exec rake
     - name: Report code coverage
