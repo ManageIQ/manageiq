@@ -31,7 +31,7 @@ RSpec.describe MeteringContainerProject do
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
     MiqEnterprise.seed
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
     Timecop.travel(report_run_time)
   end
 

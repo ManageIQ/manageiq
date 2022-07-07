@@ -153,7 +153,7 @@ RSpec.describe MiqWorker do
     end
 
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       stub_settings(settings)
     end
 
@@ -364,7 +364,7 @@ RSpec.describe MiqWorker do
 
     context "#destroy" do
       context "where it has messages it's handling" do
-        before { EvmSpecHelper.local_guid_miq_server_zone }
+        before { EvmSpecHelper.local_miq_server }
         let(:miq_task) do
           queue_opts = {:class_name => "MiqServer", :method_name => "my_server", :args => []}
           task_opts  = {:name => "Thing1", :userid => "admin"}
@@ -426,8 +426,8 @@ RSpec.describe MiqWorker do
     end
 
     describe "#kill_async" do
-      let!(:remote_server) { EvmSpecHelper.remote_guid_miq_server_zone[1] }
-      let!(:local_server)  { EvmSpecHelper.local_guid_miq_server_zone[1] }
+      let!(:remote_server) { EvmSpecHelper.remote_miq_server }
+      let!(:local_server)  { EvmSpecHelper.local_miq_server }
 
       it "queues local worker to local server" do
         worker = FactoryBot.create(:miq_worker, :miq_server => local_server)

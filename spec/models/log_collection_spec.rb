@@ -1,6 +1,7 @@
 RSpec.describe "LogCollection" do
   before do
-    _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    @miq_server = EvmSpecHelper.local_miq_server
+    @zone = @miq_server.zone
   end
 
   context "active log_collection" do

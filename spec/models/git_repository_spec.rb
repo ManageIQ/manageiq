@@ -292,7 +292,7 @@ RSpec.describe GitRepository do
 
       context "when repo deletion has no errors" do
         before do
-          EvmSpecHelper.create_guid_miq_server_zone
+          EvmSpecHelper.local_miq_server
         end
 
         it "deletes the repo and the directory" do
@@ -315,7 +315,7 @@ RSpec.describe GitRepository do
         end
 
         before do
-          EvmSpecHelper.create_guid_miq_server_zone
+          EvmSpecHelper.local_miq_server
           other_servers
         end
 

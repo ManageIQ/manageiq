@@ -1,6 +1,6 @@
 RSpec.describe MiqServer::WorkerManagement::Systemd do
   let(:units)           { [] }
-  let(:server)          { EvmSpecHelper.create_guid_miq_server_zone.second }
+  let(:server)          { EvmSpecHelper.local_miq_server }
   let(:systemd_manager) { double("DBus::Systemd::Manager") }
 
   before do

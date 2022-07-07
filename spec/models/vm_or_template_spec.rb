@@ -1367,7 +1367,7 @@ RSpec.describe VmOrTemplate do
     let(:vm_blue2)       { VmOrTemplate.find_by(:name => "vm_blue2") }
 
     let!(:ems) do
-      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       FactoryBot.create(:ems_vmware, :zone => zone).tap do |ems|
         build_vmware_folder_structure!(ems)
         folder_blue1.add_child(FactoryBot.create(:vm_vmware, :name => "vm_blue1", :ems_id => ems.id))

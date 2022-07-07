@@ -2,7 +2,7 @@ RSpec.describe Container do
   context "::Purging" do
     context ".purge_queue" do
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
       end
       let(:purge_time) { (Time.zone.now + 10).round }
 

@@ -42,7 +42,7 @@ RSpec.describe ChargebackContainerProject do
     MiqEnterprise.seed
     ManageIQ::Showback::InputMeasure.seed
 
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
     @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems,
                                   :created_on => month_beginning)
 

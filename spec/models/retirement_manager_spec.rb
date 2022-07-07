@@ -1,7 +1,7 @@
 RSpec.describe RetirementManager do
   describe "#check" do
     it "with retirement date, runs retirement checks" do
-      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
+      zone = EvmSpecHelper.local_miq_server.zone
       ems = FactoryBot.create(:ems_openstack_with_authentication, :zone => zone)
 
       orchestration_stack = FactoryBot.create(:orchestration_stack, :retires_on => Time.zone.today + 1.day, :ext_management_system => ems)

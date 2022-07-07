@@ -1,5 +1,5 @@
 RSpec.describe FirmwareRegistry do
-  before  { EvmSpecHelper.create_guid_miq_server_zone }
+  before  { EvmSpecHelper.local_miq_server }
   subject { FactoryBot.create(:firmware_registry) }
 
   describe '#destroy' do

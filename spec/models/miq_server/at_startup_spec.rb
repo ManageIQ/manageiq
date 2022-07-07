@@ -1,12 +1,10 @@
 RSpec.describe MiqServer, "::AtStartup" do
   describe ".clean_dequeued_messages" do
-    before do
-      _guid, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    end
+    let!(:miq_server) { EvmSpecHelper.local_miq_server }
 
     context "where worker has a message in dequeue" do
       it "should cleanup message on startup" do
-        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server => miq_server)
         msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker)
 
         described_class.clean_dequeued_messages
@@ -16,7 +14,7 @@ RSpec.describe MiqServer, "::AtStartup" do
       end
 
       it "deletes shutdown_and_exit messages" do
-        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server => miq_server)
         FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker,
                            :method_name => "shutdown_and_exit")
         described_class.clean_dequeued_messages
@@ -26,7 +24,7 @@ RSpec.describe MiqServer, "::AtStartup" do
 
     context "where worker on other server has a message in dequeue" do
       it "should not cleanup message on startup" do
-        other_miq_server = FactoryBot.create(:miq_server, :zone => @zone)
+        other_miq_server = FactoryBot.create(:miq_server, :zone => miq_server.zone)
         other_worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => other_miq_server.id)
         msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => other_worker)
 

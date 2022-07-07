@@ -3,7 +3,7 @@ RSpec.describe VmMigrateRequest do
   let(:request)       { FactoryBot.create(:vm_cloud_reconfigure_request, :requester => admin, :options => {:src_ids => [vm_amazon.id]}) }
   let(:vm_amazon)     { FactoryBot.create(:vm_amazon, :ext_management_system => FactoryBot.create(:ems_amazon)) }
 
-  before { _guid, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone }
+  before { @zone1 = EvmSpecHelper.local_miq_server.zone }
 
   it("#my_role should be 'ems_operations'") { expect(request.my_role).to eq('ems_operations') }
   it("#vm is present") { expect(request.vm).to eq(vm_amazon) }

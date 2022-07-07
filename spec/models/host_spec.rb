@@ -127,7 +127,7 @@ RSpec.describe Host do
   context "power operations" do
     let(:power_state) { "off" }
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       @ems = FactoryBot.create(:ext_management_system, :tenant => FactoryBot.create(:tenant))
       @host = FactoryBot.create(:host, :ems_id => @ems.id, :power_state => power_state)
     end
@@ -641,7 +641,7 @@ RSpec.describe Host do
 
   describe "#scan" do
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       @host = FactoryBot.create(:host_vmware)
       FactoryBot.create(:miq_event_definition, :name => :request_host_scan)
       # admin user is needed to process Events

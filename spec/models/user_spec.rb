@@ -211,7 +211,7 @@ RSpec.describe User do
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
 
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
     end
 
     it "will fail task if user object not found in ldap" do
@@ -401,7 +401,7 @@ RSpec.describe User do
     let(:user) { FactoryBot.create(:user, :password => "dummy") }
 
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
     end
 
     it "should login with good username/password" do
@@ -711,7 +711,7 @@ RSpec.describe User do
         stub_settings_merge(:authentication => @auth_oidc_config)
 
         FactoryBot.create(:miq_group, user_group_details)
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
       end
 
       it "returns nil with an invalid request for OIDC" do

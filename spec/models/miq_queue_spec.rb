@@ -1,11 +1,11 @@
 RSpec.describe MiqQueue do
   specify { expect(FactoryBot.build(:miq_queue)).to be_valid }
 
-  context "#deliver" do
-    before do
-      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    end
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
+  let(:zone)       { miq_server.zone }
 
+  context "#deliver" do
+    before { miq_server }
     it "requires class_name" do
       msg = MiqQueue.new(:class_name => nil)
       status, message, result = msg.deliver
@@ -33,12 +33,12 @@ RSpec.describe MiqQueue do
     end
 
     it "uses object with instance_id" do
-      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => @miq_server.id, :method_name => "my_zone")
+      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => miq_server.id, :method_name => "my_zone")
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq(@miq_server.my_zone)
+      expect(result).to eq(miq_server.my_zone)
     end
 
     it "handles record not found" do
@@ -84,9 +84,9 @@ RSpec.describe MiqQueue do
     end
 
     it "doesn't pass target_id if an instance_id is passed" do
-      expect(MiqServer).to receive(:find).with(@miq_server.id).and_return(@miq_server)
-      expect(@miq_server).to receive(:my_zone).and_return("MY ZONE")
-      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => @miq_server.id, :method_name => "my_zone", :target_id => @miq_server.id)
+      expect(MiqServer).to receive(:find).with(miq_server.id).and_return(miq_server)
+      expect(miq_server).to receive(:my_zone).and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => miq_server.id, :method_name => "my_zone", :target_id => miq_server.id)
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
@@ -109,7 +109,7 @@ RSpec.describe MiqQueue do
     it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:scan_eligible_storages).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'scan_eligible_storages')
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => miq_server, :class_name => 'Storage', :method_name => 'scan_eligible_storages')
       status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -122,7 +122,7 @@ RSpec.describe MiqQueue do
 
       allow(Storage).to receive(:scan_timer).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
-      msg.handler = @miq_server
+      msg.handler = miq_server
       status, _message, _result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -133,7 +133,7 @@ RSpec.describe MiqQueue do
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
       allow(MiqServer).to receive(:pidfile).and_raise(ex)
-      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'pidfile')
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => miq_server, :class_name => 'MiqServer', :method_name => 'pidfile')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
@@ -147,7 +147,7 @@ RSpec.describe MiqQueue do
     it "sets the User.current_user" do
       user = FactoryBot.create(:user_with_group, :name => 'Freddy Kreuger')
       msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
-                                          :handler     => @miq_server,
+                                          :handler     => miq_server,
                                           :class_name  => 'Storage',
                                           :method_name => 'create_scan_task',
                                           :user_id     => user.id,
@@ -296,10 +296,8 @@ RSpec.describe MiqQueue do
 
   context "deliver to queue" do
     before do
-      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
-      @msg = FactoryBot.create(:miq_queue, :zone => @zone.name, :role => "role1", :priority => 20, :created_on => @t1)
+      @msg = FactoryBot.create(:miq_queue, :zone => zone.name, :role => "role1", :priority => 20, :created_on => @t1)
     end
 
     it "should requeue a message with new message id" do
@@ -307,7 +305,7 @@ RSpec.describe MiqQueue do
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
         :args        => ['rq_message', 1, ["A", "B", "C"], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
-        :zone        => @zone.name,
+        :zone        => zone.name,
         :role        => 'automate',
         :msg_timeout => 60.minutes,
         :no_such_key => 'Does not exist'
@@ -328,7 +326,7 @@ RSpec.describe MiqQueue do
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
         :args        => ['rq_message', 1, ["A", "B", "C"], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
-        :zone        => @zone.name,
+        :zone        => zone.name,
         :role        => 'automate',
         :msg_timeout => 60.minutes
       }
@@ -350,9 +348,7 @@ RSpec.describe MiqQueue do
 
   context "worker" do
     before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
-
-      @worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+      @worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => miq_server.id)
       @msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
     end
 
@@ -369,7 +365,7 @@ RSpec.describe MiqQueue do
     before do
       MiqRegion.seed
       Zone.seed
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      miq_server
     end
 
     it "should put one message on queue" do
@@ -603,9 +599,7 @@ RSpec.describe MiqQueue do
   end
 
   context "#put_unless_exists" do
-    before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
-    end
+    before { miq_server }
 
     it "should put a unique message on the queue if method_name is different" do
       msg1 = MiqQueue.put(
@@ -695,9 +689,7 @@ RSpec.describe MiqQueue do
   end
 
   context "#put_or_update" do
-    before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
-    end
+    before { miq_server }
 
     it "should respect hash updates in put_or_update for create" do
       MiqQueue.put_or_update(
@@ -733,12 +725,12 @@ RSpec.describe MiqQueue do
 
     it "supports a Class object for the class name(deprecated)" do
       expect(ActiveSupport::Deprecation).to receive(:warn).with(/use a String for class_name/, anything)
-      msg = MiqQueue.put_or_update(:class_name => MiqServer, :instance_id => @miq_server.id, :method_name => "my_zone")
+      msg = MiqQueue.put_or_update(:class_name => MiqServer, :instance_id => miq_server.id, :method_name => "my_zone")
 
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_OK)
       expect(message).to eq("Message delivered successfully")
-      expect(result).to eq(@miq_server.my_zone)
+      expect(result).to eq(miq_server.my_zone)
     end
 
     it "should use args param to find messages on the queue" do
@@ -792,7 +784,7 @@ RSpec.describe MiqQueue do
 
     context "with a single server" do
       it "creates a queue item for the server" do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         MiqQueue.broadcast(queue_params)
 
         expect(queue_items.count).to eq(1)
@@ -813,7 +805,7 @@ RSpec.describe MiqQueue do
       end
 
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
+        EvmSpecHelper.local_miq_server
         other_servers.last.role = other_role.name
       end
 
@@ -850,9 +842,7 @@ RSpec.describe MiqQueue do
   end
 
   describe ".unqueue" do
-    before do
-      EvmSpecHelper.create_guid_miq_server_zone
-    end
+    before { EvmSpecHelper.local_miq_server }
 
     # NOTE: default queue_name, state, zone
     it "should unqueue a message" do

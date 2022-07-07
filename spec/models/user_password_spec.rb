@@ -3,7 +3,7 @@ require 'bcrypt'
 RSpec.describe "User Password" do
   context "With admin user" do
     before do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       @old = 'smartvm'
       @admin = FactoryBot.create(:user, :userid          => 'admin',

@@ -121,7 +121,7 @@ RSpec.describe MiqProvisionRequest do
       end
 
       context "when calling quota methods" do
-        before { EvmSpecHelper.create_guid_miq_server_zone }
+        before { EvmSpecHelper.local_miq_server }
 
         it "should return a hash for quota methods" do
           [:vms_by_group, :vms_by_owner, :retired_vms_by_group, :retired_vms_by_owner, :provisions_by_group, :provisions_by_owner,

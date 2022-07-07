@@ -65,7 +65,7 @@ RSpec.describe Authenticator::Database do
 
       context "with too many failed login attempts" do
         before do
-          EvmSpecHelper.create_guid_miq_server_zone
+          EvmSpecHelper.local_miq_server
           alice.update(:failed_login_attempts => 4)
           allow(alice).to receive(:unlock_queue)
         end
@@ -79,9 +79,7 @@ RSpec.describe Authenticator::Database do
     context "with bad password" do
       let(:password) { 'incorrect' }
 
-      before do
-        EvmSpecHelper.create_guid_miq_server_zone
-      end
+      before { EvmSpecHelper.local_miq_server }
 
       it "fails" do
         expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError, "The username or password you entered is incorrect.")
@@ -117,9 +115,7 @@ RSpec.describe Authenticator::Database do
     context "with unknown username" do
       let(:username) { 'bob' }
 
-      before do
-        EvmSpecHelper.create_guid_miq_server_zone
-      end
+      before { EvmSpecHelper.local_miq_server }
 
       it "fails" do
         expect { authenticate }.to raise_error(MiqException::MiqEVMLoginError)

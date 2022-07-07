@@ -19,7 +19,7 @@ RSpec.describe Metric::Purging do
 
   context "::Purging" do
     it "#purge_all_timer" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       Timecop.freeze(Time.now) do
         described_class.purge_all_timer
@@ -79,7 +79,7 @@ RSpec.describe Metric::Purging do
   end
 
   context "#purge_realtime" do
-    before { EvmSpecHelper.create_guid_miq_server_zone }
+    before { EvmSpecHelper.local_miq_server }
     let(:vm1) { FactoryBot.create(:vm_vmware) }
 
     it "deletes mid day" do
@@ -110,7 +110,7 @@ RSpec.describe Metric::Purging do
     end
 
     it "deletes just after new years" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
 
       Timecop.freeze('2018-01-01T02:12:00Z') do
         (0..16).each do |hours|
@@ -125,7 +125,7 @@ RSpec.describe Metric::Purging do
     end
 
     it "deletes just after daylight savings (spring forward)" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       Timecop.freeze('2017-03-12T08:12:00Z') do # 2:00am+05 EST is time of change
         # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
         (0..16).each do |hours|
@@ -140,7 +140,7 @@ RSpec.describe Metric::Purging do
     end
 
     it "deletes just after daylight savings (fallback)" do
-      EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.local_miq_server
       Timecop.freeze('2017-11-05T08:12:00Z') do # 2:00am+05 EST is time of change
         # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
         (0..16).each do |hours|

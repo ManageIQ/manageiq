@@ -1,10 +1,7 @@
 RSpec.describe PerEmsTypeWorkerMixin do
   let(:worker)       { FactoryBot.create(:miq_ems_metrics_collector_worker) }
   let(:worker_class) { worker.class }
-
-  before do
-    _guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-  end
+  let!(:server)       { EvmSpecHelper.local_miq_server }
 
   describe ".workers" do
     it "is 0 with no providers" do
@@ -12,7 +9,7 @@ RSpec.describe PerEmsTypeWorkerMixin do
     end
 
     context "with a provider" do
-      let!(:provider) { FactoryBot.create(:ems_vmware, :with_authentication, :zone => @zone) }
+      let!(:provider) { FactoryBot.create(:ems_vmware, :with_authentication, :zone => server.zone) }
 
       it "is 0 without the role active" do
         expect(worker_class.workers).to eq(0)
@@ -21,8 +18,8 @@ RSpec.describe PerEmsTypeWorkerMixin do
       context "with the role active" do
         before do
           ServerRole.seed
-          @server.role = "ems_metrics_collector"
-          @server.assigned_server_roles.update(:active => true)
+          server.role = "ems_metrics_collector"
+          server.assigned_server_roles.update(:active => true)
         end
 
         it "is the number configured" do

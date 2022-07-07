@@ -816,7 +816,7 @@ RSpec.describe ExtManagementSystem do
   end
 
   describe ".create_from_params" do
-    let(:zone)   { EvmSpecHelper.create_guid_miq_server_zone.last }
+    let(:zone)   { EvmSpecHelper.local_miq_server.zone }
     let(:params) { {"name" => "My Provider", "zone_id" => zone.id.to_s, "type" => "ManageIQ::Providers::Amazon::CloudManager", "provider_region" => "us-east-1"} }
     let(:endpoints) { [{"role" => "default"}] }
 

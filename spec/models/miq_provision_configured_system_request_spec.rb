@@ -4,7 +4,7 @@ RSpec.describe MiqProvisionConfiguredSystemRequest do
   let(:request)           { FactoryBot.create(:miq_provision_configured_system_request, :requester => admin, :options => {:src_configured_system_ids => [configured_system.id]}) }
   let(:vm_amazon)         { FactoryBot.create(:vm_amazon) }
 
-  before { _guid, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone }
+  before { @zone1 = EvmSpecHelper.local_miq_server.zone }
 
   it("#my_role should be 'ems_operations'") { expect(request.my_role).to eq('ems_operations') }
   it("#originating_controller should be 'configured_system'") { expect(request.originating_controller).to eq('configured_system') }

@@ -1,6 +1,6 @@
 RSpec.describe Authenticator::Ldap do
   before do
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
     @auth_config = {
       :authentication => {
         :mode        => "ldap",

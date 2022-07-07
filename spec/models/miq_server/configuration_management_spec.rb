@@ -73,7 +73,8 @@ RSpec.describe MiqServer, "::ConfigurationManagement" do
       end
 
       it "does not overwrite the servers zone_id if the config value is invalid" do
-        _guid, miq_server, zone = EvmSpecHelper.local_guid_miq_server_zone
+        miq_server = EvmSpecHelper.local_miq_server
+        zone = miq_server.zone
 
         miq_server.send(:immediately_reload_settings)
 

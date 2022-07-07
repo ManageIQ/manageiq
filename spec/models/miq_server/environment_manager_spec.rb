@@ -21,7 +21,7 @@ RSpec.describe "Server Environment Management" do
 
   context "#check_disk_usage" do
     before do
-      _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
+      @miq_server = EvmSpecHelper.local_miq_server
       allow(@miq_server).to receive_messages(:disk_usage_threshold => 70)
     end
 

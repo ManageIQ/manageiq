@@ -23,7 +23,7 @@ RSpec.describe MiqWidget, "::ReportContent" do
   before do
     MiqReport.seed_report("Vendor and Guest OS")
 
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
     @admin       = FactoryBot.create(:user_admin)
     @admin_group = @admin.current_group
     FactoryBot.create_list(:vm_vmware, vm_count)

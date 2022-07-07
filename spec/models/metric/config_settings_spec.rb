@@ -1,6 +1,6 @@
 RSpec.describe Metric::ConfigSettings do
   before do
-    EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.local_miq_server
   end
 
   describe ".host_overhead_cpu" do
