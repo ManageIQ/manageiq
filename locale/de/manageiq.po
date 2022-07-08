@@ -33671,10 +33671,14 @@ msgstr "Datei ist leer"
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:21
 msgid ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s byte"
-msgstr ""
-"{n, mehrere, eine {Datei ist zu groß, maximal zulässige Größe ist %s Byte. Die"
-" aktuelle Datei hat %s Byte} andere {Datei ist zu groß. Die maximal zulässige "
-"Größe ist %s Byte. Aktuelle Datei hat %s Byte}}"
+msgid_plural ""
+"File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
+msgstr[0] ""
+"Datei ist zu groß, maximal zulässige Größe ist %s Byte. Die aktuelle Datei hat"
+" %s Byte"
+msgstr[1] ""
+"Datei ist zu groß. Die maximal zulässige Größe ist %s Byte. Aktuelle Datei hat"
+" %s Byte"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:16
 msgid ""
