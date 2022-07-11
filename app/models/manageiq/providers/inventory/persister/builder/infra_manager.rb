@@ -278,7 +278,7 @@ module ManageIQ::Providers
             :custom_save_block => relationship_save_block(:relationship_key => :parent, :parent_type => "EmsFolder")
           )
 
-          add_dependency_attributes(persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact)
+          add_dependency_attributes(:vms =>persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact)
         end
 
         def vm_resource_pools
