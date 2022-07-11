@@ -19,20 +19,23 @@ module ManageIQ::Providers
     has_many :host_virtual_switches, -> { distinct }, :through => :hosts
     has_many :host_virtual_lans, -> { distinct }, :through => :hosts
 
-    has_many :host_hardwares,             :through => :hosts, :source => :hardware
-    has_many :host_operating_systems,     :through => :hosts, :source => :operating_system
-    has_many :host_storages,              :through => :hosts
-    has_many :host_switches,              :through => :hosts
-    has_many :host_networks,              :through => :hosts, :source => :networks
-    has_many :host_guest_devices,         :through => :host_hardwares, :source => :guest_devices
-    has_many :host_disks,                 :through => :host_hardwares, :source => :disks
-    has_many :snapshots,                  :through => :vms_and_templates
-    has_many :switches, -> { distinct },  :through => :hosts
-    has_many :lans, -> { distinct },      :through => :hosts
-    has_many :subnets, -> { distinct },   :through => :lans
-    has_many :networks,                   :through => :hardwares
-    has_many :guest_devices,              :through => :hardwares
-    has_many :ems_custom_attributes,      :through => :vms_and_templates
+    has_many :host_hardwares,                    :through => :hosts, :source => :hardware
+    has_many :host_operating_systems,            :through => :hosts, :source => :operating_system
+    has_many :host_storages,                     :through => :hosts
+    has_many :host_switches,                     :through => :hosts
+    has_many :host_networks,                     :through => :hosts, :source => :networks
+    has_many :host_guest_devices,                :through => :host_hardwares, :source => :guest_devices
+    has_many :host_disks,                        :through => :host_hardwares, :source => :disks
+    has_many :miq_scsi_targets, -> { distinct }, :through => :host_guest_devices
+    has_many :miq_scsi_luns, -> { distinct },    :through => :miq_scsi_targets
+    has_many :host_system_services,              :through => :hosts, :source => :system_services
+    has_many :snapshots,                         :through => :vms_and_templates
+    has_many :switches, -> { distinct },         :through => :hosts
+    has_many :lans, -> { distinct },             :through => :hosts
+    has_many :subnets, -> { distinct },          :through => :lans
+    has_many :networks,                          :through => :hardwares
+    has_many :guest_devices,                     :through => :hardwares
+    has_many :ems_custom_attributes,             :through => :vms_and_templates
     has_many :clusterless_hosts, -> { where(:ems_cluster =>nil) }, :class_name => "Host", :foreign_key => "ems_id", :inverse_of => :ext_management_system
 
     include HasManyOrchestrationStackMixin
