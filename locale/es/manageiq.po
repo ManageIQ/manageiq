@@ -33760,10 +33760,14 @@ msgstr "El archivo está vacío"
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:21
 msgid ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s byte"
-msgstr ""
-"{n, plural, un {Archivo es demasiado grande, el tamaño máximo permitido es %s "
-"bytes. El archivo actual tiene %s bytes} el otro {archivo es demasiado grande,"
-" el tamaño máximo permitido es %s bytes. El archivo actual tiene %s bytes}}"
+msgid_plural ""
+"File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
+msgstr[0] ""
+"Archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
+"archivo actual tiene %s bytes"
+msgstr[1] ""
+"archivo es demasiado grande, el tamaño máximo permitido es %s bytes. El "
+"archivo actual tiene %s bytes"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:16
 msgid ""
