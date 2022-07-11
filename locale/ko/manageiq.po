@@ -32519,9 +32519,9 @@ msgstr "파일이 비어 있음"
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:21
 msgid ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s byte"
-msgstr ""
-"{n, 복수, 하나의 {파일이 너무 크며, 최대 허용 크기는 %s바이트입니다. 현재 파일은 %s바이트} 기타 {파일이 너무 크며, 최대 허용"
-" 크기는 %s바이트입니다. 현재 파일은 %s바이트}}"
+msgid_plural ""
+"File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
+msgstr[0] "파일이 너무 크며, 최대 허용 크기는 %s바이트입니다. 현재 파일은 %s바이트"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:16
 msgid ""

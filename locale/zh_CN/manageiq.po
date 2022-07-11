@@ -32485,9 +32485,9 @@ msgstr "文件为空"
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:21
 msgid ""
 "File is too large, maximum allowed size is %s bytes. Current file has %s byte"
-msgstr ""
-"{n, plural, one {文件太大，允许的最大大小为 %s 个字节。 当前文件有 %s 个字节} 其他 {文件太大，允许的最大大小为 %s 个字节。"
-" 当前文件有 %s 个字节}}"
+msgid_plural ""
+"File is too large, maximum allowed size is %s bytes. Current file has %s bytes"
+msgstr[0] "文件太大，允许的最大大小为 %s 个字节。 当前文件有 %s 个字节"
 
 #: ../app/javascript/forms/mappers/validatorMapper.jsx:16
 msgid ""
