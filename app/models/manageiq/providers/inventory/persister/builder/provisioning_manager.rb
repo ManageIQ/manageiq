@@ -5,13 +5,13 @@ module ManageIQ::Providers
         def customization_script_media
           skip_sti
           add_properties(:manager_ref => %i[manager_ref])
-          add_default_values(:manager => manager)
+          add_default_values(:ext_management_system => manager)
         end
 
         def customization_script_ptables
           skip_sti
           add_properties(:manager_ref => %i[manager_ref])
-          add_default_values(:manager => manager)
+          add_default_values(:ext_management_system => manager)
         end
 
         def operating_system_flavors
