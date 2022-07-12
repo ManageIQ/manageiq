@@ -34,9 +34,7 @@ module ManageIQ::Providers
 
         def credentials
           default_manager_ref
-          add_default_values(
-            :resource => ->(persister) { persister.manager }
-          )
+          add_default_values(:resource => manager)
         end
 
         def inventory_root_groups
@@ -54,9 +52,7 @@ module ManageIQ::Providers
         end
 
         def add_common_default_values
-          add_default_values(
-            :manager => ->(persister) { persister.manager }
-          )
+          add_default_values(:manager => manager)
         end
       end
     end

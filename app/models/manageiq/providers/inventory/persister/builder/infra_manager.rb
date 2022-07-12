@@ -253,7 +253,7 @@ module ManageIQ::Providers
           )
 
           add_dependency_attributes(
-            :ems_folders => ->(persister) { [persister.collections[:ems_folders]] }
+            :ems_folders => [persister.collections[:ems_folders]]
           )
         end
 
@@ -266,9 +266,7 @@ module ManageIQ::Providers
           )
 
           dependency_collections = %i[clusters ems_folders datacenters hosts resource_pools storages]
-          dependency_attributes = dependency_collections.index_with do |collection|
-            ->(persister) { [persister.collections[collection]].compact }
-          end
+          dependency_attributes = dependency_collections.index_with { |collection| [persister.collections[collection]].compact }
           add_dependency_attributes(dependency_attributes)
         end
 
@@ -280,9 +278,7 @@ module ManageIQ::Providers
             :custom_save_block => relationship_save_block(:relationship_key => :parent, :parent_type => "EmsFolder")
           )
 
-          add_dependency_attributes(
-            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
-          )
+          add_dependency_attributes(:vms =>persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact)
         end
 
         def vm_resource_pools
@@ -296,7 +292,7 @@ module ManageIQ::Providers
           )
 
           add_dependency_attributes(
-            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
+            :vms => persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
           )
         end
 
