@@ -89,6 +89,9 @@ module Vmdb
     config.action_cable.allow_same_origin_as_host = true
     config.action_cable.mount_path = '/ws/notifications'
 
+    # Use yaml_unsafe_load for column serialization to handle Symbols
+    config.active_record.use_yaml_unsafe_load = true
+
     # Customize any additional options below...
 
     config.autoload_paths += config.eager_load_paths
