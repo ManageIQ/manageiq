@@ -8,6 +8,7 @@ class CloudDatabase < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :cloud_database_flavor
   belongs_to :resource_group
+  belongs_to :cloud_database_server
 
   serialize :extra_attributes
 
