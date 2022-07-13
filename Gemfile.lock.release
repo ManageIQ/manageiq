@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/ManageIQ/amazon_ssa_support.git
   revision: 07180334e62e9260b5f0640627605a5ff194496f
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     amazon_ssa_support (0.1.0)
       aws-sdk-ec2 (~> 1.0)
@@ -14,7 +14,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-api
   revision: 1bd75ebbd8395aa61d181aa18ebb1c016d63b7c9
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-api (4.4.0.pre.pre)
       config
@@ -23,7 +23,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-automation_engine
   revision: 58a081e7f737610f913786dad075f0b10467d6eb
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-automation_engine (0.1.0)
       rubyzip (~> 2.0.0)
@@ -31,7 +31,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-consumption
   revision: 79982647e6fc5e637efbbba889f0e979ecea9d2d
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-consumption (0.0.1)
       hashdiff (~> 1.0)
@@ -40,7 +40,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-content
   revision: d6aadb84a3b2312a30ea0e73202356527560ed9b
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-content (0.1.0)
       savon (~> 2.11.1)
@@ -48,14 +48,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-decorators
   revision: f6183c23b53674968229f78ba407a5119681a35d
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-decorators (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-gems-pending.git
   revision: 676e1d295583b0f5fde035c93f36ad28ecb0640e
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-gems-pending (0.1.0)
       activesupport (~> 6.0)
@@ -74,7 +74,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-amazon
   revision: b6ef87053a7a39406d3a4e1e9f6d3039159a0918
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-amazon (0.1.0)
       aws-sdk-cloudformation (~> 1.0)
@@ -92,7 +92,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ansible_tower
   revision: 6cb50d1b93f28afb0c64f0e2ff837092797d7ed0
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ansible_tower (0.1.0)
       ansible_tower_client (~> 0.20, >= 0.21.2)
@@ -100,7 +100,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-autosde
   revision: c5d9749f487a55ca9a944e6a719c239d7e8a2342
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-autosde (0.1.0)
       autosde_openapi_client (~> 1.1.0)
@@ -109,7 +109,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure
   revision: 622e43171bad9d71f48a044529c7dbbdad903be2
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-azure (0.1.0)
       azure-armrest (~> 0.14)
@@ -117,7 +117,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-azure_stack
   revision: 6eee0d3b3ed39c0015d5dc08e2dbd523d65553bf
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-azure_stack (0.1.0)
       azure_mgmt_compute (~> 0.20)
@@ -128,7 +128,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-cisco_intersight
   revision: e31dc4c73d6e04870db5689c916bf209ec60ccbb
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-cisco_intersight (0.1.0)
       intersight_client
@@ -136,7 +136,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-foreman
   revision: e8ca88704aa5f223eec4496da90890598079b961
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-foreman (0.1.0)
       foreman_api_client (~> 1.0)
@@ -144,7 +144,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-google
   revision: bb45d97fc4153d8363710221ee5fca8ae3025dce
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-google (0.1.0)
       fog-google (~> 1.10)
@@ -153,14 +153,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cic
   revision: 6433206ef6d8ace65f85444da08256403fba5971
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ibm_cic (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_cloud
   revision: f4b3810b7b65dc263759fc1207df30d1ad9e345d
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ibm_cloud (0.1.0)
       ibm-cloud-sdk (~> 0.1)
@@ -178,7 +178,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_hmc
   revision: 7895ea456f4bff704296988f7ebb75fd7ee7941a
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ibm_power_hmc (0.1.0)
       ibm_power_hmc (~> 0.9.0)
@@ -186,21 +186,21 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_power_vc
   revision: cc6555cbc7e987af44e173a226d743ed41116c01
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ibm_power_vc (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ibm_terraform
   revision: 9cf79f9862be64326d95e92d8e93b42783c39a61
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ibm_terraform (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubernetes
   revision: dd0c8d89181219a97ea9116bb54f009c5906c62f
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-kubernetes (0.1.0)
       image-inspector-client (~> 2.0)
@@ -212,7 +212,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-kubevirt
   revision: cbbd9e557c4dc384fca2f3055a26974be73a682c
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-kubevirt (0.1.0)
       fog-kubevirt (~> 1.0, >= 1.3.5)
@@ -221,7 +221,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-lenovo
   revision: 2432442a647c2ecdf0c283ac1caf5104ffe919bc
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-lenovo (0.2.0)
       xclarity_client (~> 0.6.0)
@@ -229,14 +229,14 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nsxt
   revision: 5b630db289d561c4587dfbc605b6fc8397f23d96
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-nsxt (0.1.0)
 
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-nuage
   revision: 9a8c094b4b4e7424ef35b44b794cd28863d54127
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-nuage (0.1.0)
       excon (~> 0.71)
@@ -244,7 +244,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openshift
   revision: deca5c8387e4f33494b993041129e48408df4b90
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-openshift (0.1.0)
       manageiq-providers-kubernetes (~> 0.1.0)
@@ -252,7 +252,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-openstack
   revision: ea9273ce76207b9490e252d0f8e11e103d7d1bb8
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-openstack (0.1.0)
       activesupport (~> 6.0)
@@ -265,7 +265,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-oracle_cloud
   revision: eefe1bdb8e55ec4b94c4125b42a0acfe109aefa8
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-oracle_cloud (0.1.0)
       oci (~> 2.16)
@@ -273,7 +273,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-ovirt
   revision: 7b9210edd535133c65a5ece74589b0b059d752c3
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-ovirt (0.1.0)
       ovirt-engine-sdk (~> 4.4.0)
@@ -282,7 +282,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-redfish
   revision: a824c8a3fe7ac0054d4645c709796f2f396f8166
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-redfish (0.1.0)
       redfish_client (~> 0.5.1)
@@ -290,7 +290,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-scvmm
   revision: f6732bf8b2bc9587dbd0224bad817e32b97ba39c
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-scvmm (0.1.0)
       addressable (~> 2.4)
@@ -298,7 +298,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-providers-vmware
   revision: 860d98b3f3d2f207af8bc89f0c8dfefa91e6ca97
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-providers-vmware (0.1.0)
       ffi-vix_disk_lib (~> 1.1)
@@ -310,7 +310,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-schema
   revision: e83071e45b53f7b7344cb126a5f3f11ede1eed27
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-schema (0.1.0)
       activerecord-id_regions (~> 0.3.2)
@@ -324,7 +324,7 @@ GIT
 GIT
   remote: https://github.com/ManageIQ/manageiq-ui-classic
   revision: 76f4f95d36bbbc12ae7f7f04f9cc5c29d4762af3
-  tag: najdorf-1.2
+  branch: najdorf
   specs:
     manageiq-ui-classic (0.1.0)
       execjs (= 2.8.1)

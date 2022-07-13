@@ -9,12 +9,12 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :tag => "najdorf-1.2"
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "najdorf"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :tag => "najdorf-1.2"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "najdorf"
   end
 end
 
@@ -100,7 +100,7 @@ gem "american_date"
 ### providers
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
-  gem "amazon_ssa_support",                                  :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :tag => "najdorf-1.2" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+  gem "amazon_ssa_support",                                  :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "najdorf" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 end
 
 group :ansible_tower, :manageiq_default do
