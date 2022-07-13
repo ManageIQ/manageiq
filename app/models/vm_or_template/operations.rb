@@ -145,21 +145,12 @@ module VmOrTemplate::Operations
     supports_not :quick_stats
     supports_not :rename
     supports_not :terminate
-  end
-
-  def validate_vm_control_powered_on
-    validate_vm_control_power_state(true)
-  end
-
-  def validate_vm_control_power_state(check_powered_on)
-    unless supports?(:control)
-      return {:available => false, :message => unsupported_reason(:control)}
+    supports :vm_control_powered_on do
+      if !supports?(:control)
+        unsupported_reason_add(:vm_control_powered_on, unsupported_reason(:control))
+      elsif current_state != "on"
+        unsupported_reason_add(:vm_control_powered_on, "The VM is not powered on")
+      end
     end
-    return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")
-    {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
-  end
-
-  def validate_unsupported(message_prefix)
-    {:available => false, :message => "#{message_prefix} is not available for #{self.class.model_suffix} VM or Template."}
   end
 end

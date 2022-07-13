@@ -56,9 +56,10 @@ module ManageIQ::Providers
 
     virtual_column :port_show, :type => :string
 
+    supports     :authentication_status
     supports_not :external_logging
-
-    supports :metrics
+    supports     :metrics
+    supports     :performance
 
     class << model_name
       define_method(:route_key) { "ems_containers" }
@@ -68,14 +69,6 @@ module ManageIQ::Providers
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
-    end
-
-    def validate_performance
-      {:available => true, :message => nil}
-    end
-
-    def validate_authentication_status
-      {:available => true, :message => nil}
     end
 
     def port_show

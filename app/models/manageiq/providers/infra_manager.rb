@@ -45,6 +45,8 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_infra" }
     end
 
+    supports :authentication_status
+
     #
     # ems_timeouts is a general purpose proc for obtaining
     # read and open timeouts for any ems type and optional service.
@@ -65,10 +67,6 @@ module ManageIQ::Providers
       read_timeout = ems_settings.fetch_path([service, :read_timeout].compact).try(:to_i_with_method)
       open_timeout = ems_settings.fetch_path([service, :open_timeout].compact).try(:to_i_with_method)
       [read_timeout, open_timeout]
-    end
-
-    def validate_authentication_status
-      {:available => true, :message => nil}
     end
   end
 
