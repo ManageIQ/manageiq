@@ -305,6 +305,7 @@ class EmsEvent < EventStream
 
   private_class_method def self.syndicate_event(ems_id, event)
     ems = ExtManagementSystem.find(ems_id)
+    event = event.dup
     event[:ems_uid]  = ems&.uid_ems
     event[:ems_type] = ems&.class&.ems_type
 
