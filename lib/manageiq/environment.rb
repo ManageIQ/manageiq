@@ -109,7 +109,7 @@ module ManageIQ
 
     def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
       puts "\n== Resetting tests =="
-      run_rake_task("#{task_prefix}test:vmdb:setup", :root => root)
+      run_rake_task("#{task_prefix}test:vmdb:setup", :root => root, :env => {"RAILS_ENV" => "test"})
     end
 
     def self.reset_automate_domain
@@ -142,8 +142,8 @@ module ManageIQ
       version_requirements.map { |req| req.join(" ") }.join(", ")
     end
 
-    def self.run_rake_task(task, root: APP_ROOT)
-      system!("bin/rails #{task}", :chdir => root)
+    def self.run_rake_task(task, root: APP_ROOT, env: {})
+      system!(env, "bin/rails #{task}", :chdir => root)
     end
 
     def self.system!(*args)
