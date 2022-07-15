@@ -1416,7 +1416,6 @@
   - instance_view
   - vm_view
   - miq_cloud_networks
-  - ems_container_ad_hoc_metrics
   - monitor_alerts
   - alert_status
   - alert_action
@@ -1460,7 +1459,6 @@
   - container_dashboard
   - instance_view
   - vm_view
-  - ems_container_ad_hoc_metrics
   - monitor_alerts
   - alert_status
   - alert_action
