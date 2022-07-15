@@ -22,6 +22,11 @@ module ManageIQ
 
       ensure_config_files
 
+      unless ENV["CI"]
+        migrate_database
+        seed_database
+      end
+
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root) unless ENV["SKIP_TEST_RESET"]
     end
 
