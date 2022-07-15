@@ -43,6 +43,7 @@ module ManageIQ::Providers
     virtual_has_many :volume_availability_zones, :class_name => "AvailabilityZone", :uses => :availability_zones
 
     supports_not :auth_key_pair_create
+    supports     :authentication_status
     supports_not :cinder_service
     supports_not :cloud_tenants
     supports_not :cloud_volume
@@ -72,10 +73,6 @@ module ManageIQ::Providers
       raise NotImplementedError unless Rails.env.development?
       require 'util/miq-system'
       MiqSystem.open_browser(browser_url)
-    end
-
-    def validate_authentication_status
-      {:available => true, :message => nil}
     end
 
     def stop_event_monitor_queue_on_credential_change

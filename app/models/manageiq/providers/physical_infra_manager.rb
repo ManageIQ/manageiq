@@ -78,16 +78,14 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_physical_infra" }
     end
 
+    supports :authentication_status
+
     def self.ems_type
       @ems_type ||= "physical_infra_manager".freeze
     end
 
     def self.description
       @description ||= "PhysicalInfraManager".freeze
-    end
-
-    def validate_authentication_status
-      {:available => true, :message => nil}
     end
 
     def count_health_state(state)

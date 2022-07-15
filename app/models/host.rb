@@ -179,12 +179,14 @@ class Host < ApplicationRecord
   before_create :make_smart
   after_save    :process_events
 
+  supports     :check_compliance_queue
   supports     :destroy
   supports_not :quick_stats
   supports_not :refresh_advanced_settings
   supports_not :refresh_firewall_rules
   supports_not :refresh_logs
   supports_not :refresh_network_interfaces
+  supports     :scan_and_check_compliance_queue
   supports_not :set_node_maintenance
   supports_not :smartstate_analysis
   supports_not :unset_node_maintenance
@@ -271,14 +273,6 @@ class Host < ApplicationRecord
     end
   end
   private :raise_cluster_event
-
-  def validate_scan_and_check_compliance_queue
-    {:available => true, :message => nil}
-  end
-
-  def validate_check_compliance_queue
-    {:available => true, :message => nil}
-  end
 
   def has_active_ems?
     !!ext_management_system

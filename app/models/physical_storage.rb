@@ -35,6 +35,7 @@ class PhysicalStorage < ApplicationRecord
 
   supports_not :create
   supports_not :delete
+  supports_not :update_physical_storage
   supports_not :validate
   acts_as_miq_taggable
 
@@ -157,10 +158,6 @@ class PhysicalStorage < ApplicationRecord
 
   def update_physical_storage(options = {})
     raw_update_physical_storage(options)
-  end
-
-  def validate_update_physical_storage
-    validate_unsupported("Update Volume Operation")
   end
 
   def raw_update_physical_storage(_options = {})
