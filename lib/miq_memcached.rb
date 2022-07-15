@@ -7,6 +7,13 @@ module MiqMemcached
 
   def self.default_client_options
     options = {
+      # The default consecutive socket_max_failures is 2. Since we don't have a failover
+      # memcached to use when one is down, we need to try harder to allow this client to
+      # retry memcached before marking it failed.
+      #
+      # The client options are described here:
+      # https://github.com/petergoldstein/dalli/wiki/Dalli::Client-Options
+      :socket_max_failures => 5,
       # Direct Dalli Clients won't use connection pool but will be threadsafe.
       # ActiveSupport::Cache::MemCacheStore and ManageIQ::Session::MemCacheStoreAdapter
       # use threadsafe but also accept connection pool options.
