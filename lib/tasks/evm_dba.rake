@@ -100,28 +100,10 @@ namespace :evm do
     end
 
     desc "Seed the ManageIQ EVM Database (VMDB) with defaults"
-    task :seed do
-      Rake::Task['db:seed'].invoke
-    end
+    task :seed => "db:seed"
 
     desc "Destroys the ManageIQ EVM Database (VMDB) of all tables, views and indices"
-    task :destroy do
-      begin
-        Rake::Task['environment'].invoke
-      rescue => err
-        # Allow "destroying" a database that doesn't exist
-        raise unless err.message =~ /does not exist$/
-      end
-
-      Rake::Task['db:drop'].invoke
-      Rake::Task['db:create'].invoke
-
-      # db:create creates a temporary connection to the default database, but doesn't
-      # remove the connection in the event of a failed create, so we drop the connection
-      # and reestablish it to the environment's database.
-      ActiveRecord::Base.remove_connection
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
-    end
+    task :destroy => %w[environment db:drop db:create]
 
     desc "Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices"
     task :reset => [:destroy, 'db:migrate']
