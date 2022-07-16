@@ -4,7 +4,7 @@ if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :vmdb do
     desc "Setup environment for vmdb specs"
-    task :setup => [:initialize, :verify_no_db_access_loading_rails_environment] do |rake_task|
+    task :setup => :initialize do |rake_task|
       # in case we are called from an engine or plugin, the task might be namespaced under 'app:'
       # i.e. it's 'app:test:vmdb:setup'. Then we have to call the tasks in here under the 'app:' namespace too
       app_prefix = rake_task.name.chomp('test:vmdb:setup')
