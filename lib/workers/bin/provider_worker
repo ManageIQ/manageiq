@@ -15,7 +15,8 @@ end
 
 provider_opts = {
   :ems       => ems_opts,
-  :messaging => MiqQueue.messaging_client_options
+  :messaging => MiqQueue.messaging_client_options,
+  :settings  => Settings.to_h
 }
 
 # Create a temp file and immediately unlink it to create a
