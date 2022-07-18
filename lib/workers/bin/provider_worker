@@ -18,14 +18,14 @@ provider_opts = {
   :messaging => MiqQueue.messaging_client_options
 }
 
-# Send the connection information to the child process via STDIN by creating a
-# pipe, writing the config to our end of the pipe, and replacing STDIN with the
-# read end of the pipe.  This allows the child to simply read from STDIN to get
-# the credentials and other config in a secure way.
-stdin_rd, stdin_wr = IO.pipe
-stdin_wr.write(provider_opts.to_json)
-stdin_wr.close
+# Create a temp file and immediately unlink it to create a
+# secure hidden file to be used for the child process' stdin.
+stdin_tmp = Tempfile.new
+File.unlink(stdin_tmp.path)
 
-$stdin.reopen(stdin_rd)
+stdin_tmp.write(provider_opts.to_json)
+stdin_tmp.rewind
+
+$stdin.reopen(stdin_tmp)
 
 Kernel.exec(ARGV.shelljoin)
