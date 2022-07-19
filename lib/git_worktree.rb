@@ -37,17 +37,11 @@ class GitWorktree
     @remote_name = 'origin'
     @base_name   = File.basename(@path)
 
-    # The libssh2 library must already be installed at gem installation time
-    # for the 'ssh' feature to be available.
+    # The libssh2 library must already be installed and the `--with-ssh` build option
+    # passed at gem installation time for the 'ssh' feature to be available.
     #
-    # For Fedora/Centos, the presence of libssh2 seems to be enough to get it
-    # to build properly.
-    #
-    # For OSX:
-    #
-    #     $ brew install libssh2
     #     $ gem uninstall rugged  # if required
-    #     $ export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig"
+    #     $ bundle config set --local build.rugged --with-ssh
     #     $ bin/bundle
     #
     if @ssh_private_key && !Rugged.features.include?(:ssh)

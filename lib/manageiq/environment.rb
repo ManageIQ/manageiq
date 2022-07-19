@@ -18,6 +18,7 @@ module ManageIQ
 
       setup_gemfile_lock if ENV["CI"]
       install_bundler(plugin_root)
+      bundle_config(plugin_root)
       bundle_update(plugin_root, force: force_bundle_update)
 
       ensure_config_files
@@ -78,6 +79,10 @@ module ManageIQ
 
       raise "Missing Gemfile.lock.release" unless APP_ROOT.join("Gemfile.lock.release").file?
       FileUtils.cp(APP_ROOT.join("Gemfile.lock.release"), APP_ROOT.join("Gemfile.lock"))
+    end
+
+    def self.bundle_config(root = APP_ROOT)
+      system!("bundle config set --local build.rugged --with-ssh", :chdir => root)
     end
 
     def self.bundle_update(root = APP_ROOT, force: false)

@@ -23,6 +23,7 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
 
   puts '== Installing dependencies =='
   ManageIQ::Environment.install_bundler
+  ManageIQ::Environment.bundle_config
   ManageIQ::Environment.bundle_update
 
   ui_thread = ManageIQ::Environment.update_ui_thread unless ENV["SKIP_UI_UPDATE"]
