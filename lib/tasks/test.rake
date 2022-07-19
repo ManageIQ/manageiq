@@ -29,11 +29,14 @@ namespace :test do
     end
   end
 
-  task :setup_db => :initialize do
-    ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
-    puts "** Preparing database with REGION #{ENV["REGION"]}"
+  task :setup_db => [:initialize, :setup_region] do
     reset_task = defined?(ENGINE_ROOT) ? 'app:evm:db:reset' : 'evm:db:reset'
     Rake::Task[reset_task].invoke
+  end
+
+  task :setup_region do
+    ENV["REGION"] ||= (rand(99) + 1).to_s # Ensure we have a random, non-0, region
+    puts "** Preparing database with REGION #{ENV["REGION"]}"
   end
 
   task :spec_deps => [:initialize, 'evm:compile_sti_loader']
