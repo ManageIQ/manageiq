@@ -18,7 +18,7 @@ class <%= class_name %>::<%= manager_type %> < ManageIQ::Providers::<%= manager_
   # confuse the validation. For example you should not have `x` and `x.y` fields at the
   # same time.
   def self.params_for_create
-    @params_for_create ||= {
+    {
       :fields => [
         {
           :component => "text-field",
