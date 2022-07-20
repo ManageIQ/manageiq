@@ -264,6 +264,12 @@ group :web_socket, :manageiq_default do
   gem "websocket-driver",               "~>0.6.3",           :require => false
 end
 
+if ENV["APPLIANCE"]
+  group :appliance do
+    gem "manageiq-appliance_console",     "~>7.0", ">=7.0.6",  :require => false
+  end
+end
+
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
