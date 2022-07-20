@@ -26,6 +26,7 @@ class EventStream < ApplicationRecord
   belongs_to :container_node
 
   belongs_to :physical_server
+  belongs_to :physical_storage
   belongs_to :physical_chassis, :inverse_of => :event_streams
   belongs_to :physical_switch, :inverse_of => :event_streams
 

@@ -6645,6 +6645,10 @@
       :description: Display Individual Physical Storage
       :feature_type: view
       :identifier: physical_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Physical Storage
+      :feature_type: view
+      :identifier: physical_storage_timeline
   - :name: Operate
     :description: Perform Operations on Physical Storages
     :feature_type: control
@@ -6679,7 +6683,6 @@
       :description: Validate a Physical Storage
       :feature_type: admin
       :identifier: physical_storage_validate
-
 # Physical Servers
 - :name: Physical Servers
   :description: Everything under Physical Servers

@@ -5,33 +5,31 @@ class PhysicalStorage < ApplicationRecord
   include SupportsFeatureMixin
   include CustomActionsMixin
   include EmsRefreshMixin
+  include EventMixin
+
+  # The physical-storage is expected to have san_addresses of its own in the future (The real addresses through which it actually connects to the SAN).
+  # Therefore, the name san_addresses is reserved for the physical-storages actual san-addresses, and for all of the san_addresses configured in the physical-storage's host_initiators we refer as registered_initiator_addresses.
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :physical_rack
   belongs_to :physical_chassis, :inverse_of => :physical_storages
+  belongs_to :physical_storage_family, :inverse_of => :physical_storages
+
+  has_one :hardware, :through => :computer_system
+  has_one :computer_system, :as => :managed_entity, :dependent => :destroy
+  has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
 
   has_many :storage_resources, :dependent => :destroy
   has_many :host_initiators, :dependent => :destroy
   has_many :host_initiator_groups, :dependent => :destroy
-
-  # The physical-storage is expected to have san_addresses of its own in the future (The real addresses through which it actually connects to the SAN).
-  # Therefore, the name san_addresses is reserved for the physical-storages actual san-addresses, and for all of the san_addresses configured in the physical-storage's host_initiators we refer as registered_initiator_addresses.
   has_many :registered_initiator_addresses, :through => :host_initiators, :source => :san_addresses
-
-  belongs_to :physical_storage_family, :inverse_of => :physical_storages
-
-  has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
-
   has_many :canisters, :dependent => :destroy, :inverse_of => false
   has_many :physical_disks, :dependent => :destroy, :inverse_of => :physical_storage
-
-  has_one :computer_system, :as => :managed_entity, :dependent => :destroy
-  has_one :hardware, :through => :computer_system
-
   has_many :canister_computer_systems, :through => :canisters, :source => :computer_system
   has_many :guest_devices, :through => :hardware
-
   has_many :wwpn_candidates, :dependent => :destroy
+
+  supports :timeline
 
   supports_not :create
   supports_not :delete
@@ -162,5 +160,9 @@ class PhysicalStorage < ApplicationRecord
 
   def raw_update_physical_storage(_options = {})
     raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
+  end
+
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.physical_storage_id = ?", id]
   end
 end
