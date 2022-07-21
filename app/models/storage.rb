@@ -71,17 +71,13 @@ class Storage < ApplicationRecord
 
   supports :smartstate_analysis do
     if !ext_management_system&.class&.supports?(:smartstate_analysis)
-      unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
+      _("Smartstate Analysis cannot be performed on selected Datastore")
     elsif !ext_management_system&.authentication_status_ok?
-      unsupported_reason_add(:smartstate_analysis, _("There are no EMSs with valid credentials for this Datastore"))
+      _("There are no EMSs with valid credentials for this Datastore")
     end
   end
 
-  supports :delete do
-    if vms_and_templates.any? || hosts.any?
-      unsupported_reason_add(:delete, _("Only storage without VMs and Hosts can be removed"))
-    end
-  end
+  supports(:delete) { _("Only storage without VMs and Hosts can be removed") if vms_and_templates.any? || hosts.any? }
 
   supports_not :evacuate
 

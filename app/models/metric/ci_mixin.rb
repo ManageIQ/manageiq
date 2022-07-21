@@ -23,7 +23,7 @@ module Metric::CiMixin
     supports :capture do
       metrics_capture_klass = "#{self.class.module_parent.name}::MetricsCapture".safe_constantize
       unless metrics_capture_klass&.method_defined?(:perf_collect_metrics)
-        unsupported_reason_add(:capture, _('This provider does not support metrics collection'))
+        _('This provider does not support metrics collection')
       end
     end
   end

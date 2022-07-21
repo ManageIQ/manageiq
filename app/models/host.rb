@@ -200,34 +200,32 @@ class Host < ApplicationRecord
   supports_not :vmotion_enabled
   supports     :ipmi do
     if ipmi_address.blank?
-      unsupported_reason_add(:ipmi, _("The Host is not configured for IPMI"))
+      _("The Host is not configured for IPMI")
     elsif authentication_type(:ipmi).nil?
-      unsupported_reason_add(:ipmi, _("The Host has no IPMI credentials"))
+      _("The Host has no IPMI credentials")
     elsif authentication_userid(:ipmi).blank? || authentication_password(:ipmi).blank?
-      unsupported_reason_add(:ipmi, _("The Host has invalid IPMI credentials"))
+      _("The Host has invalid IPMI credentials")
     end
   end
 
   # if you change this, please check in on VmWare#start
   supports :start do
     if !supports?(:ipmi)
-      unsupported_reason_add(:start, unsupported_reason(:ipmi))
+      unsupported_reason(:ipmi)
     elsif power_state != "off"
-      unsupported_reason_add(:start, _("The Host is not in power state off"))
+      _("The Host is not in power state off")
     end
   end
 
   supports :stop do
     if !supports?(:ipmi)
-      unsupported_reason_add(:stop, unsupported_reason(:ipmi))
+      unsupported_reason(:ipmi)
     elsif power_state != "on"
-      unsupported_reason_add(:stop, _("The Host is not in powered on"))
+      _("The Host is not in powered on")
     end
   end
 
-  supports :reset do
-    unsupported_reason_add(:reset, unsupported_reason(:ipmi)) unless supports?(:ipmi)
-  end
+  supports(:reset) { unsupported_reason(:ipmi) }
 
   def self.non_clustered
     where(:ems_cluster_id => nil)

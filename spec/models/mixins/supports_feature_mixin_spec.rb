@@ -27,7 +27,7 @@ RSpec.describe SupportsFeatureMixin do
 
       supports :std_accept
       supports_not :std_denial, :reason => "not available"
-      supports(:dynamic_feature) { unsupported_reason_add(:dynamic_feature, "dynamically unsupported") unless attr1 }
+      supports(:dynamic_feature) { "dynamically unsupported" unless attr1 }
 
       def validate_accept
         {:available => true, :message => nil}
@@ -124,6 +124,20 @@ RSpec.describe SupportsFeatureMixin do
       expect(test_inst.supports?(:dynamic_feature)).to be_truthy
     end
 
+    it "denies implicit dynamic attrs" do
+      test_class.supports(:implicit_feature) { "dynamically unsupported" unless attr1 }
+      test_inst = test_class.new(:attr1 => false)
+
+      expect(test_inst.supports?(:implicit_feature)).to be_falsey
+    end
+
+    it "supports implicit dynamic attrs" do
+      test_class.supports(:implicit_feature) { "dynamically unsupported" unless attr1 }
+      test_inst = test_class.new(:attr1 => true)
+
+      expect(test_inst.supports?(:implicit_feature)).to be_truthy
+    end
+
     it "overrides to deny from child class" do
       child_class = define_model(nil, test_class, :std_accept => false, :module_accept => false, :dynamic_feature => false)
       test_inst = child_class.new(:attr1 => true)
@@ -158,7 +172,6 @@ RSpec.describe SupportsFeatureMixin do
 
         expect(test_inst.supports?(:std_accept)).to be_truthy
         expect(test_inst.supports?(:module_accept)).to be_truthy
-        expect(test_inst.supports?(:dynamic_feature)).to be_truthy
         expect(test_inst.supports?(:std_denial)).to be_truthy
         expect(test_inst.supports?(:dynamic_feature)).to be_truthy
 
@@ -166,7 +179,6 @@ RSpec.describe SupportsFeatureMixin do
 
         expect(test_inst.supports?(:std_accept)).to be_falsey
         expect(test_inst.supports?(:module_accept)).to be_falsey
-        expect(test_inst.supports?(:dynamic_feature)).to be_falsey
         expect(test_inst.supports?(:std_denial)).to be_falsey
         expect(test_inst.supports?(:dynamic_feature)).to be_falsey
       end
@@ -218,6 +230,13 @@ RSpec.describe SupportsFeatureMixin do
       expect(test_inst.supports?(:dynamic_feature)).to be_truthy # this recalculates the reason
 
       expect(test_inst.unsupported_reason(:dynamic_feature)).to be_nil
+    end
+
+    it "gives reason when implicit dynamic attrs" do
+      test_class.supports(:implicit_feature) {  "dynamically unsupported" unless attr1 }
+      test_inst = test_class.new(:attr1 => false)
+
+      expect(test_inst.unsupported_reason(:implicit_feature)).to eq("dynamically unsupported")
     end
   end
 
@@ -322,7 +341,7 @@ RSpec.describe SupportsFeatureMixin do
         when String
           supports_not feature, :reason => value
         when :dynamic
-          supports(feature) { unsupported_reason_add(feature, "dynamically unsupported") unless attr1 }
+          supports(feature) { "dynamically unsupported" unless attr1 }
         else
           raise "trouble defining #{feature} with #{value.class.name}"
         end

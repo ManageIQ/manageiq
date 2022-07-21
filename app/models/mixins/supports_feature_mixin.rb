@@ -6,7 +6,7 @@
 #     supports :publish
 #     supports_not :fake, :reason => 'We keep it real'
 #     supports :archive do
-#       unsupported_reason_add(:archive, 'It is too good') if featured?
+#       'It is too good' if featured?
 #     end
 #   end
 #
@@ -187,7 +187,12 @@ module SupportsFeatureMixin
           unsupported.delete(feature)
           if block_given?
             begin
-              instance_eval(&block)
+              result = instance_eval(&block)
+              # if no errors yet but result was an error message
+              # then add the error
+              if !unsupported.key?(feature) && result.kind_of?(String)
+                unsupported_reason_add(feature, result)
+              end
             rescue => e
               _log.log_backtrace(e)
               unsupported_reason_add(feature, "Internal Error: #{e.message}")

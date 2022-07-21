@@ -72,8 +72,11 @@ class ServiceTemplate < ApplicationRecord
   scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
 
   supports :order do
-    unsupported_reason_add(:order, 'Service template does not belong to a service catalog') unless service_template_catalog
-    unsupported_reason_add(:order, 'Service template is not configured to be displayed') unless display
+    if !service_template_catalog
+      'Service template does not belong to a service catalog'
+    elsif !display
+      'Service template is not configured to be displayed'
+    end
   end
   alias orderable?     supports_order?
   alias validate_order supports_order?
