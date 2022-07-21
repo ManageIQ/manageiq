@@ -9,4 +9,6 @@ class CloudDatabaseFlavor < ApplicationRecord
   virtual_total :total_cloud_databases, :cloud_databases
 
   default_value_for :enabled, true
+
+  scope :active, -> { where(:enabled => true) }
 end
