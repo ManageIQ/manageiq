@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
 
+$stdout.sync = true
+
+require 'shellwords'
+args = ARGV.shelljoin
+
+puts "** Booting PID: #{Process.pid} with #{args}..."
+
 require File.expand_path("../../../config/environment", __dir__)
 
 ems_id = ENV["EMS_ID"]
@@ -29,4 +36,6 @@ stdin_tmp.rewind
 
 $stdin.reopen(stdin_tmp)
 
-Kernel.exec(ARGV.shelljoin)
+puts "Starting PID: #{Process.pid} with #{args}..."
+
+Kernel.exec(args)
