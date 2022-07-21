@@ -5,13 +5,21 @@ $stdout.sync = true
 require 'shellwords'
 args = ARGV.shelljoin
 
-puts "** Booting PID: #{Process.pid} with #{args}..."
+ems_id = ENV["EMS_ID"]
+abort("ERR: EMS_ID environment variable required") if ems_id.nil?
+
+worker_type = ENV["WORKER_TYPE"]
+abort("ERR: WORKER_TYPE environment variable required") if worker_type.nil?
+
+$stdout.puts "** Booting #{worker_type} with PID: #{Process.pid} and args: #{args}..."
 
 require File.expand_path("../../../config/environment", __dir__)
 
-ems_id = ENV["EMS_ID"]
+abort("ERR: WORKER_TYPE not found") unless MiqWorkerType.find_by(:worker_type => worker_type)
 
-ems      = ExtManagementSystem.find(ems_id)
+ems = ExtManagementSystem.find_by(:id => ems_id)
+abort("ERR: EMS not found for ID [#{ems_id}]") if ems.nil?
+
 all_emss = [ems] + ems.child_managers
 ems_opts = all_emss.map do |e|
   e.attributes.merge(
@@ -43,7 +51,7 @@ stdin_tmp.rewind
 
 $stdin.reopen(stdin_tmp)
 
-puts "Starting PID: #{Process.pid} with #{args}..."
+$stdout.puts "Starting #{worker_type} with PID: #{Process.pid} and args: #{args}..."
 
 # Using exec here rather than fork+exec so that we can continue to use the
 # standard systemd service Type=notify and not have to use Type=forking which
