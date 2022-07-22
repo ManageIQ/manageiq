@@ -50,8 +50,8 @@ class ChargebackContainerImage < Chargeback
       @data_index.store_path(:id, :container_projects, container_image.id, container_image.container_projects)
     end
 
-    @unknown_project ||= OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
-    @unknown_image ||= OpenStruct.new(:id => 0, :full_name => _('Unknown Image'))
+    @unknown_project = OpenStruct.new(:id => 0, :name => _('Unknown Project'), :ems_ref => _('Unknown'))
+    @unknown_image   = OpenStruct.new(:id => 0, :full_name => _('Unknown Image'))
 
     load_custom_attribute_groupby(options[:groupby_label]) if options[:groupby_label].present?
 
