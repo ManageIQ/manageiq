@@ -16,8 +16,8 @@ class Host < ApplicationRecord
   VENDOR_TYPES = {
     # DB            Displayed
     "microsoft"       => "Microsoft",
-    "redhat"          => "RedHat",
-    "ovirt"           => "Ovirt",
+    "redhat"          => "Red Hat",
+    "ovirt"           => "oVirt",
     "kubevirt"        => "KubeVirt",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",

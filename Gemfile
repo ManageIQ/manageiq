@@ -178,6 +178,10 @@ group :redfish, :manageiq_default do
   manageiq_plugin "manageiq-providers-redfish"
 end
 
+group :red_hat_virtualization, :manageiq_default do
+  manageiq_plugin "manageiq-providers-red_hat_virtualization"
+end
+
 group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.30.0",          :require => false
 end
