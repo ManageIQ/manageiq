@@ -519,4 +519,25 @@ RSpec.describe EmsEvent do
       end
     end
   end
+
+  context 'Physical Storage Events' do
+    let(:ems)   { FactoryBot.create(:ems_storage) }
+    let(:physical_storage) { FactoryBot.create(:physical_storage, :name => "my-storage", :ems_ref => "ems1", :ext_management_system => ems) }
+    let(:event_hash) {
+      {
+        :event_type               => "physical_storage_alert",
+        :ems_ref                  => "1",
+        :physical_storage_ems_ref => physical_storage.ems_ref,
+        :ems_id                   => ems.id,
+        :message                  => "description"
+      }
+    }
+
+    it "test process_physical_storage_in_event!" do
+      event = EmsEvent.add(ems.id, event_hash)
+      expect(event.attributes.keys).to include('physical_storage_id', 'physical_storage_name')
+      expect(event.physical_storage_id).to eq(physical_storage.id)
+      expect(event.physical_storage_name).to eq(physical_storage.name)
+    end
+  end
 end

@@ -78,6 +78,7 @@ class EmsEvent < EventStream
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
     process_container_entities_in_event!(event_hash)
+    process_physical_storage_in_event!(event_hash)
 
     # Write the event
     new_event = create_event(event_hash)
@@ -134,6 +135,10 @@ class EmsEvent < EventStream
         event[:host_name] ||= host.name
       end
     end
+  end
+
+  def self.process_physical_storage_in_event!(event, options = {})
+    process_object_in_event!(PhysicalStorage, event, options)
   end
 
   def self.process_container_entities_in_event!(event, _options = {})
