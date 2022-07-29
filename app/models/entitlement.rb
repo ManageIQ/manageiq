@@ -51,10 +51,12 @@ class Entitlement < ApplicationRecord
   def set_managed_filters(filter)
     set_filters("managed", filter)
   end
+  alias managed_filters= set_managed_filters
 
   def set_belongsto_filters(filter)
     set_filters("belongsto", filter)
   end
+  alias belongsto_filter= set_belongsto_filters
 
   def remove_tag_from_managed_filter(filter_to_remove)
     if get_managed_filters.present?
