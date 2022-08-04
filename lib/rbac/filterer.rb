@@ -717,7 +717,14 @@ module Rbac
           klass_id, descendant_id = method_name
           klass.where(klass_id => descendants.select(descendant_id)).distinct
         else
-          MiqPreloader.preload(descendants, method_name)
+          r_klass = descendants.try(:klass) || descendants.first.class
+          # some of the entries from MATCH_VIA_DESCENDANT_RELATIONSHIPS are not associations
+          # so we don't preload those
+          # specifically: parent_blue_folders and resource_pool
+          # ext_management_system will get preloaded
+          if r_klass.reflections.key?(method_name.to_s)
+            MiqPreloader.preload(descendants, method_name)
+          end
           descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
         end
       end

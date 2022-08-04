@@ -163,6 +163,11 @@ class PhysicalStorage < ApplicationRecord
   end
 
   def event_where_clause(assoc = :ems_events)
-    ["#{events_table_name(assoc)}.physical_storage_id = ?", id]
+    case assoc.to_sym
+    when :ems_events, :event_streams
+      return ["#{events_table_name(assoc)}.physical_storage_id = ?", id]
+    when :policy_events
+      return ["target_id = ? and target_class = ? ", id, self.class.base_class.name]
+    end
   end
 end
