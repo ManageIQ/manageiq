@@ -141,7 +141,7 @@ FactoryBot.define do
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
-          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
+          :class   => "ManageIQ::Providers::Awx::AutomationManager",
           :parent  => :ext_management_system
 
   factory :provisioning_manager,

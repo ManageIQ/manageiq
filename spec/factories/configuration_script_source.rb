@@ -7,6 +7,10 @@ FactoryBot.define do
           :parent => :configuration_script_source,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource"
 
+  factory :awx_configuration_script_source,
+          :parent => :configuration_script_source,
+          :class  => "ManageIQ::Providers::Awx::AutomationManager::ConfigurationScriptSource"
+
   factory :embedded_ansible_configuration_script_source,
           :parent => :configuration_script_source,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource" do
