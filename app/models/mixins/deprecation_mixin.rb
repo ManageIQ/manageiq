@@ -15,9 +15,9 @@ module DeprecationMixin
       virtual_belongs_to(old_belongs_to)
     end
 
-    def deprecate_attribute(old_attribute, new_attribute)
+    def deprecate_attribute(old_attribute, new_attribute, type:)
       deprecate_attribute_methods(old_attribute, new_attribute)
-      virtual_attribute(old_attribute, -> { type_for_attribute(new_attribute.to_s) })
+      virtual_attribute(old_attribute, type)
       hide_attribute(old_attribute)
     end
 

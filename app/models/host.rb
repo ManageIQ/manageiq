@@ -97,7 +97,7 @@ class Host < ApplicationRecord
 
   serialize :settings, Hash
 
-  deprecate_attribute :address,  :hostname
+  deprecate_attribute :address,  :hostname, :type => :string
   alias_attribute     :state,    :power_state
   alias_attribute     :to_s,     :name
 
