@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+$stdout.sync = true
+
+require 'shellwords'
+args = ARGV.shelljoin
+
+ems_id = ENV["EMS_ID"]
+abort("ERR: EMS_ID environment variable required") if ems_id.nil?
+
+worker_type = ENV["WORKER_TYPE"]
+abort("ERR: WORKER_TYPE environment variable required") if worker_type.nil?
+
+$stdout.puts "** Booting #{worker_type} with PID: #{Process.pid} and args: #{args}..."
+
+require File.expand_path("../../../config/environment", __dir__)
+
+abort("ERR: WORKER_TYPE not found") unless MiqWorkerType.find_by(:worker_type => worker_type)
+
+ems = ExtManagementSystem.find_by(:id => ems_id)
+abort("ERR: EMS not found for ID [#{ems_id}]") if ems.nil?
+
+all_emss = [ems] + ems.child_managers
+ems_opts = all_emss.map do |e|
+  e.attributes.merge(
+    "endpoints"       => e.endpoints,
+    "authentications" => e.authentications
+  )
+end
+
+provider_opts = {
+  :ems       => ems_opts,
+  :messaging => MiqQueue.messaging_client_options,
+  :settings  => Settings.to_hash
+}
+
+# Create a temp file and immediately unlink it to create a
+# secure hidden file to be used for the child process' stdin.
+#
+# Typically this is done using a pipe but because we are exec'ing
+# the child worker not forking it we aren't able to have the child
+# worker read from one side of the pipe while the parent is writing
+# to the other side.  This means that the amount of data that can be
+# written is limited to the buffer size of the pipe and if you write
+# more than that it will hang.
+stdin_tmp = Tempfile.new
+File.unlink(stdin_tmp.path)
+
+stdin_tmp.write(provider_opts.to_json)
+stdin_tmp.rewind
+
+$stdin.reopen(stdin_tmp)
+
+$stdout.puts "Starting #{worker_type} with PID: #{Process.pid} and args: #{args}..."
+
+# Using exec here rather than fork+exec so that we can continue to use the
+# standard systemd service Type=notify and not have to use Type=forking which
+# can limit other systemd options available to the service.
+Kernel.exec(args)
