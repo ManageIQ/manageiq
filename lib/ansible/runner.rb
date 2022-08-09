@@ -412,6 +412,7 @@ module Ansible
       PYTHON3_MODULE_PATHS = %w[
         /var/lib/awx/venv/ansible/lib/python3.6/site-packages
         /var/lib/manageiq/venv/lib/python3.6/site-packages
+        /var/lib/manageiq/venv/lib/python3.8/site-packages
       ].freeze
       def python3_modules_path
         @python3_modules_path ||= begin
