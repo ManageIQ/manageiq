@@ -218,9 +218,11 @@ module Ansible
         begin
           fetch_galaxy_roles(playbook_or_role_args)
 
-          result = wait_for(base_dir, "artifacts/result/command") do
-            AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
-          end
+          result = if async?(ansible_runner_method)
+                     wait_for(base_dir, "pid") { AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params) }
+                   else
+                     AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
+                   end
 
           res = response(base_dir, ansible_runner_method, result, debug)
         ensure
