@@ -42,14 +42,15 @@ RSpec.describe Hardware do
     end
 
     context "with values" do
-      let(:hardware) { FactoryBot.build(:hardware, :cpu_total_cores => 4, :cpu_speed => 1000) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_total_cores => 4, :cpu_speed => 1000) }
 
       it "calculates in ruby" do
         expect(hardware.aggregate_cpu_speed).to eq(4000)
+        expect(Hardware.where(:aggregate_cpu_speed => [3999, 4000, 4001]).count).to eq(1)
       end
 
       it "calculates in the database" do
-        hardware.save
+        hardware
         expect(virtual_column_sql_value(Hardware, "aggregate_cpu_speed")).to eq(4000)
       end
     end
